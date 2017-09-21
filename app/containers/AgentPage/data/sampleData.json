@@ -1,0 +1,14 @@
+[
+	{
+		"value": "smallTalk",
+		"text": "Small Talk Agent"
+	},
+	{
+		"value": "customerService",
+		"text": "Customer Service Agent"
+	},
+	{
+		"value": "bookings",
+		"text": "Bookings Agent"
+	}
+]

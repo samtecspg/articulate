@@ -1,0 +1,22 @@
+[
+	{
+		"value": "english",
+		"text": "English"
+	},
+	{
+		"value": "german",
+		"text": "German"
+	},
+	{
+		"value": "french",
+		"text": "French"
+	},
+	{
+		"value": "spanish",
+		"text": "Spanish"
+	},
+	{
+		"value": "chinese",
+		"text": "Chinese (Mandarin)"
+	}
+]

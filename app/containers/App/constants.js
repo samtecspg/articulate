@@ -1,12 +1,19 @@
-/*
- * AppConstants
- * Each action has a corresponding type, which the reducer knows and picks up on.
- * To avoid weird typos between the reducer and the actions, we save them as
- * constants here. We prefix them with 'yourproject/YourComponent' so we avoid
- * reducers accidentally picking up actions they shouldn't.
- *
- * Follow this format:
- * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
- */
-
+export const LOAD_AGENTS = 'boilerplate/App/LOAD_AGENTS';
+export const LOAD_AGENTS_SUCCESS = 'boilerplate/App/LOAD_AGENTS_SUCCESS';
+export const LOAD_AGENTS_ERROR = 'boilerplate/App/LOAD_AGENTS_ERROR';
+export const LOAD_DOMAINS = 'boilerplate/App/LOAD_DOMAINS';
+export const LOAD_DOMAINS_SUCCESS = 'boilerplate/App/LOAD_DOMAINS_SUCCESS';
+export const LOAD_DOMAINS_ERROR = 'boilerplate/App/LOAD_DOMAINS_ERROR';
+export const CREATE_AGENT = 'boilerplate/App/CREATE_AGENT';
+export const CREATE_AGENT_SUCCESS = 'boilerplate/App/CREATE_AGENT_SUCCESS';
+export const CREATE_AGENT_ERROR = 'boilerplate/App/CREATE_AGENT_ERROR';
+export const CREATE_DOMAIN = 'boilerplate/App/CREATE_DOMAIN';
+export const CREATE_DOMAIN_SUCCESS = 'boilerplate/App/CREATE_DOMAIN_SUCCESS';
+export const CREATE_DOMAIN_ERROR = 'boilerplate/App/CREATE_DOMAIN_ERROR';
+export const CREATE_INTENT = 'boilerplate/App/CREATE_INTENT';
+export const CREATE_INTENT_SUCCESS = 'boilerplate/App/CREATE_INTENT_SUCCESS';
+export const CREATE_INTENT_ERROR = 'boilerplate/App/CREATE_INTENT_ERROR';
+export const CREATE_ENTITY = 'boilerplate/App/CREATE_ENTITY';
+export const CREATE_ENTITY_SUCCESS = 'boilerplate/App/CREATE_ENTITY_SUCCESS';
+export const CREATE_ENTITY_ERROR = 'boilerplate/App/CREATE_ENTITY_ERROR';
 export const DEFAULT_LOCALE = 'en';

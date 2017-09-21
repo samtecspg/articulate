@@ -1,0 +1,31 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <title>webhook-icon</title>
+  <g>
+    <circle class="cls-1" cx="9" cy="5.1" r="1.33"/>
+    <circle class="cls-1" cx="13.51" cy="12.9" r="1.33"/>
+    <circle class="cls-1" cx="4.49" cy="12.9" r="1.33"/>
+    <path class="cls-2" d="M7.73,12.9A3.24,3.24,0,1,1,3.46,9.83"/>
+    <path class="cls-2" d="M7.38,7.9A3.24,3.24,0,1,1,12.24,5.1"/>
+    <path class="cls-2" d="M11.89,10.1a3.24,3.24,0,1,1,0,5.61"/>
+    <line class="cls-2" x1="9" y1="5.1" x2="11.89" y2="10.1"/>
+    <line class="cls-2" x1="4.49" y1="12.9" x2="7.38" y2="7.9"/>
+    <line class="cls-2" x1="13.51" y1="12.9" x2="7.73" y2="12.9"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+  </defs>
+  <title>folder-icon</title>
+  <polygon class="cls-1" points="12.44 15.48 11.34 15.48 1.11 15.48 1.11 4.94 16.92 4.94 16.92 15.48 12.44 15.48"/>
+  <polyline class="cls-1" points="1.11 4.94 1.11 2.52 4.5 2.52 6.76 4.78"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <title>entity-icon</title>
+  <circle class="cls-1" cx="3.25" cy="13.16" r="2.05"/>
+  <circle class="cls-1" cx="15.04" cy="15.23" r="2.05"/>
+  <circle class="cls-1" cx="3.72" cy="3.34" r="2.05"/>
+  <circle class="cls-1" cx="13.35" cy="2.77" r="2.05" transform="translate(10.17 16.03) rotate(-88.26)"/>
+  <circle class="cls-2" cx="9.61" cy="8.7" r="2.05"/>
+  <line class="cls-1" x1="13.86" y1="13.56" x2="10.95" y2="10.24"/>
+  <line class="cls-1" x1="12.16" y1="4.67" x2="10.52" y2="7.1"/>
+  <line class="cls-1" x1="5.14" y1="4.81" x2="8.06" y2="7.37"/>
+  <line class="cls-1" x1="5" y1="12.12" x2="7.96" y2="9.9"/>
+</svg>
