@@ -8,7 +8,7 @@ import { makeSelectDomainData } from 'containers/DomainPage/selectors';
 
 export function* postDomain() {
   const domainData = yield select(makeSelectDomainData());
-  domainData.intentThreshold = domain.intentThreshold/100;
+  domainData.intentThreshold = domainData.intentThreshold/100;
 
   const requestURL = `http://127.0.0.1:8000/domain`;
   const requestOptions = {
