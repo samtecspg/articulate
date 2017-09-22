@@ -28,10 +28,10 @@ export default defineMessages({
   },
   examplePlaceholder: {
     id: 'boilerplate.containers.EntityPage.create_entity.example_placeholder',
-    defaultMessage: 'New Value',
+    defaultMessage: 'Add Value',
   },
   synonymPlaceholder: {
     id: 'boilerplate.containers.EntityPage.create_entity.synonym_placeholder',
-    defaultMessage: 'New Synonym',
+    defaultMessage: 'Add Synonym',
   },
 });

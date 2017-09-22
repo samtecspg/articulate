@@ -12,15 +12,16 @@ import ContentHeader from 'components/ContentHeader';
 import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
 import Tooltip from 'components/Tooltip';
+import Chip from 'components/Chip';
 
-import { Input, Row, Icon, Chip, Tag } from 'react-materialize';
+import { Input, Row, Icon } from 'react-materialize';
 
 import messages from './messages';
 
 import { createEntity, loadAgents } from 'containers/App/actions';
 import { makeSelectCurrentAgent, makeSelectAgents, makeSelectEntity, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
 
-import { changeEntityData } from './actions';
+import { changeEntityData, removeExample, addExample, removeSynonym, addSynonym } from './actions';
 import { makeSelectEntityData } from './selectors';
 
 const returnFormattedOptions = (options) => {
@@ -33,53 +34,48 @@ const returnFormattedOptions = (options) => {
   });
 };
 
-const renderExamples = (examples, addExampleFunction, addSynonymFunction) => {
+const renderExamples = (examples, removeExampleFunction, addExampleFunction, removeSynonymFunction, addSynonymFunction) => {
   const rows = examples.map( (example, exampleIndex) => {
-    const synonyms = [<Row key="existingSynonyms">{
-        example.synonyms.map( (synonym, synonymIndex) => {
-        return (
-          <Tag key={synonymIndex}>{synonym}</Tag>
-        )
-      })}
-    </Row>]
+    const synonyms = example.synonyms.map( (synonym, indexSynonym) => {
+      return (
+        <Chip onClose={removeSynonymFunction.bind(null, example.value, synonym)} key={indexSynonym} id={example.value + '_' + synonym} close={true}>
+          {synonym}
+        </Chip>
+      )
+    });
     synonyms.push(
-      <Row key="newSynonym">
-        <div className="col s4">
-          <TextInput
-            placeholder={messages.synonymPlaceholder.defaultMessage}
-            id={'example_'+exampleIndex+'_newSynonym'}
-            onKeyPress={addSynonymFunction.bind(null, example.value)}
-          />
-        </div>
-      </Row>
+      <TextInput
+        key = {example.value + '_newSynonym'}
+        placeholder={messages.synonymPlaceholder.defaultMessage}
+        inputId={example.value + '_newSynonym'}
+        onKeyPress={addSynonymFunction.bind(null, example.value)}
+        />
     )
     return (
-      <tr key={exampleIndex} >
-        <td>
-          <Chip close={true}>
+      <tr style={{width: '100%'}} key={exampleIndex} >
+        <td style={{width: '30%', display: 'inline-block'}}>
+          <Chip onClose={removeExampleFunction.bind(null, example.value)} id={example.value}close={true}>
             {example.value}
           </Chip>
         </td>
-        <td>
-          {
-            synonyms
-          }
+        <td style={{width: '70%', display: 'inline-block'}}>
+            {
+              synonyms
+            }
         </td>
       </tr>
     )
   });
   rows.push(
-    (<tr key="newExample">
-      <td>
-        <div className="col s5">
-          <TextInput
-            placeholder={messages.examplePlaceholder.defaultMessage}
-            id="newExample"
-            onKeyPress={addExampleFunction}
-            />
-        </div>
+    (<tr style={{width: '100%'}} key="newExample">
+      <td style={{width: '30%', display: 'inline-block'}}>
+        <TextInput
+          placeholder={messages.examplePlaceholder.defaultMessage}
+          inputId="newExample"
+          onKeyPress={addExampleFunction}
+          />
       </td>
-      <td> 
+      <td style={{width: '70%', display: 'inline-block'}}> 
       </td>
     </tr>)
   );
@@ -154,8 +150,8 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
             <div className="border-container ">
                 <table className="bordered highlight">
                     <thead>
-                        <tr>
-                            <th>
+                        <tr style={{width: '100%'}}>
+                            <th style={{width: '30%', display: 'inline-block'}}>
                               Value
                               <Tooltip
                                 tooltip="This is one instance of the entity you named upwards"
@@ -167,7 +163,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                                 </a>
                               </Tooltip>
                             </th>
-                            <th>
+                            <th style={{width: '70%', display: 'inline-block'}}>
                               Synonyms  
                               <Tooltip
                                 tooltip="Synonyms will help the agent to recognize this example in several different ways"
@@ -182,7 +178,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                         </tr>
                     </thead>
                     <tbody>
-                        {renderExamples(this.props.entityData.examples, this.props.onAddExample, this.props.onAddSynonym)}
+                        {renderExamples(this.props.entityData.examples, this.props.onRemoveExample, this.props.onAddExample, this.props.onRemoveSynonym, this.props.onAddSynonym)}
                     </tbody>
                 </table>
             </div>
@@ -219,7 +215,11 @@ EntityPage.propTypes = {
   onComponentMounting: React.PropTypes.func,
   onChangeEntityData: React.PropTypes.func,
   onSubmitForm: React.PropTypes.func,
-  onMessageAccepted: React.PropTypes.func,
+  onRemoveExample: React.PropTypes.func,
+  onAddExample: React.PropTypes.func,
+  onRemoveSynonym: React.PropTypes.func,
+  onAddSynonym: React.PropTypes.func,
+  onSubmitForm: React.PropTypes.func,
   entityData: React.PropTypes.object,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
@@ -239,14 +239,22 @@ export function mapDispatchToProps(dispatch, entityProps) {
     onChangeEntityData: (field, evt) => { 
       dispatch(changeEntityData({ value: evt.target.value, field }))
     },
+    onRemoveExample: (example, evt) => {
+      dispatch(removeExample(example));
+    },
     onAddExample: (evt) => { 
       if(evt.charCode === 13){
         dispatch(addExample(evt.target.value));
+        evt.target.value = null;
       }
+    },
+    onRemoveSynonym: (example, synonym, evt) => {
+      dispatch(removeSynonym({ example, synonym }));
     },
     onAddSynonym: (exampleValue, evt) => { 
       if(evt.charCode === 13){
         dispatch(addSynonym({ example: exampleValue, synonym: evt.target.value }));
+        evt.target.value = null;
       }
     },
     onSubmitForm: (evt) => {

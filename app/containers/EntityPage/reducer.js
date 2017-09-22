@@ -3,7 +3,9 @@ import { createSelector } from 'reselect';
 
 import {
   CHANGE_ENTITY_DATA,
+  REMOVE_EXAMPLE,
   ADD_EXAMPLE,
+  REMOVE_SYNONYM,
   ADD_SYNONYM,
 } from './constants';
 
@@ -12,28 +14,36 @@ const initialState = fromJS({
   entityData: {
     agent: null,
     entityName: '',
-    examples: [
-      {
-        value: 'Cheese',
-        synonyms: [
-          'Cheese', 'Extra Cheese', 'Mozarella'
-        ]
-      },
-    ],
+    examples: [],
   },
 });
 
 function entityReducer(state = initialState, action) {
+
+  let examples;
+
   switch (action.type) {
     case CHANGE_ENTITY_DATA:
       return state
       .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value));
+    case REMOVE_EXAMPLE:
+      examples = state.getIn(['entityData', 'examples']);
+      examples = examples.filterNot(example => example.get('value') === action.example);
+      return state
+        .setIn(['entityData', 'examples'], examples);
     case ADD_EXAMPLE:
       return state
-        .updateIn(['entityData', 'examples'], x => x.push({ value: action.payload.value }));
-    case ADD_SYNONYM:
+        .updateIn(['entityData', 'examples'], x => x.push(fromJS({ value: action.example, synonyms: [action.example] })));
+    case REMOVE_SYNONYM:
+      examples = state.getIn(['entityData', 'examples']);
+      examples = examples.map(example => example.get('value') === action.payload.example ? fromJS({ value: example.get('value'), synonyms: example.get('synonyms').filterNot(synonym => synonym === action.payload.synonym)}) : example);
       return state
-        .updateIn(['entityData', 'examples'], x => x.push({ value: action.payload.value }));
+        .setIn(['entityData', 'examples'], examples);
+    case ADD_SYNONYM:
+      examples = state.getIn(['entityData', 'examples']);
+      examples = examples.map(example => example.get('value') === action.payload.example ? example.update('synonyms', synonyms => synonyms.push(action.payload.synonym)) : example);
+      return state
+        .setIn(['entityData', 'examples'], examples);
     default:
       return state;
   }
