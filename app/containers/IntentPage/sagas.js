@@ -33,7 +33,7 @@ function* postScenario(intentId) {
 
   try {
     const scenario = yield call(request, requestURL, requestOptions);
-    yield put(scenarioCreated(intent, intent._id));
+    yield put(scenarioCreated( scenario, scenario._id));
   } catch (error) {
     yield put(scenarioCreationError({
       message: 'An error ocurred creating the scenario',

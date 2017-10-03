@@ -368,7 +368,7 @@ injectGlobal`
     position: absolute; }
 
   .quotes:before {
-    left: -35px; }
+    left: -40px; }
 
   .quotes:after {
     -moz-transform: scale(-1, -1);

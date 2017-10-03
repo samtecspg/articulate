@@ -246,7 +246,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       loading,
       error,
       intent,
-      scenario,
     };
 
     let agentsSelect = [];
@@ -479,7 +478,23 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         
         <Row>
           <p>
-            {JSON.stringify(intentProps)}
+            Intent Data
+          </p>
+          <p>
+            {
+              JSON.stringify(intentProps)
+            }
+          </p>
+        </Row>
+
+        <Row>
+          <p>
+            Scenario Data
+          </p>
+          <p>
+            {
+              scenario ? JSON.stringify(scenario) : null
+            }
           </p>
         </Row>
       </Content>
@@ -604,7 +619,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   intent: makeSelectIntent(),
-  intent: makeSelectScenario(),
+  scenario: makeSelectScenario(),
   intentData: makeSelectIntentData(),
   scenarioData: makeSelectScenarioData(),
   loading: makeSelectLoading(),

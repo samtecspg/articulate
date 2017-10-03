@@ -112,6 +112,7 @@ function appReducer(state = initialState, action) {
         .set('error', false)
         .setIn(['intent', 'data'], false);
     case CREATE_INTENT_SUCCESS:
+      console.log('REDUCER INTENT', action.data)
       return state
         .setIn(['intent', 'data'], action.data)
         .set('loading', false)
@@ -121,6 +122,7 @@ function appReducer(state = initialState, action) {
         .set('error', action.error)
         .set('loading', false);
     case CREATE_SCENARIO_SUCCESS:
+      console.log('SCENARIO INTENT', action.data)
       return state
         .setIn(['scenario', 'data'], action.data)
         .set('loading', false)
