@@ -2,9 +2,12 @@ import {
     LOAD_AGENTS,
     LOAD_AGENTS_SUCCESS,
     LOAD_AGENTS_ERROR,
-    LOAD_DOMAINS,
-    LOAD_DOMAINS_SUCCESS,
-    LOAD_DOMAINS_ERROR,
+    LOAD_AGENT_DOMAINS,
+    LOAD_AGENT_DOMAINS_SUCCESS,
+    LOAD_AGENT_DOMAINS_ERROR,
+    LOAD_AGENT_ENTITIES,
+    LOAD_AGENT_ENTITIES_SUCCESS,
+    LOAD_AGENT_ENTITIES_ERROR,
     CREATE_AGENT,
     CREATE_AGENT_SUCCESS,
     CREATE_AGENT_ERROR,
@@ -14,6 +17,8 @@ import {
     CREATE_INTENT,
     CREATE_INTENT_SUCCESS,
     CREATE_INTENT_ERROR,
+    CREATE_SCENARIO_SUCCESS,
+    CREATE_SCENARIO_ERROR,
     CREATE_ENTITY,
     CREATE_ENTITY_SUCCESS,
     CREATE_ENTITY_ERROR,
@@ -39,22 +44,44 @@ import {
     };
   }
   
-  export function loadDomains() {
+  export function loadAgentDomains(agentId) {
     return {
-      type: LOAD_DOMAINS,
+      type: LOAD_AGENT_DOMAINS,
+      agentId
     };
   }
   
-  export function domainsLoaded(data) {
+  export function agentDomainsLoaded(data) {
     return {
-      type: LOAD_DOMAINS_SUCCESS,
+      type: LOAD_AGENT_DOMAINS_SUCCESS,
       data,
     };
   }
   
-  export function domainsLoadingError(error) {
+  export function agentDomainsLoadingError(error) {
     return {
-      type: LOAD_DOMAINS_ERROR,
+      type: LOAD_AGENT_DOMAINS_ERROR,
+      error,
+    };
+  }
+
+  export function loadAgentEntities(agentId) {
+    return {
+      type: LOAD_AGENT_ENTITIES,
+      agentId
+    };
+  }
+  
+  export function agentEntitiesLoaded(data) {
+    return {
+      type: LOAD_AGENT_ENTITIES_SUCCESS,
+      data,
+    };
+  }
+  
+  export function agentEntitiesLoadingError(error) {
+    return {
+      type: LOAD_AGENT_ENTITIES_ERROR,
       error,
     };
   }
@@ -118,6 +145,21 @@ import {
   export function intentCreationError(error) {
     return {
       type: CREATE_INTENT_ERROR,
+      error,
+    };
+  }
+
+  export function scenarioCreated(data, _id) {
+    return {
+      type: CREATE_SCENARIO_SUCCESS,
+      data,
+      _id,
+    };
+  }
+  
+  export function scenarioCreationError(error) {
+    return {
+      type: CREATE_SCENARIO_ERROR,
       error,
     };
   }

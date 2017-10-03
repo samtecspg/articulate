@@ -4,9 +4,12 @@ import {
   LOAD_AGENTS,
   LOAD_AGENTS_SUCCESS,
   LOAD_AGENTS_ERROR,
-  LOAD_DOMAINS,
-  LOAD_DOMAINS_SUCCESS,
-  LOAD_DOMAINS_ERROR,
+  LOAD_AGENT_DOMAINS,
+  LOAD_AGENT_DOMAINS_SUCCESS,
+  LOAD_AGENT_DOMAINS_ERROR,
+  LOAD_AGENT_ENTITIES,
+  LOAD_AGENT_ENTITIES_SUCCESS,
+  LOAD_AGENT_ENTITIES_ERROR,
   CREATE_AGENT,
   CREATE_AGENT_SUCCESS,
   CREATE_AGENT_ERROR,
@@ -16,6 +19,8 @@ import {
   CREATE_INTENT,
   CREATE_INTENT_SUCCESS,
   CREATE_INTENT_ERROR,
+  CREATE_SCENARIO_SUCCESS,
+  CREATE_SCENARIO_ERROR,
   CREATE_ENTITY,
   CREATE_ENTITY_SUCCESS,
   CREATE_ENTITY_ERROR,
@@ -28,10 +33,8 @@ const initialState = fromJS({
   currentAgent: false,
   currentDomain: false,
   agents: false,
-  domains: false,
-  /*agent: {
-    data: false,
-  },*/
+  agentDomains: false,
+  agentEntities: false,
 });
 
 function appReducer(state = initialState, action) {
@@ -49,16 +52,29 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
-    case LOAD_DOMAINS:
+    case LOAD_AGENT_DOMAINS:
       return state
         .set('loading', true)
         .set('error', false)
-        .set('domains', false);
-    case LOAD_DOMAINS_SUCCESS:
+        .set('agentDomains', false);
+    case LOAD_AGENT_DOMAINS_SUCCESS:
       return state
-        .set('domains', action.data)
+        .set('agentDomains', action.data)
         .set('loading', false)
-    case LOAD_DOMAINS_ERROR:
+    case LOAD_AGENT_DOMAINS_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case LOAD_AGENT_ENTITIES:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('agentEntities', false);
+    case LOAD_AGENT_ENTITIES_SUCCESS:
+      return state
+        .set('agentEntities', action.data)
+        .set('loading', false)
+    case LOAD_AGENT_ENTITIES_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);
@@ -101,6 +117,15 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('currentIntent', action._id);
     case CREATE_INTENT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case CREATE_SCENARIO_SUCCESS:
+      return state
+        .setIn(['scenario', 'data'], action.data)
+        .set('loading', false)
+        .set('currentScenario', action._id);
+    case CREATE_SCENARIO_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);

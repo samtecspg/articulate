@@ -4,7 +4,7 @@ function CheckboxOption(props) { // eslint-disable-line react/prefer-stateless-f
 
     return (
         <div className="checkbox">
-            <input name={props.groupName} type="radio" id={props.id} />
+            <input name={props.groupName} type="checkbox" id={props.id} />
             <label htmlFor={props.id}>{props.label}</label>
             <p>{props.text}</p>
         </div>

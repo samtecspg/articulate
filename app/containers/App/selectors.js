@@ -7,9 +7,14 @@ const makeSelectAgents = () => createSelector(
   (globalState) => globalState.get('agents')
 );
 
-const makeSelectDomains = () => createSelector(
+const makeSelectAgentDomains = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('domains')
+  (globalState) => globalState.get('agentDomains')
+);
+
+const makeSelectAgentEntities = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('agentEntities')
 );
 
 const makeSelectCurrentAgent = () => createSelector(
@@ -25,6 +30,11 @@ const makeSelectCurrentDomain = () => createSelector(
 const makeSelectCurrentIntent = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('currentIntent')
+);
+
+const makeSelectCurrentScenario = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('currentScenario')
 );
 
 const makeSelectCurrentEntity = () => createSelector(
@@ -57,6 +67,11 @@ const makeSelectIntent = () => createSelector(
   (globalState) => globalState.getIn(['intent', 'data'])
 );
 
+const makeSelectScenario = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['scenario', 'data'])
+);
+
 const makeSelectEntity = () => createSelector(
   selectGlobal,
   (globalState) => globalState.getIn(['entity', 'data'])
@@ -81,16 +96,19 @@ const makeSelectLocationState = () => {
 export {
   selectGlobal,
   makeSelectAgents,
-  makeSelectDomains,
+  makeSelectAgentDomains,
+  makeSelectAgentEntities,
   makeSelectCurrentAgent,
   makeSelectCurrentDomain,
   makeSelectCurrentIntent,
+  makeSelectCurrentScenario,
   makeSelectCurrentEntity,
   makeSelectLoading,
   makeSelectError,
   makeSelectAgent,
   makeSelectDomain,
   makeSelectIntent,
+  makeSelectScenario,
   makeSelectEntity,
   makeSelectLocationState,
 };

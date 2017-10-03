@@ -140,48 +140,54 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 />
               <InputWarning text="* Warning description here"/>
             </div>
+            <div className="col input-field s12">
+                <label><FormattedMessage {...messages.examples} /></label>
+            </div>
           </Row>
         </div>
 
-        <label htmlFor="examplesTable">
-          Examples
-        </label>
-        <div id="examplesTable" className="row table-container">
-            <div className="border-container ">
-                <table className="bordered highlight">
-                    <thead>
-                        <tr style={{width: '100%'}}>
-                            <th style={{width: '30%', display: 'inline-block'}}>
-                              Value
-                              <Tooltip
-                                tooltip="This is one instance of the entity you named upwards"
-                                delay={50}
-                                position="top"
-                              >
-                                <a>
-                                  <Icon>help_outline</Icon>
-                                </a>
-                              </Tooltip>
-                            </th>
-                            <th style={{width: '70%', display: 'inline-block'}}>
-                              Synonyms  
-                              <Tooltip
-                                tooltip="Synonyms will help the agent to recognize this example in several different ways"
-                                delay={50}
-                                position="top"
-                              >
-                                <a>
-                                  <Icon>help_outline</Icon>
-                                </a>
-                              </Tooltip>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {renderExamples(this.props.entityData.examples, this.props.onRemoveExample, this.props.onAddExample, this.props.onRemoveSynonym, this.props.onAddSynonym)}
-                    </tbody>
-                </table>
+        <div id="examplesTable" className="table-container">
+          <Row>
+            <div className="col input-field s12 table-col">
+              <div>
+                <div className="border-container ">
+                    <table className="bordered highlight">
+                        <thead>
+                            <tr style={{width: '100%'}}>
+                                <th style={{width: '30%', display: 'inline-block'}}>
+                                  Value
+                                  <Tooltip
+                                    tooltip="This is one instance of the intent you named upwards"
+                                    delay={50}
+                                    position="top"
+                                  >
+                                    <a>
+                                      <Icon>help_outline</Icon>
+                                    </a>
+                                  </Tooltip>
+                                </th>
+                                <th style={{width: '70%', display: 'inline-block'}}>
+                                  Synonyms  
+                                  <Tooltip
+                                    tooltip="Synonyms will help the agent to recognize this example in several different ways"
+                                    delay={50}
+                                    position="top"
+                                  >
+                                    <a>
+                                      <Icon>help_outline</Icon>
+                                    </a>
+                                  </Tooltip>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {renderExamples(this.props.entityData.examples, this.props.onRemoveExample, this.props.onAddExample, this.props.onRemoveSynonym, this.props.onAddSynonym)}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
             </div>
+          </Row>
         </div>
 
         <div className="fixed-action-btn">
@@ -231,7 +237,7 @@ EntityPage.propTypes = {
   ]),
 };
 
-export function mapDispatchToProps(dispatch, entityProps) {
+export function mapDispatchToProps(dispatch) {
   return {
     onComponentMounting: (evt) => {
       dispatch(loadAgents());

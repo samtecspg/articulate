@@ -225,6 +225,7 @@
     "lodash": "4.17.2",
     "minimist": "1.2.0",
     "react": "15.4.1",
+    "react-chips": "^0.6.3",
     "react-dom": "15.4.1",
     "react-helmet": "3.2.2",
     "react-intl": "2.1.5",
@@ -239,6 +240,7 @@
     "reselect": "2.5.4",
     "sanitize.css": "4.1.0",
     "styled-components": "1.1.2",
+    "to-camel-case": "^1.0.0",
     "warning": "3.0.0",
     "whatwg-fetch": "2.0.1"
   },

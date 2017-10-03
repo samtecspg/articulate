@@ -7,8 +7,8 @@ export default defineMessages({
   },
   createEntityDescription: {
     id: 'boilerplate.containers.EntityPage.create_entity.description',
-    defaultMessage: 'Entities are recognized elements inside user intents. They are extracted and sent in the response of the parsing process ' + 
-    'so the developer can use them as parameters for their business logic.',
+    defaultMessage: 'Entities can be the inputs to intents. Let\'s say you have an intent "I want to order cheese pizza", ' + 
+    'cheese could be labeled with an entity name of "topping".',
   },
   agent: {
     id: 'boilerplate.containers.EntityPage.create_entity.agent',
@@ -24,7 +24,7 @@ export default defineMessages({
   },
   examples: {
     id: 'boilerplate.containers.EntityPage.create_entity.examples',
-    defaultMessage: 'Example',
+    defaultMessage: 'Examples',
   },
   examplePlaceholder: {
     id: 'boilerplate.containers.EntityPage.create_entity.example_placeholder',
