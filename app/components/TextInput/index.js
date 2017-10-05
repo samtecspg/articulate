@@ -17,7 +17,7 @@ function TextInput(props) { // eslint-disable-line react/prefer-stateless-functi
                 onKeyPress={props.onKeyPress}
                 required={props.required}
                 type="text" 
-                className="validate"
+                className={props.className}
                 disabled={props.disabled}
             />
         </div>
@@ -34,6 +34,7 @@ TextInput.propTypes = {
     required: React.PropTypes.bool,
     style: React.PropTypes.object,
     disabled: React.PropTypes.bool,
+    className: React.PropTypes.string,
 };
 
 export default TextInput;

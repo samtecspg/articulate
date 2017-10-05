@@ -22,6 +22,9 @@ import {
     CREATE_ENTITY,
     CREATE_ENTITY_SUCCESS,
     CREATE_ENTITY_ERROR,
+    CONVERSE,
+    CONVERSE_SUCCESS,
+    CONVERSE_ERROR,
   } from './constants';
   
   export function loadAgents() {
@@ -184,4 +187,23 @@ import {
       error,
     };
   }
-  
+
+  export function converse(payload) {
+    return {
+      type: CONVERSE,
+      payload,
+    };
+  }
+
+  export function converseRespond(data) {
+    return {
+      type: CONVERSE_SUCCESS,
+      data,
+    };
+  }
+
+  export function converseError() {
+    return {
+      type: CONVERSE_ERROR,
+    };
+  }

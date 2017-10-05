@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { makeSelectRepos, makeSelectAgent, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
+import { makeSelectAgent, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
 
 import TextInput from 'components/TextInput';
 import DropdownInput from 'components/DropdownInput';

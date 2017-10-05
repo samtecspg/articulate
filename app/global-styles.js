@@ -24,11 +24,12 @@ injectGlobal`
     color: #4e4e4e; }
 
   main {
-    width: calc(100% - 200px);
-    float: right;
+    margin-left: 200px;
+    width: calc(100% - 500px);
+    float: left;
     padding-bottom: 100px; }
     main div section {
-      width: calc(100% - 300px);
+      width: calc(100% - 0px);
       height: auto;
       float: left; }
 
@@ -95,10 +96,12 @@ injectGlobal`
     /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b4cb', endColorstr='#00ca9f',GradientType=1 );
     /* IE6-9 fallback */ }
-    #side-nav ul > li {
-      width: 100%;
-      line-height: 35px;
-      float: none; }
+
+  #side-nav ul > li {
+    width: 100%;
+    line-height: 35px;
+    float: none; 
+  }
 
   nav {
     background-color: inherit;
@@ -182,6 +185,12 @@ injectGlobal`
     right: 0;
     border-left: 1px solid #c5cbd8; }
 
+  .conversation-panel {
+    width: 300px;
+    height: 85vh;
+    position: fixed;
+    right: 0;}
+
   .main-title {
   }
     .main-title h1 {
@@ -223,6 +232,12 @@ injectGlobal`
       border: 1px solid #00ca9f;
       -webkit-box-shadow: none;
       box-shadow: none; }
+
+  .conversationInput {
+    width: 250px !important;
+    margin-bottom: 10px !important;
+    margin-left: 15px !important;
+  }
 
   .warning {
     top: -14px;
@@ -347,7 +362,6 @@ injectGlobal`
   }
 
   .table-delete-row {
-    /*color: #00ca9f;*/
     color: ##4e4e4e;
     float: right;
     font-size: 1.5rem;
@@ -356,6 +370,18 @@ injectGlobal`
   .table-delete-row:hover {
     color: #00ca9f;
   }
+
+  .mic-icon {
+    padding-top: 10px;
+    color: ##4e4e4e;
+    float: right;
+    font-size: 1.5rem;
+  }
+
+  .mic-icon:hover {
+    color: #00ca9f;
+  }
+  
 
   .quotes:before, .quotes:after {
     display: block;

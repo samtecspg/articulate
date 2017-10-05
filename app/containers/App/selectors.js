@@ -17,6 +17,11 @@ const makeSelectAgentEntities = () => createSelector(
   (globalState) => globalState.get('agentEntities')
 );
 
+const makeSelectConversation = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('conversation').toJS()
+);
+
 const makeSelectCurrentAgent = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('currentAgent')
@@ -45,6 +50,11 @@ const makeSelectCurrentEntity = () => createSelector(
 const makeSelectLoading = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('loading')
+);
+
+const makeSelectLoadingConversation = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('loadingConversation')
 );
 
 const makeSelectError = () => createSelector(
@@ -98,12 +108,14 @@ export {
   makeSelectAgents,
   makeSelectAgentDomains,
   makeSelectAgentEntities,
+  makeSelectConversation,
   makeSelectCurrentAgent,
   makeSelectCurrentDomain,
   makeSelectCurrentIntent,
   makeSelectCurrentScenario,
   makeSelectCurrentEntity,
   makeSelectLoading,
+  makeSelectLoadingConversation,
   makeSelectError,
   makeSelectAgent,
   makeSelectDomain,

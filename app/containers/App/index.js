@@ -2,7 +2,7 @@ import React from 'react';
 //import normalizeCSS from 'stylesheets/normalize-min.css';
 
 import NavSideBar from 'components/NavSideBar';
-import ConversationBar from 'components/ConversationBar';
+import ConversationBar from '../ConversationBar';
 import withProgressBar from 'components/ProgressBar';
 
 export function App(props) {

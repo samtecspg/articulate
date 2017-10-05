@@ -24,17 +24,22 @@ import {
   CREATE_ENTITY,
   CREATE_ENTITY_SUCCESS,
   CREATE_ENTITY_ERROR,
+  CONVERSE,
+  CONVERSE_SUCCESS,
+  CONVERSE_ERROR,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
   loading: false,
   error: false,
+  loadingConversation: false,
   currentAgent: false,
   currentDomain: false,
   agents: false,
   agentDomains: false,
   agentEntities: false,
+  conversation: [],
 });
 
 function appReducer(state = initialState, action) {
@@ -112,7 +117,6 @@ function appReducer(state = initialState, action) {
         .set('error', false)
         .setIn(['intent', 'data'], false);
     case CREATE_INTENT_SUCCESS:
-      console.log('REDUCER INTENT', action.data)
       return state
         .setIn(['intent', 'data'], action.data)
         .set('loading', false)
@@ -122,7 +126,6 @@ function appReducer(state = initialState, action) {
         .set('error', action.error)
         .set('loading', false);
     case CREATE_SCENARIO_SUCCESS:
-      console.log('SCENARIO INTENT', action.data)
       return state
         .setIn(['scenario', 'data'], action.data)
         .set('loading', false)
@@ -145,6 +148,18 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+    case CONVERSE:
+      return state
+        .set('loadingConversation', true)
+        .update('conversation', conversation => conversation.push({ message: action.payload.message, author: 'user' }));
+    case CONVERSE_SUCCESS:
+      return state
+        .set('loadingConversation', false)
+        .update('conversation', conversation => conversation.push({ message: (action.data.intermediateResponse ? action.data.intermediateResponse : action.data.response), author: 'agent' }));
+    case CONVERSE_ERROR:
+      return state
+        .set('loadingConversation', false)
+        .update('conversation', conversation => conversation.push({ message: 'I\'m sorry! I\'m having issues connecting with my brain. Can you retry later', author: 'agent' }));
     default:
       return state;
   }

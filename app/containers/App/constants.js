@@ -21,4 +21,7 @@ export const CREATE_SCENARIO_ERROR = 'boilerplate/App/CREATE_SCENARIO_ERROR';
 export const CREATE_ENTITY = 'boilerplate/App/CREATE_ENTITY';
 export const CREATE_ENTITY_SUCCESS = 'boilerplate/App/CREATE_ENTITY_SUCCESS';
 export const CREATE_ENTITY_ERROR = 'boilerplate/App/CREATE_ENTITY_ERROR';
+export const CONVERSE = 'boilerplate/App/CONVERSE';
+export const CONVERSE_SUCCESS = 'boilerplate/App/CONVERSE_SUCCESS';
+export const CONVERSE_ERROR = 'boilerplate/App/CONVERSE_ERROR';
 export const DEFAULT_LOCALE = 'en';

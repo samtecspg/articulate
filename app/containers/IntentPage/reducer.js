@@ -16,18 +16,15 @@ const initialState = fromJS({
     agent: null,
     domain: null,
     intentName: '',
-    examples: [
-    ],
+    examples: [],
   },
   scenarioData: {
     agent: null,
     domain: null,
     intent: null,
     scenarioName: '',
-    slots: [
-    ],
-    intentResponses: [
-    ],
+    slots: [],
+    intentResponses: [],
     useWebhook: false,
   },
 });
@@ -113,7 +110,6 @@ function intentReducer(state = initialState, action) {
         }
         return slot;
       });
-      console.log(slots);
       return state
         .setIn(['scenarioData', 'slots'], slots);
     default:
