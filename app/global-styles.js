@@ -373,7 +373,14 @@ injectGlobal`
 
   .mic-icon {
     padding-top: 10px;
-    color: ##4e4e4e;
+    color: #4e4e4e !important;
+    float: right;
+    font-size: 1.5rem;
+  }
+
+  .mic-icon-recording {
+    padding-top: 10px;
+    color: #red !important;
     float: right;
     font-size: 1.5rem;
   }

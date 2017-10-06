@@ -7,6 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import UserMessage from 'components/UserMessage';
 import AgentMessage from 'components/AgentMessage';
 import TestMessageInput from 'components/TestMessageInput';
+import VoiceRecognition  from 'components/VoiceRecognition'
 
 import { Row, Icon, Col, CardPanel } from 'react-materialize';
 
@@ -16,9 +17,27 @@ import { makeSelectConversation, makeSelectLoadingConversation } from 'container
 import { converse } from '../App/actions';
 
 class ConversationBar extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
+  state = {
+    start: false,
+    stop: false,
+  }
+
+  onVoiceRecognitionStart = () => {
+    this.setState({ start: true });
+  }
+
+  onVoiceRecognitionEnd = () => {
+    this.setState({ start: false, stop: false });
+  }
+
+  onResult = ({ finalTranscript }) => {
+    this.setState({ start: false });
+    this.props.onSendVoiceMessage(finalTranscript);
+  }
   
   scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView(true)
+    this.messagesEnd.scrollIntoView(true);
   }
 
   componentDidMount() {
@@ -57,13 +76,24 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
             <div id="form-section">
               <TestMessageInput
                 className="conversationInput"
-                placeholder={messages.conversationPlaceholder.defaultMessage}
+                placeholder={this.state.start && !this.state.stop ? messages.recordingPlaceholder.defaultMessage : messages.conversationPlaceholder.defaultMessage}
                 inputId="intentName"
                 onKeyPress={this.props.onSendMessage}
-                onSpeakClick={this.props.onSendMessage}
+                onSpeakClick={() => this.setState({ start: (!this.state.start) ? true : this.state.start, stop: this.state.start ? true : this.state.stop })}
               />
             </div>
           </ul>
+
+          {this.state.start && (
+            <VoiceRecognition
+              onStart={this.onVoiceRecognitionStart}
+              onEnd={this.onVoiceRecognitionEnd}
+              onResult={this.onResult}
+              continuous={true}
+              lang="en-US"
+              stop={this.state.stop}
+            />
+          )}
         </aside>
     );
   }
@@ -82,6 +112,9 @@ export function mapDispatchToProps(dispatch) {
         dispatch(converse({ agent: 'e3812ed6-b070-a4a7-9391-43151039d839', message: evt.target.value }));
         evt.target.value = null;
       }
+    },
+    onSendVoiceMessage: (message) => {
+      dispatch(converse({ agent: 'e3812ed6-b070-a4a7-9391-43151039d839', message}));
     },
   };
 };
