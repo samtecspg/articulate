@@ -9,21 +9,25 @@ function TextInput(props) { // eslint-disable-line react/prefer-stateless-functi
         <div>
             { 
                 props.label ?
-                (<div>
-                    <label htmlFor={props.id}><FormattedMessage {...props.label} /></label>
+                (<label style={{pointerEvents: 'all'}} htmlFor={props.id}>
                     {
                         props.tooltip ? 
-                        (<Tooltip
-                            tooltip={props.tooltip}
-                            delay={50}
-                            position="top"
-                        >
-                            <a>
-                                <Icon tiny>help_outline</Icon>
-                            </a>
-                        </Tooltip>) : ''
+                        (
+                        <div>
+                            <FormattedMessage {...props.label} />
+                            <Tooltip
+                                tooltip={props.tooltip}
+                                delay={50}
+                                position="top"
+                            >
+                                <a>
+                                    <Icon tiny>help_outline</Icon>
+                                </a>
+                            </Tooltip>
+                        </div>) : 
+                        <FormattedMessage {...props.label} />
                     }
-                </div>) : ''
+                </label>) : ''
             }
             <input 
                 id={props.id}
