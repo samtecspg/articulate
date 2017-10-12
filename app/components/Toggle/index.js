@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-class Toggle extends React.Component { // eslint-disable-line react/prefer-stateless-function
-  render() {
+export function Toggle(props) { // eslint-disable-line react/prefer-stateless-function
     return (
-        <div className="switch">
+        <div className="switch" style={props.right ? { float: 'right' } : {}}>
             <label>
-                Disable
-                <input type="checkbox" />
+                {
+                    <strong>
+                        {props.label ? props.label : null}:
+                    </strong>
+                }
+                <input type="checkbox" onChange={props.onChange} />
                 <span className="lever"></span>
                 Enable
             </label>
         </div>
     );
-  }
-}
+};
+
+Toggle.propTypes = {
+    label: PropTypes.string,
+    right: PropTypes.bool,
+    onChange: PropTypes.func
+};
 
 export default Toggle;

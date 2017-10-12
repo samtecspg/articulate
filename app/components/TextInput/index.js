@@ -1,12 +1,29 @@
 import React, { PropTypes } from 'react';
 import { FormattedMessage } from 'react-intl';
+import Tooltip from '../Tooltip';
+import { Icon } from 'react-materialize';
 
 function TextInput(props) { // eslint-disable-line react/prefer-stateless-function
 
     return (
         <div>
             { 
-                props.label ? <label htmlFor={props.id}><FormattedMessage {...props.label} /></label> : ''
+                props.label ?
+                (<div>
+                    <label htmlFor={props.id}><FormattedMessage {...props.label} /></label>
+                    {
+                        props.tooltip ? 
+                        (<Tooltip
+                            tooltip={props.tooltip}
+                            delay={50}
+                            position="top"
+                        >
+                            <a>
+                                <Icon tiny>help_outline</Icon>
+                            </a>
+                        </Tooltip>) : ''
+                    }
+                </div>) : ''
             }
             <input 
                 id={props.id}
@@ -35,6 +52,7 @@ TextInput.propTypes = {
     style: React.PropTypes.object,
     disabled: React.PropTypes.bool,
     className: React.PropTypes.string,
+    tooltip: React.PropTypes.string,
 };
 
 export default TextInput;

@@ -16,6 +16,7 @@ import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
 import Tooltip from 'components/Tooltip';
 import Chip from 'components/Chip';
+import Toggle from 'components/Toggle';
 
 import { Input, Row, Icon, Dropdown, NavItem, Button } from 'react-materialize';
 
@@ -283,6 +284,9 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       <Content>
         <ContentHeader title={messages.createIntentTitle} subTitle={messages.createIntentDescription} />
         <div id="form-section">
+          <Row>
+            <Toggle label='Webhook' right={true} onChange={this.props.onChangeIntentData.bind(null, 'useWebhook')} />
+          </Row>
           <Row>
             <Input s={12} 
               name='agent'
@@ -574,7 +578,12 @@ export function mapDispatchToProps(dispatch) {
           dispatch(loadAgentEntities(evt.target.value));
           dispatch(changeIntentData({ value: evt.target.value, field }));
         }
-        dispatch(changeIntentData({ value: evt.target.value, field }));
+        if (field === 'useWebhook'){
+          dispatch(changeIntentData({ value: evt.target.checked, field }));
+        }
+        else {
+          dispatch(changeIntentData({ value: evt.target.value, field }));
+        }
       }
     },
     onRemoveExample: (exampleIndex, evt) => {

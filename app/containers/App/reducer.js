@@ -16,6 +16,9 @@ import {
   CREATE_DOMAIN,
   CREATE_DOMAIN_SUCCESS,
   CREATE_DOMAIN_ERROR,
+  CREATE_WEBHOOK,
+  CREATE_WEBHOOK_SUCCESS,
+  CREATE_WEBHOOK_ERROR,
   CREATE_INTENT,
   CREATE_INTENT_SUCCESS,
   CREATE_INTENT_ERROR,
@@ -111,6 +114,20 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+    case CREATE_WEBHOOK:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .setIn(['webhook', 'data'], false);
+    case CREATE_WEBHOOK_SUCCESS:
+      return state
+        .setIn(['webhook', 'data'], action.data)
+        .set('loading', false)
+        .set('currentDomain', action._id);
+    case CREATE_WEBHOOK_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
     case CREATE_INTENT:
       return state
         .set('loading', true)
@@ -155,7 +172,7 @@ function appReducer(state = initialState, action) {
     case CONVERSE_SUCCESS:
       return state
         .set('loadingConversation', false)
-        .update('conversation', conversation => conversation.push({ message: (action.data.intermediateResponse ? action.data.intermediateResponse : action.data.response), author: 'agent' }));
+        .update('conversation', conversation => conversation.push({ message: action.data.textResponse, author: 'agent' }));
     case CONVERSE_ERROR:
       return state
         .set('loadingConversation', false)

@@ -72,6 +72,12 @@ const makeSelectDomain = () => createSelector(
   (globalState) => globalState.getIn(['domain', 'data'])
 );
 
+const makeSelectWebhook = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.getIn(['webhook', 'data'])
+);
+
+
 const makeSelectIntent = () => createSelector(
   selectGlobal,
   (globalState) => globalState.getIn(['intent', 'data'])
@@ -119,6 +125,7 @@ export {
   makeSelectError,
   makeSelectAgent,
   makeSelectDomain,
+  makeSelectWebhook,
   makeSelectIntent,
   makeSelectScenario,
   makeSelectEntity,

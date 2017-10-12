@@ -14,6 +14,9 @@ import {
     CREATE_DOMAIN,
     CREATE_DOMAIN_SUCCESS,
     CREATE_DOMAIN_ERROR,
+    CREATE_WEBHOOK,
+    CREATE_WEBHOOK_SUCCESS,
+    CREATE_WEBHOOK_ERROR,
     CREATE_INTENT,
     CREATE_INTENT_SUCCESS,
     CREATE_INTENT_ERROR,
@@ -127,6 +130,27 @@ import {
   export function domainCreationError(error) {
     return {
       type: CREATE_DOMAIN_ERROR,
+      error,
+    };
+  }
+
+  export function createWebhook() {
+    return {
+      type: CREATE_WEBHOOK,
+    };
+  }
+  
+  export function webhookCreated(data, _id) {
+    return {
+      type: CREATE_WEBHOOK_SUCCESS,
+      data,
+      _id,
+    };
+  }
+  
+  export function webhookCreationError(error) {
+    return {
+      type: CREATE_WEBHOOK_ERROR,
       error,
     };
   }
