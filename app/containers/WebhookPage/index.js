@@ -5,13 +5,15 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
-import TextInput from 'components/TextInput';
+import FormTextInput from 'components/FormTextInput';
 import DropdownInput from 'components/DropdownInput';
 import SliderInput from 'components/SliderInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
 import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
+import Form from 'components/Form';
+import ActionButton from 'components/ActionButton';
 
 import { Input, Row } from 'react-materialize';
 
@@ -68,7 +70,7 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
         <Header/>
         <Content>
           <ContentHeader title={messages.createWebhookTitle} subTitle={messages.createWebhookDescription} />
-          <div id="form-section">
+          <Form>
             <Row>
               <Input s={12} 
                 name='agent'
@@ -78,20 +80,18 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
                 onChange={this.props.onChangeWebhookData.bind(null, 'agent')}>
                     {returnFormattedOptions(agentsSelect)}
               </Input>
-              <div className="input-field col s12">
-                <TextInput
-                  label={messages.url}
-                  placeholder={messages.urlPlaceholder.defaultMessage}
-                  inputId="webhookUrl"
-                  value={this.props.webhookData.webhookUrl}
-                  onChange={this.props.onChangeWebhookData.bind(null, 'webhookUrl')}
-                  required={true}
-                  tooltip={messages.urlTooltip.defaultMessage}
-                  />
-              </div>
+              <FormTextInput
+                label={messages.url}
+                placeholder={messages.urlPlaceholder.defaultMessage}
+                inputId="webhookUrl"
+                value={this.props.webhookData.webhookUrl}
+                onChange={this.props.onChangeWebhookData.bind(null, 'webhookUrl')}
+                required={true}
+                tooltip={messages.urlTooltip.defaultMessage}
+                />
               {/*
               <div className="input-field col s6">
-                <TextInput
+                <FormTextInput
                   label={messages.simpleAuthentication}
                   placeholder={messages.usernamePlaceholder.defaultMessage}
                   inputId="username"
@@ -101,7 +101,7 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
                   />
               </div>
               <div className="input-field col s6">
-                <TextInput
+                <FormTextInput
                   placeholder={messages.passwordPlaceholder.defaultMessage}
                   inputId="password"
                   value={this.props.webhookData.password}
@@ -110,13 +110,9 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
                   />
               </div>*/}
             </Row>
-          </div>
+          </Form>
 
-          <div className="fixed-action-btn">
-            <a className="btn-floating btn-large" onClick={this.props.onSubmitForm}>
-              <FormattedMessage {...messages.saveButton}/>
-            </a>
-          </div>
+          <ActionButton label={messages.saveButton} onClick={this.props.onSubmitForm} />
 
           <Row>
             <p>
