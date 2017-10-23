@@ -43,54 +43,6 @@ const returnFormattedOptions = (options) => {
   });
 };
 
-const renderExamples = (examples, removeExampleFunction, addExampleFunction, removeSynonymFunction, addSynonymFunction) => {
-  const rows = examples.map( (example, exampleIndex) => {
-    const synonyms = example.synonyms.map( (synonym, indexSynonym) => {
-      return (
-        <Chip onClose={removeSynonymFunction.bind(null, example.value, synonym)} key={indexSynonym} id={example.value + '_' + synonym} close={true}>
-          {synonym}
-        </Chip>
-      )
-    });
-    synonyms.push(
-      <TextInput
-        key = {example.value + '_newSynonym'}
-        placeholder={messages.synonymPlaceholder.defaultMessage}
-        inputId={example.value + '_newSynonym'}
-        onKeyPress={addSynonymFunction.bind(null, example.value)}
-        />
-    )
-    return (
-      <tr style={{width: '100%'}} key={exampleIndex} >
-        <td style={{width: '30%', display: 'inline-block'}}>
-          <Chip onClose={removeExampleFunction.bind(null, example.value)} id={example.value}close={true}>
-            {example.value}
-          </Chip>
-        </td>
-        <td style={{width: '70%', display: 'inline-block'}}>
-            {
-              synonyms
-            }
-        </td>
-      </tr>
-    )
-  });
-  rows.push(
-    (<tr style={{width: '100%'}} key="newExample">
-      <td style={{width: '30%', display: 'inline-block'}}>
-        <TextInput
-          placeholder={messages.examplePlaceholder.defaultMessage}
-          inputId="newExample"
-          onKeyPress={addExampleFunction}
-          />
-      </td>
-      <td style={{width: '70%', display: 'inline-block'}}> 
-      </td>
-    </tr>)
-  );
-  return rows;
-};
-
 export class EntityPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount() {
