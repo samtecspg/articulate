@@ -6,7 +6,6 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
 import TextInput from 'components/TextInput';
-import FormTextInput from 'components/FormTextInput';
 import DropdownInput from 'components/DropdownInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
@@ -15,6 +14,7 @@ import Content from 'components/Content';
 import Tooltip from 'components/Tooltip';
 import Chip from 'components/Chip';
 import Form from 'components/Form';
+import FormTextInput from 'components/FormTextInput';
 import InputLabel from 'components/InputLabel';
 import ActionButton from 'components/ActionButton';
 import TableContainer from 'components/TableContainer';
@@ -103,7 +103,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
           </Row>
         </Form>
 
-        <TableContainer>
+        <TableContainer id={"examplesTable"}>
             <Table>
                 <TableHeader columns={[
                   {
