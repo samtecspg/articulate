@@ -6,13 +6,15 @@ import { createStructuredSelector } from 'reselect';
 
 import { makeSelectAgent, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
 
-import TextInput from 'components/TextInput';
+import FormTextInput from 'components/FormTextInput';
 import DropdownInput from 'components/DropdownInput';
 import SliderInput from 'components/SliderInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
 import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
+import Form from 'components/Form';
+import ActionButton from 'components/ActionButton';
 
 import { Input, Row } from 'react-materialize';
 
@@ -61,29 +63,24 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
         <Header />
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createAgentDescription} />
-          <div id="form-section">
+          <Form>
             <Row>
-              <div className="input-field col s12">
-                <TextInput
-                  label={messages.agentName}
-                  placeholder={messages.agentNamePlaceholder.defaultMessage}
-                  inputId="agentName"
-                  value={this.props.agentData.agentName}
-                  onChange={this.props.onChangeAgentData.bind(null, 'agentName')}
-                  required={true}
-                  />
-              </div>
-              <div className="input-field col s12">
-                <TextInput
-                  label={messages.agentDescription}
-                  placeholder={messages.agentDescriptionPlaceholder.defaultMessage}
-                  inputId="agentDescription"
-                  value={this.props.agentData.agentDescription}
-                  onChange={this.props.onChangeAgentData.bind(null, 'agentDescription')}
-                  />
-                <InputWarning text="* Warning description here"/>
-              </div>
-
+              <FormTextInput
+                label={messages.agentName}
+                placeholder={messages.agentNamePlaceholder.defaultMessage}
+                inputId="agentName"
+                value={this.props.agentData.agentName}
+                onChange={this.props.onChangeAgentData.bind(null, 'agentName')}
+                required={true}
+                />
+              <InputWarning text="* This field is required"/>
+              <FormTextInput
+                label={messages.agentDescription}
+                placeholder={messages.agentDescriptionPlaceholder.defaultMessage}
+                inputId="agentDescription"
+                value={this.props.agentData.agentDescription}
+                onChange={this.props.onChangeAgentData.bind(null, 'agentDescription')}
+                />
               <Input s={12} 
                 name='sampleData'
                 type='select' 
@@ -92,7 +89,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'sampleData')}>
                     {returnFormattedOptions(sampleData)}
               </Input>
-              
               <Input s={6} 
                 name='language'
                 type='select' 
@@ -101,7 +97,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'language')}>
                     {returnFormattedOptions(languages)}
               </Input>
-              
               <Input s={6} 
                 name='defaultTimezone'
                 type='select' 
@@ -110,9 +105,8 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'defaultTimezone')}>
                     {returnFormattedOptions(timezones)}
               </Input>
-
             </Row>
-          </div>
+          </Form>
 
           <Row>
             <SliderInput
@@ -125,12 +119,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               />
           </Row>
 
-          <div className="fixed-action-btn">
-            <a className="btn-floating btn-large" onClick={this.props.onSubmitForm}>
-            + Create
-            </a>
-          </div>
-
+          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
           
           <Row>
             <p>
