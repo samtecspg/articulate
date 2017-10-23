@@ -5,13 +5,15 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
-import TextInput from 'components/TextInput';
+import FormTextInput from 'components/FormTextInput';
 import DropdownInput from 'components/DropdownInput';
 import SliderInput from 'components/SliderInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
 import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
+import Form from 'components/Form';
+import ActionButton from 'components/ActionButton';
 
 import { Input, Row } from 'react-materialize';
 
@@ -68,7 +70,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
         <Header/>
         <Content>
           <ContentHeader title={messages.createDomainTitle} subTitle={messages.createDomainDescription} />
-          <div id="form-section">
+          <Form>
             <Row>
               <Input s={12} 
                 name='agent'
@@ -78,19 +80,17 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
                 onChange={this.props.onChangeDomainData.bind(null, 'agent')}>
                     {returnFormattedOptions(agentsSelect)}
               </Input>
-              <div className="input-field col s12">
-                <TextInput
-                  label={messages.domainName}
-                  placeholder={messages.domainNamePlaceholder.defaultMessage}
-                  inputId="domainName"
-                  value={this.props.domainData.domainName}
-                  onChange={this.props.onChangeDomainData.bind(null, 'domainName')}
-                  required={true}
-                  />
-                <InputWarning text="* Warning description here"/>
-              </div>
+              <FormTextInput
+                label={messages.domainName}
+                placeholder={messages.domainNamePlaceholder.defaultMessage}
+                inputId="domainName"
+                value={this.props.domainData.domainName}
+                onChange={this.props.onChangeDomainData.bind(null, 'domainName')}
+                required={true}
+                />
+              <InputWarning text="* This field is required"/>
             </Row>
-          </div>
+          </Form>
 
           <Row>
             <SliderInput
@@ -103,12 +103,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
               />
           </Row>
 
-          <div className="fixed-action-btn">
-            <a className="btn-floating btn-large" onClick={this.props.onSubmitForm}>
-            + Create
-            </a>
-          </div>
-
+          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
           
           <Row>
             <p>

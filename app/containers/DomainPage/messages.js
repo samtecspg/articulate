@@ -26,4 +26,8 @@ export default defineMessages({
     id: 'boilerplate.containers.DomainPage.create_domain.intent_threshold',
     defaultMessage: 'Intent Recognition Threshold',
   },
+  actionButton: {
+    id: 'boilerplate.containers.AgentPage.create_agent.action_button',
+    defaultMessage: '+ Create',
+  },
 });
