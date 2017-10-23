@@ -6,6 +6,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
 import TextInput from 'components/TextInput';
+import FormTextInput from 'components/FormTextInput';
 import DropdownInput from 'components/DropdownInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
@@ -13,6 +14,14 @@ import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
 import Tooltip from 'components/Tooltip';
 import Chip from 'components/Chip';
+import Form from 'components/Form';
+import InputLabel from 'components/InputLabel';
+import ActionButton from 'components/ActionButton';
+import TableContainer from 'components/TableContainer';
+import Table from 'components/Table';
+import TableHeader from 'components/TableHeader';
+import TableBody from 'components/TableBody';
+import Examples from './Examples';
 
 import { Input, Row, Icon } from 'react-materialize';
 
@@ -119,7 +128,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
       <Header />
       <Content>
         <ContentHeader title={messages.createEntityTitle} subTitle={messages.createEntityDescription} />
-        <div id="form-section">
+        <Form>
           <Row>
             <Input s={12} 
               name='agent'
@@ -129,74 +138,45 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               onChange={this.props.onChangeEntityData.bind(null, 'agent')}>
                   {returnFormattedOptions(agentsSelect)}
             </Input>
-            <div className="input-field col s12">
-              <TextInput
-                label={messages.entityName}
-                placeholder={messages.entityNamePlaceholder.defaultMessage}
-                inputId="entityName"
-                value={this.props.entityData.entityName}
-                onChange={this.props.onChangeEntityData.bind(null, 'entityName')}
-                required={true}
+            <FormTextInput
+              label={messages.entityName}
+              placeholder={messages.entityNamePlaceholder.defaultMessage}
+              inputId="entityName"
+              value={this.props.entityData.entityName}
+              onChange={this.props.onChangeEntityData.bind(null, 'entityName')}
+              required={true}
+              />
+            <InputWarning text="* Warning description here"/>
+            <InputLabel text={messages.examples}/>
+          </Row>
+        </Form>
+
+        <TableContainer>
+            <Table>
+                <TableHeader columns={[
+                  {
+                    label: messages.valueColumn.defaultMessage,
+                    tooltip: messages.valueColumnTooltip.defaultMessage,
+                    width: '30%',
+                  },
+                  {
+                    label: messages.synonymsColum.defaultMessage,
+                    tooltip: messages.synonymsColumTooltip.defaultMessage,
+                    width: '70%',
+                  }
+                ]} />
+                <Examples 
+                  examples={this.props.entityData.examples}
+                  addExampleFunction={this.props.onAddExample}
+                  removeExampleFunction={this.props.onRemoveExample}
+                  removeSynonymFunction={this.props.onAddExample}
+                  addSynonymFunction={this.props.onAddSynonym}
                 />
-              <InputWarning text="* Warning description here"/>
-            </div>
-            <div className="col input-field s12">
-                <label><FormattedMessage {...messages.examples} /></label>
-            </div>
-          </Row>
-        </div>
+            </Table>
+        </TableContainer>
 
-        <div id="examplesTable" className="table-container">
-          <Row>
-            <div className="col input-field s12 table-col">
-              <div>
-                <div className="border-container ">
-                    <table className="bordered highlight">
-                        <thead>
-                            <tr style={{width: '100%'}}>
-                                <th style={{width: '30%', display: 'inline-block'}}>
-                                  Value
-                                  <Tooltip
-                                    tooltip="This is one instance of the intent you named upwards"
-                                    delay={50}
-                                    position="top"
-                                  >
-                                    <a>
-                                      <Icon>help_outline</Icon>
-                                    </a>
-                                  </Tooltip>
-                                </th>
-                                <th style={{width: '70%', display: 'inline-block'}}>
-                                  Synonyms  
-                                  <Tooltip
-                                    tooltip="Synonyms will help the agent to recognize this example in several different ways"
-                                    delay={50}
-                                    position="top"
-                                  >
-                                    <a>
-                                      <Icon>help_outline</Icon>
-                                    </a>
-                                  </Tooltip>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {renderExamples(this.props.entityData.examples, this.props.onRemoveExample, this.props.onAddExample, this.props.onRemoveSynonym, this.props.onAddSynonym)}
-                        </tbody>
-                    </table>
-                </div>
-              </div>
-            </div>
-          </Row>
-        </div>
+        <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
 
-        <div className="fixed-action-btn">
-          <a className="btn-floating btn-large" onClick={this.props.onSubmitForm}>
-          + Create
-          </a>
-        </div>
-
-        
         <Row>
           <p>
             {JSON.stringify(entityProps)}
