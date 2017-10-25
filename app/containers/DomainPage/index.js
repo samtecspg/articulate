@@ -88,7 +88,6 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
                 onChange={this.props.onChangeDomainData.bind(null, 'domainName')}
                 required={true}
                 />
-              <InputWarning text="* This field is required"/>
             </Row>
           </Form>
 

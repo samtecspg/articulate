@@ -21,7 +21,7 @@ import TableContainer from 'components/TableContainer';
 import Table from 'components/Table';
 import TableHeader from 'components/TableHeader';
 import TableBody from 'components/TableBody';
-import Examples from './Examples';
+import Examples from './Components/Examples';
 
 import { Input, Row, Icon } from 'react-materialize';
 
@@ -98,7 +98,6 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               onChange={this.props.onChangeEntityData.bind(null, 'entityName')}
               required={true}
               />
-            <InputWarning text="* Warning description here"/>
             <InputLabel text={messages.examples}/>
           </Row>
         </Form>

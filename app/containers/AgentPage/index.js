@@ -24,9 +24,54 @@ import { createAgent } from '../App/actions';
 import { changeAgentData } from './actions';
 import { makeSelectAgentData } from './selectors';
 
-import timezones from './data/timezones.json';
+/*import timezones from './data/timezones.json';
 import languages from './data/languages.json';
-import sampleData from './data/sampleData.json';
+import sampleData from './data/sampleData.json';*/
+
+const timezones = [
+  {
+      "text": "America/Kentucky/Louisville",
+      "value": "America/Kentucky/Louisville"
+  },
+]
+
+const languages = [
+	{
+		"value": "english",
+		"text": "English"
+	},
+	{
+		"value": "german",
+		"text": "German"
+	},
+	{
+		"value": "french",
+		"text": "French"
+	},
+	{
+		"value": "spanish",
+		"text": "Spanish"
+	},
+	{
+		"value": "chinese",
+		"text": "Chinese (Mandarin)"
+	}
+]
+
+const sampleData = [
+	{
+		"value": "smallTalk",
+		"text": "Small Talk Agent"
+	},
+	{
+		"value": "customerService",
+		"text": "Customer Service Agent"
+	},
+	{
+		"value": "bookings",
+		"text": "Bookings Agent"
+	}
+]
 
 const returnFormattedOptions = (options) => {
   return options.map( (option, index) => {
@@ -73,7 +118,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'agentName')}
                 required={true}
                 />
-              <InputWarning text="* This field is required"/>
               <FormTextInput
                 label={messages.agentDescription}
                 placeholder={messages.agentDescriptionPlaceholder.defaultMessage}

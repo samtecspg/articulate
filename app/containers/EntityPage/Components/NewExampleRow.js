@@ -1,7 +1,7 @@
 import React from 'react';
 import TextInput from 'components/TextInput';
 
-import messages from './messages';
+import messages from '../messages';
 
 export function NewExampleRow(props) {
   

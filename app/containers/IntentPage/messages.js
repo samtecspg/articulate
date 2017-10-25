@@ -40,7 +40,7 @@ export default defineMessages({
   },
   responsesInput: {
     id: 'boilerplate.containers.IntentPage.create_intent.user_says_input',
-    defaultMessage: 'example: The weather forecast in @city for the next five days is',
+    defaultMessage: 'example: The weather forecast in $city for the next five days is',
   },
   userSaysSearch: {
     id: 'boilerplate.containers.IntentPage.create_intent.user_says_search',
@@ -102,4 +102,16 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_placeholder',
     defaultMessage: 'Add Text Prompt',    
   },
+  actionButton: {
+    id: 'boilerplate.containers.AgentPage.create_agent.action_button',
+    defaultMessage: '+ Create',
+  },
+  emptyEntityList: {
+    id: 'boilerplate.containers.AgentPage.create_agent.empty_entity_list',
+    defaultMessage: 'Please select an agent first'
+  },
+  createEntity: {
+    id: 'boilerplate.containers.AgentPage.create_agent.create_entity',
+    defaultMessage: '+ Create Entity'
+  }
 });

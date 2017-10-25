@@ -13,13 +13,13 @@ function FormTextInput(props) { // eslint-disable-line react/prefer-stateless-fu
                 label={props.label}
                 placeholder={props.placeholder}
                 value={props.value}
-                onChange={props.id}
-                onKeyPress={props.id}
-                required={props.id}
-                style={props.id}
-                disabled={props.id}
-                className={props.id}
-                tooltip={props.id}
+                onChange={props.onChange}
+                onKeyPress={props.onKeyPress}
+                required={props.required}
+                style={props.style}
+                disabled={props.disabled}
+                className={props.className}
+                tooltip={props.tooltip}
             />
         </div>
     );

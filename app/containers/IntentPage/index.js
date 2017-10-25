@@ -17,6 +17,15 @@ import Content from 'components/Content';
 import Tooltip from 'components/Tooltip';
 import Chip from 'components/Chip';
 import Toggle from 'components/Toggle';
+import Form from 'components/Form';
+import FormTextInput from 'components/FormTextInput';
+import InputLabel from 'components/InputLabel';
+import ActionButton from 'components/ActionButton';
+import TableContainer from 'components/TableContainer';
+import Table from 'components/Table';
+import TableHeader from 'components/TableHeader';
+import TableBody from 'components/TableBody';
+import UserSayings from './Components/UserSayings';
 
 import { Input, Row, Icon, Dropdown, NavItem, Button } from 'react-materialize';
 
@@ -283,7 +292,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       <Header />
       <Content>
         <ContentHeader title={messages.createIntentTitle} subTitle={messages.createIntentDescription} />
-        <div id="form-section">
+        <Form>
           <Row>
             <Toggle label='Webhook' right={true} onChange={this.props.onChangeIntentData.bind(null, 'useWebhook')} />
           </Row>
@@ -304,182 +313,106 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               onChange={this.props.onChangeIntentData.bind(null, 'domain')}>
                   {returnFormattedOptions(domainsSelect)}
             </Input>
-            <div className="col input-field s12">
-              <TextInput
-                label={messages.intentName}
-                placeholder={messages.intentNamePlaceholder.defaultMessage}
-                inputId="intentName"
-                value={this.props.intentData.intentName}
-                onChange={this.props.onChangeIntentData.bind(null, 'intentName')}
-                required={true}
-                />
-            </div>
-            <div className="col input-field s8">
-              <TextInput
-                label={messages.userSaysTitle}
-                placeholder={messages.userSaysInput.defaultMessage}
-                inputId="userSays"
-                onKeyPress={this.props.onChangeIntentData.bind(null, 'examples')}
-                />
-            </div>
-            <div className="col input-field s4">
-              <TextInput
-                placeholder={messages.userSaysSearch.defaultMessage}
-                inputId="userSays"
-                />
-            </div>
+            <FormTextInput
+              label={messages.intentName}
+              placeholder={messages.intentNamePlaceholder.defaultMessage}
+              inputId="intentName"
+              value={this.props.intentData.intentName}
+              onChange={this.props.onChangeIntentData.bind(null, 'intentName')}
+              required={true}
+              />
+            <FormTextInput
+              label={messages.userSaysTitle}
+              placeholder={messages.userSaysInput.defaultMessage}
+              inputId="userSays"
+              onKeyPress={this.props.onChangeIntentData.bind(null, 'examples')}
+              s={8}
+              />
+            <FormTextInput
+              placeholder={messages.userSaysSearch.defaultMessage}
+              inputId="userSays"
+              s={4}
+              />
           </Row>
-        </div>
+        </Form>
 
         { this.props.intentData.examples.length > 0 ? 
-          <div id="userSayingsTable" className="quotes table-container">
-            <Row>
-              <div className="col input-field s12 table-col">
-                <div>
-                  <div className="border-container ">
-                    <table className="bordered highlight">
-                      <tbody>
-                        {renderRows(this.props.intentData.examples, 'userSays', this.props.onRemoveExample, this.props.onTagEntity, agentEntities)}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </Row>
-          </div>
+          <TableContainer id="userSayingsTable" quotes={true}>
+            <Table>
+              <UserSayings examples={this.props.intentData.examples} onRemoveExample={this.props.onRemoveExample} onTagEntity={this.props.onTagEntity} agentEntities={agentEntities} colorArray={colorArray} dirOfColors={dirOfColors} />
+            </Table>
+          </TableContainer>
           : null
         }
 
-        <div style={{marginTop: '0px'}} id="form-section">
+        <Form style={{marginTop: '0px'}}>
           <Row>
-            <div className="col input-field s12">
-                <label><FormattedMessage {...messages.slots} /></label>
-            </div>
+            <InputLabel text={messages.slots}/>
           </Row>
-        </div>
+        </Form>
 
-        <div id="slotsTable" className="table-container">
-          <Row>
-            <div className="col input-field s12 table-col">
-              <div>
-                <div className="border-container ">
-                  <table className="bordered highlight">
-                    <thead>
-                      <tr style={{width: '100%'}}>
-                        <th style={{width: '20%', display: 'inline-block'}}>
-                          <FormattedMessage {...messages.slotNameTitle} />
-                          <Tooltip
-                            tooltip={messages.slotNameTooltip.defaultMessage}
-                            delay={50}
-                            position="top"
-                          >
-                            <a>
-                              <Icon>help_outline</Icon>
-                            </a>
-                          </Tooltip>
-                        </th>
-                        <th style={{width: '15%', display: 'inline-block'}}>
-                          <FormattedMessage {...messages.slotEntityTitle} />
-                          <Tooltip
-                            tooltip={messages.slotEntityTooltip.defaultMessage}
-                            delay={50}
-                            position="top"
-                          >
-                            <a>
-                              <Icon>help_outline</Icon>
-                            </a>
-                          </Tooltip>
-                        </th>
-                        <th style={{width: '10%', display: 'inline-block'}}>
-                          <FormattedMessage {...messages.slotIsListTitle} />
-                          <Tooltip
-                            tooltip={messages.slotIsListTooltip.defaultMessage}
-                            delay={50}
-                            position="top"
-                          >
-                            <a>
-                              <Icon>help_outline</Icon>
-                            </a>
-                          </Tooltip>
-                        </th>
-                        <th style={{width: '15%', display: 'inline-block'}}>
-                          <FormattedMessage {...messages.slotIsRequiredTitle} />
-                          <Tooltip
-                            tooltip={messages.slotIsRequiredTooltip.defaultMessage}
-                            delay={50}
-                            position="top"
-                          >
-                            <a>
-                              <Icon>help_outline</Icon>
-                            </a>
-                          </Tooltip>
-                        </th>
-                        <th style={{width: '40%', display: 'inline-block'}}>
-                          <FormattedMessage {...messages.slotPromptTitle} />
-                          <Tooltip
-                            tooltip={messages.slotPromptTooltip.defaultMessage}
-                            delay={50}
-                            position="top"
-                          >
-                            <a>
-                              <Icon>help_outline</Icon>
-                            </a>
-                          </Tooltip>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {renderSlots(this.props.scenarioData.slots, this.props.onCheckboxChange, this.props.onAddTextPrompt, this.props.onDeleteTextPrompt, this.props.onAddSlot, agentEntities)}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </Row>
-        </div>
+        <TableContainer id="slotsTable">
+          <Table>
+          <TableHeader columns={[
+              {
+                width: '20%',
+                label: messages.slotNameTitle.defaultMessage,
+                tooltip: messages.slotNameTooltip.defaultMessage,
+              },
+              {
+                width: '15%',
+                label: messages.slotEntityTitle.defaultMessage,
+                tooltip: messages.slotEntityTitle.defaultMessage,
+              },
+              {
+                width: '10%',
+                label: messages.slotIsListTitle.defaultMessage,
+                tooltip: messages.slotIsListTitle.defaultMessage,
+              },
+              {
+                width: '15%',
+                label: messages.slotIsRequiredTitle.defaultMessage,
+                tooltip: messages.slotIsRequiredTitle.defaultMessage,
+              },
+              {
+                width: '40%',
+                label: messages.slotPromptTitle.defaultMessage,
+                tooltip: messages.slotPromptTitle.defaultMessage,
+              },
+            ]}/>
+            <tbody>
+              {renderSlots(this.props.scenarioData.slots, this.props.onCheckboxChange, this.props.onAddTextPrompt, this.props.onDeleteTextPrompt, this.props.onAddSlot, agentEntities)}
+            </tbody>
+          </Table>
+        </TableContainer>
 
-        <div style={{marginTop: '0px'}} id="form-section">
+        <Form>
           <Row>
-            <div className="col input-field s12">
-              <Dropdown className='dropdown-slot-entity-selector' trigger={<span id={'intentResponseEntityDropdown'}></span>}>
-                {renderAvailableSlots(this.props.scenarioData.slots, agentEntities, this.props.onAutoCompleteEntityFunction)}
-              </Dropdown>
-              <TextInput
-                label={messages.agentResponsesTitle}
-                placeholder={messages.responsesInput.defaultMessage}
-                id="responses"
-                onKeyPress={this.props.onChangeIntentData.bind(null, 'responses')}
-                />
-            </div>
+            <Dropdown className='dropdown-slot-entity-selector' trigger={<span id={'intentResponseEntityDropdown'}></span>}>
+              {renderAvailableSlots(this.props.scenarioData.slots, agentEntities, this.props.onAutoCompleteEntityFunction)}
+            </Dropdown>
+            <FormTextInput
+              label={messages.agentResponsesTitle}
+              placeholder={messages.responsesInput.defaultMessage}
+              inputId="responses"
+              onKeyPress={this.props.onChangeIntentData.bind(null, 'responses')}
+            />
           </Row>
-        </div>
+        </Form>
 
         { this.props.scenarioData.intentResponses.length > 0 ? 
-          <div id="intentResponsesTable" className="quotes table-container">
-            <Row>
-              <div className="col input-field s12 table-col">
-                <div>
-                  <div className="border-container ">
-                    <table className="bordered highlight">
-                      <tbody>
-                        {renderRows(this.props.scenarioData.intentResponses, null, this.props.onRemoveExample, agentEntities, false)}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </Row>
-          </div>
+          <TableContainer id="intentResponsesTable" quotes={true}>
+            <Table>
+              <tbody>
+                {renderRows(this.props.scenarioData.intentResponses, null, this.props.onRemoveExample, agentEntities, false)}
+              </tbody>
+            </Table>
+          </TableContainer>
           : null
         }
 
-        <div className="fixed-action-btn">
-          <a className="btn-floating btn-large" onClick={this.props.onSubmitForm}>
-          + Create
-          </a>
-        </div>
+        <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
 
-        
         <Row>
           <p>
             Intent Data
