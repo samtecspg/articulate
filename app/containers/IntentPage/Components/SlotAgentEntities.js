@@ -2,15 +2,9 @@ import React from 'react';
 import { NavItem, Dropdown } from 'react-materialize';
 import messages from '../messages';
 import * as camel from 'to-camel-case';
+import { FormattedMessage } from 'react-intl';
 
-/**
- * 
- * This component is the dropdown menu for the entities
- * Given that is present for user sayings and responses
- * it is necessary to use a differente onClick function
- */
-
-export function AgentEntities(props) {
+export function SlotAgentEntities(props) {
 
     let items = [<NavItem style={{color: '#4e4e4e'}} key="newEntity" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>];
     if (props.agentEntities && props.agentEntities.length > 0){
@@ -24,9 +18,8 @@ export function AgentEntities(props) {
             }
             return(
                 <NavItem 
-                    onClick={props.userSays ? 
-                    props.onClickFunction.bind(null, props.userSays, agentEntity._id, camel(agentEntity.entityName)) : 
-                    props.onClickFunction.bind(null, camel(agentEntity.entityName))} 
+                    href={'#'}
+                    onClick={props.onClickFunction.bind(null, camel(agentEntity.entityName))} 
                     key={agentIndex}
                 >
                     <span style={{color: entityColor}}>
@@ -36,32 +29,38 @@ export function AgentEntities(props) {
             )
         });
     }
-
-    items.push(
-        <NavItem key="divider" divider />
-    );
-
-    if (props.createEntity){
-        items.push(
-            <NavItem style={{color: '#4e4e4e'}} key="newEntity" href="/entities/create">{messages.createEntity.defaultMessage}</NavItem>
-        );
-    }
-
     return (
-        <Dropdown className='dropdown-entity-selector' trigger={<span id={'userSayingDropdown_' + props.index}></span>} options={{belowOrigin: true}}>
-            {items}
-        </Dropdown>
+        <td style={{width: '15%', display: 'inline-block', borderBottom: '1px solid #9e9e9e'}}> 
+            <Dropdown 
+                className='dropdown-slot-entity-selector' 
+                trigger={
+                    <span 
+                        style={{ fontWeight: 300, color: '#9e9e9e' }} 
+                        id={'slotEntityDropdown_' + props.index}>
+                        {props.slot.entity ? 
+                        <span style={{color: props.dirOfColors[props.slot.entity]}}>@{camel(props.agentEntity.entityName)}</span> : 
+                        <FormattedMessage {...messages.slotEntityPlaceholder} />}
+                    </span>} 
+                options={
+                    {
+                        belowOrigin: true,
+                    }
+                }
+            >
+                {items}
+            </Dropdown>
+        </td>
     )
 }
 
-AgentEntities.propTypes = {
+SlotAgentEntities.propTypes = {
+    slot: React.PropTypes.object,
+    agentEntity: React.PropTypes.object,
     agentEntities: React.PropTypes.array,
-    userSays: React.PropTypes.string,
     onClickFunction: React.PropTypes.func,
     dirOfColors: React.PropTypes.object,
     colorArray: React.PropTypes.array,
     index: React.PropTypes.number,
-    createEntity: React.PropTypes.bool,
 };
 
-export default AgentEntities;
+export default SlotAgentEntities;

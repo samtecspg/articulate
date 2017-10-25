@@ -9,13 +9,9 @@ import * as camel from 'to-camel-case';
 import { createStructuredSelector } from 'reselect';
 
 import TextInput from 'components/TextInput';
-import DropdownInput from 'components/DropdownInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
-import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
-import Tooltip from 'components/Tooltip';
-import Chip from 'components/Chip';
 import Toggle from 'components/Toggle';
 import Form from 'components/Form';
 import FormTextInput from 'components/FormTextInput';
@@ -26,8 +22,11 @@ import Table from 'components/Table';
 import TableHeader from 'components/TableHeader';
 import TableBody from 'components/TableBody';
 import UserSayings from './Components/UserSayings';
+import Slots from './Components/Slots';
+import AvailableSlots from './Components/AvailableSlots';
+import Responses from './Components/Responses';
 
-import { Input, Row, Icon, Dropdown, NavItem, Button } from 'react-materialize';
+import { Input, Row } from 'react-materialize';
 
 import messages from './messages';
 
@@ -36,14 +35,6 @@ import { makeSelectCurrentAgent, makeSelectCurrentDomain, makeSelectAgentEntitie
 
 import { changeIntentData, tagEntity, untagEntity, toggleFlag, addTextPrompt, deleteTextPrompt } from './actions';
 import { makeSelectIntentData, makeSelectScenarioData } from './selectors';
-
-function compareEntities(a,b) {
-  if (a.start < b.start)
-    return -1;
-  if (a.start > b.start)
-    return 1;
-  return 0;
-}
 
 const returnFormattedOptions = (options) => {
   return options.map( (option, index) => {
@@ -57,192 +48,6 @@ const returnFormattedOptions = (options) => {
 
 const colorArray = ['#f44336','#E91E63','#9C27B0','#673AB7','#3F51B5','#2196F3','#03A9F4','#00BCD4','#009688','#4CAF50','#8BC34A'];
 const dirOfColors = {};
-
-const highlightEntity= (agentEntities, dropDownButtonId, e) => {
-  if (agentEntities){
-    const dropDownButton = document.getElementById(dropDownButtonId);
-    dropDownButton.dispatchEvent(new Event('click'));
-  }
-};
-
-const renderAgentEntities = (agentEntities, onClickFunction, userSays, createEntity) => {
-  let items = [<NavItem style={{color: '#4e4e4e'}} key="newEntity" href="#">Please select an agent first</NavItem>];
-  if (agentEntities && agentEntities.length > 0){
-    items = agentEntities.map( (agentEntity, index) => {
-      let entityColor = dirOfColors[agentEntity._id];
-      if (!entityColor){
-        const randomColorIndex = Math.floor(Math.random() * colorArray.length);
-        entityColor = colorArray[randomColorIndex];
-        dirOfColors[agentEntity._id] = entityColor;
-        colorArray.splice(randomColorIndex, 1)
-      }
-      return(
-        <NavItem onClick={userSays ? onClickFunction.bind(null, userSays, agentEntity._id, camel(agentEntity.entityName)) : onClickFunction.bind(null, camel(agentEntity.entityName))} key={index}><span style={{color: entityColor}}>@{camel(agentEntity.entityName)}</span></NavItem>
-      )
-    });
-    items.push(
-      <NavItem key="divider" divider />
-    );
-    if (createEntity){
-      items.push(
-        <NavItem style={{color: '#4e4e4e'}} key="newEntity" href="/entities/create">+ Create Entity</NavItem>
-      );
-    }
-  }
-  return items;
-};
-
-const renderAvailableSlots = (slots, agentEntities, onClickFunction) => {
-  let items = [<NavItem style={{color: '#4e4e4e'}} key="selectAgent" href="#">You haven't created slots</NavItem>];
-  if (slots && slots.length > 0){
-    items = slots.map( (slot, index) => {
-      const agentEntity = agentEntities.filter( (agentEntity) => {
-        return agentEntity._id === slot.entity;
-      })[0];
-      let entityColor = dirOfColors[slot.entity];
-      if (!entityColor){
-        const randomColorIndex = Math.floor(Math.random() * colorArray.length);
-        entityColor = colorArray[randomColorIndex];
-        dirOfColors[slot.entity] = entityColor;
-        colorArray.splice(randomColorIndex, 1)
-      }
-      return(
-        <NavItem onClick={onClickFunction.bind(null, camel(agentEntity.entityName))} key={index}><span style={{color: entityColor}}>${camel(agentEntity.entityName)}</span></NavItem>
-      )
-    });
-  }
-  return items;
-};
-
-const recursiveFormattingMethod = (sortedEntities, textValue, entityIndex, lastStart) => {
-  const entity = sortedEntities.length > 0 ? sortedEntities.splice(0,1)[0] : null;
-  let formattedElement = null;
-  if (entity) {
-    const beforeTaggedText = textValue.substring(0, entity.start - lastStart);
-    const taggedText = textValue.substring(entity.start - lastStart, entity.end - lastStart);
-    const afterTaggedText = textValue.substring(entity.end - lastStart, textValue.length);
-    let highlightColor = dirOfColors[entity.entity];
-    if (!highlightColor){
-      const randomColorIndex = Math.floor(Math.random() * colorArray.length);
-      highlightColor = colorArray[randomColorIndex];
-      colorArray.splice(randomColorIndex, 1);
-    }
-    formattedElement = (
-      <span key={'entityTag_' + entityIndex}>
-        <span key={'beforeEntityTagText_' + entityIndex}>{beforeTaggedText}</span>
-        <span key={'entityTagText_' + entityIndex} style={{ backgroundColor: highlightColor, color: 'white'}}>{taggedText}</span>
-        {recursiveFormattingMethod(sortedEntities, afterTaggedText, entityIndex + 1, entity.end)}
-      </span>
-    );
-  }
-  else{
-    formattedElement = (
-      <span key={'entityTag_' + entityIndex}>
-        {textValue}
-      </span>
-    );
-  }
-  return formattedElement;
-};
-
-const renderRows = (values, field, removeRowFunction, tagEntityFunction, agentEntities) => {
-  const rows = values.map( (value, valueIndex) => {
-    const textValue = field ? value[field] : value;
-    let formattedText = null;
-    if (field && value.entities.length > 0){
-      const sortedEntities = value.entities.sort(compareEntities);
-      formattedText = recursiveFormattingMethod(sortedEntities, textValue, 0, 0);
-    }
-    return (
-      <tr style={{width: '100%'}} key={valueIndex} >
-        <td style={{width: '100%', display: 'inline-block'}}>
-          {
-            field ?
-            <div>
-                <span id={'userSaying_' + valueIndex} onMouseUp={highlightEntity.bind(null, agentEntities, 'userSayingDropdown_' + valueIndex)}>{formattedText ? formattedText : textValue}</span>
-                <Dropdown className='dropdown-entity-selector' trigger={<span id={'userSayingDropdown_' + valueIndex}></span>} options={{belowOrigin: true}}>
-                  {renderAgentEntities(agentEntities, tagEntityFunction, textValue, true)}
-                </Dropdown>
-                <a onClick={removeRowFunction.bind(null, textValue)}>
-                  <Icon className="table-delete-row">delete</Icon>
-                </a>
-            </div>
-            : 
-            <div>
-                <span id={'intentResponse_' + valueIndex}>{textValue}</span>
-                <a onClick={removeRowFunction.bind(null, textValue)}>
-                  <Icon className="table-delete-row">delete</Icon>
-                </a>
-            </div>
-          }
-        </td>
-      </tr>
-    )
-  });
-  return rows;
-};
-
-const renderSlots = (slots, onCheckboxChange, onAddTextPrompt, onDeleteTextPrompt, onAddSlot, agentEntities) => {
-  const rows = slots.map( (slot, slotIndex) => {
-    const agentEntity = agentEntities.filter( (agentEntity) => {
-      return agentEntity._id === slot.entity;
-    })[0];
-    const textPrompts = slot.textPrompts.map( (textPrompt, indexTextPrompt) => {
-      return (
-        <Chip onClose={onDeleteTextPrompt.bind(null, slot.slotName, textPrompt)} key={'slot_' + slotIndex + '_textPrompt_' + indexTextPrompt} close={true}>
-          {textPrompt}
-        </Chip>
-      )
-    });
-    textPrompts.push(
-      <TextInput
-        style={{ marginBottom: '0px'}}
-        key = {'newPrompt'}
-        placeholder={messages.slotPromptPlaceholder.defaultMessage}
-        inputId={'newPrompt'}
-        onKeyPress={onAddTextPrompt.bind(null, slot.slotName)}
-        disabled={!slot.isRequired}
-      />
-    )
-    return (
-      <tr style={{width: '100%'}} key={slotIndex} >
-        <td style={{width: '20%', display: 'inline-block'}}>
-          <span style={{color: dirOfColors[slot.entity]}}>${camel(slot.slotName)}</span>
-        </td>
-        <td style={{width: '15%', display: 'inline-block', borderBottom: '1px solid #9e9e9e'}}> 
-          <Dropdown 
-            className='dropdown-slot-entity-selector' 
-            trigger={
-                <span 
-                  style={{ fontWeight: 300, color: '#9e9e9e' }} 
-                  id={'slotEntityDropdown_'+slotIndex}>
-                    {slot.entity ? <span style={{color: dirOfColors[slot.entity]}}>@{camel(agentEntity.entityName)}</span> : <FormattedMessage {...messages.slotEntityPlaceholder} />}
-                </span>} 
-            options={
-              {
-                belowOrigin: true,
-              }
-            }
-            >
-              {renderAgentEntities(agentEntities, () => {}, null, false)}
-          </Dropdown>
-        </td>
-        <td style={{width: '10%', display: 'inline-block', paddingBottom: '0px'}}>
-          <Input onChange={onCheckboxChange.bind(null, slot.slotName, 'isList')} name='isList' type='checkbox' value='isList' label=' ' className='filled-in' defaultChecked={ slot.isList ? 'required' : null }  />
-        </td>
-        <td style={{width: '15%', display: 'inline-block', paddingBottom: '0px'}}>
-          <Input onChange={onCheckboxChange.bind(null, slot.slotName, 'isRequired')} name='isRequired' type='checkbox' label=' ' value='isRequired' className='filled-in' defaultChecked={ slot.isRequired ? 'required' : null }/>
-        </td>
-        <td style={{width: '35%', display: 'inline-block'}}>
-            {
-              textPrompts
-            }
-        </td>
-      </tr>
-    )
-  });
-  return rows;
-};
 
 export class IntentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -380,21 +185,32 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 tooltip: messages.slotPromptTitle.defaultMessage,
               },
             ]}/>
-            <tbody>
-              {renderSlots(this.props.scenarioData.slots, this.props.onCheckboxChange, this.props.onAddTextPrompt, this.props.onDeleteTextPrompt, this.props.onAddSlot, agentEntities)}
-            </tbody>
+            <Slots
+                slots={this.props.scenarioData.slots}
+                onCheckboxChange={this.props.onCheckboxChange}
+                onAddTextPrompt={this.props.onAddTextPrompt} 
+                onDeleteTextPrompt={this.props.onDeleteTextPrompt}
+                onAddSlot={this.props.onAddSlot}
+                agentEntities={agentEntities}
+                colorArray={colorArray}
+                dirOfColors={dirOfColors}
+            />
           </Table>
         </TableContainer>
 
         <Form>
           <Row>
-            <Dropdown className='dropdown-slot-entity-selector' trigger={<span id={'intentResponseEntityDropdown'}></span>}>
-              {renderAvailableSlots(this.props.scenarioData.slots, agentEntities, this.props.onAutoCompleteEntityFunction)}
-            </Dropdown>
+            <AvailableSlots 
+              slots={this.props.scenarioData.slots} 
+              agentEntities={agentEntities} 
+              onClickFunction={this.props.onAutoCompleteEntityFunction}
+              colorArray={colorArray}
+              dirOfColors={dirOfColors} 
+            />
             <FormTextInput
               label={messages.agentResponsesTitle}
               placeholder={messages.responsesInput.defaultMessage}
-              inputId="responses"
+              id="responses"
               onKeyPress={this.props.onChangeIntentData.bind(null, 'responses')}
             />
           </Row>
@@ -403,9 +219,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         { this.props.scenarioData.intentResponses.length > 0 ? 
           <TableContainer id="intentResponsesTable" quotes={true}>
             <Table>
-              <tbody>
-                {renderRows(this.props.scenarioData.intentResponses, null, this.props.onRemoveExample, agentEntities, false)}
-              </tbody>
+              <Responses intentResponses={this.props.scenarioData.intentResponses} onRemoveResponse={this.props.onRemoveExample} />
             </Table>
           </TableContainer>
           : null
@@ -520,6 +334,9 @@ export function mapDispatchToProps(dispatch) {
       }
     },
     onRemoveExample: (exampleIndex, evt) => {
+
+    },
+    onRemoveResponse: (exampleIndex, evt) => {
 
     },
     onAddSlot: (evt) => {

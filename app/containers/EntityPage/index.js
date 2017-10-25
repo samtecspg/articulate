@@ -6,13 +6,9 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
 import TextInput from 'components/TextInput';
-import DropdownInput from 'components/DropdownInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
-import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
-import Tooltip from 'components/Tooltip';
-import Chip from 'components/Chip';
 import Form from 'components/Form';
 import FormTextInput from 'components/FormTextInput';
 import InputLabel from 'components/InputLabel';
@@ -23,7 +19,7 @@ import TableHeader from 'components/TableHeader';
 import TableBody from 'components/TableBody';
 import Examples from './Components/Examples';
 
-import { Input, Row, Icon } from 'react-materialize';
+import { Input, Row } from 'react-materialize';
 
 import messages from './messages';
 

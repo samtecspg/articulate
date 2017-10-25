@@ -1,8 +1,8 @@
 import React from 'react';
-import Synonym from './Synonym';
-import NewSynonymInput from './NewSynonymInput';
+import TextPrompt from './TextPrompt';
+import NewTextPromptInput from './NewTextPromptInput';
 
-export function Synonyms(props) {
+export function TextPrompts(props) {
 
     const rows = props.slot.textPrompts.map( (textPrompt, indexTextPrompt) => {
         return (
@@ -12,23 +12,25 @@ export function Synonyms(props) {
 
     rows.push(
         <NewTextPromptInput
-            key = {props.example.value + '_newSynonym'}
-            example={props.example}
-            addSynonymFunction={props.addSynonymFunction}
+            key = {props.slot.slotName + '_newTextPrompt'}
+            slot={props.slot}
+            onAddTextPrompt={props.onAddTextPrompt}
         />
     );
   
     return (
-        <td style={{width: '70%', display: 'inline-block'}}>
-            {rows}
+        <td style={{width: '35%', display: 'inline-block'}}>
+            {
+              rows
+            }
         </td>
     )
 }
 
-Synonyms.propTypes = {
-    example: React.PropTypes.object,
-    removeSynonymFunction: React.PropTypes.func,
-    addSynonymFunction: React.PropTypes.func,
+TextPrompts.propTypes = {
+    slot: React.PropTypes.object,
+    onDeleteTextPrompt: React.PropTypes.func,
+    onAddTextPrompt: React.PropTypes.func,
 };
 
-export default Synonyms;
+export default TextPrompts;

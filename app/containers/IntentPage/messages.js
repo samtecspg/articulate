@@ -113,5 +113,9 @@ export default defineMessages({
   createEntity: {
     id: 'boilerplate.containers.AgentPage.create_agent.create_entity',
     defaultMessage: '+ Create Entity'
-  }
+  },
+  emptySlotList: {
+    id: 'boilerplate.containers.AgentPage.create_agent.empty_slot_list',
+    defaultMessage: 'You haven\'t created slots'
+  },
 });

@@ -39,6 +39,7 @@ export function UserSayingsRows(props) {
                     onClickFunction={props.onTagEntity}
                     dirOfColors={props.dirOfColors}
                     colorArray={props.colorArray}
+                    createEntity={true}
                 />
                 <a onClick={props.onRemoveExample.bind(null, textValue)}>
                 <Icon className="table-delete-row">delete</Icon>

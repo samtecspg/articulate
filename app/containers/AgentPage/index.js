@@ -7,11 +7,9 @@ import { createStructuredSelector } from 'reselect';
 import { makeSelectAgent, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
 
 import FormTextInput from 'components/FormTextInput';
-import DropdownInput from 'components/DropdownInput';
 import SliderInput from 'components/SliderInput';
 import Header from 'components/Header';
 import ContentHeader from 'components/ContentHeader';
-import InputWarning from 'components/InputWarning';
 import Content from 'components/Content';
 import Form from 'components/Form';
 import ActionButton from 'components/ActionButton';
