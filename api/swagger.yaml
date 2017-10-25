@@ -1,0 +1,750 @@
+swagger: '2.0'
+info:
+  description: This is the API for the NLU module of the Smart Platform Group at Samtec.
+  version: 1.0.0
+  title: Natural Language Understanding
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: daniel.calvo@samtec.com
+host: data.samtec.com
+basePath: /nlu/v1
+tags:
+  - name: entity
+    description: >-
+      The entity endpoint is used to create, retrieve, update, and delete
+      developer-defined entity objects
+  - name: intent
+    description: >-
+      The intent endpoint is used to create, retrieve, update, and delete intent
+      objects.
+  - name: domain
+    description: >-
+      The domain endpoint is used to create, retrieve, update, and delete domain
+      objects.
+schemes:
+  - http
+paths:
+  /entity:
+    get:
+      tags:
+        - entity
+      summary: Retrieves a list of all entitites in the domain
+      description: ''
+      operationId: findEntities
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+        '404':
+          description: Entities not found
+    post:
+      tags:
+        - entity
+      summary: Creates one or multiple entities
+      description: ''
+      operationId: createEntity
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Array with the entities objects that needs to be created
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+        '400':
+          description: Bad Request
+    put:
+      tags:
+        - entity
+      summary: Updates or creates miltiple entities
+      description: ''
+      operationId: upsertEntity
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            Array with the entity or entities that needs to be updated or
+            created
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad Request
+  '/entitiy/{id}':
+    get:
+      tags:
+        - entity
+      summary: Find the specified entity
+      description: Returns a single entity
+      operationId: findById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the entity to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Entity'
+        '404':
+          description: Entity not found
+    put:
+      tags:
+        - entity
+      summary: Updates the specified entity
+      description: ''
+      operationId: updateById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Entity id to update
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Entity object with updated values
+          required: true
+          schema:
+            $ref: '#/definitions/Entity'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad Request
+        '404':
+          description: Entity not found
+    delete:
+      tags:
+        - entity
+      summary: Deletes the specified entity
+      description: ''
+      operationId: deleteById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Entity id to delete
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: Entity not found
+  /intent:
+    get:
+      tags:
+        - intent
+      summary: Retrieves a list of all intents in the domain
+      description: ''
+      operationId: findIntents
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Intent'
+        '404':
+          description: Intents not found
+    post:
+      tags:
+        - intent
+      summary: Creates one or multiple intents
+      description: ''
+      operationId: createIntent
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Array with the intents objects that needs to be created
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Intent'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Intent'
+        '400':
+          description: Bad Request
+    put:
+      tags:
+        - intent
+      summary: Updates or creates miltiple intents
+      description: ''
+      operationId: upsertIntent
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Array with the intent or intents that needs to be updated or created
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Intent'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad Request
+  '/intent/{id}':
+    get:
+      tags:
+        - intent
+      summary: Find the specified intent
+      description: Returns a single intent
+      operationId: findIntentById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the intent to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Intent'
+        '404':
+          description: Intent not found
+    put:
+      tags:
+        - intent
+      summary: Updates the specified intent
+      description: ''
+      operationId: updateIntentById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Intent id to update
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Intent object with updated values
+          required: true
+          schema:
+            $ref: '#/definitions/Intent'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad Request
+        '404':
+          description: Intent not found
+    delete:
+      tags:
+        - intent
+      summary: Deletes the specified intent
+      description: ''
+      operationId: deleteIntentById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Intent id to delete
+          required: true
+          type: string
+      responses:
+        '404':
+          description: Intent not found
+  /domain:
+    get:
+      tags:
+        - domain
+      summary: Retrieves a list of all domains
+      description: ''
+      operationId: findDomains
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Domain'
+        '404':
+          description: Domains not found
+    post:
+      tags:
+        - domain
+      summary: Creates one or multiple domains
+      description: ''
+      operationId: createDomain
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Array with the domains objects that needs to be created
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Domain'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Domain'
+        '400':
+          description: Bad Request
+    put:
+      tags:
+        - domain
+      summary: Updates or creates miltiple domains
+      description: ''
+      operationId: upsertDomain
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Array with the domain or domains that needs to be updated or created
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Domain'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad Request
+  '/domain/{id}':
+    get:
+      tags:
+        - domain
+      summary: Find the specified domain
+      description: ''
+      operationId: findDomainById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the domain to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Domain'
+        '404':
+          description: Domain not found
+    put:
+      tags:
+        - domain
+      summary: Updates the specified domain
+      description: ''
+      operationId: updateDomainById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Domain id to update
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Domain object with updated values
+          required: true
+          schema:
+            $ref: '#/definitions/Domain'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad Request
+        '404':
+          description: Domain not found
+    delete:
+      tags:
+        - domain
+      summary: Deletes the specified domain
+      description: ''
+      operationId: deleteDomainById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Domain id to delete
+          required: true
+          type: string
+      responses:
+        '404':
+          description: Domain not found
+  '/domain/{id}/intent':
+    get:
+      tags:
+        - domain
+      summary: Find intents for the specified domain
+      description: ''
+      operationId: findIntentsByid
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the domain to return the intents
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Intent'
+        '404':
+          description: Domain not found
+    post:
+      tags:
+        - domain
+      summary: Add an array of intents to the specified domain
+      description: ''
+      operationId: addIntentsByid
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the domain where the intents will be added
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Array of Intents objects with updated values
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Intent'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Domain'
+        '400':
+          description: Bad Request
+        '404':
+          description: Domain not found
+    delete:
+      tags:
+        - domain
+      summary: Deletes the intents for the specified domain
+      description: ''
+      operationId: deleteIntentsByid
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Domain id to where the intents area going to be delete
+          required: true
+          type: string
+      responses:
+        '404':
+          description: Domain not found
+  /doc:
+    get:
+      tags:
+        - doc
+      summary: Retrieves a list of all documents
+      description: ''
+      operationId: getDocuments
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentResponse'
+        '404':
+          description: Documents not found
+  '/doc/{id}':
+    get:
+      tags:
+        - doc
+      summary: Find the specified document
+      description: ''
+      operationId: findDocById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DocumentResponse'
+        '404':
+          description: Document not found
+    delete:
+      tags:
+        - doc
+      summary: Deletes the specified document
+      description: ''
+      operationId: deleteDocumentById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Doc id to delete
+          required: true
+          type: string
+      responses:
+        '404':
+          description: Domain not found
+  /parse:
+    get:
+      tags:
+        - parse
+      summary: Parse a text
+      description: ''
+      operationId: parseDocument
+      parameters:
+        - name: text
+          in: query
+          description: Text that is going to be parsed
+          required: true
+          type: string
+        - name: domain
+          in: query
+          description: Optional domain to restrict parsing to just this domain
+          required: false
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentResponse'
+        '404':
+          description: Domain not found
+definitions:
+  Domain:
+    type: object
+    properties:
+      id:
+        type: string
+        example: 94de64ab-3123-45ac-9364-5b9325931b9a
+      name:
+        type: string
+        example: restaurant
+      entities:
+        type: array
+        items:
+          $ref: '#/definitions/Entity'
+      intents:
+        type: array
+        items:
+          $ref: '#/definitions/Intent'
+      lastTraining:
+        type: string
+        format: date-time
+  Entry:
+    type: object
+    required:
+      - value
+      - synonyms
+    properties:
+      id:
+        type: string
+        example: baeda84e-5925-43c3-92ca-6e9928229783
+      value:
+        type: string
+        example: indian
+      synonyms:
+        type: array
+        items:
+          type: string
+        example: '[''indian'',''indi'']'
+  Entity:
+    type: object
+    required:
+      - name
+      - entries
+    properties:
+      id:
+        type: string
+        example: ab0e5373-78e7-4745-a058-6813d81eea60
+      name:
+        type: string
+        example: cuisine
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/Entry'
+        example: >-
+          [{'value': 'indian', 'synonyms': ['indian', 'indi']},{'value':
+          'italian', 'synonyms': ['italian']}]
+  Intent:
+    type: object
+    properties:
+      id:
+        type: string
+        example: 377efb40-9680-49ab-b119-e0345a48639c
+      intent:
+        type: string
+        example: restaurant_search
+      text:
+        type: string
+        example: I'm looking for indian cuisine
+      entities:
+        type: array
+        items:
+          type: object
+          properties:
+            start:
+              type: integer
+              format: int32
+              example: 16
+            end:
+              type: integer
+              format: int32
+              example: 22
+            entity:
+              type: string
+              example: ab0e5373-78e7-4745-a058-6813d81eea60
+  Document:
+    type: object
+    properties:
+      document:
+        type: string
+        example: I want to order some Chinese food.
+      domain:
+        type: string
+        example: restaurant
+  DocumentResponse:
+    type: object
+    properties:
+      document:
+        type: string
+        example: I want to order some Chinese food.
+      id:
+        type: string
+        example: asdfas345234sadfaewr2
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            domain:
+              type: string
+              example: restaurant
+            intent:
+              type: string
+              example: restaurant_search
+            confidence:
+              type: number
+              format: float
+              example: 0.9127775465094253
+            entities:
+              type: array
+              items:
+                type: object
+                properties:
+                  start:
+                    type: integer
+                    format: int32
+                    example: 21
+                  end:
+                    type: integer
+                    format: int32
+                    example: 28
+                  entityValue:
+                    type: string
+                    example: chinese
+                  entityName:
+                    type: string
+                    example: cuisine
+        example:
+          - domain: food
+            intent: restaurant_search
+            confidence: 0.9127775465094253
+            entities:
+              - start: 8
+                end: 15
+                entityValue: chinese
+                entityName: cuisine
+          - domain: geo
+            intent: country_search
+            confidence: 0.1127775465094253
+            entities:
+              - start: 8
+                end: 15
+                entityValue: China
+                entityName: country
