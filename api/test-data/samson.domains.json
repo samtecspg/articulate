@@ -1,0 +1,20 @@
+[
+    {
+        "agent": "agentId",
+        "domainName": "Sales",
+        "enabled": true,
+        "intentThreshold": 0.7
+    },
+    {
+        "agent": "agentId",
+        "domainName": "Small Talk",
+        "enabled": true,
+        "intentThreshold": 0.55
+    },
+    {
+        "agent": "agentId",
+        "domainName": "Corporate",
+        "enabled": true,
+        "intentThreshold": 0.7
+    }
+]

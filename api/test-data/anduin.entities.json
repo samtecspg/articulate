@@ -1,0 +1,472 @@
+[
+    {
+        "name": "anduinStation",
+        "entries": [
+            {
+                "value": "ACTIVEALIGN-01"
+            },
+            {
+                "value": "AICTEST-01"
+            },
+            {
+                "value": "CR-HDRSER-01"
+            },
+            {
+                "value": "LAB3-01"
+            },
+            {
+                "value": "LI_TEST-01"
+            },
+            {
+                "value": "NA-ALEXE"
+            },
+            {
+                "value": "NA-ALEXWR"
+            },
+            {
+                "value": "NA-ATG-1"
+            },
+            {
+                "value": "NA-ATG-3"
+            },
+            {
+                "value": "NA-BRIANP"
+            },
+            {
+                "value": "NA-CALEBK"
+            },
+            {
+                "value": "NA-CATIEE"
+            },
+            {
+                "value": "NA-CIRRISTEST"
+            },
+            {
+                "value": "NA-ETEST-01"
+            },
+            {
+                "value": "NA-ETEST-02"
+            },
+            {
+                "value": "NA-FADC-04"
+            },
+            {
+                "value": "NA-FADC-08"
+            },
+            {
+                "value": "NA-FASTMT-01"
+            },
+            {
+                "value": "NA-FASTMT-02"
+            },
+            {
+                "value": "NA-FASTMT-03"
+            },
+            {
+                "value": "NA-FASTMT-04"
+            },
+            {
+                "value": "NA-HDRLT-01"
+            },
+            {
+                "value": "NA-HDRLT-02"
+            },
+            {
+                "value": "NA-HDRLT-03"
+            },
+            {
+                "value": "NA-HDRLT-04"
+            },
+            {
+                "value": "NA-HDRRF-01"
+            },
+            {
+                "value": "NA-HDRRF-02"
+            },
+            {
+                "value": "NA-HSCONT-01"
+            },
+            {
+                "value": "NA-LinkTest-01"
+            },
+            {
+                "value": "NA-MICHAELD"
+            },
+            {
+                "value": "NA-NicksLaptop"
+            },
+            {
+                "value": "NA-OPDC-01"
+            },
+            {
+                "value": "NA-OPDC-02"
+            },
+            {
+                "value": "NA-OPDC-03"
+            },
+            {
+                "value": "NA-OPDC-04"
+            },
+            {
+                "value": "NA-OPFA-01"
+            },
+            {
+                "value": "NA-OPFA-02"
+            },
+            {
+                "value": "NA-OPFA-03"
+            },
+            {
+                "value": "NA-OPFA-04"
+            },
+            {
+                "value": "NA-OPFA-05"
+            },
+            {
+                "value": "NA-OPFA-06"
+            },
+            {
+                "value": "NA-OPFP-05"
+            },
+            {
+                "value": "NA-OPLT-01"
+            },
+            {
+                "value": "NA-OPTIC3"
+            },
+            {
+                "value": "NA-OPTICS-10"
+            },
+            {
+                "value": "NA-OPTICSDPSS"
+            },
+            {
+                "value": "NA-PCT-01"
+            },
+            {
+                "value": "NA-PROG-01"
+            },
+            {
+                "value": "NA-PROG-02"
+            },
+            {
+                "value": "NA-REL-01"
+            },
+            {
+                "value": "NA-REL-02"
+            },
+            {
+                "value": "NA-REL-03"
+            },
+            {
+                "value": "NA-REL-04"
+            },
+            {
+                "value": "NA-REL-05"
+            },
+            {
+                "value": "NA-REL-06"
+            },
+            {
+                "value": "NA-REL-07"
+            },
+            {
+                "value": "NA-REL-08"
+            },
+            {
+                "value": "NA-RF-01"
+            },
+            {
+                "value": "NA-RF-02"
+            },
+            {
+                "value": "NA-TEMPCAL-01"
+            },
+            {
+                "value": "NA-TEMPCAL-02"
+            },
+            {
+                "value": "NA-TEMPCAL-03"
+            },
+            {
+                "value": "NIKON-01"
+            },
+            {
+                "value": "REFLECTION-OBR-01"
+            },
+            {
+                "value": "RF-DEBUG-01"
+            },
+            {
+                "value": "RFLAB-01"
+            },
+            {
+                "value": "SME-ABS-01"
+            },
+            {
+                "value": "SME-BT-01"
+            },
+            {
+                "value": "SME-BT-02"
+            },
+            {
+                "value": "SME-BT-03"
+            },
+            {
+                "value": "SME-CR4-INSPECT"
+            },
+            {
+                "value": "SME-DANIELBRA"
+            },
+            {
+                "value": "SME-DC-02"
+            },
+            {
+                "value": "SME-DC-03"
+            },
+            {
+                "value": "SME-DC-04"
+            },
+            {
+                "value": "SME-DC-05"
+            },
+            {
+                "value": "SME-DC-06"
+            },
+            {
+                "value": "SME-DC-07"
+            },
+            {
+                "value": "SME-DC-08"
+            },
+            {
+                "value": "SME-DC-09"
+            },
+            {
+                "value": "SME-DC1TestStation"
+            },
+            {
+                "value": "SME-ENG-01"
+            },
+            {
+                "value": "SME-ENGTEST-01"
+            },
+            {
+                "value": "SME-ENGTEST-02"
+            },
+            {
+                "value": "SME-ENGTEST-03"
+            },
+            {
+                "value": "SME-ENGTEST-04"
+            },
+            {
+                "value": "SME-JASONM2"
+            },
+            {
+                "value": "SME-JASONME"
+            },
+            {
+                "value": "SME-LASER-02"
+            },
+            {
+                "value": "SME-LoadFirwareStation1"
+            },
+            {
+                "value": "SME-NICOLEM"
+            },
+            {
+                "value": "SME-PROBE-01"
+            },
+            {
+                "value": "SME-PROG-01"
+            },
+            {
+                "value": "SME-PROG-02"
+            },
+            {
+                "value": "SME-PROG-03"
+            },
+            {
+                "value": "SME-RF-01"
+            },
+            {
+                "value": "SOG-16G-01"
+            },
+            {
+                "value": "SOG-28G-X4"
+            },
+            {
+                "value": "SOG-CONTRACTOR"
+            },
+            {
+                "value": "SOG-DC-01"
+            },
+            {
+                "value": "SOG-DC-02"
+            },
+            {
+                "value": "SOG-DVT-01"
+            },
+            {
+                "value": "SOG-ENG_16G-01"
+            },
+            {
+                "value": "SOG-ENGLAB-01"
+            },
+            {
+                "value": "SOG-ENGRFTestStation"
+            },
+            {
+                "value": "SOG-ENGTESTS-01"
+            },
+            {
+                "value": "SOG-ENGTESTS-02"
+            },
+            {
+                "value": "SOG-ENGTESTS-03"
+            },
+            {
+                "value": "SOG-FADC-01"
+            },
+            {
+                "value": "SOG-FASTMT-01"
+            },
+            {
+                "value": "SOG-FW-VAL-01"
+            },
+            {
+                "value": "SOG-GANGTEST-01"
+            },
+            {
+                "value": "SOG-INVENTORY"
+            },
+            {
+                "value": "SOG-JOHNH"
+            },
+            {
+                "value": "SOG-KELLEYSA"
+            },
+            {
+                "value": "SOG-LBLPRINTER-01"
+            },
+            {
+                "value": "SOG-LCRF-01"
+            },
+            {
+                "value": "SOG-LCRF-02"
+            },
+            {
+                "value": "SOG-LENSSCAN-01"
+            },
+            {
+                "value": "SOG-LENSSCAN-02"
+            },
+            {
+                "value": "SOG-LENSSCAN-03"
+            },
+            {
+                "value": "SOG-LINKTEST-01"
+            },
+            {
+                "value": "SOG-OPFA-01"
+            },
+            {
+                "value": "SOG-PROBE-01"
+            },
+            {
+                "value": "SOG-PROG-01"
+            },
+            {
+                "value": "SOG-PROG-02"
+            },
+            {
+                "value": "SOG-REL-01"
+            },
+            {
+                "value": "SOG-RF-02"
+            },
+            {
+                "value": "SOG-RF-03"
+            },
+            {
+                "value": "SOG-RF-04"
+            },
+            {
+                "value": "SOG-RF-OLD"
+            },
+            {
+                "value": "SOG-RXCHECK-01"
+            },
+            {
+                "value": "SOG-SCOPE-ENG01"
+            },
+            {
+                "value": "SOG-SIPHO-01"
+            },
+            {
+                "value": "SOG-TEMPCAL-01"
+            },
+            {
+                "value": "SOG-TEST-01"
+            },
+            {
+                "value": "SOG-TEST-02"
+            },
+            {
+                "value": "SOG-TEST2"
+            },
+            {
+                "value": "SOG-TS-01"
+            },
+            {
+                "value": "SOG-UberTestStation"
+            },
+            {
+                "value": "STARS-DC-01"
+            },
+            {
+                "value": "STARS-DC-02"
+            },
+            {
+                "value": "STARS-DC-03"
+            },
+            {
+                "value": "STARS-DC-04"
+            },
+            {
+                "value": "STARS-FA-01"
+            },
+            {
+                "value": "STARS-FA-02"
+            },
+            {
+                "value": "STARS-FASTMT-01"
+            },
+            {
+                "value": "STARS-LCRF-01"
+            },
+            {
+                "value": "STARS-OPDC-01"
+            },
+            {
+                "value": "STARS-OPDC-02"
+            },
+            {
+                "value": "STARS-PREP-01"
+            },
+            {
+                "value": "STARS-PREP01"
+            },
+            {
+                "value": "STARS-PROG-01"
+            },
+            {
+                "value": "STARS-PROG-02"
+            },
+            {
+                "value": "SYSLAB-01"
+            }
+        ]
+    }
+]

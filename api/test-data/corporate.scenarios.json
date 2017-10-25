@@ -1,0 +1,35 @@
+[
+    {
+        "_id": "768af974-3f78-6f46-8fc1-c5831bbff87f",
+        "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+        "domain": "83289a57-9e63-90a7-d05d-c4d36e228311",
+        "intent": "a06ed21e-9a20-3ce5-90bd-5c9be30e6657",
+        "scenarioName": "get.userInfo",
+        "slots": [
+            {
+            "slotName": "fullName",
+            "isRequired": true,
+            "useWebhook": false,
+            "textPrompts": [
+                "Who's information are you looking for?",
+                "Who's $c447f645-ee08-d42c-9dfe-85799dc652d1 are you looking for?"
+            ],
+            "isList": false,
+            "entity": "41c00cd7-99fc-4ec5-7735-529c7d8f515f"
+            },
+            {
+            "slotName": "fieldName",
+            "isRequired": false,
+            "useWebhook": false,
+            "isList": false,
+            "entity": "c447f645-ee08-d42c-9dfe-85799dc652d1"
+            }
+        ],
+        "intentResponses": [
+            "Ok, I'm looking the $c447f645-ee08-d42c-9dfe-85799dc652d1 for $41c00cd7-99fc-4ec5-7735-529c7d8f515f",
+            "Let me search what I have for $41c00cd7-99fc-4ec5-7735-529c7d8f515f"
+        ],
+        "useWebhook": true,
+        "webhookUrl": "http://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b1b15e88fa797225412429c1c50c122a1"
+    }
+]

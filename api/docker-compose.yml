@@ -1,0 +1,66 @@
+version: '3.0'
+
+#
+# The behavor of this compose can be highly (site) customized by creating 
+# a .env file in the root of the project.  see .env.example for an example
+# 
+
+services:
+  api:
+    build: .
+    ports: ['0.0.0.0:8000:8000']
+    networks: ['alpha-nlu-network']
+    # The following (crazy) block is about both:
+    # 1) setting default values for app parameteres
+    # 2) projecting any changes to those values set in the .env file
+    # a line should be added to this list for any env-var/param that the
+    # app might need, and its easiest to follow if the var name is kept the
+    # same for both the var thats projected into the app (the first name)
+    # and the name thats expected in the .env (the second name)
+    environment:
+      - ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL:-http://elasticsearch:9200}
+      - ES_BASIC_AUTH=${ES_BASIC_AUTH:-elastic:changeme}
+      - RASA_URL=${RASA_URL:-http://rasa:5000}
+      - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
+      #- DEBUG=${DEBUG:-nlu:*}
+      - MODEL_DIR=${MODEL_DIR:-./nlu-model}
+    volumes: ["${MODEL_DIR:-./nlu-model}:/usr/src/app/nlu-model"]
+    entrypoint: ['/bin/bash','wait-for-es.sh', 'elasticsearch:9200', 'node', 'start.js']
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/entity']
+  rasa:  
+    image: samtecspg/rasa-api:${SPGRASA_TAG:-RASA_0.8.7_full}
+    ports: ['0.0.0.0:5000:5000']
+    volumes: ["${MODEL_DIR:-./nlu-model}:/usr/src/rasa_nlu/models", "${RASA_CONF:-./rasa-config.json}:/usr/src/rasa_nlu/config.json"]
+    networks: ['alpha-nlu-network']
+  haskduck:
+    image: samtecspg/duckling
+    ports: ['0.0.0.0:8500:8000']
+    networks: ['alpha-nlu-network']
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-5.4.0}
+    environment: ['http.host=0.0.0.0', 'transport.host=127.0.0.1']
+    ports: ['0.0.0.0:9200:9200']
+    # environment:
+    #  - ES_JAVA_OPTS=${ES_RAM:--Xmx512m -Xms512m}
+    networks: ['alpha-nlu-network']
+    volumes: 
+      - ${ES_CONFIG:-./helpers-stuff/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ${ES_DATA:-./helpers-stuff/es-data}:/usr/share/elasticsearch/data
+    # Check that Elasticsearch is responding before hitting it with real requests.
+    healthcheck:
+      test: ['CMD', 'curl', '-f', '-u', 'elastic:changeme', 'http://localhost:9200']
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION:-5.4.0}
+    ports: ['0.0.0.0:5601:5601']
+    networks: ['alpha-nlu-network']
+    volumes:
+      - ${KIBANA_CONFIG:-./helpers-stuff/kibana.yml}:/usr/share/kibana/config/kibana.yml
+    logging: #kibana log is uselessly chatty, turning it off
+        driver: "none"
+    depends_on: 
+        - elasticsearch
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5601/login']
+
+networks: {alpha-nlu-network: {}}

@@ -1,0 +1,54 @@
+{
+  "name": "alpha-nlu-api",
+  "version": "0.0.1",
+  "description": "NLU API",
+  "main": "start.js",
+  "scripts": {
+    "test": "lab --lint --coverage",
+    "start": "npm-run-all --parallel test start:server",
+    "start:server": "nodemon start.js",
+    "precommit": "npm run git:hook",
+    "prepush": "npm run git:hook",
+    "git:hook": "lab --lint"
+  },
+  "keywords": [],
+  "author": "Daniel Calvo",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "devDependencies": {
+    "code": "^4.0.0",
+    "husky": "^0.13.3",
+    "lab": "^13.0.4",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2"
+  },
+  "dependencies": {
+    "async": "^2.4.0",
+    "boom": "^4.3.1",
+    "crypto": "^0.0.3",
+    "dashify": "^0.2.2",
+    "debug": "^2.6.7",
+    "dotenv": "^4.0.0",
+    "elasticsearch": "^13.0.1",
+    "guid": "^0.0.12",
+    "hapi": "^16.1.1",
+    "hapi-swagger": "^7.7.0",
+    "inert": "^4.2.0",
+    "joi": "^10.4.1",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
+    "ordinal": "^1.0.2",
+    "vision": "^4.1.1",
+    "wreck": "^12.2.0"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-hapi",
+    "rules": {
+      "quotes": [
+        "error",
+        "double"
+      ]
+    }
+  },
+  "repository": "https://github.com/samtecspg/alpha-nlu-api.git"
+}

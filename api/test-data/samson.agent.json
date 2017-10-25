@@ -1,0 +1,11 @@
+{
+    "agentName": "Samson",
+    "webhookUrl": "http://localhost:3000",
+    "domainClassifierThreshold": 0.6,
+    "fallbackResponses": [
+        "Sorry, can you rephrase that?",
+        "I'm still learning to speak with humans, can you rephrase that?"
+    ],
+    "useWebhookFallback": false,
+    "webhookFallbackUrl": "http://localhost:3000"
+}
