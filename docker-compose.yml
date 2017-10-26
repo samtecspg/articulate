@@ -7,7 +7,7 @@ version: '3.0'
 
 services:
   api:
-    build: .
+    build: './api/.'
     ports: ['0.0.0.0:8000:8000']
     networks: ['alpha-nlu-network']
     # The following (crazy) block is about both:
@@ -23,15 +23,19 @@ services:
       - RASA_URL=${RASA_URL:-http://rasa:5000}
       - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
       #- DEBUG=${DEBUG:-nlu:*}
-      - MODEL_DIR=${MODEL_DIR:-./nlu-model}
-    volumes: ["${MODEL_DIR:-./nlu-model}:/usr/src/app/nlu-model"]
+      - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
+    volumes: ["${MODEL_DIR:-./api/nlu-model}:/usr/src/app/nlu-model"]
     entrypoint: ['/bin/bash','wait-for-es.sh', 'elasticsearch:9200', 'node', 'start.js']
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/entity']
+  ui:
+    build: './ui/.'
+    ports: ['0.0.0.0:3500:3000']
+    networks: ['alpha-nlu-network']
   rasa:  
     image: samtecspg/rasa-api:${SPGRASA_TAG:-RASA_0.8.7_full}
     ports: ['0.0.0.0:5000:5000']
-    volumes: ["${MODEL_DIR:-./nlu-model}:/usr/src/rasa_nlu/models", "${RASA_CONF:-./rasa-config.json}:/usr/src/rasa_nlu/config.json"]
+    volumes: ["${MODEL_DIR:-./api/nlu-model}:/usr/src/rasa_nlu/models", "${RASA_CONF:-./api/rasa-config.json}:/usr/src/rasa_nlu/config.json"]
     networks: ['alpha-nlu-network']
   haskduck:
     image: samtecspg/duckling
@@ -45,8 +49,8 @@ services:
     #  - ES_JAVA_OPTS=${ES_RAM:--Xmx512m -Xms512m}
     networks: ['alpha-nlu-network']
     volumes: 
-      - ${ES_CONFIG:-./helpers-stuff/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ${ES_DATA:-./helpers-stuff/es-data}:/usr/share/elasticsearch/data
+      - ${ES_CONFIG:-./api/helpers-stuff/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ${ES_DATA:-./api/helpers-stuff/es-data}:/usr/share/elasticsearch/data
     # Check that Elasticsearch is responding before hitting it with real requests.
     healthcheck:
       test: ['CMD', 'curl', '-f', '-u', 'elastic:changeme', 'http://localhost:9200']
@@ -55,7 +59,7 @@ services:
     ports: ['0.0.0.0:5601:5601']
     networks: ['alpha-nlu-network']
     volumes:
-      - ${KIBANA_CONFIG:-./helpers-stuff/kibana.yml}:/usr/share/kibana/config/kibana.yml
+      - ${KIBANA_CONFIG:-./api/helpers-stuff/kibana.yml}:/usr/share/kibana/config/kibana.yml
     logging: #kibana log is uselessly chatty, turning it off
         driver: "none"
     depends_on: 
