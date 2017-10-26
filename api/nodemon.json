@@ -1,0 +1,4 @@
+{
+  "verbose": true,
+  "ignore": ["nlu-model", "helpers-stuff", "test-data"]
+}

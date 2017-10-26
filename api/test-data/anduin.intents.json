@@ -1,0 +1,35 @@
+[
+  {
+    "text": "What was the utilization of NA-RF-01 last month?",
+    "intent": "get.utilization",
+    "entities": [
+      {
+        "start": 28,
+        "end": 36,
+        "entity": "anduinStation"
+      }
+    ]
+  },
+  {
+    "text": "What was the yield on NA-RF-02 yesterday?",
+    "intent": "get.yield",
+    "entities": [
+      {
+        "start": 23,
+        "end": 31,
+        "entity": "anduinStation"
+      }
+    ]
+  },
+  {
+    "text": "When was the last control sequence execution on NA-OPFA-01?",
+    "intent": "get.controlSequenceExecution",
+    "entities": [
+      {
+        "start": 50,
+        "end": 60,
+        "entity": "anduinStation"
+      }
+    ]
+  }
+]

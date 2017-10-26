@@ -1,0 +1,128 @@
+[
+    {
+        "entityName": "acronym",
+        "agent": "agentId",
+        "usedBy": [
+            "domainId"
+        ],
+        "examples": [
+            {
+                "value": "SFC"
+            },
+            {
+                "value": "SME"
+            },
+            {
+                "value": "ITS"
+            },
+            {
+                "value": "PICS"
+            },
+            {
+                "value": "ASP"
+            },
+            {
+                "value": "OTP"
+            },
+            {
+                "value": "QSFPO"
+            },
+            {
+                "value": "NA"
+            },
+            {
+                "value": "HMFIC"
+            },
+            {
+                "value": "IS"
+            },
+            {
+                "value": "SOG"
+            },
+            {
+                "value": "SPARC"
+            }
+        ]
+    },
+    {
+        "entityName": "fullName",
+        "agent": "agentId",
+        "usedBy": [
+            "domainId"
+        ],
+        "examples": [
+            {
+                "value": "Caleb Keller"
+            },
+            {
+                "value": "Wooyong Ee"
+            },
+            {
+                "value": "Mike Lutz"
+            },
+            {
+                "value": "Matt Puffer"
+            },
+            {
+                "value": "Daniel Calvo"
+            },
+            {
+                "value": "Luis Malave"
+            },
+            {
+                "value": "Abraham Ban"
+            },
+            {
+                "value": "John Shine"
+            },
+            {
+                "value": "John Cook"
+            },
+            {
+                "value": "Oscar Salcedo"
+            },
+            {
+                "value": "Catie Eichorn"
+            },
+            {
+                "value": "Eliza Conant"
+            }
+        ]
+    },
+    {
+        "entityName": "fieldName",
+        "agent": "agentId",
+        "usedBy": [
+            "domainId"
+        ],
+        "examples": [
+            {
+                "value": "extension",
+                "synonyms": [
+                    "extension",
+                    "ext",
+                    "desk phone"
+                ]
+            },
+            {
+                "value": "manager",
+                "synonyms": [
+                    "manager",
+                    "boss",
+                    "report to",
+                    "reports to"
+                ]
+            },
+            {
+                "value": "email",
+                "synonyms": [
+                    "email",
+                    "e-mail",
+                    "eMail",
+                    "e-mail address",
+                    "email address"
+                ]
+            }
+        ]
+    }
+]

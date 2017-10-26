@@ -1,0 +1,110 @@
+[
+	{
+	  "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+	  "domain": "a6a86db3-46a4-ef1f-e2b7-b096b5cf58bf",
+	  "intentName": "greet",
+	  "examples": [
+		  {
+			  "userSays": "hey"
+		  },
+		  {
+			  "userSays": "howdy"
+		  },
+		  {
+			  "userSays": "hey there"
+		  },
+		  {
+			  "userSays": "hello"
+		  },
+		  {
+			  "userSays": "hi"
+		  },
+		  {
+			  "userSays": "good morning"
+		  },
+		  {
+			  "userSays": "good evening"
+		  },
+		  {
+			  "userSays": "dear sir"
+		  }
+	  ]
+	},
+	{
+	  "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+	  "domain": "83289a57-9e63-90a7-d05d-c4d36e228311",
+	  "intentName": "gratitude",
+	  "examples": [
+		  {
+			  "userSays": "thanks"
+		  },
+		  {
+			  "userSays": "thank you"
+		  },
+		  {
+			  "userSays": "thanks a lot"
+		  },
+		  {
+			  "userSays": "thank you very much"
+		  },
+		  {
+			  "userSays": "many thanks"
+		  },
+		  {
+			  "userSays": "merci"
+		  },
+		  {
+			  "userSays": "thanks a million"
+		  },
+		  {
+			  "userSays": "you are a lifesaver"
+		  },
+		  {
+			  "userSays": "thank you so much"
+		  }
+	  ]
+	},
+	{
+	  "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+	  "domain": "83289a57-9e63-90a7-d05d-c4d36e228311",
+	  "intentName": "goodbye",
+	  "examples": [
+		  {
+			  "userSays": "bye"
+		  },
+		  {
+			  "userSays": "farewell"
+		  },
+		  {
+			  "userSays": "good day"
+		  },
+		  {
+			  "userSays": "bye"
+		  },
+		  {
+			  "userSays": "good-bye"
+		  },
+		  {
+			  "userSays": "good by"
+		  },
+		  {
+			  "userSays": "bye bye"
+		  },
+		  {
+			  "userSays": "goodby"
+		  },
+		  {
+			  "userSays": "goodbye"
+		  },
+		  {
+			  "userSays": "good bye"
+		  },
+		  {
+			  "userSays": "Bye bye"
+		  },
+		  {
+			  "userSays": "have a good one"
+		  }
+	  ]
+	}
+  ]

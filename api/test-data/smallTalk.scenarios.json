@@ -1,0 +1,38 @@
+[
+    {
+        "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+        "domain": "a6a86db3-46a4-ef1f-e2b7-b096b5cf58bf",
+        "intent": "c3f3ec51-4246-8c99-8a87-a36fec485b38",
+        "scenarioName": "greet",
+        "intentResponses": [
+            "Hi, how can I help you?",
+            "Hello!! What I can do for you?",
+            "Hey, anything I can help you with?"
+        ],
+        "useWebhook": false
+    },      
+    {
+        "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+        "domain": "a6a86db3-46a4-ef1f-e2b7-b096b5cf58bf",
+        "intent": "676619da-c559-1751-e6e1-1a5b5ba4b091",
+        "scenarioName": "gratitude",
+        "intentResponses": [
+            "It's a pleassure. Anything else you need?",
+            "Glad I helped!",
+            "You're welcome. Do you need something else?"
+        ],
+        "useWebhook": false
+    },     
+    {
+        "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+        "domain": "a6a86db3-46a4-ef1f-e2b7-b096b5cf58bf",
+        "intent": "0e970916-02dd-46b3-e6b0-fa32b4150268",
+        "scenarioName": "goodbye",
+        "intentResponses": [
+            "Bye bye",
+            "Have a good one",
+            "Talk you later"
+        ],
+        "useWebhook": false
+    }
+]

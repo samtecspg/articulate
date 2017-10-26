@@ -1,0 +1,126 @@
+[
+    {
+        "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+        "domain": "d2ab0c09-88a4-3a35-18c9-3a2bb03b04a1",
+        "intentName": "get.transaction",
+        "examples": [
+            {
+                "userSays": "What were the bookings for yesterday?",
+                "entities": [
+                    {
+                        "start": 14,
+                        "end": 22,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "What were the bookings for the first quarter?",
+                "entities": [
+                    {
+                        "start": 14,
+                        "end": 22,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "What were the bookings for the first quarter of 2016?",
+                "entities": [
+                    {
+                        "start": 14,
+                        "end": 22,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "What are the bookings for today so far?",
+                "entities": [
+                    {
+                        "start": 13,
+                        "end": 21,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "Show me last week bookings",
+                "entities": [
+                    {
+                        "start": 18,
+                        "end": 25,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "I want to know last month's bookings",
+                "entities": [
+                    {
+                        "start": 14,
+                        "end": 22,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
+        "domain": "d2ab0c09-88a4-3a35-18c9-3a2bb03b04a1",
+        "intentName": "get.clientByTransaction",
+        "examples": [
+            {
+                "userSays": "Show me our 1st client in bookings",
+                "entities": [
+                    {
+                        "start": 26,
+                        "end": 33,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "Who are our top 5 clients in bookings?",
+                "entities": [
+                    {
+                        "start": 29,
+                        "end": 37,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "Who was the client with more bookings last week?",
+                "entities": [
+                    {
+                        "start": 29,
+                        "end": 37,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "bookings"
+                    }
+                ]
+            },
+            {
+                "userSays": "I want to see yesterday's cancellations by client",
+                "entities": [
+                    {
+                        "start": 26,
+                        "end": 39,
+                        "entity": "65e87b18-2371-8279-8748-5886e442b69e",
+                        "value": "cancellations"
+                    }
+                ]
+            }
+        ]
+    }
+]
