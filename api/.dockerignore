@@ -1,0 +1,8 @@
+Dockerfile
+# the .env settings are projected through the docker-compose environment block.
+# Lots of unexpected behavor will happen if you let the .env get pulled into
+# the build, so HIGHLY recommened .env is listed (blocked) on the following line:
+.env
+.git
+es-*
+docker-compose.yml
