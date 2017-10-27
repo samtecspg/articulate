@@ -26,6 +26,6 @@ module.exports = (currentContext, intentScenario, timezone, webhookUrl, callback
         const validResponses = BuildValidResponses([], currentContext, intentScenario.slots, intentScenario.intentResponses, timezone);
         const textResponse = validResponses[Math.floor(Math.random() * validResponses.length)];
         //return callback(null, { response: textResponse });
-        return callback(null, Object.assign(response, {textResponse}));
+        return callback(null, Object.assign(response, { textResponse }));
     }
 };

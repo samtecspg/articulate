@@ -142,6 +142,16 @@ const AgentRoutes = [
             validate: AgentValidator.converse,
             handler: AgentController.converse
         }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/export',
+        config: {
+            description: 'Export agent data',
+            tags: ['api'],
+            validate: AgentValidator.export,
+            handler: AgentController.export
+        }
     }
 ];
 

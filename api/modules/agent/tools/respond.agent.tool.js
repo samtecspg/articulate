@@ -61,7 +61,7 @@ const getBestRasaResult = (rasaResults, agent) => {
         if (rasaResults.results.length === 1){
             rasaResult = recognizedDomain;
         }
-        else{
+        else {
             rasaResult.entities = getEntitiesFromRasaResults(rasaResults);
         }
     }
