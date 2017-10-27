@@ -193,6 +193,14 @@ class AgentValidate {
                 };
             })()
         };
+        this.export = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema._id.required().description('Id of the agent')
+                };
+            })()
+        };
     }
 }
 
