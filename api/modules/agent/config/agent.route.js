@@ -152,6 +152,16 @@ const AgentRoutes = [
             validate: AgentValidator.export,
             handler: AgentController.export
         }
+    },
+    {
+        method: 'POST',
+        path: '/agent/redis',
+        config: {
+            description: 'Test of redis db',
+            tags: ['api'],
+            validate: AgentValidator.redis,
+            handler: AgentController.redis
+        }
     }
 ];
 
