@@ -1,3 +1,0 @@
-module.exports = funtcion (context) {
-    return context;
-};
