@@ -201,6 +201,15 @@ class AgentValidate {
                 };
             })()
         };
+        this.redis = {
+            payload: (() => {
+
+                return {
+                    key: Joi.string().required(),
+                    value: Joi.string().required()
+                };
+            })()
+        };
     }
 }
 

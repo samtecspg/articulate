@@ -38,6 +38,7 @@
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
     "ordinal": "^1.0.2",
+    "redis": "^2.8.0",
     "vision": "^4.1.1",
     "wreck": "^12.2.0"
   },

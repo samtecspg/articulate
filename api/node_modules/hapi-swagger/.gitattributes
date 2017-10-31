@@ -1,5 +1,0 @@
-*.js eol=lf
-*.json eol=lf
-*.sh eol=lf
-*.md eol=lf
-*.conf eol=lf

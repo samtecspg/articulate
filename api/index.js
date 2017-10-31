@@ -4,6 +4,7 @@ const Hapi = require('hapi');
 const Routes = require('./config/routes');
 const ESValidation = require('./config/esValidation');
 const Elasticsearch = require('elasticsearch');
+const Redis = require('redis');
 
 require('dotenv').load();
 
@@ -20,6 +21,7 @@ module.exports = (callback) => {
     server.app.elasticsearch = elasticSearchClient;
     server.app.rasa = process.env.RASA_URL;
     server.app.duckling = process.env.DUCKLING_URL;
+    server.app.redis = Redis.createClient();
 
     /* $lab:coverage:off$ */
     ESValidation.validate(elasticSearchClient, (err, invalidIndex) => {
