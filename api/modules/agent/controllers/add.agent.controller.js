@@ -1,50 +1,67 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:add');
-const _ = require('lodash');
-const Guid = require('guid');
+const Async = require('async');
 const Boom = require('boom');
-
-const buildPayload = (agent) => {
-
-    const result = {};
-
-    const id = Guid.create().toString();
-
-    //_id is not allowed as it is a system value
-    const values = _.clone(agent);
-    delete values._id;
-
-    //Create the payload for the bulk command in ES
-    result.payload = values;
-
-    //Add _id to the agent to return in the response
-    result.agent = Object.assign({ _id: id }, values);
-
-    return result;
-};
-
+    
 module.exports = (request, reply) => {
 
     const agent = request.payload;
-
-    const sentValue = buildPayload(agent);
-
-    request.server.app.elasticsearch.create({
-        index: 'agent',
-        type: 'default',
-        id: sentValue.agent._id,
-        body: sentValue.payload
-    }, (err, response) => {
-
-        if (err){
-            debug('ElasticSearch - add agent: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
+    const redis = request.server.app.redis;
+    
+    var args = [ 'agents', agent.agentName];        
+    redis.zrank(args, (zRankErr, zRankResp) => {
+        if (zRankErr){
+            const error = Boom.badImplementation('An error ocurred calling redis. Please try again');
             return reply(error);
         }
+        
+        if (!zRankResp && zRankResp != 0) {
+            redis.incr('agentId', (incrErr, agentId) => {
+                if (incrErr){
+                    const error = Boom.badImplementation('An error ocurred getting the new agent id.');
+                    return reply(error);
+                }
+                redis.zadd('agents', agentId, agent.agentName, (zAddErr, zAddResponse) => {
+                    if (zAddErr){
+                        const error = Boom.badImplementation('An error ocurred adding the name to the agents list.');
+                        return reply(error);
+                    }
+                    redis.hmset('agent:' + agentId, 'agentName', agent.agentName, 'webhookUrl', agent.webhookUrl, 'domainClassifierThreshold', agent.domainClassifierThreshold, 'useWebhookFallback', agent.useWebhookFallback);
+                    if (agent.webhookFallbackUrl){
+                        redis.hset('agent:' + agentId, 'webhookFallbackUrl', agent.webhookFallbackUrl);
+                    }
 
-        return reply(sentValue.agent);
+                    Async.forEach(agent.fallbackResponses, (fallbackResponse, cb) => {
+                        redis.lpush('agentFallbacks:' + agentId, fallbackResponse, (lPushErr, lPushResponse) => {
+                            if (lPushErr){
+                                const error = Boom.badImplementation('An error ocurred adding fallback responses.');
+                                return cb(error);
+                            }
+                            return cb(null);
+                        });
+                    }, (forEachErr) => {
+                        if (forEachErr){
+                            return reply(forEachErr);
+                        }
+                        request.server.app.redis.hgetall('agent:' + agentId, (hgetallErr, replies) => {
+                            if (hgetallErr){
+                                const error = Boom.badImplementation('An error ocurred retrieving the created agent.');
+                                return cb(error);
+                            }
+                            redis.lrange('agentFallbacks:' + agentId, 0, -1, (lRangeErr, lRangeResponse) => {
+                                if (lRangeErr){
+                                    const error = Boom.badImplementation('An error ocurred retrieving the list of created fallback responses for the agent.');
+                                    return cb(error);
+                                }
+                                return reply(Object.assign({ _id: agentId }, replies, { fallbackResponses: lRangeResponse }));
+                            })
+                        });
+                    });
+                });
+            })
+        }
+        else{
+            const error = Boom.badRequest('An agent with this name already exists.');
+            return reply(error, null);
+        }
     });
 };
