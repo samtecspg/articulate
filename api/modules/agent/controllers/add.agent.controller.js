@@ -22,7 +22,7 @@ module.exports = (request, reply) => {
         },
         (cb) => {
 
-            redis.zadd('agents', agentId, agent.agentName, (err, zAddResponse) => {
+            redis.zadd('agents', 'NX', agentId, agent.agentName, (err, zAddResponse) => {
 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the name to the agents list.');

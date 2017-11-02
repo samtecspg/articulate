@@ -12,7 +12,8 @@ class AgentValidate {
             query: (() => {
 
                 return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
                 };
             })()
         };
