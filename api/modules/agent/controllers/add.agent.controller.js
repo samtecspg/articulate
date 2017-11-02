@@ -29,18 +29,11 @@ module.exports = (request, reply) => {
                     if (agent.webhookFallbackUrl){
                         redis.hset('agent:' + agentId, 'webhookFallbackUrl', agent.webhookFallbackUrl);
                     }
-
-                    Async.forEach(agent.fallbackResponses, (fallbackResponse, cb) => {
-                        redis.lpush('agentFallbacks:' + agentId, fallbackResponse, (lPushErr, lPushResponse) => {
-                            if (lPushErr){
-                                const error = Boom.badImplementation('An error ocurred adding fallback responses.');
-                                return cb(error);
-                            }
-                            return cb(null);
-                        });
-                    }, (forEachErr) => {
-                        if (forEachErr){
-                            return reply(forEachErr);
+                    
+                    redis.lpush('agentFallbacks:' + agentId, agent.fallbackResponses, (lPushErr, lPushResponse) => {
+                        if (lPushErr){
+                            const error = Boom.badImplementation('An error ocurred adding fallback responses.');
+                            return cb(error);
                         }
                         request.server.app.redis.hgetall('agent:' + agentId, (hgetallErr, replies) => {
                             if (hgetallErr){
