@@ -1,29 +1,47 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:findByName');
 const Boom = require('boom');
+const Async = require('async');
 
 module.exports = (request, reply) => {
 
-    request.server.app.elasticsearch.get({
-        index: 'agent',
-        type: 'default',
-        id: request.params.id
-    }, (err, response) => {
+    const agentId = request.params.id;
+    const redis = request.server.app.redis;
+
+    Async.parallel([
+        (callback) => {
+
+            request.server.app.redis.hgetall('agent:' + agentId, (err, data) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred retrieving the created agent.');
+                    return callback(error);
+                }
+                if (data){
+                    return callback(null, data);
+                }
+                else {
+                    const error = Boom.notFound('The specified agent doesn\'t exists');
+                    return callback(error);                    
+                }
+            });
+        },
+        (callback) => {
+
+            redis.lrange('agentFallbacks:' + agentId, 0, -1, (err, fallbacks) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred retrieving the list of created fallback responses for the agent.');
+                    return callback(error);
+                }
+                return callback(null, fallbacks);
+            })
+        }
+    ], (err, result) => {
 
         if (err){
-            debug('ElasticSearch - search agent: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return reply(error);
+            return reply(err, null);
         }
-
-        const agent = {};
-        agent._id = response._id;
-        Object.assign(agent, response._source);
-
-        return reply(null, agent);
+        return reply(Object.assign({ id: agentId }, result[0], { fallbackResponses: result[1] }));
     });
 
 };

@@ -5,13 +5,12 @@ class AgentModel {
     static get schema() {
 
         return {
-            _id: Joi.string(),
+            id: Joi.number(),
             agentName: Joi.string(),
             webhookUrl: Joi.string(),
             domainClassifierThreshold: Joi.number(),
             fallbackResponses: Joi.array().items(Joi.string()),
-            useWebhookFallback: Joi.boolean(),
-            webhookFallbackUrl: Joi.string()
+            useWebhookFallback: Joi.boolean()
         };
     };
 }
