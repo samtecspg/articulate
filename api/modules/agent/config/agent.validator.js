@@ -21,7 +21,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };
@@ -30,7 +30,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
@@ -45,7 +45,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
+                    id: AgentSchema.id.required().description('Id of the agent'),
                     entityId: EntitySchema._id.required().description('Id of the entity')
                 };
             })()
@@ -55,7 +55,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
@@ -70,7 +70,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
+                    id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema._id.required().description('Id of the domain')
                 };
             })()
@@ -80,7 +80,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
+                    id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema._id.required().description('Id of the domain')
                 };
             })(),
@@ -96,7 +96,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
+                    id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema._id.required().description('Id of the domain'),
                     intentId: IntentSchema._id.required().description('Id of the intent')
                 };
@@ -107,7 +107,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
+                    id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema._id.required().description('Id of the domain'),
                     intentId: IntentSchema._id.required().description('Id of the intent')
                 };
@@ -125,11 +125,10 @@ class AgentValidate {
 
                 return {
                     agentName: AgentSchema.agentName.required(),
-                    webhookUrl: AgentSchema.webhookUrl.required(),
+                    webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
-                    useWebhookFallback: AgentSchema.useWebhookFallback.required(),
-                    webhookFallbackUrl: AgentSchema.webhookFallbackUrl
+                    useWebhookFallback: AgentSchema.useWebhookFallback.required()
                 };
             })()
         };
@@ -138,7 +137,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             payload: (() => {
@@ -148,8 +147,7 @@ class AgentValidate {
                     webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses,
-                    useWebhookFallback: AgentSchema.useWebhookFallback,
-                    webhookFallbackUrl: AgentSchema.webhookFallbackUrl
+                    useWebhookFallback: AgentSchema.useWebhookFallback
                 };
             })()
         };
@@ -158,7 +156,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };
@@ -167,7 +165,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
@@ -182,7 +180,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
@@ -197,16 +195,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
-                };
-            })()
-        };
-        this.redis = {
-            payload: (() => {
-
-                return {
-                    key: Joi.string().required(),
-                    value: Joi.string().required()
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };

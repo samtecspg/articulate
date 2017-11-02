@@ -14,7 +14,6 @@ const UpdateByIdController = require('./updateById.agent.controller');
 const ParseController = require('./parse.agent.controller');
 const ConverseController = require('./converse.agent.controller');
 const ExportController = require('./export.agent.controller');
-const RedisController = require('./redis.agent.controller');
 
 const AgentController = {
 
@@ -46,9 +45,7 @@ const AgentController = {
 
     converse: ConverseController,
 
-    export: ExportController,
-    
-    redis: RedisController
+    export: ExportController
 };
 
 module.exports = AgentController;
