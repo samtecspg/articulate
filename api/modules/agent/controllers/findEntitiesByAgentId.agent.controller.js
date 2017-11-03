@@ -1,41 +1,59 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:findEntitiesByAgentId');
+const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    let size;
-    if (request.query && request.query.size){
-        size = request.query.size;
+    const redis = request.server.app.redis;
+    let start = 0;
+    if (request.query && request.query.start > -1){
+        start = request.query.start;
     }
+    let limit = -1;
+    if (request.query && request.query.limit > -1){
+        limit = request.query.limit;
+    }
+    const agentId = request.params.id;
 
-    request.server.app.elasticsearch.search({
-        index: 'entity',
-        type: 'default',
-        body: { query: { term: { agent: request.params.id } } },
-        size: size ? size : 10
-    }, (err, response) => {
+    Async.waterfall([
+        (cb) => {
 
-        if (err){
-            debug('ElasticSearch - search entities: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return reply(error);
+            redis.zrange(`agentEntities:${agentId}`, start, limit === -1 ? limit : limit - 1, 'withscores', (err, entities) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the entities from the sorted set.');
+                    return cb(error);
+                }
+                entities =_.chunk(entities, 2);
+                return cb(null, entities);
+            });
+        },
+        (entities, cb) => {
+
+            Async.map(entities, (entity, callback) => {
+
+                request.server.inject('/entity/' + entity[1], (res) => {
+                    
+                    if (res.statusCode !== 200){
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
+                        return callback(error, null);
+                    }
+                    return callback(null, res.result);
+                });
+            }, (err, result) => {
+
+                if (err){
+                    return cb(err, null);
+                }
+                return cb(null, result);
+            });
         }
+    ], (err, result) => {
 
-        const hits = response.hits.hits;
-        const entities = _.map(hits, (hit) => {
-
-            const tmpEntity = {};
-            tmpEntity._id = hit._id;
-            Object.assign(tmpEntity, hit._source);
-            return tmpEntity;
-        });
-
-        return reply(null, entities);
+        if (err) {
+            return reply(err, null);
+        }
+        return reply(result);
     });
-
 };

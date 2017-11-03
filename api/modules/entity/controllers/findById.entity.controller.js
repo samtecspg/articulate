@@ -1,29 +1,26 @@
 'use strict';
-const debug = require('debug')('nlu:model:Entity:findById');
 const Boom = require('boom');
+const Async = require('async');
+const Flat = require('flat');
 
 module.exports = (request, reply) => {
 
-    request.server.app.elasticsearch.get({
-        index: 'entity',
-        type: 'default',
-        id: request.params.id
-    }, (err, response) => {
+    const entityId = request.params.id;
+    const redis = request.server.app.redis;
 
+    redis.hgetall('entity:' + entityId, (err, data) => {
+        
         if (err){
-            debug('ElasticSearch - search entity: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
+            const error = Boom.badImplementation('An error ocurred retrieving the entity.');
             return reply(error);
         }
-
-        const entity = {};
-        entity._id = response._id;
-        Object.assign(entity, response._source);
-
-        return reply(null, entity);
+        if (data){
+            return reply(null, Flat.unflatten(data));
+        }
+        else {
+            const error = Boom.notFound('The specified entity doesn\'t exists');
+            return reply(error);                    
+        }
     });
 
 };

@@ -5,15 +5,6 @@ const Joi = require('joi');
 class DomainValidate {
     constructor() {
 
-        this.findAll = {
-            query: (() => {
-
-                return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
-                };
-            })()
-        };
-
         this.add = {
             payload: (() => {
 
@@ -31,7 +22,7 @@ class DomainValidate {
             params: (() => {
 
                 return {
-                    id: DomainSchema._id.required().description('Id of the domain')
+                    id: DomainSchema.id.required().description('Id of the domain')
                 };
             })()
         };
@@ -40,7 +31,7 @@ class DomainValidate {
             params: (() => {
 
                 return {
-                    id: DomainSchema._id.required().description('Id of the domain')
+                    id: DomainSchema.id.required().description('Id of the domain')
                 };
             })(),
             payload: (() => {
@@ -59,7 +50,7 @@ class DomainValidate {
             params: (() => {
 
                 return {
-                    id: DomainSchema._id.required().description('Id of the domain')
+                    id: DomainSchema.id.required().description('Id of the domain')
                 };
             })()
         };

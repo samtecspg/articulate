@@ -5,8 +5,8 @@ class DomainModel {
     static get schema() {
 
         return {
-            _id: Joi.string(),
-            agent: Joi.string(),
+            id: Joi.number(),
+            agent: Joi.number(),
             domainName: Joi.string(),
             enabled: Joi.boolean(),
             intentThreshold: Joi.number(),

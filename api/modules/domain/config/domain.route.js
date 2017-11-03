@@ -4,16 +4,6 @@ const DomainValidator = require('./domain.validator');
 
 const DomainRoutes = [
     {
-        method: 'GET',
-        path: '/domain',
-        config: {
-            description: 'Find all instances of the model from the data source',
-            tags: ['api'],
-            validate: DomainValidator.findAll,
-            handler: DomainController.findAll
-        }
-    },
-    {
         method: 'POST',
         path: '/domain',
         config: {

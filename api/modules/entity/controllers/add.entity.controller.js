@@ -1,73 +1,77 @@
 'use strict';
-const debug = require('debug')('nlu:model:Entity:add');
-const _ = require('lodash');
-const Guid = require('guid');
-const Boom = require('boom');
-const Helpers = require('../../../helpers');
 const Async = require('async');
-const EntityTools = require('../tools');
-
-const buildPayload = (entity) => {
-
-    const result = {};
-
-    const id = entity._id ? entity._id : Guid.create().toString();
-
-    //_id is not allowed as it is a system value
-    const values = _.clone(entity);
-    delete values._id;
-
-    //Create the payload for the bulk command in ES
-    result.payload = values;
-
-    //Add _id to the entity to return in the response
-    result.entity = Object.assign({ _id: id }, values);
-
-    return result;
-};
-
+const Boom = require('boom');
+const Flat = require('flat');
+    
 module.exports = (request, reply) => {
 
+    let entityId = null;
+    let entity = request.payload;
+    const redis = request.server.app.redis;
 
-    Async.parallel([
-        (callback) => {
-
-            Helpers.exists(request.server.app.elasticsearch, 'agent', request.payload.agent, callback);
+    Async.waterfall([
+        (cb) => {
+            
+            redis.exists(`agent:${entity.agent}`, (err, agentExist) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                    return cb(error);
+                }
+                return cb(null, agentExist);
+            });
         },
-        (callback) => {
+        (agentExist, cb) => {
+            
+            if (agentExist){
+                redis.incr('entityId', (err, newEntityId) => {
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred getting the new entity id.');
+                        return cb(error);
+                    }
+                    entityId = newEntityId;
+                    return cb(null);
+                });
+            }
+            else{
+                const error = Boom.badRequest(`The agent with the id ${entity.agent} doesn't exist`);
+                return cb(error, null);
+            }
+        },
+        (cb) => {
 
-            Async.map(request.payload.usedBy, (domain, cb) => {
+            redis.zadd(`agentEntities:${entity.agent}`, 'NX', entityId, entity.entityName, (err, addResponse) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the name to the entities list.');
+                    return cb(error);
+                }
+                return cb(null, addResponse);
+            });
+        },
+        (addResponse, cb) => {
 
-                EntityTools.validateDomainTool(request.server.app.elasticsearch, request.payload.agent, domain, cb);
-            }, callback);
+            if (addResponse !== 0){
+                entity = Object.assign({id: entityId}, entity);          
+                const flatEntity = Flat(entity);  
+                redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
+                    
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                        return cb(error);
+                    }
+                    return cb(null, entity);
+                });
+            }
+            else{
+                const error = Boom.badRequest(`A entity with this name already exists in the agent ${entity.agent}.`);
+                return cb(error, null);
+            }
         }
-    ], (err) => {
-
+    ], (err, result) => {
         if (err){
             return reply(err, null);
         }
-
-        const entity = request.payload;
-
-        const sentValue = buildPayload(entity);
-
-        request.server.app.elasticsearch.create({
-            index: 'entity',
-            type: 'default',
-            id: sentValue.entity._id,
-            body: sentValue.payload
-        }, (err, response) => {
-
-            if (err){
-                debug('ElasticSearch - add entity: Error= %o', err);
-                const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-                if (err.body){
-                    error.output.payload.details = error.data;
-                }
-                return reply(error);
-            }
-
-            return reply(sentValue.entity);
-        });
+        return reply(result);
     });
 };
