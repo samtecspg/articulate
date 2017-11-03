@@ -1,41 +1,59 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:findDomainsByAgentId');
+const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    let size;
-    if (request.query && request.query.size){
-        size = request.query.size;
+    const redis = request.server.app.redis;
+    let start = 0;
+    if (request.query && request.query.start > -1){
+        start = request.query.start;
     }
+    let limit = -1;
+    if (request.query && request.query.limit > -1){
+        limit = request.query.limit;
+    }
+    const agentId = request.params.id;
 
-    request.server.app.elasticsearch.search({
-        index: 'domain',
-        type: 'default',
-        body: { query: { term: { agent: request.params.id } } },
-        size: size ? size : 10
-    }, (err, response) => {
+    Async.waterfall([
+        (cb) => {
 
-        if (err){
-            debug('ElasticSearch - search domains: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return reply(error);
+            redis.zrange(`agentDomains:${agentId}`, start, limit === -1 ? limit : limit - 1, 'withscores', (err, domains) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the domains from the sorted set.');
+                    return cb(error);
+                }
+                domains =_.chunk(domains, 2);
+                return cb(null, domains);
+            });
+        },
+        (domains, cb) => {
+
+            Async.map(domains, (domain, callback) => {
+
+                request.server.inject('/domain/' + domain[1], (res) => {
+                    
+                    if (res.statusCode !== 200){
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);
+                        return callback(error, null);
+                    }
+                    return callback(null, res.result);
+                });
+            }, (err, result) => {
+
+                if (err){
+                    return cb(err, null);
+                }
+                return cb(null, result);
+            });
         }
+    ], (err, result) => {
 
-        const hits = response.hits.hits;
-        const domains = _.map(hits, (hit) => {
-
-            const tmpDomain = {};
-            tmpDomain._id = hit._id;
-            Object.assign(tmpDomain, hit._source);
-            return tmpDomain;
-        });
-
-        return reply(null, domains);
+        if (err) {
+            return reply(err, null);
+        }
+        return reply(result);
     });
-
 };

@@ -1,58 +1,77 @@
 'use strict';
-const debug = require('debug')('nlu:model:Domain:add');
-const _ = require('lodash');
-const Guid = require('guid');
+const Async = require('async');
 const Boom = require('boom');
-const Helpers = require('../../../helpers');
-
-const buildPayload = (domain) => {
-
-    const result = {};
-
-    const id = Guid.create().toString();
-
-    //_id is not allowed as it is a system value
-    const values = _.clone(domain);
-    delete values._id;
-
-    //Create the payload for the bulk command in ES
-    result.payload = values;
-
-    //Add _id to the domain to return in the response
-    result.domain = Object.assign({ _id: id }, values);
-
-    return result;
-};
-
+const Flat = require('flat');
+    
 module.exports = (request, reply) => {
 
-    Helpers.exists(request.server.app.elasticsearch, 'agent', request.payload.agent, (err) => {
+    let domainId = null;
+    let domain = request.payload;
+    const redis = request.server.app.redis;
 
+    Async.waterfall([
+        (cb) => {
+            
+            redis.exists(`agent:${domain.agent}`, (err, agentExist) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                    return cb(error);
+                }
+                return cb(null, agentExist);
+            });
+        },
+        (agentExist, cb) => {
+            
+            if (agentExist){
+                redis.incr('domainId', (err, newDomainId) => {
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred getting the new domain id.');
+                        return cb(error);
+                    }
+                    domainId = newDomainId;
+                    return cb(null);
+                });
+            }
+            else{
+                const error = Boom.badRequest(`The agent with the id ${domain.agent} doesn't exist`);
+                return cb(error, null);
+            }
+        },
+        (cb) => {
+
+            redis.zadd(`agentDomains:${domain.agent}`, 'NX', domainId, domain.domainName, (err, addResponse) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the name to the domains list.');
+                    return cb(error);
+                }
+                return cb(null, addResponse);
+            });
+        },
+        (addResponse, cb) => {
+
+            if (addResponse !== 0){
+                domain = Object.assign({id: domainId}, domain);          
+                const flatDomain = Flat(domain);  
+                redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
+                    
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred adding the domain data.');
+                        return cb(error);
+                    }
+                    return cb(null, domain);
+                });
+            }
+            else{
+                const error = Boom.badRequest(`A domain with this name already exists in the agent ${domain.agent}.`);
+                return cb(error, null);
+            }
+        }
+    ], (err, result) => {
         if (err){
             return reply(err, null);
         }
-
-        const domain = request.payload;
-
-        const sentValue = buildPayload(domain);
-
-        request.server.app.elasticsearch.create({
-            index: 'domain',
-            type: 'default',
-            id: sentValue.domain._id,
-            body: sentValue.payload
-        }, (err, response) => {
-
-            if (err){
-                debug('ElasticSearch - add domain: Error= %o', err);
-                const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-                if (err.body){
-                    error.output.payload.details = error.data;
-                }
-                return reply(error);
-            }
-
-            return reply(sentValue.domain);
-        });
+        return reply(result);
     });
 };
