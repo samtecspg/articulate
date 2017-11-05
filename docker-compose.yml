@@ -6,29 +6,29 @@ version: '3.0'
 # 
 
 services:
-  # api:
-  #   build: './api/.'
-  #   ports: ['0.0.0.0:8000:8000']
-  #   networks: ['alpha-nlu-network']
-  #   # The following (crazy) block is about both:
-  #   # 1) setting default values for app parameteres
-  #   # 2) projecting any changes to those values set in the .env file
-  #   # a line should be added to this list for any env-var/param that the
-  #   # app might need, and its easiest to follow if the var name is kept the
-  #   # same for both the var thats projected into the app (the first name)
-  #   # and the name thats expected in the .env (the second name)
-  #   environment:
-  #     - ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL:-http://elasticsearch:9200}
-  #     - REDIS_URL=${REDIS_URL:-http://redis:6379}
-  #     - ES_BASIC_AUTH=${ES_BASIC_AUTH:-elastic:changeme}
-  #     - RASA_URL=${RASA_URL:-http://rasa:5000}
-  #     - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
-  #     #- DEBUG=${DEBUG:-nlu:*}
-  #     - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
-  #   volumes: ["${MODEL_DIR:-./api/nlu-model}:/usr/src/app/nlu-model"]
-  #   entrypoint: ['/bin/bash','wait-for-es.sh', 'elasticsearch:9200', 'node', 'start.js']
-  #   healthcheck:
-  #     test: ['CMD', 'curl', '-f', 'http://localhost:8000/entity']
+  api:
+    build: './api/.'
+    ports: ['0.0.0.0:8000:8000']
+    networks: ['alpha-nlu-network']
+    # The following (crazy) block is about both:
+    # 1) setting default values for app parameteres
+    # 2) projecting any changes to those values set in the .env file
+    # a line should be added to this list for any env-var/param that the
+    # app might need, and its easiest to follow if the var name is kept the
+    # same for both the var thats projected into the app (the first name)
+    # and the name thats expected in the .env (the second name)
+    environment:
+      - ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL:-http://elasticsearch:9200}
+      - REDIS_URL=${REDIS_URL:-http://redis:6379}
+      - ES_BASIC_AUTH=${ES_BASIC_AUTH:-elastic:changeme}
+      - RASA_URL=${RASA_URL:-http://rasa:5000}
+      - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
+      #- DEBUG=${DEBUG:-nlu:*}
+      - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
+    volumes: ["${MODEL_DIR:-./api/nlu-model}:/usr/src/app/nlu-model"]
+    entrypoint: ['/bin/bash','wait-for-es.sh', 'elasticsearch:9200', 'node', 'start.js']
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/entity']
   ui:
     build: './ui/.'
     ports: ['0.0.0.0:3500:3000']
