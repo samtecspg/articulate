@@ -6,6 +6,7 @@ WORKDIR /reactapp
 
 ADD package.json package.json
 RUN npm install
+RUN npm build
 ADD . .
 
 VOLUME /reactapp
