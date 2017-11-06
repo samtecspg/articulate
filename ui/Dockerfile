@@ -1,15 +1,13 @@
-FROM node:6-slim
+FROM node:7.5.0
 
 RUN apt-get update && apt-get install libpng12-0
 
 WORKDIR /reactapp
 
-ADD package.json package.json
-RUN npm install
-RUN npm build
 ADD . .
-
-VOLUME /reactapp
+RUN npm install
+RUN npm run build
+RUN npm run build:dll
 
 EXPOSE 3000
 
