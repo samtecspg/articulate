@@ -28,6 +28,10 @@ import sampleData from './data/sampleData.json';*/
 
 const timezones = [
   {
+      "text": "America/Chicago",
+      "value": "America/Chicago"
+  },
+  {
       "text": "America/Kentucky/Louisville",
       "value": "America/Kentucky/Louisville"
   },
@@ -143,7 +147,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name='defaultTimezone'
                 type='select' 
                 label={messages.defaultTimezone.defaultMessage} 
-                defaultValue={this.props.agentData.defaultTimezone ? this.props.agentData.defaultTimezone : 'america_kentucky_louisville'}
+                defaultValue={this.props.agentData.defaultTimezone ? this.props.agentData.defaultTimezone : 'America/Kentucky/Louisville'}
                 onChange={this.props.onChangeAgentData.bind(null, 'defaultTimezone')}>
                     {returnFormattedOptions(timezones)}
               </Input>
