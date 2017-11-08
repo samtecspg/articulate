@@ -23,9 +23,8 @@ services:
       - ES_BASIC_AUTH=${ES_BASIC_AUTH:-elastic:changeme}
       - RASA_URL=${RASA_URL:-http://rasa:5000}
       - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
-      #- DEBUG=${DEBUG:-nlu:*}
       - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
-    volumes: ["${MODEL_DIR:-./api/nlu-model}:/usr/src/app/nlu-model"]
+    volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects"]
     entrypoint: ['/bin/bash','wait-for-es.sh', 'elasticsearch:9200', 'node', 'start.js']
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/entity']
@@ -34,9 +33,9 @@ services:
     ports: ['0.0.0.0:3500:3000']
     networks: ['alpha-nlu-network']
   rasa:  
-    image: samtecspg/rasa-api:${SPGRASA_TAG:-RASA_0.8.7_full}
+    image: rasa/rasa_nlu:0.10.4-spacy
     ports: ['0.0.0.0:5000:5000']
-    volumes: ["${MODEL_DIR:-./api/nlu-model}:/usr/src/rasa_nlu/models", "${RASA_CONF:-./api/rasa-config.json}:/usr/src/rasa_nlu/config.json"]
+    volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects"]
     networks: ['alpha-nlu-network']
   haskduck:
     image: samtecspg/duckling
