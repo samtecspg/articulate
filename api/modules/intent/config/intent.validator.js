@@ -1,21 +1,10 @@
 'use strict';
 
 const IntentSchema = require('../../../models/index').Intent.schema;
-const UserSayingModel = require('../../../models/index').UserSaying.schema;
-const EntityUserSayingModel = require('../../../models/index').EntityUserSaying.schema;
 const Joi = require('joi');
 
 class IntentValidate {
     constructor() {
-
-        this.findAll = {
-            query: (() => {
-
-                return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
-                };
-            })()
-        };
 
         this.add = {
             payload: (() => {
@@ -24,15 +13,7 @@ class IntentValidate {
                     agent: IntentSchema.agent.required(),
                     domain: IntentSchema.domain.required(),
                     intentName: IntentSchema.intentName.required(),
-                    examples: Joi.array().items({
-                        userSays: UserSayingModel.userSays.required(),
-                        entities: Joi.array().items({
-                            value: EntityUserSayingModel.value.required(),
-                            entity: EntityUserSayingModel.entity.required(),
-                            start: EntityUserSayingModel.start.required(),
-                            end: EntityUserSayingModel.end.required()
-                        })
-                    }).required()
+                    examples: IntentSchema.examples.required()
                 };
             })()
         };
@@ -41,7 +22,7 @@ class IntentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema._id.required().description('Id of the intent')
+                    id: IntentSchema.id.required().description('Id of the intent')
                 };
             })()
         };
@@ -50,7 +31,7 @@ class IntentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema._id.required().description('Id of the intent')
+                    id: IntentSchema.id.required().description('Id of the intent')
                 };
             })(),
             payload: (() => {
@@ -59,15 +40,7 @@ class IntentValidate {
                     agent: IntentSchema.agent.required(),
                     domain: IntentSchema.domain.required(),
                     intentName: IntentSchema.intentName,
-                    examples: Joi.array().items({
-                        userSays: UserSayingModel.userSays.required(),
-                        entities: Joi.array().items({
-                            value: EntityUserSayingModel.value.required(),
-                            entity: EntityUserSayingModel.entity.required(),
-                            start: EntityUserSayingModel.start.required(),
-                            end: EntityUserSayingModel.end.required()
-                        })
-                    })
+                    examples: IntentSchema.examples.required()
                 };
             })()
         };
@@ -76,7 +49,7 @@ class IntentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema._id.required().description('Id of the intent')
+                    id: IntentSchema.id.required().description('Id of the intent')
                 };
             })()
         };

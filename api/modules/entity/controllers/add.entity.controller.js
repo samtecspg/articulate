@@ -12,63 +12,64 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
             
-            redis.exists(`agent:${entity.agent}`, (err, agentExist) => {
+            redis.zscore('agents', entity.agent, (err, agentId) => {
                 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
                     return cb(error);
                 }
-                return cb(null, agentExist);
+                if (agentId){
+                    return cb(null, agentId);
+                }
+                else{
+                    const error = Boom.badRequest(`The agent ${entity.agent} doesn't exist`);
+                    return cb(error, null);
+                }
             });
         },
-        (agentExist, cb) => {
+        (agentId, cb) => {
             
-            if (agentExist){
-                redis.incr('entityId', (err, newEntityId) => {
-                    if (err){
-                        const error = Boom.badImplementation('An error ocurred getting the new entity id.');
-                        return cb(error);
-                    }
-                    entityId = newEntityId;
-                    return cb(null);
-                });
-            }
-            else{
-                const error = Boom.badRequest(`The agent with the id ${entity.agent} doesn't exist`);
-                return cb(error, null);
-            }
+            redis.incr('entityId', (err, newEntityId) => {
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the new entity id.');
+                    return cb(error);
+                }
+                entityId = newEntityId;
+                return cb(null, agentId);
+            });
         },
-        (cb) => {
+        (agentId, cb) => {
 
-            redis.zadd(`agentEntities:${entity.agent}`, 'NX', entityId, entity.entityName, (err, addResponse) => {
+            redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, entity.entityName, (err, addResponse) => {
                 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the name to the entities list.');
                     return cb(error);
                 }
-                return cb(null, addResponse);
+                if (addResponse !== 0){
+                    return cb(null);
+                }
+                else{
+                    const error = Boom.badRequest(`A entity with this name already exists in the agent ${entity.agent}.`);
+                    return cb(error);
+                }
             });
         },
-        (addResponse, cb) => {
+        (cb) => {
 
-            if (addResponse !== 0){
-                entity = Object.assign({id: entityId}, entity);          
-                const flatEntity = Flat(entity);  
-                redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
-                    
-                    if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the entity data.');
-                        return cb(error);
-                    }
-                    return cb(null, entity);
-                });
-            }
-            else{
-                const error = Boom.badRequest(`A entity with this name already exists in the agent ${entity.agent}.`);
-                return cb(error, null);
-            }
+            entity = Object.assign({id: entityId}, entity);          
+            const flatEntity = Flat(entity);  
+            redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                    return cb(error);
+                }
+                return cb(null, entity);
+            });
         }
     ], (err, result) => {
+
         if (err){
             return reply(err, null);
         }

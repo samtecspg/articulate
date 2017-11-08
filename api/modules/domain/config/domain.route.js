@@ -42,6 +42,26 @@ const DomainRoutes = [
             validate: DomainValidator.deleteById,
             handler: DomainController.deleteById
         }
+    },
+    {
+        method: 'GET',
+        path: '/domain/{id}/entity',
+        config: {
+            description: 'Find list of entities linked with a domain',
+            tags: ['api'],
+            validate: DomainValidator.findEntitiesByDomainId,
+            handler: DomainController.findEntitiesByDomainId
+        }
+    },
+    {
+        method: 'GET',
+        path: '/domain/{id}/intent',
+        config: {
+            description: 'Find list of intents linked with a domain',
+            tags: ['api'],
+            validate: DomainValidator.findIntentsByDomainId,
+            handler: DomainController.findIntentsByDomainId
+        }
     }
 ];
 

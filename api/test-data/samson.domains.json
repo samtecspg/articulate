@@ -1,18 +1,18 @@
 [
     {
-        "agent": "agentId",
+        "agent": "Samson",
         "domainName": "Sales",
         "enabled": true,
         "intentThreshold": 0.7
     },
     {
-        "agent": "agentId",
+        "agent": "Samson",
         "domainName": "Small Talk",
         "enabled": true,
         "intentThreshold": 0.55
     },
     {
-        "agent": "agentId",
+        "agent": "Samson",
         "domainName": "Corporate",
         "enabled": true,
         "intentThreshold": 0.7

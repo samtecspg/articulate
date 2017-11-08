@@ -1,10 +1,7 @@
 [
     {
         "entityName": "acronym",
-        "agent": "agentId",
-        "usedBy": [
-            "domainId"
-        ],
+        "agent": "Samson",
         "examples": [
             {
                 "value": "SFC"
@@ -46,10 +43,7 @@
     },
     {
         "entityName": "fullName",
-        "agent": "agentId",
-        "usedBy": [
-            "domainId"
-        ],
+        "agent": "Samson",
         "examples": [
             {
                 "value": "Caleb Keller"
@@ -91,10 +85,7 @@
     },
     {
         "entityName": "fieldName",
-        "agent": "agentId",
-        "usedBy": [
-            "domainId"
-        ],
+        "agent": "Samson",
         "examples": [
             {
                 "value": "extension",

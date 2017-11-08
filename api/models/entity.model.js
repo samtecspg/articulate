@@ -7,7 +7,7 @@ class EntityModel {
 
         return {
             id: Joi.number(),
-            agent: Joi.number(),
+            agent: Joi.string(),
             entityName: Joi.string(),
             usedBy: Joi.array().items(Joi.number()),
             examples: Joi.array().items(ExampleModel.schema)

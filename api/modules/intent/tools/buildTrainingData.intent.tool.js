@@ -4,72 +4,42 @@ const _ = require('lodash');
 const GetData = require('./getData.intent.tool');
 const GetEntitiesCombinations = require('./getEntitiesCombinations.intent.tool');
 
-const getIntentExamples = (commonExamples) => {
+const buildTrainingData = (server, domainId, callback) => {
 
-    let intent_examples = _.cloneDeep(commonExamples);
-    intent_examples = _.map(intent_examples, (intentExample) => {
-
-        delete intentExample.entities;
-        return intentExample;
-    });
-
-    intent_examples = _.uniq(intent_examples);
-
-    return intent_examples;
-};
-
-const getEntityExamples = (commonExamples) => {
-
-    let entity_examples = _.cloneDeep(commonExamples);
-    entity_examples = _.map(entity_examples, (entityExample) => {
-
-        delete entityExample.intent;
-        if (!entityExample.entities || entityExample.entities.length === 0){
-            return null;
-        }
-        return entityExample;
-    });
-
-    entity_examples = _.compact(_.uniq(entity_examples));
-    return entity_examples;
-};
-
-const buildTrainingData = (elasticsearch, modifiedIntent, action, domainRecognitionTraining, callback) => {
-
-    GetData(elasticsearch, modifiedIntent, action, domainRecognitionTraining, (err, results) => {
+    GetData(server, domainId, (err, results) => {
 
         if (err){
             return callback(err, null);
         }
 
-        if (domainRecognitionTraining){
-            const intents = results.intents;
-            const sources = _.map(intents, '_source');
-            const numOfDomains = _.uniq(_.map(sources, 'domain')).length;
-            if (numOfDomains === 1){
-                return callback(null, null);
-            }
-        }
-        else {
-            if (results.intents.length === 1){
-                return callback(null, null);
-            }
+        if (results.intents.length === 1){
+            return callback(null, null);
         }
 
         let entitiesCombinations = [];
         if (results.entities.length > 0){
             entitiesCombinations = GetEntitiesCombinations(results.entities, results.intents);
         }
+       
+        const common_examples = _.uniq(_.flatten(_.map(results.intents, (intent) => {
 
-        //Build all train examples based on intents
-        const commonExamples = _.map(results.intents, (intent) => {
+            const buildIntentsPerExamples = _.map(intent.examples, (intentExample) => {
 
-            const buildIntentsPerExamples = _.map(intent._source.examples, (intentExample) => {
+                const entitiesList = [];
 
-                const entitiesList = intentExample.entities;
-                if (entitiesList && entitiesList.length > 0){
-                    const sortedEntitiesList = _.sortBy(entitiesList, 'start');
-                    const entitiesOfIntent = _.map(sortedEntitiesList, 'entity');
+                const entityPattern = /\{(.+?)\}/g;
+                let match;
+                while((match = entityPattern.exec(intentExample)) != null){
+                    entitiesList.push({
+                        start: match.index,
+                        end: match.index + match[0].length,
+                        value: match[0],
+                        entity: match[1]
+                    });
+                }
+
+                if (entitiesList.length > 0){
+                    const entitiesOfIntent = _.map(entitiesList, 'entity');
                     const keyOfEntities = entitiesOfIntent.join('-');
                     let combinationsForThisIntent = entitiesCombinations[keyOfEntities];
 
@@ -78,13 +48,13 @@ const buildTrainingData = (elasticsearch, modifiedIntent, action, domainRecognit
 
                     const buildedIntents = _.map(combinationsForThisIntent, (combination) => {
 
-                        let intentText = intentExample.userSays;
-                        const lowestStart = sortedEntitiesList[0].start;
+                        let intentText = intentExample;
+                        const lowestStart = entitiesList[0].start;
                         const newEntitiesList = [];
                         let shift = 0;
                         const combinationValues = Array.isArray(combination) ? combination : [combination];
 
-                        sortedEntitiesList.forEach( (entity, i) => {
+                        entitiesList.forEach( (entity, i) => {
 
                             const textValue = combinationValues[i].entityText;
                             const entityValue = combinationValues[i].entityValue;
@@ -104,7 +74,7 @@ const buildTrainingData = (elasticsearch, modifiedIntent, action, domainRecognit
 
                         const buildedIntent = {
                             text: intentText,
-                            intent: domainRecognitionTraining ? intent._source.domain : intent._id,
+                            intent: intent.intentName,
                             entities: newEntitiesList
                         };
 
@@ -115,26 +85,21 @@ const buildTrainingData = (elasticsearch, modifiedIntent, action, domainRecognit
                 }
 
                 const buildedIntent = {
-                    text: intentExample.userSays,
-                    intent: domainRecognitionTraining ? intent._source.domain : intent._id,
+                    text: intentExample,
+                    intent: intent.intentName,
                     entities: []
                 };
                 return buildedIntent;
             });
 
             return _.flatten(buildIntentsPerExamples);
-        });
+        })));
 
         const data = {
             rasa_nlu_data: {
-                intent_examples: getIntentExamples(_.flatten(commonExamples)),
-                entity_examples: getEntityExamples(_.flatten(commonExamples))
+                common_examples
             }
         };
-
-        if (domainRecognitionTraining){
-            delete data.rasa_nlu_data.entity_examples;
-        }
 
         return callback(null, data);
     });

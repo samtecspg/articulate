@@ -9,10 +9,11 @@ module.exports = (request, reply) => {
     let agent = request.payload;
     const redis = request.server.app.redis;
 
-    Async.waterfall([
-        (cb) => {
+    Async.series({
+        agentId: (cb) => {
 
             redis.incr('agentId', (err, newAgentId) => {
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred getting the new agent id.');
                     return cb(error);
@@ -21,40 +22,41 @@ module.exports = (request, reply) => {
                 return cb(null);
             });
         },
-        (cb) => {
+        addNameToList: (cb) => {
 
-            redis.zadd('agents', 'NX', agentId, agent.agentName, (err, zAddResponse) => {
+            redis.zadd('agents', 'NX', agentId, agent.agentName, (err, addResponse) => {
 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the name to the agents list.');
                     return cb(error);
                 }
-                return cb(null, zAddResponse);
+                if (addResponse !== 0){
+                    return cb(null);
+                }
+                else{
+                    const error = Boom.badRequest('An agent with this name already exists.');
+                    return cb(error, null);
+                }
             });
         },
-        (addResponse, cb) => {
+        agent: (cb) => {
 
-            if (addResponse !== 0){
-                agent = Object.assign({id: agentId}, agent);          
-                const flatAgent = Flat(agent);  
-                redis.hmset('agent:' + agentId, flatAgent, (err) => {
-                    
-                    if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the agent data.');
-                        return cb(error);
-                    }
-                    return cb(null, agent);
-                });
-            }
-            else{
-                const error = Boom.badRequest('An agent with this name already exists.');
-                return cb(error, null);
-            }
+            agent = Object.assign({id: agentId}, agent);          
+            const flatAgent = Flat(agent);  
+            redis.hmset('agent:' + agentId, flatAgent, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the agent data.');
+                    return cb(error);
+                }
+                return cb(null, agent);
+            });
         }
-    ], (err, result) => {
+    }, (err, result) => {
+
         if (err){
             return reply(err, null);
         }
-        return reply(result);
+        return reply(result.agent);
     });
 };

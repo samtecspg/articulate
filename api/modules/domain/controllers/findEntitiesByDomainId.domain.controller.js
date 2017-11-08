@@ -14,28 +14,28 @@ module.exports = (request, reply) => {
     if (request.query && request.query.limit > -1){
         limit = request.query.limit;
     }
+    const domainId = request.params.id;
 
     Async.waterfall([
         (cb) => {
 
-            redis.zrange('agents', start, limit === -1 ? limit : limit - 1, 'withscores', (err, agents) => {
-
+            redis.smembers(`domainEntities:${domainId}`, (err, entities) => {
+                
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the agents from the sorted set.');
+                    const error = Boom.badImplementation('An error ocurred getting the entities from the sorted set.');
                     return cb(error);
                 }
-                agents = _.chunk(agents, 2);
-                return cb(null, agents);
+                return cb(null, entities);
             });
         },
-        (agents, cb) => {
+        (entities, cb) => {
 
-            Async.map(agents, (agent, callback) => {
+            Async.map(entities, (entity, callback) => {
 
-                request.server.inject('/agent/' + agent[1], (res) => {
+                request.server.inject('/entity/' + entity, (res) => {
                     
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of agent ${agent[1]}`);
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
                         return callback(error, null);
                     }
                     return callback(null, res.result);

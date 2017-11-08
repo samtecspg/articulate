@@ -4,16 +4,6 @@ const IntentValidator = require('./intent.validator');
 
 const IntentRoutes = [
     {
-        method: 'GET',
-        path: '/intent',
-        config: {
-            description: 'Find all instances of the model from the data source',
-            tags: ['api'],
-            validate: IntentValidator.findAll,
-            handler: IntentController.findAll
-        }
-    },
-    {
         method: 'POST',
         path: '/intent',
         config: {
