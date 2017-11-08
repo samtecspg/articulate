@@ -1,29 +1,26 @@
 'use strict';
-const debug = require('debug')('nlu:model:Intent:findById');
 const Boom = require('boom');
+const Async = require('async');
+const Flat = require('flat');
 
 module.exports = (request, reply) => {
 
-    request.server.app.elasticsearch.get({
-        index: 'intent',
-        type: 'default',
-        id: request.params.id
-    }, (err, response) => {
+    const intentId = request.params.id;
+    const redis = request.server.app.redis;
 
+    redis.hgetall('intent:' + intentId, (err, data) => {
+        
         if (err){
-            debug('ElasticSearch - search intent: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
+            const error = Boom.badImplementation('An error ocurred retrieving the intent.');
             return reply(error);
         }
-
-        const intent = {};
-        intent._id = response._id;
-        Object.assign(intent, response._source);
-
-        return reply(null, intent);
+        if (data){
+            return reply(null, Flat.unflatten(data));
+        }
+        else {
+            const error = Boom.notFound('The specified intent doesn\'t exists');
+            return reply(error);                    
+        }
     });
 
 };

@@ -6,7 +6,7 @@ class DomainModel {
 
         return {
             id: Joi.number(),
-            agent: Joi.number(),
+            agent: Joi.string(),
             domainName: Joi.string(),
             enabled: Joi.boolean(),
             intentThreshold: Joi.number(),

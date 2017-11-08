@@ -3,6 +3,8 @@ const AddController = require('./add.domain.controller');
 const FindByIdController = require('./findById.domain.controller');
 const UpdateByIdController = require('./updateById.domain.controller');
 const DeleteByIdController = require('./deleteById.domain.controller');
+const FindEntitiesByDomainIdController = require('./findEntitiesByDomainId.domain.controller');
+const FindIntentsByDomainIdController = require('./findIntentsByDomainId.domain.controller');
 
 const DomainController = {
 
@@ -12,7 +14,11 @@ const DomainController = {
 
     updateById: UpdateByIdController,
 
-    deleteById: DeleteByIdController
+    deleteById: DeleteByIdController,
+    
+    findEntitiesByDomainId: FindEntitiesByDomainIdController,
+
+    findIntentsByDomainId: FindIntentsByDomainIdController,  
 };
 
 module.exports = DomainController;

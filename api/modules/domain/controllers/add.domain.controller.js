@@ -12,63 +12,65 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
             
-            redis.exists(`agent:${domain.agent}`, (err, agentExist) => {
+            redis.zscore('agents', domain.agent, (err, agentId) => {
                 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
                     return cb(error);
                 }
-                return cb(null, agentExist);
+                if (agentId){
+                    return cb(null, agentId);
+                }
+                else{
+                    const error = Boom.badRequest(`The agent ${domain.agent} doesn't exist`);
+                    return cb(error, null);
+                }
             });
         },
-        (agentExist, cb) => {
+        (agentId, cb) => {
             
-            if (agentExist){
-                redis.incr('domainId', (err, newDomainId) => {
-                    if (err){
-                        const error = Boom.badImplementation('An error ocurred getting the new domain id.');
-                        return cb(error);
-                    }
-                    domainId = newDomainId;
-                    return cb(null);
-                });
-            }
-            else{
-                const error = Boom.badRequest(`The agent with the id ${domain.agent} doesn't exist`);
-                return cb(error, null);
-            }
-        },
-        (cb) => {
+            redis.incr('domainId', (err, newDomainId) => {
 
-            redis.zadd(`agentDomains:${domain.agent}`, 'NX', domainId, domain.domainName, (err, addResponse) => {
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the new domain id.');
+                    return cb(error);
+                }
+                domainId = newDomainId;
+                return cb(null, agentId);
+            });
+        },
+        (agentId, cb) => {
+
+            redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, domain.domainName, (err, addResponse) => {
                 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the name to the domains list.');
                     return cb(error);
                 }
-                return cb(null, addResponse);
+                if (addResponse !== 0){
+                    return cb(null);
+                }
+                else{
+                    const error = Boom.badRequest(`A domain with this name already exists in the agent ${domain.agent}.`);
+                    return cb(error, null);
+                }
             });
         },
-        (addResponse, cb) => {
+        (cb) => {
 
-            if (addResponse !== 0){
-                domain = Object.assign({id: domainId}, domain);          
-                const flatDomain = Flat(domain);  
-                redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
-                    
-                    if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the domain data.');
-                        return cb(error);
-                    }
-                    return cb(null, domain);
-                });
-            }
-            else{
-                const error = Boom.badRequest(`A domain with this name already exists in the agent ${domain.agent}.`);
-                return cb(error, null);
-            }
+            domain = Object.assign({id: domainId}, domain);          
+            const flatDomain = Flat(domain);  
+            redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the domain data.');
+                    return cb(error);
+                }
+                return cb(null, domain);
+            });
         }
     ], (err, result) => {
+
         if (err){
             return reply(err, null);
         }

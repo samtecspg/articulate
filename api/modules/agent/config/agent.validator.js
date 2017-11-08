@@ -37,7 +37,8 @@ class AgentValidate {
             query: (() => {
 
                 return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
                 };
             })()
         };
@@ -100,7 +101,7 @@ class AgentValidate {
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    intentId: IntentSchema._id.required().description('Id of the intent')
+                    intentId: IntentSchema.id.required().description('Id of the intent')
                 };
             })()
         };
@@ -111,7 +112,7 @@ class AgentValidate {
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    intentId: IntentSchema._id.required().description('Id of the intent')
+                    intentId: IntentSchema.id.required().description('Id of the intent')
                 };
             })(),
             query: (() => {

@@ -1,116 +1,159 @@
 'use strict';
-const debug = require('debug')('nlu:model:Intent:add');
-const _ = require('lodash');
-const Guid = require('guid');
-const Boom = require('boom');
-const Helpers = require('../../../helpers');
 const Async = require('async');
+const Boom = require('boom');
+const Flat = require('flat');
 const IntentTools = require('../tools');
-
-const buildPayload = (intent) => {
-
-    const result = {};
-
-    const id = intent._id ? intent._id : Guid.create().toString();
-
-    //_id is not allowed as it is a system value
-    const values = _.clone(intent);
-    delete values._id;
-
-    //Create the payload for the bulk command in ES
-    result.payload = values;
-
-    //Add _id to the intent to return in the response
-    result.intent = Object.assign({ _id: id }, values);
-
-    return result;
-};
-
-const createIntent = (elasticsearchClient, payload, callback) => {
-
-    const intent = payload;
-
-    const sentValue = buildPayload(intent);
-
-    elasticsearchClient.create({
-        index: 'intent',
-        type: 'default',
-        id: sentValue.intent._id,
-        body: sentValue.payload
-    }, (err, response) => {
-
-        if (err){
-            debug('ElasticSearch - add intent: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return callback(error, null);
-        }
-
-        //There aren't errors, return the passed intent with the _id
-        return callback(null, sentValue.intent);
-    });
-};
-
+    
 module.exports = (request, reply) => {
 
-    Async.parallel([
-        (callback) => {
+    let intentId = null;
+    let agentId = null;
+    let domainId = null;
+    let intent = request.payload;
+    const server = request.server;
+    const redis = server.app.redis;
+    const rasa = server.app.rasa;
 
-            Helpers.exists(request.server.app.elasticsearch, 'agent', request.payload.agent, callback);
+    Async.series({
+        fathersCheck: (cb) => {
+            
+            Async.series([
+                (callback) => {
+
+                    redis.zscore('agents', intent.agent, (err, id) => {
+                        
+                        if (err){
+                            const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                            return callback(error);
+                        }
+                        if (id){
+                            agentId = id;
+                            return callback(null);
+                        }
+                        else{
+                            const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
+                            return callback(error, null);
+                        }
+                    });
+                },
+                (callback) => {
+                    Async.parallel([
+                        (cllbk) => {
+                            
+                            redis.zscore(`agentDomains:${agentId}`, intent.domain, (err, id) => {
+                                
+                                if (err){
+                                    const error = Boom.badImplementation(`An error ocurred checking if the domain ${intent.domain} exists in the agent ${intent.agent}.`);
+                                    return cllbk(error);
+                                }
+                                if (id){
+                                    domainId = id;
+                                    return cllbk(null);
+                                }
+                                else {
+                                    const error = Boom.badRequest(`The domain ${intent.domain} doesn't exist in the agent ${intent.agent}`);
+                                    return cllbk(error);
+                                }
+                            });
+                        },
+                        (cllbk) => {
+
+                            IntentTools.validateEntitiesTool(redis, agentId, intent.examples, (err) => {
+                                
+                                if (err) {
+                                    return cllbk(err);
+                                }
+                                return cllbk(null);
+                            });
+                        }
+                    ], (err, result) => {
+
+                        if (err){
+                            return callback(err);
+                        }
+                        return callback(null);
+                    });
+                }
+            ], (err) => {
+
+                if (err){
+                    return cb(err, null);
+                }
+                return cb(null);
+            });
         },
-        (callback) => {
+        intentId: (cb) => {
 
-            Helpers.exists(request.server.app.elasticsearch, 'domain', request.payload.domain, callback);
+            redis.incr('intentId', (err, newIntentId) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the new intent id.');
+                    return cb(error);
+                }
+                intentId = newIntentId;
+                return cb(null);
+            });
         },
-        (callback) => {
+        addToDomain: (cb) => {
 
-            const fields = {
-                agent: request.payload.agent,
-                _id: request.payload.domain
-            };
-            Helpers.belongs(request.server.app.elasticsearch, 'domain', fields, callback);
+            redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the name to the intents list.');
+                    return cb(error);
+                }
+                if (addResponse !== 0){
+                    return cb(null);
+                }
+                else{
+                    const error = Boom.badRequest(`A intent with this name already exists in the domain ${intent.domain}.`);
+                    return cb(error);
+                }
+            });
         },
-        (callback) => {
+        intent: (cb) => {
 
-            let entities = _.compact(_.map(request.payload.examples, 'entities'));
-            entities = entities ? _.map(_.flatten(entities), 'entity') : [];
-            Async.map(entities, (entity, cb) => {
-
-                IntentTools.validateEntityTool(request.server.app.elasticsearch, request.payload.agent, entity, cb);
-            }, callback);
+            intent = Object.assign({id: intentId}, intent);          
+            const flatIntent = Flat(intent);  
+            redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the intent data.');
+                    return cb(error);
+                }
+                return cb(null, intent);
+            });
         }
-    ], (validationErr) => {
+    }, (err, result) => {
 
-        if (validationErr) {
-            return reply(validationErr);
+        if (err){
+            return reply(err, null);
         }
 
-        Async.waterfall([
-            Async.apply(createIntent, request.server.app.elasticsearch, request.payload),
-            Async.apply(IntentTools.updateEntitiesTool, request.server.app.elasticsearch),
-            (intent, cb) => {
+        const resultIntent = result.intent;
 
+        Async.series([
+            Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId),
+            (cb) => {
+    
                 Async.parallel([
-                    Async.apply(IntentTools.retrainModelTool, request.server.app.elasticsearch, request.server.app.rasa, request.server, 'adding', intent),
-                    Async.apply(IntentTools.retrainDomainRecognizerTool, request.server.app.elasticsearch, request.server.app.rasa, request.server, 'adding', intent)
+                    Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId)//,
+                    //Async.apply(IntentTools.retrainDomainRecognizerTool, server, rasa, server, 'adding', resultIntent)
                 ], (err) => {
-
+    
                     if (err){
-                        return cb(err, null);
+                        return cb(err);
                     }
-                    return cb(null, intent);
+                    return cb(null);
                 });
             }
-        ], (err, intent) => {
-
+        ], (err) => {
+    
             if (err) {
                 return reply(err);
             }
-
-            return reply(null, intent);
+    
+            return reply(null, resultIntent);
         });
     });
-
 };
