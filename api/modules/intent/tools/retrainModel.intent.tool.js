@@ -28,9 +28,11 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
                 return callback(err);
             }
 
-            return callback(null);
+            const updateDomainPayload = {
+                lastTraining: trainingDate
+            };
 
-            /*const options = {
+            const options = {
                 url: '/domain/' + domainId,
                 method: 'PUT',
                 payload: updateDomainPayload
@@ -42,7 +44,7 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
                     return callback(res.result);
                 }
                 return callback(null);
-            });*/
+            });
         });
 
     });

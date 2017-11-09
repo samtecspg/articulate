@@ -37,7 +37,6 @@ class DomainValidate {
             payload: (() => {
 
                 return {
-                    agent: DomainSchema.agent.required(),
                     domainName: DomainSchema.domainName,
                     enabled: DomainSchema.enabled,
                     intentThreshold: DomainSchema.intentThreshold,
