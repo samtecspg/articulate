@@ -2,9 +2,7 @@
 
 const Wreck = require('wreck');
 const Boom = require('boom');
-
 const BuildTrainingData = require('./buildTrainingData.intent.tool');
-const debug = require('debug')('nlu:model:Intent:tool:retrainModel');
 
 const retrainModel = (server, rasa, agentName, domainName, domainId, callback) => {
 
