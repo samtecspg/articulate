@@ -135,10 +135,10 @@ module.exports = (request, reply) => {
         Async.series([
             Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId),
             (cb) => {
-    
+
                 Async.parallel([
-                    Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId)//,
-                    //Async.apply(IntentTools.retrainDomainRecognizerTool, server, rasa, server, 'adding', resultIntent)
+                    Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
+                    Async.apply(IntentTools.retrainDomainRecognizerTool, server, rasa, resultIntent.agent, agentId)
                 ], (err) => {
     
                     if (err){

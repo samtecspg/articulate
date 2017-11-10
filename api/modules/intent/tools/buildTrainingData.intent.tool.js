@@ -1,12 +1,12 @@
 'use strict';
 
 const _ = require('lodash');
-const GetData = require('./getData.intent.tool');
+const GetDomainData = require('./getDomainData.intent.tool');
 const GetEntitiesCombinations = require('./getEntitiesCombinations.intent.tool');
 
 const buildTrainingData = (server, domainId, callback) => {
 
-    GetData(server, domainId, (err, results) => {
+    GetDomainData(server, domainId, (err, results) => {
 
         if (err){
             return callback(err, null);
