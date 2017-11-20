@@ -24,8 +24,10 @@ const updateDataFunction = (redis, domainId, currentDomain, updateData, cb) => {
 
 module.exports = (request, reply) => {
 
+    let agentId = null;
     const domainId = request.params.id;
     const updateData = request.payload;
+    const requiresRetrain = false;
 
     const redis = request.server.app.redis;
     const server = request.server;
@@ -48,18 +50,21 @@ module.exports = (request, reply) => {
         },
         (currentDomain, cb) => {
 
-            if (updateData.domainName && updateData.domainName !== currentDomain.domainName){
+            const requiresNameChanges = (updateData.agent && updateData.agent !== currentIntent.agent) ||
+                                        (updateData.domainName && updateData.domainName !== currentIntent.domainName)
+            if (requiresNameChanges){
                 Async.waterfall([
                     (callback) => {
 
-                        redis.zscore('agents', currentDomain.agent, (err, agentId) => {
+                        redis.zscore('agents', currentDomain.agent, (err, id) => {
                             
                             if (err){
                                 const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
                                 return callback(error);
                             }
-                            if (agentId){
-                                return callback(null, agentId);
+                            if (id){
+                                agentId = id;
+                                return callback(null);
                             }
                             else{
                                 const error = Boom.badRequest(`The agent ${domain.agent} doesn't exist`);
@@ -67,7 +72,79 @@ module.exports = (request, reply) => {
                             }
                         });
                     },
-                    (agentId, callback) => {
+                    (callback) => {
+
+                        Async.waterfall([
+                            (callbk) => {
+
+                                server.inject(`/domain/${domainId}/intent`, (res) => {
+                                    
+                                    if (res.statusCode !== 200){
+                                        const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${domainId}`);
+                                        return callbk(error, null);
+                                    }
+                                    return callbk(null, res.result);
+                                });
+                            },
+                            (intents, callbk) => {
+
+                                Async.map(intents, (intent, cllback) => {
+
+                                    requiresRetrain = true;
+                                    Async.parallel([
+                                        (cbk) => {
+
+                                            intent.agent = updateData.agent;
+                                            intent.domain = updateData.domainName;
+
+                                            redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
+                                                
+                                                if (res.statusCode !== 200){
+                                                    const error = Boom.create(res.statusCode, `An error ocurred updating the intent ${intent.id} with the new values of the entity`);
+                                                    return cbk(error, null);
+                                                }
+                                                return cbk(null);
+                                            });
+                                        },
+                                        (cbk) => {
+
+                                            const updatedValues = {
+                                                agent: updateData.agent,
+                                                domain: updateData.domainName
+                                            };
+                                            redis.hmset(`scenario:${intent.id}`, Flat({updatedValues}), (err, result) => {
+                                                
+                                                if (res.statusCode !== 200){
+                                                    const error = Boom.create(res.statusCode, `An error ocurred updating the scenario of the intent ${intent.id} with the new values of the entity`);
+                                                    return cbk(error, null);
+                                                }
+                                                return cbk(null);
+                                            });
+                                        }
+                                    ], (err, result) => {
+
+                                        if (err){
+                                            return cllback(err);
+                                        }
+                                        return cllback(null);
+                                    })
+                                }, (err, result) => {
+                                    
+                                    if (err){
+                                        return callbk(err);
+                                    }
+                                    return callbk(null);
+                                });
+                            }
+                        ], (err, result) => {
+
+                            if (err){
+                                return callback(err);
+                            }
+                            return callback(null);
+                        });
+                    },
+                    (callback) => {
 
                         redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, updateData.domainName, (err, addResponse) => {
                             
@@ -84,21 +161,15 @@ module.exports = (request, reply) => {
                             }
                         });
                     },
-                    (agentId, callback) => {
+                    (callback) => {
                         
-                        redis.zrem(`agentDomains:${agentId}`, currentDomain.domainName, (err, addResponse) => {
+                        redis.zrem(`agentDomains:${agentId}`, currentDomain.domainName, (err, removeResult) => {
                             
                             if (err){
                                 const error = Boom.badImplementation( `An error ocurred removing the name ${currentDomain.domainName} from the domains list of the agent ${currentDomain.agent}.`);
                                 return callback(error);
                             }
-                            if (addResponse !== 0){
-                                return callback(null);
-                            }
-                            else{
-                                const error = Boom.badRequest(`A domain with this name already exists in the agent ${domain.agent}.`);
-                                return callback(error, null);
-                            }
+                            return callback(null);
                         });
                     },
                     (callback) => {
@@ -136,6 +207,7 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
+        //call retrain here
         return reply(result);
     });
 };
