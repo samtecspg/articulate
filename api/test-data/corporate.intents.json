@@ -2,7 +2,7 @@
   {
     "agent": "Samson",
     "domain": "Corporate",
-    "intentName": "getacronymDefinition",
+    "intentName": "getAcronymDefinition",
     "examples": [
       "What does {acronym} mean?",
       "What is {acronym}?",
