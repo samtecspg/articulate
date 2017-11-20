@@ -2,6 +2,7 @@
 
 module.exports = {
     Agent: require('./agent.model'),
+    Context: require('./context.model'),
     Domain: require('./domain.model'),
     Entity: require('./entity.model'),
     Example: require('./example.entity.model'),
