@@ -4,7 +4,7 @@ const UpdateEntitiesDomainTool = require('./updateEntitiesDomain.intent.tool');
 const RetrainModelTool = require('./retrainModel.intent.tool');
 const RetrainDomainRecognizerTool = require('./retrainDomainRecognizer.intent.tool');
 
-const EntityController = {
+const IntentTools = {
 
     validateEntitiesTool: ValidateEntitiesTool,
 
@@ -15,4 +15,4 @@ const EntityController = {
     retrainDomainRecognizerTool: RetrainDomainRecognizerTool
 };
 
-module.exports = EntityController;
+module.exports = IntentTools;
