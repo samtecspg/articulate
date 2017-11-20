@@ -4,16 +4,6 @@ const ScenarioValidator = require('./scenario.validator');
 
 const ScenarioRoutes = [
     {
-        method: 'GET',
-        path: '/scenario',
-        config: {
-            description: 'Find all instances of the model from the data source',
-            tags: ['api'],
-            validate: ScenarioValidator.findAll,
-            handler: ScenarioController.findAll
-        }
-    },
-    {
         method: 'POST',
         path: '/scenario',
         config: {
