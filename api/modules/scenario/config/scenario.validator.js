@@ -7,15 +7,6 @@ const Joi = require('joi');
 class ScenarioValidate {
     constructor() {
 
-        this.findAll = {
-            query: (() => {
-
-                return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
-                };
-            })()
-        };
-
         this.add = {
             payload: (() => {
 
@@ -58,9 +49,6 @@ class ScenarioValidate {
             payload: (() => {
 
                 return {
-                    agent: ScenarioSchema.agent.required(),
-                    domain: ScenarioSchema.domain.required(),
-                    intent: ScenarioSchema.intent.required(),
                     scenarioName: ScenarioSchema.scenarioName,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
