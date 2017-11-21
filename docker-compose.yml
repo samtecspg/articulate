@@ -18,14 +18,12 @@ services:
     # same for both the var thats projected into the app (the first name)
     # and the name thats expected in the .env (the second name)
     environment:
-      - ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL:-http://elasticsearch:9200}
       - REDIS_URL=${REDIS_URL:-http://redis:6379}
-      - ES_BASIC_AUTH=${ES_BASIC_AUTH:-elastic:changeme}
       - RASA_URL=${RASA_URL:-http://rasa:5000}
       - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
       - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
     volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects"]
-    entrypoint: ['/bin/bash','wait-for-es.sh', 'elasticsearch:9200', 'node', 'start.js']
+    entrypoint: ['node', 'start.js']
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/entity']
   ui:
@@ -47,30 +45,5 @@ services:
     command: redis-server --appendonly yes
     volumes:
       - ${REDIS_DATA:-./api/helpers-stuff/redis-data}:/data
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-5.4.0}
-    environment: ['http.host=0.0.0.0', 'transport.host=127.0.0.1']
-    ports: ['0.0.0.0:9200:9200']
-    # environment:
-    #  - ES_JAVA_OPTS=${ES_RAM:--Xmx512m -Xms512m}
-    networks: ['alpha-nlu-network']
-    volumes: 
-      - ${ES_CONFIG:-./api/helpers-stuff/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ${ES_DATA:-./api/helpers-stuff/es-data}:/usr/share/elasticsearch/data
-    # Check that Elasticsearch is responding before hitting it with real requests.
-    healthcheck:
-      test: ['CMD', 'curl', '-f', '-u', 'elastic:changeme', 'http://localhost:9200']
-  kibana:
-    image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION:-5.4.0}
-    ports: ['0.0.0.0:5601:5601']
-    networks: ['alpha-nlu-network']
-    volumes:
-      - ${KIBANA_CONFIG:-./api/helpers-stuff/kibana.yml}:/usr/share/kibana/config/kibana.yml
-    logging: #kibana log is uselessly chatty, turning it off
-        driver: "none"
-    depends_on: 
-        - elasticsearch
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:5601/login']
 
 networks: {alpha-nlu-network: {}}
