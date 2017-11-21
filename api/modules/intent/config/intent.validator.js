@@ -37,8 +37,6 @@ class IntentValidate {
             payload: (() => {
 
                 return {
-                    agent: IntentSchema.agent,
-                    domain: IntentSchema.domain,
                     intentName: IntentSchema.intentName,
                     examples: IntentSchema.examples
                 };

@@ -37,7 +37,7 @@ const getAgentData = (server, agentId, cb) => {
                         server.inject(`/domain/${domain.id}/intent`, (res) => {
                             
                             if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error ocurred getting the entities of the domain ${domain.domainName}`);
+                                const error = Boom.create(res.statusCode, `An error ocurred getting the intents of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
                             }
                             return cllbck(null, res.result);

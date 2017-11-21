@@ -4,7 +4,8 @@
   "description": "NLU API",
   "main": "start.js",
   "scripts": {
-    "test": "lab --lint --coverage",
+    "test": "lab",
+    "test:full": "lab --lint --coverage",
     "start": "npm-run-all --parallel test start:server",
     "start:server": "nodemon start.js",
     "precommit": "npm run git:hook",

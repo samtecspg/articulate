@@ -40,8 +40,6 @@ class EntityValidate {
 
                 return {
                     entityName: EntitySchema.entityName,
-                    agent: EntitySchema.agent,
-                    usedBy: EntitySchema.usedBy,
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms

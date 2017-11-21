@@ -14,7 +14,7 @@ const test = lab.test;
 
 suite('NLU API', () => {
 
-    suite('start server and validate index', () => {
+    suite('start server and flush db', () => {
 
         test('should start the server successfuly', (done) => {
 
@@ -45,7 +45,13 @@ suite('NLU API', () => {
                             done(errStart);
                         }
                         expect(server).to.be.an.object();
-                        done();
+                        server.app.redis.flushall( (errFlush, resultFlush) => {
+
+                            if (err){
+                                done(err);
+                            }
+                            done();
+                        })
                     });
                 });
             });

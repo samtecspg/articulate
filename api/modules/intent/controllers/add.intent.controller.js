@@ -133,7 +133,7 @@ module.exports = (request, reply) => {
         const resultIntent = result.intent;
 
         Async.series([
-            Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId),
+            Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, null),
             (cb) => {
 
                 Async.parallel([
