@@ -9,18 +9,31 @@ const redis = require('redis');
 
 const updateDataFunction = (redis, scenarioId, currentScenario, updateData, cb) => {
 
+    if(updateData.slots){
+        currentScenario.slots = updateData.slots;
+    }
+    if(updateData.intentResponses){
+        currentScenario.intentResponses = updateData.intentResponses;
+    }
     const flatScenario = Flat(currentScenario);
     const flatUpdateData = Flat(updateData);
     Object.keys(flatUpdateData).forEach( (key) => {
         flatScenario[key] = flatUpdateData[key]; 
     });
-    redis.hmset(`scenario:${scenarioId}`, flatScenario, (err) => {
+    redis.del(`scenario:${scenarioId}`, (err) => {
         
         if (err){
-            const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+            const error = Boom.badImplementation('An error ocurred temporaly removing the scenario for the update.');
             return cb(error);
         }
-        return cb(null, Flat.unflatten(flatScenario));
+        redis.hmset(`scenario:${scenarioId}`, flatScenario, (err) => {
+            
+            if (err){
+                const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                return cb(error);
+            }
+            return cb(null, Flat.unflatten(flatScenario));
+        });
     });
 }
 

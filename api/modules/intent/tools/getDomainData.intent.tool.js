@@ -21,7 +21,7 @@ const getDomainData = (server, domainId, cb) => {
             server.inject(`/domain/${domainId}/intent`, (res) => {
                 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the entities of the domain ${domainId}`);
+                    const error = Boom.create(res.statusCode, `An error ocurred getting the intents of the domain ${domainId}`);
                     return callback(error, null);
                 }
                 return callback(null, res.result);

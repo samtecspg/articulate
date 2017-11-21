@@ -5,7 +5,8 @@ const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    const redis = request.server.app.redis;
+    const server = request.server;
+    const redis = server.app.redis;
     let start = 0;
     if (request.query && request.query.start > -1){
         start = request.query.start;
@@ -17,6 +18,21 @@ module.exports = (request, reply) => {
     const domainId = request.params.id;
 
     Async.waterfall([
+        (cb) => {
+            
+            server.inject(`/domain/${domainId}`, (res) => {
+                
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 404){
+                        const error = Boom.notFound('The specified domain doesn\'t exists');
+                        return cb(error, null);
+                    }
+                    const error = Boom.create(res.statusCode, `An error ocurred getting the domain`);
+                    return cb(error, null);
+                }
+                return cb(null);
+            });
+        },
         (cb) => {
 
             redis.zrange(`domainIntents:${domainId}`, start, limit === -1 ? limit : limit - 1, 'withscores', (err, intents) => {

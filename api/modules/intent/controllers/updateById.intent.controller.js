@@ -9,50 +9,60 @@ const redis = require('redis');
 
 const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, cb) => {
 
+    const oldExamples = currentIntent.examples;
+    if (updateData.examples){
+        currentIntent.examples = updateData.examples;
+    }
     const flatIntent = Flat(currentIntent);
     const flatUpdateData = Flat(updateData);
     Object.keys(flatUpdateData).forEach( (key) => {
         flatIntent[key] = flatUpdateData[key]; 
     });
 
-    redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
-        
+    redis.del(`intent:${intentId}`, (err) => {
+
         if (err){
-            const error = Boom.badImplementation('An error ocurred adding the intent data.');
+            const error = Boom.badImplementation('An error ocurred temporaly removing the intent for the update.');
             return cb(error);
         }
-
-        const resultIntent = Flat.unflatten(flatIntent);
-        const equal = _.eq(updateData.examples, currentIntent.examples) && updateData.agent === currentIntent.agent && updateData.domain === currentIntent.domain;
-        if (updateData.examples && !equal){
-            Async.series([
-                Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId),
-                (callback) => {
+        redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
+            
+            if (err){
+                const error = Boom.badImplementation('An error ocurred adding the intent data.');
+                return cb(error);
+            }
+            const resultIntent = Flat.unflatten(flatIntent);
+            const equal = _.eq(updateData.examples, currentIntent.examples) && updateData.agent === currentIntent.agent && updateData.domain === currentIntent.domain;
+            if (updateData.examples && !equal){
+                Async.series([
+                    Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, oldExamples),
+                    (callback) => {
+        
+                        Async.parallel([
+                            Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
+                            Async.apply(IntentTools.retrainDomainRecognizerTool, server, rasa, resultIntent.agent, agentId)
+                        ], (err) => {
+            
+                            if (err){
+                                return callback(err);
+                            }
+                            return callback(null);
+                        });
+                    }
+                ], (err) => {
+            
+                    if (err) {
+                        return cb(err);
+                    }
+            
+                    return cb(null, resultIntent);
+                });
     
-                    Async.parallel([
-                        Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
-                        Async.apply(IntentTools.retrainDomainRecognizerTool, server, rasa, resultIntent.agent, agentId)
-                    ], (err) => {
-        
-                        if (err){
-                            return callback(err);
-                        }
-                        return callback(null);
-                    });
-                }
-            ], (err) => {
-        
-                if (err) {
-                    return cb(err);
-                }
-        
+            }
+            else {
                 return cb(null, resultIntent);
-            });
-
-        }
-        else {
-            return cb(null, resultIntent);
-        }
+            }
+        });
     });
 }
 
@@ -121,6 +131,21 @@ module.exports = (request, reply) => {
         },
         (currentIntent, cb) => {
 
+            if (updateData.examples){
+                IntentTools.validateEntitiesTool(redis, agentId, updateData.examples, (err) => {
+                    
+                    if (err) {
+                        return cb(err);
+                    }
+                    return cb(null, currentIntent);
+                });
+            }
+            else {
+                return cb(null, currentIntent);
+            }
+        },
+        (currentIntent, cb) => {
+
             if (updateData.intentName && updateData.intentName !== currentIntent.intentName){
                 Async.waterfall([
                     (callback) => {
@@ -142,7 +167,7 @@ module.exports = (request, reply) => {
                     },
                     (callback) => {
                         
-                        redis.zrem(`domainIntents:${domainId}`, currentIntent.intentName, (err, addResponse) => {
+                        redis.zrem(`domainIntents:${domainId}`, currentIntent.intentName, (err) => {
                             
                             if (err){
                                 const error = Boom.badImplementation( `An error ocurred removing the name ${currentIntent.intentName} from the intents list of the agent ${currentIntent.agent}.`);
@@ -187,13 +212,25 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
 
-        redis.hmset(`scenario:${result.id}`, { agent: result.agent, domain: result.domain, intent: result.intentName }, (err) => {
-            
+        redis.exists(`scenario:${result.id}`, (err, exists) => {
+
             if (err){
-                const error = Boom.badImplementation('Intent updated. An error ocurred updating the new values in the scenario of the intent.');
+                const error = Boom.badImplementation('Intent updated. An error ocurred checking if the scenario exists.');
                 return reply(error);
             }
-            return reply(null);
+            if (exists){
+                redis.hmset(`scenario:${result.id}`, { intent: result.intentName }, (err) => {
+                    
+                    if (err){
+                        const error = Boom.badImplementation('Intent updated. An error ocurred updating the new values in the scenario of the intent.');
+                        return reply(error);
+                    }
+                    return reply(result);
+                });
+            }
+            else {
+                return reply(result);
+            }
         });
     });
 };

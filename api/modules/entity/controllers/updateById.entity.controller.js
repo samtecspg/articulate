@@ -2,11 +2,15 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
+const _ = require('lodash');
 
 const redis = require('redis');
 
 const updateDataFunction = (redis, entityId, currentEntity, updateData, cb) => {
 
+    if (updateData.examples){
+        currentEntity.examples = updateData.examples;
+    }
     const flatEntity = Flat(currentEntity);
     const flatUpdateData = Flat(updateData);
     Object.keys(flatUpdateData).forEach( (key) => {
@@ -52,7 +56,7 @@ module.exports = (request, reply) => {
         },
         (currentEntity, cb) => {
 
-            const requiresNameChanges = (updateData.entityName && updateData.entityName !== currentIntent.entityName);
+            const requiresNameChanges = (updateData.entityName && updateData.entityName !== currentEntity.entityName);
             if (requiresNameChanges){
                 oldEntityName = currentEntity.entityName;
                 newEntityName = updateData.entityName;
@@ -85,7 +89,7 @@ module.exports = (request, reply) => {
                                 return callback(error);
                             }
                             if (addResponse !== 0){
-                                return callback(null, agentId);
+                                return callback(null);
                             }
                             else{
                                 const error = Boom.badRequest(`A entity with this name already exists in the agent ${currentEntity.agent}.`);
@@ -139,7 +143,7 @@ module.exports = (request, reply) => {
                 });
             }
         }
-    ], (err, result) => {
+    ], (err, updatedEntity) => {
 
         if (err){
             return reply(err, null);
@@ -148,85 +152,156 @@ module.exports = (request, reply) => {
         if (requiresRetrain) {
             
             Async.waterfall([
-                (cb) => {
+                (callbackGetDomainsUsingEntity) => {
 
-                    redis.smembers(`entityDomain:${result.id}`, (err, domainsUsingEntity) => {
+                    redis.smembers(`entityDomain:${updatedEntity.id}`, (err, domainsUsingEntity) => {
                         
                         if (err){
-                            const error = Boom.badImplementation(`An error ocurred getting the domains used by the entity ${result.entityName}`);
-                            return cb(error);
+                            const error = Boom.badImplementation(`An error ocurred getting the domains used by the entity ${updatedEntity.entityName}`);
+                            return callbackGetDomainsUsingEntity(error);
                         }
                         if (domainsUsingEntity && domainsUsingEntity.length > 0){
-                            return cb(null, domainsUsingEntity);
+                            return callbackGetDomainsUsingEntity(null, domainsUsingEntity);
                         }
                         else {
-                            return reply(result);
+                            return reply(updatedEntity);
                         }
                     });
                 },
-                (domainsUsingEntity, cb) => {
+                (domainsUsingEntity, callbackUpdateEachDomainIntents) => {
 
-                    Async.map(domainsUsingEntity, (domain, callback) => {
+                    Async.map(domainsUsingEntity, (domain, callbackMapOfDomains) => {
 
                         Async.waterfall([
-                            (callbk) => {
+                            (callbackGetIntentsOfDomain) => {
 
-                                server.inject(`/domain/${domain.id}/intent`, (res) => {
+                                server.inject(`/domain/${domain}/intent`, (res) => {
                                     
                                     if (res.statusCode !== 200){
-                                        const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${domain.domainName}`);
-                                        return callbk(error, null);
+                                        const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${domain}`);
+                                        return callbackGetIntentsOfDomain(error, null);
                                     }
-                                    return callbk(null, res.result);
+                                    return callbackGetIntentsOfDomain(null, res.result);
                                 });
                             },
-                            (intents, callbk) => {
+                            (intents, callbackUpdateIntentsAndScenarios) => {
 
-                                Async.map(intents, (intent, cllback) => {
+                                Async.map(intents, (intent, callbackMapOfIntent) => {
+                                    
+                                    Async.parallel([
+                                        (callbackUpdateIntent) => {
 
-                                    let updateIntent = false;
-                                    if (oldEntityName !== newEntityName){
-                                        intent.examples = _.map(intent.examples, (example) => {
+                                            let updateIntent = false;
+                                            if (oldEntityName !== newEntityName){
+                                                intent.examples = _.map(intent.examples, (example) => {
 
-                                            if (example.indexOf(`{${oldEntityName}}`) !== -1){
-                                                updateIntent = true;
+                                                    if (example.indexOf(`{${oldEntityName}}`) !== -1){
+                                                        updateIntent = true;
+                                                    }
+                                                    return example.replace(new RegExp('\{' + oldEntityName + '\}', 'g'), '\{' + newEntityName + '\}');
+                                                });
                                             }
-                                            return target.replace(new RegExp('\{' + oldEntityName + '\}', 'g'), '\{' + newEntityName + '\}');
-                                        });
-                                    }
 
-                                    if (updateIntent){
-                                        redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
-                                            
-                                            if (res.statusCode !== 200){
-                                                const error = Boom.create(res.statusCode, `An error ocurred updating the intent ${intent.id} with the new values of the entity`);
-                                                return cllback(error, null);
+                                            if (updateIntent){
+                                                redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
+                                                    
+                                                    if (err){
+                                                        const error = Boom.badImplementation(`An error ocurred updating the intent ${intent.id} with the new values of the entity`);
+                                                        return callbackUpdateIntent(error, null);
+                                                    }
+                                                    return callbackUpdateIntent(null);
+                                                });
                                             }
-                                            return cllback(null);
-                                        });
-                                    }
-                                    return cllback(null);
+                                            else {
+                                                return callbackUpdateIntent(null);
+                                            }
+                                        },
+                                        (callbackUpdateScenario) => {
+
+                                            Async.waterfall([
+                                                (callbackGetScenario) => {
+                                                    
+                                                    server.inject(`/scenario/${intent.id}`, (res) => {
+                                                        
+                                                        if (res.statusCode !== 200){
+                                                            if (res.statusCode === 404){
+                                                                return callbackGetScenario(null, null);
+                                                            }
+                                                            const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${scenarioId}`);
+                                                            return callbackGetScenario(error, null);
+                                                        }
+                                                        return callbackGetScenario(null, res.result);
+                                                    });
+                                                },
+                                                (currentScenario, callbackUpdateScenarioSlots) => {
+                                        
+                                                    if (currentScenario){
+                                                        let updateScenario = false;
+                                                        if (oldEntityName !== newEntityName){
+                                                            currentScenario.slots = _.map(currentScenario.slots, (slot) => {
+            
+                                                                if (slot.entity === oldEntityName){
+                                                                    updateScenario = true;
+                                                                    slot.entity = newEntityName;
+                                                                }
+                                                                return slot;
+                                                            });
+                                                        }
+            
+                                                        if (updateScenario){
+                                                            redis.hmset(`scenario:${intent.id}`, Flat(currentScenario), (err, result) => {
+                                                                
+                                                                if (err){
+                                                                    const error = Boom.badImplementation(`An error ocurred updating the scenario ${intent.id} with the new values of the entity`);
+                                                                    return callbackUpdateScenarioSlots(error, null);
+                                                                }
+                                                                return callbackUpdateScenarioSlots(null);
+                                                            });
+                                                        }
+                                                        else {
+                                                            return callbackUpdateScenarioSlots(null);
+                                                        }
+                                                    }
+                                                    else {
+                                                        return callbackUpdateScenarioSlots(null);
+                                                    }
+                                                }
+                                            ], (err, result) => {
+                                        
+                                                if (err){
+                                                    return callbackUpdateScenario(err, null);
+                                                }
+                                                return callbackUpdateScenario(result);
+                                            });
+                                        }
+                                    ], (err, result) => {
+    
+                                        if (err){
+                                            return callbackMapOfIntent(err);
+                                        }
+                                        return callbackMapOfIntent(null);
+                                    });
                                 }, (err, result) => {
                                     
                                     if (err){
-                                        return callbk(err);
+                                        return callbackUpdateIntentsAndScenarios(err);
                                     }
-                                    return callbk(null);
+                                    return callbackUpdateIntentsAndScenarios(null);
                                 });
                             }
                         ], (err, result) => {
 
                             if (err){
-                                return callback(err);
+                                return callbackMapOfDomains(err);
                             }
-                            return callback(null);
+                            return callbackMapOfDomains(null);
                         });
                     }, (err, result) => {
                         
                         if (err){
-                            return cb(err);
+                            return callbackUpdateEachDomainIntents(err);
                         }
-                        return cb(null);
+                        return callbackUpdateEachDomainIntents(null);
                     });
                 }
             ], (err, result) => {
@@ -235,10 +310,11 @@ module.exports = (request, reply) => {
                     return reply(err);
                 }
                 //call retrain here
-                return reply(result);
+                return reply(updatedEntity);
             });
         }
-
-        return reply(result);
+        else{
+            return reply(updatedEntity);
+        }
     });
 };

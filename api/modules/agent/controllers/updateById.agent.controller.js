@@ -3,8 +3,6 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 
-const redis = require('redis');
-
 const updateDataFunction = (redis, agentId, currentAgent, updateData, cb) => {
 
     const flatAgent = Flat(currentAgent);
@@ -24,10 +22,9 @@ const updateDataFunction = (redis, agentId, currentAgent, updateData, cb) => {
 
 module.exports = (request, reply) => {
 
-    let agentId = null;
     const agentId = request.params.id;
     const updateData = request.payload;
-    const requiresRetrain = false;
+    let requiresRetrain = false;
 
     const redis = request.server.app.redis;
     const server = request.server;
@@ -50,9 +47,26 @@ module.exports = (request, reply) => {
         },
         (currentAgent, cb) => {
 
-            const requiresNameChanges = updateData.agentName && updateData.agentName !== currentIntent.agentName;
+            const requiresNameChanges = updateData.agentName && updateData.agentName !== currentAgent.agentName;
             if (requiresNameChanges){
                 Async.waterfall([
+                    (callback) => {
+
+                        redis.zadd(`agents`, 'NX', agentId, updateData.agentName, (err, addResponse) => {
+                            
+                            if (err){
+                                const error = Boom.badImplementation(`An error ocurred adding the name ${currentAgent.agentName} to the agents list of the agent ${currentAgent.agent}.`);
+                                return callback(error);
+                            }
+                            if (addResponse !== 0){
+                                return callback(null);
+                            }
+                            else{
+                                const error = Boom.badRequest(`A agent with this name already exists in the agent ${currentAgent.agent}.`);
+                                return callback(error, null);
+                            }
+                        });
+                    },
                     (callback) => {
 
                         Async.parallel([
@@ -82,8 +96,8 @@ module.exports = (request, reply) => {
                                                     requiresRetrain = true;
                                                     redis.hmset(`domain:${domain.id}`, Flat(domain), (err, result) => {
                                                         
-                                                        if (res.statusCode !== 200){
-                                                            const error = Boom.create(res.statusCode, `An error ocurred updating the domain ${domain.id} with the new values of the agent`);
+                                                        if (err){
+                                                            const error = Boom.badImplementation(`An error ocurred updating the domain ${domain.id} with the new values of the agent`);
                                                             return callbackUpdateDomain(error, null);
                                                         }
                                                         return callbackUpdateDomain(null);
@@ -114,8 +128,8 @@ module.exports = (request, reply) => {
                             
                                                                         redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
                                                                             
-                                                                            if (res.statusCode !== 200){
-                                                                                const error = Boom.create(res.statusCode, `An error ocurred updating the intent ${intent.id} with the new values of the entity`);
+                                                                            if (err){
+                                                                                const error = Boom.badImplementation(`An error ocurred updating the intent ${intent.id} with the new values of the entity`);
                                                                                 return callbackUpdateIntent(error, null);
                                                                             }
                                                                             return callbackUpdateIntent(null);
@@ -126,10 +140,10 @@ module.exports = (request, reply) => {
                                                                         const updatedValues = {
                                                                             agent: updateData.agentName
                                                                         };
-                                                                        redis.hmset(`scenario:${intent.id}`, Flat({updatedValues}), (err, result) => {
+                                                                        redis.hmset(`scenario:${intent.id}`, updatedValues, (err, result) => {
                                                                             
-                                                                            if (res.statusCode !== 200){
-                                                                                const error = Boom.create(res.statusCode, `An error ocurred updating the scenario of the intent ${intent.id} with the new values of the entity`);
+                                                                            if (err){
+                                                                                const error = Boom.badImplementation(`An error ocurred updating the scenario of the intent ${intent.id} with the new values of the entity`);
                                                                                 return callbackUpdateScenario(error, null);
                                                                             }
                                                                             return callbackUpdateScenario(null);
@@ -197,18 +211,18 @@ module.exports = (request, reply) => {
                                     },
                                     (entities, callbackUpdateEachEntity) => {
 
-                                        Async.map(entities, (entity, callbackMapOfDomain) => {
+                                        Async.map(entities, (entity, callbackMapOfEntity) => {
                                             
-                                            domain.agent = updateData.agentName;
+                                            entity.agent = updateData.agentName;
                                             
                                             requiresRetrain = true;
-                                            redis.hmset(`domain:${domain.id}`, Flat(domain), (err, result) => {
+                                            redis.hmset(`entity:${entity.id}`, Flat(entity), (err, result) => {
                                                 
-                                                if (res.statusCode !== 200){
-                                                    const error = Boom.create(res.statusCode, `An error ocurred updating the domain ${domain.id} with the new values of the agent`);
-                                                    return callbackUpdateDomain(error, null);
+                                                if (err){
+                                                    const error = Boom.badImplementation(`An error ocurred updating the entity ${entity.id} with the new values of the agent`);
+                                                    return callbackMapOfEntity(error, null);
                                                 }
-                                                return callbackUpdateDomain(null);
+                                                return callbackMapOfEntity(null);
                                             });                                  
                                         }, (err, result) => {
                                             
@@ -235,25 +249,8 @@ module.exports = (request, reply) => {
                         });
                     },
                     (callback) => {
-
-                        redis.zadd(`agentAgents:${agentId}`, 'NX', agentId, updateData.agentName, (err, addResponse) => {
-                            
-                            if (err){
-                                const error = Boom.badImplementation(`An error ocurred adding the name ${currentAgent.agentName} to the agents list of the agent ${currentAgent.agent}.`);
-                                return callback(error);
-                            }
-                            if (addResponse !== 0){
-                                return callback(null, agentId);
-                            }
-                            else{
-                                const error = Boom.badRequest(`A agent with this name already exists in the agent ${currentAgent.agent}.`);
-                                return callback(error, null);
-                            }
-                        });
-                    },
-                    (callback) => {
                         
-                        redis.zrem(`agentAgents:${agentId}`, currentAgent.agentName, (err, removeResult) => {
+                        redis.zrem(`agents`, currentAgent.agentName, (err, removeResult) => {
                             
                             if (err){
                                 const error = Boom.badImplementation( `An error ocurred removing the name ${currentAgent.agentName} from the agents list of the agent ${currentAgent.agent}.`);
