@@ -49,7 +49,7 @@ module.exports = (request, reply) => {
 
             Async.map(intents, (intent, callback) => {
 
-                request.server.inject('/intent/' + intent[1], (res) => {
+                server.inject('/intent/' + intent[1], (res) => {
                     
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the intent ${intent[1]}`);
