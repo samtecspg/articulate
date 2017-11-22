@@ -9,7 +9,7 @@ class ScenarioModel {
             id: Joi.number(),
             name: Joi.string(),
             scenario: Joi.string(),
-            slots: Joi.array().items(Joi.object())
+            slots: Joi.object()
         };
     };
 }

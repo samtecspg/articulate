@@ -1,18 +1,15 @@
 'use strict';
-const AddController = require('./add.context.controller');
+const AddByController = require('./addById.context.controller');
 const FindByIdController = require('./findById.context.controller');
 const UpdateByIdController = require('./updateById.context.controller');
-const DeleteByIdController = require('./deleteById.context.controller');
 
 const ContextController = {
 
-    add: AddController,
+    addById: AddByController,
 
     findById: FindByIdController,
 
-    updateById: UpdateByIdController,
-
-    deleteById: DeleteByIdController
+    updateById: UpdateByIdController
 };
 
 module.exports = ContextController;
