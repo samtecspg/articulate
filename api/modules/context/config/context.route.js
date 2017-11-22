@@ -5,17 +5,17 @@ const ContextValidator = require('./context.validator');
 const ContextRoutes = [
     {
         method: 'POST',
-        path: '/context',
+        path: '/context/{sessionId}',
         config: {
             description: 'Create a new instance of the model and persist it into the data source',
             tags: ['api'],
-            validate: ContextValidator.add,
-            handler: ContextController.add
+            validate: ContextValidator.addById,
+            handler: ContextController.addById
         }
     },
     {
         method: 'GET',
-        path: '/context/{id}',
+        path: '/context/{sessionId}',
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
@@ -25,22 +25,12 @@ const ContextRoutes = [
     },
     {
         method: 'PUT',
-        path: '/context/{id}',
+        path: '/context/{sessionId}/{id}',
         config: {
             description: 'Update attributes for a model instance and persist it into the data source',
             tags: ['api'],
             validate: ContextValidator.updateById,
             handler: ContextController.updateById
-        }
-    },
-    {
-        method: 'DELETE',
-        path: '/context/{id}',
-        config: {
-            description: 'Delete a model instance by id from the data source',
-            tags: ['api'],
-            validate: ContextValidator.deleteById,
-            handler: ContextController.deleteById
         }
     }
 ];

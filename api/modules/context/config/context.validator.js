@@ -7,13 +7,19 @@ const Joi = require('joi');
 class ContextValidate {
     constructor() {
 
-        this.add = {
+        this.addById = {
+            params: (() => {
+
+                return {
+                    sessionId: Joi.string().required().description('Id of the session')
+                };
+            })(),
             payload: (() => {
 
                 return {
                     name: ContextSchema.name.required(),
                     scenario: ContextSchema.scenario.required(),
-                    slots: ContextSchema.slots.required()
+                    slots: ContextSchema.slots
                 };
             })()
         };
@@ -22,7 +28,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    id: ContextSchema.id.required().description('Id of the context')
+                    sessionId: Joi.string().required().description('Id of the session')
                 };
             })()
         };
@@ -31,28 +37,17 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    id: ContextSchema.id.required().description('Id of the context')
+                    sessionId: Joi.string().required().description('Id of the session'),
+                    id: Joi.string().required().description('Id of the context element')
                 };
             })(),
             payload: (() => {
 
                 return {
-                    name: ContextSchema.name,
-                    scenario: ContextSchema.scenario,
                     slots: ContextSchema.slots
                 };
             })()
         };
-
-        this.deleteById = {
-            params: (() => {
-
-                return {
-                    id: ContextSchema.id.required().description('Id of the context')
-                };
-            })()
-        };
-
     }
 }
 
