@@ -2,48 +2,44 @@
 const _ = require('lodash');
 const Async = require('async');
 const Boom = require('boom');
-const Crypto = require('crypto');
-const debug = require('debug')('nlu:model:Parse:findAll');
 const Wreck = require('wreck');
 const Querystring = require('querystring');
 
 const DucklingOutputToIntervals = require('./ducklingOutputToInterval.agent.tool');
 
-const getRasaParse = (textToParse, trainedDomain, server, callback) => {
+const getRasaParse = (textToParse, trainedDomain, agentName, rasaService, callback) => {
 
     const requestPayload = {
         q: textToParse,
+        project: agentName,
         model: trainedDomain.model
     };
 
-    Wreck.post(server.app.rasa + '/parse', { payload: requestPayload, json: true }, (err, wreckResponse, payload) => {
+    Wreck.post(rasaService + '/parse', { payload: requestPayload, json: true }, (err, wreckResponse, result) => {
 
         if (err){
-            debug('ElasticSearch - parse text rasa: Error= %o', err);
-            const message = 'Error calling rasa to parse text on domain ' + trainedDomain.name;
-            const error = Boom.badImplementation(message);
+            const error = Boom.badImplementation(`Error calling rasa to parse text on domain ${trainedDomain.name}`);
             return callback(error, null);
         }
 
-        delete payload.text;
+        delete result.text;
         const temporalParse = {
             domain: trainedDomain.name
         };
 
-        return callback(null, Object.assign(temporalParse, payload));
+        return callback(null, Object.assign(temporalParse, result));
     });
 };
 
-const getDucklingParse = (textToParse, timezone, server, callback) => {
+const getDucklingParse = (textToParse, timezone, language, ducklingService, callback) => {
 
-    timezone = timezone ? timezone : 'America/Kentucky/Louisville';
     const ducklingPayload = {
         text: textToParse,
-        lang: 'en',
-        tz: timezone
+        lang: (language ? language : 'en'),
+        tz: (timezone ? timezone : 'America/Kentucky/Louisville')
     };
 
-    Wreck.post(server.app.duckling + '/parse', {
+    Wreck.post(ducklingService+ '/parse', {
         payload: Querystring.stringify(ducklingPayload),
         headers: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -52,9 +48,7 @@ const getDucklingParse = (textToParse, timezone, server, callback) => {
     }, (err, wreckResponse, payload) => {
 
         if (err){
-            debug('NLU API - parse text duckling: Error= %o', err);
-            const message = 'Error calling duckling to parse text';
-            const error = Boom.badImplementation(message);
+            const error = Boom.badImplementation('Error calling duckling to parse text');
             return callback(error, null);
         }
 
@@ -78,7 +72,7 @@ const replacer = (key, value) => {
     return value;
 };
 
-const getSysEntities = (parseResult) => {
+const castSysEntities = (parseResult) => {
 
     const ducklingEntities = _.map(parseResult.duckling, (entity) => {
 
@@ -113,15 +107,15 @@ const getSysEntities = (parseResult) => {
     return parseResult.rasa;
 };
 
-const parseText = (server, textToParse, timezone, trainedDomains, cb) => {
+const parseText = (redis, rasaService, ducklingService, textToParse, timezone, agentData, cb) => {
 
     Async.parallel({
         rasa: (callback) => {
 
-            Async.map(trainedDomains, (trainedDomain, callbk) => {
+            Async.map(agentData.trainedDomains, (trainedDomain, callbk) => {
 
                 const start = process.hrtime();
-                getRasaParse(textToParse, trainedDomain, server, (err, result) => {
+                getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasaService, (err, result) => {
 
                     if (err){
                         return callbk(err, null);
@@ -143,7 +137,7 @@ const parseText = (server, textToParse, timezone, trainedDomains, cb) => {
         duckling: (callback) => {
 
             const start = process.hrtime();
-            getDucklingParse(textToParse, timezone, server, (err, result) => {
+            getDucklingParse(textToParse, (timezone ? timezone : agentData.agent.timezone), 'en', ducklingService, (err, result) => {
 
                 if (err){
                     return callback(err, null);
@@ -164,10 +158,9 @@ const parseText = (server, textToParse, timezone, trainedDomains, cb) => {
 
         const parsedDate = new Date();
 
-        result = getSysEntities(result);
+        result = castSysEntities(result);
 
         const temporalParse = {
-            id: Crypto.createHash('md5').update(textToParse + parsedDate.toISOString()).digest('hex'),
             result: {
                 document: textToParse,
                 time_stamp: parsedDate.toISOString(),
@@ -178,17 +171,16 @@ const parseText = (server, textToParse, timezone, trainedDomains, cb) => {
     });
 };
 
-module.exports = (server, textToParse, timezone, trainedDomains, cb) => {
+module.exports = (redis, rasa, duckling, textToParse, timezone, agentData, cb) => {
 
     const start = process.hrtime();
-    parseText(server, textToParse, timezone, trainedDomains, (err, result) => {
+    parseText(redis, rasa, duckling, textToParse, timezone, agentData, (err, result) => {
 
         if (err){
-
             return cb(err, null);
         }
         const time = process.hrtime(start);
-        const max_intent_score = _.max(_.compact(_.map(_.map(result.result.results.rasa, 'intent'), 'confidence')));
+        const max_intent_score = _.max(_.compact(_.map(_.map(result.result.results, 'intent'), 'confidence')));
         result.result = Object.assign(result.result, { maximum_intent_score: max_intent_score, total_elapsed_time_ms: time[1] / 1000000 });
         return cb(null, result);
     });

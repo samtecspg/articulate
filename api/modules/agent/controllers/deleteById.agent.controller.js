@@ -6,8 +6,8 @@ const Flat = require('flat');
 module.exports = (request, reply) => {
 
     const agentId = request.params.id;
-    const redis = request.server.app.redis;
     const server = request.server;
+    const redis = server.app.redis;
     
     Async.waterfall([
         (cb) => {
@@ -275,6 +275,17 @@ module.exports = (request, reply) => {
                                     return callbackDeleteAgentSet(error, null);
                                 }
                                 return callbackDeleteAgentSet(null);
+                            });
+                        },
+                        (callbackDeleteDomainRecognitionLog) => {
+
+                            redis.del(`agentDomainRecognizer:${agentId}`, (err, result) => {
+                                
+                                if (err){
+                                    const error = Boom.badImplementation(`An error ocurred deleting the agent domain recognition log`);
+                                    return callbackDeleteDomainRecognitionLog(error, null);
+                                }
+                                return callbackDeleteDomainRecognitionLog(null);
                             });
                         },
                         (callbackDeleteAgentDomainsList) => {

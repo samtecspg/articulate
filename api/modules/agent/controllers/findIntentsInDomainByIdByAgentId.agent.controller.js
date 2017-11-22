@@ -5,7 +5,8 @@ const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    const redis = request.server.app.redis;
+    const server = request.server;
+    const redis = server.app.redis;
     const agentId = request.params.id;
     const domainId = request.params.domainId;
     let start = 0;
@@ -20,12 +21,12 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
             
-            request.server.inject('/agent/' + agentId, (res) => {
+            server.inject('/agent/' + agentId, (res) => {
                 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
-                        return reply(errorNotFound);       
+                        return cb(errorNotFound);       
                     }
                     const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
                     return cb(error, null);
@@ -52,7 +53,7 @@ module.exports = (request, reply) => {
         (domain, cb) => {
 
             if (domain){
-                request.server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
+                server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
                     
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);

@@ -6,20 +6,20 @@ const RespondFulfilledIntent = require('./respondFulfilledIntent.agent.tool');
 const PromptMissingEntity = require('./promptMissingEntity.agent.tool');
 const GetEntityValue = require('./getEntityValue.agent.tool');
 
-module.exports = (CONTEXT, currentContext, intent, scenario, parseResult, timezone, webhookUrl, callback) => {
+module.exports = (context, currentContext, intent, scenario, parseResult, timezone, webhookUrl, callback) => {
 
     if (scenario.slots && scenario.slots.length > 0) {
         const intentSlotNames = _.map(scenario.slots, 'entity');
         const requiredSlots = _.filter(scenario.slots, (slot) => {
 
-            CONTEXT[CONTEXT.length - 1].slots[slot.entity] = currentContext.slots[slot.entity] ? currentContext.slots[slot.entity] : null;
+            context[context.length - 1].slots[slot.entity] = currentContext.slots[slot.entity] ? currentContext.slots[slot.entity] : null;
             return slot.isRequired;
         });
         const recognizedEntities = parseResult.entities;
         const recognizedEntitiesNames = _.map(recognizedEntities, (recognizedEntity) => {
 
             if (intentSlotNames.indexOf(recognizedEntity.entity) > -1) {
-                CONTEXT[CONTEXT.length - 1].slots[recognizedEntity.entity] = GetEntityValue(recognizedEntity, timezone);
+                context[context.length - 1].slots[recognizedEntity.entity] = GetEntityValue(recognizedEntity, timezone);
             }
             return recognizedEntity.entity;
         });
