@@ -2,6 +2,7 @@
 
 const Wreck = require('wreck');
 const Boom = require('boom');
+const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.intent.tool');
 
 const retrainModel = (server, rasa, agentName, domainName, domainId, callback) => {
@@ -18,7 +19,8 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
 
         const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
         const trainingDate = new Date().toISOString();
-        const modelFolderName = domainName + '_' + trainingDate.replace(new RegExp(':', 'g'), '');
+        const model = Guid.create().toString();
+        const modelFolderName = domainName + '_' + model;
         Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {
@@ -27,7 +29,8 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
             }
 
             const updateDomainPayload = {
-                lastTraining: trainingDate
+                lastTraining: trainingDate,
+                model 
             };
 
             const options = {

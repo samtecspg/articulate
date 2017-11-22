@@ -5,7 +5,7 @@ const Boom = require('boom');
 
 const BuildDomainRecognitionTrainingData = require('./buildDomainRecognitionTrainingData.intent.tool');
 
-const retrainDomainRecognizer = (server, rasa, agentName, agentId, cb) => {
+const retrainDomainRecognizer = (server, redis, rasa, agentName, agentId, cb) => {
 
     BuildDomainRecognitionTrainingData(server, agentId, (err, trainingSet) => {
 
@@ -19,14 +19,20 @@ const retrainDomainRecognizer = (server, rasa, agentName, agentId, cb) => {
 
         const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
         const trainingDate = new Date().toISOString();
-        const modelFolderName = agentName + '-domain-recognizer' + '_' + trainingDate.replace(new RegExp(':', 'g'), '');
+        const modelFolderName = agentName + '_domain_recognizer';
         Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
             
             if (err) {
                 return cb(err);
             }
-
-            return cb(null);
+            redis.lpush(`agentDomainRecognizer:${agentId}`, trainingDate, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error saving the training date of the domain recognizer.');
+                    return cb(error);
+                }
+                return cb(null);
+            });
         });
 
     });

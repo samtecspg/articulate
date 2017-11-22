@@ -40,7 +40,7 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
         
                         Async.parallel([
                             Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
-                            Async.apply(IntentTools.retrainDomainRecognizerTool, server, rasa, resultIntent.agent, agentId)
+                            Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
                         ], (err) => {
             
                             if (err){

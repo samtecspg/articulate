@@ -121,7 +121,7 @@ module.exports = (request, reply) => {
 
                 Async.parallel([
                     Async.apply(IntentTools.retrainModelTool, server, rasa, intent.agent, intent.domain, domainId),
-                    Async.apply(IntentTools.retrainDomainRecognizerTool, server, rasa, intent.agent, agentId)
+                    Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, intent.agent, agentId)
                 ], (err) => {
     
                     if (err){
