@@ -7,8 +7,8 @@ module.exports = (request, reply) => {
 
     const entityId = request.params.id;
     let entity;
-    const redis = request.server.app.redis;
     const server = request.server;
+    const redis = server.app.redis;
     
     Async.waterfall([
         (cb) => {
