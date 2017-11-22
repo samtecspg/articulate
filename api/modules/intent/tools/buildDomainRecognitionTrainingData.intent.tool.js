@@ -13,7 +13,11 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
             return cb(err, null);
         }
 
-        if (data.length === 1){
+        let countOfDomainsWithIntents = 0;
+        data.forEach(domain => {
+            countOfDomainsWithIntents += (domain.intents.length > 0 ? 1: 0);
+        });
+        if (countOfDomainsWithIntents < 2){
             return cb(null, null);
         }
 
