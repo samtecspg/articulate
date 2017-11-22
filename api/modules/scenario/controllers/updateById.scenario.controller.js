@@ -42,8 +42,8 @@ module.exports = (request, reply) => {
     const scenarioId = request.params.id;
     const updateData = request.payload;
 
-    const redis = request.server.app.redis;
     const server = request.server;
+    const redis = server.app.redis;
     
     Async.waterfall([
         (cb) => {
