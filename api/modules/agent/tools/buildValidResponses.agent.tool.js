@@ -6,7 +6,7 @@ const GetEntityValue = require('./getEntityValue.agent.tool');
 const replaceText = (response, entity, entityValue) => {
 
     const oldResponseText = response.text;
-    response.text =  response.text.replace('$' + entity, entityValue);
+    response.text =  response.text.replace(`{${entity}}`, entityValue);
     if (!response.template && response.text !== response) {
         response.template = true;
     }
@@ -29,17 +29,19 @@ module.exports = (recognizedEntities, context, slots, responses, timezone) => {
 
             tempResponse = replaceText(tempResponse, entity, GetEntityValue(entity, timezone));
         });
-        Object.keys(context.slots).forEach( (entity) => {
+        if (context.slots){
+            Object.keys(context.slots).forEach( (entity) => {
 
-            if (context.slots[entity]) {
-                tempResponse = replaceText(tempResponse, entity, context.slots[entity]);
-            }
-        });
+                if (context.slots[entity]) {
+                    tempResponse = replaceText(tempResponse, entity, context.slots[entity]);
+                }
+            });
+        }
         let isValid = true;
         if (slots){
             slots.forEach( (slot) => {
 
-                if (tempResponse.text.indexOf('$' + slot.entity) !== -1) {
+                if (tempResponse.text.indexOf(`{${slot.entity}}`) !== -1) {
                     isValid = false;
                 }
             });

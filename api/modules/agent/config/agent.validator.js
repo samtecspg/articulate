@@ -190,6 +190,7 @@ class AgentValidate {
             query: (() => {
 
                 return {
+                    sessionId: Joi.string().required().description('Id of the session'),
                     text: Joi.string().required().description('Text to parse'),
                     timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville')
                 };

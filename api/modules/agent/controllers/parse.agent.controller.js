@@ -1,37 +1,96 @@
 'use strict';
 const Async = require('async');
-const debug = require('debug')('nlu:model:Parse:parseText');
 const Boom = require('boom');
 const AgentTools = require('../tools');
+const Flat = require('flat');
 
 module.exports = (request, reply) => {
 
+    const agentId = request.params.id;
+    const text = request.query.text;
+    const timezone = request.query.timezone;
+    const server = request.server;
+    const redis = server.app.redis;
+    const rasa = server.app.rasa;
+    const duckling = server.app.duckling;
+    let documentId;
+
     Async.waterfall([
-        Async.apply(AgentTools.getAvailableDomains, request.server, request.params.id, null),
-        Async.apply(AgentTools.parseText, request.server, request.query.text, request.query.timezone)
-    ], (err, parseResult) => {
+        (callback) => {
+
+            Async.parallel({
+                trainedDomains: Async.apply(AgentTools.getAvailableDomains, server, redis, agentId),
+                agent: (callbackGetAgent) => {
+
+                    server.inject('/agent/' + agentId, (res) => {
+                        
+                        if (res.statusCode !== 200){
+                            if (res.statusCode === 404){
+                                const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
+                                return callbackGetAgent(errorNotFound);       
+                            }
+                            const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                            return callbackGetAgent(error, null);
+                        }
+                        return callbackGetAgent(null, res.result);
+                    });
+                }
+            }, (err, result) => {
+
+                if (err) {
+                    return callback(err, null);
+                }
+                return callback(null, result);
+            });
+        },
+        (agentData, callback) => {
+
+            AgentTools.parseText(redis, rasa, duckling, text, timezone, agentData, (err, result) => {
+
+                if (err){
+                    return callback(err);
+                }
+                return callback(null, result);
+            });
+        }
+    ], (err, document) => {
 
         if (err){
             return reply(err);
         }
 
-        request.server.app.elasticsearch.create({
-            index: 'doc',
-            type: 'default',
-            id: parseResult.id,
-            body: parseResult.result
-        }, (err, response) => {
-
-            if (err){
-                debug('ElasticSearch - parse document: Error= %o', err);
-                const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-                if (err.body){
-                    error.output.payload.details = error.data;
-                }
-                return reply(error);
+        Async.waterfall([
+            (cb) => {
+                
+                redis.incr('documentId', (err, newDocumentId) => {
+    
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred getting the new document id.');
+                        return cb(error);
+                    }
+                    documentId = newDocumentId;
+                    return cb(null);
+                });
+            },
+            (cb) => {
+    
+                document = Object.assign({id: documentId}, document);          
+                const flatDocument = Flat(document);  
+                redis.hmset(`document:${documentId}`, flatDocument, (err) => {
+                    
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred adding the document data.');
+                        return cb(error);
+                    }
+                    return cb(null, document);
+                });
             }
-
-            return reply(Object.assign({ _id: response._id }, parseResult.result));
+        ], (err, result) => {
+    
+            if (err){
+                return reply(err, null);
+            }
+            return reply(result);
         });
     });
 };

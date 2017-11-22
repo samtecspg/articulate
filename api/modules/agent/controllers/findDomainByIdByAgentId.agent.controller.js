@@ -5,14 +5,15 @@ const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    const redis = request.server.app.redis;
+    const server = request.server;
+    const redis = server.app.redis;
     const agentId = request.params.id;
     const domainId = request.params.domainId;
 
     Async.waterfall([
         (cb) => {
             
-            request.server.inject('/agent/' + agentId, (res) => {
+            server.inject('/agent/' + agentId, (res) => {
                 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
@@ -44,7 +45,7 @@ module.exports = (request, reply) => {
         (domain, cb) => {
 
             if (domain){
-                request.server.inject('/domain/' + domain[1], (res) => {
+                server.inject('/domain/' + domain[1], (res) => {
                     
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);

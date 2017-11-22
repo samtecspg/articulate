@@ -10,8 +10,8 @@ module.exports = (data, currentContext, timezone, callback) => {
         timezone
     };
 
-    if (data.agent.useWebhookFallback) {
-        CallWebhook(data.agent.webhookFallbackUrl, response, (err, webhookResponse) => {
+    if (data.agentData.useWebhookFallback === "true") {
+        CallWebhook(data.agentData.webhookFallbackUrl, response, (err, webhookResponse) => {
 
             if (err){
                 return callback(err, null);
@@ -20,7 +20,7 @@ module.exports = (data, currentContext, timezone, callback) => {
         });
     }
     else {
-        const textResponse = data.agent.fallbackResponses[Math.floor(Math.random() * data.agent.fallbackResponses.length)];
+        const textResponse = data.agentData.fallbackResponses[Math.floor(Math.random() * data.agentData.fallbackResponses.length)];
         return callback(null, Object.assign(response, { textResponse } ));
     }
 };

@@ -5,7 +5,8 @@ const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    const redis = request.server.app.redis;
+    const server = request.server;
+    const redis = server.app.redis;
     let start = 0;
     if (request.query && request.query.start > -1){
         start = request.query.start;
@@ -33,7 +34,7 @@ module.exports = (request, reply) => {
 
             Async.map(domains, (domain, callback) => {
 
-                request.server.inject('/domain/' + domain[1], (res) => {
+                server.inject('/domain/' + domain[1], (res) => {
                     
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);
