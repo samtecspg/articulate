@@ -10,7 +10,8 @@ class DomainModel {
             domainName: Joi.string(),
             enabled: Joi.boolean(),
             intentThreshold: Joi.number(),
-            lastTraining: Joi.date()
+            lastTraining: Joi.date(),
+            model: Joi.string(),
         };
     };
 }
