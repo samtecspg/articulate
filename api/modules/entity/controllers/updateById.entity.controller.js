@@ -35,8 +35,8 @@ module.exports = (request, reply) => {
     const updateData = request.payload;
     let requiresRetrain = false;
 
-    const redis = request.server.app.redis;
     const server = request.server;
+    const redis = server.app.redis;
     
     Async.waterfall([
         (cb) => {
