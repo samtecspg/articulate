@@ -48,7 +48,7 @@ module.exports = (request, reply) => {
 
             Async.map(entities, (entity, callback) => {
 
-                request.server.inject('/entity/' + entity, (res) => {
+                server.inject('/entity/' + entity, (res) => {
                     
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
