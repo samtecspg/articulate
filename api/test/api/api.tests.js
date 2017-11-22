@@ -45,13 +45,8 @@ suite('NLU API', () => {
                             done(errStart);
                         }
                         expect(server).to.be.an.object();
-                        server.app.redis.flushall( (errFlush, resultFlush) => {
-
-                            if (err){
-                                done(err);
-                            }
-                            done();
-                        })
+                        
+                        done();
                     });
                 });
             });

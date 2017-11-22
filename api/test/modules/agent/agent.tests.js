@@ -251,7 +251,7 @@ suite('/agent', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return and array of objects', (done) => {
+        test('should respond with 200 successful operation and return an array of objects', (done) => {
 
             server.inject('/agent', (res) => {
 
@@ -474,7 +474,7 @@ suite('/agent/{id}/domain', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return and array of domains', (done) => {
+        test('should respond with 200 successful operation and return an array of domains', (done) => {
 
             server.inject('/agent/' + preCreatedAgentId + '/domain', (res) => {
 
@@ -508,7 +508,7 @@ suite('/agent/{id}/domain/{domainId}/intent', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return and array of intents', (done) => {
+        test('should respond with 200 successful operation and return an array of intents', (done) => {
 
             server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent', (res) => {
 
@@ -521,45 +521,45 @@ suite('/agent/{id}/domain/{domainId}/intent', () => {
 
 });
 
-// suite('/agent/{id}/domain/{domainId}/intent/{intentId}', () => {
+suite('/agent/{id}/domain/{domainId}/intent/{intentId}', () => {
 
-//     suite('/get', () => {
+    suite('/get', () => {
 
-//         test('should respond with 200 successful operation and return and array of objects', (done) => {
+        test('should respond with 200 successful operation and return an array of objects', (done) => {
 
-//             server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent/' + intent._id, (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent/' + intent.id, (res) => {
 
-//                 expect(res.statusCode).to.equal(200);
-//                 expect(res.result).to.equal(intent);
-//                 done();
-//             });
-//         });
-//     });
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.intentName).to.equal(intent.intentName);
+                done();
+            });
+        });
+    });
 
-// });
+});
 
-// suite('/agent/{id}/domain/{domainId}/intent/{intentId}/scenario', () => {
+suite('/agent/{id}/domain/{domainId}/intent/{intentId}/scenario', () => {
 
-//     suite('/get', () => {
+    suite('/get', () => {
 
-//         test('should respond with 200 successful operation and return and array of objects', (done) => {
+        test('should respond with 200 successful operation and return a single object', (done) => {
 
-//             server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain._id + '/intent/' + intent._id + '/scenario', (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent/' + intent.id + '/scenario', (res) => {
 
-//                     expect(res.statusCode).to.equal(200);
-//                     expect(res.result).to.equal([scenario]);
-//                     done();
-//                 });
-//         });
-//     });
+                    expect(res.statusCode).to.equal(200);
+                    expect(res.result.scenarioName).to.equal(scenario.scenarioName);
+                    done();
+                });
+        });
+    });
 
-// });
+});
 
 suite('/agent/{id}/entity', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return and array of entities', (done) => {
+        test('should respond with 200 successful operation and return an array of entities', (done) => {
 
             server.inject('/agent/' + preCreatedAgentId + '/entity', (res) => {
 
@@ -572,19 +572,19 @@ suite('/agent/{id}/entity', () => {
 
 });
 
-// suite('/agent/{id}/entity/{entityId}', () => {
+suite('/agent/{id}/entity/{entityId}', () => {
 
-//     suite('/get', () => {
+    suite('/get', () => {
 
-//         test('should respond with 200 successful operation and return a single entity item', (done) => {
+        test('should respond with 200 successful operation and return a single entity item', (done) => {
 
-//             server.inject('/agent/' + preCreatedAgentId + '/entity/' + entity._id, (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/entity/' + entity.id, (res) => {
 
-//                 expect(res.statusCode).to.equal(200);
-//                 expect(res.result).to.contain(entity);
-//                 done();
-//             });
-//         });
-//     });
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.entityName).to.contain(entity.entityName);
+                done();
+            });
+        });
+    });
 
-// });
+});
