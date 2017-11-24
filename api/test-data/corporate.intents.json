@@ -1,184 +1,25 @@
 [
   {
-    "agent": "agentId",
-    "domain": "domainId",
-    "intentName": "get.acronymDefinition",
+    "agent": "Samson",
+    "domain": "Corporate",
+    "intentName": "getAcronymDefinition",
     "examples": [
-      {
-        "userSays": "What does SFC mean?",
-        "entities": [
-          {
-            "start": 10,
-            "end": 13,
-            "value": "SFC",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "What is SME?",
-        "entities": [
-          {
-            "start": 8,
-            "end": 11,
-            "value": "SME",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "Is there a definition for ITS?",
-        "entities": [
-          {
-            "start": 26,
-            "end": 29,
-            "value": "ITS",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "SME definition",
-        "entities": [
-          {
-            "start": 0,
-            "end": 3,
-            "value": "SME",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "What does ASP stand for?",
-        "entities": [
-          {
-            "start": 10,
-            "end": 13,
-            "value": "ASP",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "Does PICS stand for something?",
-        "entities": [
-          {
-            "start": 5,
-            "end": 9,
-            "value": "PICS",
-            "entity": "entityId"
-          }
-        ]
-      }
+      "What does {acronym} mean?",
+      "What is {acronym}?",
+      "Is there a definition for {acronym}?",
+      "{acronym} definition",
+      "What does {acronym} stand for?",
+      "Does {acronym} stand for something?"
     ]
   },
   {
-    "agent": "agentId",
-    "domain": "domainId",
-    "intentName": "get.userInfo",
+    "agent": "Samson",
+    "domain": "Corporate",
+    "intentName": "getUserInfo",
     "examples": [
-      {
-        "userSays": "What is Caleb Keller's extension?",
-        "entities": [
-          {
-            "start": 8,
-            "end": 20,
-            "value": "Caleb Keller",
-            "entity": "entityId"
-          },
-          {
-            "start": 23,
-            "end": 32,
-            "value": "extension",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "Does Wooyong Ee have an extension?",
-        "entities": [
-          {
-            "start": 5,
-            "end": 15,
-            "value": "Wooyong Ee",
-            "entity": "entityId"
-          },
-          {
-            "start": 24,
-            "end": 33,
-            "value": "extension",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "Who is Mike Lutz's boss?",
-        "entities": [
-          {
-            "start": 7,
-            "end": 16,
-            "value": "Mike Lutz",
-            "entity": "entityId"
-          },
-          {
-            "start": 19,
-            "end": 23,
-            "value": "boss",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "Who does Jon Riddle report to?",
-        "entities": [
-          {
-            "start": 9,
-            "end": 19,
-            "value": "Jon Riddle",
-            "entity": "entityId"
-          },
-          {
-            "start": 20,
-            "end": 29,
-            "value": "report to",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "What is Matt Puffer's e-mail address?",
-        "entities": [
-          {
-            "start": 8,
-            "end": 19,
-            "value": "Matt Puffer",
-            "entity": "entityId"
-          },
-          {
-            "start": 22,
-            "end": 36,
-            "value": "e-mail address",
-            "entity": "entityId"
-          }
-        ]
-      },
-      {
-        "userSays": "Does Jeremy Wooldridge report to John Shine?",
-        "entities": [
-          {
-            "start": 5,
-            "end": 22,
-            "value": "Jeremy Wooldridge",
-            "entity": "entityId"
-          },
-          {
-            "start": 23,
-            "end": 32,
-            "value": "report to",
-            "entity": "entityId"
-          }
-        ]
-      }
+      "What is {fullName}'s {fieldName}?",
+      "Does {fullName} have an {fieldName}?",
+      "What is {fullName}'s {fieldName}?"
     ]
   }
 ]

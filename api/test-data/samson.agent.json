@@ -6,6 +6,5 @@
         "Sorry, can you rephrase that?",
         "I'm still learning to speak with humans, can you rephrase that?"
     ],
-    "useWebhookFallback": false,
-    "webhookFallbackUrl": "http://localhost:3000"
+    "useWebhookFallback": true
 }

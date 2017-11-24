@@ -1,18 +1,18 @@
 'use strict';
-const ValidateEntityTool = require('./validateEntity.intent.tool');
-const UpdateEntitiesTool = require('./updateEntities.intent.tool');
+const ValidateEntitiesTool = require('./validateEntities.intent.tool');
+const UpdateEntitiesDomainTool = require('./updateEntitiesDomain.intent.tool');
 const RetrainModelTool = require('./retrainModel.intent.tool');
 const RetrainDomainRecognizerTool = require('./retrainDomainRecognizer.intent.tool');
 
-const EntityController = {
+const IntentTools = {
 
-    validateEntityTool: ValidateEntityTool,
+    validateEntitiesTool: ValidateEntitiesTool,
 
-    updateEntitiesTool: UpdateEntitiesTool,
+    updateEntitiesDomainTool: UpdateEntitiesDomainTool,
 
     retrainModelTool: RetrainModelTool,
 
     retrainDomainRecognizerTool: RetrainDomainRecognizerTool
 };
 
-module.exports = EntityController;
+module.exports = IntentTools;

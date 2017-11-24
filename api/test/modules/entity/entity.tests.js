@@ -13,21 +13,21 @@ const after = lab.after;
 
 let server;
 
-const agents = [];
-const domains = [];
+let agentName = null;
+let agentId = null;
 let entityId = null;
 
 const createAgent = (callback) => {
 
     const data = {
-        agentName: 'string',
+        agentName: 'Test Agent',
         webhookUrl: 'string',
-        domainClassifierThreshold: 0,
+        domainClassifierThreshold: 0.6,
         fallbackResponses: [
-            'string'
+            'Sorry, can you rephrase that?',
+            'I\'m still learning to speak with humans, can you rephrase that?'
         ],
-        useWebhookFallback: false,
-        webhookFallbackUrl: 'http://localhost:3000'
+        useWebhookFallback: false
     };
     const options = {
         method: 'POST',
@@ -37,41 +37,15 @@ const createAgent = (callback) => {
 
     server.inject(options, (res) => {
 
-        if (res.statusCode){
-            agents.push(res.result._id);
-            return callback(null);
+        if (res.statusCode !== 200) {
+            return callback({
+                message: 'Error creating agent',
+                error: res.result
+            }, null);
         }
-
-        return callback({
-            message: 'Error creating agent'
-        });
-    });
-};
-
-const createDomain = (agent, callback) => {
-
-    const data = {
-        agent,
-        domainName: 'string',
-        enabled: true,
-        intentThreshold: 0
-    };
-    const options = {
-        method: 'POST',
-        url: '/domain',
-        payload: data
-    };
-
-    server.inject(options, (res) => {
-
-        if (res.statusCode){
-            domains.push(res.result._id);
-            return callback(null);
-        }
-
-        return callback({
-            message: 'Error creating domain'
-        });
+        agentName = res.result.agentName;
+        agentId = res.result.id;
+        return callback(null);
     });
 };
 
@@ -84,22 +58,10 @@ before((done) => {
         }
         server = srv;
 
-        Async.series([
-            (callback) => {
-
-                createAgent(callback);
-            },
-            (callback) => {
-
-                createAgent(callback);
-            },
-            (callback) => {
-
-                createDomain(agents[0], callback);
-            }
-        ], (err) => {
+        createAgent( (err) => {
 
             if (err) {
+                console.log(err);
                 done(err);
             }
             done();
@@ -111,79 +73,50 @@ after((done) => {
 
     server.inject({
         method: 'DELETE',
-        url: '/agent/' + agents[0]
+        url: '/agent/' + agentId
     }, (res) => {
 
         if (res.statusCode !== 200){
-            done({
-                message: 'Error deleting agent'
-            });
+            console.log(res.result);
+            return done(res.result);
         }
-        server.inject({
-            method: 'DELETE',
-            url: '/agent/' + agents[1]
-        }, (res2) => {
-
-            if (res2.statusCode !== 200){
-                done({
-                    message: 'Error deleting agent'
-                });
-            }
-            done();
-        });
+        return done();
     });
 });
 
 suite('/entity', () => {
 
-    suite('/get', () => {
-
-        test('should respond with 200 successful operation and return and array of objects', (done) => {
-
-            server.inject('/entity', (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result).to.be.an.array();
-                done();
-            });
-        });
-    });
-
     suite('/post', () => {
 
-        test('should respond with 200 successful operation and return an entity object', { timeout: 10000 }, (done) => {
+        test('should respond with 200 successful operation and return an entity object', (done) => {
 
-            setTimeout(() => {
-
-                const data = {
-                    entityName: 'string',
-                    agent: agents[0],
-                    usedBy: domains,
-                    examples: [
-                        {
-                            value: 'string',
-                            synonyms: [
-                                'string'
-                            ]
-                        }
+            const data = {
+                entityName: 'Test Entity',
+                agent: agentName,
+                examples: [{
+                    value: 'car',
+                    synonyms: [
+                        'car',
+                        'vehicle',
+                        'automobile'
                     ]
-                };
+                }]
+            };
 
-                const options = {
-                    method: 'POST',
-                    url: '/entity',
-                    payload: data
-                };
+            const options = {
+                method: 'POST',
+                url: '/entity',
+                payload: data
+            };
 
-                server.inject(options, (res) => {
+            server.inject(options, (res) => {
 
-                    expect(res.statusCode).to.equal(200);
-                    expect(res.result).to.include(data);
-                    entityId = res.result._id;
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.entityName).to.include(data.entityName);
+                entityId = res.result.id;
 
-                    done();
-                });
-            }, 4000);
+                done();
+            });
 
         });
 
@@ -206,12 +139,9 @@ suite('/entity', () => {
 
         test('should respond with 400 because agent doesn\'t exists', (done) => {
 
-            const possibleMesages = ['The element with values: {\n  "agent": "-1",\n  "_id": "' + domains[0] + '"\n} does not exists in index domain', 'The document with id -1 doesn\'t exists in index agent'];
-
             const data = {
                 entityName: 'string',
                 agent: '-1',
-                usedBy: domains,
                 examples: [
                     {
                         value: 'string',
@@ -231,75 +161,10 @@ suite('/entity', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
+                expect(res.result.message).to.equal('The agent -1 doesn\'t exist');
                 done();
             });
         });
-
-        test('should respond with 400 because domain doesn\'t exists', (done) => {
-
-            const possibleMesages = ['The element with values: {\n  "agent": "' + agents[0] + '",\n  "_id": "-1"\n} does not exists in index domain', 'The document with id -1 doesn\'t exists in index domain'];
-
-            const data = {
-                entityName: 'string',
-                agent: agents[0],
-                usedBy: [
-                    '-1'
-                ],
-                examples: [
-                    {
-                        value: 'string',
-                        synonyms: [
-                            'string'
-                        ]
-                    }
-                ]
-            };
-
-            const options = {
-                method: 'POST',
-                url: '/entity',
-                payload: data
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
-                done();
-            });
-        });
-
-        test('should respond with 400 because domain is not in the specified agent', (done) => {
-
-            const data = {
-                entityName: 'string',
-                agent: agents[1],
-                usedBy: domains,
-                examples: [
-                    {
-                        value: 'string',
-                        synonyms: [
-                            'string'
-                        ]
-                    }
-                ]
-            };
-
-            const options = {
-                method: 'POST',
-                url: '/entity',
-                payload: data
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.equal('The element with values: {\n  "agent": "' + agents[1] + '",\n  "_id": "' + domains[0] + '"\n} does not exists in index domain');
-                done();
-            });
-        });
-
     });
 
 });
@@ -311,24 +176,22 @@ suite('/entity/{id}', () => {
         test('should respond with 200 successful operation and return a single object', (done) => {
 
             const data = {
-                _id: entityId,
-                entityName: 'string',
-                agent: agents[0],
-                usedBy: domains,
-                examples: [
-                    {
-                        value: 'string',
-                        synonyms: [
-                            'string'
-                        ]
-                    }
-                ]
+                entityName: 'Test Entity',
+                agent: agentName,
+                examples: [{
+                    value: 'car',
+                    synonyms: [
+                        'car',
+                        'vehicle',
+                        'automobile'
+                    ]
+                }]
             };
 
-            server.inject('/entity/' + data._id, (res) => {
+            server.inject('/entity/' + entityId, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result._id).to.be.contain(data._id);
+                expect(res.result.entityName).to.be.contain(data.entityName);
                 done();
             });
         });
@@ -336,13 +199,13 @@ suite('/entity/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                _id: '-1'
+                id: '-1'
             };
 
-            server.inject('/entity/' + data._id, (res) => {
+            server.inject('/entity/' + data.id, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified entity doesn\'t exists');
                 done();
             });
         });
@@ -353,35 +216,39 @@ suite('/entity/{id}', () => {
         test('should respond with 200 successful operation', (done) => {
 
             const data = {
-                _id: entityId,
-                entityName: 'name',
-                agent: agents[0],
-                usedBy: domains,
-                examples: [
-                    {
-                        value: 'string',
-                        synonyms: [
-                            'string'
-                        ]
-                    }
-                ]
+                entityName: 'Test Entity Updated',
+                agent: agentName,
+                examples: [{
+                    value: 'car',
+                    synonyms: [
+                        'car',
+                        'vehicle',
+                        'automobile'
+                    ]
+                }]
             };
 
             const updatedData = {
-                agent: agents[0],
-                entityName: 'name'
+                entityName: 'Test Entity Updated',
+                examples: [{
+                    value: 'car',
+                    synonyms: [
+                        'car',
+                        'vehicle'
+                    ]
+                }]
             };
 
             const options = {
                 method: 'PUT',
-                url: '/entity/' + data._id,
+                url: '/entity/' + entityId,
                 payload: updatedData
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result).to.be.equal(data);
+                expect(res.result.entityName).to.be.equal(data.entityName);
                 done();
             });
         });
@@ -389,7 +256,7 @@ suite('/entity/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                agent: agents[0]
+                examples: []
             };
 
             const options = {
@@ -401,7 +268,7 @@ suite('/entity/{id}', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.error).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified entity doesn\'t exists');
                 done();
             });
         });
@@ -409,12 +276,12 @@ suite('/entity/{id}', () => {
         test('should respond with 400 Bad Request', (done) => {
 
             const data = {
-                _id: entityId,
+                id: entityId,
                 invalid: true
             };
             const options = {
                 method: 'PUT',
-                url: '/entity/' + data._id,
+                url: '/entity/' + data.id,
                 payload: data
             };
 
@@ -425,26 +292,6 @@ suite('/entity/{id}', () => {
                 done();
             });
         });
-
-        test('should respond with 400 because agent doesn\'t exists', (done) => {
-
-            const updatedData = {
-                agent: '-1'
-            };
-
-            const options = {
-                method: 'PUT',
-                url: '/entity/' + entityId,
-                payload: updatedData
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.equal('The document with id -1 doesn\'t exists in index agent');
-                done();
-            });
-        });
     });
 
     suite('/delete', () => {
@@ -452,18 +299,18 @@ suite('/entity/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                _id: '-1'
+                id: '-1'
             };
 
             const options = {
                 method: 'DELETE',
-                url: '/entity/' + data._id
+                url: '/entity/' + data.id
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified entity doesn\'t exists');
                 done();
             });
         });
@@ -471,11 +318,11 @@ suite('/entity/{id}', () => {
         test('should respond with 200 successful operation', (done) => {
 
             const data = {
-                _id: entityId
+                id: entityId
             };
             const options = {
                 method: 'DELETE',
-                url: '/entity/' + data._id
+                url: '/entity/' + data.id
             };
 
             server.inject(options, (res) => {

@@ -6,22 +6,12 @@ const Joi = require('joi');
 class EntityValidate {
     constructor() {
 
-        this.findAll = {
-            query: (() => {
-
-                return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
-                };
-            })()
-        };
-
         this.add = {
             payload: (() => {
 
                 return {
                     entityName: EntitySchema.entityName.required(),
                     agent: EntitySchema.agent.required(),
-                    usedBy: EntitySchema.usedBy,
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms
@@ -34,7 +24,7 @@ class EntityValidate {
             params: (() => {
 
                 return {
-                    id: EntitySchema._id.required().description('Id of the entity')
+                    id: EntitySchema.id.required().description('Id of the entity')
                 };
             })()
         };
@@ -43,15 +33,13 @@ class EntityValidate {
             params: (() => {
 
                 return {
-                    id: EntitySchema._id.required().description('Id of the entity')
+                    id: EntitySchema.id.required().description('Id of the entity')
                 };
             })(),
             payload: (() => {
 
                 return {
                     entityName: EntitySchema.entityName,
-                    agent: EntitySchema.agent,
-                    usedBy: EntitySchema.usedBy,
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms
@@ -64,7 +52,7 @@ class EntityValidate {
             params: (() => {
 
                 return {
-                    id: EntitySchema._id.required().description('Id of the entity')
+                    id: EntitySchema.id.required().description('Id of the entity')
                 };
             })()
         };

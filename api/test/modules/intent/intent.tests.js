@@ -13,22 +13,23 @@ const after = lab.after;
 
 let server;
 
+let agentName = null;
 let agentId = null;
-let domainId = null;
-let entityId = null;
+let domainName = null;
+let entityName = null;
 let intentId = null;
 
 const createAgent = (callback) => {
 
     const data = {
-        agentName: 'string',
+        agentName: 'Test Agent',
         webhookUrl: 'string',
-        domainClassifierThreshold: 0,
+        domainClassifierThreshold: 0.6,
         fallbackResponses: [
-            'string'
+            'Sorry, can you rephrase that?',
+            'I\'m still learning to speak with humans, can you rephrase that?'
         ],
-        useWebhookFallback: false,
-        webhookFallbackUrl: 'http://localhost:3000'
+        useWebhookFallback: false
     };
     const options = {
         method: 'POST',
@@ -38,25 +39,27 @@ const createAgent = (callback) => {
 
     server.inject(options, (res) => {
 
-        if (res.statusCode){
-            agentId = res.result._id;
-            return callback(null);
+        if (res.statusCode !== 200) {
+            return callback({
+                message: 'Error creating agent',
+                error: res.result
+            }, null);
         }
-
-        return callback({
-            message: 'Error creating agent'
-        });
+        agentName = res.result.agentName;
+        agentId = res.result.id;
+        return callback(null);
     });
 };
 
 const createDomain = (callback) => {
 
     const data = {
-        agent: agentId,
-        domainName: 'string',
+        agent: 'Test Agent',
+        domainName: 'Test Domain',
         enabled: true,
-        intentThreshold: 0
+        intentThreshold: 0.7
     };
+
     const options = {
         method: 'POST',
         url: '/domain',
@@ -65,30 +68,30 @@ const createDomain = (callback) => {
 
     server.inject(options, (res) => {
 
-        if (res.statusCode){
-            domainId = res.result._id;
-            return callback(null);
+        if (res.statusCode !== 200) {
+            return callback({
+                message: 'Error creating domain',
+                error: res.result
+            }, null);
         }
-
-        return callback({
-            message: 'Error creating domain'
-        });
+        domainName = res.result.domainName;
+        return callback(null);
     });
 };
 
 const createEntity = (callback) => {
 
     const data = {
-        entityName: 'string',
-        agent: agentId,
-        examples: [
-            {
-                value: 'string',
-                synonyms: [
-                    'string'
-                ]
-            }
-        ]
+        entityName: 'Test Entity',
+        agent: 'Test Agent',
+        examples: [{
+            value: 'car',
+            synonyms: [
+                'car',
+                'vehicle',
+                'automobile'
+            ]
+        }]
     };
     const options = {
         method: 'POST',
@@ -98,14 +101,14 @@ const createEntity = (callback) => {
 
     server.inject(options, (res) => {
 
-        if (res.statusCode){
-            entityId = res.result._id;
-            return callback(null);
+        if (res.statusCode !== 200) {
+            return callback({
+                message: 'Error creating entity',
+                error: res.result
+            }, null);
         }
-
-        return callback({
-            message: 'Error creating entity'
-        });
+        entityName = res.result.entityName;
+        return callback(null);
     });
 };
 
@@ -113,7 +116,7 @@ before((done) => {
 
     require('../../../index')((err, srv) => {
 
-        if (err){
+        if (err) {
             done(err);
         }
         server = srv;
@@ -134,9 +137,12 @@ before((done) => {
         ], (err) => {
 
             if (err) {
+                console.log(err);
                 done(err);
             }
-            done();
+            else {
+                done();
+            }
         });
     });
 });
@@ -159,60 +165,36 @@ after((done) => {
 
 suite('/intent', () => {
 
-    suite('/get', () => {
-
-        test('should respond with 200 successful operation and return and array of objects', (done) => {
-
-            server.inject('/intent', (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result).to.be.an.array();
-                done();
-            });
-        });
-    });
-
     suite('/post', () => {
 
-        test('should respond with 200 successful operation and return an intent object', { timeout: 10000 }, (done) => {
+        test('should respond with 200 successful operation and return an intent object', (done) => {
 
-            setTimeout(() => {
+            const data = {
+                agent: agentName,
+                domain: domainName,
+                intentName: 'Test Intent',
+                examples: [
+                    'Locate my {Test Entity}',
+                    'Where is my {Test Entity}',
+                    'I\'m loking for my {Test Entity}',
+                    'Search the {Test Entity}'
+                ]
+            };
 
-                const data = {
-                    agent: agentId,
-                    domain: domainId,
-                    intentName: 'string',
-                    examples: [
-                        {
-                            userSays: 'string',
-                            entities: [
-                                {
-                                    value: 'string',
-                                    entity: entityId,
-                                    start: 0,
-                                    end: 0
-                                }
-                            ]
-                        }
-                    ]
-                };
+            const options = {
+                method: 'POST',
+                url: '/intent',
+                payload: data
+            };
 
-                const options = {
-                    method: 'POST',
-                    url: '/intent',
-                    payload: data
-                };
+            server.inject(options, (res) => {
 
-                server.inject(options, (res) => {
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.include(data);
+                intentId = res.result.id;
 
-                    expect(res.statusCode).to.equal(200);
-                    expect(res.result).to.include(data);
-                    intentId = res.result._id;
-
-                    done();
-                });
-            }, 4000);
-
+                done();
+            });
         });
 
         test('should respond with 400 Bad Request', (done) => {
@@ -234,26 +216,15 @@ suite('/intent', () => {
 
         test('should respond with 400 because agent doesn\'t exists', (done) => {
 
-            const possibleMesages = ['The element with values: {\n  "agent": "-1",\n  "_id": "' + domainId + '"\n} does not exists in index domain',
-                'The element with values: {\n  "agent": "-1",\n  "_id": "' + entityId + '"\n} does not exists in index entity',
-                'The document with id -1 doesn\'t exists in index agent'];
-
             const data = {
                 agent: '-1',
-                domain: domainId,
-                intentName: 'string',
+                domain: domainName,
+                intentName: 'Test Intent',
                 examples: [
-                    {
-                        userSays: 'string',
-                        entities: [
-                            {
-                                value: 'string',
-                                entity: entityId,
-                                start: 0,
-                                end: 0
-                            }
-                        ]
-                    }
+                    'Locate my {Test Entity}',
+                    'Where is my {Test Entity}',
+                    'I\'m loking for my {Test Entity}',
+                    'Search the {Test Entity}'
                 ]
             };
 
@@ -266,31 +237,22 @@ suite('/intent', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
+                expect(res.result.message).to.be.equal('The agent -1 doesn\'t exist');
                 done();
             });
         });
 
         test('should respond with 400 because domain doesn\'t exists', (done) => {
 
-            const possibleMesages = ['The element with values: {\n  "agent": "' + agentId + '",\n  "_id": "-1"\n} does not exists in index domain', 'The document with id -1 doesn\'t exists in index domain'];
-
             const data = {
-                agent: agentId,
+                agent: agentName,
                 domain: '-1',
-                intentName: 'string',
+                intentName: 'Test Intent',
                 examples: [
-                    {
-                        userSays: 'string',
-                        entities: [
-                            {
-                                value: 'string',
-                                entity: entityId,
-                                start: 0,
-                                end: 0
-                            }
-                        ]
-                    }
+                    'Locate my {Test Entity}',
+                    'Where is my {Test Entity}',
+                    'I\'m loking for my {Test Entity}',
+                    'Search the {Test Entity}'
                 ]
             };
 
@@ -303,32 +265,19 @@ suite('/intent', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
+                expect(res.result.message).to.be.equal(`The domain -1 doesn't exist in the agent ${agentName}`);
                 done();
             });
         });
 
         test('should respond with 400 because entity doesn\'t exists', (done) => {
 
-            const possibleMesages = ['The element with values: {\n  "agent": "' + agentId + '",\n  "_id": "-1"\n} does not exists in index entity',
-                'The document with id -1 doesn\'t exists in index entity'];
-
             const data = {
-                agent: agentId,
-                domain: domainId,
-                intentName: 'string',
+                agent: agentName,
+                domain: domainName,
+                intentName: 'Test Intent',
                 examples: [
-                    {
-                        userSays: 'string',
-                        entities: [
-                            {
-                                value: 'string',
-                                entity: '-1',
-                                start: 0,
-                                end: 0
-                            }
-                        ]
-                    }
+                    'Locate my {-1}'
                 ]
             };
 
@@ -341,7 +290,7 @@ suite('/intent', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
+                expect(res.result.message).to.be.equal(`The entity with the name -1 doesn't exist in the agent ${agentId}`);
                 done();
             });
         });
@@ -357,29 +306,21 @@ suite('/intent/{id}', () => {
         test('should respond with 200 successful operation and return a single object', (done) => {
 
             const data = {
-                _id: intentId,
-                agent: agentId,
-                domain: domainId,
-                intentName: 'string',
+                agent: agentName,
+                domain: domainName,
+                intentName: 'Test Intent',
                 examples: [
-                    {
-                        userSays: 'string',
-                        entities: [
-                            {
-                                value: 'string',
-                                entity: entityId,
-                                start: 0,
-                                end: 0
-                            }
-                        ]
-                    }
+                    'Locate my {Test Entity}',
+                    'Where is my {Test Entity}',
+                    'I\'m loking for my {Test Entity}',
+                    'Search the {Test Entity}'
                 ]
             };
 
-            server.inject('/intent/' + data._id, (res) => {
+            server.inject('/intent/' + intentId, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result._id).to.be.equal(data._id);
+                expect(res.result.intentName).to.be.equal(data.intentName);
                 done();
             });
         });
@@ -387,13 +328,13 @@ suite('/intent/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                _id: '-1'
+                id: '-1'
             };
 
-            server.inject('/intent/' + data._id, (res) => {
+            server.inject('/intent/' + data.id, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified intent doesn\'t exists');
                 done();
             });
         });
@@ -404,41 +345,36 @@ suite('/intent/{id}', () => {
         test('should respond with 200 successful operation', (done) => {
 
             const data = {
-                _id: intentId,
-                agent: agentId,
-                domain: domainId,
-                intentName: 'name',
+                agent: agentName,
+                domain: domainName,
+                intentName: 'Test Intent Updated',
                 examples: [
-                    {
-                        userSays: 'string',
-                        entities: [
-                            {
-                                value: 'string',
-                                entity: entityId,
-                                start: 0,
-                                end: 0
-                            }
-                        ]
-                    }
+                    'Locate my {Test Entity}',
+                    'Where is my {Test Entity}',
+                    'I\'m loking for my {Test Entity}',
+                    'Search the {Test Entity}'
                 ]
             };
 
             const updatedData = {
-                agent: agentId,
-                domain: domainId,
-                intentName: 'name'
+                intentName: 'Test Intent Updated',
+                examples: [
+                    'Locate my {Test Entity}',
+                    'Where is my {Test Entity}'
+                ]
             };
 
             const options = {
                 method: 'PUT',
-                url: '/intent/' + data._id,
+                url: '/intent/' + intentId,
                 payload: updatedData
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result).to.be.equal(data);
+                expect(res.result.intentName).to.be.equal(data.intentName);
+                expect(res.result.examples.length).to.be.equal(updatedData.examples.length);
                 done();
             });
         });
@@ -446,8 +382,13 @@ suite('/intent/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                agent: agentId,
-                domain: domainId
+                intentName: 'Test Intent',
+                examples: [
+                    'Locate my {Test Entity}',
+                    'Where is my {Test Entity}',
+                    'I\'m loking for my {Test Entity}',
+                    'Search the {Test Entity}'
+                ]
             };
 
             const options = {
@@ -467,12 +408,12 @@ suite('/intent/{id}', () => {
         test('should respond with 400 Bad Request', (done) => {
 
             const data = {
-                _id: intentId,
+                id: intentId,
                 invalid: true
             };
             const options = {
                 method: 'PUT',
-                url: '/intent/' + data._id,
+                url: '/intent/' + data.id,
                 payload: data
             };
 
@@ -484,71 +425,12 @@ suite('/intent/{id}', () => {
             });
         });
 
-        test('should respond with 400 because agent doesn\'t exists', (done) => {
-
-            const possibleMesages = ['The element with values: {\n  "agent": "-1",\n  "_id": "' + domainId + '"\n} does not exists in index domain', 'The document with id -1 doesn\'t exists in index agent'];
-
-            const updatedData = {
-                agent: '-1',
-                domain: domainId
-            };
-
-            const options = {
-                method: 'PUT',
-                url: '/intent/' + intentId,
-                payload: updatedData
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
-                done();
-            });
-        });
-
-        test('should respond with 400 because domain doesn\'t exists', (done) => {
-
-            const possibleMesages = ['The element with values: {\n  "agent": "' + agentId + '",\n  "_id": "-1"\n} does not exists in index domain', 'The document with id -1 doesn\'t exists in index domain'];
-
-            const updatedData = {
-                agent: agentId,
-                domain: '-1'
-            };
-
-            const options = {
-                method: 'PUT',
-                url: '/intent/' + intentId,
-                payload: updatedData
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
-                done();
-            });
-        });
-
         test('should respond with 400 because entity doesn\'t exists', (done) => {
 
-            const possibleMesages = ['The element with values: {\n  "agent": "' + agentId + '",\n  "_id": "-1"\n} does not exists in index entity', 'The document with id -1 doesn\'t exists in index entity'];
-
             const updatedData = {
-                agent: agentId,
-                domain: domainId,
+                intentName: 'Test Intent Updated',
                 examples: [
-                    {
-                        userSays: 'string',
-                        entities: [
-                            {
-                                value: 'string',
-                                entity: '-1',
-                                start: 0,
-                                end: 0
-                            }
-                        ]
-                    }
+                    'Locate my {-1}',
                 ]
             };
 
@@ -561,7 +443,7 @@ suite('/intent/{id}', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.part.include(possibleMesages);
+                expect(res.result.message).to.be.equal(`The entity with the name -1 doesn't exist in the agent ${agentId}`);
                 done();
             });
         });
@@ -572,30 +454,30 @@ suite('/intent/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                _id: '-1'
+                id: '-1'
             };
 
             const options = {
                 method: 'DELETE',
-                url: '/intent/' + data._id
+                url: '/intent/' + data.id
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified intent doesn\'t exists');
                 done();
             });
         });
 
-        test('should respond with 200 successful operation', (done) => {
+        test('should respond with 200 successful operation', {timeout: 10000}, (done) => {
 
             const data = {
-                _id: intentId
+                id: intentId
             };
             const options = {
                 method: 'DELETE',
-                url: '/intent/' + data._id
+                url: '/intent/' + data.id
             };
 
             server.inject(options, (res) => {

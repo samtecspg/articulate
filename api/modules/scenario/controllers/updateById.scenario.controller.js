@@ -1,64 +1,132 @@
 'use strict';
-const debug = require('debug')('nlu:model:Scenario:findById');
-const Boom = require('boom');
-const Helpers = require('../../../helpers');
 const Async = require('async');
+const Boom = require('boom');
+const Flat = require('flat');
+const _ = require('lodash');
+const ScenarioTools = require('../tools');
+
+const redis = require('redis');
+
+const updateDataFunction = (redis, scenarioId, currentScenario, updateData, cb) => {
+
+    if(updateData.slots){
+        currentScenario.slots = updateData.slots;
+    }
+    if(updateData.intentResponses){
+        currentScenario.intentResponses = updateData.intentResponses;
+    }
+    const flatScenario = Flat(currentScenario);
+    const flatUpdateData = Flat(updateData);
+    Object.keys(flatUpdateData).forEach( (key) => {
+        flatScenario[key] = flatUpdateData[key]; 
+    });
+    redis.del(`scenario:${scenarioId}`, (err) => {
+        
+        if (err){
+            const error = Boom.badImplementation('An error ocurred temporaly removing the scenario for the update.');
+            return cb(error);
+        }
+        redis.hmset(`scenario:${scenarioId}`, flatScenario, (err) => {
+            
+            if (err){
+                const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                return cb(error);
+            }
+            return cb(null, Flat.unflatten(flatScenario));
+        });
+    });
+}
 
 module.exports = (request, reply) => {
 
-    Async.parallel([
-        (callback) => {
+    const scenarioId = request.params.id;
+    const updateData = request.payload;
 
-            Helpers.exists(request.server.app.elasticsearch, 'agent', request.payload.agent, callback);
-        },
-        (callback) => {
-
-            Helpers.exists(request.server.app.elasticsearch, 'domain', request.payload.domain, callback);
-        },
-        (callback) => {
-
-            Helpers.exists(request.server.app.elasticsearch, 'intent', request.payload.intent, callback);
-        },
-        (callback) => {
-
-            const fields = {
-                agent: request.payload.agent,
-                domain: request.payload.domain,
-                _id: request.payload.intent
-            };
-            Helpers.belongs(request.server.app.elasticsearch, 'intent', fields, callback);
-        }
-    ], (err) => {
-
-        if (err) {
-            return reply(err);
-        }
-
-        request.server.app.elasticsearch.update({
-            index: 'scenario',
-            type: 'default',
-            id: request.params.id,
-            body: {
-                doc: request.payload
-            },
-            _source: true
-        }, (err, response) => {
-
-            if (err){
-                debug('ElasticSearch - search scenario: Error= %o', err);
-                const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-                if (err.body){
-                    error.output.payload.details = error.data;
+    const server = request.server;
+    const redis = server.app.redis;
+    
+    Async.waterfall([
+        (cb) => {
+            
+            server.inject(`/scenario/${scenarioId}`, (res) => {
+                
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 404){
+                        const error = Boom.notFound('The specified scenario doesn\'t exists');
+                        return cb(error, null);
+                    }
+                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${scenarioId}`);
+                    return cb(error, null);
                 }
-                return reply(error);
+                return cb(null, res.result);
+            });
+        },
+        (currentScenario, cb) => {
+
+            if (updateData.slots){
+                Async.waterfall([
+                    (callback) => {
+
+                        redis.zscore('agents', currentScenario.agent, (err, agentId) => {
+                            
+                            if (err){
+                                const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                                return callback(error);
+                            }
+                            if (agentId){
+                                return callback(null, agentId);
+                            }
+                            else{
+                                const error = Boom.badRequest(`The agent ${scenario.agent} doesn't exist`);
+                                return callback(error, null);
+                            }
+                        });
+                    },
+                    (agentId, callback) => {
+
+                        ScenarioTools.validateEntitiesTool(redis, agentId, updateData.slots, (err) => {
+                            
+                            if (err) {
+                                return callback(err);
+                            }
+                            return callback(null);
+                        });
+                    },
+                    (callback) => {
+
+                        updateDataFunction(redis, scenarioId, currentScenario, updateData, (err, result) => {
+
+                            if (err){
+                                const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                                return callback(error);
+                            }
+                            return callback(null, result);
+                        });
+                    }
+                ], (err, result) => {
+                    
+                    if (err){
+                        return cb(err);
+                    }
+                    return cb(null, result);
+                });
             }
+            else {
+                updateDataFunction(redis, scenarioId, currentScenario, updateData, (err, result) => {
+                    
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                        return cb(error);
+                    }
+                    return cb(null, result);
+                });
+            }
+        }
+    ], (err, result) => {
 
-            const scenario = {};
-            scenario._id = response._id;
-            Object.assign(scenario, response.get._source);
-
-            return reply(null, scenario);
-        });
+        if (err){
+            return reply(err, null);
+        }
+        return reply(result);
     });
-
 };

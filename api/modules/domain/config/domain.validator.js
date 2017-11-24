@@ -5,15 +5,6 @@ const Joi = require('joi');
 class DomainValidate {
     constructor() {
 
-        this.findAll = {
-            query: (() => {
-
-                return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
-                };
-            })()
-        };
-
         this.add = {
             payload: (() => {
 
@@ -22,7 +13,8 @@ class DomainValidate {
                     domainName: DomainSchema.domainName.required(),
                     enabled: DomainSchema.enabled.required(),
                     intentThreshold: DomainSchema.intentThreshold.required(),
-                    lastTraining: DomainSchema.lastTraining
+                    lastTraining: DomainSchema.lastTraining,
+                    model: DomainSchema.model
                 };
             })()
         };
@@ -31,7 +23,7 @@ class DomainValidate {
             params: (() => {
 
                 return {
-                    id: DomainSchema._id.required().description('Id of the domain')
+                    id: DomainSchema.id.required().description('Id of the domain')
                 };
             })()
         };
@@ -40,17 +32,17 @@ class DomainValidate {
             params: (() => {
 
                 return {
-                    id: DomainSchema._id.required().description('Id of the domain')
+                    id: DomainSchema.id.required().description('Id of the domain')
                 };
             })(),
             payload: (() => {
 
                 return {
-                    agent: DomainSchema.agent.required(),
                     domainName: DomainSchema.domainName,
                     enabled: DomainSchema.enabled,
                     intentThreshold: DomainSchema.intentThreshold,
-                    lastTraining: DomainSchema.lastTraining
+                    lastTraining: DomainSchema.lastTraining,
+                    model: DomainSchema.model
                 };
             })()
         };
@@ -59,7 +51,39 @@ class DomainValidate {
             params: (() => {
 
                 return {
-                    id: DomainSchema._id.required().description('Id of the domain')
+                    id: DomainSchema.id.required().description('Id of the domain')
+                };
+            })()
+        };
+
+        this.findEntitiesByDomainId = {
+            params: (() => {
+
+                return {
+                    id: DomainSchema.id.required().description('Id of the domain')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
+                };
+            })()
+        };
+
+        this.findIntentsByDomainId = {
+            params: (() => {
+
+                return {
+                    id: DomainSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
                 };
             })()
         };

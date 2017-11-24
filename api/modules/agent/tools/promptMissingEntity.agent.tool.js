@@ -12,7 +12,7 @@ module.exports = (currentContext, intentScenario, missingEntity, recognizedEntit
     };
 
     if (missingEntity.useWebhook) {
-        CallWebhook(webhookUrl, response, (err, webhookResponse) => {
+        CallWebhook(intentScenario.webhookUrl ? intentScenario.webhookUrl : webhookUrl, response, (err, webhookResponse) => {
 
             if (err){
                 return callback(err, null);

@@ -1,41 +1,59 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:findAll');
+const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    let size;
-    if (request.query && request.query.size){
-        size = request.query.size;
+    const server = request.server;
+    const redis = server.app.redis;
+    let start = 0;
+    if (request.query && request.query.start > -1){
+        start = request.query.start;
+    }
+    let limit = -1;
+    if (request.query && request.query.limit > -1){
+        limit = request.query.limit;
     }
 
-    request.server.app.elasticsearch.search({
-        index: 'agent',
-        type: 'default',
-        body: { query: { match_all: {} } },
-        size: size ? size : 10
-    }, (err, response) => {
+    Async.waterfall([
+        (cb) => {
 
-        if (err){
-            debug('ElasticSearch - search agents: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return reply(error);
+            redis.zrange('agents', start, limit === -1 ? limit : limit - 1, 'withscores', (err, agents) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the agents from the sorted set.');
+                    return cb(error);
+                }
+                agents = _.chunk(agents, 2);
+                return cb(null, agents);
+            });
+        },
+        (agents, cb) => {
+
+            Async.map(agents, (agent, callback) => {
+
+                server.inject('/agent/' + agent[1], (res) => {
+                    
+                    if (res.statusCode !== 200){
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of agent ${agent[1]}`);
+                        return callback(error, null);
+                    }
+                    return callback(null, res.result);
+                });
+            }, (err, result) => {
+
+                if (err){
+                    return cb(err, null);
+                }
+                return cb(null, result);
+            });
         }
+    ], (err, result) => {
 
-        const hits = response.hits.hits;
-        const agents = _.map(hits, (hit) => {
-
-            const tmpAgent = {};
-            tmpAgent._id = hit._id;
-            Object.assign(tmpAgent, hit._source);
-            return tmpAgent;
-        });
-
-        return reply(null, agents);
+        if (err) {
+            return reply(err, null);
+        }
+        return reply(result);
     });
-
 };

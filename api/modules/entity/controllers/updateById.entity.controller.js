@@ -1,55 +1,320 @@
 'use strict';
-const debug = require('debug')('nlu:model:Entity:findById');
-const Boom = require('boom');
-const Helpers = require('../../../helpers');
 const Async = require('async');
-const EntityTools = require('../tools');
+const Boom = require('boom');
+const Flat = require('flat');
+const _ = require('lodash');
+
+const redis = require('redis');
+
+const updateDataFunction = (redis, entityId, currentEntity, updateData, cb) => {
+
+    if (updateData.examples){
+        currentEntity.examples = updateData.examples;
+    }
+    const flatEntity = Flat(currentEntity);
+    const flatUpdateData = Flat(updateData);
+    Object.keys(flatUpdateData).forEach( (key) => {
+        flatEntity[key] = flatUpdateData[key]; 
+    });
+    redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
+        
+        if (err){
+            const error = Boom.badImplementation('An error ocurred adding the entity data.');
+            return cb(error);
+        }
+        return cb(null, Flat.unflatten(flatEntity));
+    });
+}
 
 module.exports = (request, reply) => {
 
-    Async.parallel([
-        (callback) => {
+    let agentId = null;
+    let oldEntityName = null;
+    let newEntityName = null;
+    const entityId = request.params.id;
+    const updateData = request.payload;
+    let requiresRetrain = false;
 
-            Helpers.exists(request.server.app.elasticsearch, 'agent', request.payload.agent, callback);
+    const server = request.server;
+    const redis = server.app.redis;
+    
+    Async.waterfall([
+        (cb) => {
+            
+            server.inject(`/entity/${entityId}`, (res) => {
+                
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 404){
+                        const error = Boom.notFound('The specified entity doesn\'t exists');
+                        return cb(error, null);
+                    }
+                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entityId}`);
+                    return cb(error, null);
+                }
+                return cb(null, res.result);
+            });
         },
-        (callback) => {
+        (currentEntity, cb) => {
 
-            Async.map(request.payload.usedBy, (domain, cb) => {
+            const requiresNameChanges = (updateData.entityName && updateData.entityName !== currentEntity.entityName);
+            if (requiresNameChanges){
+                oldEntityName = currentEntity.entityName;
+                newEntityName = updateData.entityName;
+                requiresRetrain = true;
+                Async.waterfall([
+                    (callback) => {
 
-                EntityTools.validateDomainTool(request.server.app.elasticsearch, request.payload.agent, domain, cb);
-            }, callback);
+                        redis.zscore('agents', currentEntity.agent, (err, id) => {
+                            
+                            if (err){
+                                const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                                return callback(error);
+                            }
+                            if (id){
+                                agentId = id;
+                                return callback(null);
+                            }
+                            else{
+                                const error = Boom.badRequest(`The agent ${entity.agent} doesn't exist`);
+                                return callback(error, null);
+                            }
+                        });
+                    },
+                    (callback) => {
+
+                        redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, updateData.entityName, (err, addResponse) => {
+                            
+                            if (err){
+                                const error = Boom.badImplementation(`An error ocurred adding the name ${currentEntity.entityName} to the entities list of the agent ${currentEntity.agent}.`);
+                                return callback(error);
+                            }
+                            if (addResponse !== 0){
+                                return callback(null);
+                            }
+                            else{
+                                const error = Boom.badRequest(`A entity with this name already exists in the agent ${currentEntity.agent}.`);
+                                return callback(error, null);
+                            }
+                        });
+                    },
+                    (callback) => {
+                        
+                        redis.zrem(`agentEntities:${agentId}`, currentEntity.entityName, (err, removeResult) => {
+                            
+                            if (err){
+                                const error = Boom.badImplementation( `An error ocurred removing the name ${currentEntity.entityName} from the entities list of the agent ${currentEntity.agent}.`);
+                                return callback(error);
+                            }
+                            return callback(null);
+                        });
+                    },
+                    (callback) => {
+
+                        updateDataFunction(redis, entityId, currentEntity, updateData, (err, result) => {
+
+                            if (err){
+                                const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                                return callback(error);
+                            }
+                            return callback(null, result);
+                        });
+                    }
+                ], (err, result) => {
+                    
+                    if (err){
+                        return cb(err);
+                    }
+                    return cb(null, result);
+                });
+            }
+            else {
+                if (updateData.examples){
+                    requiresRetrain = true;
+                    oldEntityName = currentEntity.entityName;
+                    newEntityName = currentEntity.entityName;
+                }
+                updateDataFunction(redis, entityId, currentEntity, updateData, (err, result) => {
+                    
+                    if (err){
+                        const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                        return cb(error);
+                    }
+                    return cb(null, result);
+                });
+            }
         }
-    ], (err) => {
+    ], (err, updatedEntity) => {
 
         if (err){
             return reply(err, null);
         }
 
-        request.server.app.elasticsearch.update({
-            index: 'entity',
-            type: 'default',
-            id: request.params.id,
-            body: {
-                doc: request.payload
-            },
-            _source: true
-        }, (err, response) => {
+        if (requiresRetrain) {
+            
+            Async.waterfall([
+                (callbackGetDomainsUsingEntity) => {
 
-            if (err){
-                debug('ElasticSearch - update entity: Error= %o', err);
-                const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-                if (err.body){
-                    error.output.payload.details = error.data;
+                    redis.smembers(`entityDomain:${updatedEntity.id}`, (err, domainsUsingEntity) => {
+                        
+                        if (err){
+                            const error = Boom.badImplementation(`An error ocurred getting the domains used by the entity ${updatedEntity.entityName}`);
+                            return callbackGetDomainsUsingEntity(error);
+                        }
+                        if (domainsUsingEntity && domainsUsingEntity.length > 0){
+                            return callbackGetDomainsUsingEntity(null, domainsUsingEntity);
+                        }
+                        else {
+                            return reply(updatedEntity);
+                        }
+                    });
+                },
+                (domainsUsingEntity, callbackUpdateEachDomainIntents) => {
+
+                    Async.map(domainsUsingEntity, (domain, callbackMapOfDomains) => {
+
+                        Async.waterfall([
+                            (callbackGetIntentsOfDomain) => {
+
+                                server.inject(`/domain/${domain}/intent`, (res) => {
+                                    
+                                    if (res.statusCode !== 200){
+                                        const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${domain}`);
+                                        return callbackGetIntentsOfDomain(error, null);
+                                    }
+                                    return callbackGetIntentsOfDomain(null, res.result);
+                                });
+                            },
+                            (intents, callbackUpdateIntentsAndScenarios) => {
+
+                                Async.map(intents, (intent, callbackMapOfIntent) => {
+                                    
+                                    Async.parallel([
+                                        (callbackUpdateIntent) => {
+
+                                            let updateIntent = false;
+                                            if (oldEntityName !== newEntityName){
+                                                intent.examples = _.map(intent.examples, (example) => {
+
+                                                    if (example.indexOf(`{${oldEntityName}}`) !== -1){
+                                                        updateIntent = true;
+                                                    }
+                                                    return example.replace(new RegExp('\{' + oldEntityName + '\}', 'g'), '\{' + newEntityName + '\}');
+                                                });
+                                            }
+
+                                            if (updateIntent){
+                                                redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
+                                                    
+                                                    if (err){
+                                                        const error = Boom.badImplementation(`An error ocurred updating the intent ${intent.id} with the new values of the entity`);
+                                                        return callbackUpdateIntent(error, null);
+                                                    }
+                                                    return callbackUpdateIntent(null);
+                                                });
+                                            }
+                                            else {
+                                                return callbackUpdateIntent(null);
+                                            }
+                                        },
+                                        (callbackUpdateScenario) => {
+
+                                            Async.waterfall([
+                                                (callbackGetScenario) => {
+                                                    
+                                                    server.inject(`/scenario/${intent.id}`, (res) => {
+                                                        
+                                                        if (res.statusCode !== 200){
+                                                            if (res.statusCode === 404){
+                                                                return callbackGetScenario(null, null);
+                                                            }
+                                                            const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${scenarioId}`);
+                                                            return callbackGetScenario(error, null);
+                                                        }
+                                                        return callbackGetScenario(null, res.result);
+                                                    });
+                                                },
+                                                (currentScenario, callbackUpdateScenarioSlots) => {
+                                        
+                                                    if (currentScenario){
+                                                        let updateScenario = false;
+                                                        if (oldEntityName !== newEntityName){
+                                                            currentScenario.slots = _.map(currentScenario.slots, (slot) => {
+            
+                                                                if (slot.entity === oldEntityName){
+                                                                    updateScenario = true;
+                                                                    slot.entity = newEntityName;
+                                                                }
+                                                                return slot;
+                                                            });
+                                                        }
+            
+                                                        if (updateScenario){
+                                                            redis.hmset(`scenario:${intent.id}`, Flat(currentScenario), (err, result) => {
+                                                                
+                                                                if (err){
+                                                                    const error = Boom.badImplementation(`An error ocurred updating the scenario ${intent.id} with the new values of the entity`);
+                                                                    return callbackUpdateScenarioSlots(error, null);
+                                                                }
+                                                                return callbackUpdateScenarioSlots(null);
+                                                            });
+                                                        }
+                                                        else {
+                                                            return callbackUpdateScenarioSlots(null);
+                                                        }
+                                                    }
+                                                    else {
+                                                        return callbackUpdateScenarioSlots(null);
+                                                    }
+                                                }
+                                            ], (err, result) => {
+                                        
+                                                if (err){
+                                                    return callbackUpdateScenario(err, null);
+                                                }
+                                                return callbackUpdateScenario(result);
+                                            });
+                                        }
+                                    ], (err, result) => {
+    
+                                        if (err){
+                                            return callbackMapOfIntent(err);
+                                        }
+                                        return callbackMapOfIntent(null);
+                                    });
+                                }, (err, result) => {
+                                    
+                                    if (err){
+                                        return callbackUpdateIntentsAndScenarios(err);
+                                    }
+                                    return callbackUpdateIntentsAndScenarios(null);
+                                });
+                            }
+                        ], (err, result) => {
+
+                            if (err){
+                                return callbackMapOfDomains(err);
+                            }
+                            return callbackMapOfDomains(null);
+                        });
+                    }, (err, result) => {
+                        
+                        if (err){
+                            return callbackUpdateEachDomainIntents(err);
+                        }
+                        return callbackUpdateEachDomainIntents(null);
+                    });
                 }
-                return reply(error);
-            }
+            ], (err, result) => {
 
-            const entity = {};
-            entity._id = response._id;
-            Object.assign(entity, response.get._source);
-
-            return reply(null, entity);
-        });
+                if (err){
+                    return reply(err);
+                }
+                //call retrain here
+                return reply(updatedEntity);
+            });
+        }
+        else{
+            return reply(updatedEntity);
+        }
     });
-
 };

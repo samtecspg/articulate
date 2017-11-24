@@ -1,51 +1,69 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:findEntityByIdByAgentId');
+const Async = require('async');
 const Boom = require('boom');
+const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    request.server.app.elasticsearch.search({
-        index: 'entity',
-        type: 'default',
-        body: {
-            query: {
-                bool: {
-                    must: [
-                        {
-                            term: {
-                                agent: request.params.id
-                            },
-                            term: {
-                                _id: request.params.entityId
-                            }
-                        }
-                    ]
+    const server = request.server;
+    const redis = server.app.redis;
+    const agentId = request.params.id;
+    const entityId = request.params.entityId;
+
+    Async.waterfall([
+        (cb) => {
+            
+            server.inject('/agent/' + agentId, (res) => {
+                
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 404){
+                        const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
+                        return reply(errorNotFound);       
+                    }
+                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                    return cb(error, null);
                 }
+                return cb(null);
+            });
+        },
+        (cb) => {
+
+            redis.zrange(`agentEntities:${agentId}`, 0, -1, 'withscores', (err, entities) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the entities from the sorted set.');
+                    return cb(error);
+                }
+                entities =_.chunk(entities, 2);
+                const entity = _.filter(entities, (entity) => {
+
+                    return entity[1] == entityId;
+                })[0];
+                return cb(null, entity);
+            });
+        },
+        (entity, cb) => {
+
+            if (entity){
+                server.inject('/entity/' + entity[1], (res) => {
+                    
+                    if (res.statusCode !== 200){
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
+                        return cb(error, null);
+                    }
+                    return cb(null, res.result);
+                });
+            }
+            else {
+                const error = Boom.notFound('The specified entity doesn\'t exists in this agent');
+                return cb(error);
             }
         }
-    }, (err, response) => {
+    ], (err, result) => {
 
-        if (err){
-            debug('ElasticSearch - search entity by id: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return reply(error);
+        if (err) {
+            return reply(err, null);
         }
-
-        const hits = response.hits.hits;
-        const entity = hits[0];
-
-        if (entity){
-            const tmpEntity = {};
-            tmpEntity._id = entity._id;
-            Object.assign(tmpEntity, entity._source);
-            return reply(null, tmpEntity);
-        }
-
-        const nonexistent = Boom.notFound('The specified entity doesn\'t exists for the given agent');
-        return reply(nonexistent);
+        return reply(result);
     });
-
 };
