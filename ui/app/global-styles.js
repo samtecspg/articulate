@@ -1,6 +1,5 @@
-import { injectGlobal } from 'styled-components';
-
 import quotes from 'img/quotes.svg';
+import { injectGlobal } from 'styled-components';
 
 /* eslint no-unused-expressions: 0 */
 injectGlobal`
@@ -340,7 +339,10 @@ injectGlobal`
 
   [type="radio"]:checked + label:before, [type="radio"]:checked + label:after, [type="radio"]:not(:checked) + label:before, [type="radio"]:not(:checked) + label:after, [type="radio"]:not(:checked) + label:after {
     margin-top: 30px; }
-
+  [type="checkbox"]:checked + label:before {
+    border-right: 2px solid #3CDE5D;
+    border-bottom: 2px solid #3CDE5D;
+  }
   form p:last-child {
     margin-left: 40px;
     margin-top: 3px;
