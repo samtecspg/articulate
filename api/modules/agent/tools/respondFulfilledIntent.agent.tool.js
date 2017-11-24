@@ -11,10 +11,10 @@ module.exports = (currentContext, intentScenario, timezone, webhookUrl, callback
         timezone
     };
 
-    if (intentScenario.useWebhook) {
+    if (intentScenario.useWebhook === "true") {
         //const validResponses = BuildValidResponses([], currentContext, intentScenario.slots, intentScenario.intentResponses, timezone);
         //const textResponse = validResponses[Math.floor(Math.random() * validResponses.length)];
-        CallWebhook(webhookUrl, response, (err, webhookResponse) => {
+        CallWebhook(intentScenario.webhookUrl ? intentScenario.webhookUrl : webhookUrl, response, (err, webhookResponse) => {
 
             if (err){
                 return callback(err, null);

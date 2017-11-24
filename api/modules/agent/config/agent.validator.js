@@ -12,7 +12,8 @@ class AgentValidate {
             query: (() => {
 
                 return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
                 };
             })()
         };
@@ -21,7 +22,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };
@@ -30,13 +31,14 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
 
                 return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
                 };
             })()
         };
@@ -45,8 +47,8 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
-                    entityId: EntitySchema._id.required().description('Id of the entity')
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    entityId: EntitySchema.id.required().description('Id of the entity')
                 };
             })()
         };
@@ -55,13 +57,14 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
 
                 return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
                 };
             })()
         };
@@ -70,8 +73,8 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
-                    domainId: DomainSchema._id.required().description('Id of the domain')
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    domainId: DomainSchema.id.required().description('Id of the domain')
                 };
             })()
         };
@@ -80,14 +83,15 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
-                    domainId: DomainSchema._id.required().description('Id of the domain')
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    domainId: DomainSchema.id.required().description('Id of the domain')
                 };
             })(),
             query: (() => {
 
                 return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
                 };
             })()
         };
@@ -96,9 +100,9 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
-                    domainId: DomainSchema._id.required().description('Id of the domain'),
-                    intentId: IntentSchema._id.required().description('Id of the intent')
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    domainId: DomainSchema.id.required().description('Id of the domain'),
+                    intentId: IntentSchema.id.required().description('Id of the intent')
                 };
             })()
         };
@@ -107,9 +111,9 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent'),
-                    domainId: DomainSchema._id.required().description('Id of the domain'),
-                    intentId: IntentSchema._id.required().description('Id of the intent')
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    domainId: DomainSchema.id.required().description('Id of the domain'),
+                    intentId: IntentSchema.id.required().description('Id of the intent')
                 };
             })(),
             query: (() => {
@@ -125,11 +129,10 @@ class AgentValidate {
 
                 return {
                     agentName: AgentSchema.agentName.required(),
-                    webhookUrl: AgentSchema.webhookUrl.required(),
+                    webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
-                    useWebhookFallback: AgentSchema.useWebhookFallback.required(),
-                    webhookFallbackUrl: AgentSchema.webhookFallbackUrl
+                    useWebhookFallback: AgentSchema.useWebhookFallback.required()
                 };
             })()
         };
@@ -138,7 +141,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             payload: (() => {
@@ -148,8 +151,7 @@ class AgentValidate {
                     webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses,
-                    useWebhookFallback: AgentSchema.useWebhookFallback,
-                    webhookFallbackUrl: AgentSchema.webhookFallbackUrl
+                    useWebhookFallback: AgentSchema.useWebhookFallback
                 };
             })()
         };
@@ -158,7 +160,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };
@@ -167,7 +169,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
@@ -182,12 +184,13 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             query: (() => {
 
                 return {
+                    sessionId: Joi.string().required().description('Id of the session'),
                     text: Joi.string().required().description('Text to parse'),
                     timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville')
                 };
@@ -197,7 +200,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema._id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };

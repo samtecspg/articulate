@@ -1,13 +1,13 @@
 'use strict';
 
 const Wreck = require('wreck');
-
+const Boom = require('boom');
+const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.intent.tool');
-const debug = require('debug')('nlu:model:Intent:tool:retrainModel');
 
-const retrainModel = (elasticsearch, rasa, server, action, intent, callback) => {
+const retrainModel = (server, rasa, agentName, domainName, domainId, callback) => {
 
-    BuildTrainingData(elasticsearch, intent, action, false, (err, trainingSet) => {
+    BuildTrainingData(server, domainId, (err, trainingSet) => {
 
         if (err){
             return callback(err);
@@ -19,21 +19,22 @@ const retrainModel = (elasticsearch, rasa, server, action, intent, callback) => 
 
         const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
         const trainingDate = new Date().toISOString();
-        const modelFolderName = intent.domain + '_' + trainingDate.replace(new RegExp(':', 'g'), '');
-        Wreck.post(rasa + '/train?name=' + modelFolderName, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
+        const model = Guid.create().toString();
+        const modelFolderName = domainName + '_' + model;
+        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {
-                debug('ElasticSearch - retrainModel tool: Error= %o', err);
+                const error = Boom.badImplementation('An error ocurred calling the training process.');
                 return callback(err);
             }
 
             const updateDomainPayload = {
-                agent: intent.agent,
-                lastTraining: trainingDate
+                lastTraining: trainingDate,
+                model 
             };
 
             const options = {
-                url: '/domain/' + intent.domain,
+                url: '/domain/' + domainId,
                 method: 'PUT',
                 payload: updateDomainPayload
             };

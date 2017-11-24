@@ -5,12 +5,13 @@ class DomainModel {
     static get schema() {
 
         return {
-            _id: Joi.string(),
+            id: Joi.number(),
             agent: Joi.string(),
             domainName: Joi.string(),
             enabled: Joi.boolean(),
             intentThreshold: Joi.number(),
-            lastTraining: Joi.date()
+            lastTraining: Joi.date(),
+            model: Joi.string(),
         };
     };
 }

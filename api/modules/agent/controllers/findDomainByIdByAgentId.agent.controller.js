@@ -1,53 +1,69 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:findDomainByIdByAgentId');
+const Async = require('async');
 const Boom = require('boom');
+const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
-    request.server.app.elasticsearch.search({
-        index: 'domain',
-        type: 'default',
-        body: {
-            query: {
-                bool: {
-                    must: [
-                        {
-                            term: {
-                                agent: request.params.id
-                            }
-                        },
-                        {
-                            term: {
-                                _id: request.params.domainId
-                            }
-                        }
-                    ]
+    const server = request.server;
+    const redis = server.app.redis;
+    const agentId = request.params.id;
+    const domainId = request.params.domainId;
+
+    Async.waterfall([
+        (cb) => {
+            
+            server.inject('/agent/' + agentId, (res) => {
+                
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 404){
+                        const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
+                        return reply(errorNotFound);       
+                    }
+                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                    return cb(error, null);
                 }
+                return cb(null);
+            });
+        },
+        (cb) => {
+
+            redis.zrange(`agentDomains:${agentId}`, 0, -1, 'withscores', (err, domains) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the domains from the sorted set.');
+                    return cb(error);
+                }
+                domains =_.chunk(domains, 2);
+                const domain = _.filter(domains, (domain) => {
+
+                    return domain[1] == domainId;
+                })[0];
+                return cb(null, domain);
+            });
+        },
+        (domain, cb) => {
+
+            if (domain){
+                server.inject('/domain/' + domain[1], (res) => {
+                    
+                    if (res.statusCode !== 200){
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);
+                        return cb(error, null);
+                    }
+                    return cb(null, res.result);
+                });
+            }
+            else {
+                const error = Boom.notFound('The specified domain doesn\'t exists in this agent');
+                return cb(error);
             }
         }
-    }, (err, response) => {
+    ], (err, result) => {
 
-        if (err){
-            debug('ElasticSearch - search domains: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return reply(error);
+        if (err) {
+            return reply(err, null);
         }
-
-        const hits = response.hits.hits;
-        const domain = hits[0];
-
-        if (domain){
-            const tmpDomain = {};
-            tmpDomain._id = domain._id;
-            Object.assign(tmpDomain, domain._source);
-            return reply(null, tmpDomain);
-        }
-
-        const nonexistent = Boom.notFound('The specified domain doesn\'t exists for the given agent');
-        return reply(nonexistent);
+        return reply(result);
     });
-
 };

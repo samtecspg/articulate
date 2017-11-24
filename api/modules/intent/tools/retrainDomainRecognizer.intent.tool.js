@@ -3,54 +3,35 @@
 const Wreck = require('wreck');
 const Boom = require('boom');
 
-const BuildTrainingData = require('./buildTrainingData.intent.tool');
-const debug = require('debug')('nlu:model:Intent:tool:retrainModel');
+const BuildDomainRecognitionTrainingData = require('./buildDomainRecognitionTrainingData.intent.tool');
 
-const retrainDomainRecognizer = (elasticsearch, rasa, server, action, intent, callback) => {
+const retrainDomainRecognizer = (server, redis, rasa, agentName, agentId, cb) => {
 
-    BuildTrainingData(elasticsearch, intent, action, true, (err, trainingSet) => {
+    BuildDomainRecognitionTrainingData(server, agentId, (err, trainingSet) => {
 
         if (err){
-            return callback(err);
+            return cb(err);
         }
 
         if (!trainingSet){
-            return callback(null);
+            return cb(null);
         }
 
         const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
         const trainingDate = new Date().toISOString();
-        const modelFolderName = intent.agent + '-domain-recognizer' + '_' + trainingDate.replace(new RegExp(':', 'g'), '');
-        Wreck.post(rasa + '/train?name=' + modelFolderName, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
-
+        const modelFolderName = agentName + '_domain_recognizer';
+        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
+            
             if (err) {
-                debug('ElasticSearch - retrainModel tool: Error= %o', err);
-                return callback(err);
+                return cb(err);
             }
-
-            elasticsearch.index({
-                index: 'domain',
-                type: 'default',
-                id: intent.agent + '-domain-recognizer',
-                body: {
-                    agent: intent.agent,
-                    domainName: 'Agent Domain Recognizer',
-                    enabled: true,
-                    intentThreshold: 0,
-                    lastTraining: trainingDate
+            redis.lpush(`agentDomainRecognizer:${agentId}`, trainingDate, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error saving the training date of the domain recognizer.');
+                    return cb(error);
                 }
-            }, (errorIndexing, response) => {
-
-                if (errorIndexing){
-                    debug('ElasticSearch - add intent: Error= %o', errorIndexing);
-                    const error = Boom.create(errorIndexing.statusCode, errorIndexing.message, errorIndexing.body ? errorIndexing.body : null);
-                    if (errorIndexing.body){
-                        error.output.payload.details = error.data;
-                    }
-                    return callback(error);
-                }
-
-                return callback(null);
+                return cb(null);
             });
         });
 

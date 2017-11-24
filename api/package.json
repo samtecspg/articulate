@@ -4,7 +4,8 @@
   "description": "NLU API",
   "main": "start.js",
   "scripts": {
-    "test": "lab --lint --coverage",
+    "test": "lab",
+    "test:full": "lab --lint --coverage",
     "start": "npm-run-all --parallel test start:server",
     "start:server": "nodemon start.js",
     "precommit": "npm run git:hook",
@@ -29,6 +30,7 @@
     "debug": "^2.6.7",
     "dotenv": "^4.0.0",
     "elasticsearch": "^13.0.1",
+    "flat": "^4.0.0",
     "guid": "^0.0.12",
     "hapi": "^16.1.1",
     "hapi-swagger": "^7.7.0",
@@ -38,6 +40,7 @@
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
     "ordinal": "^1.0.2",
+    "redis": "^2.8.0",
     "vision": "^4.1.1",
     "wreck": "^12.2.0"
   },

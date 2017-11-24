@@ -1,82 +1,135 @@
 'use strict';
-const debug = require('debug')('nlu:model:Scenario:add');
-const _ = require('lodash');
-const Guid = require('guid');
-const Boom = require('boom');
-const Helpers = require('../../../helpers');
 const Async = require('async');
-
-const buildPayload = (scenario) => {
-
-    const result = {};
-
-    const id = scenario._id ? scenario._id : Guid.create().toString();
-
-    //_id is not allowed as it is a system value
-    const values = _.clone(scenario);
-    delete values._id;
-
-    //Create the payload for the bulk command in ES
-    result.payload = values;
-
-    //Add _id to the scenario to return in the response
-    result.scenario = Object.assign({ _id: id }, values);
-
-    return result;
-};
-
+const Boom = require('boom');
+const Flat = require('flat');
+const ScenarioTools = require('../tools');
+    
 module.exports = (request, reply) => {
 
-    Async.parallel([
-        (callback) => {
+    let scenarioId = null;
+    let agentId = null;
+    let domainId = null;
+    let intentId = null;
+    let scenario = request.payload;
+    const redis = request.server.app.redis;
 
-            Helpers.exists(request.server.app.elasticsearch, 'agent', request.payload.agent, callback);
-        },
-        (callback) => {
+    Async.series({
+        fathersCheck: (cb) => {
+            
+            Async.series([
+                (callback) => {
 
-            Helpers.exists(request.server.app.elasticsearch, 'domain', request.payload.domain, callback);
-        },
-        (callback) => {
+                    redis.zscore('agents', scenario.agent, (err, id) => {
+                        
+                        if (err){
+                            const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                            return callback(error);
+                        }
+                        if (id){
+                            agentId = id;
+                            return callback(null);
+                        }
+                        else{
+                            const error = Boom.badRequest(`The agent ${scenario.agent} doesn't exist`);
+                            return callback(error, null);
+                        }
+                    });
+                },
+                (callback) => {
+                    
+                    redis.zscore(`agentDomains:${agentId}`, scenario.domain, (err, id) => {
+                        
+                        if (err){
+                            const error = Boom.badImplementation(`An error ocurred checking if the domain ${scenario.domain} exists in the agent ${scenario.agent}.`);
+                            return callback(error);
+                        }
+                        if (id){
+                            domainId = id;
+                            return callback(null);
+                        }
+                        else {
+                            const error = Boom.badRequest(`The domain ${scenario.domain} doesn't exist in the agent ${scenario.agent}`);
+                            return callback(error);
+                        }
+                    });
+                },
+                (callback) => {
 
-            Helpers.exists(request.server.app.elasticsearch, 'intent', request.payload.intent, callback);
-        }/*,
-        (callback) => {
+                    Async.parallel([
+                        (cllbk) => {
 
-            const fields = {
-                agent: request.payload.agent,
-                domain: request.payload.domain,
-                _id: request.payload.intent
-            };
-            Helpers.belongs(request.server.app.elasticsearch, 'intent', fields, callback);
-        }*/
-    ], (err) => {
+                            redis.zscore(`domainIntents:${domainId}`, scenario.intent, (err, id) => {
+                                
+                                if (err){
+                                    const error = Boom.badImplementation(`An error ocurred checking if the intent ${scenario.intent} exists in the domain ${scenario.domain}.`);
+                                    return cllbk(error);
+                                }
+                                if (id){
+                                    intentId = id;
+                                    return cllbk(null);
+                                }
+                                else {
+                                    const error = Boom.badRequest(`The intent ${scenario.intent} doesn't exist in the domain ${scenario.domain}`);
+                                    return cllbk(error);
+                                }
+                            });
+                        },
+                        (cllbk) => {
 
-        if (err) {
-            return reply(err);
-        }
+                            ScenarioTools.validateEntitiesTool(redis, agentId, scenario.slots, (err) => {
+                                
+                                if (err) {
+                                    return cllbk(err);
+                                }
+                                return cllbk(null);
+                            });
+                        }
+                    ], (err, result) => {
 
-        const scenario = request.payload;
-
-        const sentValue = buildPayload(scenario);
-
-        request.server.app.elasticsearch.create({
-            index: 'scenario',
-            type: 'default',
-            id: sentValue.scenario._id,
-            body: sentValue.payload
-        }, (err, response) => {
-
-            if (err){
-                debug('ElasticSearch - add scenario: Error= %o', err);
-                const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-                if (err.body){
-                    error.output.payload.details = error.data;
+                        if (err){
+                            return callback(err);
+                        }
+                        return callback(null);
+                    });
                 }
-                return reply(error);
-            }
+            ], (err) => {
 
-            //There aren't errors, return the passed scenario with the _id
-            return reply(sentValue.scenario);
-        });
+                if (err){
+                    return cb(err, null);
+                }
+                return cb(null);
+            });
+        },
+        scenarioId: (cb) => {
+
+            redis.incr('scenarioId', (err, newScenarioId) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the new scenario id.');
+                    return cb(error);
+                }
+                scenarioId = newScenarioId;
+                return cb(null);
+            });
+        },
+        scenario: (cb) => {
+
+            scenario = Object.assign({id: scenarioId}, scenario);          
+            const flatScenario = Flat(scenario);  
+            redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                    return cb(error);
+                }
+                return cb(null, scenario);
+            });
+        }
+    }, (err, result) => {
+
+        if (err){
+            return reply(err, null);
+        }
+        return reply(result.scenario);
     });
 };

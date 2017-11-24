@@ -4,16 +4,6 @@ const DomainValidator = require('./domain.validator');
 
 const DomainRoutes = [
     {
-        method: 'GET',
-        path: '/domain',
-        config: {
-            description: 'Find all instances of the model from the data source',
-            tags: ['api'],
-            validate: DomainValidator.findAll,
-            handler: DomainController.findAll
-        }
-    },
-    {
         method: 'POST',
         path: '/domain',
         config: {
@@ -51,6 +41,26 @@ const DomainRoutes = [
             tags: ['api'],
             validate: DomainValidator.deleteById,
             handler: DomainController.deleteById
+        }
+    },
+    {
+        method: 'GET',
+        path: '/domain/{id}/entity',
+        config: {
+            description: 'Find list of entities linked with a domain',
+            tags: ['api'],
+            validate: DomainValidator.findEntitiesByDomainId,
+            handler: DomainController.findEntitiesByDomainId
+        }
+    },
+    {
+        method: 'GET',
+        path: '/domain/{id}/intent',
+        config: {
+            description: 'Find list of intents linked with a domain',
+            tags: ['api'],
+            validate: DomainValidator.findIntentsByDomainId,
+            handler: DomainController.findIntentsByDomainId
         }
     }
 ];

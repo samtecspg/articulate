@@ -6,10 +6,9 @@ class EntityModel {
     static get schema() {
 
         return {
-            _id: Joi.string(),
+            id: Joi.number(),
             agent: Joi.string(),
             entityName: Joi.string(),
-            usedBy: Joi.array().items(Joi.string()),
             examples: Joi.array().items(ExampleModel.schema)
         };
     };

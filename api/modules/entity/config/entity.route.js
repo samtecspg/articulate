@@ -4,16 +4,6 @@ const EntityValidator = require('./entity.validator');
 
 const entityRoutes = [
     {
-        method: 'GET',
-        path: '/entity',
-        config: {
-            description: 'Find all instances of the model from the data source',
-            tags: ['api'],
-            validate: EntityValidator.findAll,
-            handler: EntityController.findAll
-        }
-    },
-    {
         method: 'POST',
         path: '/entity',
         config: {

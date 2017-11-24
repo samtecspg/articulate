@@ -1,4 +1,5 @@
 'use strict';
+const Async = require('async');
 
 const Code = require('code');
 const Lab = require('lab');
@@ -12,20 +13,21 @@ const after = lab.after;
 
 let server;
 
+let agentName = null;
 let agentId = null;
 let domainId = null;
 
 const createAgent = (callback) => {
 
     const data = {
-        agentName: 'string',
+        agentName: 'Test Agent',
         webhookUrl: 'string',
-        domainClassifierThreshold: 0,
+        domainClassifierThreshold: 0.6,
         fallbackResponses: [
-            'string'
+            'Sorry, can you rephrase that?',
+            'I\'m still learning to speak with humans, can you rephrase that?'
         ],
-        useWebhookFallback: false,
-        webhookFallbackUrl: 'http://localhost:3000'
+        useWebhookFallback: false
     };
     const options = {
         method: 'POST',
@@ -35,14 +37,15 @@ const createAgent = (callback) => {
 
     server.inject(options, (res) => {
 
-        if (res.statusCode){
-            agentId = res.result._id;
-            return callback(null);
+        if (res.statusCode !== 200) {
+            return callback({
+                message: 'Error creating agent',
+                error: res.result
+            }, null);
         }
-
-        return callback({
-            message: 'Error creating agent'
-        });
+        agentName = res.result.agentName;
+        agentId = res.result.id;
+        return callback(null);
     });
 };
 
@@ -58,6 +61,7 @@ before((done) => {
         createAgent( (err) => {
 
             if (err) {
+                console.log(err);
                 done(err);
             }
             done();
@@ -73,6 +77,7 @@ after((done) => {
     }, (res) => {
 
         if (res.statusCode !== 200){
+            console.log(res.result);
             return done(res.result);
         }
         return done();
@@ -81,28 +86,15 @@ after((done) => {
 
 suite('/domain', () => {
 
-    suite('/get', () => {
-
-        test('should respond with 200 successful operation and return and array of objects', (done) => {
-
-            server.inject('/domain', (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result).to.be.an.array();
-                done();
-            });
-        });
-    });
-
     suite('/post', () => {
 
         test('should respond with 200 successful operation and return an domain object', (done) => {
 
             const data = {
-                agent: agentId,
-                domainName: 'string',
+                agent: agentName,
+                domainName: 'Test Domain',
                 enabled: true,
-                intentThreshold: 0
+                intentThreshold: 0.7
             };
             const options = {
                 method: 'POST',
@@ -113,9 +105,8 @@ suite('/domain', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result).to.include(data);
-                domainId = res.result._id;
-
+                expect(res.result.domainName).to.include(data.domainName);
+                domainId = res.result.id;
                 done();
             });
         });
@@ -141,9 +132,9 @@ suite('/domain', () => {
 
             const data = {
                 agent: '-1',
-                domainName: 'string',
+                domainName: 'Test Domain',
                 enabled: true,
-                intentThreshold: 0
+                intentThreshold: 0.7
             };
 
             const options = {
@@ -155,7 +146,7 @@ suite('/domain', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.equal('The document with id -1 doesn\'t exists in index agent');
+                expect(res.result.message).to.equal('The agent -1 doesn\'t exist');
                 done();
             });
         });
@@ -171,17 +162,17 @@ suite('/domain/{id}', () => {
         test('should respond with 200 successful operation and return a single object', (done) => {
 
             const data = {
-                _id: domainId,
-                agent: agentId,
-                domainName: 'string',
+                id: domainId,
+                agent: agentName,
+                domainName: 'Test Domain',
                 enabled: true,
-                intentThreshold: 0
+                intentThreshold: 0.7
             };
 
-            server.inject('/domain/' + data._id, (res) => {
+            server.inject('/domain/' + data.id, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result._id).to.be.equal(data._id);
+                expect(res.result.domainName).to.be.equal(data.domainName);
                 done();
             });
         });
@@ -189,13 +180,13 @@ suite('/domain/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                _id: '-1'
+                id: '-1'
             };
 
-            server.inject('/domain/' + data._id, (res) => {
+            server.inject('/domain/' + data.id, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified domain doesn\'t exists');
                 done();
             });
         });
@@ -206,29 +197,29 @@ suite('/domain/{id}', () => {
         test('should respond with 200 successful operation', (done) => {
 
             const data = {
-                _id: domainId,
-                agent: agentId,
-                domainName: 'string',
+                id: domainId,
+                agent: agentName,
+                domainName: 'Test Domain Updated',
                 enabled: false,
                 intentThreshold: 0.55
             };
 
             const updatedData = {
-                agent: agentId,
+                domainName: 'Test Domain Updated',
                 enabled: false,
                 intentThreshold: 0.55
             };
 
             const options = {
                 method: 'PUT',
-                url: '/domain/' + data._id,
+                url: '/domain/' + data.id,
                 payload: updatedData
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result).to.be.equal(data);
+                expect(res.result.domainName).to.be.equal(data.domainName);
                 done();
             });
         });
@@ -236,7 +227,7 @@ suite('/domain/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                agent: agentId
+                domainName: 'Test Domain With Error'
             };
 
             const options = {
@@ -248,7 +239,7 @@ suite('/domain/{id}', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.error).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified domain doesn\'t exists');
                 done();
             });
         });
@@ -256,12 +247,12 @@ suite('/domain/{id}', () => {
         test('should respond with 400 Bad Request', (done) => {
 
             const data = {
-                _id: domainId,
+                id: domainId,
                 invalid: true
             };
             const options = {
                 method: 'PUT',
-                url: '/domain/' + data._id,
+                url: '/domain/' + data.id,
                 payload: data
             };
 
@@ -273,25 +264,6 @@ suite('/domain/{id}', () => {
             });
         });
 
-        test('should respond with 400 because agent doesn\'t exists', (done) => {
-
-            const updatedData = {
-                agent: '-1'
-            };
-
-            const options = {
-                method: 'PUT',
-                url: '/domain/' + domainId,
-                payload: updatedData
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.equal('The document with id -1 doesn\'t exists in index agent');
-                done();
-            });
-        });
     });
 
     suite('/delete', () => {
@@ -299,18 +271,18 @@ suite('/domain/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                _id: '-1'
+                id: '-1'
             };
 
             const options = {
                 method: 'DELETE',
-                url: '/domain/' + data._id
+                url: '/domain/' + data.id
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('Not Found');
+                expect(res.result.message).to.contain('The specified domain doesn\'t exists');
                 done();
             });
         });
@@ -318,11 +290,11 @@ suite('/domain/{id}', () => {
         test('should respond with 200 successful operation', (done) => {
 
             const data = {
-                _id: domainId
+                id: domainId
             };
             const options = {
                 method: 'DELETE',
-                url: '/domain/' + data._id
+                url: '/domain/' + data.id
             };
 
             server.inject(options, (res) => {

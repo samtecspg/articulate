@@ -1,50 +1,62 @@
 'use strict';
-const debug = require('debug')('nlu:model:Agent:add');
-const _ = require('lodash');
-const Guid = require('guid');
+const Async = require('async');
 const Boom = require('boom');
-
-const buildPayload = (agent) => {
-
-    const result = {};
-
-    const id = Guid.create().toString();
-
-    //_id is not allowed as it is a system value
-    const values = _.clone(agent);
-    delete values._id;
-
-    //Create the payload for the bulk command in ES
-    result.payload = values;
-
-    //Add _id to the agent to return in the response
-    result.agent = Object.assign({ _id: id }, values);
-
-    return result;
-};
-
+const Flat = require('flat');
+    
 module.exports = (request, reply) => {
 
-    const agent = request.payload;
+    let agentId = null;
+    let agent = request.payload;
+    const redis = request.server.app.redis;
 
-    const sentValue = buildPayload(agent);
+    Async.series({
+        agentId: (cb) => {
 
-    request.server.app.elasticsearch.create({
-        index: 'agent',
-        type: 'default',
-        id: sentValue.agent._id,
-        body: sentValue.payload
-    }, (err, response) => {
+            redis.incr('agentId', (err, newAgentId) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred getting the new agent id.');
+                    return cb(error);
+                }
+                agentId = newAgentId;
+                return cb(null);
+            });
+        },
+        addNameToList: (cb) => {
+
+            redis.zadd('agents', 'NX', agentId, agent.agentName, (err, addResponse) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the name to the agents list.');
+                    return cb(error);
+                }
+                if (addResponse !== 0){
+                    return cb(null);
+                }
+                else{
+                    const error = Boom.badRequest('An agent with this name already exists.');
+                    return cb(error, null);
+                }
+            });
+        },
+        agent: (cb) => {
+
+            agent = Object.assign({id: agentId}, agent);          
+            const flatAgent = Flat(agent);  
+            redis.hmset('agent:' + agentId, flatAgent, (err) => {
+                
+                if (err){
+                    const error = Boom.badImplementation('An error ocurred adding the agent data.');
+                    return cb(error);
+                }
+                return cb(null, agent);
+            });
+        }
+    }, (err, result) => {
 
         if (err){
-            debug('ElasticSearch - add agent: Error= %o', err);
-            const error = Boom.create(err.statusCode, err.message, err.body ? err.body : null);
-            if (err.body){
-                error.output.payload.details = error.data;
-            }
-            return reply(error);
+            return reply(err, null);
         }
-
-        return reply(sentValue.agent);
+        return reply(result.agent);
     });
 };
