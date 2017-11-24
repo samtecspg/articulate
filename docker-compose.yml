@@ -33,7 +33,7 @@ services:
   rasa:  
     image: rasa/rasa_nlu:0.10.4-spacy
     ports: ['0.0.0.0:5000:5000']
-    volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects"]
+    volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects", "${RASA_CONFIG:-./api/rasa-config.json}:/app/config.json", ]
     networks: ['alpha-nlu-network']
   haskduck:
     image: samtecspg/duckling
