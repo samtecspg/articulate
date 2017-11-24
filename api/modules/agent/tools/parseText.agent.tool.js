@@ -36,7 +36,7 @@ const getDucklingParse = (textToParse, timezone, language, ducklingService, call
     const ducklingPayload = {
         text: textToParse,
         lang: (language ? language : 'en'),
-        tz: (timezone ? timezone : 'America/Kentucky/Louisville')
+        tz: timezone
     };
 
     Wreck.post(ducklingService+ '/parse', {
@@ -137,7 +137,7 @@ const parseText = (redis, rasaService, ducklingService, textToParse, timezone, a
         duckling: (callback) => {
 
             const start = process.hrtime();
-            getDucklingParse(textToParse, (timezone ? timezone : agentData.agent.timezone), 'en', ducklingService, (err, result) => {
+            getDucklingParse(textToParse, timezone, 'en', ducklingService, (err, result) => {
 
                 if (err){
                     return callback(err, null);
