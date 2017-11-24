@@ -119,9 +119,9 @@ module.exports = (request, reply) => {
             Async.apply(IntentTools.updateEntitiesDomainTool, redis, { examples: []}, agentId, domainId, intent.examples),
             (callback) => {
 
-                Async.parallel([
-                    Async.apply(IntentTools.retrainModelTool, server, rasa, intent.agent, intent.domain, domainId),
-                    Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, intent.agent, agentId)
+                Async.waterfall([
+                    Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
+                    Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
                 ], (err) => {
     
                     if (err){

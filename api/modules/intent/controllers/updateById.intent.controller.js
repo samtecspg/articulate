@@ -9,7 +9,7 @@ const redis = require('redis');
 
 const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, cb) => {
 
-    const oldExamples = currentIntent.examples;
+    const oldExamples = _.cloneDeep(currentIntent.examples);
     if (updateData.examples){
         currentIntent.examples = updateData.examples;
     }
@@ -32,13 +32,19 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                 return cb(error);
             }
             const resultIntent = Flat.unflatten(flatIntent);
-            const equal = _.eq(updateData.examples, currentIntent.examples) && updateData.agent === currentIntent.agent && updateData.domain === currentIntent.domain;
-            if (updateData.examples && !equal){
+            let requiresTraining = false;
+            if (updateData.examples){
+                requiresTraining = !_.isEqual(updateData.examples, oldExamples);
+            }
+            if (updateData.intentName){
+                requiresTraining =  requiresTraining || updateData.intentName !== currentIntent.intentName;
+            }
+            if (requiresTraining){
                 Async.series([
                     Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, oldExamples),
                     (callback) => {
         
-                        Async.parallel([
+                        Async.waterfall([
                             Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
                             Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
                         ], (err) => {

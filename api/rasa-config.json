@@ -1,5 +1,4 @@
 {
   "pipeline": ["nlp_spacy", "tokenizer_spacy", "intent_featurizer_spacy", "ner_crf", "ner_synonyms",  "intent_classifier_sklearn", "ner_spacy"],
-  "mitie_file": "./data/total_word_feature_extractor.dat",
-  "path" : "/usr/src/rasa_nlu/models/"
+  "mitie_file": "./data/total_word_feature_extractor.dat"
 }
