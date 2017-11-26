@@ -224,7 +224,8 @@ suite('scenario', () => {
                             'What are you looking for?',
                             'Are you trying to find something?',
                         ],
-                        useWebhook: true
+                        useWebhook: true,
+                        useOriginal: false
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -284,7 +285,8 @@ suite('scenario', () => {
                             'What are you looking for?',
                             'Are you trying to find something?',
                         ],
-                        useWebhook: true
+                        useWebhook: true,
+                        useOriginal: false
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -324,7 +326,8 @@ suite('scenario', () => {
                             'What are you looking for?',
                             'Are you trying to find something?',
                         ],
-                        useWebhook: true
+                        useWebhook: true,
+                        useOriginal: false
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -364,7 +367,8 @@ suite('scenario', () => {
                             'What are you looking for?',
                             'Are you trying to find something?',
                         ],
-                        useWebhook: true
+                        useWebhook: true,
+                        useOriginal: false
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -411,7 +415,8 @@ suite('scenario', () => {
                             'What are you looking for?',
                             'Are you trying to find something?',
                         ],
-                        useWebhook: true
+                        useWebhook: true,
+                        useOriginal: false
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
