@@ -1,0 +1,35 @@
+[
+    {
+        "agent": "Samson",
+        "domain": "Sales",
+        "intent": "get.transaction",
+        "scenarioName": "get.transaction",
+        "slots": [
+            {
+                "slotName": "transaction",
+                "isRequired": true,
+                "useWebhook": false,
+                "textPrompts": [
+                    "Are you looking for bookings or cancellations for?"
+                ],
+                "isList": false,
+                "entity": "transaction"
+            },
+            {
+                "slotName": "date",
+                "isRequired": false,
+                "useWebhook": false,
+                "isList": false,
+                "entity": "sys.duckling_time"
+            }
+        ],
+        "intentResponses": [
+            "Ok, I'm looking the {transaction}",
+            "Let me retrieve the {transaction} real quick",
+            "Ok, I'm looking the {transaction} {date}",
+            "Let me retrieve the {transaction} {date} real quick"
+        ],
+        "useWebhook": false,
+        "webhookUrl": "http://localhost:7500"
+    }
+]

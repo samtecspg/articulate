@@ -80,13 +80,11 @@ module.exports = (recognizedEntity, timezone) => {
     switch (recognizedEntity.entity){
 
         case 'sys.duckling_time':
-            return getDateTextByGrain(new Date(recognizedEntity.value.from.value), new Date(recognizedEntity.value.to.value), recognizedEntity.value.from.grain, recognizedEntity.value.type, timezone);
+            return {
+                from : recognizedEntity.value.from.value, 
+                to: recognizedEntity.value.to.value
+            };
             break;
-        case 'sys.duckling_ordinal':
-            return getOrdinalValue(recognizedEntity.value.value);
-        case 'sys.duckling_number':
-        case 'sys.duckling_email':
-        case 'sys.duckling_phone-number':
         default:
             return recognizedEntity.value.value;
             break;

@@ -1,10 +1,7 @@
 [
     {
         "entityName": "transaction",
-        "agent": "4d725a4c-3e74-03b2-49f9-4af02cbd3f70",
-        "usedBy": [
-          "d2ab0c09-88a4-3a35-18c9-3a2bb03b04a1"
-        ],
+        "agent": "Samson",
         "examples": [
           {
             "value": "bookings"
