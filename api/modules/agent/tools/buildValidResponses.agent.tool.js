@@ -3,10 +3,10 @@
 const _ = require('lodash');
 const GetEntityValue = require('./getEntityValue.agent.tool');
 
-const replaceText = (response, entity, entityValue) => {
+const replaceText = (response, slotName, slotValue) => {
 
     const oldResponseText = response.text;
-    response.text =  response.text.replace(`{${entity}}`, entityValue);
+    response.text =  response.text.replace(`{${slotName}}`, slotValue);
     if (!response.template && response.text !== response) {
         response.template = true;
     }
@@ -16,7 +16,7 @@ const replaceText = (response, entity, entityValue) => {
     return response;
 };
 
-module.exports = (recognizedEntities, context, slots, responses, timezone) => {
+module.exports = (userText, context, slots, responses, timezone) => {
 
     const buildedResponses = _.map(responses, (response) => {
 
@@ -25,15 +25,16 @@ module.exports = (recognizedEntities, context, slots, responses, timezone) => {
             text: response,
             numberOfReplacements: 0 //Used to select responses with the max amount of slots filled
         };
-        recognizedEntities.forEach( (entity) => {
-
-            tempResponse = replaceText(tempResponse, entity, GetEntityValue(entity, timezone));
-        });
         if (context.slots){
-            Object.keys(context.slots).forEach( (entity) => {
+            Object.keys(context.slots).forEach( (slot) => {
 
-                if (context.slots[entity]) {
-                    tempResponse = replaceText(tempResponse, entity, context.slots[entity]);
+                if (slot !== "sys" && context.slots[slot]) {
+                    const slotDefinition = _.filter(slots, (tempSlot) => {
+
+                        return tempSlot.slotName === slot;
+                    })[0];
+                    const valueForReplacement = slotDefinition.useOriginal ? context.slots[slot].original : context.slots[slot].value;
+                    tempResponse = replaceText(tempResponse, slot, valueForReplacement);
                 }
             });
         }
