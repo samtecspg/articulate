@@ -13,7 +13,7 @@ module.exports = (callback) => {
 
     server.app.rasa = process.env.RASA_URL;
     server.app.duckling = process.env.DUCKLING_URL;
-    server.app.redis = Redis.createClient();
+    server.app.redis = Redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
 
     /* $lab:coverage:off$ */
     for (const route in Routes) {

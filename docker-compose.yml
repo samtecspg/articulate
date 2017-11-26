@@ -18,7 +18,8 @@ services:
     # same for both the var thats projected into the app (the first name)
     # and the name thats expected in the .env (the second name)
     environment:
-      - REDIS_URL=${REDIS_URL:-http://redis:6379}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
       - RASA_URL=${RASA_URL:-http://rasa:5000}
       - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
       - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
@@ -42,6 +43,7 @@ services:
   redis:
     image: redis:latest
     ports: ['0.0.0.0:6379:6379']
+    networks: ['alpha-nlu-network']
     command: redis-server --appendonly yes
     volumes:
       - ${REDIS_DATA:-./api/helpers-stuff/redis-data}:/data
