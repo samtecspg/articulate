@@ -13,21 +13,23 @@
                     "Are you looking for bookings or cancellations for?"
                 ],
                 "isList": false,
-                "entity": "transaction"
+                "entity": "transaction",
+				"useOriginal": false
             },
             {
                 "slotName": "date",
                 "isRequired": false,
                 "useWebhook": false,
                 "isList": false,
-                "entity": "sys.duckling_time"
+                "entity": "sys.duckling_time",
+				"useOriginal": true
             }
         ],
         "intentResponses": [
             "Ok, I'm looking the {transaction}",
             "Let me retrieve the {transaction} real quick",
-            "Ok, I'm looking the {transaction} {date}",
-            "Let me retrieve the {transaction} {date} real quick"
+            "Ok, I'm looking the {transaction} for {date}",
+            "Let me retrieve the {transaction} for {date} real quick"
         ],
         "useWebhook": false,
         "webhookUrl": "http://localhost:7500"

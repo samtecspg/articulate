@@ -20,6 +20,7 @@ class ScenarioValidate {
                         entity: SlotSchema.entity.required(),
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
+                        useOriginal: SlotSchema.useOriginal.required(),
                         textPrompts: SlotSchema.textPrompts,
                         useWebhook: SlotSchema.useWebhook.required()
                     }),
@@ -55,6 +56,7 @@ class ScenarioValidate {
                         entity: SlotSchema.entity.required(),
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
+                        useOriginal: SlotSchema.useOriginal.required(),
                         textPrompts: SlotSchema.textPrompts,
                         useWebhook: SlotSchema.useWebhook.required()
                     }),

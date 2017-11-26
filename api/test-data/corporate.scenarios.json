@@ -1,34 +1,36 @@
 [
-    {
-        "agent": "Samson",
-        "domain": "Corporate",
-        "intent": "getUserInfo",
-        "scenarioName": "getUserInfo",
-        "slots": [
-            {
-            "slotName": "fullName",
-            "isRequired": true,
-            "useWebhook": false,
-            "textPrompts": [
-                "Who's information are you looking for?",
-                "Who's {fieldName} are you looking for?"
-            ],
-            "isList": false,
-            "entity": "fullName"
-            },
-            {
-            "slotName": "fieldName",
-            "isRequired": false,
-            "useWebhook": false,
-            "isList": false,
-            "entity": "fieldName"
-            }
-        ],
-        "intentResponses": [
-            "Ok, I'm looking the {fieldName} for {fullName}",
-            "Let me search what I have for {fullName}"
-        ],
-        "useWebhook": false,
-        "webhookUrl": "http://localhost:7500"
-    }
+	{
+		"agent": "Samson",
+		"domain": "Corporate",
+		"intent": "getUserInfo",
+		"scenarioName": "getUserInfo",
+		"slots": [
+			{
+				"slotName": "fullName",
+				"isRequired": true,
+				"useWebhook": false,
+				"textPrompts": [
+					"Who's information are you looking for?",
+					"Who's {fieldName} are you looking for?"
+				],
+				"isList": false,
+				"entity": "fullName",
+				"useOriginal": false
+			},
+			{
+				"slotName": "fieldName",
+				"isRequired": false,
+				"useWebhook": false,
+				"isList": false,
+				"entity": "fieldName",
+				"useOriginal": false
+			}
+		],
+		"intentResponses": [
+			"Ok, I'm looking the {fieldName} for {fullName}",
+			"Let me search what I have for {fullName}"
+		],
+		"useWebhook": false,
+		"webhookUrl": "http://localhost:7500"
+	}
 ]

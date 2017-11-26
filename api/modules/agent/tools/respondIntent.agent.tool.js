@@ -6,33 +6,27 @@ const RespondFulfilledIntent = require('./respondFulfilledIntent.agent.tool');
 const PromptMissingEntity = require('./promptMissingEntity.agent.tool');
 const GetEntityValue = require('./getEntityValue.agent.tool');
 
-module.exports = (context, currentContext, intent, scenario, parseResult, timezone, webhookUrl, callback) => {
+module.exports = (userText, context, currentContext, intent, scenario, parseResult, timezone, webhookUrl, callback) => {
 
     if (scenario.slots && scenario.slots.length > 0) {
+        const intentSlotNames = _.map(scenario.slots, 'slotName');
         const intentSlotEntitiesNames = _.map(scenario.slots, 'entity');
         const requiredSlots = _.filter(scenario.slots, (slot) => {
 
-            context[context.length - 1].slots[slot.entity] = currentContext.slots[slot.entity] ? currentContext.slots[slot.entity] : null;
-            return slot.isRequired;
+            context[context.length - 1].slots[slot.slotName] = currentContext.slots[slot.slotName] ? currentContext.slots[slot.slotName] : null;
+            return slot.isRequired === "true";
         });
         const recognizedEntities = parseResult.entities;
         const recognizedEntitiesNames = _.map(recognizedEntities, (recognizedEntity) => {
 
-
             if (intentSlotEntitiesNames.indexOf(recognizedEntity.entity) > -1) {
-                if (recognizedEntity.entity.indexOf('sys.spacy_') || recognizedEntity.entity.indexOf('sys.duckling_')) {
-                    //ISSUE THE NAME OF THE ENTITY IS BEING SET AS THE NAME OF THE SLOT
-                    context[context.length - 1].slots[recognizedEntity.entity] = GetEntityValue(recognizedEntity, timezone);
-                }
-                else {
-                    context[context.length - 1].slots[recognizedEntity.entity] = GetEntityValue(recognizedEntity, timezone);                    
-                }
+                context[context.length - 1].slots[intentSlotNames[intentSlotEntitiesNames.indexOf(recognizedEntity.entity)]] = GetEntityValue(recognizedEntity, userText);
             }
             else{
-                if (recognizedEntity.entity.indexOf('sys.spacy_') || recognizedEntity.entity.indexOf('sys.duckling_')) {
+                if (recognizedEntity.entity.indexOf('sys.spacy_')  !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {
                     context[context.length - 1].slots = context[context.length - 1].slots ? context[context.length - 1].slots : {};
                     context[context.length - 1].slots.sys = context[context.length - 1].slots.sys ? context[context.length - 1].slots.sys : {};
-                    context[context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, timezone);
+                    context[context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, userText);
                 }
             }
             return recognizedEntity.entity;
@@ -42,7 +36,7 @@ module.exports = (context, currentContext, intent, scenario, parseResult, timezo
             return recognizedEntitiesNames.indexOf(slot.entity) === -1 && !currentContext.slots[slot.entity];
         });
         if (missingEntities.length > 0) {
-            PromptMissingEntity(currentContext, scenario, missingEntities[0], recognizedEntities, timezone, webhookUrl, (err, response) => {
+            PromptMissingEntity(userText, currentContext, scenario, missingEntities[0], recognizedEntities, timezone, webhookUrl, (err, response) => {
 
                 if (err){
                     return callback(err, null);
@@ -51,7 +45,7 @@ module.exports = (context, currentContext, intent, scenario, parseResult, timezo
             });
         }
         else {
-            RespondFulfilledIntent(currentContext, scenario, timezone, webhookUrl, (err, response) => {
+            RespondFulfilledIntent(userText, currentContext, scenario, timezone, webhookUrl, (err, response) => {
 
                 if (err){
                     return callback(err, null);
@@ -64,14 +58,14 @@ module.exports = (context, currentContext, intent, scenario, parseResult, timezo
         const recognizedEntities = parseResult.entities;
         _.map(recognizedEntities, (recognizedEntity) => {
 
-            if (recognizedEntity.entity.indexOf('sys.spacy_') || recognizedEntity.entity.indexOf('sys.duckling_')) {
+            if (recognizedEntity.entity.indexOf('sys.spacy_') !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {
                 context[context.length - 1].slots = context[context.length - 1].slots ? context[context.length - 1].slots : {};
                 context[context.length - 1].slots.sys = context[context.length - 1].slots.sys ? context[context.length - 1].slots.sys : {};
-                context[context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, timezone);
+                context[context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, userText);
             }
             return recognizedEntity.entity;
         });
-        RespondFulfilledIntent(currentContext, scenario, timezone, webhookUrl, (err, response) => {
+        RespondFulfilledIntent(userText, currentContext, scenario, timezone, webhookUrl, (err, response) => {
 
             if (err){
                 return callback(err, null);
