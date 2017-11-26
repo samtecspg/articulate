@@ -55,7 +55,17 @@ module.exports = (request, reply) => {
                 return callback(null, results);
             });
         },
-        Async.apply(AgentTools.respond, server, sessionId, timezone)
+        (data, callback) => {
+
+            const timezoneToUse = timezone ? timezone : (data.agentData.timezone ? data.agentData.timezone : 'America/Kentucky/Louisville');
+            AgentTools.respond(server, sessionId, timezoneToUse, data, (err, result) => {
+
+                if (err){
+                    return callback(err, null);
+                }
+                return callback(null, result);
+            });
+        }
     ], (err, data) => {
 
         if (err){

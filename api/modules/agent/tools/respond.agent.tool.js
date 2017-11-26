@@ -218,8 +218,13 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                 data.intent = getIntentData(solvedIntent, data.agentData);
                 data.scenario = data.intent.scenario;
                 if (solvedIntent && !data.scenario){
-                    const error = Boom.badRequest(`The intent ${data.intent.intentName} was recognized, but it doesn't have an scenario. Please add an scenario for it.`);
-                    return callbackGetResponse(error, null);
+                    RespondFallback(data, currentContext, timezone, (err, response) => {
+            
+                        if (err){
+                            return callbackGetResponse(err, null);
+                        }
+                        return callbackGetResponse(null, response);
+                    });
                 }
                 else {
                     data.domain = getDomainOfIntent(data.intent, data.agentData);

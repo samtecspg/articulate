@@ -9,7 +9,7 @@ const GetEntityValue = require('./getEntityValue.agent.tool');
 module.exports = (context, currentContext, intent, scenario, parseResult, timezone, webhookUrl, callback) => {
 
     if (scenario.slots && scenario.slots.length > 0) {
-        const intentSlotNames = _.map(scenario.slots, 'entity');
+        const intentSlotEntitiesNames = _.map(scenario.slots, 'entity');
         const requiredSlots = _.filter(scenario.slots, (slot) => {
 
             context[context.length - 1].slots[slot.entity] = currentContext.slots[slot.entity] ? currentContext.slots[slot.entity] : null;
@@ -18,8 +18,22 @@ module.exports = (context, currentContext, intent, scenario, parseResult, timezo
         const recognizedEntities = parseResult.entities;
         const recognizedEntitiesNames = _.map(recognizedEntities, (recognizedEntity) => {
 
-            if (intentSlotNames.indexOf(recognizedEntity.entity) > -1) {
-                context[context.length - 1].slots[recognizedEntity.entity] = GetEntityValue(recognizedEntity, timezone);
+
+            if (intentSlotEntitiesNames.indexOf(recognizedEntity.entity) > -1) {
+                if (recognizedEntity.entity.indexOf('sys.spacy_') || recognizedEntity.entity.indexOf('sys.duckling_')) {
+                    //ISSUE THE NAME OF THE ENTITY IS BEING SET AS THE NAME OF THE SLOT
+                    context[context.length - 1].slots[recognizedEntity.entity] = GetEntityValue(recognizedEntity, timezone);
+                }
+                else {
+                    context[context.length - 1].slots[recognizedEntity.entity] = GetEntityValue(recognizedEntity, timezone);                    
+                }
+            }
+            else{
+                if (recognizedEntity.entity.indexOf('sys.spacy_') || recognizedEntity.entity.indexOf('sys.duckling_')) {
+                    context[context.length - 1].slots = context[context.length - 1].slots ? context[context.length - 1].slots : {};
+                    context[context.length - 1].slots.sys = context[context.length - 1].slots.sys ? context[context.length - 1].slots.sys : {};
+                    context[context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, timezone);
+                }
             }
             return recognizedEntity.entity;
         });
@@ -47,6 +61,16 @@ module.exports = (context, currentContext, intent, scenario, parseResult, timezo
         }
     }
     else {
+        const recognizedEntities = parseResult.entities;
+        _.map(recognizedEntities, (recognizedEntity) => {
+
+            if (recognizedEntity.entity.indexOf('sys.spacy_') || recognizedEntity.entity.indexOf('sys.duckling_')) {
+                context[context.length - 1].slots = context[context.length - 1].slots ? context[context.length - 1].slots : {};
+                context[context.length - 1].slots.sys = context[context.length - 1].slots.sys ? context[context.length - 1].slots.sys : {};
+                context[context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, timezone);
+            }
+            return recognizedEntity.entity;
+        });
         RespondFulfilledIntent(currentContext, scenario, timezone, webhookUrl, (err, response) => {
 
             if (err){
