@@ -33,7 +33,7 @@ module.exports = (userText, context, currentContext, intent, scenario, parseResu
         });
         const missingEntities = _.filter(requiredSlots, (slot) => {
 
-            return recognizedEntitiesNames.indexOf(slot.entity) === -1 && !currentContext.slots[slot.entity];
+            return recognizedEntitiesNames.indexOf(slot.entity) === -1 && !currentContext.slots[slot.slotName];
         });
         if (missingEntities.length > 0) {
             PromptMissingEntity(userText, currentContext, scenario, missingEntities[0], recognizedEntities, timezone, webhookUrl, (err, response) => {
