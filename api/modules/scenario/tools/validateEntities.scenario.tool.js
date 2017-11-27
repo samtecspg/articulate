@@ -3,7 +3,7 @@ const _ = require('lodash');
 const Boom = require('boom');
 const Async = require('async');
 
-const systemEntities = ['sys.spacy_money', 'sys.spacy_quantity', 'sys.spacy_cardinal', 'sys.spacy_ordinal', 'sys.spacy_date', 'sys.duckling_amount-of-money', 'sys.duckling_distance', 'sys.duckling_duration', 'sys.duckling_email', 'sys.duckling_number', 'sys.duckling_ordinal', 'sys.duckling_phone-number', 'sys.duckling_quantity', 'sys.duckling_temperature', 'sys.duckling_time', 'sys.duckling_url', 'sys.duckling_volume'];
+const systemEntities = ['sys.spacy_person', 'sys.spacy_money', 'sys.spacy_quantity', 'sys.spacy_cardinal', 'sys.spacy_ordinal', 'sys.spacy_date', 'sys.duckling_amount-of-money', 'sys.duckling_distance', 'sys.duckling_duration', 'sys.duckling_email', 'sys.duckling_number', 'sys.duckling_ordinal', 'sys.duckling_phone-number', 'sys.duckling_quantity', 'sys.duckling_temperature', 'sys.duckling_time', 'sys.duckling_url', 'sys.duckling_volume'];
 
 const validateEntities = (redis, agent, slots, cb) => {
 
