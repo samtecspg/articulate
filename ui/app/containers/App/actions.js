@@ -98,11 +98,11 @@ import {
     };
   }
   
-  export function agentCreated(data, _id) {
+  export function agentCreated(data, id) {
     return {
       type: CREATE_AGENT_SUCCESS,
       data,
-      _id,
+      id,
     };
   }
   
@@ -119,11 +119,11 @@ import {
     };
   }
   
-  export function domainCreated(data, _id) {
+  export function domainCreated(data, id) {
     return {
       type: CREATE_DOMAIN_SUCCESS,
       data,
-      _id,
+      id,
     };
   }
   
@@ -140,11 +140,11 @@ import {
     };
   }
   
-  export function webhookCreated(data, _id) {
+  export function webhookCreated(data, id) {
     return {
       type: CREATE_WEBHOOK_SUCCESS,
       data,
-      _id,
+      id,
     };
   }
   
@@ -161,11 +161,11 @@ import {
     };
   }
   
-  export function intentCreated(data, _id) {
+  export function intentCreated(data, id) {
     return {
       type: CREATE_INTENT_SUCCESS,
       data,
-      _id,
+      id,
     };
   }
   
@@ -176,11 +176,11 @@ import {
     };
   }
 
-  export function scenarioCreated(data, _id) {
+  export function scenarioCreated(data, id) {
     return {
       type: CREATE_SCENARIO_SUCCESS,
       data,
-      _id,
+      id,
     };
   }
   
@@ -197,11 +197,11 @@ import {
     };
   }
   
-  export function entityCreated(data, _id) {
+  export function entityCreated(data, id) {
     return {
       type: CREATE_ENTITY_SUCCESS,
       data,
-      _id,
+      id,
     };
   }
   

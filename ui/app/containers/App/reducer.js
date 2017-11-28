@@ -95,7 +95,7 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['agent', 'data'], action.data)
         .set('loading', false)
-        .set('currentAgent', action._id);
+        .set('currentAgent', action.id);
     case CREATE_AGENT_ERROR:
       return state
         .set('error', action.error)
@@ -109,7 +109,7 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['domain', 'data'], action.data)
         .set('loading', false)
-        .set('currentDomain', action._id);
+        .set('currentDomain', action.id);
     case CREATE_DOMAIN_ERROR:
       return state
         .set('error', action.error)
@@ -123,7 +123,7 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['webhook', 'data'], action.data)
         .set('loading', false)
-        .set('currentDomain', action._id);
+        .set('currentDomain', action.id);
     case CREATE_WEBHOOK_ERROR:
       return state
         .set('error', action.error)
@@ -137,7 +137,7 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['intent', 'data'], action.data)
         .set('loading', false)
-        .set('currentIntent', action._id);
+        .set('currentIntent', action.id);
     case CREATE_INTENT_ERROR:
       return state
         .set('error', action.error)
@@ -146,7 +146,7 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['scenario', 'data'], action.data)
         .set('loading', false)
-        .set('currentScenario', action._id);
+        .set('currentScenario', action.id);
     case CREATE_SCENARIO_ERROR:
       return state
         .set('error', action.error)
@@ -160,7 +160,7 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['entity', 'data'], action.data)
         .set('loading', false)
-        .set('currentEntity', action._id);
+        .set('currentEntity', action.id);
     case CREATE_ENTITY_ERROR:
       return state
         .set('error', action.error)

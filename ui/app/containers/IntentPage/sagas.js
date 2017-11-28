@@ -15,11 +15,12 @@ import {
 
 import request from 'utils/request';
 import { makeSelectIntentData, makeSelectScenarioData } from 'containers/IntentPage/selectors';
+import _ from 'lodash';
 
-function* postScenario(intentId) {
+function* postScenario(intentName) {
   const scenarioData = yield select(makeSelectScenarioData());
   
-  scenarioData.intent = intentId;
+  scenarioData.intent = intentName;
 
   const requestURL = `http://127.0.0.1:8000/scenario`;
   const requestOptions = {
@@ -33,7 +34,7 @@ function* postScenario(intentId) {
 
   try {
     const scenario = yield call(request, requestURL, requestOptions);
-    yield put(scenarioCreated( scenario, scenario._id));
+    yield put(scenarioCreated( scenario, scenario.id));
   } catch (error) {
     yield put(scenarioCreationError({
       message: 'An error ocurred creating the scenario',
@@ -44,6 +45,18 @@ function* postScenario(intentId) {
 
 export function* postIntent() {
   const intentData = yield select(makeSelectIntentData());
+
+  const examples = _.map(intentData.examples, (example) => {
+    console.log('example: ', example);
+    example.entities.forEach(entity => {
+      example.userSays = example.userSays.replace(entity.value, `{${entity.entity}}`);
+    });
+    return example.userSays;
+  });
+
+  intentData.examples = examples;
+
+  console.log(intentData);
 
   const requestURL = `http://127.0.0.1:8000/intent`;
   const requestOptions = {
@@ -57,8 +70,8 @@ export function* postIntent() {
 
   try {
     const intent = yield call(request, requestURL, requestOptions);
-    yield call(postScenario, intent._id);
-    yield put(intentCreated(intent, intent._id));
+    yield call(postScenario, intent.intentName);
+    yield put(intentCreated(intent, intent.id));
   } catch (error) {
     yield put(intentCreationError({
       message: 'An error ocurred creating the intent',
@@ -76,7 +89,7 @@ export function* createIntent() {
 }
 
 export function* getAgents() {
-  const requestURL = `http://127.0.0.1:8000/agent?size=999`;
+  const requestURL = `http://127.0.0.1:8000/agent`;
 
   try {
     const agents = yield call(request, requestURL);
@@ -98,7 +111,8 @@ export function* loadAgents() {
 }
 
 export function* getAgentDomains(payload) {
-  const requestURL = `http://127.0.0.1:8000/agent/${payload.agentId}/domain?size=999`;
+  const agentId = payload.agentId.split('~')[0];
+  const requestURL = `http://127.0.0.1:8000/agent/${agentId}/domain`;
 
   try {
     const agentDomains = yield call(request, requestURL);
@@ -120,7 +134,8 @@ export function* loadAgentDomains() {
 }
 
 export function* getAgentEntities(payload) {
-  const requestURL = `http://127.0.0.1:8000/agent/${payload.agentId}/entity?size=999`;
+  const agentId = payload.agentId.split('~')[0];
+  const requestURL = `http://127.0.0.1:8000/agent/${agentId}/entity`;
 
   try {
     const agentEntities = yield call(request, requestURL);

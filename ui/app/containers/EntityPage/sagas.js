@@ -21,7 +21,7 @@ export function* postEntity() {
 
   try {
     const entity = yield call(request, requestURL, requestOptions);
-    yield put(entityCreated(entity, entity._id));
+    yield put(entityCreated(entity, entity.id));
   } catch (error) {
     yield put(entityCreationError({
       message: 'An error ocurred creating the entity',
@@ -39,7 +39,7 @@ export function* createEntity() {
 }
 
 export function* getAgents() {
-  const requestURL = `http://127.0.0.1:8000/agent?size=999`;
+  const requestURL = `http://127.0.0.1:8000/agent`;
 
   try {
     const agents = yield call(request, requestURL);

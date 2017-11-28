@@ -22,7 +22,7 @@ export function* postDomain() {
 
   try {
     const domain = yield call(request, requestURL, requestOptions);
-    yield put(domainCreated(domain, domain._id));
+    yield put(domainCreated(domain, domain.id));
   } catch (error) {
     yield put(domainCreationError({
       message: 'An error ocurred creating the domain',
@@ -40,7 +40,7 @@ export function* createDomain() {
 }
 
 export function* getAgents() {
-  const requestURL = `http://127.0.0.1:8000/agent?size=999`;
+  const requestURL = `http://127.0.0.1:8000/agent`;
 
   try {
     const agents = yield call(request, requestURL);

@@ -9,7 +9,7 @@ export function AvailableSlots(props) {
     if (props.slots && props.slots.length > 0){
       items = props.slots.map( (slot, index) => {
         const agentEntity = props.agentEntities.filter( (agentEntity) => {
-          return agentEntity._id === slot.entity;
+          return agentEntity.entityName === slot.entity;
         })[0];
         let entityColor = props.dirOfColors[slot.entity];
         if (!entityColor){
