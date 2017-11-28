@@ -9,11 +9,11 @@ export function SlotAgentEntities(props) {
     let items = [<NavItem style={{color: '#4e4e4e'}} key="newEntity" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>];
     if (props.agentEntities && props.agentEntities.length > 0){
         items = props.agentEntities.map( (agentEntity, agentIndex) => {
-            let entityColor = props.dirOfColors[agentEntity._id];
+            let entityColor = props.dirOfColors[agentEntity.entityName];
             if (!entityColor){
                 const randomColorIndex = Math.floor(Math.random() * props.colorArray.length);
                 entityColor = props.colorArray[randomColorIndex];
-                props.dirOfColors[agentEntity._id] = entityColor;
+                props.dirOfColors[agentEntity.entityName] = entityColor;
                 props.colorArray.splice(randomColorIndex, 1)
             }
             return(

@@ -18,8 +18,7 @@ const initialState = fromJS({
       'Sorry can you repharse that?',
       'I\'m still learning to speak with humans. What you mean?',
     ],
-    useWebhookFallback: false,
-    webhookFallbackUrl: 'http://localhost:3000'
+    useWebhookFallback: false
   },
 });
 

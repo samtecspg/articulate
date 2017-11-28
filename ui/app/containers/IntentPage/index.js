@@ -67,7 +67,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     if(agents !== false){
       agentsSelect = agents.map( (agent) => {
         return {
-          value: agent._id,
+          value: agent.id + '~' + agent.agentName,
           text: agent.agentName,
         }
       });
@@ -78,7 +78,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     if(agentDomains !== false){
       domainsSelect = agentDomains.map( (domain) => {
         return {
-          value: domain._id,
+          value: domain.id + '~' + domain.domainName,
           text: domain.domainName,
         }
       });
@@ -313,7 +313,7 @@ export function mapDispatchToProps(dispatch) {
           evt.target.value = null;
         }
         if (field === 'responses'){
-          if (evt.charCode === 36){
+          if (evt.charCode === 123){
             const dropDownButton = document.getElementById('intentResponseEntityDropdown');
             dropDownButton.dispatchEvent(new Event('click'));
           }
@@ -323,6 +323,7 @@ export function mapDispatchToProps(dispatch) {
         if (field === 'agent'){
           dispatch(loadAgentDomains(evt.target.value));
           dispatch(loadAgentEntities(evt.target.value));
+          console.log(field);
           dispatch(changeIntentData({ value: evt.target.value, field }));
         }
         if (field === 'useWebhook'){
@@ -367,7 +368,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onAutoCompleteEntityFunction: (entityName, evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      document.getElementById('responses').value += entityName;
+      document.getElementById('responses').value += entityName + '}';
     },
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();

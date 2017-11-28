@@ -1,94 +1,53 @@
 'use strict';
-const debug = require('debug')('nlu:model:Converse:tool:getEntityValue');
 
-const Moment = require('moment');
-const MomentTimezone = require('moment-timezone');
+module.exports = (recognizedEntity, userText) => {
 
-const Ordinal = require('ordinal');
-
-debug('Loaded MomentTimezone %O', MomentTimezone.defaultZone);
-
-const getDateTextByGrain = (from, to, grain, type, timezone) => {
-
-    const fromTime = Moment(from).tz(timezone);
-    const toTime = Moment(to).tz(timezone);
-    switch (grain) {
-        case 'second':
-            if (type === 'interval'){
-                return fromTime.fromNow();
-            }
-            return 'for ' + fromTime.calendar(null, {
-                lastDay : '[Yesterday at] LTS',
-                sameDay : '[Today at] LTS',
-                nextDay : '[Tomorrow at] LTS',
-                lastWeek : '[last] dddd [at] LTS',
-                nextWeek : 'dddd [at] LTS',
-                sameElse : 'LTS'
-            }).toLowerCase();
-            break;
-        case 'minute':
-        case 'hour':
-            if (type === 'interval'){
-                return fromTime.fromNow();
-            }
-            return 'for ' + fromTime.calendar(null, {
-                lastDay : '[Yesterday at] LT',
-                sameDay : '[Today at] LT',
-                nextDay : '[Tomorrow at] LT',
-                lastWeek : '[last] dddd [at] LT',
-                nextWeek : 'dddd [at] LT',
-                sameElse : 'LT'
-            }).toLowerCase();
-            break;
-        case 'day':
-            if (type === 'interval'){
-                return 'from ' + fromTime.format('MMM Do YY') + ' to ' + toTime.format('MMM Do YY');
-            }
-            return 'for ' + fromTime.calendar().split(' at')[0].toLowerCase();
-            break;
-        case 'week':
-            return 'from ' + fromTime.format('MMM Do YY') + ' to ' + toTime.subtract(1, 'second').format('MMM Do YY');
-            break;
-        case 'month':
-            if (type === 'interval'){
-                return 'from ' + fromTime.format('MMMM-YYYY') + ' to ' + toTime.format('MMMM-YYYY');
-            }
-            return 'for ' + fromTime.format('MMMM-YYYY');
-            break;
-        case 'year':
-            if (type === 'interval'){
-                return 'from ' + fromTime.format('YYYY') + ' to ' + toTime.format('YYYY');
-            }
-            return 'for ' + fromTime.format('YYYY');
-            break;
-        case 'quarter':
-            return 'from ' + fromTime.format('MMMM-YYYY') + ' to ' + toTime.format('MMMM-YYYY');
-            break;
-        default:
-            newOutput = output;
-            break;
-    }
-};
-
-const getOrdinalValue = (input) => {
-
-    return Ordinal(parseInt(input));
-};
-
-module.exports = (recognizedEntity, timezone) => {
-
+    let value;
     switch (recognizedEntity.entity){
 
         case 'sys.duckling_time':
-            return getDateTextByGrain(new Date(recognizedEntity.value.from.value), new Date(recognizedEntity.value.to.value), recognizedEntity.value.from.grain, recognizedEntity.value.type, timezone);
+            value = {
+                from : recognizedEntity.value.from.value, 
+                to: recognizedEntity.value.to.value
+            };
             break;
-        case 'sys.duckling_ordinal':
-            return getOrdinalValue(recognizedEntity.value.value);
-        case 'sys.duckling_number':
-        case 'sys.duckling_email':
-        case 'sys.duckling_phone-number':
+        case 'sys.duckling_distance':
+        case 'sys.duckling_temperature':
+        case 'sys.duckling_volume':
+            value = {
+                value : recognizedEntity.value.value, 
+                unit: recognizedEntity.value.unit
+            };
+            break;
+        case 'sys.duckling_duration':
+            value = {
+                value : recognizedEntity.value.value, 
+                unit: recognizedEntity.value.unit,
+                normalized: {
+                    value: recognizedEntity.value.normalized.value,
+                    unit: recognizedEntity.value.normalized.unit
+                }
+            };
+            break;
+        case 'sys.duckling_quantity':
+            value = {
+                value : recognizedEntity.value.value, 
+                unit: recognizedEntity.value.unit, 
+                product: recognizedEntity.value.product
+            };
+            break;
+        case 'sys.duckling_url':
+            value = {
+                value : recognizedEntity.value.value, 
+                domain: recognizedEntity.value.domain
+            };
+            break;
         default:
-            return recognizedEntity.value.value;
+            value = {
+                value: recognizedEntity.value.value
+            };
             break;
     };
+    value.original = userText.substring(recognizedEntity.start, recognizedEntity.end);
+    return value;
 };

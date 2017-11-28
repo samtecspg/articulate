@@ -213,13 +213,19 @@ module.exports = (server, sessionId, timezone, data, callback) => {
 
             let currentContext = getCurrentContext();
             if (data.parseResult && data.parseResult.result) {
+                const userText = data.parseResult.result.document;
                 const rasaResult = getBestRasaResult(data.parseResult.result, data.agentData);
                 const solvedIntent = rasaResult.intent;
                 data.intent = getIntentData(solvedIntent, data.agentData);
-                data.scenario = data.intent.scenario;
+                data.scenario = data.intent ? data.intent.scenario : null;
                 if (solvedIntent && !data.scenario){
-                    const error = Boom.badRequest(`The intent ${data.intent.intentName} was recognized, but it doesn't have an scenario. Please add an scenario for it.`);
-                    return callbackGetResponse(error, null);
+                    RespondFallback(data, currentContext, timezone, (err, response) => {
+            
+                        if (err){
+                            return callbackGetResponse(err, null);
+                        }
+                        return callbackGetResponse(null, response);
+                    });
                 }
                 else {
                     data.domain = getDomainOfIntent(data.intent, data.agentData);
@@ -232,7 +238,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                             });
                             currentContext = getCurrentContext();
                         }
-                        RespondIntent(context, currentContext, solvedIntent, data.scenario, rasaResult, timezone, data.agentData.webhookUrl, (err, response) => {
+                        RespondIntent(userText, context, currentContext, solvedIntent, data.scenario, rasaResult, timezone, data.agentData.webhookUrl, (err, response) => {
             
                             if (err){
                                 return callbackGetResponse(err, null);
@@ -247,7 +253,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                                 if (currentContext.slots && Object.keys(currentContext.slots).length > 0 && recognizedEntitiesArePartOfTheContext(currentContext, recognizedEntities)){
                                     //Current context contains the intent and the slots that's why it is passed twice
                                     data.scenario = getScenarioByName(currentContext.scenario, data.agentData);
-                                    RespondIntent(context, currentContext, currentContext, data.scenario, rasaResult, timezone, data.agentData.webhookUrl,  (err, response) => {
+                                    RespondIntent(userText, context, currentContext, currentContext, data.scenario, rasaResult, timezone, data.agentData.webhookUrl,  (err, response) => {
             
                                         if (err){
                                             return callbackGetResponse(err, null);
@@ -262,7 +268,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                                         currentContext = lastValidContext;
                                         //Current context contains the intent and the slots that's why it is passed twice
                                         data.scenario = getScenarioByName(currentContext.scenario, data.agentData);
-                                        RespondIntent(context, currentContext, currentContext, data.scenario, rasaResult, timezone, data.agentData.webhookUrl, (err, response) => {
+                                        RespondIntent(userText, context, currentContext, currentContext, data.scenario, rasaResult, timezone, data.agentData.webhookUrl, (err, response) => {
             
                                             if (err){
                                                 return callbackGetResponse(err, null);

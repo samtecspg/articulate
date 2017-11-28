@@ -49,7 +49,7 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
     if(agents !== false){
       agentsSelect = agents.map( (agent) => {
         return {
-          value: agent._id,
+          value: agent.id,
           text: agent.agentName,
         }
       });
