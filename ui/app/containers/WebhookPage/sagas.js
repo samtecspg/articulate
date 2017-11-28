@@ -18,13 +18,12 @@ export function* postWebhook() {
     },
     body: JSON.stringify({
       webhookUrl: webhookData.webhookUrl,
-      webhookFallbackUrl: webhookData.webhookUrl,
     }),
   }
 
   try {
     const webhook = yield call(request, requestURL, requestOptions);
-    yield put(webhookCreated(webhook, webhook._id));
+    yield put(webhookCreated(webhook, webhook.id));
   } catch (error) {
     yield put(webhookCreationError({
       message: 'An error ocurred creating the webhook',
@@ -42,7 +41,7 @@ export function* createWebhook() {
 }
 
 export function* getAgents() {
-  const requestURL = `http://127.0.0.1:8000/agent?size=999`;
+  const requestURL = `http://127.0.0.1:8000/agent`;
 
   try {
     const agents = yield call(request, requestURL);

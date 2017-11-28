@@ -25,7 +25,7 @@ export function* postAgent() {
 
   try {
     const agent = yield call(request, requestURL, requestOptions);
-    yield put(agentCreated(agent, agent._id));
+    yield put(agentCreated(agent, agent.id));
   } catch (error) {
     yield put(agentCreationError({
       message: 'An error ocurred creating the agent',

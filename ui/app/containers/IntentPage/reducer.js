@@ -56,9 +56,9 @@ function intentReducer(state = initialState, action) {
                 .updateIn(['intentData'], x => x.set(action.payload.field, action.payload.value));
             }
             else {
-              tempState = state.updateIn(['scenarioData'], x => x.set(action.payload.field, action.payload.value));
+              tempState = state.updateIn(['scenarioData'], x => x.set(action.payload.field, ((action.payload.field === "agent" || action.payload.field === "domain") ? action.payload.value.split("~")[1] : action.payload.value)));
               return tempState
-                .updateIn(['intentData'], x => x.set(action.payload.field, action.payload.value));
+                .updateIn(['intentData'], x => x.set(action.payload.field, ((action.payload.field === "agent" || action.payload.field === "domain") ? action.payload.value.split("~")[1] : action.payload.value)));
             }
           }
         }
@@ -74,6 +74,7 @@ function intentReducer(state = initialState, action) {
           entity: action.payload.entity,
           isRequired: false,
           isList: false,
+          useOriginal: false,
           textPrompts: [],
           useWebhook: false,
         }));

@@ -7,7 +7,7 @@ import * as camel from 'to-camel-case';
 export function SlotsRows(props) {
     const rows = props.slots.map( (slot, slotIndex) => {
         const agentEntity = props.agentEntities.filter( (agentEntity) => {
-            return agentEntity._id === slot.entity;
+            return agentEntity.entityName === slot.entity;
         })[0];
         return (
             <tr style={{width: '100%'}} key={slotIndex} >
