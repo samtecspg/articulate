@@ -42,7 +42,7 @@ module.exports = (userText, context, slots, responses, timezone) => {
         if (slots){
             slots.forEach( (slot) => {
 
-                if (tempResponse.text.indexOf(`{${slot.entity}}`) !== -1) {
+                if (tempResponse.text.indexOf(`{${slot.slotName}}`) !== -1) {
                     isValid = false;
                 }
             });
