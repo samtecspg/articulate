@@ -1,0 +1,30 @@
+export default [{
+  label: 'Domains',
+  tooltip: 'String Tooltip',
+  type: 'string',
+  accessor: 'name',
+  headerClassName: 'text-align-left table2-header',
+  cellClassName: 'text-align-left table2-column',
+  minWidth: 1,
+}, {
+  label: 'Active',
+  tooltip: 'Number Tooltip',
+  type: 'checkbox',
+  accessor: 'active',
+  headerClassName: 'table2-header',
+  cellClassName: 'table2-column',
+}, {
+  label: 'T-Score',
+  tooltip: 'String2 Tooltip',
+  type: 'number',
+  accessor: 'tScore',
+  headerClassName: 'table2-header',
+  cellClassName: 'table2-column',
+}, {
+  label: 'U-Score',
+  tooltip: 'String2 Tooltip',
+  type: 'number',
+  accessor: 'uScore',
+  headerClassName: 'table2-header',
+  cellClassName: 'table2-column',
+}];
