@@ -109,12 +109,12 @@ export function mapDispatchToProps(dispatch) {
   return {
     onSendMessage: (evt) => {
       if (evt.charCode === 13){
-        dispatch(converse({ agent: 'e3812ed6-b070-a4a7-9391-43151039d839', message: evt.target.value }));
+        dispatch(converse({ agent: '1', message: evt.target.value }));
         evt.target.value = null;
       }
     },
     onSendVoiceMessage: (message) => {
-      dispatch(converse({ agent: 'e3812ed6-b070-a4a7-9391-43151039d839', message}));
+      dispatch(converse({ agent: '1', message}));
     },
   };
 };

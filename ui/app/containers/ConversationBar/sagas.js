@@ -11,7 +11,7 @@ import {
 import request from 'utils/request';
 
 export function* postMessage(data) {
-  const requestURL = `http://127.0.0.1:8000/agent/${data.payload.agent}/converse?text=${data.payload.message}`;
+  const requestURL = `http://127.0.0.1:8000/agent/${data.payload.agent}/converse?text=${data.payload.message}&sessionId=dcalvom`;
   const requestOptions = {
     method: 'GET',
     headers: {

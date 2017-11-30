@@ -11,7 +11,7 @@ const initialState = fromJS({
     agent: null,
     domainName: '',
     enabled: true,
-    intentThreshold: 0.65,
+    intentThreshold: 65,
   },
 });
 

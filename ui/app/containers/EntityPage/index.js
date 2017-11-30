@@ -57,7 +57,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     if(agents !== false){
       agentsSelect = agents.map( (agent) => {
         return {
-          value: agent.id,
+          value: agent.agentName,
           text: agent.agentName,
         }
       });
