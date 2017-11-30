@@ -12,7 +12,7 @@ const buildTrainingData = (server, domainId, callback) => {
             return callback(err, null);
         }
 
-        if (results.intents.length === 1){
+        if (results.intents.length <= 1){
             return callback(null, null);
         }
 
