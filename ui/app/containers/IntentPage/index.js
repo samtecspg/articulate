@@ -4,8 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import * as camel from 'to-camel-case';
-
 import { createStructuredSelector } from 'reselect';
 
 import TextInput from 'components/TextInput';
@@ -33,7 +31,7 @@ import messages from './messages';
 import { createIntent, loadAgents, loadAgentDomains, loadAgentEntities } from 'containers/App/actions';
 import { makeSelectCurrentAgent, makeSelectCurrentDomain, makeSelectAgentEntities, makeSelectAgentDomains, makeSelectAgents, makeSelectIntent, makeSelectScenario, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
 
-import { changeIntentData, tagEntity, untagEntity, toggleFlag, addTextPrompt, deleteTextPrompt } from './actions';
+import { changeIntentData, tagEntity, untagEntity, toggleFlag, changeSlotName, addTextPrompt, deleteTextPrompt } from './actions';
 import { makeSelectIntentData, makeSelectScenarioData } from './selectors';
 
 const returnFormattedOptions = (options) => {
@@ -190,6 +188,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onCheckboxChange={this.props.onCheckboxChange}
                 onAddTextPrompt={this.props.onAddTextPrompt} 
                 onDeleteTextPrompt={this.props.onDeleteTextPrompt}
+                onSlotNameChange={this.props.onSlotNameChange}
                 onAddSlot={this.props.onAddSlot}
                 agentEntities={agentEntities}
                 colorArray={colorArray}
@@ -222,6 +221,23 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <Responses intentResponses={this.props.scenarioData.intentResponses} onRemoveResponse={this.props.onRemoveExample} />
             </Table>
           </TableContainer>
+          : null
+        }
+
+        {
+          this.props.scenarioData.useWebhook ?
+            <Form style={{marginTop: '0px'}}>
+              <Row>
+                <FormTextInput
+                  label={messages.webhook}
+                  placeholder={messages.webhookPlaceholder.defaultMessage}
+                  inputId="webhookUrl"
+                  value={this.props.scenarioData.webhookUrl}
+                  onChange={this.props.onChangeIntentData.bind(null, 'webhookUrl')}
+                  required={true}
+                  />
+              </Row>
+            </Form>
           : null
         }
 
@@ -275,6 +291,7 @@ IntentPage.propTypes = {
   onAutoCompleteEntityFunction: React.PropTypes.func,
   onSubmitForm: React.PropTypes.func,
   onCheckboxChange: React.PropTypes.func,
+  onSlotNameChange: React.PropTypes.func,
   onAddTextPrompt: React.PropTypes.func,
   onDeleteTextPrompt: React.PropTypes.func,
   onAddSlot: React.PropTypes.func,
@@ -308,12 +325,12 @@ export function mapDispatchToProps(dispatch) {
     },
     onChangeIntentData: (field, evt) => {
       if (field === 'examples' || field === 'responses'){
-        if (evt.charCode === 13){
+        if (evt.charCode === 13){ //If user hits enter add response
           dispatch(changeIntentData({ value: evt.target.value, field }));
           evt.target.value = null;
         }
         if (field === 'responses'){
-          if (evt.charCode === 123){
+          if (evt.charCode === 123){ //If user hits '{' display a menu with current slots
             const dropDownButton = document.getElementById('intentResponseEntityDropdown');
             dropDownButton.dispatchEvent(new Event('click'));
           }
@@ -323,7 +340,6 @@ export function mapDispatchToProps(dispatch) {
         if (field === 'agent'){
           dispatch(loadAgentDomains(evt.target.value));
           dispatch(loadAgentEntities(evt.target.value));
-          console.log(field);
           dispatch(changeIntentData({ value: evt.target.value, field }));
         }
         if (field === 'useWebhook'){
@@ -356,6 +372,9 @@ export function mapDispatchToProps(dispatch) {
     },
     onCheckboxChange: (slotName, field, evt) => {
       dispatch(toggleFlag({ slotName, field, value: evt.target.checked }));
+    },
+    onSlotNameChange: (slotName, evt) => {
+      dispatch(changeSlotName({ slotName, value: evt.target.value }));
     },
     onAddTextPrompt: (slotName, evt) => {
       if (evt.charCode === 13){

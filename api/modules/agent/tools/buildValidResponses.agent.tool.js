@@ -33,7 +33,17 @@ module.exports = (userText, context, slots, responses, timezone) => {
 
                         return tempSlot.slotName === slot;
                     })[0];
-                    const valueForReplacement = slotDefinition.useOriginal ? context.slots[slot].original : context.slots[slot].value;
+                    let valueForReplacement = slotDefinition.useOriginal ? context.slots[slot].original : context.slots[slot].value;
+                    if (slotDefinition.isList === "true"){
+                        if (valueForReplacement.length > 1){
+                            if (valueForReplacement.length === 2){
+                                valueForReplacement = `${valueForReplacement[0]} and ${valueForReplacement[1]}`;
+                            }
+                            else {
+                                valueForReplacement = `${valueForReplacement.slice(0, valueForReplacement.length - 2).join(', ')}, and ${valueForReplacement[valueForReplacement.length - 1]}`;
+                            }
+                        }                        
+                    }
                     tempResponse = replaceText(tempResponse, slot, valueForReplacement);
                 }
             });

@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavItem, Dropdown } from 'react-materialize';
 import messages from '../messages';
-import * as camel from 'to-camel-case';
 
 export function AvailableSlots(props) {
 
@@ -19,7 +18,7 @@ export function AvailableSlots(props) {
           props.colorArray.splice(randomColorIndex, 1)
         }
         return(
-          <NavItem onClick={props.onClickFunction.bind(null, camel(agentEntity.entityName))} key={index}><span style={{color: entityColor}}>${camel(agentEntity.entityName)}</span></NavItem>
+          <NavItem onClick={props.onClickFunction.bind(null, slot.slotName)} key={index}><span style={{color: entityColor}}>{`{${slot.slotName}}`}</span></NavItem>
         )
       });
     }

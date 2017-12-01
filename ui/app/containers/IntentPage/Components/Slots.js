@@ -8,6 +8,7 @@ export function Slots(props) {
         onCheckboxChange={props.onCheckboxChange}
         onAddTextPrompt={props.onAddTextPrompt} 
         onDeleteTextPrompt={props.onDeleteTextPrompt}
+        onSlotNameChange={props.onSlotNameChange}
         agentEntities={props.agentEntities}
         colorArray={props.colorArray}
         dirOfColors={props.dirOfColors}
@@ -19,6 +20,7 @@ Slots.propTypes = {
     onCheckboxChange: React.PropTypes.func,
     onAddTextPrompt: React.PropTypes.func,
     onDeleteTextPrompt: React.PropTypes.func,
+    onSlotNameChange: React.PropTypes.func,
     agentEntities: React.PropTypes.oneOfType([
       React.PropTypes.array,
       React.PropTypes.bool,

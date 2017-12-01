@@ -5,6 +5,7 @@ import {
   TOGGLE_FLAG,
   ADD_TEXT_PROMPT,
   DELETE_TEXT_PROMPT,
+  CHANGE_SLOT_NAME,
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -33,6 +34,13 @@ export function toggleFlag(payload) {
     type: TOGGLE_FLAG,
     payload,
   };
+}
+
+export function changeSlotName(payload) {
+  return {
+    type: CHANGE_SLOT_NAME,
+    payload,
+  }
 }
 
 export function addTextPrompt(payload) {

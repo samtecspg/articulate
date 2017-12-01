@@ -39,8 +39,8 @@ export default defineMessages({
     defaultMessage: 'example: What is Chicago\'s weather forecast?',
   },
   responsesInput: {
-    id: 'boilerplate.containers.IntentPage.create_intent.user_says_input',
-    defaultMessage: 'example: The weather forecast in $city for the next five days is',
+    id: 'boilerplate.containers.IntentPage.create_intent.responses_input',
+    defaultMessage: 'example: The weather forecast in {city} for the next five days is',
   },
   userSaysSearch: {
     id: 'boilerplate.containers.IntentPage.create_intent.user_says_search',
@@ -117,5 +117,13 @@ export default defineMessages({
   emptySlotList: {
     id: 'boilerplate.containers.AgentPage.create_agent.empty_slot_list',
     defaultMessage: 'You haven\'t created slots'
+  },
+  webhook: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook',
+    defaultMessage: 'Webhook Url'
+  },
+  webhookPlaceholder: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_placeholder',
+    defaultMessage: 'example: http://localhost:4500'
   },
 });

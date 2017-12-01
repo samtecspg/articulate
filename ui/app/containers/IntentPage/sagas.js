@@ -47,7 +47,6 @@ export function* postIntent() {
   const intentData = yield select(makeSelectIntentData());
 
   const examples = _.map(intentData.examples, (example) => {
-    console.log('example: ', example);
     example.entities.forEach(entity => {
       example.userSays = example.userSays.replace(entity.value, `{${entity.entity}}`);
     });
@@ -55,8 +54,6 @@ export function* postIntent() {
   });
 
   intentData.examples = examples;
-
-  console.log(intentData);
 
   const requestURL = `http://127.0.0.1:8000/intent`;
   const requestOptions = {

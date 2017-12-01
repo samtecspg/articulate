@@ -8,6 +8,7 @@ import {
   TOGGLE_FLAG,
   ADD_TEXT_PROMPT,
   DELETE_TEXT_PROMPT,
+  CHANGE_SLOT_NAME,
 } from './constants';
 
 // The initial state of the App
@@ -26,6 +27,7 @@ const initialState = fromJS({
     slots: [],
     intentResponses: [],
     useWebhook: false,
+    webhookUrl: '',
   },
 });
 
@@ -50,15 +52,21 @@ function intentReducer(state = initialState, action) {
               .setIn(['scenarioData', 'useWebhook'], action.payload.value);
           }
           else {
-            if (action.payload.field === 'intentName'){
-              tempState = state.setIn(['scenarioData', 'scenarioName'], action.payload.value);
-              return tempState
-                .updateIn(['intentData'], x => x.set(action.payload.field, action.payload.value));
+            if (action.payload.field === 'webhookUrl'){
+              return state
+                .setIn(['scenarioData', 'webhookUrl'], action.payload.value);
             }
-            else {
-              tempState = state.updateIn(['scenarioData'], x => x.set(action.payload.field, ((action.payload.field === "agent" || action.payload.field === "domain") ? action.payload.value.split("~")[1] : action.payload.value)));
-              return tempState
-                .updateIn(['intentData'], x => x.set(action.payload.field, ((action.payload.field === "agent" || action.payload.field === "domain") ? action.payload.value.split("~")[1] : action.payload.value)));
+            else{
+              if (action.payload.field === 'intentName'){
+                tempState = state.setIn(['scenarioData', 'scenarioName'], action.payload.value);
+                return tempState
+                  .updateIn(['intentData'], x => x.set(action.payload.field, action.payload.value));
+              }
+              else {
+                tempState = state.updateIn(['scenarioData'], x => x.set(action.payload.field, ((action.payload.field === "agent" || action.payload.field === "domain") ? action.payload.value.split("~")[1] : action.payload.value)));
+                return tempState
+                  .updateIn(['intentData'], x => x.set(action.payload.field, ((action.payload.field === "agent" || action.payload.field === "domain") ? action.payload.value.split("~")[1] : action.payload.value)));
+              }
             }
           }
         }
@@ -94,6 +102,16 @@ function intentReducer(state = initialState, action) {
       slots = slots.map( (slot) => {
         if (slot.slotName === action.payload.slotName){
           slot[action.payload.field] = action.payload.value;
+        }
+        return slot;
+      });
+      return state
+        .setIn(['scenarioData', 'slots'], slots)
+    case CHANGE_SLOT_NAME:
+      slots = state.getIn(['scenarioData', 'slots']);
+      slots = slots.map( (slot) => {
+        if (slot.slotName === action.payload.slotName){
+          slot['slotName'] = action.payload.value;
         }
         return slot;
       });

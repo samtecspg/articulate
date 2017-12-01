@@ -22,7 +22,7 @@ module.exports = (request, reply) => {
                     server.inject(`/agent/${agentId}/parse?text=${text}${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
                         
                         if (res.statusCode !== 200){
-                            if (res.statusCode === 400){
+                            if (res.statusCode === 404){
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return cb(errorNotFound);       
                             }

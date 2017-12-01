@@ -14,13 +14,53 @@ module.exports = (userText, context, currentContext, intent, scenario, parseResu
         const requiredSlots = _.filter(scenario.slots, (slot) => {
 
             context[context.length - 1].slots[slot.slotName] = currentContext.slots[slot.slotName] ? currentContext.slots[slot.slotName] : null;
-            return slot.isRequired === "true";
+            return slot.isRequired === 'true';
         });
+        const isListSlots = _.map(_.filter(scenario.slots, (slot) => {
+
+            return slot.isList === 'true';
+        }), 'slotName');
         const recognizedEntities = parseResult.entities;
+        const overridedSlots = [];
         const recognizedEntitiesNames = _.map(recognizedEntities, (recognizedEntity) => {
 
             if (intentSlotEntitiesNames.indexOf(recognizedEntity.entity) > -1) {
-                context[context.length - 1].slots[intentSlotNames[intentSlotEntitiesNames.indexOf(recognizedEntity.entity)]] = GetEntityValue(recognizedEntity, userText);
+                const slotName = intentSlotNames[intentSlotEntitiesNames.indexOf(recognizedEntity.entity)];
+                if (isListSlots.indexOf(slotName) > -1){
+                    if (!context[context.length - 1].slots[slotName]){
+                        const entityValue = GetEntityValue(recognizedEntity, userText)
+                        context[context.length - 1].slots[slotName] = {
+                            value: [entityValue.value],
+                            original: [entityValue.original]
+                        }
+                    }
+                    else {
+                        if (Array.isArray(context[context.length - 1].slots[slotName].value)){
+                            if (overridedSlots.indexOf(slotName) === -1){
+                                overridedSlots.push(slotName);
+                                context[context.length - 1].slots[slotName] = {
+                                    value: [],
+                                    original: []
+                                }
+                            }
+                            const entityValue = GetEntityValue(recognizedEntity, userText)
+                            context[context.length - 1].slots[slotName].value.push(entityValue.value);
+                            context[context.length - 1].slots[slotName].original.push(entityValue.original);
+                        }
+                        else {
+                            const entityValue = GetEntityValue(recognizedEntity, userText)
+                            context[context.length - 1].slots[slotName] = {
+                                value: [context[context.length - 1].slots[slotName].value],
+                                original: [context[context.length - 1].slots[slotName].original]
+                            };
+                            context[context.length - 1].slots[slotName].value.push(entityValue.value);
+                            context[context.length - 1].slots[slotName].original.push(entityValue.original);
+                        }
+                    }
+                }
+                else {
+                    context[context.length - 1].slots[slotName] = GetEntityValue(recognizedEntity, userText);
+                }
             }
             else{
                 if (recognizedEntity.entity.indexOf('sys.spacy_')  !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {

@@ -2,7 +2,8 @@ import React from 'react';
 import { Icon, Dropdown, Input } from 'react-materialize';
 import SlotAgentEntities from './SlotAgentEntities'
 import TextPrompts from './TextPrompts'
-import * as camel from 'to-camel-case';
+import TextInput from 'components/TextInput';
+import messages from '../messages';
 
 export function SlotsRows(props) {
     const rows = props.slots.map( (slot, slotIndex) => {
@@ -12,7 +13,13 @@ export function SlotsRows(props) {
         return (
             <tr style={{width: '100%'}} key={slotIndex} >
             <td style={{width: '20%', display: 'inline-block'}}>
-                <span style={{color: props.dirOfColors[slot.entity]}}>${camel(slot.slotName)}</span>
+                <TextInput
+                    style={{ marginBottom: '0px', color: props.dirOfColors[slot.entity]}}
+                    placeholder=''
+                    value={`${slot.slotName}`}
+                    inputId={'slotName_' + slotIndex}
+                    onChange={props.onSlotNameChange.bind(null, slot.slotName)}
+                />
             </td>
             <SlotAgentEntities 
                 slot={slot}
@@ -45,6 +52,7 @@ SlotsRows.propTypes = {
     slots: React.PropTypes.array,
     onCheckboxChange: React.PropTypes.func,
     onAddTextPrompt: React.PropTypes.func,
+    onSlotNameChange: React.PropTypes.func,
     onDeleteTextPrompt: React.PropTypes.func,
     agentEntities: React.PropTypes.oneOfType([
       React.PropTypes.array,

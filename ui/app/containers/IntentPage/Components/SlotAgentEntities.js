@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavItem, Dropdown } from 'react-materialize';
 import messages from '../messages';
-import * as camel from 'to-camel-case';
 import { FormattedMessage } from 'react-intl';
 
 export function SlotAgentEntities(props) {
@@ -19,11 +18,11 @@ export function SlotAgentEntities(props) {
             return(
                 <NavItem 
                     href={'#'}
-                    onClick={props.onClickFunction.bind(null, camel(agentEntity.entityName))} 
+                    onClick={props.onClickFunction.bind(null, agentEntity.entityName)} 
                     key={agentIndex}
                 >
                     <span style={{color: entityColor}}>
-                        @{camel(agentEntity.entityName)}
+                        @{agentEntity.entityName}
                     </span>
                 </NavItem>
             )
@@ -38,7 +37,7 @@ export function SlotAgentEntities(props) {
                         style={{ fontWeight: 300, color: '#9e9e9e' }} 
                         id={'slotEntityDropdown_' + props.index}>
                         {props.slot.entity ? 
-                        <span style={{color: props.dirOfColors[props.slot.entity]}}>@{camel(props.agentEntity.entityName)}</span> : 
+                        <span style={{color: props.dirOfColors[props.slot.entity]}}>@{props.agentEntity.entityName}</span> : 
                         <FormattedMessage {...messages.slotEntityPlaceholder} />}
                     </span>} 
                 options={
