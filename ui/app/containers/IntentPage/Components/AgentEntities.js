@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavItem, Dropdown } from 'react-materialize';
 import messages from '../messages';
-import * as camel from 'to-camel-case';
 
 /**
  * 
@@ -25,12 +24,12 @@ export function AgentEntities(props) {
             return(
                 <NavItem 
                     onClick={props.userSays ? 
-                    props.onClickFunction.bind(null, props.userSays, agentEntity.entityName, camel(agentEntity.entityName)) : 
-                    props.onClickFunction.bind(null, camel(agentEntity.entityName))} 
+                    props.onClickFunction.bind(null, props.userSays, agentEntity.entityName, agentEntity.entityName) : 
+                    props.onClickFunction.bind(null, agentEntity.entityName)} 
                     key={agentIndex}
                 >
                     <span style={{color: entityColor}}>
-                        @{camel(agentEntity.entityName)}
+                        @{agentEntity.entityName}
                     </span>
                 </NavItem>
             )
