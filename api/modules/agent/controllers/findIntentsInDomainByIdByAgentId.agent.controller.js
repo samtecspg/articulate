@@ -20,13 +20,13 @@ module.exports = (request, reply) => {
 
     Async.waterfall([
         (cb) => {
-            
+
             server.inject('/agent/' + agentId, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
-                        return cb(errorNotFound);       
+                        return cb(errorNotFound);
                     }
                     const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
                     return cb(error, null);
@@ -42,10 +42,10 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error ocurred getting the domains from the sorted set.');
                     return cb(error);
                 }
-                domains =_.chunk(domains, 2);
-                const domain = _.filter(domains, (domain) => {
+                domains = _.chunk(domains, 2);
+                const domain = _.filter(domains, (tempDomain) => {
 
-                    return domain[1] == domainId;
+                    return tempDomain[1] === domainId.toString();
                 })[0];
                 return cb(null, domain);
             });
@@ -54,7 +54,7 @@ module.exports = (request, reply) => {
 
             if (domain){
                 server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
-                    
+
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);
                         return cb(error, null);

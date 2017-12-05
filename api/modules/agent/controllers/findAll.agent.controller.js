@@ -34,7 +34,7 @@ module.exports = (request, reply) => {
             Async.map(agents, (agent, callback) => {
 
                 server.inject('/agent/' + agent[1], (res) => {
-                    
+
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of agent ${agent[1]}`);
                         return callback(error, null);

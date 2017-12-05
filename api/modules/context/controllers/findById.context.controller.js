@@ -1,7 +1,6 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const _ = require('lodash');
 const Flat = require('flat');
 
 module.exports = (request, reply) => {
@@ -12,9 +11,9 @@ module.exports = (request, reply) => {
 
     Async.waterfall([
         (cb) => {
-            
+
             redis.lrange(`sessionContexts:${sessionId}`, 0, -1, (err, contextIds) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred getting the agents from the sorted set.');
                     return cb(error);
@@ -25,9 +24,9 @@ module.exports = (request, reply) => {
         (contextIds, cb) => {
 
             Async.map(contextIds, (contextId, callback) => {
-                
+
                 redis.hgetall(`context:${contextId}`, (err, data) => {
-                    
+
                     if (err){
                         const error = Boom.badImplementation(`An error ocurred retrieving the context ${contextId}.`);
                         return callback(error);
@@ -35,10 +34,8 @@ module.exports = (request, reply) => {
                     if (data){
                         return callback(null, Flat.unflatten(data));
                     }
-                    else {
-                        const error = Boom.notFound(`The context ${context} doesn\'t exists`);
-                        return callback(error);                    
-                    }
+                    const error = Boom.notFound(`The context ${context} doesn\'t exists`);
+                    return callback(error);
                 });
             }, (err, result) => {
 

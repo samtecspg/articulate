@@ -12,13 +12,13 @@ module.exports = (request, reply) => {
 
     Async.waterfall([
         (cb) => {
-            
+
             server.inject('/agent/' + agentId, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
-                        return reply(errorNotFound);       
+                        return reply(errorNotFound);
                     }
                     const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
                     return cb(error, null);
@@ -34,10 +34,10 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error ocurred getting the entities from the sorted set.');
                     return cb(error);
                 }
-                entities =_.chunk(entities, 2);
-                const entity = _.filter(entities, (entity) => {
+                entities = _.chunk(entities, 2);
+                const entity = _.filter(entities, (tempEntity) => {
 
-                    return entity[1] == entityId;
+                    return tempEntity[1] === entityId.toString();
                 })[0];
                 return cb(null, entity);
             });
@@ -46,7 +46,7 @@ module.exports = (request, reply) => {
 
             if (entity){
                 server.inject('/entity/' + entity[1], (res) => {
-                    
+
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
                         return cb(error, null);

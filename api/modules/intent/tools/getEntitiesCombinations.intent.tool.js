@@ -7,13 +7,13 @@ const CartesianProduct = require('./cartesianProduct.intent.tool');
 const getCombinationOfEntities = (entities, intents) => {
 
     const intentsExamples = _.flatten(_.map(intents, 'examples'));
-    
+
     const usedEntities = _.compact(_.map(intentsExamples, (example) => {
 
-        const usedEntitiesByExample = []
+        const usedEntitiesByExample = [];
         const entityPattern = /\{(.+?)\}/g;
         let match;
-        while((match = entityPattern.exec(example)) != null){
+        while ((match = entityPattern.exec(example)) !== null){
             usedEntitiesByExample.push(match[1]);
         }
         return usedEntitiesByExample;
@@ -25,10 +25,10 @@ const getCombinationOfEntities = (entities, intents) => {
         const key = tupleOfEntities.join('-');
 
         if (!combinations[key]){
-            
+
             const entitiesList = _.map(tupleOfEntities, (entity) => {
 
-                let matchedEntity = _.filter(entities, (fullEntity) => {
+                const matchedEntity = _.filter(entities, (fullEntity) => {
 
                     return fullEntity.entityName === entity;
                 })[0];

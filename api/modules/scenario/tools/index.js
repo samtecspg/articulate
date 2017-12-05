@@ -3,7 +3,7 @@ const ValidateEntitiesTool = require('./validateEntities.scenario.tool');
 
 const ScenarioTools = {
 
-    validateEntitiesTool: ValidateEntitiesTool,
+    validateEntitiesTool: ValidateEntitiesTool
 };
 
 module.exports = ScenarioTools;

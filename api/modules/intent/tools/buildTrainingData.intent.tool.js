@@ -20,7 +20,7 @@ const buildTrainingData = (server, domainId, callback) => {
         if (results.entities.length > 0){
             entitiesCombinations = GetEntitiesCombinations(results.entities, results.intents);
         }
-       
+
         const common_examples = _.uniq(_.flatten(_.map(results.intents, (intent) => {
 
             const buildIntentsPerExamples = _.map(intent.examples, (intentExample) => {
@@ -29,7 +29,7 @@ const buildTrainingData = (server, domainId, callback) => {
 
                 const entityPattern = /\{(.+?)\}/g;
                 let match;
-                while((match = entityPattern.exec(intentExample)) != null){
+                while ((match = entityPattern.exec(intentExample)) !== null){
                     entitiesList.push({
                         start: match.index,
                         end: match.index + match[0].length,

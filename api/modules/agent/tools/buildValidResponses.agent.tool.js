@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const GetEntityValue = require('./getEntityValue.agent.tool');
 
 const replaceText = (response, slotName, slotValue) => {
 
@@ -28,13 +27,13 @@ module.exports = (userText, context, slots, responses, timezone) => {
         if (context.slots){
             Object.keys(context.slots).forEach( (slot) => {
 
-                if (slot !== "sys" && context.slots[slot]) {
+                if (slot !== 'sys' && context.slots[slot]) {
                     const slotDefinition = _.filter(slots, (tempSlot) => {
 
                         return tempSlot.slotName === slot;
                     })[0];
                     let valueForReplacement = slotDefinition.useOriginal ? context.slots[slot].original : context.slots[slot].value;
-                    if (slotDefinition.isList === "true"){
+                    if (slotDefinition.isList === 'true'){
                         if (valueForReplacement.length > 1){
                             if (valueForReplacement.length === 2){
                                 valueForReplacement = `${valueForReplacement[0]} and ${valueForReplacement[1]}`;
@@ -42,7 +41,7 @@ module.exports = (userText, context, slots, responses, timezone) => {
                             else {
                                 valueForReplacement = `${valueForReplacement.slice(0, valueForReplacement.length - 2).join(', ')}, and ${valueForReplacement[valueForReplacement.length - 1]}`;
                             }
-                        }                        
+                        }
                     }
                     tempResponse = replaceText(tempResponse, slot, valueForReplacement);
                 }

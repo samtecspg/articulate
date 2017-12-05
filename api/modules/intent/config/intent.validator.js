@@ -1,7 +1,6 @@
 'use strict';
 
 const IntentSchema = require('../../../models/index').Intent.schema;
-const Joi = require('joi');
 
 class IntentValidate {
     constructor() {

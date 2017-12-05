@@ -115,7 +115,7 @@ const createEntity = (callback) => {
 
 
 const createIntent = (callback) => {
-    
+
     const data = {
         agent: 'Test Agent',
         domain: 'Test Domain',
@@ -148,7 +148,7 @@ const createIntent = (callback) => {
 };
 
 before((done) => {
-    
+
     require('../../../index')((err, srv) => {
 
         if (err) {
@@ -187,7 +187,7 @@ before((done) => {
 });
 
 after((done) => {
-    
+
     server.inject({
         method: 'DELETE',
         url: '/agent/' + agentId
@@ -222,7 +222,7 @@ suite('scenario', () => {
                         isRequired: true,
                         textPrompts: [
                             'What are you looking for?',
-                            'Are you trying to find something?',
+                            'Are you trying to find something?'
                         ],
                         useWebhook: true,
                         useOriginal: false
@@ -270,7 +270,7 @@ suite('scenario', () => {
             });
 
             test('should respond with 400 because agent doesn\'t exists', (done) => {
-                
+
                 const data = {
                     agent: '-1',
                     domain: domainName,
@@ -283,7 +283,7 @@ suite('scenario', () => {
                         isRequired: true,
                         textPrompts: [
                             'What are you looking for?',
-                            'Are you trying to find something?',
+                            'Are you trying to find something?'
                         ],
                         useWebhook: true,
                         useOriginal: false
@@ -295,23 +295,23 @@ suite('scenario', () => {
                     ],
                     useWebhook: true
                 };
-    
+
                 const options = {
                     method: 'POST',
                     url: '/scenario',
                     payload: data
                 };
-    
+
                 server.inject(options, (res) => {
-    
+
                     expect(res.statusCode).to.equal(400);
                     expect(res.result.message).to.be.equal('The agent -1 doesn\'t exist');
                     done();
                 });
             });
-    
+
             test('should respond with 400 because domain doesn\'t exists', (done) => {
-    
+
                 const data = {
                     agent: agentName,
                     domain: '-1',
@@ -324,7 +324,7 @@ suite('scenario', () => {
                         isRequired: true,
                         textPrompts: [
                             'What are you looking for?',
-                            'Are you trying to find something?',
+                            'Are you trying to find something?'
                         ],
                         useWebhook: true,
                         useOriginal: false
@@ -336,23 +336,23 @@ suite('scenario', () => {
                     ],
                     useWebhook: true
                 };
-    
+
                 const options = {
                     method: 'POST',
                     url: '/scenario',
                     payload: data
                 };
-    
+
                 server.inject(options, (res) => {
-    
+
                     expect(res.statusCode).to.equal(400);
                     expect(res.result.message).to.be.equal(`The domain -1 doesn't exist in the agent ${agentName}`);
                     done();
                 });
             });
-    
+
             test('should respond with 400 because entity doesn\'t exists', (done) => {
-    
+
                 const data = {
                     agent: agentName,
                     domain: domainName,
@@ -365,7 +365,7 @@ suite('scenario', () => {
                         isRequired: true,
                         textPrompts: [
                             'What are you looking for?',
-                            'Are you trying to find something?',
+                            'Are you trying to find something?'
                         ],
                         useWebhook: true,
                         useOriginal: false
@@ -377,15 +377,15 @@ suite('scenario', () => {
                     ],
                     useWebhook: true
                 };
-    
+
                 const options = {
                     method: 'POST',
                     url: '/scenario',
                     payload: data
                 };
-    
+
                 server.inject(options, (res) => {
-    
+
                     expect(res.statusCode).to.equal(400);
                     expect(res.result.message).to.be.equal(`The entity with the name -1 doesn't exist in the agent ${agentId}`);
                     done();
@@ -413,7 +413,7 @@ suite('scenario', () => {
                         isRequired: true,
                         textPrompts: [
                             'What are you looking for?',
-                            'Are you trying to find something?',
+                            'Are you trying to find something?'
                         ],
                         useWebhook: true,
                         useOriginal: false
@@ -456,8 +456,8 @@ suite('scenario', () => {
                 const updatedData = {
                     scenarioName: 'Test Scenario Updated',
                     intentResponses: [
-                        'Your {searchedObject} is located at...',
-                    ],
+                        'Your {searchedObject} is located at...'
+                    ]
                 };
 
                 const options = {
@@ -480,8 +480,8 @@ suite('scenario', () => {
                 const updatedData = {
                     scenarioName: 'Test Scenario Updated',
                     intentResponses: [
-                        'Your {searchedObject} is located at...',
-                    ],
+                        'Your {searchedObject} is located at...'
+                    ]
                 };
 
                 const options = {

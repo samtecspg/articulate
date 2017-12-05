@@ -158,7 +158,7 @@ const createScenario = (callback) => {
             isRequired: true,
             textPrompts: [
                 'What are you looking for?',
-                'Are you trying to find something?',
+                'Are you trying to find something?'
             ],
             useWebhook: true,
             useOriginal: false
@@ -547,10 +547,10 @@ suite('/agent/{id}/domain/{domainId}/intent/{intentId}/scenario', () => {
 
             server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent/' + intent.id + '/scenario', (res) => {
 
-                    expect(res.statusCode).to.equal(200);
-                    expect(res.result.scenarioName).to.equal(scenario.scenarioName);
-                    done();
-                });
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.scenarioName).to.equal(scenario.scenarioName);
+                done();
+            });
         });
     });
 

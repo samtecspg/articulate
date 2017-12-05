@@ -1,7 +1,6 @@
 'use strict';
 
 const ContextSchema = require('../../../models/index').Context.schema;
-const SlotSchema = require('../../../models/index').Slot.schema;
 const Joi = require('joi');
 
 class ContextValidate {

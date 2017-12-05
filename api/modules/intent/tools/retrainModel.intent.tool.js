@@ -25,12 +25,12 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
 
             if (err) {
                 const error = Boom.badImplementation('An error ocurred calling the training process.');
-                return callback(err);
+                return callback(error);
             }
 
             const updateDomainPayload = {
                 lastTraining: trainingDate,
-                model 
+                model
             };
 
             const options = {

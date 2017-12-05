@@ -1,7 +1,6 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
 
 module.exports = (request, reply) => {
 
@@ -9,12 +8,12 @@ module.exports = (request, reply) => {
     let entity;
     const server = request.server;
     const redis = server.app.redis;
-    
+
     Async.waterfall([
         (cb) => {
-            
+
             server.inject(`/entity/${entityId}`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified entity doesn\'t exists');
@@ -28,7 +27,7 @@ module.exports = (request, reply) => {
             });
         },
         (callbackCheckEntityNotInUse) => {
-            
+
             redis.smembers(`entityDomain:${entity.id}`, (err, domains) => {
 
                 if (err){
@@ -40,7 +39,7 @@ module.exports = (request, reply) => {
                     return callbackCheckEntityNotInUse(error, null);
                 }
                 return callbackCheckEntityNotInUse(null);
-            })
+            });
         },
         (callbackDeleteEntityAndReferences) => {
 
@@ -48,7 +47,7 @@ module.exports = (request, reply) => {
                 (callbackDeleteEntity) => {
 
                     redis.del(`entity:${entityId}`, (err, result) => {
-                        
+
                         if (err){
                             const error = Boom.badImplementation(`An error ocurred deleting the entity ${entityId} from the entity ${entityId}`);
                             return callbackDeleteEntity(error, null);
@@ -59,7 +58,7 @@ module.exports = (request, reply) => {
                 (callbackDeleteEntityDomainsLists) => {
 
                     redis.del(`entityDomains:${entityId}`, (err, result) => {
-                        
+
                         if (err){
                             const error = Boom.badImplementation(`An error ocurred deleting the domains list from the entity ${entityId}`);
                             return callbackDeleteEntityDomainsLists(error, null);
@@ -68,12 +67,12 @@ module.exports = (request, reply) => {
                     });
                 },
                 (callbackDeleteEntityFromTheAgent) => {
-                    
+
                     Async.waterfall([
                         (callbackGetAgent) => {
 
-                            redis.zscore(`agents`, entity.agent, (err, agentId) => {
-                                
+                            redis.zscore('agents', entity.agent, (err, agentId) => {
+
                                 if (err){
                                     const error = Boom.badImplementation( `An error ocurred retrieving the id of the agent ${agent}`);
                                     return callbackGetAgent(error);
@@ -84,7 +83,7 @@ module.exports = (request, reply) => {
                         (agentId, callbackRemoveFromAgentsList) => {
 
                             redis.zrem(`agentEntities:${agentId}`, entity.entityName, (err, removeResult) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation( `An error ocurred removing the entity ${entityId} from the entities list of the agent ${agentId}`);
                                     return callbackRemoveFromAgentsList(error);
@@ -93,15 +92,15 @@ module.exports = (request, reply) => {
                             });
                         }
                     ], (err, result) => {
-                        
+
                         if (err){
                             return callbackDeleteEntityFromTheAgent(err);
                         }
-                        return callbackDeleteEntityFromTheAgent(null);                        
-                    })
-                },
+                        return callbackDeleteEntityFromTheAgent(null);
+                    });
+                }
             ], (err, result) => {
-                
+
                 if (err){
                     return callbackDeleteEntityAndReferences(err);
                 }

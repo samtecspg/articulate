@@ -10,7 +10,7 @@ module.exports = (data, currentContext, timezone, callback) => {
         timezone
     };
 
-    if (data.agentData.useWebhookFallback === "true") {
+    if (data.agentData.useWebhookFallback === 'true') {
         CallWebhook(data.agentData.webhookFallbackUrl, response, (err, webhookResponse) => {
 
             if (err){

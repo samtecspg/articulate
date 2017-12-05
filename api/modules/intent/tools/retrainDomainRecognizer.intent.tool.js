@@ -21,12 +21,12 @@ const retrainDomainRecognizer = (server, redis, rasa, agentName, agentId, cb) =>
         const trainingDate = new Date().toISOString();
         const modelFolderName = agentName + '_domain_recognizer';
         Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
-            
+
             if (err) {
                 return cb(err);
             }
             redis.lpush(`agentDomainRecognizer:${agentId}`, trainingDate, (err) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error saving the training date of the domain recognizer.');
                     return cb(error);

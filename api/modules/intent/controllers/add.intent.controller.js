@@ -3,7 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const IntentTools = require('../tools');
-    
+
 module.exports = (request, reply) => {
 
     let intentId = null;
@@ -16,12 +16,12 @@ module.exports = (request, reply) => {
 
     Async.series({
         fathersCheck: (cb) => {
-            
+
             Async.series([
                 (callback) => {
 
                     redis.zscore('agents', intent.agent, (err, id) => {
-                        
+
                         if (err){
                             const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
                             return callback(error);
@@ -30,18 +30,17 @@ module.exports = (request, reply) => {
                             agentId = id;
                             return callback(null);
                         }
-                        else{
-                            const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
-                            return callback(error, null);
-                        }
+                        const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
+                        return callback(error, null);
                     });
                 },
                 (callback) => {
+
                     Async.parallel([
                         (cllbk) => {
-                            
+
                             redis.zscore(`agentDomains:${agentId}`, intent.domain, (err, id) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation(`An error ocurred checking if the domain ${intent.domain} exists in the agent ${intent.agent}.`);
                                     return cllbk(error);
@@ -50,16 +49,14 @@ module.exports = (request, reply) => {
                                     domainId = id;
                                     return cllbk(null);
                                 }
-                                else {
-                                    const error = Boom.badRequest(`The domain ${intent.domain} doesn't exist in the agent ${intent.agent}`);
-                                    return cllbk(error);
-                                }
+                                const error = Boom.badRequest(`The domain ${intent.domain} doesn't exist in the agent ${intent.agent}`);
+                                return cllbk(error);
                             });
                         },
                         (cllbk) => {
 
                             IntentTools.validateEntitiesTool(redis, agentId, intent.examples, (err) => {
-                                
+
                                 if (err) {
                                     return cllbk(err);
                                 }
@@ -97,7 +94,7 @@ module.exports = (request, reply) => {
         addToDomain: (cb) => {
 
             redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the name to the intents list.');
                     return cb(error);
@@ -105,18 +102,16 @@ module.exports = (request, reply) => {
                 if (addResponse !== 0){
                     return cb(null);
                 }
-                else{
-                    const error = Boom.badRequest(`A intent with this name already exists in the domain ${intent.domain}.`);
-                    return cb(error);
-                }
+                const error = Boom.badRequest(`A intent with this name already exists in the domain ${intent.domain}.`);
+                return cb(error);
             });
         },
         intent: (cb) => {
 
-            intent = Object.assign({id: intentId}, intent);          
-            const flatIntent = Flat(intent);  
+            intent = Object.assign({ id: intentId }, intent);
+            const flatIntent = Flat(intent);
             redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the intent data.');
                     return cb(error);
@@ -140,7 +135,7 @@ module.exports = (request, reply) => {
                     Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
                     Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
                 ], (err) => {
-    
+
                     if (err){
                         return cb(err);
                     }
@@ -148,11 +143,11 @@ module.exports = (request, reply) => {
                 });
             }
         ], (err) => {
-    
+
             if (err) {
                 return reply(err);
             }
-    
+
             return reply(null, resultIntent);
         });
     });

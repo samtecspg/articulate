@@ -19,15 +19,15 @@ module.exports = (request, reply) => {
 
     Async.waterfall([
         (cb) => {
-            
+
             server.inject(`/domain/${domainId}`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified domain doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the domain`);
+                    const error = Boom.create(res.statusCode, 'An error ocurred getting the domain');
                     return cb(error, null);
                 }
                 return cb(null);
@@ -41,7 +41,7 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error ocurred getting the intents from the sorted set.');
                     return cb(error);
                 }
-                intents =_.chunk(intents, 2);
+                intents = _.chunk(intents, 2);
                 return cb(null, intents);
             });
         },
@@ -50,7 +50,7 @@ module.exports = (request, reply) => {
             Async.map(intents, (intent, callback) => {
 
                 server.inject('/intent/' + intent[1], (res) => {
-                    
+
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the intent ${intent[1]}`);
                         return callback(error, null);

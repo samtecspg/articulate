@@ -45,7 +45,7 @@ suite('NLU API', () => {
                             done(errStart);
                         }
                         expect(server).to.be.an.object();
-                        
+
                         done();
                     });
                 });

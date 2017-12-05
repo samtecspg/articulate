@@ -7,7 +7,7 @@ const systemEntities = ['sys.spacy_money', 'sys.spacy_quantity', 'sys.spacy_card
 
 const validateEntities = (redis, agent, slots, cb) => {
 
-    const usedEntities = _.map(slots, "entity");
+    const usedEntities = _.map(slots, 'entity');
 
     Async.forEach(usedEntities, (entity, callback) => {
 
@@ -20,7 +20,7 @@ const validateEntities = (redis, agent, slots, cb) => {
             }
             else {
                 redis.zscore(`agentEntities:${agent}`, entity, (err, entityExist) => {
-                    
+
                     if (err){
                         const error = Boom.badImplementation('An error ocurred checking if the entity exists.');
                         return callback(error);
@@ -28,17 +28,15 @@ const validateEntities = (redis, agent, slots, cb) => {
                     if (entityExist){
                         return callback(null);
                     }
-                    else {
-                        const error = Boom.badRequest(`The entity with the name ${entity} doesn't exist in the agent ${agent}`);
-                        return callback(error);
-                    }
+                    const error = Boom.badRequest(`The entity with the name ${entity} doesn't exist in the agent ${agent}`);
+                    return callback(error);
                 });
             }
         }
         else {
-            const error = Boom.badRequest(`Please check that every slots is pointing to a valid entity.`);
+            const error = Boom.badRequest('Please check that every slots is pointing to a valid entity.');
             return callback(error);
-        }     
+        }
     }, (err) => {
 
         if (err){

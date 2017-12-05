@@ -8,7 +8,7 @@ const getDomainData = (server, domainId, cb) => {
         entities: (callback) => {
 
             server.inject(`/domain/${domainId}/entity`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, `An error ocurred getting the entities of the domain ${domainId}`);
                     return callback(error, null);
@@ -19,7 +19,7 @@ const getDomainData = (server, domainId, cb) => {
         intents: (callback) => {
 
             server.inject(`/domain/${domainId}/intent`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, `An error ocurred getting the intents of the domain ${domainId}`);
                     return callback(error, null);
@@ -27,7 +27,7 @@ const getDomainData = (server, domainId, cb) => {
                 return callback(null, res.result);
             });
         }
-        
+
     }, (err, result) => {
 
         if (err){

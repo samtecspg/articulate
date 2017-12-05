@@ -68,18 +68,6 @@ const getBestRasaResult = (rasaResults, agent) => {
     return rasaResult;
 };
 
-const getScenarioForIntent = (solvedIntent, agentData) => {
-
-    if (solvedIntent){
-        const scenario = _.filter(agentData, (tmpData) => {
-
-            return tmpData._index === 'scenario' && tmpData._source.intent === solvedIntent.name;
-        })[0];
-        return scenario ? Object.assign({ _id: scenario._id }, scenario._source) : scenario;
-    }
-    return null;
-};
-
 const getScenarioByName = (scenarioName, agentData) => {
 
     const agentIntents = _.compact(_.flatten(_.map(agentData.domains, 'intents')));
@@ -141,7 +129,7 @@ const getLastContextWithValidSlots = (recognizedEntities) => {
 const persistContext = (server, sessionId, cb) => {
 
     Async.map(context, (elementInContext, callbackInsertInContext) => {
-        
+
         if (elementInContext.id){
             if (elementInContext.slots){
                 const options = {
@@ -153,7 +141,7 @@ const persistContext = (server, sessionId, cb) => {
                 };
 
                 server.inject(options, (res) => {
-                    
+
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred updating the context ${elementInContext.id} of the session ${sessionId}`);
                         return callbackInsertInContext(error, null);
@@ -167,7 +155,7 @@ const persistContext = (server, sessionId, cb) => {
         }
         else {
 
-            if (elementInContext.slots && Object.keys(elementInContext.slots).length == 0){
+            if (elementInContext.slots && Object.keys(elementInContext.slots).length === 0){
                 delete elementInContext.slots;
             }
             const options = {
@@ -177,7 +165,7 @@ const persistContext = (server, sessionId, cb) => {
             };
 
             server.inject(options, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, `An error ocurred adding the a new element to the session ${sessionId}`);
                     return callbackInsertInContext(error, null);
@@ -192,7 +180,7 @@ const persistContext = (server, sessionId, cb) => {
         }
         return cb(null);
     });
-}
+};
 
 module.exports = (server, sessionId, timezone, data, callback) => {
 
@@ -200,7 +188,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
         (callbackLoadContext) => {
 
             server.inject(`/context/${sessionId}`, (res) => {
-            
+
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, `An error ocurred getting the context of the session ${sessionId}`);
                     return callbackLoadContext(error, null);
@@ -220,7 +208,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                 data.scenario = data.intent ? data.intent.scenario : null;
                 if (solvedIntent && !data.scenario){
                     RespondFallback(data, currentContext, timezone, (err, response) => {
-            
+
                         if (err){
                             return callbackGetResponse(err, null);
                         }
@@ -239,7 +227,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                             currentContext = getCurrentContext();
                         }
                         RespondIntent(userText, context, currentContext, solvedIntent, data.scenario, rasaResult, timezone, data.agentData.webhookUrl, (err, response) => {
-            
+
                             if (err){
                                 return callbackGetResponse(err, null);
                             }
@@ -254,7 +242,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                                     //Current context contains the intent and the slots that's why it is passed twice
                                     data.scenario = getScenarioByName(currentContext.scenario, data.agentData);
                                     RespondIntent(userText, context, currentContext, currentContext, data.scenario, rasaResult, timezone, data.agentData.webhookUrl,  (err, response) => {
-            
+
                                         if (err){
                                             return callbackGetResponse(err, null);
                                         }
@@ -269,7 +257,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                                         //Current context contains the intent and the slots that's why it is passed twice
                                         data.scenario = getScenarioByName(currentContext.scenario, data.agentData);
                                         RespondIntent(userText, context, currentContext, currentContext, data.scenario, rasaResult, timezone, data.agentData.webhookUrl, (err, response) => {
-            
+
                                             if (err){
                                                 return callbackGetResponse(err, null);
                                             }
@@ -278,7 +266,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                                     }
                                     else {
                                         RespondFallback(data, currentContext, timezone, (err, response) => {
-            
+
                                             if (err){
                                                 return callbackGetResponse(err, null);
                                             }
@@ -289,7 +277,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                             }
                             else {
                                 RespondFallback(data, currentContext, timezone, (err, response) => {
-            
+
                                     if (err){
                                         return callbackGetResponse(err, null);
                                     }
@@ -299,7 +287,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
                         }
                         else {
                             RespondFallback(data, currentContext, timezone, (err, response) => {
-            
+
                                 if (err){
                                     return callbackGetResponse(err, null);
                                 }

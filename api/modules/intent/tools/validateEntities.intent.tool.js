@@ -8,12 +8,12 @@ const systemEntities = ['sys.spacy_money', 'sys.spacy_quantity', 'sys.spacy_card
 const validateEntities = (redis, agent, examples, cb) => {
 
     const usedEntities = _.uniq(_.compact(_.flatten(_.map(examples, (example) => {
-        
+
         const entitiesList = [];
-        
+
         const entityPattern = /\{(.+?)\}/g;
         let match;
-        while((match = entityPattern.exec(example)) != null){
+        while ((match = entityPattern.exec(example)) !== null){
             entitiesList.push(match[1]);
         }
 
@@ -29,7 +29,7 @@ const validateEntities = (redis, agent, examples, cb) => {
         }
         else {
             redis.zscore(`agentEntities:${agent}`, entity, (err, entityExist) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred checking if the entity exists.');
                     return callback(error);
@@ -37,12 +37,10 @@ const validateEntities = (redis, agent, examples, cb) => {
                 if (entityExist){
                     return callback(null);
                 }
-                else {
-                    const error = Boom.badRequest(`The entity with the name ${entity} doesn't exist in the agent ${agent}`);
-                    return callback(error);
-                }
+                const error = Boom.badRequest(`The entity with the name ${entity} doesn't exist in the agent ${agent}`);
+                return callback(error);
             });
-        }      
+        }
     }, (err) => {
 
         if (err){

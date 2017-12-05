@@ -2,32 +2,30 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
-const _ = require('lodash');
 const ScenarioTools = require('../tools');
-
-const redis = require('redis');
 
 const updateDataFunction = (redis, scenarioId, currentScenario, updateData, cb) => {
 
-    if(updateData.slots){
+    if (updateData.slots){
         currentScenario.slots = updateData.slots;
     }
-    if(updateData.intentResponses){
+    if (updateData.intentResponses){
         currentScenario.intentResponses = updateData.intentResponses;
     }
     const flatScenario = Flat(currentScenario);
     const flatUpdateData = Flat(updateData);
     Object.keys(flatUpdateData).forEach( (key) => {
-        flatScenario[key] = flatUpdateData[key]; 
+
+        flatScenario[key] = flatUpdateData[key];
     });
     redis.del(`scenario:${scenarioId}`, (err) => {
-        
+
         if (err){
             const error = Boom.badImplementation('An error ocurred temporaly removing the scenario for the update.');
             return cb(error);
         }
         redis.hmset(`scenario:${scenarioId}`, flatScenario, (err) => {
-            
+
             if (err){
                 const error = Boom.badImplementation('An error ocurred adding the scenario data.');
                 return cb(error);
@@ -35,7 +33,7 @@ const updateDataFunction = (redis, scenarioId, currentScenario, updateData, cb) 
             return cb(null, Flat.unflatten(flatScenario));
         });
     });
-}
+};
 
 module.exports = (request, reply) => {
 
@@ -44,12 +42,12 @@ module.exports = (request, reply) => {
 
     const server = request.server;
     const redis = server.app.redis;
-    
+
     Async.waterfall([
         (cb) => {
-            
+
             server.inject(`/scenario/${scenarioId}`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified scenario doesn\'t exists');
@@ -68,7 +66,7 @@ module.exports = (request, reply) => {
                     (callback) => {
 
                         redis.zscore('agents', currentScenario.agent, (err, agentId) => {
-                            
+
                             if (err){
                                 const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
                                 return callback(error);
@@ -76,16 +74,14 @@ module.exports = (request, reply) => {
                             if (agentId){
                                 return callback(null, agentId);
                             }
-                            else{
-                                const error = Boom.badRequest(`The agent ${scenario.agent} doesn't exist`);
-                                return callback(error, null);
-                            }
+                            const error = Boom.badRequest(`The agent ${scenario.agent} doesn't exist`);
+                            return callback(error, null);
                         });
                     },
                     (agentId, callback) => {
 
                         ScenarioTools.validateEntitiesTool(redis, agentId, updateData.slots, (err) => {
-                            
+
                             if (err) {
                                 return callback(err);
                             }
@@ -104,7 +100,7 @@ module.exports = (request, reply) => {
                         });
                     }
                 ], (err, result) => {
-                    
+
                     if (err){
                         return cb(err);
                     }
@@ -113,7 +109,7 @@ module.exports = (request, reply) => {
             }
             else {
                 updateDataFunction(redis, scenarioId, currentScenario, updateData, (err, result) => {
-                    
+
                     if (err){
                         const error = Boom.badImplementation('An error ocurred adding the scenario data.');
                         return cb(error);

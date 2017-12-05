@@ -6,17 +6,17 @@ const Boom = require('boom');
 const extractEntities = (examples) => {
 
     const entities = _.uniq(_.compact(_.flatten(_.map(examples, (example) => {
-        
-        const usedEntitiesByExample = []
+
+        const usedEntitiesByExample = [];
         const entityPattern = /\{(.+?)\}/g;
         let match;
-        while((match = entityPattern.exec(example)) != null){
+        while ((match = entityPattern.exec(example)) !== null){
             usedEntitiesByExample.push(match[1]);
         }
         return usedEntitiesByExample;
     }))));
     return entities;
-}
+};
 
 const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb) => {
 
@@ -37,27 +37,28 @@ const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb)
                     (cllbk) => {
 
                         redis.zscore(`agentEntities:${agentId}`, entity, (err, entityId) => {
-                            
+
                             if (err){
                                 const error = Boom.badImplementation(`An error ocurred retrieving the id of the entity ${entity}.`);
                                 return cllbk(error);
                             }
                             return cllbk(null, entityId);
-                        })
+                        });
                     },
                     (entityId, cllbk) => {
+
                         Async.parallel([
                             (cllback) => {
 
                                 redis.sismember(`entityDomain:${entityId}`, domainId, (err, result) => {
-                                    
+
                                     if (err){
                                         const error = Boom.badImplementation(`An error ocurred checking if the entity ${entityId} is being used by the domain ${domainId}`);
                                         return cllback(error);
                                     }
                                     if (!result){
                                         redis.sadd(`entityDomain:${entityId}`, domainId, (saddErr, saddResult) => {
-                                            
+
                                             if (saddErr){
                                                 const error = Boom.badImplementation(`An error ocurred adding the domain ${domainId} to the list of domains of entity ${entityId}`);
                                                 return cllback(error);
@@ -80,7 +81,7 @@ const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb)
                                     }
                                     if (!result){
                                         redis.sadd(`domainEntities:${domainId}`, entityId, (saddErr, saddResult) => {
-                                            
+
                                             if (saddErr){
                                                 const error = Boom.badImplementation(`An error ocurred adding the entity ${entityId} to the list of entities used by the domain ${domainId}`);
                                                 return cllback(error);
@@ -92,18 +93,18 @@ const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb)
                                         return cllback(null);
                                     }
                                 });
-                            },
+                            }
                         ], (err, result) => {
 
-                            if (err){ 
+                            if (err){
                                 return cllbk(err);
                             }
                             return cllbk(null);
                         });
-                    },
+                    }
                 ], (err, result) => {
 
-                    if (err){ 
+                    if (err){
                         return callback(err);
                     }
                     return callback(null);
@@ -120,32 +121,33 @@ const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb)
         (callbackRemovedUnusedEntities) => {
 
             Async.map(removedEntities, (entity, callback) => {
-                
+
                 Async.waterfall([
                     (cllbk) => {
 
                         redis.zscore(`agentEntities:${agentId}`, entity, (err, entityId) => {
-                            
+
                             if (err){
                                 const error = Boom.badImplementation(`An error ocurred retrieving the id of the entity ${entity}.`);
                                 return cllbk(error);
                             }
                             return cllbk(null, entityId);
-                        })
+                        });
                     },
                     (entityId, cllbk) => {
+
                         Async.parallel([
                             (cllback) => {
 
                                 redis.sismember(`entityDomain:${entityId}`, domainId, (err, result) => {
-                                    
+
                                     if (err){
                                         const error = Boom.badImplementation(`An error ocurred checking if the entity ${entityId} is being used by the domain ${domainId}`);
                                         return cllback(error);
                                     }
                                     if (result){
                                         redis.srem(`entityDomain:${entityId}`, domainId, (saddErr, saddResult) => {
-                                            
+
                                             if (saddErr){
                                                 const error = Boom.badImplementation(`An error ocurred removing the domain ${domainId} from the list of domains of entity ${entityId}`);
                                                 return cllback(error);
@@ -168,7 +170,7 @@ const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb)
                                     }
                                     if (result){
                                         redis.srem(`domainEntities:${domainId}`, entityId, (saddErr, saddResult) => {
-                                            
+
                                             if (saddErr){
                                                 const error = Boom.badImplementation(`An error ocurred removing the entity ${entityId} from the list of entities used by the domain ${domainId}`);
                                                 return cllback(error);
@@ -180,18 +182,18 @@ const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb)
                                         return cllback(null);
                                     }
                                 });
-                            },
+                            }
                         ], (err, result) => {
 
-                            if (err){ 
+                            if (err){
                                 return cllbk(err);
                             }
                             return cllbk(null);
                         });
-                    },
+                    }
                 ], (err, result) => {
 
-                    if (err){ 
+                    if (err){
                         return callback(err);
                     }
                     return callback(null);
@@ -206,14 +208,14 @@ const updateEntitiesDomain = (redis, intent, agentId, domainId, oldExamples, cb)
             });
         }
     ], (err) => {
-        
+
         if (err){
             return cb(err, null);
         }
 
         return cb(null);
-    })
-    
+    });
+
 };
 
 module.exports = updateEntitiesDomain;

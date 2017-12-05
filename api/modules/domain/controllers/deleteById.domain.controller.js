@@ -1,7 +1,6 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
 
 module.exports = (request, reply) => {
 
@@ -9,12 +8,12 @@ module.exports = (request, reply) => {
     let domain;
     const server = request.server;
     const redis = server.app.redis;
-    
+
     Async.waterfall([
         (cb) => {
-            
+
             server.inject(`/domain/${domainId}`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified domain doesn\'t exists');
@@ -28,11 +27,12 @@ module.exports = (request, reply) => {
             });
         },
         (callbackDeleteDomainSons) => {
+
             Async.waterfall([
                 (callbackGetIntents) => {
 
                     server.inject(`/domain/${domain.id}/intent`, (res) => {
-                        
+
                         if (res.statusCode !== 200){
                             const error = Boom.create(res.statusCode, `An error ocurred getting the intents to delete of the domain ${domainId}`);
                             return callbackGetIntents(error, null);
@@ -48,7 +48,7 @@ module.exports = (request, reply) => {
                             (callbackDeleteIntent) => {
 
                                 redis.del(`intent:${intent.id}`, (err, result) => {
-                                    
+
                                     if (err){
                                         const error = Boom.badImplementation(`An error ocurred deleting the intent ${intent.id} linked with the domain ${domainId}`);
                                         return callbackDeleteIntent(error, null);
@@ -59,7 +59,7 @@ module.exports = (request, reply) => {
                             (callbackDeleteScenario) => {
 
                                 redis.del(`scenario:${intent.id}`, (err, result) => {
-                                    
+
                                     if (err){
                                         const error = Boom.badImplementation(`An error ocurred deleting the scenario of the intent ${intent.id} linked with the domain ${domainId}`);
                                         return callbackDeleteScenario(error, null);
@@ -73,9 +73,9 @@ module.exports = (request, reply) => {
                                 return callbackMapOfIntent(err);
                             }
                             return callbackMapOfIntent(null);
-                        })
+                        });
                     }, (err, result) => {
-                        
+
                         if (err){
                             return callbackDeleteIntentAndScenario(err);
                         }
@@ -96,7 +96,7 @@ module.exports = (request, reply) => {
                 (callbackDeleteDomain) => {
 
                     redis.del(`domain:${domainId}`, (err, result) => {
-                        
+
                         if (err){
                             const error = Boom.badImplementation(`An error ocurred deleting the domain ${domainId} from the domain ${domainId}`);
                             return callbackDeleteDomain(error, null);
@@ -107,7 +107,7 @@ module.exports = (request, reply) => {
                 (callbackDeleteDomainIntentsList) => {
 
                     redis.del(`domainIntents:${domainId}`, (err, result) => {
-                        
+
                         if (err){
                             const error = Boom.badImplementation(`An error ocurred deleting the list of intents for domain ${domainId}`);
                             return callbackDeleteDomainIntentsList(error, null);
@@ -124,7 +124,7 @@ module.exports = (request, reply) => {
                                 (callbackGetEntitiesInDomain) => {
 
                                     redis.smembers(`domainEntities:${domainId}`, (err, entities) => {
-                                        
+
                                         if (err){
                                             const error = Boom.badImplementation(`An error ocurred getting the entities used by the domain ${domainId}`);
                                             return callbackGetEntitiesInDomain(error);
@@ -133,11 +133,11 @@ module.exports = (request, reply) => {
                                     });
                                 },
                                 (entities, callbackRemoveLinkForEachEntity) => {
-                                    
+
                                     Async.map(entities, (entity, callbackMapOfEntity) => {
 
                                         redis.srem(`entityDomain:${entity}`, domainId, (err, removeResult) => {
-                                            
+
                                             if (err){
                                                 const error = Boom.badImplementation( `An error ocurred removing the domain ${domainId} from the list of domains using the entity ${entity.id}`);
                                                 return callbackMapOfEntity(error);
@@ -145,7 +145,7 @@ module.exports = (request, reply) => {
                                             return callbackMapOfEntity(null);
                                         });
                                     }, (err, result) => {
-                                        
+
                                         if (err){
                                             return callbackRemoveLinkForEachEntity(err);
                                         }
@@ -153,7 +153,7 @@ module.exports = (request, reply) => {
                                     });
                                 }
                             ], (err, result) => {
-                                
+
                                 if (err){
                                     return callbackDeleteDomainFromEntities(err);
                                 }
@@ -163,7 +163,7 @@ module.exports = (request, reply) => {
                         (callbackDeleteDomainEntitiesList) => {
 
                             redis.del(`domainEntities:${domainId}`, (err, result) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation(`An error ocurred deleting the list of entities used by the domain ${domainId}`);
                                     return callbackDeleteDomainEntitiesList(error, null);
@@ -172,7 +172,7 @@ module.exports = (request, reply) => {
                             });
                         }
                     ], (err, result) => {
-                        
+
                         if (err){
                             return callbackDeleteDomainEntitiesListAndRemoveLink(err);
                         }
@@ -180,12 +180,12 @@ module.exports = (request, reply) => {
                     });
                 },
                 (callbackDeleteDomainFromTheAgent) => {
-                    
+
                     Async.waterfall([
                         (callbackGetAgent) => {
 
-                            redis.zscore(`agents`, domain.agent, (err, agentId) => {
-                                
+                            redis.zscore('agents', domain.agent, (err, agentId) => {
+
                                 if (err){
                                     const error = Boom.badImplementation( `An error ocurred retrieving the id of the agent ${agent}`);
                                     return callbackGetAgent(error);
@@ -196,7 +196,7 @@ module.exports = (request, reply) => {
                         (agentId, callbackRemoveFromAgentsList) => {
 
                             redis.zrem(`agentDomains:${agentId}`, domain.domainName, (err, removeResult) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation( `An error ocurred removing the domain ${domainId} from the domains list of the agent ${agentId}`);
                                     return callbackRemoveFromAgentsList(error);
@@ -205,15 +205,15 @@ module.exports = (request, reply) => {
                             });
                         }
                     ], (err, result) => {
-                        
+
                         if (err){
                             return callbackDeleteDomainFromTheAgent(err);
                         }
-                        return callbackDeleteDomainFromTheAgent(null);                        
-                    })
-                },
+                        return callbackDeleteDomainFromTheAgent(null);
+                    });
+                }
             ], (err, result) => {
-                
+
                 if (err){
                     return callbackDeleteDomainAndReferences(err);
                 }

@@ -15,10 +15,10 @@ const DomainController = {
     updateById: UpdateByIdController,
 
     deleteById: DeleteByIdController,
-    
+
     findEntitiesByDomainId: FindEntitiesByDomainIdController,
 
-    findIntentsByDomainId: FindIntentsByDomainIdController,  
+    findIntentsByDomainId: FindIntentsByDomainIdController
 };
 
 module.exports = DomainController;

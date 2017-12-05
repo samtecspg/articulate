@@ -152,6 +152,16 @@ const AgentRoutes = [
             validate: AgentValidator.export,
             handler: AgentController.export
         }
+    },
+    {
+        method: 'POST',
+        path: '/agent/import',
+        config: {
+            description: 'Create a new instance of the model and persist it into the data source based on a given dataset',
+            tags: ['api'],
+            validate: AgentValidator.import,
+            handler: AgentController.import
+        }
     }
 ];
 

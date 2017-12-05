@@ -1,7 +1,6 @@
 'use strict';
 
 const Joi = require('joi');
-const SlotModel = require('./slot.scenario.model');
 class ScenarioModel {
     static get schema() {
 

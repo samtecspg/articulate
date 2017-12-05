@@ -16,7 +16,6 @@ let server;
 let agentName = null;
 let agentId = null;
 let domainName = null;
-let entityName = null;
 let intentId = null;
 
 const createAgent = (callback) => {
@@ -107,7 +106,6 @@ const createEntity = (callback) => {
                 error: res.result
             }, null);
         }
-        entityName = res.result.entityName;
         return callback(null);
     });
 };
@@ -430,7 +428,7 @@ suite('/intent/{id}', () => {
             const updatedData = {
                 intentName: 'Test Intent Updated',
                 examples: [
-                    'Locate my {-1}',
+                    'Locate my {-1}'
                 ]
             };
 
@@ -470,7 +468,7 @@ suite('/intent/{id}', () => {
             });
         });
 
-        test('should respond with 200 successful operation', {timeout: 10000}, (done) => {
+        test('should respond with 200 successful operation', { timeout: 10000 }, (done) => {
 
             const data = {
                 id: intentId

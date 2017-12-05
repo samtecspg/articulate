@@ -11,7 +11,7 @@ module.exports = (userText, currentContext, intentScenario, missingEntity, recog
         timezone
     };
 
-    if (missingEntity.useWebhook === "true") {
+    if (missingEntity.useWebhook === 'true') {
         CallWebhook(intentScenario.webhookUrl ? intentScenario.webhookUrl : webhookUrl, response, (err, webhookResponse) => {
 
             if (err){

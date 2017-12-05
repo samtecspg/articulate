@@ -26,7 +26,7 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error ocurred getting the entities from the sorted set.');
                     return cb(error);
                 }
-                entities =_.chunk(entities, 2);
+                entities = _.chunk(entities, 2);
                 return cb(null, entities);
             });
         },
@@ -35,7 +35,7 @@ module.exports = (request, reply) => {
             Async.map(entities, (entity, callback) => {
 
                 server.inject('/entity/' + entity[1], (res) => {
-                    
+
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
                         return callback(error, null);

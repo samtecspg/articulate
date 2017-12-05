@@ -26,7 +26,7 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error ocurred getting the domains from the sorted set.');
                     return cb(error);
                 }
-                domains =_.chunk(domains, 2);
+                domains = _.chunk(domains, 2);
                 return cb(null, domains);
             });
         },
@@ -35,7 +35,7 @@ module.exports = (request, reply) => {
             Async.map(domains, (domain, callback) => {
 
                 server.inject('/domain/' + domain[1], (res) => {
-                    
+
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);
                         return callback(error, null);

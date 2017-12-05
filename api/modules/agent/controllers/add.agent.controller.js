@@ -2,7 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
-    
+
 module.exports = (request, reply) => {
 
     let agentId = null;
@@ -33,18 +33,17 @@ module.exports = (request, reply) => {
                 if (addResponse !== 0){
                     return cb(null);
                 }
-                else{
-                    const error = Boom.badRequest('An agent with this name already exists.');
-                    return cb(error, null);
-                }
+
+                const error = Boom.badRequest('An agent with this name already exists.');
+                return cb(error, null);
             });
         },
         agent: (cb) => {
 
-            agent = Object.assign({id: agentId}, agent);          
-            const flatAgent = Flat(agent);  
+            agent = Object.assign({ id: agentId }, agent);
+            const flatAgent = Flat(agent);
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the agent data.');
                     return cb(error);

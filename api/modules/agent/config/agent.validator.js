@@ -1,8 +1,11 @@
 'use strict';
 const AgentSchema = require('../../../models/index').Agent.schema;
 const EntitySchema = require('../../../models/index').Entity.schema;
+const ExampleSchema = require('../../../models/index').Example.schema;
 const DomainSchema = require('../../../models/index').Domain.schema;
 const IntentSchema = require('../../../models/index').Intent.schema;
+const ScenarioSchema = require('../../../models/index').Scenario.schema;
+const SlotSchema = require('../../../models/index').Slot.schema;
 const Joi = require('joi');
 
 class AgentValidate {
@@ -201,6 +204,51 @@ class AgentValidate {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+        this.import = {
+            payload: (() => {
+
+                return {
+                    agentName: AgentSchema.agentName.required(),
+                    webhookUrl: AgentSchema.webhookUrl,
+                    domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
+                    fallbackResponses: AgentSchema.fallbackResponses.required(),
+                    useWebhookFallback: AgentSchema.useWebhookFallback.required(),
+                    entities: Joi.array().items({
+                        entityName: EntitySchema.entityName.required(),
+                        examples: Joi.array().items({
+                            value: ExampleSchema.value.required(),
+                            synonyms: ExampleSchema.synonyms
+                        }).required()
+                    }),
+                    domains: Joi.array().items({
+                        domainName: DomainSchema.domainName.required(),
+                        enabled: DomainSchema.enabled.required(),
+                        intentThreshold: DomainSchema.intentThreshold.required(),
+                        lastTraining: DomainSchema.lastTraining,
+                        model: DomainSchema.model,
+                        intents: Joi.array().items({
+                            intentName: IntentSchema.intentName.required(),
+                            examples: IntentSchema.examples.required(),
+                            scenario: {
+                                scenarioName: ScenarioSchema.scenarioName.required(),
+                                slots: Joi.array().items({
+                                    slotName: SlotSchema.slotName.required(),
+                                    entity: SlotSchema.entity.required(),
+                                    isList: SlotSchema.isList.required(),
+                                    isRequired: SlotSchema.isRequired.required(),
+                                    useOriginal: SlotSchema.useOriginal.required(),
+                                    textPrompts: SlotSchema.textPrompts,
+                                    useWebhook: SlotSchema.useWebhook.required()
+                                }),
+                                intentResponses: ScenarioSchema.intentResponses.required(),
+                                useWebhook: ScenarioSchema.useWebhook.required(),
+                                webhookUrl: ScenarioSchema.webhookUrl
+                            }
+                        })
+                    })
                 };
             })()
         };

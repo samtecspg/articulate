@@ -28,11 +28,11 @@ module.exports = (userText, context, currentContext, intent, scenario, parseResu
                 const slotName = intentSlotNames[intentSlotEntitiesNames.indexOf(recognizedEntity.entity)];
                 if (isListSlots.indexOf(slotName) > -1){
                     if (!context[context.length - 1].slots[slotName]){
-                        const entityValue = GetEntityValue(recognizedEntity, userText)
+                        const entityValue = GetEntityValue(recognizedEntity, userText);
                         context[context.length - 1].slots[slotName] = {
                             value: [entityValue.value],
                             original: [entityValue.original]
-                        }
+                        };
                     }
                     else {
                         if (Array.isArray(context[context.length - 1].slots[slotName].value)){
@@ -41,14 +41,14 @@ module.exports = (userText, context, currentContext, intent, scenario, parseResu
                                 context[context.length - 1].slots[slotName] = {
                                     value: [],
                                     original: []
-                                }
+                                };
                             }
-                            const entityValue = GetEntityValue(recognizedEntity, userText)
+                            const entityValue = GetEntityValue(recognizedEntity, userText);
                             context[context.length - 1].slots[slotName].value.push(entityValue.value);
                             context[context.length - 1].slots[slotName].original.push(entityValue.original);
                         }
                         else {
-                            const entityValue = GetEntityValue(recognizedEntity, userText)
+                            const entityValue = GetEntityValue(recognizedEntity, userText);
                             context[context.length - 1].slots[slotName] = {
                                 value: [context[context.length - 1].slots[slotName].value],
                                 original: [context[context.length - 1].slots[slotName].original]
@@ -62,7 +62,7 @@ module.exports = (userText, context, currentContext, intent, scenario, parseResu
                     context[context.length - 1].slots[slotName] = GetEntityValue(recognizedEntity, userText);
                 }
             }
-            else{
+            else {
                 if (recognizedEntity.entity.indexOf('sys.spacy_')  !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {
                     context[context.length - 1].slots = context[context.length - 1].slots ? context[context.length - 1].slots : {};
                     context[context.length - 1].slots.sys = context[context.length - 1].slots.sys ? context[context.length - 1].slots.sys : {};

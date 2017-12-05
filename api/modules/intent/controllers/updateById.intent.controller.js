@@ -5,8 +5,6 @@ const Flat = require('flat');
 const IntentTools = require('../tools');
 const _ = require('lodash');
 
-const redis = require('redis');
-
 const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, cb) => {
 
     const oldExamples = _.cloneDeep(currentIntent.examples);
@@ -16,7 +14,8 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
     const flatIntent = Flat(currentIntent);
     const flatUpdateData = Flat(updateData);
     Object.keys(flatUpdateData).forEach( (key) => {
-        flatIntent[key] = flatUpdateData[key]; 
+
+        flatIntent[key] = flatUpdateData[key];
     });
 
     redis.del(`intent:${intentId}`, (err) => {
@@ -26,7 +25,7 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
             return cb(error);
         }
         redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
-            
+
             if (err){
                 const error = Boom.badImplementation('An error ocurred adding the intent data.');
                 return cb(error);
@@ -43,12 +42,12 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                 Async.series([
                     Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, oldExamples),
                     (callback) => {
-        
+
                         Async.waterfall([
                             Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
                             Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
                         ], (err) => {
-            
+
                             if (err){
                                 return callback(err);
                             }
@@ -56,21 +55,21 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                         });
                     }
                 ], (err) => {
-            
+
                     if (err) {
                         return cb(err);
                     }
-            
+
                     return cb(null, resultIntent);
                 });
-    
+
             }
             else {
                 return cb(null, resultIntent);
             }
         });
     });
-}
+};
 
 module.exports = (request, reply) => {
 
@@ -82,12 +81,12 @@ module.exports = (request, reply) => {
     const server = request.server;
     const redis = server.app.redis;
     const rasa = server.app.rasa;
-    
+
     Async.waterfall([
         (cb) => {
-            
+
             server.inject(`/intent/${intentId}`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified intent doesn\'t exists');
@@ -102,7 +101,7 @@ module.exports = (request, reply) => {
         (currentIntent, cb) => {
 
             redis.zscore('agents', currentIntent.agent, (err, id) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred getting the id of the agent.');
                     return cb(error);
@@ -111,16 +110,14 @@ module.exports = (request, reply) => {
                     agentId = id;
                     return cb(null, currentIntent);
                 }
-                else {
-                    const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
-                    return cb(error, null);
-                }
+                const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
+                return cb(error, null);
             });
         },
         (currentIntent, cb) => {
 
             redis.zscore(`agentDomains:${agentId}`, currentIntent.domain, (err, id) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred getting the id of the domain.');
                     return cb(error);
@@ -129,17 +126,15 @@ module.exports = (request, reply) => {
                     domainId = id;
                     return cb(null, currentIntent);
                 }
-                else {
-                    const error = Boom.badRequest(`The domain ${currentIntent.domain} doesn't exist`);
-                    return cb(error, null);
-                }
+                const error = Boom.badRequest(`The domain ${currentIntent.domain} doesn't exist`);
+                return cb(error, null);
             });
         },
         (currentIntent, cb) => {
 
             if (updateData.examples){
                 IntentTools.validateEntitiesTool(redis, agentId, updateData.examples, (err) => {
-                    
+
                     if (err) {
                         return cb(err);
                     }
@@ -157,7 +152,7 @@ module.exports = (request, reply) => {
                     (callback) => {
 
                         redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, updateData.intentName, (err, addResponse) => {
-                            
+
                             if (err) {
                                 const error = Boom.badImplementation(`An error ocurred adding the name ${updateData.intentName} to the intents list of the domain ${currentIntent.domain}.`);
                                 return callback(error);
@@ -165,16 +160,14 @@ module.exports = (request, reply) => {
                             if (addResponse !== 0){
                                 return callback(null);
                             }
-                            else {
-                                const error = Boom.badRequest(`A intent with the name ${updateData.intentName} already exists in the domain ${updateData.domain}.`);
-                                return callback(error, null);
-                            }
+                            const error = Boom.badRequest(`A intent with the name ${updateData.intentName} already exists in the domain ${updateData.domain}.`);
+                            return callback(error, null);
                         });
                     },
                     (callback) => {
-                        
+
                         redis.zrem(`domainIntents:${domainId}`, currentIntent.intentName, (err) => {
-                            
+
                             if (err){
                                 const error = Boom.badImplementation( `An error ocurred removing the name ${currentIntent.intentName} from the intents list of the agent ${currentIntent.agent}.`);
                                 return callback(error);
@@ -194,7 +187,7 @@ module.exports = (request, reply) => {
                         });
                     }
                 ], (err, result) => {
-                    
+
                     if (err){
                         return cb(err);
                     }
@@ -203,7 +196,7 @@ module.exports = (request, reply) => {
             }
             else {
                 updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, (err, result) => {
-                    
+
                     if (err){
                         const error = Boom.badImplementation('An error ocurred adding the intent data.');
                         return cb(error);
@@ -226,7 +219,7 @@ module.exports = (request, reply) => {
             }
             if (exists){
                 redis.hmset(`scenario:${result.id}`, { intent: result.intentName }, (err) => {
-                    
+
                     if (err){
                         const error = Boom.badImplementation('Intent updated. An error ocurred updating the new values in the scenario of the intent.');
                         return reply(error);

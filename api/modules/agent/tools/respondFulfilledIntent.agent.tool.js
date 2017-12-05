@@ -11,7 +11,7 @@ module.exports = (userText, currentContext, intentScenario, timezone, webhookUrl
         timezone
     };
 
-    if (intentScenario.useWebhook === "true") {
+    if (intentScenario.useWebhook === 'true') {
         CallWebhook(intentScenario.webhookUrl ? intentScenario.webhookUrl : webhookUrl, response, (err, webhookResponse) => {
 
             if (err){

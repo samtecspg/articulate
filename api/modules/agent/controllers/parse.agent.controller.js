@@ -23,11 +23,11 @@ module.exports = (request, reply) => {
                 agent: (callbackGetAgent) => {
 
                     server.inject('/agent/' + agentId, (res) => {
-                        
+
                         if (res.statusCode !== 200){
                             if (res.statusCode === 404){
                                 const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
-                                return callbackGetAgent(errorNotFound);       
+                                return callbackGetAgent(errorNotFound);
                             }
                             const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
                             return callbackGetAgent(error, null);
@@ -45,7 +45,7 @@ module.exports = (request, reply) => {
         },
         (agentData, callback) => {
 
-            const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'America/Kentucky/Louisville')
+            const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'America/Kentucky/Louisville');
             AgentTools.parseText(redis, rasa, duckling, text, timezoneToUse, agentData, (err, result) => {
 
                 if (err){
@@ -62,9 +62,9 @@ module.exports = (request, reply) => {
 
         Async.waterfall([
             (cb) => {
-                
+
                 redis.incr('documentId', (err, newDocumentId) => {
-    
+
                     if (err){
                         const error = Boom.badImplementation('An error ocurred getting the new document id.');
                         return cb(error);
@@ -74,11 +74,11 @@ module.exports = (request, reply) => {
                 });
             },
             (cb) => {
-    
-                document = Object.assign({id: documentId}, document);          
-                const flatDocument = Flat(document);  
+
+                document = Object.assign({ id: documentId }, document);
+                const flatDocument = Flat(document);
                 redis.hmset(`document:${documentId}`, flatDocument, (err) => {
-                    
+
                     if (err){
                         const error = Boom.badImplementation('An error ocurred adding the document data.');
                         return cb(error);
@@ -87,7 +87,7 @@ module.exports = (request, reply) => {
                 });
             }
         ], (err, result) => {
-    
+
             if (err){
                 return reply(err, null);
             }

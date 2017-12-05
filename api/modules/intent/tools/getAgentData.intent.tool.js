@@ -8,7 +8,7 @@ const getAgentData = (server, agentId, cb) => {
         (callback) => {
 
             server.inject(`/agent/${agentId}/domain`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, `An error ocurred getting the domainst of the agent ${agentId}`);
                     return callback(error, null);
@@ -24,7 +24,7 @@ const getAgentData = (server, agentId, cb) => {
                     entities: (cllbck) => {
 
                         server.inject(`/domain/${domain.id}/entity`, (res) => {
-                            
+
                             if (res.statusCode !== 200){
                                 const error = Boom.create(res.statusCode, `An error ocurred getting the entities of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
@@ -35,7 +35,7 @@ const getAgentData = (server, agentId, cb) => {
                     intents: (cllbck) => {
 
                         server.inject(`/domain/${domain.id}/intent`, (res) => {
-                            
+
                             if (res.statusCode !== 200){
                                 const error = Boom.create(res.statusCode, `An error ocurred getting the intents of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
@@ -43,18 +43,18 @@ const getAgentData = (server, agentId, cb) => {
                             return cllbck(null, res.result);
                         });
                     }
-                    
+
                 }, (err, result) => {
 
                     if (err){
                         return cllback(err);
                     }
-                    Object.assign(result, {domainId: domain.id, domainName: domain.domainName});
+                    Object.assign(result, { domainId: domain.id, domainName: domain.domainName });
                     return cllback(null, result);
                 });
 
             }, (err, result) => {
-                
+
                 if (err){
                     return callback(err, null);
                 }

@@ -3,7 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const ScenarioTools = require('../tools');
-    
+
 module.exports = (request, reply) => {
 
     let scenarioId = null;
@@ -15,12 +15,12 @@ module.exports = (request, reply) => {
 
     Async.series({
         fathersCheck: (cb) => {
-            
+
             Async.series([
                 (callback) => {
 
                     redis.zscore('agents', scenario.agent, (err, id) => {
-                        
+
                         if (err){
                             const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
                             return callback(error);
@@ -29,16 +29,14 @@ module.exports = (request, reply) => {
                             agentId = id;
                             return callback(null);
                         }
-                        else{
-                            const error = Boom.badRequest(`The agent ${scenario.agent} doesn't exist`);
-                            return callback(error, null);
-                        }
+                        const error = Boom.badRequest(`The agent ${scenario.agent} doesn't exist`);
+                        return callback(error, null);
                     });
                 },
                 (callback) => {
-                    
+
                     redis.zscore(`agentDomains:${agentId}`, scenario.domain, (err, id) => {
-                        
+
                         if (err){
                             const error = Boom.badImplementation(`An error ocurred checking if the domain ${scenario.domain} exists in the agent ${scenario.agent}.`);
                             return callback(error);
@@ -47,10 +45,8 @@ module.exports = (request, reply) => {
                             domainId = id;
                             return callback(null);
                         }
-                        else {
-                            const error = Boom.badRequest(`The domain ${scenario.domain} doesn't exist in the agent ${scenario.agent}`);
-                            return callback(error);
-                        }
+                        const error = Boom.badRequest(`The domain ${scenario.domain} doesn't exist in the agent ${scenario.agent}`);
+                        return callback(error);
                     });
                 },
                 (callback) => {
@@ -59,7 +55,7 @@ module.exports = (request, reply) => {
                         (cllbk) => {
 
                             redis.zscore(`domainIntents:${domainId}`, scenario.intent, (err, id) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation(`An error ocurred checking if the intent ${scenario.intent} exists in the domain ${scenario.domain}.`);
                                     return cllbk(error);
@@ -68,16 +64,14 @@ module.exports = (request, reply) => {
                                     intentId = id;
                                     return cllbk(null);
                                 }
-                                else {
-                                    const error = Boom.badRequest(`The intent ${scenario.intent} doesn't exist in the domain ${scenario.domain}`);
-                                    return cllbk(error);
-                                }
+                                const error = Boom.badRequest(`The intent ${scenario.intent} doesn't exist in the domain ${scenario.domain}`);
+                                return cllbk(error);
                             });
                         },
                         (cllbk) => {
 
                             ScenarioTools.validateEntitiesTool(redis, agentId, scenario.slots, (err) => {
-                                
+
                                 if (err) {
                                     return cllbk(err);
                                 }
@@ -114,10 +108,10 @@ module.exports = (request, reply) => {
         },
         scenario: (cb) => {
 
-            scenario = Object.assign({id: scenarioId}, scenario);          
-            const flatScenario = Flat(scenario);  
+            scenario = Object.assign({ id: scenarioId }, scenario);
+            const flatScenario = Flat(scenario);
             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the scenario data.');
                     return cb(error);

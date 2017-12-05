@@ -11,7 +11,6 @@ module.exports = (request, reply) => {
     const text = request.query.text;
     const timezone = request.query.timezone;
     const server = request.server;
-    const redis = server.app.redis;
 
     Async.waterfall([
         (callback) => {
@@ -20,28 +19,28 @@ module.exports = (request, reply) => {
                 parseResult: (cb) => {
 
                     server.inject(`/agent/${agentId}/parse?text=${text}${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
-                        
+
                         if (res.statusCode !== 200){
                             if (res.statusCode === 404){
                                 const errorNotFound = Boom.notFound(res.result.message);
-                                return cb(errorNotFound);       
+                                return cb(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, `An error ocurred parsing the document`);
+                            const error = Boom.create(res.statusCode, 'An error ocurred parsing the document');
                             return cb(error, null);
                         }
                         return cb(null, res.result);
                     });
                 },
                 agentData: (cb) => {
-                    
+
                     server.inject(`/agent/${agentId}/export`, (res) => {
-                        
+
                         if (res.statusCode !== 200){
                             if (res.statusCode === 400){
                                 const errorNotFound = Boom.notFound(res.result.message);
-                                return cb(errorNotFound);       
+                                return cb(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, `An error ocurred parsing the document`);
+                            const error = Boom.create(res.statusCode, 'An error ocurred parsing the document');
                             return cb(error, null);
                         }
                         return cb(null, res.result);

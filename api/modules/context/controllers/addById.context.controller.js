@@ -2,7 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
-    
+
 module.exports = (request, reply) => {
 
     let contextId = null;
@@ -36,10 +36,10 @@ module.exports = (request, reply) => {
         },
         context: (cb) => {
 
-            context = Object.assign({id: contextId}, context);          
-            const flatContext = Flat(context);  
+            context = Object.assign({ id: contextId }, context);
+            const flatContext = Flat(context);
             redis.hmset(`context:${contextId}`, flatContext, (err) => {
-                
+
                 if (err){
                     const error = Boom.badImplementation('An error ocurred adding the context data.');
                     return cb(error);

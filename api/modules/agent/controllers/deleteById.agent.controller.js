@@ -1,19 +1,18 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
 
 module.exports = (request, reply) => {
 
     const agentId = request.params.id;
     const server = request.server;
     const redis = server.app.redis;
-    
+
     Async.waterfall([
         (cb) => {
-            
+
             server.inject(`/agent/${agentId}`, (res) => {
-                
+
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified agent doesn\'t exists');
@@ -35,9 +34,9 @@ module.exports = (request, reply) => {
 
                             Async.waterfall([
                                 (callbackGetDomains) => {
-    
+
                                     server.inject(`/agent/${agentId}/domain`, (res) => {
-                                        
+
                                         if (res.statusCode !== 200){
                                             const error = Boom.create(res.statusCode, `An error ocurred getting the domains to delete from the agent ${agentId}`);
                                             return callbackGetDomains(error, null);
@@ -48,14 +47,15 @@ module.exports = (request, reply) => {
                                 (domains, callbackDeleteEachDomain) => {
 
                                     Async.map(domains, (domain, callbackMapOfDomain) => {
-                                        
+
                                         Async.waterfall([
                                             (callbackDeleteDomainSons) => {
+
                                                 Async.waterfall([
                                                     (callbackGetIntents) => {
-                        
+
                                                         server.inject(`/domain/${domain.id}/intent`, (res) => {
-                                                            
+
                                                             if (res.statusCode !== 200){
                                                                 const error = Boom.create(res.statusCode, `An error ocurred getting the intents to delete of the domain ${domainId}`);
                                                                 return callbackGetIntents(error, null);
@@ -64,14 +64,14 @@ module.exports = (request, reply) => {
                                                         });
                                                     },
                                                     (intents, callbackDeleteIntentAndScenario) => {
-                        
+
                                                         Async.map(intents, (intent, callbackMapOfIntent) => {
 
                                                             Async.parallel([
                                                                 (callbackDeleteIntent) => {
 
                                                                     redis.del(`intent:${intent.id}`, (err, result) => {
-                                                                        
+
                                                                         if (err){
                                                                             const error = Boom.badImplementation(`An error ocurred deleting the intent ${intent.id} linked with the agent ${agentId}`);
                                                                             return callbackDeleteIntent(error, null);
@@ -82,7 +82,7 @@ module.exports = (request, reply) => {
                                                                 (callbackDeleteScenario) => {
 
                                                                     redis.del(`scenario:${intent.id}`, (err, result) => {
-                                                                        
+
                                                                         if (err){
                                                                             const error = Boom.badImplementation(`An error ocurred deleting the scenario of the intent ${intent.id} linked with the agent ${agentId}`);
                                                                             return callbackDeleteScenario(error, null);
@@ -91,14 +91,14 @@ module.exports = (request, reply) => {
                                                                     });
                                                                 }
                                                             ], (err, result) => {
-                        
+
                                                                 if (err){
                                                                     return callbackMapOfIntent(err);
                                                                 }
                                                                 return callbackMapOfIntent(null);
-                                                            })
+                                                            });
                                                         }, (err, result) => {
-                                                            
+
                                                             if (err){
                                                                 return callbackDeleteIntentAndScenario(err);
                                                             }
@@ -106,7 +106,7 @@ module.exports = (request, reply) => {
                                                         });
                                                     }
                                                 ], (err, result) => {
-                        
+
                                                     if (err){
                                                         return callbackDeleteDomainSons(err);
                                                     }
@@ -117,9 +117,9 @@ module.exports = (request, reply) => {
 
                                                 Async.parallel([
                                                     (callbackDeleteDomain) => {
-                            
+
                                                         redis.del(`domain:${domain.id}`, (err, result) => {
-                                                            
+
                                                             if (err){
                                                                 const error = Boom.badImplementation(`An error ocurred deleting the domain ${domain.id} from the agent ${agentId}`);
                                                                 return callbackDeleteDomain(error, null);
@@ -128,9 +128,9 @@ module.exports = (request, reply) => {
                                                         });
                                                     },
                                                     (callbackDeleteDomainIntentsList) => {
-                            
+
                                                         redis.del(`domainIntents:${domain.id}`, (err, result) => {
-                                                            
+
                                                             if (err){
                                                                 const error = Boom.badImplementation(`An error ocurred deleting the list of intents for domain ${domain.id}`);
                                                                 return callbackDeleteDomainIntentsList(error, null);
@@ -139,9 +139,9 @@ module.exports = (request, reply) => {
                                                         });
                                                     },
                                                     (callbackDeleteDomainEntitiesList) => {
-                            
+
                                                         redis.del(`domainEntities:${domain.id}`, (err, result) => {
-                                                            
+
                                                             if (err){
                                                                 const error = Boom.badImplementation(`An error ocurred deleting the list of entities for domain ${domain.id}`);
                                                                 return callbackDeleteDomainEntitiesList(error, null);
@@ -150,7 +150,7 @@ module.exports = (request, reply) => {
                                                         });
                                                     }
                                                 ], (err, result) => {
-                                                    
+
                                                     if (err){
                                                         return callbackDeleteDomainAndReferences(err);
                                                     }
@@ -163,9 +163,9 @@ module.exports = (request, reply) => {
                                                 return callbackMapOfDomain(err);
                                             }
                                             return callbackMapOfDomain(null);
-                                        });                                    
+                                        });
                                     }, (err, result) => {
-                                        
+
                                         if (err){
                                             return callbackDeleteEachDomain(err);
                                         }
@@ -173,7 +173,7 @@ module.exports = (request, reply) => {
                                     });
                                 }
                             ], (err, result) => {
-                
+
                                 if (err){
                                     return callbackDeleteAgentDomains(err);
                                 }
@@ -184,9 +184,9 @@ module.exports = (request, reply) => {
 
                             Async.waterfall([
                                 (callbackGetEntities) => {
-    
+
                                     server.inject(`/agent/${agentId}/entity`, (res) => {
-                                        
+
                                         if (res.statusCode !== 200){
                                             const error = Boom.create(res.statusCode, `An error ocurred getting the entities to delete of the agent ${agentId}`);
                                             return callbackGetEntities(error, null);
@@ -197,12 +197,12 @@ module.exports = (request, reply) => {
                                 (entities, callbackDeleteEachEntity) => {
 
                                     Async.map(entities, (entity, callbackMapOfEntity) => {
-                                        
+
                                         Async.parallel([
                                             (callbackDeleteEntity) => {
 
                                                 redis.del(`entity:${entity.id}`, (err, result) => {
-                                                    
+
                                                     if (err){
                                                         const error = Boom.badImplementation(`An error ocurred deleting the entity ${entity.id} linked with the agent ${agentId}`);
                                                         return callbackDeleteEntity(error, null);
@@ -211,9 +211,9 @@ module.exports = (request, reply) => {
                                                 });
                                             },
                                             (callbackDeleteEntitiesDomainList) => {
-                    
+
                                                 redis.del(`entityDomain:${entity.id}`, (err, result) => {
-                                                    
+
                                                     if (err){
                                                         const error = Boom.badImplementation(`An error ocurred deleting the list of domains for entity ${entity.id}`);
                                                         return callbackDeleteEntitiesDomainList(error, null);
@@ -222,14 +222,14 @@ module.exports = (request, reply) => {
                                                 });
                                             }
                                         ], (err, result) => {
-                                            
+
                                             if (err){
                                                 return callbackMapOfEntity(err);
                                             }
                                             return callbackMapOfEntity(null, result);
-                                        });                                 
+                                        });
                                     }, (err, result) => {
-                                        
+
                                         if (err){
                                             return callbackDeleteEachEntity(err);
                                         }
@@ -237,7 +237,7 @@ module.exports = (request, reply) => {
                                     });
                                 }
                             ], (err, result) => {
-                
+
                                 if (err){
                                     return callbackDeleteAgentEntities(err);
                                 }
@@ -253,9 +253,9 @@ module.exports = (request, reply) => {
                     });
                 },
                 (callback) => {
-                    
-                    redis.zrem(`agents`, currentAgent.agentName, (err, removeResult) => {
-                        
+
+                    redis.zrem('agents', currentAgent.agentName, (err, removeResult) => {
+
                         if (err){
                             const error = Boom.badImplementation( `An error ocurred removing the name ${currentAgent.agentName} from the agents list of the agents`);
                             return callback(error);
@@ -269,7 +269,7 @@ module.exports = (request, reply) => {
                         (callbackDeleteAgentSet) => {
 
                             redis.del(`agent:${agentId}`, (err, result) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation(`An error ocurred deleting the agent ${agent.id}`);
                                     return callbackDeleteAgentSet(error, null);
@@ -280,9 +280,9 @@ module.exports = (request, reply) => {
                         (callbackDeleteDomainRecognitionLog) => {
 
                             redis.del(`agentDomainRecognizer:${agentId}`, (err, result) => {
-                                
+
                                 if (err){
-                                    const error = Boom.badImplementation(`An error ocurred deleting the agent domain recognition log`);
+                                    const error = Boom.badImplementation('An error ocurred deleting the agent domain recognition log');
                                     return callbackDeleteDomainRecognitionLog(error, null);
                                 }
                                 return callbackDeleteDomainRecognitionLog(null);
@@ -291,7 +291,7 @@ module.exports = (request, reply) => {
                         (callbackDeleteAgentDomainsList) => {
 
                             redis.del(`agentDomains:${agentId}`, (err, result) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation(`An error ocurred deleting the agent ${agent.id}`);
                                     return callbackDeleteAgentDomainsList(error, null);
@@ -302,16 +302,16 @@ module.exports = (request, reply) => {
                         (callbackDeleteAgentEntitiesList) => {
 
                             redis.del(`agentEntities:${agentId}`, (err, result) => {
-                                
+
                                 if (err){
                                     const error = Boom.badImplementation(`An error ocurred deleting the agent ${agent.id}`);
                                     return callbackDeleteAgentEntitiesList(error, null);
                                 }
                                 return callbackDeleteAgentEntitiesList(null);
                             });
-                        },
+                        }
                     ], (err, result) => {
-                        
+
                         if (err){
                             return callback(err);
                         }
@@ -319,7 +319,7 @@ module.exports = (request, reply) => {
                     });
                 }
             ], (err, result) => {
-                
+
                 if (err){
                     return cb(err);
                 }

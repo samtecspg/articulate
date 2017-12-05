@@ -39,7 +39,7 @@ const getDucklingParse = (textToParse, timezone, language, ducklingService, call
         tz: timezone
     };
 
-    Wreck.post(ducklingService+ '/parse', {
+    Wreck.post(ducklingService + '/parse', {
         payload: Querystring.stringify(ducklingPayload),
         headers: {
             'content-type': 'application/x-www-form-urlencoded'
