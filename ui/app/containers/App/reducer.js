@@ -1,35 +1,38 @@
 import { fromJS } from 'immutable';
 
 import {
-  LOAD_AGENTS,
-  LOAD_AGENTS_SUCCESS,
-  LOAD_AGENTS_ERROR,
-  LOAD_AGENT_DOMAINS,
-  LOAD_AGENT_DOMAINS_SUCCESS,
-  LOAD_AGENT_DOMAINS_ERROR,
-  LOAD_AGENT_ENTITIES,
-  LOAD_AGENT_ENTITIES_SUCCESS,
-  LOAD_AGENT_ENTITIES_ERROR,
-  CREATE_AGENT,
-  CREATE_AGENT_SUCCESS,
-  CREATE_AGENT_ERROR,
-  CREATE_DOMAIN,
-  CREATE_DOMAIN_SUCCESS,
-  CREATE_DOMAIN_ERROR,
-  CREATE_WEBHOOK,
-  CREATE_WEBHOOK_SUCCESS,
-  CREATE_WEBHOOK_ERROR,
-  CREATE_INTENT,
-  CREATE_INTENT_SUCCESS,
-  CREATE_INTENT_ERROR,
-  CREATE_SCENARIO_SUCCESS,
-  CREATE_SCENARIO_ERROR,
-  CREATE_ENTITY,
-  CREATE_ENTITY_SUCCESS,
-  CREATE_ENTITY_ERROR,
   CONVERSE,
-  CONVERSE_SUCCESS,
   CONVERSE_ERROR,
+  CONVERSE_SUCCESS,
+  CREATE_AGENT,
+  CREATE_AGENT_ERROR,
+  CREATE_AGENT_SUCCESS,
+  CREATE_DOMAIN,
+  CREATE_DOMAIN_ERROR,
+  CREATE_DOMAIN_SUCCESS,
+  CREATE_ENTITY,
+  CREATE_ENTITY_ERROR,
+  CREATE_ENTITY_SUCCESS,
+  CREATE_INTENT,
+  CREATE_INTENT_ERROR,
+  CREATE_INTENT_SUCCESS,
+  CREATE_SCENARIO_ERROR,
+  CREATE_SCENARIO_SUCCESS,
+  CREATE_WEBHOOK,
+  CREATE_WEBHOOK_ERROR,
+  CREATE_WEBHOOK_SUCCESS,
+  LOAD_AGENT_DOMAINS,
+  LOAD_AGENT_DOMAINS_ERROR,
+  LOAD_AGENT_DOMAINS_SUCCESS,
+  LOAD_AGENT_ENTITIES,
+  LOAD_AGENT_ENTITIES_ERROR,
+  LOAD_AGENT_ENTITIES_SUCCESS,
+  LOAD_AGENTS,
+  LOAD_AGENTS_ERROR,
+  LOAD_AGENTS_SUCCESS,
+  LOAD_DOMAINS_INTENTS,
+  LOAD_DOMAINS_INTENTS_ERROR,
+  LOAD_DOMAINS_INTENTS_SUCCESS,
 } from './constants';
 
 // The initial state of the App
@@ -177,6 +180,19 @@ function appReducer(state = initialState, action) {
       return state
         .set('loadingConversation', false)
         .update('conversation', conversation => conversation.push({ message: 'I\'m sorry! I\'m having issues connecting with my brain. Can you retry later', author: 'agent' }));
+    case LOAD_DOMAINS_INTENTS:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('domainIntents', false);
+    case LOAD_DOMAINS_INTENTS_SUCCESS:
+      return state
+        .set('domainIntents', action.data)
+        .set('loading', false);
+    case LOAD_DOMAINS_INTENTS_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
     default:
       return state;
   }

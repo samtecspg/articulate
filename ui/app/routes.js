@@ -67,6 +67,50 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/domains',
+      name: 'domains',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/DomainListPage/reducer'),
+          import('containers/DomainListPage/sagas'),
+          import('containers/DomainListPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('domains', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/intents',
+      name: 'intents',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/IntentListPage/reducer'),
+          import('containers/IntentListPage/sagas'),
+          import('containers/IntentListPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('intents', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '/intents/create',
       name: 'intents',
       getComponent(nextState, cb) {

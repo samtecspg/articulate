@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import Table2 from 'components/Table2';
+import Table2 from '../../components/Table2';
 import columns from './columnDefinition';
 
 class DomainsTable extends React.Component { // eslint-disable-line react/prefer-stateless-function

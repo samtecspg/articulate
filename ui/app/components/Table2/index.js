@@ -15,6 +15,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
     this.generateColumnDefinition = this.generateColumnDefinition.bind(this);
     this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
     this.searchTable = this.searchTable.bind(this);
+    this.updateData = this.updateData.bind(this);
   }
 
   state = {
@@ -24,15 +25,23 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
   };
 
   componentWillMount() {
-    this.setState({
-      initialData: this.props.data,
-      data: this.props.data,
-      filterFields: _(this.props.columns).filter('filterable').map('accessor').value(),
-    });
+    this.updateData(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.updateData(nextProps);
   }
 
   onChangeSearchInput(event) {
     this.searchTable(event.target.value);
+  }
+
+  updateData(props) {
+    this.setState({
+      initialData: props.data,
+      data: props.data,
+      filterFields: _(props.columns).filter('filterable').map('accessor').value(),
+    });
   }
 
   searchTable(searchText) {

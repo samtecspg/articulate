@@ -1,69 +1,69 @@
 import {
-    LOAD_AGENTS,
-    LOAD_AGENTS_SUCCESS,
-    LOAD_AGENTS_ERROR,
-    LOAD_AGENT_DOMAINS,
-    LOAD_AGENT_DOMAINS_SUCCESS,
-    LOAD_AGENT_DOMAINS_ERROR,
-    LOAD_AGENT_ENTITIES,
-    LOAD_AGENT_ENTITIES_SUCCESS,
-    LOAD_AGENT_ENTITIES_ERROR,
-    CREATE_AGENT,
-    CREATE_AGENT_SUCCESS,
-    CREATE_AGENT_ERROR,
-    CREATE_DOMAIN,
-    CREATE_DOMAIN_SUCCESS,
-    CREATE_DOMAIN_ERROR,
-    CREATE_WEBHOOK,
-    CREATE_WEBHOOK_SUCCESS,
-    CREATE_WEBHOOK_ERROR,
-    CREATE_INTENT,
-    CREATE_INTENT_SUCCESS,
-    CREATE_INTENT_ERROR,
-    CREATE_SCENARIO_SUCCESS,
-    CREATE_SCENARIO_ERROR,
-    CREATE_ENTITY,
-    CREATE_ENTITY_SUCCESS,
-    CREATE_ENTITY_ERROR,
-    CONVERSE,
-    CONVERSE_SUCCESS,
-    CONVERSE_ERROR,
-  } from './constants';
-  
+  LOAD_AGENTS,
+  LOAD_AGENTS_SUCCESS,
+  LOAD_AGENTS_ERROR,
+  LOAD_AGENT_DOMAINS,
+  LOAD_AGENT_DOMAINS_SUCCESS,
+  LOAD_AGENT_DOMAINS_ERROR,
+  LOAD_AGENT_ENTITIES,
+  LOAD_AGENT_ENTITIES_SUCCESS,
+  LOAD_AGENT_ENTITIES_ERROR,
+  CREATE_AGENT,
+  CREATE_AGENT_SUCCESS,
+  CREATE_AGENT_ERROR,
+  CREATE_DOMAIN,
+  CREATE_DOMAIN_SUCCESS,
+  CREATE_DOMAIN_ERROR,
+  CREATE_WEBHOOK,
+  CREATE_WEBHOOK_SUCCESS,
+  CREATE_WEBHOOK_ERROR,
+  CREATE_INTENT,
+  CREATE_INTENT_SUCCESS,
+  CREATE_INTENT_ERROR,
+  CREATE_SCENARIO_SUCCESS,
+  CREATE_SCENARIO_ERROR,
+  CREATE_ENTITY,
+  CREATE_ENTITY_SUCCESS,
+  CREATE_ENTITY_ERROR,
+  CONVERSE,
+  CONVERSE_SUCCESS,
+  CONVERSE_ERROR, LOAD_DOMAINS_INTENTS, LOAD_DOMAINS_INTENTS_SUCCESS, LOAD_DOMAINS_INTENTS_ERROR,
+} from './constants';
+
   export function loadAgents() {
     return {
       type: LOAD_AGENTS,
     };
   }
-  
+
   export function agentsLoaded(data) {
     return {
       type: LOAD_AGENTS_SUCCESS,
       data,
     };
   }
-  
+
   export function agentsLoadingError(error) {
     return {
       type: LOAD_AGENTS_ERROR,
       error,
     };
   }
-  
+
   export function loadAgentDomains(agentId) {
     return {
       type: LOAD_AGENT_DOMAINS,
       agentId
     };
   }
-  
+
   export function agentDomainsLoaded(data) {
     return {
       type: LOAD_AGENT_DOMAINS_SUCCESS,
       data,
     };
   }
-  
+
   export function agentDomainsLoadingError(error) {
     return {
       type: LOAD_AGENT_DOMAINS_ERROR,
@@ -77,27 +77,27 @@ import {
       agentId
     };
   }
-  
+
   export function agentEntitiesLoaded(data) {
     return {
       type: LOAD_AGENT_ENTITIES_SUCCESS,
       data,
     };
   }
-  
+
   export function agentEntitiesLoadingError(error) {
     return {
       type: LOAD_AGENT_ENTITIES_ERROR,
       error,
     };
   }
-  
+
   export function createAgent() {
     return {
       type: CREATE_AGENT,
     };
   }
-  
+
   export function agentCreated(data, id) {
     return {
       type: CREATE_AGENT_SUCCESS,
@@ -105,20 +105,20 @@ import {
       id,
     };
   }
-  
+
   export function agentCreationError(error) {
     return {
       type: CREATE_AGENT_ERROR,
       error,
     };
   }
-  
+
   export function createDomain() {
     return {
       type: CREATE_DOMAIN,
     };
   }
-  
+
   export function domainCreated(data, id) {
     return {
       type: CREATE_DOMAIN_SUCCESS,
@@ -126,7 +126,7 @@ import {
       id,
     };
   }
-  
+
   export function domainCreationError(error) {
     return {
       type: CREATE_DOMAIN_ERROR,
@@ -139,7 +139,7 @@ import {
       type: CREATE_WEBHOOK,
     };
   }
-  
+
   export function webhookCreated(data, id) {
     return {
       type: CREATE_WEBHOOK_SUCCESS,
@@ -147,20 +147,20 @@ import {
       id,
     };
   }
-  
+
   export function webhookCreationError(error) {
     return {
       type: CREATE_WEBHOOK_ERROR,
       error,
     };
   }
-  
+
   export function createIntent() {
     return {
       type: CREATE_INTENT,
     };
   }
-  
+
   export function intentCreated(data, id) {
     return {
       type: CREATE_INTENT_SUCCESS,
@@ -168,7 +168,7 @@ import {
       id,
     };
   }
-  
+
   export function intentCreationError(error) {
     return {
       type: CREATE_INTENT_ERROR,
@@ -183,20 +183,20 @@ import {
       id,
     };
   }
-  
+
   export function scenarioCreationError(error) {
     return {
       type: CREATE_SCENARIO_ERROR,
       error,
     };
   }
-  
+
   export function createEntity() {
     return {
       type: CREATE_ENTITY,
     };
   }
-  
+
   export function entityCreated(data, id) {
     return {
       type: CREATE_ENTITY_SUCCESS,
@@ -204,7 +204,7 @@ import {
       id,
     };
   }
-  
+
   export function entityCreationError(error) {
     return {
       type: CREATE_ENTITY_ERROR,
@@ -231,3 +231,24 @@ import {
       type: CONVERSE_ERROR,
     };
   }
+
+export function loadDomainIntents(domainId) {
+  return {
+    type: LOAD_DOMAINS_INTENTS,
+    domainId,
+  };
+}
+
+export function domainIntentsLoaded(data) {
+  return {
+    type: LOAD_DOMAINS_INTENTS_SUCCESS,
+    data,
+  };
+}
+
+export function domainIntentsLoadingError(error) {
+  return {
+    type: LOAD_DOMAINS_INTENTS_ERROR,
+    error,
+  };
+}

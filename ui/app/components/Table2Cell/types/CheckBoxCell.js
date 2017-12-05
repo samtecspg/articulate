@@ -4,8 +4,8 @@
  *
  */
 
-import React from 'react';
 import _ from 'lodash';
+import React from 'react';
 
 class CheckBoxCell extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor() {
@@ -24,9 +24,10 @@ class CheckBoxCell extends React.Component { // eslint-disable-line react/prefer
 
   render() {
     const { value } = this.props;
+    const checked = _.isString(value) ? (value === 'true') : value;
     return (
       <div key={this.state.id} className="center-align">
-        <input type="checkbox" id={this.state.id} checked={!!value} onChange={this.onChange} />
+        <input type="checkbox" id={this.state.id} checked={!!checked} onChange={this.onChange} />
         <label htmlFor={this.state.id}>&nbsp;</label>
       </div>
     );
@@ -34,7 +35,10 @@ class CheckBoxCell extends React.Component { // eslint-disable-line react/prefer
 }
 
 CheckBoxCell.propTypes = {
-  value: React.PropTypes.bool.isRequired,
+  value: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.bool,
+  ]).isRequired,
   onChange: React.PropTypes.func.isRequired,
 };
 

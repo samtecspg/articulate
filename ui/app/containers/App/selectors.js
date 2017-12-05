@@ -109,6 +109,11 @@ const makeSelectLocationState = () => {
   };
 };
 
+const makeSelectDomainIntents = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('domainIntents')
+);
+
 export {
   selectGlobal,
   makeSelectAgents,
@@ -130,4 +135,5 @@ export {
   makeSelectScenario,
   makeSelectEntity,
   makeSelectLocationState,
+  makeSelectDomainIntents,
 };
