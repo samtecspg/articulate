@@ -7,7 +7,7 @@ export default defineMessages({
   },
   domainListTitle: {
     id: 'boilerplate.containers.IntentListPage.list.title',
-    defaultMessage: 'Agent Domains',
+    defaultMessage: 'Domain Intents',
   },
   domain: {
     id: 'boilerplate.containers.IntentListPage.list.title',
