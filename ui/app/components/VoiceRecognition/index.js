@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 class VoiceRecognition extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     const SpeechRecognition = window.SpeechRecognition
       || window.webkitSpeechRecognition
       || window.mozSpeechRecognition
       || window.msSpeechRecognition
-      || window.oSpeechRecognition
+      || window.oSpeechRecognition;
 
     if (SpeechRecognition != null) {
-      this.recognition = this.createRecognition(SpeechRecognition)
+      this.recognition = this.createRecognition(SpeechRecognition);
     } else {
-      console.warn('The current browser does not support the SpeechRecognition API.')
+      console.warn('The current browser does not support the SpeechRecognition API.');
     }
   }
 
@@ -21,77 +21,77 @@ class VoiceRecognition extends Component {
     const defaults = {
       continuous: true,
       interimResults: false,
-      lang: 'en-US'
-    }
+      lang: 'en-US',
+    };
 
-    const options = Object.assign({}, defaults, this.props)
+    const options = Object.assign({}, defaults, this.props);
 
-    let recognition = new SpeechRecognition()
+    let recognition = new SpeechRecognition();
 
-    recognition.continuous = options.continuous
-    recognition.interimResults = options.interimResults
-    recognition.lang = options.lang
+    recognition.continuous = options.continuous;
+    recognition.interimResults = options.interimResults;
+    recognition.lang = options.lang;
 
-    return recognition
-  }
+    return recognition;
+  };
 
   bindResult = (event) => {
-    let interimTranscript = ''
-    let finalTranscript = ''
+    let interimTranscript = '';
+    let finalTranscript = '';
 
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
-        finalTranscript += event.results[i][0].transcript
+        finalTranscript += event.results[i][0].transcript;
       } else {
-        interimTranscript += event.results[i][0].transcript
+        interimTranscript += event.results[i][0].transcript;
       }
     }
 
-    this.props.onResult({ interimTranscript, finalTranscript })
-  }
+    this.props.onResult({ interimTranscript, finalTranscript });
+  };
 
   start = () => {
-    this.recognition.start()
-  }
+    this.recognition.start();
+  };
 
   stop = () => {
-    this.recognition.stop()
-  }
+    this.recognition.stop();
+  };
 
   abort = () => {
-    this.recognition.abort()
-  }
+    this.recognition.abort();
+  };
 
-  componentWillReceiveProps ({ stop }) {
+  componentWillReceiveProps({ stop }) {
     if (stop) {
-      this.stop()
+      this.stop();
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const events = [
       { name: 'start', action: this.props.onStart },
       { name: 'end', action: this.props.onEnd },
-      { name: 'error', action: this.props.onError }
-    ]
+      { name: 'error', action: this.props.onError },
+    ];
 
     events.forEach(event => {
-      this.recognition.addEventListener(event.name, event.action)
-    })
+      this.recognition.addEventListener(event.name, event.action);
+    });
 
-    this.recognition.addEventListener('result', this.bindResult)
+    this.recognition.addEventListener('result', this.bindResult);
 
-    this.start()
+    this.start();
   }
 
-  componentWillUnmount () {
-    this.abort()
+  componentWillUnmount() {
+    this.abort();
   }
 
-  render () {
-    return null
+  render() {
+    return null;
   }
 }
 
-export default VoiceRecognition
+export default VoiceRecognition;
 

@@ -20,7 +20,6 @@ describe('formatTranslationMessages', () => {
     expect(result).toEqual({ a: 'a' });
   });
 
-
   it('should combine default locale and current locale when not DEFAULT_LOCALE', () => {
     const result = formatTranslationMessages('', esTranslationMessages);
 

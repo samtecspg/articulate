@@ -12,7 +12,7 @@ export default defineMessages({
   },
   createAgentDescription: {
     id: 'boilerplate.containers.AgentPage.create_agent.description',
-    defaultMessage: 'An agent is capable of understand natural language and transform it into recognizable actions. ' + 
+    defaultMessage: 'An agent is capable of understand natural language and transform it into recognizable actions. ' +
     'You can insert agents in you environment to improve the user experience with your app.',
   },
   agentName: {

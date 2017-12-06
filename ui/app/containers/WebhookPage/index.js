@@ -1,34 +1,44 @@
-import React from 'react';
-import Helmet from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
+import ActionButton from 'components/ActionButton';
+import Content from 'components/Content';
+import ContentHeader from 'components/ContentHeader';
+import Form from 'components/Form';
 
 import FormTextInput from 'components/FormTextInput';
 import Header from 'components/Header';
-import ContentHeader from 'components/ContentHeader';
-import Content from 'components/Content';
-import Form from 'components/Form';
-import ActionButton from 'components/ActionButton';
 
-import { Input, Row } from 'react-materialize';
+import {
+  createWebhook,
+  loadAgents,
+} from 'containers/App/actions';
+import {
+  makeSelectAgents,
+  makeSelectCurrentAgent,
+  makeSelectError,
+  makeSelectLoading,
+  makeSelectWebhook,
+} from 'containers/App/selectors';
+import React from 'react';
+import Helmet from 'react-helmet';
 
-import messages from './messages';
-
-import { createWebhook, loadAgents } from 'containers/App/actions';
-import { makeSelectCurrentAgent, makeSelectAgents, makeSelectWebhook, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
+import {
+  Input,
+  Row,
+} from 'react-materialize';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import { changeWebhookData } from './actions';
+
+import messages from './messages';
 import { makeSelectWebhookData } from './selectors';
 
 const returnFormattedOptions = (options) => {
-  return options.map( (option, index) => {
+  return options.map((option, index) => {
     return (
-        <option key={index} value={option.value}>
-          {option.text}
-        </option>
-      )
+      <option key={index} value={option.value}>
+        {option.text}
+      </option>
+    );
   });
 };
 
@@ -46,14 +56,14 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
       webhook,
     };
     let agentsSelect = [];
-    if(agents !== false){
-      agentsSelect = agents.map( (agent) => {
+    if (agents !== false) {
+      agentsSelect = agents.map((agent) => {
         return {
           value: agent.id,
           text: agent.agentName,
-        }
+        };
       });
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your webhook', disabled: 'disabled'});
+      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your webhook', disabled: 'disabled' });
     }
 
     return (
@@ -64,18 +74,20 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
             { name: 'description', content: 'Add a webhook to your agent' },
           ]}
         />
-        <Header/>
+        <Header />
         <Content>
           <ContentHeader title={messages.createWebhookTitle} subTitle={messages.createWebhookDescription} />
           <Form>
             <Row>
-              <Input s={12} 
+              <Input
+                s={12}
                 name='agent'
-                type='select' 
-                label={messages.agent.defaultMessage} 
+                type='select'
+                label={messages.agent.defaultMessage}
                 defaultValue={this.props.webhookData.agent ? this.props.webhookData.agent : 'default'}
-                onChange={this.props.onChangeWebhookData.bind(null, 'agent')}>
-                    {returnFormattedOptions(agentsSelect)}
+                onChange={this.props.onChangeWebhookData.bind(null, 'agent')}
+              >
+                {returnFormattedOptions(agentsSelect)}
               </Input>
               <FormTextInput
                 label={messages.url}
@@ -85,7 +97,7 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
                 onChange={this.props.onChangeWebhookData.bind(null, 'webhookUrl')}
                 required={true}
                 tooltip={messages.urlTooltip.defaultMessage}
-                />
+              />
               {/*
               <div className="input-field col s6">
                 <FormTextInput
@@ -149,7 +161,7 @@ WebhookPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onComponentMounting: (evt) => {
-      dispatch(loadAgents())
+      dispatch(loadAgents());
     },
     onChangeWebhookData: (field, evt) => dispatch(changeWebhookData({ value: evt.target.value, field })),
     onSubmitForm: (evt) => {

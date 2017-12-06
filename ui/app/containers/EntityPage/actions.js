@@ -1,9 +1,9 @@
 import {
+  ADD_EXAMPLE,
+  ADD_SYNONYM,
   CHANGE_ENTITY_DATA,
   REMOVE_EXAMPLE,
-  ADD_EXAMPLE,
   REMOVE_SYNONYM,
-  ADD_SYNONYM,
 } from './constants';
 
 export function changeEntityData(payload) {

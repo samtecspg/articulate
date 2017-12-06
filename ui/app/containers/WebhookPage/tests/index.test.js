@@ -2,19 +2,24 @@
  * Test the WebhookPage
  */
 
-import React from 'react';
-import { shallow, mount } from 'enzyme';
-import { IntlProvider } from 'react-intl';
-
 import ReposList from 'components/ReposList';
-import { WebhookPage, mapDispatchToProps } from '../index';
-import { changeUsername } from '../actions';
+import {
+  mount,
+  shallow,
+} from 'enzyme';
+import React from 'react';
+import { IntlProvider } from 'react-intl';
 import { loadRepos } from '../../App/actions';
+import { changeUsername } from '../actions';
+import {
+  mapDispatchToProps,
+  WebhookPage,
+} from '../index';
 
 describe('<WebhookPage />', () => {
   it('should render the repos list', () => {
     const renderedComponent = shallow(
-      <WebhookPage loading error={false} repos={[]} />
+      <WebhookPage loading error={false} repos={[]} />,
     );
     expect(renderedComponent.contains(<ReposList loading error={false} repos={[]} />)).toEqual(true);
   });
@@ -25,10 +30,11 @@ describe('<WebhookPage />', () => {
       <IntlProvider locale="en">
         <WebhookPage
           username="Not Empty"
-          onChangeUsername={() => {}}
+          onChangeUsername={() => {
+          }}
           onSubmitForm={submitSpy}
         />
-      </IntlProvider>
+      </IntlProvider>,
     );
     expect(submitSpy).toHaveBeenCalled();
   });
@@ -67,7 +73,8 @@ describe('<WebhookPage />', () => {
 
     it('should preventDefault if called with event', () => {
       const preventDefault = jest.fn();
-      const result = mapDispatchToProps(() => {});
+      const result = mapDispatchToProps(() => {
+      });
       const evt = { preventDefault };
       result.onSubmitForm(evt);
       expect(preventDefault).toHaveBeenCalledWith();

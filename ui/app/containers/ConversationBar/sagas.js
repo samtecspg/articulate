@@ -1,12 +1,20 @@
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
-import { 
-  CONVERSE,
-  CONVERSE_SUCCESS,
-  CONVERSE_ERROR, } from 'containers/App/constants';
 import {
+  converseError,
   converseRespond,
-  converseError } from 'containers/App/actions';
+} from 'containers/App/actions';
+import {
+  CONVERSE,
+  CONVERSE_ERROR,
+  CONVERSE_SUCCESS,
+} from 'containers/App/constants';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  call,
+  cancel,
+  put,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import request from 'utils/request';
 
@@ -16,9 +24,9 @@ export function* postMessage(data) {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-  }
+  };
 
   try {
     const response = yield call(request, requestURL, requestOptions);

@@ -4,7 +4,7 @@ const selectEntity = (state) => state.get('entity');
 
 const makeSelectEntityData = () => createSelector(
   selectEntity,
-  (entityState) => entityState.get('entityData').toJS()
+  (entityState) => entityState.get('entityData').toJS(),
 );
 
 export {

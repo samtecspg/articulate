@@ -2,16 +2,16 @@
  * Test async injectors
  */
 
+import { fromJS } from 'immutable';
 import { memoryHistory } from 'react-router';
 import { put } from 'redux-saga/effects';
-import { fromJS } from 'immutable';
 
 import configureStore from 'store';
 
 import {
+  getAsyncInjectors,
   injectAsyncReducer,
   injectAsyncSagas,
-  getAsyncInjectors,
 } from '../asyncInjectors';
 
 // Fixtures
@@ -91,7 +91,8 @@ describe('asyncInjectors', () => {
         const injectReducer = injectAsyncReducer(store);
 
         injectReducer('test', reducer);
-        injectReducer('test', () => {});
+        injectReducer('test', () => {
+        });
 
         expect(store.asyncReducers.test.toString()).toEqual(reducer.toString());
       });

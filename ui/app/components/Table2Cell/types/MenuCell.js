@@ -3,7 +3,6 @@
  * StringCell
  *
  */
-import _ from 'lodash';
 import React from 'react';
 import { Icon } from 'react-materialize';
 import Dropdown from '../../Dropdown';

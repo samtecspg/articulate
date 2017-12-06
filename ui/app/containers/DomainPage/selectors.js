@@ -4,7 +4,7 @@ const selectDomain = (state) => state.get('domain');
 
 const makeSelectDomainData = () => createSelector(
   selectDomain,
-  (domainState) => domainState.get('domainData').toJS()
+  (domainState) => domainState.get('domainData').toJS(),
 );
 
 export {

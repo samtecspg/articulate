@@ -1,9 +1,7 @@
 import { fromJS } from 'immutable';
+import { changeUsername, } from '../actions';
 
 import homeReducer from '../reducer';
-import {
-  changeUsername,
-} from '../actions';
 
 describe('homeReducer', () => {
   let state;

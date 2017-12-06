@@ -1,12 +1,12 @@
 import React from 'react';
 
 export function Content(props) {
-  
+
   return (
     <section className="content-area">
-        <div className="container">
-            {React.Children.toArray(props.children)}
-        </div>
+      <div className="container">
+        {React.Children.toArray(props.children)}
+      </div>
     </section>
   );
 }

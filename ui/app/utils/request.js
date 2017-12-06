@@ -22,8 +22,8 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
-  const error = response;//new Error(response.statusText);
-  //error.response = response;
+  const error = response;// new Error(response.statusText);
+  // error.response = response;
   throw error;
 }
 

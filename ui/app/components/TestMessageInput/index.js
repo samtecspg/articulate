@@ -1,22 +1,24 @@
-import React, { PropTypes } from 'react';
-
 import TextInput from 'components/TextInput';
-import { Row, Col, Icon } from 'react-materialize';
+import React, { PropTypes } from 'react';
+import {
+  Icon,
+  Row,
+} from 'react-materialize';
 
 export function TestMessageInput(props) {
-  
+
   return (
     <Row>
       <div className="col input-field s10">
         <TextInput
           id={props.id}
-          style={props.style} 
-          placeholder={props.placeholder} 
+          style={props.style}
+          placeholder={props.placeholder}
           value={props.value}
           onChange={props.onChange}
           onKeyPress={props.onKeyPress}
           required={props.required}
-          type="text" 
+          type="text"
           className={props.className ? props.className + ' validate' : 'validate'}
           disabled={props.disabled}
         />

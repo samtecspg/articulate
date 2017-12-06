@@ -1,8 +1,22 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import { call, cancel, put, take, takeLatest } from 'redux-saga/effects';
-import { agentDomainsLoaded, agentDomainsLoadingError, agentsLoaded, agentsLoadingError } from '../../containers/App/actions';
-import { LOAD_AGENT_DOMAINS, LOAD_AGENTS } from '../../containers/App/constants';
+import {
+  call,
+  cancel,
+  put,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
+import {
+  agentDomainsLoaded,
+  agentDomainsLoadingError,
+  agentsLoaded,
+  agentsLoadingError,
+} from '../../containers/App/actions';
+import {
+  LOAD_AGENT_DOMAINS,
+  LOAD_AGENTS,
+} from '../../containers/App/constants';
 
 import request from '../../utils/request';
 

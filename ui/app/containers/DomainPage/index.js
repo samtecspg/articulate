@@ -1,37 +1,43 @@
-import React from 'react';
-import Helmet from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
+import ActionButton from 'components/ActionButton';
+import Content from 'components/Content';
+import ContentHeader from 'components/ContentHeader';
+import Form from 'components/Form';
 
 import FormTextInput from 'components/FormTextInput';
-import SliderInput from 'components/SliderInput';
 import Header from 'components/Header';
-import ContentHeader from 'components/ContentHeader';
-import Content from 'components/Content';
-import Form from 'components/Form';
-import ActionButton from 'components/ActionButton';
+import SliderInput from 'components/SliderInput';
 
-import { Input, Row } from 'react-materialize';
+import {
+  createDomain,
+  loadAgents,
+} from 'containers/App/actions';
+import {
+  makeSelectAgents,
+  makeSelectCurrentAgent,
+  makeSelectDomain,
+  makeSelectError,
+  makeSelectLoading,
+} from 'containers/App/selectors';
+import React from 'react';
+import Helmet from 'react-helmet';
 
-import messages from './messages';
-
-import { createDomain, loadAgents } from 'containers/App/actions';
-import { makeSelectCurrentAgent, makeSelectAgents, makeSelectDomain, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
+import {
+  Input,
+  Row,
+} from 'react-materialize';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import { changeDomainData } from './actions';
+
+import messages from './messages';
 import { makeSelectDomainData } from './selectors';
 
-const returnFormattedOptions = (options) => {
-  return options.map( (option, index) => {
-    return (
-        <option key={index} value={option.value}>
-          {option.text}
-        </option>
-      )
-  });
-};
+const returnFormattedOptions = (options) => options.map((option, index) => (
+  <option key={index} value={option.value}>
+    {option.text}
+  </option>
+    ));
 
 export class DomainPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -47,14 +53,12 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
       domain,
     };
     let agentsSelect = [];
-    if(agents !== false){
-      agentsSelect = agents.map( (agent) => {
-        return {
-          value: agent.agentName,
-          text: agent.agentName,
-        }
-      });
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your domain', disabled: 'disabled'});
+    if (agents !== false) {
+      agentsSelect = agents.map((agent) => ({
+        value: agent.agentName,
+        text: agent.agentName,
+      }));
+      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your domain', disabled: 'disabled' });
     }
 
     return (
@@ -65,18 +69,20 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
             { name: 'description', content: 'Create a domain for your agent' },
           ]}
         />
-        <Header/>
+        <Header />
         <Content>
           <ContentHeader title={messages.createDomainTitle} subTitle={messages.createDomainDescription} />
           <Form>
             <Row>
-              <Input s={12} 
-                name='agent'
-                type='select' 
-                label={messages.agent.defaultMessage} 
+              <Input
+                s={12}
+                name="agent"
+                type="select"
+                label={messages.agent.defaultMessage}
                 defaultValue={this.props.domainData.agent ? this.props.domainData.agent : 'default'}
-                onChange={this.props.onChangeDomainData.bind(null, 'agent')}>
-                    {returnFormattedOptions(agentsSelect)}
+                onChange={this.props.onChangeDomainData.bind(null, 'agent')}
+              >
+                {returnFormattedOptions(agentsSelect)}
               </Input>
               <FormTextInput
                 label={messages.domainName}
@@ -84,8 +90,8 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
                 inputId="domainName"
                 value={this.props.domainData.domainName}
                 onChange={this.props.onChangeDomainData.bind(null, 'domainName')}
-                required={true}
-                />
+                required
+              />
             </Row>
           </Form>
 
@@ -97,11 +103,11 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
               max="100"
               defaultValue={this.props.domainData.intentThreshold}
               onChange={this.props.onChangeDomainData.bind(null, 'intentThreshold')}
-              />
+            />
           </Row>
 
           <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
-          
+
           <Row>
             <p>
               {JSON.stringify(domainProps)}
@@ -141,7 +147,7 @@ DomainPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onComponentMounting: (evt) => {
-      dispatch(loadAgents())
+      dispatch(loadAgents());
     },
     onChangeDomainData: (field, evt) => dispatch(changeDomainData({ value: evt.target.value, field })),
     onSubmitForm: (evt) => {

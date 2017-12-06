@@ -7,7 +7,7 @@ export default defineMessages({
   },
   createEntityDescription: {
     id: 'boilerplate.containers.EntityPage.create_entity.description',
-    defaultMessage: 'Entities can be the inputs to intents. Let\'s say you have an intent "I want to order cheese pizza", ' + 
+    defaultMessage: 'Entities can be the inputs to intents. Let\'s say you have an intent "I want to order cheese pizza", ' +
     'cheese could be labeled with an entity name of "topping".',
   },
   agent: {

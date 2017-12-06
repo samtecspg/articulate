@@ -1,6 +1,4 @@
-import {
-  CHANGE_AGENT_DATA
-} from './constants';
+import { CHANGE_AGENT_DATA, } from './constants';
 
 export function changeAgentData(payload) {
   return {

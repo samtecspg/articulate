@@ -1,6 +1,5 @@
-import { fromJS } from 'immutable';
-
 import { makeSelectLocationState } from 'containers/App/selectors';
+import { fromJS } from 'immutable';
 
 describe('makeSelectLocationState', () => {
   it('should select the route as a plain JS object', () => {

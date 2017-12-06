@@ -1,43 +1,52 @@
-import React from 'react';
-import Helmet from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
-
-import TextInput from 'components/TextInput';
-import Header from 'components/Header';
-import ContentHeader from 'components/ContentHeader';
+import ActionButton from 'components/ActionButton';
 import Content from 'components/Content';
+import ContentHeader from 'components/ContentHeader';
 import Form from 'components/Form';
 import FormTextInput from 'components/FormTextInput';
+import Header from 'components/Header';
 import InputLabel from 'components/InputLabel';
-import ActionButton from 'components/ActionButton';
-import TableContainer from 'components/TableContainer';
 import Table from 'components/Table';
+import TableContainer from 'components/TableContainer';
 import TableHeader from 'components/TableHeader';
-import TableBody from 'components/TableBody';
+
+import {
+  createEntity,
+  loadAgents,
+} from 'containers/App/actions';
+import {
+  makeSelectAgents,
+  makeSelectCurrentAgent,
+  makeSelectEntity,
+  makeSelectError,
+  makeSelectLoading,
+} from 'containers/App/selectors';
+import React from 'react';
+import Helmet from 'react-helmet';
+
+import {
+  Input,
+  Row,
+} from 'react-materialize';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+import {
+  addExample,
+  addSynonym,
+  changeEntityData,
+  removeExample,
+  removeSynonym,
+} from './actions';
 import Examples from './Components/Examples';
 
-import { Input, Row } from 'react-materialize';
-
 import messages from './messages';
-
-import { createEntity, loadAgents } from 'containers/App/actions';
-import { makeSelectCurrentAgent, makeSelectAgents, makeSelectEntity, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
-
-import { changeEntityData, removeExample, addExample, removeSynonym, addSynonym } from './actions';
 import { makeSelectEntityData } from './selectors';
 
-const returnFormattedOptions = (options) => {
-  return options.map( (option, index) => {
-    return (
-        <option key={index} value={option.value}>
-          {option.text}
-        </option>
-      )
-  });
-};
+const returnFormattedOptions = (options) => options.map((option, index) => (
+  <option key={index} value={option.value}>
+    {option.text}
+  </option>
+    ));
 
 export class EntityPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -54,53 +63,54 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     };
 
     let agentsSelect = [];
-    if(agents !== false){
-      agentsSelect = agents.map( (agent) => {
-        return {
-          value: agent.agentName,
-          text: agent.agentName,
-        }
-      });
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your entity', disabled: 'disabled'});
+    if (agents !== false) {
+      agentsSelect = agents.map((agent) => ({
+        value: agent.agentName,
+        text: agent.agentName,
+      }));
+      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your entity', disabled: 'disabled' });
     }
 
     return (
 
       <div>
-      <Helmet
-        title="Create Entity"
-        meta={[
-          { name: 'description', content: 'Create an entity' },
-        ]}
-      />
-      <Header />
-      <Content>
-        <ContentHeader title={messages.createEntityTitle} subTitle={messages.createEntityDescription} />
-        <Form>
-          <Row>
-            <Input s={12} 
-              name='agent'
-              type='select' 
-              label={messages.agent.defaultMessage} 
-              defaultValue={this.props.entityData.agent ? this.props.entityData.agent : 'default'}
-              onChange={this.props.onChangeEntityData.bind(null, 'agent')}>
-                  {returnFormattedOptions(agentsSelect)}
-            </Input>
-            <FormTextInput
-              label={messages.entityName}
-              placeholder={messages.entityNamePlaceholder.defaultMessage}
-              inputId="entityName"
-              value={this.props.entityData.entityName}
-              onChange={this.props.onChangeEntityData.bind(null, 'entityName')}
-              required={true}
+        <Helmet
+          title="Create Entity"
+          meta={[
+            { name: 'description', content: 'Create an entity' },
+          ]}
+        />
+        <Header />
+        <Content>
+          <ContentHeader title={messages.createEntityTitle} subTitle={messages.createEntityDescription} />
+          <Form>
+            <Row>
+              <Input
+                s={12}
+                name="agent"
+                type="select"
+                label={messages.agent.defaultMessage}
+                defaultValue={this.props.entityData.agent ? this.props.entityData.agent : 'default'}
+                onChange={this.props.onChangeEntityData.bind(null, 'agent')}
+              >
+                {returnFormattedOptions(agentsSelect)}
+              </Input>
+              <FormTextInput
+                label={messages.entityName}
+                placeholder={messages.entityNamePlaceholder.defaultMessage}
+                inputId="entityName"
+                value={this.props.entityData.entityName}
+                onChange={this.props.onChangeEntityData.bind(null, 'entityName')}
+                required
               />
-            <InputLabel text={messages.examples}/>
-          </Row>
-        </Form>
+              <InputLabel text={messages.examples} />
+            </Row>
+          </Form>
 
-        <TableContainer id={"examplesTable"}>
+          <TableContainer id={'examplesTable'}>
             <Table>
-                <TableHeader columns={[
+              <TableHeader
+                columns={[
                   {
                     label: messages.valueColumn.defaultMessage,
                     tooltip: messages.valueColumnTooltip.defaultMessage,
@@ -110,27 +120,28 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                     label: messages.synonymsColum.defaultMessage,
                     tooltip: messages.synonymsColumTooltip.defaultMessage,
                     width: '70%',
-                  }
-                ]} />
-                <Examples 
-                  examples={this.props.entityData.examples}
-                  addExampleFunction={this.props.onAddExample}
-                  removeExampleFunction={this.props.onRemoveExample}
-                  removeSynonymFunction={this.props.onAddExample}
-                  addSynonymFunction={this.props.onAddSynonym}
-                />
+                  },
+                ]}
+              />
+              <Examples
+                examples={this.props.entityData.examples}
+                addExampleFunction={this.props.onAddExample}
+                removeExampleFunction={this.props.onRemoveExample}
+                removeSynonymFunction={this.props.onAddExample}
+                addSynonymFunction={this.props.onAddSynonym}
+              />
             </Table>
-        </TableContainer>
+          </TableContainer>
 
-        <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
+          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
 
-        <Row>
-          <p>
-            {JSON.stringify(entityProps)}
-          </p>
-        </Row>
-      </Content>
-    </div>
+          <Row>
+            <p>
+              {JSON.stringify(entityProps)}
+            </p>
+          </Row>
+        </Content>
+      </div>
     );
   }
 }
@@ -169,14 +180,14 @@ export function mapDispatchToProps(dispatch) {
     onComponentMounting: (evt) => {
       dispatch(loadAgents());
     },
-    onChangeEntityData: (field, evt) => { 
-      dispatch(changeEntityData({ value: evt.target.value, field }))
+    onChangeEntityData: (field, evt) => {
+      dispatch(changeEntityData({ value: evt.target.value, field }));
     },
     onRemoveExample: (example, evt) => {
       dispatch(removeExample(example));
     },
-    onAddExample: (evt) => { 
-      if(evt.charCode === 13){
+    onAddExample: (evt) => {
+      if (evt.charCode === 13) {
         dispatch(addExample(evt.target.value));
         evt.target.value = null;
       }
@@ -184,8 +195,8 @@ export function mapDispatchToProps(dispatch) {
     onRemoveSynonym: (example, synonym, evt) => {
       dispatch(removeSynonym({ example, synonym }));
     },
-    onAddSynonym: (exampleValue, evt) => { 
-      if(evt.charCode === 13){
+    onAddSynonym: (exampleValue, evt) => {
+      if (evt.charCode === 13) {
         dispatch(addSynonym({ example: exampleValue, synonym: evt.target.value }));
         evt.target.value = null;
       }

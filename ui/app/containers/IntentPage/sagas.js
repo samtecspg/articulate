@@ -1,25 +1,41 @@
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
-import { CREATE_INTENT, LOAD_AGENTS, LOAD_AGENT_DOMAINS, LOAD_AGENT_ENTITIES } from 'containers/App/constants';
 import {
+  agentDomainsLoaded,
+  agentDomainsLoadingError,
+  agentEntitiesLoaded,
+  agentEntitiesLoadingError,
+  agentsLoaded,
+  agentsLoadingError,
   intentCreated,
   intentCreationError,
   scenarioCreated,
   scenarioCreationError,
-  agentsLoaded,
-  agentsLoadingError,
-  agentDomainsLoaded,
-  agentDomainsLoadingError,
-  agentEntitiesLoaded,
-  agentEntitiesLoadingError } from 'containers/App/actions';
+} from 'containers/App/actions';
+import {
+  CREATE_INTENT,
+  LOAD_AGENT_DOMAINS,
+  LOAD_AGENT_ENTITIES,
+  LOAD_AGENTS,
+} from 'containers/App/constants';
+import {
+  makeSelectIntentData,
+  makeSelectScenarioData,
+} from 'containers/IntentPage/selectors';
+import _ from 'lodash';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  call,
+  cancel,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import request from 'utils/request';
-import { makeSelectIntentData, makeSelectScenarioData } from 'containers/IntentPage/selectors';
-import _ from 'lodash';
 
 function* postScenario(intentName) {
   const scenarioData = yield select(makeSelectScenarioData());
-  
+
   scenarioData.intent = intentName;
 
   const requestURL = `http://127.0.0.1:8000/scenario`;
@@ -27,18 +43,18 @@ function* postScenario(intentName) {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(scenarioData),
-  }
+  };
 
   try {
     const scenario = yield call(request, requestURL, requestOptions);
-    yield put(scenarioCreated( scenario, scenario.id));
+    yield put(scenarioCreated(scenario, scenario.id));
   } catch (error) {
     yield put(scenarioCreationError({
       message: 'An error ocurred creating the scenario',
-      error
+      error,
     }));
   }
 }
@@ -60,10 +76,10 @@ export function* postIntent() {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(intentData),
-  }
+  };
 
   try {
     const intent = yield call(request, requestURL, requestOptions);
@@ -72,7 +88,7 @@ export function* postIntent() {
   } catch (error) {
     yield put(intentCreationError({
       message: 'An error ocurred creating the intent',
-      error
+      error,
     }));
   }
 }
@@ -94,7 +110,7 @@ export function* getAgents() {
   } catch (error) {
     yield put(agentsLoadingError({
       message: 'An error ocurred loading the list of available agents',
-      error
+      error,
     }));
   }
 }
@@ -117,7 +133,7 @@ export function* getAgentDomains(payload) {
   } catch (error) {
     yield put(agentDomainsLoadingError({
       message: 'An error ocurred loading the list of available domains in this agent',
-      error
+      error,
     }));
   }
 }
@@ -140,7 +156,7 @@ export function* getAgentEntities(payload) {
   } catch (error) {
     yield put(agentEntitiesLoadingError({
       message: 'An error ocurred loading the list of available entities',
-      error
+      error,
     }));
   }
 }
@@ -158,5 +174,5 @@ export default [
   createIntent,
   loadAgents,
   loadAgentDomains,
-  loadAgentEntities
+  loadAgentEntities,
 ];

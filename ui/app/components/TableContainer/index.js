@@ -2,7 +2,7 @@ import React from 'react';
 import { Row } from 'react-materialize';
 
 export function Table(props) {
-  
+
   return (
     <div id={props.id} className={(props.quotes ? 'quotes ' : '') + 'table-container'}>
       <Row>
@@ -21,7 +21,7 @@ export function Table(props) {
 Table.propTypes = {
   children: React.PropTypes.node,
   id: React.PropTypes.string,
-  quotes: React.PropTypes.bool
+  quotes: React.PropTypes.bool,
 };
 
 export default Table;

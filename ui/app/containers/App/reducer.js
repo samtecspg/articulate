@@ -58,7 +58,7 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.data)
-        .set('loading', false)
+        .set('loading', false);
     case LOAD_AGENTS_ERROR:
       return state
         .set('error', action.error)
@@ -71,7 +71,7 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENT_DOMAINS_SUCCESS:
       return state
         .set('agentDomains', action.data)
-        .set('loading', false)
+        .set('loading', false);
     case LOAD_AGENT_DOMAINS_ERROR:
       return state
         .set('error', action.error)
@@ -84,7 +84,7 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENT_ENTITIES_SUCCESS:
       return state
         .set('agentEntities', action.data)
-        .set('loading', false)
+        .set('loading', false);
     case LOAD_AGENT_ENTITIES_ERROR:
       return state
         .set('error', action.error)

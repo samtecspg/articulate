@@ -1,7 +1,7 @@
 import React from 'react';
 
 export function Form(props) {
-  
+
   return (
     <div id="form-section" style={props.style}>
       {React.Children.toArray(props.children)}
