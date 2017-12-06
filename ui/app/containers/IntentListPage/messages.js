@@ -17,4 +17,8 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentListPage.list.description',
     defaultMessage: 'Lorem ipsu',
   },
+  actionButton: {
+    id: 'boilerplate.containers.DomainListPage.list.action',
+    defaultMessage: '+ Create',
+  },
 });

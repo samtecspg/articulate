@@ -1,15 +1,29 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Input, Row } from 'react-materialize';
+import {
+  Input,
+  Row,
+} from 'react-materialize';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { createStructuredSelector } from 'reselect';
+import ActionButton from '../../components/ActionButton/index';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
 import DomainsTable from '../../components/DomainsTable/index';
 import Form from '../../components/Form';
 import Header from '../../components/Header';
-import { loadAgentDomains, loadAgents } from '../../containers/App/actions';
-import { makeSelectAgentDomains, makeSelectAgents, makeSelectDomain, makeSelectError, makeSelectLoading } from '../../containers/App/selectors';
+import {
+  loadAgentDomains,
+  loadAgents,
+} from '../../containers/App/actions';
+import {
+  makeSelectAgentDomains,
+  makeSelectAgents,
+  makeSelectDomain,
+  makeSelectError,
+  makeSelectLoading,
+} from '../../containers/App/selectors';
 import { changeDomainData } from './actions';
 import messages from './messages';
 
@@ -24,6 +38,7 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
   constructor() {
     super();
     this.onSelectAgent = this.onSelectAgent.bind(this);
+    this.onCreateAction = this.onCreateAction.bind(this);
   }
 
   componentWillMount() {
@@ -33,6 +48,10 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
   onSelectAgent(evt) {
     const agent = { value: evt.target.value, field: 'agent' };
     this.props.onChangeDomainData(agent);
+  }
+
+  onCreateAction() {
+    browserHistory.push('/domains/create');
   }
 
   render() {
@@ -82,6 +101,7 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
                 }}
               />
             </Row>
+            <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />
 
             <Row>
               <p>

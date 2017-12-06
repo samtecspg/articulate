@@ -5,7 +5,9 @@ import {
   Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { createStructuredSelector } from 'reselect';
+import ActionButton from '../../components/ActionButton/index';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
 import Form from '../../components/Form';
@@ -34,6 +36,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     this.onSelectDomain = this.onSelectDomain.bind(this);
     this.renderAgentSelectOptions = this.renderAgentSelectOptions.bind(this);
     this.renderDomainSelectOptions = this.renderDomainSelectOptions.bind(this);
+    this.onCreateAction = this.onCreateAction.bind(this);
   }
 
   componentWillMount() {
@@ -48,6 +51,10 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   onSelectDomain(evt) {
     const domain = { value: evt.target.value, field: 'domain' };
     this.props.onChangeDomain(domain);
+  }
+
+  onCreateAction() {
+    browserHistory.push('/intents/create');
   }
 
   renderAgentSelectOptions(options) {
@@ -133,7 +140,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
                 }}
               />
             </Row>
-
+            <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />
             <Row>
               <p>
                 {JSON.stringify(domainProps)}
