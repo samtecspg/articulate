@@ -55,7 +55,7 @@ containerGen.runActions({
   wantHeaders: true,
   wantActionsAndReducer: true,
   wantSagas: true,
-  wantMessages: true
+  wantMessages: true,
 })
   .then(checkForErrors)
   .then(removeTestsDirFrom('containers/RbGeneratedContainerPureComponent'))
@@ -67,7 +67,7 @@ const ContainerComponent = containerGen.runActions({
   wantHeaders: true,
   wantActionsAndReducer: true,
   wantSagas: true,
-  wantMessages: true
+  wantMessages: true,
 })
   .then(checkForErrors)
   .then(removeTestsDirFrom('containers/RbGeneratedContainerComponent'))
@@ -78,14 +78,14 @@ const routeGen = plop.getGenerator('route');
 ContainerComponent
   .then(() => routeGen.runActions({ component: 'RbGeneratedContainerComponent', path: '/generated-route-container' })
     .then(checkForErrors)
-    .catch(reportErrorsFor('route/Container'))
-);
+    .catch(reportErrorsFor('route/Container')),
+  );
 
 ComponentEsclass
   .then(() => routeGen.runActions({ component: 'RbGeneratedComponentEsclass', path: '/generated-route-component' })
     .then(checkForErrors)
-    .catch(reportErrorsFor('route/Component'))
-);
+    .catch(reportErrorsFor('route/Component')),
+  );
 
 const languageGen = plop.getGenerator('language');
 languageGen.runActions({ language: 'fr' })
