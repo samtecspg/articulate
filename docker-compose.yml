@@ -3,7 +3,7 @@ version: '3.0'
 #
 # The behavor of this compose can be highly (site) customized by creating 
 # a .env file in the root of the project.  see .env.example for an example
-# 
+#
 
 services:
   api:
@@ -31,10 +31,15 @@ services:
     build: './ui/.'
     ports: ['0.0.0.0:3500:3000']
     networks: ['alpha-nlu-network']
-  rasa:  
+  rasa:
     image: rasa/rasa_nlu:0.10.4-spacy
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects", "${RASA_CONFIG:-./api/rasa-config.json}:/app/config.json", ]
+    networks: ['alpha-nlu-network']
+  rasa-er:
+    image: rasa/rasa_nlu:0.10.4-spacy
+    ports: ['0.0.0.0:6000:5000']
+    volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects", "${RASA_CONFIG:-./api/rasa-config-entities-only.json}:/app/config.json", ]
     networks: ['alpha-nlu-network']
   haskduck:
     image: samtecspg/duckling
