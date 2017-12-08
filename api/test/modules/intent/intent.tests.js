@@ -165,7 +165,7 @@ suite('/intent', () => {
 
     suite('/post', () => {
 
-        test('should respond with 200 successful operation and return an intent object', (done) => {
+        test('should respond with 200 successful operation and return an intent object', { timeout: 15000 }, (done) => {
 
             const data = {
                 agent: agentName,
@@ -340,7 +340,7 @@ suite('/intent/{id}', () => {
 
     suite('/put', () => {
 
-        test('should respond with 200 successful operation', (done) => {
+        test('should respond with 200 successful operation', { timeout: 15000 }, (done) => {
 
             const data = {
                 agent: agentName,

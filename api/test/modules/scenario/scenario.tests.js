@@ -147,7 +147,7 @@ const createIntent = (callback) => {
     });
 };
 
-before((done) => {
+before({ timeout: 15000 }, (done) => {
 
     require('../../../index')((err, srv) => {
 
@@ -204,7 +204,7 @@ after((done) => {
 
 suite('scenario', () => {
 
-    suite('/scenario', () => {
+    suite('/intent/{id}/scenario', () => {
 
         suite('/post', () => {
 
@@ -237,7 +237,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: '/scenario',
+                    url: `/intent/${intentId}/scenario`,
                     payload: data
                 };
 
@@ -257,7 +257,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'POST',
-                    url: '/scenario',
+                    url: `/intent/${intentId}/scenario`,
                     payload: data
                 };
 
@@ -298,7 +298,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: '/scenario',
+                    url: `/intent/${intentId}/scenario`,
                     payload: data
                 };
 
@@ -339,7 +339,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: '/scenario',
+                    url: `/intent/${intentId}/scenario`,
                     payload: data
                 };
 
@@ -380,7 +380,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: '/scenario',
+                    url: `/intent/${intentId}/scenario`,
                     payload: data
                 };
 
@@ -395,7 +395,7 @@ suite('scenario', () => {
 
     });
 
-    suite('/scenario/{id}', () => {
+    suite('intent/{id}/scenario', () => {
 
         suite('/get', () => {
 
@@ -426,7 +426,7 @@ suite('scenario', () => {
                     useWebhook: true
                 };
 
-                server.inject('/scenario/' + intentId, (res) => {
+                server.inject(`/intent/${intentId}/scenario`, (res) => {
 
                     expect(res.statusCode).to.equal(200);
                     expect(res.result.scenarioName).to.be.equal(data.scenarioName);
@@ -440,7 +440,7 @@ suite('scenario', () => {
                     id: '-1'
                 };
 
-                server.inject('/scenario/' + data.id, (res) => {
+                server.inject(`/intent/${data.id}/scenario`, (res) => {
 
                     expect(res.statusCode).to.equal(404);
                     expect(res.result.message).to.contain('The specified scenario doesn\'t exists');
@@ -462,7 +462,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'PUT',
-                    url: '/scenario/' + intentId,
+                    url: `/intent/${intentId}/scenario`,
                     payload: updatedData
                 };
 
@@ -486,7 +486,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'PUT',
-                    url: '/scenario/-1',
+                    url: '/intent/-1/scenario',
                     payload: updatedData
                 };
 
@@ -505,7 +505,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'PUT',
-                    url: '/scenario/' + intentId,
+                    url: `/intent/${intentId}/scenario`,
                     payload: data
                 };
 
@@ -528,7 +528,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'DELETE',
-                    url: '/scenario/' + data.id
+                    url: `/intent/${data.id}/scenario`
                 };
 
                 server.inject(options, (res) => {
@@ -546,7 +546,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'DELETE',
-                    url: '/scenario/' + data.id
+                    url: `/intent/${data.id}/scenario`
                 };
 
                 server.inject(options, (res) => {

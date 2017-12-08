@@ -6,7 +6,6 @@ const ScenarioTools = require('../tools');
 
 module.exports = (request, reply) => {
 
-    let scenarioId = null;
     let agentId = null;
     let domainId = null;
     let intentId = null;
@@ -70,7 +69,7 @@ module.exports = (request, reply) => {
                         },
                         (cllbk) => {
 
-                            ScenarioTools.validateEntitiesTool(redis, agentId, scenario.slots, (err) => {
+                            ScenarioTools.validateEntitiesScenarioTool(redis, agentId, scenario.slots, (err) => {
 
                                 if (err) {
                                     return cllbk(err);
@@ -85,6 +84,21 @@ module.exports = (request, reply) => {
                         }
                         return callback(null);
                     });
+                },
+                (callback) => {
+
+                    redis.exists(`scenario:${intentId}`, (err, exists) => {
+
+                        if (err){
+                            const error = Boom.badImplementation('An error ocurred retrieving the scenario.');
+                            return cb(error);
+                        }
+                        if (exists){
+                            const error = Boom.notFound('An scenario already exists for this intent. If you want to change it please use the update endpoint.');
+                            return cb(error);
+                        }
+                        return cb(null);
+                    });
                 }
             ], (err) => {
 
@@ -94,21 +108,9 @@ module.exports = (request, reply) => {
                 return cb(null);
             });
         },
-        scenarioId: (cb) => {
-
-            redis.incr('scenarioId', (err, newScenarioId) => {
-
-                if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the new scenario id.');
-                    return cb(error);
-                }
-                scenarioId = newScenarioId;
-                return cb(null);
-            });
-        },
         scenario: (cb) => {
 
-            scenario = Object.assign({ id: scenarioId }, scenario);
+            scenario = Object.assign({ id: intentId }, scenario);
             const flatScenario = Flat(scenario);
             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 

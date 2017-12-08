@@ -4,13 +4,13 @@ const Async = require('async');
 
 module.exports = (request, reply) => {
 
-    const scenarioId = request.params.id;
+    const intentId = request.params.id;
     const redis = request.server.app.redis;
 
     Async.waterfall([
         (cb) => {
 
-            redis.exists('scenario:' + scenarioId, (err, exists) => {
+            redis.exists(`scenario:${intentId}`, (err, exists) => {
 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred retrieving the scenario.');
@@ -25,7 +25,7 @@ module.exports = (request, reply) => {
         },
         (cb) => {
 
-            redis.del('scenario:' + scenarioId, (err, success) => {
+            redis.del(`scenario:${intentId}`, (err, success) => {
 
                 if (err){
                     const error = Boom.badImplementation('An error ocurred deleting the scenario.');

@@ -4,7 +4,7 @@ const Boom = require('boom');
 const Flat = require('flat');
 const ScenarioTools = require('../tools');
 
-const updateDataFunction = (redis, scenarioId, currentScenario, updateData, cb) => {
+const updateDataFunction = (redis, intentId, currentScenario, updateData, cb) => {
 
     if (updateData.slots){
         currentScenario.slots = updateData.slots;
@@ -18,13 +18,13 @@ const updateDataFunction = (redis, scenarioId, currentScenario, updateData, cb) 
 
         flatScenario[key] = flatUpdateData[key];
     });
-    redis.del(`scenario:${scenarioId}`, (err) => {
+    redis.del(`scenario:${intentId}`, (err) => {
 
         if (err){
             const error = Boom.badImplementation('An error ocurred temporaly removing the scenario for the update.');
             return cb(error);
         }
-        redis.hmset(`scenario:${scenarioId}`, flatScenario, (err) => {
+        redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
             if (err){
                 const error = Boom.badImplementation('An error ocurred adding the scenario data.');
@@ -37,7 +37,7 @@ const updateDataFunction = (redis, scenarioId, currentScenario, updateData, cb) 
 
 module.exports = (request, reply) => {
 
-    const scenarioId = request.params.id;
+    const intentId = request.params.id;
     const updateData = request.payload;
 
     const server = request.server;
@@ -46,14 +46,14 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
 
-            server.inject(`/scenario/${scenarioId}`, (res) => {
+            server.inject(`/intent/${intentId}/scenario`, (res) => {
 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified scenario doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${scenarioId}`);
+                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${intentId}`);
                     return cb(error, null);
                 }
                 return cb(null, res.result);
@@ -80,7 +80,7 @@ module.exports = (request, reply) => {
                     },
                     (agentId, callback) => {
 
-                        ScenarioTools.validateEntitiesTool(redis, agentId, updateData.slots, (err) => {
+                        ScenarioTools.validateEntitiesScenarioTool(redis, agentId, updateData.slots, (err) => {
 
                             if (err) {
                                 return callback(err);
@@ -90,7 +90,7 @@ module.exports = (request, reply) => {
                     },
                     (callback) => {
 
-                        updateDataFunction(redis, scenarioId, currentScenario, updateData, (err, result) => {
+                        updateDataFunction(redis, intentId, currentScenario, updateData, (err, result) => {
 
                             if (err){
                                 const error = Boom.badImplementation('An error ocurred adding the scenario data.');
@@ -108,7 +108,7 @@ module.exports = (request, reply) => {
                 });
             }
             else {
-                updateDataFunction(redis, scenarioId, currentScenario, updateData, (err, result) => {
+                updateDataFunction(redis, intentId, currentScenario, updateData, (err, result) => {
 
                     if (err){
                         const error = Boom.badImplementation('An error ocurred adding the scenario data.');

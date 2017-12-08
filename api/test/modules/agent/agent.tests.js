@@ -172,7 +172,7 @@ const createScenario = (callback) => {
     };
     const options = {
         method: 'POST',
-        url: '/scenario',
+        url: `/intent/${intent.id}/scenario`,
         payload: data
     };
 
@@ -189,7 +189,7 @@ const createScenario = (callback) => {
     });
 };
 
-before((done) => {
+before({ timeout: 15000 }, (done) => {
 
     require('../../../index')((err, srv) => {
 

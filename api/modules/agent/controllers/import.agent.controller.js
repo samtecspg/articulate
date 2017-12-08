@@ -4,7 +4,6 @@ const Boom = require('boom');
 const Flat = require('flat');
 const _ = require('lodash');
 const IntentTools = require('../../intent/tools');
-const ScenarioTools = require('../../scenario/tools');
 
 module.exports = (request, reply) => {
 
@@ -250,7 +249,7 @@ module.exports = (request, reply) => {
                                     Async.series({
                                         fathersCheck: (cb) => {
 
-                                            ScenarioTools.validateEntitiesTool(redis, agentId, intent.scenario.slots, (err) => {
+                                            IntentTools.validateEntitiesScenarioTool(redis, agentId, intent.scenario.slots, (err) => {
 
                                                 if (err) {
                                                     return cb(err);

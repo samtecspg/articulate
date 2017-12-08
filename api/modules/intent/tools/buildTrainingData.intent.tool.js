@@ -12,10 +12,6 @@ const buildTrainingData = (server, domainId, callback) => {
             return callback(err, null);
         }
 
-        if (results.intents.length <= 1){
-            return callback(null, null);
-        }
-
         let entitiesCombinations = [];
         if (results.entities.length > 0){
             entitiesCombinations = GetEntitiesCombinations(results.entities, results.intents);
@@ -96,8 +92,11 @@ const buildTrainingData = (server, domainId, callback) => {
         })));
 
         const data = {
-            rasa_nlu_data: {
-                common_examples
+            numberOfIntents: results.intents.length,
+            trainingSet: {
+                rasa_nlu_data: {
+                    common_examples
+                }
             }
         };
 

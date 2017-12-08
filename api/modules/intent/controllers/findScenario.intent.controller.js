@@ -4,10 +4,10 @@ const Flat = require('flat');
 
 module.exports = (request, reply) => {
 
-    const scenarioId = request.params.id;
+    const intentId = request.params.id;
     const redis = request.server.app.redis;
 
-    redis.hgetall('scenario:' + scenarioId, (err, data) => {
+    redis.hgetall(`scenario:${intentId}`, (err, data) => {
 
         if (err){
             const error = Boom.badImplementation('An error ocurred retrieving the scenario.');

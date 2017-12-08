@@ -1,0 +1,4 @@
+{
+  "pipeline": ["nlp_spacy", "tokenizer_spacy", "ner_crf", "ner_synonyms", "ner_spacy"],
+  "mitie_file": "./data/total_word_feature_extractor.dat"
+}

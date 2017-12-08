@@ -37,15 +37,35 @@ module.exports = (server, redis, agentId, cb) => {
 
             agentName = domains[0].agent;
             const formattedDomains = [];
-            domains.forEach( (domain, i) => {
+            Async.each(domains, (domain, callbackFormatDomain) => {
 
                 const domainName = domain.domainName;
                 const modelFolderName = domainName + '_' + domain.model;
-                const formattedDomain = { name: domainName, model: modelFolderName };
-                formattedDomains.push(formattedDomain);
-            });
+                const justER = modelFolderName.indexOf('just_er') !== -1;
+                if (justER){
+                    server.inject(`/agent/${agentId}/domain/${domain.id}/intent`, (res) => {
 
-            return callbackFormatDomains(null, formattedDomains);
+                        if (res.statusCode !== 200){
+                            const error = Boom.create(res.statusCode, `An error ocurred getting the list of intents of the domain ${domain.domainName}`);
+                            return callbackFormatDomain(error);
+                        }
+                        const formattedDomain = { name: domainName, model: modelFolderName, justER, intent: res.result[0].intentName };
+                        formattedDomains.push(formattedDomain);
+                        return callbackFormatDomain(null);
+                    });
+                }
+                else {
+                    const formattedDomain = { name: domainName, model: modelFolderName, justER };
+                    formattedDomains.push(formattedDomain);
+                    return callbackFormatDomain(null);
+                }
+            }, (err) => {
+
+                if (err){
+                    return callbackFormatDomains(err);
+                }
+                return callbackFormatDomains(null, formattedDomains);
+            });
         },
         (formattedDomains, callbackDomainRecognizer) => {
 

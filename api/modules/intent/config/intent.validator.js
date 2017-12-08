@@ -1,6 +1,9 @@
 'use strict';
 
+const Joi = require('joi');
 const IntentSchema = require('../../../models/index').Intent.schema;
+const ScenarioSchema = require('../../../models/index').Scenario.schema;
+const SlotSchema = require('../../../models/index').Slot.schema;
 
 class IntentValidate {
     constructor() {
@@ -43,6 +46,81 @@ class IntentValidate {
         };
 
         this.deleteById = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
+
+        this.addScenario = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    agent: ScenarioSchema.agent.required(),
+                    domain: ScenarioSchema.domain.required(),
+                    intent: ScenarioSchema.intent.required(),
+                    scenarioName: ScenarioSchema.scenarioName.required(),
+                    slots: Joi.array().items({
+                        slotName: SlotSchema.slotName.required(),
+                        entity: SlotSchema.entity.required(),
+                        isList: SlotSchema.isList.required(),
+                        isRequired: SlotSchema.isRequired.required(),
+                        useOriginal: SlotSchema.useOriginal.required(),
+                        textPrompts: SlotSchema.textPrompts,
+                        useWebhook: SlotSchema.useWebhook.required()
+                    }),
+                    intentResponses: ScenarioSchema.intentResponses.required(),
+                    useWebhook: ScenarioSchema.useWebhook.required(),
+                    webhookUrl: ScenarioSchema.webhookUrl
+                };
+            })()
+        };
+
+        this.findScenario = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
+
+        this.updateScenario = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    scenarioName: ScenarioSchema.scenarioName,
+                    slots: Joi.array().items({
+                        slotName: SlotSchema.slotName.required(),
+                        entity: SlotSchema.entity.required(),
+                        isList: SlotSchema.isList.required(),
+                        isRequired: SlotSchema.isRequired.required(),
+                        useOriginal: SlotSchema.useOriginal.required(),
+                        textPrompts: SlotSchema.textPrompts,
+                        useWebhook: SlotSchema.useWebhook.required()
+                    }),
+                    intentResponses: ScenarioSchema.intentResponses,
+                    useWebhook: ScenarioSchema.useWebhook,
+                    webhookUrl: ScenarioSchema.webhookUrl
+                };
+            })()
+        };
+
+        this.deleteScenario = {
             params: (() => {
 
                 return {

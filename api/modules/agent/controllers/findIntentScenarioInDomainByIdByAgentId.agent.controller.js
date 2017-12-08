@@ -65,7 +65,7 @@ module.exports = (request, reply) => {
         },
         (cb) => {
 
-            server.inject(`/scenario/${intentId}`, (res) => {
+            server.inject(`/intent/${intentId}/scenario`, (res) => {
 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){

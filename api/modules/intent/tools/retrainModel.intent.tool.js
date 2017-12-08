@@ -13,15 +13,13 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
             return callback(err);
         }
 
-        if (!trainingSet){
-            return callback(null);
-        }
-
-        const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
+        const stringTrainingSet = JSON.stringify(trainingSet.trainingSet, null, 2);
         const trainingDate = new Date().toISOString();
-        const model = Guid.create().toString();
+        let model = Guid.create().toString();
+        model = (trainingSet.numberOfIntents > 1 ? '' : 'just_er_') + model;
         const modelFolderName = domainName + '_' + model;
-        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
+        const rasaServer = trainingSet.numberOfIntents > 1 ? rasa : server.app.rasa_er;
+        Wreck.post(`${rasaServer}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {
                 const error = Boom.badImplementation('An error ocurred calling the training process.');

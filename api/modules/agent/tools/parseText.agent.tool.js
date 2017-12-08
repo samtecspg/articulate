@@ -7,13 +7,18 @@ const Querystring = require('querystring');
 
 const DucklingOutputToIntervals = require('./ducklingOutputToInterval.agent.tool');
 
-const getRasaParse = (textToParse, trainedDomain, agentName, rasaService, callback) => {
+const getRasaParse = (textToParse, trainedDomain, agentName, rasa_er, rasa, callback) => {
 
     const requestPayload = {
         q: textToParse,
         project: agentName,
         model: trainedDomain.model
     };
+
+    let rasaService = rasa;
+    if (trainedDomain.justER){
+        rasaService = rasa_er;
+    }
 
     Wreck.post(rasaService + '/parse', { payload: requestPayload, json: true }, (err, wreckResponse, result) => {
 
@@ -26,6 +31,10 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasaService, callba
         const temporalParse = {
             domain: trainedDomain.name
         };
+        if (trainedDomain.justER){
+            result.intent.name = trainedDomain.intent;
+            result.intent.confidence = 1;
+        }
 
         return callback(null, Object.assign(temporalParse, result));
     });
@@ -107,7 +116,7 @@ const castSysEntities = (parseResult) => {
     return parseResult.rasa;
 };
 
-const parseText = (redis, rasaService, ducklingService, textToParse, timezone, agentData, cb) => {
+const parseText = (redis, rasa_er, rasa, ducklingService, textToParse, timezone, agentData, cb) => {
 
     Async.parallel({
         rasa: (callback) => {
@@ -115,7 +124,7 @@ const parseText = (redis, rasaService, ducklingService, textToParse, timezone, a
             Async.map(agentData.trainedDomains, (trainedDomain, callbk) => {
 
                 const start = process.hrtime();
-                getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasaService, (err, result) => {
+                getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasa_er, rasa, (err, result) => {
 
                     if (err){
                         return callbk(err, null);
@@ -171,10 +180,10 @@ const parseText = (redis, rasaService, ducklingService, textToParse, timezone, a
     });
 };
 
-module.exports = (redis, rasa, duckling, textToParse, timezone, agentData, cb) => {
+module.exports = (redis, rasa_er, rasa, duckling, textToParse, timezone, agentData, cb) => {
 
     const start = process.hrtime();
-    parseText(redis, rasa, duckling, textToParse, timezone, agentData, (err, result) => {
+    parseText(redis, rasa_er, rasa, duckling, textToParse, timezone, agentData, (err, result) => {
 
         if (err){
             return cb(err, null);

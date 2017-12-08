@@ -12,6 +12,7 @@ module.exports = (request, reply) => {
     const server = request.server;
     const redis = server.app.redis;
     const rasa = server.app.rasa;
+    const rasa_er = server.app.rasa_er;
     const duckling = server.app.duckling;
     let documentId;
 
@@ -46,7 +47,7 @@ module.exports = (request, reply) => {
         (agentData, callback) => {
 
             const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'America/Kentucky/Louisville');
-            AgentTools.parseText(redis, rasa, duckling, text, timezoneToUse, agentData, (err, result) => {
+            AgentTools.parseText(redis, rasa_er, rasa, duckling, text, timezoneToUse, agentData, (err, result) => {
 
                 if (err){
                     return callback(err);
