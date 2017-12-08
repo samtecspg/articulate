@@ -1,9 +1,6 @@
 import { fromJS } from 'immutable';
-import { createSelector } from 'reselect';
 
-import {
-  CHANGE_AGENT_DATA,
-} from './constants';
+import { CHANGE_AGENT_DATA, } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -18,7 +15,7 @@ const initialState = fromJS({
       'Sorry can you repharse that?',
       'I\'m still learning to speak with humans. What you mean?',
     ],
-    useWebhookFallback: false
+    useWebhookFallback: false,
   },
 });
 

@@ -5,7 +5,7 @@ function SliderInput(props) {
   return (
     <div>
       <label htmlFor={props.id}>
-          <FormattedMessage {...props.label} />
+        <FormattedMessage {...props.label} />
       </label>
       <p className="range-field">
         <input
@@ -15,7 +15,7 @@ function SliderInput(props) {
           min={props.min}
           max={props.max}
           onChange={props.onChange}
-          />
+        />
       </p>
     </div>
   );

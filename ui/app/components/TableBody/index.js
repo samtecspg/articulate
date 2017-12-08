@@ -1,10 +1,10 @@
 import React from 'react';
 
 export function TableBody(props) {
-  
+
   return (
     <tbody>
-      {React.Children.toArray(props.children)}
+    {React.Children.toArray(props.children)}
     </tbody>
   );
 }

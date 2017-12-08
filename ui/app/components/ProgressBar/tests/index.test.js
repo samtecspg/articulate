@@ -1,5 +1,5 @@
-import React from 'react';
 import { mount } from 'enzyme';
+import React from 'react';
 import sinon from 'sinon';
 
 import withProgressBar from '../index';
@@ -23,14 +23,15 @@ describe('withProgressBar()', () => {
   }
 
   const router = {
-    listenBefore: () => (() => {}),
+    listenBefore: () => (() => {
+    }),
   };
 
   const HocComponent = withProgressBar(Component);
 
   it('Should exist', () => {
     const renderedComponent = mount(
-      <HocComponent />
+      <HocComponent />,
     );
 
     expect(renderedComponent.find(Component).length).toBe(1);
@@ -38,7 +39,7 @@ describe('withProgressBar()', () => {
 
   it('Should render <ProgressBar />', () => {
     const renderedComponent = mount(
-      <HocComponent />
+      <HocComponent />,
     );
 
     expect(renderedComponent.find(ProgressBar).length).toBe(1);
@@ -46,7 +47,7 @@ describe('withProgressBar()', () => {
 
   it('Should initially have state.progress = -1', () => {
     const renderedComponent = mount(
-      <HocComponent />
+      <HocComponent />,
     );
 
     expect(renderedComponent.state().progress).toBe(-1);
@@ -54,7 +55,7 @@ describe('withProgressBar()', () => {
 
   it('Should initially have state.loadedRoutes = current route', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} />
+      <HocComponent location={{ pathname: '/' }} />,
     );
 
     expect(renderedComponent.state().loadedRoutes[0]).toBe('/');
@@ -62,7 +63,7 @@ describe('withProgressBar()', () => {
 
   it('Should listen to route changes', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} router={router} />
+      <HocComponent location={{ pathname: '/' }} router={router} />,
     );
 
     const inst = renderedComponent.instance();
@@ -71,7 +72,7 @@ describe('withProgressBar()', () => {
 
   it('Should unset listener when unmounted', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} router={router} />
+      <HocComponent location={{ pathname: '/' }} router={router} />,
     );
 
     const inst = renderedComponent.instance();
@@ -81,7 +82,7 @@ describe('withProgressBar()', () => {
 
   it('Should update state.progress when called updateProgress()', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} router={router} />
+      <HocComponent location={{ pathname: '/' }} router={router} />,
     );
 
     const inst = renderedComponent.instance();
@@ -91,7 +92,7 @@ describe('withProgressBar()', () => {
 
   it('Should start progress bar for a new route', () => {
     const renderedComponent = mount(
-      <HocComponent location={{ pathname: '/' }} router={router} />
+      <HocComponent location={{ pathname: '/' }} router={router} />,
     );
 
     renderedComponent.setState({ loadedRoutes: [], progress: 10 });

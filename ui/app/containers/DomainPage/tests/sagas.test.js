@@ -2,15 +2,26 @@
  * Tests for DomainPage sagas
  */
 
-import { cancel, take, put, takeLatest } from 'redux-saga/effects';
-import { createMockTask } from 'redux-saga/lib/utils';
-
-import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  repoLoadingError,
+  reposLoaded,
+} from 'containers/App/actions';
 
 import { LOAD_REPOS } from 'containers/App/constants';
-import { reposLoaded, repoLoadingError } from 'containers/App/actions';
 
-import { getRepos, githubData } from '../sagas';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  cancel,
+  put,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
+import { createMockTask } from 'redux-saga/lib/utils';
+
+import {
+  getRepos,
+  githubData,
+} from '../sagas';
 
 const username = 'mxstbr';
 

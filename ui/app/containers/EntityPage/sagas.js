@@ -1,10 +1,25 @@
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
+import {
+  agentsLoaded,
+  agentsLoadingError,
+  entityCreated,
+  entityCreationError,
+} from 'containers/App/actions';
+import {
+  CREATE_ENTITY,
+  LOAD_AGENTS,
+} from 'containers/App/constants';
+import { makeSelectEntityData } from 'containers/EntityPage/selectors';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { CREATE_ENTITY, LOAD_AGENTS } from 'containers/App/constants';
-import { entityCreated, entityCreationError, agentsLoaded, agentsLoadingError } from 'containers/App/actions';
+import {
+  call,
+  cancel,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import request from 'utils/request';
-import { makeSelectEntityData } from 'containers/EntityPage/selectors';
 
 export function* postEntity() {
   const entityData = yield select(makeSelectEntityData());
@@ -14,10 +29,10 @@ export function* postEntity() {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(entityData),
-  }
+  };
 
   try {
     const entity = yield call(request, requestURL, requestOptions);
@@ -25,7 +40,7 @@ export function* postEntity() {
   } catch (error) {
     yield put(entityCreationError({
       message: 'An error ocurred creating the entity',
-      error
+      error,
     }));
   }
 }
@@ -47,7 +62,7 @@ export function* getAgents() {
   } catch (error) {
     yield put(agentsLoadingError({
       message: 'An error ocurred loading the list of available agents',
-      error
+      error,
     }));
   }
 }

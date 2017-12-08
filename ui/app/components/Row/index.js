@@ -1,10 +1,10 @@
 import React from 'react';
 
 export function Row(props) {
-  
+
   return (
     <div className="row">
-        {React.Children.toArray(props.children)}
+      {React.Children.toArray(props.children)}
     </div>
   );
 }

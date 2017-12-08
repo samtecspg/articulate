@@ -14,7 +14,7 @@ function animateProgress(message, amountOfDots) {
   }
 
   let i = 0;
-  return setInterval(function() {
+  return setInterval(() => {
     readline.cursorTo(process.stdout, 0);
     i = (i + 1) % (amountOfDots + 1);
     const dots = new Array(i + 1).join('.');

@@ -1,11 +1,11 @@
 import {
-  CHANGE_INTENT_DATA,
-  TAG_ENTITY,
-  UNTAG_ENTITY,
-  TOGGLE_FLAG,
   ADD_TEXT_PROMPT,
-  DELETE_TEXT_PROMPT,
+  CHANGE_INTENT_DATA,
   CHANGE_SLOT_NAME,
+  DELETE_TEXT_PROMPT,
+  TAG_ENTITY,
+  TOGGLE_FLAG,
+  UNTAG_ENTITY,
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -40,19 +40,19 @@ export function changeSlotName(payload) {
   return {
     type: CHANGE_SLOT_NAME,
     payload,
-  }
+  };
 }
 
 export function addTextPrompt(payload) {
   return {
     type: ADD_TEXT_PROMPT,
     payload,
-  }
+  };
 }
 
-export function deleteTextPrompt(payload){
+export function deleteTextPrompt(payload) {
   return {
     type: DELETE_TEXT_PROMPT,
     payload,
-  }
+  };
 }

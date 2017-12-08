@@ -1,7 +1,7 @@
 /* eslint-disable */
 /**
  * This script will extract the internationalization messages from all components
-   and package them in the translation json files in the translations file.
+ and package them in the translation json files in the translations file.
  */
 const fs = require('fs');
 const nodeGlob = require('glob');
@@ -37,8 +37,8 @@ const task = (message) => {
     }
     clearTimeout(progress);
     return addCheckmark(() => newLine());
-  }
-}
+  };
+};
 
 // Wrap async functions below into a promise
 const glob = (pattern) => new Promise((resolve, reject) => {
@@ -73,15 +73,15 @@ for (const locale of locales) {
     if (error.code !== 'ENOENT') {
       process.stderr.write(
         `There was an error loading this translation file: ${translationFileName}
-        \n${error}`
+        \n${error}`,
       );
     }
   }
 }
 
 /* push `react-intl` plugin to the existing plugins that are already configured in `package.json`
-   Example: 
-   ``` 
+   Example:
+   ```
   "babel": {
     "plugins": [
       ["transform-object-rest-spread", { "useBuiltIns": true }]
@@ -93,7 +93,7 @@ for (const locale of locales) {
   }
   ```
 */
-plugins.push(['react-intl'])
+plugins.push(['react-intl']);
 
 const extractFromFile = async (fileName) => {
   try {
@@ -118,12 +118,12 @@ const extractFromFile = async (fileName) => {
 (async function main() {
   const memoryTaskDone = task('Storing language files in memory');
   const files = await glob(FILES_TO_PARSE);
-  memoryTaskDone()
+  memoryTaskDone();
 
   const extractTaskDone = task('Run extraction on all files');
   // Run extraction on all files that match the glob on line 16
   await Promise.all(files.map((fileName) => extractFromFile(fileName)));
-  extractTaskDone()
+  extractTaskDone();
 
   // Make the directory if it doesn't exist, especially for first run
   mkdir('-p', 'app/translations');
@@ -132,13 +132,13 @@ const extractFromFile = async (fileName) => {
 
     try {
       const localeTaskDone = task(
-        `Writing translation messages for ${locale} to: ${translationFileName}`
+        `Writing translation messages for ${locale} to: ${translationFileName}`,
       );
 
       // Sort the translation JSON file so that git diffing is easier
       // Otherwise the translation messages will jump around every time we extract
       let messages = {};
-      Object.keys(localeMappings[locale]).sort().forEach(function(key) {
+      Object.keys(localeMappings[locale]).sort().forEach(function (key) {
         messages[key] = localeMappings[locale][key];
       });
 
@@ -151,10 +151,10 @@ const extractFromFile = async (fileName) => {
     } catch (error) {
       localeTaskDone(
         `There was an error saving this translation file: ${translationFileName}
-        \n${error}`
+        \n${error}`,
       );
     }
   }
 
-  process.exit()
+  process.exit();
 }());

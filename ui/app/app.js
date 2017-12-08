@@ -52,7 +52,7 @@ import createRoutes from './routes';
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
 
-//Inject the sagas of the conversation bar to allow global listening
+// Inject the sagas of the conversation bar to allow global listening
 ConversationBarSagas.map(store.runSaga);
 
 // Sync history and store, as the react-router-redux reducer
@@ -83,7 +83,7 @@ const render = (messages) => {
         />
       </LanguageProvider>
     </Provider>,
-    document.getElementById('app')
+    document.getElementById('app'),
   );
 };
 

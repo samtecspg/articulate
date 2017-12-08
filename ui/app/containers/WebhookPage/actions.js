@@ -1,6 +1,4 @@
-import {
-  CHANGE_WEBHOOK_DATA
-} from './constants';
+import { CHANGE_WEBHOOK_DATA, } from './constants';
 
 export function changeWebhookData(payload) {
   return {

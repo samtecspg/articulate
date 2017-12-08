@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import cx from 'classnames';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 class Tooltip extends Component {
-  componentDidMount () {
+  componentDidMount() {
     $('.tooltipped').tooltip();
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     $('.tooltipped').tooltip('remove');
   }
 
-  render () {
+  render() {
     const {
       children,
       tooltip,
       delay,
       position,
-      html
+      html,
     } = this.props;
 
     return React.cloneElement(children, {
@@ -25,7 +25,7 @@ class Tooltip extends Component {
       'data-delay': delay,
       'data-position': position,
       'data-html': html,
-      className: cx(children.props.className, 'tooltipped')
+      className: cx(children.props.className, 'tooltipped'),
     });
   }
 }
@@ -35,13 +35,13 @@ Tooltip.propTypes = {
   tooltip: PropTypes.string.isRequired,
   delay: PropTypes.number,
   html: PropTypes.bool,
-  position: PropTypes.oneOf(['top', 'right', 'bottom', 'left'])
+  position: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
 };
 
 Tooltip.defaultProps = {
   delay: 350,
   position: 'bottom',
-  html: false
+  html: false,
 };
 
 export default Tooltip;

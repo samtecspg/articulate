@@ -1,10 +1,20 @@
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { makeSelectAgentData } from 'containers/AgentPage/selectors';
+import {
+  agentCreated,
+  agentCreationError,
+} from 'containers/App/actions';
 import { CREATE_AGENT } from 'containers/App/constants';
-import { agentCreated, agentCreationError } from 'containers/App/actions';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  call,
+  cancel,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import request from 'utils/request';
-import { makeSelectAgentData } from 'containers/AgentPage/selectors';
 
 export function* postAgent() {
   const agentData = yield select(makeSelectAgentData());
@@ -18,10 +28,10 @@ export function* postAgent() {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(agentData),
-  }
+  };
 
   try {
     const agent = yield call(request, requestURL, requestOptions);
@@ -29,7 +39,7 @@ export function* postAgent() {
   } catch (error) {
     yield put(agentCreationError({
       message: 'An error ocurred creating the agent',
-      error
+      error,
     }));
   }
 }

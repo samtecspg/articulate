@@ -1,11 +1,10 @@
 import React from 'react';
-import { Row } from 'react-materialize';
 
 export function TableContainer(props) {
-  
+
   return (
     <table className="bordered highlight">
-        {React.Children.toArray(props.children)}
+      {React.Children.toArray(props.children)}
     </table>
   );
 }

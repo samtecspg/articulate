@@ -7,7 +7,7 @@ export default defineMessages({
   },
   createDomainDescription: {
     id: 'boilerplate.containers.DomainPage.create_domain.description',
-    defaultMessage: 'A domain is a unit the forms part of an agent. With a Domain you can represent a set of expressions that ' + 
+    defaultMessage: 'A domain is a unit the forms part of an agent. With a Domain you can represent a set of expressions that ' +
     'belongs to an specific context in your agent. Good examples of domains are: Sales, Order Tracking, Customer Service.',
   },
   agent: {

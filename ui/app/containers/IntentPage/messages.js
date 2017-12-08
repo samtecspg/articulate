@@ -7,7 +7,7 @@ export default defineMessages({
   },
   createIntentDescription: {
     id: 'boilerplate.containers.IntentPage.create_intent.description',
-    defaultMessage: 'Intens are grouped user sayings with a similar purpose. For example a user may say, ' + 
+    defaultMessage: 'Intens are grouped user sayings with a similar purpose. For example a user may say, ' +
     '"I want to order a cheese pizza" and that may be labeled with an intent of "Order Pizza".',
   },
   agent: {
@@ -52,43 +52,43 @@ export default defineMessages({
   },
   slotNameTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_tooltip',
-    defaultMessage: 'This is one instance of the intent you named upwards.'
+    defaultMessage: 'This is one instance of the intent you named upwards.',
   },
   slotEntityTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_entity_tooltip',
-    defaultMessage: 'Synonyms will help the agent to recognize this example in several different ways.'
+    defaultMessage: 'Synonyms will help the agent to recognize this example in several different ways.',
   },
   slotIsRequiredTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_required_tooltip',
-    defaultMessage: 'Flag to indicate if the user should fulfilled this slot before sending intent.'
+    defaultMessage: 'Flag to indicate if the user should fulfilled this slot before sending intent.',
   },
   slotIsListTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_list_tooltip',
-    defaultMessage: 'Flag to indicate if this slot should be grouped in a list of elements.'
+    defaultMessage: 'Flag to indicate if this slot should be grouped in a list of elements.',
   },
   slotPromptTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_prompt_tooltip',
-    defaultMessage: 'Flag to indicate if this slot should be grouped in a list of elements.'
+    defaultMessage: 'Flag to indicate if this slot should be grouped in a list of elements.',
   },
   slotNameTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_title',
-    defaultMessage: 'Slot Name'
+    defaultMessage: 'Slot Name',
   },
   slotEntityTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_entity_title',
-    defaultMessage: 'Entity'
+    defaultMessage: 'Entity',
   },
   slotIsRequiredTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_required_title',
-    defaultMessage: 'Is Required?'
+    defaultMessage: 'Is Required?',
   },
   slotIsListTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_list_title',
-    defaultMessage: 'Is List?'
+    defaultMessage: 'Is List?',
   },
   slotPromptTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_prompt_title',
-    defaultMessage: 'Text Prompt'
+    defaultMessage: 'Text Prompt',
   },
   slotNamePlaceholder: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_placeholder',
@@ -100,7 +100,7 @@ export default defineMessages({
   },
   slotPromptPlaceholder: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_placeholder',
-    defaultMessage: 'Add Text Prompt',    
+    defaultMessage: 'Add Text Prompt',
   },
   actionButton: {
     id: 'boilerplate.containers.AgentPage.create_agent.action_button',
@@ -108,22 +108,22 @@ export default defineMessages({
   },
   emptyEntityList: {
     id: 'boilerplate.containers.AgentPage.create_agent.empty_entity_list',
-    defaultMessage: 'Please select an agent first'
+    defaultMessage: 'Please select an agent first',
   },
   createEntity: {
     id: 'boilerplate.containers.AgentPage.create_agent.create_entity',
-    defaultMessage: '+ Create Entity'
+    defaultMessage: '+ Create Entity',
   },
   emptySlotList: {
     id: 'boilerplate.containers.AgentPage.create_agent.empty_slot_list',
-    defaultMessage: 'You haven\'t created slots'
+    defaultMessage: 'You haven\'t created slots',
   },
   webhook: {
     id: 'boilerplate.containers.AgentPage.create_agent.webhook',
-    defaultMessage: 'Webhook Url'
+    defaultMessage: 'Webhook Url',
   },
   webhookPlaceholder: {
     id: 'boilerplate.containers.AgentPage.create_agent.webhook_placeholder',
-    defaultMessage: 'example: http://localhost:4500'
+    defaultMessage: 'example: http://localhost:4500',
   },
 });

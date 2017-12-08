@@ -1,6 +1,4 @@
-import {
-  CHANGE_DOMAIN_DATA
-} from './constants';
+import { CHANGE_DOMAIN_DATA, } from './constants';
 
 export function changeDomainData(payload) {
   return {

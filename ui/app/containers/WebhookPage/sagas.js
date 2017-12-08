@@ -1,10 +1,25 @@
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
+import {
+  agentsLoaded,
+  agentsLoadingError,
+  webhookCreated,
+  webhookCreationError,
+} from 'containers/App/actions';
+import {
+  CREATE_WEBHOOK,
+  LOAD_AGENTS,
+} from 'containers/App/constants';
+import { makeSelectWebhookData } from 'containers/WebhookPage/selectors';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { CREATE_WEBHOOK, LOAD_AGENTS } from 'containers/App/constants';
-import { webhookCreated, webhookCreationError, agentsLoaded, agentsLoadingError } from 'containers/App/actions';
+import {
+  call,
+  cancel,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import request from 'utils/request';
-import { makeSelectWebhookData } from 'containers/WebhookPage/selectors';
 
 export function* postWebhook() {
   const webhookData = yield select(makeSelectWebhookData());
@@ -14,12 +29,12 @@ export function* postWebhook() {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       webhookUrl: webhookData.webhookUrl,
     }),
-  }
+  };
 
   try {
     const webhook = yield call(request, requestURL, requestOptions);
@@ -49,7 +64,7 @@ export function* getAgents() {
   } catch (error) {
     yield put(agentsLoadingError({
       message: 'An error ocurred loading the list of available agents',
-      error
+      error,
     }));
   }
 }
@@ -62,9 +77,8 @@ export function* loadAgents() {
   yield cancel(watcher);
 }
 
-
 // Bootstrap sagas
 export default [
   createWebhook,
-  loadAgents
+  loadAgents,
 ];

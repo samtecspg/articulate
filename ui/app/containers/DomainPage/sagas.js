@@ -1,24 +1,39 @@
-import { take, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
+import {
+  agentsLoaded,
+  agentsLoadingError,
+  domainCreated,
+  domainCreationError,
+} from 'containers/App/actions';
+import {
+  CREATE_DOMAIN,
+  LOAD_AGENTS,
+} from 'containers/App/constants';
+import { makeSelectDomainData } from 'containers/DomainPage/selectors';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { CREATE_DOMAIN, LOAD_AGENTS } from 'containers/App/constants';
-import { domainCreated, domainCreationError, agentsLoaded, agentsLoadingError } from 'containers/App/actions';
+import {
+  call,
+  cancel,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import request from 'utils/request';
-import { makeSelectDomainData } from 'containers/DomainPage/selectors';
 
 export function* postDomain() {
   const domainData = yield select(makeSelectDomainData());
-  domainData.intentThreshold = domainData.intentThreshold/100;
+  domainData.intentThreshold = domainData.intentThreshold / 100;
 
   const requestURL = `http://127.0.0.1:8000/domain`;
   const requestOptions = {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(domainData),
-  }
+  };
 
   try {
     const domain = yield call(request, requestURL, requestOptions);
@@ -26,7 +41,7 @@ export function* postDomain() {
   } catch (error) {
     yield put(domainCreationError({
       message: 'An error ocurred creating the domain',
-      error
+      error,
     }));
   }
 }
@@ -48,7 +63,7 @@ export function* getAgents() {
   } catch (error) {
     yield put(agentsLoadingError({
       message: 'An error ocurred loading the list of available agents',
-      error
+      error,
     }));
   }
 }
@@ -61,9 +76,8 @@ export function* loadAgents() {
   yield cancel(watcher);
 }
 
-
 // Bootstrap sagas
 export default [
   createDomain,
-  loadAgents
+  loadAgents,
 ];

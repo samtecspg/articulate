@@ -4,93 +4,92 @@ const selectGlobal = (state) => state.get('global');
 
 const makeSelectAgents = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('agents')
+  (globalState) => globalState.get('agents'),
 );
 
 const makeSelectAgentDomains = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('agentDomains')
+  (globalState) => globalState.get('agentDomains'),
 );
 
 const makeSelectAgentEntities = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('agentEntities')
+  (globalState) => globalState.get('agentEntities'),
 );
 
 const makeSelectConversation = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('conversation').toJS()
+  (globalState) => globalState.get('conversation').toJS(),
 );
 
 const makeSelectCurrentAgent = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('currentAgent')
+  (globalState) => globalState.get('currentAgent'),
 );
 
 const makeSelectCurrentDomain = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('currentDomain')
+  (globalState) => globalState.get('currentDomain'),
 );
 
 const makeSelectCurrentIntent = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('currentIntent')
+  (globalState) => globalState.get('currentIntent'),
 );
 
 const makeSelectCurrentScenario = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('currentScenario')
+  (globalState) => globalState.get('currentScenario'),
 );
 
 const makeSelectCurrentEntity = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('currentEntity')
+  (globalState) => globalState.get('currentEntity'),
 );
 
 const makeSelectLoading = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('loading')
+  (globalState) => globalState.get('loading'),
 );
 
 const makeSelectLoadingConversation = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('loadingConversation')
+  (globalState) => globalState.get('loadingConversation'),
 );
 
 const makeSelectError = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('error')
+  (globalState) => globalState.get('error'),
 );
 
 const makeSelectAgent = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['agent', 'data'])
+  (globalState) => globalState.getIn(['agent', 'data']),
 );
 
 const makeSelectDomain = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['domain', 'data'])
+  (globalState) => globalState.getIn(['domain', 'data']),
 );
 
 const makeSelectWebhook = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['webhook', 'data'])
+  (globalState) => globalState.getIn(['webhook', 'data']),
 );
-
 
 const makeSelectIntent = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['intent', 'data'])
+  (globalState) => globalState.getIn(['intent', 'data']),
 );
 
 const makeSelectScenario = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['scenario', 'data'])
+  (globalState) => globalState.getIn(['scenario', 'data']),
 );
 
 const makeSelectEntity = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['entity', 'data'])
+  (globalState) => globalState.getIn(['entity', 'data']),
 );
 
 const makeSelectLocationState = () => {
@@ -108,6 +107,11 @@ const makeSelectLocationState = () => {
     return prevRoutingStateJS;
   };
 };
+
+const makeSelectDomainIntents = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('domainIntents'),
+);
 
 export {
   selectGlobal,
@@ -130,4 +134,5 @@ export {
   makeSelectScenario,
   makeSelectEntity,
   makeSelectLocationState,
+  makeSelectDomainIntents,
 };

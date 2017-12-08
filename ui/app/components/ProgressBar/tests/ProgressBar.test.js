@@ -1,10 +1,13 @@
+import {
+  mount,
+  shallow,
+} from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import Percent from '../Percent';
 
 import ProgressBar from '../ProgressBar';
 import Wrapper from '../Wrapper';
-import Percent from '../Percent';
 
 let clock = null;
 
@@ -19,14 +22,14 @@ describe('<ProgressBar />', () => {
 
   it('should initially render hidden progress bar', () => {
     const renderedComponent = shallow(
-      <ProgressBar />
+      <ProgressBar />,
     );
     expect(renderedComponent.find(Wrapper).length).toEqual(1);
   });
 
   it('should render render horizontal progress bar', () => {
     const renderedComponent = shallow(
-      <ProgressBar />
+      <ProgressBar />,
     );
     expect(renderedComponent.find(Percent).length).toEqual(1);
   });
@@ -34,7 +37,7 @@ describe('<ProgressBar />', () => {
   it('should set state.percent as props.percent', () => {
     const expected = 50;
     const renderedComponent = mount(
-      <ProgressBar percent={expected} />
+      <ProgressBar percent={expected} />,
     );
     expect(renderedComponent.state().percent).toEqual(expected);
   });
@@ -42,7 +45,7 @@ describe('<ProgressBar />', () => {
   it('should call componentDidMount', () => {
     sinon.spy(ProgressBar.prototype, 'componentDidMount');
     const renderedComponent = mount( // eslint-disable-line
-      <ProgressBar percent={0} updateProgress={(noop) => noop} />
+      <ProgressBar percent={0} updateProgress={(noop) => noop} />,
     );
     expect(ProgressBar.prototype.componentDidMount.calledOnce).toEqual(true);
     ProgressBar.prototype.componentDidMount.restore();
@@ -51,7 +54,7 @@ describe('<ProgressBar />', () => {
   it('should call componentWillReceiveProps', () => {
     sinon.spy(ProgressBar.prototype, 'componentWillReceiveProps');
     const renderedComponent = mount( // eslint-disable-line
-      <ProgressBar percent={0} updateProgress={(noop) => noop} />
+      <ProgressBar percent={0} updateProgress={(noop) => noop} />,
     );
     renderedComponent.setProps({ percent: 50 });
     expect(ProgressBar.prototype.componentWillReceiveProps.calledOnce).toEqual(true);
@@ -60,7 +63,7 @@ describe('<ProgressBar />', () => {
 
   it('should unset ProgressBar.interval after getting new props', () => {
     const renderedComponent = mount( // eslint-disable-line
-      <ProgressBar percent={0} updateProgress={(noop) => noop} />
+      <ProgressBar percent={0} updateProgress={(noop) => noop} />,
     );
     const inst = renderedComponent.instance();
 
@@ -72,7 +75,7 @@ describe('<ProgressBar />', () => {
 
   it('should unset ProgressBar.timeout after getting new props', () => {
     const renderedComponent = mount( // eslint-disable-line
-      <ProgressBar percent={100} updateProgress={(noop) => noop} />
+      <ProgressBar percent={100} updateProgress={(noop) => noop} />,
     );
     const inst = renderedComponent.instance();
 
@@ -84,7 +87,7 @@ describe('<ProgressBar />', () => {
 
   it('should set state to -1 after new route mounts', () => {
     const renderedComponent = mount(
-      <ProgressBar percent={0} updateProgress={(noop) => noop} />
+      <ProgressBar percent={0} updateProgress={(noop) => noop} />,
     );
     renderedComponent.setProps({ percent: 100 });
     clock.tick(501);
@@ -94,7 +97,7 @@ describe('<ProgressBar />', () => {
   it('should call componentWillUnmount', () => {
     sinon.spy(ProgressBar.prototype, 'componentWillUnmount');
     const renderedComponent = mount( // eslint-disable-line
-      <ProgressBar percent={0} updateProgress={(noop) => noop} />
+      <ProgressBar percent={0} updateProgress={(noop) => noop} />,
     );
     renderedComponent.unmount();
     expect(ProgressBar.prototype.componentWillUnmount.calledOnce).toEqual(true);
@@ -104,7 +107,7 @@ describe('<ProgressBar />', () => {
   it('should unset ProgressBar.interval after unmounting', () => {
     sinon.spy(ProgressBar.prototype, 'componentWillUnmount');
     const renderedComponent = mount( // eslint-disable-line
-      <ProgressBar percent={0} updateProgress={(noop) => noop} />
+      <ProgressBar percent={0} updateProgress={(noop) => noop} />,
     );
     const inst = renderedComponent.instance();
 
@@ -118,7 +121,7 @@ describe('<ProgressBar />', () => {
   it('should unset ProgressBar.timeout after unmounting', () => {
     sinon.spy(ProgressBar.prototype, 'componentWillUnmount');
     const renderedComponent = mount( // eslint-disable-line
-      <ProgressBar percent={100} updateProgress={(noop) => noop} />
+      <ProgressBar percent={100} updateProgress={(noop) => noop} />,
     );
     const inst = renderedComponent.instance();
 
@@ -141,7 +144,7 @@ describe('<ProgressBar />', () => {
     it('should start incrementing progress if 0 <= percent < 100', () => {
       const initialPercent = 50;
       const renderedComponent = mount(
-        <ProgressBar percent={initialPercent} updateProgress={(noop) => noop} />
+        <ProgressBar percent={initialPercent} updateProgress={(noop) => noop} />,
       );
       clock.tick(1000);
       expect(renderedComponent.state().percent).toBeGreaterThan(initialPercent);
@@ -151,7 +154,7 @@ describe('<ProgressBar />', () => {
       const initialPercent = 100;
       const expected = -1;
       const renderedComponent = mount(
-        <ProgressBar percent={initialPercent} updateProgress={(noop) => noop} />
+        <ProgressBar percent={initialPercent} updateProgress={(noop) => noop} />,
       );
       clock.tick(1000);
       expect(renderedComponent.state().percent).toEqual(expected);

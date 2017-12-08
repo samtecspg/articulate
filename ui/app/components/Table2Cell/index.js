@@ -5,9 +5,9 @@
  */
 
 import React from 'react';
-import StringCell from './types/StringCell';
 import CheckBoxCell from './types/CheckBoxCell';
 import ProgressCell from './types/ProgressCell';
+import StringCell from './types/StringCell';
 
 class Table2Cell extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {

@@ -1,9 +1,6 @@
 import { fromJS } from 'immutable';
-import { createSelector } from 'reselect';
 
-import {
-  CHANGE_WEBHOOK_DATA,
-} from './constants';
+import { CHANGE_WEBHOOK_DATA, } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({

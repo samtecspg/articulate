@@ -1,9 +1,13 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
-import { Row, Col, CardPanel } from 'react-materialize';
+import {
+  CardPanel,
+  Col,
+  Row,
+} from 'react-materialize';
 
 export function AgentMessage(props) {
-  
+
   return (
     <Row>
       <Col s={6} m={10}>
