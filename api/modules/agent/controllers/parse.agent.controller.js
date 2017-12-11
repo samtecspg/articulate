@@ -7,8 +7,18 @@ const Flat = require('flat');
 module.exports = (request, reply) => {
 
     const agentId = request.params.id;
-    const text = request.query.text;
-    const timezone = request.query.timezone;
+
+    let text;
+    let timezone;
+    if (request.payload){
+        text = request.payload.text;
+        timezone = request.payload.timezone;
+    }
+    else {
+        text = request.query.text;
+        timezone = request.query.timezone;
+    }
+
     const server = request.server;
     const redis = server.app.redis;
     const rasa = server.app.rasa;

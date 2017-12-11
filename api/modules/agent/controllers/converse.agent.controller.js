@@ -7,9 +7,19 @@ const Boom = require('boom');
 module.exports = (request, reply) => {
 
     const agentId = request.params.id;
-    const sessionId = request.query.sessionId;
-    const text = request.query.text;
-    const timezone = request.query.timezone;
+    let sessionId;
+    let text;
+    let timezone;
+    if (request.payload){
+        sessionId = request.payload.sessionId;
+        text = request.payload.text;
+        timezone = request.payload.timezone;
+    }
+    else {
+        sessionId = request.query.sessionId;
+        text = request.query.text;
+        timezone = request.query.timezone;
+    }
     const server = request.server;
 
     Async.waterfall([

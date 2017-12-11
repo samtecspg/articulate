@@ -183,6 +183,23 @@ class AgentValidate {
                 };
             })()
         };
+
+        this.parsePost = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    text: Joi.string().required().description('Text to parse'),
+                    timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville')
+                };
+            })()
+        };
+
         this.converse = {
             params: (() => {
 
@@ -199,6 +216,24 @@ class AgentValidate {
                 };
             })()
         };
+
+        this.conversePost = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    sessionId: Joi.string().required().description('Id of the session'),
+                    text: Joi.string().required().description('Text to parse'),
+                    timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville')
+                };
+            })()
+        };
+
         this.export = {
             params: (() => {
 
@@ -207,6 +242,7 @@ class AgentValidate {
                 };
             })()
         };
+
         this.import = {
             payload: (() => {
 

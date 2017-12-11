@@ -134,12 +134,32 @@ const AgentRoutes = [
         }
     },
     {
+        method: 'POST',
+        path: '/agent/{id}/parse',
+        config: {
+            description: 'Parse a text for each domain in the agent',
+            tags: ['api'],
+            validate: AgentValidator.parsePost,
+            handler: AgentController.parse
+        }
+    },
+    {
         method: 'GET',
         path: '/agent/{id}/converse',
         config: {
             description: 'Converse with a trained agent',
             tags: ['api'],
             validate: AgentValidator.converse,
+            handler: AgentController.converse
+        }
+    },
+    {
+        method: 'POST',
+        path: '/agent/{id}/converse',
+        config: {
+            description: 'Converse with a trained agent',
+            tags: ['api'],
+            validate: AgentValidator.conversePost,
             handler: AgentController.converse
         }
     },
