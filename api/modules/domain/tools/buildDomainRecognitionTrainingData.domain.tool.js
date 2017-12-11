@@ -1,8 +1,8 @@
 'use strict';
 
 const _ = require('lodash');
-const GetAgentData = require('./getAgentData.intent.tool');
-const GetEntitiesCombinations = require('./getEntitiesCombinations.intent.tool');
+const GetAgentData = require('./getAgentData.domain.tool');
+const GetEntitiesCombinations = require('./getEntitiesCombinations.domain.tool');
 
 const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
 

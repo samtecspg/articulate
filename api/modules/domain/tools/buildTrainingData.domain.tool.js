@@ -1,8 +1,8 @@
 'use strict';
 
 const _ = require('lodash');
-const GetDomainData = require('./getDomainData.intent.tool');
-const GetEntitiesCombinations = require('./getEntitiesCombinations.intent.tool');
+const GetDomainData = require('./getDomainData.domain.tool');
+const GetEntitiesCombinations = require('./getEntitiesCombinations.domain.tool');
 
 const buildTrainingData = (server, domainId, callback) => {
 

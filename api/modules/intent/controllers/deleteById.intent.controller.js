@@ -2,6 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const IntentTools = require('../tools');
+const DomainTools = require('../../domain/tools');
 
 module.exports = (request, reply) => {
 
@@ -119,8 +120,8 @@ module.exports = (request, reply) => {
             (callback) => {
 
                 Async.waterfall([
-                    Async.apply(IntentTools.retrainModelTool, server, rasa, intent.agent, intent.domain, domainId),
-                    Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, intent.agent, agentId)
+                    Async.apply(DomainTools.retrainModelTool, server, rasa, intent.agent, intent.domain, domainId),
+                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, intent.agent, agentId)
                 ], (err) => {
 
                     if (err){

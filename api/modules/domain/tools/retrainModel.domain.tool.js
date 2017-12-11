@@ -3,7 +3,7 @@
 const Wreck = require('wreck');
 const Boom = require('boom');
 const Guid = require('guid');
-const BuildTrainingData = require('./buildTrainingData.intent.tool');
+const BuildTrainingData = require('./buildTrainingData.domain.tool');
 
 const retrainModel = (server, rasa, agentName, domainName, domainId, callback) => {
 

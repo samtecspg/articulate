@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const CartesianProduct = require('./cartesianProduct.intent.tool');
+const CartesianProduct = require('./cartesianProduct.domain.tool');
 
 const getCombinationOfEntities = (entities, intents) => {
 

@@ -62,6 +62,16 @@ const DomainRoutes = [
             validate: DomainValidator.findIntentsByDomainId,
             handler: DomainController.findIntentsByDomainId
         }
+    },
+    {
+        method: 'GET',
+        path: '/domain/{id}/train',
+        config: {
+            description: 'Train the specified domain',
+            tags: ['api'],
+            validate: DomainValidator.train,
+            handler: DomainController.train
+        }
     }
 ];
 

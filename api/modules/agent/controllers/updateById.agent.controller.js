@@ -295,8 +295,48 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         if (requiresRetrain){
-            //call retrain here
+            Async.waterfall([
+                (callbackGetDomains) => {
+
+                    server.inject(`/agent/${agentId}/domain`, (res) => {
+
+                        if (res.statusCode !== 200){
+                            const error = Boom.create(res.statusCode, 'An error ocurred getting the domains of the agent to train them');
+                            return callbackGetDomains(error, null);
+                        }
+                        return callbackGetDomains(null, res.result);
+                    });
+                },
+                (domains, callbackTrainEachDomain) => {
+
+                    Async.eachLimit(domains, 1, (domain, callbackMapOfDomain) => {
+
+                        server.inject(`/domain/${domain.id}/train`, (res) => {
+
+                            if (res.statusCode !== 200){
+                                const error = Boom.create(res.statusCode, `An error ocurred training the domain ${domain.domain}`);
+                                return callbackMapOfDomain(error);
+                            }
+                            return callbackMapOfDomain(null);
+                        });
+                    }, (err) => {
+
+                        if (err){
+                            return callbackTrainEachDomain(err);
+                        }
+                        return callbackTrainEachDomain(null);
+                    });
+                }
+            ], (errTraining) => {
+
+                if (errTraining){
+                    return reply(errTraining);
+                }
+                return reply(result);
+            });
         }
-        return reply(result);
+        else {
+            return reply(result);
+        }
     });
 };

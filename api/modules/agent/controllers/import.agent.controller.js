@@ -4,6 +4,7 @@ const Boom = require('boom');
 const Flat = require('flat');
 const _ = require('lodash');
 const IntentTools = require('../../intent/tools');
+const DomainTools = require('../../domain/tools');
 
 module.exports = (request, reply) => {
 
@@ -305,8 +306,8 @@ module.exports = (request, reply) => {
                         domainResult.intents = resultIntents;
 
                         Async.waterfall([
-                            Async.apply(IntentTools.retrainModelTool, server, rasa, agentResult.agentName, domainResult.domainName, domainResult.id),
-                            Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, agentResult.agentName, agentResult.id)
+                            Async.apply(DomainTools.retrainModelTool, server, rasa, agentResult.agentName, domainResult.domainName, domainResult.id),
+                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agentResult.agentName, agentResult.id)
                         ], (errTraining) => {
 
                             if (errTraining){

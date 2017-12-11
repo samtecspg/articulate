@@ -3,7 +3,7 @@
 const Wreck = require('wreck');
 const Boom = require('boom');
 
-const BuildDomainRecognitionTrainingData = require('./buildDomainRecognitionTrainingData.intent.tool');
+const BuildDomainRecognitionTrainingData = require('./buildDomainRecognitionTrainingData.domain.tool');
 
 const retrainDomainRecognizer = (server, redis, rasa, agentName, agentId, cb) => {
 

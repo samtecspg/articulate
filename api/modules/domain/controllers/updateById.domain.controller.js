@@ -200,8 +200,17 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         if (requiresRetrain){
-            //call retrain here
+            server.inject(`/domain/${domainId}/train`, (res) => {
+
+                if (res.statusCode !== 200){
+                    const error = Boom.create(res.statusCode, `An error ocurred retraining the domain ${result.domain} after the update`);
+                    reply(error);
+                }
+                reply(res.result);
+            });
         }
-        return reply(result);
+        else {
+            return reply(result);
+        }
     });
 };

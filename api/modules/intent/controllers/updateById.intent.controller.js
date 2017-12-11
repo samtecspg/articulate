@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const IntentTools = require('../tools');
+const DomainTools = require('../../domain/tools');
 const _ = require('lodash');
 
 const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, cb) => {
@@ -44,8 +45,8 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                     (callback) => {
 
                         Async.waterfall([
-                            Async.apply(IntentTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
-                            Async.apply(IntentTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
+                            Async.apply(DomainTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
+                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
                         ], (err) => {
 
                             if (err){

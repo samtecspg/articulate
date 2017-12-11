@@ -285,8 +285,19 @@ module.exports = (request, reply) => {
                                     }
                                     return callbackUpdateIntentsAndScenarios(null);
                                 });
+                            },
+                            (callbackRetrainDomains) => {
+
+                                server.inject(`/domain/${domain}/train`, (res) => {
+
+                                    if (res.statusCode !== 200){
+                                        const error = Boom.create(res.statusCode, `An error ocurred training the domain ${domain}`);
+                                        return callbackMapOfDomains(error);
+                                    }
+                                    return callbackMapOfDomains(null);
+                                });
                             }
-                        ], (err, result) => {
+                        ], (err) => {
 
                             if (err){
                                 return callbackMapOfDomains(err);
@@ -306,7 +317,6 @@ module.exports = (request, reply) => {
                 if (err){
                     return reply(err);
                 }
-                //call retrain here
                 return reply(updatedEntity);
             });
         }

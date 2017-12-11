@@ -69,7 +69,7 @@ class DomainValidate {
             params: (() => {
 
                 return {
-                    id: DomainSchema.id.required().description('Id of the agent')
+                    id: DomainSchema.id.required().description('Id of the domain')
                 };
             })(),
             query: (() => {
@@ -77,6 +77,15 @@ class DomainValidate {
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
                     limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
+                };
+            })()
+        };
+
+        this.train = {
+            params: (() => {
+
+                return {
+                    id: DomainSchema.id.required().description('Id of the domain')
                 };
             })()
         };
