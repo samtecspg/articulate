@@ -20,6 +20,9 @@ const createAgent = (callback) => {
 
     const data = {
         agentName: 'Test Agent',
+        description: 'This is test agent',
+        language: 'en',
+        timezone: 'America/Kentucky/Louisville',
         webhookUrl: 'string',
         domainClassifierThreshold: 0.6,
         fallbackResponses: [

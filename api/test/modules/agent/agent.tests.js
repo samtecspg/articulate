@@ -24,6 +24,9 @@ const createAgent = (callback) => {
 
     const data = {
         agentName: 'Test Agent',
+        description: 'This is test agent',
+        language: 'en',
+        timezone: 'America/Kentucky/Louisville',
         webhookUrl: 'string',
         domainClassifierThreshold: 0.6,
         fallbackResponses: [
@@ -269,6 +272,9 @@ suite('/agent', () => {
 
             const data = {
                 agentName: 'Test Agent 2',
+                description: 'This is test agent',
+                language: 'en',
+                timezone: 'America/Kentucky/Louisville',
                 webhookUrl: 'http://localhost:8000',
                 domainClassifierThreshold: 0.9,
                 fallbackResponses: [
@@ -354,6 +360,9 @@ suite('/agent/{id}', () => {
             const data = {
                 id: agentId.toString(),
                 agentName: 'Test Agent Updated',
+                description: 'This is test agent',
+                language: 'en',
+                timezone: 'America/Kentucky/Louisville',
                 webhookUrl: 'http://localhost:8000',
                 domainClassifierThreshold: 0.5,
                 fallbackResponses: [
@@ -364,6 +373,9 @@ suite('/agent/{id}', () => {
 
             const updatedData = {
                 agentName: 'Test Agent Updated',
+                description: 'This is test agent',
+                language: 'en',
+                timezone: 'America/Kentucky/Louisville',
                 domainClassifierThreshold: 0.5,
                 fallbackResponses: [
                     'updated'

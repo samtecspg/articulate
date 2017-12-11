@@ -132,6 +132,9 @@ class AgentValidate {
 
                 return {
                     agentName: AgentSchema.agentName.required(),
+                    description: AgentSchema.description,
+                    language: AgentSchema.language.required(),
+                    timezone: AgentSchema.timezone.required(),
                     webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
@@ -151,6 +154,9 @@ class AgentValidate {
 
                 return {
                     agentName: AgentSchema.agentName,
+                    description: AgentSchema.description,
+                    language: AgentSchema.language,
+                    timezone: AgentSchema.timezone,
                     webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses,
@@ -248,6 +254,9 @@ class AgentValidate {
 
                 return {
                     agentName: AgentSchema.agentName.required(),
+                    description: AgentSchema.description,
+                    language: AgentSchema.language.required(),
+                    timezone: AgentSchema.timezone.required(),
                     webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
