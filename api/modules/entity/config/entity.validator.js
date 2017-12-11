@@ -12,6 +12,7 @@ class EntityValidate {
                 return {
                     entityName: EntitySchema.entityName.required(),
                     agent: EntitySchema.agent.required(),
+                    uiColor: EntitySchema.uiColor,
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms
@@ -40,6 +41,7 @@ class EntityValidate {
 
                 return {
                     entityName: EntitySchema.entityName,
+                    uiColor: EntitySchema.uiColor,
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms

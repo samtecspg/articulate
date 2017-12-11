@@ -92,6 +92,7 @@ suite('/entity', () => {
             const data = {
                 entityName: 'Test Entity',
                 agent: agentName,
+                uiColor: '#009688',
                 examples: [{
                     value: 'car',
                     synonyms: [
@@ -177,6 +178,7 @@ suite('/entity/{id}', () => {
             const data = {
                 entityName: 'Test Entity',
                 agent: agentName,
+                uiColor: '#009688',
                 examples: [{
                     value: 'car',
                     synonyms: [
@@ -217,6 +219,7 @@ suite('/entity/{id}', () => {
             const data = {
                 entityName: 'Test Entity Updated',
                 agent: agentName,
+                uiColor: '#00BCD4',
                 examples: [{
                     value: 'car',
                     synonyms: [
@@ -229,6 +232,7 @@ suite('/entity/{id}', () => {
 
             const updatedData = {
                 entityName: 'Test Entity Updated',
+                uiColor: '#00BCD4',
                 examples: [{
                     value: 'car',
                     synonyms: [

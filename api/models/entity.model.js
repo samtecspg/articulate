@@ -9,6 +9,7 @@ class EntityModel {
             id: Joi.number(),
             agent: Joi.string(),
             entityName: Joi.string(),
+            uiColor: Joi.string(),
             examples: Joi.array().items(ExampleModel.schema)
         };
     };
