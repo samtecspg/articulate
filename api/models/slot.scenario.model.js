@@ -9,7 +9,6 @@ class SlotModel {
             entity: Joi.string(),
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
-            useOriginal: Joi.boolean(),
             textPrompts: Joi.array().items(Joi.string()),
             useWebhook: Joi.boolean()
         };

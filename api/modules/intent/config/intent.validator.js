@@ -73,7 +73,6 @@ class IntentValidate {
                         entity: SlotSchema.entity.required(),
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
-                        useOriginal: SlotSchema.useOriginal.required(),
                         textPrompts: SlotSchema.textPrompts,
                         useWebhook: SlotSchema.useWebhook.required()
                     }),
@@ -109,7 +108,6 @@ class IntentValidate {
                         entity: SlotSchema.entity.required(),
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
-                        useOriginal: SlotSchema.useOriginal.required(),
                         textPrompts: SlotSchema.textPrompts,
                         useWebhook: SlotSchema.useWebhook.required()
                     }),

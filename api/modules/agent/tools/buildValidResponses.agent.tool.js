@@ -2,10 +2,26 @@
 
 const _ = require('lodash');
 
-const replaceText = (response, slotName, slotValue) => {
+const replaceText = (response, slot, contextSlotValue) => {
 
     const oldResponseText = response.text;
-    response.text =  response.text.replace(`{${slotName}}`, slotValue);
+    if (response.text.indexOf(`{${slot.slotName}.original}`) > -1){
+        let valueForReplacement = contextSlotValue.original;
+        if (slot.isList === 'true'){
+            if (valueForReplacement.length > 1){
+                if (valueForReplacement.length === 2){
+                    valueForReplacement = `${valueForReplacement[0]} and ${valueForReplacement[1]}`;
+                }
+                else {
+                    valueForReplacement = `${valueForReplacement.slice(0, valueForReplacement.length - 2).join(', ')}, and ${valueForReplacement[valueForReplacement.length - 1]}`;
+                }
+            }
+        }
+        response.text =  response.text.replace(`{${slot.slotName}.original}`, valueForReplacement);
+    }
+    else {
+        response.text =  response.text.replace(`{${slot.slotName}}`, contextSlotValue.value);
+    }
     if (!response.template && response.text !== response) {
         response.template = true;
     }
@@ -32,18 +48,7 @@ module.exports = (userText, context, slots, responses, timezone) => {
 
                         return tempSlot.slotName === slot;
                     })[0];
-                    let valueForReplacement = slotDefinition.useOriginal ? context.slots[slot].original : context.slots[slot].value;
-                    if (slotDefinition.isList === 'true'){
-                        if (valueForReplacement.length > 1){
-                            if (valueForReplacement.length === 2){
-                                valueForReplacement = `${valueForReplacement[0]} and ${valueForReplacement[1]}`;
-                            }
-                            else {
-                                valueForReplacement = `${valueForReplacement.slice(0, valueForReplacement.length - 2).join(', ')}, and ${valueForReplacement[valueForReplacement.length - 1]}`;
-                            }
-                        }
-                    }
-                    tempResponse = replaceText(tempResponse, slot, valueForReplacement);
+                    tempResponse = replaceText(tempResponse, slotDefinition, context.slots[slot]);
                 }
             });
         }
@@ -51,7 +56,7 @@ module.exports = (userText, context, slots, responses, timezone) => {
         if (slots){
             slots.forEach( (slot) => {
 
-                if (tempResponse.text.indexOf(`{${slot.slotName}}`) !== -1) {
+                if (tempResponse.text.indexOf(`{${slot.slotName}}`) !== -1 || tempResponse.text.indexOf(`{${slot.slotName}.original}`) !== -1) {
                     isValid = false;
                 }
             });
