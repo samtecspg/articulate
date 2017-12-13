@@ -48,7 +48,7 @@ module.exports = (request, reply) => {
                 server.inject('/entity/' + entity[1], (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[0]} with id ${entity[0]}`);
                         return cb(error, null);
                     }
                     return cb(null, res.result);

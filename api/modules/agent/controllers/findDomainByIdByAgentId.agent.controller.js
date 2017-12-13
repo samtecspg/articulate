@@ -31,7 +31,7 @@ module.exports = (request, reply) => {
             redis.zrange(`agentDomains:${agentId}`, 0, -1, 'withscores', (err, domains) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the domains from the sorted set.');
+                    const error = Boom.badImplementation('An error ocurred getting the domains of agent from the sorted set.');
                     return cb(error);
                 }
                 domains = _.chunk(domains, 2);
@@ -48,7 +48,7 @@ module.exports = (request, reply) => {
                 server.inject('/domain/' + domain[1], (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[0]} with id ${domain[1]}`);
                         return cb(error, null);
                     }
                     return cb(null, res.result);

@@ -56,13 +56,13 @@ module.exports = (request, reply) => {
                         redis.zadd('agents', 'NX', agentId, updateData.agentName, (err, addResponse) => {
 
                             if (err){
-                                const error = Boom.badImplementation(`An error ocurred adding the name ${currentAgent.agentName} to the agents list of the agent ${currentAgent.agent}.`);
+                                const error = Boom.badImplementation(`An error ocurred adding the name ${currentAgent.agentName} to the agents list of agents`);
                                 return callback(error);
                             }
                             if (addResponse !== 0){
                                 return callback(null);
                             }
-                            const error = Boom.badRequest(`A agent with this name already exists in the agent ${currentAgent.agent}.`);
+                            const error = Boom.badRequest('An agent with this name already exists');
                             return callback(error, null);
                         });
                     },
@@ -219,7 +219,7 @@ module.exports = (request, reply) => {
                                             redis.hmset(`entity:${entity.id}`, Flat(entity), (err, result) => {
 
                                                 if (err){
-                                                    const error = Boom.badImplementation(`An error ocurred updating the entity ${entity.id} with the new values of the agent`);
+                                                    const error = Boom.badImplementation(`An error ocurred updating the entity ${entity.entityName} with the new values of the agent`);
                                                     return callbackMapOfEntity(error, null);
                                                 }
                                                 return callbackMapOfEntity(null);
@@ -253,7 +253,7 @@ module.exports = (request, reply) => {
                         redis.zrem('agents', currentAgent.agentName, (err, removeResult) => {
 
                             if (err){
-                                const error = Boom.badImplementation( `An error ocurred removing the name ${currentAgent.agentName} from the agents list of the agent ${currentAgent.agent}.`);
+                                const error = Boom.badImplementation( `An error ocurred removing the name ${currentAgent.agentName} from the agents list of agents`);
                                 return callback(error);
                             }
                             return callback(null);
@@ -314,7 +314,7 @@ module.exports = (request, reply) => {
                         server.inject(`/domain/${domain.id}/train`, (res) => {
 
                             if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error ocurred training the domain ${domain.domain}`);
+                                const error = Boom.create(res.statusCode, `An error ocurred training the domain ${domain.domainName}`);
                                 return callbackMapOfDomain(error);
                             }
                             return callbackMapOfDomain(null);

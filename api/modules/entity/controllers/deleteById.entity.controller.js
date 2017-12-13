@@ -31,11 +31,11 @@ module.exports = (request, reply) => {
             redis.smembers(`entityDomain:${entity.id}`, (err, domains) => {
 
                 if (err){
-                    const error = Boom.badImplementation(`An error ocurred deleting the entity ${entityId} from the entity ${entityId}`);
+                    const error = Boom.badImplementation(`An error ocurred getting the list of domains of the entity ${entity.entityName}sx`);
                     return callbackCheckEntityNotInUse(error, null);
                 }
                 if (domains && domains.length > 0){
-                    const error = Boom.badRequest(`The entity ${entityId} is being used by the domain(s) ${domains}`);
+                    const error = Boom.badRequest(`The entity ${entity.entityName} is being used by the domain(s) ${domains}`);
                     return callbackCheckEntityNotInUse(error, null);
                 }
                 return callbackCheckEntityNotInUse(null);

@@ -74,7 +74,7 @@ module.exports = (request, reply) => {
                             if (agentId){
                                 return callback(null, agentId);
                             }
-                            const error = Boom.badRequest(`The agent ${scenario.agent} doesn't exist`);
+                            const error = Boom.badRequest(`The agent ${currentScenario.agent} doesn't exist`);
                             return callback(error, null);
                         });
                     },

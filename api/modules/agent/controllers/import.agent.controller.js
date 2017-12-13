@@ -92,7 +92,7 @@ module.exports = (request, reply) => {
                         if (addResponse !== 0){
                             return cb(null);
                         }
-                        const error = Boom.badRequest(`A entity with this name already exists in the agent ${entity.agent}.`);
+                        const error = Boom.badRequest(`A entity with the name ${entity.entityName} already exists in the agent ${agent.agentName}.`);
                         return cb(error);
                     });
                 },
@@ -150,7 +150,7 @@ module.exports = (request, reply) => {
                             if (addResponse !== 0){
                                 return cb(null);
                             }
-                            const error = Boom.badRequest(`A domain with this name already exists in the agent ${domain.agent}.`);
+                            const error = Boom.badRequest(`A domain with the name ${domain.domainName} already exists in the agent ${agent.agentName}.`);
                             return cb(error, null);
                         });
                     },
@@ -212,7 +212,7 @@ module.exports = (request, reply) => {
                                     if (addResponse !== 0){
                                         return cb(null);
                                     }
-                                    const error = Boom.badRequest(`A intent with this name already exists in the domain ${intent.domain}.`);
+                                    const error = Boom.badRequest(`A intent with the name ${intent.intentName} already exists in the domain ${domain.domainName}.`);
                                     return cb(error);
                                 });
                             },

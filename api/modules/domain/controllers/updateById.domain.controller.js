@@ -64,7 +64,7 @@ module.exports = (request, reply) => {
                                 agentId = id;
                                 return callback(null);
                             }
-                            const error = Boom.badRequest(`The agent ${domain.agent} doesn't exist`);
+                            const error = Boom.badRequest(`The agent ${currentDomain.agent} doesn't exist`);
                             return callback(error, null);
                         });
                     },

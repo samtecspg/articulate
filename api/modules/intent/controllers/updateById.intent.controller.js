@@ -161,7 +161,7 @@ module.exports = (request, reply) => {
                             if (addResponse !== 0){
                                 return callback(null);
                             }
-                            const error = Boom.badRequest(`A intent with the name ${updateData.intentName} already exists in the domain ${updateData.domain}.`);
+                            const error = Boom.badRequest(`A intent with the name ${updateData.intentName} already exists in the domain ${currentIntent.domain}.`);
                             return callback(error, null);
                         });
                     },

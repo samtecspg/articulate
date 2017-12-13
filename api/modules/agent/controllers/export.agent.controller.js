@@ -35,7 +35,7 @@ module.exports = (request, reply) => {
                             server.inject(`/agent/${agentId}/domain`, (res) => {
 
                                 if (res.statusCode !== 200){
-                                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                                    const error = Boom.create(res.statusCode, `An error ocurred getting the list of domains of the agent ${exportedAgent.agent}`);
                                     return callbackGetDomains(error, null);
                                 }
                                 return callbackGetDomains(null, res.result);
@@ -51,7 +51,7 @@ module.exports = (request, reply) => {
                                         server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent`, (res) => {
 
                                             if (res.statusCode !== 200){
-                                                const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                                                const error = Boom.create(res.statusCode, `An error ocurred getting the list of intents for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                 return callbackGetIntentsFromDomain(error, null);
                                             }
                                             return callbackGetIntentsFromDomain(null, res.result);
@@ -67,7 +67,7 @@ module.exports = (request, reply) => {
                                                     if (res.statusCode === 404){
                                                         return callbackGetIntentScenario(null, exportedIntentForDomain);
                                                     }
-                                                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                                                    const error = Boom.create(res.statusCode, `An error ocurred getting the scenario of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                     return callbackGetIntentScenario(error, null);
                                                 }
                                                 return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: res.result }));
@@ -108,7 +108,7 @@ module.exports = (request, reply) => {
                     server.inject(`/agent/${agentId}/entity`, (res) => {
 
                         if (res.statusCode !== 200){
-                            const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                            const error = Boom.create(res.statusCode, `An error ocurred getting the list of entities of intent ${exportedAgent.agent}`);
                             return callbackGetEntities(error, null);
                         }
                         return callbackGetEntities(null, Object.assign(exportedAgent, { entities: res.result }));

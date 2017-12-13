@@ -56,7 +56,7 @@ module.exports = (request, reply) => {
                 server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[1]}`);
+                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[0]} with id ${domain[1]}`);
                         return cb(error, null);
                     }
                     return cb(null, res.result);

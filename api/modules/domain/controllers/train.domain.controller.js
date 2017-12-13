@@ -43,22 +43,6 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            redis.zscore('agents', domain.agent, (err, id) => {
-
-                if (err){
-                    const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
-                    return callback(error);
-                }
-                if (id){
-                    agentId = id;
-                    return callback(null);
-                }
-                const error = Boom.badRequest(`The agent ${domain.agent} of the specified domain doesn't exist`);
-                return callback(error);
-            });
-        },
-        (callback) => {
-
             DomainTools.retrainModelTool(server, rasa, domain.agent, domain.domainName, domainId, (err) => {
 
                 if (err){
