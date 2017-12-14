@@ -1,26 +1,42 @@
-import AgentMessage from 'components/AgentMessage';
-import TestMessageInput from 'components/TestMessageInput';
-
-import UserMessage from 'components/UserMessage';
-import VoiceRecognition from 'components/VoiceRecognition';
-
-import {
-  makeSelectConversation,
-  makeSelectLoadingConversation,
-} from 'containers/App/selectors';
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import AgentMessage from '../../components/AgentMessage';
+import TestMessageInput from '../../components/TestMessageInput';
+import UserMessage from '../../components/UserMessage';
+import VoiceRecognition from '../../components/VoiceRecognition';
 import { converse } from '../App/actions';
+import {
+  makeSelectConversation,
+  makeSelectCurrentAgent,
+  makeSelectLoadingConversation,
+} from '../App/selectors';
 
 import messages from './messages';
 
 class ConversationBar extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
+  constructor() {
+    super();
+    this.onVoiceRecognitionStart = this.onVoiceRecognitionStart.bind(this);
+    this.onVoiceRecognitionEnd = this.onVoiceRecognitionEnd.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
+    this.sendVoiceMessage = this.sendVoiceMessage.bind(this);
+    this.sendTextMessage = this.sendTextMessage.bind(this);
+  }
+
   state = {
     start: false,
     stop: false,
   };
+
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
 
   onVoiceRecognitionStart = () => {
     this.setState({ start: true });
@@ -30,21 +46,23 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
     this.setState({ start: false, stop: false });
   };
 
-  onResult = ({ finalTranscript }) => {
-    this.setState({ start: false });
-    this.props.onSendVoiceMessage(finalTranscript);
-  };
-
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView(true);
   };
 
-  componentDidMount() {
-    this.scrollToBottom();
+  sendVoiceMessage(message) {
+    const agentId = this.props.currentAgent ? this.props.currentAgent.id : null;
+    this.setState({ start: false });
+    this.props.onSendMessage(agentId, message);
   }
 
-  componentDidUpdate() {
-    this.scrollToBottom();
+  sendTextMessage(evt) {
+    if (evt.charCode === 13) {
+      const message = evt.target.value;
+      evt.target.value = null;
+      const agentId = this.props.currentAgent ? this.props.currentAgent.id : null;
+      this.props.onSendMessage(agentId, message);
+    }
   }
 
   render() {
@@ -59,6 +77,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
               if (message.author === 'user') {
                 return <UserMessage key={messageIndex} text={message.message} />;
               }
+              return '';
             })
           }
           {
@@ -80,7 +99,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
               className="conversationInput"
               placeholder={this.state.start && !this.state.stop ? messages.recordingPlaceholder.defaultMessage : messages.conversationPlaceholder.defaultMessage}
               inputId="intentName"
-              onKeyPress={this.props.onSendMessage}
+              onKeyPress={this.sendTextMessage}
               onSpeakClick={() => this.setState({ start: (!this.state.start) ? true : this.state.start, stop: this.state.start ? true : this.state.stop })}
             />
           </div>
@@ -90,7 +109,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
           <VoiceRecognition
             onStart={this.onVoiceRecognitionStart}
             onEnd={this.onVoiceRecognitionEnd}
-            onResult={this.onResult}
+            onResult={this.sendVoiceMessage}
             continuous
             lang="en-US"
             stop={this.state.stop}
@@ -105,18 +124,16 @@ ConversationBar.propTypes = {
   loading: React.PropTypes.bool,
   conversation: React.PropTypes.array,
   onSendMessage: React.PropTypes.func,
+  currentAgent: React.PropTypes.oneOfType([
+    React.PropTypes.object,
+    React.PropTypes.bool,
+  ]),
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onSendMessage: (evt) => {
-      if (evt.charCode === 13) {
-        dispatch(converse({ agent: '1', message: evt.target.value }));
-        evt.target.value = null;
-      }
-    },
-    onSendVoiceMessage: (message) => {
-      dispatch(converse({ agent: '1', message }));
+    onSendMessage: (agentId, message) => {
+      dispatch(converse({ agent: agentId, message }));
     },
   };
 }
@@ -124,6 +141,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoadingConversation(),
   conversation: makeSelectConversation(),
+  currentAgent: makeSelectCurrentAgent(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConversationBar);

@@ -83,7 +83,7 @@ module.exports = {
           process.stdout.write(result);
         });
         return 'modify translation messages';
-      },
+      }
     );
 
     return actions;

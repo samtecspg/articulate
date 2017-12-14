@@ -1,70 +1,61 @@
-import ActionButton from 'components/ActionButton';
-import Content from 'components/Content';
-import ContentHeader from 'components/ContentHeader';
-import Form from 'components/Form';
+import React from 'react';
+import Helmet from 'react-helmet';
 
-import FormTextInput from 'components/FormTextInput';
-import Header from 'components/Header';
+import { Row, } from 'react-materialize';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import ActionButton from '../../components/ActionButton';
+import Content from '../../components/Content';
+import ContentHeader from '../../components/ContentHeader';
+import Form from '../../components/Form';
 
+import FormTextInput from '../../components/FormTextInput';
+import Header from '../../components/Header';
+
+import { createWebhook, } from '../../containers/App/actions';
 import {
-  createWebhook,
-  loadAgents,
-} from 'containers/App/actions';
-import {
-  makeSelectAgents,
   makeSelectCurrentAgent,
   makeSelectError,
   makeSelectLoading,
   makeSelectWebhook,
-} from 'containers/App/selectors';
-import React from 'react';
-import Helmet from 'react-helmet';
-
-import {
-  Input,
-  Row,
-} from 'react-materialize';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+} from '../../containers/App/selectors';
 
 import { changeWebhookData } from './actions';
 
 import messages from './messages';
 import { makeSelectWebhookData } from './selectors';
 
-const returnFormattedOptions = (options) => {
-  return options.map((option, index) => {
-    return (
-      <option key={index} value={option.value}>
-        {option.text}
-      </option>
-    );
-  });
-};
-
 export class WebhookPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor() {
+    super();
+    this.onChangeInput = this.onChangeInput.bind(this);
+  }
 
   componentWillMount() {
-    this.props.onComponentMounting();
+    const { currentAgent } = this.props;
+    if (currentAgent) {
+      this.props.onChangeWebhookData('agent', currentAgent.id);
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    const { currentAgent } = nextProps;
+    if (currentAgent !== this.props.currentAgent) {
+      this.props.onChangeWebhookData('agent', currentAgent.id);
+    }
+  }
+
+  onChangeInput(evt, field) {
+    this.props.onChangeWebhookData(field, evt.target.value);
   }
 
   render() {
-    const { loading, error, webhook, agents, currentAgent } = this.props;
+    const { loading, error, webhook } = this.props;
     const webhookProps = {
       loading,
       error,
       webhook,
     };
-    let agentsSelect = [];
-    if (agents !== false) {
-      agentsSelect = agents.map((agent) => {
-        return {
-          value: agent.id,
-          text: agent.agentName,
-        };
-      });
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your webhook', disabled: 'disabled' });
-    }
 
     return (
       <div>
@@ -79,23 +70,13 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
           <ContentHeader title={messages.createWebhookTitle} subTitle={messages.createWebhookDescription} />
           <Form>
             <Row>
-              <Input
-                s={12}
-                name='agent'
-                type='select'
-                label={messages.agent.defaultMessage}
-                defaultValue={this.props.webhookData.agent ? this.props.webhookData.agent : 'default'}
-                onChange={this.props.onChangeWebhookData.bind(null, 'agent')}
-              >
-                {returnFormattedOptions(agentsSelect)}
-              </Input>
               <FormTextInput
                 label={messages.url}
                 placeholder={messages.urlPlaceholder.defaultMessage}
                 inputId="webhookUrl"
                 value={this.props.webhookData.webhookUrl}
-                onChange={this.props.onChangeWebhookData.bind(null, 'webhookUrl')}
-                required={true}
+                onChange={(evt) => this.onChangeInput(evt, 'webhookUrl')}
+                required
                 tooltip={messages.urlTooltip.defaultMessage}
               />
               {/*
@@ -144,7 +125,6 @@ WebhookPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onComponentMounting: React.PropTypes.func,
   onChangeWebhookData: React.PropTypes.func,
   onSubmitForm: React.PropTypes.func,
   webhookData: React.PropTypes.object,
@@ -152,18 +132,12 @@ WebhookPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  agents: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.bool,
-  ]),
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentMounting: (evt) => {
-      dispatch(loadAgents());
-    },
-    onChangeWebhookData: (field, evt) => dispatch(changeWebhookData({ value: evt.target.value, field })),
+
+    onChangeWebhookData: (field, value) => dispatch(changeWebhookData({ value, field })),
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createWebhook());
@@ -176,7 +150,6 @@ const mapStateToProps = createStructuredSelector({
   webhookData: makeSelectWebhookData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  agents: makeSelectAgents(),
   currentAgent: makeSelectCurrentAgent(),
 });
 

@@ -51,7 +51,7 @@ export function* getAgents() {
     yield put(agentsLoaded(agents));
   } catch (error) {
     yield put(agentsLoadingError({
-      message: 'An error ocurred loading the list of available agents',
+      message: 'An error occurred loading the list of available agents',
       error,
     }));
   }

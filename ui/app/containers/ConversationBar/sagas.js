@@ -1,25 +1,20 @@
 import {
-  converseError,
-  converseRespond,
-} from 'containers/App/actions';
-import {
-  CONVERSE,
-  CONVERSE_ERROR,
-  CONVERSE_SUCCESS,
-} from 'containers/App/constants';
-import { LOCATION_CHANGE } from 'react-router-redux';
-import {
+  actionChannel,
   call,
-  cancel,
   put,
   take,
-  takeLatest,
+  takeLatest
 } from 'redux-saga/effects';
 
-import request from 'utils/request';
+import request from '../../utils/request';
+import {
+  converseError,
+  converseRespond,
+} from '../App/actions';
+import { CONVERSE } from '../App/constants';
 
-export function* postMessage(data) {
-  const requestURL = `http://127.0.0.1:8000/agent/${data.payload.agent}/converse?text=${data.payload.message}&sessionId=dcalvom`;
+export function* postMessage(payload) {
+  const requestURL = `http://127.0.0.1:8000/agent/${payload.agent}/converse?text=${payload.message}&sessionId=dcalvom`;
   const requestOptions = {
     method: 'GET',
     headers: {
@@ -37,11 +32,11 @@ export function* postMessage(data) {
 }
 
 export function* sendMessage() {
-  const watcher = yield takeLatest(CONVERSE, postMessage);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  const requestChan = yield actionChannel(CONVERSE);
+  while (true) {
+    const { payload } = yield take(requestChan);
+    yield call(postMessage, payload);
+  }
 }
 
 // Bootstrap sagas

@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectGlobal = (state) => state.get('global');
+const selectRoute = (state) => state.get('route');
 
 const makeSelectAgents = () => createSelector(
   selectGlobal,
@@ -64,7 +65,7 @@ const makeSelectError = () => createSelector(
 
 const makeSelectAgent = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['agent', 'data']),
+  (globalState) => globalState.get('agentDetail'),
 );
 
 const makeSelectDomain = () => createSelector(
@@ -90,6 +91,10 @@ const makeSelectScenario = () => createSelector(
 const makeSelectEntity = () => createSelector(
   selectGlobal,
   (globalState) => globalState.getIn(['entity', 'data']),
+);
+const makeSelectRoute = () => createSelector(
+  selectRoute,
+  (routeState) => routeState,
 );
 
 const makeSelectLocationState = () => {
@@ -135,4 +140,5 @@ export {
   makeSelectEntity,
   makeSelectLocationState,
   makeSelectDomainIntents,
+  makeSelectRoute
 };

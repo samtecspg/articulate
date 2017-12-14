@@ -19,23 +19,40 @@ import {
   CREATE_WEBHOOK,
   CREATE_WEBHOOK_ERROR,
   CREATE_WEBHOOK_SUCCESS,
+  LOAD_AGENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_DOMAINS_ERROR,
   LOAD_AGENT_DOMAINS_SUCCESS,
   LOAD_AGENT_ENTITIES,
   LOAD_AGENT_ENTITIES_ERROR,
   LOAD_AGENT_ENTITIES_SUCCESS,
+  LOAD_AGENT_ERROR,
+  LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
+  LOAD_CURRENT_AGENT,
+  LOAD_CURRENT_AGENT_ERROR,
+  LOAD_CURRENT_AGENT_SUCCESS,
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
+  RESET_AGENT_DOMAINS,
+  RESET_CURRENT_AGENT,
+  RESET_DOMAINS_INTENTS,
+  SELECT_CURRENT_AGENT
 } from './constants';
 
 export function loadAgents() {
   return {
     type: LOAD_AGENTS,
+  };
+}
+
+export function loadAgent(id) {
+  return {
+    type: LOAD_AGENT,
+    id,
   };
 }
 
@@ -46,6 +63,47 @@ export function agentsLoaded(data) {
   };
 }
 
+export function agentLoaded(data) {
+  return {
+    type: LOAD_AGENT_SUCCESS,
+    data,
+  };
+}
+
+export function selectCurrentAgent(agent) {
+  return {
+    type: SELECT_CURRENT_AGENT,
+    agent,
+  };
+}
+
+export function loadCurrentAgentError(error) {
+  return {
+    type: LOAD_CURRENT_AGENT_ERROR,
+    error,
+  };
+}
+
+export function loadCurrentAgentSuccess(agent) {
+  return {
+    type: LOAD_CURRENT_AGENT_SUCCESS,
+    agent,
+  };
+}
+
+export function loadCurrentAgent(id) {
+  return {
+    type: LOAD_CURRENT_AGENT,
+    id,
+  };
+}
+
+export function resetCurrentAgent() {
+  return {
+    type: RESET_CURRENT_AGENT,
+  };
+}
+
 export function agentsLoadingError(error) {
   return {
     type: LOAD_AGENTS_ERROR,
@@ -53,9 +111,23 @@ export function agentsLoadingError(error) {
   };
 }
 
+export function agentLoadingError(error) {
+  return {
+    type: LOAD_AGENT_ERROR,
+    error,
+  };
+}
+
 export function loadAgentDomains(agentId) {
   return {
     type: LOAD_AGENT_DOMAINS,
+    agentId,
+  };
+}
+
+export function resetAgentDomains(agentId) {
+  return {
+    type: RESET_AGENT_DOMAINS,
     agentId,
   };
 }
@@ -239,6 +311,12 @@ export function loadDomainIntents(domainId) {
   return {
     type: LOAD_DOMAINS_INTENTS,
     domainId,
+  };
+}
+
+export function resetDomainIntents() {
+  return {
+    type: RESET_DOMAINS_INTENTS,
   };
 }
 

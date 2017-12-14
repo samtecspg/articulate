@@ -1,66 +1,62 @@
-import ActionButton from 'components/ActionButton';
-import Content from 'components/Content';
-import ContentHeader from 'components/ContentHeader';
-import Form from 'components/Form';
+import React from 'react';
+import Helmet from 'react-helmet';
+import { Row } from 'react-materialize';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import ActionButton from '../../components/ActionButton';
+import Content from '../../components/Content';
+import ContentHeader from '../../components/ContentHeader';
+import Form from '../../components/Form';
 
-import FormTextInput from 'components/FormTextInput';
-import Header from 'components/Header';
-import SliderInput from 'components/SliderInput';
+import FormTextInput from '../../components/FormTextInput';
+import Header from '../../components/Header';
+import SliderInput from '../../components/SliderInput';
 
+import { createDomain } from '../../containers/App/actions';
 import {
-  createDomain,
-  loadAgents,
-} from 'containers/App/actions';
-import {
-  makeSelectAgents,
   makeSelectCurrentAgent,
   makeSelectDomain,
   makeSelectError,
   makeSelectLoading,
-} from 'containers/App/selectors';
-import React from 'react';
-import Helmet from 'react-helmet';
-
-import {
-  Input,
-  Row,
-} from 'react-materialize';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+} from '../../containers/App/selectors';
 
 import { changeDomainData } from './actions';
 
 import messages from './messages';
 import { makeSelectDomainData } from './selectors';
 
-const returnFormattedOptions = (options) => options.map((option, index) => (
-  <option key={index} value={option.value}>
-    {option.text}
-  </option>
-    ));
-
 export class DomainPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor() {
+    super();
+    this.onChangeInput = this.onChangeInput.bind(this);
+  }
 
   componentWillMount() {
-    this.props.onComponentMounting();
+    const { currentAgent } = this.props;
+    if (currentAgent) {
+      this.props.onChangeDomainData({ value: currentAgent.agentName, field: 'agent' });
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    const { currentAgent } = nextProps;
+    if (currentAgent !== this.props.currentAgent) {
+      this.props.onChangeDomainData({ value: currentAgent.agentName, field: 'agent' });
+    }
+  }
+
+  onChangeInput(evt, field) {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.props.onChangeDomainData({ value: evt.target.value, field });
   }
 
   render() {
-    const { loading, error, domain, agents, currentAgent } = this.props;
+    const { loading, error, domain } = this.props;
     const domainProps = {
       loading,
       error,
       domain,
     };
-    let agentsSelect = [];
-    if (agents !== false) {
-      agentsSelect = agents.map((agent) => ({
-        value: agent.agentName,
-        text: agent.agentName,
-      }));
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your domain', disabled: 'disabled' });
-    }
-
     return (
       <div>
         <Helmet
@@ -74,22 +70,11 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
           <ContentHeader title={messages.createDomainTitle} subTitle={messages.createDomainDescription} />
           <Form>
             <Row>
-              <Input
-                s={12}
-                name="agent"
-                type="select"
-                label={messages.agent.defaultMessage}
-                defaultValue={this.props.domainData.agent ? this.props.domainData.agent : 'default'}
-                onChange={this.props.onChangeDomainData.bind(null, 'agent')}
-              >
-                {returnFormattedOptions(agentsSelect)}
-              </Input>
               <FormTextInput
                 label={messages.domainName}
                 placeholder={messages.domainNamePlaceholder.defaultMessage}
-                inputId="domainName"
                 value={this.props.domainData.domainName}
-                onChange={this.props.onChangeDomainData.bind(null, 'domainName')}
+                onChange={(evt) => this.onChangeInput(evt, 'domainName')}
                 required
               />
             </Row>
@@ -98,11 +83,11 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
           <Row>
             <SliderInput
               label={messages.intentThreshold}
-              inputId="intentThreshold"
               min="0"
               max="100"
+              name="intentThreshold"
               defaultValue={this.props.domainData.intentThreshold}
-              onChange={this.props.onChangeDomainData.bind(null, 'intentThreshold')}
+              onChange={(evt) => this.onChangeInput(evt, 'intentThreshold')}
             />
           </Row>
 
@@ -129,27 +114,19 @@ DomainPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onComponentMounting: React.PropTypes.func,
   onChangeDomainData: React.PropTypes.func,
   onSubmitForm: React.PropTypes.func,
-  onMessageAccepted: React.PropTypes.func,
   domainData: React.PropTypes.object,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
-    React.PropTypes.bool,
-  ]),
-  agents: React.PropTypes.oneOfType([
-    React.PropTypes.array,
     React.PropTypes.bool,
   ]),
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentMounting: (evt) => {
-      dispatch(loadAgents());
-    },
-    onChangeDomainData: (field, evt) => dispatch(changeDomainData({ value: evt.target.value, field })),
+
+    onChangeDomainData: (data) => dispatch(changeDomainData(data)),
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createDomain());
@@ -162,7 +139,6 @@ const mapStateToProps = createStructuredSelector({
   domainData: makeSelectDomainData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  agents: makeSelectAgents(),
   currentAgent: makeSelectCurrentAgent(),
 });
 

@@ -1,34 +1,26 @@
-import ActionButton from 'components/ActionButton';
-import Content from 'components/Content';
-import ContentHeader from 'components/ContentHeader';
-import Form from 'components/Form';
-import FormTextInput from 'components/FormTextInput';
-import Header from 'components/Header';
-import InputLabel from 'components/InputLabel';
-import Table from 'components/Table';
-import TableContainer from 'components/TableContainer';
-import TableHeader from 'components/TableHeader';
+import React from 'react';
+import Helmet from 'react-helmet';
 
+import { Row, } from 'react-materialize';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import ActionButton from '../../components/ActionButton';
+import Content from '../../components/Content';
+import ContentHeader from '../../components/ContentHeader';
+import Form from '../../components/Form';
+import FormTextInput from '../../components/FormTextInput';
+import Header from '../../components/Header';
+import InputLabel from '../../components/InputLabel';
+import Table from '../../components/Table';
+import TableContainer from '../../components/TableContainer';
+import TableHeader from '../../components/TableHeader';
+import { createEntity, } from '../../containers/App/actions';
 import {
-  createEntity,
-  loadAgents,
-} from 'containers/App/actions';
-import {
-  makeSelectAgents,
   makeSelectCurrentAgent,
   makeSelectEntity,
   makeSelectError,
   makeSelectLoading,
-} from 'containers/App/selectors';
-import React from 'react';
-import Helmet from 'react-helmet';
-
-import {
-  Input,
-  Row,
-} from 'react-materialize';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+} from '../../containers/App/selectors';
 
 import {
   addExample,
@@ -42,37 +34,39 @@ import Examples from './Components/Examples';
 import messages from './messages';
 import { makeSelectEntityData } from './selectors';
 
-const returnFormattedOptions = (options) => options.map((option, index) => (
-  <option key={index} value={option.value}>
-    {option.text}
-  </option>
-    ));
-
 export class EntityPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor() {
+    super();
+    this.onChangeInput = this.onChangeInput.bind(this);
+  }
 
   componentWillMount() {
-    this.props.onComponentMounting();
+    const { currentAgent } = this.props;
+    if (currentAgent) {
+      this.props.onChangeEntityData('agent', currentAgent.agentName);
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    const { currentAgent } = nextProps;
+    if (currentAgent !== this.props.currentAgent) {
+      this.props.onChangeEntityData('agent', currentAgent.agentName);
+    }
+  }
+
+  onChangeInput(evt, field) {
+    this.props.onChangeEntityData(field, evt.target.value);
   }
 
   render() {
-    const { loading, error, entity, agents, currentAgent } = this.props;
+    const { loading, error, entity } = this.props;
     const entityProps = {
       loading,
       error,
       entity,
     };
 
-    let agentsSelect = [];
-    if (agents !== false) {
-      agentsSelect = agents.map((agent) => ({
-        value: agent.agentName,
-        text: agent.agentName,
-      }));
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your entity', disabled: 'disabled' });
-    }
-
     return (
-
       <div>
         <Helmet
           title="Create Entity"
@@ -85,22 +79,11 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
           <ContentHeader title={messages.createEntityTitle} subTitle={messages.createEntityDescription} />
           <Form>
             <Row>
-              <Input
-                s={12}
-                name="agent"
-                type="select"
-                label={messages.agent.defaultMessage}
-                defaultValue={this.props.entityData.agent ? this.props.entityData.agent : 'default'}
-                onChange={this.props.onChangeEntityData.bind(null, 'agent')}
-              >
-                {returnFormattedOptions(agentsSelect)}
-              </Input>
               <FormTextInput
                 label={messages.entityName}
                 placeholder={messages.entityNamePlaceholder.defaultMessage}
                 inputId="entityName"
-                value={this.props.entityData.entityName}
-                onChange={this.props.onChangeEntityData.bind(null, 'entityName')}
+                onChange={(evt) => this.onChangeInput(evt, 'entityName')}
                 required
               />
               <InputLabel text={messages.examples} />
@@ -156,32 +139,23 @@ EntityPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onComponentMounting: React.PropTypes.func,
   onChangeEntityData: React.PropTypes.func,
   onSubmitForm: React.PropTypes.func,
   onRemoveExample: React.PropTypes.func,
   onAddExample: React.PropTypes.func,
   onRemoveSynonym: React.PropTypes.func,
   onAddSynonym: React.PropTypes.func,
-  onSubmitForm: React.PropTypes.func,
   entityData: React.PropTypes.object,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
-    React.PropTypes.bool,
-  ]),
-  agents: React.PropTypes.oneOfType([
-    React.PropTypes.array,
     React.PropTypes.bool,
   ]),
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentMounting: (evt) => {
-      dispatch(loadAgents());
-    },
-    onChangeEntityData: (field, evt) => {
-      dispatch(changeEntityData({ value: evt.target.value, field }));
+    onChangeEntityData: (field, value) => {
+      dispatch(changeEntityData({ value, field }));
     },
     onRemoveExample: (example, evt) => {
       dispatch(removeExample(example));
@@ -213,7 +187,6 @@ const mapStateToProps = createStructuredSelector({
   entityData: makeSelectEntityData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  agents: makeSelectAgents(),
   currentAgent: makeSelectCurrentAgent(),
 });
 

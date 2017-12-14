@@ -9,7 +9,6 @@ const loadModule = (cb) => (componentModule) => {
 };
 
 export default function createRoutes(store) {
-
   const { injectReducer, injectSagas } = getAsyncInjectors(store);
 
   return [
@@ -30,6 +29,28 @@ export default function createRoutes(store) {
           import('containers/AgentPage/reducer'),
           import('containers/AgentPage/sagas'),
           import('containers/AgentPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('agent', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/agent/:id',
+      name: 'agent',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/AgentDetailPage/reducer'),
+          import('containers/AgentDetailPage/sagas'),
+          import('containers/AgentDetailPage'),
         ]);
 
         const renderRoute = loadModule(cb);

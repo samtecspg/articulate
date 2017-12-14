@@ -1,42 +1,40 @@
-import ActionButton from 'components/ActionButton';
-import Content from 'components/Content';
-import ContentHeader from 'components/ContentHeader';
-import Form from 'components/Form';
-import FormTextInput from 'components/FormTextInput';
-import Header from 'components/Header';
-import InputLabel from 'components/InputLabel';
-import Table from 'components/Table';
-import TableContainer from 'components/TableContainer';
-import TableHeader from 'components/TableHeader';
-import Toggle from 'components/Toggle';
+import _ from 'lodash';
+/* eslint-disable consistent-return */
+import React from 'react';
+import Helmet from 'react-helmet';
+import {
+  Input,
+  Row,
+} from 'react-materialize';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import ActionButton from '../../components/ActionButton';
+import Content from '../../components/Content';
+import ContentHeader from '../../components/ContentHeader';
+import Form from '../../components/Form';
+import FormTextInput from '../../components/FormTextInput';
+import Header from '../../components/Header';
+import InputLabel from '../../components/InputLabel';
+import Table from '../../components/Table';
+import TableContainer from '../../components/TableContainer';
+import TableHeader from '../../components/TableHeader';
+import Toggle from '../../components/Toggle';
 
 import {
   createIntent,
   loadAgentDomains,
   loadAgentEntities,
-  loadAgents,
-} from 'containers/App/actions';
+} from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,
   makeSelectAgentEntities,
-  makeSelectAgents,
   makeSelectCurrentAgent,
   makeSelectCurrentDomain,
   makeSelectError,
   makeSelectIntent,
   makeSelectLoading,
   makeSelectScenario,
-} from 'containers/App/selectors';
-import React from 'react';
-import Helmet from 'react-helmet';
-
-import {
-  Input,
-  Row,
-} from 'react-materialize';
-import { connect } from 'react-redux';
-
-import { createStructuredSelector } from 'reselect';
+} from '../../containers/App/selectors';
 
 import {
   addTextPrompt,
@@ -61,33 +59,61 @@ const returnFormattedOptions = (options) => options.map((option, index) => (
   <option key={index} value={option.value}>
     {option.text}
   </option>
-    ));
+));
 
 const colorArray = ['#f44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A'];
 const dirOfColors = {};
 
 export class IntentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor() {
+    super();
+    this.onChangeInput = this.onChangeInput.bind(this);
+  }
 
   componentWillMount() {
-    this.props.onComponentMounting();
+    const { currentAgent } = this.props;
+    if (currentAgent) {
+      this.props.onChangeIntentData('agent', `${currentAgent.id}~${currentAgent.agentName}`); // TODO: Remove this format and pass the entire object
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    const { currentAgent } = nextProps;
+    if (currentAgent !== this.props.currentAgent) {
+      this.props.onChangeIntentData('agent', `${currentAgent.id}~${currentAgent.agentName}`); // TODO: Remove this format and pass the entire object
+    }
+  }
+
+  onChangeInput(evt, field) {
+    let value;
+    if (evt) {
+      value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value;
+    } else {
+      value = null;
+    }
+    if (field === 'examples' || field === 'responses') {
+      if (evt.charCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
+        this.props.onChangeIntentData(field, value);
+        evt.target.value = null;
+      }
+      if (field === 'responses') {
+        if (evt.charCode === 123) { // If user hits '{' display a menu with current slots
+          const dropDownButton = document.getElementById('intentResponseEntityDropdown');
+          dropDownButton.dispatchEvent(new Event('click'));
+        }
+      }
+    } else {
+      this.props.onChangeIntentData(field, value);
+    }
   }
 
   render() {
-    const { loading, error, intent, scenario, agents, agentDomains, agentEntities, currentAgent, currentDomain } = this.props;
+    const { loading, error, intent, scenario, agentDomains, agentEntities } = this.props;
     const intentProps = {
       loading,
       error,
       intent,
     };
-
-    let agentsSelect = [];
-    if (agents !== false) {
-      agentsSelect = agents.map((agent) => ({
-        value: `${agent.id}~${agent.agentName}`,
-        text: agent.agentName,
-      }));
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent to place your intent', disabled: 'disabled' });
-    }
 
     let domainsSelect = [];
     if (agentDomains !== false) {
@@ -112,47 +138,38 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           <ContentHeader title={messages.createIntentTitle} subTitle={messages.createIntentDescription} />
           <Form>
             <Row>
-              <Toggle label="Webhook" right onChange={this.props.onChangeIntentData.bind(null, 'useWebhook')} />
+              <Toggle
+                label="Webhook"
+                right
+                onChange={(evt) => this.onChangeInput(evt, 'useWebhook')}
+              />
             </Row>
             <Row>
+
               <Input
                 s={12}
-                name="agent"
-                type="select"
-                label={messages.agent.defaultMessage}
-                defaultValue={this.props.intentData.agent ? this.props.intentData.agent : 'default'}
-                onChange={this.props.onChangeIntentData.bind(null, 'agent')}
-              >
-                {returnFormattedOptions(agentsSelect)}
-              </Input>
-              <Input
-                s={12}
-                name="domain"
                 type="select"
                 label={messages.domain.defaultMessage}
                 defaultValue={this.props.intentData.domain ? this.props.intentData.domain : 'default'}
-                onChange={this.props.onChangeIntentData.bind(null, 'domain')}
+                onChange={(evt) => this.onChangeInput(evt, 'domain')}
               >
                 {returnFormattedOptions(domainsSelect)}
               </Input>
               <FormTextInput
                 label={messages.intentName}
                 placeholder={messages.intentNamePlaceholder.defaultMessage}
-                inputId="intentName"
                 value={this.props.intentData.intentName}
-                onChange={this.props.onChangeIntentData.bind(null, 'intentName')}
+                onChange={(evt) => this.onChangeInput(evt, 'intentName')}
                 required
               />
               <FormTextInput
                 label={messages.userSaysTitle}
                 placeholder={messages.userSaysInput.defaultMessage}
-                inputId="userSays"
-                onKeyPress={this.props.onChangeIntentData.bind(null, 'examples')}
+                onKeyPress={(evt) => this.onChangeInput(evt, 'examples')}
                 s={8}
               />
               <FormTextInput
                 placeholder={messages.userSaysSearch.defaultMessage}
-                inputId="userSays"
                 s={4}
               />
             </Row>
@@ -161,7 +178,13 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           {this.props.intentData.examples.length > 0 ?
             <TableContainer id="userSayingsTable" quotes>
               <Table>
-                <UserSayings examples={this.props.intentData.examples} onRemoveExample={this.props.onRemoveExample} onTagEntity={this.props.onTagEntity} agentEntities={agentEntities} colorArray={colorArray} dirOfColors={dirOfColors} />
+                <UserSayings
+                  examples={this.props.intentData.examples}
+                  onRemoveExample={this.props.onRemoveExample}
+                  onTagEntity={this.props.onTagEntity}
+                  agentEntities={agentEntities}
+                  colorArray={colorArray} dirOfColors={dirOfColors}
+                />
               </Table>
             </TableContainer>
             : null
@@ -230,8 +253,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <FormTextInput
                 label={messages.agentResponsesTitle}
                 placeholder={messages.responsesInput.defaultMessage}
-                id="responses"
-                onKeyPress={this.props.onChangeIntentData.bind(null, 'responses')}
+                onKeyPress={(evt) => this.onChangeInput(evt, 'responses')}
               />
             </Row>
           </Form>
@@ -239,7 +261,10 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           {this.props.scenarioData.intentResponses.length > 0 ?
             <TableContainer id="intentResponsesTable" quotes>
               <Table>
-                <Responses intentResponses={this.props.scenarioData.intentResponses} onRemoveResponse={this.props.onRemoveExample} />
+                <Responses
+                  intentResponses={this.props.scenarioData.intentResponses}
+                  onRemoveResponse={this.props.onRemoveExample}
+                />
               </Table>
             </TableContainer>
             : null
@@ -252,9 +277,8 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   <FormTextInput
                     label={messages.webhook}
                     placeholder={messages.webhookPlaceholder.defaultMessage}
-                    inputId="webhookUrl"
                     value={this.props.scenarioData.webhookUrl}
-                    onChange={this.props.onChangeIntentData.bind(null, 'webhookUrl')}
+                    onChange={(evt) => this.onChangeInput(evt, 'webhookUrl')}
                     required
                   />
                 </Row>
@@ -305,12 +329,10 @@ IntentPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onComponentMounting: React.PropTypes.func,
   onChangeIntentData: React.PropTypes.func,
   onSubmitForm: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
   onAutoCompleteEntityFunction: React.PropTypes.func,
-  onSubmitForm: React.PropTypes.func,
   onCheckboxChange: React.PropTypes.func,
   onSlotNameChange: React.PropTypes.func,
   onAddTextPrompt: React.PropTypes.func,
@@ -319,10 +341,6 @@ IntentPage.propTypes = {
   intentData: React.PropTypes.object,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
-    React.PropTypes.bool,
-  ]),
-  agents: React.PropTypes.oneOfType([
-    React.PropTypes.array,
     React.PropTypes.bool,
   ]),
   currentDomain: React.PropTypes.oneOfType([
@@ -341,33 +359,12 @@ IntentPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentMounting: (evt) => {
-      dispatch(loadAgents());
-    },
-    onChangeIntentData: (field, evt) => {
-      if (field === 'examples' || field === 'responses') {
-        if (evt.charCode === 13) { // If user hits enter add response
-          dispatch(changeIntentData({ value: evt.target.value, field }));
-          evt.target.value = null;
-        }
-        if (field === 'responses') {
-          if (evt.charCode === 123) { // If user hits '{' display a menu with current slots
-            const dropDownButton = document.getElementById('intentResponseEntityDropdown');
-            dropDownButton.dispatchEvent(new Event('click'));
-          }
-        }
-      } else {
-        if (field === 'agent') {
-          dispatch(loadAgentDomains(evt.target.value));
-          dispatch(loadAgentEntities(evt.target.value));
-          dispatch(changeIntentData({ value: evt.target.value, field }));
-        }
-        if (field === 'useWebhook') {
-          dispatch(changeIntentData({ value: evt.target.checked, field }));
-        } else {
-          dispatch(changeIntentData({ value: evt.target.value, field }));
-        }
+    onChangeIntentData: (field, value) => {
+      if (field === 'agent') {
+        dispatch(loadAgentDomains(value));
+        dispatch(loadAgentEntities(value));
       }
+      dispatch(changeIntentData({ value, field }));
     },
     onRemoveExample: (exampleIndex, evt) => {
 
@@ -422,7 +419,6 @@ const mapStateToProps = createStructuredSelector({
   scenarioData: makeSelectScenarioData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  agents: makeSelectAgents(),
   agentDomains: makeSelectAgentDomains(),
   agentEntities: makeSelectAgentEntities(),
   currentAgent: makeSelectCurrentAgent(),

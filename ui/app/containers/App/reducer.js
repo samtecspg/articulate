@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable';
-
 import {
   CONVERSE,
   CONVERSE_ERROR,
@@ -21,18 +20,26 @@ import {
   CREATE_WEBHOOK,
   CREATE_WEBHOOK_ERROR,
   CREATE_WEBHOOK_SUCCESS,
+  LOAD_AGENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_DOMAINS_ERROR,
   LOAD_AGENT_DOMAINS_SUCCESS,
   LOAD_AGENT_ENTITIES,
   LOAD_AGENT_ENTITIES_ERROR,
   LOAD_AGENT_ENTITIES_SUCCESS,
+  LOAD_AGENT_ERROR,
+  LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
+  LOAD_CURRENT_AGENT_SUCCESS,
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
+  RESET_AGENT_DOMAINS,
+  RESET_CURRENT_AGENT,
+  RESET_DOMAINS_INTENTS,
+  SELECT_CURRENT_AGENT,
 } from './constants';
 
 // The initial state of the App
@@ -45,7 +52,9 @@ const initialState = fromJS({
   agents: false,
   agentDomains: false,
   agentEntities: false,
+  domainIntents: false,
   conversation: [],
+  agent: undefined,
 });
 
 function appReducer(state = initialState, action) {
@@ -55,11 +64,39 @@ function appReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false)
         .set('agents', false);
+    case LOAD_AGENT:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('agent', false);
+    case SELECT_CURRENT_AGENT :
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('currentAgent', action.agent);
+    case LOAD_CURRENT_AGENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('currentAgent', action.agent);
+    case RESET_CURRENT_AGENT:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('currentAgent', false);
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.data)
         .set('loading', false);
     case LOAD_AGENTS_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case LOAD_AGENT_SUCCESS:
+      return state
+        .setIn(['agentDetail'], action.data)
+        .set('loading', false);
+    case LOAD_AGENT_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);
@@ -76,6 +113,11 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+    case RESET_AGENT_DOMAINS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('agentDomains', false);
     case LOAD_AGENT_ENTITIES:
       return state
         .set('loading', true)
@@ -93,10 +135,10 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('error', false)
-        .setIn(['agent', 'data'], false);
+        .set('agent', false);
     case CREATE_AGENT_SUCCESS:
       return state
-        .setIn(['agent', 'data'], action.data)
+        .set('agent', action.data)
         .set('loading', false)
         .set('currentAgent', action.id);
     case CREATE_AGENT_ERROR:
@@ -171,18 +213,29 @@ function appReducer(state = initialState, action) {
     case CONVERSE:
       return state
         .set('loadingConversation', true)
-        .update('conversation', conversation => conversation.push({ message: action.payload.message, author: 'user' }));
+        .update('conversation', (conversation) => conversation.push({ message: action.payload.message, author: 'user' }));
     case CONVERSE_SUCCESS:
       return state
         .set('loadingConversation', false)
-        .update('conversation', conversation => conversation.push({ message: action.data.textResponse, author: 'agent' }));
+        .update('conversation', (conversation) => conversation.push({
+          message: action.data.textResponse,
+          author: 'agent',
+        }));
     case CONVERSE_ERROR:
       return state
         .set('loadingConversation', false)
-        .update('conversation', conversation => conversation.push({ message: 'I\'m sorry! I\'m having issues connecting with my brain. Can you retry later', author: 'agent' }));
+        .update('conversation', (conversation) => conversation.push({
+          message: 'I\'m sorry! I\'m having issues connecting with my brain. Can you retry later',
+          author: 'agent',
+        }));
     case LOAD_DOMAINS_INTENTS:
       return state
         .set('loading', true)
+        .set('error', false)
+        .set('domainIntents', false);
+    case RESET_DOMAINS_INTENTS:
+      return state
+        .set('loading', false)
         .set('error', false)
         .set('domainIntents', false);
     case LOAD_DOMAINS_INTENTS_SUCCESS:

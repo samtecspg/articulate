@@ -5,7 +5,7 @@ import {
   Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton/index';
 import Content from '../../components/Content';
@@ -15,12 +15,13 @@ import Header from '../../components/Header';
 import IntentsTable from '../../components/IntentsTable/index';
 import {
   loadAgentDomains,
-  loadAgents,
   loadDomainIntents,
+  resetAgentDomains,
+  resetDomainIntents,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,
-  makeSelectAgents,
+  makeSelectCurrentAgent,
   makeSelectDomain,
   makeSelectDomainIntents,
   makeSelectError,
@@ -32,20 +33,16 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
 
   constructor() {
     super();
-    this.onSelectAgent = this.onSelectAgent.bind(this);
     this.onSelectDomain = this.onSelectDomain.bind(this);
     this.renderAgentSelectOptions = this.renderAgentSelectOptions.bind(this);
     this.renderDomainSelectOptions = this.renderDomainSelectOptions.bind(this);
     this.onCreateAction = this.onCreateAction.bind(this);
   }
 
-  componentWillMount() {
-    this.props.onComponentMounting();
-  }
-
-  onSelectAgent(evt) {
-    const agent = { value: evt.target.value, field: 'agent' };
-    this.props.onChangeAgent(agent);
+  componentWillUpdate(nextProps) {
+    if (nextProps.currentAgent !== this.props.currentAgent) {
+      this.props.onComponentWillUpdate(nextProps.currentAgent);
+    }
   }
 
   onSelectDomain(evt) {
@@ -54,7 +51,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   onCreateAction() {
-    browserHistory.push('/intents/create');
+    this.props.onChangeUrl('/intents/create');
   }
 
   renderAgentSelectOptions(options) {
@@ -74,21 +71,12 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   render() {
-    const { loading, error, agents, agentDomains, domainIntents } = this.props;
+    const { loading, error, agentDomains, domainIntents } = this.props;
     const domainProps = {
       loading,
       error,
-      agents,
       agentDomains,
     };
-    let agentsSelect = [];
-    if (agents !== false) {
-      agentsSelect = agents.map((agent) => ({
-        value: agent.id,
-        text: agent.agentName,
-      }));
-      agentsSelect.unshift({ value: 'default', text: 'Please choose an agent', disabled: 'disabled' });
-    }
 
     let domainsSelect = [];
     if (agentDomains !== false) {
@@ -111,17 +99,6 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
         <Content>
           <ContentHeader title={messages.domainListTitle} subTitle={messages.domainListDescription} />
           <Form>
-            <Row>
-              <Input
-                s={12}
-                name="agent"
-                type="select"
-                label={messages.agent.defaultMessage}
-                onChange={this.onSelectAgent}
-              >
-                {this.renderAgentSelectOptions(agentsSelect)}
-              </Input>
-            </Row>
             <Row>
               <Input
                 s={12}
@@ -161,10 +138,10 @@ IntentListPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onComponentMounting: React.PropTypes.func,
-  onChangeAgent: React.PropTypes.func,
+  onComponentWillUpdate: React.PropTypes.func,
   onChangeDomain: React.PropTypes.func,
-  agents: React.PropTypes.oneOfType([
+  onChangeUrl: React.PropTypes.func,
+  domainIntents: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
   ]),
@@ -172,19 +149,26 @@ IntentListPage.propTypes = {
     React.PropTypes.array,
     React.PropTypes.bool,
   ]),
+  currentAgent: React.PropTypes.oneOfType([
+    React.PropTypes.object,
+    React.PropTypes.bool,
+  ]),
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentMounting: () => {
-      dispatch(loadAgents());
-    },
-    onChangeAgent: (agent) => {
-      dispatch(loadAgentDomains(agent.value));
+    onComponentWillUpdate: (agent) => {
+      if (agent) {
+        dispatch(loadAgentDomains(agent.id));
+      } else {
+        dispatch(resetAgentDomains());
+      }
+      dispatch(resetDomainIntents());
     },
     onChangeDomain: (domain) => {
       dispatch(loadDomainIntents(domain.value));
     },
+    onChangeUrl: (url) => dispatch(push(url)),
   };
 }
 
@@ -192,9 +176,9 @@ const mapStateToProps = createStructuredSelector({
   domain: makeSelectDomain(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  agents: makeSelectAgents(),
   agentDomains: makeSelectAgentDomains(),
   domainIntents: makeSelectDomainIntents(),
+  currentAgent: makeSelectCurrentAgent(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(IntentListPage);

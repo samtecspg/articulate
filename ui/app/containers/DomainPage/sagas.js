@@ -1,14 +1,3 @@
-import {
-  agentsLoaded,
-  agentsLoadingError,
-  domainCreated,
-  domainCreationError,
-} from 'containers/App/actions';
-import {
-  CREATE_DOMAIN,
-  LOAD_AGENTS,
-} from 'containers/App/constants';
-import { makeSelectDomainData } from 'containers/DomainPage/selectors';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import {
   call,
@@ -19,7 +8,18 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 
-import request from 'utils/request';
+import request from '../../utils/request';
+import {
+  agentsLoaded,
+  agentsLoadingError,
+  domainCreated,
+  domainCreationError,
+} from '../App/actions';
+import {
+  CREATE_DOMAIN,
+  LOAD_AGENTS,
+} from '../App/constants';
+import { makeSelectDomainData } from './selectors';
 
 export function* postDomain() {
   const domainData = yield select(makeSelectDomainData());
