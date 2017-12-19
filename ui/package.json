@@ -1,16 +1,16 @@
 {
-  "name": "react-boilerplate",
-  "version": "3.4.0",
-  "description": "A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices",
+  "name": "articulate-ui",
+  "version": "1.0.0",
+  "description": "UI of the articulate by SPG",
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-boilerplate/react-boilerplate.git"
+    "url": "git://github.com/samtecspg/articulate.git"
   },
   "engines": {
     "npm": ">=3",
     "node": ">=5"
   },
-  "author": "Max Stoiber",
+  "author": "SPG",
   "license": "MIT",
   "scripts": {
     "analyze:clean": "rimraf stats.json",

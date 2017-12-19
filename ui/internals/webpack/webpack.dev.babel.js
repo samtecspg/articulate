@@ -135,7 +135,7 @@ function dependencyHandlers() {
  */
 function templateContent() {
   const html = fs.readFileSync(
-    path.resolve(process.cwd(), 'app/index.html'),
+    path.resolve(process.cwd(), 'app/index.html')
   ).toString();
 
   if (!dllPlugin) {
