@@ -1,22 +1,18 @@
 [
   {
-    "value": "english",
+    "value": "en",
     "text": "English"
   },
   {
-    "value": "german",
+    "value": "de",
     "text": "German"
   },
   {
-    "value": "french",
+    "value": "fr",
     "text": "French"
   },
   {
-    "value": "spanish",
+    "value": "es",
     "text": "Spanish"
-  },
-  {
-    "value": "chinese",
-    "text": "Chinese (Mandarin)"
   }
 ]

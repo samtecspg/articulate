@@ -10,7 +10,7 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.title',
     defaultMessage: 'Creating New Agent',
   },
-  createAgentDescription: {
+  createDescription: {
     id: 'boilerplate.containers.AgentPage.create_agent.description',
     defaultMessage: 'An agent is capable of understand natural language and transform it into recognizable actions. ' +
     'You can insert agents in you environment to improve the user experience with your app.',
@@ -23,11 +23,11 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.agent_name_placeholder',
     defaultMessage: 'Type a name here',
   },
-  agentDescription: {
+  description: {
     id: 'boilerplate.containers.AgentPage.create_agent.agent_description',
     defaultMessage: 'Describe Agent',
   },
-  agentDescriptionPlaceholder: {
+  descriptionPlaceholder: {
     id: 'boilerplate.containers.AgentPage.create_agent.agent_description_placeholder',
     defaultMessage: 'What does this Agent do?',
   },
@@ -47,7 +47,7 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.language_warning',
     defaultMessage: 'Cannot be changed once Agent is created',
   },
-  defaultTimezone: {
+  timezone: {
     id: 'boilerplate.containers.AgentPage.create_agent.default_timezone',
     defaultMessage: 'Default Time Zone',
   },

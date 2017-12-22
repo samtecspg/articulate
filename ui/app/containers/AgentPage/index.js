@@ -45,25 +45,21 @@ const timezones = [
 
 const languages = [
   {
-    value: 'english',
+    value: 'en',
     text: 'English',
   },
   {
-    value: 'german',
+    value: 'de',
     text: 'German',
   },
   {
-    value: 'french',
+    value: 'fr',
     text: 'French',
   },
   {
-    value: 'spanish',
+    value: 'es',
     text: 'Spanish',
-  },
-  {
-    value: 'chinese',
-    text: 'Chinese (Mandarin)',
-  },
+  }
 ];
 
 const sampleData = [
@@ -111,7 +107,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
         />
         <Header />
         <Content>
-          <ContentHeader title={messages.createAgentTitle} subTitle={messages.createAgentDescription} />
+          <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>
             <Row>
               <FormTextInput
@@ -123,11 +119,11 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 required
               />
               <FormTextInput
-                label={messages.agentDescription}
-                placeholder={messages.agentDescriptionPlaceholder.defaultMessage}
-                inputId="agentDescription"
-                value={this.props.agentData.agentDescription}
-                onChange={this.props.onChangeAgentData.bind(null, 'agentDescription')}
+                label={messages.description}
+                placeholder={messages.descriptionPlaceholder.defaultMessage}
+                inputId="description"
+                value={this.props.agentData.description}
+                onChange={this.props.onChangeAgentData.bind(null, 'description')}
               />
               <Input
                 s={12}
@@ -144,18 +140,18 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="language"
                 type="select"
                 label={messages.language.defaultMessage}
-                defaultValue={this.props.agentData.language ? this.props.agentData.language : 'english'}
+                defaultValue={this.props.agentData.language ? this.props.agentData.language : 'en'}
                 onChange={this.props.onChangeAgentData.bind(null, 'language')}
               >
                 {returnFormattedOptions(languages)}
               </Input>
               <Input
                 s={6}
-                name="defaultTimezone"
+                name="timezone"
                 type="select"
-                label={messages.defaultTimezone.defaultMessage}
-                defaultValue={this.props.agentData.defaultTimezone ? this.props.agentData.defaultTimezone : 'America/Kentucky/Louisville'}
-                onChange={this.props.onChangeAgentData.bind(null, 'defaultTimezone')}
+                label={messages.timezone.defaultMessage}
+                defaultValue={this.props.agentData.timezone ? this.props.agentData.timezone : 'America/Kentucky/Louisville'}
+                onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
               >
                 {returnFormattedOptions(timezones)}
               </Input>

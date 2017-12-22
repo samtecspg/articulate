@@ -19,9 +19,6 @@ import request from 'utils/request';
 export function* postAgent() {
   const agentData = yield select(makeSelectAgentData());
   agentData.domainClassifierThreshold = agentData.domainClassifierThreshold / 100;
-  delete agentData.agentDescription;
-  delete agentData.defaultTimezone;
-  delete agentData.language;
 
   const requestURL = `http://127.0.0.1:8000/agent`;
   const requestOptions = {

@@ -55,7 +55,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
         <Header />
         <Content>
           <Row>
-            <header className="main-title"><h1><span>Agent: {currentAgent.agentName}</span></h1><p><span>{currentAgent.agentDescription}</span></p></header>
+            <header className="main-title"><h1><span>Agent: {currentAgent.agentName}</span></h1><p><span>{currentAgent.description}</span></p></header>
           </Row>
           <Row>
             <Form>
@@ -67,9 +67,9 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
                 disabled
               />
               <FormTextInput
-                label={messages.agentDescription}
-                placeholder={messages.agentDescriptionPlaceholder.defaultMessage}
-                value={currentAgent.agentDescription}
+                label={messages.description}
+                placeholder={messages.descriptionPlaceholder.defaultMessage}
+                value={currentAgent.description}
                 onChange={() => {
                 }}
                 disabled
@@ -89,8 +89,8 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
                 disabled
               />
               <FormTextInput
-                label={messages.defaultTimezone}
-                value={currentAgent.defaultTimezone}
+                label={messages.timezone}
+                value={currentAgent.timezone}
                 onChange={() => {
                 }}
                 disabled

@@ -6,9 +6,9 @@ import { CHANGE_AGENT_DATA, } from './constants';
 const initialState = fromJS({
   agentData: {
     agentName: '',
-    agentDescription: '',
-    language: 'english',
-    defaultTimezone: 'America/Kentucky/Louisville',
+    description: '',
+    language: 'en',
+    timezone: 'America/Kentucky/Louisville',
     domainClassifierThreshold: 85,
     webhookUrl: 'http://localhost:3000',
     fallbackResponses: [
