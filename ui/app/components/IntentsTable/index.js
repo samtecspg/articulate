@@ -4,8 +4,8 @@
  *
  */
 
-import Table2 from 'components/Table2';
 import React from 'react';
+import Table2 from '../Table2';
 import columns from './columnDefinition';
 import defaultMenu from './defaultMenu';
 

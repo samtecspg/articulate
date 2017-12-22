@@ -12,7 +12,7 @@ const initialState = fromJS({
     domainClassifierThreshold: 85,
     webhookUrl: 'http://localhost:3000',
     fallbackResponses: [
-      'Sorry can you repharse that?',
+      'Sorry can you rephrase that?',
       'I\'m still learning to speak with humans. What you mean?',
     ],
     useWebhookFallback: false,

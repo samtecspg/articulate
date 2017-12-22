@@ -72,7 +72,6 @@ export function* getCurrentAgent(payload) {
 
   try {
     const agent = yield call(request, requestURL);
-    // TODO: SET the loaded agent as current
     yield put(loadCurrentAgentSuccess(agent));
   } catch (error) {
     yield put(loadCurrentAgentError({

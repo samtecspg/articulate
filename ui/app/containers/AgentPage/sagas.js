@@ -1,9 +1,3 @@
-import { makeSelectAgentData } from 'containers/AgentPage/selectors';
-import {
-  agentCreated,
-  agentCreationError,
-} from 'containers/App/actions';
-import { CREATE_AGENT } from 'containers/App/constants';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import {
   call,
@@ -14,11 +8,19 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 
-import request from 'utils/request';
+import request from '../../utils/request';
+import { makeSelectAgentData } from '../AgentPage/selectors';
+import {
+  agentCreated,
+  agentCreationError,
+  loadAgents,
+  selectCurrentAgent,
+} from '../App/actions';
+import { CREATE_AGENT } from '../App/constants';
 
 export function* postAgent() {
   const agentData = yield select(makeSelectAgentData());
-  agentData.domainClassifierThreshold = agentData.domainClassifierThreshold / 100;
+  agentData.domainClassifierThreshold /= 100;
 
   const requestURL = `http://127.0.0.1:8000/agent`;
   const requestOptions = {
@@ -33,9 +35,11 @@ export function* postAgent() {
   try {
     const agent = yield call(request, requestURL, requestOptions);
     yield put(agentCreated(agent, agent.id));
+    yield put(loadAgents());
+    yield put(selectCurrentAgent(agent));
   } catch (error) {
     yield put(agentCreationError({
-      message: 'An error ocurred creating the agent',
+      message: 'An error occurred creating the agent',
       error,
     }));
   }

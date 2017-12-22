@@ -17,6 +17,7 @@ function FormTextInput(props) { // eslint-disable-line react/prefer-stateless-fu
         disabled={props.disabled}
         className={props.className}
         tooltip={props.tooltip}
+        defaultValue={props.defaultValue}
       />
     </div>
   );
@@ -27,6 +28,7 @@ FormTextInput.propTypes = {
   label: React.PropTypes.object,
   placeholder: React.PropTypes.string,
   value: React.PropTypes.string,
+  defaultValue: React.PropTypes.string,
   onChange: React.PropTypes.func,
   onKeyPress: React.PropTypes.func,
   required: React.PropTypes.bool,

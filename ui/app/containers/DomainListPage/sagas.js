@@ -23,13 +23,12 @@ import request from '../../utils/request';
 export function* getAgentDomains(payload) {
   const agentId = payload.agentId.split('~')[0];
   const requestURL = `http://127.0.0.1:8000/agent/${agentId}/domain`;
-
   try {
     const agentDomains = yield call(request, requestURL);
     yield put(agentDomainsLoaded(agentDomains));
   } catch (error) {
     yield put(agentDomainsLoadingError({
-      message: 'An error ocurred loading the list of available domains in this agent',
+      message: 'An error occurred loading the list of available domains in this agent',
       error,
     }));
   }

@@ -6,6 +6,7 @@
 
 import React from 'react';
 import CheckBoxCell from './types/CheckBoxCell';
+import ListCell from './types/ListCell';
 import ProgressCell from './types/ProgressCell';
 import StringCell from './types/StringCell';
 
@@ -15,13 +16,15 @@ class Table2Cell extends React.Component { // eslint-disable-line react/prefer-s
 
     switch (type) {
       case 'string':
-        return <StringCell value={value} />;
+        return <StringCell value={value} className={'cell-string'} />;
       case 'number':
-        return <StringCell value={value} className={'center-align'} />;
+        return <StringCell value={value} className={'cell-string center-align'} />;
       case 'checkbox':
-        return <CheckBoxCell value={value} onChange={onCellChange} />;
+        return <CheckBoxCell value={value} className={'cell-check-box'} onChange={onCellChange} />;
       case 'progress':
-        return <ProgressCell value={value} />;
+        return <ProgressCell value={value} className={'cell-progress-bar'} />;
+      case 'list':
+        return <ListCell value={value} className={'cell-list'} />;
       default:
         return <div>invalid type=[{type}]</div>;
     }

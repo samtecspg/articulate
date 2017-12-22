@@ -1,4 +1,7 @@
+import * as React from 'react';
+
 export default [{
+  id: 'name',
   label: 'Intent',
   tooltip: '',
   type: 'string',
@@ -10,8 +13,9 @@ export default [{
 
 }, {
   label: 'Examples',
+  id: 'examples',
   tooltip: '',
-  type: 'string',
+  type: 'list',
   accessor: 'examples',
   filterable: true,
   headerClassName: 'table2-header',

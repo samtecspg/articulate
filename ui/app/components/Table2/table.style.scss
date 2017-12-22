@@ -152,6 +152,10 @@
       &:last-child {
         border-right: 0;
       }
+      .cell-list {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
     }
     .rt-expandable {
       cursor: pointer;
@@ -441,6 +445,7 @@
   }
   &-ellipsis {
     text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   &-row-menu {

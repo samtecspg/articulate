@@ -40,7 +40,7 @@ export function* postDomain() {
     yield put(domainCreated(domain, domain.id));
   } catch (error) {
     yield put(domainCreationError({
-      message: 'An error ocurred creating the domain',
+      message: 'An error occurred creating the domain',
       error,
     }));
   }
@@ -62,7 +62,7 @@ export function* getAgents() {
     yield put(agentsLoaded(agents));
   } catch (error) {
     yield put(agentsLoadingError({
-      message: 'An error ocurred loading the list of available agents',
+      message: 'An error occurred loading the list of available agents',
       error,
     }));
   }

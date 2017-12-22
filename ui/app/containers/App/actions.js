@@ -125,10 +125,9 @@ export function loadAgentDomains(agentId) {
   };
 }
 
-export function resetAgentDomains(agentId) {
+export function resetAgentDomains() {
   return {
     type: RESET_AGENT_DOMAINS,
-    agentId,
   };
 }
 
@@ -173,11 +172,10 @@ export function createAgent() {
   };
 }
 
-export function agentCreated(data, id) {
+export function agentCreated(agent, id) {
   return {
     type: CREATE_AGENT_SUCCESS,
-    data,
-    id,
+    agent
   };
 }
 

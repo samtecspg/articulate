@@ -98,6 +98,9 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       minWidth: column.minWidth,
       resizable: column.resizable,
       maxWidth: column.maxWidth,
+      Aggregated: column.Aggregated,
+      aggregate: column.aggregate,
+      id: column.id,
     };
   }
 
@@ -111,6 +114,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       striped,
       showPagination,
       showSearchInput,
+      pivotBy
     } = this.props;
     let newColumns;
 
@@ -148,6 +152,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
             showPagination={showPagination}
             className={classNames.join(' ')}
             minRows={minRows}
+            pivotBy={pivotBy}
           />
         </div>
       </div>
@@ -166,7 +171,7 @@ Table2.propTypes = {
   striped: React.PropTypes.bool,
   showPagination: React.PropTypes.bool,
   showSearchInput: React.PropTypes.bool,
-
+  pivotBy: React.PropTypes.array,
 };
 
 Table2.defaultProps = {
@@ -175,6 +180,6 @@ Table2.defaultProps = {
   striped: false,
   showPagination: false,
   showSearchInput: true,
-
+  pivotBy: []
 };
 export default Table2;

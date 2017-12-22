@@ -41,7 +41,7 @@ export function* postWebhook() {
     yield put(webhookCreated(webhook, webhook.id));
   } catch (error) {
     yield put(webhookCreationError({
-      message: 'An error ocurred creating the webhook',
+      message: 'An error occurred creating the webhook',
       error,
     }));
   }
@@ -63,7 +63,7 @@ export function* getAgents() {
     yield put(agentsLoaded(agents));
   } catch (error) {
     yield put(agentsLoadingError({
-      message: 'An error ocurred loading the list of available agents',
+      message: 'An error occurred loading the list of available agents',
       error,
     }));
   }

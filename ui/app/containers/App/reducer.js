@@ -138,9 +138,8 @@ function appReducer(state = initialState, action) {
         .set('agent', false);
     case CREATE_AGENT_SUCCESS:
       return state
-        .set('agent', action.data)
-        .set('loading', false)
-        .set('currentAgent', action.id);
+        .set('loading', true)
+        .set('error', false);
     case CREATE_AGENT_ERROR:
       return state
         .set('error', action.error)

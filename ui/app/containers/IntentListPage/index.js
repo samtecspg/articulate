@@ -42,6 +42,13 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     this.onCreateAction = this.onCreateAction.bind(this);
   }
 
+  componentWillMount() {
+    const { currentAgent } = this.props;
+    if (currentAgent) {
+      this.props.onComponentWillMount(currentAgent);
+    }
+  }
+
   componentWillUpdate(nextProps) {
     if (nextProps.currentAgent !== this.props.currentAgent) {
       this.props.onComponentWillUpdate(nextProps.currentAgent);
@@ -49,8 +56,10 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   onSelectDomain(evt) {
-    const domain = { value: evt.target.value, field: 'domain' };
-    this.props.onChangeDomain(domain);
+    const value = evt.target.value;
+    if (value !== 'default') {
+      this.props.onChangeDomain({ value, field: 'domain' });
+    }
   }
 
   onCreateAction() {
@@ -96,6 +105,8 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
         text: domain.domainName,
       }));
       domainsSelect.unshift({ value: 'default', text: 'Please choose a domain', disabled: 'disabled' });
+    } else {
+      domainsSelect.unshift({ value: 'default', text: 'No domains available for selected agent', disabled: 'disabled' });
     }
 
     return (
@@ -155,6 +166,7 @@ IntentListPage.propTypes = {
   onComponentWillUpdate: React.PropTypes.func,
   onChangeDomain: React.PropTypes.func,
   onChangeUrl: React.PropTypes.func,
+  onComponentWillMount: React.PropTypes.func,
   domainIntents: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
@@ -171,6 +183,10 @@ IntentListPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    onComponentWillMount: (agent) => {
+      dispatch(loadAgentDomains(agent.id));
+      dispatch(resetDomainIntents());
+    },
     onComponentWillUpdate: (agent) => {
       if (agent) {
         dispatch(loadAgentDomains(agent.id));

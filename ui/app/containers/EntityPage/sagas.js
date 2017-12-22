@@ -39,7 +39,7 @@ export function* postEntity() {
     yield put(entityCreated(entity, entity.id));
   } catch (error) {
     yield put(entityCreationError({
-      message: 'An error ocurred creating the entity',
+      message: 'An error occurred creating the entity',
       error,
     }));
   }
@@ -61,7 +61,7 @@ export function* getAgents() {
     yield put(agentsLoaded(agents));
   } catch (error) {
     yield put(agentsLoadingError({
-      message: 'An error ocurred loading the list of available agents',
+      message: 'An error occurred loading the list of available agents',
       error,
     }));
   }

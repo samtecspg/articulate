@@ -53,7 +53,7 @@ function* postScenario(intentName) {
     yield put(scenarioCreated(scenario, scenario.id));
   } catch (error) {
     yield put(scenarioCreationError({
-      message: 'An error ocurred creating the scenario',
+      message: 'An error occurred creating the scenario',
       error,
     }));
   }
@@ -87,7 +87,7 @@ export function* postIntent() {
     yield put(intentCreated(intent, intent.id));
   } catch (error) {
     yield put(intentCreationError({
-      message: 'An error ocurred creating the intent',
+      message: 'An error occurred creating the intent',
       error,
     }));
   }
@@ -109,7 +109,7 @@ export function* getAgents() {
     yield put(agentsLoaded(agents));
   } catch (error) {
     yield put(agentsLoadingError({
-      message: 'An error ocurred loading the list of available agents',
+      message: 'An error occurred loading the list of available agents',
       error,
     }));
   }
@@ -132,7 +132,7 @@ export function* getAgentDomains(payload) {
     yield put(agentDomainsLoaded(agentDomains));
   } catch (error) {
     yield put(agentDomainsLoadingError({
-      message: 'An error ocurred loading the list of available domains in this agent',
+      message: 'An error occurred loading the list of available domains in this agent',
       error,
     }));
   }
@@ -155,7 +155,7 @@ export function* getAgentEntities(payload) {
     yield put(agentEntitiesLoaded(agentEntities));
   } catch (error) {
     yield put(agentEntitiesLoadingError({
-      message: 'An error ocurred loading the list of available entities',
+      message: 'An error occurred loading the list of available entities',
       error,
     }));
   }

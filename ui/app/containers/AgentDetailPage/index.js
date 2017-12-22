@@ -33,7 +33,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
 
   componentWillUpdate(nextProps) {
     const { currentAgent } = nextProps;
-    if ((currentAgent && this.props.currentAgent)  && (currentAgent.id !== this.props.currentAgent.id)) {
+    if ((currentAgent && this.props.currentAgent) && (currentAgent.id !== this.props.currentAgent.id)) {
       this.props.onComponentWillMount(currentAgent.id);
     }
   }
@@ -75,38 +75,28 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             <Form>
               <FormTextInput
                 label={messages.agentName}
-                value={currentAgent.agentName}
-                onChange={() => {
-                }}
+                defaultValue={currentAgent.agentName}
                 disabled
               />
               <FormTextInput
                 label={messages.description}
                 placeholder={messages.descriptionPlaceholder.defaultMessage}
-                value={currentAgent.description}
-                onChange={() => {
-                }}
+                defaultValue={currentAgent.description}
                 disabled
               />
               <FormTextInput
                 label={messages.sampleData}
-                value={currentAgent.sampleData}
-                onChange={() => {
-                }}
+                defaultValue={currentAgent.sampleData}
                 disabled
               />
               <FormTextInput
                 label={messages.language}
-                value={currentAgent.language}
-                onChange={() => {
-                }}
+                defaultValue={currentAgent.language}
                 disabled
               />
               <FormTextInput
                 label={messages.timezone}
-                value={currentAgent.timezone}
-                onChange={() => {
-                }}
+                defaultValue={currentAgent.timezone}
                 disabled
               />
             </Form>

@@ -119,7 +119,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 label={messages.agentName}
                 placeholder={messages.agentNamePlaceholder.defaultMessage}
                 inputId="agentName"
-                value={this.props.agentData.agentName}
                 onChange={this.props.onChangeAgentData.bind(null, 'agentName')}
                 required
               />
@@ -127,7 +126,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 label={messages.description}
                 placeholder={messages.descriptionPlaceholder.defaultMessage}
                 inputId="description"
-                value={this.props.agentData.description}
                 onChange={this.props.onChangeAgentData.bind(null, 'description')}
               />
               <Input
@@ -135,7 +133,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="sampleData"
                 type="select"
                 label={messages.sampleData.defaultMessage}
-                defaultValue={this.props.agentData.sampleData ? this.props.agentData.sampleData : 'none'}
                 onChange={this.props.onChangeAgentData.bind(null, 'sampleData')}
               >
                 {returnFormattedOptions(sampleData)}
@@ -145,7 +142,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="language"
                 type="select"
                 label={messages.language.defaultMessage}
-                defaultValue={this.props.agentData.language ? this.props.agentData.language : 'en'}
+                defaultValue={'en'}
                 onChange={this.props.onChangeAgentData.bind(null, 'language')}
               >
                 {returnFormattedOptions(languages)}
@@ -155,8 +152,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="timezone"
                 type="select"
                 label={messages.timezone.defaultMessage}
-                defaultValue={this.props.agentData.timezone ? this.props.agentData.timezone : 'America/Kentucky/Louisville'}
-                onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
+	`	onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
               >
                 {returnFormattedOptions(timezones)}
               </Input>
@@ -169,7 +165,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               id="domainClassifierThreshold"
               min="0"
               max="100"
-              value={this.props.agentData.domainClassifierThreshold.toString()}
               onChange={this.props.onChangeAgentData.bind(null, 'domainClassifierThreshold')}
             />
           </Row>
@@ -198,9 +193,7 @@ AgentPage.propTypes = {
     React.PropTypes.bool,
   ]),
   onSubmitForm: React.PropTypes.func,
-  agentData: React.PropTypes.object,
   onChangeAgentData: React.PropTypes.func,
-  onMessageAccepted: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -215,7 +208,6 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
-  agentData: makeSelectAgentData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
 });
