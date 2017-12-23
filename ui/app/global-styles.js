@@ -28,7 +28,7 @@ injectGlobal`
     float: left;
     padding-bottom: 100px; }
     main div section {
-      width: calc(100% - 0px);
+      width: calc(100% - 500px);
       height: auto;
       float: left; }
 
@@ -53,10 +53,14 @@ injectGlobal`
     font-weight: 300; }
 
   .container {
-    width: 90%; }
+    width: 90%;
+    margin-bottom: 90px;
+  }
 
   .content-area {
-    padding-top: 35px;
+    height: 100vh;
+    position: fixed;
+    top: 70px;
     overflow-y: auto; }
 
   .row {
@@ -149,7 +153,7 @@ injectGlobal`
     border-color: #b4dbdb; }
 
   .bottom-nav {
-    position: absolute;
+    margin-top: 77vh;
     bottom: 0;
     width: 100%; }
 
@@ -178,6 +182,7 @@ injectGlobal`
     font-weight: 400; }
 
   .right-panel {
+    top: 70px;
     width: 300px;
     height: 100vh;
     position: fixed;
@@ -185,8 +190,9 @@ injectGlobal`
     border-left: 1px solid #c5cbd8; }
 
   .conversation-panel {
+    top: 70px;
+    bottom: 80px;
     width: 300px;
-    height: 85vh;
     position: fixed;
     right: 0;}
 
