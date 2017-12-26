@@ -18,6 +18,10 @@ export default defineMessages({
     id: 'boilerplate.containers.EntityPage.create_entity.entityName',
     defaultMessage: 'Entity Name',
   },
+  entityColor: {
+    id: 'boilerplate.containers.EntityPage.create_entity.entityColor',
+    defaultMessage: 'Entity Color',
+  },
   entityNamePlaceholder: {
     id: 'boilerplate.containers.EntityPage.create_entity.entity_name_placeholder',
     defaultMessage: 'Type a name here',

@@ -9,7 +9,7 @@ export function SlotsRows(props) {
     const agentEntity = props.agentEntities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
     return (
       <tr style={{ width: '100%' }} key={slotIndex}>
-        <td style={{ width: '20%', display: 'inline-block' }}>
+        <td style={{ width: '15%', display: 'inline-block' }}>
           <TextInput
             style={{ marginBottom: '0px', color: props.dirOfColors[slot.entity] }}
             placeholder=""
@@ -26,7 +26,6 @@ export function SlotsRows(props) {
           onClickFunction={() => {
           }}
           dirOfColors={props.dirOfColors}
-          colorArray={props.colorArray}
         />
         <td style={{ width: '10%', display: 'inline-block', paddingBottom: '0px' }}>
           <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isList')} name="isList" type="checkbox" value="isList" label=" " className="filled-in" defaultChecked={slot.isList ? 'required' : null} />
@@ -57,7 +56,6 @@ SlotsRows.propTypes = {
     React.PropTypes.bool,
   ]),
   dirOfColors: React.PropTypes.object,
-  colorArray: React.PropTypes.array,
 };
 
 export default SlotsRows;

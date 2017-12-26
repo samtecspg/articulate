@@ -18,10 +18,7 @@ export function AgentEntities(props) {
     items = props.agentEntities.map((agentEntity, agentIndex) => {
       let entityColor = props.dirOfColors[agentEntity.entityName];
       if (!entityColor) {
-        const randomColorIndex = Math.floor(Math.random() * props.colorArray.length);
-        entityColor = props.colorArray[randomColorIndex];
-        props.dirOfColors[agentEntity.entityName] = entityColor;
-        props.colorArray.splice(randomColorIndex, 1);
+        props.dirOfColors[agentEntity.entityName] = agentEntity.uiColor;
       }
       return (
         <NavItem
@@ -30,7 +27,7 @@ export function AgentEntities(props) {
             props.onClickFunction.bind(null, agentEntity.entityName)}
           key={agentIndex}
         >
-          <span style={{ color: entityColor }}>
+          <span style={{ color: agentEntity.uiColor }}>
                         @{agentEntity.entityName}
           </span>
         </NavItem>
@@ -60,7 +57,6 @@ AgentEntities.propTypes = {
   userSays: React.PropTypes.string,
   onClickFunction: React.PropTypes.func,
   dirOfColors: React.PropTypes.object,
-  colorArray: React.PropTypes.array,
   index: React.PropTypes.number,
   createEntity: React.PropTypes.bool,
 };

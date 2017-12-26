@@ -6,13 +6,17 @@ import {
   CHANGE_ENTITY_DATA,
   REMOVE_EXAMPLE,
   REMOVE_SYNONYM,
+  SWITCH_COLOR_PICKER_DISPLAY,
+  CLOSE_COLOR_PICKER,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
+  displayColorPicker: false,
   entityData: {
     agent: null,
     entityName: '',
+    uiColor: '#e91e63',
     examples: [],
   },
 });
@@ -23,6 +27,11 @@ function entityReducer(state = initialState, action) {
 
   switch (action.type) {
     case CHANGE_ENTITY_DATA:
+      if (action.payload.field === 'uiColor'){
+        return state
+          .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value.hex))
+          .set('displayColorPicker', false);
+      }
       return state
         .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value));
     case REMOVE_EXAMPLE:
@@ -43,6 +52,10 @@ function entityReducer(state = initialState, action) {
       examples = examples.map(example => example.get('value') === action.payload.example ? example.update('synonyms', synonyms => synonyms.push(action.payload.synonym)) : example);
       return state
         .setIn(['entityData', 'examples'], examples);
+    case SWITCH_COLOR_PICKER_DISPLAY:
+      return state.set('displayColorPicker', !state.get('displayColorPicker'));
+    case CLOSE_COLOR_PICKER:
+      return state.set('displayColorPicker', false);
     default:
       return state;
   }

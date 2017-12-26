@@ -1,13 +1,16 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-import { Row, } from 'react-materialize';
+import { Row,
+  Col,
+  } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
 import Form from '../../components/Form';
+import Preloader from '../../components/Preloader';
 
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
@@ -50,22 +53,33 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
   }
 
   render() {
-    const { loading, error, webhook } = this.props;
+    const { loading, error, webhook, currentAgent } = this.props;
     const webhookProps = {
       loading,
       error,
       webhook,
     };
 
+    let breadcrumbs = [];
+    if (currentAgent){
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: '+ Add Webhook'},];
+    }
+    else {
+      breadcrumbs = [{ label: '+ Add Webhook'}, ];
+    }
+
     return (
       <div>
+        <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
+          { webhookProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+        </Col>
         <Helmet
           title="Create Webhook"
           meta={[
             { name: 'description', content: 'Add a webhook to your agent' },
           ]}
         />
-        <Header />
+        <Header breadcrumbs={breadcrumbs}/>
         <Content>
           <ContentHeader title={messages.createWebhookTitle} subTitle={messages.createWebhookDescription} />
           <Form>

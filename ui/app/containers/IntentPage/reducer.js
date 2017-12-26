@@ -116,7 +116,7 @@ function intentReducer(state = initialState, action) {
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
         if (slot.slotName === action.payload.slotName) {
-          slot.textPrompts.splice(slot.textPrompts.indexOf(action.payload.textPrompt));
+          slot.textPrompts.splice(slot.textPrompts.indexOf(action.payload.textPrompt), 1);
         }
         return slot;
       });

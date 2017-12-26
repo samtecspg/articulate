@@ -226,6 +226,7 @@
     "minimist": "1.2.0",
     "react": "15.4.1",
     "react-chips": "^0.6.3",
+    "react-color": "^2.13.8",
     "react-dom": "15.4.1",
     "react-helmet": "3.2.2",
     "react-intl": "2.1.5",

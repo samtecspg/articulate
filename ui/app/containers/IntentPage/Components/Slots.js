@@ -10,7 +10,6 @@ export function Slots(props) {
       onDeleteTextPrompt={props.onDeleteTextPrompt}
       onSlotNameChange={props.onSlotNameChange}
       agentEntities={props.agentEntities}
-      colorArray={props.colorArray}
       dirOfColors={props.dirOfColors}
     />);
 }
@@ -26,7 +25,6 @@ Slots.propTypes = {
     React.PropTypes.bool,
   ]),
   dirOfColors: React.PropTypes.object,
-  colorArray: React.PropTypes.array,
 };
 
 export default Slots;

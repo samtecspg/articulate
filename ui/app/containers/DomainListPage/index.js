@@ -1,6 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Row, } from 'react-materialize';
+import { Row,
+  Col, } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
@@ -10,6 +11,8 @@ import ContentHeader from '../../components/ContentHeader';
 import DomainsTable from '../../components/DomainsTable/index';
 import Form from '../../components/Form';
 import Header from '../../components/Header';
+import Preloader from '../../components/Preloader';
+
 import {
   loadAgentDomains,
   resetAgentDomains,
@@ -56,15 +59,26 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
       agentDomains,
     };
 
+    let breadcrumbs = [];
+    if (currentAgent){
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: 'Domains'},];
+    }
+    else {
+      breadcrumbs = [{ label: 'Domains'}, ];
+    }
+
     return (
       <div>
+        <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
+          { domainProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+        </Col>
         <Helmet
           title="Agent Domains"
           meta={[
             { name: 'description', content: 'Create a domain for your agent' },
           ]}
         />
-        <Header />
+        <Header breadcrumbs={breadcrumbs} />
         <Content>
           <ContentHeader title={messages.domainListTitle} subTitle={messages.domainListDescription} />
           <Form>
@@ -83,7 +97,6 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
               </p>
             </Row>
           </Form>
-          {JSON.stringify(currentAgent)}
 
         </Content>
       </div>

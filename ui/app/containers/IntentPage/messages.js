@@ -80,11 +80,11 @@ export default defineMessages({
   },
   slotIsRequiredTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_required_title',
-    defaultMessage: 'Is Required?',
+    defaultMessage: 'Required?',
   },
   slotIsListTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_list_title',
-    defaultMessage: 'Is List?',
+    defaultMessage: 'List?',
   },
   slotPromptTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_prompt_title',

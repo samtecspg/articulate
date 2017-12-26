@@ -7,7 +7,13 @@ const makeSelectEntityData = () => createSelector(
   (entityState) => entityState.get('entityData').toJS(),
 );
 
+const makeDisplayColorPicker = () => createSelector(
+  selectEntity,
+  (displayColorPickerState) => displayColorPickerState.get('displayColorPicker'),
+);
+
 export {
   selectEntity,
   makeSelectEntityData,
+  makeDisplayColorPicker,
 };

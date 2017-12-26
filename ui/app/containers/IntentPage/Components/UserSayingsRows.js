@@ -25,7 +25,7 @@ export function UserSayingsRows(props) {
     let formattedText = null;
     if (value.entities.length > 0) {
       const sortedEntities = value.entities.sort(compareEntities);
-      formattedText = <FormattedText entities={sortedEntities} text={textValue} entityIndex={0} lastStart={0} dirOfColors={props.dirOfColors} colorArray={props.colorArray} />;
+      formattedText = <FormattedText entities={sortedEntities} text={textValue} entityIndex={0} lastStart={0} dirOfColors={props.dirOfColors} />;
     }
     return (
       <tr style={{ width: '100%' }} key={valueIndex}>
@@ -38,7 +38,6 @@ export function UserSayingsRows(props) {
               userSays={textValue}
               onClickFunction={props.onTagEntity}
               dirOfColors={props.dirOfColors}
-              colorArray={props.colorArray}
               createEntity={true}
             />
             <a onClick={props.onRemoveExample.bind(null, textValue)}>
@@ -63,7 +62,6 @@ UserSayingsRows.propTypes = {
   onTagEntity: React.PropTypes.func,
   agentEntities: React.PropTypes.array,
   dirOfColors: React.PropTypes.object,
-  colorArray: React.PropTypes.array,
 };
 
 export default UserSayingsRows;

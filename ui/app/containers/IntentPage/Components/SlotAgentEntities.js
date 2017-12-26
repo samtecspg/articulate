@@ -12,10 +12,7 @@ export function SlotAgentEntities(props) {
     items = props.agentEntities.map((agentEntity, agentIndex) => {
       let entityColor = props.dirOfColors[agentEntity.entityName];
       if (!entityColor) {
-        const randomColorIndex = Math.floor(Math.random() * props.colorArray.length);
-        entityColor = props.colorArray[randomColorIndex];
-        props.dirOfColors[agentEntity.entityName] = entityColor;
-        props.colorArray.splice(randomColorIndex, 1);
+        props.dirOfColors[agentEntity.entityName] = agentEntity.uiColor;
       }
       return (
         <NavItem
@@ -59,7 +56,6 @@ SlotAgentEntities.propTypes = {
   agentEntities: React.PropTypes.array,
   onClickFunction: React.PropTypes.func,
   dirOfColors: React.PropTypes.object,
-  colorArray: React.PropTypes.array,
   index: React.PropTypes.number,
 };
 

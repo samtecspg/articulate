@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 function InputLabel(props) { // eslint-disable-line react/prefer-stateless-function
 
   return (
-    <div className="col input-field s12">
+    <div className={`col input-field s${props.s}`}>
       <label><FormattedMessage {...props.text} /></label>
     </div>
   );

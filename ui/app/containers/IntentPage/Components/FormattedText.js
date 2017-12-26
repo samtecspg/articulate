@@ -8,16 +8,11 @@ export function FormattedText(props) {
     const taggedText = props.text.substring(entity.start - props.lastStart, entity.end - props.lastStart);
     const afterTaggedText = props.text.substring(entity.end - props.lastStart, props.text.length);
     let highlightColor = props.dirOfColors[entity.entity];
-    if (!highlightColor) {
-      const randomColorIndex = Math.floor(Math.random() * props.colorArray.length);
-      highlightColor = props.colorArray[randomColorIndex];
-      props.colorArray.splice(randomColorIndex, 1);
-    }
     formattedElement = (
       <span key={`entityTag_${props.entityIndex}`}>
         <span key={`beforeEntityTagText_${props.entityIndex}`}>{beforeTaggedText}</span>
         <span key={`entityTagText_${props.entityIndex}`} style={{ backgroundColor: highlightColor, color: 'white' }}>{taggedText}</span>
-        <FormattedText entities={props.entities} text={afterTaggedText} entityIndex={props.entityIndex + 1} lastStart={entity.end} dirOfColors={props.dirOfColors} colorArray={props.colorArray} />
+        <FormattedText entities={props.entities} text={afterTaggedText} entityIndex={props.entityIndex + 1} lastStart={entity.end} dirOfColors={props.dirOfColors} />
       </span>
     );
   } else {
@@ -37,7 +32,6 @@ FormattedText.propTypes = {
   entityIndex: React.PropTypes.number,
   lastStart: React.PropTypes.number,
   dirOfColors: React.PropTypes.object,
-  colorArray: React.PropTypes.array,
 };
 
 export default FormattedText;

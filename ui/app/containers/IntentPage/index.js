@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import {
   Input,
   Row,
+  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -18,6 +19,7 @@ import InputLabel from '../../components/InputLabel';
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
+import Preloader from '../../components/Preloader';
 import Toggle from '../../components/Toggle';
 
 import {
@@ -61,7 +63,6 @@ const returnFormattedOptions = (options) => options.map((option, index) => (
   </option>
 ));
 
-const colorArray = ['#f44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A'];
 const dirOfColors = {};
 
 export class IntentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -108,7 +109,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, intent, scenario, agentDomains, agentEntities } = this.props;
+    const { loading, error, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
     const intentProps = {
       loading,
       error,
@@ -124,16 +125,27 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       domainsSelect.unshift({ value: 'default', text: 'Please choose a domain to place your intent', disabled: 'disabled' });
     }
 
+    let breadcrumbs = [];
+    if (currentAgent){
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: '+ Creating intents'},];
+    }
+    else {
+      breadcrumbs = [{ label: '+ Creating intents'}, ];
+    }
+
     return (
 
       <div>
+        <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
+          { intentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+        </Col>
         <Helmet
           title="Create Intent"
           meta={[
             { name: 'description', content: 'Create an intent' },
           ]}
         />
-        <Header />
+        <Header breadcrumbs={breadcrumbs} />
         <Content>
           <ContentHeader title={messages.createIntentTitle} subTitle={messages.createIntentDescription} />
           <Form>
@@ -183,7 +195,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   onRemoveExample={this.props.onRemoveExample}
                   onTagEntity={this.props.onTagEntity}
                   agentEntities={agentEntities}
-                  colorArray={colorArray} dirOfColors={dirOfColors}
+                  dirOfColors={dirOfColors}
                 />
               </Table>
             </TableContainer>
@@ -201,7 +213,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <TableHeader
                 columns={[
                   {
-                    width: '20%',
+                    width: '15%',
                     label: messages.slotNameTitle.defaultMessage,
                     tooltip: messages.slotNameTooltip.defaultMessage,
                   },
@@ -221,7 +233,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                     tooltip: messages.slotIsRequiredTitle.defaultMessage,
                   },
                   {
-                    width: '40%',
+                    width: '45%',
                     label: messages.slotPromptTitle.defaultMessage,
                     tooltip: messages.slotPromptTitle.defaultMessage,
                   },
@@ -235,7 +247,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onSlotNameChange={this.props.onSlotNameChange}
                 onAddSlot={this.props.onAddSlot}
                 agentEntities={agentEntities}
-                colorArray={colorArray}
                 dirOfColors={dirOfColors}
               />
             </Table>
@@ -247,7 +258,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 slots={this.props.scenarioData.slots}
                 agentEntities={agentEntities}
                 onClickFunction={this.props.onAutoCompleteEntityFunction}
-                colorArray={colorArray}
                 dirOfColors={dirOfColors}
               />
               <FormTextInput

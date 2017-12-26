@@ -1,7 +1,9 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-import { Row } from 'react-materialize';
+import { Row,
+  Col,
+  } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Content from '../../components/Content';
@@ -9,6 +11,8 @@ import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import SliderInput from '../../components/SliderInput';
+import Preloader from '../../components/Preloader';
+
 import { loadCurrentAgent } from '../App/actions';
 import {
   makeSelectCurrentAgent,
@@ -41,18 +45,28 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
       error,
       currentAgent,
     };
+
+    let breadcrumbs = [];
+
     if (!currentAgent) {
       return (<div>&nbsp;</div>);
     }
+    else {
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`},];
+    }
+
     return (
       <div>
+        <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
+          { agentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+        </Col>
         <Helmet
           title={`Agent: ${currentAgent.agentName}`}
           meta={[
             { name: 'description', content: `Details for NLU Agent ${currentAgent.agentName}` },
           ]}
         />
-        <Header />
+        <Header breadcrumbs={breadcrumbs} />
         <Content>
           <Row>
             <header className="main-title"><h1><span>Agent: {currentAgent.agentName}</span></h1><p><span>{currentAgent.description}</span></p></header>

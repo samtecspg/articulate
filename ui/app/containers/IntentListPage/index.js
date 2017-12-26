@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import {
   Input,
   Row,
+  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -13,6 +14,8 @@ import ContentHeader from '../../components/ContentHeader';
 import Form from '../../components/Form';
 import Header from '../../components/Header';
 import IntentsTable from '../../components/IntentsTable/index';
+import Preloader from '../../components/Preloader';
+
 import {
   loadAgentDomains,
   loadDomainIntents,
@@ -71,12 +74,20 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   render() {
-    const { loading, error, agentDomains, domainIntents } = this.props;
+    const { loading, error, agentDomains, domainIntents, currentAgent } = this.props;
     const domainProps = {
       loading,
       error,
       agentDomains,
     };
+
+    let breadcrumbs = [];
+    if (currentAgent){
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: 'Intents'},];
+    }
+    else {
+      breadcrumbs = [{ label: 'Intents'}, ];
+    }
 
     let domainsSelect = [];
     if (agentDomains !== false) {
@@ -89,13 +100,16 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
 
     return (
       <div>
+        <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
+          { domainProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+        </Col>
         <Helmet
-          title="Agent Domains"
+          title="Agent Intents"
           meta={[
-            { name: 'description', content: 'Create a domain for your agent' },
+            { name: 'description', content: 'Review the list of intents' },
           ]}
         />
-        <Header />
+        <Header breadcrumbs={breadcrumbs}/>
         <Content>
           <ContentHeader title={messages.domainListTitle} subTitle={messages.domainListDescription} />
           <Form>

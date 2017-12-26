@@ -467,4 +467,12 @@ injectGlobal`
   form p.range-field {
     margin-left: 0; }
 
+  .chip .remove{
+    cursor:pointer;
+    float:right;
+    font-size:16px;
+    line-height:32px;
+    padding-left:8px
+  }
+
 `;

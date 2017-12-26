@@ -4,6 +4,8 @@ import {
   CHANGE_ENTITY_DATA,
   REMOVE_EXAMPLE,
   REMOVE_SYNONYM,
+  SWITCH_COLOR_PICKER_DISPLAY,
+  CLOSE_COLOR_PICKER,
 } from './constants';
 
 export function changeEntityData(payload) {
@@ -38,6 +40,18 @@ export function addSynonym(payload) {
   return {
     type: ADD_SYNONYM,
     payload,
+  };
+}
+
+export function switchColorPickerDisplay() {
+  return {
+    type: SWITCH_COLOR_PICKER_DISPLAY,
+  };
+}
+
+export function closeColorPicker() {
+  return {
+    type: CLOSE_COLOR_PICKER,
   };
 }
 

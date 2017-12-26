@@ -6,6 +6,7 @@ import Form from 'components/Form';
 import FormTextInput from 'components/FormTextInput';
 import Header from 'components/Header';
 import SliderInput from 'components/SliderInput';
+import Preloader from '../../components/Preloader';
 
 import {
   makeSelectAgent,
@@ -18,6 +19,7 @@ import Helmet from 'react-helmet';
 import {
   Input,
   Row,
+  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -99,13 +101,16 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
 
     return (
       <div>
+        <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
+          { agentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+        </Col>
         <Helmet
           title="Create Agent"
           meta={[
             { name: 'description', content: 'Create your NLU agent' },
           ]}
         />
-        <Header />
+        <Header breadcrumbs={[{ label: '+ Creating agent'}, ]}/>
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>

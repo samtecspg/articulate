@@ -1,7 +1,9 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-import { Row, } from 'react-materialize';
+import { Row,
+  Col,
+  } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
@@ -14,6 +16,9 @@ import InputLabel from '../../components/InputLabel';
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
+import ColorPicker from '../../components/ColorPicker';
+import Preloader from '../../components/Preloader';
+
 import { createEntity, } from '../../containers/App/actions';
 import {
   makeSelectCurrentAgent,
@@ -28,11 +33,13 @@ import {
   changeEntityData,
   removeExample,
   removeSynonym,
+  switchColorPickerDisplay,
+  closeColorPicker,
 } from './actions';
 import Examples from './Components/Examples';
 
 import messages from './messages';
-import { makeSelectEntityData } from './selectors';
+import { makeSelectEntityData, makeDisplayColorPicker } from './selectors';
 
 export class EntityPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
@@ -59,22 +66,34 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, entity } = this.props;
+    const { loading, error, entity, displayColorPicker, currentAgent } = this.props;
     const entityProps = {
       loading,
       error,
       entity,
+      displayColorPicker,
     };
+
+    let breadcrumbs = [];
+    if (currentAgent){
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: '+ Creating entities'},];
+    }
+    else {
+      breadcrumbs = [{ label: '+ Creating entities'}, ];
+    }
 
     return (
       <div>
+        <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
+          { entityProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+        </Col>
         <Helmet
           title="Create Entity"
           meta={[
             { name: 'description', content: 'Create an entity' },
           ]}
         />
-        <Header />
+        <Header breadcrumbs={breadcrumbs} />
         <Content>
           <ContentHeader title={messages.createEntityTitle} subTitle={messages.createEntityDescription} />
           <Form>
@@ -85,6 +104,15 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 inputId="entityName"
                 onChange={(evt) => this.onChangeInput(evt, 'entityName')}
                 required
+                s={10}
+              />
+              <InputLabel s={2} text={messages.entityColor} />
+              <ColorPicker color={this.props.entityData.uiColor}
+                handleClose={this.props.handleClose}
+                handleClick={this.props.handleClick}
+                handleColorChange={this.props.handleColorChange}
+                displayColorPicker={this.props.displayColorPicker}
+                s={2}
               />
               <InputLabel text={messages.examples} />
             </Row>
@@ -110,7 +138,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 examples={this.props.entityData.examples}
                 addExampleFunction={this.props.onAddExample}
                 removeExampleFunction={this.props.onRemoveExample}
-                removeSynonymFunction={this.props.onAddExample}
+                removeSynonymFunction={this.props.onRemoveSynonym}
                 addSynonymFunction={this.props.onAddSynonym}
               />
             </Table>
@@ -179,12 +207,22 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createEntity());
     },
+    handleClick: () => {
+      dispatch(switchColorPickerDisplay());
+    },
+    handleClose: () => {
+      dispatch(closeColorPicker());
+    },
+    handleColorChange: (color) => {
+      dispatch(changeEntityData({ value: color, field: 'uiColor' }));
+    },
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   entity: makeSelectEntity(),
   entityData: makeSelectEntityData(),
+  displayColorPicker: makeDisplayColorPicker(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
   currentAgent: makeSelectCurrentAgent(),
