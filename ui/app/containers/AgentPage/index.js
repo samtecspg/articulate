@@ -1,33 +1,34 @@
-import ActionButton from 'components/ActionButton';
-import Content from 'components/Content';
-import ContentHeader from 'components/ContentHeader';
-import Form from 'components/Form';
-
-import FormTextInput from 'components/FormTextInput';
-import Header from 'components/Header';
-import SliderInput from 'components/SliderInput';
-import Preloader from '../../components/Preloader';
-
-import {
-  makeSelectAgent,
-  makeSelectError,
-  makeSelectLoading,
-} from 'containers/App/selectors';
 import React from 'react';
 import Helmet from 'react-helmet';
-
 import {
+  Col,
   Input,
   Row,
-  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import ActionButton from '../../components/ActionButton';
+import Content from '../../components/Content';
+import ContentHeader from '../../components/ContentHeader';
+import Form from '../../components/Form';
+
+import FormTextInput from '../../components/FormTextInput';
+import Header from '../../components/Header';
+import Preloader from '../../components/Preloader';
+import SliderInput from '../../components/SliderInput';
 
 import { createAgent } from '../App/actions';
-import { changeAgentData } from './actions';
+import {
+  makeSelectError,
+  makeSelectLoading,
+} from '../App/selectors';
+import {
+  changeAgentData,
+  resetAgentData,
+} from './actions';
 
 import messages from './messages';
+
 import { makeSelectAgentData } from './selectors';
 
 /* import timezones from './data/timezones.json';
@@ -83,11 +84,12 @@ const returnFormattedOptions = (options) => options.map((option, index) => (
   <option key={index} value={option.value}>
     {option.text}
   </option>
-    ));
+));
 
 export class AgentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount() {
+    this.props.resetForm();
     sampleData.unshift({ value: 'none', text: messages.sampleDataPlaceholder.defaultMessage, disabled: 'disabled' });
   }
 
@@ -98,11 +100,10 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       error,
       agent,
     };
-
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          { agentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+          {agentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
           title="Create Agent"
@@ -110,7 +111,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             { name: 'description', content: 'Create your NLU agent' },
           ]}
         />
-        <Header breadcrumbs={[{ label: '+ Creating agent'}, ]}/>
+        <Header breadcrumbs={[{ label: '+ Creating agent' },]} />
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>
@@ -142,7 +143,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="language"
                 type="select"
                 label={messages.language.defaultMessage}
-                defaultValue={'en'}
+                value={this.props.agent.language}
                 onChange={this.props.onChangeAgentData.bind(null, 'language')}
               >
                 {returnFormattedOptions(languages)}
@@ -152,7 +153,8 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="timezone"
                 type="select"
                 label={messages.timezone.defaultMessage}
-	`	onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
+                value={this.props.agent.timezone}
+                onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
               >
                 {returnFormattedOptions(timezones)}
               </Input>
@@ -194,6 +196,7 @@ AgentPage.propTypes = {
   ]),
   onSubmitForm: React.PropTypes.func,
   onChangeAgentData: React.PropTypes.func,
+  resetForm: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -203,11 +206,14 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createAgent());
     },
+    resetForm: () => {
+      dispatch(resetAgentData());
+    },
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  agent: makeSelectAgent(),
+  agent: makeSelectAgentData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
 });

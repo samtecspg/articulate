@@ -41,3 +41,4 @@ export const SELECT_CURRENT_AGENT = 'boilerplate/App/SELECT_CURRENT_AGENT';
 export const LOAD_CURRENT_AGENT = 'boilerplate/App/LOAD_CURRENT_AGENT';
 export const RESET_CURRENT_AGENT = 'boilerplate/App/RESET_CURRENT_AGENT';
 export const RESET_AGENT_DOMAINS = 'boilerplate/App/RESET_AGENT_DOMAINS';
+export const ACTION_CANCELLED = 'boilerplate/App/ACTION_CANCELLED';

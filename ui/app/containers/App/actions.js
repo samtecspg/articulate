@@ -40,7 +40,8 @@ import {
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
-  SELECT_CURRENT_AGENT
+  SELECT_CURRENT_AGENT,
+  ACTION_CANCELLED,
 } from './constants';
 
 export function loadAgents() {
@@ -329,5 +330,11 @@ export function domainIntentsLoadingError(error) {
   return {
     type: LOAD_DOMAINS_INTENTS_ERROR,
     error,
+  };
+}
+export function actionCancelled(message) {
+  return {
+    type: ACTION_CANCELLED,
+    message,
   };
 }

@@ -3,6 +3,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import {
   call,
   cancel,
+  cancelled,
   put,
   take,
   takeLatest,
@@ -12,6 +13,7 @@ import {
   agentDomainsLoadingError,
   agentsLoaded,
   agentsLoadingError,
+  actionCancelled,
 } from '../../containers/App/actions';
 import {
   LOAD_AGENT_DOMAINS,
@@ -31,6 +33,12 @@ export function* getAgentDomains(payload) {
       message: 'An error occurred loading the list of available domains in this agent',
       error,
     }));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actionCancelled({
+        message: 'Get Agent Domains Cancelled',
+      }));
+    }
   }
 }
 

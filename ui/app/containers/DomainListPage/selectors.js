@@ -1,13 +1,13 @@
 import { createSelector } from 'reselect';
 
-const selectDomain = (state) => state.get('domain');
+const selectAgent = (state) => state.get('agent');
 
-const makeSelectDomainData = () => createSelector(
-  selectDomain,
-  (domainState) => domainState.get('domainData').toJS(),
+const makeSelectAgentData = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.get('agentData').toJS(),
 );
 
 export {
-  selectDomain,
-  makeSelectDomainData,
+  selectAgent,
+  makeSelectAgentData,
 };

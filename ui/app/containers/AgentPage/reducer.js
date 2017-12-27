@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 
-import { CHANGE_AGENT_DATA, } from './constants';
+import { CHANGE_AGENT_DATA, RESET_AGENT_DATA} from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -22,9 +22,10 @@ const initialState = fromJS({
 function agentReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_AGENT_DATA:
-
       return state
         .updateIn(['agentData'], x => x.set(action.payload.field, action.payload.value));
+    case RESET_AGENT_DATA:
+      return initialState;
     default:
       return state;
   }

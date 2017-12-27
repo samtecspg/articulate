@@ -40,6 +40,7 @@ import {
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
   SELECT_CURRENT_AGENT,
+  ACTION_CANCELLED,
 } from './constants';
 
 // The initial state of the App
@@ -244,6 +245,10 @@ function appReducer(state = initialState, action) {
     case LOAD_DOMAINS_INTENTS_ERROR:
       return state
         .set('error', action.error)
+        .set('loading', false);
+    case ACTION_CANCELLED:
+      return state
+        .set('message', action.message)
         .set('loading', false);
     default:
       return state;
