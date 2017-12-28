@@ -66,16 +66,16 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
         <Link id="logo" to="/"><img src={logo} alt="NLU Logo" /></Link>
         <nav>
           <ul className="primary-nav">
-            <li className="btn-agent" hidden={agents && agents.length === 0}>
-              <Input
-                s={12}
-                name="agent"
-                type="select"
-                value={currentAgent ? currentAgent.id.toString() : undefined}
-                onChange={this.onSelectAgent}
-              >
-                {this.renderAgentSelectOptions(agentsSelect)}
-              </Input>
+            <li className="btn-agent">
+              <div hidden={agents && agents.length === 0}>
+                <Input
+                  s={12}
+                  name="agent"
+                  type="select"
+                  value={currentAgent ? currentAgent.id.toString() : undefined}
+                  onChange={this.onSelectAgent}
+                >{this.renderAgentSelectOptions(agentsSelect)}</Input>
+              </div>
               <Link to="/agents/create" activeClassName={'selected'}><span>+ Create Agent</span></Link>
             </li>
             <li>
@@ -105,7 +105,8 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
           </ul>
         </nav>
       </aside>
-    );
+    )
+      ;
   }
 }
 
