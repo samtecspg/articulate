@@ -1,4 +1,5 @@
 import {
+  ACTION_CANCELLED,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -19,6 +20,18 @@ import {
   CREATE_WEBHOOK,
   CREATE_WEBHOOK_ERROR,
   CREATE_WEBHOOK_SUCCESS,
+  DELETE_AGENT,
+  DELETE_AGENT_ERROR,
+  DELETE_AGENT_SUCCESS,
+  DELETE_DOMAIN,
+  DELETE_DOMAIN_ERROR,
+  DELETE_DOMAIN_SUCCESS,
+  DELETE_ENTITY,
+  DELETE_ENTITY_ERROR,
+  DELETE_ENTITY_SUCCESS,
+  DELETE_INTENT,
+  DELETE_INTENT_ERROR,
+  DELETE_INTENT_SUCCESS,
   LOAD_AGENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_DOMAINS_ERROR,
@@ -41,7 +54,6 @@ import {
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
   SELECT_CURRENT_AGENT,
-  ACTION_CANCELLED,
 } from './constants';
 
 export function loadAgents() {
@@ -176,7 +188,7 @@ export function createAgent() {
 export function agentCreated(agent, id) {
   return {
     type: CREATE_AGENT_SUCCESS,
-    agent
+    agent,
   };
 }
 
@@ -332,9 +344,87 @@ export function domainIntentsLoadingError(error) {
     error,
   };
 }
+
 export function actionCancelled(message) {
   return {
     type: ACTION_CANCELLED,
     message,
+  };
+}
+
+export function deleteDomain(id) {
+  return {
+    type: DELETE_DOMAIN,
+    id,
+  };
+}
+
+export function deleteDomainSuccess() {
+  return {
+    type: DELETE_DOMAIN_SUCCESS,
+  };
+}
+
+export function deleteDomainError() {
+  return {
+    type: DELETE_DOMAIN_ERROR,
+  };
+}
+
+export function deleteIntent(intentId, domainId) {
+  return {
+    type: DELETE_INTENT,
+    intentId,
+    domainId
+  };
+}
+
+export function deleteIntentSuccess() {
+  return {
+    type: DELETE_INTENT_SUCCESS,
+  };
+}
+
+export function deleteIntentError() {
+  return {
+    type: DELETE_INTENT_ERROR,
+  };
+}
+
+export function deleteAgent(id) {
+  return {
+    type: DELETE_AGENT,
+    id,
+  };
+}
+
+export function deleteAgentSuccess() {
+  return {
+    type: DELETE_AGENT_SUCCESS,
+  };
+}
+
+export function deleteAgentError() {
+  return {
+    type: DELETE_AGENT_ERROR,
+  };
+}
+
+export function deleteEntity(id) {
+  return {
+    type: DELETE_ENTITY,
+    id,
+  };
+}
+
+export function deleteEntitySuccess() {
+  return {
+    type: DELETE_ENTITY_SUCCESS,
+  };
+}
+
+export function deleteEntityError() {
+  return {
+    type: DELETE_ENTITY_ERROR,
   };
 }

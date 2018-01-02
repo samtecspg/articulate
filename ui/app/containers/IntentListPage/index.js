@@ -1,9 +1,9 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import {
+  Col,
   Input,
   Row,
-  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -11,12 +11,14 @@ import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton/index';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
+import DeleteModal from '../../components/DeleteModal';
 import Form from '../../components/Form';
 import Header from '../../components/Header';
 import IntentsTable from '../../components/IntentsTable/index';
 import Preloader from '../../components/Preloader';
 
 import {
+  deleteIntent,
   loadAgentDomains,
   loadDomainIntents,
   resetAgentDomains,
@@ -33,14 +35,22 @@ import {
 import messages from './messages';
 
 export class IntentListPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-
   constructor() {
     super();
     this.onSelectDomain = this.onSelectDomain.bind(this);
-    this.renderAgentSelectOptions = this.renderAgentSelectOptions.bind(this);
     this.renderDomainSelectOptions = this.renderDomainSelectOptions.bind(this);
     this.onCreateAction = this.onCreateAction.bind(this);
+    this.onDeletePrompt = this.onDeletePrompt.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+    this.onDeleteDismiss = this.onDeleteDismiss.bind(this);
+    this.renderMenu = this.renderMenu.bind(this);
   }
+
+  state = {
+    selectedDomain: undefined,
+    deleteModalOpen: false,
+    intentToDelete: undefined,
+  };
 
   componentWillMount() {
     const { currentAgent } = this.props;
@@ -56,22 +66,33 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   onSelectDomain(evt) {
-    const value = evt.target.value;
-    if (value !== 'default') {
-      this.props.onChangeDomain({ value, field: 'domain' });
-    }
+    const domain = this.props.agentDomains.find((agentDomain) => agentDomain.id === evt.target.value);
+    this.setState({ selectedDomain: domain });
+    this.props.onChangeDomain(domain);
+
   }
 
   onCreateAction() {
     this.props.onChangeUrl('/intents/create');
   }
 
-  renderAgentSelectOptions(options) {
-    return options.map((option, index) => (
-      <option key={index} value={option.value}>
-        {option.text}
-      </option>
-    ));
+  onDeletePrompt(intent) {
+    this.setState({
+      deleteModalOpen: true,
+      intentToDelete: intent,
+    });
+  }
+
+  onDelete() {
+    const { intentToDelete, selectedDomain } = this.state;
+    this.props.onDeleteIntent(intentToDelete, selectedDomain);
+    this.onDeleteDismiss();
+  }
+
+  onDeleteDismiss() {
+    this.setState({
+      deleteModalOpen: false
+    });
   }
 
   renderDomainSelectOptions(options) {
@@ -80,6 +101,13 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
         {option.text}
       </option>
     ));
+  }
+
+  renderMenu() {
+    return [{
+      label: 'Delete',
+      action: (intent) => this.onDeletePrompt(intent),
+    }];
   }
 
   render() {
@@ -91,11 +119,10 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     };
 
     let breadcrumbs = [];
-    if (currentAgent){
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: 'Intents'},];
-    }
-    else {
-      breadcrumbs = [{ label: 'Intents'}, ];
+    if (currentAgent) {
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: 'Intents' }];
+    } else {
+      breadcrumbs = [{ label: 'Intents' }];
     }
 
     let domainsSelect = [];
@@ -112,7 +139,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          { domainProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+          {domainProps.loading ? <Preloader color={'#00ca9f'} size={'big'} /> : null}
         </Col>
         <Helmet
           title="Agent Intents"
@@ -120,7 +147,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
             { name: 'description', content: 'Review the list of intents' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs}/>
+        <Header breadcrumbs={breadcrumbs} />
         <Content>
           <ContentHeader title={messages.domainListTitle} subTitle={messages.domainListDescription} />
           <Form>
@@ -138,6 +165,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
             <Row>
               <IntentsTable
                 data={domainIntents || []}
+                menu={this.renderMenu()}
                 onCellChange={() => {
                 }}
               />
@@ -149,9 +177,12 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
               </p>
             </Row>
           </Form>
-
-
         </Content>
+        <DeleteModal
+          isOpen={this.state.deleteModalOpen}
+          onDelete={this.onDelete}
+          onDismiss={this.onDeleteDismiss}
+        />
       </div>
     );
   }
@@ -167,6 +198,7 @@ IntentListPage.propTypes = {
   onChangeDomain: React.PropTypes.func,
   onChangeUrl: React.PropTypes.func,
   onComponentWillMount: React.PropTypes.func,
+  onDeleteIntent: React.PropTypes.func,
   domainIntents: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
@@ -196,9 +228,13 @@ export function mapDispatchToProps(dispatch) {
       dispatch(resetDomainIntents());
     },
     onChangeDomain: (domain) => {
-      dispatch(loadDomainIntents(domain.value));
+      if (domain) {
+        return dispatch(loadDomainIntents(domain.id));
+      }
+      return dispatch(resetDomainIntents());
     },
     onChangeUrl: (url) => dispatch(push(url)),
+    onDeleteIntent: (intent, domain) => dispatch(deleteIntent(intent.id, domain.id)),
   };
 }
 

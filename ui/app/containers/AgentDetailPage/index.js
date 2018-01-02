@@ -1,19 +1,27 @@
 import React from 'react';
 import Helmet from 'react-helmet';
+import { FormattedMessage } from 'react-intl';
 
-import { Row,
+import {
+  Button,
   Col,
-  } from 'react-materialize';
+  Row,
+} from 'react-materialize';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import Content from '../../components/Content';
+import DeleteModal from '../../components/DeleteModal';
 import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
-import SliderInput from '../../components/SliderInput';
 import Preloader from '../../components/Preloader';
+import SliderInput from '../../components/SliderInput';
 
-import { loadCurrentAgent } from '../App/actions';
+import {
+  deleteAgent,
+  loadCurrentAgent
+} from '../App/actions';
 import {
   makeSelectCurrentAgent,
   makeSelectError,
@@ -23,6 +31,17 @@ import {
 import messages from './messages';
 
 export class AgentDetailPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+
+  constructor() {
+    super();
+    this.onDeletePrompt = this.onDeletePrompt.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+    this.onDeleteDismiss = this.onDeleteDismiss.bind(this);
+  }
+
+  state = {
+    deleteModalOpen: false,
+  };
 
   componentWillMount() {
     const { currentAgent } = this.props;
@@ -36,6 +55,24 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
     if ((currentAgent && this.props.currentAgent) && (currentAgent.id !== this.props.currentAgent.id)) {
       this.props.onComponentWillMount(currentAgent.id);
     }
+  }
+
+  onDeletePrompt() {
+    this.setState({
+      deleteModalOpen: true,
+    });
+  }
+
+  onDelete() {
+    const { currentAgent } = this.props;
+    this.props.onDeleteAgent(currentAgent);
+    this.onDeleteDismiss();
+  }
+
+  onDeleteDismiss() {
+    this.setState({
+      deleteModalOpen: false,
+    });
   }
 
   render() {
@@ -52,13 +89,13 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
       return (<div>&nbsp;</div>);
     }
     else {
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`},];
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` },];
     }
 
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          { agentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+          {agentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
           title={`Agent: ${currentAgent.agentName}`}
@@ -115,11 +152,27 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
           </Row>
 
           <Row>
+            <Button
+              floating
+              large
+              waves={'light'}
+              onClick={this.onDeletePrompt}
+              className={'right red lighten-1 white-text text-darken-4 pull-right'}
+            >
+              <FormattedMessage {...messages.deleteButton} />
+            </Button>
+          </Row>
+          <Row>
             <p>
               {JSON.stringify(agentProps)}
             </p>
           </Row>
         </Content>
+        <DeleteModal
+          isOpen={this.state.deleteModalOpen}
+          onDelete={this.onDelete}
+          onDismiss={this.onDeleteDismiss}
+        />
       </div>
     );
   }
@@ -136,11 +189,14 @@ AgentDetailPage.propTypes = {
     React.PropTypes.bool,
   ]),
   onComponentWillMount: React.PropTypes.func,
+  onDeleteAgent: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
     onComponentWillMount: (id) => dispatch(loadCurrentAgent(id)),
+    onDeleteAgent: (agent) => dispatch(deleteAgent(agent.id)),
+    onChangeUrl: (url) => dispatch(push(url)),
   };
 }
 

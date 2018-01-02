@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import {
+  ACTION_CANCELLED,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -20,6 +21,18 @@ import {
   CREATE_WEBHOOK,
   CREATE_WEBHOOK_ERROR,
   CREATE_WEBHOOK_SUCCESS,
+  DELETE_AGENT,
+  DELETE_AGENT_ERROR,
+  DELETE_AGENT_SUCCESS,
+  DELETE_DOMAIN,
+  DELETE_DOMAIN_ERROR,
+  DELETE_DOMAIN_SUCCESS,
+  DELETE_ENTITY,
+  DELETE_ENTITY_ERROR,
+  DELETE_ENTITY_SUCCESS,
+  DELETE_INTENT,
+  DELETE_INTENT_ERROR,
+  DELETE_INTENT_SUCCESS,
   LOAD_AGENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_DOMAINS_ERROR,
@@ -39,8 +52,7 @@ import {
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
-  SELECT_CURRENT_AGENT,
-  ACTION_CANCELLED,
+  SELECT_CURRENT_AGENT
 } from './constants';
 
 // The initial state of the App
@@ -250,6 +262,54 @@ function appReducer(state = initialState, action) {
       return state
         .set('message', action.message)
         .set('loading', false);
+    case DELETE_DOMAIN:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case DELETE_DOMAIN_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false);
+    case DELETE_DOMAIN_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case DELETE_INTENT:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case DELETE_INTENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false);
+    case DELETE_INTENT_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case DELETE_AGENT:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case DELETE_AGENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false);
+    case DELETE_AGENT_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case DELETE_ENTITY:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case DELETE_ENTITY_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false);
+    case DELETE_ENTITY_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
     default:
       return state;
   }

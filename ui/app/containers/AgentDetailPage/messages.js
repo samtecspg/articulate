@@ -63,4 +63,8 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.action_button',
     defaultMessage: '+ Create',
   },
+  deleteButton: {
+    id: 'boilerplate.containers.AgentPage.create_agent.delete_button',
+    defaultMessage: 'Delete',
+  },
 });

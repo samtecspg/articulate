@@ -72,7 +72,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
                   s={12}
                   name="agent"
                   type="select"
-                  value={currentAgent ? currentAgent.id.toString() : undefined}
+                  value={currentAgent ? currentAgent.id.toString() : '-1'}
                   onChange={this.onSelectAgent}
                 >{this.renderAgentSelectOptions(agentsSelect)}</Input>
               </div>

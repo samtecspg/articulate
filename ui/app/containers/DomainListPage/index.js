@@ -1,19 +1,23 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Row,
-  Col, } from 'react-materialize';
+import {
+  Col,
+  Row,
+} from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton/index';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
+import DeleteModal from '../../components/DeleteModal';
 import DomainsTable from '../../components/DomainsTable/index';
 import Form from '../../components/Form';
 import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 
 import {
+  deleteDomain,
   loadAgentDomains,
   resetAgentDomains,
 } from '../../containers/App/actions';
@@ -22,7 +26,7 @@ import {
   makeSelectCurrentAgent,
   makeSelectDomain,
   makeSelectError,
-  makeSelectLoading
+  makeSelectLoading,
 } from '../../containers/App/selectors';
 import messages from './messages';
 
@@ -31,7 +35,16 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
   constructor() {
     super();
     this.onCreateAction = this.onCreateAction.bind(this);
+    this.renderMenu = this.renderMenu.bind(this);
+    this.onDeletePrompt = this.onDeletePrompt.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+    this.onDeleteDismiss = this.onDeleteDismiss.bind(this);
   }
+
+  state = {
+    deleteModalOpen: false,
+    domainToDelete: undefined,
+  };
 
   componentWillMount() {
     const { currentAgent } = this.props;
@@ -51,6 +64,32 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
     this.props.onChangeUrl('/domains/create');
   }
 
+  onDeletePrompt(domain) {
+    this.setState({
+      deleteModalOpen: true,
+      domainToDelete: domain,
+    });
+  }
+
+  onDelete() {
+    this.props.onDeleteDomain(this.state.domainToDelete);
+    this.onDeleteDismiss();
+  }
+
+  onDeleteDismiss() {
+    this.setState({
+      deleteModalOpen: false,
+      domainToDelete: undefined,
+    });
+  }
+
+  renderMenu() {
+    return [{
+      label: 'Delete',
+      action: (domain) => this.onDeletePrompt(domain),
+    }];
+  }
+
   render() {
     const { loading, error, agentDomains, currentAgent } = this.props;
     const domainProps = {
@@ -60,17 +99,16 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
     };
 
     let breadcrumbs = [];
-    if (currentAgent){
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: 'Domains'},];
-    }
-    else {
-      breadcrumbs = [{ label: 'Domains'}, ];
+    if (currentAgent) {
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: 'Domains' }];
+    } else {
+      breadcrumbs = [{ label: 'Domains' }];
     }
 
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          { domainProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+          {domainProps.loading ? <Preloader color={'#00ca9f'} size={'big'} /> : null}
         </Col>
         <Helmet
           title="Agent Domains"
@@ -85,12 +123,12 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
             <Row>
               <DomainsTable
                 data={agentDomains || []}
+                menu={this.renderMenu()}
                 onCellChange={() => {
                 }}
               />
             </Row>
             <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />
-
             <Row>
               <p>
                 {JSON.stringify(domainProps)}
@@ -99,6 +137,11 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
           </Form>
 
         </Content>
+        <DeleteModal
+          isOpen={this.state.deleteModalOpen}
+          onDelete={this.onDelete}
+          onDismiss={this.onDeleteDismiss}
+        />
       </div>
     );
   }
@@ -112,6 +155,7 @@ DomainListPage.propTypes = {
   ]),
   onComponentWillUpdate: React.PropTypes.func,
   onChangeUrl: React.PropTypes.func,
+  onDeleteDomain: React.PropTypes.func,
   agentDomains: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
@@ -126,6 +170,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     onComponentWillUpdate: (agent) => agent ? dispatch(loadAgentDomains(agent.id)) : dispatch(resetAgentDomains()),
     onChangeUrl: (url) => dispatch(push(url)),
+    onDeleteDomain: (domain) => dispatch(deleteDomain(domain.id)),
   };
 }
 

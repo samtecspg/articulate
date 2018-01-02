@@ -12,10 +12,14 @@ import {
   agentDomainsLoadingError,
   agentsLoaded,
   agentsLoadingError,
+  deleteIntentError,
+  deleteIntentSuccess,
   domainIntentsLoaded,
   domainIntentsLoadingError,
+  loadAgentDomains as loadAgentDomainsAction,
 } from '../../containers/App/actions';
 import {
+  DELETE_INTENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENTS,
   LOAD_DOMAINS_INTENTS,
@@ -95,9 +99,39 @@ export function* loadDomainIntents() {
   yield cancel(watcher);
 }
 
+export function* deleteIntent() {
+  const action = function* (payload) {
+    const requestURL = `http://127.0.0.1:8000/intent/${payload.intentId}`;
+    const requestOptions = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+      },
+    };
+
+    try {
+      yield call(request, requestURL, requestOptions);
+      yield put(deleteIntentSuccess());
+      // TODO: remove this call from here and use react-trunk or react-promise
+      yield put(loadAgentDomainsAction(payload.domainId));
+    } catch (error) {
+      yield put(deleteIntentError({
+        message: `An error occurred deleting the intent [${payload.id}]`,
+        error,
+      }));
+    }
+  };
+  const watcher = yield takeLatest(DELETE_INTENT, action);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 // Bootstrap sagas
 export default [
   loadAgents,
   loadAgentDomains,
   loadDomainIntents,
+  deleteIntent,
 ];

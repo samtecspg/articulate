@@ -1,8 +1,9 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Row,
+import {
   Col,
-  } from 'react-materialize';
+  Row,
+} from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
@@ -12,8 +13,8 @@ import Form from '../../components/Form';
 
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
-import SliderInput from '../../components/SliderInput';
 import Preloader from '../../components/Preloader';
+import SliderInput from '../../components/SliderInput';
 
 import { createDomain } from '../../containers/App/actions';
 import {
@@ -62,17 +63,17 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
     };
 
     let breadcrumbs = [];
-    if (currentAgent){
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: '+ Creating domains'},];
+    if (currentAgent) {
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: '+ Creating domains' },];
     }
     else {
-      breadcrumbs = [{ label: '+ Creating domains'}, ];
+      breadcrumbs = [{ label: '+ Creating domains' },];
     }
 
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          { domainProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+          {domainProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
           title="Create Domain"
@@ -80,7 +81,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
             { name: 'description', content: 'Create a domain for your agent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs}/>
+        <Header breadcrumbs={breadcrumbs} />
         <Content>
           <ContentHeader title={messages.createDomainTitle} subTitle={messages.createDomainDescription} />
           <Form>
