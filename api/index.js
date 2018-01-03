@@ -12,9 +12,7 @@ module.exports = (callback) => {
     server.connection({ port: 8000, routes: { cors: true } });
 
     server.app.rasa = process.env.RASA_URL ? process.env.RASA_URL : 'http://localhost:5000';
-    console.log('RASA:', server.app.rasa);
     server.app.rasa_er = process.env.RASA_ER_URL ? process.env.RASA_ER_URL : 'http://localhost:5500';
-    console.log('RASA ER:', server.app.rasa_er);
     server.app.duckling = process.env.DUCKLING_URL;
     server.app.redis = Redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
 
