@@ -21,6 +21,7 @@ services:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - RASA_URL=${RASA_URL:-http://rasa:5000}
+      - RASA_ER_URL=${RASA_ER_URL:-http://rasa:5500}
       - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
       - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
     volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects"]
@@ -38,7 +39,7 @@ services:
     networks: ['alpha-nlu-network']
   rasa-er:
     image: rasa/rasa_nlu:0.10.4-spacy
-    ports: ['0.0.0.0:6000:5000']
+    ports: ['0.0.0.0:5500:5000']
     volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects", "${RASA_CONFIG:-./api/rasa-config-entities-only.json}:/app/config.json", ]
     networks: ['alpha-nlu-network']
   haskduck:

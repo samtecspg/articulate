@@ -278,7 +278,8 @@ suite('/intent', () => {
                 domain: domainName,
                 intentName: 'Test Intent',
                 examples: [
-                    'Locate my {-1}'
+                    'Locate my {-1}',
+                    'Where is my {-1}'
                 ]
             };
 
@@ -431,7 +432,8 @@ suite('/intent/{id}', () => {
             const updatedData = {
                 intentName: 'Test Intent Updated',
                 examples: [
-                    'Locate my {-1}'
+                    'Locate my {-1}',
+                    'Where is my {-1}'
                 ]
             };
 
