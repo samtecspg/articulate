@@ -39,9 +39,9 @@ export function* postDomain() {
     const domain = yield call(request, requestURL, requestOptions);
     yield put(domainCreated(domain, domain.id));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(domainCreationError({
-      message: 'An error occurred creating the domain',
-      error,
+      ...errorData,
     }));
   }
 }
@@ -61,9 +61,9 @@ export function* getAgents() {
     const agents = yield call(request, requestURL);
     yield put(agentsLoaded(agents));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(agentsLoadingError({
-      message: 'An error occurred loading the list of available agents',
-      error,
+      ...errorData,
     }));
   }
 }

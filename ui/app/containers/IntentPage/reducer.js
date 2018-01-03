@@ -68,7 +68,6 @@ function intentReducer(state = initialState, action) {
           entity: action.payload.entity,
           isRequired: false,
           isList: false,
-          useOriginal: false,
           textPrompts: [],
           useWebhook: false,
         }));

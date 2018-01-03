@@ -11,6 +11,7 @@ import { createStructuredSelector } from 'reselect';
 import {
   resetCurrentAgent,
   selectCurrentAgent,
+  loadAgents,
 } from '../../containers/App/actions';
 import {
   makeSelectAgents,
@@ -25,8 +26,9 @@ import webhook from '../../img/webhook-icon.svg';
 import messages from './messages';
 
 class NavSideBar extends React.Component { // eslint-disable-line react/prefer-stateless-function
-  constructor() {
-    super();
+
+  componentDidMount() {
+    this.props.onComponentMounted();
     this.renderAgentSelectOptions = this.renderAgentSelectOptions.bind(this);
     this.onSelectAgent = this.onSelectAgent.bind(this);
   }
@@ -129,6 +131,7 @@ export function mapDispatchToProps(dispatch) {
       return agent ? dispatch(selectCurrentAgent(agent)) : dispatch(resetCurrentAgent());
     },
     onChangeUrl: (url) => dispatch(push(url)),
+    onComponentMounted: () => dispatch(loadAgents()),
   };
 }
 

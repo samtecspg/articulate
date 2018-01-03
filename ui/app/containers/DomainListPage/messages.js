@@ -11,10 +11,10 @@ export default defineMessages({
   },
   domainListDescription: {
     id: 'boilerplate.containers.DomainListPage.list.description',
-    defaultMessage: 'Lorem ipsu',
+    defaultMessage: 'List of domains belonging to the selected agent',
   },
   actionButton: {
     id: 'boilerplate.containers.DomainListPage.list.action',
-    defaultMessage: '+ Create',
+    defaultMessage: '+ Create Domain',
   },
 });

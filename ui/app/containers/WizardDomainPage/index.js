@@ -8,8 +8,13 @@ import ActionButton from '../../components/ActionButton';
 import React from 'react';
 import messages from './messages';
 import { push } from 'react-router-redux';
+import { resetStatusFlags, loadAgents } from '../App/actions';
 
-export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class WizardDomainPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+
+  componentWillMount(){
+    this.props.onComponentMounted();
+  }
 
   render() {
 
@@ -25,19 +30,24 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 }
 
-HomePage.propTypes = {
+WizardDomainPage.propTypes = {
   onCreateAgent: React.PropTypes.func,
+  onComponentMounted: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
     onCreateAgent: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(push('/agents/create'));
-    }
+      dispatch(push('/domains/create'));
+    },
+    onComponentMounted: () => {
+      dispatch(loadAgents());
+      dispatch(resetStatusFlags());
+    },
   };
 }
 
 const mapStateToProps = createStructuredSelector({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(WizardDomainPage);

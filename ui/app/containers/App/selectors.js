@@ -63,6 +63,12 @@ const makeSelectError = () => createSelector(
   (globalState) => globalState.get('error'),
 );
 
+const makeSelectSuccess = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('success'),
+);
+
+
 const makeSelectAgent = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('agentDetail'),
@@ -132,6 +138,7 @@ export {
   makeSelectLoading,
   makeSelectLoadingConversation,
   makeSelectError,
+  makeSelectSuccess,
   makeSelectAgent,
   makeSelectDomain,
   makeSelectWebhook,

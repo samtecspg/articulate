@@ -9,6 +9,7 @@ import {
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import Alert from 'react-s-alert';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -26,6 +27,7 @@ import {
   createIntent,
   loadAgentDomains,
   loadAgentEntities,
+  resetStatusFlags,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,
@@ -33,6 +35,7 @@ import {
   makeSelectCurrentAgent,
   makeSelectCurrentDomain,
   makeSelectError,
+  makeSelectSuccess,
   makeSelectIntent,
   makeSelectLoading,
   makeSelectScenario,
@@ -109,10 +112,11 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
+    const { loading, error, success, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
     const intentProps = {
       loading,
       error,
+      success,
       intent,
     };
 
@@ -131,6 +135,18 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
     else {
       breadcrumbs = [{ label: '+ Creating intents'}, ];
+    }
+
+    if (intentProps.success){
+      Alert.success(messages.successMessage.defaultMessage, {
+          position: 'bottom'
+      });
+    }
+
+    if (intentProps.error){
+      Alert.error(intentProps.error.message, {
+          position: 'bottom'
+      });
     }
 
     return (
@@ -298,27 +314,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
           <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
 
-          <Row>
-            <p>
-              Intent Data
-            </p>
-            <p>
-              {
-                JSON.stringify(intentProps)
-              }
-            </p>
-          </Row>
-
-          <Row>
-            <p>
-              Scenario Data
-            </p>
-            <p>
-              {
-                scenario ? JSON.stringify(scenario) : null
-              }
-            </p>
-          </Row>
         </Content>
       </div>
     );
@@ -370,6 +365,7 @@ IntentPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeIntentData: (field, value) => {
+      dispatch(dispatch(resetStatusFlags()));
       if (field === 'agent') {
         dispatch(loadAgentDomains(value));
         dispatch(loadAgentEntities(value));
@@ -386,6 +382,7 @@ export function mapDispatchToProps(dispatch) {
 
     },
     onTagEntity: (userSays, entity, entityName, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       const userSelection = window.getSelection();
       const selectedText = userSelection.toString();
@@ -397,21 +394,26 @@ export function mapDispatchToProps(dispatch) {
       }
     },
     onCheckboxChange: (slotName, field, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(toggleFlag({ slotName, field, value: evt.target.checked }));
     },
     onSlotNameChange: (slotName, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(changeSlotName({ slotName, value: evt.target.value }));
     },
     onAddTextPrompt: (slotName, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       if (evt.charCode === 13) {
         dispatch(addTextPrompt({ slotName, value: evt.target.value }));
         evt.target.value = null;
       }
     },
     onDeleteTextPrompt: (slotName, textPrompt, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(deleteTextPrompt({ slotName, textPrompt }));
     },
     onAutoCompleteEntityFunction: (entityName, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       document.getElementById('responses').value += `${entityName}}`;
     },
@@ -429,6 +431,7 @@ const mapStateToProps = createStructuredSelector({
   scenarioData: makeSelectScenarioData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
+  success: makeSelectSuccess(),
   agentDomains: makeSelectAgentDomains(),
   agentEntities: makeSelectAgentEntities(),
   currentAgent: makeSelectCurrentAgent(),

@@ -1,11 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import {
-  Col,
   Row,
+  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
+import Alert from 'react-s-alert';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -16,11 +18,12 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 
-import { createDomain } from '../../containers/App/actions';
+import { createDomain, resetStatusFlags, } from '../../containers/App/actions';
 import {
   makeSelectCurrentAgent,
   makeSelectDomain,
   makeSelectError,
+  makeSelectSuccess,
   makeSelectLoading,
 } from '../../containers/App/selectors';
 
@@ -54,10 +57,26 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
     this.props.onChangeDomainData({ value: evt.target.value, field });
   }
 
+  componentDidUpdate() {
+    if (this.props.success){
+      Alert.success(messages.successMessage.defaultMessage, {
+          position: 'bottom'
+      });
+      this.props.onSuccess();
+    }
+
+    if (this.props.error){
+      Alert.error(this.props.error.message, {
+          position: 'bottom'
+      });
+    }
+  }
+
   render() {
-    const { loading, error, domain, currentAgent } = this.props;
+    const { loading, error, success, domain, currentAgent } = this.props;
     const domainProps = {
       loading,
+      success,
       error,
       domain,
     };
@@ -108,12 +127,6 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
           </Row>
 
           <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
-
-          <Row>
-            <p>
-              {JSON.stringify(domainProps)}
-            </p>
-          </Row>
         </Content>
       </div>
     );
@@ -142,10 +155,16 @@ DomainPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
 
-    onChangeDomainData: (data) => dispatch(changeDomainData(data)),
+    onChangeDomainData: (data) => {
+      dispatch(resetStatusFlags());
+      dispatch(changeDomainData(data));
+    },
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createDomain());
+    },
+    onSuccess: () => {
+      dispatch(push('/wizard/entity-intent'));
     },
   };
 }
@@ -155,6 +174,7 @@ const mapStateToProps = createStructuredSelector({
   domainData: makeSelectDomainData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
+  success: makeSelectSuccess(),
   currentAgent: makeSelectCurrentAgent(),
 });
 

@@ -103,27 +103,31 @@ export default defineMessages({
     defaultMessage: 'Add Text Prompt',
   },
   actionButton: {
-    id: 'boilerplate.containers.AgentPage.create_agent.action_button',
+    id: 'boilerplate.containers.IntentPage.create_agent.action_button',
     defaultMessage: '+ Create',
   },
   emptyEntityList: {
-    id: 'boilerplate.containers.AgentPage.create_agent.empty_entity_list',
+    id: 'boilerplate.containers.IntentPage.create_agent.empty_entity_list',
     defaultMessage: 'Please select an agent first',
   },
   createEntity: {
-    id: 'boilerplate.containers.AgentPage.create_agent.create_entity',
+    id: 'boilerplate.containers.IntentPage.create_agent.create_entity',
     defaultMessage: '+ Create Entity',
   },
   emptySlotList: {
-    id: 'boilerplate.containers.AgentPage.create_agent.empty_slot_list',
+    id: 'boilerplate.containers.IntentPage.create_agent.empty_slot_list',
     defaultMessage: 'You haven\'t created slots',
   },
   webhook: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook',
+    id: 'boilerplate.containers.IntentPage.create_agent.webhook',
     defaultMessage: 'Webhook Url',
   },
   webhookPlaceholder: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook_placeholder',
+    id: 'boilerplate.containers.IntentPage.create_agent.webhook_placeholder',
     defaultMessage: 'example: http://localhost:4500',
+  },
+  successMessage: {
+    id: 'boilerplate.containers.IntentPage.create_agent.success_message',
+    defaultMessage: 'Intent created',
   },
 });

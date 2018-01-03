@@ -106,7 +106,14 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
         <Header breadcrumbs={breadcrumbs} />
         <Content>
           <Row>
-            <header className="main-title"><h1><span>Agent: {currentAgent.agentName}</span></h1><p><span>{currentAgent.description}</span></p></header>
+            <header className="main-title">
+              <h1>
+                <span>{messages.detailTitle.defaultMessage}{currentAgent.agentName}</span>
+              </h1>
+              <p>
+                <span>{currentAgent.description}</span>
+              </p>
+            </header>
           </Row>
           <Row>
             <Form>
@@ -161,11 +168,6 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             >
               <FormattedMessage {...messages.deleteButton} />
             </Button>
-          </Row>
-          <Row>
-            <p>
-              {JSON.stringify(agentProps)}
-            </p>
           </Row>
         </Content>
         <DeleteModal

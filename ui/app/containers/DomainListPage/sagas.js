@@ -27,7 +27,7 @@ import request from '../../utils/request';
 import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getAgentDomains(payload) {
-  const agentId = payload.agentId.split('~')[0];
+  const agentId = payload.agentId;
   const requestURL = `http://127.0.0.1:8000/agent/${agentId}/domain`;
   try {
     const agentDomains = yield call(request, requestURL);

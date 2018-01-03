@@ -38,9 +38,9 @@ export function* postAgent() {
     yield put(loadAgents());
     yield put(selectCurrentAgent(agent));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(agentCreationError({
-      message: 'An error occurred creating the agent',
-      error,
+      ...errorData,
     }));
   }
 }

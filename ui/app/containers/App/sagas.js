@@ -25,7 +25,6 @@ import request from '../../utils/request';
 
 export function* getAgents() {
   const requestURL = 'http://127.0.0.1:8000/agent';
-
   try {
     const agents = yield call(request, requestURL);
     yield put(agentsLoaded(agents));
@@ -41,8 +40,8 @@ export function* loadAgents() {
   const watcher = yield takeLatest(LOAD_AGENTS, getAgents);
 
   // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  //yield take(LOCATION_CHANGE);
+  //yield cancel(watcher);
 }
 
 export function* getAgent(payload) {

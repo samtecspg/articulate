@@ -39,23 +39,27 @@ export default defineMessages({
     defaultMessage: 'Add Synonym',
   },
   actionButton: {
-    id: 'boilerplate.containers.AgentPage.create_agent.action_button',
+    id: 'boilerplate.containers.EntityPage.create_agent.action_button',
     defaultMessage: '+ Create',
   },
   valueColumn: {
-    id: 'boilerplate.containers.AgentPage.create_agent.value_column',
+    id: 'boilerplate.containers.EntityPage.create_agent.value_column',
     defaultMessage: 'Value',
   },
   synonymsColum: {
-    id: 'boilerplate.containers.AgentPage.create_agent.synonyms_colum',
+    id: 'boilerplate.containers.EntityPage.create_agent.synonyms_colum',
     defaultMessage: 'Synonyms',
   },
   valueColumnTooltip: {
-    id: 'boilerplate.containers.AgentPage.create_agent.value_column_tooltip',
+    id: 'boilerplate.containers.EntityPage.create_agent.value_column_tooltip',
     defaultMessage: 'An instance of the intent you named upwards',
   },
   synonymsColumTooltip: {
-    id: 'boilerplate.containers.AgentPage.create_agent.synonyms_colum_tooltip',
+    id: 'boilerplate.containers.EntityPage.create_agent.synonyms_colum_tooltip',
     defaultMessage: 'Synonyms will help the agent to recognize this example in several different ways',
+  },
+  successMessage: {
+    id: 'boilerplate.containers.EntityPage.create_agent.success_message',
+    defaultMessage: 'Entity created',
   },
 });

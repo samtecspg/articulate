@@ -9,7 +9,7 @@ const initialState = fromJS({
     description: '',
     language: 'en',
     timezone: 'America/Kentucky/Louisville',
-    domainClassifierThreshold: 85,
+    domainClassifierThreshold: 50,
     webhookUrl: 'http://localhost:3000',
     fallbackResponses: [
       'Sorry can you rephrase that?',

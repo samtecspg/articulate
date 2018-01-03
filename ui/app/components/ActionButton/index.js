@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 export function ActionButton(props) { // eslint-disable-line react/prefer-stateless-function
   return (
-    <div className="fixed-action-btn">
+    <div style={props.customStyle} className="fixed-action-btn">
       <a className="btn-floating btn-large" onClick={props.onClick}>
         <FormattedMessage {...props.label} />
       </a>
@@ -14,6 +14,7 @@ export function ActionButton(props) { // eslint-disable-line react/prefer-statel
 ActionButton.propTypes = {
   label: PropTypes.object,
   onClick: PropTypes.func,
+  customStyle: PropTypes.object,
 };
 
 export default ActionButton;

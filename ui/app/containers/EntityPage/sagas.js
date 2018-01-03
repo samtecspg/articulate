@@ -38,9 +38,9 @@ export function* postEntity() {
     const entity = yield call(request, requestURL, requestOptions);
     yield put(entityCreated(entity, entity.id));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(entityCreationError({
-      message: 'An error occurred creating the entity',
-      error,
+      ...errorData,
     }));
   }
 }

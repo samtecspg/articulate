@@ -1,8 +1,8 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import {
-  Col,
   Row,
+  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';

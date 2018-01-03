@@ -33,12 +33,15 @@ import {
 
 import request from 'utils/request';
 
-function* postScenario(intentName) {
+function* postScenario(intentId, intentName) {
   const scenarioData = yield select(makeSelectScenarioData());
 
   scenarioData.intent = intentName;
+  if (!scenarioData.useWebhook){
+    delete scenarioData.webhookUrl
+  }
 
-  const requestURL = `http://127.0.0.1:8000/scenario`;
+  const requestURL = `http://127.0.0.1:8000/intent/${intentId}/scenario`;
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -52,9 +55,9 @@ function* postScenario(intentName) {
     const scenario = yield call(request, requestURL, requestOptions);
     yield put(scenarioCreated(scenario, scenario.id));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(scenarioCreationError({
-      message: 'An error occurred creating the scenario',
-      error,
+      ...errorData,
     }));
   }
 }
@@ -83,12 +86,12 @@ export function* postIntent() {
 
   try {
     const intent = yield call(request, requestURL, requestOptions);
-    yield call(postScenario, intent.intentName);
+    yield call(postScenario, intent.id, intent.intentName);
     yield put(intentCreated(intent, intent.id));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(intentCreationError({
-      message: 'An error occurred creating the intent',
-      error,
+      ...errorData,
     }));
   }
 }
@@ -108,9 +111,9 @@ export function* getAgents() {
     const agents = yield call(request, requestURL);
     yield put(agentsLoaded(agents));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(agentsLoadingError({
-      message: 'An error occurred loading the list of available agents',
-      error,
+      ...errorData,
     }));
   }
 }
@@ -131,9 +134,9 @@ export function* getAgentDomains(payload) {
     const agentDomains = yield call(request, requestURL);
     yield put(agentDomainsLoaded(agentDomains));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(agentDomainsLoadingError({
-      message: 'An error occurred loading the list of available domains in this agent',
-      error,
+      ...errorData,
     }));
   }
 }
@@ -154,9 +157,9 @@ export function* getAgentEntities(payload) {
     const agentEntities = yield call(request, requestURL);
     yield put(agentEntitiesLoaded(agentEntities));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(agentEntitiesLoadingError({
-      message: 'An error occurred loading the list of available entities',
-      error,
+      ...errorData,
     }));
   }
 }

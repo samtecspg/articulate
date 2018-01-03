@@ -6,9 +6,9 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  createAgentTitle: {
+  detailTitle: {
     id: 'boilerplate.containers.AgentPage.create_agent.title',
-    defaultMessage: 'Creating New Agent',
+    defaultMessage: 'Detail of Agent: ',
   },
   createDescription: {
     id: 'boilerplate.containers.AgentPage.create_agent.description',

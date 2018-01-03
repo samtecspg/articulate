@@ -1,11 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-import { Row,
+import {
+  Row,
   Col,
-  } from 'react-materialize';
+} from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import Alert from 'react-s-alert';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -19,11 +21,12 @@ import TableHeader from '../../components/TableHeader';
 import ColorPicker from '../../components/ColorPicker';
 import Preloader from '../../components/Preloader';
 
-import { createEntity, } from '../../containers/App/actions';
+import { createEntity, resetStatusFlags } from '../../containers/App/actions';
 import {
   makeSelectCurrentAgent,
   makeSelectEntity,
   makeSelectError,
+  makeSelectSuccess,
   makeSelectLoading,
 } from '../../containers/App/selectors';
 
@@ -66,10 +69,11 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, entity, displayColorPicker, currentAgent } = this.props;
+    const { loading, error, success, entity, displayColorPicker, currentAgent } = this.props;
     const entityProps = {
       loading,
       error,
+      success,
       entity,
       displayColorPicker,
     };
@@ -80,6 +84,18 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     }
     else {
       breadcrumbs = [{ label: '+ Creating entities'}, ];
+    }
+
+    if (entityProps.success){
+      Alert.success(messages.successMessage.defaultMessage, {
+          position: 'bottom'
+      });
+    }
+
+    if (entityProps.error){
+      Alert.error(entityProps.error.message, {
+          position: 'bottom'
+      });
     }
 
     return (
@@ -145,12 +161,6 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
           </TableContainer>
 
           <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
-
-          <Row>
-            <p>
-              {JSON.stringify(entityProps)}
-            </p>
-          </Row>
         </Content>
       </div>
     );
@@ -183,21 +193,26 @@ EntityPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeEntityData: (field, value) => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(changeEntityData({ value, field }));
     },
     onRemoveExample: (example, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(removeExample(example));
     },
     onAddExample: (evt) => {
       if (evt.charCode === 13) {
+        dispatch(dispatch(resetStatusFlags()));
         dispatch(addExample(evt.target.value));
         evt.target.value = null;
       }
     },
     onRemoveSynonym: (example, synonym, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(removeSynonym({ example, synonym }));
     },
     onAddSynonym: (exampleValue, evt) => {
+      dispatch(dispatch(resetStatusFlags()));
       if (evt.charCode === 13) {
         dispatch(addSynonym({ example: exampleValue, synonym: evt.target.value }));
         evt.target.value = null;
@@ -208,12 +223,15 @@ export function mapDispatchToProps(dispatch) {
       dispatch(createEntity());
     },
     handleClick: () => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(switchColorPickerDisplay());
     },
     handleClose: () => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(closeColorPicker());
     },
     handleColorChange: (color) => {
+      dispatch(dispatch(resetStatusFlags()));
       dispatch(changeEntityData({ value: color, field: 'uiColor' }));
     },
   };
@@ -225,6 +243,7 @@ const mapStateToProps = createStructuredSelector({
   displayColorPicker: makeDisplayColorPicker(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
+  success: makeSelectSuccess(),
   currentAgent: makeSelectCurrentAgent(),
 });
 

@@ -6,7 +6,9 @@ import {
   Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
+import Alert from 'react-s-alert';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -17,10 +19,12 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 
-import { createAgent } from '../App/actions';
+import { createAgent, resetStatusFlags } from '../App/actions';
 import {
   makeSelectError,
+  makeSelectSuccess,
   makeSelectLoading,
+  makeSelectScenario,
 } from '../App/selectors';
 import {
   changeAgentData,
@@ -93,11 +97,27 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     sampleData.unshift({ value: 'none', text: messages.sampleDataPlaceholder.defaultMessage, disabled: 'disabled' });
   }
 
+  componentDidUpdate() {
+    if (this.props.success){
+      Alert.success(messages.successMessage.defaultMessage, {
+          position: 'bottom'
+      });
+      this.props.onSuccess();
+    }
+
+    if (this.props.error){
+      Alert.error(this.props.error.message, {
+          position: 'bottom'
+      });
+    }
+  }
+
   render() {
-    const { loading, error, agent } = this.props;
+    const { loading, error, success, agent } = this.props;
     const agentProps = {
       loading,
       error,
+      success,
       agent,
     };
     return (
@@ -172,12 +192,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
           </Row>
 
           <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
-
-          <Row>
-            <p>
-              {JSON.stringify(agentProps)}
-            </p>
-          </Row>
         </Content>
       </div>
     );
@@ -201,7 +215,10 @@ AgentPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onChangeAgentData: (field, evt) => dispatch(changeAgentData({ value: evt.target.value, field })),
+    onChangeAgentData: (field, evt) => {
+      dispatch(resetStatusFlags());
+      dispatch(changeAgentData({ value: evt.target.value, field }));
+    },
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createAgent());
@@ -209,12 +226,16 @@ export function mapDispatchToProps(dispatch) {
     resetForm: () => {
       dispatch(resetAgentData());
     },
+    onSuccess: () => {
+      dispatch(push('/wizard/domain'));
+    },
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgentData(),
   loading: makeSelectLoading(),
+  success: makeSelectSuccess(),
   error: makeSelectError(),
 });
 

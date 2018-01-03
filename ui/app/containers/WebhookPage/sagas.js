@@ -40,9 +40,9 @@ export function* postWebhook() {
     const webhook = yield call(request, requestURL, requestOptions);
     yield put(webhookCreated(webhook, webhook.id));
   } catch (error) {
+    const errorData = yield error.json();
     yield put(webhookCreationError({
-      message: 'An error occurred creating the webhook',
-      error,
+      ...errorData,
     }));
   }
 }

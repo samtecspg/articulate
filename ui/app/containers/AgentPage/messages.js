@@ -63,4 +63,8 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.action_button',
     defaultMessage: '+ Create',
   },
+  successMessage: {
+    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    defaultMessage: 'Agent created',
+  },
 });

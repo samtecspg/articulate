@@ -22,6 +22,24 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/wizard/domain',
+      name: 'wizardDomain',
+      getComponent(nextState, cb) {
+        import('containers/WizardDomainPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    },
+    {
+      path: '/wizard/entity-intent',
+      name: 'wizardEntityIntent',
+      getComponent(nextState, cb) {
+        import('containers/WizardEntityIntentPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    },
+    {
       path: '/agents/create',
       name: 'agents',
       getComponent(nextState, cb) {

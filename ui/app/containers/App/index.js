@@ -1,6 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
+
 import NavSideBar from '../../components/NavSideBar';
 import withProgressBar from '../../components/ProgressBar';
 import { loadAgents } from '../../containers/App/actions';
@@ -15,15 +20,12 @@ import ConversationBar from '../ConversationBar';
 
 export class App extends React.PureComponent {
 
-  componentDidMount() {
-    this.props.onComponentMounting();
-  }
-
   render() {
     const { agents, children } = this.props;
     return (
       <div>
-        <NavSideBar agents={agents} />
+        <Alert stack={false} timeout={3000} />
+        <NavSideBar />
         <main className="group" role="main">
           {React.Children.toArray(children)}
         </main>
@@ -43,11 +45,7 @@ App.propTypes = {
 };
 
 export function mapDispatchToProps(dispatch) {
-  return {
-    onComponentMounting: () => {
-      dispatch(loadAgents());
-    },
-  };
+  return {};
 }
 
 const mapStateToProps = createStructuredSelector({

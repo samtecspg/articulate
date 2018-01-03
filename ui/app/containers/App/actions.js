@@ -54,6 +54,8 @@ import {
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
   SELECT_CURRENT_AGENT,
+  ACTION_CANCELLED,
+  RESET_STATUS_FLAGS,
 } from './constants';
 
 export function loadAgents() {
@@ -426,5 +428,11 @@ export function deleteEntitySuccess() {
 export function deleteEntityError() {
   return {
     type: DELETE_ENTITY_ERROR,
-  };
+  }
+};
+
+export function resetStatusFlags(){
+  return {
+    type: RESET_STATUS_FLAGS,
+  }
 }
