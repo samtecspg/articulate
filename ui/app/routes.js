@@ -154,6 +154,28 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/entities',
+      name: 'entities',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/EntityListPage/reducer'),
+          import('containers/EntityListPage/sagas'),
+          import('containers/EntityListPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('entities', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '/entities/create',
       name: 'entities',
       getComponent(nextState, cb) {

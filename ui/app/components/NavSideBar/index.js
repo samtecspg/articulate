@@ -88,7 +88,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
               <Link to="/intents" activeClassName={'selected'}><img src={intent} alt="" /><span>Intents</span></Link>
             </li>
             <li>
-              <Link to="/entities/create" activeClassName={'selected'}><img src={entity} alt="" /><span>Entity</span></Link>
+              <Link to="/entities" activeClassName={'selected'}><img src={entity} alt="" /><span>Entity</span></Link>
             </li>
             <li>
               <div className="divider" />
