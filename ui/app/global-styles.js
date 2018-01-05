@@ -82,7 +82,9 @@ injectGlobal`
 
   /* IE7 */
   #side-nav #logo > img {
-    width: 100%; }
+    width: 95%;
+    padding: 20px 0px 15px 13px;
+  }
 
   #side-nav {
     float: left;
@@ -103,7 +105,7 @@ injectGlobal`
   #side-nav ul > li {
     width: 100%;
     line-height: 35px;
-    float: none; 
+    float: none;
   }
 
   nav {
@@ -294,7 +296,7 @@ injectGlobal`
     width: 300px !important;
     left: auto !important;
   }
-  
+
   .dropdown-slot-entity-selector{
     width: 300px !important;
   }
@@ -333,11 +335,11 @@ injectGlobal`
 
 [type="checkbox"].filled-in:checked+label:before{
     top: 12px;
-    left: -1px;   
+    left: -1px;
   }
-  
+
   .slot-checkboxs {
-    bottom: 35px; 
+    bottom: 35px;
   }
 
   [type="radio"]:not(:checked) + label, [type="radio"]:checked + label {
@@ -360,7 +362,7 @@ injectGlobal`
   .table-container {
     margin: 0 0 20px 0;
     position: relative; }
-  
+
   .table-container .input-field {
     padding: 0 1.5rem 0 0; }
 
@@ -396,7 +398,7 @@ injectGlobal`
   .mic-icon:hover {
     color: #00ca9f;
   }
-  
+
 
   .quotes:before, .quotes:after {
     display: block;
