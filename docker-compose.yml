@@ -27,7 +27,7 @@ services:
     volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8000/entity']
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
   ui:
     build: './ui/.'
     ports: ['0.0.0.0:3500:3000']
