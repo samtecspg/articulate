@@ -66,9 +66,11 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   onSelectDomain(evt) {
-    const domain = this.props.agentDomains.find((agentDomain) => agentDomain.id === evt.target.value);
-    this.setState({ selectedDomain: domain });
-    this.props.onChangeDomain(domain);
+    if(this.props.agentDomains && (this.props.agentDomains.length > 0)){
+      const domain = this.props.agentDomains.find((agentDomain) => agentDomain.id === evt.target.value);
+      this.setState({ selectedDomain: domain });
+      this.props.onChangeDomain(domain);
+    }
 
   }
 

@@ -1,4 +1,7 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  LOCATION_CHANGE,
+  push
+} from 'react-router-redux';
 import {
   call,
   cancel,
@@ -7,47 +10,41 @@ import {
   take,
   takeLatest,
 } from 'redux-saga/effects';
-
-import request from '../../utils/request';
+import { getAgents } from '../../containers/App/sagas';
+import { makeSelectInWizard } from '../../containers/App/selectors';
 import { makeSelectAgentData } from '../AgentPage/selectors';
 import {
   agentCreated,
   agentCreationError,
-  loadAgents,
   selectCurrentAgent,
 } from '../App/actions';
+
 import { CREATE_AGENT } from '../App/constants';
 
-export function* postAgent() {
+export function* postAgent(payload) {
+  const { api } = payload;
   const agentData = yield select(makeSelectAgentData());
+  const inWizard = yield select(makeSelectInWizard());
   agentData.domainClassifierThreshold /= 100;
-
-  const requestURL = `http://127.0.0.1:8000/agent`;
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(agentData),
-  };
-
   try {
-    const agent = yield call(request, requestURL, requestOptions);
-    yield put(agentCreated(agent, agent.id));
-    yield put(loadAgents());
+    const response = yield call(api.agent.postAgent, { body: agentData });
+    const agent = response.obj;
+    yield put(agentCreated(agent));
+    yield call(getAgents, { api });
     yield put(selectCurrentAgent(agent));
-  } catch (error) {
-    const errorData = yield error.json();
-    yield put(agentCreationError({
-      ...errorData,
-    }));
+    if (inWizard) {
+      yield put(push('/wizard/domain'));
+    }
+    else {
+      yield put(push('/domains'));
+    }
+  } catch ({ response }) {
+    yield put(agentCreationError({ message: response.obj.message }));
   }
 }
 
 export function* createAgent() {
   const watcher = yield takeLatest(CREATE_AGENT, postAgent);
-
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);

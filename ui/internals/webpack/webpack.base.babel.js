@@ -4,7 +4,14 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
+let processEnv = {
+  NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+};
 
+if (process.env.API_URL) {
+  processEnv.API_URL = JSON.stringify(process.env.API_URL);
+}
 module.exports = (options) => ({
   entry: options.entry,
   output: Object.assign({ // Compile into js/build.js
@@ -74,11 +81,14 @@ module.exports = (options) => ({
     // inside your code for any environment checks; UglifyJS will automatically
     // drop any unreachable code.
     new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      },
+      'process.env': processEnv,
     }),
     new webpack.NamedModulesPlugin(),
+    new Dotenv({
+      path: './.env', // Path to .env file (this is the default)
+      silent: true //If true, all warnings will be surpressed.
+
+    }),
   ]),
   resolve: {
     modules: ['app', 'node_modules'],

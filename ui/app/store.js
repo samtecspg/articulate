@@ -11,14 +11,17 @@ import {
 } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
+import swaggerMiddleware from './utils/swaggerMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
-  // 1. sagaMiddleware: Makes redux-sagas work
-  // 2. routerMiddleware: Syncs the location/URL path to the state
+  // 1. swaggerMiddleware: adds generated API object from swagger.json
+  // 2. sagaMiddleware: Makes redux-sagas work
+  // 3. routerMiddleware: Syncs the location/URL path to the state
   const middlewares = [
+    swaggerMiddleware({ url: `${process.env.API_URL}/swagger.json` }),
     sagaMiddleware,
     routerMiddleware(history),
   ];

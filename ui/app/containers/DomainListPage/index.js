@@ -20,7 +20,6 @@ import {
   deleteDomain,
   loadAgentDomains,
   resetAgentDomains,
-  resetStatusFlags,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,
@@ -45,6 +44,7 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
   state = {
     deleteModalOpen: false,
     domainToDelete: undefined,
+    menu: undefined
   };
 
   componentWillMount() {
@@ -88,6 +88,9 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
     return [{
       label: 'Delete',
       action: (domain) => this.onDeletePrompt(domain),
+    }, {
+      label: 'View',
+      action: (domain) => console.log(`action::${JSON.stringify(domain)}`), // TODO: REMOVE!!!!,
     }];
   }
 

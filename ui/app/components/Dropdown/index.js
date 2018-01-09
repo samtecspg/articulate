@@ -33,6 +33,14 @@ class Dropdown extends React.Component { // eslint-disable-line react/prefer-sta
     $('.dropdown-button').dropdown('remove');
   }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.item.id !== this.state.item.id) {
+      this.setState({
+        item: nextProps.item,
+      });
+    }
+  }
+
   renderMenu(menuItem) {
     const action = menuItem.action.bind(null, this.state.item);
     return (

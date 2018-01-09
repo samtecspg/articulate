@@ -7,42 +7,23 @@ import {
   take,
   takeLatest,
 } from 'redux-saga/effects';
-
-import request from '../../utils/request';
 import {
-  agentsLoaded,
-  agentsLoadingError,
   domainCreated,
   domainCreationError,
 } from '../App/actions';
-import {
-  CREATE_DOMAIN,
-  LOAD_AGENTS,
-} from '../App/constants';
+import { CREATE_DOMAIN, } from '../App/constants';
 import { makeSelectDomainData } from './selectors';
 
-export function* postDomain() {
+export function* postDomain(payload) {
+  const { api } = payload;
   const domainData = yield select(makeSelectDomainData());
   domainData.intentThreshold = domainData.intentThreshold / 100;
-
-  const requestURL = `http://127.0.0.1:8000/domain`;
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(domainData),
-  };
-
   try {
-    const domain = yield call(request, requestURL, requestOptions);
+    const response = yield call(api.domain.postDomain, { body: domainData });
+    const domain = response.obj;
     yield put(domainCreated(domain, domain.id));
-  } catch (error) {
-    const errorData = yield error.json();
-    yield put(domainCreationError({
-      ...errorData,
-    }));
+  } catch ({ response }) {
+    yield put(domainCreationError({ message: response.obj.message }));
   }
 }
 
@@ -54,30 +35,7 @@ export function* createDomain() {
   yield cancel(watcher);
 }
 
-export function* getAgents() {
-  const requestURL = `http://127.0.0.1:8000/agent`;
-
-  try {
-    const agents = yield call(request, requestURL);
-    yield put(agentsLoaded(agents));
-  } catch (error) {
-    const errorData = yield error.json();
-    yield put(agentsLoadingError({
-      ...errorData,
-    }));
-  }
-}
-
-export function* loadAgents() {
-  const watcher = yield takeLatest(LOAD_AGENTS, getAgents);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
-}
-
 // Bootstrap sagas
 export default [
   createDomain,
-  loadAgents,
 ];

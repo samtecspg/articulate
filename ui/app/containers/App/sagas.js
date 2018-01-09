@@ -1,5 +1,4 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
-
 import {
   call,
   cancel,
@@ -8,31 +7,23 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 import {
-  agentLoaded,
-  agentLoadingError,
   agentsLoaded,
   agentsLoadingError,
-  loadCurrentAgentSuccess,
   loadCurrentAgentError,
+  loadCurrentAgentSuccess,
 } from '../../containers/App/actions';
 import {
-  LOAD_AGENT,
   LOAD_AGENTS,
   LOAD_CURRENT_AGENT,
 } from '../../containers/App/constants';
 
-import request from '../../utils/request';
-
-export function* getAgents() {
-  const requestURL = 'http://127.0.0.1:8000/agent';
+export function* getAgents(payload) {
+  const { api } = payload;
   try {
-    const agents = yield call(request, requestURL);
-    yield put(agentsLoaded(agents));
-  } catch (error) {
-    yield put(agentsLoadingError({
-      message: 'An error occurred loading the list of available agents',
-      error,
-    }));
+    const response = yield call(api.agent.getAgent);
+    yield put(agentsLoaded(response.obj));
+  } catch ({ response }) {
+    yield put(agentsLoadingError({ message: response.obj.message }));
   }
 }
 
@@ -44,39 +35,13 @@ export function* loadAgents() {
   //yield cancel(watcher);
 }
 
-export function* getAgent(payload) {
-  const requestURL = `http://127.0.0.1:8000/agent/${payload.id}`;
-
-  try {
-    const agent = yield call(request, requestURL);
-    yield put(agentLoaded(agent));
-  } catch (error) {
-    yield put(agentLoadingError({
-      message: 'An error occurred loading the agent',
-      error,
-    }));
-  }
-}
-
-export function* loadAgent() {
-  const watcher = yield takeLatest(LOAD_AGENT, getAgent);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
-}
-
 export function* getCurrentAgent(payload) {
-  const requestURL = `http://127.0.0.1:8000/agent/${payload.id}`;
-
+  const { api, id } = payload;
   try {
-    const agent = yield call(request, requestURL);
-    yield put(loadCurrentAgentSuccess(agent));
-  } catch (error) {
-    yield put(loadCurrentAgentError({
-      message: 'An error occurred loading the agent',
-      error,
-    }));
+    const response = yield call(api.agent.getAgentId, { id });
+    yield put(loadCurrentAgentSuccess(response.obj));
+  } catch ({ response }) {
+    yield put(loadCurrentAgentError({ message: response.obj.message }));
   }
 }
 
@@ -91,6 +56,5 @@ export function* loadCurrentAgent() {
 // Bootstrap sagas
 export default [
   loadAgents,
-  loadAgent,
   loadCurrentAgent,
 ];

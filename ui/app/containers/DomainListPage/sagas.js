@@ -12,31 +12,22 @@ import {
   actionCancelled,
   agentDomainsLoaded,
   agentDomainsLoadingError,
-  agentsLoaded,
-  agentsLoadingError,
   deleteDomainError,
-  deleteDomainSuccess,
-  loadAgentDomains as loadAgentDomainsAction,
+  deleteDomainSuccess
 } from '../../containers/App/actions';
 import {
   DELETE_DOMAIN,
   LOAD_AGENT_DOMAINS,
-  LOAD_AGENTS,
 } from '../../containers/App/constants';
-import request from '../../utils/request';
 import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getAgentDomains(payload) {
-  const agentId = payload.agentId;
-  const requestURL = `http://127.0.0.1:8000/agent/${agentId}/domain`;
+  const { api, agentId } = payload;
   try {
-    const agentDomains = yield call(request, requestURL);
-    yield put(agentDomainsLoaded(agentDomains));
-  } catch (error) {
-    yield put(agentDomainsLoadingError({
-      message: 'An error occurred loading the list of available domains in this agent',
-      error,
-    }));
+    const response = yield call(api.agent.getAgentIdDomain, { id: agentId.split('~')[0] });// TODO: Remove this notation
+    yield put(agentDomainsLoaded(response.obj));
+  } catch ({ response, ...rest }) {
+    yield put(agentDomainsLoadingError({ message: response.obj.message }));
   } finally {
     if (yield cancelled()) {
       yield put(actionCancelled({
@@ -54,49 +45,17 @@ export function* loadAgentDomains() {
   yield cancel(watcher);
 }
 
-export function* getAgents() {
-  const requestURL = 'http://127.0.0.1:8000/agent';
-
-  try {
-    const agents = yield call(request, requestURL);
-    yield put(agentsLoaded(agents));
-  } catch (error) {
-    yield put(agentsLoadingError({
-      message: 'An error occurred loading the list of available agents',
-      error,
-    }));
-  }
-}
-
-export function* loadAgents() {
-  const watcher = yield takeLatest(LOAD_AGENTS, getAgents);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
-}
-
 export function* deleteDomain() {
   const action = function* (payload) {
-    const requestURL = `http://127.0.0.1:8000/domain/${payload.id}`;
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-      },
-    };
+    const { api, id } = payload;
+    const currentAgent = yield select(makeSelectCurrentAgent());
 
     try {
-      yield call(request, requestURL, requestOptions);
+      yield call(api.domain.deleteDomainId, { id });
       yield put(deleteDomainSuccess());
-      // TODO: remove this call from here and use react-trunk or react-promise
-      const currentAgent = yield select(makeSelectCurrentAgent());
-      yield put(loadAgentDomainsAction(currentAgent.id));
-    } catch (error) {
-      yield put(deleteDomainError({
-        message: `An error occurred deleting the domain [${payload.id}]`,
-        error,
-      }));
+      yield call(getAgentDomains, { api, agentId: currentAgent.id });
+    } catch ({ response }) {
+      yield put(deleteDomainError({ message: response.obj.message }));
     }
   };
   const watcher = yield takeLatest(DELETE_DOMAIN, action);
@@ -108,7 +67,6 @@ export function* deleteDomain() {
 
 // Bootstrap sagas
 export default [
-  loadAgents,
   loadAgentDomains,
   deleteDomain,
 ];

@@ -1,14 +1,3 @@
-import {
-  agentsLoaded,
-  agentsLoadingError,
-  webhookCreated,
-  webhookCreationError,
-} from 'containers/App/actions';
-import {
-  CREATE_WEBHOOK,
-  LOAD_AGENTS,
-} from 'containers/App/constants';
-import { makeSelectWebhookData } from 'containers/WebhookPage/selectors';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import {
   call,
@@ -18,32 +7,25 @@ import {
   take,
   takeLatest,
 } from 'redux-saga/effects';
+import {
+  webhookCreated,
+  webhookCreationError,
+} from '../../containers/App/actions';
+import { CREATE_WEBHOOK, } from '../../containers/App/constants';
+import { makeSelectWebhookData } from '../../containers/WebhookPage/selectors';
 
-import request from 'utils/request';
-
-export function* postWebhook() {
+export function* postWebhook(payload) {
+  const { api } = payload;
   const webhookData = yield select(makeSelectWebhookData());
-
-  const requestURL = `http://127.0.0.1:8000/agent/${webhookData.agent}`;
-  const requestOptions = {
-    method: 'PUT',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      webhookUrl: webhookData.webhookUrl,
-    }),
+  const body = {
+    webhookUrl: webhookData.webhookUrl
   };
-
   try {
-    const webhook = yield call(request, requestURL, requestOptions);
+    const response = yield call(api.agent.putAgentId, { id: webhookData.agent, body });
+    const webhook = response.obj;
     yield put(webhookCreated(webhook, webhook.id));
-  } catch (error) {
-    const errorData = yield error.json();
-    yield put(webhookCreationError({
-      ...errorData,
-    }));
+  } catch ({ response }) {
+    yield put(webhookCreationError({ message: response.obj.message }));
   }
 }
 
@@ -55,30 +37,7 @@ export function* createWebhook() {
   yield cancel(watcher);
 }
 
-export function* getAgents() {
-  const requestURL = `http://127.0.0.1:8000/agent`;
-
-  try {
-    const agents = yield call(request, requestURL);
-    yield put(agentsLoaded(agents));
-  } catch (error) {
-    yield put(agentsLoadingError({
-      message: 'An error occurred loading the list of available agents',
-      error,
-    }));
-  }
-}
-
-export function* loadAgents() {
-  const watcher = yield takeLatest(LOAD_AGENTS, getAgents);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
-}
-
 // Bootstrap sagas
 export default [
   createWebhook,
-  loadAgents,
 ];

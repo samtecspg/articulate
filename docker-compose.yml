@@ -30,6 +30,8 @@ services:
   ui:
     build: './ui/.'
     ports: ['0.0.0.0:3500:3000']
+    environment:
+      - API_URL=${API_URL:-http://localhost:8000}
     networks: ['alpha-nlu-network']
   rasa:
     image: rasa/rasa_nlu:0.10.4-spacy

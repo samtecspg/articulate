@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import {
+  ACTION_CANCELLED,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -32,17 +33,13 @@ import {
   DELETE_INTENT,
   DELETE_INTENT_ERROR,
   DELETE_INTENT_SUCCESS,
-  LOAD_AGENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_DOMAINS_ERROR,
   LOAD_AGENT_DOMAINS_SUCCESS,
   LOAD_AGENT_ENTITIES,
   LOAD_AGENT_ENTITIES_ERROR,
   LOAD_AGENT_ENTITIES_SUCCESS,
-  LOAD_AGENT_ERROR,
-  LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
-  LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
   LOAD_CURRENT_AGENT_SUCCESS,
   LOAD_DOMAINS_INTENTS,
@@ -51,9 +48,8 @@ import {
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
-  SELECT_CURRENT_AGENT,
-  ACTION_CANCELLED,
   RESET_STATUS_FLAGS,
+  SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
 } from './constants';
 
@@ -79,11 +75,6 @@ function appReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false)
         .set('agents', false);
-    case LOAD_AGENT:
-      return state
-        .set('loading', true)
-        .set('error', false)
-        .set('agent', false);
     case SELECT_CURRENT_AGENT :
       return state
         .set('loading', false)
@@ -102,18 +93,6 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.data)
-        .set('loading', false);
-    case LOAD_AGENTS_ERROR:
-      return state
-        .set('error', action.error)
-        .set('loading', false);
-    case LOAD_AGENT_SUCCESS:
-      return state
-        .setIn(['agentDetail'], action.data)
-        .set('loading', false);
-    case LOAD_AGENT_ERROR:
-      return state
-        .set('error', action.error)
         .set('loading', false);
     case LOAD_AGENT_DOMAINS:
       return state
@@ -321,10 +300,10 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('success', false)
+        .set('success', false);
     case SET_IN_WIZARD:
       return state
-        .set('inWizard', action.value)
+        .set('inWizard', action.value);
     default:
       return state;
   }

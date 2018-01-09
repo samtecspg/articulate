@@ -8,86 +8,26 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 import {
-  agentDomainsLoaded,
-  agentDomainsLoadingError,
-  agentsLoaded,
-  agentsLoadingError,
   deleteIntentError,
   deleteIntentSuccess,
   domainIntentsLoaded,
   domainIntentsLoadingError,
-  loadAgentDomains as loadAgentDomainsAction,
 } from '../../containers/App/actions';
 import {
   DELETE_INTENT,
   LOAD_AGENT_DOMAINS,
-  LOAD_AGENTS,
-  LOAD_DOMAINS_INTENTS,
+  LOAD_DOMAINS_INTENTS
 } from '../../containers/App/constants';
+import { getAgentDomains } from '../../containers/DomainListPage/sagas';
 
-import request from '../../utils/request';
-
-// AGENTS
-export function* getAgents() {
-  const requestURL = 'http://127.0.0.1:8000/agent';
-
-  try {
-    const agents = yield call(request, requestURL);
-    yield put(agentsLoaded(agents));
-  } catch (error) {
-    yield put(agentsLoadingError({
-      message: 'An error occurred loading the list of available agents',
-      error,
-    }));
-  }
-}
-
-export function* loadAgents() {
-  const watcher = yield takeLatest(LOAD_AGENTS, getAgents);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
-}
-
-// AGENT DOMAINS
-export function* getAgentDomains(payload) {
-  const agentId = payload.agentId;
-  const requestURL = `http://127.0.0.1:8000/agent/${agentId}/domain`;
-
-  try {
-    const agentDomains = yield call(request, requestURL);
-    yield put(agentDomainsLoaded(agentDomains));
-  } catch (error) {
-    yield put(agentDomainsLoadingError({
-      message: 'An error occurred loading the list of available domains in this agent',
-      error,
-    }));
-  }
-}
-
-export function* loadAgentDomains() {
-  const watcher = yield takeLatest(LOAD_AGENT_DOMAINS, getAgentDomains);
-
-  // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
-}
-
-// DOMAIN INTENTS
 export function* getDomainIntents(payload) {
-  const domainId = payload.domainId;
-
-  const requestURL = `http://127.0.0.1:8000/domain/${domainId}/intent`;
-
+  const { api, domainId } = payload;
   try {
-    const intents = yield call(request, requestURL);
+    const response = yield call(api.domain.getDomainIdIntent, { id: domainId });
+    const intents = response.obj;
     yield put(domainIntentsLoaded(intents));
-  } catch (error) {
-    yield put(domainIntentsLoadingError({
-      message: 'An error occurred loading the list of available intents',
-      error,
-    }));
+  } catch ({ response }) {
+    yield put(domainIntentsLoadingError({ message: response.obj.message }));
   }
 }
 
@@ -101,24 +41,13 @@ export function* loadDomainIntents() {
 
 export function* deleteIntent() {
   const action = function* (payload) {
-    const requestURL = `http://127.0.0.1:8000/intent/${payload.intentId}`;
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-      },
-    };
-
+    const { api, intentId, domainId } = payload;
     try {
-      yield call(request, requestURL, requestOptions);
+      yield call(api.intent.deleteIntentId, { id: intentId });
       yield put(deleteIntentSuccess());
-      // TODO: remove this call from here and use react-trunk or react-promise
-      yield put(loadAgentDomainsAction(payload.domainId));
-    } catch (error) {
-      yield put(deleteIntentError({
-        message: `An error occurred deleting the intent [${payload.id}]`,
-        error,
-      }));
+      yield call(getDomainIntents, { api, domainId });
+    } catch ({ response }) {
+      yield put(deleteIntentError({ message: response.obj.message }));
     }
   };
   const watcher = yield takeLatest(DELETE_INTENT, action);
@@ -128,10 +57,17 @@ export function* deleteIntent() {
   yield cancel(watcher);
 }
 
+export function* loadAgentDomains() {
+  const watcher = yield takeLatest(LOAD_AGENT_DOMAINS, getAgentDomains);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 // Bootstrap sagas
 export default [
-  loadAgents,
-  loadAgentDomains,
   loadDomainIntents,
   deleteIntent,
+  loadAgentDomains
 ];

@@ -1,4 +1,5 @@
 import {
+  ACTION_CANCELLED,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -31,15 +32,12 @@ import {
   DELETE_INTENT,
   DELETE_INTENT_ERROR,
   DELETE_INTENT_SUCCESS,
-  LOAD_AGENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_DOMAINS_ERROR,
   LOAD_AGENT_DOMAINS_SUCCESS,
   LOAD_AGENT_ENTITIES,
   LOAD_AGENT_ENTITIES_ERROR,
   LOAD_AGENT_ENTITIES_SUCCESS,
-  LOAD_AGENT_ERROR,
-  LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
@@ -52,35 +50,21 @@ import {
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
-  SELECT_CURRENT_AGENT,
-  ACTION_CANCELLED,
   RESET_STATUS_FLAGS,
+  SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
 } from './constants';
 
 export function loadAgents() {
   return {
     type: LOAD_AGENTS,
-  };
-}
-
-export function loadAgent(id) {
-  return {
-    type: LOAD_AGENT,
-    id,
+    apiCall: true,
   };
 }
 
 export function agentsLoaded(data) {
   return {
     type: LOAD_AGENTS_SUCCESS,
-    data,
-  };
-}
-
-export function agentLoaded(data) {
-  return {
-    type: LOAD_AGENT_SUCCESS,
     data,
   };
 }
@@ -109,6 +93,7 @@ export function loadCurrentAgentSuccess(agent) {
 export function loadCurrentAgent(id) {
   return {
     type: LOAD_CURRENT_AGENT,
+    apiCall: true,
     id,
   };
 }
@@ -126,16 +111,10 @@ export function agentsLoadingError(error) {
   };
 }
 
-export function agentLoadingError(error) {
-  return {
-    type: LOAD_AGENT_ERROR,
-    error,
-  };
-}
-
 export function loadAgentDomains(agentId) {
   return {
     type: LOAD_AGENT_DOMAINS,
+    apiCall: true,
     agentId,
   };
 }
@@ -163,6 +142,7 @@ export function agentDomainsLoadingError(error) {
 export function loadAgentEntities(agentId) {
   return {
     type: LOAD_AGENT_ENTITIES,
+    apiCall: true,
     agentId,
   };
 }
@@ -184,10 +164,11 @@ export function agentEntitiesLoadingError(error) {
 export function createAgent() {
   return {
     type: CREATE_AGENT,
+    apiCall: true,
   };
 }
 
-export function agentCreated(agent, id) {
+export function agentCreated(agent) {
   return {
     type: CREATE_AGENT_SUCCESS,
     agent,
@@ -204,6 +185,7 @@ export function agentCreationError(error) {
 export function createDomain() {
   return {
     type: CREATE_DOMAIN,
+    apiCall: true,
   };
 }
 
@@ -225,6 +207,7 @@ export function domainCreationError(error) {
 export function createWebhook() {
   return {
     type: CREATE_WEBHOOK,
+    apiCall: true,
   };
 }
 
@@ -246,6 +229,7 @@ export function webhookCreationError(error) {
 export function createIntent() {
   return {
     type: CREATE_INTENT,
+    apiCall: true,
   };
 }
 
@@ -282,6 +266,7 @@ export function scenarioCreationError(error) {
 export function createEntity() {
   return {
     type: CREATE_ENTITY,
+    apiCall: true,
   };
 }
 
@@ -303,6 +288,7 @@ export function entityCreationError(error) {
 export function converse(payload) {
   return {
     type: CONVERSE,
+    apiCall: true,
     payload,
   };
 }
@@ -323,6 +309,7 @@ export function converseError() {
 export function loadDomainIntents(domainId) {
   return {
     type: LOAD_DOMAINS_INTENTS,
+    apiCall: true,
     domainId,
   };
 }
@@ -357,6 +344,7 @@ export function actionCancelled(message) {
 export function deleteDomain(id) {
   return {
     type: DELETE_DOMAIN,
+    apiCall: true,
     id,
   };
 }
@@ -376,6 +364,7 @@ export function deleteDomainError() {
 export function deleteIntent(intentId, domainId) {
   return {
     type: DELETE_INTENT,
+    apiCall: true,
     intentId,
     domainId
   };
@@ -396,6 +385,7 @@ export function deleteIntentError() {
 export function deleteAgent(id) {
   return {
     type: DELETE_AGENT,
+    apiCall: true,
     id,
   };
 }
@@ -415,6 +405,7 @@ export function deleteAgentError() {
 export function deleteEntity(id) {
   return {
     type: DELETE_ENTITY,
+    apiCall: true,
     id,
   };
 }
@@ -428,18 +419,18 @@ export function deleteEntitySuccess() {
 export function deleteEntityError() {
   return {
     type: DELETE_ENTITY_ERROR,
-  }
+  };
 };
 
-export function resetStatusFlags(){
+export function resetStatusFlags() {
   return {
     type: RESET_STATUS_FLAGS,
-  }
+  };
 }
 
-export function setInWizard(value){
+export function setInWizard(value) {
   return {
     type: SET_IN_WIZARD,
     value,
-  }
+  };
 }

@@ -7,7 +7,7 @@ export default defineMessages({
   },
   createIntentDescription: {
     id: 'boilerplate.containers.IntentPage.create_intent.description',
-    defaultMessage: 'Intens are grouped user sayings with a similar purpose. For example a user may say, ' +
+    defaultMessage: 'Intents are grouped user sayings with a similar purpose. For example a user may say, ' +
     '"I want to order a cheese pizza" and that may be labeled with an intent of "Order Pizza".',
   },
   agent: {

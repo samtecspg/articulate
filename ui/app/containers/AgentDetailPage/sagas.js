@@ -1,4 +1,7 @@
-import { LOCATION_CHANGE, } from 'react-router-redux';
+import {
+  LOCATION_CHANGE,
+  push,
+} from 'react-router-redux';
 
 import {
   call,
@@ -10,29 +13,20 @@ import {
 import {
   deleteAgentError,
   deleteAgentSuccess,
-  loadAgents,
   resetCurrentAgent,
 } from '../../containers/App/actions';
 import { DELETE_AGENT } from '../../containers/App/constants';
-import request from '../../utils/request';
+import { getAgents } from '../../containers/App/sagas';
 
 export function* deleteAgent() {
   const action = function* (payload) {
-    const requestURL = `http://127.0.0.1:8000/agent/${payload.id}`;
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-      },
-    };
-
+    const { api, id } = payload;
     try {
-      yield call(request, requestURL, requestOptions);
+      yield call(api.agent.deleteAgentId, { id });
       yield put(deleteAgentSuccess());
-      // TODO: remove this call from here and use react-trunk or react-promise
+      yield call(getAgents, { api });
       yield put(resetCurrentAgent());
-      yield put(loadAgents());
-      // TODO: Redirect to root page
+      yield put(push('/'));
     } catch (error) {
       yield put(deleteAgentError({
         message: `An error occurred deleting the agent [${payload.id}]`,

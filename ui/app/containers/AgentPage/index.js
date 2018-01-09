@@ -229,12 +229,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(resetAgentData());
     },
     onSuccess: (inWizard) => {
-      if (inWizard){
-        dispatch(push('/wizard/domain'));
-      }
-      else {
-        dispatch(push('/domains'));
-      }
+
     },
   };
 }

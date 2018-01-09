@@ -1,6 +1,3 @@
-export const LOAD_AGENT = 'boilerplate/App/LOAD_AGENT';
-export const LOAD_AGENT_SUCCESS = 'boilerplate/App/LOAD_AGENT_SUCCESS';
-export const LOAD_AGENT_ERROR = 'boilerplate/App/LOAD_AGENT_ERROR';
 export const LOAD_CURRENT_AGENT_SUCCESS = 'boilerplate/App/LOAD_CURRENT_AGENT_SUCCESS';
 export const LOAD_CURRENT_AGENT_ERROR = 'boilerplate/App/LOAD_CURRENT_AGENT_ERROR';
 export const LOAD_AGENTS = 'boilerplate/App/LOAD_AGENTS';

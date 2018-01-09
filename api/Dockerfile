@@ -4,13 +4,14 @@ FROM node:7.5.0
 RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
+RUN npm install -g yarn
+COPY package.json yarn.lock ./
+RUN yarn install
 
 # Bundle app source
 COPY . /usr/src/app/
 
 # Install app dependencies
-RUN npm install -g yarn
-RUN yarn install
 
 EXPOSE 8000
 

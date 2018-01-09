@@ -14,26 +14,21 @@ import {
   agentEntitiesLoadingError,
   deleteEntityError,
   deleteEntitySuccess,
-  loadAgentEntities as loadAgentEntitiesAction,
 } from '../../containers/App/actions';
 import {
   DELETE_ENTITY,
   LOAD_AGENT_ENTITIES,
 } from '../../containers/App/constants';
-import request from '../../utils/request';
 import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getAgentEntities(payload) {
-  const agentId = payload.agentId.split('~')[0];
-  const requestURL = `http://127.0.0.1:8000/agent/${agentId}/entity`;
+  const { api, agentId } = payload;
   try {
-    const agentEntities = yield call(request, requestURL);
+    const response = yield call(api.agent.getAgentIdEntity, { id: agentId.split('~')[0] }); // TODO: Remove this notation
+    const agentEntities = response.obj;
     yield put(agentEntitiesLoaded(agentEntities));
-  } catch (error) {
-    yield put(agentEntitiesLoadingError({
-      message: 'An error occurred loading the list of available entities in this agent',
-      error,
-    }));
+  } catch ({ response }) {
+    yield put(agentEntitiesLoadingError({ message: response.obj.message }));
   } finally {
     if (yield cancelled()) {
       yield put(actionCancelled({
@@ -53,25 +48,14 @@ export function* loadAgentEntities() {
 
 export function* deleteEntity() {
   const action = function* (payload) {
-    const requestURL = `http://127.0.0.1:8000/entity/${payload.id}`;
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-      },
-    };
-
+    const { api, id } = payload;
+    const currentAgent = yield select(makeSelectCurrentAgent());
     try {
-      yield call(request, requestURL, requestOptions);
+      yield call(api.entity.deleteEntityId, { id });
       yield put(deleteEntitySuccess());
-      // TODO: remove this call from here and use react-trunk or react-promise
-      const currentAgent = yield select(makeSelectCurrentAgent());
-      yield put(loadAgentEntitiesAction(currentAgent.id));
-    } catch (error) {
-      yield put(deleteEntityError({
-        message: `An error occurred deleting the entity [${payload.id}]`,
-        error,
-      }));
+      yield call(getAgentEntities, { api, agentId: currentAgent.id });
+    } catch ({ response }) {
+      yield put(deleteEntityError({ message: response.obj.message }));
     }
   };
   const watcher = yield takeLatest(DELETE_ENTITY, action);
