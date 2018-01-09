@@ -55,3 +55,4 @@ export const DELETE_ENTITY = 'boilerplate/App/DELETE_ENTITY';
 export const DELETE_ENTITY_ERROR = 'boilerplate/App/DELETE_ENTITY_ERROR';
 export const DELETE_ENTITY_SUCCESS = 'boilerplate/App/DELETE_ENTITY_SUCCESS';
 export const RESET_STATUS_FLAGS = 'boilerplate/App/RESET_STATUS_FLAGS';
+export const SET_IN_WIZARD = 'boilerplate/App/SET_IN_WIZARD';

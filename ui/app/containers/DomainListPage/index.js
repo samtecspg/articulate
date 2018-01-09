@@ -20,6 +20,7 @@ import {
   deleteDomain,
   loadAgentDomains,
   resetAgentDomains,
+  resetStatusFlags,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,
@@ -129,11 +130,6 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
               />
             </Row>
             <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />
-            <Row>
-              <p>
-                {JSON.stringify(domainProps)}
-              </p>
-            </Row>
           </Form>
 
         </Content>
@@ -168,7 +164,9 @@ DomainListPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentWillUpdate: (agent) => agent ? dispatch(loadAgentDomains(agent.id)) : dispatch(resetAgentDomains()),
+    onComponentWillUpdate: (agent) => {
+      agent ? dispatch(loadAgentDomains(agent.id)) : dispatch(resetAgentDomains());
+    },
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteDomain: (domain) => dispatch(deleteDomain(domain.id)),
   };

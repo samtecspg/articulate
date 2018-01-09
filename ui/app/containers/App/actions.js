@@ -56,6 +56,7 @@ import {
   SELECT_CURRENT_AGENT,
   ACTION_CANCELLED,
   RESET_STATUS_FLAGS,
+  SET_IN_WIZARD,
 } from './constants';
 
 export function loadAgents() {
@@ -434,5 +435,12 @@ export function deleteEntityError() {
 export function resetStatusFlags(){
   return {
     type: RESET_STATUS_FLAGS,
+  }
+}
+
+export function setInWizard(value){
+  return {
+    type: SET_IN_WIZARD,
+    value,
   }
 }

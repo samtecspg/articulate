@@ -51,6 +51,10 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.default_timezone',
     defaultMessage: 'Default Time Zone',
   },
+  webhookUrl: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_url',
+    defaultMessage: 'Webhook Url'
+  },
   domainClassifierThreshold: {
     id: 'boilerplate.containers.AgentPage.create_agent.domain_classifier_threshold',
     defaultMessage: 'Domain Recognition Threshold',

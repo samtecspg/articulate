@@ -15,7 +15,7 @@ export default defineMessages({
   },
   domainListDescription: {
     id: 'boilerplate.containers.IntentListPage.list.description',
-    defaultMessage: 'Lorem ipsu',
+    defaultMessage: 'List of intents for each domain in the agent.',
   },
   actionButton: {
     id: 'boilerplate.containers.DomainListPage.list.action',

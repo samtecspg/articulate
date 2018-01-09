@@ -25,6 +25,7 @@ import {
   makeSelectSuccess,
   makeSelectLoading,
   makeSelectScenario,
+  makeSelectInWizard,
 } from '../App/selectors';
 import {
   changeAgentData,
@@ -102,7 +103,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       Alert.success(messages.successMessage.defaultMessage, {
           position: 'bottom'
       });
-      this.props.onSuccess();
+      this.props.onSuccess.bind(null, this.props.inWizard)();
     }
 
     if (this.props.error){
@@ -211,6 +212,7 @@ AgentPage.propTypes = {
   onSubmitForm: React.PropTypes.func,
   onChangeAgentData: React.PropTypes.func,
   resetForm: React.PropTypes.func,
+  onSuccess: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -226,8 +228,13 @@ export function mapDispatchToProps(dispatch) {
     resetForm: () => {
       dispatch(resetAgentData());
     },
-    onSuccess: () => {
-      dispatch(push('/wizard/domain'));
+    onSuccess: (inWizard) => {
+      if (inWizard){
+        dispatch(push('/wizard/domain'));
+      }
+      else {
+        dispatch(push('/domains'));
+      }
     },
   };
 }
@@ -236,6 +243,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgentData(),
   loading: makeSelectLoading(),
   success: makeSelectSuccess(),
+  inWizard: makeSelectInWizard(),
   error: makeSelectError(),
 });
 

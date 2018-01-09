@@ -2,6 +2,7 @@ import {
   ADD_EXAMPLE,
   ADD_SYNONYM,
   CHANGE_ENTITY_DATA,
+  RESET_ENTITY_DATA,
   REMOVE_EXAMPLE,
   REMOVE_SYNONYM,
   SWITCH_COLOR_PICKER_DISPLAY,
@@ -13,6 +14,12 @@ export function changeEntityData(payload) {
     type: CHANGE_ENTITY_DATA,
     payload,
   };
+}
+
+export function resetEntityData() {
+  return {
+    type: RESET_ENTITY_DATA,
+  }
 }
 
 export function removeExample(example) {

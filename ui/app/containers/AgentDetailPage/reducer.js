@@ -5,7 +5,6 @@ const initialState = fromJS({});
 
 function agentReducer(state = initialState, action) {
   return state;
-
 }
 
 export default agentReducer;

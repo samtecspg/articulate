@@ -8,9 +8,9 @@ import ActionButton from '../../components/ActionButton';
 import React from 'react';
 import messages from './messages';
 import { push } from 'react-router-redux';
-import { resetStatusFlags, loadAgents } from '../App/actions';
+import { resetStatusFlags, loadAgents, setInWizard } from '../App/actions';
 
-export class WizardDomainPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class WizardEntityIntentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount(){
     this.props.onComponentMounted();
@@ -31,7 +31,7 @@ export class WizardDomainPage extends React.PureComponent { // eslint-disable-li
   }
 }
 
-WizardDomainPage.propTypes = {
+WizardEntityIntentPage.propTypes = {
   onCreateAgent: React.PropTypes.func,
   onComponentMounted: React.PropTypes.func,
 };
@@ -44,6 +44,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onCreateIntent: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(setInWizard(false));
       dispatch(push('/intents/create'));
     },
     onComponentMounted: () => {
@@ -55,4 +56,4 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(WizardDomainPage);
+export default connect(mapStateToProps, mapDispatchToProps)(WizardEntityIntentPage);

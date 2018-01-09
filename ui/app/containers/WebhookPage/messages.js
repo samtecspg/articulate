@@ -58,4 +58,8 @@ export default defineMessages({
     id: 'boilerplate.containers.WebhookPage.create_webhook.save_button',
     defaultMessage: 'Save',
   },
+  successMessage: {
+    id: 'boilerplate.containers.IntentPage.create_agent.success_message',
+    defaultMessage: 'Webhook url saved into the agent',
+  },
 });

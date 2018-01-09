@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import {
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
+  RESET_INTENT_DATA,
   CHANGE_SLOT_NAME,
   DELETE_TEXT_PROMPT,
   TAG_ENTITY,
@@ -57,6 +58,8 @@ function intentReducer(state = initialState, action) {
         return tempState
           .updateIn(['intentData'], (x) => x.set(action.payload.field, ((action.payload.field === 'agent' || action.payload.field === 'domain') ? action.payload.value.split('~')[1] : action.payload.value)));
       }
+    case RESET_INTENT_DATA:
+      return initialState;
     case TAG_ENTITY:
       let newState = null;
       slots = state.getIn(['scenarioData', 'slots']);

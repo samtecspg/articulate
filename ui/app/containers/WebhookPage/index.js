@@ -6,6 +6,7 @@ import { Row,
   } from 'react-materialize';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import Alert from 'react-s-alert';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -15,15 +16,16 @@ import Preloader from '../../components/Preloader';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 
-import { createWebhook, } from '../../containers/App/actions';
+import { createWebhook, resetStatusFlags, } from '../../containers/App/actions';
 import {
   makeSelectCurrentAgent,
   makeSelectError,
   makeSelectLoading,
   makeSelectWebhook,
+  makeSelectSuccess,
 } from '../../containers/App/selectors';
 
-import { changeWebhookData } from './actions';
+import { changeWebhookData, resetWebhookData, } from './actions';
 
 import messages from './messages';
 import { makeSelectWebhookData } from './selectors';
@@ -35,8 +37,10 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
   }
 
   componentWillMount() {
+    this.props.resetForm();
     const { currentAgent } = this.props;
     if (currentAgent) {
+      this.props.onChangeWebhookData('webhookUrl', currentAgent.webhookUrl);
       this.props.onChangeWebhookData('agent', currentAgent.id);
     }
   }
@@ -50,6 +54,21 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
 
   onChangeInput(evt, field) {
     this.props.onChangeWebhookData(field, evt.target.value);
+  }
+
+  componentDidUpdate() {
+    if (this.props.success){
+      Alert.success(messages.successMessage.defaultMessage, {
+          position: 'bottom'
+      });
+      this.props.onSuccess()
+    }
+
+    if (this.props.error){
+      Alert.error(this.props.error.message, {
+          position: 'bottom'
+      });
+    }
   }
 
   render() {
@@ -117,12 +136,6 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
           </Form>
 
           <ActionButton label={messages.saveButton} onClick={this.props.onSubmitForm} />
-
-          <Row>
-            <p>
-              {JSON.stringify(webhookProps)}
-            </p>
-          </Row>
         </Content>
       </div>
     );
@@ -146,6 +159,7 @@ WebhookPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
+  resetForm: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -156,6 +170,12 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createWebhook());
     },
+    onSuccess: () => {
+      dispatch(resetStatusFlags());
+    },
+    resetForm: () => {
+      dispatch(resetWebhookData());
+    },
   };
 }
 
@@ -163,6 +183,7 @@ const mapStateToProps = createStructuredSelector({
   webhook: makeSelectWebhook(),
   webhookData: makeSelectWebhookData(),
   loading: makeSelectLoading(),
+  success: makeSelectSuccess(),
   error: makeSelectError(),
   currentAgent: makeSelectCurrentAgent(),
 });

@@ -40,6 +40,15 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/wizard/intent',
+      name: 'wizardIntent',
+      getComponent(nextState, cb) {
+        import('containers/WizardIntentPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    },
+    {
       path: '/agents/create',
       name: 'agents',
       getComponent(nextState, cb) {
@@ -63,7 +72,7 @@ export default function createRoutes(store) {
     },
     {
       path: '/agent/:id',
-      name: 'agent',
+      name: 'agentDetail',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           import('containers/AgentDetailPage/reducer'),
@@ -74,9 +83,8 @@ export default function createRoutes(store) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-          injectReducer('agent', reducer.default);
+          injectReducer('agentDetail', reducer.default);
           injectSagas(sagas.default);
-
           renderRoute(component);
         });
 

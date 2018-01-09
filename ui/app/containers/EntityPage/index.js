@@ -6,6 +6,7 @@ import {
   Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import Alert from 'react-s-alert';
 import ActionButton from '../../components/ActionButton';
@@ -28,6 +29,8 @@ import {
   makeSelectError,
   makeSelectSuccess,
   makeSelectLoading,
+  makeSelectIntentMissing,
+  makeSelectInWizard,
 } from '../../containers/App/selectors';
 
 import {
@@ -38,6 +41,7 @@ import {
   removeSynonym,
   switchColorPickerDisplay,
   closeColorPicker,
+  resetEntityData,
 } from './actions';
 import Examples from './Components/Examples';
 
@@ -51,6 +55,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   componentWillMount() {
+    this.props.resetForm();
     const { currentAgent } = this.props;
     if (currentAgent) {
       this.props.onChangeEntityData('agent', currentAgent.agentName);
@@ -66,6 +71,21 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
 
   onChangeInput(evt, field) {
     this.props.onChangeEntityData(field, evt.target.value);
+  }
+
+  componentDidUpdate() {
+    if (this.props.success){
+      Alert.success(messages.successMessage.defaultMessage, {
+          position: 'bottom'
+      });
+      this.props.onSuccess.bind(null, this.props.inWizard)();
+    }
+
+    if (this.props.error){
+      Alert.error(this.props.error.message, {
+          position: 'bottom'
+      });
+    }
   }
 
   render() {
@@ -84,18 +104,6 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     }
     else {
       breadcrumbs = [{ label: '+ Creating entities'}, ];
-    }
-
-    if (entityProps.success){
-      Alert.success(messages.successMessage.defaultMessage, {
-          position: 'bottom'
-      });
-    }
-
-    if (entityProps.error){
-      Alert.error(entityProps.error.message, {
-          position: 'bottom'
-      });
     }
 
     return (
@@ -160,7 +168,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
             </Table>
           </TableContainer>
 
-          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
+          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm.bind(null, this.props.inWizard)} />
         </Content>
       </div>
     );
@@ -188,6 +196,7 @@ EntityPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
+  resetForm: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -218,7 +227,7 @@ export function mapDispatchToProps(dispatch) {
         evt.target.value = null;
       }
     },
-    onSubmitForm: (evt) => {
+    onSubmitForm: (inWizard, evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createEntity());
     },
@@ -234,6 +243,18 @@ export function mapDispatchToProps(dispatch) {
       dispatch(dispatch(resetStatusFlags()));
       dispatch(changeEntityData({ value: color, field: 'uiColor' }));
     },
+    resetForm: () => {
+      dispatch(resetEntityData());
+    },
+    onSuccess: (inWizard) =>{
+      dispatch(resetStatusFlags());
+      if (inWizard){
+        dispatch(push('/wizard/intent'));
+      }
+      else {
+        dispatch(push('/entities'));
+      }
+    }
   };
 }
 
@@ -244,6 +265,7 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
   success: makeSelectSuccess(),
+  inWizard: makeSelectInWizard(),
   currentAgent: makeSelectCurrentAgent(),
 });
 

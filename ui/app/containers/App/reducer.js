@@ -55,6 +55,7 @@ import {
   SELECT_CURRENT_AGENT,
   ACTION_CANCELLED,
   RESET_STATUS_FLAGS,
+  SET_IN_WIZARD,
 } from './constants';
 
 // The initial state of the App
@@ -64,7 +65,6 @@ const initialState = fromJS({
   success: false,
   loadingConversation: false,
   currentAgent: false,
-  currentDomain: false,
   agents: false,
   agentDomains: false,
   agentEntities: false,
@@ -167,15 +167,12 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('error', false)
-        .set('success', false)
-        .setIn(['domain', 'data'], false);
+        .set('success', false);
     case CREATE_DOMAIN_SUCCESS:
       return state
-        .setIn(['domain', 'data'], action.data)
         .set('loading', false)
         .set('error', false)
-        .set('success', true)
-        .set('currentDomain', action.id);
+        .set('success', true);
     case CREATE_DOMAIN_ERROR:
       return state
         .set('error', action.error)
@@ -184,15 +181,12 @@ function appReducer(state = initialState, action) {
     case CREATE_WEBHOOK:
       return state
         .set('loading', true)
-        .set('error', false)
-        .setIn(['webhook', 'data'], false);
+        .set('error', false);
     case CREATE_WEBHOOK_SUCCESS:
       return state
-        .setIn(['webhook', 'data'], action.data)
         .set('loading', false)
         .set('success', true)
-        .set('error', false)
-        .set('currentDomain', action.id);
+        .set('error', false);
     case CREATE_WEBHOOK_ERROR:
       return state
         .set('error', action.error)
@@ -201,15 +195,12 @@ function appReducer(state = initialState, action) {
     case CREATE_INTENT:
       return state
         .set('loading', true)
-        .set('error', false)
-        .setIn(['intent', 'data'], false);
+        .set('error', false);
     case CREATE_INTENT_SUCCESS:
       return state
-        .setIn(['intent', 'data'], action.data)
         .set('loading', false)
         .set('success', true)
-        .set('error', false)
-        .set('currentIntent', action.id);
+        .set('error', false);
     case CREATE_INTENT_ERROR:
       return state
         .set('error', action.error)
@@ -217,11 +208,9 @@ function appReducer(state = initialState, action) {
         .set('loading', false);
     case CREATE_SCENARIO_SUCCESS:
       return state
-        .setIn(['scenario', 'data'], action.data)
         .set('loading', false)
         .set('success', true)
-        .set('error', false)
-        .set('currentScenario', action.id);
+        .set('error', false);
     case CREATE_SCENARIO_ERROR:
       return state
         .set('error', action.error)
@@ -230,15 +219,12 @@ function appReducer(state = initialState, action) {
     case CREATE_ENTITY:
       return state
         .set('loading', true)
-        .set('error', false)
-        .setIn(['entity', 'data'], false);
+        .set('error', false);
     case CREATE_ENTITY_SUCCESS:
       return state
-        .setIn(['entity', 'data'], action.data)
         .set('loading', false)
         .set('success', true)
-        .set('error', false)
-        .set('currentEntity', action.id);
+        .set('error', false);
     case CREATE_ENTITY_ERROR:
       return state
         .set('error', action.error)
@@ -334,9 +320,12 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case RESET_STATUS_FLAGS:
       return state
-      .set('loading', false)
-      .set('error', false)
-      .set('success', false)
+        .set('loading', false)
+        .set('error', false)
+        .set('success', false)
+    case SET_IN_WIZARD:
+      return state
+        .set('inWizard', action.value)
     default:
       return state;
   }

@@ -28,26 +28,6 @@ const makeSelectCurrentAgent = () => createSelector(
   (globalState) => globalState.get('currentAgent'),
 );
 
-const makeSelectCurrentDomain = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('currentDomain'),
-);
-
-const makeSelectCurrentIntent = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('currentIntent'),
-);
-
-const makeSelectCurrentScenario = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('currentScenario'),
-);
-
-const makeSelectCurrentEntity = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('currentEntity'),
-);
-
 const makeSelectLoading = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('loading'),
@@ -68,6 +48,10 @@ const makeSelectSuccess = () => createSelector(
   (globalState) => globalState.get('success'),
 );
 
+const makeSelectInWizard = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('inWizard'),
+);
 
 const makeSelectAgent = () => createSelector(
   selectGlobal,
@@ -131,14 +115,11 @@ export {
   makeSelectAgentEntities,
   makeSelectConversation,
   makeSelectCurrentAgent,
-  makeSelectCurrentDomain,
-  makeSelectCurrentIntent,
-  makeSelectCurrentScenario,
-  makeSelectCurrentEntity,
   makeSelectLoading,
   makeSelectLoadingConversation,
   makeSelectError,
   makeSelectSuccess,
+  makeSelectInWizard,
   makeSelectAgent,
   makeSelectDomain,
   makeSelectWebhook,

@@ -1,6 +1,7 @@
 import {
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
+  RESET_INTENT_DATA,
   CHANGE_SLOT_NAME,
   DELETE_TEXT_PROMPT,
   TAG_ENTITY,
@@ -12,6 +13,12 @@ export function changeIntentData(payload) {
   return {
     type: CHANGE_INTENT_DATA,
     payload,
+  };
+}
+
+export function resetIntentData() {
+  return {
+    type: RESET_INTENT_DATA,
   };
 }
 

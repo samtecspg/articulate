@@ -33,7 +33,6 @@ import {
   makeSelectAgentDomains,
   makeSelectAgentEntities,
   makeSelectCurrentAgent,
-  makeSelectCurrentDomain,
   makeSelectError,
   makeSelectSuccess,
   makeSelectIntent,
@@ -48,6 +47,7 @@ import {
   deleteTextPrompt,
   tagEntity,
   toggleFlag,
+  resetIntentData,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -75,6 +75,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   componentWillMount() {
+    this.props.resetForm();
     const { currentAgent } = this.props;
     if (currentAgent) {
       this.props.onChangeIntentData('agent', `${currentAgent.id}~${currentAgent.agentName}`); // TODO: Remove this format and pass the entire object
@@ -111,6 +112,21 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.success){
+      Alert.success(messages.successMessage.defaultMessage, {
+          position: 'bottom'
+      });
+      this.props.onSuccess();
+    }
+
+    if (this.props.error){
+      Alert.error(this.props.error.message, {
+          position: 'bottom'
+      });
+    }
+  }
+
   render() {
     const { loading, error, success, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
     const intentProps = {
@@ -135,18 +151,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
     else {
       breadcrumbs = [{ label: '+ Creating intents'}, ];
-    }
-
-    if (intentProps.success){
-      Alert.success(messages.successMessage.defaultMessage, {
-          position: 'bottom'
-      });
-    }
-
-    if (intentProps.error){
-      Alert.error(intentProps.error.message, {
-          position: 'bottom'
-      });
     }
 
     return (
@@ -348,10 +352,6 @@ IntentPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  currentDomain: React.PropTypes.oneOfType([
-    React.PropTypes.object,
-    React.PropTypes.bool,
-  ]),
   agentDomains: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
@@ -360,6 +360,8 @@ IntentPage.propTypes = {
     React.PropTypes.array,
     React.PropTypes.bool,
   ]),
+  onSuccess: React.PropTypes.func,
+  resetForm: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -421,6 +423,12 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createIntent());
     },
+    onSuccess: () => {
+      dispatch(resetStatusFlags());
+    },
+    resetForm: () => {
+      dispatch(resetIntentData());
+    },
   };
 }
 
@@ -435,7 +443,6 @@ const mapStateToProps = createStructuredSelector({
   agentDomains: makeSelectAgentDomains(),
   agentEntities: makeSelectAgentEntities(),
   currentAgent: makeSelectCurrentAgent(),
-  currentDomain: makeSelectCurrentDomain(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(IntentPage);

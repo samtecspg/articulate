@@ -4,6 +4,7 @@ import {
   ADD_EXAMPLE,
   ADD_SYNONYM,
   CHANGE_ENTITY_DATA,
+  RESET_ENTITY_DATA,
   REMOVE_EXAMPLE,
   REMOVE_SYNONYM,
   SWITCH_COLOR_PICKER_DISPLAY,
@@ -34,6 +35,8 @@ function entityReducer(state = initialState, action) {
       }
       return state
         .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value));
+    case RESET_ENTITY_DATA:
+      return initialState;
     case REMOVE_EXAMPLE:
       examples = state.getIn(['entityData', 'examples']);
       examples = examples.filterNot(example => example.get('value') === action.example);

@@ -171,11 +171,6 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
               />
             </Row>
             <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />
-            <Row>
-              <p>
-                {JSON.stringify(domainProps)}
-              </p>
-            </Row>
           </Form>
         </Content>
         <DeleteModal

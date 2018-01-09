@@ -143,6 +143,11 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
                 defaultValue={currentAgent.timezone}
                 disabled
               />
+              <FormTextInput
+                label={messages.webhookUrl}
+                defaultValue={currentAgent.webhookUrl}
+                disabled
+              />
             </Form>
           </Row>
 
@@ -206,7 +211,6 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
   currentAgent: makeSelectCurrentAgent(),
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentDetailPage);

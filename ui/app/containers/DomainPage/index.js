@@ -25,9 +25,10 @@ import {
   makeSelectError,
   makeSelectSuccess,
   makeSelectLoading,
+  makeSelectInWizard,
 } from '../../containers/App/selectors';
 
-import { changeDomainData } from './actions';
+import { changeDomainData, resetDomainData } from './actions';
 
 import messages from './messages';
 import { makeSelectDomainData } from './selectors';
@@ -39,6 +40,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   componentWillMount() {
+    this.props.resetForm();
     const { currentAgent } = this.props;
     if (currentAgent) {
       this.props.onChangeDomainData({ value: currentAgent.agentName, field: 'agent' });
@@ -62,7 +64,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
       Alert.success(messages.successMessage.defaultMessage, {
           position: 'bottom'
       });
-      this.props.onSuccess();
+      this.props.onSuccess.bind(null, this.props.inWizard)();
     }
 
     if (this.props.error){
@@ -150,6 +152,8 @@ DomainPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
+  onSuccess: React.PropTypes.func,
+  resetForm: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -163,8 +167,17 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(createDomain());
     },
-    onSuccess: () => {
-      dispatch(push('/wizard/entity-intent'));
+    resetForm: () => {
+      dispatch(resetDomainData());
+    },
+    onSuccess: (inWizard) => {
+      dispatch(resetStatusFlags());
+      if (inWizard){
+        dispatch(push('/wizard/entity-intent'));
+      }
+      else {
+        dispatch(push('/domains'));
+      }
     },
   };
 }
@@ -175,6 +188,7 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
   success: makeSelectSuccess(),
+  inWizard: makeSelectInWizard(),
   currentAgent: makeSelectCurrentAgent(),
 });
 
