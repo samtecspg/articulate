@@ -1,6 +1,5 @@
 import { fromJS } from 'immutable';
 import {
-  ACTION_CANCELLED,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
