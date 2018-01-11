@@ -263,6 +263,7 @@ class AgentValidate {
                     useWebhookFallback: AgentSchema.useWebhookFallback.required(),
                     entities: Joi.array().items({
                         entityName: EntitySchema.entityName.required(),
+                        uiColor: EntitySchema.uiColor,
                         examples: Joi.array().items({
                             value: ExampleSchema.value.required(),
                             synonyms: ExampleSchema.synonyms

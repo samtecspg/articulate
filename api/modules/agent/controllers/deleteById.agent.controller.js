@@ -57,7 +57,7 @@ module.exports = (request, reply) => {
                                                         server.inject(`/domain/${domain.id}/intent`, (res) => {
 
                                                             if (res.statusCode !== 200){
-                                                                const error = Boom.create(res.statusCode, `An error ocurred getting the intents to delete of the domain ${domainId}`);
+                                                                const error = Boom.create(res.statusCode, `An error ocurred getting the intents to delete of the domain ${domain.domainName}`);
                                                                 return callbackGetIntents(error, null);
                                                             }
                                                             return callbackGetIntents(null, res.result);
@@ -271,7 +271,7 @@ module.exports = (request, reply) => {
                             redis.del(`agent:${agentId}`, (err, result) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation(`An error ocurred deleting the agent ${agent.id}`);
+                                    const error = Boom.badImplementation(`An error ocurred deleting the agent ${agentId}`);
                                     return callbackDeleteAgentSet(error, null);
                                 }
                                 return callbackDeleteAgentSet(null);
@@ -293,7 +293,7 @@ module.exports = (request, reply) => {
                             redis.del(`agentDomains:${agentId}`, (err, result) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation(`An error ocurred deleting the agent ${agent.id}`);
+                                    const error = Boom.badImplementation(`An error ocurred deleting the agent ${agentId}`);
                                     return callbackDeleteAgentDomainsList(error, null);
                                 }
                                 return callbackDeleteAgentDomainsList(null);
@@ -304,7 +304,7 @@ module.exports = (request, reply) => {
                             redis.del(`agentEntities:${agentId}`, (err, result) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation(`An error ocurred deleting the agent ${agent.id}`);
+                                    const error = Boom.badImplementation(`An error ocurred deleting the agent ${agentId}`);
                                     return callbackDeleteAgentEntitiesList(error, null);
                                 }
                                 return callbackDeleteAgentEntitiesList(null);

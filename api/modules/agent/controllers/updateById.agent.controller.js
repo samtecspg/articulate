@@ -110,7 +110,7 @@ module.exports = (request, reply) => {
                                                             server.inject(`/domain/${domain.id}/intent`, (res) => {
 
                                                                 if (res.statusCode !== 200){
-                                                                    const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${domainId}`);
+                                                                    const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${domain.domainName}`);
                                                                     return callbackGetIntents(error, null);
                                                                 }
                                                                 return callbackGetIntents(null, res.result);

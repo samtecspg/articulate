@@ -111,7 +111,7 @@ module.exports = (request, reply) => {
                     agentId = id;
                     return cb(null, currentIntent);
                 }
-                const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
+                const error = Boom.badRequest(`The agent ${currentIntent.agent} doesn't exist`);
                 return cb(error, null);
             });
         },

@@ -70,7 +70,7 @@ module.exports = (request, reply) => {
 
             if (res.statusCode !== 200){
                 const error = Boom.create(res.statusCode, 'An error ocurred getting the domain after training');
-                return callback(error, null);
+                return reply(error);
             }
             return reply(res.result);
         });

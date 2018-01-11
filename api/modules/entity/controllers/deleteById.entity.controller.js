@@ -74,7 +74,7 @@ module.exports = (request, reply) => {
                             redis.zscore('agents', entity.agent, (err, agentId) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation( `An error ocurred retrieving the id of the agent ${agent}`);
+                                    const error = Boom.badImplementation( `An error ocurred retrieving the id of the agent ${entity.agent}`);
                                     return callbackGetAgent(error);
                                 }
                                 return callbackGetAgent(null, agentId);

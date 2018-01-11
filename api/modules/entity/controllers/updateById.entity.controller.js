@@ -77,7 +77,7 @@ module.exports = (request, reply) => {
                                 agentId = id;
                                 return callback(null);
                             }
-                            const error = Boom.badRequest(`The agent ${entity.agent} doesn't exist`);
+                            const error = Boom.badRequest(`The agent ${currentEntity.agent} doesn't exist`);
                             return callback(error, null);
                         });
                     },
@@ -224,7 +224,7 @@ module.exports = (request, reply) => {
                                                             if (res.statusCode === 404){
                                                                 return callbackGetScenario(null, null);
                                                             }
-                                                            const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${scenarioId}`);
+                                                            const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${intent.id}`);
                                                             return callbackGetScenario(error, null);
                                                         }
                                                         return callbackGetScenario(null, res.result);

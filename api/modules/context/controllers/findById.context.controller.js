@@ -34,7 +34,7 @@ module.exports = (request, reply) => {
                     if (data){
                         return callback(null, Flat.unflatten(data));
                     }
-                    const error = Boom.notFound(`The context ${context} doesn\'t exists`);
+                    const error = Boom.notFound(`The context ${contextId} doesn\'t exists`);
                     return callback(error);
                 });
             }, (err, result) => {
