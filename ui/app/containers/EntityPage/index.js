@@ -86,7 +86,12 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
           position: 'bottom'
       });
     }
+    this.scrollToBottom();
   }
+
+  scrollToBottom = () => {
+    this.lastExample.scrollIntoView(true);
+  };
 
   render() {
     const { loading, error, success, entity, displayColorPicker, currentAgent } = this.props;
@@ -167,7 +172,13 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               />
             </Table>
           </TableContainer>
-
+          <div
+            style={{ float: 'left', clear: 'both' }}
+            ref={(el) => {
+              this.lastExample = el;
+            }}
+          >
+          </div>
           <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm.bind(null, this.props.inWizard)} />
         </Content>
       </div>

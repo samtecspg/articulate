@@ -43,10 +43,10 @@ function intentReducer(state = initialState, action) {
     case CHANGE_INTENT_DATA:
       if (action.payload.field === 'examples') {
         return state
-          .updateIn(['intentData', 'examples'], (x) => x.push(fromJS({ userSays: action.payload.value, entities: [] })));
+          .updateIn(['intentData', 'examples'], (x) => x.splice(0, 0, fromJS({ userSays: action.payload.value, entities: [] })));
       } else if (action.payload.field === 'responses') {
         return state
-          .updateIn(['scenarioData', 'intentResponses'], (x) => x.push(action.payload.value));
+          .updateIn(['scenarioData', 'intentResponses'], (x) => x.splice(0, 0, action.payload.value));
       } else if (action.payload.field === 'useWebhook') {
         return state
           .setIn(['scenarioData', 'useWebhook'], action.payload.value);

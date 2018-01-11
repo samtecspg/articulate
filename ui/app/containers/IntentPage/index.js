@@ -101,6 +101,9 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
     if (field === 'examples' || field === 'responses') {
       if (evt.charCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
+        if (field === 'responses'){
+          this.lastAgentResponse.scrollIntoView(true);
+        }
         this.props.onChangeIntentData(field, value);
         evt.target.value = null;
       }
@@ -303,7 +306,13 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             </TableContainer>
             : null
           }
-
+          <div
+            style={{ float: 'left', clear: 'both' }}
+            ref={(el) => {
+              this.lastAgentResponse = el;
+            }}
+          >
+          </div>
           {
             this.props.scenarioData.useWebhook ?
               <Form style={{ marginTop: '0px' }}>
