@@ -9,7 +9,7 @@ export function ResponsesRows(props) {
         <td style={{ width: '100%', display: 'inline-block' }}>
           <div>
             <span id={'intentResponse_' + responseIndex}>{response}</span>
-            <a onClick={props.onRemoveResponse.bind(null, response)}>
+            <a onClick={props.onRemoveResponse.bind(null, responseIndex)}>
               <Icon className="table-delete-row">delete</Icon>
             </a>
           </div>

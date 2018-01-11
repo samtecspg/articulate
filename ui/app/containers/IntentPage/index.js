@@ -48,6 +48,9 @@ import {
   tagEntity,
   toggleFlag,
   resetIntentData,
+  removeUserSaying,
+  removeAgentResponse,
+  removeSlot,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -264,6 +267,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onCheckboxChange={this.props.onCheckboxChange}
                 onAddTextPrompt={this.props.onAddTextPrompt}
                 onDeleteTextPrompt={this.props.onDeleteTextPrompt}
+                onRemoveSlot={this.props.onRemoveSlot}
                 onSlotNameChange={this.props.onSlotNameChange}
                 onAddSlot={this.props.onAddSlot}
                 agentEntities={agentEntities}
@@ -293,7 +297,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <Table>
                 <Responses
                   intentResponses={this.props.scenarioData.intentResponses}
-                  onRemoveResponse={this.props.onRemoveExample}
+                  onRemoveResponse={this.props.onRemoveResponse}
                 />
               </Table>
             </TableContainer>
@@ -346,6 +350,7 @@ IntentPage.propTypes = {
   onSlotNameChange: React.PropTypes.func,
   onAddTextPrompt: React.PropTypes.func,
   onDeleteTextPrompt: React.PropTypes.func,
+  onRemoveSlot: React.PropTypes.func,
   onAddSlot: React.PropTypes.func,
   intentData: React.PropTypes.object,
   currentAgent: React.PropTypes.oneOfType([
@@ -375,10 +380,13 @@ export function mapDispatchToProps(dispatch) {
       dispatch(changeIntentData({ value, field }));
     },
     onRemoveExample: (exampleIndex, evt) => {
-
+      dispatch(removeUserSaying(exampleIndex));
     },
-    onRemoveResponse: (exampleIndex, evt) => {
-
+    onRemoveResponse: (responseIndex, evt) => {
+      dispatch(removeAgentResponse(responseIndex));
+    },
+    onRemoveSlot: (slotIndex, evt) => {
+      dispatch(removeSlot(slotIndex));
     },
     onAddSlot: (evt) => {
 

@@ -19,7 +19,7 @@ export function TextPrompts(props) {
   );
 
   return (
-    <td style={{ width: '45%', display: 'inline-block' }}>
+    <td style={{ width: '40%', display: 'inline-block' }}>
       {
         rows
       }

@@ -7,6 +7,9 @@ import {
   TAG_ENTITY,
   TOGGLE_FLAG,
   UNTAG_ENTITY,
+  REMOVE_USER_SAYING,
+  REMOVE_AGENT_RESPONSE,
+  REMOVE_SLOT,
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -62,4 +65,25 @@ export function deleteTextPrompt(payload) {
     type: DELETE_TEXT_PROMPT,
     payload,
   };
+}
+
+export function removeUserSaying(index) {
+  return {
+    type: REMOVE_USER_SAYING,
+    index,
+  }
+}
+
+export function removeAgentResponse(index) {
+  return {
+    type: REMOVE_AGENT_RESPONSE,
+    index,
+  }
+}
+
+export function removeSlot(index){
+  return {
+    type: REMOVE_SLOT,
+    index,
+  }
 }

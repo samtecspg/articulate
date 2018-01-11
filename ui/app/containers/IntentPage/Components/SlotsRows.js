@@ -1,6 +1,6 @@
 import TextInput from 'components/TextInput';
 import React from 'react';
-import { Input } from 'react-materialize';
+import { Icon, Input, } from 'react-materialize';
 import SlotAgentEntities from './SlotAgentEntities';
 import TextPrompts from './TextPrompts';
 
@@ -28,12 +28,17 @@ export function SlotsRows(props) {
           dirOfColors={props.dirOfColors}
         />
         <td style={{ width: '10%', display: 'inline-block', paddingBottom: '0px' }}>
-          <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isList')} name="isList" type="checkbox" value="isList" label=" " className="filled-in" defaultChecked={slot.isList ? 'required' : null} />
+          <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isList')} name="isList" type="checkbox" value="isList" label=" " className="filled-in" checked={slot.isList ? true : false} />
         </td>
         <td style={{ width: '15%', display: 'inline-block', paddingBottom: '0px' }}>
-          <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isRequired')} name="isRequired" type="checkbox" label=" " value="isRequired" className="filled-in" defaultChecked={slot.isRequired ? 'required' : null} />
+          <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isRequired')} name="isRequired" type="checkbox" label=" " value="isRequired" className="filled-in" checked={slot.isRequired ? true : false} />
         </td>
         <TextPrompts slot={slot} onDeleteTextPrompt={props.onDeleteTextPrompt} onAddTextPrompt={props.onAddTextPrompt} />
+        <td style={{ width: '5%', display: 'inline-block', paddingBottom: '0px' }}>
+          <a onClick={props.onRemoveSlot.bind(null, slotIndex)}>
+            <Icon className="table-delete-row">delete</Icon>
+          </a>
+        </td>
       </tr>
     );
   });
@@ -51,6 +56,7 @@ SlotsRows.propTypes = {
   onAddTextPrompt: React.PropTypes.func,
   onSlotNameChange: React.PropTypes.func,
   onDeleteTextPrompt: React.PropTypes.func,
+  onRemoveSlot: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,

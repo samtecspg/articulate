@@ -9,6 +9,9 @@ import {
   TAG_ENTITY,
   TOGGLE_FLAG,
   UNTAG_ENTITY,
+  REMOVE_USER_SAYING,
+  REMOVE_AGENT_RESPONSE,
+  REMOVE_SLOT,
 } from './constants';
 
 // The initial state of the App
@@ -34,6 +37,7 @@ const initialState = fromJS({
 function intentReducer(state = initialState, action) {
   let slots;
   let tempState;
+  let examples;
 
   switch (action.type) {
     case CHANGE_INTENT_DATA:
@@ -77,7 +81,7 @@ function intentReducer(state = initialState, action) {
       } else {
         newState = state;
       }
-      let examples = newState.getIn(['intentData', 'examples']);
+      examples = newState.getIn(['intentData', 'examples']);
       examples = examples.map((example) => example.get('userSays') === action.payload.userSays ? example.update('entities', (synonyms) => synonyms.push({ value: action.payload.value, entity: action.payload.entity, start: action.payload.start, end: action.payload.end })) : example);
       return newState
         .setIn(['intentData', 'examples'], examples);
@@ -124,6 +128,15 @@ function intentReducer(state = initialState, action) {
       });
       return state
         .setIn(['scenarioData', 'slots'], slots);
+    case REMOVE_USER_SAYING:
+      return state
+        .setIn(['intentData', 'examples'], state.getIn(['intentData', 'examples']).splice(action.index,1));
+    case REMOVE_AGENT_RESPONSE:
+      return state
+        .setIn(['scenarioData', 'intentResponses'], state.getIn(['scenarioData', 'intentResponses']).splice(action.index,1));
+    case REMOVE_SLOT:
+      return state
+        .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index,1));
     default:
       return state;
   }

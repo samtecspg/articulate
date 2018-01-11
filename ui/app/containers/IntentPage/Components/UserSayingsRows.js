@@ -40,7 +40,7 @@ export function UserSayingsRows(props) {
               dirOfColors={props.dirOfColors}
               createEntity={true}
             />
-            <a onClick={props.onRemoveExample.bind(null, textValue)}>
+            <a onClick={props.onRemoveExample.bind(null, valueIndex)}>
               <Icon className="table-delete-row">delete</Icon>
             </a>
           </div>
