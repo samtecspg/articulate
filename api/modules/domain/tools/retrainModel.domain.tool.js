@@ -4,6 +4,7 @@ const Wreck = require('wreck');
 const Boom = require('boom');
 const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.domain.tool');
+const erPipeline = require('../../../rasa-er-pipeline.json');
 
 const retrainModel = (server, rasa, agentName, domainName, domainId, callback) => {
 
@@ -18,8 +19,8 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
         let model = Guid.create().toString();
         model = (trainingSet.numberOfIntents > 1 ? '' : 'just_er_') + model;
         const modelFolderName = domainName + '_' + model;
-        const rasaServer = trainingSet.numberOfIntents > 1 ? rasa : server.app.rasa_er;
-        Wreck.post(`${rasaServer}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
+        const pipeline = trainingSet.numberOfIntents > 1 ? null : erPipeline.join(',');
+        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}${pipeline ? `&pipeline=${pipeline}` : ''}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {
                 const error = Boom.badImplementation('An error ocurred calling the training process.');
