@@ -4,7 +4,7 @@ const Wreck = require('wreck');
 const Boom = require('boom');
 const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.domain.tool');
-const erPipeline = require('../../../rasa-er-pipeline.json');
+const ERPipeline = require('../../../rasa-er-pipeline.json');
 
 const retrainModel = (server, rasa, agentName, domainName, domainId, callback) => {
 
@@ -19,7 +19,7 @@ const retrainModel = (server, rasa, agentName, domainName, domainId, callback) =
         let model = Guid.create().toString();
         model = (trainingSet.numberOfIntents > 1 ? '' : 'just_er_') + model;
         const modelFolderName = domainName + '_' + model;
-        const pipeline = trainingSet.numberOfIntents > 1 ? null : erPipeline.join(',');
+        const pipeline = trainingSet.numberOfIntents > 1 ? null : ERPipeline.join(',');
         Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}${pipeline ? `&pipeline=${pipeline}` : ''}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {

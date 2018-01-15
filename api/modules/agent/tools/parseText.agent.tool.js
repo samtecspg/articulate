@@ -4,7 +4,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Wreck = require('wreck');
 const Querystring = require('querystring');
-const erPipeline = require('../../../rasa-er-pipeline.json');
+const ERPipeline = require('../../../rasa-er-pipeline.json');
 
 const DucklingOutputToIntervals = require('./ducklingOutputToInterval.agent.tool');
 
@@ -16,12 +16,11 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasa, callback) => 
         model: trainedDomain.model
     };
 
-    let rasaService = rasa;
     if (trainedDomain.justER){
-        requestPayload.pipeline = erPipeline;
+        requestPayload.pipeline = ERPipeline;
     }
 
-    Wreck.post(rasaService + '/parse', { payload: requestPayload, json: true }, (err, wreckResponse, result) => {
+    Wreck.post(rasa + '/parse', { payload: requestPayload, json: true }, (err, wreckResponse, result) => {
 
         if (err){
             const error = Boom.badImplementation(`Error calling rasa to parse text on domain ${trainedDomain.name}`);
