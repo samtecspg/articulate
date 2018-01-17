@@ -108,9 +108,15 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         evt.target.value = null;
       }
       if (field === 'responses') {
+        const dropDownButton = document.getElementById('intentResponseEntityDropdown');
         if (evt.charCode === 123) { // If user hits '{' display a menu with current slots
-          const dropDownButton = document.getElementById('intentResponseEntityDropdown');
           dropDownButton.dispatchEvent(new Event('click'));
+        }
+        else {
+          console.log(dropDownButton.getAttribute('class').split(' '));
+          if (dropDownButton.getAttribute('class').split(' ').indexOf('active') > -1){
+            dropDownButton.dispatchEvent(new Event('click'));
+          }
         }
       }
     } else {
@@ -288,6 +294,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 dirOfColors={dirOfColors}
               />
               <FormTextInput
+                id='responses'
                 label={messages.agentResponsesTitle}
                 placeholder={messages.responsesInput.defaultMessage}
                 onKeyPress={(evt) => this.onChangeInput(evt, 'responses')}
@@ -434,7 +441,9 @@ export function mapDispatchToProps(dispatch) {
     onAutoCompleteEntityFunction: (entityName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      document.getElementById('responses').value += `${entityName}}`;
+      var currentResponse = document.getElementById('responses').value;
+      var positionOfEntity = currentResponse.lastIndexOf('{');
+      document.getElementById('responses').value = currentResponse.substring(0, positionOfEntity) + `{${entityName}}`;
     },
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
