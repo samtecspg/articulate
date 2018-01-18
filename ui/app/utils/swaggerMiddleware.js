@@ -13,10 +13,11 @@ export default function swaggerMiddleware(opts) {
     }
     return new Swagger({ ...opts })
       .then(result => {
-          //console.log(result);
           const { apiCall, ...rest } = action;
           api = result.apis;
-          console.info(api);
+          if (process.env.NODE_ENV === 'development') {
+            console.info(api);
+          }
           return next({ ...rest, api });
         },
         err => opts.error && opts.error(err)

@@ -34,7 +34,6 @@ import {
 function* postScenario(payload) {
   const { api, id, name } = payload;
   const scenarioData = yield select(makeSelectScenarioData());
-  console.log(`postScenario::${JSON.stringify({ id, name })}`); // TODO: REMOVE!!!!
   scenarioData.intent = name;
   if (!scenarioData.useWebhook) {
     delete scenarioData.webhookUrl;
