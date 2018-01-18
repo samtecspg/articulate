@@ -28,7 +28,10 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
   ui:
-    build: './ui/.'
+    build:
+      context: './ui/.'
+      args:
+        - API_URL=${API_URL:-http://localhost:8000} # Needed for running yarn build in Dockerfile
     ports: ['0.0.0.0:3500:3000']
     environment:
       - API_URL=${API_URL:-http://localhost:8000}
