@@ -17,7 +17,7 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasa, callback) => 
     };
 
     if (trainedDomain.justER){
-        requestPayload.pipeline = ERPipeline;
+        requestPayload.pipeline = ERPipeline.join(',');
     }
 
     Wreck.post(rasa + '/parse', { payload: requestPayload, json: true }, (err, wreckResponse, result) => {

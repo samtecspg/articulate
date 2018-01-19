@@ -51,7 +51,7 @@ const createAgent = (callback) => {
     });
 };
 
-before((done) => {
+before({ timeout: 15000 }, (done) => {
 
     require('../../../index')((err, srv) => {
 

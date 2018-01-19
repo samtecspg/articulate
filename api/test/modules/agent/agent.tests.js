@@ -267,7 +267,7 @@ suite('/agent', () => {
 
     suite('/post', () => {
 
-        test('should respond with 200 successful operation and return an agent object', (done) => {
+        test('should respond with 200 successful operation and return an agent object', { timeout: 15000 }, (done) => {
 
             const data = {
                 agentName: 'Test Agent 2',

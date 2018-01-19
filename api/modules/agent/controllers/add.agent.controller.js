@@ -2,12 +2,16 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
+const AgentTools = require('../tools');
 
 module.exports = (request, reply) => {
 
     let agentId = null;
     let agent = request.payload;
-    const redis = request.server.app.redis;
+
+    const server = request.server;
+    const redis = server.app.redis;
+    const rasa = server.app.rasa;
 
     Async.series({
         agentId: (cb) => {
@@ -56,6 +60,12 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        return reply(result.agent);
+        AgentTools.trainSystemERModel(server, rasa, result.agent.agentName, (errTraining) => {
+
+            if (errTraining){
+                return reply(errTraining, null);
+            }
+            return reply(result.agent);
+        });
     });
 };
