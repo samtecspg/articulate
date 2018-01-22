@@ -7,6 +7,7 @@ export function UserSayings(props) {
     examples={props.examples}
     onRemoveExample={props.onRemoveExample}
     onTagEntity={props.onTagEntity}
+    setWindowSelection={props.setWindowSelection}
     agentEntities={props.agentEntities}
     dirOfColors={props.dirOfColors}
   />;
@@ -16,6 +17,7 @@ UserSayings.propTypes = {
   examples: React.PropTypes.array,
   onRemoveExample: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
+  setWindowSelection: React.PropTypes.func,
   agentEntities: React.PropTypes.array,
   dirOfColors: React.PropTypes.object,
 };

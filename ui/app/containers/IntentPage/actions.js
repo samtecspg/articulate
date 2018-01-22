@@ -10,6 +10,7 @@ import {
   REMOVE_USER_SAYING,
   REMOVE_AGENT_RESPONSE,
   REMOVE_SLOT,
+  SET_WINDOW_SELECTION,
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -85,5 +86,12 @@ export function removeSlot(index){
   return {
     type: REMOVE_SLOT,
     index,
+  }
+}
+
+export function setWindowSelection(selection){
+  return {
+    type: SET_WINDOW_SELECTION,
+    selection,
   }
 }

@@ -51,6 +51,7 @@ import {
   removeUserSaying,
   removeAgentResponse,
   removeSlot,
+  setWindowSelection,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -61,6 +62,7 @@ import messages from './messages';
 import {
   makeSelectIntentData,
   makeSelectScenarioData,
+  makeSelectWindowSelection,
 } from './selectors';
 
 const returnFormattedOptions = (options) => options.map((option, index) => (
@@ -113,7 +115,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           dropDownButton.dispatchEvent(new Event('click'));
         }
         else {
-          console.log(dropDownButton.getAttribute('class').split(' '));
           if (dropDownButton.getAttribute('class').split(' ').indexOf('active') > -1){
             dropDownButton.dispatchEvent(new Event('click'));
           }
@@ -225,6 +226,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 <UserSayings
                   examples={this.props.intentData.examples}
                   onRemoveExample={this.props.onRemoveExample}
+                  setWindowSelection={this.props.setWindowSelection}
                   onTagEntity={this.props.onTagEntity}
                   agentEntities={agentEntities}
                   dirOfColors={dirOfColors}
@@ -383,6 +385,7 @@ IntentPage.propTypes = {
   ]),
   onSuccess: React.PropTypes.func,
   resetForm: React.PropTypes.func,
+  setWindowSelection: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -410,14 +413,7 @@ export function mapDispatchToProps(dispatch) {
     onTagEntity: (userSays, entity, entityName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      const userSelection = window.getSelection();
-      const selectedText = userSelection.toString();
-      if (selectedText !== '') {
-        const start = userSays.indexOf(selectedText);
-        const end = start + selectedText.length;
-        const value = userSays.substring(start, end);
-        dispatch(tagEntity({ userSays, entity, entityName, value, end, start }));
-      }
+      dispatch(tagEntity({ userSays, entity, entityName}));
     },
     onCheckboxChange: (slotName, field, evt) => {
       dispatch(dispatch(resetStatusFlags()));
@@ -455,6 +451,9 @@ export function mapDispatchToProps(dispatch) {
     resetForm: () => {
       dispatch(resetIntentData());
     },
+    setWindowSelection: (selection) => {
+      dispatch(setWindowSelection(selection));
+    }
   };
 }
 
@@ -463,6 +462,7 @@ const mapStateToProps = createStructuredSelector({
   scenario: makeSelectScenario(),
   intentData: makeSelectIntentData(),
   scenarioData: makeSelectScenarioData(),
+  windowSelection: makeSelectWindowSelection(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
   success: makeSelectSuccess(),

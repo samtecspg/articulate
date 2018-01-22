@@ -12,10 +12,12 @@ import {
   REMOVE_USER_SAYING,
   REMOVE_AGENT_RESPONSE,
   REMOVE_SLOT,
+  SET_WINDOW_SELECTION,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
+  windowSelection: '',
   intentData: {
     agent: null,
     domain: null,
@@ -65,26 +67,35 @@ function intentReducer(state = initialState, action) {
     case RESET_INTENT_DATA:
       return initialState;
     case TAG_ENTITY:
-      let newState = null;
-      slots = state.getIn(['scenarioData', 'slots']);
-      const existingSlot = slots.filter((slot) => slot.entity === action.payload.entity);
-      if (existingSlot.size === 0) {
+      const selectedText = state.get('windowSelection');
+      if (selectedText !== '') {
+
+        const start = action.payload.userSays.indexOf(selectedText);
+        const end = start + selectedText.length;
+        const value = action.payload.userSays.substring(start, end);
+
+        let newState = null;
         slots = state.getIn(['scenarioData', 'slots']);
-        newState = state.updateIn(['scenarioData', 'slots'], (slots) => slots.push({
-          slotName: action.payload.entityName,
-          entity: action.payload.entity,
-          isRequired: false,
-          isList: false,
-          textPrompts: [],
-          useWebhook: false,
-        }));
-      } else {
-        newState = state;
+        const existingSlot = slots.filter((slot) => slot.entity === action.payload.entity);
+        if (existingSlot.size === 0) {
+          slots = state.getIn(['scenarioData', 'slots']);
+          newState = state.updateIn(['scenarioData', 'slots'], (slots) => slots.push({
+            slotName: action.payload.entityName,
+            entity: action.payload.entity,
+            isRequired: false,
+            isList: false,
+            textPrompts: [],
+            useWebhook: false,
+          }));
+        } else {
+          newState = state;
+        }
+        examples = newState.getIn(['intentData', 'examples']);
+        examples = examples.map((example) => example.get('userSays') === action.payload.userSays ? example.update('entities', (synonyms) => synonyms.push({ value, entity: action.payload.entity, start, end })) : example);
+        newState = newState.set('windowSelection', '');
+        return newState
+          .setIn(['intentData', 'examples'], examples);
       }
-      examples = newState.getIn(['intentData', 'examples']);
-      examples = examples.map((example) => example.get('userSays') === action.payload.userSays ? example.update('entities', (synonyms) => synonyms.push({ value: action.payload.value, entity: action.payload.entity, start: action.payload.start, end: action.payload.end })) : example);
-      return newState
-        .setIn(['intentData', 'examples'], examples);
     case UNTAG_ENTITY:
       return state
         .updateIn(['intentData', 'examples'], (x) => x.push(fromJS({ value: action.example, synonyms: [action.example] })));
@@ -137,6 +148,9 @@ function intentReducer(state = initialState, action) {
     case REMOVE_SLOT:
       return state
         .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index,1));
+    case SET_WINDOW_SELECTION:
+      return state
+        .set('windowSelection', action.selection);
     default:
       return state;
   }

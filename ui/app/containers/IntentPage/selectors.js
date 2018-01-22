@@ -7,6 +7,11 @@ const makeSelectIntentData = () => createSelector(
   (intentState) => intentState.get('intentData').toJS(),
 );
 
+const makeSelectWindowSelection = () => createSelector(
+  selectIntent,
+  (intentState) => intentState.get('windowSelection'),
+);
+
 const makeSelectScenarioData = () => createSelector(
   selectIntent,
   (scenarioState) => scenarioState.get('scenarioData').toJS(),
@@ -14,6 +19,7 @@ const makeSelectScenarioData = () => createSelector(
 
 export {
   selectIntent,
+  makeSelectWindowSelection,
   makeSelectIntentData,
   makeSelectScenarioData,
 };

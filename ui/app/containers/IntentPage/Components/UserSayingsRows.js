@@ -3,9 +3,11 @@ import { Icon, } from 'react-materialize';
 import AgentEntities from './AgentEntities';
 import FormattedText from './FormattedText';
 
-const highlightEntity = (agentEntities, dropDownButtonId, e) => {
+const highlightEntity = (agentEntities, dropDownButtonId, setWindowSelection, e) => {
   if (agentEntities) {
     const dropDownButton = document.getElementById(dropDownButtonId);
+    const selection = window.getSelection().toString();
+    setWindowSelection(selection);
     dropDownButton.dispatchEvent(new Event('click'));
   }
 };
@@ -31,7 +33,7 @@ export function UserSayingsRows(props) {
       <tr style={{ width: '100%' }} key={valueIndex}>
         <td style={{ width: '100%', display: 'inline-block' }}>
           <div>
-            <span id={'userSaying_' + valueIndex} onMouseUp={highlightEntity.bind(null, props.agentEntities, 'userSayingDropdown_' + valueIndex)}>{formattedText ? formattedText : textValue}</span>
+            <span id={'userSaying_' + valueIndex} onMouseUp={highlightEntity.bind(null, props.agentEntities, 'userSayingDropdown_' + valueIndex, props.setWindowSelection)}>{formattedText ? formattedText : textValue}</span>
             <AgentEntities
               index={valueIndex}
               agentEntities={props.agentEntities}
@@ -60,6 +62,7 @@ UserSayingsRows.propTypes = {
   examples: React.PropTypes.array,
   onRemoveExample: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
+  setWindowSelection: React.PropTypes.func,
   agentEntities: React.PropTypes.array,
   dirOfColors: React.PropTypes.object,
 };
