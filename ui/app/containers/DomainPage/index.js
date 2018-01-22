@@ -1,13 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import {
-  Row,
   Col,
+  Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
 import Alert from 'react-s-alert';
+import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -18,17 +18,23 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 
-import { createDomain, resetStatusFlags, } from '../../containers/App/actions';
+import {
+  createDomain,
+  resetStatusFlags,
+  updateDomain,
+} from '../App/actions';
 import {
   makeSelectCurrentAgent,
-  makeSelectDomain,
   makeSelectError,
-  makeSelectSuccess,
-  makeSelectLoading,
   makeSelectInWizard,
-} from '../../containers/App/selectors';
-
-import { changeDomainData, resetDomainData } from './actions';
+  makeSelectLoading,
+  makeSelectSuccess,
+} from '../App/selectors';
+import {
+  changeDomainData,
+  loadDomain,
+  resetDomainData
+} from './actions';
 
 import messages from './messages';
 import { makeSelectDomainData } from './selectors';
@@ -37,14 +43,20 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
   constructor() {
     super();
     this.onChangeInput = this.onChangeInput.bind(this);
+    this.setEditMode = this.setEditMode.bind(this);
+    this.submitForm = this.submitForm.bind(this);
   }
 
+  state = {
+    editMode: false,
+  };
+
   componentWillMount() {
-    this.props.resetForm();
-    const { currentAgent } = this.props;
-    if (currentAgent) {
-      this.props.onChangeDomainData({ value: currentAgent.agentName, field: 'agent' });
-    }
+
+  }
+
+  componentDidMount() {
+    this.setEditMode(this.props.route.name === 'domainEdit');
   }
 
   componentWillUpdate(nextProps) {
@@ -56,21 +68,48 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
 
   onChangeInput(evt, field) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    console.log(`onChangeInput::${JSON.stringify(evt.target.value)}`); // TODO: REMOVE!!!!
     this.props.onChangeDomainData({ value: evt.target.value, field });
   }
 
-  componentDidUpdate() {
-    if (this.props.success){
+  componentDidUpdate(prevProps, prevState, prevContext) {
+    if (this.props.route !== prevProps.route) {
+      this.setEditMode(this.props.route.name === 'domainEdit');
+    }
+    if (this.props.success) {
       Alert.success(messages.successMessage.defaultMessage, {
-          position: 'bottom'
+        position: 'bottom'
       });
       this.props.onSuccess.bind(null, this.props.inWizard)();
     }
 
-    if (this.props.error){
+    if (this.props.error) {
       Alert.error(this.props.error.message, {
-          position: 'bottom'
+        position: 'bottom'
       });
+    }
+  }
+
+  setEditMode(isEditMode) {
+    if (isEditMode) {
+      this.setState({ editMode: true });
+      this.props.onEditMode(this.props.params.id);
+    } else {
+      this.props.resetForm();
+      this.setState({ editMode: false });
+      const { currentAgent } = this.props;
+      if (currentAgent) {
+        this.props.onChangeDomainData({ value: currentAgent.agentName, field: 'agent' });
+      }
+    }
+  }
+
+  submitForm(evt) {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    if (this.state.editMode) {
+      this.props.onUpdate();
+    } else {
+      this.props.onCreate();
     }
   }
 
@@ -110,7 +149,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
               <FormTextInput
                 label={messages.domainName}
                 placeholder={messages.domainNamePlaceholder.defaultMessage}
-                value={this.props.domainData.domainName}
+                value={domain.domainName}
                 onChange={(evt) => this.onChangeInput(evt, 'domainName')}
                 required
               />
@@ -123,13 +162,16 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
               min="0"
               max="100"
               name="intentThreshold"
-              defaultValue={this.props.domainData.intentThreshold}
               onChange={(evt) => this.onChangeInput(evt, 'intentThreshold')}
+              value={domain.intentThreshold.toString()}
+
             />
           </Row>
+          {domain.intentThreshold.toString()}
+          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
 
-          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
         </Content>
+
       </div>
     );
   }
@@ -146,14 +188,15 @@ DomainPage.propTypes = {
     React.PropTypes.bool,
   ]),
   onChangeDomainData: React.PropTypes.func,
-  onSubmitForm: React.PropTypes.func,
-  domainData: React.PropTypes.object,
+  onCreate: React.PropTypes.func,
+  onUpdate: React.PropTypes.func,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   onSuccess: React.PropTypes.func,
   resetForm: React.PropTypes.func,
+  onEditMode: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -163,28 +206,32 @@ export function mapDispatchToProps(dispatch) {
       dispatch(resetStatusFlags());
       dispatch(changeDomainData(data));
     },
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    onCreate: () => {
       dispatch(createDomain());
+    },
+    onUpdate: () => {
+      dispatch(updateDomain());
     },
     resetForm: () => {
       dispatch(resetDomainData());
     },
     onSuccess: (inWizard) => {
       dispatch(resetStatusFlags());
-      if (inWizard){
+      if (inWizard) {
         dispatch(push('/wizard/entity-intent'));
       }
       else {
         dispatch(push('/domains'));
       }
     },
+    onEditMode: (domainId) => {
+      dispatch(loadDomain(domainId));
+    },
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  domain: makeSelectDomain(),
-  domainData: makeSelectDomainData(),
+  domain: makeSelectDomainData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
   success: makeSelectSuccess(),

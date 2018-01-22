@@ -51,6 +51,18 @@ import {
   RESET_STATUS_FLAGS,
   SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
+  UPDATE_AGENT,
+  UPDATE_AGENT_ERROR,
+  UPDATE_AGENT_SUCCESS,
+  UPDATE_DOMAIN,
+  UPDATE_DOMAIN_ERROR,
+  UPDATE_DOMAIN_SUCCESS,
+  UPDATE_ENTITY,
+  UPDATE_ENTITY_ERROR,
+  UPDATE_ENTITY_SUCCESS,
+  UPDATE_INTENT,
+  UPDATE_INTENT_ERROR,
+  UPDATE_INTENT_SUCCESS
 } from './constants';
 
 // The initial state of the App
@@ -304,6 +316,64 @@ function appReducer(state = initialState, action) {
     case SET_IN_WIZARD:
       return state
         .set('inWizard', action.value);
+    case UPDATE_AGENT:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('agent', false);
+    case UPDATE_AGENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('success', true)
+        .set('currentAgent', action.agent);
+    case UPDATE_AGENT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('success', false)
+        .set('loading', false);
+    case UPDATE_DOMAIN:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case UPDATE_DOMAIN_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('success', true);
+    case UPDATE_DOMAIN_ERROR:
+      return state
+        .set('error', action.error)
+        .set('success', false)
+        .set('loading', false);
+    case UPDATE_INTENT:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case UPDATE_INTENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('success', true);
+    case UPDATE_INTENT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('success', false)
+        .set('loading', false);
+    case UPDATE_ENTITY:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case UPDATE_ENTITY_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('success', true);
+    case UPDATE_ENTITY_ERROR:
+      return state
+        .set('error', action.error)
+        .set('success', false)
+        .set('loading', false);
     default:
       return state;
   }

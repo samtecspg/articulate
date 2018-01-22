@@ -1,14 +1,16 @@
 import { fromJS } from 'immutable';
-
 import {
   ADD_EXAMPLE,
   ADD_SYNONYM,
   CHANGE_ENTITY_DATA,
-  RESET_ENTITY_DATA,
+  CLOSE_COLOR_PICKER,
+  LOAD_ENTITY,
+  LOAD_ENTITY_ERROR,
+  LOAD_ENTITY_SUCCESS,
   REMOVE_EXAMPLE,
   REMOVE_SYNONYM,
-  SWITCH_COLOR_PICKER_DISPLAY,
-  CLOSE_COLOR_PICKER,
+  RESET_ENTITY_DATA,
+  SWITCH_COLOR_PICKER_DISPLAY
 } from './constants';
 
 // The initial state of the App
@@ -28,7 +30,7 @@ function entityReducer(state = initialState, action) {
 
   switch (action.type) {
     case CHANGE_ENTITY_DATA:
-      if (action.payload.field === 'uiColor'){
+      if (action.payload.field === 'uiColor') {
         return state
           .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value.hex))
           .set('displayColorPicker', false);
@@ -59,6 +61,19 @@ function entityReducer(state = initialState, action) {
       return state.set('displayColorPicker', !state.get('displayColorPicker'));
     case CLOSE_COLOR_PICKER:
       return state.set('displayColorPicker', false);
+    case LOAD_ENTITY:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_ENTITY_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('entityData', fromJS(action.entity));
+    case LOAD_ENTITY_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
     default:
       return state;
   }

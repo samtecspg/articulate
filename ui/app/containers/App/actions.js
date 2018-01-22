@@ -53,6 +53,18 @@ import {
   RESET_STATUS_FLAGS,
   SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
+  UPDATE_AGENT,
+  UPDATE_AGENT_ERROR,
+  UPDATE_AGENT_SUCCESS,
+  UPDATE_DOMAIN,
+  UPDATE_DOMAIN_ERROR,
+  UPDATE_DOMAIN_SUCCESS,
+  UPDATE_ENTITY,
+  UPDATE_ENTITY_ERROR,
+  UPDATE_ENTITY_SUCCESS,
+  UPDATE_INTENT,
+  UPDATE_INTENT_ERROR,
+  UPDATE_INTENT_SUCCESS
 } from './constants';
 
 export function loadAgents() {
@@ -432,5 +444,89 @@ export function setInWizard(value) {
   return {
     type: SET_IN_WIZARD,
     value,
+  };
+}
+
+export function updateAgentError(error) {
+  return {
+    type: UPDATE_AGENT_ERROR,
+    error,
+  };
+}
+
+export function updateAgentSuccess(agent) {
+  return {
+    type: UPDATE_AGENT_SUCCESS,
+    agent,
+  };
+}
+
+export function updateAgent() {
+  return {
+    type: UPDATE_AGENT,
+    apiCall: true,
+  };
+}
+
+export function updateDomainError(error) {
+  return {
+    type: UPDATE_DOMAIN_ERROR,
+    error,
+  };
+}
+
+export function updateDomainSuccess(domain) {
+  return {
+    type: UPDATE_DOMAIN_SUCCESS,
+    domain,
+  };
+}
+
+export function updateDomain() {
+  return {
+    type: UPDATE_DOMAIN,
+    apiCall: true,
+  };
+}
+
+export function updateIntentError(error) {
+  return {
+    type: UPDATE_INTENT_ERROR,
+    error,
+  };
+}
+
+export function updateIntentSuccess(intent) {
+  return {
+    type: UPDATE_INTENT_SUCCESS,
+    intent,
+  };
+}
+
+export function updateIntent() {
+  return {
+    type: UPDATE_INTENT,
+    apiCall: true,
+  };
+}
+
+export function updateEntityError(error) {
+  return {
+    type: UPDATE_ENTITY_ERROR,
+    error,
+  };
+}
+
+export function updateEntitySuccess(entity) {
+  return {
+    type: UPDATE_ENTITY_SUCCESS,
+    entity,
+  };
+}
+
+export function updateEntity() {
+  return {
+    type: UPDATE_ENTITY,
+    apiCall: true,
   };
 }

@@ -102,9 +102,13 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_placeholder',
     defaultMessage: 'Add Text Prompt',
   },
-  actionButton: {
-    id: 'boilerplate.containers.IntentPage.create_agent.action_button',
+  createButton: {
+    id: 'boilerplate.containers.IntentPage.create_intent.create_button',
     defaultMessage: '+ Create',
+  },
+  editButton: {
+    id: 'boilerplate.containers.IntentPage.create_intent.edit_button',
+    defaultMessage: '+ Update',
   },
   emptyEntityList: {
     id: 'boilerplate.containers.IntentPage.create_agent.empty_entity_list',

@@ -37,9 +37,13 @@ export default defineMessages({
     id: 'boilerplate.containers.EntityPage.create_entity.synonym_placeholder',
     defaultMessage: 'Add Synonym',
   },
-  actionButton: {
-    id: 'boilerplate.containers.EntityPage.create_agent.action_button',
+  createButton: {
+    id: 'boilerplate.containers.EntityPage.create_entity.create_button',
     defaultMessage: '+ Create',
+  },
+  editButton: {
+    id: 'boilerplate.containers.EntityPage.create_entity.edit_button',
+    defaultMessage: '+ Update',
   },
   valueColumn: {
     id: 'boilerplate.containers.EntityPage.create_agent.value_column',

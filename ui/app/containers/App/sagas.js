@@ -28,11 +28,8 @@ export function* getAgents(payload) {
 }
 
 export function* loadAgents() {
-  const watcher = yield takeLatest(LOAD_AGENTS, getAgents);
+ yield takeLatest(LOAD_AGENTS, getAgents);
 
-  // Suspend execution until location changes
-  //yield take(LOCATION_CHANGE);
-  //yield cancel(watcher);
 }
 
 export function* getCurrentAgent(payload) {

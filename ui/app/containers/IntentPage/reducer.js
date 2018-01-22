@@ -1,18 +1,20 @@
 import { fromJS } from 'immutable';
-
 import {
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
-  RESET_INTENT_DATA,
   CHANGE_SLOT_NAME,
   DELETE_TEXT_PROMPT,
+  LOAD_INTENT,
+  LOAD_INTENT_ERROR,
+  LOAD_INTENT_SUCCESS,
+  REMOVE_AGENT_RESPONSE,
+  REMOVE_SLOT,
+  REMOVE_USER_SAYING,
+  RESET_INTENT_DATA,
+  SET_WINDOW_SELECTION,
   TAG_ENTITY,
   TOGGLE_FLAG,
   UNTAG_ENTITY,
-  REMOVE_USER_SAYING,
-  REMOVE_AGENT_RESPONSE,
-  REMOVE_SLOT,
-  SET_WINDOW_SELECTION,
 } from './constants';
 
 // The initial state of the App
@@ -141,16 +143,30 @@ function intentReducer(state = initialState, action) {
         .setIn(['scenarioData', 'slots'], slots);
     case REMOVE_USER_SAYING:
       return state
-        .setIn(['intentData', 'examples'], state.getIn(['intentData', 'examples']).splice(action.index,1));
+        .setIn(['intentData', 'examples'], state.getIn(['intentData', 'examples']).splice(action.index, 1));
     case REMOVE_AGENT_RESPONSE:
       return state
-        .setIn(['scenarioData', 'intentResponses'], state.getIn(['scenarioData', 'intentResponses']).splice(action.index,1));
+        .setIn(['scenarioData', 'intentResponses'], state.getIn(['scenarioData', 'intentResponses']).splice(action.index, 1));
     case REMOVE_SLOT:
       return state
-        .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index,1));
+        .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index, 1));
     case SET_WINDOW_SELECTION:
       return state
         .set('windowSelection', action.selection);
+    case LOAD_INTENT:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_INTENT_SUCCESS:
+      // TODO: need to check the scenario data how to load it
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('intentData', fromJS(action.intent));
+    case LOAD_INTENT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
     default:
       return state;
   }

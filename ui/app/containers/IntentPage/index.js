@@ -338,7 +338,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               : null
           }
 
-          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
+          <ActionButton label={messages.createButton} onClick={this.props.onSubmitForm} />
 
         </Content>
       </div>

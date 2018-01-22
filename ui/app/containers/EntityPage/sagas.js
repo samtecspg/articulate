@@ -1,4 +1,7 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
+import {
+  LOCATION_CHANGE,
+  push
+} from 'react-router-redux';
 import {
   call,
   cancel,
@@ -10,9 +13,14 @@ import {
 import {
   entityCreated,
   entityCreationError,
-} from '../../containers/App/actions';
-import { CREATE_ENTITY, } from '../../containers/App/constants';
-import { makeSelectEntityData } from '../../containers/EntityPage/selectors';
+  updateEntityError,
+  updateEntitySuccess
+} from '../App/actions';
+import {
+  CREATE_ENTITY,
+  UPDATE_DOMAIN
+} from '../App/constants';
+import { makeSelectEntityData } from './selectors';
 
 export function* postEntity(payload) {
   const { api } = payload;
@@ -34,7 +42,31 @@ export function* createEntity() {
   yield cancel(watcher);
 }
 
+export function* putEntity(payload) {
+  const { api } = payload;
+  const entityData = yield select(makeSelectEntityData());
+  const { id, ...data } = entityData;
+  data.intentThreshold /= 100;
+
+  try {
+    const response = yield call(api.entity.putEntityId, { id, body: data });
+    const entity = response.obj;
+    yield put(updateEntitySuccess(entity));
+    yield put(push('/entities'));
+  } catch ({ response }) {
+    yield put(updateEntityError({ message: response.obj.message }));
+  }
+}
+
+export function* updateEntity() {
+  const watcher = yield takeLatest(UPDATE_DOMAIN, putEntity);
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 // Bootstrap sagas
 export default [
   createEntity,
+  updateEntity,
 ];

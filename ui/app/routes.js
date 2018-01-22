@@ -71,6 +71,28 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/agent/:id/edit',
+      name: 'agentEdit',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/AgentPage/reducer'),
+          import('containers/AgentPage/sagas'),
+          import('containers/AgentPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('agent', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '/agent/:id',
       name: 'agentDetail',
       getComponent(nextState, cb) {
@@ -94,6 +116,28 @@ export default function createRoutes(store) {
     {
       path: '/domains/create',
       name: 'domains',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/DomainPage/reducer'),
+          import('containers/DomainPage/sagas'),
+          import('containers/DomainPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('domain', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/domain/:id/edit',
+      name: 'domainEdit',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           import('containers/DomainPage/reducer'),
@@ -180,6 +224,28 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/intent/:id/edit',
+      name: 'intentEdit',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/IntentPage/reducer'),
+          import('containers/IntentPage/sagas'),
+          import('containers/IntentPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('intent', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '/entities',
       name: 'entities',
       getComponent(nextState, cb) {
@@ -204,6 +270,28 @@ export default function createRoutes(store) {
     {
       path: '/entities/create',
       name: 'entities',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/EntityPage/reducer'),
+          import('containers/EntityPage/sagas'),
+          import('containers/EntityPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('entity', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/entity/:id/edit',
+      name: 'entityEdit',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           import('containers/EntityPage/reducer'),

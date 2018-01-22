@@ -2,11 +2,14 @@ import {
   ADD_EXAMPLE,
   ADD_SYNONYM,
   CHANGE_ENTITY_DATA,
-  RESET_ENTITY_DATA,
+  CLOSE_COLOR_PICKER,
+  LOAD_ENTITY,
+  LOAD_ENTITY_ERROR,
+  LOAD_ENTITY_SUCCESS,
   REMOVE_EXAMPLE,
   REMOVE_SYNONYM,
-  SWITCH_COLOR_PICKER_DISPLAY,
-  CLOSE_COLOR_PICKER,
+  RESET_ENTITY_DATA,
+  SWITCH_COLOR_PICKER_DISPLAY
 } from './constants';
 
 export function changeEntityData(payload) {
@@ -19,7 +22,7 @@ export function changeEntityData(payload) {
 export function resetEntityData() {
   return {
     type: RESET_ENTITY_DATA,
-  }
+  };
 }
 
 export function removeExample(example) {
@@ -62,3 +65,24 @@ export function closeColorPicker() {
   };
 }
 
+export function loadEntityError(error) {
+  return {
+    type: LOAD_ENTITY_ERROR,
+    error,
+  };
+}
+
+export function loadEntitySuccess(entity) {
+  return {
+    type: LOAD_ENTITY_SUCCESS,
+    entity,
+  };
+}
+
+export function loadEntity(id) {
+  return {
+    type: LOAD_ENTITY,
+    apiCall: true,
+    id,
+  };
+}

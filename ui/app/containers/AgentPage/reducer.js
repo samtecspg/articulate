@@ -1,6 +1,11 @@
 import { fromJS } from 'immutable';
-
-import { CHANGE_AGENT_DATA, RESET_AGENT_DATA} from './constants';
+import {
+  CHANGE_AGENT_DATA,
+  LOAD_AGENT_ERROR,
+  LOAD_AGENT_SUCCESS,
+  RESET_AGENT_DATA,
+  LOAD_AGENT
+,} from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -26,6 +31,19 @@ function agentReducer(state = initialState, action) {
         .updateIn(['agentData'], x => x.set(action.payload.field, action.payload.value));
     case RESET_AGENT_DATA:
       return initialState;
+    case LOAD_AGENT:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_AGENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('agentData', fromJS(action.agent));
+    case LOAD_AGENT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
     default:
       return state;
   }

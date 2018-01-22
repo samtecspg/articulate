@@ -1,5 +1,8 @@
 import {
   CHANGE_AGENT_DATA,
+  LOAD_AGENT,
+  LOAD_AGENT_ERROR,
+  LOAD_AGENT_SUCCESS,
   RESET_AGENT_DATA,
 } from './constants';
 
@@ -15,3 +18,27 @@ export function resetAgentData() {
     type: RESET_AGENT_DATA,
   };
 }
+
+export function loadAgentError(error) {
+  return {
+    type: LOAD_AGENT_ERROR,
+    error,
+  };
+}
+
+export function loadAgentSuccess(agent) {
+  return {
+    type: LOAD_AGENT_SUCCESS,
+    agent,
+  };
+}
+
+export function loadAgent(id) {
+  return {
+    type: LOAD_AGENT,
+    apiCall: true,
+    id,
+  };
+}
+
+

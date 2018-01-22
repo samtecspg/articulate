@@ -6,9 +6,8 @@ import {
   Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
 import Alert from 'react-s-alert';
+import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -19,16 +18,20 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 
-import { createAgent, resetStatusFlags } from '../App/actions';
+import {
+  createAgent,
+  resetStatusFlags,
+  updateAgent,
+} from '../App/actions';
 import {
   makeSelectError,
-  makeSelectSuccess,
-  makeSelectLoading,
-  makeSelectScenario,
   makeSelectInWizard,
+  makeSelectLoading,
+  makeSelectSuccess,
 } from '../App/selectors';
 import {
   changeAgentData,
+  loadAgent,
   resetAgentData,
 } from './actions';
 
@@ -92,34 +95,69 @@ const returnFormattedOptions = (options) => options.map((option, index) => (
 ));
 
 export class AgentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor() {
+    super();
+    this.setEditMode = this.setEditMode.bind(this);
+    this.submitForm = this.submitForm.bind(this);
+  }
+
+  state = {
+    editMode: false,
+  };
 
   componentWillMount() {
-    this.props.resetForm();
     sampleData.unshift({ value: 'none', text: messages.sampleDataPlaceholder.defaultMessage, disabled: 'disabled' });
   }
 
-  componentDidUpdate() {
-    if (this.props.success){
+  componentDidMount() {
+    this.setEditMode(this.props.route.name === 'agentEdit');
+  }
+
+  componentDidUpdate(prevProps, prevState, prevContext) {
+    if (this.props.route !== prevProps.route) {
+      this.setEditMode(this.props.route.name === 'agentEdit');
+    }
+    if (this.props.success) {
       Alert.success(messages.successMessage.defaultMessage, {
-          position: 'bottom'
+        position: 'bottom'
       });
       this.props.onSuccess.bind(null, this.props.inWizard)();
     }
 
-    if (this.props.error){
+    if (this.props.error) {
       Alert.error(this.props.error.message, {
-          position: 'bottom'
+        position: 'bottom'
       });
     }
   }
 
+  setEditMode(isEditMode) {
+    if (isEditMode) {
+      this.setState({ editMode: true });
+      this.props.onEditMode(this.props.params.id);
+    } else {
+      this.setState({ editMode: false });
+      this.props.resetForm();
+    }
+  }
+
+  submitForm(evt) {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    if (this.state.editMode) {
+      this.props.onUpdate();
+    } else {
+      this.props.onCreate();
+    }
+  }
+
   render() {
-    const { loading, error, success, agent } = this.props;
+    const { loading, error, success, agent, match } = this.props;
     const agentProps = {
       loading,
       error,
       success,
       agent,
+      match
     };
     return (
       <div>
@@ -132,7 +170,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             { name: 'description', content: 'Create your NLU agent' },
           ]}
         />
-        <Header breadcrumbs={[{ label: '+ Creating agent' },]} />
+        <Header breadcrumbs={[{ label: `${this.state.editMode ? '+ Edit agent' : '+ Creating agent'}` },]} />
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>
@@ -142,6 +180,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 placeholder={messages.agentNamePlaceholder.defaultMessage}
                 inputId="agentName"
                 onChange={this.props.onChangeAgentData.bind(null, 'agentName')}
+                value={agent.agentName}
                 required
               />
               <FormTextInput
@@ -149,6 +188,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 placeholder={messages.descriptionPlaceholder.defaultMessage}
                 inputId="description"
                 onChange={this.props.onChangeAgentData.bind(null, 'description')}
+                value={agent.description}
               />
               <Input
                 s={12}
@@ -164,7 +204,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="language"
                 type="select"
                 label={messages.language.defaultMessage}
-                value={this.props.agent.language}
+                value={agent.language}
                 onChange={this.props.onChangeAgentData.bind(null, 'language')}
               >
                 {returnFormattedOptions(languages)}
@@ -174,7 +214,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 name="timezone"
                 type="select"
                 label={messages.timezone.defaultMessage}
-                value={this.props.agent.timezone}
+                value={agent.timezone}
                 onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
               >
                 {returnFormattedOptions(timezones)}
@@ -189,10 +229,11 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               min="0"
               max="100"
               onChange={this.props.onChangeAgentData.bind(null, 'domainClassifierThreshold')}
+              value={agent.domainClassifierThreshold.toString()}
             />
           </Row>
 
-          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm} />
+          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
         </Content>
       </div>
     );
@@ -209,10 +250,12 @@ AgentPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onSubmitForm: React.PropTypes.func,
+  onCreate: React.PropTypes.func,
+  onUpdate: React.PropTypes.func,
   onChangeAgentData: React.PropTypes.func,
   resetForm: React.PropTypes.func,
   onSuccess: React.PropTypes.func,
+  onEditMode: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -221,15 +264,20 @@ export function mapDispatchToProps(dispatch) {
       dispatch(resetStatusFlags());
       dispatch(changeAgentData({ value: evt.target.value, field }));
     },
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    onCreate: () => {
       dispatch(createAgent());
+    },
+    onUpdate: () => {
+      dispatch(updateAgent());
     },
     resetForm: () => {
       dispatch(resetAgentData());
     },
     onSuccess: (inWizard) => {
 
+    },
+    onEditMode: (agentId) => {
+      dispatch(loadAgent(agentId));
     },
   };
 }

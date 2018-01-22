@@ -179,7 +179,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
             }}
           >
           </div>
-          <ActionButton label={messages.actionButton} onClick={this.props.onSubmitForm.bind(null, this.props.inWizard)} />
+          <ActionButton label={messages.editButton} onClick={this.props.onSubmitForm.bind(null, this.props.inWizard)} />
         </Content>
       </div>
     );

@@ -15,21 +15,24 @@ import {
   intentCreated,
   intentCreationError,
   scenarioCreated,
-  scenarioCreationError
-} from '../../containers/App/actions';
+  scenarioCreationError,
+  updateIntentError,
+  updateIntentSuccess
+} from '../App/actions';
 import {
   CREATE_INTENT,
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_ENTITIES,
   LOAD_AGENTS,
-} from '../../containers/App/constants';
-import { getAgents } from '../../containers/App/sagas';
-import { getAgentDomains } from '../../containers/DomainListPage/sagas';
-import { getAgentEntities } from '../../containers/EntityListPage/sagas';
+  UPDATE_DOMAIN
+} from '../App/constants';
+import { getAgents } from '../App/sagas';
+import { getAgentDomains } from '../DomainListPage/sagas';
+import { getAgentEntities } from '../EntityListPage/sagas';
 import {
   makeSelectIntentData,
   makeSelectScenarioData,
-} from '../../containers/IntentPage/selectors';
+} from './selectors';
 
 function* postScenario(payload) {
   const { api, id, name } = payload;
@@ -105,10 +108,34 @@ export function* loadAgentEntities() {
   yield cancel(watcher);
 }
 
+export function* putIntent(payload) {
+  const { api } = payload;
+  const intentData = yield select(makeSelectIntentData());
+  const { id, ...data } = intentData;
+  data.intentThreshold /= 100;
+
+  try {
+    const response = yield call(api.intent.putIntentId, { id, body: data });
+    const intent = response.obj;
+    yield put(updateIntentSuccess(intent));
+    yield put(push('/intents'));
+  } catch ({ response }) {
+    yield put(updateIntentError({ message: response.obj.message }));
+  }
+}
+
+export function* updateIntent() {
+  const watcher = yield takeLatest(UPDATE_DOMAIN, putIntent);
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 // Bootstrap sagas
 export default [
   createIntent,
   loadAgents,
   loadAgentDomains,
   loadAgentEntities,
+  updateIntent,
 ];

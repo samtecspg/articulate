@@ -59,9 +59,13 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.import_agent',
     defaultMessage: 'Import agent from backup',
   },
-  actionButton: {
-    id: 'boilerplate.containers.AgentPage.create_agent.action_button',
+  createButton: {
+    id: 'boilerplate.containers.AgentPage.create_agent.create_button',
     defaultMessage: '+ Create',
+  },
+  editButton: {
+    id: 'boilerplate.containers.AgentPage.create_agent.edit_button',
+    defaultMessage: '+ Update',
   },
   successMessage: {
     id: 'boilerplate.containers.AgentPage.create_agent.success_message',

@@ -26,12 +26,16 @@ export default defineMessages({
     id: 'boilerplate.containers.DomainPage.create_domain.intent_threshold',
     defaultMessage: 'Intent Recognition Threshold',
   },
-  actionButton: {
-    id: 'boilerplate.containers.AgentPage.create_agent.action_button',
+  createButton: {
+    id: 'boilerplate.containers.DomainPage.create_domain.create_button',
     defaultMessage: '+ Create',
   },
+  editButton: {
+    id: 'boilerplate.containers.DomainPage.create_domain.edit_button',
+    defaultMessage: '+ Update',
+  },
   successMessage: {
-    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    id: 'boilerplate.containers.DomainPage.create_domain.success_message',
     defaultMessage: 'Domain created',
   },
 });

@@ -1,6 +1,11 @@
 import { fromJS } from 'immutable';
-
-import { CHANGE_DOMAIN_DATA, RESET_DOMAIN_DATA, } from './constants';
+import {
+  CHANGE_DOMAIN_DATA,
+  LOAD_DOMAIN,
+  LOAD_DOMAIN_ERROR,
+  LOAD_DOMAIN_SUCCESS,
+  RESET_DOMAIN_DATA
+} from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -19,6 +24,19 @@ function domainReducer(state = initialState, action) {
         .updateIn(['domainData'], x => x.set(action.payload.field, action.payload.value));
     case RESET_DOMAIN_DATA:
       return initialState;
+    case LOAD_DOMAIN:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_DOMAIN_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('domainData', fromJS(action.domain));
+    case LOAD_DOMAIN_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
     default:
       return state;
   }
