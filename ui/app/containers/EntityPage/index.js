@@ -2,60 +2,76 @@ import React from 'react';
 import Helmet from 'react-helmet';
 
 import {
-  Row,
   Col,
+  Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
 import Alert from 'react-s-alert';
+import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
+import ColorPicker from '../../components/ColorPicker';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
 import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import InputLabel from '../../components/InputLabel';
+import Preloader from '../../components/Preloader';
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
-import ColorPicker from '../../components/ColorPicker';
-import Preloader from '../../components/Preloader';
 
-import { createEntity, resetStatusFlags } from '../../containers/App/actions';
+import {
+  createEntity,
+  resetStatusFlags
+} from '../../containers/App/actions';
 import {
   makeSelectCurrentAgent,
   makeSelectEntity,
   makeSelectError,
-  makeSelectSuccess,
-  makeSelectLoading,
   makeSelectIntentMissing,
   makeSelectInWizard,
+  makeSelectLoading,
+  makeSelectSuccess,
 } from '../../containers/App/selectors';
-
+import { updateEntity } from '../App/actions';
 import {
   addExample,
   addSynonym,
   changeEntityData,
+  closeColorPicker,
+  loadEntity,
   removeExample,
   removeSynonym,
-  switchColorPickerDisplay,
-  closeColorPicker,
   resetEntityData,
+  switchColorPickerDisplay
 } from './actions';
 import Examples from './Components/Examples';
 
 import messages from './messages';
-import { makeSelectEntityData, makeDisplayColorPicker } from './selectors';
+import {
+  makeDisplayColorPicker,
+  makeSelectEntityData
+} from './selectors';
 
 export class EntityPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
     super();
     this.onChangeInput = this.onChangeInput.bind(this);
+    this.setEditMode = this.setEditMode.bind(this);
+    this.submitForm = this.submitForm.bind(this);
+  }
+
+  state = {
+    editMode: false,
+  };
+
+  componentDidMount() {
+    this.setEditMode(this.props.route.name === 'entityEdit');
   }
 
   componentWillMount() {
-    this.props.resetForm();
     const { currentAgent } = this.props;
     if (currentAgent) {
       this.props.onChangeEntityData('agent', currentAgent.agentName);
@@ -73,17 +89,20 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     this.props.onChangeEntityData(field, evt.target.value);
   }
 
-  componentDidUpdate() {
-    if (this.props.success){
+  componentDidUpdate(prevProps, prevState, prevContext) {
+    if (this.props.route !== prevProps.route) {
+      this.setEditMode(this.props.route.name === 'entityEdit');
+    }
+    if (this.props.success) {
       Alert.success(messages.successMessage.defaultMessage, {
-          position: 'bottom'
+        position: 'bottom'
       });
       this.props.onSuccess.bind(null, this.props.inWizard)();
     }
 
-    if (this.props.error){
+    if (this.props.error) {
       Alert.error(this.props.error.message, {
-          position: 'bottom'
+        position: 'bottom'
       });
     }
     this.scrollToBottom();
@@ -92,6 +111,29 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
   scrollToBottom = () => {
     this.lastExample.scrollIntoView(true);
   };
+
+  setEditMode(isEditMode) {
+    if (isEditMode) {
+      this.setState({ editMode: true });
+      this.props.onEditMode(this.props.params.id);
+    } else {
+      this.props.resetForm();
+      this.setState({ editMode: false });
+      const { currentAgent } = this.props;
+      if (currentAgent) {
+        this.props.onChangeDomainData({ value: currentAgent.agentName, field: 'agent' });
+      }
+    }
+  }
+
+  submitForm(evt) {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    if (this.state.editMode) {
+      this.props.onUpdate();
+    } else {
+      this.props.onCreate();
+    }
+  }
 
   render() {
     const { loading, error, success, entity, displayColorPicker, currentAgent } = this.props;
@@ -104,17 +146,17 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     };
 
     let breadcrumbs = [];
-    if (currentAgent){
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: '+ Creating entities'},];
+    if (currentAgent) {
+      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: '+ Creating entities' },];
     }
     else {
-      breadcrumbs = [{ label: '+ Creating entities'}, ];
+      breadcrumbs = [{ label: '+ Creating entities' },];
     }
 
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          { entityProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+          {entityProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
           title="Create Entity"
@@ -134,9 +176,13 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 onChange={(evt) => this.onChangeInput(evt, 'entityName')}
                 required
                 s={10}
+                value={entity.entityName}
+
               />
               <InputLabel s={2} text={messages.entityColor} />
-              <ColorPicker color={this.props.entityData.uiColor}
+              <ColorPicker
+                color={entity.uiColor}
+                color={entity.uiColor}
                 handleClose={this.props.handleClose}
                 handleClick={this.props.handleClick}
                 handleColorChange={this.props.handleColorChange}
@@ -164,7 +210,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 ]}
               />
               <Examples
-                examples={this.props.entityData.examples}
+                examples={entity.examples}
                 addExampleFunction={this.props.onAddExample}
                 removeExampleFunction={this.props.onRemoveExample}
                 removeSynonymFunction={this.props.onRemoveSynonym}
@@ -179,7 +225,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
             }}
           >
           </div>
-          <ActionButton label={messages.editButton} onClick={this.props.onSubmitForm.bind(null, this.props.inWizard)} />
+          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
         </Content>
       </div>
     );
@@ -197,17 +243,18 @@ EntityPage.propTypes = {
     React.PropTypes.bool,
   ]),
   onChangeEntityData: React.PropTypes.func,
-  onSubmitForm: React.PropTypes.func,
+  onCreate: React.PropTypes.func,
+  onUpdate: React.PropTypes.func,
   onRemoveExample: React.PropTypes.func,
   onAddExample: React.PropTypes.func,
   onRemoveSynonym: React.PropTypes.func,
   onAddSynonym: React.PropTypes.func,
-  entityData: React.PropTypes.object,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   resetForm: React.PropTypes.func,
+  onEditMode: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -238,9 +285,11 @@ export function mapDispatchToProps(dispatch) {
         evt.target.value = null;
       }
     },
-    onSubmitForm: (inWizard, evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    onCreate: (inWizard) => {
       dispatch(createEntity());
+    },
+    onUpdate: () => {
+      dispatch(updateEntity());
     },
     handleClick: () => {
       dispatch(dispatch(resetStatusFlags()));
@@ -257,21 +306,24 @@ export function mapDispatchToProps(dispatch) {
     resetForm: () => {
       dispatch(resetEntityData());
     },
-    onSuccess: (inWizard) =>{
+    onSuccess: (inWizard) => {
       dispatch(resetStatusFlags());
-      if (inWizard){
+      if (inWizard) {
         dispatch(push('/wizard/intent'));
       }
       else {
         dispatch(push('/entities'));
       }
-    }
+    },
+    onEditMode: (entityId) => {
+      console.log(`onEditMode::${JSON.stringify(entityId)}`); // TODO: REMOVE!!!!
+      dispatch(loadEntity(entityId));
+    },
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  entity: makeSelectEntity(),
-  entityData: makeSelectEntityData(),
+  entity: makeSelectEntityData(),
   displayColorPicker: makeDisplayColorPicker(),
   loading: makeSelectLoading(),
   error: makeSelectError(),

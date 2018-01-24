@@ -51,10 +51,6 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
     editMode: false,
   };
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'domainEdit');
   }

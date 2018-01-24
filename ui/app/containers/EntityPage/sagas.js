@@ -18,8 +18,13 @@ import {
 } from '../App/actions';
 import {
   CREATE_ENTITY,
-  UPDATE_DOMAIN
+  UPDATE_ENTITY
 } from '../App/constants';
+import {
+  loadEntityError,
+  loadEntitySuccess
+} from './actions';
+import { LOAD_ENTITY } from './constants';
 import { makeSelectEntityData } from './selectors';
 
 export function* postEntity(payload) {
@@ -45,8 +50,8 @@ export function* createEntity() {
 export function* putEntity(payload) {
   const { api } = payload;
   const entityData = yield select(makeSelectEntityData());
-  const { id, ...data } = entityData;
-  data.intentThreshold /= 100;
+  const { id, agent,...data } = entityData;
+  console.log(`putEntity::${JSON.stringify(entityData)}`); // TODO: REMOVE!!!!
 
   try {
     const response = yield call(api.entity.putEntityId, { id, body: data });
@@ -59,7 +64,26 @@ export function* putEntity(payload) {
 }
 
 export function* updateEntity() {
-  const watcher = yield takeLatest(UPDATE_DOMAIN, putEntity);
+  const watcher = yield takeLatest(UPDATE_ENTITY, putEntity);
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* getEntity(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.entity.getEntityId, { id });
+    const entity = response.obj;
+    yield put(loadEntitySuccess(entity));
+  } catch ({ response }) {
+    yield put(loadEntityError({ message: response.obj.message }));
+  }
+}
+
+export function* loadEntity() {
+  const watcher = yield takeLatest(LOAD_ENTITY, getEntity);
+
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
@@ -69,4 +93,5 @@ export function* updateEntity() {
 export default [
   createEntity,
   updateEntity,
+  loadEntity,
 ];
