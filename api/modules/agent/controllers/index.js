@@ -3,6 +3,7 @@ const AddController = require('./add.agent.controller');
 const DeleteByIdController = require('./deleteById.agent.controller');
 const FindAllController = require('./findAll.agent.controller');
 const FindByIdController = require('./findById.agent.controller');
+const FindByNameController = require('./findByName.agent.controller');
 const FindDomainsByAgentIdController = require('./findDomainsByAgentId.agent.controller');
 const FindDomainByIdByAgentIdController = require('./findDomainByIdByAgentId.agent.controller');
 const FindEntitiesByAgentIdController = require('./findEntitiesByAgentId.agent.controller');
@@ -25,6 +26,8 @@ const AgentController = {
     findAll: FindAllController,
 
     findById: FindByIdController,
+
+    findByName: FindByNameController,
 
     findEntitiesByAgentId: FindEntitiesByAgentIdController,
 

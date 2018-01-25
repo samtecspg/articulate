@@ -30,6 +30,15 @@ class AgentValidate {
             })()
         };
 
+        this.findByName = {
+            params: (() => {
+
+                return {
+                    agentName: AgentSchema.agentName.required().description('The name of the agent')
+                };
+            })()
+        };
+
         this.findEntitiesByAgentId = {
             params: (() => {
 

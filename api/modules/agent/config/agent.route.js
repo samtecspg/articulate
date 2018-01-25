@@ -25,6 +25,16 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
+        path: '/agent/name/{agentName}',
+        config: {
+            description: 'Find a model instance by name from the data source',
+            tags: ['api'],
+            validate: AgentValidator.findByName,
+            handler: AgentController.findByName
+        }
+    },
+    {
+        method: 'GET',
         path: '/agent/{id}/entity',
         config: {
             description: 'Find list of entities linked with a model instance specified by id',
