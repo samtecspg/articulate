@@ -53,7 +53,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
   sendVoiceMessage(message) {
     const agentId = this.props.currentAgent ? this.props.currentAgent.id : null;
     this.setState({ start: false });
-    this.props.onSendMessage(agentId, message);
+    this.props.onSendMessage(agentId, message.finalTranscript);
   }
 
   sendTextMessage(evt) {
