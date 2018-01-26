@@ -64,7 +64,6 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
 
   onChangeInput(evt, field) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-    console.log(`onChangeInput::${JSON.stringify(evt.target.value)}`); // TODO: REMOVE!!!!
     this.props.onChangeDomainData({ value: evt.target.value, field });
   }
 
@@ -118,28 +117,30 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
       domain,
     };
 
-    let breadcrumbs = [];
+    let breadcrumbs = [
+      { label: 'Agent' },
+    ];
     if (currentAgent) {
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: '+ Creating domains' },];
+      breadcrumbs.push({ link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` });
     }
-    else {
-      breadcrumbs = [{ label: '+ Creating domains' },];
-    }
-
+    breadcrumbs.push({ link: `/domains`, label: 'Domains' });
+    breadcrumbs.push({ label: `${this.state.editMode ? '+ Edit' : '+ Create'}` });
+    const contentHeaderTitle = this.state.editMode ? messages.editDomainTitle : messages.createDomainTitle;
+    const contentHeaderSubTitle = this.state.editMode ? messages.editDomainDescription : messages.createDomainDescription;
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
           {domainProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
-          title="Create Domain"
+          title={`${this.state.editMode ? 'Edit Domain' : 'Create Domain'}`}
           meta={[
-            { name: 'description', content: 'Create a domain for your agent' },
+            { name: 'description', content: 'Create/Edit a domain for your agent' },
           ]}
         />
         <Header breadcrumbs={breadcrumbs} />
         <Content>
-          <ContentHeader title={messages.createDomainTitle} subTitle={messages.createDomainDescription} />
+          <ContentHeader title={contentHeaderTitle} subTitle={contentHeaderSubTitle} />
           <Form>
             <Row>
               <FormTextInput

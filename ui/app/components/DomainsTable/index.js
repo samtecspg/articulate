@@ -11,10 +11,14 @@ import columns from './columnDefinition';
 class DomainsTable extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     const { data, onCellChange, menu } = this.props;
+    const formattedData = data.map((domain) => {
+      domain.intentThreshold = domain.intentThreshold * 100;
+      return domain;
+    });
     return (
       <Table2
         columns={columns}
-        data={data}
+        data={formattedData}
         onCellChange={onCellChange}
         menu={menu}
         tableName={'Domains'}

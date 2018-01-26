@@ -160,7 +160,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
     let breadcrumbs = [];
     if (currentAgent){
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}`}, { label: '+ Creating intents'},];
+      breadcrumbs = [
+        { label: 'Agent' },
+        { link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` },
+        { link: `/intents`, label: 'Intents' },
+        { label: '+ Create' }
+      ];
     }
     else {
       breadcrumbs = [{ label: '+ Creating intents'}, ];

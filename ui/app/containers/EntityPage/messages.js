@@ -9,6 +9,14 @@ export default defineMessages({
     id: 'boilerplate.containers.EntityPage.create_entity.description',
     defaultMessage: 'Entities are elements in the text that your agent is going to recognized according to the training you give it.',
   },
+  editEntityTitle: {
+    id: 'boilerplate.containers.EntityPage.edit_entity.title',
+    defaultMessage: 'Edit Entity',
+  },
+  editEntityDescription: {
+    id: 'boilerplate.containers.EntityPage.edit_entity.description',
+    defaultMessage: 'Entities are elements in the text that your agent is going to recognized according to the training you give it.',
+  },
   agent: {
     id: 'boilerplate.containers.EntityPage.create_entity.agent',
     defaultMessage: 'Agent',

@@ -11,7 +11,7 @@ export default defineMessages({
   },
   entityListDescription: {
     id: 'boilerplate.containers.EntityListPage.list.description',
-    defaultMessage: 'Lorem ipsu',
+    defaultMessage: ' ',
   },
   actionButton: {
     id: 'boilerplate.containers.EntityListPage.list.action',

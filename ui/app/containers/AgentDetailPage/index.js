@@ -89,7 +89,10 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
       return (<div>&nbsp;</div>);
     }
     else {
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` },];
+      breadcrumbs = [
+        {  label: 'Agent' },
+        {  label: `${currentAgent.agentName}` },
+      ];
     }
 
     return (
@@ -163,16 +166,27 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             />
           </Row>
 
-          <Row>
-            <Button
-              floating
-              large
-              waves={'light'}
-              onClick={this.onDeletePrompt}
-              className={'right red lighten-1 white-text text-darken-4 pull-right'}
-            >
-              <FormattedMessage {...messages.deleteButton} />
-            </Button>
+          <Row className={'right'}>
+            <Col>
+              <Button
+                floating
+                large
+                waves={'light'}
+                onClick={() => {
+                  this.props.onChangeUrl(`/agent/${this.props.currentAgent.id}/edit`);
+                }}
+                className={'lighten-1 white-text text-darken-4'}
+              ><FormattedMessage {...messages.editButton} /></Button>
+            </Col>
+            <Col>
+              <Button
+                floating
+                large
+                waves={'light'}
+                onClick={this.onDeletePrompt}
+                className={'red lighten-1 white-text text-darken-4'}
+              ><FormattedMessage {...messages.deleteButton} /></Button>
+            </Col>
           </Row>
         </Content>
         <DeleteModal
@@ -197,6 +211,7 @@ AgentDetailPage.propTypes = {
   ]),
   onComponentWillMount: React.PropTypes.func,
   onDeleteAgent: React.PropTypes.func,
+  onChangeUrl: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {

@@ -172,16 +172,18 @@ injectGlobal`
     opacity: 0.5;
     font-weight: 300;
     font-size: 1em; }
-    header .breadcrumb:hover {
-      text-decoration: underline; }
+    
     header .breadcrumb:before {
       color: #c5cbd8;
       font-size: 16px; }
 
-  header .breadcrumb:last-child {
+  header a.breadcrumb, .breadcrumb:last-child {
     color: #4e4e4e;
     opacity: 1;
     font-weight: 400; }
+   
+  header a.breadcrumb:hover {
+    text-decoration: underline;}
 
   .right-panel {
     top: 70px;

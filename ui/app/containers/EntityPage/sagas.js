@@ -51,7 +51,6 @@ export function* putEntity(payload) {
   const { api } = payload;
   const entityData = yield select(makeSelectEntityData());
   const { id, agent,...data } = entityData;
-  console.log(`putEntity::${JSON.stringify(entityData)}`); // TODO: REMOVE!!!!
 
   try {
     const response = yield call(api.entity.putEntityId, { id, body: data });

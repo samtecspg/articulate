@@ -87,6 +87,9 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
     return [{
       label: 'Delete',
       action: (entity) => this.onDeletePrompt(entity),
+    }, {
+      label: 'Edit',
+      action: (entity) => this.props.onChangeUrl(`/entity/${entity.id}/edit/`),
     }];
   }
 
@@ -98,12 +101,13 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
       agentEntities,
     };
 
-    let breadcrumbs = [];
+    let breadcrumbs = [
+      { label: 'Agent' },
+    ];
     if (currentAgent) {
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: 'Entities' }];
-    } else {
-      breadcrumbs = [{ label: 'Entities' }];
+      breadcrumbs.push({ link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` });
     }
+    breadcrumbs.push({ label: 'Entities' });
 
     return (
       <div>

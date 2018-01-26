@@ -10,6 +10,15 @@ export default defineMessages({
     defaultMessage: 'A domain is a unit the forms part of an agent. With a Domain you can represent a set of expressions that ' +
     'belongs to an specific context in your agent. Good examples of domains are: Sales, Order Tracking, Customer Service.',
   },
+  editDomainTitle: {
+    id: 'boilerplate.containers.DomainPage.edit_domain.title',
+    defaultMessage: 'Edit Domain',
+  },
+  editDomainDescription: {
+    id: 'boilerplate.containers.DomainPage.edit_domain.description',
+    defaultMessage: 'A domain is a unit the forms part of an agent. With a Domain you can represent a set of expressions that ' +
+    'belongs to an specific context in your agent. Good examples of domains are: Sales, Order Tracking, Customer Service.',
+  },
   agent: {
     id: 'boilerplate.containers.DomainPage.create_domain.agent',
     defaultMessage: 'Agent',

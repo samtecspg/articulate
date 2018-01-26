@@ -66,7 +66,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   onSelectDomain(evt) {
-    if(this.props.agentDomains && (this.props.agentDomains.length > 0)){
+    if (this.props.agentDomains && (this.props.agentDomains.length > 0)) {
       const domain = this.props.agentDomains.find((agentDomain) => agentDomain.id === evt.target.value);
       this.setState({ selectedDomain: domain });
       this.props.onChangeDomain(domain);
@@ -120,12 +120,13 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
       agentDomains,
     };
 
-    let breadcrumbs = [];
+    let breadcrumbs = [
+      { label: 'Agent' },
+    ];
     if (currentAgent) {
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: 'Intents' }];
-    } else {
-      breadcrumbs = [{ label: 'Intents' }];
+      breadcrumbs.push({ link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` });
     }
+    breadcrumbs.push({ label: 'Intents' });
 
     let domainsSelect = [];
     if (agentDomains !== false) {

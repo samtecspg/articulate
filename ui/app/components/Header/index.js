@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, } from 'react-router';
 
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
@@ -6,16 +7,16 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
     const { breadcrumbs } = this.props;
 
     return (
-      <header style={{position: 'fixed'}} className="valign-wrapper">
+      <header style={{ position: 'fixed' }} className="valign-wrapper">
         <div className="nav-wrapper">
           <div className="col s12 ">
             {
-              breadcrumbs.map( (breadcrumb, index) => {
-                if (breadcrumb.link){
-                  return <a key={`breadcrumb-${index}`} href={breadcrumb.link} className="breadcrumb">{breadcrumb.label}</a>
+              breadcrumbs.map((breadcrumb, index) => {
+                if (breadcrumb.link) {
+                  return <Link key={`breadcrumb-${index}`} to={breadcrumb.link} className="breadcrumb"><span>{breadcrumb.label}</span></Link>;
                 }
                 else {
-                  return <a key={`breadcrumb-${index}`} href='#' className="breadcrumb">{breadcrumb.label}</a>
+                  return <span key={`breadcrumb-${index}`} className="breadcrumb">{breadcrumb.label}</span>;
                 }
               })
             }

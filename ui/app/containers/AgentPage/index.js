@@ -159,6 +159,14 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       agent,
       match
     };
+
+    const breadcrumbs = [{ label: 'Agent' },];
+    if(this.state.editMode){
+      breadcrumbs.push({ label: '+ Edit' })
+    }else{
+      breadcrumbs.push({ label: '+ Create' })
+
+    }
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
@@ -170,7 +178,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             { name: 'description', content: 'Create your NLU agent' },
           ]}
         />
-        <Header breadcrumbs={[{ label: `${this.state.editMode ? '+ Edit agent' : '+ Creating agent'}` },]} />
+        <Header breadcrumbs={breadcrumbs} />
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>

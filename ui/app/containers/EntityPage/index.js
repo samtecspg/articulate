@@ -28,7 +28,6 @@ import {
 } from '../../containers/App/actions';
 import {
   makeSelectCurrentAgent,
-  makeSelectEntity,
   makeSelectError,
   makeSelectIntentMissing,
   makeSelectInWizard,
@@ -121,7 +120,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
       this.setState({ editMode: false });
       const { currentAgent } = this.props;
       if (currentAgent) {
-        this.props.onChangeDomainData({ value: currentAgent.agentName, field: 'agent' });
+        this.props.onChangeEntityData({ value: currentAgent.agentName, field: 'agent' });
       }
     }
   }
@@ -145,13 +144,16 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
       displayColorPicker,
     };
 
-    let breadcrumbs = [];
+    let breadcrumbs = [
+      { label: 'Agent' },
+    ];
     if (currentAgent) {
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: '+ Creating entities' },];
+      breadcrumbs.push({ link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` });
     }
-    else {
-      breadcrumbs = [{ label: '+ Creating entities' },];
-    }
+    breadcrumbs.push({ link: `/entities`, label: 'Entities' });
+    breadcrumbs.push({ label: `${this.state.editMode ? '+ Edit' : '+ Create'}` });
+    const contentHeaderTitle = this.state.editMode ? messages.editEntityTitle : messages.createEntityTitle;
+    const contentHeaderSubTitle = this.state.editMode ? messages.editEntityDescription : messages.createEntityDescription;
 
     return (
       <div>
@@ -166,7 +168,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
         />
         <Header breadcrumbs={breadcrumbs} />
         <Content>
-          <ContentHeader title={messages.createEntityTitle} subTitle={messages.createEntityDescription} />
+          <ContentHeader title={contentHeaderTitle} subTitle={contentHeaderSubTitle} />
           <Form>
             <Row>
               <FormTextInput
@@ -316,7 +318,6 @@ export function mapDispatchToProps(dispatch) {
       }
     },
     onEditMode: (entityId) => {
-      console.log(`onEditMode::${JSON.stringify(entityId)}`); // TODO: REMOVE!!!!
       dispatch(loadEntity(entityId));
     },
   };

@@ -1,8 +1,8 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import {
-  Row,
   Col,
+  Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -88,6 +88,9 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
     return [{
       label: 'Delete',
       action: (domain) => this.onDeletePrompt(domain),
+    }, {
+      label: 'Edit',
+      action: (domain) => this.props.onChangeUrl(`/domain/${domain.id}/edit/`),
     }];
   }
 
@@ -99,12 +102,13 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
       agentDomains,
     };
 
-    let breadcrumbs = [];
+    let breadcrumbs = [
+      { label: 'Agent' },
+    ];
     if (currentAgent) {
-      breadcrumbs = [{ link: `/agent/${currentAgent.id}`, label: `Agent: ${currentAgent.agentName}` }, { label: 'Domains' }];
-    } else {
-      breadcrumbs = [{ label: 'Domains' }];
+      breadcrumbs.push({ link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` });
     }
+    breadcrumbs.push({ label: 'Domains' });
 
     return (
       <div>
