@@ -1,15 +1,14 @@
 import _ from 'lodash';
-/* eslint-disable consistent-return */
 import React from 'react';
 import Helmet from 'react-helmet';
 import {
+  Col,
   Input,
   Row,
-  Col,
 } from 'react-materialize';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import Alert from 'react-s-alert';
+import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
@@ -17,10 +16,10 @@ import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import InputLabel from '../../components/InputLabel';
+import Preloader from '../../components/Preloader';
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
-import Preloader from '../../components/Preloader';
 import Toggle from '../../components/Toggle';
 
 import {
@@ -28,30 +27,30 @@ import {
   loadAgentDomains,
   loadAgentEntities,
   resetStatusFlags,
-} from '../../containers/App/actions';
+  updateIntent,
+} from '../App/actions';
 import {
   makeSelectAgentDomains,
   makeSelectAgentEntities,
   makeSelectCurrentAgent,
   makeSelectError,
-  makeSelectSuccess,
-  makeSelectIntent,
   makeSelectLoading,
   makeSelectScenario,
-} from '../../containers/App/selectors';
-
+  makeSelectSuccess,
+} from '../App/selectors';
 import {
   addTextPrompt,
   changeIntentData,
   changeSlotName,
   deleteTextPrompt,
-  tagEntity,
-  toggleFlag,
-  resetIntentData,
-  removeUserSaying,
+  loadIntent,
   removeAgentResponse,
   removeSlot,
+  removeUserSaying,
+  resetIntentData,
   setWindowSelection,
+  tagEntity,
+  toggleFlag
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -77,14 +76,16 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   constructor() {
     super();
     this.onChangeInput = this.onChangeInput.bind(this);
+    this.setEditMode = this.setEditMode.bind(this);
+    this.submitForm = this.submitForm.bind(this);
   }
 
-  componentWillMount() {
-    this.props.resetForm();
-    const { currentAgent } = this.props;
-    if (currentAgent) {
-      this.props.onChangeIntentData('agent', `${currentAgent.id}~${currentAgent.agentName}`); // TODO: Remove this format and pass the entire object
-    }
+  state = {
+    editMode: false,
+  };
+
+  componentDidMount() {
+    this.setEditMode(this.props.route.name === 'intentEdit');
   }
 
   componentWillUpdate(nextProps) {
@@ -103,7 +104,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
     if (field === 'examples' || field === 'responses') {
       if (evt.charCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
-        if (field === 'responses'){
+        if (field === 'responses') {
           this.lastAgentResponse.scrollIntoView(true);
         }
         this.props.onChangeIntentData(field, value);
@@ -115,7 +116,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           dropDownButton.dispatchEvent(new Event('click'));
         }
         else {
-          if (dropDownButton.getAttribute('class').split(' ').indexOf('active') > -1){
+          if (dropDownButton.getAttribute('class').split(' ').indexOf('active') > -1) {
             dropDownButton.dispatchEvent(new Event('click'));
           }
         }
@@ -125,23 +126,49 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.success){
+  componentDidUpdate(prevProps, prevState, prevContext) {
+    if (this.props.route !== prevProps.route) {
+      this.setEditMode(this.props.route.name === 'intentEdit');
+    }
+    if (this.props.success) {
       Alert.success(messages.successMessage.defaultMessage, {
-          position: 'bottom'
+        position: 'bottom'
       });
       this.props.onSuccess();
     }
 
-    if (this.props.error){
+    if (this.props.error) {
       Alert.error(this.props.error.message, {
-          position: 'bottom'
+        position: 'bottom'
       });
     }
   }
 
+  setEditMode(isEditMode) {
+    if (isEditMode) {
+      this.setState({ editMode: true });
+      this.props.onEditMode(this.props.params.id);
+    } else {
+      this.props.resetForm();
+      this.setState({ editMode: false });
+      const { currentAgent } = this.props;
+      if (currentAgent) {
+        this.props.onChangeIntentData('agent', `${currentAgent.id}~${currentAgent.agentName}`); // TODO: Remove this format and pass the entire object
+      }
+    }
+  }
+
+  submitForm(evt) {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    if (this.state.editMode) {
+      this.props.onUpdate();
+    } else {
+      this.props.onCreate();
+    }
+  }
+
   render() {
-    const { loading, error, success, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
+    const { loading, error, success, intent, agentDomains, agentEntities, currentAgent } = this.props;
     const intentProps = {
       loading,
       error,
@@ -159,7 +186,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
 
     let breadcrumbs = [];
-    if (currentAgent){
+    if (currentAgent) {
       breadcrumbs = [
         { label: 'Agent' },
         { link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` },
@@ -168,14 +195,14 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       ];
     }
     else {
-      breadcrumbs = [{ label: '+ Creating intents'}, ];
+      breadcrumbs = [{ label: '+ Creating intents' },];
     }
 
     return (
 
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          { intentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null }
+          {intentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
           title="Create Intent"
@@ -200,7 +227,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 s={12}
                 type="select"
                 label={messages.domain.defaultMessage}
-                defaultValue={this.props.intentData.domain ? this.props.intentData.domain : 'default'}
+                defaultValue={intent.domain ? intent.domain : 'default'}
                 onChange={(evt) => this.onChangeInput(evt, 'domain')}
               >
                 {returnFormattedOptions(domainsSelect)}
@@ -208,7 +235,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <FormTextInput
                 label={messages.intentName}
                 placeholder={messages.intentNamePlaceholder.defaultMessage}
-                value={this.props.intentData.intentName}
+                value={intent.intentName}
                 onChange={(evt) => this.onChangeInput(evt, 'intentName')}
                 required
               />
@@ -225,11 +252,11 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             </Row>
           </Form>
 
-          {this.props.intentData.examples.length > 0 ?
+          {intent.examples.length > 0 ?
             <TableContainer id="userSayingsTable" quotes>
               <Table>
                 <UserSayings
-                  examples={this.props.intentData.examples}
+                  examples={intent.examples}
                   onRemoveExample={this.props.onRemoveExample}
                   setWindowSelection={this.props.setWindowSelection}
                   onTagEntity={this.props.onTagEntity}
@@ -343,7 +370,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               : null
           }
 
-          <ActionButton label={messages.createButton} onClick={this.props.onSubmitForm} />
+          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
 
         </Content>
       </div>
@@ -366,7 +393,8 @@ IntentPage.propTypes = {
     React.PropTypes.bool,
   ]),
   onChangeIntentData: React.PropTypes.func,
-  onSubmitForm: React.PropTypes.func,
+  onCreate: React.PropTypes.func,
+  onUpdate: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
   onAutoCompleteEntityFunction: React.PropTypes.func,
   onCheckboxChange: React.PropTypes.func,
@@ -375,7 +403,6 @@ IntentPage.propTypes = {
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
   onAddSlot: React.PropTypes.func,
-  intentData: React.PropTypes.object,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
@@ -391,6 +418,7 @@ IntentPage.propTypes = {
   onSuccess: React.PropTypes.func,
   resetForm: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
+  onEditMode: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -418,7 +446,7 @@ export function mapDispatchToProps(dispatch) {
     onTagEntity: (userSays, entity, entityName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(tagEntity({ userSays, entity, entityName}));
+      dispatch(tagEntity({ userSays, entity, entityName }));
     },
     onCheckboxChange: (slotName, field, evt) => {
       dispatch(dispatch(resetStatusFlags()));
@@ -442,13 +470,15 @@ export function mapDispatchToProps(dispatch) {
     onAutoCompleteEntityFunction: (entityName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      var currentResponse = document.getElementById('responses').value;
-      var positionOfEntity = currentResponse.lastIndexOf('{');
+      let currentResponse = document.getElementById('responses').value;
+      let positionOfEntity = currentResponse.lastIndexOf('{');
       document.getElementById('responses').value = currentResponse.substring(0, positionOfEntity) + `{${entityName}}`;
     },
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    onCreate: () => {
       dispatch(createIntent());
+    },
+    onUpdate: () => {
+      dispatch(updateIntent());
     },
     onSuccess: () => {
       dispatch(resetStatusFlags());
@@ -458,14 +488,16 @@ export function mapDispatchToProps(dispatch) {
     },
     setWindowSelection: (selection) => {
       dispatch(setWindowSelection(selection));
-    }
+    },
+    onEditMode: (intentId) => {
+      dispatch(loadIntent(intentId));
+    },
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  intent: makeSelectIntent(),
+  intent: makeSelectIntentData(),
   scenario: makeSelectScenario(),
-  intentData: makeSelectIntentData(),
   scenarioData: makeSelectScenarioData(),
   windowSelection: makeSelectWindowSelection(),
   loading: makeSelectLoading(),

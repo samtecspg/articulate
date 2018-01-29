@@ -24,11 +24,16 @@ import {
   LOAD_AGENT_DOMAINS,
   LOAD_AGENT_ENTITIES,
   LOAD_AGENTS,
-  UPDATE_DOMAIN
+  UPDATE_INTENT
 } from '../App/constants';
 import { getAgents } from '../App/sagas';
 import { getAgentDomains } from '../DomainListPage/sagas';
 import { getAgentEntities } from '../EntityListPage/sagas';
+import {
+  loadIntentError,
+  loadIntentSuccess
+} from './actions';
+import { LOAD_INTENT } from './constants';
 import {
   makeSelectIntentData,
   makeSelectScenarioData,
@@ -112,7 +117,12 @@ export function* putIntent(payload) {
   const { api } = payload;
   const intentData = yield select(makeSelectIntentData());
   const { id, ...data } = intentData;
-  data.intentThreshold /= 100;
+  data.examples = _.map(intentData.examples, (example) => {
+    example.entities.forEach(entity => {
+      example.userSays = example.userSays.replace(entity.value, `{${entity.entity}}`);
+    });
+    return example.userSays;
+  });
 
   try {
     const response = yield call(api.intent.putIntentId, { id, body: data });
@@ -125,7 +135,30 @@ export function* putIntent(payload) {
 }
 
 export function* updateIntent() {
-  const watcher = yield takeLatest(UPDATE_DOMAIN, putIntent);
+  const watcher = yield takeLatest(UPDATE_INTENT, putIntent);
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* getIntent(payload) {
+  const { api, id } = payload;
+  try {
+    const responseIntent = yield call(api.intent.getIntentId, { id });
+    const intent = responseIntent.obj;
+    const responseAgent = yield call(api.agent.getAgentNameAgentname, { agentName: intent.agent });
+    const agent = responseAgent.obj;
+    yield call(getAgentDomains, { api, agentId: agent.id });
+    yield call(getAgentEntities, { api, agentId: agent.id });
+    yield put(loadIntentSuccess(intent));
+  } catch ({ response }) {
+    yield put(loadIntentError({ message: response.obj.message }));
+  }
+}
+
+export function* loadIntent() {
+  const watcher = yield takeLatest(LOAD_INTENT, getIntent);
+
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
@@ -138,4 +171,5 @@ export default [
   loadAgentDomains,
   loadAgentEntities,
   updateIntent,
+  loadIntent,
 ];
