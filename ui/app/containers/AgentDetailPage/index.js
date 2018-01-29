@@ -131,11 +131,11 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
                 defaultValue={currentAgent.description}
                 disabled
               />
-              <FormTextInput
+              {/*<FormTextInput
                 label={messages.sampleData}
                 defaultValue={currentAgent.sampleData}
                 disabled
-              />
+              />*/}
               <FormTextInput
                 label={messages.language}
                 defaultValue={currentAgent.language}

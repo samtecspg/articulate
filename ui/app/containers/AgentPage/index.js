@@ -198,7 +198,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'description')}
                 value={agent.description}
               />
-              <Input
+              {/*<Input
                 s={12}
                 name="sampleData"
                 type="select"
@@ -206,7 +206,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'sampleData')}
               >
                 {returnFormattedOptions(sampleData)}
-              </Input>
+              </Input>*/}
               <Input
                 s={6}
                 name="language"
