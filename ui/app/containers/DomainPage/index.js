@@ -164,7 +164,6 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
 
             />
           </Row>
-          {domain.intentThreshold.toString()}
           <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
 
         </Content>
