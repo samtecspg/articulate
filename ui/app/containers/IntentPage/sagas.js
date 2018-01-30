@@ -61,15 +61,6 @@ export function* postIntent(payload) {
   const { api } = payload;
   const intentData = yield select(makeSelectIntentData());
 
-  const examples = _.map(intentData.examples, (example) => {
-    example.entities.forEach(entity => {
-      example.userSays = example.userSays.replace(entity.value, `{${entity.entity}}`);
-    });
-    return example.userSays;
-  });
-
-  intentData.examples = examples;
-
   try {
     const response = yield call(api.intent.postIntent, { body: intentData });
     const intent = response.obj;
