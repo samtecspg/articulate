@@ -122,10 +122,28 @@ const createIntent = (callback) => {
         domain: 'Test Domain',
         intentName: 'Test Intent',
         examples: [
-            'Locate my {Test Entity}',
-            'Where is my {Test Entity}',
-            'I\'m loking for my {Test Entity}',
-            'Search the {Test Entity}'
+            {
+                userSays: 'Locate my car',
+                entities: [
+                    {
+                        start: 10,
+                        end: 12,
+                        value: 'car',
+                        entity: 'Test Entity'
+                    }
+                ]
+            },
+            {
+                userSays: 'Where is my car',
+                entities: [
+                    {
+                        start: 12,
+                        end: 14,
+                        value: 'car',
+                        entity: 'Test Entity'
+                    }
+                ]
+            }
         ]
     };
     const options = {

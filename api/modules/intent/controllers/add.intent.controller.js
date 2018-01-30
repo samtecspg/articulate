@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
@@ -110,6 +111,18 @@ module.exports = (request, reply) => {
         intent: (cb) => {
 
             intent = Object.assign({ id: intentId }, intent);
+            intent.examples = _.map(intent.examples, (example) => {
+
+                if (example.entities.length > 0){
+
+                    const entities = _.sortBy(example.entities, (entity) => {
+
+                        return entity.start;
+                    });
+                    example.entities = entities;
+                }
+                return example;
+            });
             const flatIntent = Flat(intent);
             redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 

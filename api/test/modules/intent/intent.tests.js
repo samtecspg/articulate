@@ -175,10 +175,28 @@ suite('/intent', () => {
                 domain: domainName,
                 intentName: 'Test Intent',
                 examples: [
-                    'Locate my {Test Entity}',
-                    'Where is my {Test Entity}',
-                    'I\'m loking for my {Test Entity}',
-                    'Search the {Test Entity}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    }
                 ]
             };
 
@@ -222,10 +240,28 @@ suite('/intent', () => {
                 domain: domainName,
                 intentName: 'Test Intent',
                 examples: [
-                    'Locate my {Test Entity}',
-                    'Where is my {Test Entity}',
-                    'I\'m loking for my {Test Entity}',
-                    'Search the {Test Entity}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    }
                 ]
             };
 
@@ -250,10 +286,28 @@ suite('/intent', () => {
                 domain: '-1',
                 intentName: 'Test Intent',
                 examples: [
-                    'Locate my {Test Entity}',
-                    'Where is my {Test Entity}',
-                    'I\'m loking for my {Test Entity}',
-                    'Search the {Test Entity}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    }
                 ]
             };
 
@@ -278,8 +332,28 @@ suite('/intent', () => {
                 domain: domainName,
                 intentName: 'Test Intent',
                 examples: [
-                    'Locate my {-1}',
-                    'Where is my {-1}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: '-1'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: '-1'
+                            }
+                        ]
+                    }
                 ]
             };
 
@@ -312,10 +386,28 @@ suite('/intent/{id}', () => {
                 domain: domainName,
                 intentName: 'Test Intent',
                 examples: [
-                    'Locate my {Test Entity}',
-                    'Where is my {Test Entity}',
-                    'I\'m loking for my {Test Entity}',
-                    'Search the {Test Entity}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    }
                 ]
             };
 
@@ -351,18 +443,56 @@ suite('/intent/{id}', () => {
                 domain: domainName,
                 intentName: 'Test Intent Updated',
                 examples: [
-                    'Locate my {Test Entity}',
-                    'Where is my {Test Entity}',
-                    'I\'m loking for my {Test Entity}',
-                    'Search the {Test Entity}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    }
                 ]
             };
 
             const updatedData = {
                 intentName: 'Test Intent Updated',
                 examples: [
-                    'Locate my {Test Entity}',
-                    'Where is my {Test Entity}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    }
                 ]
             };
 
@@ -386,10 +516,28 @@ suite('/intent/{id}', () => {
             const data = {
                 intentName: 'Test Intent',
                 examples: [
-                    'Locate my {Test Entity}',
-                    'Where is my {Test Entity}',
-                    'I\'m loking for my {Test Entity}',
-                    'Search the {Test Entity}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: 'Test Entity'
+                            }
+                        ]
+                    }
                 ]
             };
 
@@ -432,8 +580,28 @@ suite('/intent/{id}', () => {
             const updatedData = {
                 intentName: 'Test Intent Updated',
                 examples: [
-                    'Locate my {-1}',
-                    'Where is my {-1}'
+                    {
+                        userSays: 'Locate my car',
+                        entities: [
+                            {
+                                start: 10,
+                                end: 12,
+                                value: 'car',
+                                entity: '-1'
+                            }
+                        ]
+                    },
+                    {
+                        userSays: 'Where is my car',
+                        entities: [
+                            {
+                                start: 12,
+                                end: 14,
+                                value: 'car',
+                                entity: '-1'
+                            }
+                        ]
+                    }
                 ]
             };
 

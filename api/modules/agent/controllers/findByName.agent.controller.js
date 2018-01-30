@@ -14,7 +14,6 @@ module.exports = (request, reply) => {
             return reply(error);
         }
         if (agentId){
-            console.log('HERE');
             redis.hgetall('agent:' + agentId, (err, data) => {
 
                 if (err){

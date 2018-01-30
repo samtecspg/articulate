@@ -5,16 +5,7 @@ const Boom = require('boom');
 
 const extractEntities = (examples) => {
 
-    const entities = _.uniq(_.compact(_.flatten(_.map(examples, (example) => {
-
-        const usedEntitiesByExample = [];
-        const entityPattern = /\{(.+?)\}/g;
-        let match;
-        while ((match = entityPattern.exec(example)) !== null){
-            usedEntitiesByExample.push(match[1]);
-        }
-        return usedEntitiesByExample;
-    }))));
+    const entities = _.uniq(_.flatten(_.map(_.flatten(_.map(examples, 'entities')), 'entity')));
     return entities;
 };
 

@@ -7,6 +7,8 @@ module.exports = {
     Entity: require('./entity.model'),
     Example: require('./example.entity.model'),
     Intent: require('./intent.model'),
+    IntentExample: require('./example.intent.model'),
+    IntentEntity: require('./entity.intent.model'),
     Scenario: require('./scenario.model'),
     Slot: require('./slot.scenario.model')
 };

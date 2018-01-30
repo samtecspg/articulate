@@ -4,6 +4,8 @@ const Joi = require('joi');
 const IntentSchema = require('../../../models/index').Intent.schema;
 const ScenarioSchema = require('../../../models/index').Scenario.schema;
 const SlotSchema = require('../../../models/index').Slot.schema;
+const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
+const IntentExampleSchema = require('../../../models/index').IntentExample.schema;
 
 class IntentValidate {
     constructor() {
@@ -15,7 +17,15 @@ class IntentValidate {
                     agent: IntentSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the intent.')),
                     domain: IntentSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the intent')),
                     intentName: IntentSchema.intentName.required().error(new Error('The intent name is required')),
-                    examples: IntentSchema.examples.required().min(2).error(new Error('Please enter at least 2 user sayings.'))
+                    examples: Joi.array().items({
+                        userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
+                        entities: Joi.array().items({
+                            start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
+                            end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
+                            value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),
+                            entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.'))
+                        })
+                    }).required().min(2).error(new Error('Please specify at least two examples for your intent definition.'))
                 };
             })()
         };
@@ -40,7 +50,15 @@ class IntentValidate {
 
                 return {
                     intentName: IntentSchema.intentName,
-                    examples: IntentSchema.examples.min(2).error(new Error('Please enter at least 2 user sayings.'))
+                    examples: Joi.array().items({
+                        userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
+                        entities: Joi.array().items({
+                            start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
+                            end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
+                            value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),
+                            entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.'))
+                        })
+                    }).min(2).error(new Error('Please specify at least two examples for your intent definition.'))
                 };
             })()
         };

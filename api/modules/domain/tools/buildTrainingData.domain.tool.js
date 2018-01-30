@@ -21,9 +21,9 @@ const buildTrainingData = (server, domainId, callback) => {
 
             const buildIntentsPerExamples = _.map(intent.examples, (intentExample) => {
 
-                const entitiesList = [];
+                const entitiesList = intentExample.entities;
 
-                const entityPattern = /\{(.+?)\}/g;
+                /*const entityPattern = /\{(.+?)\}/g;
                 let match;
                 while ((match = entityPattern.exec(intentExample)) !== null){
                     entitiesList.push({
@@ -32,7 +32,7 @@ const buildTrainingData = (server, domainId, callback) => {
                         value: match[0],
                         entity: match[1]
                     });
-                }
+                }*/
 
                 if (entitiesList.length > 0){
                     const entitiesOfIntent = _.map(entitiesList, 'entity');
@@ -44,8 +44,8 @@ const buildTrainingData = (server, domainId, callback) => {
 
                     const buildedIntents = _.map(combinationsForThisIntent, (combination) => {
 
-                        let intentText = intentExample;
-                        const lowestStart = entitiesList[0].start;
+                        let intentText = intentExample.userSays;
+                        const lowestStart = parseInt(entitiesList[0].start);
                         const newEntitiesList = [];
                         let shift = 0;
                         const combinationValues = Array.isArray(combination) ? combination : [combination];
@@ -54,7 +54,7 @@ const buildTrainingData = (server, domainId, callback) => {
 
                             const textValue = combinationValues[i].entityText;
                             const entityValue = combinationValues[i].entityValue;
-                            const newStart = lowestStart === entity.start ? entity.start : entity.start + shift;
+                            const newStart = parseInt(lowestStart === parseInt(entity.start) ? parseInt(entity.start) : parseInt(entity.start) + shift);
                             const newEnd = newStart + textValue.length;
                             const replacementStart = i === 0 ? entity.start : newStart;
                             const replacementFinish = i === 0 ? entity.end : entity.end + shift;

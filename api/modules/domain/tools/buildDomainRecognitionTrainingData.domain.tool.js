@@ -32,18 +32,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
 
                 const buildIntentsPerExamples = _.map(intent.examples, (intentExample) => {
 
-                    const entitiesList = [];
-
-                    const entityPattern = /\{(.+?)\}/g;
-                    let match;
-                    while ((match = entityPattern.exec(intentExample)) !== null){
-                        entitiesList.push({
-                            start: match.index,
-                            end: match.index + match[0].length,
-                            value: match[0],
-                            entity: match[1]
-                        });
-                    }
+                    const entitiesList = intentExample.entities;
 
                     if (entitiesList.length > 0){
                         const entitiesOfIntent = _.map(entitiesList, 'entity');

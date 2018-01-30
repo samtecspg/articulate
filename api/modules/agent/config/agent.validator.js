@@ -4,6 +4,8 @@ const EntitySchema = require('../../../models/index').Entity.schema;
 const ExampleSchema = require('../../../models/index').Example.schema;
 const DomainSchema = require('../../../models/index').Domain.schema;
 const IntentSchema = require('../../../models/index').Intent.schema;
+const IntentExampleSchema = require('../../../models/index').IntentExample.schema;
+const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
 const ScenarioSchema = require('../../../models/index').Scenario.schema;
 const SlotSchema = require('../../../models/index').Slot.schema;
 const Joi = require('joi');
@@ -286,7 +288,15 @@ class AgentValidate {
                         model: DomainSchema.model,
                         intents: Joi.array().items({
                             intentName: IntentSchema.intentName.required(),
-                            examples: IntentSchema.examples.required(),
+                            examples: Joi.array().items({
+                                userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
+                                entities: Joi.array().items({
+                                    start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
+                                    end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
+                                    value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),
+                                    entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.'))
+                                })
+                            }).required().min(2).error(new Error('Please specify at least two examples for your intent definition.')),
                             scenario: {
                                 scenarioName: ScenarioSchema.scenarioName.required(),
                                 slots: Joi.array().items({
