@@ -120,7 +120,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
       this.setState({ editMode: false });
       const { currentAgent } = this.props;
       if (currentAgent) {
-        this.props.onChangeEntityData({ value: currentAgent.agentName, field: 'agent' });
+        this.props.onChangeEntityData('agent', currentAgent.agentName);
       }
     }
   }
