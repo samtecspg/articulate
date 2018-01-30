@@ -18,12 +18,13 @@ services:
     # same for both the var thats projected into the app (the first name)
     # and the name thats expected in the .env (the second name)
     environment:
+      - DOCKER_CONTAINER=${DOCKER_CONTAINER:-YES}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - RASA_URL=${RASA_URL:-http://rasa:5000}
       - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
-      - MODEL_DIR=${MODEL_DIR:-./api/nlu-model}
-    volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects"]
+      - MODEL_DIR=${MODEL_DIR:-./helpers-stuff/rasa/nlu-model}
+    volumes: ["${MODEL_DIR:-./helpers-stuff/rasa/nlu-model}:/app/projects", "${RASA_ER_PIPELINE:-./helpers-stuff/rasa/rasa-er-pipeline.json}:/usr/src/app/rasa-er-pipeline.json"]
     entrypoint: ['node', 'start.js']
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
@@ -39,7 +40,7 @@ services:
   rasa:
     image: rasa/rasa_nlu:0.10.4-spacy
     ports: ['0.0.0.0:5000:5000']
-    volumes: ["${MODEL_DIR:-./api/nlu-model}:/app/projects", "${RASA_CONFIG:-./api/rasa-config.json}:/app/config.json", ]
+    volumes: ["${MODEL_DIR:-./helpers-stuff/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./helpers-stuff/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']
   haskduck:
     image: samtecspg/duckling
@@ -51,6 +52,6 @@ services:
     networks: ['alpha-nlu-network']
     command: redis-server --appendonly yes
     volumes:
-      - ${REDIS_DATA:-./api/helpers-stuff/redis-data}:/data
+      - ${REDIS_DATA:-./helpers-stuff/redis-data}:/data
 
 networks: {alpha-nlu-network: {}}

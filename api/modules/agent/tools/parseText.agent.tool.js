@@ -4,11 +4,10 @@ const Async = require('async');
 const Boom = require('boom');
 const Wreck = require('wreck');
 const Querystring = require('querystring');
-const ERPipeline = require('../../../rasa-er-pipeline.json');
 
 const DucklingOutputToIntervals = require('./ducklingOutputToInterval.agent.tool');
 
-const getRasaParse = (textToParse, trainedDomain, agentName, rasa, callback) => {
+const getRasaParse = (textToParse, trainedDomain, agentName, rasa, ERPipeline, callback) => {
 
     const requestPayload = {
         q: textToParse,
@@ -116,7 +115,7 @@ const castSysEntities = (parseResult) => {
     return parseResult.rasa;
 };
 
-const parseText = (redis, rasa, ducklingService, textToParse, timezone, agentData, cb) => {
+const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezone, agentData, cb) => {
 
     Async.parallel({
         rasa: (callback) => {
@@ -124,7 +123,7 @@ const parseText = (redis, rasa, ducklingService, textToParse, timezone, agentDat
             Async.map(agentData.trainedDomains, (trainedDomain, callbk) => {
 
                 const start = process.hrtime();
-                getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasa, (err, result) => {
+                getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasa, ERPipeline, (err, result) => {
 
                     if (err){
                         return callbk(err, null);
@@ -180,10 +179,10 @@ const parseText = (redis, rasa, ducklingService, textToParse, timezone, agentDat
     });
 };
 
-module.exports = (redis, rasa, duckling, textToParse, timezone, agentData, cb) => {
+module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, agentData, cb) => {
 
     const start = process.hrtime();
-    parseText(redis, rasa, duckling, textToParse, timezone, agentData, (err, result) => {
+    parseText(redis, rasa, ERPipeline, duckling, textToParse, timezone, agentData, (err, result) => {
 
         if (err){
             return cb(err, null);

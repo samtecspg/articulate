@@ -2,7 +2,6 @@
 
 const Wreck = require('wreck');
 const Boom = require('boom');
-const ERPipeline = require('../../../rasa-er-pipeline.json');
 
 const trainSystemERModel = (server, rasa, agentName, callback) => {
 
@@ -14,7 +13,7 @@ const trainSystemERModel = (server, rasa, agentName, callback) => {
     const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
 
     const modelFolderName = agentName + '_ER';
-    const pipeline = ERPipeline.join(',');
+    const pipeline = server.app.rasa_er_pipeline.join(',');
     Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}&pipeline=${pipeline}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
         if (err) {
