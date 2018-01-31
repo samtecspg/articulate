@@ -81,7 +81,7 @@ const buildTrainingData = (server, domainId, callback) => {
                 }
 
                 const buildedIntent = {
-                    text: intentExample,
+                    text: intentExample.userSays,
                     intent: intent.intentName,
                     entities: []
                 };

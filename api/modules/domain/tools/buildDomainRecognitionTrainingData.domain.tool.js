@@ -44,7 +44,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
 
                         const buildedIntents = _.map(combinationsForThisIntent, (combination) => {
 
-                            let intentText = intentExample;
+                            let intentText = intentExample.userSays;
                             const lowestStart = entitiesList[0].start;
                             const newEntitiesList = [];
                             let shift = 0;
@@ -54,10 +54,10 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
 
                                 const textValue = combinationValues[i].entityText;
                                 const entityValue = combinationValues[i].entityValue;
-                                const newStart = lowestStart === entity.start ? entity.start : entity.start + shift;
+                                const newStart = lowestStart === parseInt(entity.start) ? parseInt(entity.start) : parseInt(entity.start) + shift;
                                 const newEnd = newStart + textValue.length;
-                                const replacementStart = i === 0 ? entity.start : newStart;
-                                const replacementFinish = i === 0 ? entity.end : entity.end + shift;
+                                const replacementStart = i === 0 ? parseInt(entity.start) : newStart;
+                                const replacementFinish = i === 0 ? parseInt(entity.end) : entity.end + shift;
                                 intentText = intentText.substring(0, replacementStart) + textValue + intentText.substring(replacementFinish);
                                 newEntitiesList.push({
                                     start: newStart,
@@ -65,7 +65,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
                                     value: entityValue,
                                     entity: entity.entity
                                 });
-                                shift = newEnd - entity.end;
+                                shift = newEnd - parseInt(entity.end);
                             });
 
                             const buildedIntent = {
@@ -81,7 +81,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
                     }
 
                     const buildedIntent = {
-                        text: intentExample,
+                        text: intentExample.userSays,
                         intent: domain.domainName,
                         entities: []
                     };
