@@ -207,7 +207,6 @@ injectGlobal`
       margin-bottom: 20px; }
 
   .fixed-action-btn {
-    top: -8px;
     right: 330px; }
 
   .btn-floating {
