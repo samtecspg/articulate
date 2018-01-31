@@ -6,7 +6,7 @@ const IntentTools = require('../tools');
 const DomainTools = require('../../domain/tools');
 const _ = require('lodash');
 
-const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, cb) => {
+const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, cb) => {
 
     const oldExamples = _.cloneDeep(currentIntent.examples);
     if (updateData.examples){
@@ -45,8 +45,8 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                     (callback) => {
 
                         Async.waterfall([
-                            Async.apply(DomainTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
-                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
+                            Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
+                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
                         ], (err) => {
 
                             if (err){
@@ -75,6 +75,7 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
 module.exports = (request, reply) => {
 
     const intentId = request.params.id;
+    let agent = null;
     let agentId = null;
     let domainId = null;
     const updateData = request.payload;
@@ -113,6 +114,22 @@ module.exports = (request, reply) => {
                 }
                 const error = Boom.badRequest(`The agent ${currentIntent.agent} doesn't exist`);
                 return cb(error, null);
+            });
+        },
+        (currentIntent, cb) => {
+
+            server.inject(`/agent/${agentId}`, (res) => {
+
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 400){
+                        const errorNotFound = Boom.notFound(res.result.message);
+                        return cb(errorNotFound);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                    return cb(error, null);
+                }
+                agent = res.result;
+                return cb(null, currentIntent);
             });
         },
         (currentIntent, cb) => {
@@ -178,7 +195,7 @@ module.exports = (request, reply) => {
                     },
                     (callback) => {
 
-                        updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, (err, result) => {
+                        updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
 
                             if (err){
                                 const error = Boom.badImplementation('An error ocurred adding the intent data.');
@@ -196,7 +213,7 @@ module.exports = (request, reply) => {
                 });
             }
             else {
-                updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agentId, domainId, (err, result) => {
+                updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
 
                     if (err){
                         const error = Boom.badImplementation('An error ocurred adding the intent data.');

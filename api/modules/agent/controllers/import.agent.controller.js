@@ -306,8 +306,8 @@ module.exports = (request, reply) => {
                         domainResult.intents = resultIntents;
 
                         Async.waterfall([
-                            Async.apply(DomainTools.retrainModelTool, server, rasa, agentResult.agentName, domainResult.domainName, domainResult.id),
-                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agentResult.agentName, agentResult.id)
+                            Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, agentResult.agentName, domainResult.domainName, domainResult.id),
+                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, agentResult.agentName, agentResult.id)
                         ], (errTraining) => {
 
                             if (errTraining){

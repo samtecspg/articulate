@@ -8,6 +8,7 @@ module.exports = (request, reply) => {
 
     const intentId = request.params.id;
     let intent;
+    let agent;
     let agentId;
     let domainId;
     const server = request.server;
@@ -59,16 +60,32 @@ module.exports = (request, reply) => {
                 (callbackDeleteIntentFromTheDomain) => {
 
                     Async.waterfall([
-                        (callbackGetAgent) => {
+                        (callbackGetAgentId) => {
 
                             redis.zscore('agents', intent.agent, (err, score) => {
 
                                 if (err){
                                     const error = Boom.badImplementation( `An error ocurred retrieving the id of the agent ${intent.agent}`);
-                                    return callbackGetAgent(error);
+                                    return callbackGetAgentId(error);
                                 }
                                 agentId = score;
-                                return callbackGetAgent(null);
+                                return callbackGetAgentId(null);
+                            });
+                        },
+                        (callbackGetAgentData) => {
+
+                            server.inject(`/agent/${agentId}`, (res) => {
+
+                                if (res.statusCode !== 200){
+                                    if (res.statusCode === 400){
+                                        const errorNotFound = Boom.notFound(res.result.message);
+                                        return callbackGetAgentData(errorNotFound);
+                                    }
+                                    const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                                    return callbackGetAgentData(error, null);
+                                }
+                                agent = res.result;
+                                return callbackGetAgentData(null);
                             });
                         },
                         (callbackGetDomain) => {
@@ -120,8 +137,8 @@ module.exports = (request, reply) => {
             (callback) => {
 
                 Async.waterfall([
-                    Async.apply(DomainTools.retrainModelTool, server, rasa, intent.agent, intent.domain, domainId),
-                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, intent.agent, agentId)
+                    Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, intent.agent, intent.domain, domainId),
+                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, intent.agent, agentId)
                 ], (err) => {
 
                     if (err){

@@ -43,7 +43,7 @@ const getDucklingParse = (textToParse, timezone, language, ducklingService, call
 
     const ducklingPayload = {
         text: textToParse,
-        lang: (language ? language : 'en'),
+        lang: language,
         tz: timezone
     };
 
@@ -115,7 +115,7 @@ const castSysEntities = (parseResult) => {
     return parseResult.rasa;
 };
 
-const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezone, agentData, cb) => {
+const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezone, language, agentData, cb) => {
 
     Async.parallel({
         rasa: (callback) => {
@@ -145,7 +145,7 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
         duckling: (callback) => {
 
             const start = process.hrtime();
-            getDucklingParse(textToParse, timezone, 'en', ducklingService, (err, result) => {
+            getDucklingParse(textToParse, timezone, language, ducklingService, (err, result) => {
 
                 if (err){
                     return callback(err, null);
@@ -179,10 +179,10 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
     });
 };
 
-module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, agentData, cb) => {
+module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, cb) => {
 
     const start = process.hrtime();
-    parseText(redis, rasa, ERPipeline, duckling, textToParse, timezone, agentData, (err, result) => {
+    parseText(redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, (err, result) => {
 
         if (err){
             return cb(err, null);

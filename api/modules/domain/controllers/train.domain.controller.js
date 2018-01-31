@@ -5,6 +5,7 @@ const DomainTools = require('../tools');
 
 module.exports = (request, reply) => {
 
+    let agent = null;
     let agentId = null;
     let domain = null;
     const domainId = request.params.id;
@@ -43,7 +44,23 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            DomainTools.retrainModelTool(server, rasa, domain.agent, domain.domainName, domainId, (err) => {
+            server.inject(`/agent/${agentId}`, (res) => {
+
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 400){
+                        const errorNotFound = Boom.notFound(res.result.message);
+                        return callback(errorNotFound);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                    return callback(error, null);
+                }
+                agent = res.result;
+                return callback(null);
+            });
+        },
+        (callback) => {
+
+            DomainTools.retrainModelTool(server, rasa, agent.language, domain.agent, domain.domainName, domainId, (err) => {
 
                 if (err){
                     return callback(err);
@@ -53,7 +70,7 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            DomainTools.retrainDomainRecognizerTool(server, redis, rasa, domain.agent, agentId, (err) => {
+            DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, domain.agent, agentId, (err) => {
 
                 if (err){
                     return callback(err);

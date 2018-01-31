@@ -10,13 +10,16 @@ module.exports = (request, reply) => {
 
     let text;
     let timezone;
+    let language;
     if (request.payload){
         text = request.payload.text;
         timezone = request.payload.timezone;
+        language = request.payload.language;
     }
     else {
         text = request.query.text;
         timezone = request.query.timezone;
+        language = request.query.language;
     }
 
     const server = request.server;
@@ -57,7 +60,8 @@ module.exports = (request, reply) => {
         (agentData, callback) => {
 
             const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'America/Kentucky/Louisville');
-            AgentTools.parseText(redis, rasa, ERPipeline, duckling, text, timezoneToUse, agentData, (err, result) => {
+            const languageToUse = language ? language : (agentData.agent.language ? agentData.agent.language : 'en');
+            AgentTools.parseText(redis, rasa, ERPipeline, duckling, text, timezoneToUse, languageToUse, agentData, (err, result) => {
 
                 if (err){
                     return callback(err);

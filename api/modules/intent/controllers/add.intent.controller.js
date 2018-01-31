@@ -9,6 +9,7 @@ const DomainTools = require('../../domain/tools');
 module.exports = (request, reply) => {
 
     let intentId = null;
+    let agent = null;
     let agentId = null;
     let domainId = null;
     let intent = request.payload;
@@ -34,6 +35,22 @@ module.exports = (request, reply) => {
                         }
                         const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
                         return callback(error, null);
+                    });
+                },
+                (callback) => {
+
+                    server.inject(`/agent/${agentId}`, (res) => {
+
+                        if (res.statusCode !== 200){
+                            if (res.statusCode === 400){
+                                const errorNotFound = Boom.notFound(res.result.message);
+                                return callback(errorNotFound);
+                            }
+                            const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                            return callback(error, null);
+                        }
+                        agent = res.result;
+                        return callback(null);
                     });
                 },
                 (callback) => {
@@ -146,8 +163,8 @@ module.exports = (request, reply) => {
             (cb) => {
 
                 Async.waterfall([
-                    Async.apply(DomainTools.retrainModelTool, server, rasa, resultIntent.agent, resultIntent.domain, domainId),
-                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, resultIntent.agent, agentId)
+                    Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
+                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
                 ], (err) => {
 
                     if (err){
