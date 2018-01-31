@@ -20,7 +20,7 @@ const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agent
         const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
         const trainingDate = new Date().toISOString();
         const modelFolderName = agentName + '_domain_recognizer';
-        Wreck.post(`${rasa}/train?language=${language}&project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
+        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {
                 return cb(err);

@@ -19,7 +19,7 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
         model = (trainingSet.numberOfIntents > 1 ? '' : 'just_er_') + model;
         const modelFolderName = domainName + '_' + model;
         const pipeline = trainingSet.numberOfIntents > 1 ? null : server.app.rasa_er_pipeline.join(',');
-        Wreck.post(`${rasa}/train?language=${language}&project=${agentName}&fixed_model_name=${modelFolderName}${pipeline ? `&pipeline=${pipeline}` : ''}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
+        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}${pipeline ? `&pipeline=${pipeline}` : ''}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {
                 const error = Boom.badImplementation('An error ocurred calling the training process.');
