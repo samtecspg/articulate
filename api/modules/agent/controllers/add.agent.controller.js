@@ -60,7 +60,7 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        AgentTools.trainSystemERModel(server, rasa, result.agent.agentName, (errTraining) => {
+        AgentTools.trainSystemERModel(server, rasa, result.agent.language, result.agent.agentName, (errTraining) => {
 
             if (errTraining){
                 return reply(errTraining, null);
