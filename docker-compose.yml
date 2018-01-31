@@ -46,7 +46,7 @@ services:
     ports: ['0.0.0.0:8500:8000']
     networks: ['alpha-nlu-network']
   redis:
-    image: redis:latest
+    image: redis:4.0.6-alpine
     ports: ['0.0.0.0:6379:6379']
     networks: ['alpha-nlu-network']
     command: redis-server --appendonly yes
