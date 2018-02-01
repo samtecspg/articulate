@@ -79,7 +79,6 @@ after((done) => {
     }, (res) => {
 
         if (res.statusCode !== 200){
-            console.log(res.result);
             return done(res.result);
         }
         return done();
