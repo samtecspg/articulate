@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import {
+  ADD_SLOT,
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
   CHANGE_SLOT_NAME,
@@ -76,28 +77,19 @@ function intentReducer(state = initialState, action) {
         const end = start + selectedText.length;
         const value = action.payload.userSays.substring(start, end);
 
-        let newState = null;
-        slots = state.getIn(['scenarioData', 'slots']);
-        const existingSlot = slots.filter((slot) => slot.entity === action.payload.entity);
-        if (existingSlot.size === 0) {
-          slots = state.getIn(['scenarioData', 'slots']);
-          newState = state.updateIn(['scenarioData', 'slots'], (slots) => slots.push({
-            slotName: action.payload.entityName,
-            entity: action.payload.entity,
-            isRequired: false,
-            isList: false,
-            textPrompts: [],
-            useWebhook: false,
-          }));
-        } else {
-          newState = state;
-        }
+        let newState = state;
         examples = newState.getIn(['intentData', 'examples']);
-        examples = examples.map((example) => example.get('userSays') === action.payload.userSays ? example.update('entities', (synonyms) => synonyms.push({ value, entity: action.payload.entity, start, end })) : example);
+        examples = examples.map((example) => {
+          return example.get('userSays') === action.payload.userSays ? example.update('entities', (synonyms) => {
+            synonyms = synonyms === '' ? fromJS([]) : synonyms;// Redis saves an empty array as an empty string so we need to re-create the array
+            return synonyms.push({ value, entity: action.payload.entity, start, end });
+          }) : example;
+        });
         newState = newState.set('windowSelection', '');
         return newState
           .setIn(['intentData', 'examples'], examples);
       }
+      return state;
     case UNTAG_ENTITY:
       return state
         .updateIn(['intentData', 'examples'], (x) => x.push(fromJS({ value: action.example, synonyms: [action.example] })));
@@ -150,6 +142,13 @@ function intentReducer(state = initialState, action) {
     case REMOVE_SLOT:
       return state
         .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index, 1));
+    case ADD_SLOT:
+      slots = state.getIn(['scenarioData', 'slots']);
+      const existingSlot = slots.filter((slot) => slot.entity === action.slot.entity);
+      if (existingSlot.size === 0) {
+        return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(action.slot));
+      }
+      return state;
     case SET_WINDOW_SELECTION:
       return state
         .set('windowSelection', action.selection);

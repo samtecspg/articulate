@@ -2,7 +2,6 @@ import React from 'react';
 import UserSayingsRows from './UserSayingsRows';
 
 export function UserSayings(props) {
-
   return <UserSayingsRows
     examples={props.examples}
     onRemoveExample={props.onRemoveExample}

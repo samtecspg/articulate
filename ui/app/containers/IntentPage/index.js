@@ -39,6 +39,7 @@ import {
   makeSelectSuccess,
 } from '../App/selectors';
 import {
+  addSlot,
   addTextPrompt,
   changeIntentData,
   changeSlotName,
@@ -50,7 +51,7 @@ import {
   resetIntentData,
   setWindowSelection,
   tagEntity,
-  toggleFlag
+  toggleFlag,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -70,18 +71,19 @@ const returnFormattedOptions = (options) => options.map((option, index) => (
   </option>
 ));
 
-const dirOfColors = {};
-
 export class IntentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
     super();
     this.onChangeInput = this.onChangeInput.bind(this);
     this.setEditMode = this.setEditMode.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.generateSlotObject = this.generateSlotObject.bind(this);
+    this.handleOnTagEntity = this.handleOnTagEntity.bind(this);
   }
 
   state = {
     editMode: false,
+    dirOfColors: undefined,
   };
 
   componentDidMount() {
@@ -92,6 +94,31 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     const { currentAgent } = nextProps;
     if (currentAgent !== this.props.currentAgent) {
       this.props.onChangeIntentData('agent', `${currentAgent.id}~${currentAgent.agentName}`); // TODO: Remove this format and pass the entire object
+    }
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.props.agentEntities !== nextProps.agentEntities) {
+      if (nextProps.agentEntities) {
+        const dirOfColors = {};
+        nextProps.agentEntities.forEach((entity) => (dirOfColors[entity.entityName] = entity.uiColor));
+        this.setState({ dirOfColors });
+      }
+    }
+
+    if (this.props.intent !== nextProps.intent) {
+      const { intent } = nextProps;
+      //re-create slots
+      //TODO: validate if slots where created first
+      intent.examples.forEach((synonyms) => {
+        if (synonyms === '') return;
+        if (synonyms.entities === '') return;
+        synonyms.entities.forEach((synonym) => {
+          this.props.onAddSlot(this.generateSlotObject(synonym));
+
+        });
+      });
+
     }
   }
 
@@ -167,8 +194,26 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
+  generateSlotObject(data) {
+    return {
+      slotName: data.entity,
+      entity: data.entity,
+      isRequired: false,
+      isList: false,
+      textPrompts: [],
+      useWebhook: false,
+    };
+  }
+
+  handleOnTagEntity(userSays, entity, entityName, evt) {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.props.onTagEntity(userSays, entity, entityName);
+    this.props.onAddSlot(this.generateSlotObject({ entity }));
+  }
+
   render() {
     const { loading, error, success, intent, agentDomains, agentEntities, currentAgent } = this.props;
+    if(_.isNil(agentDomains) && _.isNill(agentEntities)) return undefined;
     const intentProps = {
       loading,
       error,
@@ -252,16 +297,16 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             </Row>
           </Form>
 
-          {intent.examples.length > 0 ?
+          {agentEntities && (intent.examples.length > 0) ?
             <TableContainer id="userSayingsTable" quotes>
               <Table>
                 <UserSayings
                   examples={intent.examples}
                   onRemoveExample={this.props.onRemoveExample}
                   setWindowSelection={this.props.setWindowSelection}
-                  onTagEntity={this.props.onTagEntity}
+                  onTagEntity={this.handleOnTagEntity}
                   agentEntities={agentEntities}
-                  dirOfColors={dirOfColors}
+                  dirOfColors={this.state.dirOfColors}
                 />
               </Table>
             </TableContainer>
@@ -314,28 +359,29 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onSlotNameChange={this.props.onSlotNameChange}
                 onAddSlot={this.props.onAddSlot}
                 agentEntities={agentEntities}
-                dirOfColors={dirOfColors}
+                dirOfColors={this.state.dirOfColors}
               />
             </Table>
           </TableContainer>
 
-          <Form>
-            <Row>
-              <AvailableSlots
-                slots={this.props.scenarioData.slots}
-                agentEntities={agentEntities}
-                onClickFunction={this.props.onAutoCompleteEntityFunction}
-                dirOfColors={dirOfColors}
-              />
-              <FormTextInput
-                id='responses'
-                label={messages.agentResponsesTitle}
-                placeholder={messages.responsesInput.defaultMessage}
-                onKeyPress={(evt) => this.onChangeInput(evt, 'responses')}
-              />
-            </Row>
-          </Form>
-
+          {agentEntities ?
+            <Form>
+              <Row>
+                <AvailableSlots
+                  slots={this.props.scenarioData.slots}
+                  agentEntities={agentEntities}
+                  onClickFunction={this.props.onAutoCompleteEntityFunction}
+                  dirOfColors={this.state.dirOfColors}
+                />
+                <FormTextInput
+                  id='responses'
+                  label={messages.agentResponsesTitle}
+                  placeholder={messages.responsesInput.defaultMessage}
+                  onKeyPress={(evt) => this.onChangeInput(evt, 'responses')}
+                />
+              </Row>
+            </Form>
+            : null}
           {this.props.scenarioData.intentResponses.length > 0 ?
             <TableContainer id="intentResponsesTable" quotes>
               <Table>
@@ -440,12 +486,11 @@ export function mapDispatchToProps(dispatch) {
     onRemoveSlot: (slotIndex, evt) => {
       dispatch(removeSlot(slotIndex));
     },
-    onAddSlot: (evt) => {
-
+    onAddSlot: (slot) => {
+      dispatch(addSlot(slot));
     },
-    onTagEntity: (userSays, entity, entityName, evt) => {
+    onTagEntity: (userSays, entity, entityName) => {
       dispatch(dispatch(resetStatusFlags()));
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(tagEntity({ userSays, entity, entityName }));
     },
     onCheckboxChange: (slotName, field, evt) => {

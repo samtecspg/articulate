@@ -1,4 +1,5 @@
 import {
+  ADD_SLOT,
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
   CHANGE_SLOT_NAME,
@@ -89,6 +90,13 @@ export function removeSlot(index) {
   return {
     type: REMOVE_SLOT,
     index,
+  };
+}
+
+export function addSlot(slot) {
+  return {
+    type: ADD_SLOT,
+    slot,
   };
 }
 

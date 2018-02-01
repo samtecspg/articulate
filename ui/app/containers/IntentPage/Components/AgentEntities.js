@@ -16,10 +16,6 @@ export function AgentEntities(props) {
   let items = [<NavItem style={{ color: '#4e4e4e' }} key="newEntityDefault" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>];
   if (props.agentEntities && props.agentEntities.length > 0) {
     items = props.agentEntities.map((agentEntity, agentIndex) => {
-      let entityColor = props.dirOfColors[agentEntity.entityName];
-      if (!entityColor) {
-        props.dirOfColors[agentEntity.entityName] = agentEntity.uiColor;
-      }
       return (
         <NavItem
           onClick={props.userSays ?
