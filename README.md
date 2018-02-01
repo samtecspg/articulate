@@ -2,6 +2,8 @@
 
 ## A platform for building conversational interfaces with intelligent agents
 
+[![Join the chat at https://gitter.im/samtecspg/articulate](https://badges.gitter.im/samtecspg/articulate.svg)](https://gitter.im/samtecspg/articulate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Documentation coming soon!
 
 ## QUICK START
