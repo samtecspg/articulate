@@ -11,7 +11,7 @@ export function SlotsRows(props) {
       <tr style={{ width: '100%' }} key={slotIndex}>
         <td style={{ width: '15%', display: 'inline-block' }}>
           <TextInput
-            style={{ marginBottom: '0px', color: props.dirOfColors[slot.entity] }}
+            style={{ marginBottom: '0px', color: agentEntity.uiColor }}
             placeholder=""
             value={`${slot.slotName}`}
             inputId={`slotName_${slotIndex}`}
@@ -25,7 +25,6 @@ export function SlotsRows(props) {
           agentEntities={props.agentEntities}
           onClickFunction={() => {
           }}
-          dirOfColors={props.dirOfColors}
         />
         <td style={{ width: '10%', display: 'inline-block', paddingBottom: '0px' }}>
           <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isList')} name="isList" type="checkbox" value="isList" label=" " className="filled-in" checked={slot.isList ? true : false} />
@@ -61,7 +60,6 @@ SlotsRows.propTypes = {
     React.PropTypes.array,
     React.PropTypes.bool,
   ]),
-  dirOfColors: React.PropTypes.object,
 };
 
 export default SlotsRows;

@@ -65,3 +65,5 @@ export const UPDATE_INTENT_ERROR = 'boilerplate/App/UPDATE_INTENT_ERROR';
 export const UPDATE_ENTITY = 'boilerplate/App/UPDATE_ENTITY';
 export const UPDATE_ENTITY_SUCCESS = 'boilerplate/App/UPDATE_ENTITY_SUCCESS';
 export const UPDATE_ENTITY_ERROR = 'boilerplate/App/UPDATE_ENTITY_ERROR';
+export const UPDATE_SCENARIO_ERROR = 'boilerplate/App/UPDATE_SCENARIO_ERROR';
+export const UPDATE_SCENARIO_SUCCESS = 'boilerplate/App/UPDATE_SCENARIO_SUCCESS';

@@ -3,7 +3,8 @@ import SlotsRows from './SlotsRows';
 
 export function Slots(props) {
   return (
-    <SlotsRows
+    props.agentEntities ? 
+      <SlotsRows
       slots={props.slots}
       onCheckboxChange={props.onCheckboxChange}
       onAddTextPrompt={props.onAddTextPrompt}
@@ -11,8 +12,9 @@ export function Slots(props) {
       onRemoveSlot={props.onRemoveSlot}
       onSlotNameChange={props.onSlotNameChange}
       agentEntities={props.agentEntities}
-      dirOfColors={props.dirOfColors}
-    />);
+    />
+      : null
+  );
 }
 
 Slots.propTypes = {
@@ -26,7 +28,6 @@ Slots.propTypes = {
     React.PropTypes.array,
     React.PropTypes.bool,
   ]),
-  dirOfColors: React.PropTypes.object,
 };
 
 export default Slots;

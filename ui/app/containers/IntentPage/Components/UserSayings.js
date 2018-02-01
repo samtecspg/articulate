@@ -8,7 +8,6 @@ export function UserSayings(props) {
     onTagEntity={props.onTagEntity}
     setWindowSelection={props.setWindowSelection}
     agentEntities={props.agentEntities}
-    dirOfColors={props.dirOfColors}
   />;
 }
 
@@ -18,7 +17,6 @@ UserSayings.propTypes = {
   onTagEntity: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
   agentEntities: React.PropTypes.array,
-  dirOfColors: React.PropTypes.object,
 };
 
 export default UserSayings;

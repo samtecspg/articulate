@@ -8,6 +8,9 @@ import {
   LOAD_INTENT,
   LOAD_INTENT_ERROR,
   LOAD_INTENT_SUCCESS,
+  LOAD_SCENARIO,
+  LOAD_SCENARIO_ERROR,
+  LOAD_SCENARIO_SUCCESS,
   REMOVE_AGENT_RESPONSE,
   REMOVE_SLOT,
   REMOVE_USER_SAYING,
@@ -63,9 +66,9 @@ function intentReducer(state = initialState, action) {
         return tempState
           .updateIn(['intentData'], (x) => x.set(action.payload.field, action.payload.value));
       } else {
-        tempState = state.updateIn(['scenarioData'], (x) => x.set(action.payload.field, ((action.payload.field === 'agent' || action.payload.field === 'domain') ? action.payload.value.split('~')[1] : action.payload.value)));
+        tempState = state.updateIn(['scenarioData'], (x) => x.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)));
         return tempState
-          .updateIn(['intentData'], (x) => x.set(action.payload.field, ((action.payload.field === 'agent' || action.payload.field === 'domain') ? action.payload.value.split('~')[1] : action.payload.value)));
+          .updateIn(['intentData'], (x) => x.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)));
       }
     case RESET_INTENT_DATA:
       return initialState;
@@ -157,12 +160,32 @@ function intentReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false);
     case LOAD_INTENT_SUCCESS:
-      // TODO: need to check the scenario data how to load it
       return state
         .set('loading', false)
         .set('error', false)
         .set('intentData', fromJS(action.intent));
     case LOAD_INTENT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case LOAD_SCENARIO:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_SCENARIO_SUCCESS:
+    const transformedScenario = action.scenario;
+    transformedScenario.slots = action.scenario.slots.map((slot) => {
+      slot.isList = slot.isList === "true";
+      slot.isRequired = slot.isRequired === "true";
+      slot.useWebhook = slot.useWebhook === "true";
+      return slot;
+    });
+    transformedScenario.useWebhook = action.useWebhook === "true";
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('scenarioData', fromJS(transformedScenario));
+    case LOAD_SCENARIO_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);

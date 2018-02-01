@@ -10,9 +10,8 @@ export function AvailableSlots(props) {
   if (props.slots && props.slots.length > 0) {
     items = props.slots.map((slot, index) => {
       const agentEntity = props.agentEntities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
-      let entityColor = props.dirOfColors[slot.entity];
       return (
-        <NavItem onClick={props.onClickFunction.bind(null, slot.slotName)} key={index}><span style={{ color: entityColor }}>{`{${slot.slotName}}`}</span></NavItem>
+        <NavItem onClick={props.onClickFunction.bind(null, slot.slotName)} key={index}><span style={{ color: agentEntity.uiColor }}>{`{${slot.slotName}}`}</span></NavItem>
       );
     });
   }
@@ -30,7 +29,6 @@ AvailableSlots.propTypes = {
     React.PropTypes.bool,
   ]),
   onClickFunction: React.PropTypes.func,
-  dirOfColors: React.PropTypes.object,
 };
 
 export default AvailableSlots;

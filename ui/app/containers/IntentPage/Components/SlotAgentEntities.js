@@ -10,10 +10,7 @@ export function SlotAgentEntities(props) {
   let items = [<NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>];
   if (props.agentEntities && props.agentEntities.length > 0) {
     items = props.agentEntities.map((agentEntity, agentIndex) => {
-      let entityColor = props.dirOfColors[agentEntity.entityName];
-      if (!entityColor) {
-        props.dirOfColors[agentEntity.entityName] = agentEntity.uiColor;
-      }
+      let entityColor = agentEntity.uiColor;
       return (
         <NavItem
           href={'#'}
@@ -37,7 +34,7 @@ export function SlotAgentEntities(props) {
             id={`slotEntityDropdown_${props.index}`}
           >
             {props.slot.entity ?
-              <span style={{ color: props.dirOfColors[props.slot.entity] }}>@{props.agentEntity.entityName}</span> :
+              <span style={{ color: props.agentEntity.uiColor }}>@{props.agentEntity.entityName}</span> :
               <FormattedMessage {...messages.slotEntityPlaceholder} />}
           </span>}
         options={{
@@ -55,7 +52,6 @@ SlotAgentEntities.propTypes = {
   agentEntity: React.PropTypes.object,
   agentEntities: React.PropTypes.array,
   onClickFunction: React.PropTypes.func,
-  dirOfColors: React.PropTypes.object,
   index: React.PropTypes.number,
 };
 

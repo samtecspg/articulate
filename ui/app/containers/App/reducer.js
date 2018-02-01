@@ -62,7 +62,9 @@ import {
   UPDATE_ENTITY_SUCCESS,
   UPDATE_INTENT,
   UPDATE_INTENT_ERROR,
-  UPDATE_INTENT_SUCCESS
+  UPDATE_INTENT_SUCCESS,
+  UPDATE_SCENARIO_ERROR,
+  UPDATE_SCENARIO_SUCCESS
 } from './constants';
 
 // The initial state of the App
@@ -356,6 +358,16 @@ function appReducer(state = initialState, action) {
         .set('error', false)
         .set('success', true);
     case UPDATE_INTENT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('success', false)
+        .set('loading', false);
+    case UPDATE_SCENARIO_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('success', true);
+    case UPDATE_SCENARIO_ERROR:
       return state
         .set('error', action.error)
         .set('success', false)

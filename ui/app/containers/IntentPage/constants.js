@@ -14,3 +14,6 @@ export const SET_WINDOW_SELECTION = 'boilerplate/IntentPage/SET_WINDOW_SELECTION
 export const LOAD_INTENT = 'boilerplate/IntentPage/LOAD_INTENT';
 export const LOAD_INTENT_SUCCESS = 'boilerplate/IntentPage/LOAD_INTENT_SUCCESS';
 export const LOAD_INTENT_ERROR = 'boilerplate/IntentPage/LOAD_INTENT_ERROR';
+export const LOAD_SCENARIO = 'boilerplate/IntentPage/LOAD_SCENARIO';
+export const LOAD_SCENARIO_SUCCESS = 'boilerplate/IntentPage/LOAD_SCENARIO_SUCCESS';
+export const LOAD_SCENARIO_ERROR = 'boilerplate/IntentPage/LOAD_SCENARIO_ERROR';

@@ -7,6 +7,9 @@ import {
   LOAD_INTENT,
   LOAD_INTENT_ERROR,
   LOAD_INTENT_SUCCESS,
+  LOAD_SCENARIO,
+  LOAD_SCENARIO_ERROR,
+  LOAD_SCENARIO_SUCCESS,
   REMOVE_AGENT_RESPONSE,
   REMOVE_SLOT,
   REMOVE_USER_SAYING,
@@ -124,6 +127,28 @@ export function loadIntentSuccess(intent) {
 export function loadIntent(id) {
   return {
     type: LOAD_INTENT,
+    apiCall: true,
+    id,
+  };
+}
+
+export function loadScenarioError(error) {
+  return {
+    type: LOAD_SCENARIO_ERROR,
+    error,
+  };
+}
+
+export function loadScenarioSuccess(scenario) {
+  return {
+    type: LOAD_SCENARIO_SUCCESS,
+    scenario,
+  };
+}
+
+export function loadScenario(id) {
+  return {
+    type: LOAD_SCENARIO,
     apiCall: true,
     id,
   };

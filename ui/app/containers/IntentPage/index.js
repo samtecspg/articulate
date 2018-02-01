@@ -45,6 +45,7 @@ import {
   changeSlotName,
   deleteTextPrompt,
   loadIntent,
+  loadScenario,
   removeAgentResponse,
   removeSlot,
   removeUserSaying,
@@ -83,7 +84,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   state = {
     editMode: false,
-    dirOfColors: undefined,
   };
 
   componentDidMount() {
@@ -94,31 +94,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     const { currentAgent } = nextProps;
     if (currentAgent !== this.props.currentAgent) {
       this.props.onChangeIntentData('agent', `${currentAgent.id}~${currentAgent.agentName}`); // TODO: Remove this format and pass the entire object
-    }
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (this.props.agentEntities !== nextProps.agentEntities) {
-      if (nextProps.agentEntities) {
-        const dirOfColors = {};
-        nextProps.agentEntities.forEach((entity) => (dirOfColors[entity.entityName] = entity.uiColor));
-        this.setState({ dirOfColors });
-      }
-    }
-
-    if (this.props.intent !== nextProps.intent) {
-      const { intent } = nextProps;
-      //re-create slots
-      //TODO: validate if slots where created first
-      intent.examples.forEach((synonyms) => {
-        if (synonyms === '') return;
-        if (synonyms.entities === '') return;
-        synonyms.entities.forEach((synonym) => {
-          this.props.onAddSlot(this.generateSlotObject(synonym));
-
-        });
-      });
-
     }
   }
 
@@ -212,21 +187,24 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, success, intent, agentDomains, agentEntities, currentAgent } = this.props;
+    const { loading, error, success, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
     if(_.isNil(agentDomains) && _.isNill(agentEntities)) return undefined;
     const intentProps = {
       loading,
       error,
       success,
       intent,
+      scenario,
     };
 
     let domainsSelect = [];
     if (agentDomains !== false) {
-      domainsSelect = agentDomains.map((domain) => ({
-        value: `${domain.id}~${domain.domainName}`,
-        text: domain.domainName,
-      }));
+      domainsSelect = agentDomains.map((domain) => {
+        return {
+          value: domain.domainName,
+          text: domain.domainName,
+        }
+      });
       domainsSelect.unshift({ value: 'default', text: 'Please choose a domain to place your intent', disabled: 'disabled' });
     }
 
@@ -267,12 +245,11 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               />
             </Row>
             <Row>
-
               <Input
                 s={12}
                 type="select"
                 label={messages.domain.defaultMessage}
-                defaultValue={intent.domain ? intent.domain : 'default'}
+                value={intent.domain ? intent.domain : 'default'}
                 onChange={(evt) => this.onChangeInput(evt, 'domain')}
               >
                 {returnFormattedOptions(domainsSelect)}
@@ -306,7 +283,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   setWindowSelection={this.props.setWindowSelection}
                   onTagEntity={this.handleOnTagEntity}
                   agentEntities={agentEntities}
-                  dirOfColors={this.state.dirOfColors}
                 />
               </Table>
             </TableContainer>
@@ -359,7 +335,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onSlotNameChange={this.props.onSlotNameChange}
                 onAddSlot={this.props.onAddSlot}
                 agentEntities={agentEntities}
-                dirOfColors={this.state.dirOfColors}
               />
             </Table>
           </TableContainer>
@@ -371,7 +346,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   slots={this.props.scenarioData.slots}
                   agentEntities={agentEntities}
                   onClickFunction={this.props.onAutoCompleteEntityFunction}
-                  dirOfColors={this.state.dirOfColors}
                 />
                 <FormTextInput
                   id='responses'
@@ -536,6 +510,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onEditMode: (intentId) => {
       dispatch(loadIntent(intentId));
+      dispatch(loadScenario(intentId));
     },
   };
 }

@@ -64,7 +64,9 @@ import {
   UPDATE_ENTITY_SUCCESS,
   UPDATE_INTENT,
   UPDATE_INTENT_ERROR,
-  UPDATE_INTENT_SUCCESS
+  UPDATE_INTENT_SUCCESS,
+  UPDATE_SCENARIO_ERROR,
+  UPDATE_SCENARIO_SUCCESS,
 } from './constants';
 
 export function loadAgents() {
@@ -507,6 +509,20 @@ export function updateIntent() {
   return {
     type: UPDATE_INTENT,
     apiCall: true,
+  };
+}
+
+export function updateScenarioError(error) {
+  return {
+    type: UPDATE_SCENARIO_ERROR,
+    error,
+  };
+}
+
+export function updateScenarioSuccess(scenario) {
+  return {
+    type: UPDATE_SCENARIO_SUCCESS,
+    scenario,
   };
 }
 

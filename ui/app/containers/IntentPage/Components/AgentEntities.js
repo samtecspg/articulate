@@ -52,7 +52,6 @@ AgentEntities.propTypes = {
   agentEntities: React.PropTypes.array,
   userSays: React.PropTypes.string,
   onClickFunction: React.PropTypes.func,
-  dirOfColors: React.PropTypes.object,
   index: React.PropTypes.number,
   createEntity: React.PropTypes.bool,
 };
