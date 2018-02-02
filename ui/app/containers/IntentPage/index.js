@@ -327,7 +327,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 ]}
               />
               <Slots
-                slots={this.props.scenarioData.slots}
+                slots={Array.isArray(this.props.scenarioData.slots) ? this.props.scenarioData.slots : []}
                 onCheckboxChange={this.props.onCheckboxChange}
                 onAddTextPrompt={this.props.onAddTextPrompt}
                 onDeleteTextPrompt={this.props.onDeleteTextPrompt}
@@ -343,7 +343,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             <Form>
               <Row>
                 <AvailableSlots
-                  slots={this.props.scenarioData.slots}
+                  slots={Array.isArray(this.props.scenarioData.slots) ? this.props.scenarioData.slots : []}
                   agentEntities={agentEntities}
                   onClickFunction={this.props.onAutoCompleteEntityFunction}
                 />

@@ -147,7 +147,7 @@ function intentReducer(state = initialState, action) {
         .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index, 1));
     case ADD_SLOT:
       slots = state.getIn(['scenarioData', 'slots']);
-      const existingSlot = slots.filter((slot) => slot.entity === action.slot.entity);
+      const existingSlot = slots.filter((slot) => {return slot.get('entity') === action.slot.entity});
       if (existingSlot.size === 0) {
         return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(action.slot));
       }
@@ -174,12 +174,14 @@ function intentReducer(state = initialState, action) {
         .set('error', false);
     case LOAD_SCENARIO_SUCCESS:
     const transformedScenario = action.scenario;
-    transformedScenario.slots = action.scenario.slots.map((slot) => {
-      slot.isList = slot.isList === "true";
-      slot.isRequired = slot.isRequired === "true";
-      slot.useWebhook = slot.useWebhook === "true";
-      return slot;
-    });
+    if (Array.isArray(transformedScenario.slots)){
+      transformedScenario.slots = action.scenario.slots.map((slot) => {
+        slot.isList = slot.isList === "true";
+        slot.isRequired = slot.isRequired === "true";
+        slot.useWebhook = slot.useWebhook === "true";
+        return slot;
+      });
+    }
     transformedScenario.useWebhook = action.useWebhook === "true";
       return state
         .set('loading', false)

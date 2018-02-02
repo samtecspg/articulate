@@ -118,6 +118,12 @@ function* putScenario(payload) {
   if (!scenarioData.useWebhook) {
     delete scenarioData.webhookUrl;
   }
+  if (scenarioData.slots === ""){
+    scenarioData.slots = [];
+  }
+  if (scenarioData.intentResponses === ""){
+    scenarioData.intentResponses = [];
+  }
   try {
     const response = yield call(api.intent.putIntentIdScenario, { id, body: scenarioData });
     const scenario = response.obj;
@@ -134,7 +140,12 @@ export function* putIntent(payload) {
   const { id, ...data } = intentData;
   delete data.agent;
   delete data.domain;
-
+  data.examples = data.examples.map((example) => {
+    if (example.entities === ""){
+      example.entities = [];
+    }
+    return example;
+  });
   try {
     const response = yield call(api.intent.putIntentId, { id, body: data });
     const intent = response.obj;
