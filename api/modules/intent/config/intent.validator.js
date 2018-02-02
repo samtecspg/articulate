@@ -94,7 +94,7 @@ class IntentValidate {
                         textPrompts: SlotSchema.textPrompts,
                         useWebhook: SlotSchema.useWebhook.required().error(new Error('Please specify if the slot use a webhook or not.'))
                     }),
-                    intentResponses: ScenarioSchema.intentResponses.required().min(1).error(new Error('Please specify at least one response from the agent for this scenario.')),
+                    intentResponses: ScenarioSchema.intentResponses,
                     useWebhook: ScenarioSchema.useWebhook.required().error(new Error('Please specify if these scenario use a webhook for fullfilment.')),
                     webhookUrl: ScenarioSchema.webhookUrl
                 };

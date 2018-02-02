@@ -134,4 +134,12 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_agent.success_message',
     defaultMessage: 'Intent processed successfully',
   },
+  missingResponsesMessage: {
+    id: 'boilerplate.containers.IntentPage.create_agent.missing_response_message',
+    defaultMessage: 'Please add at least one agent response',
+  },
+  missingWebhookMessage: {
+    id: 'boilerplate.containers.IntentPage.create_agent.missing_webhook_message',
+    defaultMessage: 'Please add at the webhook url',
+  },
 });

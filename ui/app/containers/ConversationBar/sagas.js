@@ -18,7 +18,7 @@ export function* postMessage(payload) {
     const response = yield call(api.agent.getAgentIdConverse, {
       id: agent,
       text: message,
-      sessionId: 'ui',
+      sessionId: 'articulate',
     });
     yield put(converseRespond(response.obj));
   } catch ({ response }) {

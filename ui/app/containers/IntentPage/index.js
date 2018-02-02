@@ -162,10 +162,24 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-    if (this.state.editMode) {
-      this.props.onUpdate();
-    } else {
-      this.props.onCreate();
+    if (this.props.scenarioData.useWebhook && this.props.scenarioData.webhookUrl || (!this.props.scenarioData.useWebhook && this.props.scenarioData.intentResponses.length > 0)){
+      if (this.state.editMode) {
+        this.props.onUpdate();
+      } else {
+        this.props.onCreate();
+      }
+    }
+    else {
+      if (this.props.scenarioData.useWebhook){
+        Alert.warning(messages.missingWebhookMessage.defaultMessage, {
+          position: 'bottom'
+        });
+      }
+      else {
+        Alert.warning(messages.missingResponsesMessage.defaultMessage, {
+          position: 'bottom'
+        });
+      }
     }
   }
 
