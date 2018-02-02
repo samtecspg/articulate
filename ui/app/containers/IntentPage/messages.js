@@ -132,6 +132,6 @@ export default defineMessages({
   },
   successMessage: {
     id: 'boilerplate.containers.IntentPage.create_agent.success_message',
-    defaultMessage: 'Intent created',
+    defaultMessage: 'Intent processed successfully',
   },
 });
