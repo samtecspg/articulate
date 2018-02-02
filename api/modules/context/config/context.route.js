@@ -32,6 +32,16 @@ const ContextRoutes = [
             validate: ContextValidator.updateById,
             handler: ContextController.updateById
         }
+    },
+    {
+        method: 'DELETE',
+        path: '/context/{sessionId}',
+        config: {
+            description: 'Deletes a session',
+            tags: ['api'],
+            validate: ContextValidator.deleteById,
+            handler: ContextController.deleteById
+        }
     }
 ];
 

@@ -47,6 +47,15 @@ class ContextValidate {
                 };
             })()
         };
+
+        this.deleteById = {
+            params: (() => {
+
+                return {
+                    sessionId: Joi.string().required().description('Id of the session')
+                };
+            })()
+        };
     }
 }
 

@@ -2,6 +2,7 @@
 const AddByController = require('./addById.context.controller');
 const FindByIdController = require('./findById.context.controller');
 const UpdateByIdController = require('./updateById.context.controller');
+const DeleteByIdController = require('./deleteById.context.controller');
 
 const ContextController = {
 
@@ -9,7 +10,9 @@ const ContextController = {
 
     findById: FindByIdController,
 
-    updateById: UpdateByIdController
+    updateById: UpdateByIdController,
+
+    deleteById: DeleteByIdController
 };
 
 module.exports = ContextController;
