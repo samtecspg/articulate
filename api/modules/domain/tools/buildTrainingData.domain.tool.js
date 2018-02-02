@@ -57,7 +57,7 @@ const buildTrainingData = (server, domainId, callback) => {
                             const newStart = parseInt(lowestStart === parseInt(entity.start) ? parseInt(entity.start) : parseInt(entity.start) + shift);
                             const newEnd = newStart + textValue.length;
                             const replacementStart = i === 0 ? entity.start : newStart;
-                            const replacementFinish = i === 0 ? entity.end : entity.end + shift;
+                            const replacementFinish = i === 0 ? entity.end : parseInt(entity.end) + shift;
                             intentText = intentText.substring(0, replacementStart) + textValue + intentText.substring(replacementFinish);
                             newEntitiesList.push({
                                 start: newStart,
