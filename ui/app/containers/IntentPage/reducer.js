@@ -149,7 +149,12 @@ function intentReducer(state = initialState, action) {
       slots = state.getIn(['scenarioData', 'slots']) === "" ? [] : state.getIn(['scenarioData', 'slots']);
       if (Iterable.isIterable(slots)){
         const existingSlot = slots.filter((slot) => {
-          return slot.get('entity') === action.slot.entity;
+          if (Iterable.isIterable(slot)){
+            return slot.get('entity') === action.slot.entity;
+          }
+          else {
+            return slot.entity === action.slot.entity;
+          }
         });
         if (existingSlot.size === 0) {
           return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(action.slot));
