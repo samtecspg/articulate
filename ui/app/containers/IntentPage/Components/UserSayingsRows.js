@@ -7,8 +7,10 @@ const highlightEntity = (agentEntities, dropDownButtonId, setWindowSelection, e)
   if (agentEntities) {
     const dropDownButton = document.getElementById(dropDownButtonId);
     const selection = window.getSelection().toString();
-    setWindowSelection(selection);
-    dropDownButton.dispatchEvent(new Event('click'));
+    if (selection.length > 0){
+      setWindowSelection(selection);
+      dropDownButton.dispatchEvent(new Event('click'));
+    }
   }
 };
 
@@ -31,9 +33,9 @@ export function UserSayingsRows(props) {
     }
     return (
       <tr style={{ width: '100%' }} key={valueIndex}>
-        <td style={{ width: '100%', display: 'inline-block' }}>
+        <td style={{ width: '100%', display: 'inline-block' }} onMouseUp={highlightEntity.bind(null, props.agentEntities, 'userSayingDropdown_' + valueIndex, props.setWindowSelection)}>
           <div>
-            <span id={'userSaying_' + valueIndex} onMouseUp={highlightEntity.bind(null, props.agentEntities, 'userSayingDropdown_' + valueIndex, props.setWindowSelection)}>{formattedText ? formattedText : textValue}</span>
+            <span id={'userSaying_' + valueIndex}>{formattedText ? formattedText : textValue + ' '}</span>
             <AgentEntities
               index={valueIndex}
               agentEntities={props.agentEntities}
