@@ -99,8 +99,8 @@ function intentReducer(state = initialState, action) {
     case TOGGLE_FLAG:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
-        if (slot.slotName === action.payload.slotName) {
-          slot[action.payload.field] = action.payload.value;
+        if (slot.get('slotName') === action.payload.slotName) {
+          slot = slot.set(action.payload.field, action.payload.value);
         }
         return slot;
       });
@@ -119,8 +119,9 @@ function intentReducer(state = initialState, action) {
     case ADD_TEXT_PROMPT:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
-        if (slot.slotName === action.payload.slotName) {
-          slot.textPrompts.push(action.payload.value);
+        if (slot.get('slotName') === action.payload.slotName) {
+          const updatedSlot = slot.get('textPrompts').push(action.payload.value);
+          slot = slot.set('textPrompts', updatedSlot);
         }
         return slot;
       });
@@ -129,8 +130,8 @@ function intentReducer(state = initialState, action) {
     case DELETE_TEXT_PROMPT:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
-        if (slot.slotName === action.payload.slotName) {
-          slot.textPrompts.splice(slot.textPrompts.indexOf(action.payload.textPrompt), 1);
+        if (slot.get('slotName') === action.payload.slotName) {
+          slot = slot.set('textPrompts', slot.get('textPrompts').splice(slot.get('textPrompts').indexOf(action.payload.textPrompt), 1));
         }
         return slot;
       });
@@ -146,28 +147,12 @@ function intentReducer(state = initialState, action) {
       return state
         .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index, 1));
     case ADD_SLOT:
-      slots = state.getIn(['scenarioData', 'slots']) === "" ? [] : state.getIn(['scenarioData', 'slots']);
-      if (Iterable.isIterable(slots)){
-        const existingSlot = slots.filter((slot) => {
-          if (Iterable.isIterable(slot)){
-            return slot.get('entity') === action.slot.entity;
-          }
-          else {
-            return slot.entity === action.slot.entity;
-          }
-        });
-        if (existingSlot.size === 0) {
-          return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(action.slot));
-        }
-      }
-      else {
-        const existingSlot = slots.filter((slot) => {
-          return slot.entity === action.slot.entity;
-        });
-        if (existingSlot.length === 0) {
-          slots.push(action.slot)
-          return state.setIn(['scenarioData', 'slots'], slots);
-        }
+      slots = state.getIn(['scenarioData', 'slots']);
+      const existingSlot = slots.filter((slot) => {
+        return slot.get('entity') === action.slot.entity;
+      });
+      if (existingSlot.size === 0) {
+        return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(fromJS(action.slot)));
       }
       return state;
     case SET_WINDOW_SELECTION:
@@ -178,10 +163,16 @@ function intentReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false);
     case LOAD_INTENT_SUCCESS:
+      let transformedIntent = action.intent;
+      transformedIntent.examples = transformedIntent.examples.map((example) => {
+        example.entities = Array.isArray(example.entities) ? example.entities : [];
+        return example;
+      });
+      transformedIntent = fromJS(transformedIntent);
       return state
         .set('loading', false)
         .set('error', false)
-        .set('intentData', fromJS(action.intent));
+        .set('intentData', transformedIntent);
     case LOAD_INTENT_ERROR:
       return state
         .set('error', action.error)
@@ -191,20 +182,26 @@ function intentReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false);
     case LOAD_SCENARIO_SUCCESS:
-    const transformedScenario = action.scenario;
+    let transformedScenario = action.scenario;
     if (Array.isArray(transformedScenario.slots)){
       transformedScenario.slots = action.scenario.slots.map((slot) => {
         slot.isList = slot.isList === "true";
         slot.isRequired = slot.isRequired === "true";
         slot.useWebhook = slot.useWebhook === "true";
+        slot.textPrompts = Array.isArray(slot.textPrompts) ? slot.textPrompts : [];
         return slot;
       });
     }
+    else{
+      transformedScenario.slots = [];
+    }
+    transformedScenario.intentResponses = Array.isArray(transformedScenario.intentResponses) ? transformedScenario.intentResponses : [];
     transformedScenario.useWebhook = action.useWebhook === "true";
+    transformedScenario = fromJS(transformedScenario);
       return state
         .set('loading', false)
         .set('error', false)
-        .set('scenarioData', fromJS(transformedScenario));
+        .set('scenarioData', transformedScenario);
     case LOAD_SCENARIO_ERROR:
       return state
         .set('error', action.error)
