@@ -37,7 +37,7 @@ services:
       - API_URL=${API_URL:-http://localhost:8000}
     networks: ['alpha-nlu-network']
   rasa:
-    image: rasa/rasa_nlu:0.10.4-spacy
+    image: milutz/art-rasa-docker:0.11.0-02.01.2018
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./helpers-stuff/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./helpers-stuff/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']

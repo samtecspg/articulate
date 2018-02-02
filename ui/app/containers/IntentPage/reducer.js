@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, Iterable } from 'immutable';
 import {
   ADD_SLOT,
   ADD_TEXT_PROMPT,
@@ -146,10 +146,23 @@ function intentReducer(state = initialState, action) {
       return state
         .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index, 1));
     case ADD_SLOT:
-      slots = state.getIn(['scenarioData', 'slots']);
-      const existingSlot = slots.filter((slot) => {return slot.get('entity') === action.slot.entity});
-      if (existingSlot.size === 0) {
-        return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(action.slot));
+      slots = state.getIn(['scenarioData', 'slots']) === "" ? [] : state.getIn(['scenarioData', 'slots']);
+      if (Iterable.isIterable(slots)){
+        const existingSlot = slots.filter((slot) => {
+          return slot.get('entity') === action.slot.entity;
+        });
+        if (existingSlot.size === 0) {
+          return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(action.slot));
+        }
+      }
+      else {
+        const existingSlot = slots.filter((slot) => {
+          return slot.entity === action.slot.entity;
+        });
+        if (existingSlot.length === 0) {
+          slots.push(action.slot)
+          return state.setIn(['scenarioData', 'slots'], slots);
+        }
       }
       return state;
     case SET_WINDOW_SELECTION:
