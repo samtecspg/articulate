@@ -506,6 +506,8 @@ export function mapDispatchToProps(dispatch) {
       let currentResponse = document.getElementById('responses').value;
       let positionOfEntity = currentResponse.lastIndexOf('{');
       document.getElementById('responses').value = currentResponse.substring(0, positionOfEntity) + `{${entityName}}`;
+      document.getElementById('responses').focus();
+      document.getElementById('responses').scrollIntoView();
     },
     onCreate: () => {
       dispatch(createIntent());
