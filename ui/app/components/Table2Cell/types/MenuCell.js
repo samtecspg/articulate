@@ -16,6 +16,7 @@ class MenuCell extends React.Component {// eslint-disable-line react/prefer-stat
         element={<Icon>more_vert</Icon>}
         menu={menu}
         item={item}
+        belowOrigin={false}
       />
     );
   }
