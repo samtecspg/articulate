@@ -4,12 +4,13 @@ import {
   Icon,
   Row,
 } from 'react-materialize';
+import Dropdown from '../Dropdown';
 
 export function TestMessageInput(props) {
 
   return (
     <Row>
-      <div className="col input-field s10">
+      <div className="col input-field s8">
         <TextInput
           id={props.id}
           style={props.style}
@@ -23,10 +24,19 @@ export function TestMessageInput(props) {
           disabled={props.disabled}
         />
       </div>
-      <div className="col input-field s2">
+      <div className="col input-field s2" style={{paddingRight: '0px'}}>
         <a onClick={props.onSpeakClick}>
           <Icon small className="mic-icon">mic</Icon>
         </a>
+      </div>
+      <div className="col input-field s2">
+        <Dropdown
+            element={<Icon>more_vert</Icon>}
+            menu={props.menu}
+            item={{}}
+            globalStyle={{paddingTop: '10px'}}
+            belowOrigin={false}
+        />
       </div>
     </Row>
   );
@@ -44,6 +54,7 @@ TestMessageInput.propTypes = {
   style: React.PropTypes.object,
   disabled: React.PropTypes.bool,
   className: React.PropTypes.string,
+  menu: React.PropTypes.array,
 };
 
 export default TestMessageInput;

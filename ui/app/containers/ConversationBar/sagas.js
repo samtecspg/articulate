@@ -8,8 +8,10 @@ import {
 import {
   converseError,
   converseRespond,
+  resetSessionError,
+  resetSessionSuccess
 } from '../App/actions';
-import { CONVERSE } from '../App/constants';
+import { CONVERSE, RESET_SESSION } from '../App/constants';
 
 export function* postMessage(payload) {
 
@@ -18,7 +20,7 @@ export function* postMessage(payload) {
     const response = yield call(api.agent.getAgentIdConverse, {
       id: agent,
       text: message,
-      sessionId: 'articulate',
+      sessionId: 'articulateUI',
     });
     yield put(converseRespond(response.obj));
   } catch ({ response }) {
@@ -35,7 +37,26 @@ export function* sendMessage() {
   }
 }
 
+export function* deleteSession(payload) {
+  try {
+    const { api } = payload;
+    const response = yield call(api.context.deleteContextSessionid, { sessionId: 'articulateUI', });
+    yield put(resetSessionSuccess());
+  } catch ({ response }) {
+    yield put(resetSessionError());
+  }
+}
+
+export function* resetSession() {
+  const requestChan = yield actionChannel(RESET_SESSION);
+  while (true) {
+    const payload = yield take(requestChan);
+    yield call(deleteSession, {api: payload.api});
+  }
+}
+
 // Bootstrap sagas
 export default [
   sendMessage,
+  resetSession,
 ];

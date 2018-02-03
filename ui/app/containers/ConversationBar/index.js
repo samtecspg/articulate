@@ -5,7 +5,7 @@ import AgentMessage from '../../components/AgentMessage';
 import TestMessageInput from '../../components/TestMessageInput';
 import UserMessage from '../../components/UserMessage';
 import VoiceRecognition from '../../components/VoiceRecognition';
-import { converse } from '../App/actions';
+import { converse, resetSession } from '../App/actions';
 import {
   makeSelectConversation,
   makeSelectCurrentAgent,
@@ -65,6 +65,13 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
     }
   }
 
+  renderMenu() {
+    return [{
+      label: 'Reset session',
+      action: () => this.props.onResetSession(),
+    }];
+  }
+
   render() {
     return (
       <aside className="right-panel">
@@ -96,6 +103,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
         <ul className="bottom-nav">
           <div id="form-section">
             <TestMessageInput
+              menu={this.renderMenu()}
               className="conversationInput"
               placeholder={this.state.start && !this.state.stop ? messages.recordingPlaceholder.defaultMessage : messages.conversationPlaceholder.defaultMessage}
               inputId="intentName"
@@ -124,6 +132,7 @@ ConversationBar.propTypes = {
   loading: React.PropTypes.bool,
   conversation: React.PropTypes.array,
   onSendMessage: React.PropTypes.func,
+  onResetSession: React.PropTypes.func,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
@@ -135,6 +144,9 @@ export function mapDispatchToProps(dispatch) {
     onSendMessage: (agentId, message) => {
       dispatch(converse({ agent: agentId, message }));
     },
+    onResetSession: () => {
+      dispatch(resetSession());
+    }
   };
 }
 

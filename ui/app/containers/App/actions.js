@@ -1,5 +1,8 @@
 import {
   ACTION_CANCELLED,
+  RESET_SESSION,
+  RESET_SESSION_ERROR,
+  RESET_SESSION_SUCCESS,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -317,6 +320,27 @@ export function converseRespond(data) {
 export function converseError() {
   return {
     type: CONVERSE_ERROR,
+  };
+}
+
+export function resetSession(){
+  return {
+    type: RESET_SESSION,
+    apiCall: true,
+  };
+}
+
+export function resetSessionSuccess(data){
+
+  return {
+    type: RESET_SESSION_SUCCESS,
+    data
+  };
+}
+
+export function resetSessionError() {
+  return {
+    type: RESET_SESSION_ERROR,
   };
 }
 

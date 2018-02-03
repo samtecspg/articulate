@@ -1,6 +1,9 @@
 import { fromJS } from 'immutable';
 import {
   ACTION_CANCELLED,
+  RESET_SESSION,
+  RESET_SESSION_SUCCESS,
+  RESET_SESSION_ERROR,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -238,6 +241,20 @@ function appReducer(state = initialState, action) {
         .set('loadingConversation', false)
         .update('conversation', (conversation) => conversation.push({
           message: 'I\'m sorry! I\'m having issues connecting with my brain. Can you retry later',
+          author: 'agent',
+        }));
+    case RESET_SESSION:
+      return state
+        .set('loadingConversation', true);
+    case RESET_SESSION_SUCCESS:
+      return state
+        .set('conversation', fromJS([]))
+        .set('loadingConversation', false);
+    case RESET_SESSION_ERROR:
+      return state
+        .set('loadingConversation', false)
+        .update('conversation', (conversation) => conversation.push({
+          message: 'Sorry an error ocurred, the session wasn\'t deleted',
           author: 'agent',
         }));
     case LOAD_DOMAINS_INTENTS:

@@ -62,9 +62,10 @@ class Dropdown extends React.Component { // eslint-disable-line react/prefer-sta
       belowOrigin,
       alignment,
       stopPropagation,
+      globalStyle,
     } = this.props;
     return (
-      <div>
+      <div style={globalStyle}>
         <a
           className="dropdown-button"
           data-activates={this.state.id}
@@ -97,6 +98,7 @@ Dropdown.propTypes = {
   belowOrigin: React.PropTypes.bool,
   alignment: React.PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
   stopPropagation: React.PropTypes.bool,
+  globalStyle: React.PropTypes.object,
 };
 
 Dropdown.defaultProps = {
@@ -108,6 +110,7 @@ Dropdown.defaultProps = {
   belowOrigin: true, // Displays dropdown below the button
   alignment: 'right', // Displays dropdown with edge aligned to the left of button
   stopPropagation: false,// Stops event propagation
+  globalStyle: {}
 };
 
 export default Dropdown;
