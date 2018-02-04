@@ -7,7 +7,7 @@ version: '3.0'
 
 services:
   api:
-    build: './api/.'
+    image: samtecspg/articulate-api:repo-head
     ports: ['0.0.0.0:8000:8000']
     networks: ['alpha-nlu-network']
     # The following (crazy) block is about both:
@@ -21,28 +21,25 @@ services:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - RASA_URL=${RASA_URL:-http://rasa:5000}
-      - DUCKLING_URL=${DUCKLING_URL:-http://haskduck:8000}
-      - MODEL_DIR=${MODEL_DIR:-./helpers-stuff/rasa/nlu-model}
-    volumes: ["${MODEL_DIR:-./helpers-stuff/rasa/nlu-model}:/app/projects"]
+      - DUCKLING_URL=${DUCKLING_URL:-http://duckling:8000}
+      - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
+    volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
   ui:
-    build:
-      context: './ui/.'
-      args:
-        - API_URL=${API_URL:-http://localhost:8000} # Needed for running yarn build in Dockerfile
+    image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3500:3000']
     environment:
       - API_URL=${API_URL:-http://localhost:8000}
     networks: ['alpha-nlu-network']
   rasa:
-    image: milutz/art-rasa-docker:0.11.0-02.01.2018
+    image: samtecspg/articulate-rasa:repo-head
     ports: ['0.0.0.0:5000:5000']
-    volumes: ["${MODEL_DIR:-./helpers-stuff/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./helpers-stuff/rasa/rasa-config.json}:/app/config.json"]
+    volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']
-  haskduck:
-    image: samtecspg/duckling
+  duckling:
+    image: samtecspg/articulate-duckling:repo-head
     ports: ['0.0.0.0:8500:8000']
     networks: ['alpha-nlu-network']
   redis:
@@ -51,6 +48,6 @@ services:
     networks: ['alpha-nlu-network']
     command: redis-server --appendonly yes
     volumes:
-      - ${REDIS_DATA:-./helpers-stuff/redis-data}:/data
+      - ${REDIS_DATA:-./local-storage/redis-data}:/data
 
 networks: {alpha-nlu-network: {}}

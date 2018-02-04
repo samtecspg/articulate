@@ -1,0 +1,16 @@
+version: '3.0'
+
+services:
+  api:
+    build: './api/.'
+  ui:
+    build:
+      context: './ui/.'
+      args:
+        - API_URL=${API_URL:-http://localhost:8000} # Needed for running yarn build in Dockerfile
+  rasa:
+    build:
+      context: './rasa/.'
+  duckling:
+    build:
+      context: './duckling/.'
