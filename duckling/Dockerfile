@@ -1,0 +1,1 @@
+FROM samtecspg/duckling:latest

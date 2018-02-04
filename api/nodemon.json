@@ -1,4 +1,4 @@
 {
   "verbose": true,
-  "ignore": ["nlu-model", "helpers-stuff", "test-data"]
+  "ignore": ["nlu-model", "local-storage", "test-data"]
 }
