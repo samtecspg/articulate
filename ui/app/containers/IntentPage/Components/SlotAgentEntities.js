@@ -16,10 +16,7 @@ export function SlotAgentEntities(props) {
           href={'#'}
           onClick={props.onClickFunction.bind(null, agentEntity.entityName)}
           key={agentIndex}
-        >
-          <span style={{ color: entityColor }}>
-                        @{agentEntity.entityName}
-          </span>
+        ><span style={{ color: entityColor }}>{agentEntity.entityName}</span>
         </NavItem>
       );
     });
