@@ -90,6 +90,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
 
     return {
       Header: header,
+      pivot:column.pivot,
       Cell: cell,
       accessor: column.accessor,
       sortable: column.sortable,

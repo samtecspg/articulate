@@ -1,5 +1,4 @@
 import * as React from 'react';
-import _ from 'lodash';
 
 export default [{
   id: 'name',
@@ -17,8 +16,9 @@ export default [{
   id: 'examples',
   tooltip: '',
   type: 'list',
-  accessor: row => _.map(row.examples, 'userSays'),
+  accessor: row => row.examples.length,
+  pivot: true,
   filterable: true,
   headerClassName: 'table2-header',
-  cellClassName: 'table2-column',
+  cellClassName: 'text-align-center table2-column',
 }];
