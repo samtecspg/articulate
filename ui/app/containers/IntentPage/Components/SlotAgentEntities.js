@@ -31,7 +31,7 @@ export function SlotAgentEntities(props) {
             id={`slotEntityDropdown_${props.index}`}
           >
             {props.slot.entity ?
-              <span style={{ color: props.agentEntity.uiColor }}>@{props.agentEntity.entityName}</span> :
+              <span style={{ color: props.agentEntity.uiColor }}>{props.agentEntity.entityName}</span> :
               <FormattedMessage {...messages.slotEntityPlaceholder} />}
           </span>}
         options={{
