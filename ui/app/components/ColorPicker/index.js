@@ -47,7 +47,7 @@ function ColorPicker(props) { // eslint-disable-line react/prefer-stateless-func
       </div>
       { props.displayColorPicker ? <div style={ styles.popover }>
         <div style={ styles.cover } onClick={ props.handleClose }/>
-        <CirclePicker width='176' color={ props.color } onChange={ props.handleColorChange } />
+        <CirclePicker width='176px' color={ props.color } onChange={ props.handleColorChange } />
       </div> : null }
     </div>
   );

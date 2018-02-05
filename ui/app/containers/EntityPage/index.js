@@ -184,7 +184,6 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               <InputLabel s={2} text={messages.entityColor} />
               <ColorPicker
                 color={entity.uiColor}
-                color={entity.uiColor}
                 handleClose={this.props.handleClose}
                 handleClick={this.props.handleClick}
                 handleColorChange={this.props.handleColorChange}
