@@ -18,7 +18,6 @@ export default [{
   type: 'number',
   accessor: row => row.examples.length,
   pivot: true,
-  filterable: true,
   headerClassName: 'table2-header',
   cellClassName: 'text-align-center table2-column',
 }];
