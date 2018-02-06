@@ -124,7 +124,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       this.setEditMode(this.props.route.name === 'agentEdit');
     }
     if (this.props.success) {
-      Alert.success(messages.successMessage.defaultMessage, {
+      Alert.success(this.state.editMode ? messages.successMessageEdit.defaultMessage : messages.successMessage.defaultMessage, {
         position: 'bottom'
       });
       this.props.onSuccess.bind(null, this.props.inWizard)();
@@ -252,6 +252,21 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 {returnFormattedOptions(timezones)}
               </Input>
             </Row>
+          </Form>
+
+          <Row>
+            <br/>
+            <SliderInput
+              label={messages.domainClassifierThreshold}
+              id="domainClassifierThreshold"
+              min="0"
+              max="100"
+              onChange={this.props.onChangeAgentData.bind(null, 'domainClassifierThreshold')}
+              value={agent.domainClassifierThreshold.toString()}
+            />
+          </Row>
+
+          <Form style={{marginTop: '0px'}}>
             <Row>
                 <FormTextInput
                   id='fallbacks'
@@ -259,7 +274,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                   placeholder={messages.fallbackInput.defaultMessage}
                   onKeyPress={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
                 />
-              </Row>
+            </Row>
           </Form>
 
           {agent.fallbackResponses.length > 0 ?
@@ -273,19 +288,10 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             </TableContainer>
             : null
           }
+          <br/>
           <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el;}}>
-          </div>
-          <Row>
             <br/>
-            <SliderInput
-              label={messages.domainClassifierThreshold}
-              id="domainClassifierThreshold"
-              min="0"
-              max="100"
-              onChange={this.props.onChangeAgentData.bind(null, 'domainClassifierThreshold')}
-              value={agent.domainClassifierThreshold.toString()}
-            />
-          </Row>
+          </div>
 
           <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
         </Content>

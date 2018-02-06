@@ -75,4 +75,8 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.delete_button',
     defaultMessage: 'Edit',
   },
+  agentFallbackTitle: {
+    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    defaultMessage: 'Fallback Responses',
+  },
 });

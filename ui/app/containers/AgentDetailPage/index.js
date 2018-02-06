@@ -17,6 +17,12 @@ import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
+import InputLabel from '../../components/InputLabel';
+
+import Table from '../../components/Table';
+import TableContainer from '../../components/TableContainer';
+
+import Responses from './Components/Responses';
 
 import {
   deleteAgent,
@@ -137,11 +143,13 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
                 disabled
               />*/}
               <FormTextInput
+                s={6}
                 label={messages.language}
                 defaultValue={currentAgent.language}
                 disabled
               />
               <FormTextInput
+                s={6}
                 label={messages.timezone}
                 defaultValue={currentAgent.timezone}
                 disabled
@@ -155,6 +163,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
           </Row>
 
           <Row>
+            <br/>
             <SliderInput
               label={messages.domainClassifierThreshold}
               min="0"
@@ -165,6 +174,23 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               disabled
             />
           </Row>
+
+          <Row>
+            <Form style={{marginTop: '0px'}}>
+              <InputLabel s={12} text={messages.agentFallbackTitle} />
+            </Form>
+          </Row>
+
+          {currentAgent.fallbackResponses.length > 0 ?
+            <TableContainer id="fallbackResponsesTable" quotes>
+              <Table>
+                <Responses
+                  fallbackResponses={currentAgent.fallbackResponses}
+                />
+              </Table>
+            </TableContainer>
+            : null
+          }
 
           <Row className={'right'}>
             <Col>
@@ -188,6 +214,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               ><FormattedMessage {...messages.deleteButton} /></Button>
             </Col>
           </Row>
+          <Row></Row>
         </Content>
         <DeleteModal
           isOpen={this.state.deleteModalOpen}
