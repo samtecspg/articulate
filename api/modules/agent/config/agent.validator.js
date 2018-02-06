@@ -196,8 +196,7 @@ class AgentValidate {
 
                 return {
                     text: Joi.string().required().description('Text to parse'),
-                    timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville'),
-                    language: Joi.string().description('Language of the text. Default value en')
+                    timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville')
                 };
             })()
         };
@@ -213,8 +212,7 @@ class AgentValidate {
 
                 return {
                     text: Joi.string().required().description('Text to parse'),
-                    timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville'),
-                    language: Joi.string().description('Language of the text. Default value en')
+                    timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville')
                 };
             })()
         };

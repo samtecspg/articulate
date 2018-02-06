@@ -28,7 +28,8 @@ module.exports = (request, reply) => {
             Async.parallel({
                 parseResult: (cb) => {
 
-                    server.inject(`/agent/${agentId}/parse?text=${text}${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
+                    const languageToUse = agentData.agent.language ? agentData.agent.language : 'en';
+                    server.inject(`/agent/${agentId}/parse?language=${languageToUse}&text=${text}${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
 
                         if (res.statusCode !== 200){
                             if (res.statusCode === 404){
