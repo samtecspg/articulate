@@ -73,4 +73,8 @@ export default defineMessages({
     id: 'boilerplate.containers.EntityPage.create_agent.success_message',
     defaultMessage: 'Entity created',
   },
+  successMessageEdit: {
+    id: 'boilerplate.containers.EntityPage.create_agent.success_message',
+    defaultMessage: 'Entity updated',
+  },
 });

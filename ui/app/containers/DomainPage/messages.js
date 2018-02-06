@@ -47,4 +47,8 @@ export default defineMessages({
     id: 'boilerplate.containers.DomainPage.create_domain.success_message',
     defaultMessage: 'Domain created',
   },
+  successMessageEdit: {
+    id: 'boilerplate.containers.AgentPage.create_agent.success_message_edit',
+    defaultMessage: 'Domain updated',
+  },
 });

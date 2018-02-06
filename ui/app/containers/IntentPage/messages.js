@@ -132,7 +132,11 @@ export default defineMessages({
   },
   successMessage: {
     id: 'boilerplate.containers.IntentPage.create_agent.success_message',
-    defaultMessage: 'Intent processed successfully',
+    defaultMessage: 'Intent created',
+  },
+  successMessageEdit: {
+    id: 'boilerplate.containers.IntentPage.create_agent.success_message',
+    defaultMessage: 'Intent updated',
   },
   missingResponsesMessage: {
     id: 'boilerplate.containers.IntentPage.create_agent.missing_response_message',

@@ -133,7 +133,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       this.setEditMode(this.props.route.name === 'intentEdit');
     }
     if (this.props.success) {
-      Alert.success(messages.successMessage.defaultMessage, {
+      Alert.success(this.state.editMode ? messages.successMessageEdit.defaultMessage : messages.successMessage.defaultMessage, {
         position: 'bottom'
       });
       this.props.onSuccess();
