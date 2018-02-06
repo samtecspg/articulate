@@ -71,4 +71,12 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.success_message',
     defaultMessage: 'Agent created',
   },
+  fallbackInput: {
+    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    defaultMessage: 'example: Sorry I can\'t understand what you are saying',
+  },
+  agentFallbackTitle: {
+    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    defaultMessage: 'Fallback Responses',
+  },
 });

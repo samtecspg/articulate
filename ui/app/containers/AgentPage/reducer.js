@@ -4,8 +4,9 @@ import {
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
   RESET_AGENT_DATA,
-  LOAD_AGENT
-,} from './constants';
+  LOAD_AGENT,
+  REMOVE_AGENT_FALLBACK,
+} from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -27,8 +28,13 @@ const initialState = fromJS({
 function agentReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_AGENT_DATA:
-      return state
-        .updateIn(['agentData'], x => x.set(action.payload.field, action.payload.value));
+      if (action.payload.field === 'fallbackResponses'){
+        return state.updateIn(['agentData'], agent => agent.set('fallbackResponses', agent.get('fallbackResponses').push(action.payload.value)));
+      }
+      else {
+        return state
+          .updateIn(['agentData'], x => x.set(action.payload.field, action.payload.value));
+      }
     case RESET_AGENT_DATA:
       return initialState;
     case LOAD_AGENT:
@@ -44,6 +50,9 @@ function agentReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+    case REMOVE_AGENT_FALLBACK:
+      return state
+        .setIn(['agentData', 'fallbackResponses'], state.getIn(['agentData', 'fallbackResponses']).splice(action.index, 1));
     default:
       return state;
   }

@@ -4,6 +4,7 @@ import {
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
   RESET_AGENT_DATA,
+  REMOVE_AGENT_FALLBACK,
 } from './constants';
 
 export function changeAgentData(payload) {
@@ -41,4 +42,9 @@ export function loadAgent(id) {
   };
 }
 
-
+export function removeAgentFallback(index) {
+  return {
+    type: REMOVE_AGENT_FALLBACK,
+    index,
+  };
+}

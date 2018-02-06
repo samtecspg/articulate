@@ -18,6 +18,11 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 
+import Table from '../../components/Table';
+import TableContainer from '../../components/TableContainer';
+
+import Responses from './Components/Responses';
+
 import {
   createAgent,
   resetStatusFlags,
@@ -33,6 +38,7 @@ import {
   changeAgentData,
   loadAgent,
   resetAgentData,
+  removeAgentFallback,
 } from './actions';
 
 import messages from './messages';
@@ -150,6 +156,24 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     }
   }
 
+  onChangeInput(evt, field) {
+    let value;
+    if (evt) {
+      value = evt.target.value;
+    } else {
+      value = null;
+    }
+    if (field === 'fallbackResponses') {
+      if (evt.charCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
+        if (field === 'fallbackResponses') {
+          this.lastAgentResponse.scrollIntoView(true);
+        }
+        this.props.onChangeAgentData(field, evt);
+        evt.target.value = null;
+      }
+    }
+  }
+
   render() {
     const { loading, error, success, agent, match } = this.props;
     const agentProps = {
@@ -228,9 +252,31 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 {returnFormattedOptions(timezones)}
               </Input>
             </Row>
+            <Row>
+                <FormTextInput
+                  id='fallbacks'
+                  label={messages.agentFallbackTitle}
+                  placeholder={messages.fallbackInput.defaultMessage}
+                  onKeyPress={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
+                />
+              </Row>
           </Form>
 
+          {agent.fallbackResponses.length > 0 ?
+            <TableContainer id="fallbackResponsesTable" quotes>
+              <Table>
+                <Responses
+                  fallbackResponses={agent.fallbackResponses}
+                  onRemoveResponse={this.props.onRemoveFallback}
+                />
+              </Table>
+            </TableContainer>
+            : null
+          }
+          <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el;}}>
+          </div>
           <Row>
+            <br/>
             <SliderInput
               label={messages.domainClassifierThreshold}
               id="domainClassifierThreshold"
@@ -264,6 +310,7 @@ AgentPage.propTypes = {
   resetForm: React.PropTypes.func,
   onSuccess: React.PropTypes.func,
   onEditMode: React.PropTypes.func,
+  onRemoveFallback: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -287,6 +334,9 @@ export function mapDispatchToProps(dispatch) {
     onEditMode: (agentId) => {
       dispatch(loadAgent(agentId));
     },
+    onRemoveFallback: (fallbackIndex) => {
+      dispatch(removeAgentFallback(fallbackIndex));
+    }
   };
 }
 
