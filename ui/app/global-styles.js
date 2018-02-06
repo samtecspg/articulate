@@ -464,6 +464,10 @@ injectGlobal`
     padding-left:8px
   }
 
+  .multiline-chip{
+    height: auto !important;
+  }
+
   .select-dropdown.dropdown-content li:hover {
     background-color: #f0f3f7; }
 

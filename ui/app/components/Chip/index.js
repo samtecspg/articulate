@@ -3,9 +3,9 @@ import React from 'react';
 
 const Chip = ({ children, close, onClose }) => {
   return (
-    <div className='chip'>
-      {children}
+    <div className='chip multiline-chip'>
       {close ? <i onClick={onClose} className='remove material-icons'>close</i> : null}
+      {children}
     </div>
   );
 };
