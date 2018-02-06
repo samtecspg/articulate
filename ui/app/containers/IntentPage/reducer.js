@@ -109,13 +109,21 @@ function intentReducer(state = initialState, action) {
     case CHANGE_SLOT_NAME:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
-        if (slot.slotName === action.payload.slotName) {
-          slot.slotName = action.payload.value;
+        if (slot.get('slotName') === action.payload.slotName) {
+          slot = slot.set('slotName', action.payload.value);
         }
         return slot;
       });
+      let intentResponses = state.getIn(['scenarioData', 'intentResponses']);
+      intentResponses = intentResponses.map((response) => {
+        if (response.indexOf(`{${action.payload.slotName}}`)){
+          response = response.replace(new RegExp(`{${action.payload.slotName}}`, 'g'), `{${action.payload.value}}`);
+        }
+        return response;
+      });
       return state
-        .setIn(['scenarioData', 'slots'], slots);
+        .setIn(['scenarioData', 'slots'], slots)
+        .setIn(['scenarioData', 'intentResponses'], intentResponses);
     case ADD_TEXT_PROMPT:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
