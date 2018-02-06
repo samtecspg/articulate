@@ -70,6 +70,13 @@ module.exports = (request, reply) => {
                                                     const error = Boom.create(res.statusCode, `An error ocurred getting the scenario of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                     return callbackGetIntentScenario(error, null);
                                                 }
+                                                delete exportedIntentForDomain.id;
+                                                delete exportedIntentForDomain.agent;
+                                                delete exportedIntentForDomain.domain;
+                                                delete res.result.id;
+                                                delete res.result.agent;
+                                                delete res.result.domain;
+                                                delete res.result.intent;
                                                 return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: res.result }));
                                             });
                                         }, (err, intentsWithScenarios) => {
@@ -85,6 +92,8 @@ module.exports = (request, reply) => {
                                     if (err){
                                         return callbackGetDataDomain(err);
                                     }
+                                    delete exportedDomain.id;
+                                    delete exportedDomain.agent;
                                     return callbackGetDataDomain(null, Object.assign(exportedDomain, { intents: intentsWithScenarios }));
                                 });
                             }, (err, domainsWithIntents) => {
@@ -111,6 +120,11 @@ module.exports = (request, reply) => {
                             const error = Boom.create(res.statusCode, `An error ocurred getting the list of entities of intent ${exportedAgent.agent}`);
                             return callbackGetEntities(error, null);
                         }
+                        res.result.forEach((entity) => {
+
+                            delete entity.id;
+                            delete entity.agent;
+                        });
                         return callbackGetEntities(null, Object.assign(exportedAgent, { entities: res.result }));
                     });
                 }
@@ -119,6 +133,7 @@ module.exports = (request, reply) => {
                 if (err){
                     return callbackGetAgentEntitiesAndDomains(err);
                 }
+                delete exportedAgent.id;
                 return callbackGetAgentEntitiesAndDomains(null, exportedAgent);
             });
         }
