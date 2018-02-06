@@ -16,6 +16,7 @@ const ParseController = require('./parse.agent.controller');
 const ConverseController = require('./converse.agent.controller');
 const ExportController = require('./export.agent.controller');
 const ImportController = require('./import.agent.controller');
+const FindIntentsByIdByAgentIdController = require('./findIntentsByIdByAgentId.agent.controller');
 
 const AgentController = {
 
@@ -51,7 +52,9 @@ const AgentController = {
 
     export: ExportController,
 
-    import: ImportController
+    import: ImportController,
+
+    findIntentsByAgentId: FindIntentsByIdByAgentIdController
 };
 
 module.exports = AgentController;

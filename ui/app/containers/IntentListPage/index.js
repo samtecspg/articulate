@@ -20,6 +20,7 @@ import Preloader from '../../components/Preloader';
 import {
   deleteIntent,
   loadAgentDomains,
+  loadAgentIntents,
   loadDomainIntents,
   resetAgentDomains,
   resetDomainIntents,
@@ -66,12 +67,12 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   onSelectDomain(evt) {
+    const { currentAgent } = this.props;
     if (this.props.agentDomains && (this.props.agentDomains.length > 0)) {
       const domain = this.props.agentDomains.find((agentDomain) => agentDomain.id === evt.target.value);
       this.setState({ selectedDomain: domain });
-      this.props.onChangeDomain(domain);
+      this.props.onChangeDomain(domain, currentAgent);
     }
-
   }
 
   onCreateAction() {
@@ -218,7 +219,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     onComponentWillMount: (agent) => {
       dispatch(loadAgentDomains(agent.id));
-      dispatch(resetDomainIntents());
+      dispatch(loadAgentIntents(agent.id));
     },
     onComponentWillUpdate: (agent) => {
       if (agent) {
@@ -228,11 +229,11 @@ export function mapDispatchToProps(dispatch) {
       }
       dispatch(resetDomainIntents());
     },
-    onChangeDomain: (domain) => {
+    onChangeDomain: (domain, agent) => {
       if (domain) {
         return dispatch(loadDomainIntents(domain.id));
       }
-      return dispatch(resetDomainIntents());
+      dispatch(loadAgentIntents(agent.id));
     },
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteIntent: (intent, domain) => dispatch(deleteIntent(intent.id, domain.id)),

@@ -15,7 +15,7 @@ export default [{
   label: 'Examples',
   id: 'examples',
   tooltip: '',
-  type: 'list',
+  type: 'number',
   accessor: row => row.examples.length,
   pivot: true,
   filterable: true,

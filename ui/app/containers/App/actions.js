@@ -1,8 +1,5 @@
 import {
   ACTION_CANCELLED,
-  RESET_SESSION,
-  RESET_SESSION_ERROR,
-  RESET_SESSION_SUCCESS,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -41,6 +38,9 @@ import {
   LOAD_AGENT_ENTITIES,
   LOAD_AGENT_ENTITIES_ERROR,
   LOAD_AGENT_ENTITIES_SUCCESS,
+  LOAD_AGENT_INTENTS,
+  LOAD_AGENT_INTENTS_ERROR,
+  LOAD_AGENT_INTENTS_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
@@ -53,6 +53,9 @@ import {
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
+  RESET_SESSION,
+  RESET_SESSION_ERROR,
+  RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
   SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
@@ -323,14 +326,14 @@ export function converseError() {
   };
 }
 
-export function resetSession(){
+export function resetSession() {
   return {
     type: RESET_SESSION,
     apiCall: true,
   };
 }
 
-export function resetSessionSuccess(data){
+export function resetSessionSuccess(data) {
 
   return {
     type: RESET_SESSION_SUCCESS,
@@ -568,5 +571,27 @@ export function updateEntity() {
   return {
     type: UPDATE_ENTITY,
     apiCall: true,
+  };
+}
+
+export function loadAgentIntents(agentId) {
+  return {
+    type: LOAD_AGENT_INTENTS,
+    apiCall: true,
+    agentId,
+  };
+}
+
+export function loadAgentIntentsSuccess(data) {
+  return {
+    type: LOAD_AGENT_INTENTS_SUCCESS,
+    data,
+  };
+}
+
+export function loadAgentIntentsError(error) {
+  return {
+    type: LOAD_AGENT_INTENTS_ERROR,
+    error,
   };
 }

@@ -70,3 +70,6 @@ export const UPDATE_ENTITY_SUCCESS = 'boilerplate/App/UPDATE_ENTITY_SUCCESS';
 export const UPDATE_ENTITY_ERROR = 'boilerplate/App/UPDATE_ENTITY_ERROR';
 export const UPDATE_SCENARIO_ERROR = 'boilerplate/App/UPDATE_SCENARIO_ERROR';
 export const UPDATE_SCENARIO_SUCCESS = 'boilerplate/App/UPDATE_SCENARIO_SUCCESS';
+export const LOAD_AGENT_INTENTS = 'boilerplate/App/LOAD_AGENT_INTENTS';
+export const LOAD_AGENT_INTENTS_SUCCESS = 'boilerplate/App/LOAD_AGENT_INTENTS_SUCCESS';
+export const LOAD_AGENT_INTENTS_ERROR = 'boilerplate/App/LOAD_AGENT_INTENTS_ERROR';

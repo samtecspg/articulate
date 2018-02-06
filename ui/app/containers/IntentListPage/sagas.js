@@ -12,10 +12,13 @@ import {
   deleteIntentSuccess,
   domainIntentsLoaded,
   domainIntentsLoadingError,
+  loadAgentIntentsError,
+  loadAgentIntentsSuccess,
 } from '../../containers/App/actions';
 import {
   DELETE_INTENT,
   LOAD_AGENT_DOMAINS,
+  LOAD_AGENT_INTENTS,
   LOAD_DOMAINS_INTENTS
 } from '../../containers/App/constants';
 import { getAgentDomains } from '../../containers/DomainListPage/sagas';
@@ -57,8 +60,27 @@ export function* deleteIntent() {
   yield cancel(watcher);
 }
 
+export function* getAgentIntents(payload) {
+  const { api, agentId } = payload;
+  try {
+    const response = yield call(api.agent.getAgentIdIntent, { id: agentId });
+    const intents = response.obj;
+    yield put(loadAgentIntentsSuccess(intents));
+  } catch ({ response }) {
+    yield put(loadAgentIntentsError({ message: response.obj.message }));
+  }
+}
+
 export function* loadAgentDomains() {
   const watcher = yield takeLatest(LOAD_AGENT_DOMAINS, getAgentDomains);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* loadAgentIntents() {
+  const watcher = yield takeLatest(LOAD_AGENT_INTENTS, getAgentIntents);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
@@ -69,5 +91,6 @@ export function* loadAgentDomains() {
 export default [
   loadDomainIntents,
   deleteIntent,
-  loadAgentDomains
+  loadAgentDomains,
+  loadAgentIntents,
 ];

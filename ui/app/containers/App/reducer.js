@@ -1,9 +1,6 @@
 import { fromJS } from 'immutable';
 import {
   ACTION_CANCELLED,
-  RESET_SESSION,
-  RESET_SESSION_SUCCESS,
-  RESET_SESSION_ERROR,
   CONVERSE,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
@@ -42,6 +39,9 @@ import {
   LOAD_AGENT_ENTITIES,
   LOAD_AGENT_ENTITIES_ERROR,
   LOAD_AGENT_ENTITIES_SUCCESS,
+  LOAD_AGENT_INTENTS,
+  LOAD_AGENT_INTENTS_ERROR,
+  LOAD_AGENT_INTENTS_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_SUCCESS,
   LOAD_CURRENT_AGENT_SUCCESS,
@@ -50,7 +50,9 @@ import {
   LOAD_DOMAINS_INTENTS_SUCCESS,
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
-  RESET_DOMAINS_INTENTS,
+  RESET_SESSION,
+  RESET_SESSION_ERROR,
+  RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
   SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
@@ -262,11 +264,6 @@ function appReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false)
         .set('domainIntents', false);
-    case RESET_DOMAINS_INTENTS:
-      return state
-        .set('loading', false)
-        .set('error', false)
-        .set('domainIntents', false);
     case LOAD_DOMAINS_INTENTS_SUCCESS:
       return state
         .set('domainIntents', action.data)
@@ -402,6 +399,19 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('success', false)
+        .set('loading', false);
+    case LOAD_AGENT_INTENTS:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('domainIntents', false);
+    case LOAD_AGENT_INTENTS_SUCCESS:
+      return state
+        .set('domainIntents', action.data)
+        .set('loading', false);
+    case LOAD_AGENT_INTENTS_ERROR:
+      return state
+        .set('error', action.error)
         .set('loading', false);
     default:
       return state;

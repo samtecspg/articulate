@@ -192,6 +192,16 @@ const AgentRoutes = [
             validate: AgentValidator.import,
             handler: AgentController.import
         }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/intent',
+        config: {
+            description: 'Find list of intents linked with a model instance specified by id',
+            tags: ['api'],
+            validate: AgentValidator.findIntentsByAgentId,
+            handler: AgentController.findIntentsByAgentId
+        }
     }
 ];
 
