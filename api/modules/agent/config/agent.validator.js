@@ -257,6 +257,12 @@ class AgentValidate {
                 return {
                     id: AgentSchema.id.required().description('Id of the agent')
                 };
+            })(),
+            query: (() => {
+
+                return {
+                    withReferences: Joi.bool().required().description('Flag to indicate if method should exports ids and ancestors of an element')
+                };
             })()
         };
 

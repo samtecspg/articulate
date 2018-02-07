@@ -13,7 +13,7 @@ const replaceText = (response, slot, contextSlotValue) => {
                     valueForReplacement = `${valueForReplacement[0]} and ${valueForReplacement[1]}`;
                 }
                 else {
-                    valueForReplacement = `${valueForReplacement.slice(0, valueForReplacement.length - 2).join(', ')}, and ${valueForReplacement[valueForReplacement.length - 1]}`;
+                    valueForReplacement = `${valueForReplacement.slice(0, valueForReplacement.length - 1).join(', ')}, and ${valueForReplacement[valueForReplacement.length - 1]}`;
                 }
             }
         }

@@ -43,7 +43,7 @@ module.exports = (request, reply) => {
                 },
                 agentData: (cb) => {
 
-                    server.inject(`/agent/${agentId}/export`, (res) => {
+                    server.inject(`/agent/${agentId}/export?withReferences=true`, (res) => {
 
                         if (res.statusCode !== 200){
                             if (res.statusCode === 400){
