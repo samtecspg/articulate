@@ -209,7 +209,7 @@ const createScenario = (callback) => {
     });
 };
 
-before({ timeout: 15000 }, (done) => {
+before({ timeout: 60000 }, (done) => {
 
     require('../../../index')((err, srv) => {
 
@@ -285,7 +285,7 @@ suite('/agent', () => {
 
     suite('/post', () => {
 
-        test('should respond with 200 successful operation and return an agent object', { timeout: 15000 }, (done) => {
+        test('should respond with 200 successful operation and return an agent object', { timeout: 60000 }, (done) => {
 
             const data = {
                 agentName: 'Test Agent 2',

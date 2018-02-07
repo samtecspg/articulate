@@ -113,7 +113,7 @@ const createEntity = (callback) => {
     });
 };
 
-before({ timeout: 15000 }, (done) => {
+before({ timeout: 60000 }, (done) => {
 
     require('../../../index')((err, srv) => {
 
@@ -168,7 +168,7 @@ suite('/intent', () => {
 
     suite('/post', () => {
 
-        test('should respond with 200 successful operation and return an intent object', { timeout: 15000 }, (done) => {
+        test('should respond with 200 successful operation and return an intent object', { timeout: 60000 }, (done) => {
 
             const data = {
                 agent: agentName,
@@ -436,7 +436,7 @@ suite('/intent/{id}', () => {
 
     suite('/put', () => {
 
-        test('should respond with 200 successful operation', { timeout: 15000 }, (done) => {
+        test('should respond with 200 successful operation', { timeout: 60000 }, (done) => {
 
             const data = {
                 agent: agentName,
@@ -641,7 +641,7 @@ suite('/intent/{id}', () => {
             });
         });
 
-        test('should respond with 200 successful operation', { timeout: 10000 }, (done) => {
+        test('should respond with 200 successful operation', { timeout: 60000 }, (done) => {
 
             const data = {
                 id: intentId
