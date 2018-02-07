@@ -7,7 +7,7 @@ version: '3.0'
 
 services:
   api:
-    image: samtecspg/articulate-api:0.5.0
+    image: samtecspg/articulate-api:0.5.1
     ports: ['0.0.0.0:8000:8000']
     environment:
       - REDIS_HOST=${REDIS_HOST:-redis}
@@ -25,7 +25,7 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
     networks: ['alpha-nlu-network']
   ui:
-    image: samtecspg/articulate-ui:0.5.0
+    image: samtecspg/articulate-ui:0.5.1
     ports: ['0.0.0.0:3500:3000']
     environment:
       - API_URL=${API_URL:-http://localhost:8000}
@@ -33,12 +33,12 @@ services:
       - "api"
     networks: ['alpha-nlu-network']
   rasa:
-    image: samtecspg/articulate-rasa:0.5.0
+    image: samtecspg/articulate-rasa:0.5.1
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']
   duckling:
-    image: samtecspg/articulate-duckling:0.5.0
+    image: samtecspg/articulate-duckling:0.5.1
     ports: ['0.0.0.0:8500:8000']
     networks: ['alpha-nlu-network']
   redis:
