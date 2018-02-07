@@ -33,6 +33,7 @@ module.exports = (request, reply) => {
         (domains, cb) => {
 
             Async.map(domains, (domain, callback) => {
+
                 server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
 
                     if (res.statusCode !== 200){
