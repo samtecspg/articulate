@@ -7,16 +7,8 @@ version: '3.0'
 
 services:
   api:
-    image: samtecspg/articulate-api:v0.5.0
+    image: samtecspg/articulate-api:0.5.0
     ports: ['0.0.0.0:8000:8000']
-    networks: ['alpha-nlu-network']
-    # The following (crazy) block is about both:
-    # 1) setting default values for app parameteres
-    # 2) projecting any changes to those values set in the .env file
-    # a line should be added to this list for any env-var/param that the
-    # app might need, and its easiest to follow if the var name is kept the
-    # same for both the var thats projected into the app (the first name)
-    # and the name thats expected in the .env (the second name)
     environment:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
@@ -25,29 +17,36 @@ services:
       - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
+    depends_on:
+      - "rasa"
+      - "redis"
+      - "duckling"
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
+    networks: ['alpha-nlu-network']
   ui:
-    image: samtecspg/articulate-ui:v0.5.0
+    image: samtecspg/articulate-ui:0.5.0
     ports: ['0.0.0.0:3500:3000']
     environment:
       - API_URL=${API_URL:-http://localhost:8000}
+    depends_on:
+      - "api"
     networks: ['alpha-nlu-network']
   rasa:
-    image: samtecspg/articulate-rasa:v0.5.0
+    image: samtecspg/articulate-rasa:0.5.0
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']
   duckling:
-    image: samtecspg/articulate-duckling:v0.5.0
+    image: samtecspg/articulate-duckling:0.5.0
     ports: ['0.0.0.0:8500:8000']
     networks: ['alpha-nlu-network']
   redis:
     image: redis:4.0.6-alpine
     ports: ['0.0.0.0:6379:6379']
-    networks: ['alpha-nlu-network']
     command: redis-server --appendonly yes
     volumes:
       - ${REDIS_DATA:-./local-storage/redis-data}:/data
+    networks: ['alpha-nlu-network']
 
 networks: {alpha-nlu-network: {}}
