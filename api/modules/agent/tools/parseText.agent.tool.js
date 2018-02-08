@@ -120,26 +120,69 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
     Async.parallel({
         rasa: (callback) => {
 
-            Async.map(agentData.trainedDomains, (trainedDomain, callbk) => {
+            Async.waterfall([
+                (cb) => {
+                    let domainRecognizerName = _.filter(agentData.trainedDomains, (trainedDomain) => {
+                        return trainedDomain.name.indexOf('_domain_recognizer') > -1;
+                    });
+                    domainRecognizerName = domainRecognizerName.length > 0 ? domainRecognizerName[0] : null;
+                    if (domainRecognizerName){
+                        getRasaParse(textToParse, domainRecognizerName, agentData.agent.agentName, rasa, ERPipeline, (err, result) => {
 
-                const start = process.hrtime();
-                getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasa, ERPipeline, (err, result) => {
-
-                    if (err){
-                        return callbk(err, null);
+                            if (err){
+                                return cb(err, null);
+                            }
+                            return cb(null, result);
+                        });
                     }
-                    const time = process.hrtime(start);
-                    result = Object.assign(result, { elapsed_time_ms: time[1] / 1000000 });
-                    return callbk(null, result);
-                });
+                    else {
+                        return cb(null, null);
+                    }
+                },
+                (domainRecognitionResults, cb) => {
 
-            }, (err, parsingResults) => {
+                    const parsingResults = [];
+                    Async.map(agentData.trainedDomains, (trainedDomain, callbk) => {
+
+                        if (!domainRecognitionResults || trainedDomain.name !== domainRecognitionResults.domain){
+                            const start = process.hrtime();
+                            getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasa, ERPipeline, (err, result) => {
+
+                                if (err){
+                                    return callbk(err, null);
+                                }
+                                const time = process.hrtime(start);
+                                result = Object.assign(result, { elapsed_time_ms: time[1] / 1000000 });
+                                if (domainRecognitionResults){
+                                    let domainScore = _.filter(domainRecognitionResults.intent_ranking, (recognizedDomain) => {
+                                        return recognizedDomain.name === result.domain;
+                                    });
+                                    domainScore = domainScore.length > 0 ? domainScore[0].confidence : 0;
+                                    result = Object.assign(result, { domainScore });
+                                }
+                                parsingResults.push(result);
+                                return callbk(null);
+                            });
+                        }
+                        else {
+                            return callbk(null);
+                        }
+                    }, (err) => {
+
+                        if (err){
+                            return cb(err, null);
+                        }
+
+                        return cb(null, parsingResults);
+                    });
+                }
+            ], (err, results) => {
 
                 if (err){
                     return callback(err, null);
                 }
 
-                return callback(null, parsingResults);
+                return callback(null, results);
             });
         },
         duckling: (callback) => {
@@ -188,8 +231,9 @@ module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, lang
             return cb(err, null);
         }
         const time = process.hrtime(start);
-        const max_intent_score = _.max(_.compact(_.map(_.map(result.result.results, 'intent'), 'confidence')));
-        result.result = Object.assign(result.result, { maximum_intent_score: max_intent_score, total_elapsed_time_ms: time[1] / 1000000 });
+        const maximum_intent_score = _.max(_.compact(_.map(_.map(result.result.results, 'intent'), 'confidence')));
+        const maximum_domain_score = _.max(_.compact(_.map(result.result.results, 'domainScore')));
+        result.result = Object.assign(result.result, { maximum_domain_score, maximum_intent_score, total_elapsed_time_ms: time[1] / 1000000 });
         return cb(null, result);
     });
 };

@@ -43,18 +43,15 @@ const getEntitiesFromRasaResults = (rasaResults) => {
 
 const getBestRasaResult = (rasaResults, agent) => {
 
-    const recognizedDomain = rasaResults.results.length > 1 ? _.filter(rasaResults.results, (rasaResult) => {
-
-        return rasaResult.domain.indexOf('domain_recognizer') !== -1;
-    })[0] : rasaResults.results[0];
-
     let rasaResult = {};
 
-    if (rasaResults.results.length > 1 && recognizedDomain.intent.confidence > agent.domainClassifierThreshold){
-        rasaResult = _.filter(rasaResults.results, (tempResult) => {
+    const recognizedDomain = rasaResults.results.maximum_domain_score ? _.filter(rasaResults.results, (rasaResult) => {
 
-            return tempResult.domain === recognizedDomain.intent.name;
-        })[0];
+        return rasaResults.results.maximum_domain_score === rasaResult.domainScore;
+    })[0] : rasaResults.results[0];
+
+    if (recognizedDomain.domainScore && recognizedDomain.domainScore > agent.domainClassifierThreshold){
+        rasaResult = recognizedDomain;
     }
     else {
         if (rasaResults.results.length === 1){
