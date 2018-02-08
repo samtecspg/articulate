@@ -24,16 +24,32 @@ This means:
 
 # Release process
 
-Process begins as soon as all the features that are destin for the release are in master
-
-1. Make a release branch
+1. Process begins as soon as all the features that are destin for the release are in master
+   1. Make a release branch - "git checkout -b v0.5"
 2. Test/bug-fix until the release is ready
-3. Edit the `docker-compoose.yml` so that it points to the release version
-4. (optionally) do a local build then a up to double-check mods
-5. Commit & push
-6. Tag the commit with the release version number
-7. (Wait for dockerhub to finish building everything
-8. Do a `docker-compose up` and make sure its still as expected
-9. Clone on that tag then delete all the git files
-10. Tar/Zip
+   1. Set the "patch" number your attempting to build (`MAJOR.MINOR.PATCH`)
+   2. Edit the `docker-compoose.yml` so that it points to that version - "api:0.5.1"
+   3. Commit & push
+   4. Do a local build then a up to double-check mods - `docker-compose -f docker-compose.yml -f build-compose-override.yml up`
+3. If everything above all seems clean and your ready to really make the release (trigger the automatic builds)
+   1. Tag with the full verison info - `git tag -a -m "The release" v0.5.1 ; git push origin v0.5.1`
+   2. (Wait for dockerhub to finish building everything
+   3. Do a `docker-compose up` and make sure its still as expected (best on clean clone and clean docker (flush releated images)
+4. Make the release on github
+   1. Click on "X releases" in github and "Draft a new release" with the version tag used above
+   2. Build the Tar/Zips for the release
+      1. Start in a clean/empty directory
+      2. `clone https://github.com/samtecspg/articulate.git`
+      3. `mv articulate articulate-src`
+      4. `cd articulate-src`
+      5. `git checkout v0.5.1`
+      6. `cd ..`
+      7. `mkdir articulate-0.5.1`
+      8.  `cp -r articulate-src/docker-compose.yml articulate-src/local-storage articulate-0.5.1`
+      9. `rm articulate-0.5.1/local-storage/redis-data/.gitignore articulate-0.5.1/local-storage/rasa/nlu-model/.gitignore`
+      10. `zip -9 -y -r articulate-0.5.1.zip articulate-0.5.1`
+      11. `tar cvf articulate-0.5.1.tar articulate-0.5.1`
+      12. `gzip -9 articulate-0.5.1.tar`
+  3. "Edit" the github relase and drag `articulate-0.5.1.zip` & `articulate-0.5.1.tar.gz` onto the release
+
 11. Edit the GitHub release with any useful notes, upload the tar/zip 
