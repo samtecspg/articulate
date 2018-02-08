@@ -146,4 +146,12 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_agent.missing_webhook_message',
     defaultMessage: 'Please add at the webhook url',
   },
+  invalidSlotNameInPrompt: {
+    id: 'boilerplate.containers.IntentPage.create_agent.invalid_slot_name_prompt',
+    defaultMessage: 'Please verify that every text prompt for required slots are referencing valid slots names',
+  },
+  invalidSlotNameInResponse: {
+    id: 'boilerplate.containers.IntentPage.create_agent.invalid_slot_name_response',
+    defaultMessage: 'Please verify that every agent response are referencing valid slots names',
+  },
 });

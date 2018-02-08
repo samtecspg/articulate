@@ -160,13 +160,70 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
+  slotsAreValid(){
+    const regex = /\{[^\{\}]+\}/g;
+    let nonExistingSlotsInPrompts = [];
+    let nonExistingSlotsInResponses = [];
+    const slotNames = _.map(this.props.scenarioData.slots, (slot) => {
+      return `{${slot.slotName}}`;
+    });
+    this.props.scenarioData.slots.forEach(slot => {
+      const matches = [];
+      let m;
+      do {
+        m = regex.exec(slot.textPrompts);;
+        if (m) {
+            matches.push(m);
+        }
+      } while (m);
+      const slotsReferencedInTextPromps = _.compact(_.flatten(matches));
+      nonExistingSlotsInPrompts.push(_.difference(slotsReferencedInTextPromps, slotNames));
+    });
+    this.props.scenarioData.intentResponses.forEach(response => {
+      const matches = [];
+      let m;
+      do {
+        m = regex.exec(response);;
+        if (m) {
+            matches.push(m);
+        }
+      } while (m);
+      const slotsReferencedInResponse = _.compact(_.flatten(matches));
+      nonExistingSlotsInResponses.push(_.difference(slotsReferencedInResponse, slotNames));
+    });
+    nonExistingSlotsInPrompts = _.flattenDeep(nonExistingSlotsInPrompts);
+    nonExistingSlotsInResponses = _.flattenDeep(nonExistingSlotsInResponses);
+
+    if (nonExistingSlotsInPrompts.length > 0 || nonExistingSlotsInResponses.length > 0){
+      Alert.closeAll();
+      if (nonExistingSlotsInPrompts.length > 0){
+        Alert.warning(messages.invalidSlotNameInPrompt.defaultMessage, {
+          position: 'bottom',
+          timeout: 'none'
+        });
+      }
+      else {
+        Alert.warning(messages.invalidSlotNameInResponse.defaultMessage, {
+          position: 'bottom',
+          timeout: 'none'
+        });
+      }
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     if (this.props.scenarioData.useWebhook && this.props.scenarioData.webhookUrl || (!this.props.scenarioData.useWebhook && this.props.scenarioData.intentResponses.length > 0)){
-      if (this.state.editMode) {
-        this.props.onUpdate();
-      } else {
-        this.props.onCreate();
+      if (this.slotsAreValid()){
+        if (this.state.editMode) {
+          this.props.onUpdate();
+        } else {
+          this.props.onCreate();
+        }
       }
     }
     else {
