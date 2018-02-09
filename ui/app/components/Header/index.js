@@ -4,7 +4,7 @@ import { Link, } from 'react-router';
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
 
-    const { breadcrumbs } = this.props;
+    const { breadcrumbs, actionButtons } = this.props;
 
     return (
       <header style={{ position: 'fixed' }} className="valign-wrapper">
@@ -21,6 +21,7 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
               })
             }
           </div>
+          {actionButtons}
         </div>
       </header>
     );
@@ -29,6 +30,14 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
 
 Header.propTypes = {
   breadcrumbs: React.PropTypes.array.isRequired,
+  actionButtons: React.PropTypes.oneOfType([
+    React.PropTypes.array,
+    React.PropTypes.object,
+  ]),
 };
+
+Header.defaultProps = {
+  actionButtons: [],
+}
 
 export default Header;

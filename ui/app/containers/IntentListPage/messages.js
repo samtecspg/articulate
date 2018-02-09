@@ -19,6 +19,6 @@ export default defineMessages({
   },
   actionButton: {
     id: 'boilerplate.containers.DomainListPage.list.action',
-    defaultMessage: '+ Create',
+    defaultMessage: '+ Create Intent',
   },
 });

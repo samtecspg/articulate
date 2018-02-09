@@ -98,7 +98,9 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
             { name: 'description', content: 'Add a webhook to your agent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs}/>
+        <Header breadcrumbs={breadcrumbs} actionButtons={
+          <ActionButton label={messages.saveButton} onClick={this.props.onSubmitForm} />
+        }/>
         <Content>
           <ContentHeader title={messages.createWebhookTitle} subTitle={messages.createWebhookDescription} />
           <Form>
@@ -134,8 +136,6 @@ export class WebhookPage extends React.PureComponent { // eslint-disable-line re
               </div>*/}
             </Row>
           </Form>
-
-          <ActionButton label={messages.saveButton} onClick={this.props.onSubmitForm} />
         </Content>
       </div>
     );

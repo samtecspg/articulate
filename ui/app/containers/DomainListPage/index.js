@@ -121,7 +121,8 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
             { name: 'description', content: 'Create a domain for your agent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} />
+        <Header breadcrumbs={breadcrumbs} actionButtons={
+            <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />} />
         <Content>
           <ContentHeader title={messages.domainListTitle} subTitle={messages.domainListDescription} />
           <Form>
@@ -133,7 +134,6 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
                 }}
               />
             </Row>
-            <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />
           </Form>
 
         </Content>

@@ -56,7 +56,7 @@ export default defineMessages({
   },
   saveButton: {
     id: 'boilerplate.containers.WebhookPage.create_webhook.save_button',
-    defaultMessage: 'Save',
+    defaultMessage: 'Enable Webhook',
   },
   successMessage: {
     id: 'boilerplate.containers.IntentPage.create_agent.success_message',

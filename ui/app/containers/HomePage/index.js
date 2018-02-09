@@ -16,10 +16,9 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
 
     return (
       <div>
-        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} />
+        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} actionButtons={<ActionButton key="CreateButton" label={messages.actionButton} onClick={this.props.onCreateAgent} />} />
         <Content>
           <ContentHeader title={messages.welcomeTitle} subTitle={messages.welcomeDescription} />
-          <ActionButton label={messages.actionButton} onClick={this.props.onCreateAgent} />
         </Content>
       </div>
     );

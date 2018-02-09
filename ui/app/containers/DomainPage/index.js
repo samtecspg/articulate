@@ -124,7 +124,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
       breadcrumbs.push({ link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` });
     }
     breadcrumbs.push({ link: `/domains`, label: 'Domains' });
-    breadcrumbs.push({ label: `${this.state.editMode ? '+ Edit' : '+ Create'}` });
+    breadcrumbs.push({ label: `${this.state.editMode ? 'Edit' : '+ Create'}` });
     const contentHeaderTitle = this.state.editMode ? messages.editDomainTitle : messages.createDomainTitle;
     const contentHeaderSubTitle = this.state.editMode ? messages.editDomainDescription : messages.createDomainDescription;
     return (
@@ -138,7 +138,8 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
             { name: 'description', content: 'Create/Edit a domain for your agent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} />
+        <Header breadcrumbs={breadcrumbs} actionButtons={
+          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />} />
         <Content>
           <ContentHeader title={contentHeaderTitle} subTitle={contentHeaderSubTitle} />
           <Form>
@@ -164,7 +165,6 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
 
             />
           </Row>
-          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
 
         </Content>
 

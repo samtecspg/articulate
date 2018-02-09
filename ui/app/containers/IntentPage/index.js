@@ -304,7 +304,9 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             { name: 'description', content: 'Create an intent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} />
+        <Header breadcrumbs={breadcrumbs} actionButtons={
+          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
+        }/>
         <Content>
           <ContentHeader title={messages.createIntentTitle} subTitle={messages.createIntentDescription} />
           <Form>
@@ -460,8 +462,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               </Form>
               : null
           }
-
-          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
 
         </Content>
       </div>

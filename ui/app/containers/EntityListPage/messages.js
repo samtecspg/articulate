@@ -15,6 +15,6 @@ export default defineMessages({
   },
   actionButton: {
     id: 'boilerplate.containers.EntityListPage.list.action',
-    defaultMessage: '+ Create',
+    defaultMessage: '+ Create Entity',
   },
 });

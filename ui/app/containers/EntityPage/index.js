@@ -151,7 +151,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
       breadcrumbs.push({ link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` });
     }
     breadcrumbs.push({ link: `/entities`, label: 'Entities' });
-    breadcrumbs.push({ label: `${this.state.editMode ? '+ Edit' : '+ Create'}` });
+    breadcrumbs.push({ label: `${this.state.editMode ? 'Edit' : '+ Create'}` });
     const contentHeaderTitle = this.state.editMode ? messages.editEntityTitle : messages.createEntityTitle;
     const contentHeaderSubTitle = this.state.editMode ? messages.editEntityDescription : messages.createEntityDescription;
 
@@ -166,7 +166,9 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
             { name: 'description', content: 'Create an entity' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} />
+        <Header breadcrumbs={breadcrumbs} actionButtons={
+          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
+        }/>
         <Content>
           <ContentHeader title={contentHeaderTitle} subTitle={contentHeaderSubTitle} />
           <Form>
@@ -226,7 +228,6 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
             }}
           >
           </div>
-          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
         </Content>
       </div>
     );

@@ -186,7 +186,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
 
     const breadcrumbs = [{ label: 'Agent' },];
     if(this.state.editMode){
-      breadcrumbs.push({ label: '+ Edit' })
+      breadcrumbs.push({ label: 'Edit' })
     }else{
       breadcrumbs.push({ label: '+ Create' })
 
@@ -202,7 +202,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             { name: 'description', content: 'Create your NLU agent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} />
+        <Header breadcrumbs={breadcrumbs} actionButtons={<ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />} />
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>
@@ -292,8 +292,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
           <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el;}}>
             <br/>
           </div>
-
-          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
         </Content>
       </div>
     );

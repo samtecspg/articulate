@@ -18,6 +18,7 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 import InputLabel from '../../components/InputLabel';
+import EditDeleteButton from '../../components/EditDeleteButton';
 
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
@@ -112,7 +113,14 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             { name: 'description', content: `Details for NLU Agent ${currentAgent.agentName}` },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} />
+        <Header breadcrumbs={breadcrumbs} actionButtons={
+          <div className="btn-edit-delete">
+            <EditDeleteButton label={messages.editButton} iconName="edit" onClick={() => {
+              this.props.onChangeUrl(`/agent/${this.props.currentAgent.id}/edit`);
+            }}/>
+            <EditDeleteButton label={messages.deleteButton} iconName="delete" onClick={this.onDeletePrompt} />
+          </div>
+        }/>
         <Content>
           <Row>
             <header className="main-title">
@@ -191,30 +199,6 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             </TableContainer>
             : null
           }
-
-          <Row className={'right'}>
-            <Col>
-              <Button
-                floating
-                large
-                waves={'light'}
-                onClick={() => {
-                  this.props.onChangeUrl(`/agent/${this.props.currentAgent.id}/edit`);
-                }}
-                className={'lighten-1 white-text text-darken-4'}
-              ><FormattedMessage {...messages.editButton} /></Button>
-            </Col>
-            <Col>
-              <Button
-                floating
-                large
-                waves={'light'}
-                onClick={this.onDeletePrompt}
-                className={'red lighten-1 white-text text-darken-4'}
-              ><FormattedMessage {...messages.deleteButton} /></Button>
-            </Col>
-          </Row>
-          <Row></Row>
         </Content>
         <DeleteModal
           isOpen={this.state.deleteModalOpen}

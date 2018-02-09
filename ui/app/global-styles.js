@@ -172,7 +172,7 @@ injectGlobal`
     opacity: 0.5;
     font-weight: 300;
     font-size: 1em; }
-    
+
     header .breadcrumb:before {
       color: #c5cbd8;
       font-size: 16px; }
@@ -181,7 +181,7 @@ injectGlobal`
     color: #4e4e4e;
     opacity: 1;
     font-weight: 400; }
-   
+
   header a.breadcrumb:hover {
     text-decoration: underline;}
 
@@ -206,8 +206,17 @@ injectGlobal`
       color: #00ca9f;
       margin-bottom: 20px; }
 
-  .fixed-action-btn {
-    right: 330px; }
+  .btn-action {
+    position: fixed;
+    top: -4px;
+    right: 330px;
+  }
+
+  .btn-edit-delete {
+    position: fixed;
+    top: 6px;
+    right: 330px;
+  }
 
   .btn-floating {
     -webkit-border-radius: 3px;
@@ -386,6 +395,11 @@ injectGlobal`
     color: #00ca9f;
   }
 
+  .edit-delete-icon {
+    color: #4e4e4e !important;
+    font-size: 16px !important;
+    vertical-align: bottom;
+  }
 
   .quotes:before, .quotes:after {
     display: block;
