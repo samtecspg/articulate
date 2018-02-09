@@ -30,6 +30,15 @@ class EntityValidate {
             })()
         };
 
+        this.findIntentsByEntityId = {
+            params: (() => {
+
+                return {
+                    id: EntitySchema.id.required().description('Id of the entity')
+                };
+            })()
+        };
+
         this.updateById = {
             params: (() => {
 

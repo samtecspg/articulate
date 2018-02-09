@@ -1,4 +1,7 @@
-import { fromJS } from 'immutable';
+import {
+  fromJS,
+  Map
+} from 'immutable';
 import {
   ACTION_CANCELLED,
   CONVERSE,
@@ -48,6 +51,9 @@ import {
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
+  LOAD_ENTITY_INTENTS,
+  LOAD_ENTITY_INTENTS_ERROR,
+  LOAD_ENTITY_INTENTS_SUCCESS,
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
   RESET_SESSION,
@@ -69,7 +75,7 @@ import {
   UPDATE_INTENT_ERROR,
   UPDATE_INTENT_SUCCESS,
   UPDATE_SCENARIO_ERROR,
-  UPDATE_SCENARIO_SUCCESS
+  UPDATE_SCENARIO_SUCCESS,
 } from './constants';
 
 // The initial state of the App
@@ -85,6 +91,7 @@ const initialState = fromJS({
   domainIntents: false,
   conversation: [],
   agent: undefined,
+  entityIntents: Map(),
 });
 
 function appReducer(state = initialState, action) {
@@ -410,6 +417,18 @@ function appReducer(state = initialState, action) {
         .set('domainIntents', action.data)
         .set('loading', false);
     case LOAD_AGENT_INTENTS_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case LOAD_ENTITY_INTENTS:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_ENTITY_INTENTS_SUCCESS:
+      return state
+        .update('entityIntents', (entityIntents) => entityIntents.set(action.data.id, action.data.intents))
+        .set('loading', false);
+    case LOAD_ENTITY_INTENTS_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);

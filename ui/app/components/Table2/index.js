@@ -90,7 +90,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
 
     return {
       Header: header,
-      pivot:column.pivot,
+      pivot: column.pivot,
       Cell: cell,
       accessor: column.accessor,
       sortable: column.sortable,
@@ -110,12 +110,10 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       columns,
       menu,
       tableName,
-      minRows,
       highlightRow,
       striped,
-      showPagination,
       showSearchInput,
-      pivotBy
+      ...other,
     } = this.props;
     let newColumns;
 
@@ -150,10 +148,8 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
           <ReactTable
             data={this.state.data}
             columns={newColumns.map(this.generateColumnDefinition)}
-            showPagination={showPagination}
             className={classNames.join(' ')}
-            minRows={minRows}
-            pivotBy={pivotBy}
+            {...other}
           />
         </div>
       </div>
@@ -173,6 +169,7 @@ Table2.propTypes = {
   showPagination: React.PropTypes.bool,
   showSearchInput: React.PropTypes.bool,
   pivotBy: React.PropTypes.array,
+  SubComponent: React.PropTypes.func,
 };
 
 Table2.defaultProps = {

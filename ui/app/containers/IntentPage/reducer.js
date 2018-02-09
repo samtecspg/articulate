@@ -1,4 +1,4 @@
-import { fromJS, Iterable } from 'immutable';
+import { fromJS } from 'immutable';
 import {
   ADD_SLOT,
   ADD_TEXT_PROMPT,
@@ -85,7 +85,7 @@ function intentReducer(state = initialState, action) {
         examples = examples.map((example) => {
           return example.get('userSays') === action.payload.userSays ? example.update('entities', (synonyms) => {
             synonyms = synonyms === '' ? fromJS([]) : synonyms;// Redis saves an empty array as an empty string so we need to re-create the array
-            return synonyms.push({ value, entity: action.payload.entity, start, end });
+            return synonyms.push({ value, entity: action.payload.entity.entityName, start, end, entityId: action.payload.entity.id });
           }) : example;
         });
         newState = newState.set('windowSelection', '');
@@ -116,7 +116,7 @@ function intentReducer(state = initialState, action) {
       });
       let intentResponses = state.getIn(['scenarioData', 'intentResponses']);
       intentResponses = intentResponses.map((response) => {
-        if (response.indexOf(`{${action.payload.slotName}}`)){
+        if (response.indexOf(`{${action.payload.slotName}}`)) {
           response = response.replace(new RegExp(`{${action.payload.slotName}}`, 'g'), `{${action.payload.value}}`);
         }
         return response;
@@ -190,22 +190,22 @@ function intentReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false);
     case LOAD_SCENARIO_SUCCESS:
-    let transformedScenario = action.scenario;
-    if (Array.isArray(transformedScenario.slots)){
-      transformedScenario.slots = action.scenario.slots.map((slot) => {
-        slot.isList = slot.isList === "true";
-        slot.isRequired = slot.isRequired === "true";
-        slot.useWebhook = slot.useWebhook === "true";
-        slot.textPrompts = Array.isArray(slot.textPrompts) ? slot.textPrompts : [];
-        return slot;
-      });
-    }
-    else{
-      transformedScenario.slots = [];
-    }
-    transformedScenario.intentResponses = Array.isArray(transformedScenario.intentResponses) ? transformedScenario.intentResponses : [];
-    transformedScenario.useWebhook = action.useWebhook === "true";
-    transformedScenario = fromJS(transformedScenario);
+      let transformedScenario = action.scenario;
+      if (Array.isArray(transformedScenario.slots)) {
+        transformedScenario.slots = action.scenario.slots.map((slot) => {
+          slot.isList = slot.isList === 'true';
+          slot.isRequired = slot.isRequired === 'true';
+          slot.useWebhook = slot.useWebhook === 'true';
+          slot.textPrompts = Array.isArray(slot.textPrompts) ? slot.textPrompts : [];
+          return slot;
+        });
+      }
+      else {
+        transformedScenario.slots = [];
+      }
+      transformedScenario.intentResponses = Array.isArray(transformedScenario.intentResponses) ? transformedScenario.intentResponses : [];
+      transformedScenario.useWebhook = action.useWebhook === 'true';
+      transformedScenario = fromJS(transformedScenario);
       return state
         .set('loading', false)
         .set('error', false)

@@ -297,6 +297,7 @@ class AgentValidate {
                             examples: Joi.array().items({
                                 userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
                                 entities: Joi.array().items({
+                                    entityId: Joi.number(),
                                     start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                                     end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
                                     value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),

@@ -24,6 +24,7 @@ import {
   loadDomainIntents,
   resetAgentDomains,
   resetDomainIntents,
+  loadEntityIntents,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,

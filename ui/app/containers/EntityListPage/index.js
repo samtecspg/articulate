@@ -19,12 +19,14 @@ import Preloader from '../../components/Preloader';
 import {
   deleteEntity,
   loadAgentEntities,
+  loadEntityIntents,
   resetAgentDomains,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentEntities,
   makeSelectCurrentAgent,
   makeSelectEntity,
+  makeSelectEntityIntents,
   makeSelectError,
   makeSelectLoading,
 } from '../../containers/App/selectors';
@@ -39,6 +41,7 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
     this.onDeletePrompt = this.onDeletePrompt.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onDeleteDismiss = this.onDeleteDismiss.bind(this);
+    this.fetchEntityIntents = this.fetchEntityIntents.bind(this);
   }
 
   state = {
@@ -93,8 +96,12 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
     }];
   }
 
+  fetchEntityIntents(id) {
+    this.props.onFetchEntityIntents(id);
+  }
+
   render() {
-    const { loading, error, agentEntities, currentAgent } = this.props;
+    const { loading, error, agentEntities, currentAgent, entityIntents } = this.props;
     const entityProps = {
       loading,
       error,
@@ -128,7 +135,9 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
             <Row>
               <EntitiesTable
                 data={agentEntities || []}
+                intentData={entityIntents}
                 menu={this.renderMenu()}
+                onFetchIntents={this.fetchEntityIntents}
                 onCellChange={() => {
                 }}
               />
@@ -155,6 +164,7 @@ EntityListPage.propTypes = {
   onComponentWillUpdate: React.PropTypes.func,
   onChangeUrl: React.PropTypes.func,
   onDeleteDomain: React.PropTypes.func,
+  onFetchEntityIntents: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
@@ -167,9 +177,13 @@ EntityListPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    onFetchEntityIntents: (id) => {
+      dispatch(loadEntityIntents(id));
+    },
     onComponentWillUpdate: (agent) => agent ? dispatch(loadAgentEntities(agent.id)) : dispatch(resetAgentDomains()), // TODO: Reset agent entities
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteDomain: (entity) => dispatch(deleteEntity(entity.id)),
+
   };
 }
 
@@ -179,6 +193,7 @@ const mapStateToProps = createStructuredSelector({
   error: makeSelectError(),
   agentEntities: makeSelectAgentEntities(),
   currentAgent: makeSelectCurrentAgent(),
+  entityIntents: makeSelectEntityIntents(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntityListPage);

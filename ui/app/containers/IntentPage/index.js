@@ -217,7 +217,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-    if (this.props.scenarioData.useWebhook && this.props.scenarioData.webhookUrl || (!this.props.scenarioData.useWebhook && this.props.scenarioData.intentResponses.length > 0)){
+    if (this.props.scenarioData.useWebhook && this.props.scenarioData.webhookUrl || (!this.props.scenarioData.useWebhook && this.props.scenarioData.intentResponses.length > 0)) {
       if (this.slotsAreValid()){
         if (this.state.editMode) {
           this.props.onUpdate();
@@ -227,7 +227,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       }
     }
     else {
-      if (this.props.scenarioData.useWebhook){
+      if (this.props.scenarioData.useWebhook) {
         Alert.warning(messages.missingWebhookMessage.defaultMessage, {
           position: 'bottom'
         });
@@ -254,12 +254,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   handleOnTagEntity(userSays, entity, entityName, evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.props.onTagEntity(userSays, entity, entityName);
-    this.props.onAddSlot(this.generateSlotObject({ entity }));
+    this.props.onAddSlot(this.generateSlotObject({ entity: entity.entityName }));
   }
 
   render() {
     const { loading, error, success, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
-    if(_.isNil(agentDomains) && _.isNill(agentEntities)) return undefined;
+    if (_.isNil(agentDomains) && _.isNill(agentEntities)) return undefined;
     const intentProps = {
       loading,
       error,
@@ -274,7 +274,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         return {
           value: domain.domainName,
           text: domain.domainName,
-        }
+        };
       });
       domainsSelect.unshift({ value: 'default', text: 'Please choose a domain to place your intent', disabled: 'disabled' });
     }
@@ -534,9 +534,9 @@ export function mapDispatchToProps(dispatch) {
     onAddSlot: (slot) => {
       dispatch(addSlot(slot));
     },
-    onTagEntity: (userSays, entity, entityName) => {
+    onTagEntity: (userSays, entity) => {
       dispatch(dispatch(resetStatusFlags()));
-      dispatch(tagEntity({ userSays, entity, entityName }));
+      dispatch(tagEntity({ userSays, entity }));
     },
     onCheckboxChange: (slotName, field, evt) => {
       dispatch(dispatch(resetStatusFlags()));

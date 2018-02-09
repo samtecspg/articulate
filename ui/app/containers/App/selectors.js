@@ -108,6 +108,12 @@ const makeSelectDomainIntents = () => createSelector(
   (globalState) => globalState.get('domainIntents'),
 );
 
+
+const makeSelectEntityIntents = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('entityIntents').toJS(),
+);
+
 export {
   selectGlobal,
   makeSelectAgents,
@@ -128,5 +134,6 @@ export {
   makeSelectEntity,
   makeSelectLocationState,
   makeSelectDomainIntents,
-  makeSelectRoute
+  makeSelectRoute,
+  makeSelectEntityIntents,
 };

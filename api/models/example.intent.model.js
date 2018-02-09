@@ -7,6 +7,7 @@ class IntentExampleModel {
     static get schema() {
 
         return {
+            id: Joi.number(),
             userSays: Joi.string(),
             entities: Joi.array().items(IntentEntityModel.schema)
         };

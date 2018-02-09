@@ -1,6 +1,7 @@
 'use strict';
 
 const Joi = require('joi');
+
 class IntentEntityModel {
     static get schema() {
 
@@ -8,7 +9,8 @@ class IntentEntityModel {
             start: Joi.number(),
             end: Joi.number(),
             value: Joi.string(),
-            entity: Joi.string()
+            entity: Joi.string(),
+            entityId: Joi.number(),
         };
     };
 }

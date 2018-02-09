@@ -25,11 +25,11 @@ module.exports = (request, reply) => {
 
                     redis.zscore('agents', intent.agent, (err, id) => {
 
-                        if (err){
+                        if (err) {
                             const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
                             return callback(error);
                         }
-                        if (id){
+                        if (id) {
                             agentId = id;
                             return callback(null);
                         }
@@ -41,8 +41,8 @@ module.exports = (request, reply) => {
 
                     server.inject(`/agent/${agentId}`, (res) => {
 
-                        if (res.statusCode !== 200){
-                            if (res.statusCode === 400){
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 400) {
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return callback(errorNotFound);
                             }
@@ -60,11 +60,11 @@ module.exports = (request, reply) => {
 
                             redis.zscore(`agentDomains:${agentId}`, intent.domain, (err, id) => {
 
-                                if (err){
+                                if (err) {
                                     const error = Boom.badImplementation(`An error ocurred checking if the domain ${intent.domain} exists in the agent ${intent.agent}.`);
                                     return cllbk(error);
                                 }
-                                if (id){
+                                if (id) {
                                     domainId = id;
                                     return cllbk(null);
                                 }
@@ -84,7 +84,7 @@ module.exports = (request, reply) => {
                         }
                     ], (err, result) => {
 
-                        if (err){
+                        if (err) {
                             return callback(err);
                         }
                         return callback(null);
@@ -92,7 +92,7 @@ module.exports = (request, reply) => {
                 }
             ], (err) => {
 
-                if (err){
+                if (err) {
                     return cb(err, null);
                 }
                 return cb(null);
@@ -102,7 +102,7 @@ module.exports = (request, reply) => {
 
             redis.incr('intentId', (err, newIntentId) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error ocurred getting the new intent id.');
                     return cb(error);
                 }
@@ -114,23 +114,37 @@ module.exports = (request, reply) => {
 
             redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error ocurred adding the name to the intents list.');
                     return cb(error);
                 }
-                if (addResponse !== 0){
+                if (addResponse !== 0) {
                     return cb(null);
                 }
                 const error = Boom.badRequest(`A intent with this name already exists in the domain ${intent.domain}.`);
                 return cb(error);
             });
         },
+        addToEntities: (cb) => {
+            Async.eachSeries(intent.examples, (example, next) => {
+                Async.eachSeries(example.entities, (entity, next) => {
+                    redis.zadd(`entityIntents:${entity.entityId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
+                        if (err) {
+                            const error = Boom.badImplementation('An error ocurred adding the intent to the entity list.');
+                            return next(error);
+                        }
+                        return next(null);
+                    });
+                }, next);
+
+            }, cb);
+        },
         intent: (cb) => {
 
             intent = Object.assign({ id: intentId }, intent);
             intent.examples = _.map(intent.examples, (example) => {
 
-                if (example.entities.length > 0){
+                if (example.entities.length > 0) {
 
                     const entities = _.sortBy(example.entities, (entity) => {
 
@@ -143,7 +157,7 @@ module.exports = (request, reply) => {
             const flatIntent = Flat(intent);
             redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error ocurred adding the intent data.');
                     return cb(error);
                 }
@@ -152,7 +166,7 @@ module.exports = (request, reply) => {
         }
     }, (err, result) => {
 
-        if (err){
+        if (err) {
             return reply(err, null);
         }
 
@@ -167,7 +181,7 @@ module.exports = (request, reply) => {
                     Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
                 ], (err) => {
 
-                    if (err){
+                    if (err) {
                         return cb(err);
                     }
                     return cb(null);

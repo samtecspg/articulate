@@ -19,8 +19,8 @@ export function AgentEntities(props) {
       return (
         <NavItem
           onClick={props.userSays ?
-            props.onClickFunction.bind(null, props.userSays, agentEntity.entityName, agentEntity.entityName) :
-            props.onClickFunction.bind(null, agentEntity.entityName)}
+            props.onClickFunction.bind(null, props.userSays, agentEntity) :
+            props.onClickFunction.bind(null, agentEntity)}
           key={agentIndex}
         >
           <span style={{ color: agentEntity.uiColor }}>

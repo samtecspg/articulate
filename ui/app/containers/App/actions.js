@@ -50,6 +50,9 @@ import {
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
+  LOAD_ENTITY_INTENTS,
+  LOAD_ENTITY_INTENTS_ERROR,
+  LOAD_ENTITY_INTENTS_SUCCESS,
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
   RESET_DOMAINS_INTENTS,
@@ -592,6 +595,28 @@ export function loadAgentIntentsSuccess(data) {
 export function loadAgentIntentsError(error) {
   return {
     type: LOAD_AGENT_INTENTS_ERROR,
+    error,
+  };
+}
+
+export function loadEntityIntents(id) {
+  return {
+    type: LOAD_ENTITY_INTENTS,
+    apiCall: true,
+    id,
+  };
+}
+
+export function loadEntityIntentsSuccess(data) {
+  return {
+    type: LOAD_ENTITY_INTENTS_SUCCESS,
+    data,
+  };
+}
+
+export function loadEntityIntentsError(error) {
+  return {
+    type: LOAD_ENTITY_INTENTS_ERROR,
     error,
   };
 }

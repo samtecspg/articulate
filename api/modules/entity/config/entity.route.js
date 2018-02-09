@@ -24,6 +24,16 @@ const entityRoutes = [
         }
     },
     {
+        method: 'GET',
+        path: '/entity/{id}/intent',
+        config: {
+            description: 'Find a model instance by id from the data source',
+            tags: ['api'],
+            validate: EntityValidator.findIntentsByEntityId,
+            handler: EntityController.findIntentsByEntityId
+        }
+    },
+    {
         method: 'PUT',
         path: '/entity/{id}',
         config: {

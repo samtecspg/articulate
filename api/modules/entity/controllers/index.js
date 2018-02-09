@@ -3,6 +3,7 @@ const AddController = require('./add.entity.controller');
 const FindByIdController = require('./findById.entity.controller');
 const UpdateByIdController = require('./updateById.entity.controller');
 const DeleteByIdController = require('./deleteById.entity.controller');
+const FindIntentsByEntityIdController = require('./findIntentsByEntityId.entity.controller');
 
 const EntityController = {
 
@@ -12,7 +13,8 @@ const EntityController = {
 
     updateById: UpdateByIdController,
 
-    deleteById: DeleteByIdController
+    deleteById: DeleteByIdController,
+    findIntentsByEntityId: FindIntentsByEntityIdController,
 };
 
 module.exports = EntityController;
