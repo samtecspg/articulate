@@ -10,7 +10,7 @@ module.exports = (request, reply) => {
     redis.hgetall('agent:' + agentId, (err, data) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred retrieving the agent.');
+            const error = Boom.badImplementation('An error occurred retrieving the agent.');
             return reply(error);
         }
         if (data){

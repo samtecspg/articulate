@@ -18,7 +18,7 @@ module.exports = (request, reply) => {
                         const error = Boom.notFound('The specified domain doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, 'An error ocurred getting the domain');
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the domain');
                     return cb(error, null);
                 }
                 return cb(null);
@@ -29,7 +29,7 @@ module.exports = (request, reply) => {
             redis.smembers(`domainEntities:${domainId}`, (err, entities) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the entities from the sorted set.');
+                    const error = Boom.badImplementation('An error occurred getting the entities from the sorted set.');
                     return cb(error);
                 }
                 return cb(null, entities);
@@ -42,7 +42,7 @@ module.exports = (request, reply) => {
                 server.inject('/entity/' + entity, (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[1]}`);
+                        const error = Boom.create(res.statusCode, `An error occurred getting the data of the entity ${entity[1]}`);
                         return callback(error, null);
                     }
                     return callback(null, res.result);

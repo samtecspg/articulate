@@ -21,7 +21,7 @@ module.exports = (request, reply) => {
                         const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
                         return cb(errorNotFound);
                     }
-                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the agent');
                     return cb(error, null);
                 }
                 agentName = res.result.agentName;
@@ -37,7 +37,7 @@ module.exports = (request, reply) => {
                         const errorNotFound = Boom.notFound('The specified domain doesn\'t exists in this agent');
                         return cb(errorNotFound);
                     }
-                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the domain');
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the domain');
                     return cb(error, null);
                 }
                 domainName = res.result.domainName;
@@ -53,7 +53,7 @@ module.exports = (request, reply) => {
                         const errorNotFound = Boom.notFound('The specified intent doesn\'t exists');
                         return cb(errorNotFound);
                     }
-                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the intent');
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the intent');
                     return cb(error, null);
                 }
                 if (res.result && res.result.agent && res.result.agent === agentName && res.result.domain && res.result.domain === domainName){

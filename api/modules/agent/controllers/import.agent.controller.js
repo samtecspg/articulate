@@ -21,7 +21,7 @@ module.exports = (request, reply) => {
             redis.incr('agentId', (err, newAgentId) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the new agent id.');
+                    const error = Boom.badImplementation('An error occurred getting the new agent id.');
                     return cb(error);
                 }
                 agentId = newAgentId;
@@ -33,7 +33,7 @@ module.exports = (request, reply) => {
             redis.zadd('agents', 'NX', agentId, agent.agentName, (err, addResponse) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the name to the agents list.');
+                    const error = Boom.badImplementation('An error occurred adding the name to the agents list.');
                     return cb(error);
                 }
                 if (addResponse !== 0){
@@ -53,7 +53,7 @@ module.exports = (request, reply) => {
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the agent data.');
+                    const error = Boom.badImplementation('An error occurred adding the agent data.');
                     return cb(error);
                 }
                 return cb(null, clonedAgent);
@@ -74,7 +74,7 @@ module.exports = (request, reply) => {
                     redis.incr('entityId', (err, newEntityId) => {
 
                         if (err){
-                            const error = Boom.badImplementation('An error ocurred getting the new entity id.');
+                            const error = Boom.badImplementation('An error occurred getting the new entity id.');
                             return cb(error);
                         }
                         entityId = newEntityId;
@@ -86,7 +86,7 @@ module.exports = (request, reply) => {
                     redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, entity.entityName, (err, addResponse) => {
 
                         if (err){
-                            const error = Boom.badImplementation('An error ocurred adding the name to the entities list.');
+                            const error = Boom.badImplementation('An error occurred adding the name to the entities list.');
                             return cb(error);
                         }
                         if (addResponse !== 0){
@@ -103,7 +103,7 @@ module.exports = (request, reply) => {
                     redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 
                         if (err){
-                            const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                            const error = Boom.badImplementation('An error occurred adding the entity data.');
                             return cb(error);
                         }
                         return cb(null, entity);
@@ -132,7 +132,7 @@ module.exports = (request, reply) => {
                         redis.incr('domainId', (err, newDomainId) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred getting the new domain id.');
+                                const error = Boom.badImplementation('An error occurred getting the new domain id.');
                                 return cb(error);
                             }
                             domainId = newDomainId;
@@ -144,7 +144,7 @@ module.exports = (request, reply) => {
                         redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, domain.domainName, (err, addResponse) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred adding the name to the domains list.');
+                                const error = Boom.badImplementation('An error occurred adding the name to the domains list.');
                                 return cb(error);
                             }
                             if (addResponse !== 0){
@@ -163,7 +163,7 @@ module.exports = (request, reply) => {
                         redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred adding the domain data.');
+                                const error = Boom.badImplementation('An error occurred adding the domain data.');
                                 return cb(error);
                             }
                             return cb(null, clonedDomain);
@@ -194,7 +194,7 @@ module.exports = (request, reply) => {
                                 redis.incr('intentId', (err, newIntentId) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation('An error ocurred getting the new intent id.');
+                                        const error = Boom.badImplementation('An error occurred getting the new intent id.');
                                         return cb(error);
                                     }
                                     intentId = newIntentId;
@@ -206,7 +206,7 @@ module.exports = (request, reply) => {
                                 redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation('An error ocurred adding the name to the intents list.');
+                                        const error = Boom.badImplementation('An error occurred adding the name to the intents list.');
                                         return cb(error);
                                     }
                                     if (addResponse !== 0){
@@ -225,7 +225,7 @@ module.exports = (request, reply) => {
                                 redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation('An error ocurred adding the intent data.');
+                                        const error = Boom.badImplementation('An error occurred adding the intent data.');
                                         return cb(error);
                                     }
                                     return cb(null, clonedIntent);
@@ -263,7 +263,7 @@ module.exports = (request, reply) => {
                                             redis.incr('scenarioId', (err, newScenarioId) => {
 
                                                 if (err){
-                                                    const error = Boom.badImplementation('An error ocurred getting the new scenario id.');
+                                                    const error = Boom.badImplementation('An error occurred getting the new scenario id.');
                                                     return cb(error);
                                                 }
                                                 scenarioId = newScenarioId;
@@ -278,7 +278,7 @@ module.exports = (request, reply) => {
                                             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
                                                 if (err){
-                                                    const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                                                    const error = Boom.badImplementation('An error occurred adding the scenario data.');
                                                     return cb(error);
                                                 }
                                                 return cb(null, scenarioToInert);

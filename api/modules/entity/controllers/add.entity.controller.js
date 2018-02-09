@@ -19,7 +19,7 @@ module.exports = (request, reply) => {
             redis.zscore('agents', entity.agent, (err, agentId) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                    const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                     return cb(error);
                 }
                 if (agentId){
@@ -34,7 +34,7 @@ module.exports = (request, reply) => {
             redis.incr('entityId', (err, newEntityId) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the new entity id.');
+                    const error = Boom.badImplementation('An error occurred getting the new entity id.');
                     return cb(error);
                 }
                 entityId = newEntityId;
@@ -46,7 +46,7 @@ module.exports = (request, reply) => {
             redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, entity.entityName, (err, addResponse) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the name to the entities list.');
+                    const error = Boom.badImplementation('An error occurred adding the name to the entities list.');
                     return cb(error);
                 }
                 if (addResponse !== 0){
@@ -63,7 +63,7 @@ module.exports = (request, reply) => {
             redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                    const error = Boom.badImplementation('An error occurred adding the entity data.');
                     return cb(error);
                 }
                 return cb(null, entity);

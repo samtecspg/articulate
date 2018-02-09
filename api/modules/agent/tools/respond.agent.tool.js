@@ -140,7 +140,7 @@ const persistContext = (server, sessionId, cb) => {
                 server.inject(options, (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred updating the context ${elementInContext.id} of the session ${sessionId}`);
+                        const error = Boom.create(res.statusCode, `An error occurred updating the context ${elementInContext.id} of the session ${sessionId}`);
                         return callbackInsertInContext(error, null);
                     }
                     return callbackInsertInContext(null);
@@ -164,7 +164,7 @@ const persistContext = (server, sessionId, cb) => {
             server.inject(options, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error ocurred adding the a new element to the session ${sessionId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred adding the a new element to the session ${sessionId}`);
                     return callbackInsertInContext(error, null);
                 }
                 return callbackInsertInContext(null);
@@ -187,7 +187,7 @@ module.exports = (server, sessionId, timezone, data, callback) => {
             server.inject(`/context/${sessionId}`, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the context of the session ${sessionId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the context of the session ${sessionId}`);
                     return callbackLoadContext(error, null);
                 }
                 context = res.result;

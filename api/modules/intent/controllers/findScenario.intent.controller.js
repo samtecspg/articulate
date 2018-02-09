@@ -10,7 +10,7 @@ module.exports = (request, reply) => {
     redis.hgetall(`scenario:${intentId}`, (err, data) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred retrieving the scenario.');
+            const error = Boom.badImplementation('An error occurred retrieving the scenario.');
             return reply(error);
         }
         if (data){

@@ -10,7 +10,7 @@ const getAgentData = (server, agentId, cb) => {
             server.inject(`/agent/${agentId}/domain`, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the domainst of the agent ${agentId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the domainst of the agent ${agentId}`);
                     return callback(error, null);
                 }
                 return callback(null, res.result);
@@ -26,7 +26,7 @@ const getAgentData = (server, agentId, cb) => {
                         server.inject(`/domain/${domain.id}/entity`, (res) => {
 
                             if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error ocurred getting the entities of the domain ${domain.domainName}`);
+                                const error = Boom.create(res.statusCode, `An error occurred getting the entities of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
                             }
                             return cllbck(null, res.result);
@@ -37,7 +37,7 @@ const getAgentData = (server, agentId, cb) => {
                         server.inject(`/domain/${domain.id}/intent`, (res) => {
 
                             if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error ocurred getting the intents of the domain ${domain.domainName}`);
+                                const error = Boom.create(res.statusCode, `An error occurred getting the intents of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
                             }
                             return cllbck(null, res.result);

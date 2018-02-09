@@ -22,7 +22,7 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
         Wreck.post(`${rasa}/train?language=${language}&project=${agentName}&fixed_model_name=${modelFolderName}${pipeline ? `&pipeline=${pipeline}` : ''}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
 
             if (err) {
-                const error = Boom.badImplementation('An error ocurred calling the training process.');
+                const error = Boom.badImplementation('An error occurred calling the training process.');
                 return callback(error);
             }
 

@@ -19,7 +19,7 @@ module.exports = (request, reply) => {
             server.inject(`/domain/${domainId}`, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, 'An error ocurred getting the domain');
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the domain');
                     return callback(error, null);
                 }
                 domain = res.result;
@@ -31,7 +31,7 @@ module.exports = (request, reply) => {
             redis.zscore('agents', domain.agent, (err, id) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                    const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                     return callback(error);
                 }
                 if (id){
@@ -51,7 +51,7 @@ module.exports = (request, reply) => {
                         const errorNotFound = Boom.notFound(res.result.message);
                         return callback(errorNotFound);
                     }
-                    const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                    const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
                     return callback(error, null);
                 }
                 agent = res.result;
@@ -86,7 +86,7 @@ module.exports = (request, reply) => {
         server.inject(`/domain/${domainId}`, (res) => {
 
             if (res.statusCode !== 200){
-                const error = Boom.create(res.statusCode, 'An error ocurred getting the domain after training');
+                const error = Boom.create(res.statusCode, 'An error occurred getting the domain after training');
                 return reply(error);
             }
             return reply(res.result);

@@ -22,7 +22,7 @@ module.exports = (request, reply) => {
             redis.zrange('agents', start, limit === -1 ? limit : limit - 1, 'withscores', (err, agents) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the agents from the sorted set.');
+                    const error = Boom.badImplementation('An error occurred getting the agents from the sorted set.');
                     return cb(error);
                 }
                 agents = _.chunk(agents, 2);
@@ -36,7 +36,7 @@ module.exports = (request, reply) => {
                 server.inject('/agent/' + agent[1], (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of agent ${agent[0]} with id ${agent[1]}`);
+                        const error = Boom.create(res.statusCode, `An error occurred getting the data of agent ${agent[0]} with id ${agent[1]}`);
                         return callback(error, null);
                     }
                     return callback(null, res.result);

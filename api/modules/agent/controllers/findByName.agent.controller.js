@@ -10,14 +10,14 @@ module.exports = (request, reply) => {
     redis.zscore('agents', agentName, (err, agentId) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+            const error = Boom.badImplementation('An error occurred checking if the agent exists.');
             return reply(error);
         }
         if (agentId){
             redis.hgetall('agent:' + agentId, (err, data) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred retrieving the agent.');
+                    const error = Boom.badImplementation('An error occurred retrieving the agent.');
                     return reply(error);
                 }
                 if (data){

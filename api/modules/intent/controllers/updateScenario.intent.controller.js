@@ -21,13 +21,13 @@ const updateDataFunction = (redis, intentId, currentScenario, updateData, cb) =>
     redis.del(`scenario:${intentId}`, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred temporaly removing the scenario for the update.');
+            const error = Boom.badImplementation('An error occurred temporaly removing the scenario for the update.');
             return cb(error);
         }
         redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
             if (err){
-                const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                const error = Boom.badImplementation('An error occurred adding the scenario data.');
                 return cb(error);
             }
             return cb(null, Flat.unflatten(flatScenario));
@@ -53,7 +53,7 @@ module.exports = (request, reply) => {
                         const error = Boom.notFound('The specified scenario doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${intentId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the scenario ${intentId}`);
                     return cb(error, null);
                 }
                 return cb(null, res.result);
@@ -68,7 +68,7 @@ module.exports = (request, reply) => {
                         redis.zscore('agents', currentScenario.agent, (err, agentId) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                                const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                                 return callback(error);
                             }
                             if (agentId){
@@ -93,7 +93,7 @@ module.exports = (request, reply) => {
                         updateDataFunction(redis, intentId, currentScenario, updateData, (err, result) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                                const error = Boom.badImplementation('An error occurred adding the scenario data.');
                                 return callback(error);
                             }
                             return callback(null, result);
@@ -111,7 +111,7 @@ module.exports = (request, reply) => {
                 updateDataFunction(redis, intentId, currentScenario, updateData, (err, result) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                        const error = Boom.badImplementation('An error occurred adding the scenario data.');
                         return cb(error);
                     }
                     return cb(null, result);

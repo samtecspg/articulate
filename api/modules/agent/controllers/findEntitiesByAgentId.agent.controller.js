@@ -23,7 +23,7 @@ module.exports = (request, reply) => {
             redis.zrange(`agentEntities:${agentId}`, start, limit === -1 ? limit : limit - 1, 'withscores', (err, entities) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the entities of the agent from the sorted set.');
+                    const error = Boom.badImplementation('An error occurred getting the entities of the agent from the sorted set.');
                     return cb(error);
                 }
                 entities = _.chunk(entities, 2);
@@ -37,7 +37,7 @@ module.exports = (request, reply) => {
                 server.inject('/entity/' + entity[1], (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entity[0]} with id ${entity[0]}`);
+                        const error = Boom.create(res.statusCode, `An error occurred getting the data of the entity ${entity[0]} with id ${entity[0]}`);
                         return callback(error, null);
                     }
                     return callback(null, res.result);

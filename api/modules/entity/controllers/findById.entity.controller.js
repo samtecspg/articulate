@@ -10,7 +10,7 @@ module.exports = (request, reply) => {
     redis.hgetall('entity:' + entityId, (err, data) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred retrieving the entity.');
+            const error = Boom.badImplementation('An error occurred retrieving the entity.');
             return reply(error);
         }
         if (data){

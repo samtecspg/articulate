@@ -26,7 +26,7 @@ module.exports = (request, reply) => {
                     redis.zscore('agents', intent.agent, (err, id) => {
 
                         if (err) {
-                            const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                            const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                             return callback(error);
                         }
                         if (id) {
@@ -46,7 +46,7 @@ module.exports = (request, reply) => {
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return callback(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                            const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
                             return callback(error, null);
                         }
                         agent = res.result;
@@ -61,7 +61,7 @@ module.exports = (request, reply) => {
                             redis.zscore(`agentDomains:${agentId}`, intent.domain, (err, id) => {
 
                                 if (err) {
-                                    const error = Boom.badImplementation(`An error ocurred checking if the domain ${intent.domain} exists in the agent ${intent.agent}.`);
+                                    const error = Boom.badImplementation(`An error occurred checking if the domain ${intent.domain} exists in the agent ${intent.agent}.`);
                                     return cllbk(error);
                                 }
                                 if (id) {
@@ -103,7 +103,7 @@ module.exports = (request, reply) => {
             redis.incr('intentId', (err, newIntentId) => {
 
                 if (err) {
-                    const error = Boom.badImplementation('An error ocurred getting the new intent id.');
+                    const error = Boom.badImplementation('An error occurred getting the new intent id.');
                     return cb(error);
                 }
                 intentId = newIntentId;
@@ -115,7 +115,7 @@ module.exports = (request, reply) => {
             redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
 
                 if (err) {
-                    const error = Boom.badImplementation('An error ocurred adding the name to the intents list.');
+                    const error = Boom.badImplementation('An error occurred adding the name to the intents list.');
                     return cb(error);
                 }
                 if (addResponse !== 0) {
@@ -130,7 +130,7 @@ module.exports = (request, reply) => {
                 Async.eachSeries(example.entities, (entity, next) => {
                     redis.zadd(`entityIntents:${entity.entityId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
                         if (err) {
-                            const error = Boom.badImplementation('An error ocurred adding the intent to the entity list.');
+                            const error = Boom.badImplementation('An error occurred adding the intent to the entity list.');
                             return next(error);
                         }
                         return next(null);
@@ -158,7 +158,7 @@ module.exports = (request, reply) => {
             redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
                 if (err) {
-                    const error = Boom.badImplementation('An error ocurred adding the intent data.');
+                    const error = Boom.badImplementation('An error occurred adding the intent data.');
                     return cb(error);
                 }
                 return cb(null, intent);

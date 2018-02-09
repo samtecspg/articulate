@@ -21,7 +21,7 @@ module.exports = (request, reply) => {
                     redis.zscore('agents', scenario.agent, (err, id) => {
 
                         if (err){
-                            const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                            const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                             return callback(error);
                         }
                         if (id){
@@ -37,7 +37,7 @@ module.exports = (request, reply) => {
                     redis.zscore(`agentDomains:${agentId}`, scenario.domain, (err, id) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error ocurred checking if the domain ${scenario.domain} exists in the agent ${scenario.agent}.`);
+                            const error = Boom.badImplementation(`An error occurred checking if the domain ${scenario.domain} exists in the agent ${scenario.agent}.`);
                             return callback(error);
                         }
                         if (id){
@@ -56,7 +56,7 @@ module.exports = (request, reply) => {
                             redis.zscore(`domainIntents:${domainId}`, scenario.intent, (err, id) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation(`An error ocurred checking if the intent ${scenario.intent} exists in the domain ${scenario.domain}.`);
+                                    const error = Boom.badImplementation(`An error occurred checking if the intent ${scenario.intent} exists in the domain ${scenario.domain}.`);
                                     return cllbk(error);
                                 }
                                 if (id){
@@ -90,7 +90,7 @@ module.exports = (request, reply) => {
                     redis.exists(`scenario:${intentId}`, (err, exists) => {
 
                         if (err){
-                            const error = Boom.badImplementation('An error ocurred retrieving the scenario.');
+                            const error = Boom.badImplementation('An error occurred retrieving the scenario.');
                             return cb(error);
                         }
                         if (exists){
@@ -115,7 +115,7 @@ module.exports = (request, reply) => {
             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the scenario data.');
+                    const error = Boom.badImplementation('An error occurred adding the scenario data.');
                     return cb(error);
                 }
                 return cb(null, scenario);

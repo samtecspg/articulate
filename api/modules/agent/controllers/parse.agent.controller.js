@@ -40,7 +40,7 @@ module.exports = (request, reply) => {
                                 const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
                                 return callbackGetAgent(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the agent');
                             return callbackGetAgent(error, null);
                         }
                         return callbackGetAgent(null, res.result);
@@ -78,7 +78,7 @@ module.exports = (request, reply) => {
                 redis.incr('documentId', (err, newDocumentId) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error ocurred getting the new document id.');
+                        const error = Boom.badImplementation('An error occurred getting the new document id.');
                         return cb(error);
                     }
                     documentId = newDocumentId;
@@ -92,7 +92,7 @@ module.exports = (request, reply) => {
                 redis.hmset(`document:${documentId}`, flatDocument, (err) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the document data.');
+                        const error = Boom.badImplementation('An error occurred adding the document data.');
                         return cb(error);
                     }
                     return cb(null, document);

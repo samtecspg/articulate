@@ -10,7 +10,7 @@ module.exports = (request, reply) => {
     redis.hgetall('intent:' + intentId, (err, data) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred retrieving the intent.');
+            const error = Boom.badImplementation('An error occurred retrieving the intent.');
             return reply(error);
         }
         if (data){

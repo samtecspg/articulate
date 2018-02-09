@@ -19,7 +19,7 @@ module.exports = (request, reply) => {
             redis.incr('agentId', (err, newAgentId) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the new agent id.');
+                    const error = Boom.badImplementation('An error occurred getting the new agent id.');
                     return cb(error);
                 }
                 agentId = newAgentId.toString();
@@ -31,7 +31,7 @@ module.exports = (request, reply) => {
             redis.zadd('agents', 'NX', agentId, agent.agentName, (err, addResponse) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the name to the agents list.');
+                    const error = Boom.badImplementation('An error occurred adding the name to the agents list.');
                     return cb(error);
                 }
                 if (addResponse !== 0){
@@ -49,7 +49,7 @@ module.exports = (request, reply) => {
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the agent data.');
+                    const error = Boom.badImplementation('An error occurred adding the agent data.');
                     return cb(error);
                 }
                 return cb(null, agent);

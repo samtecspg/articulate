@@ -22,13 +22,13 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
     redis.del(`intent:${intentId}`, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred temporaly removing the intent for the update.');
+            const error = Boom.badImplementation('An error occurred temporaly removing the intent for the update.');
             return cb(error);
         }
         redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
             if (err){
-                const error = Boom.badImplementation('An error ocurred adding the intent data.');
+                const error = Boom.badImplementation('An error occurred adding the intent data.');
                 return cb(error);
             }
             const resultIntent = Flat.unflatten(flatIntent);
@@ -94,7 +94,7 @@ module.exports = (request, reply) => {
                         const error = Boom.notFound('The specified intent doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the intent ${intentId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the intent ${intentId}`);
                     return cb(error, null);
                 }
                 return cb(null, res.result);
@@ -105,7 +105,7 @@ module.exports = (request, reply) => {
             redis.zscore('agents', currentIntent.agent, (err, id) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the id of the agent.');
+                    const error = Boom.badImplementation('An error occurred getting the id of the agent.');
                     return cb(error);
                 }
                 if (id){
@@ -125,7 +125,7 @@ module.exports = (request, reply) => {
                         const errorNotFound = Boom.notFound(res.result.message);
                         return cb(errorNotFound);
                     }
-                    const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                    const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
                     return cb(error, null);
                 }
                 agent = res.result;
@@ -137,7 +137,7 @@ module.exports = (request, reply) => {
             redis.zscore(`agentDomains:${agentId}`, currentIntent.domain, (err, id) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the id of the domain.');
+                    const error = Boom.badImplementation('An error occurred getting the id of the domain.');
                     return cb(error);
                 }
                 if (id){
@@ -172,7 +172,7 @@ module.exports = (request, reply) => {
                         redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, updateData.intentName, (err, addResponse) => {
 
                             if (err) {
-                                const error = Boom.badImplementation(`An error ocurred adding the name ${updateData.intentName} to the intents list of the domain ${currentIntent.domain}.`);
+                                const error = Boom.badImplementation(`An error occurred adding the name ${updateData.intentName} to the intents list of the domain ${currentIntent.domain}.`);
                                 return callback(error);
                             }
                             if (addResponse !== 0){
@@ -187,7 +187,7 @@ module.exports = (request, reply) => {
                         redis.zrem(`domainIntents:${domainId}`, currentIntent.intentName, (err) => {
 
                             if (err){
-                                const error = Boom.badImplementation( `An error ocurred removing the name ${currentIntent.intentName} from the intents list of the agent ${currentIntent.agent}.`);
+                                const error = Boom.badImplementation( `An error occurred removing the name ${currentIntent.intentName} from the intents list of the agent ${currentIntent.agent}.`);
                                 return callback(error);
                             }
                             return callback(null);
@@ -198,7 +198,7 @@ module.exports = (request, reply) => {
                         updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred adding the intent data.');
+                                const error = Boom.badImplementation('An error occurred adding the intent data.');
                                 return callback(error);
                             }
                             return callback(null, result);
@@ -216,7 +216,7 @@ module.exports = (request, reply) => {
                 updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the intent data.');
+                        const error = Boom.badImplementation('An error occurred adding the intent data.');
                         return cb(error);
                     }
                     return cb(null, result);
@@ -232,14 +232,14 @@ module.exports = (request, reply) => {
         redis.exists(`scenario:${result.id}`, (err, exists) => {
 
             if (err){
-                const error = Boom.badImplementation('Intent updated. An error ocurred checking if the scenario exists.');
+                const error = Boom.badImplementation('Intent updated. An error occurred checking if the scenario exists.');
                 return reply(error);
             }
             if (exists){
                 redis.hmset(`scenario:${result.id}`, { intent: result.intentName }, (err) => {
 
                     if (err){
-                        const error = Boom.badImplementation('Intent updated. An error ocurred updating the new values in the scenario of the intent.');
+                        const error = Boom.badImplementation('Intent updated. An error occurred updating the new values in the scenario of the intent.');
                         return reply(error);
                     }
                     return reply(result);

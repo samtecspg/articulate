@@ -16,7 +16,7 @@ module.exports = (request, reply) => {
             redis.incr('contextId', (err, newContextId) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the new context id.');
+                    const error = Boom.badImplementation('An error occurred getting the new context id.');
                     return cb(error);
                 }
                 contextId = newContextId;
@@ -28,7 +28,7 @@ module.exports = (request, reply) => {
             redis.rpush(`sessionContexts:${sessionId}`, contextId, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the new context id.');
+                    const error = Boom.badImplementation('An error occurred getting the new context id.');
                     return cb(error);
                 }
                 return cb(null);
@@ -41,7 +41,7 @@ module.exports = (request, reply) => {
             redis.hmset(`context:${contextId}`, flatContext, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the context data.');
+                    const error = Boom.badImplementation('An error occurred adding the context data.');
                     return cb(error);
                 }
                 return cb(null, context);

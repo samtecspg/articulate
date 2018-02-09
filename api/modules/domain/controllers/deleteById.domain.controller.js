@@ -19,7 +19,7 @@ module.exports = (request, reply) => {
                         const error = Boom.notFound('The specified domain doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domainId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the domain ${domainId}`);
                     return cb(error, null);
                 }
                 domain = res.result;
@@ -34,7 +34,7 @@ module.exports = (request, reply) => {
                     server.inject(`/domain/${domain.id}/intent`, (res) => {
 
                         if (res.statusCode !== 200){
-                            const error = Boom.create(res.statusCode, `An error ocurred getting the intents to delete of the domain ${domainId}`);
+                            const error = Boom.create(res.statusCode, `An error occurred getting the intents to delete of the domain ${domainId}`);
                             return callbackGetIntents(error, null);
                         }
                         return callbackGetIntents(null, res.result);
@@ -50,7 +50,7 @@ module.exports = (request, reply) => {
                                 redis.del(`intent:${intent.id}`, (err, result) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation(`An error ocurred deleting the intent ${intent.id} linked with the domain ${domainId}`);
+                                        const error = Boom.badImplementation(`An error occurred deleting the intent ${intent.id} linked with the domain ${domainId}`);
                                         return callbackDeleteIntent(error, null);
                                     }
                                     return callbackDeleteIntent(null);
@@ -61,7 +61,7 @@ module.exports = (request, reply) => {
                                 redis.del(`scenario:${intent.id}`, (err, result) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation(`An error ocurred deleting the scenario of the intent ${intent.id} linked with the domain ${domainId}`);
+                                        const error = Boom.badImplementation(`An error occurred deleting the scenario of the intent ${intent.id} linked with the domain ${domainId}`);
                                         return callbackDeleteScenario(error, null);
                                     }
                                     return callbackDeleteScenario(null);
@@ -98,7 +98,7 @@ module.exports = (request, reply) => {
                     redis.del(`domain:${domainId}`, (err, result) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error ocurred deleting the domain ${domainId} from the domain ${domainId}`);
+                            const error = Boom.badImplementation(`An error occurred deleting the domain ${domainId} from the domain ${domainId}`);
                             return callbackDeleteDomain(error, null);
                         }
                         return callbackDeleteDomain(null);
@@ -109,7 +109,7 @@ module.exports = (request, reply) => {
                     redis.del(`domainIntents:${domainId}`, (err, result) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error ocurred deleting the list of intents for domain ${domainId}`);
+                            const error = Boom.badImplementation(`An error occurred deleting the list of intents for domain ${domainId}`);
                             return callbackDeleteDomainIntentsList(error, null);
                         }
                         return callbackDeleteDomainIntentsList(null);
@@ -126,7 +126,7 @@ module.exports = (request, reply) => {
                                     redis.smembers(`domainEntities:${domainId}`, (err, entities) => {
 
                                         if (err){
-                                            const error = Boom.badImplementation(`An error ocurred getting the entities used by the domain ${domainId}`);
+                                            const error = Boom.badImplementation(`An error occurred getting the entities used by the domain ${domainId}`);
                                             return callbackGetEntitiesInDomain(error);
                                         }
                                         return callbackGetEntitiesInDomain(null, entities);
@@ -139,7 +139,7 @@ module.exports = (request, reply) => {
                                         redis.srem(`entityDomain:${entity}`, domainId, (err, removeResult) => {
 
                                             if (err){
-                                                const error = Boom.badImplementation( `An error ocurred removing the domain ${domainId} from the list of domains using the entity ${entity.id}`);
+                                                const error = Boom.badImplementation( `An error occurred removing the domain ${domainId} from the list of domains using the entity ${entity.id}`);
                                                 return callbackMapOfEntity(error);
                                             }
                                             return callbackMapOfEntity(null);
@@ -165,7 +165,7 @@ module.exports = (request, reply) => {
                             redis.del(`domainEntities:${domainId}`, (err, result) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation(`An error ocurred deleting the list of entities used by the domain ${domainId}`);
+                                    const error = Boom.badImplementation(`An error occurred deleting the list of entities used by the domain ${domainId}`);
                                     return callbackDeleteDomainEntitiesList(error, null);
                                 }
                                 return callbackDeleteDomainEntitiesList(null);
@@ -187,7 +187,7 @@ module.exports = (request, reply) => {
                             redis.zscore('agents', domain.agent, (err, agentId) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation( `An error ocurred retrieving the id of the agent ${domain.agent}`);
+                                    const error = Boom.badImplementation( `An error occurred retrieving the id of the agent ${domain.agent}`);
                                     return callbackGetAgent(error);
                                 }
                                 return callbackGetAgent(null, agentId);
@@ -198,7 +198,7 @@ module.exports = (request, reply) => {
                             redis.zrem(`agentDomains:${agentId}`, domain.domainName, (err, removeResult) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation( `An error ocurred removing the domain ${domainId} from the domains list of the agent ${agentId}`);
+                                    const error = Boom.badImplementation( `An error occurred removing the domain ${domainId} from the domains list of the agent ${agentId}`);
                                     return callbackRemoveFromAgentsList(error);
                                 }
                                 return callbackRemoveFromAgentsList(null);

@@ -15,7 +15,7 @@ module.exports = (request, reply) => {
             redis.zscore('agents', domain.agent, (err, agentId) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                    const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                     return cb(error);
                 }
                 if (agentId){
@@ -30,7 +30,7 @@ module.exports = (request, reply) => {
             redis.incr('domainId', (err, newDomainId) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the new domain id.');
+                    const error = Boom.badImplementation('An error occurred getting the new domain id.');
                     return cb(error);
                 }
                 domainId = newDomainId;
@@ -42,7 +42,7 @@ module.exports = (request, reply) => {
             redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, domain.domainName, (err, addResponse) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the name to the domains list.');
+                    const error = Boom.badImplementation('An error occurred adding the name to the domains list.');
                     return cb(error);
                 }
                 if (addResponse !== 0){
@@ -59,7 +59,7 @@ module.exports = (request, reply) => {
             redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the domain data.');
+                    const error = Boom.badImplementation('An error occurred adding the domain data.');
                     return cb(error);
                 }
                 return cb(null, domain);

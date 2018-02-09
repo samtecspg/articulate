@@ -18,7 +18,7 @@ const updateDataFunction = (redis, entityId, currentEntity, updateData, cb) => {
     redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred adding the entity data.');
+            const error = Boom.badImplementation('An error occurred adding the entity data.');
             return cb(error);
         }
         return cb(null, Flat.unflatten(flatEntity));
@@ -51,7 +51,7 @@ module.exports = (request, reply) => {
                         const error = Boom.notFound('The specified entity doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the entity ${entityId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the entity ${entityId}`);
                     return cb(error, null);
                 }
                 return cb(null, res.result);
@@ -70,7 +70,7 @@ module.exports = (request, reply) => {
                         redis.zscore('agents', currentEntity.agent, (err, id) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                                const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                                 return callback(error);
                             }
                             if (id){
@@ -86,7 +86,7 @@ module.exports = (request, reply) => {
                         redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, updateData.entityName, (err, addResponse) => {
 
                             if (err){
-                                const error = Boom.badImplementation(`An error ocurred adding the name ${currentEntity.entityName} to the entities list of the agent ${currentEntity.agent}.`);
+                                const error = Boom.badImplementation(`An error occurred adding the name ${currentEntity.entityName} to the entities list of the agent ${currentEntity.agent}.`);
                                 return callback(error);
                             }
                             if (addResponse !== 0){
@@ -101,7 +101,7 @@ module.exports = (request, reply) => {
                         redis.zrem(`agentEntities:${agentId}`, currentEntity.entityName, (err, removeResult) => {
 
                             if (err){
-                                const error = Boom.badImplementation( `An error ocurred removing the name ${currentEntity.entityName} from the entities list of the agent ${currentEntity.agent}.`);
+                                const error = Boom.badImplementation( `An error occurred removing the name ${currentEntity.entityName} from the entities list of the agent ${currentEntity.agent}.`);
                                 return callback(error);
                             }
                             return callback(null);
@@ -112,7 +112,7 @@ module.exports = (request, reply) => {
                         updateDataFunction(redis, entityId, currentEntity, updateData, (err, result) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                                const error = Boom.badImplementation('An error occurred adding the entity data.');
                                 return callback(error);
                             }
                             return callback(null, result);
@@ -135,7 +135,7 @@ module.exports = (request, reply) => {
                 updateDataFunction(redis, entityId, currentEntity, updateData, (err, result) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the entity data.');
+                        const error = Boom.badImplementation('An error occurred adding the entity data.');
                         return cb(error);
                     }
                     return cb(null, result);
@@ -156,7 +156,7 @@ module.exports = (request, reply) => {
                     redis.smembers(`entityDomain:${updatedEntity.id}`, (err, domainsUsingEntity) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error ocurred getting the domains used by the entity ${updatedEntity.entityName}`);
+                            const error = Boom.badImplementation(`An error occurred getting the domains used by the entity ${updatedEntity.entityName}`);
                             return callbackGetDomainsUsingEntity(error);
                         }
                         if (domainsUsingEntity && domainsUsingEntity.length > 0){
@@ -175,7 +175,7 @@ module.exports = (request, reply) => {
                                 server.inject(`/domain/${domain}/intent`, (res) => {
 
                                     if (res.statusCode !== 200){
-                                        const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${domain}`);
+                                        const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the domain ${domain}`);
                                         return callbackGetIntentsOfDomain(error, null);
                                     }
                                     return callbackGetIntentsOfDomain(null, res.result);
@@ -203,7 +203,7 @@ module.exports = (request, reply) => {
                                                 redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
 
                                                     if (err){
-                                                        const error = Boom.badImplementation(`An error ocurred updating the intent ${intent.id} with the new values of the entity`);
+                                                        const error = Boom.badImplementation(`An error occurred updating the intent ${intent.id} with the new values of the entity`);
                                                         return callbackUpdateIntent(error, null);
                                                     }
                                                     return callbackUpdateIntent(null);
@@ -224,7 +224,7 @@ module.exports = (request, reply) => {
                                                             if (res.statusCode === 404){
                                                                 return callbackGetScenario(null, null);
                                                             }
-                                                            const error = Boom.create(res.statusCode, `An error ocurred getting the data of the scenario ${intent.id}`);
+                                                            const error = Boom.create(res.statusCode, `An error occurred getting the data of the scenario ${intent.id}`);
                                                             return callbackGetScenario(error, null);
                                                         }
                                                         return callbackGetScenario(null, res.result);
@@ -249,7 +249,7 @@ module.exports = (request, reply) => {
                                                             redis.hmset(`scenario:${intent.id}`, Flat(currentScenario), (err, result) => {
 
                                                                 if (err){
-                                                                    const error = Boom.badImplementation(`An error ocurred updating the scenario ${intent.id} with the new values of the entity`);
+                                                                    const error = Boom.badImplementation(`An error occurred updating the scenario ${intent.id} with the new values of the entity`);
                                                                     return callbackUpdateScenarioSlots(error, null);
                                                                 }
                                                                 return callbackUpdateScenarioSlots(null);
@@ -291,7 +291,7 @@ module.exports = (request, reply) => {
                                 server.inject(`/domain/${domain}/train`, (res) => {
 
                                     if (res.statusCode !== 200){
-                                        const error = Boom.create(res.statusCode, `An error ocurred training the domain ${domain}`);
+                                        const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain}`);
                                         return callbackMapOfDomains(error);
                                     }
                                     return callbackMapOfDomains(null);

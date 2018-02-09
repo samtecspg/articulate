@@ -14,7 +14,7 @@ const updateDataFunction = (redis, domainId, currentDomain, updateData, cb) => {
     redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred adding the domain data.');
+            const error = Boom.badImplementation('An error occurred adding the domain data.');
             return cb(error);
         }
         return cb(null, Flat.unflatten(flatDomain));
@@ -41,7 +41,7 @@ module.exports = (request, reply) => {
                         const error = Boom.notFound('The specified domain doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domainId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the domain ${domainId}`);
                     return cb(error, null);
                 }
                 return cb(null, res.result);
@@ -57,7 +57,7 @@ module.exports = (request, reply) => {
                         redis.zscore('agents', currentDomain.agent, (err, id) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred checking if the agent exists.');
+                                const error = Boom.badImplementation('An error occurred checking if the agent exists.');
                                 return callback(error);
                             }
                             if (id){
@@ -73,7 +73,7 @@ module.exports = (request, reply) => {
                         redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, updateData.domainName, (err, addResponse) => {
 
                             if (err){
-                                const error = Boom.badImplementation(`An error ocurred adding the name ${currentDomain.domainName} to the domains list of the agent ${currentDomain.agent}.`);
+                                const error = Boom.badImplementation(`An error occurred adding the name ${currentDomain.domainName} to the domains list of the agent ${currentDomain.agent}.`);
                                 return callback(error);
                             }
                             if (addResponse !== 0){
@@ -91,7 +91,7 @@ module.exports = (request, reply) => {
                                 server.inject(`/domain/${currentDomain.id}/intent`, (res) => {
 
                                     if (res.statusCode !== 200){
-                                        const error = Boom.create(res.statusCode, `An error ocurred getting the intents to update of the domain ${currentDomain.domainName}`);
+                                        const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the domain ${currentDomain.domainName}`);
                                         return callbackGetIntents(error, null);
                                     }
                                     return callbackGetIntents(null, res.result);
@@ -110,7 +110,7 @@ module.exports = (request, reply) => {
                                             redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
 
                                                 if (err){
-                                                    const error = Boom.badImplementation(`An error ocurred updating the intent ${intent.id} with the new values of the entity`);
+                                                    const error = Boom.badImplementation(`An error occurred updating the intent ${intent.id} with the new values of the entity`);
                                                     return callbackUpdateIntent(error, null);
                                                 }
                                                 return callbackUpdateIntent(null);
@@ -124,7 +124,7 @@ module.exports = (request, reply) => {
                                             redis.hmset(`scenario:${intent.id}`, updatedValues, (err, result) => {
 
                                                 if (err){
-                                                    const error = Boom.badImplementation(`An error ocurred updating the scenario of the intent ${intent.id} with the new values of the entity`);
+                                                    const error = Boom.badImplementation(`An error occurred updating the scenario of the intent ${intent.id} with the new values of the entity`);
                                                     return callbackUpdateScenario(error, null);
                                                 }
                                                 return callbackUpdateScenario(null);
@@ -158,7 +158,7 @@ module.exports = (request, reply) => {
                         redis.zrem(`agentDomains:${agentId}`, currentDomain.domainName, (err, removeResult) => {
 
                             if (err){
-                                const error = Boom.badImplementation( `An error ocurred removing the name ${currentDomain.domainName} from the domains list of the agent ${currentDomain.agent}.`);
+                                const error = Boom.badImplementation( `An error occurred removing the name ${currentDomain.domainName} from the domains list of the agent ${currentDomain.agent}.`);
                                 return callback(error);
                             }
                             return callback(null);
@@ -169,7 +169,7 @@ module.exports = (request, reply) => {
                         updateDataFunction(redis, domainId, currentDomain, updateData, (err, result) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error ocurred adding the domain data.');
+                                const error = Boom.badImplementation('An error occurred adding the domain data.');
                                 return callback(error);
                             }
                             return callback(null, result);
@@ -187,7 +187,7 @@ module.exports = (request, reply) => {
                 updateDataFunction(redis, domainId, currentDomain, updateData, (err, result) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error ocurred adding the domain data.');
+                        const error = Boom.badImplementation('An error occurred adding the domain data.');
                         return cb(error);
                     }
                     return cb(null, result);
@@ -203,7 +203,7 @@ module.exports = (request, reply) => {
             server.inject(`/domain/${domainId}/train`, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error ocurred retraining the domain ${result.domain} after the update`);
+                    const error = Boom.create(res.statusCode, `An error occurred retraining the domain ${result.domain} after the update`);
                     reply(error);
                 }
                 reply(res.result);

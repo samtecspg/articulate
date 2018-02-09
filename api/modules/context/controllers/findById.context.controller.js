@@ -15,7 +15,7 @@ module.exports = (request, reply) => {
             redis.lrange(`sessionContexts:${sessionId}`, 0, -1, (err, contextIds) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the agents from the sorted set.');
+                    const error = Boom.badImplementation('An error occurred getting the agents from the sorted set.');
                     return cb(error);
                 }
                 return cb(null, contextIds);
@@ -28,7 +28,7 @@ module.exports = (request, reply) => {
                 redis.hgetall(`context:${contextId}`, (err, data) => {
 
                     if (err){
-                        const error = Boom.badImplementation(`An error ocurred retrieving the context ${contextId}.`);
+                        const error = Boom.badImplementation(`An error occurred retrieving the context ${contextId}.`);
                         return callback(error);
                     }
                     if (data){

@@ -12,7 +12,7 @@ module.exports = (server, redis, agentId, cb) => {
             server.inject(`/agent/${agentId}/domain`, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the list of domains from agent ${agentId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the list of domains from agent ${agentId}`);
                     return callbackGetDomainsOfAgent(error, null);
                 }
                 return callbackGetDomainsOfAgent(null, res.result);
@@ -46,7 +46,7 @@ module.exports = (server, redis, agentId, cb) => {
                     server.inject(`/agent/${agentId}/domain/${domain.id}/intent`, (res) => {
 
                         if (res.statusCode !== 200){
-                            const error = Boom.create(res.statusCode, `An error ocurred getting the list of intents of the domain ${domain.domainName}`);
+                            const error = Boom.create(res.statusCode, `An error occurred getting the list of intents of the domain ${domain.domainName}`);
                             return callbackFormatDomain(error);
                         }
                         const formattedDomain = { name: domainName, model: modelFolderName, justER, intent: res.result[0].intentName };
@@ -72,7 +72,7 @@ module.exports = (server, redis, agentId, cb) => {
             redis.exists(`agentDomainRecognizer:${agentId}`, (err, exists) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred checking if the domain recognizer exists for the agent.');
+                    const error = Boom.badImplementation('An error occurred checking if the domain recognizer exists for the agent.');
                     return cb(error);
                 }
                 if (exists){

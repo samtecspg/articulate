@@ -13,7 +13,7 @@ module.exports = (request, reply) => {
             redis.exists(`scenario:${intentId}`, (err, exists) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred retrieving the scenario.');
+                    const error = Boom.badImplementation('An error occurred retrieving the scenario.');
                     return cb(error);
                 }
                 if (exists){
@@ -28,7 +28,7 @@ module.exports = (request, reply) => {
             redis.del(`scenario:${intentId}`, (err, success) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred deleting the scenario.');
+                    const error = Boom.badImplementation('An error occurred deleting the scenario.');
                     return cb(error);
                 }
                 if (success === 1){

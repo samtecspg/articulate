@@ -14,7 +14,7 @@ module.exports = (request, reply) => {
             redis.exists(`sessionContexts:${sessionId}`, (err, exists) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred retrieving the session.');
+                    const error = Boom.badImplementation('An error occurred retrieving the session.');
                     return cb(error);
                 }
                 if (exists){
@@ -29,7 +29,7 @@ module.exports = (request, reply) => {
             redis.del(`sessionContexts:${sessionId}`, (err, success) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred deleting the session.');
+                    const error = Boom.badImplementation('An error occurred deleting the session.');
                     return cb(error);
                 }
                 if (success === 1){

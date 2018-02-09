@@ -10,7 +10,7 @@ module.exports = (request, reply) => {
     redis.hgetall('domain:' + domainId, (err, data) => {
 
         if (err){
-            const error = Boom.badImplementation('An error ocurred retrieving the domain.');
+            const error = Boom.badImplementation('An error occurred retrieving the domain.');
             return reply(error);
         }
         if (data){

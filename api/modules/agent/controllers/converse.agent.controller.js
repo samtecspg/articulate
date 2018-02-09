@@ -35,7 +35,7 @@ module.exports = (request, reply) => {
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return cb(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, 'An error ocurred parsing the document');
+                            const error = Boom.create(res.statusCode, 'An error occurred parsing the document');
                             return cb(error, null);
                         }
                         return cb(null, res.result);
@@ -50,7 +50,7 @@ module.exports = (request, reply) => {
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return cb(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                            const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
                             return cb(error, null);
                         }
                         return cb(null, res.result);

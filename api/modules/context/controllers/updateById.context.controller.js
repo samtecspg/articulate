@@ -18,7 +18,7 @@ module.exports = (request, reply) => {
             redis.lrange(`sessionContexts:${sessionId}`, 0, -1, (err, contextElements) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred retrieving the context of this session');
+                    const error = Boom.badImplementation('An error occurred retrieving the context of this session');
                     return cb(error, null);
                 }
                 if (contextElements.length > 0){
@@ -37,7 +37,7 @@ module.exports = (request, reply) => {
             redis.hgetall(`context:${contextId}`, (err, data) => {
 
                 if (err){
-                    const error = Boom.badImplementation(`An error ocurred retrieving the context ${contextId}.`);
+                    const error = Boom.badImplementation(`An error occurred retrieving the context ${contextId}.`);
                     return cb(error);
                 }
                 if (data){
@@ -52,7 +52,7 @@ module.exports = (request, reply) => {
             redis.del(`context:${contextId}`, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred temporaly removing the context for the update.');
+                    const error = Boom.badImplementation('An error occurred temporaly removing the context for the update.');
                     return cb(error);
                 }
                 return cb(null, currentContext);
@@ -70,7 +70,7 @@ module.exports = (request, reply) => {
             redis.hmset(`context:${contextId}`, flatContextElement, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred adding the context data.');
+                    const error = Boom.badImplementation('An error occurred adding the context data.');
                     return cb(error);
                 }
                 return cb(null, Flat.unflatten(flatContextElement));

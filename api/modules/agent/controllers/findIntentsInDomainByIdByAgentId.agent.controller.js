@@ -28,7 +28,7 @@ module.exports = (request, reply) => {
                         const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
                         return cb(errorNotFound);
                     }
-                    const error = Boom.create(res.statusCode, 'An error ocurred getting the data of the agent');
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the agent');
                     return cb(error, null);
                 }
                 return cb(null);
@@ -39,7 +39,7 @@ module.exports = (request, reply) => {
             redis.zrange(`agentDomains:${agentId}`, 0, -1, 'withscores', (err, domains) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred getting the domains from the sorted set.');
+                    const error = Boom.badImplementation('An error occurred getting the domains from the sorted set.');
                     return cb(error);
                 }
                 domains = _.chunk(domains, 2);
@@ -56,7 +56,7 @@ module.exports = (request, reply) => {
                 server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error ocurred getting the data of the domain ${domain[0]} with id ${domain[1]}`);
+                        const error = Boom.create(res.statusCode, `An error occurred getting the data of the domain ${domain[0]} with id ${domain[1]}`);
                         return cb(error, null);
                     }
                     return cb(null, res.result);

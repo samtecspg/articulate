@@ -25,7 +25,7 @@ module.exports = (request, reply) => {
                         const error = Boom.notFound('The specified intent doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error ocurred getting the data of the intent ${intentId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the intent ${intentId}`);
                     return cb(error, null);
                 }
                 intent = res.result;
@@ -40,7 +40,7 @@ module.exports = (request, reply) => {
                     redis.del(`intent:${intentId}`, (err, result) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error ocurred deleting the intent ${intentId}`);
+                            const error = Boom.badImplementation(`An error occurred deleting the intent ${intentId}`);
                             return callbackDeleteIntent(error, null);
                         }
                         return callbackDeleteIntent(null);
@@ -51,7 +51,7 @@ module.exports = (request, reply) => {
                     redis.del(`scenario:${intentId}`, (err, result) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error ocurred deleting the scenario ${intentId}`);
+                            const error = Boom.badImplementation(`An error occurred deleting the scenario ${intentId}`);
                             return callbackDeleteScenario(error, null);
                         }
                         return callbackDeleteScenario(null);
@@ -65,7 +65,7 @@ module.exports = (request, reply) => {
                             redis.zscore('agents', intent.agent, (err, score) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation( `An error ocurred retrieving the id of the agent ${intent.agent}`);
+                                    const error = Boom.badImplementation( `An error occurred retrieving the id of the agent ${intent.agent}`);
                                     return callbackGetAgentId(error);
                                 }
                                 agentId = score;
@@ -81,7 +81,7 @@ module.exports = (request, reply) => {
                                         const errorNotFound = Boom.notFound(res.result.message);
                                         return callbackGetAgentData(errorNotFound);
                                     }
-                                    const error = Boom.create(res.statusCode, 'An error ocurred get the agent data');
+                                    const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
                                     return callbackGetAgentData(error, null);
                                 }
                                 agent = res.result;
@@ -93,7 +93,7 @@ module.exports = (request, reply) => {
                             redis.zscore(`agentDomains:${agentId}`, intent.domain, (err, score) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation( `An error ocurred retrieving the id of the domain ${intent.domain}`);
+                                    const error = Boom.badImplementation( `An error occurred retrieving the id of the domain ${intent.domain}`);
                                     return callbackGetDomain(error);
                                 }
                                 domainId = score;
@@ -105,7 +105,7 @@ module.exports = (request, reply) => {
                             redis.zrem(`domainIntents:${domainId}`, intent.intentName, (err, removeResult) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation( `An error ocurred removing the intent ${intentId} from the intents list of the domain ${domainId}`);
+                                    const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the domain ${domainId}`);
                                     return callbackRemoveFromDomainsList(error);
                                 }
                                 return callbackRemoveFromDomainsList(null);

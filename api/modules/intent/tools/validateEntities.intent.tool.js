@@ -26,7 +26,7 @@ const validateEntities = (redis, agent, examples, cb) => {
             redis.zscore(`agentEntities:${agent}`, entity, (err, entityExist) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred checking if the entity exists.');
+                    const error = Boom.badImplementation('An error occurred checking if the entity exists.');
                     return callback(error);
                 }
                 if (entityExist){
