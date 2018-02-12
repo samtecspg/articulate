@@ -1,3 +1,21 @@
+.valign-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center
+}
+
+.circle {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 .ReactTable {
   * {
     box-sizing: border-box;
@@ -140,7 +158,6 @@
     -ms-flex-direction: column;
     flex-direction: column;
     overflow: auto;
-    padding-top: 15px;
     .rt-tr-group {
       border-bottom: solid 1px rgba(0, 0, 0, 0);
       &:last-child {
@@ -183,6 +200,7 @@
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
     display: inline-flex;
+    @extend .valign-wrapper !optional;
   }
   .rt-th, .rt-td {
     -webkit-box-flex: 1;

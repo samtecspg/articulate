@@ -23,11 +23,17 @@ class EntitiesTable extends React.Component { // eslint-disable-line react/prefe
         SubComponent={row => {
 
           return <div style={{ padding: '20px' }}>
-            <br />
-            <br />
-            <IntentListTable
-              data={intentData[row.original.id]}
-            />
+            <div
+              style={{
+                padding: '20px',
+                border: '1px solid rgba(0,0,0,0.1)',
+              }}
+              className={' grey lighten-5'}
+            >
+              <IntentListTable
+                data={intentData[row.original.id]}
+              />
+            </div>
           </div>
             ;
         }}

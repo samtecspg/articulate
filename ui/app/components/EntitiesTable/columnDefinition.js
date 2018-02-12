@@ -13,5 +13,5 @@ export default [{
   type: 'color',
   accessor: 'uiColor',
   headerClassName: 'table2-header',
-  cellClassName: 'table2-column',
+  cellClassName: 'table2-column center-align',
 }];

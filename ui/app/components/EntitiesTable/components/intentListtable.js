@@ -15,11 +15,11 @@ class IntentListTable extends React.Component { // eslint-disable-line react/pre
     const { data } = this.props;
     const intentColumns = [{
       id: 'name',
-      label: 'Intent',
+      Header: 'Intents using it',
       tooltip: '',
       type: 'string',
       accessor: 'intentName',
-      headerClassName: 'hide',
+      headerClassName: '',
       cellClassName: 'text-align-left table2-column',
       minWidth: 1.75,
       sortable: false,
@@ -27,9 +27,9 @@ class IntentListTable extends React.Component { // eslint-disable-line react/pre
     }];
     return (
       <ReactTable
+        minRows={5}
         data={data}
         columns={intentColumns}
-        defaultPageSize={3}
         showPagination={false}
       />
     );

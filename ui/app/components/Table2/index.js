@@ -87,7 +87,6 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
         );
       return (tableCell);
     };
-
     return {
       Header: header,
       pivot: column.pivot,
@@ -117,7 +116,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
     } = this.props;
     let newColumns;
 
-    const classNames = ['border-container'];
+    const classNames = ['border-container '];
     if (highlightRow) classNames.push('-highlight');
     if (striped) classNames.push('-striped');
 
@@ -161,7 +160,7 @@ Table2.propTypes = {
   columns: React.PropTypes.array.isRequired,
   menu: React.PropTypes.array,
   data: React.PropTypes.array,
-  onCellChange: React.PropTypes.func.isRequired,
+  onCellChange: React.PropTypes.func,
   tableName: React.PropTypes.string,
   minRows: React.PropTypes.number,
   highlightRow: React.PropTypes.bool,
