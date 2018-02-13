@@ -11,7 +11,13 @@ const makeSelectAgentData = () => createSelector(
   (agentState) => agentState.get('agentData').toJS(),
 );
 
+const makeSelectTouched = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.get('touched'),
+);
+
 export {
   selectAgent,
   makeSelectAgentData,
+  makeSelectTouched,
 };

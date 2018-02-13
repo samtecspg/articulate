@@ -22,6 +22,7 @@ const initialState = fromJS({
     uiColor: '#e91e63',
     examples: [],
   },
+  touched: false,
 });
 
 function entityReducer(state = initialState, action) {
@@ -33,30 +34,40 @@ function entityReducer(state = initialState, action) {
       if (action.payload.field === 'uiColor') {
         return state
           .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value.hex))
+          .set('touched', true)
           .set('displayColorPicker', false);
       }
-      return state
+      if (action.payload.field === 'agent') { //Don't set touched given that agent is loaded by the system
+        return state
         .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value));
+      }
+      return state
+        .updateIn(['entityData'], x => x.set(action.payload.field, action.payload.value))
+        .set('touched', true);
     case RESET_ENTITY_DATA:
       return initialState;
     case REMOVE_EXAMPLE:
       examples = state.getIn(['entityData', 'examples']);
       examples = examples.filterNot(example => example.get('value') === action.example);
       return state
-        .setIn(['entityData', 'examples'], examples);
+        .setIn(['entityData', 'examples'], examples)
+        .set('touched', true);
     case ADD_EXAMPLE:
       return state
-        .updateIn(['entityData', 'examples'], x => x.push(fromJS({ value: action.example, synonyms: [action.example] })));
+        .updateIn(['entityData', 'examples'], x => x.push(fromJS({ value: action.example, synonyms: [action.example] })))
+        .set('touched', true);
     case REMOVE_SYNONYM:
       examples = state.getIn(['entityData', 'examples']);
       examples = examples.map(example => example.get('value') === action.payload.example ? fromJS({ value: example.get('value'), synonyms: example.get('synonyms').filterNot(synonym => synonym === action.payload.synonym) }) : example);
       return state
-        .setIn(['entityData', 'examples'], examples);
+        .setIn(['entityData', 'examples'], examples)
+        .set('touched', true);
     case ADD_SYNONYM:
       examples = state.getIn(['entityData', 'examples']);
       examples = examples.map(example => example.get('value') === action.payload.example ? example.update('synonyms', synonyms => synonyms.push(action.payload.synonym)) : example);
       return state
-        .setIn(['entityData', 'examples'], examples);
+        .setIn(['entityData', 'examples'], examples)
+        .set('touched', true);
     case SWITCH_COLOR_PICKER_DISPLAY:
       return state.set('displayColorPicker', !state.get('displayColorPicker'));
     case CLOSE_COLOR_PICKER:

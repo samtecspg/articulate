@@ -21,6 +21,7 @@ import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
 import Toggle from '../../components/Toggle';
+import ConfirmationModal from '../../components/ConfirmationModal';
 
 import {
   createIntent,
@@ -64,6 +65,7 @@ import {
   makeSelectIntentData,
   makeSelectScenarioData,
   makeSelectWindowSelection,
+  makeSelectTouched,
 } from './selectors';
 
 const returnFormattedOptions = (options) => options.map((option, index) => (
@@ -80,14 +82,22 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     this.submitForm = this.submitForm.bind(this);
     this.generateSlotObject = this.generateSlotObject.bind(this);
     this.handleOnTagEntity = this.handleOnTagEntity.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
+    this.onLeave = this.onLeave.bind(this);
   }
 
   state = {
     editMode: false,
+    displayModal: false,
+    clickedSave: false,
+    waitingForConfirm: false,
+    nextRoute: null,
   };
 
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'intentEdit');
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }
 
   componentWillUpdate(nextProps) {
@@ -217,6 +227,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.state.clickedSave = true;
     if (this.props.scenarioData.useWebhook && this.props.scenarioData.webhookUrl || (!this.props.scenarioData.useWebhook && this.props.scenarioData.intentResponses.length > 0)) {
       if (this.slotsAreValid()){
         if (this.state.editMode) {
@@ -255,6 +266,28 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.props.onTagEntity(userSays, entity, entityName);
     this.props.onAddSlot(this.generateSlotObject({ entity: entity.entityName }));
+  }
+
+  routerWillLeave(route){
+    if (!this.state.waitingForConfirm && this.props.touched && !this.state.clickedSave) {
+      this.state.nextRoute = route;
+      this.state.displayModal = true;
+      this.state.waitingForConfirm = true;
+      this.forceUpdate();
+      return false;
+    }
+  }
+
+  onLeave(){
+    this.props.resetForm();
+    this.props.router.push(this.state.nextRoute.pathname);
+  }
+
+  onDismiss(){
+    this.setState({
+      displayModal: false,
+      waitingForConfirm: false,
+    });
   }
 
   render() {
@@ -464,6 +497,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           }
 
         </Content>
+        <ConfirmationModal
+          isOpen={this.state.displayModal}
+          onLeave={this.onLeave}
+          onDismiss={this.onDismiss}
+          contentBody='You have not saved your edits to this intent. If you leave you will lose your current work.'
+        />
       </div>
     );
   }
@@ -594,6 +633,7 @@ const mapStateToProps = createStructuredSelector({
   scenarioData: makeSelectScenarioData(),
   windowSelection: makeSelectWindowSelection(),
   loading: makeSelectLoading(),
+  touched: makeSelectTouched(),
   error: makeSelectError(),
   success: makeSelectSuccess(),
   agentDomains: makeSelectAgentDomains(),

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84.92 51.17">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #c5cbd8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <title>icon-confused</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g>
+        <circle class="cls-1" cx="58.3" cy="3.92" r="2.92"/>
+        <path class="cls-1" d="M58.38,7V13H22.82a4,4,0,0,0-4,4V50.17H65.89V17a4,4,0,0,0-4-4h-.1M36.4,30.18a4.68,4.68,0,0,1,.41,1.92,4.63,4.63,0,0,1-9.12,1.14m24.22,3.49a4.63,4.63,0,1,1,4.63-4.63A4.63,4.63,0,0,1,51.91,36.73Z"/>
+        <line class="cls-1" x1="1" y1="50.17" x2="83.92" y2="50.17"/>
+      </g>
+      <line class="cls-1" x1="25.56" y1="29.93" x2="39" y2="29.93"/>
+    </g>
+  </g>
+</svg>

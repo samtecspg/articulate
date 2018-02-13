@@ -23,17 +23,21 @@ const initialState = fromJS({
     ],
     useWebhookFallback: false,
   },
+  touched: false,
 });
 
 function agentReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_AGENT_DATA:
       if (action.payload.field === 'fallbackResponses'){
-        return state.updateIn(['agentData'], agent => agent.set('fallbackResponses', agent.get('fallbackResponses').push(action.payload.value)));
+        return state
+          .updateIn(['agentData'], agent => agent.set('fallbackResponses', agent.get('fallbackResponses').push(action.payload.value)))
+          .set('touched', true);
       }
       else {
         return state
-          .updateIn(['agentData'], x => x.set(action.payload.field, action.payload.value));
+          .updateIn(['agentData'], x => x.set(action.payload.field, action.payload.value))
+          .set('touched', true);
       }
     case RESET_AGENT_DATA:
       return initialState;

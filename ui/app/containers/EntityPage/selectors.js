@@ -12,8 +12,14 @@ const makeDisplayColorPicker = () => createSelector(
   (displayColorPickerState) => displayColorPickerState.get('displayColorPicker'),
 );
 
+const makeSelectTouched = () => createSelector(
+  selectEntity,
+  (entityState) => entityState.get('touched'),
+);
+
 export {
   selectEntity,
   makeSelectEntityData,
   makeDisplayColorPicker,
+  makeSelectTouched,
 };

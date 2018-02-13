@@ -21,6 +21,7 @@ import Preloader from '../../components/Preloader';
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
+import ConfirmationModal from '../../components/ConfirmationModal';
 
 import {
   createEntity,
@@ -51,7 +52,8 @@ import Examples from './Components/Examples';
 import messages from './messages';
 import {
   makeDisplayColorPicker,
-  makeSelectEntityData
+  makeSelectEntityData,
+  makeSelectTouched,
 } from './selectors';
 
 export class EntityPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -60,14 +62,22 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     this.onChangeInput = this.onChangeInput.bind(this);
     this.setEditMode = this.setEditMode.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
+    this.onLeave = this.onLeave.bind(this);
   }
 
   state = {
     editMode: false,
+    displayModal: false,
+    clickedSave: false,
+    waitingForConfirm: false,
+    nextRoute: null,
   };
 
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'entityEdit');
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }
 
   componentWillMount() {
@@ -127,11 +137,34 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
 
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.state.clickedSave = true;
     if (this.state.editMode) {
       this.props.onUpdate();
     } else {
       this.props.onCreate();
     }
+  }
+
+  routerWillLeave(route){
+    if (!this.state.waitingForConfirm && this.props.touched && !this.state.clickedSave) {
+      this.state.nextRoute = route;
+      this.state.displayModal = true;
+      this.state.waitingForConfirm = true;
+      this.forceUpdate();
+      return false;
+    }
+  }
+
+  onLeave(){
+    this.props.resetForm();
+    this.props.router.push(this.state.nextRoute.pathname);
+  }
+
+  onDismiss(){
+    this.setState({
+      displayModal: false,
+      waitingForConfirm: false,
+    });
   }
 
   render() {
@@ -229,6 +262,12 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
           >
           </div>
         </Content>
+        <ConfirmationModal
+          isOpen={this.state.displayModal}
+          onLeave={this.onLeave}
+          onDismiss={this.onDismiss}
+          contentBody='You have not saved your edits to this entity. If you leave you will lose your current work.'
+        />
       </div>
     );
   }
@@ -327,6 +366,7 @@ const mapStateToProps = createStructuredSelector({
   entity: makeSelectEntityData(),
   displayColorPicker: makeDisplayColorPicker(),
   loading: makeSelectLoading(),
+  touched: makeSelectTouched(),
   error: makeSelectError(),
   success: makeSelectSuccess(),
   inWizard: makeSelectInWizard(),

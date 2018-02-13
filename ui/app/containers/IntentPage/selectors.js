@@ -17,9 +17,15 @@ const makeSelectScenarioData = () => createSelector(
   (scenarioState) => scenarioState.get('scenarioData').toJS(),
 );
 
+const makeSelectTouched = () => createSelector(
+  selectIntent,
+  (intentState) => intentState.get('touched'),
+);
+
 export {
   selectIntent,
   makeSelectWindowSelection,
   makeSelectIntentData,
   makeSelectScenarioData,
+  makeSelectTouched,
 };

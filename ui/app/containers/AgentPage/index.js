@@ -12,6 +12,7 @@ import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
 import Form from '../../components/Form';
+import ConfirmationModal from '../../components/ConfirmationModal';
 
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
@@ -43,7 +44,7 @@ import {
 
 import messages from './messages';
 
-import { makeSelectAgentData } from './selectors';
+import { makeSelectAgentData, makeSelectTouched } from './selectors';
 
 /* import timezones from './data/timezones.json';
 import languages from './data/languages.json';
@@ -105,10 +106,17 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     super();
     this.setEditMode = this.setEditMode.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
+    this.onLeave = this.onLeave.bind(this);
   }
 
   state = {
     editMode: false,
+    displayModal: false,
+    clickedSave: false,
+    waitingForConfirm: false,
+    nextRoute: null,
   };
 
   componentWillMount() {
@@ -117,6 +125,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
 
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'agentEdit');
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }
 
   componentDidUpdate(prevProps, prevState, prevContext) {
@@ -149,6 +158,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
 
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.state.clickedSave = true;
     if (this.state.editMode) {
       this.props.onUpdate();
     } else {
@@ -174,6 +184,28 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     }
   }
 
+  routerWillLeave(route){
+    if (!this.state.waitingForConfirm && this.props.touched && !this.state.clickedSave) {
+      this.state.nextRoute = route;
+      this.state.displayModal = true;
+      this.state.waitingForConfirm = true;
+      this.forceUpdate();
+      return false;
+    }
+  }
+
+  onLeave(){
+    this.props.resetForm();
+    this.props.router.push(this.state.nextRoute.pathname);
+  }
+
+  onDismiss(){
+    this.setState({
+      displayModal: false,
+      waitingForConfirm: false,
+    });
+  }
+
   render() {
     const { loading, error, success, agent, match } = this.props;
     const agentProps = {
@@ -189,8 +221,8 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       breadcrumbs.push({ label: 'Edit' })
     }else{
       breadcrumbs.push({ label: '+ Create' })
-
     }
+
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
@@ -293,6 +325,12 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             <br/>
           </div>
         </Content>
+        <ConfirmationModal
+          isOpen={this.state.displayModal}
+          onLeave={this.onLeave}
+          onDismiss={this.onDismiss}
+          contentBody='You have not saved your edits to this agent. If you leave you will lose your current work.'
+        />
       </div>
     );
   }
@@ -347,6 +385,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgentData(),
   loading: makeSelectLoading(),
+  touched: makeSelectTouched(),
   success: makeSelectSuccess(),
   inWizard: makeSelectInWizard(),
   error: makeSelectError(),

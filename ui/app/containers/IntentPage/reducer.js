@@ -40,6 +40,7 @@ const initialState = fromJS({
     useWebhook: false,
     webhookUrl: '',
   },
+  touched: false,
 });
 
 function intentReducer(state = initialState, action) {
@@ -51,24 +52,30 @@ function intentReducer(state = initialState, action) {
     case CHANGE_INTENT_DATA:
       if (action.payload.field === 'examples') {
         return state
-          .updateIn(['intentData', 'examples'], (x) => x.splice(0, 0, fromJS({ userSays: action.payload.value, entities: [] })));
+          .updateIn(['intentData', 'examples'], (x) => x.splice(0, 0, fromJS({ userSays: action.payload.value, entities: [] })))
+          .set('touched', true);
       } else if (action.payload.field === 'responses') {
         return state
-          .updateIn(['scenarioData', 'intentResponses'], (x) => x.splice(0, 0, action.payload.value));
+          .updateIn(['scenarioData', 'intentResponses'], (x) => x.splice(0, 0, action.payload.value))
+          .set('touched', true);
       } else if (action.payload.field === 'useWebhook') {
         return state
-          .setIn(['scenarioData', 'useWebhook'], action.payload.value);
+          .setIn(['scenarioData', 'useWebhook'], action.payload.value)
+          .set('touched', true);
       } else if (action.payload.field === 'webhookUrl') {
         return state
-          .setIn(['scenarioData', 'webhookUrl'], action.payload.value);
+          .setIn(['scenarioData', 'webhookUrl'], action.payload.value)
+          .set('touched', true);
       } else if (action.payload.field === 'intentName') {
         tempState = state.setIn(['scenarioData', 'scenarioName'], action.payload.value);
         return tempState
-          .updateIn(['intentData'], (x) => x.set(action.payload.field, action.payload.value));
+          .updateIn(['intentData'], (x) => x.set(action.payload.field, action.payload.value))
+          .set('touched', true);
       } else {
         tempState = state.updateIn(['scenarioData'], (x) => x.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)));
         return tempState
-          .updateIn(['intentData'], (x) => x.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)));
+          .updateIn(['intentData'], (x) => x.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)))
+          .set('touched', true);
       }
     case RESET_INTENT_DATA:
       return initialState;
@@ -90,12 +97,14 @@ function intentReducer(state = initialState, action) {
         });
         newState = newState.set('windowSelection', '');
         return newState
-          .setIn(['intentData', 'examples'], examples);
+          .setIn(['intentData', 'examples'], examples)
+          .set('touched', true);
       }
       return state;
     case UNTAG_ENTITY:
       return state
-        .updateIn(['intentData', 'examples'], (x) => x.push(fromJS({ value: action.example, synonyms: [action.example] })));
+        .updateIn(['intentData', 'examples'], (x) => x.push(fromJS({ value: action.example, synonyms: [action.example] })))
+        .set('touched', true);
     case TOGGLE_FLAG:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
@@ -105,25 +114,33 @@ function intentReducer(state = initialState, action) {
         return slot;
       });
       return state
-        .setIn(['scenarioData', 'slots'], slots);
+        .setIn(['scenarioData', 'slots'], slots)
+        .set('touched', true);
     case CHANGE_SLOT_NAME:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
         if (slot.get('slotName') === action.payload.slotName) {
           slot = slot.set('slotName', action.payload.value);
         }
+        slot = slot.set('textPrompts', slot.get('textPrompts').map((textPrompt) => {
+          if (textPrompt.indexOf(`{${action.payload.slotName}}`) > -1) {
+            textPrompt = textPrompt.replace(new RegExp(`{${action.payload.slotName}}`, 'g'), `{${action.payload.value}}`);
+          }
+          return textPrompt;
+        }));
         return slot;
       });
       let intentResponses = state.getIn(['scenarioData', 'intentResponses']);
       intentResponses = intentResponses.map((response) => {
-        if (response.indexOf(`{${action.payload.slotName}}`)) {
+        if (response.indexOf(`{${action.payload.slotName}}`) > -1) {
           response = response.replace(new RegExp(`{${action.payload.slotName}}`, 'g'), `{${action.payload.value}}`);
         }
         return response;
       });
       return state
         .setIn(['scenarioData', 'slots'], slots)
-        .setIn(['scenarioData', 'intentResponses'], intentResponses);
+        .setIn(['scenarioData', 'intentResponses'], intentResponses)
+        .set('touched', true);
     case ADD_TEXT_PROMPT:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
@@ -134,7 +151,8 @@ function intentReducer(state = initialState, action) {
         return slot;
       });
       return state
-        .setIn(['scenarioData', 'slots'], slots);
+        .setIn(['scenarioData', 'slots'], slots)
+        .set('touched', true);
     case DELETE_TEXT_PROMPT:
       slots = state.getIn(['scenarioData', 'slots']);
       slots = slots.map((slot) => {
@@ -144,25 +162,32 @@ function intentReducer(state = initialState, action) {
         return slot;
       });
       return state
-        .setIn(['scenarioData', 'slots'], slots);
+        .setIn(['scenarioData', 'slots'], slots)
+        .set('touched', true);
     case REMOVE_USER_SAYING:
       return state
-        .setIn(['intentData', 'examples'], state.getIn(['intentData', 'examples']).splice(action.index, 1));
+        .setIn(['intentData', 'examples'], state.getIn(['intentData', 'examples']).splice(action.index, 1))
+        .set('touched', true);
     case REMOVE_AGENT_RESPONSE:
       return state
-        .setIn(['scenarioData', 'intentResponses'], state.getIn(['scenarioData', 'intentResponses']).splice(action.index, 1));
+        .setIn(['scenarioData', 'intentResponses'], state.getIn(['scenarioData', 'intentResponses']).splice(action.index, 1))
+        .set('touched', true);
     case REMOVE_SLOT:
       return state
-        .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index, 1));
+        .setIn(['scenarioData', 'slots'], state.getIn(['scenarioData', 'slots']).splice(action.index, 1))
+        .set('touched', true);
     case ADD_SLOT:
       slots = state.getIn(['scenarioData', 'slots']);
       const existingSlot = slots.filter((slot) => {
         return slot.get('entity') === action.slot.entity;
       });
       if (existingSlot.size === 0) {
-        return state.updateIn(['scenarioData', 'slots'], (slots) => slots.push(fromJS(action.slot)));
+        return state
+          .updateIn(['scenarioData', 'slots'], (slots) => slots.push(fromJS(action.slot)))
+          .set('touched', true);
       }
-      return state;
+      return state
+        .set('touched', true);
     case SET_WINDOW_SELECTION:
       return state
         .set('windowSelection', action.selection);

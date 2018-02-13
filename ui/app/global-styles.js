@@ -497,5 +497,11 @@ injectGlobal`
     width: 300px !important;
   }
 
+  .modal-footer > button {
+    margin: 6px !important;
+  }
 
+  .modal-footer{
+    text-align: center !important;
+  }
 `;
