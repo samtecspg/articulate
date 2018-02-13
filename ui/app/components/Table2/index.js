@@ -70,7 +70,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
           </Tooltip>
           : ''
       }</div>);
-    const cell = (prop) => {
+    const cell = column.Cell ? column.Cell : (prop) => {
       const tableCell = column.type === 'menu' ?
         (
           <MenuCell

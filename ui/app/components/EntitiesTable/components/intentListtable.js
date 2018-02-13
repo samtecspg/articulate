@@ -5,32 +5,20 @@
  */
 
 import React from 'react';
-
-import ReactTable from 'react-table';
+import Table2 from '../../Table2';
+import columns from './columnDefinition';
 
 class IntentListTable extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
-
   render() {
     const { data } = this.props;
-    const intentColumns = [{
-      id: 'name',
-      Header: 'Intents using it',
-      tooltip: '',
-      type: 'string',
-      accessor: 'intentName',
-      headerClassName: '',
-      cellClassName: 'text-align-left table2-column',
-      minWidth: 1.75,
-      sortable: false,
-
-    }];
     return (
-      <ReactTable
+      <Table2
         minRows={5}
+        tableName={'Intents'}
         data={data}
-        columns={intentColumns}
-        showPagination={false}
+        columns={columns}
+        showSearchInput={false}
       />
     );
   }

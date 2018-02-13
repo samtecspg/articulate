@@ -1,8 +1,13 @@
+import * as React from 'react';
+
 export default [{
+  id: 'name',
   label: 'Domains',
   tooltip: '',
-  type: 'string',
-  accessor: 'domainName',
+  type: 'link',
+  accessor: row => {
+    return { label: row.domainName, path: `/intents?domainId=${row.id}` };
+  },
   headerClassName: 'text-align-left table2-header',
   cellClassName: 'text-align-left table2-column',
   filterable: true,

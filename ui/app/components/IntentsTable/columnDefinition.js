@@ -4,8 +4,10 @@ export default [{
   id: 'name',
   label: 'Intent',
   tooltip: '',
-  type: 'string',
-  accessor: 'intentName',
+  type: 'link',
+  accessor: row => {
+    return { label: row.intentName, path: `/intent/${row.id}/edit` };
+  },
   filterable: true,
   headerClassName: 'text-align-left table2-header',
   cellClassName: 'text-align-left table2-column',

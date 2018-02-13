@@ -7,6 +7,7 @@
 import React from 'react';
 import CheckBoxCell from './types/CheckBoxCell';
 import ColorCell from './types/ColorCell';
+import LinkCell from './types/LinkCell';
 import ListCell from './types/ListCell';
 import ProgressCell from './types/ProgressCell';
 import StringCell from './types/StringCell';
@@ -28,6 +29,8 @@ class Table2Cell extends React.Component { // eslint-disable-line react/prefer-s
         return <ListCell value={value} className={'cell-list'} />;
       case 'color':
         return <ColorCell value={value} className={'cell-color'} />;
+      case 'link':
+        return <LinkCell label={value.label} path={value.path} className={'cell-link'} />;
       default:
         return <div>invalid type=[{type}]</div>;
     }

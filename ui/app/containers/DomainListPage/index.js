@@ -131,6 +131,7 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
                 data={agentDomains || []}
                 menu={this.renderMenu()}
                 onCellChange={() => {
+                  console.log(`DomainList::${JSON.stringify(arguments)}`); // TODO: REMOVE!!!!
                 }}
               />
             </Row>

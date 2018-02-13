@@ -16,7 +16,6 @@ import Form from '../../components/Form';
 import Header from '../../components/Header';
 import IntentsTable from '../../components/IntentsTable/index';
 import Preloader from '../../components/Preloader';
-
 import {
   deleteIntent,
   loadAgentDomains,
@@ -24,7 +23,6 @@ import {
   loadDomainIntents,
   resetAgentDomains,
   resetDomainIntents,
-  loadEntityIntents,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,
@@ -46,34 +44,63 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     this.onDelete = this.onDelete.bind(this);
     this.onDeleteDismiss = this.onDeleteDismiss.bind(this);
     this.renderMenu = this.renderMenu.bind(this);
+    this.loadDomains = this.loadDomains.bind(this);
   }
 
   state = {
     selectedDomain: undefined,
     deleteModalOpen: false,
     intentToDelete: undefined,
+    allIntentsLoaded: false,
   };
 
   componentWillMount() {
-    const { currentAgent } = this.props;
-    if (currentAgent) {
-      this.props.onComponentWillMount(currentAgent);
-    }
+    this.props.onReset();
   }
 
-  componentWillUpdate(nextProps) {
-    if (nextProps.currentAgent !== this.props.currentAgent) {
-      this.props.onComponentWillUpdate(nextProps.currentAgent);
+  componentDidMount() {
+    this.loadDomains(this.props.currentAgent);
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (!this.props.currentAgent && !nextProps.currentAgent) return;
+
+    if (_.isEqual(this.props.currentAgent, nextProps.currentAgent)) {
+      if (!nextProps.agentDomains) return;
+      if (nextProps.agentDomains.length === 0) return;
+      const oDomainId = _.isEmpty(this.state.selectedDomain) ? undefined : this.state.selectedDomain.id;
+      const nDomainId = _.isEmpty(nextProps.location.query) ? undefined : nextProps.location.query.domainId;
+      if (nDomainId === undefined) {
+        if (this.state.allIntentsLoaded) return;
+        this.loadIntents(nextProps.currentAgent, nextProps.agentDomains);
+        return;
+      }
+      if (_.isEqual(oDomainId, nDomainId)) return;
+      this.loadIntents(nextProps.currentAgent, nextProps.agentDomains, nDomainId);
+    } else {
+      this.loadDomains(nextProps.currentAgent);
     }
   }
 
   onSelectDomain(evt) {
-    const { currentAgent } = this.props;
-    if (this.props.agentDomains && (this.props.agentDomains.length > 0)) {
-      const domain = this.props.agentDomains.find((agentDomain) => agentDomain.id === evt.target.value);
-      this.setState({ selectedDomain: domain });
-      this.props.onChangeDomain(domain, currentAgent);
-    }
+    const url = `/intents${evt.target.value !== 'default' ? `?domainId=${evt.target.value}` : ''}`;
+    this.props.onChangeUrl(url);
+  }
+
+  loadDomains(agent) {
+    if (!agent) return;
+    this.props.onLoadDomains(agent);
+  }
+
+  loadIntents(agent, agentDomains, domainId) {
+    if (!agent) return;
+    if (!agentDomains || (agentDomains.length === 0)) return;
+    const domain = agentDomains.find((agentDomain) => agentDomain.id === domainId);
+    this.setState({
+      selectedDomain: domain,
+      allIntentsLoaded: !domain
+    });
+    this.props.onLoadIntents(domain, agent);
   }
 
   onCreateAction() {
@@ -155,8 +182,10 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
             { name: 'description', content: 'Review the list of intents' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} actionButtons={
-            <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />} />
+        <Header
+          breadcrumbs={breadcrumbs} actionButtons={
+          <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />}
+        />
         <Content>
           <ContentHeader title={messages.domainListTitle} subTitle={messages.domainListDescription} />
           <Form>
@@ -167,6 +196,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
                 type="select"
                 label={messages.domain.defaultMessage}
                 onChange={this.onSelectDomain}
+                value={this.state.selectedDomain ? this.state.selectedDomain.id : 'default'}
               >
                 {this.renderDomainSelectOptions(domainsSelect)}
               </Input>
@@ -197,11 +227,11 @@ IntentListPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onComponentWillUpdate: React.PropTypes.func,
-  onChangeDomain: React.PropTypes.func,
+  onLoadIntents: React.PropTypes.func,
   onChangeUrl: React.PropTypes.func,
-  onComponentWillMount: React.PropTypes.func,
   onDeleteIntent: React.PropTypes.func,
+  onLoadDomains: React.PropTypes.func,
+  onReset: React.PropTypes.func,
   domainIntents: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
@@ -218,19 +248,15 @@ IntentListPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentWillMount: (agent) => {
-      dispatch(loadAgentDomains(agent.id));
-      dispatch(loadAgentIntents(agent.id));
-    },
-    onComponentWillUpdate: (agent) => {
-      if (agent) {
-        dispatch(loadAgentDomains(agent.id));
-      } else {
-        dispatch(resetAgentDomains());
-      }
+    onReset() {
+      dispatch(resetAgentDomains());
       dispatch(resetDomainIntents());
     },
-    onChangeDomain: (domain, agent) => {
+    onLoadDomains(agent) {
+      dispatch(loadAgentDomains(agent.id));
+    },
+
+    onLoadIntents: (domain, agent) => {
       if (domain) {
         return dispatch(loadDomainIntents(domain.id));
       }
