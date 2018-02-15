@@ -23,7 +23,7 @@ export default [{
   label: 'Intent Threshold',
   tooltip: '',
   type: 'number',
-  accessor: 'intentThreshold',
+  accessor: 'intentThresholdNormalized',
   headerClassName: 'table2-header',
   cellClassName: 'table2-column',
 }];
