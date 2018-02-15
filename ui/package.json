@@ -244,6 +244,8 @@
     "styled-components": "1.1.2",
     "swagger-client": "^3.4.4",
     "to-camel-case": "^1.0.0",
+    "transit-immutable-js": "^0.7.0",
+    "transit-js": "^0.8.846",
     "warning": "3.0.0",
     "whatwg-fetch": "2.0.1"
   },

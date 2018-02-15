@@ -35,6 +35,10 @@ import 'sanitize.css/sanitize.css';
 import './global-styles';
 // Import i18n messages
 import { translationMessages } from './i18n';
+import {
+  loadState,
+  saveState
+} from './localStorage';
 // Import root routes
 import createRoutes from './routes';
 import configureStore from './store';
@@ -44,9 +48,11 @@ import configureStore from './store';
 // this uses the singleton browserHistory provided by react-router
 // Optionally, this could be changed to leverage a created history
 // e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
-const initialState = {};
+const initialState = loadState();
 const store = configureStore(initialState, browserHistory);
-
+store.subscribe(() => {
+  saveState(store.getState());
+});
 // Inject the sagas of the conversation bar to allow global listening
 ConversationBarSagas.map(store.runSaga);
 AppSagas.map(store.runSaga);
@@ -67,6 +73,7 @@ const rootRoute = {
 const render = (messages) => {
   ReactDOM.render(
     <Provider store={store}>
+
       <LanguageProvider messages={messages}>
         <Router
           history={history}
