@@ -1,61 +1,66 @@
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 
-const selectGlobal = (state) => state.get('global');
-const selectRoute = (state) => state.get('route');
+const selectGlobal = (state) => {
+  return state.global;
+};
+const selectRoute = (state) => {
+  return state.routing;
+};
 
 const makeSelectAgents = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('agents'),
+  (globalState) => globalState.agents,
 );
 
 const makeSelectAgentDomains = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('agentDomains'),
+  (globalState) => globalState.agentDomains,
 );
 
 const makeSelectAgentEntities = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('agentEntities'),
+  (globalState) => globalState.agentEntities,
 );
 
 const makeSelectConversation = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('conversation').toJS(),
+  (globalState) => globalState.conversation,
 );
 
 const makeSelectCurrentAgent = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('currentAgent'),
+  (globalState) => globalState.currentAgent,
 );
 
 const makeSelectLoading = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('loading'),
+  (globalState) => globalState.loading,
 );
 
 const makeSelectLoadingConversation = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('loadingConversation'),
+  (globalState) => globalState.loadingConversation,
 );
 
 const makeSelectError = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('error'),
+  (globalState) => globalState.error,
 );
 
 const makeSelectSuccess = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('success'),
+  (globalState) => globalState.success,
 );
 
 const makeSelectInWizard = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('inWizard'),
+  (globalState) => globalState.inWizard,
 );
 
 const makeSelectAgent = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('agentDetail'),
+  (globalState) => globalState.agentDetail,
 );
 
 const makeSelectDomain = () => createSelector(
@@ -92,11 +97,11 @@ const makeSelectLocationState = () => {
   let prevRoutingStateJS;
 
   return (state) => {
-    const routingState = state.get('route'); // or state.route
+    const routingState = state.routing; // or state.route
 
-    if (!routingState.equals(prevRoutingState)) {
+    if (!_.isEqual(prevRoutingState, routingState)) {
       prevRoutingState = routingState;
-      prevRoutingStateJS = routingState.toJS();
+      prevRoutingStateJS = routingState;
     }
 
     return prevRoutingStateJS;
@@ -105,13 +110,12 @@ const makeSelectLocationState = () => {
 
 const makeSelectDomainIntents = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('domainIntents'),
+  (globalState) => globalState.domainIntents,
 );
-
 
 const makeSelectEntityIntents = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('entityIntents').toJS(),
+  (globalState) => globalState.entityIntents,
 );
 
 export {

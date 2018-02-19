@@ -162,13 +162,16 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
 
     let domainsSelect = [];
     if (agentDomains !== false) {
-      domainsSelect = agentDomains.map((domain) => ({
+      const defaultOption = { value: 'default', text: 'Please choose a domain', disabled: 'disabled' };
+
+      const options = agentDomains.map((domain) => ({
         value: domain.id,
         text: domain.domainName,
       }));
-      domainsSelect.unshift({ value: 'default', text: 'Please choose a domain', disabled: 'disabled' });
+      domainsSelect = [defaultOption, ...options];
     } else {
-      domainsSelect.unshift({ value: 'default', text: 'No domains available for selected agent', disabled: 'disabled' });
+      const defaultOption = { value: 'default', text: 'No domains available for selected agent', disabled: 'disabled' };
+      domainsSelect = [defaultOption];
     }
 
     return (

@@ -1,25 +1,25 @@
 import { createSelector } from 'reselect';
 
-const selectIntent = (state) => state.get('intent');
+const selectIntent = (state) => state.intent;
 
 const makeSelectIntentData = () => createSelector(
   selectIntent,
-  (intentState) => intentState.get('intentData').toJS(),
+  (intentState) => intentState.intentData,
 );
 
 const makeSelectWindowSelection = () => createSelector(
   selectIntent,
-  (intentState) => intentState.get('windowSelection'),
+  (intentState) => intentState.windowSelection,
 );
 
 const makeSelectScenarioData = () => createSelector(
   selectIntent,
-  (scenarioState) => scenarioState.get('scenarioData').toJS(),
+  (scenarioState) => scenarioState.scenarioData,
 );
 
 const makeSelectTouched = () => createSelector(
   selectIntent,
-  (intentState) => intentState.get('touched'),
+  (intentState) => intentState.touched,
 );
 
 export {

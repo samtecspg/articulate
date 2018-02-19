@@ -2,7 +2,6 @@
  * Create the store with asynchronously loaded reducers
  */
 
-import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import {
   applyMiddleware,
@@ -10,6 +9,7 @@ import {
   createStore,
 } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import Immutable from 'seamless-immutable';
 import createReducer from './reducers';
 import swaggerMiddleware from './utils/swaggerMiddleware';
 
@@ -41,7 +41,7 @@ export default function configureStore(initialState = {}, history) {
 
   const store = createStore(
     createReducer(),
-    fromJS(initialState),
+    Immutable(initialState),
     composeEnhancers(...enhancers),
   );
 

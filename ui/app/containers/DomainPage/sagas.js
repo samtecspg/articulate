@@ -29,10 +29,11 @@ import { makeSelectDomainData } from './selectors';
 
 export function* postDomain(payload) {
   const { api } = payload;
-  const domainData = yield select(makeSelectDomainData());
-  domainData.intentThreshold /= 100;
+  const data = yield select(makeSelectDomainData());
+  const updatedData = data.updateIn(['intentThreshold'], intentThreshold => intentThreshold / 100);
+
   try {
-    const response = yield call(api.domain.postDomain, { body: domainData });
+    const response = yield call(api.domain.postDomain, { body: updatedData });
     const domain = response.obj;
     yield put(domainCreated(domain, domain.id));
   } catch ({ response }) {
@@ -51,8 +52,8 @@ export function* createDomain() {
 export function* putDomain(payload) {
   const { api } = payload;
   const domainData = yield select(makeSelectDomainData());
-  const { id, agent, ...data } = domainData;
-  data.intentThreshold /= 100;
+  const updatedData = domainData.updateIn(['intentThreshold'], intentThreshold => intentThreshold / 100);
+  const { id, agent, ...data } = updatedData;
 
   try {
     const response = yield call(api.domain.putDomainId, { id, body: data });

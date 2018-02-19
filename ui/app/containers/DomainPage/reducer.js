@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import Immutable from 'seamless-immutable';
 import {
   CHANGE_DOMAIN_DATA,
   LOAD_DOMAIN,
@@ -8,7 +8,7 @@ import {
 } from './constants';
 
 // The initial state of the App
-const initialState = fromJS({
+const initialState = Immutable({
   domainData: {
     agent: null,
     domainName: '',
@@ -21,7 +21,7 @@ function domainReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_DOMAIN_DATA:
       return state
-        .updateIn(['domainData'], x => x.set(action.payload.field, action.payload.value));
+        .setIn(['domainData', action.payload.field], action.payload.value);
     case RESET_DOMAIN_DATA:
       return initialState;
     case LOAD_DOMAIN:
@@ -32,7 +32,7 @@ function domainReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('domainData', fromJS(action.domain));
+        .set('domainData', action.domain);
     case LOAD_DOMAIN_ERROR:
       return state
         .set('error', action.error)

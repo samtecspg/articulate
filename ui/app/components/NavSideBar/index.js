@@ -9,9 +9,9 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
 import {
+  loadAgents,
   resetCurrentAgent,
   selectCurrentAgent,
-  loadAgents,
 } from '../../containers/App/actions';
 import {
   makeSelectAgents,
@@ -26,6 +26,10 @@ import webhook from '../../img/webhook-icon.svg';
 import messages from './messages';
 
 class NavSideBar extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
+  state = {
+    agents: []
+  };
 
   componentDidMount() {
     this.props.onComponentMounted();
@@ -57,11 +61,11 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
     let agentsSelect = [];
     if (agents !== false) {
       const defaultOption = { value: -1, text: messages.agentDropDownDefault.defaultMessage, disabled: 'disabled' };
-      agentsSelect = agents.map((agent) => ({
+      const options = agents.map((agent) => ({
         value: agent.id,
         text: agent.agentName,
       }));
-      agentsSelect.unshift(defaultOption);
+      agentsSelect = [defaultOption, ...options];
     }
     return (
       <aside id="side-nav">

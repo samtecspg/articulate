@@ -3,6 +3,7 @@ import {
   Dropdown,
   NavItem,
 } from 'react-materialize';
+import Immutable from 'seamless-immutable';
 import messages from '../messages';
 
 /**
@@ -13,9 +14,13 @@ import messages from '../messages';
  */
 
 export function AgentEntities(props) {
-  let items = [<NavItem style={{ color: '#4e4e4e' }} key="newEntityDefault" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>];
-  if (props.agentEntities && props.agentEntities.length > 0) {
-    items = props.agentEntities.map((agentEntity, agentIndex) => {
+  const newEntityDefault = <NavItem style={{ color: '#4e4e4e' }} key="newEntityDefault" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>;
+  const newEntity = <NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="/entities/create">{messages.createEntity.defaultMessage}</NavItem>;
+  const divider = <NavItem key="divider" divider />;
+  let items = undefined;
+
+  const entitiesItems = props.agentEntities
+    .map((agentEntity, agentIndex) => {
       return (
         <NavItem
           onClick={props.userSays ?
@@ -29,16 +34,16 @@ export function AgentEntities(props) {
         </NavItem>
       );
     });
-  }
-
-  items.push(
-    <NavItem key="divider" divider />,
-  );
 
   if (props.createEntity) {
-    items.push(
-      <NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="/entities/create">{messages.createEntity.defaultMessage}</NavItem>,
-    );
+    items = Immutable([newEntityDefault])
+      .concat(entitiesItems)
+      .concat(divider)
+      .concat(newEntity);
+  } else {
+    items = Immutable([newEntityDefault])
+      .concat(entitiesItems)
+      .concat(divider);
   }
 
   return (

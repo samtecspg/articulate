@@ -1,15 +1,16 @@
-import { fromJS } from 'immutable';
+import Immutable from 'seamless-immutable';
+
 import {
   CHANGE_AGENT_DATA,
+  LOAD_AGENT,
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
-  RESET_AGENT_DATA,
-  LOAD_AGENT,
   REMOVE_AGENT_FALLBACK,
+  RESET_AGENT_DATA,
 } from './constants';
 
 // The initial state of the App
-const initialState = fromJS({
+const initialState = Immutable({
   agentData: {
     agentName: '',
     description: '',
@@ -28,16 +29,14 @@ const initialState = fromJS({
 function agentReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_AGENT_DATA:
-      if (action.payload.field === 'fallbackResponses'){
+      if (action.payload.field === 'fallbackResponses') {
         return state
-          .updateIn(['agentData'], agent => agent.set('fallbackResponses', agent.get('fallbackResponses').push(action.payload.value)))
+          .updateIn(['agentData', 'fallbackResponses'], fallbackResponses => fallbackResponses.concat(action.payload.value))
           .set('touched', true);
       }
-      else {
-        return state
-          .updateIn(['agentData'], x => x.set(action.payload.field, action.payload.value))
-          .set('touched', true);
-      }
+      return state
+        .setIn(['agentData', action.payload.field], action.payload.value)
+        .set('touched', true);
     case RESET_AGENT_DATA:
       return initialState;
     case LOAD_AGENT:
@@ -48,14 +47,14 @@ function agentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('agentData', fromJS(action.agent));
+        .set('agentData', action.agent);
     case LOAD_AGENT_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);
     case REMOVE_AGENT_FALLBACK:
       return state
-        .setIn(['agentData', 'fallbackResponses'], state.getIn(['agentData', 'fallbackResponses']).splice(action.index, 1));
+        .updateIn(['agentData', 'fallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.index));
     default:
       return state;
   }

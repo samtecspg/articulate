@@ -127,8 +127,10 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
             { name: 'description', content: 'Create a entity for your agent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} actionButtons={
-            <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />}/>
+        <Header
+          breadcrumbs={breadcrumbs} actionButtons={
+          <ActionButton label={messages.actionButton} onClick={this.onCreateAction} />}
+        />
         <Content>
           <ContentHeader title={messages.entityListTitle} subTitle={messages.entityListDescription} />
           <Form>

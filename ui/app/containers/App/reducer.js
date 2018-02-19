@@ -1,7 +1,5 @@
-import {
-  fromJS,
-  Map
-} from 'immutable';
+import { fromJS } from 'immutable';
+import Immutable from 'seamless-immutable';
 import {
   ACTION_CANCELLED,
   CONVERSE,
@@ -56,6 +54,7 @@ import {
   LOAD_ENTITY_INTENTS_SUCCESS,
   RESET_AGENT_DOMAINS,
   RESET_CURRENT_AGENT,
+  RESET_DOMAINS_INTENTS,
   RESET_SESSION,
   RESET_SESSION_ERROR,
   RESET_SESSION_SUCCESS,
@@ -79,19 +78,19 @@ import {
 } from './constants';
 
 // The initial state of the App
-const initialState = fromJS({
+const initialState = Immutable({
   loading: false,
   error: false,
   success: false,
   loadingConversation: false,
-  currentAgent: false,
-  agents: false,
-  agentDomains: false,
-  agentEntities: false,
-  domainIntents: false,
+  currentAgent: undefined,
+  agents: [],
+  agentDomains: [],
+  agentEntities: [],
+  domainIntents: [],
   conversation: [],
   agent: undefined,
-  entityIntents: Map(),
+  entityIntents: {},
 });
 
 function appReducer(state = initialState, action) {
@@ -134,6 +133,11 @@ function appReducer(state = initialState, action) {
         .set('error', action.error)
         .set('loading', false);
     case RESET_AGENT_DOMAINS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('domainIntents', initialState.domainIntents);
+    case RESET_DOMAINS_INTENTS:
       return state
         .set('loading', false)
         .set('error', false)
@@ -426,7 +430,7 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case LOAD_ENTITY_INTENTS_SUCCESS:
       return state
-        .update('entityIntents', (entityIntents) => entityIntents.set(action.data.id, action.data.intents))
+        .updateIn(['entityIntents'], (entityIntents) => entityIntents.set(action.data.id, action.data.intents))
         .set('loading', false);
     case LOAD_ENTITY_INTENTS_ERROR:
       return state

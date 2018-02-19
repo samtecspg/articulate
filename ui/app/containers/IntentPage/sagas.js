@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {
   LOCATION_CHANGE,
   push
@@ -37,7 +36,10 @@ import {
   loadScenarioError,
   loadScenarioSuccess,
 } from './actions';
-import { LOAD_INTENT, LOAD_SCENARIO } from './constants';
+import {
+  LOAD_INTENT,
+  LOAD_SCENARIO
+} from './constants';
 import {
   makeSelectIntentData,
   makeSelectScenarioData,
@@ -45,12 +47,13 @@ import {
 
 function* postScenario(payload) {
   const { api, id, name } = payload;
-  const scenarioData = yield select(makeSelectScenarioData());
-  scenarioData.intent = name;
-  if (!scenarioData.useWebhook) {
-    delete scenarioData.webhookUrl;
+  const data = yield select(makeSelectScenarioData());
+  let scenarioData = undefined;
+  if (!data.useWebhook) {
+    scenarioData = data.set('intent', name).without('webhookUrl');
+  } else {
+    scenarioData = data.set('intent', name);
   }
-
   try {
     const response = yield call(api.intent.postIntentIdScenario, { id, body: scenarioData });
     const scenario = response.obj;
@@ -118,10 +121,10 @@ function* putScenario(payload) {
   if (!scenarioData.useWebhook) {
     delete scenarioData.webhookUrl;
   }
-  if (scenarioData.slots === ""){
+  if (scenarioData.slots === '') {
     scenarioData.slots = [];
   }
-  if (scenarioData.intentResponses === ""){
+  if (scenarioData.intentResponses === '') {
     scenarioData.intentResponses = [];
   }
   try {
@@ -141,7 +144,7 @@ export function* putIntent(payload) {
   delete data.agent;
   delete data.domain;
   data.examples = data.examples.map((example) => {
-    if (example.entities === ""){
+    if (example.entities === '') {
       example.entities = [];
     }
     return example;

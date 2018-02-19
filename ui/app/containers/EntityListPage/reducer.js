@@ -1,8 +1,7 @@
-import { fromJS } from 'immutable';
-
+import Immutable from 'seamless-immutable';
 
 // The initial state of the App
-const initialState = fromJS({
+const initialState = Immutable({
   entity: {},
 });
 

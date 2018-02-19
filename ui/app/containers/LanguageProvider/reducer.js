@@ -4,19 +4,18 @@
  *
  */
 
-import { fromJS } from 'immutable';
+import Immutable from 'seamless-immutable';
 import { DEFAULT_LOCALE, } from '../App/constants'; // eslint-disable-line
 import { CHANGE_LOCALE, } from './constants';
 
-const initialState = fromJS({
+const initialState = Immutable({
   locale: DEFAULT_LOCALE,
 });
 
 function languageProviderReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_LOCALE:
-      return state
-        .set('locale', action.locale);
+      return Immutable.setIn(state, ['locale'], action.locale);
     default:
       return state;
   }

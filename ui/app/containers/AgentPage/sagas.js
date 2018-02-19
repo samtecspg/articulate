@@ -33,11 +33,11 @@ import { LOAD_AGENT } from './constants';
 
 export function* postAgent(payload) {
   const { api } = payload;
-  const agentData = yield select(makeSelectAgentData());
+  const data = yield select(makeSelectAgentData());
   const inWizard = yield select(makeSelectInWizard());
-  agentData.domainClassifierThreshold /= 100;
+  const updatedData = data.updateIn(['domainClassifierThreshold'], domainClassifierThreshold => domainClassifierThreshold / 100);
   try {
-    const response = yield call(api.agent.postAgent, { body: agentData });
+    const response = yield call(api.agent.postAgent, { body: updatedData });
     const agent = response.obj;
     yield put(agentCreated(agent));
     yield call(getAgents, { api });
@@ -63,8 +63,9 @@ export function* createAgent() {
 export function* putAgent(payload) {
   const { api } = payload;
   const agentData = yield select(makeSelectAgentData());
-  const { id, ...data } = agentData;
-  data.domainClassifierThreshold /= 100;
+  const updatedData = agentData.updateIn(['domainClassifierThreshold'], domainClassifierThreshold => domainClassifierThreshold / 100);
+
+  const { id, ...data } = updatedData;
 
   try {
     const response = yield call(api.agent.putAgentId, { id, body: data });
