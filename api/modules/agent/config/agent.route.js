@@ -104,6 +104,16 @@ const AgentRoutes = [
         }
     },
     {
+        method: 'GET',
+        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/webhook',
+        config: {
+            description: 'Find the webhook related with an intent, for the given domain and agent',
+            tags: ['api'],
+            validate: AgentValidator.findIntentWebhookInDomainByIdByAgentId,
+            handler: AgentController.findIntentWebhookInDomainByIdByAgentId
+        }
+    },
+    {
         method: 'POST',
         path: '/agent',
         config: {
@@ -201,6 +211,46 @@ const AgentRoutes = [
             tags: ['api'],
             validate: AgentValidator.findIntentsByAgentId,
             handler: AgentController.findIntentsByAgentId
+        }
+    },
+    {
+        method: 'POST',
+        path: '/agent/{id}/webhook',
+        config: {
+            description: 'Create a new instance of a webhook for the agent and persist it into the data source',
+            tags: ['api'],
+            validate: AgentValidator.addWebhook,
+            handler: AgentController.addWebhook
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/webhook',
+        config: {
+            description: 'Find a webhook by agent id from the data source',
+            tags: ['api'],
+            validate: AgentValidator.findWebhook,
+            handler: AgentController.findWebhook
+        }
+    },
+    {
+        method: 'PUT',
+        path: '/agent/{id}/webhook',
+        config: {
+            description: 'Update attributes of the webhook of the agent and persist it into the data source',
+            tags: ['api'],
+            validate: AgentValidator.updateWebhook,
+            handler: AgentController.updateWebhook
+        }
+    },
+    {
+        method: 'DELETE',
+        path: '/agent/{id}/webhook',
+        config: {
+            description: 'Delete a webhook instance by id from the data source',
+            tags: ['api'],
+            validate: AgentValidator.deleteWebhook,
+            handler: AgentController.deleteWebhook
         }
     }
 ];

@@ -10,10 +10,9 @@ class AgentModel {
             description: Joi.string(),
             language: Joi.string(),
             timezone: Joi.string(),
-            webhookUrl: Joi.string(),
+            useWebhook: Joi.boolean(),
             domainClassifierThreshold: Joi.number(),
-            fallbackResponses: Joi.array().items(Joi.string()),
-            useWebhookFallback: Joi.boolean()
+            fallbackResponses: Joi.array().items(Joi.string())
         };
     };
 }

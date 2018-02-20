@@ -94,7 +94,7 @@ module.exports = (request, reply) => {
                             return cb(error);
                         }
                         if (exists){
-                            const error = Boom.notFound('An scenario already exists for this intent. If you want to change it please use the update endpoint.');
+                            const error = Boom.badRequest('An scenario already exists for this intent. If you want to change it please use the update endpoint.');
                             return cb(error);
                         }
                         return cb(null);

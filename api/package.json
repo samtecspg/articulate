@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "async": "^2.4.0",
+    "axios": "^0.18.0",
     "boom": "^4.3.1",
     "crypto": "^0.0.3",
     "dashify": "^0.2.2",
@@ -32,6 +33,7 @@
     "elasticsearch": "^13.0.1",
     "flat": "^4.0.0",
     "guid": "^0.0.12",
+    "handlebars": "^4.0.11",
     "hapi": "^16.1.1",
     "hapi-swagger": "^7.7.0",
     "inert": "^4.2.0",

@@ -3,6 +3,7 @@
 const Joi = require('joi');
 const IntentSchema = require('../../../models/index').Intent.schema;
 const ScenarioSchema = require('../../../models/index').Scenario.schema;
+const WebhookSchema = require('../../../models/index').Webhook.schema;
 const SlotSchema = require('../../../models/index').Slot.schema;
 const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
 const IntentExampleSchema = require('../../../models/index').IntentExample.schema;
@@ -17,6 +18,7 @@ class IntentValidate {
                     agent: IntentSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the intent.')),
                     domain: IntentSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the intent')),
                     intentName: IntentSchema.intentName.required().error(new Error('The intent name is required')),
+                    useWebhook: IntentSchema.useWebhook.required().error(new Error('Please specify if this intent use a webhook for fullfilment.')),
                     examples: Joi.array().items({
                         userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
                         entities: Joi.array().items({
@@ -51,6 +53,7 @@ class IntentValidate {
 
                 return {
                     intentName: IntentSchema.intentName,
+                    useWebhook: IntentSchema.useWebhook,
                     examples: Joi.array().items({
                         userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
                         entities: Joi.array().items({
@@ -93,12 +96,9 @@ class IntentValidate {
                         entity: SlotSchema.entity.required().error(new Error('The entity is required for the slot.')),
                         isList: SlotSchema.isList.required().error(new Error('Please specify if the slot is a list of items or not.')),
                         isRequired: SlotSchema.isRequired.required().error(new Error('Please specify if the slot is required or not.')),
-                        textPrompts: SlotSchema.textPrompts,
-                        useWebhook: SlotSchema.useWebhook.required().error(new Error('Please specify if the slot use a webhook or not.'))
+                        textPrompts: SlotSchema.textPrompts
                     }),
-                    intentResponses: ScenarioSchema.intentResponses,
-                    useWebhook: ScenarioSchema.useWebhook.required().error(new Error('Please specify if these scenario use a webhook for fullfilment.')),
-                    webhookUrl: ScenarioSchema.webhookUrl
+                    intentResponses: ScenarioSchema.intentResponses
                 };
             })()
         };
@@ -128,17 +128,71 @@ class IntentValidate {
                         entity: SlotSchema.entity.required(),
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
-                        textPrompts: SlotSchema.textPrompts,
-                        useWebhook: SlotSchema.useWebhook.required()
+                        textPrompts: SlotSchema.textPrompts
                     }),
-                    intentResponses: ScenarioSchema.intentResponses,
-                    useWebhook: ScenarioSchema.useWebhook,
-                    webhookUrl: ScenarioSchema.webhookUrl
+                    intentResponses: ScenarioSchema.intentResponses
                 };
             })()
         };
 
         this.deleteScenario = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
+
+        this.addWebhook = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the scenario.')),
+                    domain: ScenarioSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the scenario.')),
+                    intent: ScenarioSchema.intent.required().error(new Error('The intent is required. Please specify an intent for the scenario.')),
+                    webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
+                    webhookVerb: WebhookSchema.webhookVerb.required().error(new Error('The verb is required. Please specify a verb for the webhook.')),
+                    webhookPayloadType: WebhookSchema.webhookPayloadType.required().error(new Error('The payload type is required. Please specify a payload type for the webhook.')),
+                    webhookPayload: WebhookSchema.webhookPayload
+                };
+            })()
+        };
+
+        this.findWebhook = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
+
+        this.updateWebhook = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    webhookUrl: WebhookSchema.webhookUrl,
+                    webhookVerb: WebhookSchema.webhookVerb,
+                    webhookPayloadType: WebhookSchema.webhookPayloadType,
+                    webhookPayload: WebhookSchema.webhookPayload
+                };
+            })()
+        };
+
+        this.deleteWebhook = {
             params: (() => {
 
                 return {

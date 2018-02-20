@@ -26,7 +26,7 @@ module.exports = (request, reply) => {
         (callback) => {
 
             Async.parallel({
-                parseResult: (cb) => {
+                parse: (cb) => {
 
                     server.inject(`/agent/${agentId}/parse?text=${text}${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
 
@@ -38,10 +38,10 @@ module.exports = (request, reply) => {
                             const error = Boom.create(res.statusCode, 'An error occurred parsing the document');
                             return cb(error, null);
                         }
-                        return cb(null, res.result);
+                        return cb(null, res.result.result.results);
                     });
                 },
-                agentData: (cb) => {
+                agent: (cb) => {
 
                     server.inject(`/agent/${agentId}/export?withReferences=true`, (res) => {
 
@@ -55,6 +55,17 @@ module.exports = (request, reply) => {
                         }
                         return cb(null, res.result);
                     });
+                },
+                context: (cb) =>{
+
+                    server.inject(`/context/${sessionId}`, (res) => {
+
+                        if (res.statusCode !== 200){
+                            const error = Boom.create(res.statusCode, `An error occurred getting the context of the session ${sessionId}`);
+                            return cb(error, null);
+                        }
+                        return cb(null, res.result);
+                    });
                 }
             }, (err, results) => {
 
@@ -64,10 +75,13 @@ module.exports = (request, reply) => {
                 return callback(null, results);
             });
         },
-        (data, callback) => {
+        (conversationStateObject, callback) => {
 
-            const timezoneToUse = timezone ? timezone : (data.agentData.timezone ? data.agentData.timezone : 'America/Kentucky/Louisville');
-            AgentTools.respond(server, sessionId, timezoneToUse, data, (err, result) => {
+            const timezoneToUse = timezone ? timezone : (conversationStateObject.agent.timezone ? conversationStateObject.agent.timezone : 'America/Kentucky/Louisville');
+            conversationStateObject.text = text;
+            conversationStateObject.sessionId = sessionId;
+            conversationStateObject.timezone = timezoneToUse;
+            AgentTools.respond(server, conversationStateObject, (err, result) => {
 
                 if (err){
                     return callback(err, null);

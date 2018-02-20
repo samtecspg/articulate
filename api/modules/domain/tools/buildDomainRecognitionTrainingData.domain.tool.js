@@ -34,7 +34,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
 
                     const entitiesList = intentExample.entities;
 
-                    if (entitiesList.length > 0){
+                    if (entitiesList && entitiesList.length > 0){
                         const entitiesOfIntent = _.map(entitiesList, 'entity');
                         const keyOfEntities = entitiesOfIntent.join('-');
                         let combinationsForThisIntent = entitiesCombinations[keyOfEntities];

@@ -7,14 +7,14 @@ const CartesianProduct = require('./cartesianProduct.domain.tool');
 const getCombinationOfEntities = (entities, intents) => {
 
     const intentExamples = _.flatten(_.map(intents, 'examples'));
-    const usedEntities = _.uniq(_.map(intentExamples, (example) => {
+    const usedEntities = _.compact(_.uniq(_.map(intentExamples, (example) => {
 
-        const exampleEntities = _.map(example.entities, 'entity');
-        return exampleEntities;
-    }));
-    /*const notNullEntities = _.compact(intentsEntities);
-    const entitiesArrays = _.compact(intentsEntities);
-    const usedEntities = _.map(_.flatten(_.map(notNullEntities, 'entity')));*/
+        if (example.entities){
+            const exampleEntities = _.map(example.entities, 'entity');
+            return exampleEntities;
+        }
+        return null;
+    })));
 
     const combinations = {};
     _.map(usedEntities, (tupleOfEntities) => {

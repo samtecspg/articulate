@@ -11,12 +11,18 @@ const FindEntityByIdByAgentIdController = require('./findEntityByIdByAgentId.age
 const FindIntentByIdInDomainByIdByAgentIdController = require('./findIntentByIdInDomainByIdByAgentId.agent.controller');
 const FindIntentsInDomainByIdByAgentIdController = require('./findIntentsInDomainByIdByAgentId.agent.controller');
 const FindIntentScenarioInDomainByIdByAgentIdController = require('./findIntentScenarioInDomainByIdByAgentId.agent.controller');
+const FindIntentWebhookInDomainByIdByAgentIdController = require('./findIntentWebhookInDomainByIdByAgentId.agent.controller');
 const UpdateByIdController = require('./updateById.agent.controller');
 const ParseController = require('./parse.agent.controller');
 const ConverseController = require('./converse.agent.controller');
 const ExportController = require('./export.agent.controller');
 const ImportController = require('./import.agent.controller');
 const FindIntentsByIdByAgentIdController = require('./findIntentsByIdByAgentId.agent.controller');
+const AddWebhookController = require('./addWebhook.agent.controller');
+const FindWebhookController = require('./findWebhook.agent.controller');
+const UpdateWebhookController = require('./updateWebhook.agent.controller');
+const DeleteWebhookController = require('./deleteWebhook.agent.controller');
+
 
 const AgentController = {
 
@@ -44,6 +50,8 @@ const AgentController = {
 
     findIntentScenarioInDomainByIdByAgentId: FindIntentScenarioInDomainByIdByAgentIdController,
 
+    findIntentWebhookInDomainByIdByAgentId: FindIntentWebhookInDomainByIdByAgentIdController,
+
     updateById: UpdateByIdController,
 
     parse: ParseController,
@@ -54,7 +62,15 @@ const AgentController = {
 
     import: ImportController,
 
-    findIntentsByAgentId: FindIntentsByIdByAgentIdController
+    findIntentsByAgentId: FindIntentsByIdByAgentIdController,
+
+    addWebhook: AddWebhookController,
+
+    findWebhook: FindWebhookController,
+
+    updateWebhook: UpdateWebhookController,
+
+    deleteWebhook: DeleteWebhookController
 };
 
 module.exports = AgentController;

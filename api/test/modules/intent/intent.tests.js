@@ -25,7 +25,6 @@ const createAgent = (callback) => {
         description: 'This is test agent',
         language: 'en',
         timezone: 'America/Kentucky/Louisville',
-        webhookUrl: 'string',
         domainClassifierThreshold: 0.6,
         fallbackResponses: [
             'Sorry, can you rephrase that?',
@@ -138,7 +137,6 @@ before({ timeout: 60000 }, (done) => {
         ], (err) => {
 
             if (err) {
-                console.log(err);
                 done(err);
             }
             else {

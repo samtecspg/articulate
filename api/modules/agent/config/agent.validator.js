@@ -6,6 +6,7 @@ const DomainSchema = require('../../../models/index').Domain.schema;
 const IntentSchema = require('../../../models/index').Intent.schema;
 const IntentExampleSchema = require('../../../models/index').IntentExample.schema;
 const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
+const WebhookSchema = require('../../../models/index').Webhook.schema;
 const ScenarioSchema = require('../../../models/index').Scenario.schema;
 const SlotSchema = require('../../../models/index').Slot.schema;
 const Joi = require('joi');
@@ -129,11 +130,16 @@ class AgentValidate {
                     domainId: DomainSchema.id.required().description('Id of the domain'),
                     intentId: IntentSchema.id.required().description('Id of the intent')
                 };
-            })(),
-            query: (() => {
+            })()
+        };
+
+        this.findIntentWebhookInDomainByIdByAgentId = {
+            params: (() => {
 
                 return {
-                    size: Joi.number().description('Number of elements to return. Default 10')
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    domainId: DomainSchema.id.required().description('Id of the domain'),
+                    intentId: IntentSchema.id.required().description('Id of the intent')
                 };
             })()
         };
@@ -144,12 +150,11 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.required(),
+                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr').required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone.required(),
-                    webhookUrl: AgentSchema.webhookUrl,
+                    useWebhook: AgentSchema.useWebhook.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
-                    fallbackResponses: AgentSchema.fallbackResponses.required(),
-                    useWebhookFallback: AgentSchema.useWebhookFallback.required()
+                    fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent'))
                 };
             })()
         };
@@ -166,12 +171,11 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName,
                     description: AgentSchema.description,
-                    language: AgentSchema.language,
+                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr').error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone,
-                    webhookUrl: AgentSchema.webhookUrl,
+                    useWebhook: AgentSchema.useWebhook,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
-                    fallbackResponses: AgentSchema.fallbackResponses,
-                    useWebhookFallback: AgentSchema.useWebhookFallback
+                    fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent'))
                 };
             })()
         };
@@ -248,7 +252,10 @@ class AgentValidate {
                     text: Joi.string().required().description('Text to parse'),
                     timezone: Joi.string().description('Timezone for duckling parse. Default America/Kentucky/Louisville')
                 };
-            })()
+            })(),
+            options: {
+              allowUnknown: true
+            },
         };
 
         this.export = {
@@ -272,12 +279,17 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.required(),
+                    language: AgentSchema.language.required().valid('en', 'es', 'de', 'fr').error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone.required(),
-                    webhookUrl: AgentSchema.webhookUrl,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
-                    useWebhookFallback: AgentSchema.useWebhookFallback.required(),
+                    useWebhook: AgentSchema.useWebhook.required(),
+                    webhook: {
+                        webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
+                        webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                        webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                        webhookPayload: WebhookSchema.webhookPayload
+                    },
                     entities: Joi.array().items({
                         entityName: EntitySchema.entityName.required(),
                         uiColor: EntitySchema.uiColor,
@@ -311,18 +323,23 @@ class AgentValidate {
                                     entity: SlotSchema.entity.required(),
                                     isList: SlotSchema.isList.required(),
                                     isRequired: SlotSchema.isRequired.required(),
-                                    textPrompts: SlotSchema.textPrompts,
-                                    useWebhook: SlotSchema.useWebhook.required()
+                                    textPrompts: SlotSchema.textPrompts
                                 }),
-                                intentResponses: ScenarioSchema.intentResponses.required(),
-                                useWebhook: ScenarioSchema.useWebhook.required(),
-                                webhookUrl: ScenarioSchema.webhookUrl
+                                intentResponses: ScenarioSchema.intentResponses.required()
+                            },
+                            useWebhook: IntentSchema.useWebhook.required(),
+                            webhook: {
+                                webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
+                                webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                                webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                                webhookPayload: WebhookSchema.webhookPayload
                             }
                         })
                     })
                 };
             })()
         };
+
         this.findIntentsByAgentId = {
             params: (() => {
 
@@ -335,6 +352,61 @@ class AgentValidate {
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
                     limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
+                };
+            })()
+        };
+
+        this.addWebhook = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
+                    webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
+                    webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                    webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                    webhookPayload: WebhookSchema.webhookPayload
+                };
+            })()
+        };
+
+        this.findWebhook = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
+
+        this.updateWebhook = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    webhookUrl: WebhookSchema.webhookUrl,
+                    webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                    webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                    webhookPayload: WebhookSchema.webhookPayload
+                };
+            })()
+        };
+
+        this.deleteWebhook = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
                 };
             })()
         };

@@ -10,7 +10,6 @@ class SlotModel {
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
             textPrompts: Joi.array().items(Joi.string()),
-            useWebhook: Joi.boolean()
         };
     };
 }

@@ -2,28 +2,35 @@
 
 const BuildValidResponses = require('./buildValidResponses.agent.tool');
 const CallWebhook = require('./callWebhook.agent.tool');
+const _ = require('lodash');
 
-module.exports = (userText, currentContext, intentScenario, timezone, webhookUrl, callback) => {
+const getTextResponse = (conversationStateObject, webhookResponse) => {
 
-    const response = {
-        timestamp: new Date().toISOString(),
-        currentContext,
-        timezone
-    };
+    if (webhookResponse){
+        conversationStateObject = _.merge(conversationStateObject, webhookResponse);
+    }
+    const validResponses = BuildValidResponses(conversationStateObject, conversationStateObject.scenario.intentResponses);
+    const textResponse = validResponses[Math.floor(Math.random() * validResponses.length)];
+    return textResponse;
+};
 
-    if (intentScenario.useWebhook === 'true') {
-        CallWebhook(intentScenario.webhookUrl ? intentScenario.webhookUrl : webhookUrl, response, (err, webhookResponse) => {
+module.exports = (conversationStateObject, callback) => {
 
-            if (err){
-                return callback(err, null);
+    if (conversationStateObject.intent.useWebhook === 'true' || conversationStateObject.agent.useWebhook === 'true') {
+        const webhookToUse = conversationStateObject.intent.useWebhook === 'true' ? conversationStateObject.intent.webhook : conversationStateObject.agent.webhook;
+        CallWebhook(webhookToUse, conversationStateObject, (webhookResponse) => {
+
+            if (webhookResponse.textResponse){
+                return callback(null, { textResponse: webhookResponse.textResponse });
             }
-            return callback(null, webhookResponse);
+            else {
+                const textResponse = getTextResponse(conversationStateObject, webhookResponse);
+                return callback(null, Object.assign(webhookResponse, { textResponse }));
+            }
         });
     }
     else {
-        const validResponses = BuildValidResponses(userText, currentContext, intentScenario.slots, intentScenario.intentResponses, timezone);
-        const textResponse = validResponses[Math.floor(Math.random() * validResponses.length)];
-        //return callback(null, { response: textResponse });
-        return callback(null, Object.assign(response, { textResponse }));
+        const textResponse = getTextResponse(conversationStateObject);
+        return callback(null, { textResponse });
     }
 };

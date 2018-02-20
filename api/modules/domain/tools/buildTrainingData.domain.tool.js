@@ -23,18 +23,7 @@ const buildTrainingData = (server, domainId, callback) => {
 
                 const entitiesList = intentExample.entities;
 
-                /*const entityPattern = /\{(.+?)\}/g;
-                let match;
-                while ((match = entityPattern.exec(intentExample)) !== null){
-                    entitiesList.push({
-                        start: match.index,
-                        end: match.index + match[0].length,
-                        value: match[0],
-                        entity: match[1]
-                    });
-                }*/
-
-                if (entitiesList.length > 0){
+                if (entitiesList && entitiesList.length > 0){
                     const entitiesOfIntent = _.map(entitiesList, 'entity');
                     const keyOfEntities = entitiesOfIntent.join('-');
                     let combinationsForThisIntent = entitiesCombinations[keyOfEntities];

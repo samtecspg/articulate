@@ -27,7 +27,6 @@ const createAgent = (callback) => {
         description: 'This is test agent',
         language: 'en',
         timezone: 'America/Kentucky/Louisville',
-        webhookUrl: 'string',
         domainClassifierThreshold: 0.6,
         fallbackResponses: [
             'Sorry, can you rephrase that?',
@@ -197,7 +196,6 @@ before({ timeout: 60000 }, (done) => {
         ], (err) => {
 
             if (err) {
-                console.log(err);
                 done(err);
             }
             else {
@@ -244,8 +242,7 @@ suite('scenario', () => {
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
-                        ],
-                        useWebhook: true
+                        ]
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -304,8 +301,7 @@ suite('scenario', () => {
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
-                        ],
-                        useWebhook: true
+                        ]
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -344,8 +340,7 @@ suite('scenario', () => {
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
-                        ],
-                        useWebhook: true
+                        ]
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -384,8 +379,7 @@ suite('scenario', () => {
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
-                        ],
-                        useWebhook: true
+                        ]
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',
@@ -431,8 +425,7 @@ suite('scenario', () => {
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
-                        ],
-                        useWebhook: true
+                        ]
                     }],
                     intentResponses: [
                         'Your {searchedObject} is located at...',

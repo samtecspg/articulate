@@ -1,18 +1,30 @@
 'use strict';
 
 const Boom = require('boom');
-const Wreck = require('wreck');
+const Axios = require('axios');
+const Handlebars = require('handlebars');
 
-module.exports = (url, payload, callback) => {
+module.exports = (webhook, conversationStateObject, callback) => {
 
-    Wreck.post(url, { payload }, (err, wreckResponse, responsePayload) => {
+    const compiledWebhookUrl = Handlebars.compile(webhook.webhookUrl);
+    const processedWebhookUrl = compiledWebhookUrl(conversationStateObject);
+    let compiledWebhookPayload, processedWebhookPayload;
+    if (webhook.webhookPayloadType !== 'None'){
+        compiledWebhookPayload = Handlebars.compile(webhook.webhookPayload);
+        processedWebhookPayload = compiledWebhookPayload(conversationStateObject);
+    }
 
-        if (err){
-            const message = 'Error calling webhook with the url ' + url;
-            const error = Boom.badImplementation(message);
-            return callback(error, null);
-        }
-        const data = JSON.parse(responsePayload.toString());
-        return callback(null, data);
-    });
+    Axios({
+        method: webhook.webhookVerb,
+        url: processedWebhookUrl,
+        data: JSON.parse(processedWebhookPayload)
+    })
+    .then((response) => {
+        return callback(response.data);
+    })
+    .catch((error) => {
+        return callback({
+            textResponse: 'We\'re having trouble fulfilling that request'
+        });
+    });;
 };

@@ -7,7 +7,7 @@ const systemEntities = ['sys.spacy_money', 'sys.spacy_quantity', 'sys.spacy_card
 
 const extractEntities = (examples) => {
 
-    const entities = _.uniq(_.flatten(_.map(_.flatten(_.map(examples, 'entities')), 'entity')));
+    const entities = _.compact(_.uniq(_.flatten(_.map(_.flatten(_.map(examples, 'entities')), 'entity'))));
     return entities;
 };
 

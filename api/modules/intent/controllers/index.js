@@ -7,6 +7,10 @@ const AddScenarioController = require('./addScenario.intent.controller');
 const FindScenarioController = require('./findScenario.intent.controller');
 const UpdateScenarioController = require('./updateScenario.intent.controller');
 const DeleteScenarioController = require('./deleteScenario.intent.controller');
+const AddWebhookController = require('./addWebhook.intent.controller');
+const FindWebhookController = require('./findWebhook.intent.controller');
+const UpdateWebhookController = require('./updateWebhook.intent.controller');
+const DeleteWebhookController = require('./deleteWebhook.intent.controller');
 
 const IntentController = {
 
@@ -24,7 +28,15 @@ const IntentController = {
 
     updateScenario: UpdateScenarioController,
 
-    deleteScenario: DeleteScenarioController
+    deleteScenario: DeleteScenarioController,
+
+    addWebhook: AddWebhookController,
+
+    findWebhook: FindWebhookController,
+
+    updateWebhook: UpdateWebhookController,
+
+    deleteWebhook: DeleteWebhookController
 };
 
 module.exports = IntentController;

@@ -11,7 +11,8 @@ class IntentModel {
             agent: Joi.string(),
             domain: Joi.string(),
             intentName: Joi.string(),
-            examples: Joi.array().items(ExampleIntentModel.schema)
+            examples: Joi.array().items(ExampleIntentModel.schema),
+            useWebhook: Joi.boolean()
         };
     };
 }

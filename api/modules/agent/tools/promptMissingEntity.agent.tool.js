@@ -3,26 +3,15 @@
 const BuildValidResponses = require('./buildValidResponses.agent.tool');
 const CallWebhook = require('./callWebhook.agent.tool');
 
-module.exports = (userText, currentContext, intentScenario, missingEntity, recognizedEntities, timezone, webhookUrl, callback) => {
+module.exports = (conversationStateObject, missingEntity, callback) => {
 
     const response = {
         timestamp: new Date().toISOString(),
-        currentContext,
-        timezone
+        currentContext: conversationStateObject.currentContext,
+        timezone: conversationStateObject.timezone
     };
 
-    if (missingEntity.useWebhook === 'true') {
-        CallWebhook(intentScenario.webhookUrl ? intentScenario.webhookUrl : webhookUrl, response, (err, webhookResponse) => {
-
-            if (err){
-                return callback(err, null);
-            }
-            return callback(null, webhookResponse);
-        });
-    }
-    else {
-        const validResponses = BuildValidResponses(userText, currentContext, intentScenario.slots, missingEntity.textPrompts, timezone);
-        const textResponse = validResponses[Math.floor(Math.random() * validResponses.length)];
-        return callback(null, Object.assign(response, { textResponse } ));
-    }
+    const validResponses = BuildValidResponses(conversationStateObject, missingEntity.textPrompts);
+    const textResponse = validResponses[Math.floor(Math.random() * validResponses.length)];
+    return callback(null, Object.assign(response, { textResponse } ));
 };

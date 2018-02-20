@@ -77,10 +77,50 @@ const IntentRoutes = [
         method: 'DELETE',
         path: '/intent/{id}/scenario',
         config: {
-            description: 'Delete an scenario instance by id from the data source',
+            description: 'Delete a scenario instance by id from the data source',
             tags: ['api'],
             validate: IntentValidator.deleteScenario,
             handler: IntentController.deleteScenario
+        }
+    },
+    {
+        method: 'POST',
+        path: '/intent/{id}/webhook',
+        config: {
+            description: 'Create a new instance of a webhook for the intent and persist it into the data source',
+            tags: ['api'],
+            validate: IntentValidator.addWebhook,
+            handler: IntentController.addWebhook
+        }
+    },
+    {
+        method: 'GET',
+        path: '/intent/{id}/webhook',
+        config: {
+            description: 'Find a webhook by intent id from the data source',
+            tags: ['api'],
+            validate: IntentValidator.findWebhook,
+            handler: IntentController.findWebhook
+        }
+    },
+    {
+        method: 'PUT',
+        path: '/intent/{id}/webhook',
+        config: {
+            description: 'Update attributes of the webhook of the intent and persist it into the data source',
+            tags: ['api'],
+            validate: IntentValidator.updateWebhook,
+            handler: IntentController.updateWebhook
+        }
+    },
+    {
+        method: 'DELETE',
+        path: '/intent/{id}/webhook',
+        config: {
+            description: 'Delete a webhook instance by id from the data source',
+            tags: ['api'],
+            validate: IntentValidator.deleteWebhook,
+            handler: IntentController.deleteWebhook
         }
     }
 ];

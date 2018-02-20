@@ -144,7 +144,7 @@ module.exports = (request, reply) => {
             intent = Object.assign({ id: intentId }, intent);
             intent.examples = _.map(intent.examples, (example) => {
 
-                if (example.entities.length > 0) {
+                if (example.entities && example.entities.length > 0) {
 
                     const entities = _.sortBy(example.entities, (entity) => {
 

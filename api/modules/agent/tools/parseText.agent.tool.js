@@ -160,6 +160,9 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                                     domainScore = domainScore.length > 0 ? domainScore[0].confidence : 0;
                                     result = Object.assign(result, { domainScore });
                                 }
+                                if (result.intent_ranking){
+                                    
+                                }
                                 parsingResults.push(result);
                                 return callbk(null);
                             });
@@ -233,6 +236,7 @@ module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, lang
         const time = process.hrtime(start);
         const maximum_intent_score = _.max(_.compact(_.map(_.map(result.result.results, 'intent'), 'confidence')));
         const maximum_domain_score = _.max(_.compact(_.map(result.result.results, 'domainScore')));
+        result.result.results = _.orderBy(result.result.results, 'domainScore', 'desc');
         result.result = Object.assign(result.result, { maximum_domain_score, maximum_intent_score, total_elapsed_time_ms: time[1] / 1000000 });
         return cb(null, result);
     });

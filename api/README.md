@@ -80,7 +80,7 @@ You can check the documents parsing history at the `doc` endpoint.
 
 ### Understanding the output
 
-* `_id`: unique identifier of the document
+* `id`: unique identifier of the document
 * `document`: text to parse
 * `time_stamp`: date and time when document was parsed
 * `results`:

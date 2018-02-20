@@ -27,7 +27,6 @@ const createAgent = (callback) => {
         description: 'This is test agent',
         language: 'en',
         timezone: 'America/Kentucky/Louisville',
-        webhookUrl: 'string',
         domainClassifierThreshold: 0.6,
         fallbackResponses: [
             'Sorry, can you rephrase that?',
@@ -180,8 +179,7 @@ const createScenario = (callback) => {
             textPrompts: [
                 'What are you looking for?',
                 'Are you trying to find something?'
-            ],
-            useWebhook: true
+            ]
         }],
         intentResponses: [
             'Your {searchedObject} is located at...',
@@ -242,7 +240,6 @@ before({ timeout: 60000 }, (done) => {
         ], (err) => {
 
             if (err) {
-                console.log(err);
                 done(err);
             }
             else {
@@ -292,7 +289,6 @@ suite('/agent', () => {
                 description: 'This is test agent',
                 language: 'en',
                 timezone: 'America/Kentucky/Louisville',
-                webhookUrl: 'http://localhost:8000',
                 domainClassifierThreshold: 0.9,
                 fallbackResponses: [
                     'Can you repeat that?'
@@ -380,7 +376,6 @@ suite('/agent/{id}', () => {
                 description: 'This is test agent',
                 language: 'en',
                 timezone: 'America/Kentucky/Louisville',
-                webhookUrl: 'http://localhost:8000',
                 domainClassifierThreshold: 0.5,
                 fallbackResponses: [
                     'updated'
@@ -417,7 +412,6 @@ suite('/agent/{id}', () => {
 
             const data = {
                 agentName: 'string',
-                webhookUrl: 'string',
                 domainClassifierThreshold: 0.5,
                 fallbackResponses: [
                     'updated'
