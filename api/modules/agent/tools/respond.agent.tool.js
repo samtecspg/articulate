@@ -46,10 +46,12 @@ const getBestRasaResult = (conversationStateObject) => {
 
     if (conversationStateObject.parse.length > 0 && recognizedDomain.domainScore > conversationStateObject.agent.domainClassifierThreshold) {
         rasaResult = recognizedDomain;
-    } else {
+    }
+    else {
         if (conversationStateObject.parse.length === 1) {
             rasaResult = recognizedDomain;
-        } else {
+        }
+        else {
             rasaResult.entities = getEntitiesFromRasaResults(conversationStateObject);
         }
     }
@@ -137,10 +139,12 @@ const persistContext = (server, conversationStateObject, cb) => {
                     }
                     return callbackInsertInContext(null);
                 });
-            } else {
+            }
+            else {
                 return callbackInsertInContext(null);
             }
-        } else {
+        }
+        else {
 
             if (elementInContext.slots && Object.keys(elementInContext.slots).length === 0) {
                 delete elementInContext.slots;
@@ -190,7 +194,8 @@ module.exports = (server, conversationStateObject, callback) => {
                     return callback(response);
                 });
             });
-        } else {
+        }
+        else {
             conversationStateObject.domain = getDomainOfIntent(conversationStateObject);
             if (conversationStateObject.intent && conversationStateObject.scenario && conversationStateObject.domain && conversationStateObject.rasaResult.intent.confidence > conversationStateObject.domain.intentThreshold) {
                 if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.intent.name !== conversationStateObject.currentContext.name)) {
@@ -214,7 +219,8 @@ module.exports = (server, conversationStateObject, callback) => {
                         return callback(response);
                     });
                 });
-            } else {
+            }
+            else {
                 const recognizedEntities = !conversationStateObject.rasaResult.intent ? conversationStateObject.rasaResult.entities : getEntitiesFromRasaResults(conversationStateObject.parse);
                 if (conversationStateObject.currentContext) {
                     if (recognizedEntities.length > 0) {
@@ -234,7 +240,8 @@ module.exports = (server, conversationStateObject, callback) => {
                                     return callback(response);
                                 });
                             });
-                        } else {
+                        }
+                        else {
                             const lastValidContext = getLastContextWithValidSlots(conversationStateObject, recognizedEntities);
                             if (lastValidContext) {
                                 conversationStateObject.context.push(lastValidContext);
@@ -254,7 +261,8 @@ module.exports = (server, conversationStateObject, callback) => {
                                         return callback(response);
                                     });
                                 });
-                            } else {
+                            }
+                            else {
                                 RespondFallback(conversationStateObject, (err, response) => {
 
                                     if (err) {
@@ -264,7 +272,8 @@ module.exports = (server, conversationStateObject, callback) => {
                                 });
                             }
                         }
-                    } else {
+                    }
+                    else {
                         RespondFallback(conversationStateObject, (err, response) => {
 
                             if (err) {
@@ -273,7 +282,8 @@ module.exports = (server, conversationStateObject, callback) => {
                             return callback(response);
                         });
                     }
-                } else {
+                }
+                else {
                     RespondFallback(conversationStateObject, (err, response) => {
 
                         if (err) {
@@ -284,7 +294,8 @@ module.exports = (server, conversationStateObject, callback) => {
                 }
             }
         }
-    } else {
+    }
+    else {
         const message = 'Sorry but the NLU engine didn\'t were able to parse your text';
         const error = Boom.badImplementation(message);
         return callback(error, null);

@@ -23,7 +23,7 @@ let intentId = null;
 const createAgent = (callback) => {
 
     const data = {
-        agentName: 'Test Agent',
+        agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
         description: 'This is test agent',
         language: 'en',
         timezone: 'America/Kentucky/Louisville',
@@ -32,7 +32,7 @@ const createAgent = (callback) => {
             'Sorry, can you rephrase that?',
             'I\'m still learning to speak with humans, can you rephrase that?'
         ],
-        useWebhookFallback: false
+        useWebhook: false
     };
     const options = {
         method: 'POST',
@@ -57,7 +57,7 @@ const createAgent = (callback) => {
 const createDomain = (callback) => {
 
     const data = {
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         domainName: 'Test Domain',
         enabled: true,
         intentThreshold: 0.7
@@ -86,7 +86,7 @@ const createEntity = (callback) => {
 
     const data = {
         entityName: 'Test Entity',
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         examples: [{
             value: 'car',
             synonyms: [
@@ -119,7 +119,7 @@ const createEntity = (callback) => {
 const createIntent = (callback) => {
 
     const data = {
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         domain: 'Test Domain',
         intentName: 'Test Intent',
         examples: [
@@ -145,7 +145,8 @@ const createIntent = (callback) => {
                     }
                 ]
             }
-        ]
+        ],
+        useWebhook: true
     };
     const options = {
         method: 'POST',
@@ -196,6 +197,7 @@ before({ timeout: 60000 }, (done) => {
         ], (err) => {
 
             if (err) {
+                console.log(err);
                 done(err);
             }
             else {
@@ -248,8 +250,7 @@ suite('scenario', () => {
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
-                    ],
-                    useWebhook: true
+                    ]
                 };
 
                 const options = {
@@ -307,8 +308,7 @@ suite('scenario', () => {
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
-                    ],
-                    useWebhook: true
+                    ]
                 };
 
                 const options = {
@@ -346,8 +346,7 @@ suite('scenario', () => {
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
-                    ],
-                    useWebhook: true
+                    ]
                 };
 
                 const options = {
@@ -385,8 +384,7 @@ suite('scenario', () => {
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
-                    ],
-                    useWebhook: true
+                    ]
                 };
 
                 const options = {
@@ -431,8 +429,7 @@ suite('scenario', () => {
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
-                    ],
-                    useWebhook: true
+                    ]
                 };
 
                 server.inject(`/intent/${intentId}/scenario`, (res) => {

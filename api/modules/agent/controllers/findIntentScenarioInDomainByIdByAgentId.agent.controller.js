@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 
@@ -83,6 +84,6 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
-        return reply(result);
+        return reply(Cast(result, 'scenario'));
     });
 };

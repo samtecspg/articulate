@@ -2,6 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
+const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 
@@ -50,6 +51,10 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
+        result = result.map((context) => {
+
+            return Cast(result, 'context');
+        });
         return reply(result);
     });
 };

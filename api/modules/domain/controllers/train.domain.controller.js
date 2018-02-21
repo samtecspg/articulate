@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const DomainTools = require('../tools');
 
 module.exports = (request, reply) => {
@@ -89,7 +90,7 @@ module.exports = (request, reply) => {
                 const error = Boom.create(res.statusCode, 'An error occurred getting the domain after training');
                 return reply(error);
             }
-            return reply(res.result);
+            return reply(Cast(res.result, 'domain'));
         });
     });
 };

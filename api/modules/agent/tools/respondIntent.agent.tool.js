@@ -18,12 +18,12 @@ module.exports = (conversationStateObject, callback) => {
         const requiredSlots = _.filter(conversationStateObject.scenario.slots, (slot) => {
 
             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slot.slotName] = conversationStateObject.currentContext.slots[slot.slotName] ? conversationStateObject.currentContext.slots[slot.slotName] : '';
-            return slot.isRequired === 'true';
+            return slot.isRequired;
         });
         //Create an array of slot names fo slots that are lists
         const isListSlots = _.map(_.filter(conversationStateObject.scenario.slots, (slot) => {
 
-            return slot.isList === 'true';
+            return slot.isList;
         }), 'slotName');
         //Extract the recognized entities from the text parse
         const recognizedEntities = conversationStateObject.rasaResult.entities;

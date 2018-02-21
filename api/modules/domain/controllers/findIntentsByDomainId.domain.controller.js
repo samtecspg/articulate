@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const _ = require('lodash');
 
 module.exports = (request, reply) => {
@@ -70,6 +71,10 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
+        result = result.map((intent) => {
+
+            return Cast(intent, 'intent');
+        });
         return reply(result);
     });
 };

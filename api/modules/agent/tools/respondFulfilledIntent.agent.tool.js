@@ -16,17 +16,15 @@ const getTextResponse = (conversationStateObject, webhookResponse) => {
 
 module.exports = (conversationStateObject, callback) => {
 
-    if (conversationStateObject.intent.useWebhook === 'true' || conversationStateObject.agent.useWebhook === 'true') {
-        const webhookToUse = conversationStateObject.intent.useWebhook === 'true' ? conversationStateObject.intent.webhook : conversationStateObject.agent.webhook;
+    if (conversationStateObject.intent.useWebhook || conversationStateObject.agent.useWebhook) {
+        const webhookToUse = conversationStateObject.intent.useWebhook ? conversationStateObject.intent.webhook : conversationStateObject.agent.webhook;
         CallWebhook(webhookToUse, conversationStateObject, (webhookResponse) => {
 
             if (webhookResponse.textResponse){
                 return callback(null, { textResponse: webhookResponse.textResponse });
             }
-            else {
-                const textResponse = getTextResponse(conversationStateObject, webhookResponse);
-                return callback(null, Object.assign(webhookResponse, { textResponse }));
-            }
+            const textResponse = getTextResponse(conversationStateObject, webhookResponse);
+            return callback(null, Object.assign(webhookResponse, { textResponse }));
         });
     }
     else {

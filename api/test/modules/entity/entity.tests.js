@@ -19,7 +19,7 @@ let entityId = null;
 const createAgent = (callback) => {
 
     const data = {
-        agentName: 'Test Agent',
+        agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
         description: 'This is test agent',
         language: 'en',
         timezone: 'America/Kentucky/Louisville',
@@ -28,7 +28,7 @@ const createAgent = (callback) => {
             'Sorry, can you rephrase that?',
             'I\'m still learning to speak with humans, can you rephrase that?'
         ],
-        useWebhookFallback: false
+        useWebhook: false
     };
     const options = {
         method: 'POST',

@@ -1,5 +1,6 @@
 'use strict';
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 
 module.exports = (request, reply) => {
@@ -14,7 +15,7 @@ module.exports = (request, reply) => {
             return reply(error);
         }
         if (data){
-            return reply(null, Flat.unflatten(data));
+            return reply(null, Cast(Flat.unflatten(data), 'intent'));
         }
         const error = Boom.notFound('The specified intent doesn\'t exists');
         return reply(error);

@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 const IntentTools = require('../tools');
 const DomainTools = require('../../domain/tools');
@@ -242,11 +243,11 @@ module.exports = (request, reply) => {
                         const error = Boom.badImplementation('Intent updated. An error occurred updating the new values in the scenario of the intent.');
                         return reply(error);
                     }
-                    return reply(result);
+                    return reply(Cast(result, 'intent'));
                 });
             }
             else {
-                return reply(result);
+                return reply(Cast(result, 'intent'));
             }
         });
     });

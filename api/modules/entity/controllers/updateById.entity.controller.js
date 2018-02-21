@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 const _ = require('lodash');
 
@@ -317,11 +318,11 @@ module.exports = (request, reply) => {
                 if (err){
                     return reply(err);
                 }
-                return reply(updatedEntity);
+                return reply(Cast(updatedEntity, 'entity'));
             });
         }
         else {
-            return reply(updatedEntity);
+            return reply(Cast(updatedEntity, 'entity'));
         }
     });
 };

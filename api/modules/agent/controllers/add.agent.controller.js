@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const AgentTools = require('../tools');
+const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 
@@ -65,7 +66,7 @@ module.exports = (request, reply) => {
             if (errTraining){
                 return reply(errTraining, null);
             }
-            return reply(result.agent);
+            return reply(Cast(result.agent, 'agent'));
         });
     });
 };

@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 
 module.exports = (request, reply) => {
@@ -60,7 +61,7 @@ module.exports = (request, reply) => {
                             return callback(null);
                         }
                         const error = Boom.badRequest(`The intent ${webhook.intent} doesn't exist in the domain ${webhook.domain}`);
-                        return callback(err);
+                        return callback(error);
                     });
                 },
                 (callback) => {
@@ -104,6 +105,6 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        return reply(result.webhook);
+        return reply(Cast(result.webhook, 'webhook'));
     });
 };

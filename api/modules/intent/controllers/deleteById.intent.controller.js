@@ -113,19 +113,19 @@ module.exports = (request, reply) => {
                         },
                         (callbackRemoveFromEntitiesList) => {
 
-                            Async.eachSeries(intent.examples, (example, next) => {
+                            Async.eachSeries(intent.examples, (example, nextIntent) => {
 
-                                Async.eachSeries(example.entities, (entity, next) => {
+                                Async.eachSeries(example.entities, (entity, nextEntity) => {
 
                                     redis.zrem(`entityIntents:${entity.entityId}`, intent.intentName, (err, addResponse) => {
 
                                         if (err){
                                             const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the entity ${entity.entityId}`);
-                                            return next(error);
+                                            return nextEntity(error);
                                         }
-                                        return next(null);
+                                        return nextEntity(null);
                                     });
-                                }, next);
+                                }, nextIntent);
                             }, callbackRemoveFromEntitiesList);
                         }
                     ], (err, result) => {

@@ -15,7 +15,7 @@ class EntityValidate {
                     uiColor: EntitySchema.uiColor,
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
-                        synonyms: ExampleSchema.synonyms
+                        synonyms: ExampleSchema.synonyms.required()
                     }).required()
                 };
             })()
@@ -53,7 +53,7 @@ class EntityValidate {
                     uiColor: EntitySchema.uiColor,
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
-                        synonyms: ExampleSchema.synonyms
+                        synonyms: ExampleSchema.synonyms.required()
                     })
                 };
             })()

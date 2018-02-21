@@ -2,6 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
+const Cast = require('../../../helpers/cast');
 
 const updateDataFunction = (redis, agentId, currentWebhook, updateData, cb) => {
 
@@ -74,6 +75,6 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        return reply(result);
+        return reply(Cast(result, 'webhook'));
     });
 };

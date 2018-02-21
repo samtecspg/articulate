@@ -14,7 +14,8 @@ const EntityController = {
     updateById: UpdateByIdController,
 
     deleteById: DeleteByIdController,
-    findIntentsByEntityId: FindIntentsByEntityIdController,
+
+    findIntentsByEntityId: FindIntentsByEntityIdController
 };
 
 module.exports = EntityController;

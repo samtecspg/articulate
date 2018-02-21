@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 
 const updateDataFunction = (redis, intentId, currentWebhook, updateData, cb) => {
@@ -74,6 +75,6 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        return reply(result);
+        return reply(Cast(result, 'webhook'));
     });
 };

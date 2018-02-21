@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 
@@ -22,7 +23,7 @@ module.exports = (request, reply) => {
                     const error = Boom.create(res.statusCode, 'An error occurred getting the data of the agent');
                     return callbackGetAgent(error, null);
                 }
-                return callbackGetAgent(null, res.result);
+                return callbackGetAgent(null, Cast(res.result, 'agent'));
             });
         },
         (exportedAgent, callbackGetAgentEntitiesAndDomains) => {
@@ -39,6 +40,10 @@ module.exports = (request, reply) => {
                                     const error = Boom.create(res.statusCode, `An error occurred getting the list of domains of the agent ${exportedAgent.agent}`);
                                     return callbackGetDomains(error, null);
                                 }
+                                res.result = res.result.map((domain) => {
+
+                                    return Cast(domain, 'domain');
+                                });
                                 return callbackGetDomains(null, res.result);
                             });
                         },
@@ -55,6 +60,10 @@ module.exports = (request, reply) => {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the list of intents for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                 return callbackGetIntentsFromDomain(error, null);
                                             }
+                                            res.result = res.result.map((intent) => {
+
+                                                return Cast(intent, 'intent');
+                                            });
                                             return callbackGetIntentsFromDomain(null, res.result);
                                         });
                                     },
@@ -77,7 +86,7 @@ module.exports = (request, reply) => {
                                                     delete res.result.domain;
                                                     delete res.result.intent;
                                                 }
-                                                return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: res.result }));
+                                                return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: Cast(res.result, 'scenario') }));
                                             });
                                         }, (err, intentsWithScenarios) => {
 
@@ -115,7 +124,7 @@ module.exports = (request, reply) => {
                                                     delete res.result.domain;
                                                     delete res.result.intent;
                                                 }
-                                                return callbackGetIntentWebhook(null, Object.assign(exportedIntentForDomain, { webhook: res.result }));
+                                                return callbackGetIntentWebhook(null, Object.assign(exportedIntentForDomain, { webhook: Cast(res.result, 'webhook') }));
                                             });
                                         }, (err, intentsWithWebhooks) => {
 
@@ -162,7 +171,10 @@ module.exports = (request, reply) => {
                             const error = Boom.create(res.statusCode, `An error occurred getting the list of entities of agent ${exportedAgent.agentName}`);
                             return callbackGetEntities(error, null);
                         }
+                        res.result = res.result.map((entity) => {
 
+                            return Cast(entity, 'entity');
+                        });
                         if (!withReferences){
 
                             res.result.forEach((entity) => {
@@ -182,10 +194,8 @@ module.exports = (request, reply) => {
                             if (res.statusCode === 404){
                                 return callbackGetWebhook(null, exportedAgent);
                             }
-                            else {
-                                const error = Boom.create(res.statusCode, `An error occurred getting the webhook of the agent ${exportedAgent.agentName}`);
-                                return callbackGetWebhook(error, null);
-                            }
+                            const error = Boom.create(res.statusCode, `An error occurred getting the webhook of the agent ${exportedAgent.agentName}`);
+                            return callbackGetWebhook(error, null);
                         }
 
                         if (!withReferences){
@@ -193,7 +203,7 @@ module.exports = (request, reply) => {
                             delete res.result.id;
                             delete res.result.agent;
                         }
-                        return callbackGetWebhook(null, Object.assign(exportedAgent, { webhook: res.result }));
+                        return callbackGetWebhook(null, Object.assign(exportedAgent, { webhook: Cast(res.result, 'webhook') }));
                     });
                 }
             }, (err) => {

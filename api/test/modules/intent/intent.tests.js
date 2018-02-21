@@ -21,7 +21,7 @@ let intentId = null;
 const createAgent = (callback) => {
 
     const data = {
-        agentName: 'Test Agent',
+        agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
         description: 'This is test agent',
         language: 'en',
         timezone: 'America/Kentucky/Louisville',
@@ -30,7 +30,7 @@ const createAgent = (callback) => {
             'Sorry, can you rephrase that?',
             'I\'m still learning to speak with humans, can you rephrase that?'
         ],
-        useWebhookFallback: false
+        useWebhook: false
     };
     const options = {
         method: 'POST',
@@ -55,7 +55,7 @@ const createAgent = (callback) => {
 const createDomain = (callback) => {
 
     const data = {
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         domainName: 'Test Domain',
         enabled: true,
         intentThreshold: 0.7
@@ -84,7 +84,7 @@ const createEntity = (callback) => {
 
     const data = {
         entityName: 'Test Entity',
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         examples: [{
             value: 'car',
             synonyms: [
@@ -195,7 +195,8 @@ suite('/intent', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             const options = {
@@ -207,7 +208,7 @@ suite('/intent', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result).to.include(data);
+                expect(res.result.intentName).to.equal(data.intentName);
                 intentId = res.result.id;
 
                 done();
@@ -260,7 +261,8 @@ suite('/intent', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             const options = {
@@ -306,7 +308,8 @@ suite('/intent', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             const options = {
@@ -352,7 +355,8 @@ suite('/intent', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             const options = {
@@ -406,7 +410,8 @@ suite('/intent/{id}', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             server.inject('/intent/' + intentId, (res) => {
@@ -463,7 +468,8 @@ suite('/intent/{id}', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             const updatedData = {
@@ -536,7 +542,8 @@ suite('/intent/{id}', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             const options = {
@@ -600,7 +607,8 @@ suite('/intent/{id}', () => {
                             }
                         ]
                     }
-                ]
+                ],
+                useWebhook: true
             };
 
             const options = {

@@ -2,6 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
+const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 
@@ -55,6 +56,10 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
+        result = result.map((entity) => {
+
+            return Cast(entity, 'entity');
+        });
         return reply(result);
     });
 };

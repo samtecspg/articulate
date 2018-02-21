@@ -9,7 +9,7 @@ class SlotModel {
             entity: Joi.string(),
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
-            textPrompts: Joi.array().items(Joi.string()),
+            textPrompts: Joi.array().items(Joi.string())
         };
     };
 }

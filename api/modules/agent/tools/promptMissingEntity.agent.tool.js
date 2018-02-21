@@ -1,7 +1,6 @@
 'use strict';
 
 const BuildValidResponses = require('./buildValidResponses.agent.tool');
-const CallWebhook = require('./callWebhook.agent.tool');
 
 module.exports = (conversationStateObject, missingEntity, callback) => {
 

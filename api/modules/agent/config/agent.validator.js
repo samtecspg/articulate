@@ -254,8 +254,8 @@ class AgentValidate {
                 };
             })(),
             options: {
-              allowUnknown: true
-            },
+                allowUnknown: true
+            }
         };
 
         this.export = {

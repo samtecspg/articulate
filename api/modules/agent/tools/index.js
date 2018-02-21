@@ -2,7 +2,7 @@
 const GetAvailableTool = require('./getAvailableDomains.agent.tool');
 const ParseTextTool = require('./parseText.agent.tool');
 const RespondTool = require('./respond.agent.tool');
-const TrainSystemERModel = require('./trainSystemERModel.domain.tool');
+const TrainSystemERModel = require('./trainSystemERModel.agent.tool');
 
 const AgentTools = {
 

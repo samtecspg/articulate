@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const _ = require('lodash');
 
 module.exports = (request, reply) => {
@@ -33,6 +34,7 @@ module.exports = (request, reply) => {
         (intents, cb) => {
 
             Async.map(intents, (intent, callback) => {
+
                 server.inject(`/intent/${intent[1]}`, (res) => {
 
                     if (res.statusCode !== 200) {
@@ -55,7 +57,10 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
+        result = _.flatten(result).map((intent) => {
 
-        return reply(_.flatten(result));
+            return Cast(intent, 'intent');
+        });
+        return reply(result);
     });
 };

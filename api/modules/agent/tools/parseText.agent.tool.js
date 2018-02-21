@@ -121,8 +121,10 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
         rasa: (callback) => {
 
             Async.waterfall([
-                (cb) => {
+                (callbackGetDomainRecognizer) => {
+
                     let domainRecognizerName = _.filter(agentData.trainedDomains, (trainedDomain) => {
+
                         return trainedDomain.name.indexOf('_domain_recognizer') > -1;
                     });
                     domainRecognizerName = domainRecognizerName.length > 0 ? domainRecognizerName[0] : null;
@@ -130,16 +132,16 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                         getRasaParse(textToParse, domainRecognizerName, agentData.agent.agentName, rasa, ERPipeline, (err, result) => {
 
                             if (err){
-                                return cb(err, null);
+                                return callbackGetDomainRecognizer(err, null);
                             }
-                            return cb(null, result);
+                            return callbackGetDomainRecognizer(null, result);
                         });
                     }
                     else {
-                        return cb(null, null);
+                        return callbackGetDomainRecognizer(null, null);
                     }
                 },
-                (domainRecognitionResults, cb) => {
+                (domainRecognitionResults, callbackGetParseForEachDomain) => {
 
                     const parsingResults = [];
                     Async.map(agentData.trainedDomains, (trainedDomain, callbk) => {
@@ -155,13 +157,11 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                                 result = Object.assign(result, { elapsed_time_ms: time[1] / 1000000 });
                                 if (domainRecognitionResults){
                                     let domainScore = _.filter(domainRecognitionResults.intent_ranking, (recognizedDomain) => {
+
                                         return recognizedDomain.name === result.domain;
                                     });
                                     domainScore = domainScore.length > 0 ? domainScore[0].confidence : 0;
                                     result = Object.assign(result, { domainScore });
-                                }
-                                if (result.intent_ranking){
-                                    
                                 }
                                 parsingResults.push(result);
                                 return callbk(null);
@@ -173,10 +173,10 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                     }, (err) => {
 
                         if (err){
-                            return cb(err, null);
+                            return callbackGetParseForEachDomain(err, null);
                         }
 
-                        return cb(null, parsingResults);
+                        return callbackGetParseForEachDomain(null, parsingResults);
                     });
                 }
             ], (err, results) => {

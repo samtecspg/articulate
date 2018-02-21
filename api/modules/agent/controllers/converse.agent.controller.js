@@ -56,7 +56,7 @@ module.exports = (request, reply) => {
                         return cb(null, res.result);
                     });
                 },
-                context: (cb) =>{
+                context: (cb) => {
 
                     server.inject(`/context/${sessionId}`, (res) => {
 

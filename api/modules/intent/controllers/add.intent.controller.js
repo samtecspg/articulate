@@ -2,6 +2,7 @@
 const _ = require('lodash');
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 const IntentTools = require('../tools');
 const DomainTools = require('../../domain/tools');
@@ -126,17 +127,20 @@ module.exports = (request, reply) => {
             });
         },
         addToEntities: (cb) => {
-            Async.eachSeries(intent.examples, (example, next) => {
-                Async.eachSeries(example.entities, (entity, next) => {
+
+            Async.eachSeries(intent.examples, (example, nextIntent) => {
+
+                Async.eachSeries(example.entities, (entity, nextEntity) => {
+
                     redis.zadd(`entityIntents:${entity.entityId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
+
                         if (err) {
                             const error = Boom.badImplementation('An error occurred adding the intent to the entity list.');
-                            return next(error);
+                            return nextEntity(error);
                         }
-                        return next(null);
+                        return nextEntity(null);
                     });
-                }, next);
-
+                }, nextIntent);
             }, cb);
         },
         intent: (cb) => {
@@ -192,7 +196,7 @@ module.exports = (request, reply) => {
             if (err) {
                 return reply(err);
             }
-            return reply(null, resultIntent);
+            return reply(null, Cast(resultIntent, 'intent'));
         });
     });
 };

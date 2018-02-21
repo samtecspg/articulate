@@ -1,6 +1,5 @@
 'use strict';
 
-const Boom = require('boom');
 const Axios = require('axios');
 const Handlebars = require('handlebars');
 
@@ -8,7 +7,8 @@ module.exports = (webhook, conversationStateObject, callback) => {
 
     const compiledWebhookUrl = Handlebars.compile(webhook.webhookUrl);
     const processedWebhookUrl = compiledWebhookUrl(conversationStateObject);
-    let compiledWebhookPayload, processedWebhookPayload;
+    let compiledWebhookPayload;
+    let processedWebhookPayload;
     if (webhook.webhookPayloadType !== 'None'){
         compiledWebhookPayload = Handlebars.compile(webhook.webhookPayload);
         processedWebhookPayload = compiledWebhookPayload(conversationStateObject);
@@ -20,11 +20,13 @@ module.exports = (webhook, conversationStateObject, callback) => {
         data: JSON.parse(processedWebhookPayload)
     })
     .then((response) => {
+
         return callback(response.data);
     })
-    .catch((error) => {
+    .catch(() => {
+
         return callback({
             textResponse: 'We\'re having trouble fulfilling that request'
         });
-    });;
+    });
 };

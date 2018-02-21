@@ -23,7 +23,7 @@ let scenario = null;
 const createAgent = (callback) => {
 
     const data = {
-        agentName: 'Test Agent',
+        agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
         description: 'This is test agent',
         language: 'en',
         timezone: 'America/Kentucky/Louisville',
@@ -32,7 +32,7 @@ const createAgent = (callback) => {
             'Sorry, can you rephrase that?',
             'I\'m still learning to speak with humans, can you rephrase that?'
         ],
-        useWebhookFallback: false
+        useWebhook: false
     };
     const options = {
         method: 'POST',
@@ -56,7 +56,7 @@ const createAgent = (callback) => {
 const createDomain = (callback) => {
 
     const data = {
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         domainName: 'Test Domain',
         enabled: true,
         intentThreshold: 0.7
@@ -85,7 +85,7 @@ const createEntity = (callback) => {
 
     const data = {
         entityName: 'Test Entity',
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         examples: [{
             value: 'car',
             synonyms: [
@@ -117,7 +117,7 @@ const createEntity = (callback) => {
 const createIntent = (callback) => {
 
     const data = {
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         domain: 'Test Domain',
         intentName: 'Test Intent',
         examples: [
@@ -143,7 +143,8 @@ const createIntent = (callback) => {
                     }
                 ]
             }
-        ]
+        ],
+        useWebhook: true
     };
     const options = {
         method: 'POST',
@@ -167,7 +168,7 @@ const createIntent = (callback) => {
 const createScenario = (callback) => {
 
     const data = {
-        agent: 'Test Agent',
+        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
         domain: 'Test Domain',
         intent: 'Test Intent',
         scenarioName: 'Test Scenario',
@@ -185,8 +186,7 @@ const createScenario = (callback) => {
             'Your {searchedObject} is located at...',
             'I was unable to find the {searchedObject}',
             'The {searchedObject} is near 7th street at the downtown.'
-        ],
-        useWebhook: true
+        ]
     };
     const options = {
         method: 'POST',
@@ -285,7 +285,7 @@ suite('/agent', () => {
         test('should respond with 200 successful operation and return an agent object', { timeout: 60000 }, (done) => {
 
             const data = {
-                agentName: 'Test Agent 2',
+                agentName: '71999911-cb70-442c-8864-bc1d4e6a306e 2',
                 description: 'This is test agent',
                 language: 'en',
                 timezone: 'America/Kentucky/Louisville',
@@ -293,7 +293,7 @@ suite('/agent', () => {
                 fallbackResponses: [
                     'Can you repeat that?'
                 ],
-                useWebhookFallback: true
+                useWebhook: true
             };
             const options = {
                 method: 'POST',
@@ -304,7 +304,7 @@ suite('/agent', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result).to.include(data);
+                expect(res.result.agentName).to.equal(data.agentName);
                 agentId = res.result.id;
                 done();
             });
@@ -346,7 +346,7 @@ suite('/agent/{id}', () => {
             server.inject('/agent/' + data.id, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.id).to.be.equal(data.id.toString());
+                expect(res.result.id).to.be.equal(data.id);
                 done();
             });
         });
@@ -371,8 +371,8 @@ suite('/agent/{id}', () => {
         test('should respond with 200 successful operation', (done) => {
 
             const data = {
-                id: agentId.toString(),
-                agentName: 'Test Agent Updated',
+                id: agentId,
+                agentName: '71999911-cb70-442c-8864-bc1d4e6a306e Updated',
                 description: 'This is test agent',
                 language: 'en',
                 timezone: 'America/Kentucky/Louisville',
@@ -380,18 +380,19 @@ suite('/agent/{id}', () => {
                 fallbackResponses: [
                     'updated'
                 ],
-                useWebhookFallback: 'true'
+                useWebhook: true
             };
 
             const updatedData = {
-                agentName: 'Test Agent Updated',
+                agentName: '71999911-cb70-442c-8864-bc1d4e6a306e Updated',
                 description: 'This is test agent',
                 language: 'en',
                 timezone: 'America/Kentucky/Louisville',
                 domainClassifierThreshold: 0.5,
                 fallbackResponses: [
                     'updated'
-                ]
+                ],
+                useWebhook: true
             };
 
             const options = {

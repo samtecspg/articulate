@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 
 const updateDataFunction = (redis, domainId, currentDomain, updateData, cb) => {
@@ -210,7 +211,7 @@ module.exports = (request, reply) => {
             });
         }
         else {
-            return reply(result);
+            return reply(Cast(result, 'domain'));
         }
     });
 };
