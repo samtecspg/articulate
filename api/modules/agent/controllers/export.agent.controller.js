@@ -95,10 +95,11 @@ module.exports = (request, reply) => {
 
                                                 if (res.statusCode !== 200){
                                                     if (res.statusCode === 404){
-
-                                                        delete exportedIntentForDomain.id;
-                                                        delete exportedIntentForDomain.agent;
-                                                        delete exportedIntentForDomain.domain;
+                                                        if (!withReferences){
+                                                            delete exportedIntentForDomain.id;
+                                                            delete exportedIntentForDomain.agent;
+                                                            delete exportedIntentForDomain.domain;
+                                                        }
                                                         return callbackGetIntentWebhook(null, exportedIntentForDomain);
                                                     }
                                                     const error = Boom.create(res.statusCode, `An error occurred getting the webhook of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);

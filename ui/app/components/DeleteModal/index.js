@@ -13,18 +13,8 @@ class DeleteModal extends React.Component { // eslint-disable-line react/prefer-
           textAlign: 'center',
         }}
         isOpen={isOpen}
-        header={<div style={{
-          textAlign: 'center',
-        }}>
-          <img src={deleteIlus} style={{
-            width: '100px',
-            height: '100px',
-            paddingBottom: '15px',
-          }} alt="" />
-          <p>{contentHeader}</p>
-        </div>}
         actions={[
-          <Button onClick={this.props.onDismiss} style={{
+          <Button onClick={this.props.onDelete} style={{
             backgroundColor: '#de5e56',
           }}>delete</Button>,
           <Button onClick={this.props.onDismiss}>Cancel</Button>,
@@ -36,6 +26,12 @@ class DeleteModal extends React.Component { // eslint-disable-line react/prefer-
       <div style={{
           textAlign: 'center',
         }}>
+          <img src={deleteIlus} style={{
+            width: '100px',
+            height: '100px',
+            paddingBottom: '15px',
+          }} alt="" />
+          <p style={{fontSize: '2em'}}>{contentHeader}</p>
           <p>{contentBody}</p>
         </div>
       </Modal>

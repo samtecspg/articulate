@@ -44,11 +44,16 @@ export function* loadDomainIntents() {
 
 export function* deleteIntent() {
   const action = function* (payload) {
-    const { api, intentId, domainId } = payload;
+    const { api, intentId, filterId, currentFilter } = payload;
     try {
       yield call(api.intent.deleteIntentId, { id: intentId });
       yield put(deleteIntentSuccess());
-      yield call(getDomainIntents, { api, domainId });
+      if (currentFilter === 'domain'){
+        yield call(getDomainIntents, { api, filterId });
+      }
+      else{
+        yield call(getAgentIntents, { api, filterId });
+      }
     } catch ({ response }) {
       yield put(deleteIntentError({ message: response.obj.message }));
     }

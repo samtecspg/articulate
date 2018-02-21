@@ -20,7 +20,7 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
 
-            redis.zrange(`entityIntents:${id}`, 0, -1, 'withscores', (err, intents) => {
+            redis.zrange(`entityIntents:${id}`, start, limit, 'withscores', (err, intents) => {
 
                 if (err) {
                     const error = Boom.badImplementation('An error occurred getting the intents from the sorted set.');

@@ -16,12 +16,11 @@ const initialState = fromJS({
     language: 'en',
     timezone: 'America/Kentucky/Louisville',
     domainClassifierThreshold: 50,
-    webhookUrl: 'http://localhost:3000',
     fallbackResponses: [
       'Sorry can you rephrase that?',
       'I\'m still learning to speak with humans. What you mean?',
     ],
-    useWebhookFallback: false,
+    useWebhook: false,
   },
   touched: false,
 });

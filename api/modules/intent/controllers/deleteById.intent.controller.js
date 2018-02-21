@@ -110,6 +110,23 @@ module.exports = (request, reply) => {
                                 }
                                 return callbackRemoveFromDomainsList(null);
                             });
+                        },
+                        (callbackRemoveFromEntitiesList) => {
+
+                            Async.eachSeries(intent.examples, (example, next) => {
+
+                                Async.eachSeries(example.entities, (entity, next) => {
+
+                                    redis.zrem(`entityIntents:${entity.entityId}`, intent.intentName, (err, addResponse) => {
+
+                                        if (err){
+                                            const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the entity ${entity.entityId}`);
+                                            return next(error);
+                                        }
+                                        return next(null);
+                                    });
+                                }, next);
+                            }, callbackRemoveFromEntitiesList);
                         }
                     ], (err, result) => {
 

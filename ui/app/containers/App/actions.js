@@ -405,12 +405,13 @@ export function deleteDomainError() {
   };
 }
 
-export function deleteIntent(intentId, domainId) {
+export function deleteIntent(intentId, filterId, currentFilter) {
   return {
     type: DELETE_INTENT,
     apiCall: true,
     intentId,
-    domainId
+    filterId,
+    currentFilter
   };
 }
 

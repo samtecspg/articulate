@@ -4,14 +4,8 @@ const CallWebhook = require('./callWebhook.agent.tool');
 
 module.exports = (conversationStateObject, callback) => {
 
-    const response = {
-        timestamp: new Date().toISOString(),
-        currentContext,
-        timezone
-    };
-
-    const textResponse = data.agentData.fallbackResponses[Math.floor(Math.random() * data.agentData.fallbackResponses.length)];
-    return callback(null, Object.assign(response, { textResponse } ));
+    const textResponse = conversationStateObject.agent.fallbackResponses[Math.floor(Math.random() * conversationStateObject.agent.fallbackResponses.length)];
+    return callback(null, { textResponse } );
 
     /*if (data.agentData.useWebhookFallback === 'true') {
         CallWebhook(data.agentData.webhookFallbackUrl, response, (err, webhookResponse) => {

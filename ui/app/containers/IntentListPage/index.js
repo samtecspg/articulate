@@ -116,7 +116,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
 
   onDelete() {
     const { intentToDelete, selectedDomain } = this.state;
-    this.props.onDeleteIntent(intentToDelete, selectedDomain);
+    this.props.onDeleteIntent(intentToDelete, selectedDomain ? selectedDomain : this.props.currentAgent, selectedDomain ? 'domain' : 'agent');
     this.onDeleteDismiss();
   }
 
@@ -263,7 +263,9 @@ export function mapDispatchToProps(dispatch) {
       dispatch(loadAgentIntents(agent.id));
     },
     onChangeUrl: (url) => dispatch(push(url)),
-    onDeleteIntent: (intent, domain) => dispatch(deleteIntent(intent.id, domain.id)),
+    onDeleteIntent: (intent, parent, filter) => {
+      dispatch(deleteIntent(intent.id, parent.id, filter));
+    },
   };
 }
 

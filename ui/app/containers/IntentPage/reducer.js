@@ -29,6 +29,7 @@ const initialState = fromJS({
     domain: null,
     intentName: '',
     examples: [],
+    useWebhook: false
   },
   scenarioData: {
     agent: null,
@@ -37,8 +38,6 @@ const initialState = fromJS({
     scenarioName: '',
     slots: [],
     intentResponses: [],
-    useWebhook: false,
-    webhookUrl: '',
   },
   touched: false,
 });

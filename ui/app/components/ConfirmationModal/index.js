@@ -11,18 +11,10 @@ class ConfirmationModal extends React.Component { // eslint-disable-line react/p
         style={{
           width: '35%',
           textAlign: 'center',
+          maxHeight: '100%',
+          height: '340px',
         }}
         isOpen={isOpen}
-        header={<div style={{
-          textAlign: 'center',
-        }}>
-          <img src={exitIlus} style={{
-            width: '100px',
-            height: '100px',
-            paddingBottom: '10px',
-          }} alt="" />
-          <p>{contentHeader}</p>
-        </div>}
         actions={[
           <Button onClick={this.props.onLeave} style={{
             backgroundColor: '#d3d3d3',
@@ -37,6 +29,13 @@ class ConfirmationModal extends React.Component { // eslint-disable-line react/p
         <div style={{
           textAlign: 'center',
         }}>
+          <img src={exitIlus} style={{
+              width: '100px',
+              height: '100px',
+              paddingBottom: '10px',
+            }} alt="" />
+          <p style={{fontSize: '2em'}}>{contentHeader}</p>
+          <br/>
           <p>{contentBody}</p>
         </div>
       }</Modal>
