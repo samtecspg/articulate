@@ -9,7 +9,9 @@ const Pack = require('./package');
 Server((err, server) => {
 
     if (err) {
-        throw err;
+        console.error(err);
+        console.log('process.exit(1)');
+        return process.exit(1);
     }
 
     const optionsDoc = {
@@ -27,13 +29,13 @@ Server((err, server) => {
         if (err) {
             console.log(err);
         }
-        server.start( (errStart) => {
+        server.start((errStart) => {
 
             if (errStart) {
                 console.log(errStart);
             }
             else {
-                console.log('Server running at: ' + server.info.uri + '\n Explorer running at: ' + server.info.uri + '/documentation');
+                console.log('Server running at:   ' + server.info.uri + '\nExplorer running at: ' + server.info.uri + '/documentation');
             }
         });
     });
