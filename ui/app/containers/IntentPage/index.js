@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import Alert from 'react-s-alert';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
 import Form from '../../components/Form';
@@ -21,7 +22,6 @@ import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
 import Toggle from '../../components/Toggle';
-import ConfirmationModal from '../../components/ConfirmationModal';
 
 import {
   createIntent,
@@ -64,8 +64,8 @@ import messages from './messages';
 import {
   makeSelectIntentData,
   makeSelectScenarioData,
-  makeSelectWindowSelection,
   makeSelectTouched,
+  makeSelectWindowSelection,
 } from './selectors';
 
 const returnFormattedOptions = (options) => options.map((option, index) => (
@@ -125,7 +125,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       if (field === 'responses') {
         const dropDownButton = document.getElementById('intentResponseEntityDropdown');
         if (evt.charCode === 123) { // If user hits '{' display a menu with current slots
-          dropDownButton.dispatchEvent(new Event('click'));
+          //dropDownButton.dispatchEvent(new Event('click'));
         }
         else {
           if (dropDownButton.getAttribute('class').split(' ').indexOf('active') > -1) {
@@ -170,6 +170,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
+
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.state.clickedSave = true;
@@ -210,7 +211,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     this.props.onAddSlot(this.generateSlotObject({ entity: entity.entityName }));
   }
 
-  routerWillLeave(route){
+  routerWillLeave(route) {
     if (!this.state.waitingForConfirm && this.props.touched && !this.state.clickedSave) {
       this.state.nextRoute = route;
       this.state.displayModal = true;
@@ -220,12 +221,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
-  onLeave(){
+  onLeave() {
     this.props.resetForm();
     this.props.router.push(this.state.nextRoute.pathname);
   }
 
-  onDismiss(){
+  onDismiss() {
     this.setState({
       displayModal: false,
       waitingForConfirm: false,
@@ -234,7 +235,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   render() {
     const { loading, error, success, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
-    if (_.isNil(agentDomains) && _.isNill(agentEntities)) return undefined;
+    if (_.isNil(agentDomains) && _.isNil(agentEntities)) return undefined;
     const intentProps = {
       loading,
       error,
@@ -245,13 +246,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
     let domainsSelect = [];
     if (agentDomains !== false) {
-      domainsSelect = agentDomains.map((domain) => {
-        return {
-          value: domain.domainName,
-          text: domain.domainName,
-        };
-      });
-      domainsSelect.unshift({ value: 'default', text: 'Please choose a domain to place your intent', disabled: 'disabled' });
+      const defaultOption = { value: 'default', text: 'Please choose a domain to place your intent', disabled: 'disabled' };
+      const options = agentDomains.map((domain) => ({
+        value: domain.domainName,
+        text: domain.domainName,
+      }));
+      domainsSelect = [defaultOption, ...options];
     }
 
     let breadcrumbs = [];
@@ -279,9 +279,11 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             { name: 'description', content: 'Create an intent' },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} actionButtons={
+        <Header
+          breadcrumbs={breadcrumbs} actionButtons={
           <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
-        }/>
+        }
+        />
         <Content>
           <ContentHeader title={messages.createIntentTitle} subTitle={messages.createIntentDescription} />
           <Form>

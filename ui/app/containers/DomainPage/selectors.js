@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect';
 
-const selectDomain = (state) => state.get('domain');
+const selectDomain = (state) => state.domain;
 
 const makeSelectDomainData = () => createSelector(
   selectDomain,
-  (domainState) => domainState.get('domainData').toJS(),
+  (domainState) => domainState.domainData,
 );
 
 export {

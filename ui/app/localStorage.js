@@ -14,7 +14,7 @@ export const loadState = () => {
 
 export const saveState = (state) => {
   try {
-    const globalState = state.get('global');
+    const globalState = state.global;
     const serializedState = transit.toJSON({ global: globalState });
     localStorage.setItem('state', serializedState);
   } catch (err) {

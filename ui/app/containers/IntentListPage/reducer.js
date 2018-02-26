@@ -1,14 +1,7 @@
-import { fromJS } from 'immutable';
+import Immutable from 'seamless-immutable';
 
 // The initial state of the App
-const initialState = fromJS({
-  domainData: {
-    agent: null,
-    domainName: '',
-    enabled: true,
-    intentThreshold: 65,
-  },
-});
+const initialState = Immutable({});
 
 function intentListReducer(state = initialState, action) {
   switch (action.type) {

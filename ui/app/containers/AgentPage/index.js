@@ -485,13 +485,14 @@ AgentPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeAgentData: (field, evt) => {
-      //dispatch(resetStatusFlags());
+      dispatch(resetStatusFlags());
       if (field === 'useWebhook'){
         evt.target.value = evt.target.checked;
       }
       dispatch(changeAgentData({ value: evt.target.value, field }));
     },
     onChangeWebhookData: (field, evt) => {
+      dispatch(resetStatusFlags());
       if (field === 'webhookPayload'){
         const value = evt;
         dispatch(changeWebhookData({ value, field }));

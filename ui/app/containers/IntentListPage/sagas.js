@@ -22,6 +22,7 @@ import {
   LOAD_DOMAINS_INTENTS
 } from '../../containers/App/constants';
 import { getAgentDomains } from '../../containers/DomainListPage/sagas';
+import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getDomainIntents(payload) {
   const { api, domainId } = payload;

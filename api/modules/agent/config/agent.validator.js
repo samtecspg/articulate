@@ -288,7 +288,7 @@ class AgentValidate {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                         webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                        webhookPayload: WebhookSchema.webhookPayload
+                        webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                     },
                     entities: Joi.array().items({
                         entityName: EntitySchema.entityName.required(),
@@ -332,7 +332,7 @@ class AgentValidate {
                                 webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                                 webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                                 webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                                webhookPayload: WebhookSchema.webhookPayload
+                                webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                             }
                         })
                     })
@@ -370,7 +370,7 @@ class AgentValidate {
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                    webhookPayload: WebhookSchema.webhookPayload
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                 };
             })()
         };

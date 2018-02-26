@@ -1,4 +1,5 @@
-import { fromJS } from 'immutable';
+import Immutable from 'seamless-immutable';
+
 import {
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
@@ -10,7 +11,7 @@ import {
 
 
 // The initial state of the App
-const initialState = fromJS({
+const initialState = Immutable({
   agentData: {
     agentName: '',
     description: '',
@@ -39,7 +40,7 @@ function agentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('agentData', fromJS(action.agent));
+        .set('agentData', action.agent);
     case LOAD_AGENT_ERROR:
       return state
         .set('error', action.error)
@@ -52,7 +53,7 @@ function agentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('webhookData', fromJS(action.webhook));
+        .set('webhookData', action.webhook);
     case LOAD_WEBHOOK_ERROR:
       return state
         .set('error', action.error)

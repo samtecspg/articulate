@@ -12,8 +12,7 @@ class DomainsTable extends React.Component { // eslint-disable-line react/prefer
   render() {
     const { data, onCellChange, menu } = this.props;
     const formattedData = data.map((domain) => {
-      domain.intentThresholdNormalized = domain.intentThreshold * 100;
-      return domain;
+      return domain.updateIn(['intentThreshold'], intentThreshold => intentThreshold * 100);
     });
     return (
       <Table2

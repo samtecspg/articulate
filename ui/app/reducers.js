@@ -5,10 +5,12 @@
 
 import globalReducer from 'containers/App/reducer';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
-import { fromJS } from 'immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { combineReducers } from 'redux-immutable';
-
+import {
+  combineReducers,
+  routerReducer
+} from 'redux-seamless-immutable';
+import Immutable from 'seamless-immutable';
 /*
  * routeReducer
  *
@@ -18,9 +20,9 @@ import { combineReducers } from 'redux-immutable';
  */
 
 // Initial routing state
-const routeInitialState = fromJS({
+const routeInitialState = {
   locationBeforeTransitions: null,
-});
+};
 
 /**
  * Merge route into the global application state
@@ -42,7 +44,7 @@ function routeReducer(state = routeInitialState, action) {
  */
 export default function createReducer(asyncReducers) {
   return combineReducers({
-    route: routeReducer,
+    routing: routerReducer,
     global: globalReducer,
     language: languageProviderReducer,
     ...asyncReducers,

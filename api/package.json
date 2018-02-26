@@ -5,6 +5,8 @@
   "main": "start.js",
   "scripts": {
     "test": "lab",
+    "lint": "lab -dL",
+    "lint:fix": "lab -dL --lint-fix",
     "test:full": "lab --lint --coverage",
     "start": "npm-run-all --parallel test start:server",
     "start:server": "nodemon start.js",

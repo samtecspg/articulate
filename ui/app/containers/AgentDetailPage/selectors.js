@@ -4,16 +4,16 @@
 
 import { createSelector } from 'reselect';
 
-const selectAgent = (state) => state.get('agentDetail');
+const selectAgent = (state) => state.agentDetail;
 
 const makeSelectAgentData = () => createSelector(
   selectAgent,
-  (agentState) => agentState.get('agentData').toJS(),
+  (agentState) => agentState.agentData,
 );
 
 const makeSelectWebhookData = () => createSelector(
   selectAgent,
-  (agentState) => agentState.get('webhookData').toJS(),
+  (agentState) => agentState.webhookData,
 );
 
 export {

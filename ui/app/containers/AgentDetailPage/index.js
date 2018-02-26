@@ -1,6 +1,5 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
 
 import brace from 'brace';
 import AceEditor from 'react-ace';
@@ -10,7 +9,6 @@ import 'brace/mode/json';
 import 'brace/theme/terminal';
 
 import {
-  Button,
   Col,
   Row,
 } from 'react-materialize';
@@ -22,6 +20,7 @@ import DeleteModal from '../../components/DeleteModal';
 import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
+
 import ContentSubHeader from '../../components/ContentSubHeader';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
@@ -32,8 +31,6 @@ import Toggle from '../../components/Toggle';
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 
-import Responses from './Components/Responses';
-
 import {
   deleteAgent,
 } from '../App/actions';
@@ -42,6 +39,8 @@ import {
   makeSelectLoading,
   makeSelectCurrentAgent,
 } from '../App/selectors';
+
+import Responses from './Components/Responses';
 
 import messages from './messages';
 import { makeSelectAgentData, makeSelectWebhookData } from './selectors';
@@ -119,8 +118,8 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
     }
     else {
       breadcrumbs = [
-        {  label: 'Agent' },
-        {  label: `${currentAgent.agentName}` },
+        { label: 'Agent' },
+        { label: `${currentAgent.agentName}` },
       ];
     }
 
@@ -135,14 +134,18 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             { name: 'description', content: `Details for NLU Agent ${currentAgent.agentName}` },
           ]}
         />
-        <Header breadcrumbs={breadcrumbs} actionButtons={
+        <Header
+          breadcrumbs={breadcrumbs} actionButtons={
           <div className="btn-edit-delete">
-            <EditDeleteButton label={messages.editButton} iconName="edit" onClick={() => {
+            <EditDeleteButton
+              label={messages.editButton} iconName="edit" onClick={() => {
               this.props.onChangeUrl(`/agent/${this.props.currentAgent.id}/edit`);
-            }}/>
+            }}
+            />
             <EditDeleteButton label={messages.deleteButton} iconName="delete" onClick={this.onDeletePrompt} />
           </div>
-        }/>
+        }
+        />
         <Content>
           <Row>
             <header className="main-title">
@@ -188,7 +191,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
           </Row>
 
           <Row>
-            <br/>
+            <br />
             <SliderInput
               label={messages.domainClassifierThreshold}
               min="0"
@@ -201,7 +204,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
           </Row>
 
           <Row>
-            <Form style={{marginTop: '0px'}}>
+            <Form style={{ marginTop: '0px' }}>
               <InputLabel s={12} text={messages.agentFallbackTitle} />
             </Form>
           </Row>

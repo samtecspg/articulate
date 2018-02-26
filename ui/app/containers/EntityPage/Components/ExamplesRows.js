@@ -4,7 +4,7 @@ import NewExampleRow from './NewExampleRow';
 import Synonyms from './Synonyms';
 
 export function ExamplesRows(props) {
-
+  const newExampleRow = <NewExampleRow key="newExample" addExampleFunction={props.addExampleFunction} />;
   const rows = props.examples.map((example, exampleIndex) => {
     return (
       <tr style={{ width: '100%' }} key={exampleIndex}>
@@ -15,11 +15,9 @@ export function ExamplesRows(props) {
       </tr>
     );
   });
-  rows.push(<NewExampleRow key="newExample" addExampleFunction={props.addExampleFunction} />);
-
   return (
     <tbody>
-    {rows}
+    {rows.concat(newExampleRow)}
     </tbody>
   );
 }
