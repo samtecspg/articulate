@@ -2,6 +2,7 @@ import {
   ADD_SLOT,
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
+  CHANGE_WEBHOOK_DATA,
   CHANGE_SLOT_NAME,
   DELETE_TEXT_PROMPT,
   LOAD_INTENT,
@@ -18,11 +19,21 @@ import {
   TAG_ENTITY,
   TOGGLE_FLAG,
   UNTAG_ENTITY,
+  LOAD_WEBHOOK_ERROR,
+  LOAD_WEBHOOK_SUCCESS,
+  LOAD_WEBHOOK,
 } from './constants';
 
 export function changeIntentData(payload) {
   return {
     type: CHANGE_INTENT_DATA,
+    payload,
+  };
+}
+
+export function changeWebhookData(payload) {
+  return {
+    type: CHANGE_WEBHOOK_DATA,
     payload,
   };
 }
@@ -149,6 +160,28 @@ export function loadScenarioSuccess(scenario) {
 export function loadScenario(id) {
   return {
     type: LOAD_SCENARIO,
+    apiCall: true,
+    id,
+  };
+}
+
+export function loadWebhookError(error) {
+  return {
+    type: LOAD_WEBHOOK_ERROR,
+    error,
+  };
+}
+
+export function loadWebhookSuccess(webhook) {
+  return {
+    type: LOAD_WEBHOOK_SUCCESS,
+    webhook,
+  };
+}
+
+export function loadWebhook(id) {
+  return {
+    type: LOAD_WEBHOOK,
     apiCall: true,
     id,
   };

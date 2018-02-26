@@ -153,5 +153,40 @@ export default defineMessages({
   invalidSlotNameInResponse: {
     id: 'boilerplate.containers.IntentPage.create_agent.invalid_slot_name_response',
     defaultMessage: 'Please verify that every agent response are referencing valid slots names',
+  },webhook: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook',
+    defaultMessage: 'Webhook Definition',
   },
+  webhookDescription: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_description',
+    defaultMessage: 'A webhook will help you to process the parsed text by the agent in order to complete you business logic.',
+  },
+  webhookVerb: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_verb',
+    defaultMessage: 'Method',
+  },
+  webhookUrl: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_url',
+    defaultMessage: 'URL',
+  },
+  webhookUrlPlaceholder: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_url_placeholder',
+    defaultMessage: 'http://localhost:3000',
+  },
+  webhookPayloadType: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_payload_type',
+    defaultMessage: 'Body Type',
+  },
+  webhookPayload: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_payload',
+    defaultMessage: 'Body',
+  },
+  missingWebhookUrl: {
+    id: 'boilerplate.containers.AgentPage.create_agent.missing_webhook_url',
+    defaultMessage: 'Please add a webhook url for your webhook',
+  },
+  useWebhook: {
+    id: 'boilerplate.containers.IntentPage.create_agent.use_webhook',
+    defaultMessage: 'Webhook',
+  }
 });

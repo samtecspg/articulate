@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable';
 import Immutable from 'seamless-immutable';
 import {
   ACTION_CANCELLED,
@@ -261,7 +260,7 @@ function appReducer(state = initialState, action) {
         .set('loadingConversation', true);
     case RESET_SESSION_SUCCESS:
       return state
-        .set('conversation', fromJS([]))
+        .set('conversation', [])
         .set('loadingConversation', false);
     case RESET_SESSION_ERROR:
       return state

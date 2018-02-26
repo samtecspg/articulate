@@ -6,6 +6,14 @@ import {
   Input,
   Row,
 } from 'react-materialize';
+
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/xml';
+import 'brace/mode/json';
+import 'brace/theme/terminal';
+
 import { connect } from 'react-redux';
 import Alert from 'react-s-alert';
 import { createStructuredSelector } from 'reselect';
@@ -13,6 +21,7 @@ import ActionButton from '../../components/ActionButton';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
+import ContentSubHeader from '../../components/ContentSubHeader';
 import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
@@ -54,6 +63,8 @@ import {
   setWindowSelection,
   tagEntity,
   toggleFlag,
+  changeWebhookData,
+  loadWebhook,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -66,6 +77,7 @@ import {
   makeSelectScenarioData,
   makeSelectTouched,
   makeSelectWindowSelection,
+  makeSelectWebhookData,
 } from './selectors';
 
 const returnFormattedOptions = (options) => options.map((option, index) => (
@@ -73,6 +85,44 @@ const returnFormattedOptions = (options) => options.map((option, index) => (
     {option.text}
   </option>
 ));
+
+const verbs = [
+  {
+    value: 'GET',
+    text: 'GET',
+  },
+  {
+    value: 'PUT',
+    text: 'PUT',
+  },
+  {
+    value: 'POST',
+    text: 'POST',
+  },
+  {
+    value: 'DELETE',
+    text: 'DELETE',
+  },
+  {
+    value: 'PATCH',
+    text: 'PATCH',
+  },
+];
+
+const payloadTypes = [
+  {
+    value: 'None',
+    text: 'None',
+  },
+  {
+    value: 'JSON',
+    text: 'JSON',
+  },
+  {
+    value: 'XML',
+    text: 'XML',
+  },
+];
 
 export class IntentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
@@ -174,7 +224,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.state.clickedSave = true;
-    if (this.props.scenarioData.useWebhook && this.props.scenarioData.webhookUrl || (!this.props.scenarioData.useWebhook && this.props.scenarioData.intentResponses.length > 0)) {
+    if (this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '' || (!this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) {
       if (this.state.editMode) {
         this.props.onUpdate();
       } else {
@@ -182,8 +232,8 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       }
     }
     else {
-      if (this.props.scenarioData.useWebhook) {
-        Alert.warning(messages.missingWebhookMessage.defaultMessage, {
+      if (this.props.intent.useWebhook) {
+        Alert.warning(messages.missingWebhookUrl.defaultMessage, {
           position: 'bottom'
         });
       }
@@ -234,7 +284,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, success, intent, scenario, agentDomains, agentEntities, currentAgent } = this.props;
+    const { loading, error, success, intent, scenario, webhook, agentDomains, agentEntities, currentAgent } = this.props;
     if (_.isNil(agentDomains) && _.isNil(agentEntities)) return undefined;
     const intentProps = {
       loading,
@@ -289,9 +339,10 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           <Form>
             <Row>
               <Toggle
-                label="Webhook"
+                label={messages.useWebhook.defaultMessage}
                 right
                 onChange={(evt) => this.onChangeInput(evt, 'useWebhook')}
+                checked={intent.useWebhook}
               />
             </Row>
             <Row>
@@ -424,20 +475,65 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             }}
           >
           </div>
+
           {
-            this.props.scenarioData.useWebhook ?
-              <Form style={{ marginTop: '0px' }}>
+            intent.useWebhook ? <ContentSubHeader title={messages.webhook} /> : null
+          }
+          {
+            intent.useWebhook ?
+              <Form style={{marginTop: '0px'}}>
                 <Row>
+                  <Input
+                    s={2}
+                    name="webhookVerb"
+                    type="select"
+                    label={messages.webhookVerb.defaultMessage}
+                    value={webhook.webhookVerb}
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookVerb')}
+                  >
+                    {returnFormattedOptions(verbs)}
+                  </Input>
                   <FormTextInput
-                    label={messages.webhook}
-                    placeholder={messages.webhookPlaceholder.defaultMessage}
-                    value={this.props.scenarioData.webhookUrl}
-                    onChange={(evt) => this.onChangeInput(evt, 'webhookUrl')}
-                    required
+                    label={messages.webhookUrl}
+                    placeholder={messages.webhookUrlPlaceholder.defaultMessage}
+                    inputId="description"
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookUrl')}
+                    value={webhook.webhookUrl}
+                    s={8}
                   />
+                  <Input
+                    s={2}
+                    name="webhookPayloadType"
+                    type="select"
+                    label={messages.webhookPayloadType.defaultMessage}
+                    value={webhook.webhookPayloadType}
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayloadType')}
+                  >
+                    {returnFormattedOptions(payloadTypes)}
+                  </Input>
+                  {webhook.webhookPayloadType !== 'None' ?
+                  (<AceEditor
+                    width="100%"
+                    height="250px"
+                    mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                    theme="terminal"
+                    name="webhookPayload"
+                    readOnly={false}
+                    onLoad={this.onLoad}
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                    fontSize={14}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={webhook.webhookPayload}
+                    setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                    }}/>) : null}
                 </Row>
               </Form>
-              : null
+            : null
           }
 
         </Content>
@@ -467,6 +563,7 @@ IntentPage.propTypes = {
     React.PropTypes.bool,
   ]),
   onChangeIntentData: React.PropTypes.func,
+  onChangeWebhookData: React.PropTypes.func,
   onCreate: React.PropTypes.func,
   onUpdate: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
@@ -504,6 +601,16 @@ export function mapDispatchToProps(dispatch) {
         dispatch(loadAgentEntities(value));
       }
       dispatch(changeIntentData({ value, field }));
+    },
+    onChangeWebhookData: (field, evt) => {
+      dispatch(resetStatusFlags());
+      if (field === 'webhookPayload'){
+        const value = evt;
+        dispatch(changeWebhookData({ value, field }));
+      }
+      else {
+        dispatch(changeWebhookData({ value: evt.target.value, field }));
+      }
     },
     onRemoveExample: (exampleIndex, evt) => {
       dispatch(removeUserSaying(exampleIndex));
@@ -567,6 +674,7 @@ export function mapDispatchToProps(dispatch) {
     onEditMode: (intentId) => {
       dispatch(loadIntent(intentId));
       dispatch(loadScenario(intentId));
+      dispatch(loadWebhook(intentId));
     },
   };
 }
@@ -574,6 +682,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   intent: makeSelectIntentData(),
   scenario: makeSelectScenario(),
+  webhook: makeSelectWebhookData(),
   scenarioData: makeSelectScenarioData(),
   windowSelection: makeSelectWindowSelection(),
   loading: makeSelectLoading(),

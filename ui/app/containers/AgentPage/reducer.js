@@ -99,9 +99,6 @@ function agentReducer(state = initialState, action) {
           .setIn(['webhookData', action.payload.field], action.payload.value)
           .set('touched', true);
       }
-      return state
-        .setIn(['agentData', action.payload.field], action.payload.value)
-        .set('touched', true);
     case RESET_AGENT_DATA:
       return initialState;
     case LOAD_AGENT:

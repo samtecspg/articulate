@@ -3,6 +3,7 @@ import {
   ADD_SLOT,
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
+  CHANGE_WEBHOOK_DATA,
   CHANGE_SLOT_NAME,
   DELETE_TEXT_PROMPT,
   LOAD_INTENT,
@@ -11,6 +12,9 @@ import {
   LOAD_SCENARIO,
   LOAD_SCENARIO_ERROR,
   LOAD_SCENARIO_SUCCESS,
+  LOAD_WEBHOOK,
+  LOAD_WEBHOOK_ERROR,
+  LOAD_WEBHOOK_SUCCESS,
   REMOVE_AGENT_RESPONSE,
   REMOVE_SLOT,
   REMOVE_USER_SAYING,
@@ -39,6 +43,15 @@ const initialState = Immutable({
     slots: [],
     intentResponses: [],
   },
+  webhookData: {
+    agent: null,
+    domain: null,
+    intent: null,
+    webhookUrl: '',
+    webhookVerb: 'GET',
+    webhookPayloadType: 'None',
+    webhookPayload: '',
+  },
   touched: false,
 });
 
@@ -55,7 +68,7 @@ function intentReducer(state = initialState, action) {
           .set('touched', true);
       } else if (action.payload.field === 'useWebhook') {
         return state
-          .setIn(['scenarioData', 'useWebhook'], action.payload.value)
+          .setIn(['intentData', action.payload.field], action.payload.value)
           .set('touched', true);
       } else if (action.payload.field === 'webhookUrl') {
         return state
@@ -64,12 +77,47 @@ function intentReducer(state = initialState, action) {
       } else if (action.payload.field === 'intentName') {
         return state
           .setIn(['scenarioData', 'scenarioName'], action.payload.value)
+          .setIn(['scenarioData', 'intent'], action.payload.value)
+          .setIn(['webhookData', 'intent'], action.payload.value)
           .setIn(['intentData', action.payload.field], action.payload.value)
           .set('touched', true);
       } else {
         return state
+          .updateIn(['webhookData'], (scenarioData) => scenarioData.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)))
           .updateIn(['scenarioData'], (scenarioData) => scenarioData.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)))
           .updateIn(['intentData'], (intentData) => intentData.set(action.payload.field, (action.payload.field === 'agent' ? action.payload.value.split('~')[1] : action.payload.value)))
+          .set('touched', true);
+      }
+    case CHANGE_WEBHOOK_DATA:
+      if (action.payload.field === 'webhookPayloadType' && action.payload.value === 'None'){
+        if (state.webhookData.webhookPayloadType === 'JSON'){
+          state = state.set('oldPayloadJSON', state.webhookData.webhookPayload);
+        }
+        if (state.webhookData.webhookPayloadType === 'XML'){
+          state = state.set('oldPayloadXML', state.webhookData.webhookPayload);
+        }
+        return state
+          .setIn(['webhookData', 'webhookPayload'], '')
+          .setIn(['webhookData', action.payload.field], action.payload.value)
+          .set('touched', true);
+      }
+      else {
+        if (action.payload.field === 'webhookPayloadType'){
+          if(action.payload.value === 'JSON' && state.webhookData.webhookPayloadType !== 'JSON'){
+            if (state.webhookData.webhookPayloadType === 'XML'){
+              state = state.set('oldPayloadXML', state.webhookData.webhookPayload);
+            }
+            state = state.setIn(['webhookData', 'webhookPayload'], state.oldPayloadJSON);
+          }
+          if(action.payload.value === 'XML' && state.webhookData.webhookPayloadType !== 'XML'){
+            if (state.webhookData.webhookPayloadType === 'JSON'){
+              state = state.set('oldPayloadJSON', state.webhookData.webhookPayload);
+            }
+            state = state.setIn(['webhookData', 'webhookPayload'], state.oldPayloadXML);
+          }
+        }
+        return state
+          .setIn(['webhookData', action.payload.field], action.payload.value)
           .set('touched', true);
       }
     case RESET_INTENT_DATA:
@@ -205,6 +253,19 @@ function intentReducer(state = initialState, action) {
         .set('error', false)
         .set('scenarioData', action.scenario);
     case LOAD_SCENARIO_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case LOAD_WEBHOOK:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_WEBHOOK_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('webhookData', action.webhook);
+    case LOAD_WEBHOOK_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);

@@ -17,6 +17,11 @@ const makeSelectScenarioData = () => createSelector(
   (scenarioState) => scenarioState.scenarioData,
 );
 
+const makeSelectWebhookData = () => createSelector(
+  selectIntent,
+  (scenarioState) => scenarioState.webhookData,
+);
+
 const makeSelectTouched = () => createSelector(
   selectIntent,
   (intentState) => intentState.touched,
@@ -27,5 +32,6 @@ export {
   makeSelectWindowSelection,
   makeSelectIntentData,
   makeSelectScenarioData,
+  makeSelectWebhookData,
   makeSelectTouched,
 };

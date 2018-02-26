@@ -15,6 +15,7 @@ import {
   intentCreationError,
   scenarioCreated,
   scenarioCreationError,
+  webhookCreationError,
   updateIntentError,
   updateIntentSuccess,
   updateScenarioError,
@@ -35,25 +36,36 @@ import {
   loadIntentSuccess,
   loadScenarioError,
   loadScenarioSuccess,
+  loadWebhookError,
+  loadWebhookSuccess,
 } from './actions';
 import {
   LOAD_INTENT,
-  LOAD_SCENARIO
+  LOAD_SCENARIO,
+  LOAD_WEBHOOK,
 } from './constants';
 import {
   makeSelectIntentData,
   makeSelectScenarioData,
+  makeSelectWebhookData,
 } from './selectors';
 
-function* postScenario(payload) {
-  const { api, id, name } = payload;
-  const data = yield select(makeSelectScenarioData());
-  let scenarioData = undefined;
-  if (!data.useWebhook) {
-    scenarioData = data.set('intent', name).without('webhookUrl');
-  } else {
-    scenarioData = data.set('intent', name);
+function* postWebhook(payload) {
+  const { api, id } = payload;
+  const webhookData = yield select(makeSelectWebhookData());
+
+  try {
+    yield call(api.intent.postIntentIdWebhook, { id, body: webhookData });
+  } catch ({ response }) {
+    yield put(webhookCreationError({ message: response.obj.message }));
+    throw response;
   }
+}
+
+function* postScenario(payload) {
+  const { api, id } = payload;
+  const scenarioData = yield select(makeSelectScenarioData());
+
   try {
     const response = yield call(api.intent.postIntentIdScenario, { id, body: scenarioData });
     const scenario = response.obj;
@@ -72,7 +84,10 @@ export function* postIntent(payload) {
     const response = yield call(api.intent.postIntent, { body: intentData });
     const intent = response.obj;
     yield put(intentCreated(intent, intent.id));
-    yield call(postScenario, { api, id: intent.id, name: intent.intentName });
+    yield call(postScenario, { api, id: intent.id});
+    if (intent.useWebhook){
+      yield call(postWebhook, { api, id: intent.id});
+    }
     yield put(push('/intents'));
   } catch ({ response }) {
     yield put(intentCreationError({ message: response.obj.message }));
@@ -111,6 +126,23 @@ export function* loadAgentEntities() {
   yield cancel(watcher);
 }
 
+function* putWebhook(payload) {
+  const { api, id } = payload;
+  const webhookData = yield select(makeSelectWebhookData());
+  delete webhookData.id;
+  delete webhookData.agent;
+  delete scenarioData.domain;
+  delete scenarioData.intent;
+  try {
+    const response = yield call(api.agent.putAgentIdWebhook, { id, body: webhookData });
+    const webhook = response.obj;
+  } catch ({ response }) {
+    yield put(updateWebhookError({ message: response.obj.message }));
+    throw response;
+  }
+}
+
+
 function* putScenario(payload) {
   const { api, id, name } = payload;
   const scenarioData = yield select(makeSelectScenarioData());
@@ -118,15 +150,6 @@ function* putScenario(payload) {
   delete scenarioData.agent;
   delete scenarioData.domain;
   delete scenarioData.intent;
-  if (!scenarioData.useWebhook) {
-    delete scenarioData.webhookUrl;
-  }
-  if (scenarioData.slots === '') {
-    scenarioData.slots = [];
-  }
-  if (scenarioData.intentResponses === '') {
-    scenarioData.intentResponses = [];
-  }
   try {
     const response = yield call(api.intent.putIntentIdScenario, { id, body: scenarioData });
     const scenario = response.obj;
@@ -209,6 +232,25 @@ export function* loadScenario() {
   yield cancel(watcher);
 }
 
+export function* getWebhook(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.intent.getIntentIdWebhook, { id });
+    const webhook = response.obj;
+    yield put(loadWebhookSuccess(webhook));
+  } catch ({ response }) {
+    yield put(loadWebhookError({ message: response.obj.message }));
+  }
+}
+
+export function* loadWebhook() {
+  const watcher = yield takeLatest(LOAD_WEBHOOK, getWebhook);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 // Bootstrap sagas
 export default [
   createIntent,
@@ -218,4 +260,5 @@ export default [
   updateIntent,
   loadIntent,
   loadScenario,
+  loadWebhook,
 ];

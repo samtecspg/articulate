@@ -57,6 +57,17 @@ module.exports = (request, reply) => {
                         return callbackDeleteScenario(null);
                     });
                 },
+                (callbackDeleteWebhook) => {
+
+                    redis.del(`intentWebhook:${intentId}`, (err, result) => {
+
+                        if (err){
+                            const error = Boom.badImplementation(`An error occurred deleting the webhook of the intent ${intentId}`);
+                            return callbackDeleteWebhook(error, null);
+                        }
+                        return callbackDeleteWebhook(null);
+                    });
+                },
                 (callbackDeleteIntentFromTheDomain) => {
 
                     Async.waterfall([
