@@ -268,7 +268,7 @@ class AgentValidate {
             query: (() => {
 
                 return {
-                    withReferences: Joi.bool().required().description('Flag to indicate if method should exports ids and ancestors of an element')
+                    withReferences: Joi.bool().default(true).description('Flag to indicate if method should exports ids and ancestors of an element')
                 };
             })()
         };
@@ -397,7 +397,7 @@ class AgentValidate {
                     webhookUrl: WebhookSchema.webhookUrl,
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                    webhookPayload: WebhookSchema.webhookPayload
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                 };
             })()
         };

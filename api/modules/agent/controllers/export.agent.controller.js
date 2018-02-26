@@ -1,7 +1,6 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 
@@ -23,7 +22,7 @@ module.exports = (request, reply) => {
                     const error = Boom.create(res.statusCode, 'An error occurred getting the data of the agent');
                     return callbackGetAgent(error, null);
                 }
-                return callbackGetAgent(null, Cast(res.result, 'agent'));
+                return callbackGetAgent(null, res.result);
             });
         },
         (exportedAgent, callbackGetAgentEntitiesAndDomains) => {
@@ -40,10 +39,6 @@ module.exports = (request, reply) => {
                                     const error = Boom.create(res.statusCode, `An error occurred getting the list of domains of the agent ${exportedAgent.agent}`);
                                     return callbackGetDomains(error, null);
                                 }
-                                res.result = res.result.map((domain) => {
-
-                                    return Cast(domain, 'domain');
-                                });
                                 return callbackGetDomains(null, res.result);
                             });
                         },
@@ -60,10 +55,6 @@ module.exports = (request, reply) => {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the list of intents for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                 return callbackGetIntentsFromDomain(error, null);
                                             }
-                                            res.result = res.result.map((intent) => {
-
-                                                return Cast(intent, 'intent');
-                                            });
                                             return callbackGetIntentsFromDomain(null, res.result);
                                         });
                                     },
@@ -86,7 +77,7 @@ module.exports = (request, reply) => {
                                                     delete res.result.domain;
                                                     delete res.result.intent;
                                                 }
-                                                return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: Cast(res.result, 'scenario') }));
+                                                return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: res.result}));
                                             });
                                         }, (err, intentsWithScenarios) => {
 
@@ -124,7 +115,7 @@ module.exports = (request, reply) => {
                                                     delete res.result.domain;
                                                     delete res.result.intent;
                                                 }
-                                                return callbackGetIntentWebhook(null, Object.assign(exportedIntentForDomain, { webhook: Cast(res.result, 'webhook') }));
+                                                return callbackGetIntentWebhook(null, Object.assign(exportedIntentForDomain, { webhook: res.result }));
                                             });
                                         }, (err, intentsWithWebhooks) => {
 
@@ -171,10 +162,6 @@ module.exports = (request, reply) => {
                             const error = Boom.create(res.statusCode, `An error occurred getting the list of entities of agent ${exportedAgent.agentName}`);
                             return callbackGetEntities(error, null);
                         }
-                        res.result = res.result.map((entity) => {
-
-                            return Cast(entity, 'entity');
-                        });
                         if (!withReferences){
 
                             res.result.forEach((entity) => {
@@ -203,7 +190,7 @@ module.exports = (request, reply) => {
                             delete res.result.id;
                             delete res.result.agent;
                         }
-                        return callbackGetWebhook(null, Object.assign(exportedAgent, { webhook: Cast(res.result, 'webhook') }));
+                        return callbackGetWebhook(null, Object.assign(exportedAgent, { webhook: res.result }));
                     });
                 }
             }, (err) => {

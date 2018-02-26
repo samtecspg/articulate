@@ -5,19 +5,30 @@ import {
   Input,
   Row,
 } from 'react-materialize';
+
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/xml';
+import 'brace/mode/json';
+import 'brace/theme/terminal';
+
 import { connect } from 'react-redux';
 import Alert from 'react-s-alert';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
+import ContentSubHeader from '../../components/ContentSubHeader';
 import Form from '../../components/Form';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import InputLabel from '../../components/InputLabel';
 
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
+import Toggle from '../../components/Toggle';
 
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
@@ -37,14 +48,16 @@ import {
 } from '../App/selectors';
 import {
   changeAgentData,
+  changeWebhookData,
   loadAgent,
   resetAgentData,
   removeAgentFallback,
+  loadWebhook,
 } from './actions';
 
 import messages from './messages';
 
-import { makeSelectAgentData, makeSelectTouched } from './selectors';
+import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData } from './selectors';
 
 /* import timezones from './data/timezones.json';
 import languages from './data/languages.json';
@@ -92,6 +105,44 @@ const sampleData = [
   {
     value: 'bookings',
     text: 'Bookings Agent',
+  },
+];
+
+const verbs = [
+  {
+    value: 'GET',
+    text: 'GET',
+  },
+  {
+    value: 'PUT',
+    text: 'PUT',
+  },
+  {
+    value: 'POST',
+    text: 'POST',
+  },
+  {
+    value: 'DELETE',
+    text: 'DELETE',
+  },
+  {
+    value: 'PATCH',
+    text: 'PATCH',
+  },
+];
+
+const payloadTypes = [
+  {
+    value: 'None',
+    text: 'None',
+  },
+  {
+    value: 'JSON',
+    text: 'JSON',
+  },
+  {
+    value: 'XML',
+    text: 'XML',
   },
 ];
 
@@ -159,10 +210,17 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.state.clickedSave = true;
-    if (this.state.editMode) {
-      this.props.onUpdate();
-    } else {
-      this.props.onCreate();
+    if (this.props.agent.useWebhook && this.props.webhook.webhookUrl === '') {
+      Alert.warning(messages.missingWebhookUrl.defaultMessage, {
+        position: 'bottom'
+      });
+    }
+    else {
+      if (this.state.editMode) {
+        this.props.onUpdate();
+      } else {
+        this.props.onCreate();
+      }
     }
   }
 
@@ -207,7 +265,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   }
 
   render() {
-    const { loading, error, success, agent, match } = this.props;
+    const { loading, error, success, agent, match, webhook } = this.props;
     const agentProps = {
       loading,
       error,
@@ -238,6 +296,14 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>
+            <Row>
+              <Toggle
+                label={messages.useWebhook.defaultMessage}
+                right
+                onChange={this.props.onChangeAgentData.bind(null, 'useWebhook')}
+                checked={agent.useWebhook}
+              />
+            </Row>
             <Row>
               <FormTextInput
                 label={messages.agentName}
@@ -320,10 +386,70 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             </TableContainer>
             : null
           }
-          <br/>
+
           <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el;}}>
-            <br/>
           </div>
+
+          {
+            agent.useWebhook ? <ContentSubHeader title={messages.webhook} /> : null
+          }
+          {
+            agent.useWebhook ?
+              <Form style={{marginTop: '0px'}}>
+                <Row>
+                  <Input
+                    s={2}
+                    name="webhookVerb"
+                    type="select"
+                    label={messages.webhookVerb.defaultMessage}
+                    value={webhook.webhookVerb}
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookVerb')}
+                  >
+                    {returnFormattedOptions(verbs)}
+                  </Input>
+                  <FormTextInput
+                    label={messages.webhookUrl}
+                    placeholder={messages.webhookUrlPlaceholder.defaultMessage}
+                    inputId="description"
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookUrl')}
+                    value={webhook.webhookUrl}
+                    s={8}
+                  />
+                  <Input
+                    s={2}
+                    name="webhookPayloadType"
+                    type="select"
+                    label={messages.webhookPayloadType.defaultMessage}
+                    value={webhook.webhookPayloadType}
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayloadType')}
+                  >
+                    {returnFormattedOptions(payloadTypes)}
+                  </Input>
+                  {webhook.webhookPayloadType !== 'None' ?
+                  (<AceEditor
+                    width="100%"
+                    height="250px"
+                    mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                    theme="terminal"
+                    name="webhookPayload"
+                    readOnly={false}
+                    onLoad={this.onLoad}
+                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                    fontSize={14}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={webhook.webhookPayload}
+                    setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                    }}/>) : null}
+                </Row>
+              </Form>
+            : null
+          }
+          <br/>
         </Content>
         <ConfirmationModal
           isOpen={this.state.displayModal}
@@ -349,6 +475,7 @@ AgentPage.propTypes = {
   onCreate: React.PropTypes.func,
   onUpdate: React.PropTypes.func,
   onChangeAgentData: React.PropTypes.func,
+  onChangeWebhookData: React.PropTypes.func,
   resetForm: React.PropTypes.func,
   onSuccess: React.PropTypes.func,
   onEditMode: React.PropTypes.func,
@@ -358,8 +485,20 @@ AgentPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeAgentData: (field, evt) => {
-      dispatch(resetStatusFlags());
+      //dispatch(resetStatusFlags());
+      if (field === 'useWebhook'){
+        evt.target.value = evt.target.checked;
+      }
       dispatch(changeAgentData({ value: evt.target.value, field }));
+    },
+    onChangeWebhookData: (field, evt) => {
+      if (field === 'webhookPayload'){
+        const value = evt;
+        dispatch(changeWebhookData({ value, field }));
+      }
+      else {
+        dispatch(changeWebhookData({ value: evt.target.value, field }));
+      }
     },
     onCreate: () => {
       dispatch(createAgent());
@@ -374,7 +513,10 @@ export function mapDispatchToProps(dispatch) {
 
     },
     onEditMode: (agentId) => {
+      dispatch(resetStatusFlags());
+      dispatch(resetAgentData());
       dispatch(loadAgent(agentId));
+      dispatch(loadWebhook(agentId));
     },
     onRemoveFallback: (fallbackIndex) => {
       dispatch(removeAgentFallback(fallbackIndex));
@@ -384,6 +526,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgentData(),
+  webhook: makeSelectWebhookData(),
   loading: makeSelectLoading(),
   touched: makeSelectTouched(),
   success: makeSelectSuccess(),

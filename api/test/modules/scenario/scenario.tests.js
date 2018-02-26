@@ -197,7 +197,6 @@ before({ timeout: 60000 }, (done) => {
         ], (err) => {
 
             if (err) {
-                console.log(err);
                 done(err);
             }
             else {

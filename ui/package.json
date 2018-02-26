@@ -224,6 +224,7 @@
     "lodash": "4.17.2",
     "minimist": "1.2.0",
     "react": "15.4.1",
+    "react-ace": "^5.9.0",
     "react-chips": "^0.6.3",
     "react-color": "^2.13.8",
     "react-dom": "15.4.1",

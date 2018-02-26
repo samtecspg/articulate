@@ -66,7 +66,7 @@ module.exports = (request, reply) => {
             if (errTraining){
                 return reply(errTraining, null);
             }
-            return reply(Cast(result.agent, 'agent'));
+            return reply(result.agent);
         });
     });
 };

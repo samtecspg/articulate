@@ -71,6 +71,6 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        return reply(Cast(result, 'domain'));
+        return reply(result);
     });
 };

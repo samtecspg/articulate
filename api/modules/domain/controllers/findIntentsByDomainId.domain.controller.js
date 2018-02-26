@@ -71,10 +71,6 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
-        result = result.map((intent) => {
-
-            return Cast(intent, 'intent');
-        });
         return reply(result);
     });
 };

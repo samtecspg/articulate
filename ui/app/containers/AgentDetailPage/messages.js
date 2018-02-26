@@ -79,4 +79,32 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.success_message',
     defaultMessage: 'Fallback Responses',
   },
+  webhook: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook',
+    defaultMessage: 'Webhook Definition',
+  },
+  webhookDescription: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_description',
+    defaultMessage: 'A webhook will help you to process the parsed text by the agent in order to complete you business logic.',
+  },
+  webhookVerb: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_verb',
+    defaultMessage: 'Method',
+  },
+  webhookUrl: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_url',
+    defaultMessage: 'URL',
+  },
+  webhookUrlPlaceholder: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_url_placeholder',
+    defaultMessage: 'http://localhost:3000',
+  },
+  webhookPayloadType: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_payload_type',
+    defaultMessage: 'Body Type',
+  },
+  webhookPayload: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook_payload',
+    defaultMessage: 'Body',
+  },
 });

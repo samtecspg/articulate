@@ -9,7 +9,7 @@ module.exports = (webhook, conversationStateObject, callback) => {
     const processedWebhookUrl = compiledWebhookUrl(conversationStateObject);
     let compiledWebhookPayload;
     let processedWebhookPayload;
-    if (webhook.webhookPayloadType !== 'None'){
+    if (webhook.webhookPayloadType !== 'None' && webhook.webhookPayload !== ''){
         compiledWebhookPayload = Handlebars.compile(webhook.webhookPayload);
         processedWebhookPayload = compiledWebhookPayload(conversationStateObject);
     }
@@ -17,7 +17,7 @@ module.exports = (webhook, conversationStateObject, callback) => {
     Axios({
         method: webhook.webhookVerb,
         url: processedWebhookUrl,
-        data: JSON.parse(processedWebhookPayload)
+        data: processedWebhookPayload ? JSON.parse(processedWebhookPayload) : ''
     })
     .then((response) => {
 

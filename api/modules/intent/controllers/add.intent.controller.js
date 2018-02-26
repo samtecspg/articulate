@@ -196,7 +196,7 @@ module.exports = (request, reply) => {
             if (err) {
                 return reply(err);
             }
-            return reply(null, Cast(resultIntent, 'intent'));
+            return reply(resultIntent);
         });
     });
 };

@@ -201,10 +201,21 @@ injectGlobal`
     right: 0;}
 
   .main-title {
+
   }
-    .main-title h1 {
-      color: #00ca9f;
-      margin-bottom: 20px; }
+
+  .main-title h1 {
+    color: #00ca9f;
+    margin-bottom: 20px;
+  }
+
+  .sub-title {
+  }
+
+  .sub-title h1 {
+    font-size: 20px;
+    color: #4e4e4e;
+  }
 
   .btn-action {
     position: fixed;

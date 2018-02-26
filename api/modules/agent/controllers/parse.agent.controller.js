@@ -89,6 +89,11 @@ module.exports = (request, reply) => {
 
                 document = Object.assign({ id: documentId }, document);
                 const flatDocument = Flat(document);
+                Object.keys(flatDocument).forEach(key => {
+                    if (Array.isArray(flatDocument[key]) && flatDocument[key].length === 0){
+                        flatDocument[key] = '';
+                    }
+                });
                 redis.hmset(`document:${documentId}`, flatDocument, (err) => {
 
                     if (err){

@@ -47,7 +47,7 @@ export function* loadCurrentAgent() {
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  //yield cancel(watcher);
 }
 
 // Bootstrap sagas

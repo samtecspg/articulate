@@ -23,7 +23,6 @@ import {
   CREATE_SCENARIO_SUCCESS,
   CREATE_WEBHOOK,
   CREATE_WEBHOOK_ERROR,
-  CREATE_WEBHOOK_SUCCESS,
   DELETE_AGENT,
   DELETE_AGENT_ERROR,
   DELETE_AGENT_SUCCESS,
@@ -47,6 +46,7 @@ import {
   LOAD_AGENT_INTENTS_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_SUCCESS,
+  LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_SUCCESS,
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
@@ -60,7 +60,7 @@ import {
   RESET_SESSION_ERROR,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
-  SELECT_CURRENT_AGENT,
+  //SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
   UPDATE_AGENT,
   UPDATE_AGENT_ERROR,
@@ -76,6 +76,7 @@ import {
   UPDATE_INTENT_SUCCESS,
   UPDATE_SCENARIO_ERROR,
   UPDATE_SCENARIO_SUCCESS,
+  UPDATE_WEBHOOK_ERROR,
 } from './constants';
 
 // The initial state of the App
@@ -101,11 +102,15 @@ function appReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false)
         .set('agents', false);
-    case SELECT_CURRENT_AGENT :
+    /*case SELECT_CURRENT_AGENT :
       return state
         .set('loading', false)
         .set('error', false)
-        .set('currentAgent', action.agent);
+        .set('currentAgent', action.agent);*/
+    case LOAD_CURRENT_AGENT:
+      return state
+        .set('loading', true)
+        .set('error', false);
     case LOAD_CURRENT_AGENT_SUCCESS:
       return state
         .set('loading', false)
@@ -185,11 +190,6 @@ function appReducer(state = initialState, action) {
     case CREATE_WEBHOOK:
       return state
         .set('loading', true)
-        .set('error', false);
-    case CREATE_WEBHOOK_SUCCESS:
-      return state
-        .set('loading', false)
-        .set('success', true)
         .set('error', false);
     case CREATE_WEBHOOK_ERROR:
       return state
@@ -389,6 +389,11 @@ function appReducer(state = initialState, action) {
         .set('error', false)
         .set('success', true);
     case UPDATE_SCENARIO_ERROR:
+      return state
+        .set('error', action.error)
+        .set('success', false)
+        .set('loading', false);
+    case UPDATE_WEBHOOK_ERROR:
       return state
         .set('error', action.error)
         .set('success', false)

@@ -24,7 +24,7 @@ import { makeSelectCurrentAgent } from '../App/selectors';
 export function* getAgentDomains(payload) {
   const { api, agentId } = payload;
   try {
-    const response = yield call(api.agent.getAgentIdDomain, { id: agentId.split('~')[0] });// TODO: Remove this notation
+    const response = yield call(api.agent.getAgentIdDomain, { id: agentId.toString().split('~')[0] });// TODO: Remove this notation
     yield put(agentDomainsLoaded(response.obj));
   } catch ({ response, ...rest }) {
     yield put(agentDomainsLoadingError({ message: response.obj.message }));

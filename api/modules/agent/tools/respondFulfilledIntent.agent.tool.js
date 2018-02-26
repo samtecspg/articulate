@@ -24,7 +24,7 @@ module.exports = (conversationStateObject, callback) => {
                 return callback(null, { textResponse: webhookResponse.textResponse });
             }
             const textResponse = getTextResponse(conversationStateObject, webhookResponse);
-            return callback(null, Object.assign(webhookResponse, { textResponse }));
+            return callback(null, Object.assign( { webhookResponse }, { textResponse }));
         });
     }
     else {

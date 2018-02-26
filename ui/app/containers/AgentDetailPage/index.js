@@ -2,6 +2,13 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/xml';
+import 'brace/mode/json';
+import 'brace/theme/terminal';
+
 import {
   Button,
   Col,
@@ -15,10 +22,12 @@ import DeleteModal from '../../components/DeleteModal';
 import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
+import ContentSubHeader from '../../components/ContentSubHeader';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 import InputLabel from '../../components/InputLabel';
 import EditDeleteButton from '../../components/EditDeleteButton';
+import Toggle from '../../components/Toggle';
 
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
@@ -27,15 +36,16 @@ import Responses from './Components/Responses';
 
 import {
   deleteAgent,
-  loadCurrentAgent
 } from '../App/actions';
 import {
-  makeSelectCurrentAgent,
   makeSelectError,
   makeSelectLoading,
+  makeSelectCurrentAgent,
 } from '../App/selectors';
 
 import messages from './messages';
+import { makeSelectAgentData, makeSelectWebhookData } from './selectors';
+import { loadAgent, loadWebhook } from './actions';
 
 export class AgentDetailPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -48,12 +58,24 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
 
   state = {
     deleteModalOpen: false,
+    webhookLoaded: false,
   };
 
   componentWillMount() {
-    const { currentAgent } = this.props;
+    const { currentAgent, agent } = this.props;
     if (!currentAgent) {
       this.props.onComponentWillMount(this.props.params.id);
+    }
+    else {
+      if (currentAgent.id !== agent.id){
+        this.props.onComponentWillMount(this.props.params.id);
+      }
+      else{
+        if (!this.state.webhookLoaded){
+          const justWebhook = true;
+          this.props.onComponentWillMount(this.props.params.id, justWebhook);
+        }
+      }
     }
   }
 
@@ -83,7 +105,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
   }
 
   render() {
-    const { loading, error, currentAgent } = this.props;
+    const { loading, error, currentAgent, webhook } = this.props;
     const agentProps = {
       loading,
       error,
@@ -136,13 +158,13 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             <Form>
               <FormTextInput
                 label={messages.agentName}
-                defaultValue={currentAgent.agentName}
+                value={currentAgent.agentName}
                 disabled
               />
               <FormTextInput
                 label={messages.description}
                 placeholder={messages.descriptionPlaceholder.defaultMessage}
-                defaultValue={currentAgent.description}
+                value={currentAgent.description}
                 disabled
               />
               {/*<FormTextInput
@@ -153,18 +175,13 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               <FormTextInput
                 s={6}
                 label={messages.language}
-                defaultValue={currentAgent.language}
+                value={currentAgent.language}
                 disabled
               />
               <FormTextInput
                 s={6}
                 label={messages.timezone}
-                defaultValue={currentAgent.timezone}
-                disabled
-              />
-              <FormTextInput
-                label={messages.webhookUrl}
-                defaultValue={currentAgent.webhookUrl}
+                value={currentAgent.timezone}
                 disabled
               />
             </Form>
@@ -199,6 +216,55 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             </TableContainer>
             : null
           }
+
+          {
+            currentAgent.useWebhook ? <ContentSubHeader title={messages.webhook} /> : null
+          }
+          {
+            currentAgent.useWebhook ?
+              <Form style={{marginTop: '0px'}}>
+                <Row>
+                  <FormTextInput
+                    s={2}
+                    label={messages.webhookVerb}
+                    value={webhook.webhookVerb}
+                    disabled
+                  />
+                  <FormTextInput
+                    label={messages.webhookUrl}
+                    value={webhook.webhookUrl}
+                    s={8}
+                    disabled
+                  />
+                  <FormTextInput
+                    s={2}
+                    label={messages.webhookPayloadType}
+                    value={webhook.webhookPayloadType}
+                    disabled
+                  />
+                  {webhook.webhookPayloadType !== 'None' ?
+                  (<AceEditor
+                    width="100%"
+                    height="250px"
+                    mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                    theme="terminal"
+                    name="webhookPayload"
+                    readOnly={true}
+                    onLoad={this.onLoad}
+                    fontSize={14}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={webhook.webhookPayload}
+                    setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                    }}/>) : null}
+                </Row>
+              </Form>
+            : null
+          }
         </Content>
         <DeleteModal
           isOpen={this.state.deleteModalOpen}
@@ -227,7 +293,12 @@ AgentDetailPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentWillMount: (id) => dispatch(loadCurrentAgent(id)),
+    onComponentWillMount: (id, justWebhook) => {
+      if (!justWebhook){
+        dispatch(loadAgent(id));
+      }
+      dispatch(loadWebhook(id));
+    },
     onDeleteAgent: (agent) => dispatch(deleteAgent(agent.id)),
     onChangeUrl: (url) => dispatch(push(url)),
   };
@@ -237,6 +308,8 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
   currentAgent: makeSelectCurrentAgent(),
+  agent: makeSelectAgentData(),
+  webhook: makeSelectWebhookData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentDetailPage);

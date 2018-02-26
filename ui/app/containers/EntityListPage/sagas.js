@@ -27,7 +27,7 @@ import { makeSelectCurrentAgent } from '../App/selectors';
 export function* getAgentEntities(payload) {
   const { api, agentId } = payload;
   try {
-    const response = yield call(api.agent.getAgentIdEntity, { id: agentId.split('~')[0] }); // TODO: Remove this notation
+    const response = yield call(api.agent.getAgentIdEntity, { id: agentId.toString().split('~')[0] }); // TODO: Remove this notation
     const agentEntities = response.obj;
     yield put(agentEntitiesLoaded(agentEntities));
     const entityResponse = yield agentEntities.map(entity => {

@@ -10,8 +10,8 @@ import { createStructuredSelector } from 'reselect';
 
 import {
   resetCurrentAgent,
-  selectCurrentAgent,
   loadAgents,
+  loadCurrentAgent,
 } from '../../containers/App/actions';
 import {
   makeSelectAgents,
@@ -36,7 +36,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
   onSelectAgent(evt) {
     const agentId = evt.target.value;
     if (agentId !== '-1') {
-      const agent = this.props.agents.find((a) => a.id === agentId);
+      const agent = this.props.agents.find((a) => a.id === parseInt(agentId));
       this.props.onChangeCurrentAgent(agent);
       browserHistory.push(`/agent/${agent.id}`);
     } else {
@@ -92,12 +92,6 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
             <li>
               <Link to="/entities" activeClassName={'selected'}><img src={entity} alt="" /><span>Entity</span></Link>
             </li>
-            <li>
-              <div className="divider" />
-            </li>
-            <li>
-              <Link to="/webhooks/create" activeClassName={'selected'}><img src={webhook} alt="" /><span>Webhooks</span></Link>
-            </li>
           </ul>
 
           <ul className="bottom-nav">
@@ -128,7 +122,7 @@ NavSideBar.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeCurrentAgent: (agent) => {
-      return agent ? dispatch(selectCurrentAgent(agent)) : dispatch(resetCurrentAgent());
+      return agent ? dispatch(loadCurrentAgent(agent.id)) : dispatch(resetCurrentAgent());
     },
     onChangeUrl: (url) => dispatch(push(url)),
     onComponentMounted: () => dispatch(loadAgents()),

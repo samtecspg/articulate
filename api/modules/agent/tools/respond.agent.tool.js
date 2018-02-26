@@ -191,7 +191,7 @@ module.exports = (server, conversationStateObject, callback) => {
                     if (err) {
                         return callback(err);
                     }
-                    return callback(response);
+                    return callback(null, response);
                 });
             });
         }
@@ -216,7 +216,7 @@ module.exports = (server, conversationStateObject, callback) => {
                         if (err) {
                             return callback(err);
                         }
-                        return callback(response);
+                        return callback(null, response);
                     });
                 });
             }
@@ -237,7 +237,7 @@ module.exports = (server, conversationStateObject, callback) => {
                                     if (err) {
                                         return callback(err);
                                     }
-                                    return callback(response);
+                                    return callback(null, response);
                                 });
                             });
                         }
@@ -258,7 +258,7 @@ module.exports = (server, conversationStateObject, callback) => {
                                         if (err) {
                                             return callback(err);
                                         }
-                                        return callback(response);
+                                        return callback(null, response);
                                     });
                                 });
                             }

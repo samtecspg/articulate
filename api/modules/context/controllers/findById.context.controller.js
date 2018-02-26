@@ -33,7 +33,7 @@ module.exports = (request, reply) => {
                         return callback(error);
                     }
                     if (data){
-                        return callback(null, Flat.unflatten(data));
+                        return callback(null, Cast(Flat.unflatten(data), 'context'));
                     }
                     const error = Boom.notFound(`The context ${contextId} doesn\'t exists`);
                     return callback(error);
@@ -51,10 +51,6 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
-        result = result.map((context) => {
-
-            return Cast(result, 'context');
-        });
         return reply(result);
     });
 };

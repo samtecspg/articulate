@@ -20,6 +20,7 @@ import {
   deleteDomain,
   loadAgentDomains,
   resetAgentDomains,
+  resetStatusFlags,
 } from '../../containers/App/actions';
 import {
   makeSelectAgentDomains,
@@ -170,6 +171,7 @@ DomainListPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onComponentWillUpdate: (agent) => {
+      dispatch(resetStatusFlags());
       agent ? dispatch(loadAgentDomains(agent.id)) : dispatch(resetAgentDomains());
     },
     onChangeUrl: (url) => dispatch(push(url)),

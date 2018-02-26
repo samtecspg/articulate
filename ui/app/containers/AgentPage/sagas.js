@@ -14,9 +14,12 @@ import { makeSelectAgentData } from '../AgentPage/selectors';
 import {
   agentCreated,
   agentCreationError,
-  selectCurrentAgent,
+  webhookCreationError,
+  //selectCurrentAgent,
   updateAgentError,
-  updateAgentSuccess
+  updateAgentSuccess,
+  updateWebhookError,
+  loadCurrentAgent,
 } from '../App/actions';
 
 import {
@@ -27,9 +30,27 @@ import { getAgents } from '../App/sagas';
 import { makeSelectInWizard } from '../App/selectors';
 import {
   loadAgentError,
-  loadAgentSuccess
+  loadAgentSuccess,
+  loadWebhookError,
+  loadWebhookSuccess,
 } from './actions';
-import { LOAD_AGENT } from './constants';
+import { LOAD_AGENT, LOAD_WEBHOOK } from './constants';
+import { makeSelectWebhookData } from './selectors';
+
+function* postWebhook(payload) {
+  const { api, id } = payload;
+  const webhookData = yield select(makeSelectWebhookData());
+  if (webhookData.webhookPayload === ''){
+    delete webhookData.webhookPayload;
+  }
+
+  try {
+    yield call(api.agent.postAgentIdWebhook, { id, body: webhookData });
+  } catch ({ response }) {
+    yield put(webhookCreationError({ message: response.obj.message }));
+    throw response;
+  }
+}
 
 export function* postAgent(payload) {
   const { api } = payload;
@@ -39,9 +60,12 @@ export function* postAgent(payload) {
   try {
     const response = yield call(api.agent.postAgent, { body: agentData });
     const agent = response.obj;
+    if (agent.useWebhook){
+      yield call(postWebhook, { api, id: agent.id });
+    }
     yield put(agentCreated(agent));
     yield call(getAgents, { api });
-    yield put(selectCurrentAgent(agent));
+    //yield put(loadCurrentAgent(agent.id));
     if (inWizard) {
       yield put(push('/wizard/domain'));
     }
@@ -60,6 +84,20 @@ export function* createAgent() {
   yield cancel(watcher);
 }
 
+function* putWebhook(payload) {
+  const { api, id } = payload;
+  const webhookData = yield select(makeSelectWebhookData());
+  delete webhookData.id;
+  delete webhookData.agent;
+  try {
+    const response = yield call(api.agent.putAgentIdWebhook, { id, body: webhookData });
+    const webhook = response.obj;
+  } catch ({ response }) {
+    yield put(updateWebhookError({ message: response.obj.message }));
+    throw response;
+  }
+}
+
 export function* putAgent(payload) {
   const { api } = payload;
   const agentData = yield select(makeSelectAgentData());
@@ -69,9 +107,12 @@ export function* putAgent(payload) {
   try {
     const response = yield call(api.agent.putAgentId, { id, body: data });
     const agent = response.obj;
+    if (agent.useWebhook){
+      yield call(putWebhook, { api, id: agent.id });
+    }
     yield put(updateAgentSuccess(agent));
     yield call(getAgents, { api });
-    yield put(selectCurrentAgent(agent));
+    yield put(loadCurrentAgent(agent.id));
     yield put(push('/domains'));
   } catch ({ response }) {
     yield put(updateAgentError({ message: response.obj.message }));
@@ -83,6 +124,17 @@ export function* updateAgent() {
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
+}
+
+export function* getWebhook(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.agent.getAgentIdWebhook, { id });
+    const webhook = response.obj;
+    yield put(loadWebhookSuccess(webhook));
+  } catch ({ response }) {
+    yield put(loadWebhookError({ message: response.obj.message }));
+  }
 }
 
 export function* getAgent(payload) {
@@ -105,9 +157,18 @@ export function* loadAgent() {
   yield cancel(watcher);
 }
 
+export function* loadWebhook() {
+  const watcher = yield takeLatest(LOAD_WEBHOOK, getWebhook);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 // Bootstrap sagas
 export default [
   createAgent,
   loadAgent,
+  loadWebhook,
   updateAgent,
 ];

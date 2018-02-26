@@ -76,6 +76,7 @@ import {
   UPDATE_INTENT_SUCCESS,
   UPDATE_SCENARIO_ERROR,
   UPDATE_SCENARIO_SUCCESS,
+  UPDATE_WEBHOOK_ERROR,
 } from './constants';
 
 export function loadAgents() {
@@ -92,12 +93,12 @@ export function agentsLoaded(data) {
   };
 }
 
-export function selectCurrentAgent(agent) {
+/*export function selectCurrentAgent(agent) {
   return {
     type: SELECT_CURRENT_AGENT,
     agent,
   };
-}
+}*/
 
 export function loadCurrentAgentError(error) {
   return {
@@ -234,17 +235,16 @@ export function createWebhook() {
   };
 }
 
-export function webhookCreated(data, id) {
-  return {
-    type: CREATE_WEBHOOK_SUCCESS,
-    data,
-    id,
-  };
-}
-
 export function webhookCreationError(error) {
   return {
     type: CREATE_WEBHOOK_ERROR,
+    error,
+  };
+}
+
+export function updateWebhookError(error) {
+  return {
+    type: UPDATE_WEBHOOK_ERROR,
     error,
   };
 }
