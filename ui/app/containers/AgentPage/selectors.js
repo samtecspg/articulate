@@ -16,6 +16,16 @@ const makeSelectWebhookData = () => createSelector(
   (agentState) => agentState.webhookData,
 );
 
+const makeSelectOldAgentData = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.oldAgentData,
+);
+
+const makeSelectOldWebhookData = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.oldWebhookData,
+);
+
 const makeSelectTouched = () => createSelector(
   selectAgent,
   (agentState) => agentState.touched,
@@ -25,5 +35,7 @@ export {
   selectAgent,
   makeSelectAgentData,
   makeSelectWebhookData,
+  makeSelectOldAgentData,
+  makeSelectOldWebhookData,
   makeSelectTouched,
 };

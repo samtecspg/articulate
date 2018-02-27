@@ -351,8 +351,7 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('success', true)
-        .set('currentAgent', action.agent);
+        .set('success', true);
     case UPDATE_AGENT_ERROR:
       return state
         .set('error', action.error)

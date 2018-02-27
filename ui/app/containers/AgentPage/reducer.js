@@ -36,6 +36,8 @@ const initialState = Immutable({
   },
   oldPayloadJSON: '',
   oldPayloadXML: '',
+  oldAgentData: null,
+  oldWebhookData: null,
   touched: false,
 });
 
@@ -109,7 +111,8 @@ function agentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('agentData', action.agent);
+        .set('agentData', action.agent)
+        .set('oldAgentData', action.agent);
     case LOAD_AGENT_ERROR:
       return state
         .set('error', action.error)
@@ -122,7 +125,8 @@ function agentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('webhookData', action.webhook);
+        .set('webhookData', action.webhook)
+        .set('oldWebhookData', action.webhook);
     case LOAD_WEBHOOK_ERROR:
       return state
         .set('error', action.error)

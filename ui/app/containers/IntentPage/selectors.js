@@ -7,11 +7,6 @@ const makeSelectIntentData = () => createSelector(
   (intentState) => intentState.intentData,
 );
 
-const makeSelectWindowSelection = () => createSelector(
-  selectIntent,
-  (intentState) => intentState.windowSelection,
-);
-
 const makeSelectScenarioData = () => createSelector(
   selectIntent,
   (scenarioState) => scenarioState.scenarioData,
@@ -20,6 +15,26 @@ const makeSelectScenarioData = () => createSelector(
 const makeSelectWebhookData = () => createSelector(
   selectIntent,
   (scenarioState) => scenarioState.webhookData,
+);
+
+const makeSelectOldIntentData = () => createSelector(
+  selectIntent,
+  (intentState) => intentState.oldIntent,
+);
+
+const makeSelectOldScenarioData = () => createSelector(
+  selectIntent,
+  (scenarioState) => scenarioState.oldScenario,
+);
+
+const makeSelectOldWebhookData = () => createSelector(
+  selectIntent,
+  (scenarioState) => scenarioState.oldWebhook,
+);
+
+const makeSelectWindowSelection = () => createSelector(
+  selectIntent,
+  (intentState) => intentState.windowSelection,
 );
 
 const makeSelectTouched = () => createSelector(
@@ -33,5 +48,8 @@ export {
   makeSelectIntentData,
   makeSelectScenarioData,
   makeSelectWebhookData,
+  makeSelectOldIntentData,
+  makeSelectOldScenarioData,
+  makeSelectOldWebhookData,
   makeSelectTouched,
 };

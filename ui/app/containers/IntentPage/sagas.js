@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
   LOCATION_CHANGE,
   push
@@ -46,8 +48,11 @@ import {
 } from './constants';
 import {
   makeSelectIntentData,
+  makeSelectOldIntentData,
   makeSelectScenarioData,
+  makeSelectOldScenarioData,
   makeSelectWebhookData,
+  makeSelectOldWebhookData,
 } from './selectors';
 
 function* postWebhook(payload) {
@@ -129,31 +134,40 @@ export function* loadAgentEntities() {
 function* putWebhook(payload) {
   const { api, id } = payload;
   const webhookData = yield select(makeSelectWebhookData());
-  delete webhookData.id;
-  delete webhookData.agent;
-  delete scenarioData.domain;
-  delete scenarioData.intent;
+  const oldWebhookData = yield select(makeSelectOldWebhookData());
   try {
-    const response = yield call(api.agent.putAgentIdWebhook, { id, body: webhookData });
-    const webhook = response.obj;
+    if (!_.isEqual(webhookData, oldWebhookData)){
+      const { agent, domain, intent, ...data } = webhookData;
+      delete data.id;
+      yield call(api.intent.putIntentIdWebhook, { id, body: data });
+    }
   } catch ({ response }) {
     yield put(updateWebhookError({ message: response.obj.message }));
     throw response;
   }
 }
 
+function* deleteWebhook(payload) {
+  const { api, id } = payload;
+  try {
+    yield call(api.intent.deleteIntentIdWebhook, { id });
+  } catch ({ response }) {
+    yield put(updateWebhookError({ message: response.obj.message }));
+    throw response;
+  }
+}
 
 function* putScenario(payload) {
-  const { api, id, name } = payload;
+  const { api, id } = payload;
   const scenarioData = yield select(makeSelectScenarioData());
-  delete scenarioData.id;
-  delete scenarioData.agent;
-  delete scenarioData.domain;
-  delete scenarioData.intent;
+  const oldScenarioData = yield select(makeSelectOldScenarioData());
   try {
-    const response = yield call(api.intent.putIntentIdScenario, { id, body: scenarioData });
-    const scenario = response.obj;
-    yield put(updateScenarioSuccess(scenario));
+    if (!_.isEqual(scenarioData, oldScenarioData)){
+      const { agent, domain, intent, ...data } = scenarioData;
+      delete data.id;
+      yield call(api.intent.putIntentIdScenario, { id, body: data });
+    }
+    yield put(updateScenarioSuccess());
   } catch ({ response }) {
     yield put(updateScenarioError({ message: response.obj.message }));
     throw response;
@@ -163,20 +177,27 @@ function* putScenario(payload) {
 export function* putIntent(payload) {
   const { api } = payload;
   const intentData = yield select(makeSelectIntentData());
-  const { id, ...data } = intentData;
-  delete data.agent;
-  delete data.domain;
-  data.examples = data.examples.map((example) => {
-    if (example.entities === '') {
-      example.entities = [];
-    }
-    return example;
-  });
+  const oldIntentData = yield select(makeSelectOldIntentData());
   try {
-    const response = yield call(api.intent.putIntentId, { id, body: data });
-    const intent = response.obj;
-    yield put(updateIntentSuccess(intent));
-    yield call(putScenario, { api, id: intent.id, name: intent.intentName });
+    if (!_.isEqual(intentData, oldIntentData)){
+      const { id, agent, domain, ...data } = intentData;
+      yield call(api.intent.putIntentId, { id, body: data });
+    }
+    yield put(updateIntentSuccess());
+    yield call(putScenario, { api, id: intentData.id });
+    if (oldIntentData.useWebhook){
+      if (intentData.useWebhook){
+        yield call(putWebhook, { api, id: intentData.id });
+      }
+      else {
+        yield call(deleteWebhook, {api, id: intentData.id});
+      }
+    }
+    else {
+      if (intentData.useWebhook){
+        yield call(postWebhook, { api, id: intentData.id });
+      }
+    }
     yield put(push('/intents'));
   } catch ({ response }) {
     yield put(updateIntentError({ message: response.obj.message }));

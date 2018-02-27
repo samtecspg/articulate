@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
   LOCATION_CHANGE,
   push
@@ -10,7 +12,7 @@ import {
   take,
   takeLatest,
 } from 'redux-saga/effects';
-import { makeSelectAgentData } from '../AgentPage/selectors';
+import { makeSelectAgentData, makeSelectOldWebhookData, makeSelectOldAgentData } from '../AgentPage/selectors';
 import {
   agentCreated,
   agentCreationError,
@@ -84,11 +86,23 @@ export function* createAgent() {
 function* putWebhook(payload) {
   const { api, id } = payload;
   const webhookData = yield select(makeSelectWebhookData());
-  delete webhookData.id;
-  delete webhookData.agent;
+  const oldWebhookData = yield select(makeSelectOldWebhookData());
+  const {agent, ...data} = webhookData;
+  delete data.id;
   try {
-    const response = yield call(api.agent.putAgentIdWebhook, { id, body: webhookData });
-    const webhook = response.obj;
+    if (!_.isEqual(webhookData, oldWebhookData)){
+      yield call(api.agent.putAgentIdWebhook, { id, body: data });
+    }
+  } catch ({ response }) {
+    yield put(updateWebhookError({ message: response.obj.message }));
+    throw response;
+  }
+}
+
+function* deleteWebhook(payload) {
+  const { api, id } = payload;
+  try {
+    yield call(api.agent.deleteAgentIdWebhook, { id });
   } catch ({ response }) {
     yield put(updateWebhookError({ message: response.obj.message }));
     throw response;
@@ -98,19 +112,29 @@ function* putWebhook(payload) {
 export function* putAgent(payload) {
   const { api } = payload;
   const agentData = yield select(makeSelectAgentData());
+  const oldAgentData = yield select(makeSelectOldAgentData());
   const updatedData = agentData.updateIn(['domainClassifierThreshold'], domainClassifierThreshold => domainClassifierThreshold / 100);
-
   const { id, ...data } = updatedData;
-
   try {
-    const response = yield call(api.agent.putAgentId, { id, body: data });
-    const agent = response.obj;
-    if (agent.useWebhook){
-      yield call(putWebhook, { api, id: agent.id });
+    if (!_.isEqual(agentData, oldAgentData)){
+      yield call(api.agent.putAgentId, { id, body: data });
     }
-    yield put(updateAgentSuccess(agent));
+    if (oldAgentData.useWebhook){
+      if (agentData.useWebhook){
+        yield call(putWebhook, { api, id: agentData.id });
+      }
+      else {
+        yield call(deleteWebhook, {api, id: agentData.id});
+      }
+    }
+    else {
+      if (agentData.useWebhook){
+        yield call(postWebhook, { api, id: agentData.id });
+      }
+    }
+    yield put(updateAgentSuccess());
     yield call(getAgents, { api });
-    yield put(loadCurrentAgent(agent.id));
+    yield put(loadCurrentAgent(agentData.id));
     yield put(push('/domains'));
   } catch ({ response }) {
     yield put(updateAgentError({ message: response.obj.message }));

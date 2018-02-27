@@ -487,10 +487,9 @@ export function updateAgentError(error) {
   };
 }
 
-export function updateAgentSuccess(agent) {
+export function updateAgentSuccess() {
   return {
     type: UPDATE_AGENT_SUCCESS,
-    agent,
   };
 }
 
@@ -529,10 +528,9 @@ export function updateIntentError(error) {
   };
 }
 
-export function updateIntentSuccess(intent) {
+export function updateIntentSuccess() {
   return {
     type: UPDATE_INTENT_SUCCESS,
-    intent,
   };
 }
 
@@ -550,10 +548,9 @@ export function updateScenarioError(error) {
   };
 }
 
-export function updateScenarioSuccess(scenario) {
+export function updateScenarioSuccess() {
   return {
     type: UPDATE_SCENARIO_SUCCESS,
-    scenario,
   };
 }
 

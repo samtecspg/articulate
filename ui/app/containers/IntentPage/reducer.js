@@ -53,6 +53,9 @@ const initialState = Immutable({
     webhookPayload: '',
   },
   touched: false,
+  oldIntent: null,
+  oldScenario: null,
+  oldWebhook: null,
 });
 
 function intentReducer(state = initialState, action) {
@@ -238,6 +241,7 @@ function intentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
+        .set('oldIntent', action.intent)
         .set('intentData', action.intent);
     case LOAD_INTENT_ERROR:
       return state
@@ -251,6 +255,7 @@ function intentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
+        .set('oldScenario', action.scenario)
         .set('scenarioData', action.scenario);
     case LOAD_SCENARIO_ERROR:
       return state
@@ -264,6 +269,7 @@ function intentReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
+        .set('oldWebhook', action.webhook)
         .set('webhookData', action.webhook);
     case LOAD_WEBHOOK_ERROR:
       return state

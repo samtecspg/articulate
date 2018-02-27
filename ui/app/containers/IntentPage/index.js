@@ -78,6 +78,7 @@ import {
   makeSelectTouched,
   makeSelectWindowSelection,
   makeSelectWebhookData,
+  makeSelectOldIntentData,
 } from './selectors';
 
 const returnFormattedOptions = (options) => options.map((option, index) => (
@@ -284,14 +285,13 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, success, intent, scenario, webhook, agentDomains, agentEntities, currentAgent } = this.props;
+    const { loading, error, success, intent, webhook, agentDomains, agentEntities, currentAgent } = this.props;
     if (_.isNil(agentDomains) && _.isNil(agentEntities)) return undefined;
     const intentProps = {
       loading,
       error,
       success,
       intent,
-      scenario,
     };
 
     let domainsSelect = [];
@@ -558,7 +558,7 @@ IntentPage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  scenario: React.PropTypes.oneOfType([
+  scenarioData: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
@@ -681,9 +681,9 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   intent: makeSelectIntentData(),
-  scenario: makeSelectScenario(),
-  webhook: makeSelectWebhookData(),
+  oldIntent: makeSelectOldIntentData(),
   scenarioData: makeSelectScenarioData(),
+  webhook: makeSelectWebhookData(),
   windowSelection: makeSelectWindowSelection(),
   loading: makeSelectLoading(),
   touched: makeSelectTouched(),
