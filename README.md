@@ -15,7 +15,7 @@ Documentation coming soon!
 
 2. Download the current release: https://github.com/samtecspg/articulate/releases/download/v0.5.1/articulate-0.5.1.zip
 
-3. Unzip and get a terinal or CMD in the release directory
+3. Unzip and get a terminal or CMD in the release directory
 
 4. run `docker-compose up` (`sudo` might be needed)
 
