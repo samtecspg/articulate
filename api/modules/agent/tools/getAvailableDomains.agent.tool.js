@@ -37,6 +37,7 @@ module.exports = (server, redis, agentId, cb) => {
 
             agentName = domains[0].agent;
             const formattedDomains = [];
+            const haveIntents = true;
             Async.each(domains, (domain, callbackFormatDomain) => {
 
                 const domainName = domain.domainName;
@@ -49,9 +50,13 @@ module.exports = (server, redis, agentId, cb) => {
                             const error = Boom.create(res.statusCode, `An error occurred getting the list of intents of the domain ${domain.domainName}`);
                             return callbackFormatDomain(error);
                         }
-                        const formattedDomain = { name: domainName, model: modelFolderName, justER, intent: res.result[0].intentName };
-                        formattedDomains.push(formattedDomain);
-                        return callbackFormatDomain(null);
+                        if (res.result.length > 0){
+                            const formattedDomain = { name: domainName, model: modelFolderName, justER, intent: res.result[0].intentName };
+                            formattedDomains.push(formattedDomain);
+                            return callbackFormatDomain(null);
+                        }
+                        const error = Boom.badRequest('There doesn\'t exists trained models for the domains of this agent. Please train models for the existing domains and try again');
+                        return callbackFormatDomains(error, null);
                     });
                 }
                 else {

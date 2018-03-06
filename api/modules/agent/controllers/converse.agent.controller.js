@@ -35,7 +35,7 @@ module.exports = (request, reply) => {
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return cb(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, 'An error occurred parsing the document');
+                            const error = Boom.create(res.statusCode, res.result.message);
                             return cb(error, null);
                         }
                         return cb(null, res.result.result.results);
