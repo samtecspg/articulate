@@ -10,7 +10,7 @@ export function NewExampleRow(props) {
       <td style={{ width: '30%', display: 'inline-block' }}>
         <TextInput
           placeholder={messages.examplePlaceholder.defaultMessage}
-          inputId="newExample"
+          id="newExample"
           onKeyPress={props.addExampleFunction}
         />
       </td>

@@ -45,7 +45,7 @@ function entityReducer(state = initialState, action) {
       return initialState;
     case REMOVE_EXAMPLE:
       return state
-        .updateIn(['entityData', 'examples'], examples => examples.filter(example => example !== action.example))
+        .updateIn(['entityData', 'examples'], examples => examples.filter(example => example.value !== action.example))
         .set('touched', true);
     case ADD_EXAMPLE:
       return state
@@ -73,7 +73,7 @@ function entityReducer(state = initialState, action) {
         })
         .set('touched', true);
     case SWITCH_COLOR_PICKER_DISPLAY:
-      return state.set('displayColorPicker', !state.get('displayColorPicker'));
+      return state.set('displayColorPicker', !state.displayColorPicker);
     case CLOSE_COLOR_PICKER:
       return state.set('displayColorPicker', false);
     case LOAD_ENTITY:

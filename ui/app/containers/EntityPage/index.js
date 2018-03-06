@@ -60,6 +60,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
   constructor() {
     super();
     this.onChangeInput = this.onChangeInput.bind(this);
+    this.onAddExample = this.onAddExample.bind(this);
     this.setEditMode = this.setEditMode.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
@@ -98,6 +99,11 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     this.props.onChangeEntityData(field, evt.target.value);
   }
 
+  onAddExample(evt){
+    this.scrollToBottom();
+    this.props.onAddExample(evt);
+  }
+
   componentDidUpdate(prevProps, prevState, prevContext) {
     if (this.props.route !== prevProps.route) {
       this.setEditMode(this.props.route.name === 'entityEdit');
@@ -114,11 +120,10 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
         position: 'bottom'
       });
     }
-    this.scrollToBottom();
   }
 
   scrollToBottom = () => {
-    this.lastExample.scrollIntoView(true);
+    this.lastExample.scrollIntoView({block: 'end', behavior: 'smooth'});
   };
 
   setEditMode(isEditMode) {
@@ -157,7 +162,6 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
 
   onLeave(){
     this.props.resetForm();
-    //this.props.router.push(this.state.nextRoute.pathname);
   }
 
   onDismiss(){
@@ -247,7 +251,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               />
               <Examples
                 examples={entity.examples}
-                addExampleFunction={this.props.onAddExample}
+                addExampleFunction={(evt) => {  this.onAddExample(evt) }}
                 removeExampleFunction={this.props.onRemoveExample}
                 removeSynonymFunction={this.props.onRemoveSynonym}
                 addSynonymFunction={this.props.onAddSynonym}
@@ -255,7 +259,6 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
             </Table>
           </TableContainer>
           <div
-            style={{ float: 'left', clear: 'both' }}
             ref={(el) => {
               this.lastExample = el;
             }}
