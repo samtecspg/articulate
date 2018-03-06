@@ -74,6 +74,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     clickedSave: false,
     waitingForConfirm: false,
     nextRoute: null,
+    lastExampleEdited: false,
   };
 
   componentDidMount() {
@@ -100,7 +101,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   onAddExample(evt){
-    this.scrollToBottom();
+    this.state.lastExampleEdited = true;
     this.props.onAddExample(evt);
   }
 
@@ -119,6 +120,10 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
       Alert.error(this.props.error.message, {
         position: 'bottom'
       });
+    }
+    if (this.state.lastExampleEdited){
+      this.state.lastExampleEdited = false;
+      this.scrollToBottom();
     }
   }
 
@@ -258,6 +263,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               />
             </Table>
           </TableContainer>
+          <br/>
           <div
             ref={(el) => {
               this.lastExample = el;
