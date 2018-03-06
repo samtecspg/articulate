@@ -20,10 +20,10 @@ export class WizardDomainPage extends React.PureComponent { // eslint-disable-li
 
     return (
       <div>
-        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} />
+        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} actionButtons={
+          <ActionButton label={messages.actionButton} onClick={this.props.onCreateAgent} />} />
         <Content>
           <ContentHeader title={messages.welcomeTitle} subTitle={messages.welcomeDescription} />
-          <ActionButton label={messages.actionButton} onClick={this.props.onCreateAgent} />
         </Content>
       </div>
     );

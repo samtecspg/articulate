@@ -20,11 +20,12 @@ export class WizardEntityIntentPage extends React.PureComponent { // eslint-disa
 
     return (
       <div>
-        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} />
+        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} actionButtons={[
+          <ActionButton key="btn_Entity" customStyle={{right:'500px'}} label={messages.actionButtonEntity} onClick={this.props.onCreateEntity} />,
+          <ActionButton key="btn_Intent" label={messages.actionButtonIntent} onClick={this.props.onCreateIntent} />
+          ]} />
         <Content>
           <ContentHeader title={messages.welcomeTitle} subTitle={messages.welcomeDescription} />
-          <ActionButton customStyle={{right:'500px'}} label={messages.actionButtonEntity} onClick={this.props.onCreateEntity} />
-          <ActionButton label={messages.actionButtonIntent} onClick={this.props.onCreateIntent} />
         </Content>
       </div>
     );

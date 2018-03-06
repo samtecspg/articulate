@@ -20,10 +20,10 @@ export class WizardIntentPage extends React.PureComponent { // eslint-disable-li
 
     return (
       <div>
-        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} />
+        <Header breadcrumbs={[{ label: 'Welcome: Getting Started' }]} actionButtons={
+          <ActionButton label={messages.actionButtonIntent} onClick={this.props.onCreateIntent} />} />
         <Content>
           <ContentHeader title={messages.welcomeTitle} subTitle={messages.welcomeDescription} />
-          <ActionButton label={messages.actionButtonIntent} onClick={this.props.onCreateIntent} />
         </Content>
       </div>
     );
