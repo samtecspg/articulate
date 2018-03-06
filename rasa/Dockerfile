@@ -50,6 +50,9 @@ RUN pip install https://github.com/explosion/spacy-models/releases/download/fr_c
 RUN pip install https://github.com/explosion/spacy-models/releases/download/es_core_news_md-2.0.0/es_core_news_md-2.0.0.tar.gz --no-cache-dir > /dev/null \
     && python -m spacy link es_core_news_md es
 
+RUN pip uninstall msgpack-python -y
+RUN pip install msgpack-python==0.5.2
+
 #only turn on if using mitie
 # RUN wget -P data/ https://s3-eu-west-1.amazonaws.com/mitie/total_word_feature_extractor.dat
 
