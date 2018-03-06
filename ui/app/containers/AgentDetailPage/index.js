@@ -105,6 +105,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
 
   render() {
     const { loading, error, currentAgent, webhook } = this.props;
+
     const agentProps = {
       loading,
       error,
@@ -221,10 +222,10 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
           }
 
           {
-            currentAgent.useWebhook ? <ContentSubHeader title={messages.webhook} /> : null
+            currentAgent.useWebhook && webhook.agent !== '' ? <ContentSubHeader title={messages.webhook} /> : null
           }
           {
-            currentAgent.useWebhook ?
+            currentAgent.useWebhook && webhook.agent !== '' ?
               <Form style={{marginTop: '0px'}}>
                 <Row>
                   <FormTextInput
