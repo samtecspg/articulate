@@ -22,7 +22,6 @@ import {
   LOAD_DOMAINS_INTENTS
 } from '../../containers/App/constants';
 import { getAgentDomains } from '../../containers/DomainListPage/sagas';
-import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getDomainIntents(payload) {
   const { api, domainId } = payload;
@@ -49,11 +48,11 @@ export function* deleteIntent() {
     try {
       yield call(api.intent.deleteIntentId, { id: intentId });
       yield put(deleteIntentSuccess());
-      if (currentFilter === 'domain'){
-        yield call(getDomainIntents, { api, filterId });
+      if (currentFilter === 'domain') {
+        yield call(getDomainIntents, { api, domainId: filterId });
       }
-      else{
-        yield call(getAgentIntents, { api, filterId });
+      else {
+        yield call(getAgentIntents, { api, agentId: filterId });
       }
     } catch ({ response }) {
       yield put(deleteIntentError({ message: response.obj.message }));
