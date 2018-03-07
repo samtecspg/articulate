@@ -178,13 +178,19 @@ export function* putIntent(payload) {
   const { api } = payload;
   const intentData = yield select(makeSelectIntentData());
   const oldIntentData = yield select(makeSelectOldIntentData());
+  const oldScenarioData = yield select(makeSelectOldScenarioData());
   try {
     if (!_.isEqual(intentData, oldIntentData)){
       const { id, agent, domain, ...data } = intentData;
       yield call(api.intent.putIntentId, { id, body: data });
     }
     yield put(updateIntentSuccess());
-    yield call(putScenario, { api, id: intentData.id });
+    if (oldScenarioData){
+      yield call(putScenario, { api, id: intentData.id });
+    }
+    else {
+      yield call(postScenario, { api, id: intentData.id });
+    }
     if (oldIntentData.useWebhook){
       if (intentData.useWebhook){
         yield call(putWebhook, { api, id: intentData.id });

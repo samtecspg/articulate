@@ -260,6 +260,7 @@ function intentReducer(state = initialState, action) {
     case LOAD_SCENARIO_ERROR:
       return state
         .set('error', action.error)
+        .set('oldScenario', null)
         .set('loading', false);
     case LOAD_WEBHOOK:
       return state
@@ -274,6 +275,7 @@ function intentReducer(state = initialState, action) {
     case LOAD_WEBHOOK_ERROR:
       return state
         .set('error', action.error)
+        .set('oldWebhook', null)
         .set('loading', false);
     default:
       return state;

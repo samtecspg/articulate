@@ -20,21 +20,19 @@ module.exports = (object, type) => {
             object.useWebhook = object.useWebhook === 'true';
             object.examples = object.examples.map((example) => {
 
-                if (example.entities){
-                    if (example.entities.length === 0){
-                        example.entities = [];
-                    }
-                    else {
-                        example.entities = example.entities.map((entity) => {
+                if (example.entities === ''){
+                    example.entities = [];
+                }
+                else {
+                    example.entities = example.entities.map((entity) => {
 
-                            if (entity.entityId){
-                                entity.entityId = parseInt(entity.entityId);
-                            }
-                            entity.start = parseInt(entity.start);
-                            entity.end = parseInt(entity.end);
-                            return entity;
-                        });
-                    }
+                        if (entity.entityId){
+                            entity.entityId = parseInt(entity.entityId);
+                        }
+                        entity.start = parseInt(entity.start);
+                        entity.end = parseInt(entity.end);
+                        return entity;
+                    });
                 }
                 return example;
             });
