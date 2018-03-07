@@ -41,8 +41,6 @@ module.exports = (object, type) => {
             });
             break;
         case 'scenario':
-            console.log(`cast:scenario::textPrompts`); // TODO: REMOVE!!!!
-            console.log(object); // TODO: REMOVE!!!!
             if (object.slots) {
                 if (object.slots.length === 0) {
                     object.slots = [];
