@@ -40,7 +40,7 @@ module.exports = (object, type) => {
             break;
         case 'scenario':
             if (object.slots) {
-                if (object.slots.length === 0) {
+                if (object.slots === '') {
                     object.slots = [];
                 }
                 else {

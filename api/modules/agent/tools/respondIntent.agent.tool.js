@@ -43,7 +43,7 @@ module.exports = (conversationStateObject, callback) => {
                         //Get the original and parsed value of the entity
                         const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text);
                         //Add these values to the context as a new slot
-                        conversationStateObject.context[context.length - 1].slots[slotName] = {
+                        conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = {
                             value: entityValue.value,
                             original: entityValue.original
                         };
@@ -95,7 +95,7 @@ module.exports = (conversationStateObject, callback) => {
                 //Check if it is a spacy or duckling system entity
                 if (recognizedEntity.entity.indexOf('sys.spacy_')  !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {
                     //If there is a dictionary of slots in the current context, use this dictionary, if not, create an empty dictionary of slots
-                    conversationStateObject.context[conversationStateObject.context.length - 1].slots = context[context.length - 1].slots ? conversationStateObject.context[conversationStateObject.context.length - 1].slots : {};
+                    conversationStateObject.context[conversationStateObject.context.length - 1].slots = conversationStateObject.context[conversationStateObject.context.length - 1].slots ? conversationStateObject.context[conversationStateObject.context.length - 1].slots : {};
                     //If in the current dictionary of slots exists a dictionary for system entities, use it, else create an empty dir for sys entities
                     conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys = conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys ? conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys : {};
                     //Add the recognized system entities to the dir of system entities in the slots dir of the current context
