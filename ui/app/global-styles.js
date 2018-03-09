@@ -262,8 +262,8 @@ injectGlobal`
       -webkit-box-shadow: none;
       box-shadow: none; }
 
-  .conversationInput {
-    width: 250px !important;
+  .conversation-input {
+    width: 180px !important;
     margin-bottom: 10px !important;
     margin-left: 15px !important;
   }
