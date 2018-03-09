@@ -10,6 +10,14 @@ export default defineMessages({
     defaultMessage: 'Intents are grouped user sayings with a similar purpose. For example a user may say, ' +
     '"I want to order a cheese pizza" and that may be labeled with an intent of "Order Pizza".',
   },
+  editIntentTitle: {
+    id: 'boilerplate.containers.IntentPage.create_intent.title',
+    defaultMessage: 'Editing the intent',
+  },
+  editIntentDescription: {
+    id: 'boilerplate.containers.IntentPage.create_intent.description',
+    defaultMessage: 'Please make the desired changes in your intent and click on the update button',
+  },
   agent: {
     id: 'boilerplate.containers.IntentPage.create_intent.agent',
     defaultMessage: 'Agent',

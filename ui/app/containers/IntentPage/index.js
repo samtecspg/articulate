@@ -310,7 +310,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         { label: 'Agent' },
         { link: `/agent/${currentAgent.id}`, label: `${currentAgent.agentName}` },
         { link: `/intents`, label: 'Intents' },
-        { label: '+ Create' }
+        { label: this.state.editMode ? 'Edit' : '+ Create' }
       ];
     }
     else {
@@ -324,9 +324,9 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           {intentProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
-          title="Create Intent"
+          title={this.state.editMode ? "Edit Intent" : "Create Intent"}
           meta={[
-            { name: 'description', content: 'Create an intent' },
+            { name: 'description', content: this.state.editMode ? 'Edit intent' : 'Create an intent' },
           ]}
         />
         <Header
@@ -335,7 +335,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         }
         />
         <Content>
-          <ContentHeader title={messages.createIntentTitle} subTitle={messages.createIntentDescription} />
+          <ContentHeader title={this.state.editMode ? messages.editIntentTitle : messages.createIntentTitle} subTitle={this.state.editMode ? messages.editIntentDescription : messages.createIntentDescription } />
           <Form>
             <Row>
               <Toggle
