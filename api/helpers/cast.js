@@ -39,20 +39,18 @@ module.exports = (object, type) => {
             });
             break;
         case 'scenario':
-            if (object.slots) {
-                if (object.slots === '') {
-                    object.slots = [];
-                }
-                else {
-                    object.slots = object.slots.map((slot) => {
-                        if (!_.isArray(slot.textPrompts)) slot.textPrompts = [];
-                        slot.isList = slot.isList === 'true';
-                        slot.isRequired = slot.isRequired === 'true';
-                        return slot;
-                    });
-                }
+            if (object.slots === '') {
+                object.slots = [];
             }
-            if (object.intentResponses) {
+            else {
+                object.slots = object.slots.map((slot) => {
+                    if (!_.isArray(slot.textPrompts)) slot.textPrompts = [];
+                    slot.isList = slot.isList === 'true';
+                    slot.isRequired = slot.isRequired === 'true';
+                    return slot;
+                });
+            }
+            if (object.intentResponses === '') {
                 if (object.intentResponses.length === 0) {
                     object.intentResponses = [];
                 }
