@@ -10,7 +10,7 @@ const getTextResponse = (conversationStateObject, webhookResponse) => {
         conversationStateObject = _.merge(conversationStateObject, webhookResponse);
     }
     const validResponses = BuildValidResponses(conversationStateObject, conversationStateObject.scenario.intentResponses);
-    const textResponse = validResponses[Math.floor(Math.random() * validResponses.length)];
+    const textResponse = validResponses.length > 0 ? validResponses[Math.floor(Math.random() * validResponses.length)].response : '';
     return textResponse;
 };
 

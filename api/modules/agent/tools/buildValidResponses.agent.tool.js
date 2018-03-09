@@ -7,13 +7,23 @@ module.exports = (conversationStateObject, responses) => {
 
     const buildedResponses = _.map(responses, (response) => {
 
+        const numberOfTemplatedValues = (response.match(/\{\{/g) ? response.match(/\{\{/g).length : 0) - (response.match(/\{\{\{/g) ? response.match(/\{\{\{/g).length : 0);
         const compiledResponse = Handlebars.compile(response, { strict: true });
         try {
-            return compiledResponse(conversationStateObject);
+            return { response: compiledResponse(conversationStateObject), numOfReplacements: numberOfTemplatedValues };
         }
         catch (error) {
             return null;
         }
     });
-    return _.compact(buildedResponses);
+    let parsedResponses = _.compact(buildedResponses);
+    if (parsedResponses.length > 0){
+        const maxNumberOfReplacements = _.max(_.map(parsedResponses, 'numOfReplacements'));
+        const selectedResponses = _.filter(parsedResponses, (response) => {
+
+            return response.numOfReplacements === maxNumberOfReplacements;
+        });
+        parsedResponses = selectedResponses;
+    }
+    return parsedResponses;
 };
