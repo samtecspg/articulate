@@ -2,12 +2,14 @@
 
 const _ = require('lodash');
 const Handlebars = require('handlebars');
+const registerHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
 
 module.exports = (conversationStateObject, responses) => {
 
+    registerHandlebarHelpers(Handlebars);
     const buildedResponses = _.map(responses, (response) => {
 
-        const numberOfTemplatedValues = (response.match(/\{\{/g) ? response.match(/\{\{/g).length : 0) - (response.match(/\{\{\{/g) ? response.match(/\{\{\{/g).length : 0);
+        const numberOfTemplatedValues = response.match(/\{\{/g) ? response.match(/\{\{/g).length : 0;
         const compiledResponse = Handlebars.compile(response, { strict: true });
         try {
             return { response: compiledResponse(conversationStateObject), numOfReplacements: numberOfTemplatedValues };
