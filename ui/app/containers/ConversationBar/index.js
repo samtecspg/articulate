@@ -104,7 +104,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
           <div id="form-section">
             <TestMessageInput
               menu={this.renderMenu()}
-              className="conversationInput"
+              className="conversation-input"
               placeholder={this.state.start && !this.state.stop ? messages.recordingPlaceholder.defaultMessage : messages.conversationPlaceholder.defaultMessage}
               inputId="intentName"
               onKeyPress={this.sendTextMessage}

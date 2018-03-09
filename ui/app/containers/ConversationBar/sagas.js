@@ -24,7 +24,6 @@ export function* postMessage(payload) {
     });
     yield put(converseRespond(response.obj));
   } catch ({ response }) {
-    console.error(response.obj.message);
     yield put(converseError());
   }
 }
