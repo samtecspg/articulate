@@ -51,7 +51,8 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     selectedDomain: undefined,
     deleteModalOpen: false,
     intentToDelete: undefined,
-    allIntentsLoaded: false,
+    intentsLoaded: false,
+    domainsLoaded: false,
   };
 
   componentWillMount() {
@@ -63,42 +64,45 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if (!this.props.currentAgent && !nextProps.currentAgent) return;
-
-    if (_.isEqual(this.props.currentAgent, nextProps.currentAgent)) {
-      if (!nextProps.agentDomains) return;
-      if (nextProps.agentDomains.length === 0) return;
-      const oDomainId = _.isEmpty(this.state.selectedDomain) ? undefined : this.state.selectedDomain.id;
-      const nDomainId = _.isEmpty(nextProps.location.query) ? undefined : nextProps.location.query.domainId;
-      if (nDomainId === undefined) {
-        if (this.state.allIntentsLoaded) return;
-        this.loadIntents(nextProps.currentAgent, nextProps.agentDomains);
-        return;
+    if (!nextProps.currentAgent) return; // No agent selected
+    if (!nextProps.agentDomains) { // Agent but no domains
+      return this.loadDomains(nextProps.currentAgent); //Load Domains
+    }
+    if (this.state.intentsLoaded) return; // Intents already loaded
+    const nDomainId = _.isEmpty(nextProps.location.query) ? undefined : nextProps.location.query.domainId;
+    if (nextProps.agentDomains) {
+      if (nDomainId) {
+        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains, nDomainId); //Load Domain Intents
+      } else {
+        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains); //Load All Intents
       }
-      if (_.isEqual(oDomainId, nDomainId)) return;
-      this.loadIntents(nextProps.currentAgent, nextProps.agentDomains, nDomainId);
-    } else {
-      this.loadDomains(nextProps.currentAgent);
     }
   }
 
   onSelectDomain(evt) {
     const url = `/intents${evt.target.value !== 'default' ? `?domainId=${evt.target.value}` : ''}`;
+    this.setState({
+      intentsLoaded: false,
+    });
     this.props.onChangeUrl(url);
   }
 
   loadDomains(agent) {
     if (!agent) return;
+    if (this.state.domainsLoaded) return;
+    this.setState({
+      domainsLoaded: true,
+    });
     this.props.onLoadDomains(agent);
   }
 
   loadIntents(agent, agentDomains, domainId) {
     if (!agent) return;
     if (!agentDomains || (agentDomains.length === 0)) return;
-    const domain = agentDomains.find((agentDomain) => agentDomain.id === domainId);
+    const domain = agentDomains.find((agentDomain) => agentDomain.id.toString() === domainId);
     this.setState({
+      intentsLoaded: true,
       selectedDomain: domain,
-      allIntentsLoaded: !domain
     });
     this.props.onLoadIntents(domain, agent);
   }
@@ -199,7 +203,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
                 type="select"
                 label={messages.domain.defaultMessage}
                 onChange={this.onSelectDomain}
-                value={this.state.selectedDomain ? this.state.selectedDomain.id : 'default'}
+                value={this.state.selectedDomain ? this.state.selectedDomain.id.toString() : 'default'}
               >
                 {this.renderDomainSelectOptions(domainsSelect)}
               </Input>
