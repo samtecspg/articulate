@@ -22,6 +22,7 @@ import {
   updateIntentSuccess,
   updateScenarioError,
   updateScenarioSuccess,
+  updateWebhookError,
 } from '../App/actions';
 import {
   CREATE_INTENT,
@@ -56,8 +57,13 @@ import {
 } from './selectors';
 
 function* postWebhook(payload) {
-  const { api, id } = payload;
-  const webhookData = yield select(makeSelectWebhookData());
+  const { api, id, intentData } = payload;
+  let webhookData = yield select(makeSelectWebhookData());
+  if (intentData){
+    webhookData = webhookData.set('agent', intentData.agent);
+    webhookData = webhookData.set('domain', intentData.domain);
+    webhookData = webhookData.set('intent', intentData.intentName);
+  }
 
   try {
     yield call(api.intent.postIntentIdWebhook, { id, body: webhookData });
@@ -68,8 +74,13 @@ function* postWebhook(payload) {
 }
 
 function* postScenario(payload) {
-  const { api, id } = payload;
+  const { api, id, intentData } = payload;
   const scenarioData = yield select(makeSelectScenarioData());
+  if (intentData){
+    scenarioData.agent = intentData.agent;
+    scenarioData.domain = intentData.domain;
+    scenarioData.intent = intentData.intentName;
+  }
 
   try {
     const response = yield call(api.intent.postIntentIdScenario, { id, body: scenarioData });
@@ -189,7 +200,7 @@ export function* putIntent(payload) {
       yield call(putScenario, { api, id: intentData.id });
     }
     else {
-      yield call(postScenario, { api, id: intentData.id });
+      yield call(postScenario, { api, id: intentData.id, intentData });
     }
     if (oldIntentData.useWebhook){
       if (intentData.useWebhook){
@@ -201,7 +212,7 @@ export function* putIntent(payload) {
     }
     else {
       if (intentData.useWebhook){
-        yield call(postWebhook, { api, id: intentData.id });
+        yield call(postWebhook, { api, id: intentData.id, intentData });
       }
     }
     yield put(push('/intents'));
