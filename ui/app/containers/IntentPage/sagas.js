@@ -75,11 +75,12 @@ function* postWebhook(payload) {
 
 function* postScenario(payload) {
   const { api, id, intentData } = payload;
-  const scenarioData = yield select(makeSelectScenarioData());
+  let scenarioData = yield select(makeSelectScenarioData());
   if (intentData){
-    scenarioData.agent = intentData.agent;
-    scenarioData.domain = intentData.domain;
-    scenarioData.intent = intentData.intentName;
+    scenarioData = scenarioData.set('agent', intentData.agent);
+    scenarioData = scenarioData.set('domain', intentData.domain);
+    scenarioData = scenarioData.set('intent', intentData.intentName);
+    scenarioData = scenarioData.set('scenarioName', intentData.intentName);
   }
 
   try {
