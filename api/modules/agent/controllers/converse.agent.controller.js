@@ -81,6 +81,14 @@ module.exports = (request, reply) => {
             conversationStateObject.text = text;
             conversationStateObject.sessionId = sessionId;
             conversationStateObject.timezone = timezoneToUse;
+            if (request.payload){
+                Object.keys(request.payload).forEach( (key) => {
+
+                    if (!conversationStateObject[key]){
+                        conversationStateObject[key] = request.payload[key];
+                    }
+                });
+            }
             AgentTools.respond(server, conversationStateObject, (err, result) => {
 
                 if (err){
