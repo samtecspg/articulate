@@ -87,6 +87,11 @@ module.exports = (request, reply) => {
                     if (!conversationStateObject[key]){
                         conversationStateObject[key] = request.payload[key];
                     }
+                    else {
+                        if (['text', 'timezone', 'sessionId'].indexOf(key) === -1){
+                            console.error(`POST value {{${key}}} overwritten by Articulate. {{${key}}} is a reserved keyword.`);
+                        }
+                    }
                 });
             }
             AgentTools.respond(server, conversationStateObject, (err, result) => {
