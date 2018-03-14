@@ -70,6 +70,16 @@ const getScenarioByName = (scenarioName, conversationStateObject) => {
     return scenario;
 };
 
+const getIntentByName = (intentName, conversationStateObject) => {
+
+    const agentIntents = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'intents')));
+    const intent = _.filter(agentIntents, (agentIntent) => {
+
+        return agentIntent.intentName === intentName;
+    })[0];
+    return intent;
+};
+
 const getDomainOfIntent = (conversationStateObject) => {
 
     if (conversationStateObject.intent) {
@@ -225,8 +235,8 @@ module.exports = (server, conversationStateObject, callback) => {
                 if (conversationStateObject.currentContext) {
                     if (recognizedEntities.length > 0) {
                         if (conversationStateObject.currentContext.slots && Object.keys(conversationStateObject.currentContext.slots).length > 0 && recognizedEntitiesArePartOfTheContext(conversationStateObject.currentContext, recognizedEntities)) {
-                            //Current context contains the intent and the slots that's why it is passed twice
                             conversationStateObject.scenario = getScenarioByName(conversationStateObject.currentContext.scenario, conversationStateObject);
+                            conversationStateObject.intent = getIntentByName(conversationStateObject.currentContext.name, conversationStateObject);
                             RespondIntent(conversationStateObject, (err, response) => {
 
                                 if (err) {
@@ -246,8 +256,8 @@ module.exports = (server, conversationStateObject, callback) => {
                             if (lastValidContext) {
                                 conversationStateObject.context.push(lastValidContext);
                                 conversationStateObject.currentContext = lastValidContext;
-                                //Current context contains the intent and the slots that's why it is passed twice
                                 conversationStateObject.scenario = getScenarioByName(conversationStateObject.currentContext.scenario, conversationStateObject);
+                                conversationStateObject.intent = getIntentByName(conversationStateObject.currentContext.name, conversationStateObject);
                                 RespondIntent(conversationStateObject, (err, response) => {
 
                                     if (err) {
