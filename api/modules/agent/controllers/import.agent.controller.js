@@ -305,10 +305,7 @@ module.exports = (request, reply) => {
                         }
                         domainResult.intents = resultIntents;
 
-                        Async.waterfall([
-                            Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, agentResult.agentName, domainResult.domainName, domainResult.id),
-                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, agentResult.agentName, agentResult.id)
-                        ], (errTraining) => {
+                        DomainTools.retrainModelTool(server, rasa, agent.language, agentResult.agentName, domainResult.domainName, domainResult.id, (errTraining) => {
 
                             if (errTraining){
                                 return callbackAddDomains(errTraining);
@@ -323,7 +320,14 @@ module.exports = (request, reply) => {
                     return reply(errDomains, null);
                 }
                 agentResult.domains = resultDomains;
-                return reply(agentResult);
+
+                DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agentResult.agentName, agentResult.id, (errTraining) => {
+
+                    if (errTraining){
+                        return reply(errTraining);
+                    }
+                    return reply(agentResult);
+                });
             });
         });
     });
