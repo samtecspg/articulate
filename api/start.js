@@ -21,7 +21,10 @@ Server((err, server) => {
             contact: {
                 name: 'Smart Platform Group'
             }
-        }
+        },
+        schemes: process.env.SWAGGER_SCHEMES ? [process.env.SWAGGER_SCHEMES] : ['http'],
+        host: process.env.SWAGGER_HOST || 'localhost:8000',
+        basePath: process.env.SWAGGER_BASE_PATH || '/'
     };
 
     server.register([Inert, Vision, { 'register': HapiSwagger, 'options': optionsDoc }], (err) => {
