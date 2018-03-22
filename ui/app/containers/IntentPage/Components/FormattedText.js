@@ -1,4 +1,5 @@
 import React from 'react';
+import systemEntities from 'systemEntities';
 
 export function FormattedText(props) {
   const entity = props.entities.length > 0 ? props.entities.splice(0, 1)[0] : null;
@@ -10,8 +11,11 @@ export function FormattedText(props) {
     const beforeTaggedText = props.text.substring(0, start - lastStart);
     const taggedText = props.text.substring(start - lastStart, end - lastStart);
     const afterTaggedText = props.text.substring(end - lastStart, props.text.length);
-    const filteredEntities = props.agentEntities.filter((agentEntity) => { return agentEntity.entityName === entity.entity });
-    let highlightColor = filteredEntities[0].uiColor;
+    let filteredEntity = props.agentEntities.filter((agentEntity) => { return agentEntity.entityName === entity.entity })[0];
+    if (!filteredEntity){
+      filteredEntity = systemEntities.filter((sysEntity) => { return sysEntity.entityName === entity.entity})[0];
+    }
+    let highlightColor = filteredEntity.uiColor;
     formattedElement = (
       <span key={`entityTag_${props.entityIndex}`}>
         <span key={`beforeEntityTagText_${props.entityIndex}`}>{beforeTaggedText}</span>

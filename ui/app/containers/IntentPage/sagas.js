@@ -1,5 +1,5 @@
 import _ from 'lodash';
-
+import Immutable from 'seamless-immutable';
 import {
   LOCATION_CHANGE,
   push
@@ -95,7 +95,14 @@ function* postScenario(payload) {
 
 export function* postIntent(payload) {
   const { api } = payload;
-  const intentData = yield select(makeSelectIntentData());
+  let intentData = yield select(makeSelectIntentData());
+  intentData = Immutable.asMutable(intentData, {deep: true});
+  intentData.examples = intentData.examples.map((example) => {
+    example.entities = example.entities.filter(entity => {
+        return entity.entity.indexOf('sys.') === -1;
+    });
+    return example;
+  });
 
   try {
     const response = yield call(api.intent.postIntent, { body: intentData });
@@ -188,7 +195,14 @@ function* putScenario(payload) {
 
 export function* putIntent(payload) {
   const { api } = payload;
-  const intentData = yield select(makeSelectIntentData());
+  let intentData = yield select(makeSelectIntentData());
+  intentData = Immutable.asMutable(intentData, {deep: true});
+  intentData.examples = intentData.examples.map((example) => {
+    example.entities = example.entities.filter(entity => {
+        return entity.entity.indexOf('sys.') === -1;
+    });
+    return example;
+  });
   const oldIntentData = yield select(makeSelectOldIntentData());
   const oldScenarioData = yield select(makeSelectOldScenarioData());
   try {

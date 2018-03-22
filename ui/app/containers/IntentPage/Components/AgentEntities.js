@@ -5,6 +5,7 @@ import {
 } from 'react-materialize';
 import Immutable from 'seamless-immutable';
 import messages from '../messages';
+import SystemEntities from 'components/SystemEntities';
 
 /**
  *
@@ -14,9 +15,9 @@ import messages from '../messages';
  */
 
 export function AgentEntities(props) {
+  const systemEntities = SystemEntities(props.userSays, props.onClickFunction);
   const newEntityDefault = <NavItem style={{ color: '#4e4e4e' }} key="newEntityDefault" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>;
   const newEntity = <NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="/entities/create">{messages.createEntity.defaultMessage}</NavItem>;
-  const divider = <NavItem key="divider" divider />;
   let items = undefined;
 
   const entitiesItems = props.agentEntities
@@ -38,11 +39,14 @@ export function AgentEntities(props) {
   if (props.agentEntities.length > 0){
     if (props.createEntity) {
       items = Immutable([entitiesItems])
-        .concat(divider)
+        .concat(<NavItem key="dividerSysEntities" divider />)
+        .concat(systemEntities)
+        .concat(<NavItem key="dividerNewEntity" divider />)
         .concat(newEntity);
     } else {
       items = Immutable([entitiesItems])
-        .concat(divider);
+        .concat(<NavItem key="divider" divider />)
+        .concat(systemEntities);;
     }
   }
   else{

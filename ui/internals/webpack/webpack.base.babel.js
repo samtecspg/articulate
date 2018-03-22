@@ -1,7 +1,7 @@
 /**
  * COMMON WEBPACK CONFIGURATION
  */
-
+const material = require('material-colors');
 const path = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
@@ -106,4 +106,96 @@ module.exports = (options) => ({
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window
   performance: options.performance || {},
+  externals: {
+    systemEntities: JSON.stringify([
+      {
+        "entityName": "sys.spacy_money",
+        "uiColor": material.red['500']
+      },
+      {
+        "entityName": "sys.spacy_quantity",
+        "uiColor": material.pink['500']
+      },
+      {
+        "entityName": "sys.spacy_cardinal",
+        "uiColor": material.purple['500']
+      },
+      {
+        "entityName": "sys.spacy_ordinal",
+        "uiColor": material.deepPurple['500']
+      },
+      {
+        "entityName": "sys.spacy_date",
+        "uiColor": material.indigo['500']
+      },
+      {
+        "entityName": "sys.spacy_time",
+        "uiColor": material.blue['500']
+      },
+      {
+        "entityName": "sys.spacy_person",
+        "uiColor": material.lightBlue['500']
+      },
+      {
+        "entityName": "sys.spacy_norp",
+        "uiColor": material.cyan['500']
+      },
+      {
+        "entityName": "sys.spacy_org",
+        "uiColor": material.teal['500']
+      },
+      {
+        "entityName": "sys.spacy_percent",
+        "uiColor": material.green['500']
+      },
+      {
+        "entityName": "sys.duckling_amount-of-money",
+        "uiColor": material.lightGreen['500']
+      },
+      {
+        "entityName": "sys.duckling_distance",
+        "uiColor": material.lime['500']
+      },
+      {
+        "entityName": "sys.duckling_duration",
+        "uiColor": material.yellow['500']
+      },
+      {
+        "entityName": "sys.duckling_email",
+        "uiColor": material.amber['500']
+      },
+      {
+        "entityName": "sys.duckling_number",
+        "uiColor": material.orange['500']
+      },
+      {
+        "entityName": "sys.duckling_ordinal",
+        "uiColor": material.deepOrange['500']
+      },
+      {
+        "entityName": "sys.duckling_phone-number",
+        "uiColor": material.brown['500']
+      },
+      {
+        "entityName": "sys.duckling_quantity",
+        "uiColor": material.blueGrey['500']
+      },
+      {
+        "entityName": "sys.duckling_temperature",
+        "uiColor": material.purple['500']
+      },
+      {
+        "entityName": "sys.duckling_time",
+        "uiColor": material.red['500']
+      },
+      {
+        "entityName": "sys.duckling_url",
+        "uiColor": material.pink['500']
+      },
+      {
+        "entityName": "sys.duckling_volume",
+        "uiColor": material.purple['500']
+      }
+    ]),
+  },
 });

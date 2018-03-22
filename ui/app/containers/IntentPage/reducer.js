@@ -166,14 +166,14 @@ function intentReducer(state = initialState, action) {
         .set('touched', true);
     case CHANGE_SLOT_NAME:
       return state
-        .updateIn(['scenarioData', 'slots'], examples =>
-          examples.map(slot => {
+        .updateIn(['scenarioData', 'slots'], slots =>
+          slots.map(slot => {
             const slotName = slot.slotName === action.payload.slotName ? action.payload.value : slot.slotName;
             return slot
               .set('slotName', slotName)
-              .updateIn('textPrompts', textPrompts => textPrompts.map(textPrompt => {
-                if (textPrompt.indexOf(`{{${action.payload.slotName}}}`) > -1) {
-                  return textPrompt.replace(new RegExp(`{{${action.payload.slotName}}}`, 'g'), `{{${action.payload.value}}}`);
+              .update('textPrompts', textPrompts => textPrompts.map(textPrompt => {
+                if (textPrompt.indexOf(`{{slots.${action.payload.slotName}.original}}`) > -1 || textPrompt.indexOf(`{{slots.${action.payload.slotName}.value}}`) > -1 || textPrompt.indexOf(`{{slots.[${action.payload.slotName}].value}}`) > -1 || textPrompt.indexOf(`{{slots.[${action.payload.slotName}].value}}`) > -1) {
+                  return textPrompt.replace(new RegExp(`{{slots.${action.payload.slotName}`, 'g'), `{{slots.${action.payload.value}`);
                 }
                 return textPrompt;
               }));
@@ -181,8 +181,8 @@ function intentReducer(state = initialState, action) {
         )
         .updateIn(['scenarioData', 'intentResponses'], intentResponses =>
           intentResponses.map(intentResponse => {
-            if (intentResponse.indexOf(`{{${action.payload.slotName}}}`) > -1) {
-              return intentResponse.replace(new RegExp(`{{${action.payload.slotName}}}`, 'g'), `{{${action.payload.value}}}`);
+            if (intentResponse.indexOf(`{{slots.${action.payload.slotName}.original}}`) > -1 || intentResponse.indexOf(`{{slots.${action.payload.slotName}.value}}`) > -1 || intentResponse.indexOf(`{{slots.[${action.payload.slotName}].value}}`) > -1 || intentResponse.indexOf(`{{slots.[${action.payload.slotName}].value}}`) > -1) {
+              return intentResponse.replace(new RegExp(`{{slots.${action.payload.slotName}`, 'g'), `{{slots.${action.payload.value}`);
             }
             return intentResponse;
           })

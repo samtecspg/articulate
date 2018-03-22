@@ -4,12 +4,16 @@ import {
   NavItem,
 } from 'react-materialize';
 import messages from '../messages';
+import systemEntities from 'systemEntities';
 
 export function AvailableSlots(props) {
   let items = [<NavItem style={{ color: '#4e4e4e' }} key="addSlots" href="#">{messages.emptySlotList.defaultMessage}</NavItem>];
   if (props.slots && props.slots.length > 0) {
     items = props.slots.map((slot, index) => {
-      const agentEntity = props.agentEntities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
+      let agentEntity = props.agentEntities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
+      if (!agentEntity){
+        agentEntity = systemEntities.filter((sysEntity) => sysEntity.entityName === slot.entity)[0];
+      }
       return (
         <NavItem onClick={props.onClickFunction.bind(null, slot.slotName)} key={index}><span style={{ color: agentEntity.uiColor }}>{`{${slot.slotName}}`}</span></NavItem>
       );

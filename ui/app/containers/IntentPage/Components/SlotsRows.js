@@ -3,10 +3,14 @@ import React from 'react';
 import { Icon, Input, } from 'react-materialize';
 import SlotAgentEntities from './SlotAgentEntities';
 import TextPrompts from './TextPrompts';
+import systemEntities from 'systemEntities';
 
 export function SlotsRows(props) {
   const rows = props.slots.map((slot, slotIndex) => {
-    const agentEntity = props.agentEntities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
+    let agentEntity = props.agentEntities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
+    if (!agentEntity){
+      agentEntity = systemEntities.filter((sysEntity) => sysEntity.entityName === slot.entity)[0];
+    }
     return (
       <tr style={{ width: '100%' }} key={slotIndex}>
         <td style={{ width: '15%', display: 'inline-block' }}>
