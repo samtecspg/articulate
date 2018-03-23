@@ -1,0 +1,137 @@
+// Side navigation styles
+
+#sidenav{
+  position: fixed;
+  padding-left: 0;
+  width: 240px;
+  height: 100vh;
+  margin: 0;
+  list-style-type: none;
+  padding-top: $header-height;
+  background: #fff;
+  border-right: 1px solid $border-color;
+
+  ul {
+    margin-bottom: 25px;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .nav-container > nav {
+    padding-top: 40px;
+  }
+
+  li {
+    line-height: 1.3rem;
+    padding: 0 20px;
+    margin-bottom: 5px;
+    a {
+      font-size: 0.9rem;
+      color: $primary-color;
+      transition: all .3s ease-out;
+      &:hover {
+        color: $dark-green;
+      }
+    }
+  }
+
+  .text-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    opacity: .6;
+    cursor: default;
+    text-transform: uppercase;
+  }
+
+  .is-selected {
+    border-right: 2px solid #00ca9f;
+    a {
+      font-weight: 500;
+      color: $accent-green;
+    }
+  }
+
+  .dropdown-btn {
+    display: none;
+  }
+
+  @include media-query($content-width) {
+    width: 100%;
+    height: fit-content;
+    position: relative;
+    border-bottom: 1px solid $border-color;
+    background-color: #F7F9FC;
+
+    .nav-container {
+      height: 0;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .nav-container > nav {
+      padding-top: 0px;
+      padding-bottom: 30px;
+    }
+
+    .dropdown-btn {
+      background-color: #fff;
+      display: block;
+      width: 250px;
+      color: $accent-green;
+      margin: 50px auto 50px auto;
+      text-align: center;
+      border: 2px solid;
+      border-radius: 3px;
+      padding: 10px 0;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+         -webkit-box-shadow: 0px 8px 29px 2px rgba(51, 51, 51, 0.08);
+        -moz-box-shadow: 0px 8px 29px 2px rgba(51, 51, 51, 0.08);
+        box-shadow: 0px 8px 29px 2px rgba(51, 51, 51, 0.08);
+      }
+
+    }
+
+    .dropdown-btn:hover + a{
+      color: $dark-green;
+    }
+
+    .dropdown-btn > a:after {
+      content: " ";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid $accent-green;
+      right: 13px;
+      top: 18px;
+    }
+
+    .dropdown-btn > a {
+      color: $accent-green;
+      font-weight: 500;
+    }
+
+
+  }
+
+.nav-open {
+  background-color: $accent-green;
+  a {
+    color:white;
+  }
+
+  a:after {
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid white;
+    top:11px;
+  }
+}
+
+} // -- end of #sidenav

@@ -1,0 +1,26 @@
+// Styles for the codeblock
+
+.highlighter-rouge .highlight {
+  background: #4e4e4e;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  margin-bottom: 0;
+  border: 1px solid #e8e8e8;
+}
+
+.highlighter-rouge {
+  margin: 25px 0;
+}
+
+code {
+  font-family: 'Roboto Mono', monospace;
+  background-color: #efefef;
+  border: 1px solid #e8e8e8;
+  padding: 3px 7px;
+  color:#0e1635;
+}
+
+pre.highlight > code {
+  color: #fff;
+  background-color: transparent;
+}

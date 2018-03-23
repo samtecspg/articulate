@@ -1,0 +1,13 @@
+@mixin gradient ($col-1, $col-2) {
+	background: $col-1; /* Old browsers */
+	background: -moz-linear-gradient(top, $col-1 0%, $col-2 100%);
+	background: -webkit-linear-gradient(top, $col-1 0%,$col-2 100%); 
+	background: linear-gradient(to bottom, $col-1 0%,$col-2 100%); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$col-1', endColorstr='$col-2',GradientType=0 );
+}
+
+@mixin dropshadow() {
+	-webkit-box-shadow: 0px 8px 29px 2px rgba(51,51,51,0.08);
+	-moz-box-shadow: 0px 8px 29px 2px rgba(51,51,51,0.08);
+	box-shadow: 0px 8px 29px 2px rgba(51,51,51,0.08);
+}

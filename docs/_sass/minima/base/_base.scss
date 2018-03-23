@@ -1,0 +1,285 @@
+/**
+  * Reset some basic elements
+*/
+
+
+
+body, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, hr,
+dl, dd, ol, ul, figure {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  line-height: 1.5em;
+}
+
+$base-font-family: 'Montserrat', Arial, sans-serif;
+
+/**
+ * Basic styling
+ */
+body {
+  font: $base-font-weight #{$base-font-size}/#{$base-line-height} $base-font-family;
+  color: $primary-color;
+  background-color: $background-color;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+     -moz-font-feature-settings: "kern" 1;
+       -o-font-feature-settings: "kern" 1;
+          font-feature-settings: "kern" 1;
+  font-kerning: normal;
+
+}
+
+
+
+/**
+ * Set `margin-bottom` to maintain vertical rhythm
+ */
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+ul, ol, dl, figure,
+%vertical-rhythm {
+  margin-bottom: $spacing-unit / 2;
+}
+
+
+
+/**
+ * Images
+ */
+img {
+  max-width: 100%;
+  vertical-align: middle;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  -webkit-box-shadow: 0px 8px 48px -12px rgba(78,78,78,0.4);
+  -moz-box-shadow: 0px 8px 48px -12px rgba(78,78,78,0.4);
+  box-shadow: 0px 8px 48px -12px rgba(78,78,78,0.4);
+  margin-bottom: 30px;
+}
+
+
+
+/**
+ * Figures
+ */
+figure > img {
+  display: block;
+}
+
+figcaption {
+  font-size: $small-font-size;
+}
+
+/**
+ * Lists
+ */
+ul, ol {
+  padding-left: $spacing-unit;
+}
+
+li {
+  list-style-type: disk;
+  > ul,
+  > ol {
+    margin-bottom: 0;
+  }
+}
+
+.page-content li{
+  margin-bottom: 10px;
+}
+
+
+/**
+ * Headings
+ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $base-font-weight;
+  margin-top: 50px;
+  font-weight: 600;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+h2:before {
+  content: "";
+  border-left: 3px solid;
+  border-radius: 3px;
+  height: inherit;
+  padding-left: 10px;
+  margin-left: -13px;
+}
+
+h3 {
+  margin-top: 30px;
+}
+
+/**
+ * Links
+ */
+a {
+  color: $accent-green;
+  text-decoration: none;
+  transition: all .3s ease-out;
+
+  // &:visited {
+  //   color: darken($accent-green, 15%);
+  // }
+
+  &:hover {
+    color: $dark-green;
+  }
+
+  .social-media-list &:hover {
+    text-decoration: none;
+
+    .username {
+      text-decoration: underline;
+    }
+  }
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  color: $grey-color;
+  border-left: 4px solid $grey-color-light;
+  padding-left: $spacing-unit / 2;
+  @include relative-font-size(1.125);
+  letter-spacing: -1px;
+  font-style: italic;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+
+/**
+ * Code formatting
+ */
+pre,
+code {
+  @include relative-font-size(0.9375);
+  border: 1px solid $grey-color-light;
+  border-radius: 3px;
+  background-color: #eef;
+}
+
+code {
+  padding: 1px 5px;
+}
+
+pre {
+  padding: 20px 12px 25px;
+  overflow-x: auto;
+
+  > code {
+    border: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+table {
+  margin: 25px 0;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  border-spacing:0;
+
+  thead {
+    background-color: #efefef;
+  }
+
+  thead tr th{
+    border-bottom: 1px solid #e2e2e2;
+    padding: 10px;
+
+  }
+
+  th {
+    font-weight: 500;
+  }
+
+  tbody td {
+    padding: 20px 10px;
+
+  }
+}
+
+.wrapper {
+  max-width: 90%;
+  margin-right: auto;
+  margin-left: auto;
+  @extend %clearfix;
+
+  @include media-query($on-laptop) {
+    max-width: -webkit-calc(#{$content-width} - (#{$spacing-unit}));
+    max-width:         calc(#{$content-width} - (#{$spacing-unit}));
+    padding-right: $spacing-unit / 2;
+    padding-left: $spacing-unit / 2;
+  }
+
+  @include media-query($on-palm) {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+
+/**
+ * Clearfix
+ */
+%clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+
+/**
+ * Icons
+ */
+.icon > svg {
+  display: inline-block;
+  vertical-align: middle;
+
+  path {
+    fill: $grey-color;
+  }
+}
+
+.social-media-list {
+  .icon {
+    padding-right: 5px;
+  }
+
+  li + li {
+    padding-top: 5px;
+  }
+}
+
+
+// --- Custom edit below
+
+.wrapper:after, .footer-col-wrapper:after {
+  display: none;
+}
+
+// --- Custom classes
+
+.flex {
+  display: flex;
+}

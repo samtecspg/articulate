@@ -1,0 +1,32 @@
+// Buttons styles
+
+.btn {
+	padding: 10px 15px;
+	border-radius: 3px;
+	color: #fff;
+
+}
+
+// header navigation button
+.nav-btn {
+	color: #fff;
+	font-size: 14px;
+	@include gradient(#00e5a9, #00ca9f);
+
+}
+
+.cta {
+	padding: 18px 25px;
+	background-color: #fff;
+	font-weight: 500;
+	-webkit-box-shadow: 0px 4px 102px -2px rgba(255,255,255,1);
+	-moz-box-shadow: 0px 4px 102px -2px rgba(255,255,255,1);
+	box-shadow: 0px 4px 102px -2px rgba(255,255,255,1);
+	transition: box-shadow 0.3s ease-out;
+
+	&:hover {
+		-webkit-box-shadow: 0px 4px 102px -8px rgba(255,255,255,1);
+		-moz-box-shadow: 0px 4px 102px -8px rgba(255,255,255,1);
+		box-shadow: 0px 4px 102px -8px rgba(255,255,255,1);
+	}
+}
