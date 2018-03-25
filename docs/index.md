@@ -5,28 +5,15 @@
 layout: default
 ---
 
+# Introducing Articulate
+
 ![Articulate Logo]({{ "/img/articulate-logo.png" | absolute_url }})
 
-## A platform for building conversational interfaces with intelligent agents
+Articulate is a platform for building conversational interfaces with intelligent agents
 
 [![Join the chat at https://gitter.im/samtecspg/articulate](https://badges.gitter.im/samtecspg/articulate.svg)](https://gitter.im/samtecspg/articulate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Documentation coming soon!
-
-## QUICK START
-
-1. Make sure you have Docker and `docker-compose` installed:
-
-   * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
-   * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
-
-2. Download the current release: https://github.com/samtecspg/articulate/releases/download/v0.5.1/articulate-0.5.1.zip
-
-3. Unzip and get a terinal or CMD in the release directory
-
-4. run `docker-compose up` (`sudo` might be needed)
-
-5. point your web browser at  http://localhost:3500 and enjoy Articulate
+Documentation coming soon! For installation instruction go to the Basic Installation page.
 
 ## License
 
