@@ -97,10 +97,12 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
               <Link to="/entities" activeClassName={'selected'}><img src={entity} alt="" /><span>Entity</span></Link>
             </li>
           </ul>
-
           <ul className="bottom-nav">
             <li>
-              <Link to="" activeClassName={'selected'}><img src={settings} alt="/settings" /><span>Settings</span></Link>
+              <p>This is a pre-release of Articulate and is certain to have bugs or short comings. If you have any questions please <a target="_blank" href="https://github.com/samtecspg/articulate/issues/new">create an issue</a> or join us on <a target="_blank" href="https://gitter.im/samtecspg/articulate">Gitter</a>.</p>
+            </li>
+            <li>
+              <p className="built-by">Built with <a target="_blank" href="https://rasa.com/">Rasa NLU</a></p>
             </li>
           </ul>
         </nav>

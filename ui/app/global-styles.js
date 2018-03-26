@@ -155,9 +155,28 @@ injectGlobal`
     border-color: #b4dbdb; }
 
   .bottom-nav {
-    margin-top: 77vh;
+    position: absolute;
     bottom: 0;
-    width: 100%; }
+    width: 100%;
+  }
+
+  #side-nav .bottom-nav p {
+    font-weight: 300;
+		font-size: 12px;
+		line-height: 1.4em;
+		padding: 0px 21px 10px;
+  }
+
+  #side-nav .bottom-nav a {
+    font-weight: 600;
+		display: inline;
+		padding: 0;
+  }
+
+  #side-nav .bottom-nav a:hover {
+    text-decoration: underline;
+    background-color: inherit;
+  }
 
   main > div > header {
     width: 100%;
@@ -245,8 +264,8 @@ injectGlobal`
   #form-section {
     margin: 20px 0 0;
     position: relative; }
-    #form-section .input-field {
-      padding: 0 1.5rem 0 0; }
+  #form-section .input-field {
+    padding: 0 1.5rem 0 0; }
 
   #form-section input {
     border: 1px solid #c5cbd8;
@@ -257,7 +276,7 @@ injectGlobal`
     padding-left: 15px;
     font-weight: 300;
     left: 0; }
-    #form-section input:focus {
+  #form-section input:focus {
       border: 1px solid #00ca9f;
       -webkit-box-shadow: none;
       box-shadow: none; }

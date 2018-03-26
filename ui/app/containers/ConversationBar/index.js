@@ -101,7 +101,6 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
           </div>
         </ul>
         <ul className="bottom-nav">
-          <div id="form-section">
             <TestMessageInput
               menu={this.renderMenu()}
               className="conversation-input"
@@ -110,7 +109,6 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
               onKeyPress={this.sendTextMessage}
               onSpeakClick={() => this.setState({ start: (!this.state.start) ? true : this.state.start, stop: this.state.start ? true : this.state.stop })}
             />
-          </div>
         </ul>
 
         {this.state.start && (
