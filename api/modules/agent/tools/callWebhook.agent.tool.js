@@ -2,11 +2,11 @@
 
 const Axios = require('axios');
 const Handlebars = require('handlebars');
-const registerHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
+const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
 
 module.exports = (webhook, conversationStateObject, callback) => {
 
-    registerHandlebarHelpers(Handlebars);
+    RegisterHandlebarHelpers(Handlebars);
     const compiledWebhookUrl = Handlebars.compile(webhook.webhookUrl);
     const processedWebhookUrl = compiledWebhookUrl(conversationStateObject);
     let compiledWebhookPayload;

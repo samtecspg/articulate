@@ -10,7 +10,7 @@ module.exports = (request, reply) => {
 
     let text;
     let timezone;
-    if (request.payload){
+    if (request.payload) {
         text = request.payload.text;
         timezone = request.payload.timezone;
     }
@@ -35,8 +35,8 @@ module.exports = (request, reply) => {
 
                     server.inject('/agent/' + agentId, (res) => {
 
-                        if (res.statusCode !== 200){
-                            if (res.statusCode === 404){
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
                                 const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
                                 return callbackGetAgent(errorNotFound);
                             }
@@ -60,7 +60,7 @@ module.exports = (request, reply) => {
             const languageToUse = agentData.agent.language ? agentData.agent.language : 'en';
             AgentTools.parseText(redis, rasa, ERPipeline, duckling, text, timezoneToUse, languageToUse, agentData, (err, result) => {
 
-                if (err){
+                if (err) {
                     return callback(err);
                 }
                 return callback(null, result);
@@ -68,7 +68,7 @@ module.exports = (request, reply) => {
         }
     ], (err, document) => {
 
-        if (err){
+        if (err) {
             return reply(err);
         }
 
@@ -77,7 +77,7 @@ module.exports = (request, reply) => {
 
                 redis.incr('documentId', (err, newDocumentId) => {
 
-                    if (err){
+                    if (err) {
                         const error = Boom.badImplementation('An error occurred getting the new document id.');
                         return cb(error);
                     }
@@ -89,14 +89,15 @@ module.exports = (request, reply) => {
 
                 document = Object.assign({ id: documentId }, document);
                 const flatDocument = Flat(document);
-                Object.keys(flatDocument).forEach(key => {
-                    if (Array.isArray(flatDocument[key]) && flatDocument[key].length === 0){
+                Object.keys(flatDocument).forEach((key) => {
+
+                    if (Array.isArray(flatDocument[key]) && flatDocument[key].length === 0) {
                         flatDocument[key] = '';
                     }
                 });
                 redis.hmset(`document:${documentId}`, flatDocument, (err) => {
 
-                    if (err){
+                    if (err) {
                         const error = Boom.badImplementation('An error occurred adding the document data.');
                         return cb(error);
                     }
@@ -105,7 +106,7 @@ module.exports = (request, reply) => {
             }
         ], (err, result) => {
 
-            if (err){
+            if (err) {
                 return reply(err, null);
             }
             return reply(result);

@@ -2,7 +2,6 @@
 const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
-const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 

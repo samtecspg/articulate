@@ -21,13 +21,13 @@ module.exports = (object, type) => {
             object.useWebhook = object.useWebhook === 'true';
             object.examples = object.examples.map((example) => {
 
-                if (example.entities === ''){
+                if (example.entities === '') {
                     example.entities = [];
                 }
                 else {
                     example.entities = example.entities.map((entity) => {
 
-                        if (entity.entityId){
+                        if (entity.entityId) {
                             entity.entityId = parseInt(entity.entityId);
                         }
                         entity.start = parseInt(entity.start);
@@ -44,7 +44,10 @@ module.exports = (object, type) => {
             }
             else {
                 object.slots = object.slots.map((slot) => {
-                    if (!_.isArray(slot.textPrompts)) slot.textPrompts = [];
+
+                    if (!_.isArray(slot.textPrompts)) {
+                        slot.textPrompts = [];
+                    }
                     slot.isList = slot.isList === 'true';
                     slot.isRequired = slot.isRequired === 'true';
                     return slot;

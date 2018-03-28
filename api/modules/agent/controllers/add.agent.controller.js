@@ -2,8 +2,6 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
-const AgentTools = require('../tools');
-const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {
 
@@ -12,14 +10,13 @@ module.exports = (request, reply) => {
 
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.series({
         agentId: (cb) => {
 
             redis.incr('agentId', (err, newAgentId) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error occurred getting the new agent id.');
                     return cb(error);
                 }
@@ -31,11 +28,11 @@ module.exports = (request, reply) => {
 
             redis.zadd('agents', 'NX', agentId, agent.agentName, (err, addResponse) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error occurred adding the name to the agents list.');
                     return cb(error);
                 }
-                if (addResponse !== 0){
+                if (addResponse !== 0) {
                     return cb(null);
                 }
 
@@ -49,7 +46,7 @@ module.exports = (request, reply) => {
             const flatAgent = Flat(agent);
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error occurred adding the agent data.');
                     return cb(error);
                 }
@@ -58,7 +55,7 @@ module.exports = (request, reply) => {
         }
     }, (err, result) => {
 
-        if (err){
+        if (err) {
             return reply(err, null);
         }
         return reply(result.agent);

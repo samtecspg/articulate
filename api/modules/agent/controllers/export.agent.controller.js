@@ -77,7 +77,7 @@ module.exports = (request, reply) => {
                                                     delete res.result.domain;
                                                     delete res.result.intent;
                                                 }
-                                                return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: res.result}));
+                                                return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: res.result }));
                                             });
                                         }, (err, intentsWithScenarios) => {
 

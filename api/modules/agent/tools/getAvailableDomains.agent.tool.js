@@ -37,7 +37,6 @@ module.exports = (server, redis, agentId, cb) => {
 
             agentName = domains[0].agent;
             const formattedDomains = [];
-            const haveIntents = true;
             Async.each(domains, (domain, callbackFormatDomain) => {
 
                 const domainName = domain.domainName;
