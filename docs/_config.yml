@@ -25,7 +25,7 @@ github_username:  jekyll
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-minimal
+theme: minima
 plugins:
   - jekyll-feed
 redcarpet:
@@ -34,6 +34,14 @@ redcarpet:
 collections:
   getting_started:
     title: Getting Started
+    output: true
+    permalink: /:collection/:title
+  screen_by_screen:
+    title: Screen By Screen
+    output: true
+    permalink: /:collection/:title
+  concepts:
+    title: Concepts
     output: true
     permalink: /:collection/:title
 

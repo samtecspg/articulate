@@ -23,6 +23,28 @@
           {% endif %}
         {% endfor %}
       </ul>
+      <ul>
+        <li class="text-label">Screen By Screen</li>
+        {% assign sbs_items = site.screen_by_screen | sort: 'order' %}
+        {% for item in sbs_items %}
+          {% if page.url == item.url %}
+            <li class="is-selected"><a href="{{ site.baseurl }}{{ item.url }}" class="active">{{item.title}}</a></li>
+          {% else %}
+            <li><a href="{{ site.baseurl }}{{ item.url }}">{{item.title}}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <ul>
+        <li class="text-label">Concepts</li>
+        {% assign c_items = site.concepts | sort: 'order' %}
+        {% for item in c_items %}
+          {% if page.url == item.url %}
+            <li class="is-selected"><a href="{{ site.baseurl }}{{ item.url }}" class="active">{{item.title}}</a></li>
+          {% else %}
+            <li><a href="{{ site.baseurl }}{{ item.url }}">{{item.title}}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
       
   </nav>
 </menu>
