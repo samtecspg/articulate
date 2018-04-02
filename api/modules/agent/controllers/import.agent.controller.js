@@ -221,6 +221,18 @@ module.exports = (request, reply) => {
                                 let clonedIntent = _.cloneDeep(intent);
                                 delete clonedIntent.scenario;
                                 clonedIntent = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedIntent);
+                                clonedIntent.examples = _.map(clonedIntent.examples, (example) => {
+
+                                    if (example.entities && example.entities.length > 0) {
+
+                                        const entities = _.sortBy(example.entities, (entity) => {
+
+                                            return entity.start;
+                                        });
+                                        example.entities = entities;
+                                    }
+                                    return example;
+                                });
                                 const flatIntent = Flat(clonedIntent);
                                 redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
