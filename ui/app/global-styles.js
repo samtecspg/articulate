@@ -520,6 +520,7 @@ injectGlobal`
 
   .dropdown-entity-selector {
     width: 300px !important;
+    height: 400px !important;
     left: auto !important;
   }
 
