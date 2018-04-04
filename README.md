@@ -15,7 +15,7 @@ https://samtecspg.github.io/articulate/
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
 
-2. Download the current releasei zip (the file will be articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
+2. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
 
 3. Unzip and get a terminal or CMD in the release directory
 
