@@ -29,7 +29,7 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
   ui:
     image: samtecspg/articulate-ui:repo-head
-    ports: ['0.0.0.0:3500:3000']
+    ports: ['0.0.0.0:3000:3000']
     environment:
       - API_URL=${API_URL:-http://localhost:8000}
     networks: ['alpha-nlu-network']
