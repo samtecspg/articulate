@@ -39,7 +39,7 @@ services:
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']
   duckling:
-    image: samtecspg/articulate-duckling:repo-head
+    image: samtecspg/duckling:0.1.0.0
     ports: ['0.0.0.0:8500:8000']
     networks: ['alpha-nlu-network']
   redis:
