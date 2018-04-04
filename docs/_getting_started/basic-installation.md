@@ -26,12 +26,12 @@ To get started
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
 
-2. Download the current release from this page: https://github.com/samtecspg/articulate/releases/latest
+2. Download the current release from this page: [https://github.com/samtecspg/articulate/releases/latest](https://github.com/samtecspg/articulate/releases/latest)
 
 3. Unzip and get a terinal or CMD in the new  directory
 
 4. run `docker-compose up` (`sudo` might be needed)
 
-5. point your web browser at http://localhost:3500 and enjoy Articulate
+5. point your web browser at [http://localhost:3500](http://localhost:3500) and enjoy Articulate
 
-To explore the API you can go to http://localhost:8000/documentation
+To explore the API you can go to [http://localhost:8000/documentation](http://localhost:8000/documentation)
