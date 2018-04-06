@@ -36,6 +36,8 @@
     "flat": "^4.0.0",
     "guid": "^0.0.12",
     "handlebars": "^4.0.11",
+    "handlebars-helpers": "^0.10.0",
+    "handlebars-intl": "^1.1.2",
     "hapi": "^16.1.1",
     "hapi-swagger": "^7.7.0",
     "inert": "^4.2.0",
