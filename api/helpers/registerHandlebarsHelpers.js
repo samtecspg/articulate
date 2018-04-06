@@ -1,5 +1,8 @@
 'use strict';
 const Moment = require('moment');
+const HandlebarsIntl = require('handlebars-intl');
+const helpers = require('handlebars-helpers');
+
 module.exports = (Handlebars) => {
 
     Handlebars.registerHelper('toJSON', (obj) => {
@@ -8,5 +11,10 @@ module.exports = (Handlebars) => {
     });
 
     Handlebars.registerHelper('dateTimeFormat', (datetime, format) => Moment(datetime).format(format));
+    HandlebarsIntl.registerWith(Handlebars);
+
+    const comparison = helpers.comparison({
+        handlebars: Handlebars
+    });
     return Handlebars;
 };
