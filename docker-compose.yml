@@ -29,7 +29,7 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
   ui:
     image: samtecspg/articulate-ui:repo-head
-    ports: ['0.0.0.0:3500:3000']
+    ports: ['0.0.0.0:3000:3000']
     environment:
       - API_URL=${API_URL:-http://localhost:8000}
     networks: ['alpha-nlu-network']
@@ -39,7 +39,7 @@ services:
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']
   duckling:
-    image: samtecspg/articulate-duckling:repo-head
+    image: samtecspg/duckling:0.1.0.0
     ports: ['0.0.0.0:8500:8000']
     networks: ['alpha-nlu-network']
   redis:

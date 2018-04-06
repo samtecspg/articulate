@@ -4,7 +4,9 @@
 
 [![Join the chat at https://gitter.im/samtecspg/articulate](https://badges.gitter.im/samtecspg/articulate.svg)](https://gitter.im/samtecspg/articulate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Documentation coming soon!
+## Documentation
+
+https://samtecspg.github.io/articulate/
 
 ## QUICK START
 
@@ -13,7 +15,7 @@ Documentation coming soon!
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
 
-2. Download the current release: https://github.com/samtecspg/articulate/releases/download/v0.5.1/articulate-0.5.1.zip
+2. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
 
 3. Unzip and get a terminal or CMD in the release directory
 
