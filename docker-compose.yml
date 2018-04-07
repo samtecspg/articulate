@@ -1,7 +1,7 @@
 version: '3.0'
 
 #
-# The behavor of this compose can be highly (site) customized by creating 
+# The behavor of this compose can be highly (site) customized by creating
 # a .env file in the root of the project.  see .env.example for an example
 #
 
@@ -23,15 +23,17 @@ services:
       - RASA_URL=${RASA_URL:-http://rasa:5000}
       - DUCKLING_URL=${DUCKLING_URL:-http://duckling:8000}
       - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
+      - DOCKER_HOST=${DOCKER_HOST:-localhost}
+      - SWAGGER_HOST=${DOCKER_HOST:-localhost}:8000
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
+      test: ['CMD', 'curl', '-f', 'http://${DOCKER_HOST}:8000/agent']
   ui:
     image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3000:3000']
     environment:
-      - API_URL=${API_URL:-http://localhost:8000}
+      - API_URL=${API_URL}
     networks: ['alpha-nlu-network']
   rasa:
     image: samtecspg/articulate-rasa:repo-head
