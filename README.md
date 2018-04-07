@@ -10,6 +10,16 @@ https://samtecspg.github.io/articulate/
 
 ## QUICK START
 
+**If installing on a public host or on a docker host that uses a 192.168, etc type IP please ensure you create a .env file and put the below values in it so the application will work as expected**
+
+`DOCKER_HOST=ip_address_here
+
+ SWAGGER_HOST=same_ip_address
+ 
+ API_URL=http://same_ip_address:8000`
+ 
+
+
 1. Make sure you have Docker and `docker-compose` installed:
 
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
@@ -19,9 +29,9 @@ https://samtecspg.github.io/articulate/
 
 3. Unzip and get a terminal or CMD in the release directory
 
-4. run `docker-compose up` (`sudo` might be needed)
+4. run `docker-compose up` (`sudo` might be needed, you can use -d after the up for it to be a daemon and run in the background)
 
-5. point your web browser at  http://localhost:3500 and enjoy Articulate
+5. point your web browser at  http://localhost:3000 and enjoy Articulate
 
 ## License
 ```
