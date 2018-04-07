@@ -24,7 +24,7 @@ services:
       - DUCKLING_URL=${DUCKLING_URL:-http://duckling:8000}
       - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
       - DOCKER_HOST=${DOCKER_HOST:-localhost}
-      - SWAGGER_HOST=${DOCKER_HOST:-localhost}:8000
+      - SWAGGER_HOST=${SWAGGER_HOST:-localhost}:8000
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
     healthcheck:
