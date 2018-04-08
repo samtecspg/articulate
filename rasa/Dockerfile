@@ -1,7 +1,7 @@
 FROM alpine:3.7
 
 
-ENV RASA_RELEASE=0.11.0 \
+ENV RASA_RELEASE=0.11.4 \
     RASA_NLU_HOME=/app \
     RASA_NLU_PYTHON_PACKAGES=/usr/local/lib/python2.7/dist-packages
 
