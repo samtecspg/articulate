@@ -40,7 +40,11 @@ const entityRoutes = [
             description: 'Update attributes for a model instance and persist it into the data source',
             tags: ['api'],
             validate: EntityValidator.updateById,
-            handler: EntityController.updateById
+            handler: EntityController.updateById,
+            timeout: {
+                socket: 20 * 60 * 1000, //Max default training time 20 minutes
+                server: false
+            }
         }
     },
     {
