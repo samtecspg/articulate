@@ -130,7 +130,11 @@ const AgentRoutes = [
             description: 'Update attributes for a model instance and persist it into the data source',
             tags: ['api'],
             validate: AgentValidator.updateById,
-            handler: AgentController.updateById
+            handler: AgentController.updateById,
+            timeout: {
+                socket: 20 * 60 * 1000, //Max default training time 20 minutes
+                server: false
+            }
         }
     },
     {
@@ -200,7 +204,11 @@ const AgentRoutes = [
             description: 'Create a new instance of the model and persist it into the data source based on a given dataset',
             tags: ['api'],
             validate: AgentValidator.import,
-            handler: AgentController.import
+            handler: AgentController.import,
+            timeout: {
+                socket: 20 * 60 * 1000, //Max default training time 20 minutes
+                server: false
+            }
         }
     },
     {
