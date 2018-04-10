@@ -1,4 +1,5 @@
 import React from 'react';
+import Linkify from 'react-linkify'
 
 import {
   CardPanel,
@@ -11,8 +12,8 @@ export function AgentMessage(props) {
   return (
     <Row>
       <Col s={6} m={10}>
-        <CardPanel className="transparent teal-text">
-          <span>{props.text}</span>
+        <CardPanel className="transparent teal-text message-card">
+          <Linkify properties={{target: '_blank', style: {color: 'blue'}}}><span>{props.text}</span></Linkify>
         </CardPanel>
       </Col>
       <Col s={6} m={2}>

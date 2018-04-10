@@ -535,4 +535,8 @@ injectGlobal`
   .modal-footer{
     text-align: center !important;
   }
+
+  .message-card{
+    word-wrap: break-word;
+  }
 `;
