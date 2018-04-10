@@ -220,6 +220,7 @@ module.exports = (request, reply) => {
 
                                 let clonedIntent = _.cloneDeep(intent);
                                 delete clonedIntent.scenario;
+                                delete clonedIntent.webhook;
                                 clonedIntent = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedIntent);
                                 clonedIntent.examples = _.map(clonedIntent.examples, (example) => {
 
@@ -284,16 +285,16 @@ module.exports = (request, reply) => {
                                         },
                                         scenario: (cb) => {
 
-                                            let scenarioToInert = intent.scenario;
-                                            scenarioToInert = Object.assign({ id: scenarioId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, scenarioToInert);
-                                            const flatScenario = Flat(scenarioToInert);
+                                            let scenarioToInsert = intent.scenario;
+                                            scenarioToInsert = Object.assign({ id: scenarioId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, scenarioToInsert);
+                                            const flatScenario = Flat(scenarioToInsert);
                                             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
                                                 if (err){
                                                     const error = Boom.badImplementation('An error occurred adding the scenario data.');
                                                     return cb(error);
                                                 }
-                                                return cb(null, scenarioToInert);
+                                                return cb(null, scenarioToInsert);
                                             });
                                         }
                                     }, (errScenario, resultScenario) => {
@@ -302,7 +303,23 @@ module.exports = (request, reply) => {
                                             return callbackAddIntents(errScenario, null);
                                         }
                                         resultIntent.scenario = resultScenario.scenario;
-                                        return callbackAddIntents(null, resultIntent);
+                                        if (intent.webhook){
+                                            let webhookToInsert = intent.webhook;
+                                            webhookToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, webhookToInsert);
+                                            const flatWebhook = Flat(webhookToInsert);
+                                            redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
+
+                                                if (err){
+                                                    const error = Boom.badImplementation('An error occurred adding the webhook data.');
+                                                    return callbackAddIntents(error, null);
+                                                }
+                                                resultIntent.webhook = webhookToInsert;
+                                                return callbackAddIntents(null, webhookToInsert);
+                                            });
+                                        }
+                                        else {
+                                            return callbackAddIntents(null, resultIntent);
+                                        }
                                     });
                                 }
                                 else {
