@@ -10,6 +10,27 @@ module.exports = (object, type) => {
             object.domainClassifierThreshold = parseFloat(object.domainClassifierThreshold);
             break;
         case 'context':
+            if (object.slots){
+                if (object.slots === '') {
+                    object.slots = [];
+                }
+                else {
+                    Object.keys(object.slots).forEach(slot => {
+
+                        if (object.slots[slot].lifespan){
+                            object.slots[slot].lifespan = parseInt(object.slots[slot].lifespan);
+                        }
+                    });
+                    if (object.slots.sys){
+                        Object.keys(object.slots.sys).forEach(slot => {
+
+                            if (object.slots.sys[slot].lifespan){
+                                object.slots.sys[slot].lifespan = parseInt(object.slots.sys[slot].lifespan);
+                            }
+                        });
+                    }
+                }
+            }
             break;
         case 'domain':
             object.enabled = object.enabled === 'true';
@@ -50,6 +71,7 @@ module.exports = (object, type) => {
                     }
                     slot.isList = slot.isList === 'true';
                     slot.isRequired = slot.isRequired === 'true';
+                    slot.lifespan = parseInt(slot.lifespan);
                     return slot;
                 });
             }

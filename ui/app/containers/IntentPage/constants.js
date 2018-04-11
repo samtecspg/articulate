@@ -7,6 +7,7 @@ export const TOGGLE_FLAG = 'boilerplate/IntentPage/TOGGLE_FLAG';
 export const ADD_TEXT_PROMPT = 'boilerplate/IntentPage/ADD_TEXT_PROMPT';
 export const DELETE_TEXT_PROMPT = 'boilerplate/IntentPage/DELETE_TEXT_PROMPT';
 export const CHANGE_SLOT_NAME = 'boilerplate/IntentPage/CHANGE_SLOT_NAME';
+export const CHANGE_SLOT_LIFESPAN = 'boilerplate/IntentPage/CHANGE_SLOT_LIFESPAN'
 export const REMOVE_USER_SAYING = 'boilerplate/IntentPage/REMOVE_USER_SAYING';
 export const REMOVE_AGENT_RESPONSE = 'boilerplate/IntentPage/REMOVE_AGENT_RESPONSE';
 export const REMOVE_SLOT = 'boilerplate/IntentPage/REMOVE_SLOT';

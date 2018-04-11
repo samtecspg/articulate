@@ -177,6 +177,7 @@ const createScenario = (callback) => {
             entity: 'Test Entity',
             isList: false,
             isRequired: true,
+            lifespan: 0,
             textPrompts: [
                 'What are you looking for?',
                 'Are you trying to find something?'

@@ -13,6 +13,21 @@ const getCurrentContext = (conversationStateObject) => {
     return null;
 };
 
+const updateLifespanOfSlots = (conversationStateObject) => {
+
+    if (conversationStateObject.context.length > 0) {
+        conversationStateObject.context.forEach(frame => {
+            if (frame.slots){
+                Object.keys(frame.slots).forEach(slotInFrame => {
+                    if (frame.slots[slotInFrame].lifespan > 0){
+                        frame.slots[slotInFrame].lifespan--;
+                    }
+                });
+            }
+        });
+    }
+};
+
 const recognizedEntitiesArePartOfTheContext = (currentContext, recognizedEntities) => {
 
     let results = _.map(recognizedEntities, (recognizedEntity) => {
@@ -186,6 +201,7 @@ const persistContext = (server, conversationStateObject, cb) => {
 module.exports = (server, conversationStateObject, callback) => {
 
     conversationStateObject.currentContext = getCurrentContext(conversationStateObject);
+    updateLifespanOfSlots(conversationStateObject);
     if (conversationStateObject.parse) {
         conversationStateObject.rasaResult = getBestRasaResult(conversationStateObject);
         conversationStateObject.intent = getIntentData(conversationStateObject);

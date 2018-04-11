@@ -4,6 +4,7 @@ import {
   CHANGE_INTENT_DATA,
   CHANGE_WEBHOOK_DATA,
   CHANGE_SLOT_NAME,
+  CHANGE_SLOT_LIFESPAN,
   DELETE_TEXT_PROMPT,
   LOAD_INTENT,
   LOAD_INTENT_ERROR,
@@ -68,6 +69,13 @@ export function toggleFlag(payload) {
 export function changeSlotName(payload) {
   return {
     type: CHANGE_SLOT_NAME,
+    payload,
+  };
+}
+
+export function changeSlotLifespan(payload) {
+  return {
+    type: CHANGE_SLOT_LIFESPAN,
     payload,
   };
 }

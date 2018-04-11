@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = (recognizedEntity, userText) => {
+module.exports = (recognizedEntity, userText, slot) => {
 
     let value;
     switch (recognizedEntity.entity){
@@ -49,5 +49,6 @@ module.exports = (recognizedEntity, userText) => {
             break;
     };
     value.original = userText.substring(recognizedEntity.start, recognizedEntity.end);
+    value.lifespan = slot ? slot.lifespan : 0;
     return value;
 };

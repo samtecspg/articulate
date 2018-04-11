@@ -30,11 +30,20 @@ export function SlotsRows(props) {
           onClickFunction={() => {
           }}
         />
-        <td style={{ width: '10%', display: 'inline-block', paddingBottom: '0px' }}>
+        <td style={{ width: '8%', display: 'inline-block', paddingBottom: '0px' }}>
           <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isList')} name="isList" type="checkbox" value="isList" label=" " className="filled-in" checked={slot.isList ? true : false} />
         </td>
-        <td style={{ width: '15%', display: 'inline-block', paddingBottom: '0px' }}>
+        <td style={{ width: '13%', display: 'inline-block', paddingBottom: '0px' }}>
           <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isRequired')} name="isRequired" type="checkbox" label=" " value="isRequired" className="filled-in" checked={slot.isRequired ? true : false} />
+        </td>
+        <td style={{ width: '11%', display: 'inline-block'}}>
+          <TextInput
+            style={{ marginBottom: '0px' }}
+            placeholder=""
+            value={`${slot.lifespan}`}
+            inputId={`slotLifespan_${slotIndex}`}
+            onChange={props.onSlotLifespanChange.bind(null, slot.slotName, 'lifespan')}
+          />
         </td>
         <TextPrompts slot={slot} onDeleteTextPrompt={props.onDeleteTextPrompt} onAddTextPrompt={props.onAddTextPrompt} />
         <td style={{ width: '5%', display: 'inline-block', paddingBottom: '0px' }}>
@@ -58,6 +67,7 @@ SlotsRows.propTypes = {
   onCheckboxChange: React.PropTypes.func,
   onAddTextPrompt: React.PropTypes.func,
   onSlotNameChange: React.PropTypes.func,
+  onSlotLifespanChange: React.PropTypes.func,
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([

@@ -60,11 +60,11 @@ export default defineMessages({
   },
   slotNameTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_tooltip',
-    defaultMessage: 'This is one instance of the intent you named upwards.',
+    defaultMessage: 'This is the name you will use to access the parsed value.',
   },
   slotEntityTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_entity_tooltip',
-    defaultMessage: 'Synonyms will help the agent to recognize this example in several different ways.',
+    defaultMessage: 'This field will identify the entity that was recognized when parsing a value.',
   },
   slotIsRequiredTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_required_tooltip',
@@ -74,9 +74,13 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_list_tooltip',
     defaultMessage: 'Flag to indicate if this slot should be grouped in a list of elements.',
   },
+  slotLifespanTooltip: {
+    id: 'boilerplate.containers.IntentPage.create_intent.slot_lifespan_tooltip',
+    defaultMessage: 'Number of frames (unit of context) that the slot value will be available to fulfill intent slots',
+  },
   slotPromptTooltip: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_prompt_tooltip',
-    defaultMessage: 'Flag to indicate if this slot should be grouped in a list of elements.',
+    defaultMessage: 'The text message that the agent will use to ask for this value to the user when the slot is required.',
   },
   slotNameTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_name_title',
@@ -89,6 +93,10 @@ export default defineMessages({
   slotIsRequiredTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_required_title',
     defaultMessage: 'Required?',
+  },
+  slotLifespanTitle: {
+    id: 'boilerplate.containers.IntentPage.create_intent.slot_lifespan_title',
+    defaultMessage: 'Lifespan',
   },
   slotIsListTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.slot_is_list_title',

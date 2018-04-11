@@ -15,7 +15,7 @@ export function TextPrompts(props) {
   });
 
   return (
-    <td style={{ width: '40%', display: 'inline-block' }}>
+    <td style={{ width: '33%', display: 'inline-block' }}>
       {rows.concat(newTextPromptInput)}
     </td>
   );

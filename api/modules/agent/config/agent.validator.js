@@ -323,6 +323,7 @@ class AgentValidate {
                                     entity: SlotSchema.entity.required(),
                                     isList: SlotSchema.isList.required(),
                                     isRequired: SlotSchema.isRequired.required(),
+                                    lifespan: SlotSchema.lifespan.required(),
                                     textPrompts: SlotSchema.textPrompts
                                 }),
                                 intentResponses: ScenarioSchema.intentResponses.required()
