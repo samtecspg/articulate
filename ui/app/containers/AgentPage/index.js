@@ -72,6 +72,10 @@ const timezones = [
     text: 'America/Kentucky/Louisville',
     value: 'America/Kentucky/Louisville',
   },
+  {
+    text: 'UTC',
+    value: 'UTC',
+  },
 ];
 
 const languages = [
