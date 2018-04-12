@@ -16,13 +16,21 @@ const updateDataFunction = (redis, entityId, currentEntity, updateData, cb) => {
 
         flatEntity[key] = flatUpdateData[key];
     });
-    redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
+
+    redis.del(`entity:${entityId}`, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error occurred adding the entity data.');
+            const error = Boom.badImplementation('An error occurred temporaly removing the entity for the update.');
             return cb(error);
         }
-        return cb(null, Flat.unflatten(flatEntity));
+        redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
+
+            if (err){
+                const error = Boom.badImplementation('An error occurred adding the entity data.');
+                return cb(error);
+            }
+            return cb(null, Flat.unflatten(flatEntity));
+        });
     });
 };
 
