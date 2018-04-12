@@ -7,7 +7,7 @@ version: '3.0'
 
 services:
   api:
-    image: samtecspg/articulate-api:0.6.1
+    image: samtecspg/articulate-api:0.6.2
     ports: ['0.0.0.0:8000:8000']
     networks: ['alpha-nlu-network']
     # The following (crazy) block is about both:
@@ -28,13 +28,13 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/agent']
   ui:
-    image: samtecspg/articulate-ui:0.6.1
+    image: samtecspg/articulate-ui:0.6.2
     ports: ['0.0.0.0:3500:3000']
     environment:
       - API_URL=${API_URL:-http://localhost:8000}
     networks: ['alpha-nlu-network']
   rasa:
-    image: samtecspg/articulate-rasa:0.6.1
+    image: samtecspg/articulate-rasa:0.6.2
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.json}:/app/config.json"]
     networks: ['alpha-nlu-network']
