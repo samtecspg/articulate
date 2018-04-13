@@ -96,7 +96,6 @@ class IntentValidate {
                         entity: SlotSchema.entity.required().error(new Error('The entity is required for the slot.')),
                         isList: SlotSchema.isList.required().error(new Error('Please specify if the slot is a list of items or not.')),
                         isRequired: SlotSchema.isRequired.required().error(new Error('Please specify if the slot is required or not.')),
-                        lifespan: SlotSchema.lifespan.required().error(new Error('Please specify the slot lifespan.')),
                         textPrompts: SlotSchema.textPrompts
                     }),
                     intentResponses: ScenarioSchema.intentResponses
@@ -129,7 +128,6 @@ class IntentValidate {
                         entity: SlotSchema.entity.required(),
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
-                        lifespan: SlotSchema.lifespan.required().error(new Error('Please specify the slot lifespan.')),
                         textPrompts: SlotSchema.textPrompts
                     }),
                     intentResponses: ScenarioSchema.intentResponses

@@ -65,7 +65,6 @@ import {
   toggleFlag,
   changeWebhookData,
   loadWebhook,
-  changeSlotLifespan,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -253,7 +252,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       entity: data.entity,
       isRequired: false,
       isList: false,
-      lifespan: 0,
       textPrompts: [],
     };
   }
@@ -410,27 +408,22 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   {
                     width: '15%',
                     label: messages.slotEntityTitle.defaultMessage,
-                    tooltip: messages.slotEntityTooltip.defaultMessage,
+                    tooltip: messages.slotEntityTitle.defaultMessage,
                   },
                   {
-                    width: '8%',
+                    width: '10%',
                     label: messages.slotIsListTitle.defaultMessage,
-                    tooltip: messages.slotIsListTooltip.defaultMessage,
+                    tooltip: messages.slotIsListTitle.defaultMessage,
                   },
                   {
-                    width: '13%',
+                    width: '15%',
                     label: messages.slotIsRequiredTitle.defaultMessage,
-                    tooltip: messages.slotIsRequiredTooltip.defaultMessage,
+                    tooltip: messages.slotIsRequiredTitle.defaultMessage,
                   },
                   {
-                    width: '11%',
-                    label: messages.slotLifespanTitle.defaultMessage,
-                    tooltip: messages.slotLifespanTooltip.defaultMessage,
-                  },
-                  {
-                    width: '38%',
+                    width: '45%',
                     label: messages.slotPromptTitle.defaultMessage,
-                    tooltip: messages.slotPromptTooltip.defaultMessage,
+                    tooltip: messages.slotPromptTitle.defaultMessage,
                   },
                 ]}
               />
@@ -441,7 +434,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onDeleteTextPrompt={this.props.onDeleteTextPrompt}
                 onRemoveSlot={this.props.onRemoveSlot}
                 onSlotNameChange={this.props.onSlotNameChange}
-                onSlotLifespanChange={this.props.onSlotLifespanChange}
                 onAddSlot={this.props.onAddSlot}
                 agentEntities={agentEntities}
               />
@@ -578,7 +570,6 @@ IntentPage.propTypes = {
   onAutoCompleteEntityFunction: React.PropTypes.func,
   onCheckboxChange: React.PropTypes.func,
   onSlotNameChange: React.PropTypes.func,
-  onSlotLifespanChange: React.PropTypes.func,
   onAddTextPrompt: React.PropTypes.func,
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
@@ -644,10 +635,6 @@ export function mapDispatchToProps(dispatch) {
     onSlotNameChange: (slotName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
       dispatch(changeSlotName({ slotName, value: evt.target.value }));
-    },
-    onSlotLifespanChange: (slotName, field, evt) => {
-      dispatch(dispatch(resetStatusFlags()));
-      dispatch(changeSlotLifespan({ slotName, field, value: parseInt(evt.target.value) }));
     },
     onAddTextPrompt: (slotName, evt) => {
       dispatch(dispatch(resetStatusFlags()));

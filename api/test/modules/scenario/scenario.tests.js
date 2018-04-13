@@ -240,7 +240,6 @@ suite('scenario', () => {
                         entity: entityName,
                         isList: false,
                         isRequired: true,
-                        lifespan: 0,
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
@@ -299,7 +298,6 @@ suite('scenario', () => {
                         entity: entityName,
                         isList: false,
                         isRequired: true,
-                        lifespan: 0,
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
@@ -338,7 +336,6 @@ suite('scenario', () => {
                         entity: entityName,
                         isList: false,
                         isRequired: true,
-                        lifespan: 0,
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
@@ -377,7 +374,6 @@ suite('scenario', () => {
                         entity: '-1',
                         isList: false,
                         isRequired: true,
-                        lifespan: 0,
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'
@@ -423,7 +419,6 @@ suite('scenario', () => {
                         entity: entityName,
                         isList: false,
                         isRequired: true,
-                        lifespan: 0,
                         textPrompts: [
                             'What are you looking for?',
                             'Are you trying to find something?'

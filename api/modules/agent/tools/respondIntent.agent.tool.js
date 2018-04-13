@@ -5,7 +5,6 @@ const _ = require('lodash');
 const RespondFulfilledIntent = require('./respondFulfilledIntent.agent.tool');
 const PromptMissingEntity = require('./promptMissingEntity.agent.tool');
 const GetEntityValue = require('./getEntityValue.agent.tool');
-const FulfillEmptySlotsWithOlderValues = require('./fulfillEmptySlotsWithOlderValues.agent.tool')
 
 module.exports = (conversationStateObject, callback) => {
 
@@ -37,18 +36,16 @@ module.exports = (conversationStateObject, callback) => {
             if (intentSlotEntitiesNames.indexOf(recognizedEntity.entity) > -1) {
                 //Get the slot name of the entity that was recognized using the index of the array of entities names
                 const slotName = intentSlotNames[intentSlotEntitiesNames.indexOf(recognizedEntity.entity)];
-                const recognizedSlot = _.filter(conversationStateObject.scenario.slots, (slot) => { return slot.slotName === slotName })[0];
                 //If the slot is a list of elemnts
                 if (isListSlots.indexOf(slotName) > -1){
                     //If there isn't a value for this slot name in the context
                     if (!conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] || conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] === ''){
                         //Get the original and parsed value of the entity
-                        const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text, recognizedSlot);
+                        const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text);
                         //Add these values to the context as a new slot
                         conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = {
                             value: entityValue.value,
-                            original: entityValue.original,
-                            lifespan: recognizedSlot.lifespan
+                            original: entityValue.original
                         };
                     }
                     //If an slot in the context already exists for the recognized slot
@@ -62,20 +59,19 @@ module.exports = (conversationStateObject, callback) => {
                                 //And clear the context of this slot
                                 conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = {
                                     value: [],
-                                    original: [],
-                                    lifespan: recognizedSlot.lifespan
+                                    original: []
                                 };
                             }
                             //Get the original and parsed value of the entity
-                            const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text, recognizedSlot);
+                            const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text);
                             //Push the recognized values to the current context slot value and original attribute
                             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName].value.push(entityValue.value);
                             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName].original.push(entityValue.original);
                         }
-                        //If the slot is a list, and it exists in the context but it wasn't an array
+                        //If the slot ias a list, and it exists in the context but it wasn't an array
                         else {
                             //Get the original and parsed value of the entity
-                            const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text, recognizedSlot);
+                            const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text);
                             //Transform the current slot in the context to an array and insert the existent values in this array
                             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = {
                                 value: [conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName].value],
@@ -91,7 +87,7 @@ module.exports = (conversationStateObject, callback) => {
                 //If slot is not a list
                 else {
                     //Just insert an object with attributes value and original into the context slot
-                    conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = GetEntityValue(recognizedEntity, conversationStateObject.text, recognizedSlot);
+                    conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = GetEntityValue(recognizedEntity, conversationStateObject.text);
                 }
             }
             //If the slot wasn't part of the scenario slots array. This means that the slot is a system entity
@@ -109,7 +105,6 @@ module.exports = (conversationStateObject, callback) => {
             //Finally return the name of the recognized entity for further checks
             return recognizedEntity.entity;
         });
-        FulfillEmptySlotsWithOlderValues(conversationStateObject);
         const missingEntities = _.filter(requiredSlots, (slot) => {
 
             return recognizedEntitiesNames.indexOf(slot.entity) === -1 && !conversationStateObject.currentContext.slots[slot.slotName];

@@ -9,7 +9,6 @@ class SlotModel {
             entity: Joi.string(),
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
-            lifespan: Joi.number(),
             textPrompts: Joi.array().items(Joi.string())
         };
     };

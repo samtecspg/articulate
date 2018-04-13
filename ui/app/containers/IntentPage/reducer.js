@@ -5,7 +5,6 @@ import {
   CHANGE_INTENT_DATA,
   CHANGE_WEBHOOK_DATA,
   CHANGE_SLOT_NAME,
-  CHANGE_SLOT_LIFESPAN,
   DELETE_TEXT_PROMPT,
   LOAD_INTENT,
   LOAD_INTENT_ERROR,
@@ -186,16 +185,6 @@ function intentReducer(state = initialState, action) {
               return intentResponse.replace(new RegExp(`{{slots.${action.payload.slotName}`, 'g'), `{{slots.${action.payload.value}`);
             }
             return intentResponse;
-          })
-        )
-        .set('touched', true);
-    case CHANGE_SLOT_LIFESPAN:
-      return state
-        .updateIn(['scenarioData', 'slots'], examples =>
-          examples.map(slot => {
-            const { slotName } = slot;
-            if (slotName !== action.payload.slotName) return slot; // Not the slot we are looking for, make no changes
-            return slot.set(action.payload.field, action.payload.value);
           })
         )
         .set('touched', true);
