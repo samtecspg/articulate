@@ -10,7 +10,11 @@ const IntentRoutes = [
             description: 'Create a new instance of the model and persist it into the data source',
             tags: ['api'],
             validate: IntentValidator.add,
-            handler: IntentController.add
+            handler: IntentController.add,
+            timeout: {
+                socket: 20 * 60 * 1000, //Max default training time 20 minutes
+                server: false
+            }
         }
     },
     {
@@ -30,7 +34,11 @@ const IntentRoutes = [
             description: 'Update attributes for a model instance and persist it into the data source',
             tags: ['api'],
             validate: IntentValidator.updateById,
-            handler: IntentController.updateById
+            handler: IntentController.updateById,
+            timeout: {
+                socket: 20 * 60 * 1000, //Max default training time 20 minutes
+                server: false
+            }
         }
     },
     {
@@ -40,7 +48,11 @@ const IntentRoutes = [
             description: 'Delete a model instance by id from the data source',
             tags: ['api'],
             validate: IntentValidator.deleteById,
-            handler: IntentController.deleteById
+            handler: IntentController.deleteById,
+            timeout: {
+                socket: 20 * 60 * 1000, //Max default training time 20 minutes
+                server: false
+            }
         }
     },
     {

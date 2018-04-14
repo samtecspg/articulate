@@ -13,6 +13,18 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
     if (updateData.examples){
         currentIntent.examples = updateData.examples;
     }
+    currentIntent.examples = _.map(currentIntent.examples, (example) => {
+
+        if (example.entities && example.entities.length > 0) {
+
+            const entities = _.sortBy(example.entities, (entity) => {
+
+                return entity.start;
+            });
+            example.entities = entities;
+        }
+        return example;
+    });
     const flatIntent = Flat(currentIntent);
     const flatUpdateData = Flat(updateData);
     Object.keys(flatUpdateData).forEach( (key) => {
