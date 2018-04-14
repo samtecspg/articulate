@@ -33,7 +33,7 @@ services:
     image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3000:3000']
     environment:
-      - API_URL=${API_URL:-localhost}
+      - API_URL=${API_URL:-http://localhost:8000}
     networks: ['alpha-nlu-network']
   rasa:
     image: samtecspg/articulate-rasa:repo-head
