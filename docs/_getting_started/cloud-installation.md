@@ -17,7 +17,7 @@ That is all that is required to run Articulate on a cloud VM. If you have any tr
 
 #### Starting The Container
 
-**If installing on a public host or on a docker host that uses a 192.168, etc type IP please ensure you create a .env file and put the below values in it so the application will work as expected**
+**If installing on a public host or on a docker host that uses a 192.168, etc type IP please ensure you create a .env file and put the below values in it so the application will work as expected.  You can see the .env.example.docker at the root directory for an example**
 
 ```DOCKER_HOST=ip_address_here
 
