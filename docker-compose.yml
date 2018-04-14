@@ -28,12 +28,12 @@ services:
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://${DOCKER_HOST}:8000/agent']
+      test: ['CMD', 'curl', '-f', 'http://${DOCKER_HOST:-localhost}:8000/agent']
   ui:
     image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3000:3000']
     environment:
-      - API_URL=${API_URL}
+      - API_URL=${API_URL:-localhost}
     networks: ['alpha-nlu-network']
   rasa:
     image: samtecspg/articulate-rasa:repo-head
