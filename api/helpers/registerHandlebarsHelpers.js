@@ -13,7 +13,7 @@ module.exports = (Handlebars) => {
     Handlebars.registerHelper('dateTimeFormat', (datetime, format) => Moment(datetime).format(format));
     HandlebarsIntl.registerWith(Handlebars);
 
-    const comparison = helpers.comparison({
+    helpers({
         handlebars: Handlebars
     });
     return Handlebars;
