@@ -19,16 +19,18 @@ That is all that is required to run Articulate on a cloud VM. If you have any tr
 
 **If installing on a public host or on a docker host that uses a 192.168, etc type IP please ensure you create a .env file and put the below values in it so the application will work as expected.  You can see the .env.example.docker at the root directory for an example**
 
-```DOCKER_HOST=ip_address_here
+`DOCKER_HOST=ip_address_here`
 
- SWAGGER_HOST=same_ip_address
+`SWAGGER_HOST=same_ip_address`
 
- API_URL=http://same_ip_address:8000```
+`API_URL=http://same_ip_address:8000`
 
  1. Make sure you have Docker and `docker-compose` installed:
 
     * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
+    
     * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
+
 
  2. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
 
