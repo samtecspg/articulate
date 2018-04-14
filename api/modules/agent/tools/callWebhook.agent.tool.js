@@ -19,13 +19,15 @@ module.exports = (webhook, conversationStateObject, callback) => {
     Axios({
         method: webhook.webhookVerb,
         url: processedWebhookUrl,
-        data: processedWebhookPayload ? JSON.parse(processedWebhookPayload) : ''
+        data: processedWebhookPayload ? (webhook.webhookPayloadType === 'JSON' ? JSON.parse(processedWebhookPayload) : processedWebhookPayload) : '',
+        headers: {'Content-Type': processedWebhookPayload ? (webhook.webhookPayloadType === 'JSON' ? 'application/json' : 'text/xml') : ''},
+        responseType: webhook.webhookPayloadType === 'XML' ? 'text' : 'json',
     })
     .then((response) => {
 
         return callback(response.data);
     })
-    .catch(() => {
+    .catch((err) => {
 
         return callback({
             textResponse: 'We\'re having trouble fulfilling that request'

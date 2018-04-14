@@ -130,6 +130,7 @@ module.exports = (conversationStateObject, callback) => {
         }
     }
     else {
+        conversationStateObject.slots = {};
         const recognizedEntities = conversationStateObject.rasaResult.entities;
         _.map(recognizedEntities, (recognizedEntity) => {
 
