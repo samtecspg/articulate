@@ -16,11 +16,6 @@ const buildListOfWords = (words, separator) => {
 
 module.exports = (Handlebars) => {
 
-    Handlebars.registerHelper('toJSON', (obj) => {
-
-        return JSON.stringify(obj, null, 2);
-    });
-
     Handlebars.registerHelper('andList', (words) => {
 
         return buildListOfWords(words, 'and');
