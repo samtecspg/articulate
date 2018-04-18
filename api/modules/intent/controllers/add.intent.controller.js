@@ -179,7 +179,7 @@ module.exports = (request, reply) => {
             Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, null),
             (cb) => {
 
-                Async.waterfall([
+                Async.parallel([
                     Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
                     Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
                 ], (err) => {

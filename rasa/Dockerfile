@@ -1,7 +1,7 @@
 FROM alpine:3.7
 
 
-ENV RASA_RELEASE=0.11.4 \
+ENV RASA_RELEASE=0.11.4.a \
     RASA_NLU_HOME=/app \
     RASA_NLU_PYTHON_PACKAGES=/usr/local/lib/python2.7/dist-packages
 
@@ -26,7 +26,7 @@ RUN apk --update add --virtual scipy-runtime python py-pip \
 
 RUN apk add git bash --update-cache
 
-RUN wget -O - https://github.com/RasaHQ/rasa_nlu/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
+RUN wget -O - https://github.com/dcalvom/rasa_nlu/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
 RUN mv rasa_nlu-${RASA_RELEASE} ${RASA_NLU_HOME}
 
 WORKDIR ${RASA_NLU_HOME}
@@ -42,11 +42,11 @@ RUN pip install -r alt_requirements/requirements_spacy_sklearn.txt
 RUN pip install -e .
 
 RUN pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_md-2.0.0/en_core_web_md-2.0.0.tar.gz --no-cache-dir > /dev/null \
-    && python -m spacy link en_core_web_md en 
+    && python -m spacy link en_core_web_md en
 RUN pip install https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.0.0/de_core_news_sm-2.0.0.tar.gz --no-cache-dir > /dev/null \
-    && python -m spacy link de_core_news_sm de 
+    && python -m spacy link de_core_news_sm de
 RUN pip install https://github.com/explosion/spacy-models/releases/download/fr_core_news_md-2.0.0/fr_core_news_md-2.0.0.tar.gz --no-cache-dir > /dev/null \
-    && python -m spacy link fr_core_news_md fr 
+    && python -m spacy link fr_core_news_md fr
 RUN pip install https://github.com/explosion/spacy-models/releases/download/es_core_news_md-2.0.0/es_core_news_md-2.0.0.tar.gz --no-cache-dir > /dev/null \
     && python -m spacy link es_core_news_md es
 
