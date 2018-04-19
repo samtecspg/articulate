@@ -49,6 +49,8 @@ RUN pip install https://github.com/explosion/spacy-models/releases/download/fr_c
     && python -m spacy link fr_core_news_md fr 
 RUN pip install https://github.com/explosion/spacy-models/releases/download/es_core_news_md-2.0.0/es_core_news_md-2.0.0.tar.gz --no-cache-dir > /dev/null \
     && python -m spacy link es_core_news_md es
+RUN pip install https://github.com/explosion/spacy-models/releases/download/pt_core_news_sm-2.0.0/pt_core_news_sm-2.0.0.tar.gz --no-cache-dir > /dev/null \
+    && python -m spacy link pt_core_news_sm pt
 
 RUN pip uninstall msgpack-python -y
 RUN pip install msgpack-python==0.5.2

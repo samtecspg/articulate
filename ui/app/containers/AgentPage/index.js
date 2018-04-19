@@ -84,12 +84,16 @@ const languages = [
     text: 'English',
   },
   {
+    value: 'fr',
+    text: 'French',
+  },
+  {
     value: 'de',
     text: 'German',
   },
   {
-    value: 'fr',
-    text: 'French',
+    value: 'pt',
+    text: 'Portuguese',
   },
   {
     value: 'es',
