@@ -4,6 +4,8 @@
 
 [![Join the chat at https://gitter.im/samtecspg/articulate](https://badges.gitter.im/samtecspg/articulate.svg)](https://gitter.im/samtecspg/articulate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+![Articulate Interface](./docs/img/main-ilus.png)
+
 ## Documentation
 
 https://samtecspg.github.io/articulate/
@@ -12,6 +14,16 @@ https://samtecspg.github.io/articulate/
 
 Please see the [Documentation](https://samtecspg.github.io/articulate/getting_started/cloud-installaion)
 
+   * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
+   * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
+
+2. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
+
+3. Unzip and get a terminal or CMD in the release directory
+
+4. run `docker-compose up` (`sudo` might be needed)
+
+5. point your web browser at  http://localhost:3000 and enjoy Articulate
 
 ## License
 ```
