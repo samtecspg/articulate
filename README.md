@@ -4,6 +4,8 @@
 
 [![Join the chat at https://gitter.im/samtecspg/articulate](https://badges.gitter.im/samtecspg/articulate.svg)](https://gitter.im/samtecspg/articulate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+![Articulate Interface](./docs/img/main-ilus.png)
+
 ## Documentation
 
 https://samtecspg.github.io/articulate/
