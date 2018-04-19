@@ -23,7 +23,7 @@ https://samtecspg.github.io/articulate/
 
 4. run `docker-compose up` (`sudo` might be needed)
 
-5. point your web browser at  http://localhost:3500 and enjoy Articulate
+5. point your web browser at  http://localhost:3000 and enjoy Articulate
 
 ## License
 ```
