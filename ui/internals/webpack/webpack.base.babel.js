@@ -197,5 +197,27 @@ module.exports = (options) => ({
         "uiColor": material.purple['500']
       }
     ]),
+    languages: JSON.stringify([
+      {
+        value: 'en',
+        text: 'English',
+      },
+      {
+        value: 'fr',
+        text: 'French',
+      },
+      {
+        value: 'de',
+        text: 'German',
+      },
+      {
+        value: 'pt',
+        text: 'Portuguese',
+      },
+      {
+        value: 'es',
+        text: 'Spanish',
+      }
+    ]),
   },
 });

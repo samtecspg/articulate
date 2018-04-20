@@ -57,6 +57,8 @@ import {
 
 import messages from './messages';
 
+import languages from 'languages';
+
 import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData } from './selectors';
 
 /* import timezones from './data/timezones.json';
@@ -76,25 +78,6 @@ const timezones = [
     text: 'UTC',
     value: 'UTC',
   },
-];
-
-const languages = [
-  {
-    value: 'en',
-    text: 'English',
-  },
-  {
-    value: 'de',
-    text: 'German',
-  },
-  {
-    value: 'fr',
-    text: 'French',
-  },
-  {
-    value: 'es',
-    text: 'Spanish',
-  }
 ];
 
 const sampleData = [
