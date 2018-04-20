@@ -2,6 +2,7 @@ import Immutable from 'seamless-immutable';
 import {
   ACTION_CANCELLED,
   CONVERSE,
+  MISSING_AGENT,
   CONVERSE_ERROR,
   CONVERSE_SUCCESS,
   CREATE_AGENT,
@@ -253,6 +254,13 @@ function appReducer(state = initialState, action) {
         .set('loadingConversation', false)
         .update('conversation', (conversation) => conversation.concat({
           message: 'I\'m sorry! I\'m having issues connecting with my brain. Can you retry later',
+          author: 'agent',
+        }));
+    case MISSING_AGENT:
+      return state
+        .set('loadingConversation', false)
+        .update('conversation', (conversation) => conversation.concat({
+          message: 'You need to select an agent first',
           author: 'agent',
         }));
     case RESET_SESSION:

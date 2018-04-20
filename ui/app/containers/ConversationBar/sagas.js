@@ -9,22 +9,28 @@ import {
   converseError,
   converseRespond,
   resetSessionError,
-  resetSessionSuccess
+  resetSessionSuccess,
+  missingAgent
 } from '../App/actions';
 import { CONVERSE, RESET_SESSION } from '../App/constants';
 
 export function* postMessage(payload) {
 
   const { api, agent, message } = payload;
-  try {
-    const response = yield call(api.agent.getAgentIdConverse, {
-      id: agent,
-      text: message,
-      sessionId: 'articulateUI',
-    });
-    yield put(converseRespond(response.obj));
-  } catch ({ response }) {
-    yield put(converseError());
+  if (agent){
+    try {
+      const response = yield call(api.agent.getAgentIdConverse, {
+        id: agent,
+        text: message,
+        sessionId: 'articulateUI',
+      });
+      yield put(converseRespond(response.obj));
+    } catch ({ response }) {
+      yield put(converseError());
+    }
+  }
+  else{
+    yield put(missingAgent());
   }
 }
 

@@ -39,6 +39,7 @@ export const RESET_SESSION_ERROR = 'boilerplate/App/RESET_SESSION_ERROR';
 export const CONVERSE = 'boilerplate/App/CONVERSE';
 export const CONVERSE_SUCCESS = 'boilerplate/App/CONVERSE_SUCCESS';
 export const CONVERSE_ERROR = 'boilerplate/App/CONVERSE_ERROR';
+export const MISSING_AGENT = 'boilerplate/App/MISSING_AGENT'
 export const DEFAULT_LOCALE = 'en';
 //export const SELECT_CURRENT_AGENT = 'boilerplate/App/SELECT_CURRENT_AGENT';
 export const LOAD_CURRENT_AGENT = 'boilerplate/App/LOAD_CURRENT_AGENT';
