@@ -4,6 +4,7 @@ const Server = require('./index');
 const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
+const HapiSwaggerUI = require('hapi-swaggered-ui');
 const Pack = require('./package');
 
 Server((err, server) => {
@@ -14,7 +15,7 @@ Server((err, server) => {
         return process.exit(1);
     }
 
-    const optionsDoc = {
+    const swaggerOptions = {
         info: {
             title: 'Natural Language Understanding API Documentation',
             version: Pack.version,
@@ -24,10 +25,29 @@ Server((err, server) => {
         },
         schemes: process.env.SWAGGER_SCHEMES ? [process.env.SWAGGER_SCHEMES] : ['http'],
         host: process.env.SWAGGER_HOST || 'localhost:8000',
-        basePath: process.env.SWAGGER_BASE_PATH || '/'
+        basePath: process.env.SWAGGER_BASE_PATH || '/',
+        documentationPage: false
     };
 
-    server.register([Inert, Vision, { 'register': HapiSwagger, 'options': optionsDoc }], (err) => {
+    const swaggerUIScheme = process.env.SWAGGER_SCHEMES ? process.env.SWAGGER_SCHEMES[0] : 'http';
+    const swaggerUIPath = swaggerUIScheme + '://' +
+                        (process.env.SWAGGER_HOST || 'localhost:8000') +
+                        (process.env.SWAGGER_BASE_PATH || '');
+
+
+    const swaggerUIOptions = {
+        title: 'Natural Language Understanding API Documentation',
+        path: '/documentation',
+        basePath: swaggerUIPath,
+        swaggerEndpoint: '/swagger.json'
+    };
+
+    server.register([
+        Inert,
+        Vision,
+        { 'register': HapiSwagger, 'options': swaggerOptions },
+        { 'register': HapiSwaggerUI, 'options': swaggerUIOptions }
+    ], (err) => {
 
         if (err) {
             console.log(err);

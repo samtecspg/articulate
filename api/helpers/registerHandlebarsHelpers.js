@@ -11,7 +11,7 @@ const buildListOfWords = (words, separator) => {
     if (words.length === 2){
         return words[0] + ' ' + separator + ' ' + words[1];
     }
-    return words.slice(0,words.length - 1).join(', ') + ', ' + separator + ' ' + words[words.length -1];
+    return words.slice(0, words.length - 1).join(', ') + ', ' + separator + ' ' + words[words.length - 1];
 };
 
 module.exports = (Handlebars) => {
