@@ -17,7 +17,7 @@ Server((err, server) => {
 
     const swaggerOptions = {
         info: {
-            title: 'Natural Language Understanding API Documentation',
+            title: 'Articulate API Documentation',
             version: Pack.version,
             contact: {
                 name: 'Smart Platform Group'
@@ -29,17 +29,21 @@ Server((err, server) => {
         documentationPage: false
     };
 
-    const swaggerUIScheme = process.env.SWAGGER_SCHEMES ? process.env.SWAGGER_SCHEMES[0] : 'http';
+    const swaggerUIScheme = process.env.SWAGGER_SCHEMES ? [process.env.SWAGGER_SCHEMES][0] : 'http';
     const swaggerUIPath = swaggerUIScheme + '://' +
                         (process.env.SWAGGER_HOST || 'localhost:8000') +
                         (process.env.SWAGGER_BASE_PATH || '');
 
 
     const swaggerUIOptions = {
-        title: 'Natural Language Understanding API Documentation',
+        title: 'Articulate API Documentation',
         path: '/documentation',
         basePath: swaggerUIPath,
-        swaggerEndpoint: '/swagger.json'
+        swaggerOptions: {
+            validatorUrl: false,
+        },
+        authorization: false,
+        swaggerEndpoint: (process.env.SWAGGER_BASE_PATH || '') + '/swagger.json'
     };
 
     server.register([
