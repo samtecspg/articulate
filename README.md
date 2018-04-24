@@ -12,10 +12,12 @@ https://samtecspg.github.io/articulate/
 
 ## QUICK START
 
-1. Make sure you have Docker and `docker-compose` installed:
+Please see the [Documentation](https://samtecspg.github.io/articulate/getting_started/cloud-installaion)
 
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
+   
+1. Make sure you have Docker and `docker-compose` installed:
 
 2. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
 
@@ -41,4 +43,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
