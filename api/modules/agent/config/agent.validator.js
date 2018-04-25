@@ -150,7 +150,7 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr').required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
+                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr', 'pt').required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
@@ -171,7 +171,7 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName,
                     description: AgentSchema.description,
-                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr').error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
+                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr', 'pt').error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone,
                     useWebhook: AgentSchema.useWebhook,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
@@ -279,7 +279,7 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.required().valid('en', 'es', 'de', 'fr').error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
+                    language: AgentSchema.language.required().valid('en', 'es', 'de', 'fr', 'pt').error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),

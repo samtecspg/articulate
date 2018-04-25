@@ -63,8 +63,6 @@ import timezones from 'timezones';
 
 import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData } from './selectors';
 
-/*import sampleData from './data/sampleData.json';*/
-
 const sampleData = [
   {
     value: 'smallTalk',

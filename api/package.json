@@ -40,6 +40,7 @@
     "handlebars-intl": "^1.1.2",
     "hapi": "^16.1.1",
     "hapi-swagger": "^7.7.0",
+    "hapi-swaggered-ui": "^2.6.2",
     "inert": "^4.2.0",
     "joi": "^10.4.1",
     "json2xml": "^0.1.3",

@@ -10,7 +10,14 @@ const getTextResponse = (conversationStateObject, webhookResponse) => {
         conversationStateObject = _.merge(conversationStateObject, webhookResponse);
     }
     const validResponses = BuildValidResponses(conversationStateObject, conversationStateObject.scenario.intentResponses);
-    const textResponse = validResponses.length > 0 ? validResponses[Math.floor(Math.random() * validResponses.length)].response : '';
+    let textResponse;
+    if (validResponses.length > 0){
+        textResponse = validResponses[Math.floor(Math.random() * validResponses.length)].response;
+    }
+    else {
+        textResponse = 'Sorry we’re not sure how to respond.';
+        console.error(`Failed to generate valid response for intent ${conversationStateObject.intent.intentName}`);
+    }
     return textResponse;
 };
 

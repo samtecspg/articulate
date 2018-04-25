@@ -14,6 +14,15 @@ export default [{
   minWidth: 1.75,
 
 }, {
+  id: 'domain',
+  label: 'Domain',
+  tooltip: '',
+  type: 'string',
+  accessor: row => row.domain,
+  headerClassName: 'text-align-left table2-header',
+  cellClassName: 'text-align-left table2-column',
+  minWidth: 1.75,
+}, {
   label: 'Examples',
   id: 'examples',
   tooltip: '',

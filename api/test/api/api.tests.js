@@ -5,8 +5,8 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const Inert = require('inert');
 const Vision = require('vision');
-const HapiSwagger = require('hapi-swagger');
-const Pack = require('../../package');
+// const HapiSwagger = require('hapi-swagger');
+// const Pack = require('../../package');
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -24,17 +24,7 @@ suite('NLU API', () => {
                     done(err);
                 }
 
-                const optionsDoc = {
-                    info: {
-                        title: 'Natural Language Understanding API Documentation',
-                        version: Pack.version,
-                        contact: {
-                            name: 'Smart Platform Group'
-                        }
-                    }
-                };
-
-                server.register([Inert, Vision, { 'register': HapiSwagger, 'options': optionsDoc }], (err) => {
+                server.register([Inert, Vision], (err) => {
 
                     if (err) {
                         done(err);
