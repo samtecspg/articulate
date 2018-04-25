@@ -30,9 +30,9 @@ export function* getAgentDomains(payload) {
     yield put(agentDomainsLoadingError({ message: response.obj.message }));
   } finally {
     if (yield cancelled()) {
-      yield put(actionCancelled({
+      /*yield put(actionCancelled({
         message: 'Get Agent Domains Cancelled',
-      }));
+      }));*/
     }
   }
 }
@@ -41,8 +41,8 @@ export function* loadAgentDomains() {
   const watcher = yield takeLatest(LOAD_AGENT_DOMAINS, getAgentDomains);
 
   // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  /*yield take(LOCATION_CHANGE);
+  yield cancel(watcher);*/
 }
 
 export function* deleteDomain() {
