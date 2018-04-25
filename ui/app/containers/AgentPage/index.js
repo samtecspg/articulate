@@ -23,6 +23,7 @@ import ContentSubHeader from '../../components/ContentSubHeader';
 import Form from '../../components/Form';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import InputLabel from '../../components/InputLabel';
+import Typeahead from '../../components/Typeahead';
 
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
@@ -58,27 +59,11 @@ import {
 import messages from './messages';
 
 import languages from 'languages';
+import timezones from 'timezones';
 
 import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData } from './selectors';
 
-/* import timezones from './data/timezones.json';
-import languages from './data/languages.json';
-import sampleData from './data/sampleData.json';*/
-
-const timezones = [
-  {
-    text: 'America/Chicago',
-    value: 'America/Chicago',
-  },
-  {
-    text: 'America/Kentucky/Louisville',
-    value: 'America/Kentucky/Louisville',
-  },
-  {
-    text: 'UTC',
-    value: 'UTC',
-  },
-];
+/*import sampleData from './data/sampleData.json';*/
 
 const sampleData = [
   {
@@ -203,10 +188,17 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       });
     }
     else {
-      if (this.state.editMode) {
-        this.props.onUpdate();
-      } else {
-        this.props.onCreate();
+      if (timezones.indexOf(this.props.agent.timezone) === -1){
+        Alert.error(messages.invalidTimezone.defaultMessage, {
+          position: 'bottom'
+        });
+      }
+      else {
+        if (this.state.editMode) {
+          this.props.onUpdate();
+        } else {
+          this.props.onCreate();
+        }
       }
     }
   }
@@ -326,7 +318,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               >
                 {returnFormattedOptions(languages)}
               </Input>
-              <Input
+              {/*<Input
                 s={6}
                 name="timezone"
                 type="select"
@@ -335,7 +327,16 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
               >
                 {returnFormattedOptions(timezones)}
-              </Input>
+              </Input>*/}
+              <Typeahead
+                id= 'timezone'
+                name='timezone'
+			          maxResults='20'
+                callback={this.props.onChangeAgentData}
+                label={messages.timezone.defaultMessage}
+                value={agent.timezone}
+                s={6}
+              />
             </Row>
           </Form>
 

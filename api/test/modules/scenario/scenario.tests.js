@@ -26,7 +26,7 @@ const createAgent = (callback) => {
         agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
         description: 'This is test agent',
         language: 'en',
-        timezone: 'America/Kentucky/Louisville',
+        timezone: 'UTC',
         domainClassifierThreshold: 0.6,
         fallbackResponses: [
             'Sorry, can you rephrase that?',

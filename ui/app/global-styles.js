@@ -342,6 +342,15 @@ injectGlobal`
     -ms-border-radius: 3px;
     border-radius: 3px; }
 
+  .timezones {
+    box-shadow: none;
+    border: 1px solid #00ca9f;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+  }
+
   [type="radio"]:checked + label:after, [type="radio"].with-gap:checked + label:after {
     background-color: #00ca9f; }
 
