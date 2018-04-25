@@ -56,7 +56,7 @@ const initialState = Immutable({
   oldIntent: null,
   oldScenario: null,
   oldWebhook: null,
-  oldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"intent": {{{toJSON intent}}},\n\t"slots": {{{toJSON slots}}}\n}',
+  oldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"intent": {{{JSONstringify intent}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   oldPayloadXML: '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n\t<text>{{text}}</text>\n\t<intent>{{{toXML intent}}}</intent>\n\t<slots>{{{toXML slots}}}</slots>\n</data>'
 });
 

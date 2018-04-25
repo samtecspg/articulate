@@ -25,7 +25,7 @@ This screen allows you to create intents from user examples. It also allows mana
 {% raw %}
 {
     "intent": {{intent.intentName}},
-    "slots": {{toJSON slots}}
+    "slots": {{JSONstringify slots}}
 }
 {% endraw %}
 ```
