@@ -149,6 +149,8 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'agentEdit');
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+
+    document.getElementById('agentName').focus();
   }
 
   componentDidUpdate(prevProps, prevState, prevContext) {
@@ -285,6 +287,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             </Row>
             <Row>
               <FormTextInput
+                id='agentName'
                 label={messages.agentName}
                 placeholder={messages.agentNamePlaceholder.defaultMessage}
                 inputId="agentName"

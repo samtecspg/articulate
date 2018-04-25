@@ -53,6 +53,8 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
 
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'domainEdit');
+
+    document.getElementById('domainName').focus();
   }
 
   componentWillUpdate(nextProps) {
@@ -145,6 +147,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
           <Form>
             <Row>
               <FormTextInput
+                id='domainName'
                 label={messages.domainName}
                 placeholder={messages.domainNamePlaceholder.defaultMessage}
                 value={domain.domainName}

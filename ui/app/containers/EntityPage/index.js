@@ -80,6 +80,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'entityEdit');
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+    document.getElementById('entityName').focus();
   }
 
   componentWillMount() {
@@ -216,6 +217,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
           <Form>
             <Row>
               <FormTextInput
+                id='entityName'
                 label={messages.entityName}
                 placeholder={messages.entityNamePlaceholder.defaultMessage}
                 inputId="entityName"
