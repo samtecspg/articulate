@@ -46,7 +46,14 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
 
   searchTable(searchText) {
     const filter = (value) => {
-      const search = (field) => value[field].toString().toLowerCase().indexOf(searchText.toLowerCase()) >= 0;
+      const search = (field) => {
+        if (typeof field === 'function'){
+          return value[field(value).columnName].toString().toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+        }
+        else {
+          return value[field].toString().toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+        }
+      };
       return _(this.state.filterFields).map(search).compact().value().length > 0;
     };
     const filteredData = searchText ? _.filter(this.state.initialData, filter) : this.state.initialData;

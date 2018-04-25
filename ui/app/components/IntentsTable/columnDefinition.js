@@ -6,7 +6,7 @@ export default [{
   tooltip: '',
   type: 'link',
   accessor: row => {
-    return { label: row.intentName, path: `/intent/${row.id}/edit` };
+    return { label: row.intentName, path: `/intent/${row.id}/edit`, columnName: 'intentName' };
   },
   filterable: true,
   headerClassName: 'text-align-left table2-header',

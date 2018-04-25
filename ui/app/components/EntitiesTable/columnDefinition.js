@@ -4,7 +4,7 @@ export default [{
   tooltip: '',
   type: 'link',
   accessor: row => {
-    return { label: row.entityName, path: `/entity/${row.id}/edit` };
+    return { label: row.entityName, path: `/entity/${row.id}/edit`, columnName: 'entityName' };
   },
   filterable: true,
   headerClassName: 'text-align-left table2-header',
