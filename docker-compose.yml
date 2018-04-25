@@ -8,7 +8,7 @@ version: '3.0'
 services:
   api:
     image: samtecspg/articulate-api:repo-head
-    ports: ['0.0.0.0:8000:8000']
+    ports: ['0.0.0.0:7500:7500']
     networks: ['alpha-nlu-network']
     # The following (crazy) block is about both:
     # 1) setting default values for app parameteres
@@ -31,7 +31,7 @@ services:
     image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3000:3000']
     environment:
-      - API_URL=${API_URL:-http://localhost:8000}
+      - API_URL=${API_URL:-http://localhost:7500}
     networks: ['alpha-nlu-network']
   rasa:
     image: samtecspg/articulate-rasa:repo-head
@@ -40,7 +40,7 @@ services:
     networks: ['alpha-nlu-network']
   duckling:
     image: samtecspg/duckling:0.1.0.0
-    ports: ['0.0.0.0:8500:8000']
+    ports: ['0.0.0.0:8000:8000']
     networks: ['alpha-nlu-network']
   redis:
     image: redis:4.0.6-alpine

@@ -42,7 +42,7 @@ To initialize the NLU API run:
 npm run start:server
 ```
 
-Test the system, go to [http://localhost:8000/documentation](http://localhost:8000/documentation) and explore the API.
+Test the system, go to [http://localhost:7500/documentation](http://localhost:7500/documentation) and explore the API.
 
 :information_source: The NLU API will check every time it is started that the ES's indexes structure are valid. If not, the API will automatically stop.
 
@@ -74,7 +74,7 @@ Take note of the ids returned by the API for each intent and entity, and with th
 
 To parse documents use the `/parse` endpoint of the API. Remember to navigate the swagger file on `/documentation` in your browser to get more information about endpoints, but for now, you just need to know that the `/parse` endpoint receives a query param called `text`.
 
-Call `http://localhost:8000/parse` and pass the `text` param with `show me spanish places in the center for today` string. If you have your API service running click [here](http://localhost:8000/parse?text=show%20me%20spanish%20places%20in%20the%20center%20for%20today) and you will have your first document parsed.
+Call `http://localhost:7500/parse` and pass the `text` param with `show me spanish places in the center for today` string. If you have your API service running click [here](http://localhost:7500/parse?text=show%20me%20spanish%20places%20in%20the%20center%20for%20today) and you will have your first document parsed.
 
 You can check the documents parsing history at the `doc` endpoint.
 

@@ -65,9 +65,9 @@ const initRedis = (next) => {
 const initHapi = (next) => {
 
     const server = new Hapi.Server();
-    server.connection({ port: 8000, routes: { cors: true } });
+    server.connection({ port: 7500, routes: { cors: true } });
     server.app.rasa = process.env.RASA_URL ? process.env.RASA_URL : 'http://localhost:5000';
-    server.app.duckling = process.env.DUCKLING_URL ? process.env.DUCKLING_URL : 'http://localhost:8500';
+    server.app.duckling = process.env.DUCKLING_URL ? process.env.DUCKLING_URL : 'http://localhost:8000';
     server.app.rasa_er_pipeline = ERPipeline;
 
     /* $lab:coverage:off$ */
