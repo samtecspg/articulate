@@ -168,6 +168,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
 
   onLeave(){
     this.props.resetForm();
+    this.props.router.push(this.state.nextRoute.pathname);
   }
 
   onDismiss(){
