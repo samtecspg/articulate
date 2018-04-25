@@ -12,7 +12,7 @@ https://samtecspg.github.io/articulate/
 
 ## QUICK START
 
-Please see the [Documentation](https://samtecspg.github.io/articulate/getting_started/cloud-installaion)
+Please see the [Documentation](https://samtecspg.github.io/articulate/getting_started/cloud-installation)
 
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
