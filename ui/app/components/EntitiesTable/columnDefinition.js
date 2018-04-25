@@ -1,11 +1,14 @@
 export default [{
+  id: 'name',
   label: 'Entity',
   tooltip: '',
-  type: 'string',
-  accessor: 'entityName',
+  type: 'link',
+  accessor: row => {
+    return { label: row.entityName, path: `/entity/${row.id}/edit` };
+  },
+  filterable: true,
   headerClassName: 'text-align-left table2-header',
   cellClassName: 'text-align-left table2-column',
-  filterable: true,
   minWidth: 1,
 }, {
   label: 'Color',
