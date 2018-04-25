@@ -144,6 +144,8 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     clickedSave: false,
     waitingForConfirm: false,
     nextRoute: null,
+    webhookJustOpen: false,
+    webhookPayloadJustOpen: false,
   };
 
   componentDidMount() {
@@ -185,7 +187,17 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         }
       }
     } else {
-      this.props.onChangeIntentData(field, value);
+      if (field === 'useWebhook' && value){
+        this.state.webhookJustOpen = true;
+        this.props.onChangeIntentData(field, value);
+      }
+      else {
+        if (field === 'webhookPayloadType' && evt.target.value !== 'None'){
+          this.state.webhookPayloadJustOpen = true;
+          this.props.onChangeWebhookData('webhookPayloadType', evt)
+        }
+        this.props.onChangeIntentData(field, value);
+      }
     }
   }
 
@@ -204,6 +216,18 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       Alert.error(this.props.error.message, {
         position: 'bottom'
       });
+    }
+
+    if (this.state.webhookJustOpen){
+      this.state.webhookJustOpen = false;
+      document.getElementById('webhookEditor').focus();
+      document.getElementById('webhookEditor').scrollIntoView();
+    }
+
+    if (this.state.webhookPayloadJustOpen){
+      this.state.webhookPayloadJustOpen = false;
+      document.getElementById('webhookPayload').focus();
+      document.getElementById('webhookPayload').scrollIntoView();
     }
   }
 
@@ -494,6 +518,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                     {returnFormattedOptions(verbs)}
                   </Input>
                   <FormTextInput
+                    id='webhookEditor'
                     label={messages.webhookUrl}
                     placeholder={messages.webhookUrlPlaceholder.defaultMessage}
                     inputId="description"
@@ -507,7 +532,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                     type="select"
                     label={messages.webhookPayloadType.defaultMessage}
                     value={webhook.webhookPayloadType}
-                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayloadType')}
+                    onChange={(evt) => this.onChangeInput(evt, 'webhookPayloadType')}
                   >
                     {returnFormattedOptions(payloadTypes)}
                   </Input>
