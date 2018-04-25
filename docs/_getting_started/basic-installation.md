@@ -34,4 +34,4 @@ To get started
 
 5. point your web browser at [http://localhost:3500](http://localhost:3500) and enjoy Articulate
 
-To explore the API you can go to [http://localhost:8000/documentation](http://localhost:8000/documentation)
+To explore the API you can go to [http://localhost:7500/documentation](http://localhost:7500/documentation)

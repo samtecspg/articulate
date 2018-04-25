@@ -7,7 +7,7 @@ services:
     build:
       context: './ui/.'
       args:
-        - API_URL=${API_URL:-http://localhost:8000} # Needed for running yarn build in Dockerfile
+        - API_URL=${API_URL:-http://localhost:7500} # Needed for running yarn build in Dockerfile
   rasa:
     build:
       context: './rasa/.'
