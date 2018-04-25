@@ -61,19 +61,12 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            DomainTools.retrainModelTool(server, rasa, agent.language, domain.agent, domain.domainName, domainId, (err) => {
+            Async.parallel([
+                Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, domain.agent, domain.domain, domainId),
+                Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, domain.agent, agentId)
+            ], (err) => {
 
-                if (err){
-                    return callback(err);
-                }
-                return callback(null);
-            });
-        },
-        (callback) => {
-
-            DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, domain.agent, agentId, (err) => {
-
-                if (err){
+                if (err) {
                     return callback(err);
                 }
                 return callback(null);

@@ -38,8 +38,8 @@ export function* loadDomainIntents() {
   const watcher = yield takeLatest(LOAD_DOMAINS_INTENTS, getDomainIntents);
 
   // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  //yield take(LOCATION_CHANGE);
+  //yield cancel(watcher);
 }
 
 export function* deleteIntent() {
@@ -88,8 +88,8 @@ export function* loadAgentIntents() {
   const watcher = yield takeLatest(LOAD_AGENT_INTENTS, getAgentIntents);
 
   // Suspend execution until location changes
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  //yield take(LOCATION_CHANGE);
+  //yield cancel(watcher);
 }
 
 // Bootstrap sagas

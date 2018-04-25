@@ -6,7 +6,7 @@ export default [{
   tooltip: '',
   type: 'link',
   accessor: row => {
-    return { label: row.domainName, path: `/intents?domainId=${row.id}` };
+    return { label: row.domainName, path: `/intents?domainId=${row.id}`, columnName: 'domainName' };
   },
   headerClassName: 'text-align-left table2-header',
   cellClassName: 'text-align-left table2-column',

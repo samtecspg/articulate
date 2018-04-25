@@ -13,6 +13,6 @@ COPY . /usr/src/app/
 
 # Install app dependencies
 
-EXPOSE 8000
+EXPOSE 7500
 
 ENTRYPOINT [ "node", "start.js" ]

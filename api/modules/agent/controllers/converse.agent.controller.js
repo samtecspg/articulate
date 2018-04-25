@@ -77,7 +77,7 @@ module.exports = (request, reply) => {
         },
         (conversationStateObject, callback) => {
 
-            const timezoneToUse = timezone ? timezone : (conversationStateObject.agent.timezone ? conversationStateObject.agent.timezone : 'America/Kentucky/Louisville');
+            const timezoneToUse = timezone ? timezone : (conversationStateObject.agent.timezone ? conversationStateObject.agent.timezone : 'UTC');
             conversationStateObject.text = text;
             conversationStateObject.sessionId = sessionId;
             conversationStateObject.timezone = timezoneToUse;

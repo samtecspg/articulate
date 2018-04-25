@@ -1,4 +1,5 @@
 {
+  "max_training_processes": 4,
   "pipeline": ["nlp_spacy", "tokenizer_spacy", "intent_featurizer_spacy", "ner_crf", "ner_synonyms",  "intent_classifier_sklearn", "ner_spacy"],
   "mitie_file": "./data/total_word_feature_extractor.dat"
 }

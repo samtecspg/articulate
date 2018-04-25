@@ -24,14 +24,14 @@ Server((err, server) => {
             }
         },
         schemes: process.env.SWAGGER_SCHEMES ? [process.env.SWAGGER_SCHEMES] : ['http'],
-        host: process.env.SWAGGER_HOST || 'localhost:8000',
+        host: process.env.SWAGGER_HOST || 'localhost:7500',
         basePath: process.env.SWAGGER_BASE_PATH || '/',
         documentationPage: false
     };
 
     const swaggerUIScheme = process.env.SWAGGER_SCHEMES ? [process.env.SWAGGER_SCHEMES][0] : 'http';
     const swaggerUIPath = swaggerUIScheme + '://' +
-                        (process.env.SWAGGER_HOST || 'localhost:8000') +
+                        (process.env.SWAGGER_HOST || 'localhost:7500') +
                         (process.env.SWAGGER_BASE_PATH || '');
 
 

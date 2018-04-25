@@ -4,6 +4,22 @@ const _ = require('lodash');
 
 const CartesianProduct = require('./cartesianProduct.domain.tool');
 
+var homogenize = function(combination){
+    return _.map(_.orderBy(combination, 'entityText'), 'entityText').join(',');
+};
+
+const removeDuplicatesAndRepeatedValues = (entitiesCombinations) => {
+
+    let cleanEntitiesCombinations = _.uniqBy(entitiesCombinations, homogenize);
+
+    cleanEntitiesCombinations = _.filter(cleanEntitiesCombinations, (combination) => {
+
+        const countOfDifferentTexts = _.countBy(combination, 'entityText');
+        return combination.length === Object.keys(countOfDifferentTexts).length;
+    });
+    return cleanEntitiesCombinations;
+};
+
 const getCombinationOfEntities = (entities, intents) => {
 
     const intentExamples = _.flatten(_.map(intents, 'examples'));
@@ -45,6 +61,7 @@ const getCombinationOfEntities = (entities, intents) => {
             let entitiesCombinations;
             if (entitiesList.length > 1 && Array.isArray(entitiesList[0])){
                 entitiesCombinations = CartesianProduct(entitiesList);
+                entitiesCombinations = removeDuplicatesAndRepeatedValues(entitiesCombinations);
             }
             else {
                 entitiesCombinations = entitiesList;

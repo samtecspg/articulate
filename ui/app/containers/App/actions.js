@@ -77,6 +77,7 @@ import {
   UPDATE_SCENARIO_ERROR,
   UPDATE_SCENARIO_SUCCESS,
   UPDATE_WEBHOOK_ERROR,
+  MISSING_AGENT,
 } from './constants';
 
 export function loadAgents() {
@@ -326,6 +327,12 @@ export function converseRespond(data) {
 export function converseError() {
   return {
     type: CONVERSE_ERROR,
+  };
+}
+
+export function missingAgent() {
+  return {
+    type: MISSING_AGENT,
   };
 }
 

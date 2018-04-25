@@ -38,9 +38,9 @@ export function* getAgentEntities(payload) {
     yield put(agentEntitiesLoadingError({ message: response.obj.message }));
   } finally {
     if (yield cancelled()) {
-      yield put(actionCancelled({
+      /*yield put(actionCancelled({
         message: 'Get Agent Entities Cancelled',
-      }));
+      }));*/
     }
   }
 }
@@ -83,9 +83,9 @@ export function* getEntityIntents(payload) {
     yield put(loadEntityIntentsError({ message: response.obj.message }));
   } finally {
     if (yield cancelled()) {
-      yield put(actionCancelled({
+      /*yield put(actionCancelled({
         message: 'Get Entity Intents Cancelled',
-      }));
+      }));*/
     }
   }
 }

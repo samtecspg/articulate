@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React from 'react';
 import { Icon } from 'react-materialize';
 import ReactTable from 'react-table';
-import SearchInput from '../SearchInput/index';
 import Table2Cell from '../Table2Cell';
 import MenuCell from '../Table2Cell/types/MenuCell';
 
@@ -13,44 +12,6 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
   constructor() {
     super();
     this.generateColumnDefinition = this.generateColumnDefinition.bind(this);
-    this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
-    this.searchTable = this.searchTable.bind(this);
-    this.updateData = this.updateData.bind(this);
-  }
-
-  state = {
-    initialData: [],
-    data: [],
-    filterFields: [],
-  };
-
-  componentWillMount() {
-    this.updateData(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.updateData(nextProps);
-  }
-
-  onChangeSearchInput(event) {
-    this.searchTable(event.target.value);
-  }
-
-  updateData(props) {
-    this.setState({
-      initialData: props.data,
-      data: props.data,
-      filterFields: _(props.columns).filter('filterable').map('accessor').value(),
-    });
-  }
-
-  searchTable(searchText) {
-    const filter = (value) => {
-      const search = (field) => value[field].toString().toLowerCase().indexOf(searchText.toLowerCase()) >= 0;
-      return _(this.state.filterFields).map(search).compact().value().length > 0;
-    };
-    const filteredData = searchText ? _.filter(this.state.initialData, filter) : this.state.initialData;
-    this.setState({ data: filteredData });
   }
 
   generateColumnDefinition(column) {
@@ -108,7 +69,6 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
     const {
       columns,
       menu,
-      tableName,
       highlightRow,
       striped,
       showSearchInput,
@@ -135,23 +95,12 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       newColumns = columns;
     }
     return (
-      <div className={'ReactTable'}>
-        {showSearchInput ?
-          <SearchInput
-            onChange={this.onChangeSearchInput}
-            name={tableName}
-          />
-          : ''
-        }
-        <div>
-          <ReactTable
-            data={this.state.data}
-            columns={newColumns.map(this.generateColumnDefinition)}
-            className={classNames.join(' ')}
-            {...other}
-          />
-        </div>
-      </div>
+      <ReactTable
+        data={this.props.data}
+        columns={newColumns.map(this.generateColumnDefinition)}
+        className={classNames.join(' ')}
+        {...other}
+      />
     );
   }
 }
@@ -161,7 +110,6 @@ Table2.propTypes = {
   menu: React.PropTypes.array,
   data: React.PropTypes.array,
   onCellChange: React.PropTypes.func,
-  tableName: React.PropTypes.string,
   minRows: React.PropTypes.number,
   highlightRow: React.PropTypes.bool,
   striped: React.PropTypes.bool,

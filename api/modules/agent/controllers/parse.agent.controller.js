@@ -56,7 +56,7 @@ module.exports = (request, reply) => {
         },
         (agentData, callback) => {
 
-            const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'America/Kentucky/Louisville');
+            const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'UTC');
             const languageToUse = agentData.agent.language ? agentData.agent.language : 'en';
             AgentTools.parseText(redis, rasa, ERPipeline, duckling, text, timezoneToUse, languageToUse, agentData, (err, result) => {
 

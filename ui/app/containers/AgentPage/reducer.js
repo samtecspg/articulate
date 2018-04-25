@@ -19,7 +19,7 @@ const initialState = Immutable({
     agentName: '',
     description: '',
     language: 'en',
-    timezone: 'America/Kentucky/Louisville',
+    timezone: 'UTC',
     domainClassifierThreshold: 50,
     fallbackResponses: [
       'Sorry can you rephrase that?',

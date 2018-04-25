@@ -57,7 +57,7 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                     Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, oldExamples),
                     (callback) => {
 
-                        Async.waterfall([
+                        Async.parallel([
                             Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
                             Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
                         ], (err) => {

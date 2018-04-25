@@ -46,6 +46,16 @@ import messages from './messages';
 import { makeSelectAgentData, makeSelectWebhookData } from './selectors';
 import { loadAgent, loadWebhook } from './actions';
 
+import languages from 'languages';
+
+const getLanguageFromCode = (languageCode) => {
+
+  return _.filter(languages, (language) => {
+
+    return language.value === languageCode;
+  })[0].text;
+};
+
 export class AgentDetailPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   constructor() {
@@ -179,7 +189,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               <FormTextInput
                 s={6}
                 label={messages.language}
-                value={currentAgent.language}
+                value={getLanguageFromCode(currentAgent.language)}
                 disabled
               />
               <FormTextInput

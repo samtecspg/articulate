@@ -115,6 +115,10 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.missing_webhook_url',
     defaultMessage: 'Please add a webhook url for your webhook',
   },
+  invalidTimezone: {
+    id: 'boilerplate.containers.AgentPage.create_agent.invalid_timezone',
+    defaultMessage: 'The specified timezone is not valid',
+  },
   useWebhook: {
     id: 'boilerplate.containers.IntentPage.create_agent.use_webhook',
     defaultMessage: 'Webhook',
