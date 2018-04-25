@@ -2,7 +2,7 @@
 const Moment = require('moment');
 const Json2Xml = require('json2xml');
 const HandlebarsIntl = require('handlebars-intl');
-const helpers = require('handlebars-helpers');
+const Helpers = require('handlebars-helpers');
 
 const buildListOfWords = (words, separator) => {
 
@@ -35,7 +35,7 @@ module.exports = (Handlebars) => {
     Handlebars.registerHelper('dateTimeFormat', (datetime, format) => Moment(datetime).format(format));
     HandlebarsIntl.registerWith(Handlebars);
 
-    helpers(['array', 'collection', 'comparison', 'inflection', 'math', 'misc', 'number', 'object', 'string', 'url'], {
+    Helpers(['array', 'collection', 'comparison', 'inflection', 'math', 'misc', 'number', 'object', 'string', 'url'], {
         handlebars: Handlebars
     });
     return Handlebars;

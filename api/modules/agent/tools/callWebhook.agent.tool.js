@@ -20,8 +20,8 @@ module.exports = (webhook, conversationStateObject, callback) => {
         method: webhook.webhookVerb,
         url: processedWebhookUrl,
         data: processedWebhookPayload ? (webhook.webhookPayloadType === 'JSON' ? JSON.parse(processedWebhookPayload) : processedWebhookPayload) : '',
-        headers: {'Content-Type': processedWebhookPayload ? (webhook.webhookPayloadType === 'JSON' ? 'application/json' : 'text/xml') : ''},
-        responseType: webhook.webhookPayloadType === 'XML' ? 'text' : 'json',
+        headers: { 'Content-Type': processedWebhookPayload ? (webhook.webhookPayloadType === 'JSON' ? 'application/json' : 'text/xml') : '' },
+        responseType: webhook.webhookPayloadType === 'XML' ? 'text' : 'json'
     })
     .then((response) => {
 
@@ -29,6 +29,7 @@ module.exports = (webhook, conversationStateObject, callback) => {
     })
     .catch((err) => {
 
+        console.log('Error calling the webhook: ', err);
         return callback({
             textResponse: 'We\'re having trouble fulfilling that request'
         });

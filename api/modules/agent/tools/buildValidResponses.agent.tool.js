@@ -23,7 +23,7 @@ module.exports = (conversationStateObject, responses) => {
         const maxNumberOfReplacements = _.max(_.map(parsedResponses, 'numOfReplacements'));
         const selectedResponses = _.filter(parsedResponses, (response) => {
 
-            return response.response !== "" && response.numOfReplacements === maxNumberOfReplacements;
+            return response.response !== '' && response.numOfReplacements === maxNumberOfReplacements;
         });
         parsedResponses = selectedResponses;
     }

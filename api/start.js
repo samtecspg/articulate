@@ -40,7 +40,7 @@ Server((err, server) => {
         path: '/documentation',
         basePath: swaggerUIPath,
         swaggerOptions: {
-            validatorUrl: false,
+            validatorUrl: false
         },
         authorization: false,
         swaggerEndpoint: (process.env.SWAGGER_BASE_PATH || '') + '/swagger.json'
