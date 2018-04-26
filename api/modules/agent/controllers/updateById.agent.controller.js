@@ -2,6 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
+const Cast = require('../../../helpers/cast');
 
 const updateDataFunction = (redis, agentId, currentAgent, updateData, cb) => {
 
@@ -294,6 +295,7 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
+        result = Cast(result, 'agent');
         if (requiresRetrain){
             Async.waterfall([
                 (callbackGetDomains) => {

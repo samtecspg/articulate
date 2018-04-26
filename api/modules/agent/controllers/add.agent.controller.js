@@ -20,7 +20,7 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred getting the new agent id.');
                     return cb(error);
                 }
-                agentId = newAgentId.toString();
+                agentId = newAgentId;
                 return cb(null);
             });
         },

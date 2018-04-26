@@ -293,7 +293,7 @@ suite('/agent', () => {
                 fallbackResponses: [
                     'Can you repeat that?'
                 ],
-                useWebhook: true
+                useWebhook: false
             };
             const options = {
                 method: 'POST',

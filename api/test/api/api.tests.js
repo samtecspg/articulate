@@ -14,7 +14,7 @@ const test = lab.test;
 
 suite('NLU API', () => {
 
-    suite('start server and flush db', () => {
+    suite('start server', () => {
 
         test('should start the server successfuly', (done) => {
 

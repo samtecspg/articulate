@@ -6,19 +6,25 @@ module.exports = (object, type) => {
     switch (type) {
 
         case 'agent':
-            object.useWebhook = object.useWebhook === 'true';
+            if (typeof object.useWebhook !== 'boolean'){
+                object.useWebhook = object.useWebhook === 'true';
+            }
             object.domainClassifierThreshold = parseFloat(object.domainClassifierThreshold);
             break;
         case 'context':
             break;
         case 'domain':
-            object.enabled = object.enabled === 'true';
+            if (typeof object.enabled !== 'boolean'){
+                object.enabled = object.enabled === 'true';
+            }
             object.intentThreshold = parseFloat(object.intentThreshold);
             break;
         case 'entity':
             break;
         case 'intent':
-            object.useWebhook = object.useWebhook === 'true';
+            if (typeof object.useWebhook !== 'boolean'){
+                object.useWebhook = object.useWebhook === 'true';
+            }
             object.examples = object.examples.map((example) => {
 
                 if (example.entities === '') {
@@ -48,8 +54,12 @@ module.exports = (object, type) => {
                     if (!_.isArray(slot.textPrompts)) {
                         slot.textPrompts = [];
                     }
-                    slot.isList = slot.isList === 'true';
-                    slot.isRequired = slot.isRequired === 'true';
+                    if (typeof object.isList !== 'boolean'){
+                        slot.isList = slot.isList === 'true';
+                    }
+                    if (typeof object.isRequired !== 'boolean'){
+                        slot.isRequired = slot.isRequired === 'true';
+                    }
                     return slot;
                 });
             }

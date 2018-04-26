@@ -126,6 +126,6 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        return reply(result);
+        return reply(result.scenario);
     });
 };

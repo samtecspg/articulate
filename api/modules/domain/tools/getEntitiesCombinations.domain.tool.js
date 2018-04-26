@@ -5,6 +5,7 @@ const _ = require('lodash');
 const CartesianProduct = require('./cartesianProduct.domain.tool');
 
 const homogenize = (combination) => {
+
     return _.map(_.orderBy(combination, 'entityText'), 'entityText').join(',');
 };
 
