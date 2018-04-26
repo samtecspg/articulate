@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 const updateDataFunction = (redis, domainId, currentDomain, updateData, cb) => {
 
@@ -12,7 +13,7 @@ const updateDataFunction = (redis, domainId, currentDomain, updateData, cb) => {
 
         flatDomain[key] = flatUpdateData[key];
     });
-    redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
+    redis.hmset(`domain:${domainId}`, RemoveBlankArray(flatDomain), (err) => {
 
         if (err){
             const error = Boom.badImplementation('An error occurred adding the domain data.');
@@ -108,7 +109,7 @@ module.exports = (request, reply) => {
 
                                             intent.domain = updateData.domainName;
 
-                                            redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
+                                            redis.hmset(`intent:${intent.id}`, RemoveBlankArray(Flat(intent)), (err, result) => {
 
                                                 if (err){
                                                     const error = Boom.badImplementation(`An error occurred updating the intent ${intent.id} with the new values of the entity`);

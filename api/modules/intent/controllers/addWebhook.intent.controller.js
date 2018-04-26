@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -90,7 +91,7 @@ module.exports = (request, reply) => {
         webhook: (cb) => {
 
             webhook = Object.assign({ id: intentId }, webhook);
-            const flatWebhook = Flat(webhook);
+            const flatWebhook = RemoveBlankArray(Flat(webhook));
             redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
 
                 if (err){

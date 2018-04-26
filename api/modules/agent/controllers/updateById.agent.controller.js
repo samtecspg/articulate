@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const Cast = require('../../../helpers/cast');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 const updateDataFunction = (redis, agentId, currentAgent, updateData, cb) => {
 
@@ -12,7 +13,7 @@ const updateDataFunction = (redis, agentId, currentAgent, updateData, cb) => {
 
         flatAgent[key] = flatUpdateData[key];
     });
-    redis.hmset(`agent:${agentId}`, flatAgent, (err) => {
+    redis.hmset(`agent:${agentId}`, RemoveBlankArray(flatAgent), (err) => {
 
         if (err){
             const error = Boom.badImplementation('An error occurred updating the agent data.');
@@ -94,7 +95,7 @@ module.exports = (request, reply) => {
                                                     domain.agent = updateData.agentName;
 
                                                     requiresRetrain = true;
-                                                    redis.hmset(`domain:${domain.id}`, Flat(domain), (err, result) => {
+                                                    redis.hmset(`domain:${domain.id}`, RemoveBlankArray(Flat(domain)), (err, result) => {
 
                                                         if (err){
                                                             const error = Boom.badImplementation(`An error occurred updating the domain ${domain.id} with the new values of the agent`);
@@ -127,7 +128,7 @@ module.exports = (request, reply) => {
 
                                                                         intent.agent = updateData.agentName;
 
-                                                                        redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
+                                                                        redis.hmset(`intent:${intent.id}`, RemoveBlankArray(Flat(intent)), (err, result) => {
 
                                                                             if (err){
                                                                                 const error = Boom.badImplementation(`An error occurred updating the intent ${intent.id} with the new values of the entity`);
@@ -217,7 +218,7 @@ module.exports = (request, reply) => {
                                             entity.agent = updateData.agentName;
 
                                             requiresRetrain = true;
-                                            redis.hmset(`entity:${entity.id}`, Flat(entity), (err, result) => {
+                                            redis.hmset(`entity:${entity.id}`, RemoveBlankArray(Flat(entity)), (err, result) => {
 
                                                 if (err){
                                                     const error = Boom.badImplementation(`An error occurred updating the entity ${entity.entityName} with the new values of the agent`);

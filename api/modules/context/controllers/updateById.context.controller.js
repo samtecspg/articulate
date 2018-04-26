@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const Cast = require('../../../helpers/cast');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -68,7 +69,7 @@ module.exports = (request, reply) => {
 
                 flatContextElement[key] = flatUpdateData[key];
             });
-            redis.hmset(`context:${contextId}`, flatContextElement, (err) => {
+            redis.hmset(`context:${contextId}`, RemoveBlankArray(flatContextElement), (err) => {
 
                 if (err){
                     const error = Boom.badImplementation('An error occurred adding the context data.');

@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 const updateDataFunction = (redis, intentId, currentWebhook, updateData, cb) => {
 
@@ -24,7 +25,7 @@ const updateDataFunction = (redis, intentId, currentWebhook, updateData, cb) => 
             const error = Boom.badImplementation('An error occurred temporaly removing the webhook for the update.');
             return cb(error);
         }
-        redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
+        redis.hmset(`intentWebhook:${intentId}`, RemoveBlankArray(flatWebhook), (err) => {
 
             if (err){
                 const error = Boom.badImplementation('An error occurred adding the webhook data.');

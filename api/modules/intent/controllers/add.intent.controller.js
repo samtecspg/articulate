@@ -5,6 +5,7 @@ const Boom = require('boom');
 const Flat = require('flat');
 const IntentTools = require('../tools');
 const DomainTools = require('../../domain/tools');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -157,7 +158,7 @@ module.exports = (request, reply) => {
                 }
                 return example;
             });
-            const flatIntent = Flat(intent);
+            const flatIntent = RemoveBlankArray(Flat(intent));
             redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
                 if (err) {

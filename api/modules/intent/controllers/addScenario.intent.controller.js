@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const ScenarioTools = require('../tools');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -111,7 +112,7 @@ module.exports = (request, reply) => {
         scenario: (cb) => {
 
             scenario = Object.assign({ id: intentId }, scenario);
-            const flatScenario = Flat(scenario);
+            const flatScenario = RemoveBlankArray(Flat(scenario));
             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
                 if (err){

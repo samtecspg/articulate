@@ -4,6 +4,7 @@ const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 const _ = require('lodash');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 const updateDataFunction = (redis, entityId, currentEntity, updateData, cb) => {
 
@@ -23,7 +24,7 @@ const updateDataFunction = (redis, entityId, currentEntity, updateData, cb) => {
             const error = Boom.badImplementation('An error occurred temporaly removing the entity for the update.');
             return cb(error);
         }
-        redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
+        redis.hmset(`entity:${entityId}`, RemoveBlankArray(flatEntity), (err) => {
 
             if (err){
                 const error = Boom.badImplementation('An error occurred adding the entity data.');
@@ -209,7 +210,7 @@ module.exports = (request, reply) => {
                                             }
 
                                             if (updateIntent){
-                                                redis.hmset(`intent:${intent.id}`, Flat(intent), (err, result) => {
+                                                redis.hmset(`intent:${intent.id}`, RemoveBlankArray(Flat(intent)), (err, result) => {
 
                                                     if (err){
                                                         const error = Boom.badImplementation(`An error occurred updating the intent ${intent.id} with the new values of the entity`);
@@ -255,7 +256,7 @@ module.exports = (request, reply) => {
                                                         }
 
                                                         if (updateScenario){
-                                                            redis.hmset(`scenario:${intent.id}`, Flat(currentScenario), (err, result) => {
+                                                            redis.hmset(`scenario:${intent.id}`, RemoveBlankArray(Flat(currentScenario)), (err, result) => {
 
                                                                 if (err){
                                                                     const error = Boom.badImplementation(`An error occurred updating the scenario ${intent.id} with the new values of the entity`);

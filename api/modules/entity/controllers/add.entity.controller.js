@@ -2,6 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -59,7 +60,7 @@ module.exports = (request, reply) => {
         (cb) => {
 
             entity = Object.assign({ id: entityId }, entity);
-            const flatEntity = Flat(entity);
+            const flatEntity = RemoveBlankArray(Flat(entity));
             redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 
                 if (err){

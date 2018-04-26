@@ -6,6 +6,7 @@ const Flat = require('flat');
 const IntentTools = require('../tools');
 const DomainTools = require('../../domain/tools');
 const _ = require('lodash');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, cb) => {
 
@@ -38,7 +39,7 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
             const error = Boom.badImplementation('An error occurred temporaly removing the intent for the update.');
             return cb(error);
         }
-        redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
+        redis.hmset(`intent:${intentId}`, RemoveBlankArray(flatIntent), (err) => {
 
             if (err){
                 const error = Boom.badImplementation('An error occurred adding the intent data.');

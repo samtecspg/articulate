@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const AgentTools = require('../tools');
 const Flat = require('flat');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -88,13 +89,7 @@ module.exports = (request, reply) => {
             (cb) => {
 
                 document = Object.assign({ id: documentId }, document);
-                const flatDocument = Flat(document);
-                Object.keys(flatDocument).forEach((key) => {
-
-                    if (Array.isArray(flatDocument[key]) && flatDocument[key].length === 0) {
-                        flatDocument[key] = '';
-                    }
-                });
+                const flatDocument = RemoveBlankArray(Flat(document));
                 redis.hmset(`document:${documentId}`, flatDocument, (err) => {
 
                     if (err) {

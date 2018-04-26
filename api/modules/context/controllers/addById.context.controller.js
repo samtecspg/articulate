@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const Cast = require('../../../helpers/cast');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -38,7 +39,7 @@ module.exports = (request, reply) => {
         context: (cb) => {
 
             context = Object.assign({ id: contextId }, context);
-            const flatContext = Flat(context);
+            const flatContext = RemoveBlankArray(Flat(context));
             redis.hmset(`context:${contextId}`, flatContext, (err) => {
 
                 if (err){

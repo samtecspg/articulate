@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const ScenarioTools = require('../tools');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 const updateDataFunction = (redis, intentId, currentScenario, updateData, cb) => {
 
@@ -24,7 +25,7 @@ const updateDataFunction = (redis, intentId, currentScenario, updateData, cb) =>
             const error = Boom.badImplementation('An error occurred temporaly removing the scenario for the update.');
             return cb(error);
         }
-        redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
+        redis.hmset(`scenario:${intentId}`, RemoveBlankArray(flatScenario), (err) => {
 
             if (err){
                 const error = Boom.badImplementation('An error occurred adding the scenario data.');

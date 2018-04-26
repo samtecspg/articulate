@@ -5,6 +5,7 @@ const Flat = require('flat');
 const _ = require('lodash');
 const IntentTools = require('../../intent/tools');
 const DomainTools = require('../../domain/tools');
+const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
 
@@ -49,7 +50,7 @@ module.exports = (request, reply) => {
             delete clonedAgent.entities;
             delete clonedAgent.domains;
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
-            const flatAgent = Flat(clonedAgent);
+            const flatAgent = RemoveBlankArray(Flat(clonedAgent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
                 if (err){
@@ -99,7 +100,7 @@ module.exports = (request, reply) => {
                 (cb) => {
 
                     entity = Object.assign({ id: entityId, agent: agentResult.agentName }, entity);
-                    const flatEntity = Flat(entity);
+                    const flatEntity = RemoveBlankArray(Flat(entity));
                     redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 
                         if (err){
@@ -159,7 +160,7 @@ module.exports = (request, reply) => {
                         let clonedDomain = _.cloneDeep(domain);
                         delete clonedDomain.intents;
                         clonedDomain = Object.assign({ id: domainId, agent: agent.agentName }, clonedDomain);
-                        const flatDomain = Flat(clonedDomain);
+                        const flatDomain = RemoveBlankArray(Flat(clonedDomain));
                         redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
 
                             if (err){
@@ -234,7 +235,7 @@ module.exports = (request, reply) => {
                                     }
                                     return example;
                                 });
-                                const flatIntent = Flat(clonedIntent);
+                                const flatIntent = RemoveBlankArray(Flat(clonedIntent));
                                 redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
                                     if (err){
@@ -287,7 +288,7 @@ module.exports = (request, reply) => {
 
                                             let scenarioToInsert = intent.scenario;
                                             scenarioToInsert = Object.assign({ id: scenarioId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, scenarioToInsert);
-                                            const flatScenario = Flat(scenarioToInsert);
+                                            const flatScenario = RemoveBlankArray(Flat(scenarioToInsert));
                                             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
                                                 if (err){
@@ -306,7 +307,7 @@ module.exports = (request, reply) => {
                                         if (intent.webhook){
                                             let webhookToInsert = intent.webhook;
                                             webhookToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, webhookToInsert);
-                                            const flatWebhook = Flat(webhookToInsert);
+                                            const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
                                             redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
 
                                                 if (err){
