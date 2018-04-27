@@ -112,6 +112,7 @@ function agentReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('agentData', action.agent)
+        .setIn(['webhookData', 'agent'], action.agent.agentName)
         .set('oldAgentData', action.agent);
     case LOAD_AGENT_ERROR:
       return state
@@ -129,7 +130,6 @@ function agentReducer(state = initialState, action) {
         .set('oldWebhookData', action.webhook);
     case LOAD_WEBHOOK_ERROR:
       return state
-        .set('error', action.error)
         .set('loading', false);
     case REMOVE_AGENT_FALLBACK:
       return state
