@@ -7,6 +7,7 @@
     "test": "lab",
     "lint": "lab -dL",
     "lint:fix": "lab -dL --lint-fix",
+    "coverage": "lab -dc",
     "test:full": "lab --lint --coverage",
     "start": "npm-run-all --parallel test start:server",
     "start:server": "nodemon start.js",
