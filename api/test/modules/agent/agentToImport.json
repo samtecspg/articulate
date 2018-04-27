@@ -1,0 +1,195 @@
+{
+  "language": "en",
+  "timezone": "UTC",
+  "agentName": "c732e970-311b-4a3a-b9cd-c689a8554ef1",
+  "useWebhook": true,
+  "description": "Test agent for import",
+  "fallbackResponses": [
+    "Sorry can you rephrase that?",
+    "I'm still learning to speak with humans. What you mean?"
+  ],
+  "domainClassifierThreshold": 0.7,
+  "webhook": {
+    "webhookUrl": "http://localhost:7500/agent/{{agent.id}}",
+    "webhookVerb": "GET",
+    "webhookPayload": "",
+    "webhookPayloadType": "None"
+  },
+  "entities": [
+    {
+      "uiColor": "#e91e63",
+      "entityName": "Toppings",
+      "examples": [
+        {
+          "value": "Cheese",
+          "synonyms": [
+            "Cheese"
+          ]
+        },
+        {
+          "value": "Mushrooms",
+          "synonyms": [
+            "Mushrooms"
+          ]
+        },
+        {
+          "value": "Chicken",
+          "synonyms": [
+            "Chicken"
+          ]
+        },
+        {
+          "value": "Peppers",
+          "synonyms": [
+            "Peppers"
+          ]
+        },
+        {
+          "value": "Onions",
+          "synonyms": [
+            "Onions"
+          ]
+        },
+        {
+          "value": "Bacon",
+          "synonyms": [
+            "Bacon"
+          ]
+        },
+        {
+          "value": "Ham",
+          "synonyms": [
+            "Ham"
+          ]
+        }
+      ]
+    }
+  ],
+  "domains": [
+    {
+      "model": "just_er_8ebb2d11-5ef2-3b32-7557-8620f5f2cef9",
+      "enabled": true,
+      "domainName": "Orders",
+      "lastTraining": "Fri Apr 27 2018 14:39:29 GMT-0600 (CST)",
+      "intentThreshold": 0.7,
+      "intents": [
+        {
+          "intentName": "Order pizza",
+          "useWebhook": false,
+          "examples": [
+            {
+              "userSays": "I want a ham and cheese pizza",
+              "entities": [
+                {
+                  "end": 12,
+                  "start": 9,
+                  "value": "ham",
+                  "entity": "Toppings",
+                  "entityId": 1
+                },
+                {
+                  "end": 23,
+                  "value": "cheese",
+                  "start": 17,
+                  "entity": "Toppings",
+                  "entityId": 1
+                }
+              ]
+            },
+            {
+              "userSays": "Give me a pizza with mushrooms",
+              "entities": [
+                {
+                  "end": 30,
+                  "value": "mushrooms",
+                  "start": 21,
+                  "entity": "Toppings",
+                  "entityId": 1
+                }
+              ]
+            },
+            {
+              "userSays": "I would like a pizza with chicken",
+              "entities": [
+                {
+                  "end": 33,
+                  "start": 26,
+                  "value": "chicken",
+                  "entity": "Toppings",
+                  "entityId": 1
+                }
+              ]
+            }
+          ],
+          "scenario": {
+            "scenarioName": "Order pizza",
+            "slots": [
+              {
+                "entity": "Toppings",
+                "isList": true,
+                "slotName": "Toppings",
+                "isRequired": true,
+                "textPrompts": [
+                  "What toppings would you like in your pizza?"
+                ]
+              }
+            ],
+            "intentResponses": [
+              "I will prepare you a pizza with {{andList slots.Toppings.original}}, ok?"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "model": "just_er_baf9b400-34ad-73d3-9acf-6bc851aa1b81",
+      "enabled": true,
+      "domainName": "Small talk",
+      "lastTraining": "Fri Apr 27 2018 14:39:59 GMT-0600 (CST)",
+      "intentThreshold": 0.7,
+      "intents": [
+        {
+          "intentName": "Greeting",
+          "useWebhook": false,
+          "examples": [
+            {
+              "entities": [],
+              "userSays": "Hola"
+            },
+            {
+              "entities": [],
+              "userSays": "hi"
+            },
+            {
+              "entities": [],
+              "userSays": "hello"
+            },
+            {
+              "userSays": "hey",
+              "entities": []
+            },
+            {
+              "userSays": "Hey",
+              "entities": []
+            },
+            {
+              "userSays": "Hello",
+              "entities": []
+            },
+            {
+              "entities": [],
+              "userSays": "Hi"
+            }
+          ],
+          "scenario": {
+            "slots": [],
+            "scenarioName": "Greeting",
+            "intentResponses": [
+              "Hi, how can I help you?"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

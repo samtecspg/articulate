@@ -1,0 +1,164 @@
+{
+  "language": "en",
+  "timezone": "UTC",
+  "agentName": "71999911-cb70-442c-8864-bc1d4e6a306e",
+  "useWebhook": true,
+  "description": "This is test agent",
+  "fallbackResponses": [
+    "Sorry, can you rephrase that?",
+    "I'm still learning to speak with humans, can you rephrase that?"
+  ],
+  "domainClassifierThreshold": 0.6,
+  "webhook": {
+    "webhookUrl": "http://localhost:3000/agent/{{agent.id}}",
+    "webhookVerb": "GET",
+    "webhookPayload": "",
+    "webhookPayloadType": "None"
+  },
+  "entities": [
+    {
+      "uiColor": "#e91e63",
+      "entityName": "Test Entity",
+      "examples": [
+        {
+          "value": "car",
+          "synonyms": [
+            "car",
+            "vehicle",
+            "automobile"
+          ]
+        },
+        {
+          "value": "mobile",
+          "synonyms": [
+            "mobile",
+            "cellphone",
+            "cell",
+            "cell phone",
+            "iphone"
+          ]
+        },
+        {
+          "value": "laptop",
+          "synonyms": [
+            "laptop",
+            "computer",
+            "macbook"
+          ]
+        }
+      ]
+    }
+  ],
+  "domains": [
+    {
+      "model": "just_er_c67520da-cb61-d195-ff78-0fbd4aaddaaf",
+      "enabled": true,
+      "domainName": "Test Domain",
+      "lastTraining": "Fri Apr 27 2018 12:33:10 GMT-0600 (CST)",
+      "intentThreshold": 0.7,
+      "intents": [
+        {
+          "intentName": "Test Intent",
+          "useWebhook": true,
+          "examples": [
+            {
+              "userSays": "Show me my phone location",
+              "entities": [
+                {
+                  "end": 16,
+                  "start": 11,
+                  "value": "phone",
+                  "entity": "Test Entity",
+                  "entityId": 18
+                }
+              ]
+            },
+            {
+              "userSays": "I need to find my laptop",
+              "entities": [
+                {
+                  "end": 24,
+                  "value": "laptop",
+                  "start": 18,
+                  "entity": "Test Entity",
+                  "entityId": 18
+                }
+              ]
+            },
+            {
+              "userSays": "Have you seen my iphone?",
+              "entities": [
+                {
+                  "end": 23,
+                  "value": "iphone",
+                  "start": 17,
+                  "entity": "Test Entity",
+                  "entityId": 18
+                }
+              ]
+            },
+            {
+              "userSays": "Where do I left my car?",
+              "entities": [
+                {
+                  "end": 22,
+                  "start": 19,
+                  "value": "car",
+                  "entity": "Test Entity",
+                  "entityId": 18
+                }
+              ]
+            },
+            {
+              "userSays": "Where is my car?",
+              "entities": [
+                {
+                  "end": 15,
+                  "start": 12,
+                  "value": "car",
+                  "entity": "Test Entity",
+                  "entityId": 18
+                }
+              ]
+            },
+            {
+              "userSays": "Locate my car",
+              "entities": [
+                {
+                  "end": 13,
+                  "start": 10,
+                  "value": "car",
+                  "entity": "Test Entity",
+                  "entityId": 18
+                }
+              ]
+            }
+          ],
+          "scenario": {
+            "scenarioName": "Test Intent",
+            "slots": [
+              {
+                "entity": "Test Entity",
+                "isList": false,
+                "slotName": "searchedObject",
+                "isRequired": true,
+                "textPrompts": [
+                  "What are you for?"
+                ]
+              }
+            ],
+            "intentResponses": [
+              "Your {{slots.searchedObject.original}} is located at..."
+            ]
+          },
+          "webhook": {
+            "webhookUrl": "http://localhost:7500/agent/{{agent.id}}",
+            "webhookVerb": "GET",
+            "webhookPayload": "",
+            "webhookPayloadType": "None"
+          }
+        }
+      ]
+    }
+  ]
+}
