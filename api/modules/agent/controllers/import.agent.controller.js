@@ -49,6 +49,7 @@ module.exports = (request, reply) => {
             let clonedAgent = _.cloneDeep(agent);
             delete clonedAgent.entities;
             delete clonedAgent.domains;
+            delete clonedAgent.webhook;
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
             const flatAgent = RemoveBlankArray(Flat(clonedAgent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
@@ -315,7 +316,7 @@ module.exports = (request, reply) => {
                                                     return callbackAddIntents(error, null);
                                                 }
                                                 resultIntent.webhook = webhookToInsert;
-                                                return callbackAddIntents(null, webhookToInsert);
+                                                return callbackAddIntents(null, resultIntent);
                                             });
                                         }
                                         else {
@@ -347,7 +348,7 @@ module.exports = (request, reply) => {
             }, (errDomains, resultDomains) => {
 
                 if (errDomains){
-                    return reply(errDomains, null);
+                    return reply(errDomains);
                 }
                 agentResult.domains = resultDomains;
 
@@ -356,7 +357,23 @@ module.exports = (request, reply) => {
                     if (errTraining){
                         return reply(errTraining);
                     }
-                    return reply(agentResult);
+                    if (agent.useWebhook){
+                        const webhook = Object.assign({ id: agentId }, agent.webhook);
+                        const flatWebhook = RemoveBlankArray(Flat(webhook));
+                        redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
+
+                            if (err){
+                                const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
+                                return reply(error);
+                            }
+                            webhook.agent = agent.agentName;
+                            agentResult.webhook = webhook;
+                            return reply(agentResult);
+                        });
+                    }
+                    else {
+                        return reply(agentResult);
+                    }
                 });
             });
         });
