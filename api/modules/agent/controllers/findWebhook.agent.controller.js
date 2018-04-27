@@ -48,5 +48,5 @@ module.exports = (request, reply) => {
             return reply(err);
         }
         return reply(result);
-    })
+    });
 };

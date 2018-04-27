@@ -1,5 +1,4 @@
 'use strict';
-const Async = require('async');
 const AgentToImport = require('./agentToImport');
 const PrecreatedAgent = require('./preCreatedAgent');
 const Code = require('code');
@@ -658,10 +657,10 @@ suite('/agent/{id}/webhook', () => {
 
             const data = {
                 agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
-                webhookUrl: "http://localhost:7500/agent/{{agent.id}}",
-                webhookVerb: "GET",
-                webhookPayload: "",
-                webhookPayloadType: "None"
+                webhookUrl: 'http://localhost:7500/agent/{{agent.id}}',
+                webhookVerb: 'GET',
+                webhookPayload: '',
+                webhookPayloadType: 'None'
             };
             const options = {
                 method: 'POST',
