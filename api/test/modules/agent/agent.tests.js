@@ -640,7 +640,7 @@ suite('/agent/{id}/webhook', () => {
 
             const options = {
                 method: 'DELETE',
-                url: `/agent/${preCreatedAgentId}/webhook`,
+                url: `/agent/${preCreatedAgentId}/webhook`
             };
 
             server.inject(options, (res) => {
@@ -720,7 +720,7 @@ suite('/agent/name/{agentName}', () => {
 
         test('should respond with 404 Not Found', (done) => {
 
-            server.inject(`/agent/name/-1`, (res) => {
+            server.inject('/agent/name/-1', (res) => {
 
                 expect(res.statusCode).to.equal(404);
                 expect(res.result.message).to.contain('The agent "-1" doesn\'t exist');
