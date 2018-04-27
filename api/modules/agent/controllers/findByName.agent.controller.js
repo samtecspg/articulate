@@ -29,7 +29,7 @@ module.exports = (request, reply) => {
             });
         }
         else {
-            const error = Boom.badRequest(`The agent "${agentName}" doesn't exist`);
+            const error = Boom.notFound(`The agent "${agentName}" doesn't exist`);
             return reply(error, null);
         }
     });
