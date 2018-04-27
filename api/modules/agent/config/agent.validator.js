@@ -212,7 +212,7 @@ class AgentValidate {
                     id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
-            query: (() => {
+            payload: (() => {
 
                 return {
                     text: Joi.string().required().description('Text to parse'),
