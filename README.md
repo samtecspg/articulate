@@ -10,22 +10,26 @@
 
 https://samtecspg.github.io/articulate/
 
+Running on Docker Machine or in the cloud, make sure to check out our [alternate installation](https://samtecspg.github.io/articulate/getting_started/cloud-installation) docs.
+
 ## QUICK START
 
-Please see the [Documentation](https://samtecspg.github.io/articulate/getting_started/cloud-installation)
+Make sure you've got these programs installed:
 
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
    
-1. Make sure you have Docker and `docker-compose` installed:
+> Running on Docker Machine or in the cloud, make sure to check out our [alternate installation](https://samtecspg.github.io/articulate/getting_started/cloud-installation) docs.
 
-2. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
+> Docker for Windows and Docker for mac users, make sure you are [allocating at least 4Gb of RAM to Docker](https://docs.docker.com/docker-for-mac/#advanced).
 
-3. Unzip and get a terminal or CMD in the release directory
+1. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
 
-4. run `docker-compose up` (`sudo` might be needed)
+2. Unzip and get a terminal or CMD in the release directory
 
-5. point your web browser at  http://localhost:3000 and enjoy Articulate
+3. run `docker-compose up` (`sudo` might be needed)
+
+4. point your web browser at  http://localhost:3000 and enjoy Articulate
 
 ## License
 ```
