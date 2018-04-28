@@ -10,8 +10,6 @@
 
 https://samtecspg.github.io/articulate/
 
-Running on Docker Machine or in the cloud, make sure to check out our [alternate installation](https://samtecspg.github.io/articulate/getting_started/cloud-installation) docs.
-
 ## QUICK START
 
 Make sure you've got these programs installed:
