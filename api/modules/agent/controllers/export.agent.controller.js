@@ -55,6 +55,18 @@ module.exports = (request, reply) => {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the list of intents for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                 return callbackGetIntentsFromDomain(error, null);
                                             }
+                                            if (!withReferences){
+                                                res.result.forEach((domainIntent) => {
+
+                                                    domainIntent.examples.forEach((example) => {
+
+                                                        example.entities.forEach((exampleEntity) => {
+
+                                                            delete exampleEntity.entityId;
+                                                        });
+                                                    });
+                                                });
+                                            }
                                             return callbackGetIntentsFromDomain(null, res.result);
                                         });
                                     },

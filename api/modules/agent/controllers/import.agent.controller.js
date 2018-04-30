@@ -15,6 +15,7 @@ module.exports = (request, reply) => {
     const redis = server.app.redis;
     const rasa = server.app.rasa;
     let agentResult;
+    const entitiesDir = {};
 
     Async.series({
         agentId: (cb) => {
@@ -108,6 +109,7 @@ module.exports = (request, reply) => {
                             const error = Boom.badImplementation('An error occurred adding the entity data.');
                             return cb(error);
                         }
+                        entitiesDir[entity.entityName] = entityId;
                         return cb(null, entity);
                     });
                 }
@@ -217,6 +219,24 @@ module.exports = (request, reply) => {
                                     const error = Boom.badRequest(`A intent with the name ${intent.intentName} already exists in the domain ${domain.domainName}.`);
                                     return cb(error);
                                 });
+                            },
+                            addToEntities: (cb) => {
+
+                                Async.eachSeries(intent.examples, (example, nextIntent) => {
+
+                                    Async.eachSeries(example.entities, (entity, nextEntity) => {
+
+                                        redis.zadd(`entityIntents:${entitiesDir[entity.entity]}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
+
+                                            if (err) {
+                                                const error = Boom.badImplementation('An error occurred adding the intent to the entity list.');
+                                                return nextEntity(error);
+                                            }
+                                            entity.entityId = entitiesDir[entity.entity];
+                                            return nextEntity(null);
+                                        });
+                                    }, nextIntent);
+                                }, cb);
                             },
                             intent: (cb) => {
 
