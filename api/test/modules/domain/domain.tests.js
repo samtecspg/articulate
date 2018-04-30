@@ -9,15 +9,12 @@ const expect = Code.expect;
 const suite = lab.suite;
 const test = lab.test;
 const before = lab.before;
-const after = lab.after;
 
 let server;
 
 let preCreatedAgent = null;
 let agentName = null;
 let domainId = null;
-
-let agentId = null;
 let preCreatedDomain = null;
 
 before({ timeout: 120000 }, (done) => {
@@ -42,7 +39,6 @@ before({ timeout: 120000 }, (done) => {
                     else {
                         preCreatedAgent = resAgent.result;
                         agentName = preCreatedAgent.agentName;
-                        agentId = preCreatedAgent.id;
                         preCreatedDomain = preCreatedAgent.domains[0];
                         done();
                     }

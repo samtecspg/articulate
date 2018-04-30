@@ -5,7 +5,6 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const Inert = require('inert');
 const Vision = require('vision');
-const Fs = require('fs');
 const PrecreatedAgent = require('./preCreatedAgent');
 
 const expect = Code.expect;

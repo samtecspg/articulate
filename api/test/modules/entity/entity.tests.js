@@ -328,10 +328,6 @@ suite('/entity/{id}/intent', () => {
 
         test('should respond with 404 Not Found', (done) => {
 
-            const data = {
-                id: '-1'
-            };
-
             server.inject('/entity/-1/intent', (res) => {
 
                 expect(res.statusCode).to.equal(404);

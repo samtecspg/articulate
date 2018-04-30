@@ -1,7 +1,6 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Cast = require('../../../helpers/cast');
 const _ = require('lodash');
 
 module.exports = (request, reply) => {
