@@ -61,46 +61,50 @@ before((done) => {
     });
 });
 
-suite('scenario', () => {
+after((done) => {
 
-    suite('/intent/{id}/scenario', () => {
+    server.inject({
+        method: 'DELETE',
+        url: '/agent/' + agentId
+    }, (res) => {
+
+        if (res.statusCode !== 200){
+            done({
+                message: 'Error deleting agent'
+            });
+        }
+        done();
+    });
+});
+
+suite('webhook', () => {
+
+    suite('/intent/{id}/webhook', () => {
 
         suite('/post', () => {
 
-            test('should respond with 200 successful operation and return an scenario object', (done) => {
+            test('should respond with 200 successful operation and return an webhook object', (done) => {
 
                 const data = {
                     agent: agentName,
                     domain: domainName,
                     intent: intentName,
-                    scenarioName: 'Test Scenario 2',
-                    slots: [{
-                        slotName: 'searchedObject',
-                        entity: entityName,
-                        isList: false,
-                        isRequired: true,
-                        textPrompts: [
-                            'What are you looking for?',
-                            'Are you trying to find something?'
-                        ]
-                    }],
-                    intentResponses: [
-                        'Your {searchedObject} is located at...',
-                        'I was unable to find the {searchedObject}',
-                        'The {searchedObject} is near 7th street at the downtown.'
-                    ]
+                    webhookUrl: "http://localhost:3000/agent",
+                    webhookVerb: "GET",
+                    webhookPayloadType: "None",
+                    webhookPayload: ""
                 };
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/intent/${intentId}/webhook`,
                     payload: data
                 };
 
                 server.inject(options, (res) => {
 
                     expect(res.statusCode).to.equal(200);
-                    expect(res.result.scenarioName).to.include(data.scenarioName);
+                    expect(res.result.webhookUrl).to.include(data.webhookUrl);
                     done();
                 });
 
@@ -113,7 +117,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/intent/${intentId}/webhook`,
                     payload: data
                 };
 
@@ -131,27 +135,15 @@ suite('scenario', () => {
                     agent: '-1',
                     domain: domainName,
                     intent: intentName,
-                    scenarioName: 'Test Scenario 2',
-                    slots: [{
-                        slotName: 'searchedObject',
-                        entity: entityName,
-                        isList: false,
-                        isRequired: true,
-                        textPrompts: [
-                            'What are you looking for?',
-                            'Are you trying to find something?'
-                        ]
-                    }],
-                    intentResponses: [
-                        'Your {searchedObject} is located at...',
-                        'I was unable to find the {searchedObject}',
-                        'The {searchedObject} is near 7th street at the downtown.'
-                    ]
+                    webhookUrl: "http://localhost:3000/agent",
+                    webhookVerb: "GET",
+                    webhookPayloadType: "None",
+                    webhookPayload: ""
                 };
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/intent/${intentId}/webhook`,
                     payload: data
                 };
 
@@ -169,27 +161,15 @@ suite('scenario', () => {
                     agent: agentName,
                     domain: '-1',
                     intent: intentName,
-                    scenarioName: 'Test Scenario 2',
-                    slots: [{
-                        slotName: 'searchedObject',
-                        entity: entityName,
-                        isList: false,
-                        isRequired: true,
-                        textPrompts: [
-                            'What are you looking for?',
-                            'Are you trying to find something?'
-                        ]
-                    }],
-                    intentResponses: [
-                        'Your {searchedObject} is located at...',
-                        'I was unable to find the {searchedObject}',
-                        'The {searchedObject} is near 7th street at the downtown.'
-                    ]
+                    webhookUrl: "http://localhost:3000/agent",
+                    webhookVerb: "GET",
+                    webhookPayloadType: "None",
+                    webhookPayload: ""
                 };
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/intent/${intentId}/webhook`,
                     payload: data
                 };
 
@@ -200,49 +180,11 @@ suite('scenario', () => {
                     done();
                 });
             });
-
-            test('should respond with 400 because entity doesn\'t exists', (done) => {
-
-                const data = {
-                    agent: agentName,
-                    domain: domainName,
-                    intent: intentName,
-                    scenarioName: 'Test Scenario 2',
-                    slots: [{
-                        slotName: 'searchedObject',
-                        entity: '-1',
-                        isList: false,
-                        isRequired: true,
-                        textPrompts: [
-                            'What are you looking for?',
-                            'Are you trying to find something?'
-                        ]
-                    }],
-                    intentResponses: [
-                        'Your {searchedObject} is located at...',
-                        'I was unable to find the {searchedObject}',
-                        'The {searchedObject} is near 7th street at the downtown.'
-                    ]
-                };
-
-                const options = {
-                    method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
-                    payload: data
-                };
-
-                server.inject(options, (res) => {
-
-                    expect(res.statusCode).to.equal(400);
-                    expect(res.result.message).to.be.equal(`The entity with the name -1 doesn't exist in the agent ${agentId}`);
-                    done();
-                });
-            });
         });
 
     });
 
-    suite('intent/{id}/scenario', () => {
+    suite('intent/{id}/webhook', () => {
 
         suite('/get', () => {
 
@@ -252,28 +194,16 @@ suite('scenario', () => {
                     agent: agentName,
                     domain: domainName,
                     intent: intentName,
-                    scenarioName: 'Test Scenario 2',
-                    slots: [{
-                        slotName: 'searchedObject',
-                        entity: entityName,
-                        isList: false,
-                        isRequired: true,
-                        textPrompts: [
-                            'What are you looking for?',
-                            'Are you trying to find something?'
-                        ]
-                    }],
-                    intentResponses: [
-                        'Your {searchedObject} is located at...',
-                        'I was unable to find the {searchedObject}',
-                        'The {searchedObject} is near 7th street at the downtown.'
-                    ]
+                    webhookUrl: "http://localhost:3000/agent",
+                    webhookVerb: "GET",
+                    webhookPayloadType: "None",
+                    webhookPayload: ""
                 };
 
-                server.inject(`/intent/${intentId}/scenario`, (res) => {
+                server.inject(`/intent/${intentId}/webhook`, (res) => {
 
                     expect(res.statusCode).to.equal(200);
-                    expect(res.result.scenarioName).to.be.equal(data.scenarioName);
+                    expect(res.result.webhookUrl).to.be.equal(data.webhookUrl);
                     done();
                 });
             });
@@ -284,10 +214,10 @@ suite('scenario', () => {
                     id: '-1'
                 };
 
-                server.inject(`/intent/${data.id}/scenario`, (res) => {
+                server.inject(`/intent/${data.id}/webhook`, (res) => {
 
                     expect(res.statusCode).to.equal(404);
-                    expect(res.result.message).to.contain('The specified scenario doesn\'t exists');
+                    expect(res.result.message).to.contain('The specified webhook doesn\'t exists');
                     done();
                 });
             });
@@ -298,23 +228,19 @@ suite('scenario', () => {
             test('should respond with 200 successful operation', (done) => {
 
                 const updatedData = {
-                    scenarioName: 'Test Scenario 2 Updated',
-                    intentResponses: [
-                        'Your {searchedObject} is located at...'
-                    ]
+                    webhookUrl: "http://localhost:3000/domain"
                 };
 
                 const options = {
                     method: 'PUT',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/intent/${intentId}/webhook`,
                     payload: updatedData
                 };
 
                 server.inject(options, (res) => {
 
                     expect(res.statusCode).to.equal(200);
-                    expect(res.result.scenarioName).to.be.equal(updatedData.scenarioName);
-                    expect(res.result.intentResponses.length).to.be.equal(updatedData.intentResponses.length);
+                    expect(res.result.webhookUrl).to.be.equal(updatedData.webhookUrl);
                     done();
                 });
             });
@@ -322,22 +248,19 @@ suite('scenario', () => {
             test('should respond with 404 Not Found', (done) => {
 
                 const updatedData = {
-                    scenarioName: 'Test Scenario 2 Updated',
-                    intentResponses: [
-                        'Your {searchedObject} is located at...'
-                    ]
+                    webhookUrl: "http://localhost:3000/agent"
                 };
 
                 const options = {
                     method: 'PUT',
-                    url: '/intent/-1/scenario',
+                    url: '/intent/-1/webhook',
                     payload: updatedData
                 };
 
                 server.inject(options, (res) => {
 
                     expect(res.statusCode).to.equal(404);
-                    expect(res.result.message).to.contain('The specified scenario doesn\'t exists');
+                    expect(res.result.message).to.contain('The specified webhook doesn\'t exists');
                     done();
                 });
             });
@@ -349,7 +272,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'PUT',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/intent/${intentId}/webhook`,
                     payload: data
                 };
 
@@ -372,13 +295,13 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'DELETE',
-                    url: `/intent/${data.id}/scenario`
+                    url: `/intent/${data.id}/webhook`
                 };
 
                 server.inject(options, (res) => {
 
                     expect(res.statusCode).to.equal(404);
-                    expect(res.result.message).to.contain('The specified scenario doesn\'t exists');
+                    expect(res.result.message).to.contain('The specified webhook doesn\'t exists');
                     done();
                 });
             });
@@ -390,7 +313,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'DELETE',
-                    url: `/intent/${data.id}/scenario`
+                    url: `/intent/${data.id}/webhook`
                 };
 
                 server.inject(options, (res) => {

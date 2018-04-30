@@ -52,20 +52,6 @@ before((done) => {
     });
 });
 
-after((done) => {
-
-    server.inject({
-        method: 'DELETE',
-        url: '/agent/' + agentId
-    }, (res) => {
-
-        if (res.statusCode !== 200){
-            return done(res.result);
-        }
-        return done();
-    });
-});
-
 suite('/entity', () => {
 
     suite('/post', () => {

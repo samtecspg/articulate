@@ -1,9 +1,9 @@
 'use strict';
-const Async = require('async');
 
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
+const PrecreatedAgentName = require('../../api/preCreatedAgent').agentName;
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -13,106 +13,14 @@ const after = lab.after;
 
 let server;
 
+let preCreatedAgent = null;
 let agentName = null;
 let agentId = null;
 let domainName = null;
+let entityId = null;
 let intentId = null;
 
-const createAgent = (callback) => {
-
-    const data = {
-        agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
-        description: 'This is test agent',
-        language: 'en',
-        timezone: 'UTC',
-        domainClassifierThreshold: 0.6,
-        fallbackResponses: [
-            'Sorry, can you rephrase that?',
-            'I\'m still learning to speak with humans, can you rephrase that?'
-        ],
-        useWebhook: false
-    };
-    const options = {
-        method: 'POST',
-        url: '/agent',
-        payload: data
-    };
-
-    server.inject(options, (res) => {
-
-        if (res.statusCode !== 200) {
-            return callback({
-                message: 'Error creating agent',
-                error: res.result
-            }, null);
-        }
-        agentName = res.result.agentName;
-        agentId = res.result.id;
-        return callback(null);
-    });
-};
-
-const createDomain = (callback) => {
-
-    const data = {
-        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
-        domainName: 'Test Domain',
-        enabled: true,
-        intentThreshold: 0.7
-    };
-
-    const options = {
-        method: 'POST',
-        url: '/domain',
-        payload: data
-    };
-
-    server.inject(options, (res) => {
-
-        if (res.statusCode !== 200) {
-            return callback({
-                message: 'Error creating domain',
-                error: res.result
-            }, null);
-        }
-        domainName = res.result.domainName;
-        return callback(null);
-    });
-};
-
-const createEntity = (callback) => {
-
-    const data = {
-        entityName: 'Test Entity',
-        agent: '71999911-cb70-442c-8864-bc1d4e6a306e',
-        examples: [{
-            value: 'car',
-            synonyms: [
-                'car',
-                'vehicle',
-                'automobile'
-            ]
-        }]
-    };
-    const options = {
-        method: 'POST',
-        url: '/entity',
-        payload: data
-    };
-
-    server.inject(options, (res) => {
-
-        if (res.statusCode !== 200) {
-            return callback({
-                message: 'Error creating entity',
-                error: res.result
-            }, null);
-        }
-        return callback(null);
-    });
-};
-
-before({ timeout: 60000 }, (done) => {
+before((done) => {
 
     require('../../../index')((err, srv) => {
 
@@ -121,44 +29,28 @@ before({ timeout: 60000 }, (done) => {
         }
         server = srv;
 
-        Async.series([
-            (callback) => {
+        server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
-                createAgent(callback);
-            },
-            (callback) => {
-
-                createDomain(callback);
-            },
-            (callback) => {
-
-                createEntity(callback);
-            }
-        ], (err) => {
-
-            if (err) {
-                done(err);
+            if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
+                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
-                done();
+                server.inject(`/agent/${resName.result.id}/export`, (resAgent) => {
+
+                    if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
+                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                    }
+                    else {
+                        preCreatedAgent = resAgent.result;
+                        agentName = preCreatedAgent.agentName;
+                        agentId = preCreatedAgent.id;
+                        domainName = preCreatedAgent.domains[0].domainName;
+                        entityId = preCreatedAgent.entities[0].id;
+                        done();
+                    }
+                });
             }
         });
-    });
-});
-
-after((done) => {
-
-    server.inject({
-        method: 'DELETE',
-        url: '/agent/' + agentId
-    }, (res) => {
-
-        if (res.statusCode !== 200){
-            done({
-                message: 'Error deleting agent'
-            });
-        }
-        done();
     });
 });
 
@@ -171,7 +63,7 @@ suite('/intent', () => {
             const data = {
                 agent: agentName,
                 domain: domainName,
-                intentName: 'Test Intent',
+                intentName: 'Test Intent 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
@@ -180,7 +72,8 @@ suite('/intent', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     },
@@ -191,7 +84,8 @@ suite('/intent', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     }
@@ -237,7 +131,7 @@ suite('/intent', () => {
             const data = {
                 agent: '-1',
                 domain: domainName,
-                intentName: 'Test Intent',
+                intentName: 'Test Intent 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
@@ -246,7 +140,8 @@ suite('/intent', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     },
@@ -257,7 +152,8 @@ suite('/intent', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     }
@@ -284,7 +180,7 @@ suite('/intent', () => {
             const data = {
                 agent: agentName,
                 domain: '-1',
-                intentName: 'Test Intent',
+                intentName: 'Test Intent 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
@@ -293,7 +189,8 @@ suite('/intent', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     },
@@ -304,7 +201,8 @@ suite('/intent', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     }
@@ -331,7 +229,7 @@ suite('/intent', () => {
             const data = {
                 agent: agentName,
                 domain: domainName,
-                intentName: 'Test Intent',
+                intentName: 'Test Intent 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
@@ -340,7 +238,8 @@ suite('/intent', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: '-1'
+                                entity: '-1',
+                                entityId
                             }
                         ]
                     },
@@ -351,7 +250,8 @@ suite('/intent', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: '-1'
+                                entity: '-1',
+                                entityId
                             }
                         ]
                     }
@@ -384,34 +284,7 @@ suite('/intent/{id}', () => {
         test('should respond with 200 successful operation and return a single object', (done) => {
 
             const data = {
-                agent: agentName,
-                domain: domainName,
-                intentName: 'Test Intent',
-                examples: [
-                    {
-                        userSays: 'Locate my car',
-                        entities: [
-                            {
-                                start: 10,
-                                end: 12,
-                                value: 'car',
-                                entity: 'Test Entity'
-                            }
-                        ]
-                    },
-                    {
-                        userSays: 'Where is my car',
-                        entities: [
-                            {
-                                start: 12,
-                                end: 14,
-                                value: 'car',
-                                entity: 'Test Entity'
-                            }
-                        ]
-                    }
-                ],
-                useWebhook: true
+                intentName: 'Test Intent 2'
             };
 
             server.inject('/intent/' + intentId, (res) => {
@@ -444,7 +317,7 @@ suite('/intent/{id}', () => {
             const data = {
                 agent: agentName,
                 domain: domainName,
-                intentName: 'Test Intent Updated',
+                intentName: 'Test Intent 2 Updated',
                 examples: [
                     {
                         userSays: 'Locate my car',
@@ -453,7 +326,8 @@ suite('/intent/{id}', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     },
@@ -464,7 +338,8 @@ suite('/intent/{id}', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     }
@@ -473,7 +348,7 @@ suite('/intent/{id}', () => {
             };
 
             const updatedData = {
-                intentName: 'Test Intent Updated',
+                intentName: 'Test Intent 2 Updated',
                 examples: [
                     {
                         userSays: 'Locate my car',
@@ -482,7 +357,8 @@ suite('/intent/{id}', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     },
@@ -493,7 +369,8 @@ suite('/intent/{id}', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     }
@@ -518,7 +395,7 @@ suite('/intent/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                intentName: 'Test Intent',
+                intentName: 'Test Intent 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
@@ -527,7 +404,8 @@ suite('/intent/{id}', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     },
@@ -538,7 +416,8 @@ suite('/intent/{id}', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity'
+                                entity: 'Test Entity',
+                                entityId
                             }
                         ]
                     }
@@ -592,7 +471,8 @@ suite('/intent/{id}', () => {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: '-1'
+                                entity: '-1',
+                                entityId
                             }
                         ]
                     },
@@ -603,7 +483,8 @@ suite('/intent/{id}', () => {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: '-1'
+                                entity: '-1',
+                                entityId
                             }
                         ]
                     }
