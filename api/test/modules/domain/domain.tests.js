@@ -61,7 +61,7 @@ after((done) => {
         return done();
     });
 });
-/*
+
 suite('/domain', () => {
 
     suite('/post', () => {
@@ -283,7 +283,7 @@ suite('/domain/{id}', () => {
         });
     });
 
-});*/
+});
 
 suite('/domain/{id}/entity', () => {
 
