@@ -151,6 +151,32 @@
             "webhookPayload": "",
             "webhookPayloadType": "None"
           }
+        },
+        {
+          "intentName": "Simple Test Intent",
+          "useWebhook": true,
+          "examples": [
+            {
+              "userSays": "What can you find?",
+              "entities": []
+            },
+            {
+              "userSays": "What do you do?",
+              "entities": []
+            },
+            {
+              "userSays": "What can you do?",
+              "entities": []
+            },
+            {
+              "userSays": "What could you do for me?",
+              "entities": []
+            },
+            {
+              "userSays": "How you work?",
+              "entities": []
+            }
+          ]
         }
       ]
     }
