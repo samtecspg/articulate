@@ -18,7 +18,6 @@ let preCreatedAgent = null;
 let agentName = null;
 let agentId = null;
 let domainName = null;
-let entityName = null;
 let intentName = null;
 let intentId = null;
 
@@ -47,7 +46,6 @@ before((done) => {
                         agentName = preCreatedAgent.agentName;
                         agentId = preCreatedAgent.id;
                         domainName = preCreatedAgent.domains[0].domainName;
-                        entityName = preCreatedAgent.entities[0].entityName;
                         intentName = 'Simple Test Intent';
                         intentId = _.filter(preCreatedAgent.domains[0].intents, (tempIntent) => {
 
@@ -89,10 +87,10 @@ suite('webhook', () => {
                     agent: agentName,
                     domain: domainName,
                     intent: intentName,
-                    webhookUrl: "http://localhost:3000/agent",
-                    webhookVerb: "GET",
-                    webhookPayloadType: "None",
-                    webhookPayload: ""
+                    webhookUrl: 'http://localhost:3000/agent',
+                    webhookVerb: 'GET',
+                    webhookPayloadType: 'None',
+                    webhookPayload: ''
                 };
 
                 const options = {
@@ -135,10 +133,10 @@ suite('webhook', () => {
                     agent: '-1',
                     domain: domainName,
                     intent: intentName,
-                    webhookUrl: "http://localhost:3000/agent",
-                    webhookVerb: "GET",
-                    webhookPayloadType: "None",
-                    webhookPayload: ""
+                    webhookUrl: 'http://localhost:3000/agent',
+                    webhookVerb: 'GET',
+                    webhookPayloadType: 'None',
+                    webhookPayload: ''
                 };
 
                 const options = {
@@ -161,10 +159,10 @@ suite('webhook', () => {
                     agent: agentName,
                     domain: '-1',
                     intent: intentName,
-                    webhookUrl: "http://localhost:3000/agent",
-                    webhookVerb: "GET",
-                    webhookPayloadType: "None",
-                    webhookPayload: ""
+                    webhookUrl: 'http://localhost:3000/agent',
+                    webhookVerb: 'GET',
+                    webhookPayloadType: 'None',
+                    webhookPayload: ''
                 };
 
                 const options = {
@@ -194,10 +192,10 @@ suite('webhook', () => {
                     agent: agentName,
                     domain: domainName,
                     intent: intentName,
-                    webhookUrl: "http://localhost:3000/agent",
-                    webhookVerb: "GET",
-                    webhookPayloadType: "None",
-                    webhookPayload: ""
+                    webhookUrl: 'http://localhost:3000/agent',
+                    webhookVerb: 'GET',
+                    webhookPayloadType: 'None',
+                    webhookPayload: ''
                 };
 
                 server.inject(`/intent/${intentId}/webhook`, (res) => {
@@ -228,7 +226,7 @@ suite('webhook', () => {
             test('should respond with 200 successful operation', (done) => {
 
                 const updatedData = {
-                    webhookUrl: "http://localhost:3000/domain"
+                    webhookUrl: 'http://localhost:3000/domain'
                 };
 
                 const options = {
@@ -248,7 +246,7 @@ suite('webhook', () => {
             test('should respond with 404 Not Found', (done) => {
 
                 const updatedData = {
-                    webhookUrl: "http://localhost:3000/agent"
+                    webhookUrl: 'http://localhost:3000/agent'
                 };
 
                 const options = {

@@ -10,7 +10,6 @@ const expect = Code.expect;
 const suite = lab.suite;
 const test = lab.test;
 const before = lab.before;
-const after = lab.after;
 
 let server;
 

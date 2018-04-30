@@ -9,13 +9,11 @@ const expect = Code.expect;
 const suite = lab.suite;
 const test = lab.test;
 const before = lab.before;
-const after = lab.after;
 
 let server;
 
 let preCreatedAgent = null;
 let agentName = null;
-let agentId = null;
 let entityId = null;
 let preCreatedEntity = null;
 
@@ -42,7 +40,6 @@ before((done) => {
                     else {
                         preCreatedAgent = resAgent.result;
                         agentName = preCreatedAgent.agentName;
-                        agentId = preCreatedAgent.id;
                         preCreatedEntity = preCreatedAgent.entities[0];
                         done();
                     }

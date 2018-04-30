@@ -137,62 +137,60 @@ const updateEntitiesDomain = (server, redis, intent, agentId, domainId, oldExamp
                             if (domainsUsingEntity.indexOf(intent.domain) !== -1){
                                 return cllbk(null);
                             }
-                            else {
-                                Async.parallel([
-                                    (cllback) => {
+                            Async.parallel([
+                                (cllback) => {
 
-                                        redis.sismember(`entityDomain:${entityId}`, domainId, (err, result) => {
+                                    redis.sismember(`entityDomain:${entityId}`, domainId, (err, result) => {
 
-                                            if (err){
-                                                const error = Boom.badImplementation(`An error occurred checking if the entity ${entityId} is being used by the domain ${domainId}`);
-                                                return cllback(error);
-                                            }
-                                            if (result){
-                                                redis.srem(`entityDomain:${entityId}`, domainId, (saddErr, saddResult) => {
+                                        if (err){
+                                            const error = Boom.badImplementation(`An error occurred checking if the entity ${entityId} is being used by the domain ${domainId}`);
+                                            return cllback(error);
+                                        }
+                                        if (result){
+                                            redis.srem(`entityDomain:${entityId}`, domainId, (saddErr, saddResult) => {
 
-                                                    if (saddErr){
-                                                        const error = Boom.badImplementation(`An error occurred removing the domain ${domainId} from the list of domains of entity ${entityId}`);
-                                                        return cllback(error);
-                                                    }
-                                                    return cllback(null);
-                                                });
-                                            }
-                                            else {
+                                                if (saddErr){
+                                                    const error = Boom.badImplementation(`An error occurred removing the domain ${domainId} from the list of domains of entity ${entityId}`);
+                                                    return cllback(error);
+                                                }
                                                 return cllback(null);
-                                            }
-                                        });
-                                    },
-                                    (cllback) => {
+                                            });
+                                        }
+                                        else {
+                                            return cllback(null);
+                                        }
+                                    });
+                                },
+                                (cllback) => {
 
-                                        redis.sismember(`domainEntities:${domainId}`, entityId, (err, result) => {
+                                    redis.sismember(`domainEntities:${domainId}`, entityId, (err, result) => {
 
-                                            if (err){
-                                                const error = Boom.badImplementation(`An error occurred checking if the domain ${domainId} is using the entity ${entityId}`);
-                                                return cllback(error);
-                                            }
-                                            if (result){
-                                                redis.srem(`domainEntities:${domainId}`, entityId, (saddErr, saddResult) => {
+                                        if (err){
+                                            const error = Boom.badImplementation(`An error occurred checking if the domain ${domainId} is using the entity ${entityId}`);
+                                            return cllback(error);
+                                        }
+                                        if (result){
+                                            redis.srem(`domainEntities:${domainId}`, entityId, (saddErr, saddResult) => {
 
-                                                    if (saddErr){
-                                                        const error = Boom.badImplementation(`An error occurred removing the entity ${entityId} from the list of entities used by the domain ${domainId}`);
-                                                        return cllback(error);
-                                                    }
-                                                    return cllback(null);
-                                                });
-                                            }
-                                            else {
+                                                if (saddErr){
+                                                    const error = Boom.badImplementation(`An error occurred removing the entity ${entityId} from the list of entities used by the domain ${domainId}`);
+                                                    return cllback(error);
+                                                }
                                                 return cllback(null);
-                                            }
-                                        });
-                                    }
-                                ], (err, result) => {
+                                            });
+                                        }
+                                        else {
+                                            return cllback(null);
+                                        }
+                                    });
+                                }
+                            ], (err, result) => {
 
-                                    if (err){
-                                        return cllbk(err);
-                                    }
-                                    return cllbk(null);
-                                });
-                            }
+                                if (err){
+                                    return cllbk(err);
+                                }
+                                return cllbk(null);
+                            });
                         });
                     }
                 ], (err, result) => {
