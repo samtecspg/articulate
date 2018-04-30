@@ -21,6 +21,21 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
 
+            server.inject(`/entity/${id}`, (res) => {
+
+                if (res.statusCode !== 200){
+                    if (res.statusCode === 404){
+                        const error = Boom.notFound('The specified entity doesn\'t exists');
+                        return cb(error, null);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the entity');
+                    return cb(error, null);
+                }
+                return cb(null);
+            });
+        },
+        (cb) => {
+
             redis.zrange(`entityIntents:${id}`, start, limit, 'withscores', (err, intents) => {
 
                 if (err) {
@@ -57,10 +72,6 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
-        result = _.flatten(result).map((intent) => {
-
-            return Cast(intent, 'intent');
-        });
         return reply(result);
     });
 };
