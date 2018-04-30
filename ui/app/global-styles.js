@@ -58,7 +58,7 @@ injectGlobal`
   }
 
   .content-area {
-    height: 100vh;
+    height: calc( 100vh - 70px );
     position: fixed;
     top: 70px;
     overflow-y: auto; }
