@@ -274,7 +274,7 @@ module.exports = (request, reply) => {
 
                             const resultIntent = resultAddIntent.intent;
 
-                            IntentTools.updateEntitiesDomainTool(redis, resultIntent, agentId, domainId, null, (errUpdateEntitiesDomains) => {
+                            IntentTools.updateEntitiesDomainTool(server, redis, resultIntent, agentId, domainId, null, (errUpdateEntitiesDomains) => {
 
                                 if (errUpdateEntitiesDomains) {
                                     return callbackAddIntents(errUpdateEntitiesDomains);

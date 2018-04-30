@@ -32,57 +32,89 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
 
         flatIntent[key] = flatUpdateData[key];
     });
+    const resultIntent = Flat.unflatten(flatIntent);
 
-    redis.del(`intent:${intentId}`, (err) => {
+    Async.series({
+        temporalDelete: (callback) => {
+
+            redis.del(`intent:${intentId}`, (err) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred temporaly removing the intent for the update.');
+                    return callback(error);
+                }
+                return callback(null);
+            });
+        },
+        intentEntitiesLink: (callback) => {
+
+            Async.eachSeries(resultIntent.examples, (example, nextIntent) => {
+
+                Async.eachSeries(example.entities, (entity, nextEntity) => {
+
+                    redis.zadd(`entityIntents:${entity.entityId}`, 'NX', intentId, resultIntent.intentName, (err, addResponse) => {
+
+                        if (err) {
+                            const error = Boom.badImplementation('An error occurred adding the intent to the entity list.');
+                            return nextEntity(error);
+                        }
+                        return nextEntity(null);
+                    });
+                }, nextIntent);
+            }, callback);
+        },
+        intent: (callback) => {
+
+            redis.hmset(`intent:${intentId}`, RemoveBlankArray(flatIntent), (err) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred adding the intent data.');
+                    return callback(error);
+                }
+                let requiresTraining = false;
+                if (updateData.examples){
+                    requiresTraining = !_.isEqual(updateData.examples, oldExamples);
+                }
+                if (updateData.intentName){
+                    requiresTraining =  requiresTraining || updateData.intentName !== currentIntent.intentName;
+                }
+                if (requiresTraining){
+                    Async.series([
+                        Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, resultIntent, agentId, domainId, oldExamples),
+                        (callb) => {
+
+                            Async.parallel([
+                                Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
+                                Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
+                            ], (err) => {
+
+                                if (err){
+                                    return callb(err);
+                                }
+                                return callb(null);
+                            });
+                        }
+                    ], (err) => {
+
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        return callback(null, resultIntent);
+                    });
+
+                }
+                else {
+                    return callback(null, resultIntent);
+                }
+            });
+        }
+    }, (err, result) => {
 
         if (err){
-            const error = Boom.badImplementation('An error occurred temporaly removing the intent for the update.');
-            return cb(error);
+            return cb(err);
         }
-        redis.hmset(`intent:${intentId}`, RemoveBlankArray(flatIntent), (err) => {
-
-            if (err){
-                const error = Boom.badImplementation('An error occurred adding the intent data.');
-                return cb(error);
-            }
-            const resultIntent = Flat.unflatten(flatIntent);
-            let requiresTraining = false;
-            if (updateData.examples){
-                requiresTraining = !_.isEqual(updateData.examples, oldExamples);
-            }
-            if (updateData.intentName){
-                requiresTraining =  requiresTraining || updateData.intentName !== currentIntent.intentName;
-            }
-            if (requiresTraining){
-                Async.series([
-                    Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, oldExamples),
-                    (callback) => {
-
-                        Async.parallel([
-                            Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
-                            Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
-                        ], (err) => {
-
-                            if (err){
-                                return callback(err);
-                            }
-                            return callback(null);
-                        });
-                    }
-                ], (err) => {
-
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    return cb(null, resultIntent);
-                });
-
-            }
-            else {
-                return cb(null, resultIntent);
-            }
-        });
+        return cb(null, result.intent);
     });
 };
 
@@ -206,6 +238,23 @@ module.exports = (request, reply) => {
                             }
                             return callback(null);
                         });
+                    },
+                    (callback) => {
+
+                        Async.eachSeries(currentIntent.examples, (example, nextIntent) => {
+
+                            Async.eachSeries(example.entities, (entity, nextEntity) => {
+
+                                redis.zrem(`entityIntents:${entity.entityId}`, currentIntent.intentName, (err, addResponse) => {
+
+                                    if (err){
+                                        const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the entity ${entity.entityId}`);
+                                        return nextEntity(error);
+                                    }
+                                    return nextEntity(null);
+                                });
+                            }, nextIntent);
+                        }, callback);
                     },
                     (callback) => {
 

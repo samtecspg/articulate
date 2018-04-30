@@ -177,7 +177,7 @@ module.exports = (request, reply) => {
         const resultIntent = result.intent;
 
         Async.series([
-            Async.apply(IntentTools.updateEntitiesDomainTool, redis, resultIntent, agentId, domainId, null),
+            Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, resultIntent, agentId, domainId, null),
             (cb) => {
 
                 Async.parallel([

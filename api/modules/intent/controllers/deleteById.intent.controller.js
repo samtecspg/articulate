@@ -161,7 +161,7 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         Async.series([
-            Async.apply(IntentTools.updateEntitiesDomainTool, redis, { examples: [] }, agentId, domainId, intent.examples),
+            Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, { domain: intent.domain, examples: [] }, agentId, domainId, intent.examples),
             (callback) => {
 
                 Async.parallel([
