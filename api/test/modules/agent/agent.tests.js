@@ -1,9 +1,11 @@
 'use strict';
-const AgentToImport = require('./agentToImport');
+const _ = require('lodash');
+
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const PrecreatedAgentName = require('../../api/preCreatedAgent').agentName;
+const AgentToImport = require('./agentToImport');
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -52,9 +54,12 @@ before({ timeout: 120000 }, (done) => {
                         agentWebhook = preCreatedAgent.webhook;
                         domain = preCreatedAgent.domains[0];
                         entity = preCreatedAgent.entities[0];
-                        intent = preCreatedAgent.domains[0].intents[0];
-                        scenario = preCreatedAgent.domains[0].intents[0].scenario;
-                        intentWebhook = preCreatedAgent.domains[0].intents[0].webhook;
+                        intent = _.filter(preCreatedAgent.domains[0].intents, (tempIntent) => {
+
+                            return tempIntent.intentName === 'Test Intent';
+                        })[0];
+                        scenario = intent.scenario;
+                        intentWebhook = intent.webhook;
                         done();
                     }
                 });
@@ -553,7 +558,7 @@ suite('/agent/{id}/parse', () => {
                 expect(res.result.result.results[0].domain).to.equal(domain.domainName);
                 expect(res.result.result.results[0].entities.length).to.be.greaterThan(0);
                 expect(res.result.result.results[0].entities[0].entity).to.equal(entity.entityName);
-                expect(res.result.result.results[0].intent.confidence).to.equal(1);
+                expect(res.result.result.results[0].intent.confidence).to.be.a.number();
                 expect(res.result.result.results[0].intent.name).to.equal(intent.intentName);
                 done();
             });
@@ -582,7 +587,7 @@ suite('/agent/{id}/parse', () => {
                 expect(res.result.result.results[0].domain).to.equal(domain.domainName);
                 expect(res.result.result.results[0].entities.length).to.be.greaterThan(0);
                 expect(res.result.result.results[0].entities[0].entity).to.equal(entity.entityName);
-                expect(res.result.result.results[0].intent.confidence).to.equal(1);
+                expect(res.result.result.results[0].intent.confidence).to.be.a.number();
                 expect(res.result.result.results[0].intent.name).to.equal(intent.intentName);
                 done();
             });

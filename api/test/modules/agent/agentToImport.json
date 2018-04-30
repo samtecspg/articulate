@@ -84,15 +84,13 @@
                   "end": 12,
                   "start": 9,
                   "value": "ham",
-                  "entity": "Toppings",
-                  "entityId": 1
+                  "entity": "Toppings"
                 },
                 {
                   "end": 23,
                   "value": "cheese",
                   "start": 17,
-                  "entity": "Toppings",
-                  "entityId": 1
+                  "entity": "Toppings"
                 }
               ]
             },
@@ -103,8 +101,7 @@
                   "end": 30,
                   "value": "mushrooms",
                   "start": 21,
-                  "entity": "Toppings",
-                  "entityId": 1
+                  "entity": "Toppings"
                 }
               ]
             },
@@ -115,8 +112,7 @@
                   "end": 33,
                   "start": 26,
                   "value": "chicken",
-                  "entity": "Toppings",
-                  "entityId": 1
+                  "entity": "Toppings"
                 }
               ]
             }
