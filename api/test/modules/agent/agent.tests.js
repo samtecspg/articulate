@@ -393,7 +393,7 @@ suite('/agent/{id}/domain/{domainId}/intent', () => {
             server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result[0].intentName).to.equal(intent.intentName);
+                expect(res.result.length).to.equal(2);
                 done();
             });
         });
@@ -499,9 +499,7 @@ suite('/agent/{id}/export', () => {
                 expect(res.result.webhook.webhookUrl).to.equal(agentWebhook.webhookUrl);
                 expect(res.result.domains[0].id).to.equal(domain.id);
                 expect(res.result.entities[0].id).to.equal(entity.id);
-                expect(res.result.domains[0].intents[0].id).to.equal(intent.id);
-                expect(res.result.domains[0].intents[0].scenario.id).to.equal(scenario.id);
-                expect(res.result.domains[0].intents[0].webhook.id).to.equal(intentWebhook.id);
+                expect(res.result.domains[0].intents.length).to.equal(2);
                 done();
             });
         });
@@ -517,9 +515,7 @@ suite('/agent/{id}/export', () => {
                 expect(res.result.webhook.webhookUrl).to.equal(agentWebhook.webhookUrl);
                 expect(res.result.domains[0].domainName).to.equal(domain.domainName);
                 expect(res.result.entities[0].entityName).to.equal(entity.entityName);
-                expect(res.result.domains[0].intents[0].intentName).to.equal(intent.intentName);
-                expect(res.result.domains[0].intents[0].scenario.scenarioName).to.equal(scenario.scenarioName);
-                expect(res.result.domains[0].intents[0].webhook.webhookUrl).to.equal(intentWebhook.webhookUrl);
+                expect(res.result.domains[0].intents.length).to.equal(2);
                 done();
             });
         });
