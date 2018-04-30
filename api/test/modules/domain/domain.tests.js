@@ -13,7 +13,7 @@ const after = lab.after;
 
 let server;
 
-let agentName = PrecreatedAgent.agentName;
+const agentName = PrecreatedAgent.agentName;
 let domainId = null;
 
 let agentId = null;
