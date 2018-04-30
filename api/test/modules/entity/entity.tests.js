@@ -3,6 +3,7 @@
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
+const PrecreatedAgentName = require('../../api/preCreatedAgent').agentName;
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -12,45 +13,13 @@ const after = lab.after;
 
 let server;
 
+let preCreatedAgent = null;
 let agentName = null;
 let agentId = null;
 let entityId = null;
+let preCreatedEntity = null;
 
-const createAgent = (callback) => {
-
-    const data = {
-        agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
-        description: 'This is test agent',
-        language: 'en',
-        timezone: 'UTC',
-        domainClassifierThreshold: 0.6,
-        fallbackResponses: [
-            'Sorry, can you rephrase that?',
-            'I\'m still learning to speak with humans, can you rephrase that?'
-        ],
-        useWebhook: false
-    };
-    const options = {
-        method: 'POST',
-        url: '/agent',
-        payload: data
-    };
-
-    server.inject(options, (res) => {
-
-        if (res.statusCode !== 200) {
-            return callback({
-                message: 'Error creating agent',
-                error: res.result
-            }, null);
-        }
-        agentName = res.result.agentName;
-        agentId = res.result.id;
-        return callback(null);
-    });
-};
-
-before({ timeout: 60000 }, (done) => {
+before((done) => {
 
     require('../../../index')((err, srv) => {
 
@@ -59,12 +28,26 @@ before({ timeout: 60000 }, (done) => {
         }
         server = srv;
 
-        createAgent( (err) => {
+        server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
-            if (err) {
-                done(err);
+            if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
+                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
-            done();
+            else {
+                server.inject(`/agent/${resName.result.id}/export`, (resAgent) => {
+
+                    if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
+                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                    }
+                    else {
+                        preCreatedAgent = resAgent.result;
+                        agentName = preCreatedAgent.agentName;
+                        agentId = preCreatedAgent.id;
+                        preCreatedEntity = preCreatedAgent.entities[0];
+                        done();
+                    }
+                });
+            }
         });
     });
 });
@@ -90,7 +73,7 @@ suite('/entity', () => {
         test('should respond with 200 successful operation and return an entity object', (done) => {
 
             const data = {
-                entityName: 'Test Entity',
+                entityName: 'Test Entity 2',
                 agent: agentName,
                 uiColor: '#009688',
                 examples: [{
@@ -176,20 +159,10 @@ suite('/entity/{id}', () => {
         test('should respond with 200 successful operation and return a single object', (done) => {
 
             const data = {
-                entityName: 'Test Entity',
-                agent: agentName,
-                uiColor: '#009688',
-                examples: [{
-                    value: 'car',
-                    synonyms: [
-                        'car',
-                        'vehicle',
-                        'automobile'
-                    ]
-                }]
+                entityName: 'Test Entity 2'
             };
 
-            server.inject('/entity/' + entityId, (res) => {
+            server.inject(`/entity/${entityId}`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.entityName).to.be.contain(data.entityName);
@@ -244,7 +217,7 @@ suite('/entity/{id}', () => {
 
             const options = {
                 method: 'PUT',
-                url: '/entity/' + entityId,
+                url: `/entity/${entityId}`,
                 payload: updatedData
             };
 
@@ -325,12 +298,44 @@ suite('/entity/{id}', () => {
             };
             const options = {
                 method: 'DELETE',
-                url: '/entity/' + data.id
+                url: `/entity/${data.id}`
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
+                done();
+            });
+        });
+    });
+
+});
+
+suite('/entity/{id}/intent', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return an array of intents', (done) => {
+
+            server.inject(`/entity/${preCreatedEntity.id}/intent`, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.be.an.array();
+                expect(res.result.length).to.be.greaterThan(0);
+                done();
+            });
+        });
+
+        test('should respond with 404 Not Found', (done) => {
+
+            const data = {
+                id: '-1'
+            };
+
+            server.inject('/entity/-1/intent', (res) => {
+
+                expect(res.statusCode).to.equal(404);
+                expect(res.result.message).to.contain('The specified entity doesn\'t exists');
                 done();
             });
         });
