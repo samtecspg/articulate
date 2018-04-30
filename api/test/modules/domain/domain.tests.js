@@ -3,7 +3,7 @@
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
-const PrecreatedAgent = require('../../api/preCreatedAgent');
+const PrecreatedAgentName = require('../../api/preCreatedAgent').agentName;
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -13,7 +13,8 @@ const after = lab.after;
 
 let server;
 
-const agentName = PrecreatedAgent.agentName;
+let preCreatedAgent = null;
+let agentName = null;
 let domainId = null;
 
 let agentId = null;
@@ -27,38 +28,27 @@ before({ timeout: 120000 }, (done) => {
             done(err);
         }
         server = srv;
+        server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
-        const options = {
-            method: 'POST',
-            url: '/agent/import',
-            payload: PrecreatedAgent
-        };
-
-        server.inject(options, (res) => {
-
-            if (res.result && res.result.statusCode && res.result.statusCode !== 200){
-                done(new Error(`An error ocurred creating an agent for the Agent tests. Error message: ${res.result.message}`));
+            if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
+                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
-                agentId = res.result.id;
-                preCreatedDomain = res.result.domains[0];
-                done();
+                server.inject(`/agent/${resName.result.id}/export`, (resAgent) => {
+
+                    if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
+                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                    }
+                    else {
+                        preCreatedAgent = resAgent.result;
+                        agentName = preCreatedAgent.agentName;
+                        agentId = preCreatedAgent.id;
+                        preCreatedDomain = preCreatedAgent.domains[0];
+                        done();
+                    }
+                });
             }
         });
-    });
-});
-
-after((done) => {
-
-    server.inject({
-        method: 'DELETE',
-        url: '/agent/' + agentId
-    }, (res) => {
-
-        if (res.statusCode !== 200){
-            return done(res.result);
-        }
-        return done();
     });
 });
 

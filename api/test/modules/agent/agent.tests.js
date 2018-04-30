@@ -1,9 +1,9 @@
 'use strict';
 const AgentToImport = require('./agentToImport');
-const PrecreatedAgent = require('../../api/preCreatedAgent');
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
+const PrecreatedAgentName = require('../../api/preCreatedAgent').agentName;
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -13,6 +13,7 @@ const after = lab.after;
 
 let server;
 
+let preCreatedAgent = null;
 let agentId = null;
 let preCreatedAgentId = null;
 let importedAgentId = null;
@@ -33,26 +34,30 @@ before({ timeout: 120000 }, (done) => {
         }
         server = srv;
 
-        const options = {
-            method: 'POST',
-            url: '/agent/import',
-            payload: PrecreatedAgent
-        };
+        server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
-        server.inject(options, (res) => {
-
-            if (res.result && res.result.statusCode && res.result.statusCode !== 200){
-                done(new Error(`An error ocurred creating an agent for the Agent tests. Error message: ${res.result.message}`));
+            if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
+                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
-                preCreatedAgentId = res.result.id;
-                agentWebhook = res.result.webhook;
-                domain = res.result.domains[0];
-                entity = res.result.entities[0];
-                intent = res.result.domains[0].intents[0];
-                scenario = res.result.domains[0].intents[0].scenario;
-                intentWebhook = res.result.domains[0].intents[0].webhook;
-                done();
+                server.inject(`/agent/${resName.result.id}/export`, (resAgent) => {
+
+                    if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
+                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                    }
+                    else {
+                        preCreatedAgent = resAgent.result;
+
+                        preCreatedAgentId = preCreatedAgent.id;
+                        agentWebhook = preCreatedAgent.webhook;
+                        domain = preCreatedAgent.domains[0];
+                        entity = preCreatedAgent.entities[0];
+                        intent = preCreatedAgent.domains[0].intents[0];
+                        scenario = preCreatedAgent.domains[0].intents[0].scenario;
+                        intentWebhook = preCreatedAgent.domains[0].intents[0].webhook;
+                        done();
+                    }
+                });
             }
         });
     });
@@ -62,26 +67,15 @@ after((done) => {
 
     server.inject({
         method: 'DELETE',
-        url: '/agent/' + preCreatedAgentId
-    }, (res) => {
+        url: '/agent/' + importedAgentId
+    }, (resImported) => {
 
-        if (res.statusCode !== 200){
+        if (resImported.statusCode !== 200){
             done({
-                message: 'Error deleting agent'
+                message: 'Error deleting agent of the import endpoint test'
             });
         }
-        server.inject({
-            method: 'DELETE',
-            url: '/agent/' + importedAgentId
-        }, (resImported) => {
-
-            if (resImported.statusCode !== 200){
-                done({
-                    message: 'Error deleting agent'
-                });
-            }
-            done();
-        });
+        done();
     });
 });
 
@@ -710,7 +704,7 @@ suite('/agent/name/{agentName}', () => {
 
         test('should respond with 200 successful operation and return a single object', (done) => {
 
-            server.inject(`/agent/name/${PrecreatedAgent.agentName}`, (res) => {
+            server.inject(`/agent/name/${preCreatedAgent.agentName}`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.id).to.be.equal(preCreatedAgentId);
