@@ -20,6 +20,10 @@ module.exports = (request, reply) => {
             server.inject(`/domain/${domainId}`, (res) => {
 
                 if (res.statusCode !== 200){
+                    if (res.statusCode === 404){
+                        const errorNotFound = Boom.notFound(res.result.message);
+                        return callback(errorNotFound);
+                    }
                     const error = Boom.create(res.statusCode, 'An error occurred getting the domain');
                     return callback(error, null);
                 }
