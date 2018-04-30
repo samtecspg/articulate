@@ -38,7 +38,7 @@ services:
   rasa:
     image: samtecspg/articulate-rasa:repo-head
     ports: ['0.0.0.0:5000:5000']
-    volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.json}:/app/config.json", "./local-storage/rasa/logs:/app/logs"]
+    volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
     networks: ['alpha-nlu-network']
   duckling:
     image: samtecspg/duckling:0.1.0.0

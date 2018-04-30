@@ -1,1 +1,7 @@
-["nlp_spacy", "tokenizer_spacy", "ner_crf", "ner_synonyms", "ner_spacy"]
+[
+    {"name": "nlp_spacy"},
+    {"name": "tokenizer_spacy"},
+    {"name": "ner_crf"},
+    {"name": "ner_synonyms"},
+    {"name": "ner_spacy"}
+]

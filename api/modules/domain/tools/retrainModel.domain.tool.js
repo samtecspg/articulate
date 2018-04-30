@@ -4,6 +4,7 @@ const Wreck = require('wreck');
 const Boom = require('boom');
 const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.domain.tool');
+const YAML = require('json2yaml');
 
 const retrainModel = (server, rasa, language, agentName, domainName, domainId, callback) => {
 
@@ -18,8 +19,20 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
         let model = Guid.create().toString();
         model = (trainingSet.numberOfIntents > 1 ? '' : 'just_er_') + model;
         const modelFolderName = domainName + '_' + model;
-        const pipeline = trainingSet.numberOfIntents > 1 ? null : server.app.rasa_er_pipeline.join(',');
-        Wreck.post(`${rasa}/train?language=${language}&project=${agentName}&fixed_model_name=${modelFolderName}${pipeline ? `&pipeline=${pipeline}` : ''}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
+        let requestPayload = {
+            language
+        };
+        if (trainingSet.numberOfIntents === 1){
+            requestPayload['pipeline'] = server.app.rasa_er_pipeline;
+        }
+        requestPayload = YAML.stringify(requestPayload);
+        requestPayload += `  data: ${stringTrainingSet}`;
+        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { 
+            payload: requestPayload,
+            headers: {
+                'Content-Type': 'application/x-yml'
+            }
+        }, (err, wreckResponse, payload) => {
 
             if (err) {
                 const error = Boom.badImplementation('An error occurred calling the training process.');
