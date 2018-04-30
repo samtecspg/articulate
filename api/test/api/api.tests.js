@@ -5,8 +5,8 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const Inert = require('inert');
 const Vision = require('vision');
-// const HapiSwagger = require('hapi-swagger');
-// const Pack = require('../../package');
+const Fs = require('fs');
+const PrecreatedAgent = require('./preCreatedAgent');
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -16,7 +16,7 @@ suite('NLU API', () => {
 
     suite('start server', () => {
 
-        test('should start the server successfuly', (done) => {
+        test('should start the server successfuly', { timeout: 120000 }, (done) => {
 
             require('../../index')((err, server) => {
 
@@ -36,7 +36,21 @@ suite('NLU API', () => {
                         }
                         expect(server).to.be.an.object();
 
-                        done();
+                        const options = {
+                            method: 'POST',
+                            url: '/agent/import',
+                            payload: PrecreatedAgent
+                        };
+
+                        server.inject(options, (res) => {
+
+                            if (res.result && res.result.statusCode && res.result.statusCode !== 200){
+                                done(new Error(`An error ocurred creating an agent for the tests. Error message: ${res.result.message}`));
+                            }
+                            else {
+                                done();
+                            }
+                        });
                     });
                 });
             });
