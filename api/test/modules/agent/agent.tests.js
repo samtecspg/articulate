@@ -1,6 +1,6 @@
 'use strict';
 const AgentToImport = require('./agentToImport');
-const PrecreatedAgent = require('./preCreatedAgent');
+const PrecreatedAgent = require('../../api/preCreatedAgent');
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
