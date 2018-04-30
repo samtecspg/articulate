@@ -3,6 +3,7 @@
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
+const PrecreatedAgent = require('../../api/preCreatedAgent');
 
 const expect = Code.expect;
 const suite = lab.suite;
@@ -12,59 +13,37 @@ const after = lab.after;
 
 let server;
 
-let agentName = null;
-let agentId = null;
+let agentName = PrecreatedAgent.agentName;
 let domainId = null;
 
-const createAgent = (callback) => {
+let agentId = null;
+let preCreatedDomain = null;
 
-    const data = {
-        agentName: '71999911-cb70-442c-8864-bc1d4e6a306e',
-        description: 'This is test agent',
-        language: 'en',
-        timezone: 'UTC',
-        domainClassifierThreshold: 0.6,
-        fallbackResponses: [
-            'Sorry, can you rephrase that?',
-            'I\'m still learning to speak with humans, can you rephrase that?'
-        ],
-        useWebhook: false
-    };
-    const options = {
-        method: 'POST',
-        url: '/agent',
-        payload: data
-    };
-
-    server.inject(options, (res) => {
-
-        if (res.statusCode !== 200) {
-            return callback({
-                message: 'Error creating agent',
-                error: res.result
-            }, null);
-        }
-        agentName = res.result.agentName;
-        agentId = res.result.id;
-        return callback(null);
-    });
-};
-
-before({ timeout: 60000 }, (done) => {
+before({ timeout: 120000 }, (done) => {
 
     require('../../../index')((err, srv) => {
 
-        if (err){
+        if (err) {
             done(err);
         }
         server = srv;
 
-        createAgent( (err) => {
+        const options = {
+            method: 'POST',
+            url: '/agent/import',
+            payload: PrecreatedAgent
+        };
 
-            if (err) {
-                done(err);
+        server.inject(options, (res) => {
+
+            if (res.result && res.result.statusCode && res.result.statusCode !== 200){
+                done(new Error(`An error ocurred creating an agent for the Agent tests. Error message: ${res.result.message}`));
             }
-            done();
+            else {
+                agentId = res.result.id;
+                preCreatedDomain = res.result.domains[0];
+                done();
+            }
         });
     });
 });
@@ -82,7 +61,7 @@ after((done) => {
         return done();
     });
 });
-
+/*
 suite('/domain', () => {
 
     suite('/post', () => {
@@ -91,7 +70,7 @@ suite('/domain', () => {
 
             const data = {
                 agent: agentName,
-                domainName: 'Test Domain',
+                domainName: 'Test Domain 2',
                 enabled: true,
                 intentThreshold: 0.7
             };
@@ -163,7 +142,7 @@ suite('/domain/{id}', () => {
             const data = {
                 id: domainId,
                 agent: agentName,
-                domainName: 'Test Domain',
+                domainName: 'Test Domain 2',
                 enabled: true,
                 intentThreshold: 0.7
             };
@@ -198,13 +177,13 @@ suite('/domain/{id}', () => {
             const data = {
                 id: domainId,
                 agent: agentName,
-                domainName: 'Test Domain Updated',
+                domainName: 'Test Domain 2 Updated',
                 enabled: false,
                 intentThreshold: 0.55
             };
 
             const updatedData = {
-                domainName: 'Test Domain Updated',
+                domainName: 'Test Domain 2 Updated',
                 enabled: false,
                 intentThreshold: 0.55
             };
@@ -299,6 +278,90 @@ suite('/domain/{id}', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
+                done();
+            });
+        });
+    });
+
+});*/
+
+suite('/domain/{id}/entity', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return a single object', (done) => {
+
+            server.inject(`/domain/${preCreatedDomain.id}/entity`, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.be.an.array();
+                expect(res.result.length).to.be.greaterThan(0);
+                done();
+            });
+        });
+
+        test('should respond with 404 Not Found', (done) => {
+
+            server.inject('/domain/-1/entity', (res) => {
+
+                expect(res.statusCode).to.equal(404);
+                expect(res.result.message).to.contain('The specified domain doesn\'t exists');
+                done();
+            });
+        });
+    });
+
+});
+
+suite('/domain/{id}/intent', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return a single object', (done) => {
+
+            server.inject(`/domain/${preCreatedDomain.id}/intent`, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.be.an.array();
+                expect(res.result.length).to.be.greaterThan(0);
+                done();
+            });
+        });
+
+        test('should respond with 404 Not Found', (done) => {
+
+            server.inject('/domain/-1/intent', (res) => {
+
+                expect(res.statusCode).to.equal(404);
+                expect(res.result.message).to.contain('The specified domain doesn\'t exists');
+                done();
+            });
+        });
+    });
+
+});
+
+suite('/domain/{id}/train', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return a single object', { timeout: 120000 }, (done) => {
+
+            server.inject(`/domain/${preCreatedDomain.id}/train`, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.domainName).to.equal(preCreatedDomain.domainName);
+                expect(res.result.model).to.not.be.equal(preCreatedDomain.model);
+                done();
+            });
+        });
+
+        test('should respond with 404 Not Found', (done) => {
+
+            server.inject('/domain/-1/train', (res) => {
+
+                expect(res.statusCode).to.equal(404);
+                expect(res.result.message).to.contain('The specified domain doesn\'t exists');
                 done();
             });
         });
