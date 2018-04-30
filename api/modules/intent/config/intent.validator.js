@@ -22,12 +22,12 @@ class IntentValidate {
                     examples: Joi.array().items({
                         userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
                         entities: Joi.array().items({
-                            entityId: Joi.number(),
+                            entityId: Joi.number().required().error(new Error('You must specify the id of the entity that you are tagging in the examples')),
                             start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                             end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
                             value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),
                             entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.'))
-                        })
+                        }).required().allow([])
                     }).required().min(2).error(new Error('Please specify at least two examples for your intent definition.'))
                 };
             })()
@@ -57,12 +57,12 @@ class IntentValidate {
                     examples: Joi.array().items({
                         userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
                         entities: Joi.array().items({
-                            entityId: Joi.number(),
+                            entityId: Joi.number().required().error(new Error('You must specify the id of the entity that you are tagging in the examples')),
                             start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                             end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
                             value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),
                             entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.'))
-                        })
+                        }).required().allow([])
                     }).min(2).error(new Error('Please specify at least two examples for your intent definition.'))
                 };
             })()
