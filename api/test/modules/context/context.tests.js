@@ -95,10 +95,6 @@ suite('context', () => {
 
             test('should respond with 404 Not Found', (done) => {
 
-                const data = {
-                    id: '-1'
-                };
-
                 server.inject(`/context/${sessionId}`, (res) => {
 
                     expect(res.statusCode).to.equal(200);
@@ -181,7 +177,7 @@ suite('context', () => {
                 };
                 const options = {
                     method: 'PUT',
-                    url: `/context/articulateAPI2/-1`,
+                    url: '/context/articulateAPI2/-1',
                     payload: data
                 };
 
