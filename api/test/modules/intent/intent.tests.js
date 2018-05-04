@@ -81,7 +81,7 @@ suite('/intent', () => {
                         entities: [
                             {
                                 start: 12,
-                                end: 14,
+                                end: 15,
                                 value: 'car',
                                 entity: 'Test Entity',
                                 entityId
