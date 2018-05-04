@@ -140,11 +140,11 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
 
   renderMenu() {
     return [{
-      label: 'Delete',
-      action: (intent) => this.onDeletePrompt(intent),
-    }, {
       label: 'Edit',
       action: (intent) => this.props.onChangeUrl(`/intent/${intent.id}/edit/`),
+    }, {
+      label: 'Delete',
+      action: (intent) => this.onDeletePrompt(intent),
     }];
   }
 

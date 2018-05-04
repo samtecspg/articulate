@@ -87,11 +87,11 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
 
   renderMenu() {
     return [{
-      label: 'Delete',
-      action: (domain) => this.onDeletePrompt(domain),
-    }, {
       label: 'Edit',
       action: (domain) => this.props.onChangeUrl(`/domain/${domain.id}/edit/`),
+    }, {
+      label: 'Delete',
+      action: (domain) => this.onDeletePrompt(domain),
     }];
   }
 

@@ -88,11 +88,11 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
 
   renderMenu() {
     return [{
-      label: 'Delete',
-      action: (entity) => this.onDeletePrompt(entity),
-    }, {
       label: 'Edit',
       action: (entity) => this.props.onChangeUrl(`/entity/${entity.id}/edit/`),
+    }, {
+      label: 'Delete',
+      action: (entity) => this.onDeletePrompt(entity),
     }];
   }
 
