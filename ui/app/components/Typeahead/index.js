@@ -35,7 +35,13 @@ class Typeahead extends Component {
           <AutoComplete
             id                  ={this.props.id}
             searchText          ={this.state.inputValue}
-            filter              ={AutoComplete.caseInsensitiveFilter}
+            maxSearchResults    ={this.props.maxSearchResults}
+            filter              ={function (searchText, key) {
+              if (searchText.length >= 2){
+                return key.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+              }
+              return false;
+            }}
             openOnFocus         ={true}
             fullWidth           ={true}
             dataSource          ={this.state.dataSource}

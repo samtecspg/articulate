@@ -319,20 +319,10 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               >
                 {returnFormattedOptions(languages)}
               </Input>
-              {/*<Input
-                s={6}
-                name="timezone"
-                type="select"
-                label={messages.timezone.defaultMessage}
-                value={agent.timezone}
-                onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
-              >
-                {returnFormattedOptions(timezones)}
-              </Input>*/}
               <Typeahead
                 id= 'timezone'
                 name='timezone'
-			          maxResults='20'
+			          maxSearchResults={10}
                 callback={this.props.onChangeAgentData}
                 label={messages.timezone.defaultMessage}
                 value={agent.timezone}
