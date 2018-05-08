@@ -20,7 +20,7 @@ module.exports = (server, redis, callback) => {
                 const options = {
                     url: `/settings/${setting}`,
                     method: 'PUT',
-                    payload: setting === 'uiLanguage' ? { language: DefaultSettings[setting] } : DefaultSettings[setting]
+                    payload: setting === 'uiLanguage' ? { uiLanguage: DefaultSettings[setting] } : DefaultSettings[setting]
                 };
 
                 server.inject(options, (resPut) => {
@@ -35,7 +35,7 @@ module.exports = (server, redis, callback) => {
         (err) => {
 
             if (err){
-                return callback(err);
+                return callback(JSON.stringify(err, null, 2));
             }
             return callback(null);
         }

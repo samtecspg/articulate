@@ -21,7 +21,10 @@ const buildTrainingData = (server, domainId, callback) => {
 
             const buildIntentsPerExamples = _.map(intent.examples, (intentExample) => {
 
-                const entitiesList = intentExample.entities;
+                const entitiesList = _.compact(_.map(intentExample.entities, (entity) => {
+
+                    return entity.extractor ? null : entity;
+                }));
 
                 if (entitiesList && entitiesList.length > 0){
                     const entitiesOfIntent = _.map(entitiesList, 'entity');

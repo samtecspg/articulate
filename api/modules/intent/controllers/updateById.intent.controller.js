@@ -52,6 +52,10 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
 
                 Async.eachSeries(example.entities, (entity, nextEntity) => {
 
+                    //Only system entities have an extractor specified, so ignore sys entities
+                    if (entity.extractor){
+                        return nextEntity(null);
+                    }
                     redis.zadd(`entityIntents:${entity.entityId}`, 'NX', intentId, resultIntent.intentName, (err, addResponse) => {
 
                         if (err) {

@@ -27,7 +27,10 @@ const getCombinationOfEntities = (entities, intents) => {
     const usedEntities = _.compact(_.uniq(_.map(intentExamples, (example) => {
 
         if (example.entities){
-            const exampleEntities = _.map(example.entities, 'entity');
+            const exampleEntities = _.compact(_.map(example.entities, (entity) => {
+
+                return entity.extractor ? null : entity.entity;
+            }));
             return exampleEntities;
         }
         return null;

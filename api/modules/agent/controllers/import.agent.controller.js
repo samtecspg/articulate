@@ -226,6 +226,10 @@ module.exports = (request, reply) => {
 
                                     Async.eachSeries(example.entities, (entity, nextEntity) => {
 
+                                        //Only system entities have an extractor specified, so ignore sys entities
+                                        if (entity.extractor){
+                                            return nextEntity(null);
+                                        }
                                         redis.zadd(`entityIntents:${entitiesDir[entity.entity]}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
 
                                             if (err) {

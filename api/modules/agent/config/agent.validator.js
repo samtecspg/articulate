@@ -312,7 +312,8 @@ class AgentValidate {
                                     start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                                     end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
                                     value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),
-                                    entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.'))
+                                    entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.')),
+                                    extractor: IntentEntitySchema.extractor
                                 }).required().allow([])
                             }).required().min(2).error(new Error('Please specify at least two examples for your intent definition.')),
                             scenario: {

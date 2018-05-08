@@ -7,7 +7,11 @@ const systemEntities = ['sys.spacy_money', 'sys.spacy_quantity', 'sys.spacy_card
 
 const extractEntities = (examples) => {
 
-    const entities = _.compact(_.uniq(_.flatten(_.map(_.flatten(_.map(examples, 'entities')), 'entity'))));
+    //Only system entities have an extractor specified, so ignore sys entities
+    const entities = _.compact(_.uniq(_.flatten(_.map(_.filter(_.flatten(_.map(examples, 'entities')), (entity) => {
+
+        return !entity.extractor;
+    }), 'entity'))));
     return entities;
 };
 

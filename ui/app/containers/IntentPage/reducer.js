@@ -137,15 +137,19 @@ function intentReducer(state = initialState, action) {
           .updateIn(['intentData', 'examples'], examples => examples.map(example => {
             const { userSays } = example;
             if (userSays !== action.payload.userSays) return example; // Not the example we are looking for, make no changes
-            return example.updateIn(['entities'], (synonyms) => {
-              const tmpSynonyms = synonyms === '' ? Immutable([]) : synonyms; // Redis saves an empty array as an empty string so we need to re-create the array
-              return tmpSynonyms.concat({
+            return example.updateIn(['entities'], (entities) => {
+              const entityToAdd = {
                 value,
                 entity: action.payload.entity.entityName,
                 start,
                 end,
                 entityId: action.payload.entity.id
-              });
+              };
+              if (action.payload.entity.entityName.indexOf('sys.') !== -1){
+                entityToAdd.extractor = 'system';
+                entityToAdd.entityId = 0;
+              }
+              return entities.concat(entityToAdd);
             });
           }))
           .set('touched', true)

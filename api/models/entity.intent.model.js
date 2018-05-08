@@ -10,7 +10,8 @@ class IntentEntityModel {
             end: Joi.number(),
             value: Joi.string(),
             entity: Joi.string(),
-            entityId: Joi.number()
+            entityId: Joi.number(),
+            extractor: Joi.string()
         };
     };
 }
