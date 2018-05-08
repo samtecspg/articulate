@@ -6,6 +6,7 @@ import {
   Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
+import Alert from 'react-s-alert';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton/index';
@@ -61,6 +62,15 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
 
   componentDidMount() {
     this.loadDomains(this.props.currentAgent);
+  }
+
+  componentDidUpdate(){
+
+    if (this.props.error) {
+      Alert.error(this.props.error.message, {
+        position: 'bottom'
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps, nextContext) {

@@ -4,6 +4,7 @@ import {
   Col,
   Row,
 } from 'react-materialize';
+import Alert from 'react-s-alert';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
@@ -59,6 +60,15 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
     const { currentAgent } = nextProps;
     if (currentAgent !== this.props.currentAgent) {
       this.props.onComponentWillUpdate(currentAgent);
+    }
+  }
+
+  componentDidUpdate(){
+
+    if (this.props.error) {
+      Alert.error(this.props.error.message, {
+        position: 'bottom'
+      });
     }
   }
 

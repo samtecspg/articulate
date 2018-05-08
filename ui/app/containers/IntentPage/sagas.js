@@ -97,12 +97,6 @@ export function* postIntent(payload) {
   const { api } = payload;
   let intentData = yield select(makeSelectIntentData());
   intentData = Immutable.asMutable(intentData, {deep: true});
-  /*intentData.examples = intentData.examples.map((example) => {
-    example.entities = example.entities.filter(entity => {
-        return entity.entity.indexOf('sys.') === -1;
-    });
-    return example;
-  });*/
 
   try {
     const response = yield call(api.intent.postIntent, { body: intentData });
@@ -197,18 +191,12 @@ export function* putIntent(payload) {
   const { api } = payload;
   let intentData = yield select(makeSelectIntentData());
   intentData = Immutable.asMutable(intentData, {deep: true});
-  /*intentData.examples = intentData.examples.map((example) => {
-    example.entities = example.entities.filter(entity => {
-        return entity.entity.indexOf('sys.') === -1;
-    });
-    return example;
-  });*/
   const oldIntentData = yield select(makeSelectOldIntentData());
   const oldScenarioData = yield select(makeSelectOldScenarioData());
   try {
     if (!_.isEqual(intentData, oldIntentData)){
       const { id, agent, domain, ...data } = intentData;
-      yield call(api.intent.putIntentId, { id, body: data });
+      const response = yield call(api.intent.putIntentId, { id, body: data });
     }
     yield put(updateIntentSuccess());
     if (oldScenarioData){
@@ -231,8 +219,19 @@ export function* putIntent(payload) {
       }
     }
     yield put(push('/intents'));
-  } catch ({ response }) {
-    yield put(updateIntentError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(updateIntentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(updateIntentError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateIntentError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 

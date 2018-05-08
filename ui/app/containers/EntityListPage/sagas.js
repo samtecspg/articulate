@@ -34,14 +34,21 @@ export function* getAgentEntities(payload) {
       return call(getEntityIntents, { api, id: entity.id });
     });
 
-  } catch ({ response }) {
-    yield put(agentEntitiesLoadingError({ message: response.obj.message }));
-  } finally {
-    if (yield cancelled()) {
-      /*yield put(actionCancelled({
-        message: 'Get Agent Entities Cancelled',
-      }));*/
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(agentEntitiesLoadingError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(agentEntitiesLoadingError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(agentEntitiesLoadingError({ message: 'Unknow API error' }));
+      }
+    }
+  } finally {
+    if (yield cancelled()) {}
   }
 }
 
@@ -61,8 +68,19 @@ export function* deleteEntity() {
       yield call(api.entity.deleteEntityId, { id });
       yield put(deleteEntitySuccess());
       yield call(getAgentEntities, { api, agentId: currentAgent.id });
-    } catch ({ response }) {
-      yield put(deleteEntityError({ message: response.obj.message }));
+    } catch (err) {
+      const errObject = { err };
+      if (errObject.err && errObject.err.message === 'Failed to fetch'){
+        yield put(deleteEntityError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+      }
+      else {
+        if (errObject.err.response.obj && errObject.err.response.obj.message){
+          yield put(deleteEntityError({ message: errObject.err.response.obj.message }));
+        }
+        else {
+          yield put(deleteEntityError({ message: 'Unknow API error' }));
+        }
+      }
     }
   };
   const watcher = yield takeLatest(DELETE_ENTITY, action);
@@ -79,14 +97,21 @@ export function* getEntityIntents(payload) {
     const response = yield call(api.entity.getEntityIdIntent, { id });
     const intents = response.obj;
     yield put(loadEntityIntentsSuccess({ id, intents }));
-  } catch ({ response }) {
-    yield put(loadEntityIntentsError({ message: response.obj.message }));
-  } finally {
-    if (yield cancelled()) {
-      /*yield put(actionCancelled({
-        message: 'Get Entity Intents Cancelled',
-      }));*/
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadEntityIntentsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadEntityIntentsError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadEntityIntentsError({ message: 'Unknow API error' }));
+      }
+    }
+  } finally {
+    if (yield cancelled()) { }
   }
 }
 

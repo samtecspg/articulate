@@ -34,11 +34,19 @@ export function* deleteAgent() {
       yield call(getAgents, { api });
       yield put(resetCurrentAgent());
       yield put(push('/'));
-    } catch (error) {
-      yield put(deleteAgentError({
-        message: `An error occurred deleting the agent [${payload.id}]`,
-        error,
-      }));
+    } catch (err) {
+      const errObject = { err };
+      if (errObject.err && errObject.err.message === 'Failed to fetch'){
+        yield put(deleteAgentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+      }
+      else {
+        if (errObject.err.response.obj && errObject.err.response.obj.message){
+          yield put(deleteAgentError({ message: errObject.err.response.obj.message }));
+        }
+        else {
+          yield put(deleteAgentError({ message: 'Unknow API error' }));
+        }
+      }
     }
   };
   const watcher = yield takeLatest(DELETE_AGENT, action);
@@ -54,8 +62,19 @@ export function* getWebhook(payload) {
     const response = yield call(api.agent.getAgentIdWebhook, { id });
     const webhook = response.obj;
     yield put(loadWebhookSuccess(webhook));
-  } catch ({ response }) {
-    yield put(loadWebhookError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadWebhookError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadWebhookError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -66,8 +85,19 @@ export function* getAgent(payload) {
     const agent = response.obj;
     agent.domainClassifierThreshold *= 100;
     yield put(loadAgentSuccess(agent));
-  } catch ({ response }) {
-    yield put(loadAgentError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadAgentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadAgentError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadAgentError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 

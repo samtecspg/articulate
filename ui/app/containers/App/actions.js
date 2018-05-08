@@ -406,9 +406,10 @@ export function deleteDomainSuccess() {
   };
 }
 
-export function deleteDomainError() {
+export function deleteDomainError(error) {
   return {
     type: DELETE_DOMAIN_ERROR,
+    error,
   };
 }
 
@@ -428,9 +429,10 @@ export function deleteIntentSuccess() {
   };
 }
 
-export function deleteIntentError() {
+export function deleteIntentError(error) {
   return {
     type: DELETE_INTENT_ERROR,
+    error,
   };
 }
 
@@ -448,9 +450,10 @@ export function deleteAgentSuccess() {
   };
 }
 
-export function deleteAgentError() {
+export function deleteAgentError(error) {
   return {
     type: DELETE_AGENT_ERROR,
+    error,
   };
 }
 
@@ -468,9 +471,10 @@ export function deleteEntitySuccess() {
   };
 }
 
-export function deleteEntityError() {
+export function deleteEntityError(error) {
   return {
     type: DELETE_ENTITY_ERROR,
+    error,
   };
 };
 

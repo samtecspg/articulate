@@ -22,8 +22,19 @@ export function* getAgents(payload) {
   try {
     const response = yield call(api.agent.getAgent);
     yield put(agentsLoaded(response.obj));
-  } catch ({ response }) {
-    yield put(agentsLoadingError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(agentsLoadingError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(agentsLoadingError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(agentsLoadingError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -37,8 +48,19 @@ export function* getCurrentAgent(payload) {
   try {
     const response = yield call(api.agent.getAgentId, { id });
     yield put(loadCurrentAgentSuccess(response.obj));
-  } catch ({ response }) {
-    yield put(loadCurrentAgentError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadCurrentAgentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadCurrentAgentError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadCurrentAgentError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -47,10 +69,8 @@ export function* loadCurrentAgent() {
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
-  //yield cancel(watcher);
 }
 
-// Bootstrap sagas
 export default [
   loadAgents,
   loadCurrentAgent,

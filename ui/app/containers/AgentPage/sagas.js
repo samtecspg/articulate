@@ -17,7 +17,6 @@ import {
   agentCreated,
   agentCreationError,
   webhookCreationError,
-  //selectCurrentAgent,
   updateAgentError,
   updateAgentSuccess,
   updateWebhookError,
@@ -45,9 +44,19 @@ function* postWebhook(payload) {
 
   try {
     yield call(api.agent.postAgentIdWebhook, { id, body: webhookData });
-  } catch ({ response }) {
-    yield put(webhookCreationError({ message: response.obj.message }));
-    throw response;
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(webhookCreationError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(webhookCreationError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(webhookCreationError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -71,8 +80,19 @@ export function* postAgent(payload) {
     else {
       yield put(push('/domains'));
     }
-  } catch ({ response }) {
-    yield put(agentCreationError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(agentCreationError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(agentCreationError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(agentCreationError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -93,9 +113,19 @@ function* putWebhook(payload) {
     if (!_.isEqual(webhookData, oldWebhookData)){
       yield call(api.agent.putAgentIdWebhook, { id, body: data });
     }
-  } catch ({ response }) {
-    yield put(updateWebhookError({ message: response.obj.message }));
-    throw response;
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(updateWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(updateWebhookError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateWebhookError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -103,9 +133,19 @@ function* deleteWebhook(payload) {
   const { api, id } = payload;
   try {
     yield call(api.agent.deleteAgentIdWebhook, { id });
-  } catch ({ response }) {
-    yield put(updateWebhookError({ message: response.obj.message }));
-    throw response;
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(updateWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(updateWebhookError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateWebhookError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -136,8 +176,19 @@ export function* putAgent(payload) {
     yield call(getAgents, { api });
     yield put(loadCurrentAgent(agentData.id));
     yield put(push('/domains'));
-  } catch ({ response }) {
-    yield put(updateAgentError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(updateAgentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(updateAgentError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateAgentError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -154,8 +205,19 @@ export function* getWebhook(payload) {
     const response = yield call(api.agent.getAgentIdWebhook, { id });
     const webhook = response.obj;
     yield put(loadWebhookSuccess(webhook));
-  } catch ({ response }) {
-    yield put(loadWebhookError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadWebhookError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadWebhookError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -166,8 +228,19 @@ export function* getAgent(payload) {
     const agent = response.obj;
     agent.domainClassifierThreshold *= 100;
     yield put(loadAgentSuccess(agent));
-  } catch ({ response }) {
-    yield put(loadAgentError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadAgentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadAgentError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadAgentError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -187,7 +260,6 @@ export function* loadWebhook() {
   yield cancel(watcher);
 }
 
-// Bootstrap sagas
 export default [
   createAgent,
   loadAgent,

@@ -13,6 +13,7 @@ import {
   Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
+import Alert from 'react-s-alert';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import Content from '../../components/Content';
@@ -92,6 +93,15 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
     const { currentAgent } = nextProps;
     if ((currentAgent && this.props.currentAgent) && (currentAgent.id !== this.props.currentAgent.id)) {
       this.props.onComponentWillMount(currentAgent.id);
+    }
+  }
+
+  componentDidUpdate(){
+
+    if (this.props.error) {
+      Alert.error(this.props.error.message, {
+        position: 'bottom'
+      });
     }
   }
 

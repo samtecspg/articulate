@@ -29,17 +29,24 @@ export function* getDomainIntents(payload) {
     const response = yield call(api.domain.getDomainIdIntent, { id: domainId });
     const intents = response.obj;
     yield put(domainIntentsLoaded(intents));
-  } catch ({ response }) {
-    yield put(domainIntentsLoadingError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(domainIntentsLoadingError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(domainIntentsLoadingError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(domainIntentsLoadingError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
 export function* loadDomainIntents() {
   const watcher = yield takeLatest(LOAD_DOMAINS_INTENTS, getDomainIntents);
-
-  // Suspend execution until location changes
-  //yield take(LOCATION_CHANGE);
-  //yield cancel(watcher);
 }
 
 export function* deleteIntent() {
@@ -54,8 +61,19 @@ export function* deleteIntent() {
       else {
         yield call(getAgentIntents, { api, agentId: filterId });
       }
-    } catch ({ response }) {
-      yield put(deleteIntentError({ message: response.obj.message }));
+    } catch (err) {
+      const errObject = { err };
+      if (errObject.err && errObject.err.message === 'Failed to fetch'){
+        yield put(deleteIntentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+      }
+      else {
+        if (errObject.err.response.obj && errObject.err.response.obj.message){
+          yield put(deleteIntentError({ message: errObject.err.response.obj.message }));
+        }
+        else {
+          yield put(deleteIntentError({ message: 'Unknow API error' }));
+        }
+      }
     }
   };
   const watcher = yield takeLatest(DELETE_INTENT, action);
@@ -71,8 +89,19 @@ export function* getAgentIntents(payload) {
     const response = yield call(api.agent.getAgentIdIntent, { id: agentId });
     const intents = response.obj;
     yield put(loadAgentIntentsSuccess(intents));
-  } catch ({ response }) {
-    yield put(loadAgentIntentsError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadAgentIntentsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadAgentIntentsError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadAgentIntentsError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -87,9 +116,6 @@ export function* loadAgentDomains() {
 export function* loadAgentIntents() {
   const watcher = yield takeLatest(LOAD_AGENT_INTENTS, getAgentIntents);
 
-  // Suspend execution until location changes
-  //yield take(LOCATION_CHANGE);
-  //yield cancel(watcher);
 }
 
 // Bootstrap sagas
