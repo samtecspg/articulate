@@ -1,7 +1,7 @@
 FROM alpine:3.7
 
 
-ENV RASA_RELEASE=0.12.2 \
+ENV RASA_RELEASE=0.12.3.a \
     RASA_NLU_HOME=/app \
     RASA_NLU_PYTHON_PACKAGES=/usr/local/lib/python2.7/dist-packages
 
@@ -26,7 +26,7 @@ RUN apk --update add --virtual scipy-runtime python py-pip \
 
 RUN apk add git bash --update-cache
 
-RUN wget -O - https://github.com/RasaHQ/rasa_nlu/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
+RUN wget -O - https://github.com/dcalvom/rasa_nlu/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
 RUN mv rasa_nlu-${RASA_RELEASE} ${RASA_NLU_HOME}
 
 WORKDIR ${RASA_NLU_HOME}
@@ -63,5 +63,5 @@ RUN cp  sample_configs/config_spacy_duckling.yml ${RASA_NLU_HOME}/config.yml
 EXPOSE 5000
 
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["start", "--path", "/app/projects", "-c", "config.yml", "--max_training_processes", "2"]
+CMD ["start", "--path", "/app/projects", "-c", "config.yml", "--max_training_processes", "4"]
 
