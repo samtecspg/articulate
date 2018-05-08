@@ -71,6 +71,14 @@ module.exports = (object, type) => {
             break;
         case 'webhook':
             break;
+        case 'pipeline':
+            const newObject = [];
+            Object.keys(object).forEach((key) => {
+
+                newObject.push(object[key]);
+            });
+            object = newObject;
+            break;
     }
     ;
     if (object.id) {

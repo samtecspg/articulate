@@ -10,6 +10,7 @@ module.exports = {
     IntentExample: require('./example.intent.model'),
     IntentEntity: require('./entity.intent.model'),
     Scenario: require('./scenario.model'),
+    Settings: require('./settings.model'),
     Slot: require('./slot.scenario.model'),
     Webhook: require('./webhook.model')
 };

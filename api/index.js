@@ -9,6 +9,7 @@ const Redis = require('redis');
 const Async = require('async');
 const _ = require('lodash');
 const ERPipeline = require('./rasa-er-pipeline.json');
+const StartDB = require('./helpers/startDB');
 
 module.exports = (callback) => init(callback);
 
@@ -24,8 +25,15 @@ const init = (callback) => {
 
             const { redis, server } = results;
             server.app.redis = redis;
-            callback(null, server);
 
+            StartDB(server, redis, (err) => {
+
+                if (err){
+                    const error = new Error(`An error ocurred checking DB default settings. Error detail: ${err}`);
+                    callback(error);
+                }
+                callback(null, server);
+            });
         });
 };
 

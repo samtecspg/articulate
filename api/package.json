@@ -4,7 +4,7 @@
   "description": "NLU API",
   "main": "start.js",
   "scripts": {
-    "test": "lab",
+    "test": "lab -v --lint --leaks",
     "lint": "lab -dL",
     "lint:fix": "lab -dL --lint-fix",
     "coverage": "lab -dc",
@@ -13,7 +13,7 @@
     "start:server": "nodemon start.js",
     "precommit": "npm run git:hook",
     "prepush": "npm run git:hook",
-    "git:hook": "lab --lint"
+    "git:hook": "lab --lint --leaks"
   },
   "keywords": [],
   "author": "Daniel Calvo",

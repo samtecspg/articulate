@@ -1,40 +1,82 @@
 'use strict';
 
+const Async = require('async');
 const Wreck = require('wreck');
 const Boom = require('boom');
+const YAML = require('json2yaml');
 
 const BuildDomainRecognitionTrainingData = require('./buildDomainRecognitionTrainingData.domain.tool');
 
-const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agentId, cb) => {
+const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agentId, callback) => {
 
-    BuildDomainRecognitionTrainingData(server, agentId, (err, trainingSet) => {
+    Async.waterfall([
+        (cb) => {
 
-        if (err){
-            return cb(err);
-        }
-
-        if (!trainingSet){
-            return cb(null);
-        }
-
-        const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
-        const trainingDate = new Date().toISOString();
-        const modelFolderName = agentName + '_domain_recognizer';
-        Wreck.post(`${rasa}/train?language=${language}&project=${agentName}&fixed_model_name=${modelFolderName}`, { payload: stringTrainingSet }, (err, wreckResponse, payload) => {
-
-            if (err) {
-                return cb(err);
-            }
-            redis.lpush(`agentDomainRecognizer:${agentId}`, trainingDate, (err) => {
+            BuildDomainRecognitionTrainingData(server, agentId, (err, trainingSet) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error saving the training date of the domain recognizer.');
+                    return cb(err);
+                }
+                if (!trainingSet){
+                    const error = {};
+                    error.noTrainingData = true;
                     return cb(error);
+                }
+                return cb(null, trainingSet);
+            });
+        },
+        (trainingSet, cb) => {
+
+            server.inject(`/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'domain'}ClassifierPipeline`, (res) => {
+
+                if (res.statusCode !== 200){
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the pipeline');
+                    return cb(error, null);
+                }
+                const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
+                let requestPayload = {
+                    language
+                };
+                requestPayload.pipeline = res.result;
+                requestPayload = YAML.stringify(requestPayload);
+                requestPayload += `  data: ${stringTrainingSet}`;
+                return cb(null, requestPayload);
+            });
+        },
+        (rasaPayload, cb) => {
+
+            const modelFolderName = agentName + '_domain_recognizer';
+            Wreck.post(`${rasa}/train?language=${language}&project=${agentName}&model=${modelFolderName}`,{
+                payload: rasaPayload,
+                headers: {
+                    'Content-Type': 'application/x-yml'
+                }
+            }, (err, wreckResponse, payload) => {
+
+                if (err) {
+                    return cb(err);
                 }
                 return cb(null);
             });
-        });
+        }
+    ], (err) => {
 
+        if (err){
+            if (err.noTrainingData){
+                return callback(null);
+            }
+            return callback(err);
+        }
+
+        const trainingDate = new Date().toISOString();
+        redis.lpush(`agentDomainRecognizer:${agentId}`, trainingDate, (err) => {
+
+            if (err){
+                const error = Boom.badImplementation('An error saving the training date of the domain recognizer.');
+                return callback(error);
+            }
+            return callback(null);
+        });
     });
 };
 

@@ -1,5 +1,6 @@
 'use strict';
 
+const Async = require('async');
 const Wreck = require('wreck');
 const Boom = require('boom');
 const Guid = require('guid');
@@ -8,58 +9,80 @@ const YAML = require('json2yaml');
 
 const retrainModel = (server, rasa, language, agentName, domainName, domainId, callback) => {
 
-    BuildTrainingData(server, domainId, (err, trainingSet) => {
+    let model = Guid.create().toString();
+    Async.waterfall([
+        (cb) => {
+
+            BuildTrainingData(server, domainId, (err, trainingSet) => {
+
+                if (err){
+                    return cb(err);
+                }
+                return cb(null, trainingSet);
+            });
+        },
+        (trainingSet, cb) => {
+
+            model = (trainingSet.numberOfIntents === 1 ? 'just_er_' : '') + model;
+            server.inject(`/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'intent'}ClassifierPipeline`, (res) => {
+
+                if (res.statusCode !== 200){
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the pipeline');
+                    return cb(error, null);
+                }
+                const stringTrainingSet = JSON.stringify(trainingSet.trainingSet, null, 2);
+                let requestPayload = {
+                    language
+                };
+                requestPayload.pipeline = res.result;
+                requestPayload = YAML.stringify(requestPayload);
+                requestPayload += `  data: ${stringTrainingSet}`;
+                return cb(null, requestPayload);
+            });
+        },
+        (rasaPayload, cb) => {
+
+            const modelFolderName = domainName + '_' + model;
+            Wreck.post(`${rasa}/train?project=${agentName}&model=${modelFolderName}`, {
+                payload: rasaPayload,
+                headers: {
+                    'Content-Type': 'application/x-yml'
+                }
+            }, (err, wreckResponse, payload) => {
+
+                if (err) {
+                    const error = Boom.badImplementation('An error occurred calling the training process.');
+                    return cb(error);
+                }
+                return cb(null);
+            });
+        }
+    ], (err) => {
 
         if (err){
             return callback(err);
         }
-
-        const stringTrainingSet = JSON.stringify(trainingSet.trainingSet, null, 2);
         const trainingDate = new Date().toISOString();
-        let model = Guid.create().toString();
-        model = (trainingSet.numberOfIntents > 1 ? '' : 'just_er_') + model;
-        const modelFolderName = domainName + '_' + model;
-        let requestPayload = {
-            language
+        const updateDomainPayload = {
+            lastTraining: trainingDate,
+            model
         };
-        if (trainingSet.numberOfIntents === 1){
-            requestPayload['pipeline'] = server.app.rasa_er_pipeline;
-        }
-        requestPayload = YAML.stringify(requestPayload);
-        requestPayload += `  data: ${stringTrainingSet}`;
-        Wreck.post(`${rasa}/train?project=${agentName}&fixed_model_name=${modelFolderName}`, { 
-            payload: requestPayload,
-            headers: {
-                'Content-Type': 'application/x-yml'
+
+        const options = {
+            url: '/domain/' + domainId,
+            method: 'PUT',
+            payload: updateDomainPayload
+        };
+
+        server.inject(options, (res) => {
+
+            if (res.statusCode !== 200) {
+                return callback(res.result);
             }
-        }, (err, wreckResponse, payload) => {
-
-            if (err) {
-                const error = Boom.badImplementation('An error occurred calling the training process.');
-                return callback(error);
-            }
-
-            const updateDomainPayload = {
-                lastTraining: trainingDate,
-                model
-            };
-
-            const options = {
-                url: '/domain/' + domainId,
-                method: 'PUT',
-                payload: updateDomainPayload
-            };
-
-            server.inject(options, (res) => {
-
-                if (res.statusCode !== 200) {
-                    return callback(res.result);
-                }
-                return callback(null);
-            });
+            return callback(null);
         });
-
     });
+
 };
 
 module.exports = retrainModel;
