@@ -33,6 +33,14 @@ export default defineMessages({
     id: 'boilerplate.containers.EntityPage.create_entity.entity_name_placeholder',
     defaultMessage: 'Type a name here',
   },
+  regex : {
+    id : 'boilerplate.containers.EntityPage.create_entity.regex',
+    defaultMessage: 'Regex matching'
+  },
+  regexPlaceholder: {
+    id :  'boilerplate.containers.EntityPage.regex_placeholder',
+    defaultMessage : 'Type a regex to help find this entity.'
+  },
   examples: {
     id: 'boilerplate.containers.EntityPage.create_entity.examples',
     defaultMessage: 'Examples',

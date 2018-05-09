@@ -21,6 +21,7 @@ const initialState = Immutable({
     entityName: '',
     uiColor: '#e91e63',
     examples: [],
+    regex: ''
   },
   touched: false,
 });
