@@ -293,6 +293,7 @@ class AgentValidate {
                     entities: Joi.array().items({
                         entityName: EntitySchema.entityName.required(),
                         uiColor: EntitySchema.uiColor,
+                        regex: EntitySchema.regex,
                         examples: Joi.array().items({
                             value: ExampleSchema.value.required(),
                             synonyms: ExampleSchema.synonyms
