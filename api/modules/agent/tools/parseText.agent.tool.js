@@ -59,7 +59,7 @@ const getDucklingParse = (textToParse, timezone, language, ducklingService, call
         //The value in the result is not formatted as JSON. This formats that value
         payload = _.map(payload, (ducklingResult) => {
 
-            ducklingResult.value = JSON.parse(ducklingResult.value);
+            //ducklingResult.value = JSON.parse(ducklingResult.value);
             return ducklingResult;
         });
 
