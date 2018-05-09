@@ -548,4 +548,17 @@ injectGlobal`
   .message-card{
     word-wrap: break-word;
   }
+
+  .error-img {
+    max-width: 500px;
+  }
+
+  .error-btn-container {
+    margin: 30px 0;
+  }
+
+  .error-paragraph {
+    max-width: 575px;
+  }
+
 `;
