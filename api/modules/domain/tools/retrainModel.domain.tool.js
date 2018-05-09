@@ -73,7 +73,6 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
             if (!domain.model){
                 return cb(null);
             }
-            const previousModelFolderName = `${domain.domainName}_${domain.model}`;
             Wreck.delete(`${rasa}/models?project=${agentName}&model=${domain.domainName}_${domain.model}`, {}, (err, wreckResponse, payload) => {
 
                 if (err) {
