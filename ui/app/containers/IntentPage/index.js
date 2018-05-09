@@ -192,11 +192,15 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         this.props.onChangeIntentData(field, value);
       }
       else {
-        if (field === 'webhookPayloadType' && evt.target.value !== 'None'){
-          this.state.webhookPayloadJustOpen = true;
+        if (field === 'webhookPayloadType'){
+          if (evt.target.value !== 'None'){
+            this.state.webhookPayloadJustOpen = true;
+          }
           this.props.onChangeWebhookData('webhookPayloadType', evt)
         }
-        this.props.onChangeIntentData(field, value);
+        else {
+          this.props.onChangeIntentData(field, value);
+        }
       }
     }
   }

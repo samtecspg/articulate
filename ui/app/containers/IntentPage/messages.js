@@ -48,7 +48,7 @@ export default defineMessages({
   },
   responsesInput: {
     id: 'boilerplate.containers.IntentPage.create_intent.responses_input',
-    defaultMessage: 'example: The weather forecast in {city} for the next five days is',
+    defaultMessage: 'example: The weather forecast in {{slots.City.original}} for the next five days is',
   },
   userSaysSearch: {
     id: 'boilerplate.containers.IntentPage.create_intent.user_says_search',
