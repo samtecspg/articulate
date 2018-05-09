@@ -79,6 +79,21 @@ module.exports = (object, type) => {
             });
             object = newObject;
             break;
+        case 'document':
+            if (object.result && object.result.results){
+                object.result.results.forEach((result) => {
+
+                    if (result.entities){
+                        result.entities.forEach((entity) => {
+
+                            if (entity.confidence === ''){
+                                entity.confidence = null;
+                            }
+                        });
+                    }
+                });
+            }
+            break;
     }
     ;
     if (object.id) {

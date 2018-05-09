@@ -89,6 +89,19 @@ module.exports = (request, reply) => {
             (cb) => {
 
                 document = Object.assign({ id: documentId }, document);
+                if (document.result && document.result.results){
+                    document.result.results.forEach((result) => {
+
+                        if (result.entities){
+                            result.entities.forEach((entity) => {
+
+                                if (entity.confidence === null){
+                                    entity.confidence = '';
+                                }
+                            });
+                        }
+                    });
+                }
                 const flatDocument = RemoveBlankArray(Flat(document));
                 redis.hmset(`document:${documentId}`, flatDocument, (err) => {
 
