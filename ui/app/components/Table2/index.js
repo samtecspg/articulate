@@ -72,6 +72,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       highlightRow,
       striped,
       showSearchInput,
+      showPagination,
       ...other,
     } = this.props;
     let newColumns;
@@ -79,7 +80,6 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
     const classNames = ['border-container '];
     if (highlightRow) classNames.push('-highlight');
     if (striped) classNames.push('-striped');
-
     // If menu object is available then render a new cell
     if (menu && menu.length > 0) {
       const menuCell = {
@@ -98,7 +98,9 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       <ReactTable
         data={this.props.data}
         columns={newColumns.map(this.generateColumnDefinition)}
+        defaultPageSize={10}
         className={classNames.join(' ')}
+        showPagination={showPagination ? showPagination : (this.props.data.length > 10)}
         {...other}
       />
     );
@@ -120,7 +122,7 @@ Table2.propTypes = {
 };
 
 Table2.defaultProps = {
-  minRows: 15,
+  minRows: 10,
   highlightRow: true,
   striped: false,
   showPagination: false,
