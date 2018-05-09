@@ -56,6 +56,32 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
                 }
                 return cb(null);
             });
+        },
+        (cb) => {
+
+            server.inject(`/domain/${domainId}`, (res) => {
+
+                if (res.statusCode !== 200){
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the domain to check old models');
+                    return cb(error, null);
+                }
+                return cb(null, res.result);
+            });
+        },
+        (domain, cb) => {
+
+            if (!domain.model){
+                return cb(null);
+            }
+            const previousModelFolderName = `${domain.domainName}_${domain.model}`;
+            Wreck.delete(`${rasa}/models?project=${agentName}&model=${domain.domainName}_${domain.model}`, {}, (err, wreckResponse, payload) => {
+
+                if (err) {
+                    const error = Boom.badImplementation('An error occurred unloading previous model.');
+                    return cb(error);
+                }
+                return cb(null);
+            });
         }
     ], (err) => {
 
@@ -69,7 +95,7 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
         };
 
         const options = {
-            url: '/domain/' + domainId,
+            url: `/domain/${domainId}`,
             method: 'PUT',
             payload: updateDomainPayload
         };

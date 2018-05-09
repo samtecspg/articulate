@@ -58,6 +58,17 @@ const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agent
                 }
                 return cb(null);
             });
+        },
+        (cb) => {
+
+            Wreck.delete(`${rasa}/models?project=${agentName}&model=${agentName}_domain_recognizer`, {}, (err, wreckResponse, payload) => {
+
+                if (err) {
+                    const error = Boom.badImplementation('An error occurred unloading previous model of the domain recognizer.');
+                    return cb(error);
+                }
+                return cb(null);
+            });
         }
     ], (err) => {
 

@@ -51,10 +51,8 @@
   ],
   "domains": [
     {
-      "model": "just_er_c67520da-cb61-d195-ff78-0fbd4aaddaaf",
       "enabled": true,
       "domainName": "Test Domain",
-      "lastTraining": "Fri Apr 27 2018 12:33:10 GMT-0600 (CST)",
       "intentThreshold": 0.7,
       "intents": [
         {

@@ -67,10 +67,8 @@
   ],
   "domains": [
     {
-      "model": "just_er_8ebb2d11-5ef2-3b32-7557-8620f5f2cef9",
       "enabled": true,
       "domainName": "Orders",
-      "lastTraining": "Fri Apr 27 2018 14:39:29 GMT-0600 (CST)",
       "intentThreshold": 0.7,
       "intents": [
         {
@@ -138,10 +136,8 @@
       ]
     },
     {
-      "model": "just_er_baf9b400-34ad-73d3-9acf-6bc851aa1b81",
       "enabled": true,
       "domainName": "Small talk",
-      "lastTraining": "Fri Apr 27 2018 14:39:59 GMT-0600 (CST)",
       "intentThreshold": 0.7,
       "intents": [
         {
