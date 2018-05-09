@@ -6,12 +6,12 @@ class DomainModel {
 
         return {
             id: Joi.number(),
-            agent: Joi.string(),
-            domainName: Joi.string(),
+            agent: Joi.string().trim(),
+            domainName: Joi.string().trim(),
             enabled: Joi.boolean(),
             intentThreshold: Joi.number(),
             lastTraining: Joi.date(),
-            model: Joi.string()
+            model: Joi.string().trim()
         };
     };
 }

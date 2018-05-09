@@ -6,11 +6,11 @@ class WebhookModel {
     static get schema() {
 
         return {
-            id: Joi.string(),
-            webhookUrl: Joi.string(),
-            webhookVerb: Joi.string(),
-            webhookPayloadType: Joi.string(),
-            webhookPayload: Joi.string()
+            id: Joi.string().trim(),
+            webhookUrl: Joi.string().trim(),
+            webhookVerb: Joi.string().trim(),
+            webhookPayloadType: Joi.string().trim(),
+            webhookPayload: Joi.string().trim()
         };
     };
 }

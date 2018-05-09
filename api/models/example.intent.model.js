@@ -8,7 +8,7 @@ class IntentExampleModel {
 
         return {
             id: Joi.number(),
-            userSays: Joi.string(),
+            userSays: Joi.string().trim(),
             entities: Joi.array().items(IntentEntityModel.schema)
         };
     };

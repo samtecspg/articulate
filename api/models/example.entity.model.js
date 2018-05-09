@@ -5,8 +5,8 @@ class ExampleModel {
     static get schema() {
 
         return {
-            value: Joi.string(),
-            synonyms: Joi.array().items(Joi.string())
+            value: Joi.string().trim(),
+            synonyms: Joi.array().items(Joi.string().trim())
         };
     };
 }

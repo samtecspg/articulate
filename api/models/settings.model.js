@@ -6,15 +6,15 @@ class SettingsModel {
     static get schema() {
 
         return {
-            uiLanguage: Joi.string(),
+            uiLanguage: Joi.string().trim(),
             domainClassifierPipeline: Joi.array().items({
-                name: Joi.string()
+                name: Joi.string().trim()
             }),
             intentClassifierPipeline: Joi.array().items({
-                name: Joi.string()
+                name: Joi.string().trim()
             }),
             entityClassifierPipeline: Joi.array().items({
-                name: Joi.string()
+                name: Joi.string().trim()
             })
         };
     };
