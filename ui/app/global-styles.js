@@ -575,4 +575,10 @@ injectGlobal`
     justify-content: center !important;
   }
 
+  .ReactTable .rt-noData {
+    top: auto !important;
+    padding: 0px !important;
+    background: #fafafa !important;
+  }
+
 `;
