@@ -561,4 +561,18 @@ injectGlobal`
     max-width: 575px;
   }
 
+  .pagination-bottom .-pagination {
+    height: 45px;
+  }
+
+  .ReactTable .-pagination .-pageJump input {
+    margin: 0px;
+    height: 20px;
+    width: 30px !important;
+  }
+
+  .ReactTable .-pagination .-center {
+    justify-content: center !important;
+  }
+
 `;
