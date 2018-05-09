@@ -228,6 +228,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 value={entity.entityName}
 
               />
+
               <InputLabel s={2} text={messages.entityColor} />
               <ColorPicker
                 color={entity.uiColor}
@@ -237,6 +238,15 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 displayColorPicker={this.props.displayColorPicker}
                 s={2}
               />
+              <FormTextInput
+                  id='regex'
+                  label={messages.regex}
+                  placeholder={messages.regexPlaceholder.defaultMessage}
+                  inputId="regex"
+                  onChange={(evt) => this.onChangeInput(evt, 'regex')}
+                  s={12}
+                  value={entity.regex}
+                />
               <InputLabel text={messages.examples} />
             </Row>
           </Form>

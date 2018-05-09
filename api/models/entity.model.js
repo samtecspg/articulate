@@ -10,7 +10,8 @@ class EntityModel {
             agent: Joi.string().trim(),
             entityName: Joi.string().trim(),
             uiColor: Joi.string().trim(),
-            examples: Joi.array().items(ExampleModel.schema)
+            examples: Joi.array().items(ExampleModel.schema),
+            regex : Joi.string().trim()
         };
     };
 }
