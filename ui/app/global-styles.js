@@ -581,4 +581,119 @@ injectGlobal`
     background: #fafafa !important;
   }
 
+  .right-panel {
+    padding: 35px 20px 20px 20px;
+  }
+
+  .user-bubble, .bot-bubble {
+    padding: 10px;
+    min-width: 50px;
+    border-radius: 3px;
+    width: fit-content;
+    margin-bottom: 35px;
+    position:relative;
+
+    p {
+      font-weight: 300;
+    }
+
+  }
+
+  .user-bubble, .bot-bubble {
+    padding: 10px;
+    min-width: 50px;
+    border-radius: 3px;
+    width: fit-content;
+    margin-bottom: 35px;
+    position: relative; }
+    .user-bubble p, .bot-bubble p {
+      font-weight: 300; }
+
+  .user-bubble {
+    background-color: #00ca9f;
+    margin-left: 12px; }
+    .user-bubble .bubble-container::before {
+      content: "User";
+      position: absolute;
+      font-size: 12px;
+      top: -20px;
+      right: 30px;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      color: #c4ccca; }
+    .user-bubble p {
+      color: white; }
+    .user-bubble:before {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      right: 0px;
+      width: 20px;
+      height: 20px;
+      background-color: #00ca9f;
+      border-radius: 3px;
+      transform: skewY(38deg);
+      z-index: -1; }
+
+  .bot-bubble {
+    background-color: white;
+    border: 1px solid #00ca9f;
+    margin-right: 12px; }
+    .bot-bubble .bubble-container::before {
+      content: "Bot";
+      position: absolute;
+      font-size: 12px;
+      top: -20px;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      color: #c4ccca; }
+    .bot-bubble p {
+      color: #00ca9f; }
+    .bot-bubble:before, .bot-bubble:after {
+      content: "";
+      position: absolute;
+      border-radius: 3px; }
+    .bot-bubble:before {
+      bottom: -7px;
+      left: -1px;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #00ca9f;
+      transform: skewY(-38deg);
+      z-index: -1; }
+    .bot-bubble:after {
+      bottom: -2px;
+      left: 0px;
+      width: 16px;
+      height: 3px;
+      background: white;
+      border: 5px solid white;
+      z-index: 1; }
+
+  div#wave {
+    position: relative;
+    height: auto;
+    border: 1px solid #00ca9f;
+    border-radius: 3px;
+    padding: 7px 10px; }
+    div#wave .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ca9f;
+      animation: wave 1.3s linear infinite; }
+      div#wave .dot:nth-child(2) {
+        animation-delay: -1.1s; }
+      div#wave .dot:nth-child(3) {
+        animation-delay: -0.9s; }
+
+  @keyframes wave {
+    0%, 60%, 100% {
+      transform: initial; }
+    30% {
+      opacity: 0.15; } }
+
 `;

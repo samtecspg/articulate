@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import AgentMessage from '../../components/AgentMessage';
+import LoadingWave from '../../components/LoadingWave';
 import TestMessageInput from '../../components/TestMessageInput';
 import UserMessage from '../../components/UserMessage';
 import VoiceRecognition from '../../components/VoiceRecognition';
@@ -75,7 +76,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
   render() {
     return (
       <aside className="right-panel">
-        <ul className="conversation-panel" style={{ overflowY: 'auto' }}>
+        <ul className="conversation-panel" style={{ paddingTop: '18px', overflowY: 'auto' }}>
           {
             this.props.conversation.map((message, messageIndex) => {
               if (message.author === 'agent') {
@@ -89,7 +90,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
           }
           {
             this.props.loading ?
-              <AgentMessage text={'...'} /> :
+            <LoadingWave /> :
               null
           }
           <div
