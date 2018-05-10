@@ -60,6 +60,7 @@ import {
   RESET_SESSION_ERROR,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
+  RESET_MISSING_API,
   SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
   UPDATE_AGENT,
@@ -78,6 +79,7 @@ import {
   UPDATE_SCENARIO_SUCCESS,
   UPDATE_WEBHOOK_ERROR,
   MISSING_AGENT,
+  CHECK_API,
 } from './constants';
 
 export function loadAgents() {
@@ -93,13 +95,6 @@ export function agentsLoaded(data) {
     data,
   };
 }
-
-/*export function selectCurrentAgent(agent) {
-  return {
-    type: SELECT_CURRENT_AGENT,
-    agent,
-  };
-}*/
 
 export function loadCurrentAgentError(error) {
   return {
@@ -627,5 +622,19 @@ export function loadEntityIntentsError(error) {
   return {
     type: LOAD_ENTITY_INTENTS_ERROR,
     error,
+  };
+}
+
+export function checkAPI(refURL) {
+  return {
+    type: CHECK_API,
+    apiCall: true,
+    refURL,
+  };
+}
+
+export function resetMissingAPI() {
+  return {
+    type: RESET_MISSING_API,
   };
 }

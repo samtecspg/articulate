@@ -5,20 +5,43 @@ import { createStructuredSelector } from 'reselect';
 import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
+import { push } from 'react-router-redux';
 
 import NavSideBar from '../../components/NavSideBar';
 import withProgressBar from '../../components/ProgressBar';
-import { loadAgents } from '../../containers/App/actions';
+import { loadAgents, checkAPI, redirectMissingAPI } from '../../containers/App/actions';
 import {
   makeSelectAgents,
   makeSelectError,
   makeSelectLoading,
+  makeSelectMissingAPI,
 } from '../../containers/App/selectors';
 import ConversationBar from '../ConversationBar';
 
 // import normalizeCSS from 'stylesheets/normalize-min.css';
 
 export class App extends React.PureComponent {
+
+
+  componentWillMount(){
+    this.props.onCheckAPI();
+  }
+
+  componentDidMount(){
+    if (this.props.missingAPI){
+      this.props.onMissingAPI(this.props.router.location.pathname);
+    }
+  }
+
+  componentWillUpdate(){
+    this.props.onCheckAPI(this.props.router.location.pathname);
+  }
+
+  componentDidUpdate(){
+    if (this.props.missingAPI){
+      this.props.onMissingAPI(this.props.router.location.pathname);
+    }
+  }
 
   render() {
     const { agents, children } = this.props;
@@ -42,16 +65,30 @@ App.propTypes = {
     React.PropTypes.bool,
   ]),
   onComponentMounting: React.PropTypes.func,
+  onMissingAPI: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    onMissingAPI: (refURL) => {
+      if (refURL !== '/missing-api'){
+        dispatch(push('/missing-api'));
+      }
+    },
+    onCheckAPI: (refURL) => {
+      if (refURL && refURL !== '/missing-api'){
+        dispatch(checkAPI(refURL));
+      }
+      dispatch(checkAPI());
+    }
+  };
 }
 
 const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
   agents: makeSelectAgents(),
+  missingAPI: makeSelectMissingAPI(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withProgressBar(App));

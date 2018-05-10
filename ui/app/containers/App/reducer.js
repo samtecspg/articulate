@@ -59,7 +59,6 @@ import {
   RESET_SESSION_ERROR,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
-  //SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
   UPDATE_AGENT,
   UPDATE_AGENT_ERROR,
@@ -76,6 +75,9 @@ import {
   UPDATE_SCENARIO_ERROR,
   UPDATE_SCENARIO_SUCCESS,
   UPDATE_WEBHOOK_ERROR,
+  RESET_MISSING_API,
+  MISSING_API,
+  CHECK_API,
 } from './constants';
 
 // The initial state of the App
@@ -83,6 +85,7 @@ const initialState = Immutable({
   loading: false,
   error: false,
   success: false,
+  missingAPI: false,
   loadingConversation: false,
   currentAgent: undefined,
   agents: [],
@@ -101,11 +104,6 @@ function appReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false)
         .set('agents', false);
-    /*case SELECT_CURRENT_AGENT :
-      return state
-        .set('loading', false)
-        .set('error', false)
-        .set('currentAgent', action.agent);*/
     case LOAD_CURRENT_AGENT:
       return state
         .set('loading', true)
@@ -447,6 +445,14 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+    case CHECK_API:
+      return state;
+    case MISSING_API:
+      return state
+        .set('missingAPI', true);
+    case RESET_MISSING_API:
+      return state
+        .set('missingAPI', false);
     default:
       return state;
   }

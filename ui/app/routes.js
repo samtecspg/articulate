@@ -22,6 +22,15 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/missing-api',
+      name: 'home',
+      getComponent(nextState, cb) {
+        import('containers/MissingAPIPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    },
+    {
       path: '/wizard/domain',
       name: 'wizardDomain',
       getComponent(nextState, cb) {

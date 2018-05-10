@@ -79,3 +79,6 @@ export const UPDATE_WEBHOOK_SUCCESS = 'boilerplate/App/UPDATE_WEBHOOK_SUCCESS';
 export const LOAD_AGENT_INTENTS = 'boilerplate/App/LOAD_AGENT_INTENTS';
 export const LOAD_AGENT_INTENTS_SUCCESS = 'boilerplate/App/LOAD_AGENT_INTENTS_SUCCESS';
 export const LOAD_AGENT_INTENTS_ERROR = 'boilerplate/App/LOAD_AGENT_INTENTS_ERROR';
+export const MISSING_API = 'boilerplate/App/MISSING_API';
+export const RESET_MISSING_API = 'boilerplate/App/RESET_MISSING_API';
+export const CHECK_API = 'boilerplate/App/CHECK_API';

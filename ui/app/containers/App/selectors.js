@@ -43,6 +43,11 @@ const makeSelectLoadingConversation = () => createSelector(
   (globalState) => globalState.loadingConversation,
 );
 
+const makeSelectMissingAPI = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.missingAPI,
+);
+
 const makeSelectError = () => createSelector(
   selectGlobal,
   (globalState) => globalState.error,
@@ -127,6 +132,7 @@ export {
   makeSelectCurrentAgent,
   makeSelectLoading,
   makeSelectLoadingConversation,
+  makeSelectMissingAPI,
   makeSelectError,
   makeSelectSuccess,
   makeSelectInWizard,

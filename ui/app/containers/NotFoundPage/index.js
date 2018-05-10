@@ -22,7 +22,7 @@ export default class NotFound extends React.PureComponent { // eslint-disable-li
           <img className="error-img" src={image404} alt="" />
           <p className="error-paragraph">{messages.notFoundParagraph.defaultMessage}</p>
           <div className="error-btn-container">
-            <a className="btn-floating btn-large" href="https://samtecspg.github.io/articulate/">See Docs</a>
+            <a target="_blank" className="btn-floating btn-large" href="https://samtecspg.github.io/articulate/">See Docs</a>
           </div>
           <div className="fixed-action-btn">
 						<a style={ { right: '310px' } } className="btn-floating btn-large" href="/agent/create">
