@@ -82,10 +82,12 @@ const buildTrainingData = (server, domainId, callback) => {
 
             return _.flatten(buildIntentsPerExamples);
         })));
-        var regexs = []
-        results.entities.forEach((ent)=>{
-                if (ent.regex)
-                    regexs.push({name:ent.entityName,pattern:ent.regex}); 
+        let regexs = [];
+        results.entities.forEach((ent) => {
+
+            if (ent.regex && ent.regex !== ''){
+                regexs.push({ name:ent.entityName,pattern:ent.regex });
+            }
         });
         const data = {
             numberOfIntents: results.intents.length,
@@ -94,7 +96,6 @@ const buildTrainingData = (server, domainId, callback) => {
                     common_examples,
                     regex_features : regexs
                 }
-                
             }
         };
 

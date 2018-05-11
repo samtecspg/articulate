@@ -82,6 +82,9 @@ function entityReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false);
     case LOAD_ENTITY_SUCCESS:
+      if (!action.entity.regex){
+        action.entity.regex = '';
+      }
       return state
         .set('loading', false)
         .set('error', false)

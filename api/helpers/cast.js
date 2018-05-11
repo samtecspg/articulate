@@ -20,6 +20,9 @@ module.exports = (object, type) => {
             object.intentThreshold = parseFloat(object.intentThreshold);
             break;
         case 'entity':
+            if (object.regex === '' || !object.regex){
+                object.regex = null;
+            }
             break;
         case 'intent':
             if (typeof object.useWebhook !== 'boolean'){
