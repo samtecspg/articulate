@@ -92,6 +92,11 @@ module.exports = (request, reply) => {
                 if (document.result && document.result.results){
                     document.result.results.forEach((result) => {
 
+                        if (result.intent){
+                            if (result.intent.name === null){
+                                result.intent.name = '';
+                            }
+                        }
                         if (result.entities){
                             result.entities.forEach((entity) => {
 

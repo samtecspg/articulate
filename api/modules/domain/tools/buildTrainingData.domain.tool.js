@@ -82,7 +82,7 @@ const buildTrainingData = (server, domainId, callback) => {
 
             return _.flatten(buildIntentsPerExamples);
         })));
-        let regexs = [];
+        const regexs = [];
         results.entities.forEach((ent) => {
 
             if (ent.regex && ent.regex !== ''){

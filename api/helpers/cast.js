@@ -86,13 +86,23 @@ module.exports = (object, type) => {
             if (object.result && object.result.results){
                 object.result.results.forEach((result) => {
 
-                    if (result.entities){
-                        result.entities.forEach((entity) => {
+                    if (result.intent){
+                        if (result.intent.name && (result.intent.name === '' || result.intent.name === 'null')){
+                            result.intent.name = null;
+                        }
+                    }
+                    if (result.entities !== undefined && result.entities !== null){
+                        if (Array.isArray(result.entities)){
+                            result.entities.forEach((entity) => {
 
-                            if (entity.confidence === ''){
-                                entity.confidence = null;
-                            }
-                        });
+                                if (entity.confidence === ''){
+                                    entity.confidence = null;
+                                }
+                            });
+                        }
+                        else {
+                            result.entities = [];
+                        }
                     }
                 });
             }

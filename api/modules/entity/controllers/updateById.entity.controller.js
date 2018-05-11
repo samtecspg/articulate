@@ -17,7 +17,9 @@ const updateDataFunction = (redis, entityId, currentEntity, updateData, cb) => {
 
         flatEntity[key] = flatUpdateData[key];
     });
-
+    if (flatEntity.regex === null){
+        flatEntity.regex = '';
+    }
     redis.del(`entity:${entityId}`, (err) => {
 
         if (err){
