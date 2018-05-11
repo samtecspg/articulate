@@ -559,7 +559,13 @@ injectGlobal`
 
   .error-paragraph {
     max-width: 575px;
+    margin: 0 auto;
   }
+
+  .secondary-btn {
+    background-color: #c4ccca; }
+    .secondary-btn:hover {
+      background-color: #adb2b1; }
 
   .pagination-bottom .-pagination {
     height: 45px;

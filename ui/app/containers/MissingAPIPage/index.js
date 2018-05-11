@@ -18,14 +18,15 @@ export default class MissingAPIPage extends React.PureComponent { // eslint-disa
   render() {
     return (
       <div>
-        <Header breadcrumbs={[{ label: 'Missing API' },]}/>
+        <Header breadcrumbs={[]}/>
         <Content>
-          <ContentHeader title={messages.missingAPITitle} subTitle={messages.missingAPIDescription} />
-          <img className="error-img" src={image404} alt="" />
-          <p className="error-paragraph">{messages.missingAPIParagraph.defaultMessage}</p>
-          <div className="error-btn-container">
-            <a target="_blank" className="btn-floating btn-large" href="https://samtecspg.github.io/articulate/">See Docs</a>
-          </div>
+          <ContentHeader headerStyle={{textAlign: 'center'}} title={messages.missingAPITitle} subTitle={messages.missingAPIDescription}>
+            <img className="error-img" src={image404} alt="" />
+            <p className="error-paragraph">{messages.missingAPIParagraph.defaultMessage}</p>
+            <div className="error-btn-container">
+              <a target="_blank" className="btn-floating btn-large" href="https://samtecspg.github.io/articulate/">See Docs</a>
+            </div>
+          </ContentHeader>
         </Content>
       </div>
     );
