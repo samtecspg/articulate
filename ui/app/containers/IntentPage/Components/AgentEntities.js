@@ -36,21 +36,16 @@ export function AgentEntities(props) {
       );
     });
 
-  if (props.agentEntities.length > 0){
-    if (props.createEntity) {
-      items = Immutable([entitiesItems])
-        .concat(<NavItem key="dividerSysEntities" divider />)
-        .concat(systemEntities)
-        .concat(<NavItem key="dividerNewEntity" divider />)
-        .concat(newEntity);
-    } else {
-      items = Immutable([entitiesItems])
-        .concat(<NavItem key="divider" divider />)
-        .concat(systemEntities);;
-    }
-  }
-  else{
-    items = Immutable([newEntityDefault])
+  if (props.createEntity) {
+    items = Immutable([entitiesItems])
+      .concat(<NavItem key="dividerSysEntities" divider />)
+      .concat(systemEntities);
+      //.concat(<NavItem key="dividerNewEntity" divider />)
+      //.concat(newEntity);
+  } else {
+    items = Immutable([entitiesItems])
+      .concat(<NavItem key="divider" divider />)
+      .concat(systemEntities);;
   }
 
   return (

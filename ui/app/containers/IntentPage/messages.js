@@ -122,6 +122,10 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_agent.empty_entity_list',
     defaultMessage: 'Please select an agent first',
   },
+  noEntitiesInAgent: {
+    id: 'boilerplate.containers.IntentPage.create_agent.empty_entity_list',
+    defaultMessage: 'No entities created',
+  },
   createEntity: {
     id: 'boilerplate.containers.IntentPage.create_agent.create_entity',
     defaultMessage: '+ Create Entity',
