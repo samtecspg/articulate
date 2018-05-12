@@ -359,7 +359,7 @@ suite('/agent/{id}/domain', () => {
             server.inject('/agent/' + preCreatedAgentId + '/domain', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result[0].domainName).to.equal(domain.domainName);
+                expect(res.result.domains[0].domainName).to.equal(domain.domainName);
                 done();
             });
         });

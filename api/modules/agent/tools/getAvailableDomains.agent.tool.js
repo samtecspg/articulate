@@ -15,7 +15,7 @@ module.exports = (server, redis, agentId, cb) => {
                     const error = Boom.create(res.statusCode, `An error occurred getting the list of domains from agent ${agentId}`);
                     return callbackGetDomainsOfAgent(error, null);
                 }
-                return callbackGetDomainsOfAgent(null, res.result);
+                return callbackGetDomainsOfAgent(null, res.result.domains);
             });
         },
         (domains, callbackFormatDomains) => {

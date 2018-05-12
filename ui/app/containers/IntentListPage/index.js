@@ -82,9 +82,9 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     const nDomainId = _.isEmpty(nextProps.location.query) ? undefined : nextProps.location.query.domainId;
     if (nextProps.agentDomains) {
       if (nDomainId) {
-        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains, nDomainId); //Load Domain Intents
+        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains.domains, nDomainId); //Load Domain Intents
       } else {
-        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains); //Load All Intents
+        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains.domains); //Load All Intents
       }
     }
   }
@@ -178,7 +178,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     if (agentDomains !== false) {
       const defaultOption = { value: 'default', text: 'Please choose a domain', disabled: 'disabled' };
 
-      const options = agentDomains.map((domain) => ({
+      const options = agentDomains.domains.map((domain) => ({
         value: domain.id,
         text: domain.domainName,
       }));
@@ -254,7 +254,7 @@ IntentListPage.propTypes = {
     React.PropTypes.bool,
   ]),
   agentDomains: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   currentAgent: React.PropTypes.oneOfType([

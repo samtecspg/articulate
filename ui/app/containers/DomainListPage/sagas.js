@@ -22,9 +22,20 @@ import {
 import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getAgentDomains(payload) {
-  const { api, agentId } = payload;
+  const { api, agentId, page, filter } = payload;
+  let start = 0;
+  let limit = -1;
+  if (page || page === 0){
+    start = page * 10;
+    limit = start + 10;
+  }
   try {
-    const response = yield call(api.agent.getAgentIdDomain, { id: agentId.toString().split('~')[0] });// TODO: Remove this notation
+    const response = yield call(api.agent.getAgentIdDomain, {
+      id: agentId.toString().split('~')[0],
+      start,
+      limit,
+      filter
+    });// TODO: Remove this notation
     yield put(agentDomainsLoaded(response.obj));
   } catch (err) {
     const errObject = { err };

@@ -15,20 +15,44 @@ module.exports = (request, reply) => {
     if (request.query && request.query.limit > -1){
         limit = request.query.limit;
     }
+    let filter = '';
+    if (request.query.filter && request.query.filter.trim() !== ''){
+        filter = request.query.filter;
+    }
+    let total = 0;
     const agentId = request.params.id;
 
     Async.waterfall([
         (cb) => {
 
-            redis.zrange(`agentDomains:${agentId}`, start, limit === -1 ? limit : limit - 1, 'withscores', (err, domains) => {
+            if (filter && filter !== ''){
+                redis.zrange(`agentDomains:${agentId}`, 0, -1, 'withscores', (err, domains) => {
 
-                if (err){
-                    const error = Boom.badImplementation('An error occurred getting the domains of the agent from the sorted set.');
-                    return cb(error);
-                }
-                domains = _.chunk(domains, 2);
-                return cb(null, domains);
-            });
+                    if (err){
+                        const error = Boom.badImplementation('An error occurred getting the domains of the agent from the sorted set.');
+                        return cb(error);
+                    }
+                    domains = _.chunk(domains, 2);
+                    domains = _.filter(domains, (domain) => {
+
+                        return domain[0].toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+                    });
+                    total = domains.length;
+                    domains = domains.slice(start, limit);
+                    return cb(null, domains);
+                });
+            }
+            else {
+                redis.zrange(`agentDomains:${agentId}`, start, limit === -1 ? limit : limit - 1, 'withscores', (err, domains) => {
+
+                    if (err){
+                        const error = Boom.badImplementation('An error occurred getting the domains of the agent from the sorted set.');
+                        return cb(error);
+                    }
+                    domains = _.chunk(domains, 2);
+                    return cb(null, domains);
+                });
+            }
         },
         (domains, cb) => {
 
@@ -48,6 +72,21 @@ module.exports = (request, reply) => {
                     return cb(err, null);
                 }
                 return cb(null, result);
+            });
+        },
+        (domains, cb) => {
+
+            if (filter && filter !== ''){
+                return cb(null, { domains, total });
+            }
+            redis.zcount(`agentDomains:${agentId}`, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, (err, count) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred getting the count of domains in the agent.');
+                    return cb(error);
+                }
+                total = count;
+                return cb(null, { domains, total });
             });
         }
     ], (err, result) => {

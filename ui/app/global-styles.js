@@ -582,9 +582,7 @@ injectGlobal`
   }
 
   .ReactTable .rt-noData {
-    top: auto !important;
-    padding: 0px !important;
-    background: #fafafa !important;
+    display: none !important;
   }
 
   .right-panel {

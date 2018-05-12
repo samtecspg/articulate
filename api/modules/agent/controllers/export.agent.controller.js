@@ -39,7 +39,7 @@ module.exports = (request, reply) => {
                                     const error = Boom.create(res.statusCode, `An error occurred getting the list of domains of the agent ${exportedAgent.agent}`);
                                     return callbackGetDomains(error, null);
                                 }
-                                return callbackGetDomains(null, res.result);
+                                return callbackGetDomains(null, res.result.domains);
                             });
                         },
                         (exportedDomains, callbackGetDomainIntentAndScenarios) => {

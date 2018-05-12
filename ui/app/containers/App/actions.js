@@ -131,11 +131,13 @@ export function agentsLoadingError(error) {
   };
 }
 
-export function loadAgentDomains(agentId) {
+export function loadAgentDomains(agentId, page, filter) {
   return {
     type: LOAD_AGENT_DOMAINS,
     apiCall: true,
     agentId,
+    page,
+    filter,
   };
 }
 

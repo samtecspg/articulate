@@ -325,7 +325,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     let domainsSelect = [];
     if (agentDomains !== false) {
       const defaultOption = { value: 'default', text: 'Please choose a domain to place your intent', disabled: 'disabled' };
-      const options = agentDomains.map((domain) => ({
+      const options = agentDomains.domains.map((domain) => ({
         value: domain.domainName,
         text: domain.domainName,
       }));
@@ -608,7 +608,7 @@ IntentPage.propTypes = {
     React.PropTypes.bool,
   ]),
   agentDomains: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   agentEntities: React.PropTypes.oneOfType([

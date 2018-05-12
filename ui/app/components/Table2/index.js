@@ -73,6 +73,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       striped,
       showSearchInput,
       showPagination,
+      defaultPageSize,
       ...other,
     } = this.props;
     let newColumns;
@@ -98,9 +99,9 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       <ReactTable
         data={this.props.data}
         columns={newColumns.map(this.generateColumnDefinition)}
-        defaultPageSize={10}
+        defaultPageSize={defaultPageSize}
         className={classNames.join(' ')}
-        showPagination={showPagination ? showPagination : (this.props.data.length > 10)}
+        showPagination={showPagination}
         {...other}
       />
     );
@@ -119,13 +120,13 @@ Table2.propTypes = {
   showSearchInput: React.PropTypes.bool,
   pivotBy: React.PropTypes.array,
   SubComponent: React.PropTypes.func,
+  defaultPageSize: React.PropTypes.number,
 };
 
 Table2.defaultProps = {
-  minRows: 10,
   highlightRow: true,
   striped: false,
-  showPagination: false,
+  showPagination: true,
   showSearchInput: true,
   pivotBy: []
 };

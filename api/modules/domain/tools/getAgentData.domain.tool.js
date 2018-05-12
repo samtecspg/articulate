@@ -13,7 +13,7 @@ const getAgentData = (server, agentId, cb) => {
                     const error = Boom.create(res.statusCode, `An error occurred getting the domainst of the agent ${agentId}`);
                     return callback(error, null);
                 }
-                return callback(null, res.result);
+                return callback(null, res.result.domains);
             });
         },
         (domains, callback) => {

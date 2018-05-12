@@ -41,7 +41,7 @@ module.exports = (request, reply) => {
                                             const error = Boom.create(res.statusCode, `An error occurred getting the domains to delete from the agent ${agentId}`);
                                             return callbackGetDomains(error, null);
                                         }
-                                        return callbackGetDomains(null, res.result);
+                                        return callbackGetDomains(null, res.result.domains);
                                     });
                                 },
                                 (domains, callbackDeleteEachDomain) => {

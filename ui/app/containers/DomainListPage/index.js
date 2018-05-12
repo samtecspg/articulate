@@ -139,8 +139,9 @@ export class DomainListPage extends React.PureComponent { // eslint-disable-line
           <Form>
             <Row>
               <DomainsTable
-                data={agentDomains || []}
+                data={agentDomains || { domains: [], total: 0 } }
                 menu={this.renderMenu()}
+                onReloadData={this.props.onReloadData.bind(null, currentAgent ? currentAgent.id : 0)}
                 onCellChange={() => {
                   console.log(`DomainList::${JSON.stringify(arguments)}`); // TODO: REMOVE!!!!
                 }}
@@ -168,8 +169,9 @@ DomainListPage.propTypes = {
   onComponentWillUpdate: React.PropTypes.func,
   onChangeUrl: React.PropTypes.func,
   onDeleteDomain: React.PropTypes.func,
+  onPageChange: React.PropTypes.func,
   agentDomains: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   currentAgent: React.PropTypes.oneOfType([
@@ -182,10 +184,14 @@ export function mapDispatchToProps(dispatch) {
   return {
     onComponentWillUpdate: (agent) => {
       dispatch(resetStatusFlags());
-      agent ? dispatch(loadAgentDomains(agent.id)) : dispatch(resetAgentDomains());
+      agent ? dispatch(loadAgentDomains(agent.id, 0)) : dispatch(resetAgentDomains());
     },
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteDomain: (domain) => dispatch(deleteDomain(domain.id)),
+    onReloadData: (agentId, page, filter) => {
+      console.log(agentId, page, filter);
+      dispatch(loadAgentDomains(agentId, page, filter));
+    }
   };
 }
 
