@@ -53,6 +53,7 @@
     {
       "enabled": true,
       "domainName": "Test Domain",
+      "model": "Test Domain_a24ef9cb-88f6-3da5-a0df-bdec39bd3069",
       "intentThreshold": 0.7,
       "intents": [
         {
