@@ -161,7 +161,7 @@ class IntentValidate {
                     intent: ScenarioSchema.intent.required().error(new Error('The intent is required. Please specify an intent for the scenario.')),
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.required().valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
-                    webhookPayloadType: WebhookSchema.webhookPayloadType.required().valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                    webhookPayloadType: WebhookSchema.webhookPayloadType.required().valid('None', 'JSON', 'XML', 'URL Encoded').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML, and URL Encoded.')),
                     webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                 };
             })()
@@ -188,7 +188,7 @@ class IntentValidate {
                 return {
                     webhookUrl: WebhookSchema.webhookUrl,
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
-                    webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                    webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML', 'URL Encoded').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML, and URL Encoded.')),
                     webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                 };
             })()

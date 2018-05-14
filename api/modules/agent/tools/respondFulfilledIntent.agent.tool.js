@@ -7,7 +7,7 @@ const _ = require('lodash');
 const getTextResponse = (conversationStateObject, webhookResponse) => {
 
     if (webhookResponse){
-        conversationStateObject = _.merge(conversationStateObject, webhookResponse);
+        conversationStateObject = _.merge(conversationStateObject, { webhookResponse });
     }
     const validResponses = BuildValidResponses(conversationStateObject, conversationStateObject.scenario.intentResponses);
     let textResponse;

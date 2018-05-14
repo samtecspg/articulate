@@ -3,6 +3,7 @@
 const Axios = require('axios');
 const Handlebars = require('handlebars');
 const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
+const Querystring = require('querystring');
 
 module.exports = (webhook, conversationStateObject, callback) => {
 
@@ -19,8 +20,8 @@ module.exports = (webhook, conversationStateObject, callback) => {
     Axios({
         method: webhook.webhookVerb,
         url: processedWebhookUrl,
-        data: processedWebhookPayload ? (webhook.webhookPayloadType === 'JSON' ? JSON.parse(processedWebhookPayload) : processedWebhookPayload) : '',
-        headers: { 'Content-Type': processedWebhookPayload ? (webhook.webhookPayloadType === 'JSON' ? 'application/json' : 'text/xml') : '' },
+        data: processedWebhookPayload ? (webhook.webhookPayloadType === 'URL Encoded' ? Querystring.stringify(JSON.parse(webhook.webhookPayload)) : (webhook.webhookPayloadType === 'JSON' ? JSON.parse(processedWebhookPayload) : processedWebhookPayload)) : '',
+        headers: { 'Content-Type': processedWebhookPayload ? (webhook.webhookPayloadType === 'URL Encoded' ? 'application/x-www-form-urlencoded' : (webhook.webhookPayloadType === 'JSON' ? 'application/json' : 'text/xml')) : '' },
         responseType: webhook.webhookPayloadType === 'XML' ? 'text' : 'json'
     })
     .then((response) => {

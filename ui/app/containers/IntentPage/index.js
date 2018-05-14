@@ -123,6 +123,10 @@ const payloadTypes = [
     value: 'XML',
     text: 'XML',
   },
+  {
+    value: 'URL Encoded',
+    text: 'URL Encoded',
+  },
 ];
 
 export class IntentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function

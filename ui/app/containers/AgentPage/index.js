@@ -114,6 +114,10 @@ const payloadTypes = [
     value: 'XML',
     text: 'XML',
   },
+  {
+    value: 'URL Encoded',
+    text: 'URL Encoded',
+  },
 ];
 
 const returnFormattedOptions = (options) => options.map((option, index) => (
