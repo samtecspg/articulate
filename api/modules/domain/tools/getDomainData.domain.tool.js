@@ -24,7 +24,7 @@ const getDomainData = (server, domainId, cb) => {
                     const error = Boom.create(res.statusCode, `An error occurred getting the intents of the domain ${domainId}`);
                     return callback(error, null);
                 }
-                return callback(null, res.result);
+                return callback(null, res.result.intents);
             });
         }
 

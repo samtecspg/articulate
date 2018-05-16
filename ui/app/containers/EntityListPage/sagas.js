@@ -25,15 +25,27 @@ import {
 import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getAgentEntities(payload) {
-  const { api, agentId } = payload;
+  const { api, agentId, page, filter, forIntentEdit } = payload;
+  let start = 0;
+  let limit = -1;
+  if (page || page === 0){
+    start = page * 10;
+    limit = start + 10;
+  }
   try {
-    const response = yield call(api.agent.getAgentIdEntity, { id: agentId.toString().split('~')[0] }); // TODO: Remove this notation
+    const response = yield call(api.agent.getAgentIdEntity, {
+      id: agentId.toString().split('~')[0],
+      start,
+      limit,
+      filter
+    });// TODO: Remove this notation
     const agentEntities = response.obj;
     yield put(agentEntitiesLoaded(agentEntities));
-    const entityResponse = yield agentEntities.map(entity => {
-      return call(getEntityIntents, { api, id: entity.id });
-    });
-
+    if (!forIntentEdit){
+      const entityResponse = yield agentEntities.entities.map(entity => {
+        return call(getEntityIntents, { api, id: entity.id });
+      });
+    }
   } catch (err) {
     const errObject = { err };
     if (errObject.err && errObject.err.message === 'Failed to fetch'){

@@ -7,7 +7,7 @@ import systemEntities from 'systemEntities';
 
 export function SlotsRows(props) {
   const rows = props.slots.map((slot, slotIndex) => {
-    let agentEntity = props.agentEntities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
+    let agentEntity = props.agentEntities.entities.filter((agentEntity) => agentEntity.entityName === slot.entity)[0];
     if (!agentEntity){
       agentEntity = systemEntities.filter((sysEntity) => sysEntity.entityName === slot.entity)[0];
     }
@@ -15,7 +15,7 @@ export function SlotsRows(props) {
       <tr style={{ width: '100%' }} key={slotIndex}>
         <td style={{ width: '15%', display: 'inline-block' }}>
           <TextInput
-            style={{ marginBottom: '0px', color: agentEntity.uiColor }}
+            style={{ marginBottom: '0px', color: agentEntity ? agentEntity.uiColor : '' }}
             placeholder=""
             value={`${slot.slotName}`}
             inputId={`slotName_${slotIndex}`}
@@ -61,7 +61,7 @@ SlotsRows.propTypes = {
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
 };

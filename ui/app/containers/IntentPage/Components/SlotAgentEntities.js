@@ -8,8 +8,8 @@ import messages from '../messages';
 
 export function SlotAgentEntities(props) {
   let items = [<NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>];
-  if (props.agentEntities && props.agentEntities.length > 0) {
-    items = props.agentEntities.map((agentEntity, agentIndex) => {
+  if (props.agentEntities && props.agentEntities && props.agentEntities.entities.length > 0) {
+    items = props.agentEntities.entities.map((agentEntity, agentIndex) => {
       let entityColor = agentEntity.uiColor;
       return (
         <NavItem
@@ -47,7 +47,7 @@ export function SlotAgentEntities(props) {
 SlotAgentEntities.propTypes = {
   slot: React.PropTypes.object,
   agentEntity: React.PropTypes.object,
-  agentEntities: React.PropTypes.array,
+  agentEntities: React.PropTypes.object,
   onClickFunction: React.PropTypes.func,
   index: React.PropTypes.number,
 };

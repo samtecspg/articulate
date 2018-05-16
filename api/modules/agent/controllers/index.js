@@ -17,7 +17,7 @@ const ParseController = require('./parse.agent.controller');
 const ConverseController = require('./converse.agent.controller');
 const ExportController = require('./export.agent.controller');
 const ImportController = require('./import.agent.controller');
-const FindIntentsByIdByAgentIdController = require('./findIntentsByIdByAgentId.agent.controller');
+const FindIntentsByAgentIdController = require('./findIntentsByAgentId.agent.controller');
 const AddWebhookController = require('./addWebhook.agent.controller');
 const FindWebhookController = require('./findWebhook.agent.controller');
 const UpdateWebhookController = require('./updateWebhook.agent.controller');
@@ -62,7 +62,7 @@ const AgentController = {
 
     import: ImportController,
 
-    findIntentsByAgentId: FindIntentsByIdByAgentIdController,
+    findIntentsByAgentId: FindIntentsByAgentIdController,
 
     addWebhook: AddWebhookController,
 

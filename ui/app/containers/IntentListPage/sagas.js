@@ -24,9 +24,20 @@ import {
 import { getAgentDomains } from '../../containers/DomainListPage/sagas';
 
 export function* getDomainIntents(payload) {
-  const { api, domainId } = payload;
+  const { api, domainId, page, filter } = payload;
+  let start = 0;
+  let limit = -1;
+  if (page || page === 0){
+    start = page * 10;
+    limit = start + 10;
+  }
   try {
-    const response = yield call(api.domain.getDomainIdIntent, { id: domainId });
+    const response = yield call(api.domain.getDomainIdIntent, {
+      id: domainId,
+      start,
+      limit,
+      filter
+    });
     const intents = response.obj;
     yield put(domainIntentsLoaded(intents));
   } catch (err) {
@@ -35,6 +46,7 @@ export function* getDomainIntents(payload) {
       yield put(domainIntentsLoadingError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
+      console.log(errObject);
       if (errObject.err.response.obj && errObject.err.response.obj.message){
         yield put(domainIntentsLoadingError({ message: errObject.err.response.obj.message }));
       }
@@ -84,9 +96,20 @@ export function* deleteIntent() {
 }
 
 export function* getAgentIntents(payload) {
-  const { api, agentId } = payload;
+  const { api, agentId, page, filter } = payload;
+  let start = 0;
+  let limit = -1;
+  if (page || page === 0){
+    start = page * 10;
+    limit = start + 10;
+  }
   try {
-    const response = yield call(api.agent.getAgentIdIntent, { id: agentId });
+    const response = yield call(api.agent.getAgentIdIntent, {
+      id: agentId,
+      start,
+      limit,
+      filter
+    });
     const intents = response.obj;
     yield put(loadAgentIntentsSuccess(intents));
   } catch (err) {

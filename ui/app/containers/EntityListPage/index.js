@@ -146,9 +146,10 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
           <Form>
             <Row>
               <EntitiesTable
-                data={agentEntities || []}
+                data={agentEntities || { entities: [], total: 0 }}
                 intentData={entityIntents}
                 menu={this.renderMenu()}
+                onReloadData={this.props.onReloadData.bind(null, currentAgent ? currentAgent.id : 0)}
                 onFetchIntents={this.fetchEntityIntents}
                 onCellChange={() => {
                 }}
@@ -178,7 +179,7 @@ EntityListPage.propTypes = {
   onDeleteDomain: React.PropTypes.func,
   onFetchEntityIntents: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   currentAgent: React.PropTypes.oneOfType([
@@ -192,10 +193,12 @@ export function mapDispatchToProps(dispatch) {
     onFetchEntityIntents: (id) => {
       dispatch(loadEntityIntents(id));
     },
-    onComponentWillUpdate: (agent) => agent ? dispatch(loadAgentEntities(agent.id)) : dispatch(resetAgentDomains()), // TODO: Reset agent entities
+    onComponentWillUpdate: (agent) => agent ? dispatch(loadAgentEntities(agent.id, 0)) : dispatch(resetAgentDomains()), // TODO: Reset agent entities
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteDomain: (entity) => dispatch(deleteEntity(entity.id)),
-
+    onReloadData: (agentId, page, filter) => {
+      dispatch(loadAgentEntities(agentId, page, filter));
+    }
   };
 }
 

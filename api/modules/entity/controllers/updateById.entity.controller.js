@@ -190,7 +190,7 @@ module.exports = (request, reply) => {
                                         const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the domain ${domain}`);
                                         return callbackGetIntentsOfDomain(error, null);
                                     }
-                                    return callbackGetIntentsOfDomain(null, res.result);
+                                    return callbackGetIntentsOfDomain(null, res.result.intents);
                                 });
                             },
                             (intents, callbackUpdateIntentsAndScenarios) => {

@@ -161,11 +161,14 @@ export function agentDomainsLoadingError(error) {
   };
 }
 
-export function loadAgentEntities(agentId) {
+export function loadAgentEntities(agentId, page, filter, forIntentEdit) {
   return {
     type: LOAD_AGENT_ENTITIES,
     apiCall: true,
     agentId,
+    page,
+    filter,
+    forIntentEdit,
   };
 }
 
@@ -354,11 +357,13 @@ export function resetSessionError() {
   };
 }
 
-export function loadDomainIntents(domainId) {
+export function loadDomainIntents(domainId, page, filter) {
   return {
     type: LOAD_DOMAINS_INTENTS,
     apiCall: true,
     domainId,
+    page,
+    filter,
   };
 }
 
@@ -583,11 +588,13 @@ export function updateEntity() {
   };
 }
 
-export function loadAgentIntents(agentId) {
+export function loadAgentIntents(agentId, page, filter) {
   return {
     type: LOAD_AGENT_INTENTS,
     apiCall: true,
     agentId,
+    page,
+    filter,
   };
 }
 

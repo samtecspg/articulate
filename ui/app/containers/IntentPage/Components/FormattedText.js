@@ -11,7 +11,7 @@ export function FormattedText(props) {
     const beforeTaggedText = props.text.substring(0, start - lastStart);
     const taggedText = props.text.substring(start - lastStart, end - lastStart);
     const afterTaggedText = props.text.substring(end - lastStart, props.text.length);
-    let filteredEntity = props.agentEntities.filter((agentEntity) => { return agentEntity.entityName === entity.entity })[0];
+    let filteredEntity = props.agentEntities.entities.filter((agentEntity) => { return agentEntity.entityName === entity.entity })[0];
     if (!filteredEntity){
       filteredEntity = systemEntities.filter((sysEntity) => { return sysEntity.entityName === entity.entity})[0];
     }
@@ -34,7 +34,7 @@ export function FormattedText(props) {
 }
 
 FormattedText.propTypes = {
-  agentEntities: React.PropTypes.array,
+  agentEntities: React.PropTypes.object,
   entities: React.PropTypes.array,
   text: React.PropTypes.string,
   entityIndex: React.PropTypes.number,

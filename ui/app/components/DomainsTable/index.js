@@ -26,7 +26,6 @@ class DomainsTable extends React.Component { // eslint-disable-line react/prefer
   };
 
   onChangeSearchInput(event) {
-    console.log(event.target.value);
     this.setState({
       page: 0,
       filter: event.target.value
@@ -61,6 +60,7 @@ class DomainsTable extends React.Component { // eslint-disable-line react/prefer
         />
         <div>
           <Table2
+            sortable={false}
             manual
             page={this.state.page}
             pages={this.state.pages}

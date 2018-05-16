@@ -17,6 +17,10 @@ module.exports = (request, reply) => {
     if (request.query && request.query.limit > -1){
         limit = request.query.limit;
     }
+    let filter = '';
+    if (request.query.filter && request.query.filter.trim() !== ''){
+        filter = request.query.filter;
+    }
 
     Async.waterfall([
         (cb) => {
@@ -53,7 +57,7 @@ module.exports = (request, reply) => {
         (domain, cb) => {
 
             if (domain){
-                server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
+                server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}${filter ? `&filter=${filter}` : ''}`, (res) => {
 
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error occurred getting the data of the domain ${domain[0]} with id ${domain[1]}`);

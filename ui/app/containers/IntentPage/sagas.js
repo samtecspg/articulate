@@ -250,7 +250,7 @@ export function* getIntent(payload) {
     const responseAgent = yield call(api.agent.getAgentNameAgentname, { agentName: intent.agent });
     const agent = responseAgent.obj;
     yield call(getAgentDomains, { api, agentId: agent.id });
-    yield call(getAgentEntities, { api, agentId: agent.id });
+    yield call(getAgentEntities, { api, agentId: agent.id, forIntentEdit: true });
     yield put(loadIntentSuccess(intent));
   } catch ({ response }) {
     yield put(loadIntentError({ message: response.obj.message }));

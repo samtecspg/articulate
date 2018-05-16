@@ -53,7 +53,8 @@ class AgentValidate {
 
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
-                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
+                    filter: Joi.string().description('String that will filter values to return only those entities with part of this filter in their names')
                 };
             })()
         };
@@ -107,7 +108,8 @@ class AgentValidate {
 
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
-                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
+                    filter: Joi.string().description('String that will filter values to return only those intents with part of this filter in their names')
                 };
             })()
         };
@@ -353,7 +355,8 @@ class AgentValidate {
 
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
-                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default')
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
+                    filter: Joi.string().description('String that will filter values to return only those intents with part of this filter in their names')
                 };
             })()
         };

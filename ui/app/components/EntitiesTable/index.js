@@ -16,17 +16,23 @@ class EntitiesTable extends React.Component { // eslint-disable-line react/prefe
   constructor(){
     super();
     this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
-    this.searchTable = this.searchTable.bind(this);
   }
 
   state = {
+    filter: '',
+    page: 0,
+    pages: 0,
     initialData: [],
-    data: [],
-    filterFields: [],
+    data: []
   };
 
   onChangeSearchInput(event) {
-    this.searchTable(event.target.value);
+    this.setState({
+      page: 0,
+      filter: event.target.value
+    }, () => {
+      this.props.onReloadData(this.state.page ? this.state.page : 0, this.state.filter);
+    });
   }
 
   componentWillMount() {
@@ -39,31 +45,14 @@ class EntitiesTable extends React.Component { // eslint-disable-line react/prefe
 
   updateData(props) {
     this.setState({
-      initialData: Immutable.asMutable(props.data, { deep: true }),
-      data: Immutable.asMutable(props.data, { deep: true }),
-      filterFields: _(columns).filter('filterable').map('accessor').value(),
+      initialData: Immutable.asMutable(props.data.entities, { deep: true }),
+      data: Immutable.asMutable(props.data.entities, { deep: true }),
+      pages: Math.ceil(props.data.total / this.props.defaultPageSize)
     });
   }
 
-  searchTable(searchText) {
-    const filter = (value) => {
-      const search = (field) => {
-        if (typeof field === 'function'){
-          return value[field(value).columnName].toString().toLowerCase().indexOf(searchText.toLowerCase()) >= 0
-        }
-        else {
-          return value[field].toString().toLowerCase().indexOf(searchText.toLowerCase()) >= 0
-        }
-      };
-      return _(this.state.filterFields).map(search).compact().value().length > 0;
-    };
-    const filteredData = searchText ? _.filter(this.state.initialData, filter) : this.state.initialData;
-    this.setState({ data: filteredData });
-  }
-
   render() {
-    const { data, intentData, onCellChange, menu } = this.props;
-    let formattedData = Immutable.asMutable(data, { deep: true });
+    const { data, intentData, onCellChange, menu, defaultPageSize } = this.props;
     return (
       <div className={'ReactTable'}>
         <SearchInput
@@ -72,6 +61,19 @@ class EntitiesTable extends React.Component { // eslint-disable-line react/prefe
         />
         <div>
           <Table2
+            sortable={false}
+            manual
+            page={this.state.page}
+            pages={this.state.pages}
+            onPageChange={
+              (pageIndex) => {
+                this.setState({
+                  page: pageIndex
+                })
+                this.props.onReloadData.bind(null, pageIndex, this.state.filter)()
+              }
+            }
+            defaultPageSize={defaultPageSize}
             columns={columns}
             data={this.state.data}
             onCellChange={onCellChange}
@@ -118,11 +120,17 @@ class EntitiesTable extends React.Component { // eslint-disable-line react/prefe
 }
 
 EntitiesTable.propTypes = {
-  data: React.PropTypes.array,
+  data: React.PropTypes.object,
   intentData: React.PropTypes.any,
   menu: React.PropTypes.array,
   onCellChange: React.PropTypes.func,
   onFetchIntents: React.PropTypes.func,
+  onReloadData: React.PropTypes.func,
+  defaultPageSize: React.PropTypes.number,
 };
+
+EntitiesTable.defaultProps = {
+  defaultPageSize: 10,
+}
 
 export default EntitiesTable;

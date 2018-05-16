@@ -189,7 +189,6 @@ export function mapDispatchToProps(dispatch) {
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteDomain: (domain) => dispatch(deleteDomain(domain.id)),
     onReloadData: (agentId, page, filter) => {
-      console.log(agentId, page, filter);
       dispatch(loadAgentDomains(agentId, page, filter));
     }
   };

@@ -60,7 +60,7 @@ module.exports = (request, reply) => {
                                                                 const error = Boom.create(res.statusCode, `An error occurred getting the intents to delete of the domain ${domain.domainName}`);
                                                                 return callbackGetIntents(error, null);
                                                             }
-                                                            return callbackGetIntents(null, res.result);
+                                                            return callbackGetIntents(null, res.result.intents);
                                                         });
                                                     },
                                                     (intents, callbackDeleteIntentAndScenario) => {
@@ -191,7 +191,7 @@ module.exports = (request, reply) => {
                                             const error = Boom.create(res.statusCode, `An error occurred getting the entities to delete of the agent ${agentId}`);
                                             return callbackGetEntities(error, null);
                                         }
-                                        return callbackGetEntities(null, res.result);
+                                        return callbackGetEntities(null, res.result.entities);
                                     });
                                 },
                                 (entities, callbackDeleteEachEntity) => {

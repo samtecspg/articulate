@@ -40,7 +40,7 @@ const getAgentData = (server, agentId, cb) => {
                                 const error = Boom.create(res.statusCode, `An error occurred getting the intents of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
                             }
-                            return cllbck(null, res.result);
+                            return cllbck(null, res.result.intents);
                         });
                     }
 

@@ -220,8 +220,9 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
             </Row>
             <Row>
               <IntentsTable
-                data={domainIntents || []}
+                data={domainIntents || { intents: [], total: 0 }}
                 menu={this.renderMenu()}
+                onReloadData={this.props.onReloadData.bind(null, this.state.selectedDomain ? this.state.selectedDomain.id : null , currentAgent ? currentAgent.id : 0)}
                 onCellChange={() => {
                 }}
               />
@@ -250,7 +251,7 @@ IntentListPage.propTypes = {
   onLoadDomains: React.PropTypes.func,
   onReset: React.PropTypes.func,
   domainIntents: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   agentDomains: React.PropTypes.oneOfType([
@@ -272,17 +273,22 @@ export function mapDispatchToProps(dispatch) {
     onLoadDomains(agent) {
       dispatch(loadAgentDomains(agent.id));
     },
-
     onLoadIntents: (domain, agent) => {
       if (domain) {
-        return dispatch(loadDomainIntents(domain.id));
+        return dispatch(loadDomainIntents(domain.id,0));
       }
-      dispatch(loadAgentIntents(agent.id));
+      dispatch(loadAgentIntents(agent.id,0));
     },
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteIntent: (intent, parent, filter) => {
       dispatch(deleteIntent(intent.id, parent.id, filter));
     },
+    onReloadData: (domainId, agentId, page, filter) => {
+      if (domainId) {
+        return dispatch(loadDomainIntents(domainId, page, filter));
+      }
+      dispatch(loadAgentIntents(agentId, page, filter));
+    }
   };
 }
 

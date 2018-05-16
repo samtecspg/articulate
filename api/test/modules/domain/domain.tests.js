@@ -308,8 +308,8 @@ suite('/domain/{id}/intent', () => {
             server.inject(`/domain/${preCreatedDomain.id}/intent`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result).to.be.an.array();
-                expect(res.result.length).to.be.greaterThan(0);
+                expect(res.result.intents).to.be.an.array();
+                expect(res.result.intents.length).to.be.greaterThan(0);
                 done();
             });
         });

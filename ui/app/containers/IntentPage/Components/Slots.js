@@ -25,7 +25,7 @@ Slots.propTypes = {
   onRemoveSlot: React.PropTypes.func,
   onSlotNameChange: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
 };

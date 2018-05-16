@@ -64,8 +64,7 @@ const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agent
             Wreck.delete(`${rasa}/models?project=${agentName}&model=${agentName}_domain_recognizer`, {}, (err, wreckResponse, payload) => {
 
                 if (err) {
-                    const error = Boom.badImplementation('An error occurred unloading previous model of the domain recognizer.');
-                    return cb(error);
+                    console.log(`The model ${agentName}_domain_recognizer wasn't unloaded`);
                 }
                 return cb(null);
             });

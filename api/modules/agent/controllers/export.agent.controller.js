@@ -56,7 +56,7 @@ module.exports = (request, reply) => {
                                                 return callbackGetIntentsFromDomain(error, null);
                                             }
                                             if (!withReferences){
-                                                res.result.forEach((domainIntent) => {
+                                                res.result.intents.forEach((domainIntent) => {
 
                                                     domainIntent.examples.forEach((example) => {
 
@@ -67,7 +67,7 @@ module.exports = (request, reply) => {
                                                     });
                                                 });
                                             }
-                                            return callbackGetIntentsFromDomain(null, res.result);
+                                            return callbackGetIntentsFromDomain(null, res.result.intents);
                                         });
                                     },
                                     (exportedIntentsForDomain, callbackGetScenarioForEachIntent) => {
@@ -176,13 +176,13 @@ module.exports = (request, reply) => {
                         }
                         if (!withReferences){
 
-                            res.result.forEach((entity) => {
+                            res.result.entities.forEach((entity) => {
 
                                 delete entity.id;
                                 delete entity.agent;
                             });
                         }
-                        return callbackGetEntities(null, Object.assign(exportedAgent, { entities: res.result }));
+                        return callbackGetEntities(null, Object.assign(exportedAgent, { entities: res.result.entities }));
                     });
                 },
                 webhook: (callbackGetWebhook) => {

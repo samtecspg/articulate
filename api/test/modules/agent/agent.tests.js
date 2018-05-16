@@ -393,7 +393,7 @@ suite('/agent/{id}/domain/{domainId}/intent', () => {
             server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.length).to.equal(2);
+                expect(res.result.intents.length).to.equal(2);
                 done();
             });
         });
@@ -461,7 +461,7 @@ suite('/agent/{id}/entity', () => {
             server.inject('/agent/' + preCreatedAgentId + '/entity', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result[0].entityName).to.contain(entity.entityName);
+                expect(res.result.entities[0].entityName).to.contain(entity.entityName);
                 done();
             });
         });
@@ -532,7 +532,7 @@ suite('/agent/{id}/intent', () => {
             server.inject(`/agent/${preCreatedAgentId}/intent`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result[0].intentName).to.contain(intent.intentName);
+                expect(res.result.intents[0].intentName).to.contain(intent.intentName);
                 done();
             });
         });

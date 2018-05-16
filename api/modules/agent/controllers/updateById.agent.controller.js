@@ -115,7 +115,7 @@ module.exports = (request, reply) => {
                                                                     const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the domain ${domain.domainName}`);
                                                                     return callbackGetIntents(error, null);
                                                                 }
-                                                                return callbackGetIntents(null, res.result);
+                                                                return callbackGetIntents(null, res.result.intents);
                                                             });
                                                         },
                                                         (intents, callbackUpdateIntentAndScenario) => {
@@ -208,7 +208,7 @@ module.exports = (request, reply) => {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the entities to update of the agent ${agentId}`);
                                                 return callbackGetEntities(error, null);
                                             }
-                                            return callbackGetEntities(null, res.result);
+                                            return callbackGetEntities(null, res.result.entities);
                                         });
                                     },
                                     (entities, callbackUpdateEachEntity) => {

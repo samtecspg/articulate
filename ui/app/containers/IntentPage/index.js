@@ -616,7 +616,7 @@ IntentPage.propTypes = {
     React.PropTypes.bool,
   ]),
   agentEntities: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   onSuccess: React.PropTypes.func,
@@ -631,7 +631,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(dispatch(resetStatusFlags()));
       if (field === 'agent') {
         dispatch(loadAgentDomains(value));
-        dispatch(loadAgentEntities(value));
+        dispatch(loadAgentEntities(value, null, null, true));
       }
       dispatch(changeIntentData({ value, field }));
     },

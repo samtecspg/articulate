@@ -20,7 +20,7 @@ export function AgentEntities(props) {
   const newEntity = <NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="/entities/create">{messages.createEntity.defaultMessage}</NavItem>;
   let items = undefined;
 
-  const entitiesItems = props.agentEntities
+  const entitiesItems = props.agentEntities.entities
     .map((agentEntity, agentIndex) => {
       return (
         <NavItem
@@ -56,7 +56,7 @@ export function AgentEntities(props) {
 }
 
 AgentEntities.propTypes = {
-  agentEntities: React.PropTypes.array,
+  agentEntities: React.PropTypes.object,
   userSays: React.PropTypes.string,
   onClickFunction: React.PropTypes.func,
   index: React.PropTypes.number,

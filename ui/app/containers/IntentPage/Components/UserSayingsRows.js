@@ -64,7 +64,7 @@ UserSayingsRows.propTypes = {
   onRemoveExample: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
-  agentEntities: React.PropTypes.array,
+  agentEntities: React.PropTypes.object,
 };
 
 export default UserSayingsRows;
