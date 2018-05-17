@@ -29,6 +29,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
   state = {
     start: false,
     stop: false,
+    repeatPreviousMessage: null,
   };
 
   componentDidMount() {
@@ -58,11 +59,28 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
   }
 
   sendTextMessage(evt) {
-    if (evt.charCode === 13) {
+    if (evt.keyCode === 13) {
       const message = evt.target.value;
       evt.target.value = null;
       const agentId = this.props.currentAgent ? this.props.currentAgent.id : null;
       this.props.onSendMessage(agentId, message);
+      this.state.repeatPreviousMessage = null;
+    }
+    if (evt.keyCode === 38) {
+      if (this.props.conversation.length > 0) {
+        let messages = this.props.conversation;
+        let len = this.state.repeatPreviousMessage || messages.length;
+        let message = null;
+
+        while (len-- && !message) {
+          if (messages[len].author == "user") {
+            this.state.repeatPreviousMessage = len
+            message = messages[len].message;
+          }
+        }
+
+        evt.target.value = message;
+      }
     }
   }
 
@@ -107,7 +125,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
               className="conversation-input"
               placeholder={this.state.start && !this.state.stop ? messages.recordingPlaceholder.defaultMessage : messages.conversationPlaceholder.defaultMessage}
               inputId="intentName"
-              onKeyPress={this.sendTextMessage}
+              onKeyDown={this.sendTextMessage}
               onSpeakClick={() => this.setState({ start: (!this.state.start) ? true : this.state.start, stop: this.state.start ? true : this.state.stop })}
             />
         </ul>

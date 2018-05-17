@@ -215,7 +215,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       value = null;
     }
     if (field === 'fallbackResponses') {
-      if (evt.charCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
+      if (evt.keyCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
         if (field === 'fallbackResponses') {
           this.lastAgentResponse.scrollIntoView(true);
         }
@@ -354,7 +354,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                   id='fallbacks'
                   label={messages.agentFallbackTitle}
                   placeholder={messages.fallbackInput.defaultMessage}
-                  onKeyPress={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
+                  onKeyDown={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
                 />
             </Row>
           </Form>

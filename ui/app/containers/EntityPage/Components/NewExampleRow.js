@@ -11,7 +11,7 @@ export function NewExampleRow(props) {
         <TextInput
           placeholder={messages.examplePlaceholder.defaultMessage}
           id="newExample"
-          onKeyPress={props.addExampleFunction}
+          onKeyDown={props.addExampleFunction}
         />
       </td>
       <td style={{ width: '70%', display: 'inline-block' }}>

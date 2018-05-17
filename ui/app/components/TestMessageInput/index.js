@@ -18,7 +18,7 @@ export function TestMessageInput(props) {
             placeholder={props.placeholder}
             value={props.value}
             onChange={props.onChange}
-            onKeyPress={props.onKeyPress}
+            onKeyDown={props.onKeyDown}
             required={props.required}
             type="text"
             className={props.className ? props.className + ' validate' : 'validate'}
@@ -50,7 +50,7 @@ TestMessageInput.propTypes = {
   placeholder: React.PropTypes.string,
   value: React.PropTypes.string,
   onChange: React.PropTypes.func,
-  onKeyPress: React.PropTypes.func,
+  onKeyDown: React.PropTypes.func,
   onSpeakClick: React.PropTypes.func,
   required: React.PropTypes.bool,
   style: React.PropTypes.object,

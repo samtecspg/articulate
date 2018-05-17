@@ -331,7 +331,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(removeExample(example));
     },
     onAddExample: (evt) => {
-      if (evt.charCode === 13) {
+      if (evt.keyCode === 13) {
         dispatch(dispatch(resetStatusFlags()));
         dispatch(addExample(evt.target.value));
         evt.target.value = null;
@@ -343,7 +343,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onAddSynonym: (exampleValue, evt) => {
       dispatch(dispatch(resetStatusFlags()));
-      if (evt.charCode === 13) {
+      if (evt.keyCode === 13) {
         dispatch(addSynonym({ example: exampleValue, synonym: evt.target.value }));
         evt.target.value = null;
       }

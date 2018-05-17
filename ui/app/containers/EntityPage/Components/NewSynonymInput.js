@@ -8,7 +8,7 @@ export function NewSynonymInput(props) {
     <TextInput
       placeholder={messages.synonymPlaceholder.defaultMessage}
       inputId={props.example.value + '_newSynonym'}
-      onKeyPress={props.addSynonymFunction.bind(null, props.example.value)}
+      onKeyDown={props.addSynonymFunction.bind(null, props.example.value)}
     />
   );
 }

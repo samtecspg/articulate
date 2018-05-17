@@ -186,7 +186,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       value = null;
     }
     if (field === 'examples' || field === 'responses') {
-      if (evt.charCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
+      if (evt.keyCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
         if (field === 'responses') {
           this.lastAgentResponse.scrollIntoView(true);
         }
@@ -195,7 +195,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       }
       if (field === 'responses') {
         const dropDownButton = document.getElementById('intentResponseEntityDropdown');
-        if (evt.charCode === 123) { // If user hits '{' display a menu with current slots
+        if (evt.keyCode === 123) { // If user hits '{' display a menu with current slots
           //dropDownButton.dispatchEvent(new Event('click'));
         }
         else {
@@ -468,7 +468,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <FormTextInput
                 label={messages.userSaysTitle}
                 placeholder={messages.userSaysInput.defaultMessage}
-                onKeyPress={(evt) => this.onChangeInput(evt, 'examples')}
+                onKeyDown={(evt) => this.onChangeInput(evt, 'examples')}
                 s={8}
               />
               <FormTextInput
@@ -609,7 +609,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   id='responses'
                   label={messages.agentResponsesTitle}
                   placeholder={messages.responsesInput.defaultMessage}
-                  onKeyPress={(evt) => this.onChangeInput(evt, 'responses')}
+                  onKeyDown={(evt) => this.onChangeInput(evt, 'responses')}
                 />
               </Row>
             </Form>
@@ -800,7 +800,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onAddTextPrompt: (slotName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
-      if (evt.charCode === 13) {
+      if (evt.keyCode === 13) {
         dispatch(addTextPrompt({ slotName, value: evt.target.value }));
         evt.target.value = null;
       }

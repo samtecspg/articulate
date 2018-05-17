@@ -35,7 +35,7 @@ function TextInput(props) { // eslint-disable-line react/prefer-stateless-functi
         placeholder={props.placeholder}
         value={props.value}
         onChange={props.onChange}
-        onKeyPress={props.onKeyPress}
+        onKeyDown={props.onKeyDown}
         required={props.required}
         type="text"
         className={props.className}
@@ -53,7 +53,7 @@ TextInput.propTypes = {
   value: React.PropTypes.string,
   defaultValue: React.PropTypes.string,
   onChange: React.PropTypes.func,
-  onKeyPress: React.PropTypes.func,
+  onKeyDown: React.PropTypes.func,
   required: React.PropTypes.bool,
   style: React.PropTypes.object,
   disabled: React.PropTypes.bool,

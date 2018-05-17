@@ -11,7 +11,7 @@ function FormTextInput(props) { // eslint-disable-line react/prefer-stateless-fu
         placeholder={props.placeholder}
         value={props.value}
         onChange={props.onChange}
-        onKeyPress={props.onKeyPress}
+        onKeyDown={props.onKeyDown}
         required={props.required}
         style={props.style}
         disabled={props.disabled}
@@ -30,7 +30,7 @@ FormTextInput.propTypes = {
   value: React.PropTypes.string,
   defaultValue: React.PropTypes.string,
   onChange: React.PropTypes.func,
-  onKeyPress: React.PropTypes.func,
+  onKeyDown: React.PropTypes.func,
   required: React.PropTypes.bool,
   style: React.PropTypes.object,
   disabled: React.PropTypes.bool,
