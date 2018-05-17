@@ -297,7 +297,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   setEditMode(isEditMode) {
     if (isEditMode) {
       this.setState({ editMode: true });
-      this.props.onEditMode(this.props.params.id);
+      this.props.onEditMode(this.props);
     } else {
       this.props.resetForm();
       this.setState({ editMode: false });
@@ -818,10 +818,12 @@ export function mapDispatchToProps(dispatch) {
     setWindowSelection: (selection) => {
       dispatch(setWindowSelection(selection));
     },
-    onEditMode: (intentId) => {
-      dispatch(loadIntent(intentId));
-      dispatch(loadScenario(intentId));
-      dispatch(loadWebhook(intentId));
+    onEditMode: (props) => {
+      dispatch(loadIntent(props.params.id));
+      dispatch(loadScenario(props.params.id));
+      if (props.intent.useWebhook) {
+        dispatch(loadWebhook(props.params.id));
+      }
     },
   };
 }

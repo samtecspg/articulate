@@ -74,16 +74,16 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
   componentWillMount() {
     const { currentAgent, agent } = this.props;
     if (!currentAgent) {
-      this.props.onComponentWillMount(this.props.params.id);
+      this.props.onComponentWillMount(this.props);
     }
     else {
       if (currentAgent.id !== agent.id){
-        this.props.onComponentWillMount(this.props.params.id);
+        this.props.onComponentWillMount(this.props);
       }
       else{
         if (!this.state.webhookLoaded){
           const justWebhook = true;
-          this.props.onComponentWillMount(this.props.params.id, justWebhook);
+          this.props.onComponentWillMount(this.props, justWebhook);
         }
       }
     }
@@ -317,11 +317,13 @@ AgentDetailPage.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onComponentWillMount: (id, justWebhook) => {
+    onComponentWillMount: (props, justWebhook) => {
       if (!justWebhook){
-        dispatch(loadAgent(id));
+        dispatch(loadAgent(props.params.id));
       }
-      dispatch(loadWebhook(id));
+      if (props.agent.useWebhook) {
+        dispatch(loadWebhook(props.params.id));
+      }
     },
     onDeleteAgent: (agent) => dispatch(deleteAgent(agent.id)),
     onChangeUrl: (url) => dispatch(push(url)),

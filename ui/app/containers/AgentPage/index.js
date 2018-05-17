@@ -176,7 +176,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   setEditMode(isEditMode) {
     if (isEditMode) {
       this.setState({ editMode: true });
-      this.props.onEditMode(this.props.params.id);
+      this.props.onEditMode(this.props);
     } else {
       this.setState({ editMode: false });
       this.props.resetForm();
@@ -497,11 +497,13 @@ export function mapDispatchToProps(dispatch) {
     onSuccess: (inWizard) => {
 
     },
-    onEditMode: (agentId) => {
+    onEditMode: (props) => {
       dispatch(resetStatusFlags());
       dispatch(resetAgentData());
-      dispatch(loadAgent(agentId));
-      dispatch(loadWebhook(agentId));
+      dispatch(loadAgent(props.params.id));
+      if (props.agent.useWebhook) {
+        dispatch(loadWebhook(props.params.id));
+      }
     },
     onRemoveFallback: (fallbackIndex) => {
       dispatch(removeAgentFallback(fallbackIndex));
