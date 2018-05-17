@@ -59,6 +59,10 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.domain_classifier_threshold',
     defaultMessage: 'Domain Recognition Threshold',
   },
+  domainClassifierThresholdDescription: {
+    id: 'boilerplate.containers.AgentPage.create_agent.domain_classifier_threshold_description',
+    defaultMessage: 'This threshold determines how confident your agent has to be that a user\'s request matches a domain inside the agent. Requests not meeting the threshold will use the fallback responses below.'
+  },
   importAgent: {
     id: 'boilerplate.containers.AgentPage.create_agent.import_agent',
     defaultMessage: 'Import agent from backup',

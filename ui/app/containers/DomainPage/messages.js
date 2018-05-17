@@ -37,7 +37,7 @@ export default defineMessages({
   },
   intentThresholdDescription: {
     id: 'boilerplate.containers.DomainPage.create_domain.intent_threshold_description',
-    defaultMessage: 'The intent recognition threshold is a value that determines how confident your agent has to be that a user\'s request matches an intent under this domain. The default value is 50. Setting this value higher will make the agent less likely to select an intent. Do so only if you have many examples specified for intents under this domain.'
+    defaultMessage: 'This threshold determines how confident your agent has to be that a user\'s request matches an intent inside the domain. Higher values are likely to fallback. Lower values are more likely to mis-classify.'
   },
   createButton: {
     id: 'boilerplate.containers.DomainPage.create_domain.create_button',

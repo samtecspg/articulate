@@ -215,6 +215,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             <br />
             <SliderInput
               label={messages.domainClassifierThreshold}
+              tooltip={messages.domainClassifierThresholdDescription.defaultMessage}
               min="0"
               max="100"
               value={(currentAgent.domainClassifierThreshold * 100).toString()}

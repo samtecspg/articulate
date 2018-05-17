@@ -498,7 +498,7 @@ injectGlobal`
       color: #00ca9f; }
 
   .backdrop {
-    background-color: #00ca9f; }
+    background-color: #4e4e4e; }
 
   .material-tooltip {
     max-width: 400px; }
