@@ -46,7 +46,6 @@ export function* getDomainIntents(payload) {
       yield put(domainIntentsLoadingError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      console.log(errObject);
       if (errObject.err.response.obj && errObject.err.response.obj.message){
         yield put(domainIntentsLoadingError({ message: errObject.err.response.obj.message }));
       }

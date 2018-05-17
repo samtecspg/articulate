@@ -69,6 +69,7 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
     const {
       columns,
       menu,
+      borderContainer,
       highlightRow,
       striped,
       showSearchInput,
@@ -78,7 +79,8 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
     } = this.props;
     let newColumns;
 
-    const classNames = ['border-container '];
+    const classNames = [];
+    if (borderContainer) classNames.push('border-container ');
     if (highlightRow) classNames.push('-highlight');
     if (striped) classNames.push('-striped');
     // If menu object is available then render a new cell
@@ -124,6 +126,7 @@ Table2.propTypes = {
 };
 
 Table2.defaultProps = {
+  borderContainer: true,
   highlightRow: true,
   striped: false,
   showPagination: true,

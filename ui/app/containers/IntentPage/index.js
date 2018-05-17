@@ -70,6 +70,7 @@ import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
 import Slots from './Components/Slots';
 import UserSayings from './Components/UserSayings';
+import Pagination from './Components/Pagination';
 
 import messages from './messages';
 import {
@@ -143,6 +144,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   state = {
+    entityTagged: false,
+    userExamplesPage: 0,
+    userExamplesPages: 0,
+    userExamplesShown: [],
+    userExampleFilter: '',
+    showUserExamplesPagination: false,
     editMode: false,
     displayModal: false,
     clickedSave: false,
@@ -152,9 +159,16 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     webhookPayloadJustOpen: false,
   };
 
+  componentWillMount(){
+    this.props.resetForm();
+  }
+
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'intentEdit');
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+    this.setState({
+      userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize)
+    });
   }
 
   componentWillUpdate(nextProps) {
@@ -210,6 +224,47 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   componentDidUpdate(prevProps, prevState, prevContext) {
+    //If an example is added or removed then update the table to add/remove the new example
+    if (prevProps.intent.examples.length !== this.props.intent.examples.length){
+      this.setState({
+        userExamplesPages: Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize),
+        userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize),
+        showUserExamplesPagination: this.props.intent.examples.length > this.props.defaultUserExamplesPageSize
+      });
+    }
+    //if the filter changed filter the examples and slice the result. If the user removed the input show the first 10 examples
+    if (prevState.userExampleFilter !== this.state.userExampleFilter){
+      if (this.state.userExampleFilter === ''){
+        this.setState({
+          userExamplesPage: 0,
+          userExamplesPages: Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize),
+          userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize),
+          showUserExamplesPagination: this.props.intent.examples.length > this.props.defaultUserExamplesPageSize
+        });
+      }
+      else {
+        this.setState({
+          userExamplesPage: 0,
+          userExamplesPages: Math.ceil(this.props.intent.examples.filter((example) => {
+            return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
+          }).length/this.props.defaultUserExamplesPageSize),
+          userExamplesShown: this.props.intent.examples.filter((example) => {
+            return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
+          }).slice(0, this.props.defaultUserExamplesPageSize),
+          showUserExamplesPagination: this.props.intent.examples.filter((example) => {
+            return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
+          }).length > this.props.defaultUserExamplesPageSize
+        });
+      }
+    }
+    //if the user just tagged an entity update the examples list to render the new tagged entity
+    console.log(this.state);
+    if (this.state.entityTagged){
+      this.setState({
+        entityTagged: false,
+        userExamplesShown: this.props.intent.examples.slice(this.state.userExamplesPage, this.props.defaultUserExamplesPageSize)
+      });
+    }
     if (this.props.route !== prevProps.route) {
       this.setEditMode(this.props.route.name === 'intentEdit');
     }
@@ -290,6 +345,9 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   handleOnTagEntity(userSays, entity, entityName, evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.setState({
+      entityTagged: true
+    });
     this.props.onTagEntity(userSays, entity, entityName);
     this.props.onAddSlot(this.generateSlotObject({ entity: entity.entityName }));
   }
@@ -403,22 +461,74 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <FormTextInput
                 placeholder={messages.userSaysSearch.defaultMessage}
                 s={4}
+                onChange={(evt) => {
+                  this.setState({
+                    userExampleFilter: evt.target.value
+                  })
+                }}
               />
             </Row>
           </Form>
 
           {agentEntities && (intent.examples.length > 0) ?
-            <TableContainer id="userSayingsTable" quotes>
-              <Table>
-                <UserSayings
-                  examples={intent.examples}
-                  onRemoveExample={this.props.onRemoveExample}
-                  setWindowSelection={this.props.setWindowSelection}
-                  onTagEntity={this.handleOnTagEntity}
-                  agentEntities={agentEntities}
+            <div>
+              {
+                this.state.userExamplesShown.length > 0 ?
+                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
+                  <Table>
+                    <UserSayings
+                      examples={this.state.userExamplesShown}
+                      onRemoveExample={this.props.onRemoveExample}
+                      setWindowSelection={this.props.setWindowSelection}
+                      onTagEntity={this.handleOnTagEntity}
+                      agentEntities={agentEntities}
+                    />
+                  </Table>
+                </TableContainer> :
+                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
+                  <Table>
+                    <tbody>
+                      <tr style={{ width: '100%' }}>
+                        <td style={{ width: '100%', display: 'inline-block' }}>
+                          <div>
+                            <span>Nothing found...</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </TableContainer>
+              }
+              {
+              this.state.showUserExamplesPagination ?
+              <Row>
+                <Pagination
+                  pageText='Page'
+                  page={this.state.userExamplesPage}
+                  pages={this.state.userExamplesPages}
+                  canPrevious={this.state.userExamplesPage !== 0}
+                  canNext={this.state.userExamplesPage <= this.state.userExamplesPages}
+                  previousText='Previous'
+                  nextText='Next'
+                  ofText='of'
+                  style={{
+                    borderTop: '0px'
+                  }}
+                  showPageJump={true}
+                  onPageChange={(pageIndex) => {
+                    this.setState({
+                      userExamplesPage: pageIndex,
+                      userExamplesShown: this.state.userExampleFilter.length > 0 ? intent.examples.filter((example) => {
+                        return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
+                      }).slice(pageIndex * this.props.defaultUserExamplesPageSize, pageIndex * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize) :
+                      intent.examples.slice(pageIndex * this.props.defaultUserExamplesPageSize, pageIndex * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize)
+                    });
+                  }}
                 />
-              </Table>
-            </TableContainer>
+              </Row>
+              : null
+              }
+            </div>
             : null
           }
 
@@ -624,6 +734,10 @@ IntentPage.propTypes = {
   setWindowSelection: React.PropTypes.func,
   onEditMode: React.PropTypes.func,
 };
+
+IntentPage.defaultProps = {
+  defaultUserExamplesPageSize: 10
+}
 
 export function mapDispatchToProps(dispatch) {
   return {
