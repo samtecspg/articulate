@@ -23,7 +23,6 @@ function compareEntities(a, b) {
 }
 
 export function UserSayingsRows(props) {
-
   const rows = props.examples.map((value, valueIndex) => {
     const textValue = value['userSays'];
     let formattedText = null;
@@ -43,7 +42,7 @@ export function UserSayingsRows(props) {
               onClickFunction={props.onTagEntity}
               createEntity={true}
             />
-            <a onClick={props.onRemoveExample.bind(null, valueIndex)}>
+            <a onClick={props.onRemoveExample.bind(null, props.page * props.defaultPageSize + valueIndex)}>
               <Icon className="table-delete-row">delete</Icon>
             </a>
           </div>
@@ -60,6 +59,8 @@ export function UserSayingsRows(props) {
 }
 
 UserSayingsRows.propTypes = {
+  page: React.PropTypes.number,
+  defaultPageSize: React.PropTypes.number,
   examples: React.PropTypes.array,
   onRemoveExample: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
