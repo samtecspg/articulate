@@ -55,6 +55,10 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.domain_classifier_threshold',
     defaultMessage: 'Domain Recognition Threshold',
   },
+  domainClassifierThresholdDescription: {
+    id: 'boilerplate.containers.AgentPage.create_agent.domain_classifier_threshold_description',
+    defaultMessage: 'The domain recognition threshold is a value that determines how confident your agent has to be that a user\'s request matches a domain inside the agent. The default value is 50. Setting this value higher will make the agent less likely to select a domain. Do so only if you have many examples specified for intents under this agent.'
+  },
   importAgent: {
     id: 'boilerplate.containers.AgentPage.create_agent.import_agent',
     defaultMessage: 'Import agent from backup',

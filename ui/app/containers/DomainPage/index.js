@@ -160,6 +160,7 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
           <Row>
             <SliderInput
               label={messages.intentThreshold}
+              tooltip={messages.intentThresholdDescription.defaultMessage}
               min="0"
               max="100"
               name="intentThreshold"
