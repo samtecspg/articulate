@@ -226,11 +226,25 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   componentDidUpdate(prevProps, prevState, prevContext) {
     //If an example is added or removed then update the table to add/remove the new example
     if (prevProps.intent.examples.length !== this.props.intent.examples.length){
-      this.setState({
-        userExamplesPages: Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize),
-        userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize),
-        showUserExamplesPagination: this.props.intent.examples.length > this.props.defaultUserExamplesPageSize
-      });
+      if (prevProps.intent.examples.length < this.props.intent.examples.length){
+        this.setState({
+          userExamplesPage: 0,
+          userExamplesPages: Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize),
+          userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize),
+          showUserExamplesPagination: this.props.intent.examples.length > this.props.defaultUserExamplesPageSize
+        });
+      }
+      else {
+          const oldNumOfPages = Math.ceil(prevProps.intent.examples.length/this.props.defaultUserExamplesPageSize);
+          const newNumOfPages = Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize);
+          const currentPage = oldNumOfPages > newNumOfPages ? this.state.userExamplesPage - 1 : this.state.userExamplesPage;
+        this.setState({
+          userExamplesPage: currentPage,
+          userExamplesPages: newNumOfPages,
+          userExamplesShown: this.props.intent.examples.slice(currentPage * this.props.defaultUserExamplesPageSize, currentPage * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize),
+          showUserExamplesPagination: this.props.intent.examples.length > this.props.defaultUserExamplesPageSize
+        });
+      }
     }
     //if the filter changed filter the examples and slice the result. If the user removed the input show the first 10 examples
     if (prevState.userExampleFilter !== this.state.userExampleFilter){
@@ -258,7 +272,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       }
     }
     //if the user just tagged an entity update the examples list to render the new tagged entity
-    console.log(this.state);
     if (this.state.entityTagged){
       this.setState({
         entityTagged: false,
@@ -477,6 +490,8 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
                   <Table>
                     <UserSayings
+                      page={this.state.userExamplesPage}
+                      defaultPageSize={this.props.defaultUserExamplesPageSize}
                       examples={this.state.userExamplesShown}
                       onRemoveExample={this.props.onRemoveExample}
                       setWindowSelection={this.props.setWindowSelection}
