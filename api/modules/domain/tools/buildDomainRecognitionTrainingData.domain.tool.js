@@ -35,7 +35,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
                     const entitiesList = intentExample.entities;
 
                     if (entitiesList && entitiesList.length > 0){
-                        const entitiesOfIntent = _.map(entitiesList, 'entity');
+                        /*const entitiesOfIntent = _.map(entitiesList, 'entity');
                         const keyOfEntities = entitiesOfIntent.join('-');
                         let combinationsForThisIntent = entitiesCombinations[keyOfEntities];
 
@@ -77,7 +77,28 @@ const buildDomainRecognitionTrainingData = (server, agentId, cb) => {
                             return buildedIntent;
                         });
 
-                        return buildedIntents;
+                        return buildedIntents;*/
+
+
+                        const newEntitiesList = [];
+
+                        intentExample.entities.forEach(tempEntity => {
+
+                            newEntitiesList.push({
+                                start: tempEntity.start,
+                                end: tempEntity.end,
+                                value: tempEntity.value,
+                                entity: tempEntity.entity
+                            });
+                        });
+
+                        const buildedIntent = {
+                            text: intentExample.userSays,
+                            intent: domain.domainName,
+                            entities: newEntitiesList
+                        };
+
+                        return buildedIntent;
                     }
 
                     const buildedIntent = {
