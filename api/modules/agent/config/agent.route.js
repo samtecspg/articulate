@@ -260,6 +260,16 @@ const AgentRoutes = [
             validate: AgentValidator.deleteWebhook,
             handler: AgentController.deleteWebhook
         }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/train',
+        config: {
+            description: 'Train the specified agent',
+            tags: ['api'],
+            validate: AgentValidator.train,
+            handler: AgentController.train
+        }
     }
 ];
 

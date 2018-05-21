@@ -18,6 +18,11 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
                 if (err){
                     return cb(err);
                 }
+                if (trainingSet.numberOfIntents === 0){
+                    const error = {};
+                    error.noTrainingData = true;
+                    return cb(error);
+                }
                 return cb(null, trainingSet);
             });
         },
@@ -84,8 +89,12 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
     ], (err) => {
 
         if (err){
+            if (err.noTrainingData){
+                return callback(null);
+            }
             return callback(err);
         }
+
         const trainingDate = new Date().toISOString();
         const updateDomainPayload = {
             lastTraining: trainingDate,

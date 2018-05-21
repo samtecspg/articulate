@@ -4,8 +4,8 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const IntentTools = require('../tools');
-const DomainTools = require('../../domain/tools');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
@@ -180,27 +180,19 @@ module.exports = (request, reply) => {
 
         const resultIntent = result.intent;
 
-        Async.series([
-            Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, resultIntent, agentId, domainId, null),
-            (cb) => {
-
-                Async.parallel([
-                    Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
-                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
-                ], (err) => {
-
-                    if (err) {
-                        return cb(err);
-                    }
-                    return cb(null);
-                });
-            }
-        ], (err) => {
+        IntentTools.updateEntitiesDomainTool(server, redis, resultIntent, agentId, domainId, null, (err) => {
 
             if (err) {
                 return reply(err);
             }
-            return reply(resultIntent);
+            redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred updating the agent status.');
+                    return reply(error);
+                }
+                return reply(resultIntent);
+            });
         });
     });
 };

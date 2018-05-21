@@ -22,6 +22,7 @@ const AddWebhookController = require('./addWebhook.agent.controller');
 const FindWebhookController = require('./findWebhook.agent.controller');
 const UpdateWebhookController = require('./updateWebhook.agent.controller');
 const DeleteWebhookController = require('./deleteWebhook.agent.controller');
+const TrainController = require('./train.agent.controller');
 
 
 const AgentController = {
@@ -70,7 +71,9 @@ const AgentController = {
 
     updateWebhook: UpdateWebhookController,
 
-    deleteWebhook: DeleteWebhookController
+    deleteWebhook: DeleteWebhookController,
+
+    train: TrainController
 };
 
 module.exports = AgentController;

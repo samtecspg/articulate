@@ -4,9 +4,9 @@ const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 const IntentTools = require('../tools');
-const DomainTools = require('../../domain/tools');
 const _ = require('lodash');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, cb) => {
 
@@ -83,30 +83,20 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                     requiresTraining =  requiresTraining || updateData.intentName !== currentIntent.intentName;
                 }
                 if (requiresTraining){
-                    Async.series([
-                        Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, resultIntent, agentId, domainId, oldExamples),
-                        (callb) => {
-
-                            Async.parallel([
-                                Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
-                                Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
-                            ], (err) => {
-
-                                if (err){
-                                    return callb(err);
-                                }
-                                return callb(null);
-                            });
-                        }
-                    ], (err) => {
+                    IntentTools.updateEntitiesDomainTool(server, redis, resultIntent, agentId, domainId, oldExamples, (err) => {
 
                         if (err) {
                             return callback(err);
                         }
+                        redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
 
-                        return callback(null, resultIntent);
+                            if (err){
+                                const error = Boom.badImplementation('An error occurred updating the agent status.');
+                                return callback(err);
+                            }
+                            return callback(null, resultIntent);
+                        });
                     });
-
                 }
                 else {
                     return callback(null, resultIntent);

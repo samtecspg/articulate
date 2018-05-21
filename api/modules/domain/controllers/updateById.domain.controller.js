@@ -4,6 +4,8 @@ const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 const Flat = require('flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
+
 
 const updateDataFunction = (redis, domainId, currentDomain, updateData, cb) => {
 
@@ -202,13 +204,13 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         if (requiresRetrain){
-            server.inject(`/domain/${domainId}/train`, (res) => {
+            redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
 
-                if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error occurred retraining the domain ${result.domain} after the update`);
-                    reply(error);
+                if (err){
+                    const error = Boom.badImplementation('An error occurred updating the agent status.');
+                    return reply(error);
                 }
-                reply(res.result);
+                reply(Cast(result, 'domain'));
             });
         }
         else {

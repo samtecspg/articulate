@@ -20,7 +20,7 @@ module.exports = (object, type) => {
             object.intentThreshold = parseFloat(object.intentThreshold);
             break;
         case 'entity':
-            if (object.regex === '' || !object.regex){
+            if (object.regex === '' || !object.regex || object.regex === 'null'){
                 object.regex = null;
             }
             break;

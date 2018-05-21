@@ -4,8 +4,8 @@ const Boom = require('boom');
 const Flat = require('flat');
 const _ = require('lodash');
 const IntentTools = require('../../intent/tools');
-const DomainTools = require('../../domain/tools');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
@@ -52,6 +52,7 @@ module.exports = (request, reply) => {
             delete clonedAgent.domains;
             delete clonedAgent.webhook;
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
+            clonedAgent.status = Status.outOfDate;
             const flatAgent = RemoveBlankArray(Flat(clonedAgent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
@@ -361,14 +362,7 @@ module.exports = (request, reply) => {
                             return reply(errIntents, null);
                         }
                         domainResult.intents = resultIntents;
-
-                        DomainTools.retrainModelTool(server, rasa, agent.language, agentResult.agentName, domainResult.domainName, domainResult.id, (errTraining) => {
-
-                            if (errTraining){
-                                return callbackAddDomains(errTraining);
-                            }
-                            return callbackAddDomains(null, domainResult);
-                        });
+                        return callbackAddDomains(null, domainResult);
                     });
                 });
             }, (errDomains, resultDomains) => {
@@ -378,29 +372,23 @@ module.exports = (request, reply) => {
                 }
                 agentResult.domains = resultDomains;
 
-                DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agentResult.agentName, agentResult.id, (errTraining) => {
+                if (agent.useWebhook){
+                    const webhook = Object.assign({ id: agentId }, agent.webhook);
+                    const flatWebhook = RemoveBlankArray(Flat(webhook));
+                    redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
 
-                    if (errTraining){
-                        return reply(errTraining);
-                    }
-                    if (agent.useWebhook){
-                        const webhook = Object.assign({ id: agentId }, agent.webhook);
-                        const flatWebhook = RemoveBlankArray(Flat(webhook));
-                        redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
-
-                            if (err){
-                                const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
-                                return reply(error);
-                            }
-                            webhook.agent = agent.agentName;
-                            agentResult.webhook = webhook;
-                            return reply(agentResult);
-                        });
-                    }
-                    else {
+                        if (err){
+                            const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
+                            return reply(error);
+                        }
+                        webhook.agent = agent.agentName;
+                        agentResult.webhook = webhook;
                         return reply(agentResult);
-                    }
-                });
+                    });
+                }
+                else {
+                    return reply(agentResult);
+                }
             });
         });
     });

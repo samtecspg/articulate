@@ -178,7 +178,9 @@ class AgentValidate {
                     timezone: AgentSchema.timezone,
                     useWebhook: AgentSchema.useWebhook,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
-                    fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent'))
+                    fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
+                    status: AgentSchema.status,
+                    lastTraining: AgentSchema.lastTraining
                 };
             })()
         };
@@ -411,7 +413,16 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema.id.required().description('Id of the intent')
+                    id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+
+        this.train = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };

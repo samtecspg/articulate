@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
@@ -44,6 +45,7 @@ module.exports = (request, reply) => {
         agent: (cb) => {
 
             agent = Object.assign({ id: agentId }, agent);
+            agent.status = Status.ready;
             const flatAgent = RemoveBlankArray(Flat(agent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
@@ -60,12 +62,5 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         return reply(result.agent);
-        /*AgentTools.trainSystemERModel(server, rasa, result.agent.language, result.agent.agentName, (errTraining) => {
-
-            if (errTraining){
-                return reply(errTraining, null);
-            }
-            return reply(result.agent);
-        });*/
     });
 };
