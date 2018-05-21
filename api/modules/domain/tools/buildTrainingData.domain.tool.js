@@ -27,14 +27,32 @@ const buildTrainingData = (server, domainId, callback) => {
                 }));
 
                 if (entitiesList && entitiesList.length > 0){
-                    const entitiesOfIntent = _.map(entitiesList, 'entity');
+  /*                  const entitiesOfIntent = _.map(entitiesList, 'entity');
                     const keyOfEntities = entitiesOfIntent.join('-');
                     let combinationsForThisIntent = entitiesCombinations[keyOfEntities];
 
                     //If there is just one entity in the text of this intent, flat the array of combinations
                     combinationsForThisIntent = combinationsForThisIntent.length === 1 ? _.flatten(combinationsForThisIntent) : combinationsForThisIntent;
+*/
+                    const newEntitiesList = [];
 
-                    const buildedIntents = _.map(combinationsForThisIntent, (combination) => {
+                    intentExample.entities.forEach(tempEntity => {
+
+                        newEntitiesList.push({
+                            start: tempEntity.start,
+                            end: tempEntity.end,
+                            value: tempEntity.value,
+                            entity: tempEntity.entity
+                        });
+                    });
+
+                    const buildedIntent = {
+                        text: intentExample.userSays,
+                        intent: intent.intentName,
+                        entities: newEntitiesList
+                    };
+
+                    /*const buildedIntents = _.map(combinationsForThisIntent, (combination) => {
 
                         let intentText = intentExample.userSays;
                         const lowestStart = entitiesList[0].start;
@@ -67,9 +85,9 @@ const buildTrainingData = (server, domainId, callback) => {
                         };
 
                         return buildedIntent;
-                    });
+                    });*/
 
-                    return buildedIntents;
+                    return buildedIntent;
                 }
 
                 const buildedIntent = {
