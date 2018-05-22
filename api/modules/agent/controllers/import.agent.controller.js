@@ -162,6 +162,8 @@ module.exports = (request, reply) => {
 
                         let clonedDomain = _.cloneDeep(domain);
                         delete clonedDomain.intents;
+                        delete clonedDomain.model; //This would make that the training process don't try to unload a non existent model
+                        delete clonedDomain.lastTraining;
                         clonedDomain = Object.assign({ id: domainId, agent: agent.agentName }, clonedDomain);
                         const flatDomain = RemoveBlankArray(Flat(clonedDomain));
                         redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
