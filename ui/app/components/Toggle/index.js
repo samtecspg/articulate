@@ -21,7 +21,7 @@ export function Toggle(props) { // eslint-disable-line react/prefer-stateless-fu
           :
           props.label ? props.label + ":" : null)
         }
-        <input type="checkbox" onChange={props.onChange} checked={props.checked ? true : false} />
+        <input type="checkbox" disabled={props.disabled} onChange={props.onChange} checked={props.checked ? true : false} />
         <span className="lever"></span>
         Enable
       </label>
@@ -39,7 +39,8 @@ Toggle.propTypes = {
 };
 
 Toggle.defaultProps = {
-  strongLabel: true
+  strongLabel: true,
+  disabled: false
 }
 
 export default Toggle;

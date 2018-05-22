@@ -57,7 +57,7 @@ export default defineMessages({
   },
   expandedTrainingData: {
     id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data',
-    defaultMessage: 'Genereate extra training examples',
+    defaultMessage: 'Generate extra training examples',
   },
   expandedTrainingDataTooltip: {
     id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data_tooltip',
