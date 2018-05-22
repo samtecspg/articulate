@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import {
   Col,
   Row,
+  Icon,
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -17,6 +18,8 @@ import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
+import Toggle from '../../components/Toggle';
+import Tooltip from '../../components/Tooltip';
 
 import {
   createDomain,
@@ -170,6 +173,28 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
             />
           </Row>
 
+          <Form>
+            <Row>
+              <Toggle
+                inline
+                strongLabel={false}
+                label={messages.expandedTrainingData.defaultMessage}
+                onChange={this.props.onChangeDomainData.bind(null, { field: 'extraTrainingData' })}
+                checked={domainProps.domain.extraTrainingData}
+              />
+              &nbsp;
+              <Tooltip
+                tooltip={messages.expandedTrainingDataTooltip.defaultMessage}
+                delay={50}
+                position="top"
+              >
+                <a>
+                  <Icon>help_outline</Icon>
+                </a>
+              </Tooltip>
+            </Row>
+          </Form>
+
         </Content>
 
       </div>
@@ -202,8 +227,11 @@ DomainPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
 
-    onChangeDomainData: (data) => {
+    onChangeDomainData: (data, evt) => {
       dispatch(resetStatusFlags());
+      if (data.field === 'extraTrainingData'){
+        data.value = evt.target.checked;
+      }
       dispatch(changeDomainData(data));
     },
     onCreate: () => {

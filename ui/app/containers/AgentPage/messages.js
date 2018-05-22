@@ -124,7 +124,15 @@ export default defineMessages({
     defaultMessage: 'The specified timezone is not valid',
   },
   useWebhook: {
-    id: 'boilerplate.containers.IntentPage.create_agent.use_webhook',
+    id: 'boilerplate.containers.AgentPage.create_agent.use_webhook',
     defaultMessage: 'Webhook',
+  },
+  expandedTrainingData: {
+    id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data',
+    defaultMessage: 'Genereate extra training examples',
+  },
+  expandedTrainingDataTooltip: {
+    id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data_tooltip',
+    defaultMessage: 'On small agents this can improve classification, as your agent grows this may increase training time.',
   }
 });

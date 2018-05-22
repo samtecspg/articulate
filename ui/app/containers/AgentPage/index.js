@@ -4,6 +4,7 @@ import {
   Col,
   Input,
   Row,
+  Icon,
 } from 'react-materialize';
 
 import brace from 'brace';
@@ -30,6 +31,7 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 import Toggle from '../../components/Toggle';
+import Tooltip from '../../components/Tooltip';
 
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
@@ -374,8 +376,30 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
           <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el;}}>
           </div>
 
+          <Form style={{marginTop: '30px'}}>
+            <Row>
+              <Toggle
+                inline
+                strongLabel={false}
+                label={messages.expandedTrainingData.defaultMessage}
+                onChange={this.props.onChangeAgentData.bind(null, 'extraTrainingData')}
+                checked={agent.extraTrainingData}
+              />
+              &nbsp;
+              <Tooltip
+                tooltip={messages.expandedTrainingDataTooltip.defaultMessage}
+                delay={50}
+                position="top"
+              >
+                <a>
+                  <Icon>help_outline</Icon>
+                </a>
+              </Tooltip>
+            </Row>
+          </Form>
+
           {
-            agent.useWebhook ? <ContentSubHeader title={messages.webhook} /> : null
+            agent.useWebhook ? <div><br/><ContentSubHeader title={messages.webhook} /></div> : null
           }
           {
             agent.useWebhook ?
@@ -470,7 +494,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     onChangeAgentData: (field, evt) => {
       dispatch(resetStatusFlags());
-      if (field === 'useWebhook'){
+      if (field === 'useWebhook' || field === 'extraTrainingData'){
         evt.target.value = evt.target.checked;
       }
       dispatch(changeAgentData({ value: evt.target.value, field }));

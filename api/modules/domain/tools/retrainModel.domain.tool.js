@@ -7,8 +7,9 @@ const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.domain.tool');
 const YAML = require('json2yaml');
 
-const retrainModel = (server, rasa, language, agentName, domainName, domainId, callback) => {
+const retrainModel = (server, rasa, language, agentName, domainName, domainId, extraTrainingData, callback) => {
 
+<<<<<<< HEAD
     let model = Guid.create().toString();
     Async.waterfall([
         (cb) => {
@@ -87,6 +88,9 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, c
             });
         }
     ], (err) => {
+=======
+    BuildTrainingData(server, domainId, extraTrainingData, (err, trainingSet) => {
+>>>>>>> 77ca6eb... Patch to disable expanded training data
 
         if (err){
             if (err.noTrainingData){

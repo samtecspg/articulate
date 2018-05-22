@@ -8,7 +8,7 @@ const _ = require('lodash');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 const Status = require('../../../helpers/status.json');
 
-const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, cb) => {
+const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, extraTrainingData, cb) => {
 
     const oldExamples = _.cloneDeep(currentIntent.examples);
     if (updateData.examples){
@@ -125,6 +125,7 @@ module.exports = (request, reply) => {
     let agent = null;
     let agentId = null;
     let domainId = null;
+    let extraTrainingData = null;
     const updateData = request.payload;
 
     const server = request.server;
@@ -197,6 +198,22 @@ module.exports = (request, reply) => {
         },
         (currentIntent, cb) => {
 
+            server.inject(`/domain/${domainId}`, (res) => {
+
+                if (res.statusCode !== 200) {
+                    if (res.statusCode === 400) {
+                        const errorNotFound = Boom.notFound(res.result.message);
+                        return cb(errorNotFound);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the domain data');
+                    return cb(error, null);
+                }
+                extraTrainingData = res.result.extraTrainingData;
+                return cb(null, currentIntent);
+            });
+        },
+        (currentIntent, cb) => {
+
             if (updateData.examples){
                 IntentTools.validateEntitiesTool(redis, agentId, updateData.examples, (err) => {
 
@@ -259,7 +276,7 @@ module.exports = (request, reply) => {
                     },
                     (callback) => {
 
-                        updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
+                        updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, extraTrainingData, (err, result) => {
 
                             if (err){
                                 const error = Boom.badImplementation('An error occurred adding the intent data.');
@@ -277,7 +294,7 @@ module.exports = (request, reply) => {
                 });
             }
             else {
-                updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
+                updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, extraTrainingData, (err, result) => {
 
                     if (err){
                         const error = Boom.badImplementation('An error occurred adding the intent data.');

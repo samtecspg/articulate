@@ -65,7 +65,7 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            DomainTools.retrainModelTool(server, rasa, agent.language, domain.agent, domain.domainName, domainId, (err) => {
+            DomainTools.retrainModelTool(server, rasa, agent.language, domain.agent, domain.domainName, domainId, domain.extraTrainingData, (err) => {
 
                 if (err) {
                     return callback(err);

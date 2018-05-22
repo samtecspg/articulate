@@ -6,7 +6,7 @@ import Row from '../Row';
 function ContentSubHeader(props) { // eslint-disable-line react/prefer-stateless-function
 
   return (
-    <Row>
+    <Row style={props.rowStyle}>
       <header className="sub-title">
         <h1>
           <FormattedMessage {...props.title} />
@@ -19,6 +19,7 @@ function ContentSubHeader(props) { // eslint-disable-line react/prefer-stateless
 ContentSubHeader.propTypes = {
   title: PropTypes.object,
   subTitle: PropTypes.object,
+  rowStyle: PropTypes.object
 };
 
 export default ContentSubHeader;

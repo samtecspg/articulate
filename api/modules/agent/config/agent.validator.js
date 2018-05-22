@@ -157,7 +157,8 @@ class AgentValidate {
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
-                    fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent'))
+                    fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
+                    extraTrainingData: AgentSchema.extraTrainingData
                 };
             })()
         };
@@ -180,7 +181,8 @@ class AgentValidate {
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
                     status: AgentSchema.status,
-                    lastTraining: AgentSchema.lastTraining
+                    lastTraining: AgentSchema.lastTraining,
+                    extraTrainingData: AgentSchema.extraTrainingData
                 };
             })()
         };
@@ -291,6 +293,7 @@ class AgentValidate {
                     useWebhook: AgentSchema.useWebhook.required(),
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining,
+                    extraTrainingData: AgentSchema.extraTrainingData,
                     webhook: {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
@@ -314,6 +317,7 @@ class AgentValidate {
                         model: DomainSchema.model,
                         status: DomainSchema.status,
                         lastTraining: DomainSchema.lastTraining,
+                        extraTrainingData: DomainSchema.extraTrainingData,
                         intents: Joi.array().items({
                             intentName: IntentSchema.intentName.required(),
                             examples: Joi.array().items({

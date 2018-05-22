@@ -10,6 +10,7 @@ module.exports = (request, reply) => {
     let intent;
     let agentId;
     let domainId;
+    let extraTrainingData = null;
     const server = request.server;
     const redis = server.app.redis;
 
@@ -120,6 +121,22 @@ module.exports = (request, reply) => {
                                     });
                                 }, nextIntent);
                             }, callbackRemoveFromEntitiesList);
+                        },
+                        (callbackGetExtraTrainingDataFlag) => {
+
+                            server.inject(`/domain/${domainId}`, (res) => {
+
+                                if (res.statusCode !== 200) {
+                                    if (res.statusCode === 400) {
+                                        const errorNotFound = Boom.notFound(res.result.message);
+                                        return callbackGetExtraTrainingDataFlag(errorNotFound);
+                                    }
+                                    const error = Boom.create(res.statusCode, 'An error occurred getting the domain data');
+                                    return callbackGetExtraTrainingDataFlag(error, null);
+                                }
+                                extraTrainingData = res.result.extraTrainingData;
+                                return callbackGetExtraTrainingDataFlag(null);
+                            });
                         }
                     ], (err, result) => {
 
