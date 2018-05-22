@@ -26,6 +26,7 @@ const initialState = Immutable({
       'I\'m still learning to speak with humans. What you mean?',
     ],
     useWebhook: false,
+    extraTrainingData: false,
   },
   webhookData: {
     agent: '',
@@ -63,9 +64,16 @@ function agentReducer(state = initialState, action) {
               .set('touched', true);
           }
           else {
-            return state
-              .setIn(['agentData', action.payload.field], action.payload.value)
-              .set('touched', true);
+            if (action.payload.field === 'extraTrainingData'){
+              return state
+                .setIn(['agentData', action.payload.field], action.payload.value === 'true')
+                .set('touched', true);
+            }
+            else {
+              return state
+                .setIn(['agentData', action.payload.field], action.payload.value)
+                .set('touched', true);
+            }
           }
         }
       }

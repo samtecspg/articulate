@@ -7,12 +7,12 @@ const YAML = require('json2yaml');
 
 const BuildDomainRecognitionTrainingData = require('./buildDomainRecognitionTrainingData.domain.tool');
 
-const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agentId, callback) => {
+const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agentId, extraTrainingData, callback) => {
 
     Async.waterfall([
         (cb) => {
 
-            BuildDomainRecognitionTrainingData(server, agentId, (err, trainingSet) => {
+            BuildDomainRecognitionTrainingData(server, agentId, extraTrainingData, (err, trainingSet) => {
 
                 if (err){
                     return cb(err);

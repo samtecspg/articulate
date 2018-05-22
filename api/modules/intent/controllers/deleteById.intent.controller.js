@@ -11,6 +11,7 @@ module.exports = (request, reply) => {
     let agent;
     let agentId;
     let domainId;
+    let extraTrainingData = null;
     const server = request.server;
     const redis = server.app.redis;
     const rasa = server.app.rasa;
@@ -138,6 +139,22 @@ module.exports = (request, reply) => {
                                     });
                                 }, nextIntent);
                             }, callbackRemoveFromEntitiesList);
+                        },
+                        (callbackGetExtraTrainingDataFlag) => {
+
+                            server.inject(`/domain/${domainId}`, (res) => {
+
+                                if (res.statusCode !== 200) {
+                                    if (res.statusCode === 400) {
+                                        const errorNotFound = Boom.notFound(res.result.message);
+                                        return callbackGetExtraTrainingDataFlag(errorNotFound);
+                                    }
+                                    const error = Boom.create(res.statusCode, 'An error occurred getting the domain data');
+                                    return callbackGetExtraTrainingDataFlag(error, null);
+                                }
+                                extraTrainingData = res.result.extraTrainingData;
+                                return callbackGetExtraTrainingDataFlag(null);
+                            });
                         }
                     ], (err, result) => {
 
@@ -165,8 +182,8 @@ module.exports = (request, reply) => {
             (callback) => {
 
                 Async.parallel([
-                    Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, intent.agent, intent.domain, domainId),
-                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, intent.agent, agentId)
+                    Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, intent.agent, intent.domain, domainId, extraTrainingData),
+                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, intent.agent, agentId, agent.extraTrainingData)
                 ], (err) => {
 
                     if (err){

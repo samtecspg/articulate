@@ -7,13 +7,13 @@ const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.domain.tool');
 const YAML = require('json2yaml');
 
-const retrainModel = (server, rasa, language, agentName, domainName, domainId, callback) => {
+const retrainModel = (server, rasa, language, agentName, domainName, domainId, extraTrainingData, callback) => {
 
     let model = Guid.create().toString();
     Async.waterfall([
         (cb) => {
 
-            BuildTrainingData(server, domainId, (err, trainingSet) => {
+            BuildTrainingData(server, domainId, extraTrainingData, (err, trainingSet) => {
 
                 if (err){
                     return cb(err);

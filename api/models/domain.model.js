@@ -11,7 +11,8 @@ class DomainModel {
             enabled: Joi.boolean(),
             intentThreshold: Joi.number(),
             lastTraining: Joi.date(),
-            model: Joi.string().trim()
+            model: Joi.string().trim(),
+            extraTrainingData: Joi.boolean()
         };
     };
 }

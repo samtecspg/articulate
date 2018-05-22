@@ -51,4 +51,12 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.success_message_edit',
     defaultMessage: 'Domain updated',
   },
+  expandedTrainingData: {
+    id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data',
+    defaultMessage: 'Genereate extra training examples',
+  },
+  expandedTrainingDataTooltip: {
+    id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data_tooltip',
+    defaultMessage: 'On small agents this can improve classification, as your agent grows this may increase training time.',
+  }
 });
