@@ -231,6 +231,19 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             : null
           }
 
+          <Form style={{marginTop: '30px'}}>
+            <Row>
+              <Toggle
+                disabled
+                inline
+                strongLabel={false}
+                label={messages.expandedTrainingData.defaultMessage}
+                checked={currentAgent.extraTrainingData}
+                onChange={() => {}}
+              />
+            </Row>
+          </Form>
+
           {
             currentAgent.useWebhook && webhook.agent !== '' ? <ContentSubHeader title={messages.webhook} /> : null
           }
