@@ -356,7 +356,7 @@ module.exports = (request, reply) => {
                         }
                         domainResult.intents = resultIntents;
 
-                        DomainTools.retrainModelTool(server, rasa, agent.language, agentResult.agentName, domainResult.domainName, domainResult.id, (errTraining) => {
+                        DomainTools.retrainModelTool(server, rasa, agent.language, agentResult.agentName, domainResult.domainName, domainResult.id, domainResult.extraTrainingData, (errTraining) => {
 
                             if (errTraining){
                                 return callbackAddDomains(errTraining);
@@ -372,7 +372,7 @@ module.exports = (request, reply) => {
                 }
                 agentResult.domains = resultDomains;
 
-                DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agentResult.agentName, agentResult.id, (errTraining) => {
+                DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agentResult.agentName, agentResult.id, agentResult.extraTrainingData, (errTraining) => {
 
                     if (errTraining){
                         return reply(errTraining);

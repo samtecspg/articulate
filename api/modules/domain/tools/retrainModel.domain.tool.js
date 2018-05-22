@@ -5,9 +5,9 @@ const Boom = require('boom');
 const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.domain.tool');
 
-const retrainModel = (server, rasa, language, agentName, domainName, domainId, callback) => {
+const retrainModel = (server, rasa, language, agentName, domainName, domainId, extraTrainingData, callback) => {
 
-    BuildTrainingData(server, domainId, (err, trainingSet) => {
+    BuildTrainingData(server, domainId, extraTrainingData, (err, trainingSet) => {
 
         if (err){
             return callback(err);

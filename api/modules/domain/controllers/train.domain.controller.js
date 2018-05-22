@@ -66,8 +66,8 @@ module.exports = (request, reply) => {
         (callback) => {
 
             Async.parallel([
-                Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, domain.agent, domain.domain, domainId),
-                Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, domain.agent, agentId)
+                Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, domain.agent, domain.domainName, domainId, domain.extraTrainingData),
+                Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, domain.agent, agentId, agent.extraTrainingData)
             ], (err) => {
 
                 if (err) {

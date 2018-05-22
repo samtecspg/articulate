@@ -9,6 +9,9 @@ module.exports = (object, type) => {
             if (typeof object.useWebhook !== 'boolean'){
                 object.useWebhook = object.useWebhook === 'true';
             }
+            if (typeof object.extraTrainingData !== 'boolean'){
+                object.extraTrainingData = object.extraTrainingData === 'true';
+            }
             object.domainClassifierThreshold = parseFloat(object.domainClassifierThreshold);
             break;
         case 'context':
@@ -16,6 +19,9 @@ module.exports = (object, type) => {
         case 'domain':
             if (typeof object.enabled !== 'boolean'){
                 object.enabled = object.enabled === 'true';
+            }
+            if (typeof object.extraTrainingData !== 'boolean'){
+                object.extraTrainingData = object.extraTrainingData === 'true';
             }
             object.intentThreshold = parseFloat(object.intentThreshold);
             break;

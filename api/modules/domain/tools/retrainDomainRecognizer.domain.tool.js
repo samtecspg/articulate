@@ -5,9 +5,9 @@ const Boom = require('boom');
 
 const BuildDomainRecognitionTrainingData = require('./buildDomainRecognitionTrainingData.domain.tool');
 
-const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agentId, cb) => {
+const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agentId, extraTrainingData, cb) => {
 
-    BuildDomainRecognitionTrainingData(server, agentId, (err, trainingSet) => {
+    BuildDomainRecognitionTrainingData(server, agentId, extraTrainingData, (err, trainingSet) => {
 
         if (err){
             return cb(err);

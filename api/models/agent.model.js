@@ -12,7 +12,8 @@ class AgentModel {
             timezone: Joi.string(),
             useWebhook: Joi.boolean(),
             domainClassifierThreshold: Joi.number(),
-            fallbackResponses: Joi.array().items(Joi.string())
+            fallbackResponses: Joi.array().items(Joi.string()),
+            extraTrainingData: Joi.boolean()
         };
     };
 }

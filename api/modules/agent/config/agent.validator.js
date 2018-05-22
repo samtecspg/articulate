@@ -154,7 +154,8 @@ class AgentValidate {
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
-                    fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent'))
+                    fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
+                    extraTrainingData: AgentSchema.extraTrainingData
                 };
             })()
         };
@@ -175,7 +176,8 @@ class AgentValidate {
                     timezone: AgentSchema.timezone,
                     useWebhook: AgentSchema.useWebhook,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
-                    fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent'))
+                    fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
+                    extraTrainingData: AgentSchema.extraTrainingData
                 };
             })()
         };
@@ -284,6 +286,7 @@ class AgentValidate {
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
+                    extraTrainingData: AgentSchema.extraTrainingData,
                     webhook: {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
@@ -304,6 +307,7 @@ class AgentValidate {
                         intentThreshold: DomainSchema.intentThreshold.required(),
                         lastTraining: DomainSchema.lastTraining,
                         model: DomainSchema.model,
+                        extraTrainingData: DomainSchema.extraTrainingData,
                         intents: Joi.array().items({
                             intentName: IntentSchema.intentName.required(),
                             examples: Joi.array().items({
