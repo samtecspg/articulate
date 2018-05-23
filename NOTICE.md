@@ -8,6 +8,8 @@ Software|Licenses
 **duckling** | [BSD](https://github.com/facebook/duckling/blob/master/LICENSE)
 **rasa-nlu** | [apache2](https://github.com/RasaHQ/rasa_nlu/blob/master/LICENSE.txt)
 **redis**    | [bsd3](https://github.com/antirez/redis/blob/unstable/COPYING)
+**debian linux**   | [various](https://www.debian.org/legal/licenses/)
+**alpine linux** | [MIT and various](https://github.com/alpinelinux/alpine-wiki/blob/master/LICENSE)
 
 
 ## FOSSA list of 3rd-Party Software for articulate source
@@ -1207,26 +1209,5 @@ Library|Licenses
 
 
 * Other Licenses
-
-
-
-
-
-
-
-
-
-
-***Deep dependencies not included.  Enable this in FOSSA to include deeper data.***
-
-
-
-***Full license list not included.  Enable this in FOSSA to include licenses.***
-
-
-
-[FOSSA]: # (Do not touch the comments below)
-
-[FOSSA]: # (==depsig=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855==)
 
 
