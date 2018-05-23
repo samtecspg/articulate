@@ -7,7 +7,7 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
     const { breadcrumbs, actionButtons } = this.props;
 
     return (
-      <header style={{ position: 'fixed' }} className="valign-wrapper">
+      <header style={{ position: 'fixed', width: 'calc(100% - 500px)' }} className="valign-wrapper">
         <div className="nav-wrapper">
           <div className="col s12 ">
             {

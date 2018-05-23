@@ -13,7 +13,6 @@ module.exports = (request, reply) => {
     const agent = request.payload;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
     let agentResult;
     const entitiesDir = {};
 

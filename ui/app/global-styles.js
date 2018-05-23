@@ -210,7 +210,48 @@ injectGlobal`
     height: 100vh;
     position: fixed;
     right: 0;
-    border-left: 1px solid #c5cbd8; }
+    border-left: 1px solid #c5cbd8;
+    padding: 35px 20px 20px 20px;
+  }
+
+  .right-panel-header {
+    width: 300px;
+    height: 70px;
+    position: fixed;
+    right: 0;
+    border-left: 1px solid #c5cbd8;
+    border-bottom: 1px solid #c5cbd8;
+  }
+
+  .training-container {
+    width: 100%;
+    padding: 13px 15px;
+  }
+
+  .condition, .trained-timestamp {
+    font-weight: 300;
+  }
+
+  .condition span, .trained-timestamp span {
+      font-weight: 400;
+  }
+
+  .btn-small {
+    padding: 0 20px;
+    width: auto;
+    display: inline-block;
+    border: 1px solid #4e4e4e;
+    background-color: white !important;
+    color: #4e4e4e;
+    box-shadow: none;
+  }
+
+  .btn-small:hover {
+    background-color: white;
+    color: #00ca9f;
+    border-color: #00ca9f;
+    box-shadow: none;
+  }
 
   .conversation-panel {
     top: 70px;
@@ -282,9 +323,9 @@ injectGlobal`
       box-shadow: none; }
 
   .conversation-input {
-    width: 180px !important;
+    width: 250px !important;
     margin-bottom: 10px !important;
-    margin-left: 15px !important;
+    margin-left: 11.25px !important;
   }
 
   .warning {
@@ -584,11 +625,6 @@ injectGlobal`
   .ReactTable .rt-noData {
     display: none !important;
   }
-
-  .right-panel {
-    padding: 35px 20px 20px 20px;
-  }
-
   .user-bubble, .bot-bubble {
     padding: 10px;
     min-width: 50px;

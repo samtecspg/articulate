@@ -11,7 +11,7 @@ export function TestMessageInput(props) {
   return (
     <div id="form-section" style={{marginBottom: '60px'}}>
       <Row>
-        <div className="col input-field s8">
+        <div className="col input-field s10">
           <TextInput
             id={props.id}
             style={props.style}
@@ -25,12 +25,12 @@ export function TestMessageInput(props) {
             disabled={props.disabled}
           />
         </div>
-        <div className="col input-field s2" style={{paddingRight: '0px'}}>
+        <div className="col input-field s1" style={{paddingRight: '0px'}}>
           <a onClick={props.onSpeakClick}>
             <Icon small className="mic-icon">mic</Icon>
           </a>
         </div>
-        <div className="col input-field s2">
+        <div className="col input-field s1">
           <Dropdown
               element={<Icon>more_vert</Icon>}
               menu={props.menu}

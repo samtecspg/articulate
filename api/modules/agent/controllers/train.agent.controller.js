@@ -1,14 +1,13 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Cast = require('../../../helpers/cast');
 const DomainTools = require('../../domain/tools');
 const Wreck = require('wreck');
 const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
-    let agentId = request.params.id;
+    const agentId = request.params.id;
     let agent = null;
     const server = request.server;
     const redis = server.app.redis;
@@ -28,6 +27,10 @@ module.exports = (request, reply) => {
                     return callbackGetAgent(error, null);
                 }
                 agent = res.result;
+                if (agent.status && agent.status === Status.training){
+                    const error = Boom.badRequest('The agent is already training, please waint until the current training finish.');
+                    return callbackGetAgent(error, null);
+                }
                 return callbackGetAgent(null);
             });
         },

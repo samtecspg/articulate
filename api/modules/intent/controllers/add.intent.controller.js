@@ -10,13 +10,11 @@ const Status = require('../../../helpers/status.json');
 module.exports = (request, reply) => {
 
     let intentId = null;
-    let agent = null;
     let agentId = null;
     let domainId = null;
     let intent = request.payload;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.series({
         fathersCheck: (cb) => {
@@ -36,22 +34,6 @@ module.exports = (request, reply) => {
                         }
                         const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
                         return callback(error, null);
-                    });
-                },
-                (callback) => {
-
-                    server.inject(`/agent/${agentId}`, (res) => {
-
-                        if (res.statusCode !== 200) {
-                            if (res.statusCode === 400) {
-                                const errorNotFound = Boom.notFound(res.result.message);
-                                return callback(errorNotFound);
-                            }
-                            const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
-                            return callback(error, null);
-                        }
-                        agent = res.result;
-                        return callback(null);
                     });
                 },
                 (callback) => {

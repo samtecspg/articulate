@@ -92,7 +92,7 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
 
                             if (err){
                                 const error = Boom.badImplementation('An error occurred updating the agent status.');
-                                return callback(err);
+                                return callback(error);
                             }
                             return callback(null, resultIntent);
                         });

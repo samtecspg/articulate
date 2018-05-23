@@ -8,12 +8,10 @@ module.exports = (request, reply) => {
 
     const intentId = request.params.id;
     let intent;
-    let agent;
     let agentId;
     let domainId;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.waterfall([
         (cb) => {
@@ -81,22 +79,6 @@ module.exports = (request, reply) => {
                                 }
                                 agentId = score;
                                 return callbackGetAgentId(null);
-                            });
-                        },
-                        (callbackGetAgentData) => {
-
-                            server.inject(`/agent/${agentId}`, (res) => {
-
-                                if (res.statusCode !== 200){
-                                    if (res.statusCode === 400){
-                                        const errorNotFound = Boom.notFound(res.result.message);
-                                        return callbackGetAgentData(errorNotFound);
-                                    }
-                                    const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
-                                    return callbackGetAgentData(error, null);
-                                }
-                                agent = res.result;
-                                return callbackGetAgentData(null);
                             });
                         },
                         (callbackGetDomain) => {

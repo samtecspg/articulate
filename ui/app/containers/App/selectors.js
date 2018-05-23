@@ -33,6 +33,11 @@ const makeSelectCurrentAgent = () => createSelector(
   (globalState) => globalState.currentAgent,
 );
 
+const makeSelectCurrentAgentStatus = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.currentAgentStatus
+);
+
 const makeSelectLoading = () => createSelector(
   selectGlobal,
   (globalState) => globalState.loading,
@@ -130,6 +135,7 @@ export {
   makeSelectAgentEntities,
   makeSelectConversation,
   makeSelectCurrentAgent,
+  makeSelectCurrentAgentStatus,
   makeSelectLoading,
   makeSelectLoadingConversation,
   makeSelectMissingAPI,

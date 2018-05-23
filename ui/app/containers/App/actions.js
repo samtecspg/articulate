@@ -47,6 +47,8 @@ import {
   LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_ERROR,
   LOAD_CURRENT_AGENT_SUCCESS,
+  LOAD_CURRENT_AGENT_STATUS,
+  LOAD_CURRENT_AGENT_STATUS_SUCCESS,
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
@@ -80,6 +82,7 @@ import {
   UPDATE_WEBHOOK_ERROR,
   MISSING_AGENT,
   CHECK_API,
+  TRAIN_AGENT,
 } from './constants';
 
 export function loadAgents() {
@@ -110,9 +113,25 @@ export function loadCurrentAgentSuccess(agent) {
   };
 }
 
+export function loadCurrentAgentStatusSuccess(agentStatus) {
+  return {
+    type: LOAD_CURRENT_AGENT_STATUS_SUCCESS,
+    agentStatus,
+  };
+}
+
+
 export function loadCurrentAgent(id) {
   return {
     type: LOAD_CURRENT_AGENT,
+    apiCall: true,
+    id,
+  };
+}
+
+export function loadCurrentAgentStatus(id) {
+  return {
+    type: LOAD_CURRENT_AGENT_STATUS,
     apiCall: true,
     id,
   };
@@ -646,4 +665,19 @@ export function resetMissingAPI() {
   return {
     type: RESET_MISSING_API,
   };
+}
+
+export function trainAgent(agentId) {
+  return {
+    type: TRAIN_AGENT,
+    apiCall: true,
+    agentId,
+  }
+}
+
+export function traingAgentError(error){
+  return {
+    type: TRAIN_AGENT_ERROR,
+    error
+  }
 }

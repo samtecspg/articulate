@@ -162,6 +162,7 @@ suite('/agent/{id}', () => {
                 agentName: '71999911-cb70-442c-8864-bc1d4e6a306e Updated',
                 description: 'This is test agent',
                 language: 'en',
+                status: 'Ready',
                 timezone: 'UTC',
                 domainClassifierThreshold: 0.5,
                 fallbackResponses: [
@@ -302,47 +303,6 @@ suite('/agent/{id}', () => {
 
                 expect(res.statusCode).to.equal(404);
                 expect(res.result.message).to.contain('The specified agent doesn\'t exists');
-                done();
-            });
-        });
-    });
-
-});
-
-suite('/agent/{id}/converse', () => {
-
-    suite('/get', () => {
-
-        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
-
-            server.inject('/agent/' + preCreatedAgentId + '/converse?sessionId=articulateAPI&text=Locate%20my%20car', (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your car is located at...');
-                done();
-            });
-        });
-    });
-
-    suite('/post', () => {
-
-        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
-
-            const data = {
-                sessionId: 'POST',
-                text: 'Locate my car',
-                timezone: 'UTC'
-            };
-            const options = {
-                method: 'POST',
-                url: `/agent/${preCreatedAgentId}/converse`,
-                payload: data
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your car is located at...');
                 done();
             });
         });
@@ -533,6 +493,63 @@ suite('/agent/{id}/intent', () => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.intents[0].intentName).to.contain(intent.intentName);
+                done();
+            });
+        });
+    });
+
+});
+
+suite('/agent/{id}/train', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return an agent trained', { timeout: 60000 }, (done) => {
+
+            server.inject(`/agent/${preCreatedAgentId}/train`, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.status).to.equal('Ready');
+                done();
+            });
+        });
+    });
+});
+
+suite('/agent/{id}/converse', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
+
+            server.inject('/agent/' + preCreatedAgentId + '/converse?sessionId=articulateAPI&text=Locate%20my%20car', (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.textResponse).to.equal('Your car is located at...');
+                done();
+            });
+        });
+    });
+
+    suite('/post', () => {
+
+        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
+
+            const data = {
+                sessionId: 'POST',
+                text: 'Locate my car',
+                timezone: 'UTC'
+            };
+            const options = {
+                method: 'POST',
+                url: `/agent/${preCreatedAgentId}/converse`,
+                payload: data
+            };
+
+            server.inject(options, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.textResponse).to.equal('Your car is located at...');
                 done();
             });
         });

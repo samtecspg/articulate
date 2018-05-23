@@ -11,10 +11,13 @@ import {
   agentsLoadingError,
   loadCurrentAgentError,
   loadCurrentAgentSuccess,
+  loadCurrentAgentStatusSuccess,
 } from '../../containers/App/actions';
 import {
   LOAD_AGENTS,
   LOAD_CURRENT_AGENT,
+  LOAD_CURRENT_AGENT_STATUS,
+  TRAIN_AGENT
 } from '../../containers/App/constants';
 
 export function* getAgents(payload) {
@@ -71,7 +74,66 @@ export function* loadCurrentAgent() {
   yield take(LOCATION_CHANGE);
 }
 
+export function* getCurrentAgentStatus(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.agent.getAgentId, { id });
+    yield put(loadCurrentAgentStatusSuccess({
+      status: response.obj.status,
+      lastTraining: response.obj.lastTraining
+    }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      console.error('Can\'t find a connection with the API. Please check your API is alive and configured properly.');
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        console.error(errObject.err.response.obj.message);
+      }
+      else {
+        console.error('Unknow API error on getting current agent status');
+      }
+    }
+  }
+}
+
+export function* loadCurrentAgentStatus() {
+  const watcher = yield takeLatest(LOAD_CURRENT_AGENT_STATUS, getCurrentAgentStatus);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+}
+
+export function* getTrainAgent(payload) {
+  const { api, agentId } = payload;
+  try {
+    const response = yield call(api.agent.getAgentIdTrain, { id: agentId });
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      console.log('Can\'t find a connection with the API. Please check your API is alive and configured properly.');
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        console.log(errObject.err.response.obj.message);
+      }
+      else {
+        console.log('Unknow API error on training');
+      }
+    }
+  }
+}
+
+export function* trainAgent() {
+  const watcher = yield takeLatest(TRAIN_AGENT, getTrainAgent);
+
+  yield take(LOCATION_CHANGE);
+}
+
 export default [
   loadAgents,
   loadCurrentAgent,
+  loadCurrentAgentStatus,
+  trainAgent,
 ];

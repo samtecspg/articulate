@@ -46,6 +46,7 @@ import {
   LOAD_AGENTS_SUCCESS,
   LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_SUCCESS,
+  LOAD_CURRENT_AGENT_STATUS_SUCCESS,
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
@@ -78,6 +79,7 @@ import {
   RESET_MISSING_API,
   MISSING_API,
   CHECK_API,
+  LOAD_CURRENT_AGENT_STATUS,
 } from './constants';
 
 // The initial state of the App
@@ -88,6 +90,7 @@ const initialState = Immutable({
   missingAPI: false,
   loadingConversation: false,
   currentAgent: undefined,
+  currentAgentStatus: undefined,
   agents: [],
   agentDomains: { domains: [], total: 0 },
   agentEntities: { domains: [], total: 0 },
@@ -112,12 +115,20 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('currentAgent', action.agent);
+        .set('currentAgent', action.agent)
+        .set('currentAgentStatus', {
+          status: action.agent.status,
+          lastTraining: action.agent.lastTraining,
+        });
+    case LOAD_CURRENT_AGENT_STATUS_SUCCESS:
+      return state
+        .set('currentAgentStatus', action.agentStatus);
     case RESET_CURRENT_AGENT:
       return state
         .set('loading', false)
         .set('error', false)
-        .set('currentAgent', false);
+        .set('currentAgent', false)
+        .set('currentAgentStatus', false);
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.data)
@@ -168,7 +179,11 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('success', true)
-        .set('currentAgent', action.agent);
+        .set('currentAgent', action.agent)
+        .set('currentAgentStatus', {
+          status: action.agent.status,
+          lastTraining: action.agent.lastTraining
+        });
     case CREATE_AGENT_ERROR:
       return state
         .set('error', action.error)
