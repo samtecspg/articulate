@@ -10,6 +10,7 @@ class DomainModel {
             domainName: Joi.string().trim(),
             enabled: Joi.boolean(),
             intentThreshold: Joi.number(),
+            status: Joi.string().trim(),
             lastTraining: Joi.date(),
             model: Joi.string().trim()
         };

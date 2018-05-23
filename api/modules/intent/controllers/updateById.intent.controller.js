@@ -94,7 +94,14 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                                 const error = Boom.badImplementation('An error occurred updating the agent status.');
                                 return callback(error);
                             }
-                            return callback(null, resultIntent);
+                            redis.hmset(`domain:${domainId}`, { status: Status.outOfDate }, (err) => {
+
+                                if (err){
+                                    const error = Boom.badImplementation('An error occurred updating the domain status.');
+                                    return callback(error);
+                                }
+                                return callback(null, resultIntent);
+                            });
                         });
                     });
                 }

@@ -161,6 +161,7 @@ module.exports = (request, reply) => {
                     (cb) => {
 
                         let clonedDomain = _.cloneDeep(domain);
+                        clonedDomain.status = Status.outOfDate;
                         delete clonedDomain.intents;
                         delete clonedDomain.model; //This would make that the training process don't try to unload a non existent model
                         delete clonedDomain.lastTraining;

@@ -3,6 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
@@ -56,6 +57,7 @@ module.exports = (request, reply) => {
         (cb) => {
 
             domain = Object.assign({ id: domainId }, domain);
+            domain.status = Status.ready;
             const flatDomain = RemoveBlankArray(Flat(domain));
             redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
 

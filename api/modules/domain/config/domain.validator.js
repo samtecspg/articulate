@@ -42,6 +42,7 @@ class DomainValidate {
                     enabled: DomainSchema.enabled,
                     intentThreshold: DomainSchema.intentThreshold,
                     lastTraining: DomainSchema.lastTraining,
+                    status: DomainSchema.status,
                     model: DomainSchema.model
                 };
             })()

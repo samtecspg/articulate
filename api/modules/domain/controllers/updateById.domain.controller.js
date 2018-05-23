@@ -210,7 +210,14 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred updating the agent status.');
                     return reply(error);
                 }
-                reply(Cast(result, 'domain'));
+                redis.hmset(`domain:${domainId}`, { status: Status.outOfDate }, (err) => {
+
+                    if (err){
+                        const error = Boom.badImplementation('An error occurred updating the domain status.');
+                        return reply(error);
+                    }
+                    reply(Cast(result, 'domain'));
+                });
             });
         }
         else {

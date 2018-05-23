@@ -21,7 +21,7 @@ import messages from './messages';
 const getLastTrainingTime = (lastTraining) => {
 
   const timeAgo = ta.ago(lastTraining);
-  if (timeAgo.indexOf('seconds') !== -1 ){
+  if (timeAgo.indexOf('second') !== -1 || timeAgo.indexOf(' ms ') !== -1){
     return 'Just now';
   }
   return timeAgo;
@@ -127,7 +127,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
             </div>
             <a
               onClick={() => { this.props.onTrainAgent(this.props.currentAgent) }}
-              disabled={this.props.currentAgentStatus ? this.props.currentAgentStatus.status === 'Training' : false}
+              disabled={this.props.currentAgentStatus ? ['Training', 'Ready'].indexOf(this.props.currentAgentStatus.status) !== -1 : false}
               className="btn-floating btn-small right">{messages.trainButton.defaultMessage}</a>
           </div>
         </aside>

@@ -289,6 +289,8 @@ class AgentValidate {
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
+                    status: AgentSchema.status,
+                    lastTraining: AgentSchema.lastTraining,
                     webhook: {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
@@ -310,6 +312,8 @@ class AgentValidate {
                         intentThreshold: DomainSchema.intentThreshold.required(),
                         lastTraining: DomainSchema.lastTraining,
                         model: DomainSchema.model,
+                        status: DomainSchema.status,
+                        lastTraining: DomainSchema.lastTraining,
                         intents: Joi.array().items({
                             intentName: IntentSchema.intentName.required(),
                             examples: Joi.array().items({

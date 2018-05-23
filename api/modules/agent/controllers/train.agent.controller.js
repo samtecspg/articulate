@@ -4,6 +4,7 @@ const Boom = require('boom');
 const DomainTools = require('../../domain/tools');
 const Wreck = require('wreck');
 const Status = require('../../../helpers/status.json');
+const _ = require('lodash');
 
 module.exports = (request, reply) => {
 
@@ -75,8 +76,12 @@ module.exports = (request, reply) => {
         (rasaStatus, domains, callbackTrainEachDomain) => {
 
             const limit = rasaStatus.max_training_processes - rasaStatus.current_training_processes;
+            const needToTrain = _.map(domains, 'status').indexOf(Status.outOfDate) !== -1 || _.map(domains, 'status').indexOf(Status.error) !== -1;
             if (domains.length > 1){
                 domains.push({ domainRecognizer: true });
+            }
+            if (!needToTrain){
+                return callbackTrainEachDomain(null);
             }
             Async.eachLimit(domains, limit, (domain, callbackMapOfDomain) => {
 
@@ -90,6 +95,9 @@ module.exports = (request, reply) => {
                     });
                 }
                 else {
+                    if (domain.status === Status.ready || domain.status === Status.training){
+                        return callbackMapOfDomain(null);
+                    }
                     server.inject(`/domain/${domain.id}/train`, (res) => {
 
                         if (res.statusCode !== 200){

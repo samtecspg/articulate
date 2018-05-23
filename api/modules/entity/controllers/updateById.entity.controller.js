@@ -71,6 +71,22 @@ module.exports = (request, reply) => {
                 return cb(null, res.result);
             });
         },
+        (currentEntity, callback) => {
+
+            redis.zscore('agents', currentEntity.agent, (err, id) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred checking if the agent exists.');
+                    return callback(error);
+                }
+                if (id){
+                    agentId = id;
+                    return callback(null, currentEntity);
+                }
+                const error = Boom.badRequest(`The agent ${currentEntity.agent} doesn't exist`);
+                return callback(error, null);
+            });
+        },
         (currentEntity, cb) => {
 
             const requiresNameChanges = (updateData.entityName && updateData.entityName !== currentEntity.entityName);
@@ -79,22 +95,6 @@ module.exports = (request, reply) => {
                 newEntityName = updateData.entityName;
                 requiresNameUpdate = true;
                 Async.waterfall([
-                    (callback) => {
-
-                        redis.zscore('agents', currentEntity.agent, (err, id) => {
-
-                            if (err){
-                                const error = Boom.badImplementation('An error occurred checking if the agent exists.');
-                                return callback(error);
-                            }
-                            if (id){
-                                agentId = id;
-                                return callback(null);
-                            }
-                            const error = Boom.badRequest(`The agent ${currentEntity.agent} doesn't exist`);
-                            return callback(error, null);
-                        });
-                    },
                     (callback) => {
 
                         redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, updateData.entityName, (err, addResponse) => {
@@ -200,6 +200,17 @@ module.exports = (request, reply) => {
                     Async.map(domainsUsingEntity, (domain, callbackMapOfDomains) => {
 
                         Async.waterfall([
+                            (callbackSetDomainOutOfDate) => {
+
+                                redis.hmset(`domain:${domain}`, { status: Status.outOfDate }, (err) => {
+
+                                    if (err){
+                                        const error = Boom.badImplementation(`An error occurred updating the domain ${domain} status.`);
+                                        return callbackSetDomainOutOfDate(error);
+                                    }
+                                    return callbackSetDomainOutOfDate(null);
+                                });
+                            },
                             (callbackGetIntentsOfDomain) => {
 
                                 server.inject(`/domain/${domain}/intent`, (res) => {
@@ -248,7 +259,7 @@ module.exports = (request, reply) => {
                                             Async.waterfall([
                                                 (callbackGetScenario) => {
 
-                                                    server.inject(`/scenario/${intent.id}`, (res) => {
+                                                    server.inject(`/intent/${intent.id}/scenario`, (res) => {
 
                                                         if (res.statusCode !== 200){
                                                             if (res.statusCode === 404){
@@ -347,13 +358,55 @@ module.exports = (request, reply) => {
             if (!requiresRetrain){
                 return reply(Cast(updatedEntity, 'entity'));
             }
-            redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
+
+            Async.waterfall([
+                (callbackGetDomainsUsingEntity) => {
+
+                    redis.smembers(`entityDomain:${updatedEntity.id}`, (err, domainsUsingEntity) => {
+
+                        if (err){
+                            const error = Boom.badImplementation(`An error occurred getting the domains used by the entity ${updatedEntity.entityName}`);
+                            return callbackGetDomainsUsingEntity(error);
+                        }
+                        if (domainsUsingEntity && domainsUsingEntity.length > 0){
+                            return callbackGetDomainsUsingEntity(null, domainsUsingEntity);
+                        }
+                        return reply(updatedEntity);
+                    });
+                },
+                (domainsUsingEntity, callbackUpdateEachDomainStatus) => {
+
+                    Async.map(domainsUsingEntity, (domain, callbackMapOfDomains) => {
+
+                        redis.hmset(`domain:${domain}`, { status: Status.outOfDate }, (err) => {
+
+                            if (err){
+                                const error = Boom.badImplementation(`An error occurred updating the domain ${domain} status.`);
+                                return callbackMapOfDomains(error);
+                            }
+                            return callbackMapOfDomains(null);
+                        });
+                    }, (err, result) => {
+
+                        if (err){
+                            return callbackUpdateEachDomainStatus(err);
+                        }
+                        return callbackUpdateEachDomainStatus(null);
+                    });
+                }
+            ], (err, result) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error occurred updating the agent status.');
-                    return reply(error);
+                    return reply(err);
                 }
-                return reply(Cast(updatedEntity, 'entity'));
+                redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
+
+                    if (err){
+                        const error = Boom.badImplementation('An error occurred updating the agent status.');
+                        return reply(error);
+                    }
+                    return reply(Cast(updatedEntity, 'entity'));
+                });
             });
         }
     });
