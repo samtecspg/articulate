@@ -165,6 +165,7 @@ suite('/agent/{id}', () => {
                 status: 'Ready',
                 timezone: 'UTC',
                 domainClassifierThreshold: 0.5,
+                extraTrainingData: false,
                 fallbackResponses: [
                     'updated'
                 ],
