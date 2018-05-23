@@ -7,7 +7,7 @@ Software|Licenses
 --------|--------
 **duckling** | [BSD](https://github.com/facebook/duckling/blob/master/LICENSE)
 **rasa-nlu** | [apache2](https://github.com/RasaHQ/rasa_nlu/blob/master/LICENSE.txt)
-**redis**    | [bsd3](https://github.com/antirez/redis/blob/unstable/COPYING)
+**node.js**  | [joyent](https://github.com/nodejs/node/blob/master/LICENSE)
 **debian linux**   | [various](https://www.debian.org/legal/licenses/)
 **alpine linux** | [MIT and various](https://github.com/alpinelinux/alpine-wiki/blob/master/LICENSE)
 
