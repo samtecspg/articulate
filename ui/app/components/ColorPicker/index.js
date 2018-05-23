@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { CirclePicker } from 'react-color';
+import { SwatchesPicker } from 'react-color';
 
 function ColorPicker(props) { // eslint-disable-line react/prefer-stateless-function
 
@@ -25,10 +25,11 @@ function ColorPicker(props) { // eslint-disable-line react/prefer-stateless-func
     },
     popover: {
       background: '#FFFFFF',
-      border: '1px solid #c5cbd8',
-      borderRadius: '3px',
-      padding: '5px',
+      // border: '1px solid #c5cbd8',
+      // borderRadius: '3px',
+      marginTop: '5px',
       position: 'absolute',
+      right: '-10px',
       zIndex: '999',
     },
     cover: {
@@ -47,7 +48,7 @@ function ColorPicker(props) { // eslint-disable-line react/prefer-stateless-func
       </div>
       { props.displayColorPicker ? <div style={ styles.popover }>
         <div style={ styles.cover } onClick={ props.handleClose }/>
-        <CirclePicker width='176px' color={ props.color } onChange={ props.handleColorChange } />
+        <SwatchesPicker color={ props.color } onChange={ props.handleColorChange } />
       </div> : null }
     </div>
   );
