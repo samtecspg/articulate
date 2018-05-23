@@ -12,7 +12,6 @@ module.exports = (request, reply) => {
     let intentId = null;
     let agentId = null;
     let domainId = null;
-    let extraTrainingData = null;
     let intent = request.payload;
     const server = request.server;
     const redis = server.app.redis;
@@ -72,22 +71,6 @@ module.exports = (request, reply) => {
                             return callback(err);
                         }
                         return callback(null);
-                    });
-                },
-                (callbackGetExtraTrainingDataFlag) => {
-
-                    server.inject(`/domain/${domainId}`, (res) => {
-
-                        if (res.statusCode !== 200) {
-                            if (res.statusCode === 400) {
-                                const errorNotFound = Boom.notFound(res.result.message);
-                                return callbackGetExtraTrainingDataFlag(errorNotFound);
-                            }
-                            const error = Boom.create(res.statusCode, 'An error occurred getting the domain data');
-                            return callbackGetExtraTrainingDataFlag(error, null);
-                        }
-                        extraTrainingData = res.result.extraTrainingData;
-                        return callbackGetExtraTrainingDataFlag(null);
                     });
                 }
             ], (err) => {

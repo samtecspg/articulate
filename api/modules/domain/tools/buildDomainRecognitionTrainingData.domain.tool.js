@@ -38,7 +38,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
                     }));
 
                     if (entitiesList && entitiesList.length > 0){
-                        if(extraTrainingData){
+                        if (extraTrainingData){
                             const entitiesOfIntent = _.map(entitiesList, 'entity');
                             const keyOfEntities = entitiesOfIntent.join('-');
                             let combinationsForThisIntent = entitiesCombinations[keyOfEntities];
@@ -86,7 +86,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
 
                         const newEntitiesList = [];
 
-                        intentExample.entities.forEach(tempEntity => {
+                        intentExample.entities.forEach((tempEntity) => {
 
                             newEntitiesList.push({
                                 start: tempEntity.start,
