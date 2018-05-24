@@ -345,7 +345,7 @@ injectGlobal`
       box-shadow: none; }
 
   .conversation-input {
-    width: 250px !important;
+    width: 215px !important;
     margin-bottom: 10px !important;
     margin-left: 11.25px !important;
   }
