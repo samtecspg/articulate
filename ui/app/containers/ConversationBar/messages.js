@@ -21,4 +21,8 @@ export default defineMessages({
     id: 'boilerplate.containers.ConversationBar.conversation_bar.train_button',
     defaultMessage: 'Train',
   },
+  trainInProcessButton: {
+    id: 'boilerplate.containers.ConversationBar.conversation_bar.train_button',
+    defaultMessage: 'Training...',
+  },
 });

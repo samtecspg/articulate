@@ -127,16 +127,18 @@ module.exports = (request, reply) => {
                 return reply(errTraining);
             });
         }
-        const lastTraining = new Date().toISOString();
-        redis.hmset(`agent:${agent.id}`, { status: Status.ready, lastTraining }, (err) => {
+        else {
+            const lastTraining = new Date().toISOString();
+            redis.hmset(`agent:${agent.id}`, { status: Status.ready, lastTraining }, (err) => {
 
-            if (err){
-                const error = Boom.badImplementation('Model trained. An error occurred updating the agent status to ready.');
-                return reply(error);
-            }
-            agent.status = Status.ready;
-            agent.lastTraining = lastTraining;
-            return reply(agent);
-        });
+                if (err){
+                    const error = Boom.badImplementation('Model trained. An error occurred updating the agent status to ready.');
+                    return reply(error);
+                }
+                agent.status = Status.ready;
+                agent.lastTraining = lastTraining;
+                return reply(agent);
+            });
+        }
     });
 };

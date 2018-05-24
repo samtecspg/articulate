@@ -1,4 +1,5 @@
 import quotes from 'img/quotes.svg';
+import botTraining from 'img/bot-training.svg';
 import { injectGlobal } from 'styled-components';
 
 /* eslint no-unused-expressions: 0 */
@@ -235,6 +236,31 @@ injectGlobal`
   .condition span, .trained-timestamp span {
       font-weight: 400;
   }
+
+  a.activate-training {
+    width: 100%;
+    border-color: white;
+    display: flex;
+    justify-content: center;
+  }
+
+  a.activate-training:hover {
+    color: #4e4e4e;
+    border-color: white;
+    cursor: default;
+  }
+
+  a.activate-training:before {
+    display: inline-block;
+    content: ' ';
+    background-image: url(${botTraining});
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 28px;
+    width: 28px;
+    margin-right: 8px;
+  }
+
 
   .btn-small {
     padding: 0 20px;

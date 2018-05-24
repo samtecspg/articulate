@@ -119,16 +119,31 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
       <div>
         <aside className="right-panel-header">
           <div className="training-container">
-            <div className="left">
-              <p className="condition">{messages.statusLabel.defaultMessage}:<span> {this.props.currentAgentStatus && this.props.currentAgentStatus.status ? this.props.currentAgentStatus.status : '-'}</span>
+            <div className={`status-area left ${this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Training' ? 'hide' : '') : ''}`}>
+              <p
+                className="condition">
+                {messages.statusLabel.defaultMessage}:&nbsp;
+                <span style={{ color: this.props.currentAgentStatus && this.props.currentAgentStatus.status === 'Ready' ? '#00ca9f' : '#4e4e4e'}} >
+                  {this.props.currentAgentStatus && this.props.currentAgentStatus.status ? this.props.currentAgentStatus.status : '-'}
+                </span>
               </p>
-              <p className="trained-timestamp">{messages.trainedLabel.defaultMessage}:<span> {this.props.currentAgentStatus ? (this.props.currentAgentStatus.lastTraining ? getLastTrainingTime(new Date(this.props.currentAgentStatus.lastTraining)) : 'Never trained') : '-'}</span>
+              <p
+                className="trained-timestamp">{messages.trainedLabel.defaultMessage}:&nbsp;
+                <span>
+                  {this.props.currentAgentStatus ?
+                    (this.props.currentAgentStatus.lastTraining ?
+                      getLastTrainingTime(new Date(this.props.currentAgentStatus.lastTraining)) :
+                      'Never trained') :
+                    '-'}
+                </span>
               </p>
             </div>
             <a
               onClick={() => { this.props.onTrainAgent(this.props.currentAgent) }}
-              disabled={this.props.currentAgentStatus ? ['Training', 'Ready'].indexOf(this.props.currentAgentStatus.status) !== -1 : false}
-              className="btn-floating btn-small right">{messages.trainButton.defaultMessage}</a>
+              disabled={this.props.currentAgentStatus ? this.props.currentAgentStatus.status === 'Ready' : false}
+              className={`btn-floating btn-small right ${this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Training' ? 'activate-training' : '') : ''}`}>
+                {this.props.currentAgentStatus.status === 'Training' ? messages.trainInProcessButton.defaultMessage : messages.trainButton.defaultMessage}
+              </a>
           </div>
         </aside>
         <aside className="right-panel">
