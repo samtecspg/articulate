@@ -98,13 +98,42 @@ module.exports = (request, reply) => {
                     if (domain.status === Status.ready || domain.status === Status.training){
                         return callbackMapOfDomain(null);
                     }
-                    server.inject(`/domain/${domain.id}/train`, (res) => {
+                    Async.series([
+                        (callbackChangeDomainStatus) => {
 
-                        if (res.statusCode !== 200){
-                            const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain.domainName}`);
+                            redis.hmset(`domain:${domain.id}`, { status: Status.training }, (err) => {
+
+                                if (err){
+                                    const error = Boom.badImplementation('An error occurred updating the domain status.');
+                                    return callbackChangeDomainStatus(error);
+                                }
+                                callbackChangeDomainStatus(null);
+                            });
+                        },
+                        (callbackTrainDomain) => {
+
+                            server.inject(`/domain/${domain.id}/train`, (res) => {
+
+                                if (res.statusCode !== 200){
+                                    const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain.domainName}`);
+                                    return callbackTrainDomain(error);
+                                }
+                                return callbackTrainDomain(null);
+                            });
+                        }
+                    ], (err) => {
+
+                        if (err){
                             return callbackMapOfDomain(error);
                         }
-                        return callbackMapOfDomain(null);
+                        redis.hmset(`domain:${domain.id}`, { status: Status.ready }, (err) => {
+
+                            if (err){
+                                const error = Boom.badImplementation('An error occurred updating the domain status.');
+                                return callbackMapOfDomain(error);
+                            }
+                            return callbackMapOfDomain(null);
+                        });
                     });
                 }
             }, (err) => {
