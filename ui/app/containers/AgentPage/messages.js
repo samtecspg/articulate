@@ -133,6 +133,6 @@ export default defineMessages({
   },
   expandedTrainingDataTooltip: {
     id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data_tooltip',
-    defaultMessage: 'On small agents this can improve classification, as your agent grows this may increase training time.',
+    defaultMessage: 'Create combinations between your entities and intents. On small agents this can improve classification, as your agent grows this may increase training time.',
   }
 });
