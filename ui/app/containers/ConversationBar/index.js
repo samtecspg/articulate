@@ -117,7 +117,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
   render() {
     return (
       <div>
-        <aside className="right-panel-header">
+        <aside style={{backgroundColor: this.props.currentAgentStatus && this.props.currentAgentStatus.status === 'Training' ? '#eaeaea' : 'white'}} className="right-panel-header">
           <div className="training-container">
             <div className={`status-area left ${this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Training' ? 'hide' : '') : ''}`}>
               <p

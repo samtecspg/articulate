@@ -239,28 +239,24 @@ injectGlobal`
 
   a.activate-training {
     width: 100%;
-    border-color: white;
+    border-color: #eaeaea;
+    background-color: #eaeaea !important;
     display: flex;
-    justify-content: center;
-  }
-
+    justify-content: center; }
   a.activate-training:hover {
-    color: #4e4e4e;
-    border-color: white;
-    cursor: default;
-  }
-
+      color: #4e4e4e;
+      border-color: #eaeaea;
+      background-color: #eaeaea;
+      cursor: default; }
   a.activate-training:before {
-    display: inline-block;
-    content: ' ';
-    background-image: url(${botTraining});
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 28px;
-    width: 28px;
-    margin-right: 8px;
-  }
-
+      display: inline-block;
+      content: ' ';
+      background-image: url(${botTraining});
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 28px;
+      width: 28px;
+      margin-right: 8px; }
 
   .btn-small {
     padding: 0 20px;
