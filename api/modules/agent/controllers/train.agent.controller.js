@@ -86,7 +86,7 @@ module.exports = (request, reply) => {
             Async.eachLimit(domains, limit, (domain, callbackMapOfDomain) => {
 
                 if (domain.domainRecognizer){
-                    DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agent.agentName, agent.id, (errTraining) => {
+                    DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agent.agentName, agent.id, agent.extraTrainingData, (errTraining) => {
 
                         if (errTraining){
                             return callbackMapOfDomain(errTraining);
