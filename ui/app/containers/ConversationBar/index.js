@@ -142,7 +142,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
               onClick={() => { this.props.onTrainAgent(this.props.currentAgent) }}
               disabled={this.props.currentAgentStatus ? this.props.currentAgentStatus.status === 'Ready' : false}
               className={`btn-floating btn-small right ${this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Training' ? 'activate-training' : '') : ''}`}>
-                {this.props.currentAgentStatus.status === 'Training' ? messages.trainInProcessButton.defaultMessage : messages.trainButton.defaultMessage}
+                { this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Training' ? messages.trainInProcessButton.defaultMessage : messages.trainButton.defaultMessage) : messages.trainButton.defaultMessage }
               </a>
           </div>
         </aside>
