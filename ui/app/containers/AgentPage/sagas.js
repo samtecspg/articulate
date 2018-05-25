@@ -203,6 +203,7 @@ export function* getWebhook(payload) {
   const { api, id } = payload;
   try {
     const response = yield call(api.agent.getAgentIdWebhook, { id });
+    
     const webhook = response.obj;
     yield put(loadWebhookSuccess(webhook));
   } catch (err) {

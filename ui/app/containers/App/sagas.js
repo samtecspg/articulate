@@ -23,6 +23,7 @@ import {
 export function* getAgents(payload) {
   const { api } = payload;
   try {
+    console.log(api.agent.getAgent);
     const response = yield call(api.agent.getAgent);
     yield put(agentsLoaded(response.obj));
   } catch (err) {
