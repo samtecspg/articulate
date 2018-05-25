@@ -204,6 +204,26 @@ module.exports = (request, reply) => {
                         }
                         return callbackGetWebhook(null, Object.assign(exportedAgent, { webhook: res.result }));
                     });
+                },
+                postFormat: (callbackGetPostFormat) => {
+
+                    server.inject(`/agent/${agentId}/post-format`, (res) => {
+
+                        if (res.statusCode !== 200){
+                            if (res.statusCode === 404){
+                                return callbackGetPostFormat(null, exportedAgent);
+                            }
+                            const error = Boom.create(res.statusCode, `An error occurred getting the webhook of the agent ${exportedAgent.agentName}`);
+                            return callbackGetPostFormat(error, null);
+                        }
+
+                        if (!withReferences){
+
+                            delete res.result.id;
+                            delete res.result.agent;
+                        }
+                        return callbackGetPostFormat(null, Object.assign(exportedAgent, { postFormat: res.result }));
+                    });
                 }
             }, (err) => {
 

@@ -9,6 +9,7 @@ const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
 const WebhookSchema = require('../../../models/index').Webhook.schema;
 const ScenarioSchema = require('../../../models/index').Scenario.schema;
 const SlotSchema = require('../../../models/index').Slot.schema;
+const PostFormat = require('../../../models/index').PostFormat.schema;
 const Joi = require('joi');
 
 class AgentValidate {
@@ -375,7 +376,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema.id.required().description('Id of the intent')
+                    id: IntentSchema.id.required().description('Id of the agent')
                 };
             })(),
             payload: (() => {
@@ -389,6 +390,56 @@ class AgentValidate {
                 };
             })()
         };
+
+        this.addPostFormat = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
+                    postFormatPayload: PostFormat.postFormatPayload.allow('').optional()
+                };
+            })()
+        };
+
+        this.findPostFormat = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+
+        this.updatePostFormat = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
+                    postFormatPayload: PostFormat.postFormatPayload.allow('').optional()
+                };
+            })()
+        };
+        this.deletePostFormat = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+
 
         this.findWebhook = {
             params: (() => {

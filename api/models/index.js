@@ -12,5 +12,6 @@ module.exports = {
     Scenario: require('./scenario.model'),
     Settings: require('./settings.model'),
     Slot: require('./slot.scenario.model'),
-    Webhook: require('./webhook.model')
+    Webhook: require('./webhook.model'),
+    PostFormat: require('./postFormat.model')
 };

@@ -19,7 +19,11 @@ const ExportController = require('./export.agent.controller');
 const ImportController = require('./import.agent.controller');
 const FindIntentsByAgentIdController = require('./findIntentsByAgentId.agent.controller');
 const AddWebhookController = require('./addWebhook.agent.controller');
+const AddPostFormatController = require('./addPostFormat.agent.controller');
 const FindWebhookController = require('./findWebhook.agent.controller');
+const FindPostFormatController = require('./findPostFormat.agent.controller');
+const DeletePostFormatController = require('./deletePostFormat.agent.controller');
+const UpdatePostFormatController = require('./updatePostFormat.agent.controller');
 const UpdateWebhookController = require('./updateWebhook.agent.controller');
 const DeleteWebhookController = require('./deleteWebhook.agent.controller');
 const TrainController = require('./train.agent.controller');
@@ -67,7 +71,15 @@ const AgentController = {
 
     addWebhook: AddWebhookController,
 
+    addPostFormat: AddPostFormatController,
+
     findWebhook: FindWebhookController,
+
+    findPostFormat : FindPostFormatController,
+
+    deletePostFormat : DeletePostFormatController,
+
+    updatePostFormat : UpdatePostFormatController,
 
     updateWebhook: UpdateWebhookController,
 

@@ -11,6 +11,7 @@ class AgentModel {
             language: Joi.string().trim(),
             timezone: Joi.string().trim(),
             useWebhook: Joi.boolean(),
+            usePostFormat: Joi.boolean(),
             domainClassifierThreshold: Joi.number(),
             fallbackResponses: Joi.array().items(Joi.string().trim()),
             status: Joi.string().trim(),

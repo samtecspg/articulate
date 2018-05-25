@@ -80,6 +80,8 @@ module.exports = (object, type) => {
             break;
         case 'webhook':
             break;
+        case 'postFormat':
+            break;
         case 'pipeline':
             const newObject = [];
             Object.keys(object).forEach((key) => {

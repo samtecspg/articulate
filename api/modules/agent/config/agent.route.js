@@ -232,6 +232,46 @@ const AgentRoutes = [
         }
     },
     {
+        method: 'POST',
+        path: '/agent/{id}/post-format',
+        config: {
+            description: 'Create a new instance of a post format for the agent and persist it into the data source',
+            tags: ['api'],
+            validate: AgentValidator.addPostFormat,
+            handler: AgentController.addPostFormat
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/post-format',
+        config: {
+            description: 'Find a post format by agent id from the data source',
+            tags: ['api'],
+            validate: AgentValidator.findPostFormat,
+            handler: AgentController.findPostFormat
+        }
+    },
+    {
+        method: 'DELETE',
+        path: '/agent/{id}/post-format',
+        config: {
+            description: 'Delete a post format by agent id from the data source',
+            tags: ['api'],
+            validate: AgentValidator.deletePostFormat,
+            handler: AgentController.deletePostFormat
+        }
+    },
+    {
+        method: 'PUT',
+        path: '/agent/{id}/post-format',
+        config: {
+            description: 'Update attributes of the post format of the agent and persist it into the data source',
+            tags: ['api'],
+            validate: AgentValidator.updatePostFormat,
+            handler: AgentController.updatePostFormat
+        }
+    },
+    {
         method: 'GET',
         path: '/agent/{id}/webhook',
         config: {

@@ -8,7 +8,7 @@ const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 module.exports = (request, reply) => {
 
     let agentId = null;
-    let webhook = request.payload;
+    let postFormat = request.payload;
     const redis = request.server.app.redis;
 
     Async.series({
@@ -17,7 +17,7 @@ module.exports = (request, reply) => {
             Async.series([
                 (callback) => {
 
-                    redis.zscore('agents', webhook.agent, (err, id) => {
+                    redis.zscore('agents', postFormat.agent, (err, id) => {
 
                         if (err){
                             const error = Boom.badImplementation('An error occurred checking if the agent exists.');
@@ -27,20 +27,20 @@ module.exports = (request, reply) => {
                             agentId = id;
                             return callback(null);
                         }
-                        const error = Boom.badRequest(`The agent ${webhook.agent} doesn't exist`);
+                        const error = Boom.badRequest(`The agent ${postFormat.agent} doesn't exist`);
                         return callback(error, null);
                     });
                 },
                 (callback) => {
 
-                    redis.exists(`agentWebhook:${agentId}`, (err, exists) => {
+                    redis.exists(`agentPostFormat:${agentId}`, (err, exists) => {
 
                         if (err){
-                            const error = Boom.badImplementation('An error occurred retrieving the webhook.');
+                            const error = Boom.badImplementation('An error occurred retrieving the postFormat.');
                             return callback(error);
                         }
                         if (exists){
-                            const error = Boom.badRequest('An webhook already exists for this agent. If you want to change it please use the update endpoint.');
+                            const error = Boom.badRequest('A postFormat already exists for this agent. If you want to change it please use the update endpoint.');
                             return callback(error);
                         }
                         return callback(null);
@@ -54,17 +54,17 @@ module.exports = (request, reply) => {
                 return cb(null);
             });
         },
-        webhook: (cb) => {
+        postFormat: (cb) => {
 
-            webhook = Object.assign({ id: agentId }, webhook);
-            const flatWebhook = RemoveBlankArray(Flat(webhook));
-            redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
+            postFormat = Object.assign({ id: agentId }, postFormat);
+            const flatPostFormat = RemoveBlankArray(Flat(postFormat));
+            redis.hmset(`agentPostFormat:${agentId}`, flatPostFormat, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error occurred adding the webhook data.');
+                    const error = Boom.badImplementation('An error occurred adding the postFormat data.');
                     return cb(error);
                 }
-                return cb(null, webhook);
+                return cb(null, postFormat);
             });
         }
     }, (err, result) => {
@@ -72,7 +72,6 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        let a = Cast(result.webhook, 'webhook');
-        return reply(Cast(result.webhook, 'webhook'));
+        return reply(result.postFormat);
     });
 };

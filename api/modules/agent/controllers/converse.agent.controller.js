@@ -2,10 +2,12 @@
 const Async = require('async');
 const AgentTools = require('../tools');
 const Boom = require('boom');
+const Handlebars = require('handlebars');
+const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
 
 
 module.exports = (request, reply) => {
-
+    RegisterHandlebarHelpers(Handlebars);
     const agentId = request.params.id;
     let sessionId;
     let text;
@@ -97,17 +99,33 @@ module.exports = (request, reply) => {
             AgentTools.respond(server, conversationStateObject, (err, result) => {
 
                 if (err){
-                    return callback(err, null);
+                    return callback(err, null,null);
                 }
-                return callback(null, result);
+                return callback(null, result, conversationStateObject);
             });
         }
-    ], (err, data) => {
+    ], (err, data, conversationStateObject) => {
 
         if (err){
             return reply(err);
         }
+        const compiledPostFormat = Handlebars.compile(conversationStateObject.agent.postFormat.postFormatPayload); 
+        //let dd = {...conversationStateObject,textResponse: data.textResponse};
+        const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject,{textResponse: data.textResponse}));
+        let processedPostFormatJson = {};
+        try {
+             processedPostFormatJson = JSON.parse(processedPostFormat);
+        } catch (error) {
+            console.log('Error formatting the post response: ', error);
+        return reply({
+            textResponse: data.textResponse,
+            postFormating: 'Error formatting the post response: ' + error
+        });
+        }
+        if (! processedPostFormatJson.textResponse){
+            processedPostFormatJson.textResponse = data.textResponse
+        }
+        return reply(processedPostFormatJson);
 
-        return reply(data);
     });
 };
