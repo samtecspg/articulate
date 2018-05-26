@@ -4,6 +4,7 @@ import { Icon, Input, } from 'react-materialize';
 import SlotAgentEntities from './SlotAgentEntities';
 import TextPrompts from './TextPrompts';
 import systemEntities from 'systemEntities';
+import SortableSlotsRows from './SortableSlotsRows'
 
 export function SlotsRows(props) {
   const rows = props.slots.map((slot, slotIndex) => {
@@ -47,9 +48,7 @@ export function SlotsRows(props) {
   });
 
   return (
-    <tbody>
-    {rows}
-    </tbody>
+      <SortableSlotsRows slotRows={rows}/>
   );
 }
 

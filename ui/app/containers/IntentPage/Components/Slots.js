@@ -1,5 +1,7 @@
 import React from 'react';
 import SlotsRows from './SlotsRows';
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 export function Slots(props) {
   return (
@@ -30,4 +32,4 @@ Slots.propTypes = {
   ]),
 };
 
-export default Slots;
+export default DragDropContext(HTML5Backend)(Slots);
