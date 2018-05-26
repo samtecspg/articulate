@@ -326,9 +326,17 @@ injectGlobal`
 
   #form-section {
     margin: 20px 0 0;
-    position: relative; }
+    position: relative;
+  }
+
   #form-section .input-field {
-    padding: 0 1.5rem 0 0; }
+    padding: 0 1.5rem 0 0;
+  }
+
+  .input-icon {
+    float: right;
+    margin-top: -54px;
+  }
 
   #form-section input {
     border: 1px solid #c5cbd8;

@@ -38,17 +38,25 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_intent.user_says',
     defaultMessage: 'User Says',
   },
+  userSaysExample: {
+    id: 'boilerplate.containers.IntentPage.create_intent.user_says_example',
+    defaultMessage: 'Example: How\'s the weather looking for today?'
+  },
   agentResponsesTitle: {
     id: 'boilerplate.containers.IntentPage.create_intent.agent_responses_title',
     defaultMessage: 'Agent Responses',
   },
+  agentResponseExample: {
+    id: 'boilerplate.containers.IntentPage.create_intent.agent_responses_example',
+    defaultMessage: 'The weather in {{slots.location.value}} should be {{response.value}}.'
+  },
   userSaysInput: {
     id: 'boilerplate.containers.IntentPage.create_intent.user_says_input',
-    defaultMessage: 'example: What is Chicago\'s weather forecast?',
+    defaultMessage: 'Type sample dialogue and press Enter',
   },
   responsesInput: {
     id: 'boilerplate.containers.IntentPage.create_intent.responses_input',
-    defaultMessage: 'example: The weather forecast in {{slots.City.original}} for the next five days is',
+    defaultMessage: 'Type an agent response and press Enter',
   },
   userSaysSearch: {
     id: 'boilerplate.containers.IntentPage.create_intent.user_says_search',

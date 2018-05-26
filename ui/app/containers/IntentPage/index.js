@@ -469,6 +469,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 label={messages.userSaysTitle}
                 placeholder={messages.userSaysInput.defaultMessage}
                 onKeyDown={(evt) => this.onChangeInput(evt, 'examples')}
+                icon={'keyboard_return'}
                 s={8}
               />
               <FormTextInput
@@ -483,7 +484,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             </Row>
           </Form>
 
-          {agentEntities && (intent.examples.length > 0) ?
             <div>
               {
                 this.state.userExamplesShown.length > 0 ?
@@ -506,7 +506,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                       <tr style={{ width: '100%' }}>
                         <td style={{ width: '100%', display: 'inline-block' }}>
                           <div>
-                            <span>Nothing found...</span>
+                            <span>{messages.userSaysExample.defaultMessage}</span>
                           </div>
                         </td>
                       </tr>
@@ -544,8 +544,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               : null
               }
             </div>
-            : null
-          }
 
           <Form style={{ marginTop: '0px' }}>
             <Row>
@@ -610,21 +608,30 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   label={messages.agentResponsesTitle}
                   placeholder={messages.responsesInput.defaultMessage}
                   onKeyDown={(evt) => this.onChangeInput(evt, 'responses')}
+                  icon={'keyboard_return'}
                 />
               </Row>
             </Form>
             : null}
-          {this.props.scenarioData.intentResponses.length > 0 ?
-            <TableContainer id="intentResponsesTable" quotes>
-              <Table>
-                <Responses
+          <TableContainer id="intentResponsesTable" quotes>
+            <Table>
+              {this.props.scenarioData.intentResponses.length > 0 ?
+                (<Responses
                   intentResponses={this.props.scenarioData.intentResponses}
                   onRemoveResponse={this.props.onRemoveResponse}
-                />
-              </Table>
-            </TableContainer>
-            : null
-          }
+                />) :
+                (<tbody>
+                <tr style={{ width: '100%' }}>
+                  <td style={{ width: '100%', display: 'inline-block' }}>
+                    <div>
+                      <span>{messages.agentResponseExample.defaultMessage}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>) 
+              }
+            </Table>
+          </TableContainer>
           <div
             style={{ float: 'left', clear: 'both' }}
             ref={(el) => {
