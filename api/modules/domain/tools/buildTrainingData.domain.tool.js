@@ -104,6 +104,29 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
 
             return _.flatten(buildIntentsPerExamples);
         })));
+
+        let entity_synonyms = _.flatten(_.map(results.entities, (entity) => {
+
+            const entitySynonyms = _.map(entity.examples, (example) => {
+
+                const result = {};
+
+                result.value = example.value;
+                result.synonyms = _.filter(example.synonyms, (synonym) => {
+
+                    return synonym !== example.value;
+                });
+                return result;
+            });
+            return _.flatten(entitySynonyms);
+        }));
+
+        //Add only those entities that have synonyms
+        entity_synonyms = _.filter(entity_synonyms, (entitySynonym) => {
+
+            return entitySynonym.synonyms.length > 0;
+        });
+
         const regexs = [];
         results.entities.forEach((ent) => {
 
@@ -111,12 +134,14 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
                 regexs.push({ name:ent.entityName,pattern:ent.regex });
             }
         });
+
         const data = {
             numberOfIntents: results.intents.length,
             trainingSet: {
                 rasa_nlu_data: {
                     common_examples,
-                    regex_features : regexs
+                    regex_features : regexs,
+                    entity_synonyms
                 }
             }
         };
