@@ -270,7 +270,7 @@ class AgentValidate {
             query: (() => {
 
                 return {
-                    withReferences: Joi.bool().default(true).description('Flag to indicate if method should exports ids and ancestors of an element')
+                    withReferences: Joi.bool().default(false).description('Flag to indicate if method should exports ids and ancestors of an element')
                 };
             })()
         };
