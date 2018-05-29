@@ -36,7 +36,7 @@ before((done) => {
                 done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
-                server.inject(`/agent/${resName.result.id}/export`, (resAgent) => {
+                server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
                         done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
