@@ -108,7 +108,7 @@
               "userSays": "Where is my car?",
               "entities": [
                 {
-                  "end": 15,
+                  "end": 14,
                   "start": 12,
                   "value": "car",
                   "entity": "Test Entity"
@@ -119,7 +119,7 @@
               "userSays": "Locate my car",
               "entities": [
                 {
-                  "end": 13,
+                  "end": 12,
                   "start": 10,
                   "value": "car",
                   "entity": "Test Entity"
