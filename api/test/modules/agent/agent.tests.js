@@ -162,6 +162,7 @@ suite('/agent/{id}', () => {
                 agentName: '71999911-cb70-442c-8864-bc1d4e6a306e Updated',
                 description: 'This is test agent',
                 language: 'en',
+                extraTrainingData: false,
                 timezone: 'UTC',
                 domainClassifierThreshold: 0.5,
                 fallbackResponses: [
