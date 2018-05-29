@@ -38,7 +38,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
                     }));
 
                     if (entitiesList && entitiesList.length > 0){
-                        if(extraTrainingData){
+                        if (extraTrainingData){
                             const entitiesOfIntent = _.map(entitiesList, 'entity');
                             const keyOfEntities = entitiesOfIntent.join('-');
                             let combinationsForThisIntent = entitiesCombinations[keyOfEntities];
@@ -86,7 +86,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
 
                         const newEntitiesList = [];
 
-                        intentExample.entities.forEach(tempEntity => {
+                        intentExample.entities.forEach((tempEntity) => {
 
                             newEntitiesList.push({
                                 start: tempEntity.start,
@@ -119,9 +119,49 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
             return common_examples;
         });
 
+        const entity_synonyms = _.flatten(data.map( (domain) => {
+
+            let domain_entity_synonyms = _.flatten(_.map(domain.entities, (entity) => {
+
+                const entitySynonyms = _.map(entity.examples, (example) => {
+
+                    const result = {};
+
+                    result.value = example.value;
+                    result.synonyms = _.filter(example.synonyms, (synonym) => {
+
+                        return synonym !== example.value;
+                    });
+                    return result;
+                });
+                return _.flatten(entitySynonyms);
+            }));
+
+            //Add only those entities that have synonyms
+            domain_entity_synonyms = _.filter(domain_entity_synonyms, (entitySynonym) => {
+
+                return entitySynonym.synonyms.length > 0;
+            });
+
+            return domain_entity_synonyms;
+        }));
+
+        const regexs = [];
+        data.forEach((domain) => {
+
+            domain.entities.forEach((ent) => {
+
+                if (ent.regex && ent.regex !== ''){
+                    regexs.push({ name:ent.entityName,pattern:ent.regex });
+                }
+            });
+        });
+
         const trainingData = {
             rasa_nlu_data: {
-                common_examples: _.flatten(domainsExamples)
+                common_examples: _.flatten(domainsExamples),
+                regex_features : regexs,
+                entity_synonyms
             }
         };
 
