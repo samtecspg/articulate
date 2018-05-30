@@ -48,7 +48,10 @@ export function SlotsRows(props) {
   });
 
   return (
-      <SortableSlotsRows slotRows={rows}/>
+      <SortableSlotsRows
+        onSortSlots={props.onSortSlots}
+        slotRows={rows}
+      />
   );
 }
 
@@ -59,6 +62,7 @@ SlotsRows.propTypes = {
   onSlotNameChange: React.PropTypes.func,
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
+  onSortSlots: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,

@@ -23,6 +23,7 @@ import {
   TAG_ENTITY,
   TOGGLE_FLAG,
   UNTAG_ENTITY,
+  SORT_SLOTS,
 } from './constants';
 
 // The initial state of the App
@@ -283,6 +284,11 @@ function intentReducer(state = initialState, action) {
         .set('error', action.error)
         .set('oldWebhook', null)
         .set('loading', false);
+    case SORT_SLOTS:
+      const tempSlots = Immutable.asMutable(state.scenarioData.slots, { deep: true});
+      tempSlots.splice(action.newIndex, 0, tempSlots.splice(action.oldIndex, 1)[0]);
+      return state
+        .setIn(['scenarioData', 'slots'], Immutable(tempSlots));
     default:
       return state;
   }

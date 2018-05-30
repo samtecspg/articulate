@@ -22,6 +22,7 @@ import {
   LOAD_WEBHOOK_ERROR,
   LOAD_WEBHOOK_SUCCESS,
   LOAD_WEBHOOK,
+  SORT_SLOTS,
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -184,5 +185,13 @@ export function loadWebhook(id) {
     type: LOAD_WEBHOOK,
     apiCall: true,
     id,
+  };
+}
+
+export function sortSlots(oldIndex, newIndex) {
+  return {
+    type: SORT_SLOTS,
+    oldIndex,
+    newIndex
   };
 }

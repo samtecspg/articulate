@@ -65,6 +65,7 @@ import {
   toggleFlag,
   changeWebhookData,
   loadWebhook,
+  sortSlots,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -590,6 +591,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onRemoveSlot={this.props.onRemoveSlot}
                 onSlotNameChange={this.props.onSlotNameChange}
                 onAddSlot={this.props.onAddSlot}
+                onSortSlots={this.props.onSortSlots}
                 agentEntities={agentEntities}
               />
             </Table>
@@ -739,6 +741,7 @@ IntentPage.propTypes = {
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
   onAddSlot: React.PropTypes.func,
+  onSortSlots: React.PropTypes.func,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
@@ -847,6 +850,9 @@ export function mapDispatchToProps(dispatch) {
         dispatch(loadWebhook(props.params.id));
       }
     },
+    onSortSlots: (oldIndex, newIndex) => {
+      dispatch(sortSlots(oldIndex, newIndex));
+    }
   };
 }
 

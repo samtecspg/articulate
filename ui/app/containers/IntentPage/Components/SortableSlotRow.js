@@ -57,7 +57,7 @@ const cardTarget = {
 		}
 
 		// Time to actually perform the action
-		props.moveCard(dragIndex, hoverIndex)
+		props.moveSlot(dragIndex, hoverIndex)
 
 		// Note: we're mutating the monitor item here!
 		// Generally it's better to avoid mutations,
@@ -93,7 +93,7 @@ class SortableSlotRow extends Component {
 		isDragging: PropTypes.bool.isRequired,
 		id: PropTypes.any.isRequired,
 		slotRow: PropTypes.object.isRequired,
-		moveCard: PropTypes.func.isRequired,
+		moveSlot: PropTypes.func.isRequired,
 	}
 
 	render() {

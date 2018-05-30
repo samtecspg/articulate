@@ -13,6 +13,7 @@ export function Slots(props) {
       onDeleteTextPrompt={props.onDeleteTextPrompt}
       onRemoveSlot={props.onRemoveSlot}
       onSlotNameChange={props.onSlotNameChange}
+      onSortSlots={props.onSortSlots}
       agentEntities={props.agentEntities}
     />
       : null
@@ -26,6 +27,7 @@ Slots.propTypes = {
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
   onSlotNameChange: React.PropTypes.func,
+  onSortSlots: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
