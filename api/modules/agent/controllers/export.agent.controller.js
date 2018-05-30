@@ -144,12 +144,12 @@ module.exports = (request, reply) => {
 
                                             server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/post-format`, (res) => {
 
-                                                if (res.statusCode !== 200) {
+                                                if (res.statusCode !== 200 && exportedIntentForDomain.usePostFormat) {
                                                     if (res.statusCode === 404) {
                                                         if (!withReferences) {
                                                             return callbackGetIntentPostFormat(null, exportedIntentForDomain);
                                                         }
-                                                        const error = Boom.create(res.statusCode, `An error occurred getting the webhook of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
+                                                        const error = Boom.create(res.statusCode, `An error occurred getting the post-format of intent ${exportedIntentForDomain.intentName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
                                                         return callbackGetIntentPostFormat(error, null);
                                                     }
                                                 }

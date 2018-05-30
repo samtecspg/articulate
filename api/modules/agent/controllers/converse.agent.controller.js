@@ -117,7 +117,7 @@ module.exports = (request, reply) => {
             postFormatPayloadToUse = conversationStateObject.intent.postFormat.postFormatPayload;
             usedPostFormatIntent = true;
         }
-        else if (conversationStateObject.intent.usePostFormat) {
+        else if (conversationStateObject.agent.usePostFormat) {
             usedPostFormatIntent = false;
             postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
         }
