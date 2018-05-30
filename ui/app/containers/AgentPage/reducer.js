@@ -31,6 +31,7 @@ const initialState = Immutable({
       'I\'m still learning to speak with humans. What you mean?',
     ],
     useWebhook: false,
+    usePostFormat: false,
     extraTrainingData: false,
   },
   webhookData: {
