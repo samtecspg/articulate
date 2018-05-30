@@ -134,7 +134,49 @@ const IntentRoutes = [
             validate: IntentValidator.deleteWebhook,
             handler: IntentController.deleteWebhook
         }
+    },
+
+    {
+        method: 'POST',
+        path: '/intent/{id}/post-format',
+        config: {
+            description: 'Create a new instance of a post format for the intent and persist it into the data source',
+            tags: ['api'],
+            validate: IntentValidator.addPostFormat,
+            handler: IntentController.addPostFormat
+        }
+    },
+    {
+        method: 'GET',
+        path: '/intent/{id}/post-format',
+        config: {
+            description: 'Find a post format by intent id from the data source',
+            tags: ['api'],
+            validate: IntentValidator.findPostFormat,
+            handler: IntentController.findPostFormat
+        }
+    },
+    {
+        method: 'PUT',
+        path: '/intent/{id}/post-format',
+        config: {
+            description: 'Update attributes of the webhook of the intent and persist it into the data source',
+            tags: ['api'],
+            validate: IntentValidator.updatePostFormat,
+            handler: IntentController.updatePostFormat
+        }
+    },
+    {
+        method: 'DELETE',
+        path: '/intent/{id}/post-format',
+        config: {
+            description: 'Delete a webhook instance by id from the data source',
+            tags: ['api'],
+            validate: IntentValidator.deletePostFormat,
+            handler: IntentController.deletePostFormat
+        }
     }
+
 ];
 
 module.exports = IntentRoutes;

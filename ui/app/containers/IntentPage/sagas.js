@@ -41,11 +41,15 @@ import {
   loadScenarioSuccess,
   loadWebhookError,
   loadWebhookSuccess,
+  loadPostFormat,
+  loadPostFormatError,
+  loadPostFormatSuccess
 } from './actions';
 import {
   LOAD_INTENT,
   LOAD_SCENARIO,
   LOAD_WEBHOOK,
+  LOAD_POSTFORMAT,
 } from './constants';
 import {
   makeSelectIntentData,
@@ -54,12 +58,13 @@ import {
   makeSelectOldScenarioData,
   makeSelectWebhookData,
   makeSelectOldWebhookData,
+  makeSelectPostFormatData,
 } from './selectors';
 
 function* postWebhook(payload) {
   const { api, id, intentData } = payload;
   let webhookData = yield select(makeSelectWebhookData());
-  if (intentData){
+  if (intentData) {
     webhookData = webhookData.set('agent', intentData.agent);
     webhookData = webhookData.set('domain', intentData.domain);
     webhookData = webhookData.set('intent', intentData.intentName);
@@ -73,10 +78,28 @@ function* postWebhook(payload) {
   }
 }
 
+function* postPostFormat(payload) {
+  const { api, id, intentData } = payload;
+  let postFormatData = yield select(makeSelectPostFormatData());
+  if (intentData) {
+    postFormatData = postFormatData.set('agent', intentData.agent);
+    postFormatData = postFormatData.set('domain', intentData.domain);
+    postFormatData = postFormatData.set('intent', intentData.intentName);
+  }
+
+  try {
+    yield call(api.intent.postIntentIdPostformat, { id, body: postFormatData });
+  } catch ({ response }) {
+    yield put(webhookCreationError({ message: response.obj.message }));
+    throw response;
+  }
+}
+
+
 function* postScenario(payload) {
   const { api, id, intentData } = payload;
   let scenarioData = yield select(makeSelectScenarioData());
-  if (intentData){
+  if (intentData) {
     scenarioData = scenarioData.set('agent', intentData.agent);
     scenarioData = scenarioData.set('domain', intentData.domain);
     scenarioData = scenarioData.set('intent', intentData.intentName);
@@ -96,15 +119,18 @@ function* postScenario(payload) {
 export function* postIntent(payload) {
   const { api } = payload;
   let intentData = yield select(makeSelectIntentData());
-  intentData = Immutable.asMutable(intentData, {deep: true});
+  intentData = Immutable.asMutable(intentData, { deep: true });
 
   try {
     const response = yield call(api.intent.postIntent, { body: intentData });
     const intent = response.obj;
     yield put(intentCreated(intent, intent.id));
-    yield call(postScenario, { api, id: intent.id});
-    if (intent.useWebhook){
-      yield call(postWebhook, { api, id: intent.id});
+    yield call(postScenario, { api, id: intent.id });
+    if (intent.useWebhook) {
+      yield call(postWebhook, { api, id: intent.id });
+    }
+    if (intent.usePostFormat) {
+      yield call(postPostFormat, { api, id: intent.id, intentData });
     }
     yield put(push('/intents'));
   } catch ({ response }) {
@@ -149,7 +175,7 @@ function* putWebhook(payload) {
   const webhookData = yield select(makeSelectWebhookData());
   const oldWebhookData = yield select(makeSelectOldWebhookData());
   try {
-    if (!_.isEqual(webhookData, oldWebhookData)){
+    if (!_.isEqual(webhookData, oldWebhookData)) {
       const { agent, domain, intent, ...data } = webhookData;
       delete data.id;
       yield call(api.intent.putIntentIdWebhook, { id, body: data });
@@ -170,18 +196,44 @@ function* deleteWebhook(payload) {
   }
 }
 
+function* putPostFormat(payload) {
+  const { api, id } = payload;
+  const postFormatData = yield select(makeSelectPostFormatData());
+  try {
+
+    const { agent, domain, intent, ...data } = postFormatData;
+    delete data.id;
+    yield call(api.intent.putIntentIdPostformat, { id, body: data });
+  } catch ({ response }) {
+    yield put(updateWebhookError({ message: response.obj.message }));
+    throw response;
+  }
+}
+
+function* deletePostFormat(payload) {
+  const { api, id } = payload;
+  try {
+    yield call(api.intent.deleteIntentIdPostformat, { id });
+  } catch ({ response }) {
+    yield put(updateWebhookError({ message: response.obj.message }));
+    throw response;
+  }
+}
+
 function* putScenario(payload) {
   const { api, id } = payload;
   const scenarioData = yield select(makeSelectScenarioData());
   const oldScenarioData = yield select(makeSelectOldScenarioData());
   try {
-    if (!_.isEqual(scenarioData, oldScenarioData)){
+    if (!_.isEqual(scenarioData, oldScenarioData)) {
       const { agent, domain, intent, ...data } = scenarioData;
+      // delete data.usePostFormat;
       delete data.id;
       yield call(api.intent.putIntentIdScenario, { id, body: data });
     }
     yield put(updateScenarioSuccess());
   } catch ({ response }) {
+    console.log(response)
     yield put(updateScenarioError({ message: response.obj.message }));
     throw response;
   }
@@ -190,42 +242,58 @@ function* putScenario(payload) {
 export function* putIntent(payload) {
   const { api } = payload;
   let intentData = yield select(makeSelectIntentData());
-  intentData = Immutable.asMutable(intentData, {deep: true});
+  intentData = Immutable.asMutable(intentData, { deep: true });
   const oldIntentData = yield select(makeSelectOldIntentData());
   const oldScenarioData = yield select(makeSelectOldScenarioData());
   try {
-    if (!_.isEqual(intentData, oldIntentData)){
+    if (!_.isEqual(intentData, oldIntentData)) {
       const { id, agent, domain, ...data } = intentData;
       const response = yield call(api.intent.putIntentId, { id, body: data });
     }
     yield put(updateIntentSuccess());
-    if (oldScenarioData){
+    if (oldScenarioData) {
       yield call(putScenario, { api, id: intentData.id });
     }
     else {
       yield call(postScenario, { api, id: intentData.id, intentData });
     }
-    if (oldIntentData.useWebhook){
-      if (intentData.useWebhook){
+    if (oldIntentData.useWebhook) {
+      if (intentData.useWebhook) {
         yield call(putWebhook, { api, id: intentData.id });
       }
       else {
-        yield call(deleteWebhook, {api, id: intentData.id});
+        yield call(deleteWebhook, { api, id: intentData.id });
       }
     }
     else {
-      if (intentData.useWebhook){
+      if (intentData.useWebhook) {
         yield call(postWebhook, { api, id: intentData.id, intentData });
       }
     }
+    if (oldIntentData.usePostFormat) {
+      if (intentData.usePostFormat) {
+        yield call(putPostFormat, { api, id: intentData.id });
+      }
+      else {
+        yield call(deletePostFormat, { api, id: intentData.id });
+      }
+    }
+    else {
+      if (intentData.usePostFormat) {
+        yield call(postPostFormat, { api, id: intentData.id, intentData });
+      }
+    }
+
+
     yield put(push('/intents'));
   } catch (err) {
+    console.log(err)
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(updateIntentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(updateIntentError({ message: errObject.err.response.obj.message }));
       }
       else {
@@ -252,6 +320,8 @@ export function* getIntent(payload) {
     yield call(getAgentDomains, { api, agentId: agent.id });
     yield call(getAgentEntities, { api, agentId: agent.id, forIntentEdit: true });
     yield put(loadIntentSuccess(intent));
+    // yield put(loadWebhook(id));
+    // yield put(loadPostFormat(id));
   } catch ({ response }) {
     yield put(loadIntentError({ message: response.obj.message }));
   }
@@ -294,9 +364,28 @@ export function* getWebhook(payload) {
     yield put(loadWebhookError({ message: response.obj.message }));
   }
 }
+export function* getPostFormat(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.intent.getIntentIdPostformat, { id });
+    const postFormat = response.obj;
+    yield put(loadPostFormatSuccess(postFormat));
+  } catch ({ response }) {
+    yield put(loadPostFormatError({ message: response.obj.message }));
+  }
+}
+
 
 export function* loadWebhook() {
   const watcher = yield takeLatest(LOAD_WEBHOOK, getWebhook);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* loadPostFormatSaga() {
+  const watcher = yield takeLatest(LOAD_POSTFORMAT, getPostFormat);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
@@ -313,4 +402,5 @@ export default [
   loadIntent,
   loadScenario,
   loadWebhook,
+  loadPostFormatSaga
 ];

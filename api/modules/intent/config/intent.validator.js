@@ -7,6 +7,7 @@ const WebhookSchema = require('../../../models/index').Webhook.schema;
 const SlotSchema = require('../../../models/index').Slot.schema;
 const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
 const IntentExampleSchema = require('../../../models/index').IntentExample.schema;
+const PostFormatSchema = require('../../../models/index').PostFormat.schema;
 
 class IntentValidate {
     constructor() {
@@ -19,6 +20,7 @@ class IntentValidate {
                     domain: IntentSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the intent')),
                     intentName: IntentSchema.intentName.required().error(new Error('The intent name is required')),
                     useWebhook: IntentSchema.useWebhook.required().error(new Error('Please specify if this intent use a webhook for fullfilment.')),
+                    usePostFormat: IntentSchema.usePostFormat.required().error(new Error('Please specify if this intent use a post format for fullfilment.')),
                     examples: Joi.array().items({
                         userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
                         entities: Joi.array().items({
@@ -55,6 +57,7 @@ class IntentValidate {
                 return {
                     intentName: IntentSchema.intentName,
                     useWebhook: IntentSchema.useWebhook,
+                    usePostFormat: IntentSchema.usePostFormat,
                     examples: Joi.array().items({
                         userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
                         entities: Joi.array().items({
@@ -203,6 +206,61 @@ class IntentValidate {
             })()
         };
 
+
+        this.addPostFormat = {
+            params: (() => {
+
+                return {
+                    id: PostFormatSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the post format.')),
+                    domain: ScenarioSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the post format.')),
+                    intent: ScenarioSchema.intent.required().error(new Error('The intent is required. Please specify an intent for the post format.')),
+                    postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
+                };
+            })()
+        };
+
+        this.findPostFormat = {
+            params: (() => {
+
+                return {
+                    id: PostFormatSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
+
+        this.updatePostFormat = {
+            params: (() => {
+
+                return {
+                    id: PostFormatSchema.id.required().description('Id of the intent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    // webhookUrl: WebhookSchema.webhookUrl,
+                    // webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                    // webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML', 'URL Encoded').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML, and URL Encoded.')),
+                    // webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                    postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
+                };
+            })()
+        };
+
+        this.deletePostFormat = {
+            params: (() => {
+
+                return {
+                    id: IntentSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
     }
 }
 

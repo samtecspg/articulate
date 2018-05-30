@@ -10,6 +10,10 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.title',
     defaultMessage: 'Creating New Agent',
   },
+  defaultPostFormat : {
+    id: 'boilerplate.containers.AgentPage.create_agent.defaultPostFormat',
+    defaultMessage: '{ "textResponse" : "{{ textResponse }}" }'
+  },
   createDescription: {
     id: 'boilerplate.containers.AgentPage.create_agent.description',
     defaultMessage: 'An agent is capable of understand natural language and transform it into recognizable actions. ' +
@@ -91,6 +95,10 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.webhook',
     defaultMessage: 'Webhook Definition',
   },
+  postFormat: {
+    id: 'boilerplate.containers.AgentPage.create_agent.postFormat',
+    defaultMessage: 'Default agent response payload',
+  },
   webhookDescription: {
     id: 'boilerplate.containers.AgentPage.create_agent.webhook_description',
     defaultMessage: 'A webhook will help you to process the parsed text by the agent in order to complete you business logic.',
@@ -119,6 +127,10 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.missing_webhook_url',
     defaultMessage: 'Please add a webhook url for your webhook',
   },
+  missingPostFormatPayload: {
+    id: 'boilerplate.containers.AgentPage.create_agent.missing_postFormatPayload',
+    defaultMessage: 'Please add a POST format response for the agent, default one has been added.',
+  },
   invalidTimezone: {
     id: 'boilerplate.containers.AgentPage.create_agent.invalid_timezone',
     defaultMessage: 'The specified timezone is not valid',
@@ -126,6 +138,10 @@ export default defineMessages({
   useWebhook: {
     id: 'boilerplate.containers.AgentPage.create_agent.use_webhook',
     defaultMessage: 'Webhook',
+  },
+  usePostformat:{
+    id: 'boilerplate.containers.AgentPage.create_agent.use_postFormat',
+    defaultMessage: 'PostFormat',
   },
   expandedTrainingData: {
     id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data',

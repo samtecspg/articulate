@@ -1,5 +1,6 @@
 export const CHANGE_AGENT_DATA = 'boilerplate/AgentPage/CHANGE_AGENT_DATA';
 export const CHANGE_WEBHOOK_DATA = 'boilerplate/AgentPage/CHANGE_WEBHOOK_DATA';
+export const CHANGE_POSTFORMAT_DATA = 'boilerplate/AgentPage/CHANGE_POSTFORMAT_DATA'
 export const RESET_AGENT_DATA = 'boilerplate/AgentPage/RESET_AGENT_DATA';
 export const LOAD_AGENT = 'boilerplate/AgentPage/LOAD_AGENT';
 export const LOAD_AGENT_SUCCESS = 'boilerplate/AgentPage/LOAD_AGENT_SUCCESS';
@@ -8,3 +9,6 @@ export const LOAD_WEBHOOK = 'boilerplate/AgentPage/LOAD_WEBHOOK';
 export const LOAD_WEBHOOK_SUCCESS = 'boilerplate/AgentPage/LOAD_WEBHOOK_SUCCESS';
 export const LOAD_WEBHOOK_ERROR = 'boilerplate/AgentPage/LOAD_WEBHOOK_ERROR';
 export const REMOVE_AGENT_FALLBACK = 'boilerplate/AgentPage/REMOVE_AGENT_FALLBACK';
+export const LOAD_POSTFORMAT = 'boilerplate/AgentPage/LOAD_POSTFORMAT'
+export const LOAD_POSTFORMAT_SUCCESS = 'boilerplate/AgentPage/LOAD_POSTFORMAT_SUCCESS'
+export const LOAD_POSTFORMAT_ERROR = 'boilerplate/AgentPage/LOAD_POSTFORMAT_ERROR'

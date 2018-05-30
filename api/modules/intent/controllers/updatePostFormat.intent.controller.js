@@ -1,11 +1,11 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
 const Cast = require('../../../helpers/cast');
+const Flat = require('flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
-const updateDataFunction = (redis, agentId, currentPostFormat, updateData, cb) => {
+const updateDataFunction = (redis, intentId, currentPostFormat, updateData, cb) => {
 
     const flatPostFormat = Flat(currentPostFormat);
     const flatUpdateData = Flat(updateData);
@@ -13,13 +13,13 @@ const updateDataFunction = (redis, agentId, currentPostFormat, updateData, cb) =
 
         flatPostFormat[key] = flatUpdateData[key];
     });
-    redis.del(`agentPostFormat:${agentId}`, (err) => {
+    redis.del(`intentPostFormat:${intentId}`, (err) => {
 
         if (err){
             const error = Boom.badImplementation('An error occurred temporaly removing the post format for the update.');
             return cb(error);
         }
-        redis.hmset(`agentPostFormat:${agentId}`, RemoveBlankArray(flatPostFormat), (err) => {
+        redis.hmset(`intentPostFormat:${intentId}`, RemoveBlankArray(flatPostFormat), (err) => {
 
             if (err){
                 const error = Boom.badImplementation('An error occurred adding the post format data.');
@@ -32,7 +32,7 @@ const updateDataFunction = (redis, agentId, currentPostFormat, updateData, cb) =
 
 module.exports = (request, reply) => {
 
-    const agentId = request.params.id;
+    const intentId = request.params.id;
     const updateData = request.payload;
 
     const server = request.server;
@@ -41,14 +41,14 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
 
-            server.inject(`/agent/${agentId}/post-format`, (res) => {
+            server.inject(`/intent/${intentId}/post-format`, (res) => {
 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
                         const error = Boom.notFound('The specified post format doesn\'t exists');
                         return cb(error, null);
                     }
-                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the post format ${agentId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the data of the post format for the intent ${intentId}`);
                     return cb(error, null);
                 }
                 return cb(null, res.result);
@@ -56,7 +56,7 @@ module.exports = (request, reply) => {
         },
         (currentPostFormat, cb) => {
 
-            updateDataFunction(redis, agentId, currentPostFormat, updateData, (err, result) => {
+            updateDataFunction(redis, intentId, currentPostFormat, updateData, (err, result) => {
 
                 if (err){
                     const error = Boom.badImplementation('An error occurred adding the post format data.');

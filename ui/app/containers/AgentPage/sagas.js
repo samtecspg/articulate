@@ -12,7 +12,7 @@ import {
   take,
   takeLatest,
 } from 'redux-saga/effects';
-import { makeSelectAgentData, makeSelectOldWebhookData, makeSelectOldAgentData } from '../AgentPage/selectors';
+import { makeSelectAgentData, makeSelectOldWebhookData, makeSelectOldAgentData, makeSelectPostFormatData } from '../AgentPage/selectors';
 import {
   agentCreated,
   agentCreationError,
@@ -30,12 +30,16 @@ import {
 import { getAgents } from '../App/sagas';
 import { makeSelectInWizard } from '../App/selectors';
 import {
+  loadWebhook,
+  loadPostFormat,
   loadAgentError,
   loadAgentSuccess,
   loadWebhookError,
   loadWebhookSuccess,
+  loadPostFormatError,
+  loadPostFormatSuccess
 } from './actions';
-import { LOAD_AGENT, LOAD_WEBHOOK } from './constants';
+import { LOAD_AGENT, LOAD_WEBHOOK, LOAD_POSTFORMAT, LOAD_AGENT_SUCCESS } from './constants';
 import { makeSelectWebhookData } from './selectors';
 
 function* postWebhook(payload) {
@@ -46,11 +50,33 @@ function* postWebhook(payload) {
     yield call(api.agent.postAgentIdWebhook, { id, body: webhookData });
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(webhookCreationError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
+        yield put(webhookCreationError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(webhookCreationError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
+
+function* postPostFormat(payload) {
+  const { api, id } = payload;
+  const postFormatData = yield select(makeSelectPostFormatData());
+
+  try {
+    yield call(api.agent.postAgentIdPostformat, { id, body: postFormatData });
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
+      yield put(webhookCreationError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(webhookCreationError({ message: errObject.err.response.obj.message }));
       }
       else {
@@ -68,8 +94,11 @@ export function* postAgent(payload) {
   try {
     const response = yield call(api.agent.postAgent, { body: updatedData });
     const agent = response.obj;
-    if (agent.useWebhook){
+    if (agent.useWebhook) {
       yield call(postWebhook, { api, id: agent.id });
+    }
+    if (agent.usePostFormat) {
+      yield call(postPostFormat, { api, id: agent.id });
     }
     yield put(agentCreated(agent));
     yield call(getAgents, { api });
@@ -82,11 +111,11 @@ export function* postAgent(payload) {
     }
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(agentCreationError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(agentCreationError({ message: errObject.err.response.obj.message }));
       }
       else {
@@ -107,19 +136,43 @@ function* putWebhook(payload) {
   const { api, id } = payload;
   const webhookData = yield select(makeSelectWebhookData());
   const oldWebhookData = yield select(makeSelectOldWebhookData());
-  const {agent, ...data} = webhookData;
+  const { agent, ...data } = webhookData;
   delete data.id;
   try {
-    if (!_.isEqual(webhookData, oldWebhookData)){
+    if (!_.isEqual(webhookData, oldWebhookData)) {
       yield call(api.agent.putAgentIdWebhook, { id, body: data });
     }
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(updateWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
+        yield put(updateWebhookError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateWebhookError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
+
+function* putPostFormat(payload) {
+  const { api, id } = payload;
+  const postFormatData = yield select(makeSelectPostFormatData());
+  const { agent, ...data } = postFormatData;
+  delete data.id;
+  try {
+    yield call(api.agent.putAgentIdPostformat, { id, body: data });
+
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
+      yield put(updateWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(updateWebhookError({ message: errObject.err.response.obj.message }));
       }
       else {
@@ -135,11 +188,31 @@ function* deleteWebhook(payload) {
     yield call(api.agent.deleteAgentIdWebhook, { id });
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(updateWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
+        yield put(updateWebhookError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateWebhookError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
+
+function* deletePostFormat(payload) {
+  const { api, id } = payload;
+  try {
+    yield call(api.agent.deleteAgentIdPostformat, { id });
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
+      yield put(updateWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(updateWebhookError({ message: errObject.err.response.obj.message }));
       }
       else {
@@ -156,20 +229,38 @@ export function* putAgent(payload) {
   const updatedData = agentData.updateIn(['domainClassifierThreshold'], domainClassifierThreshold => domainClassifierThreshold / 100);
   const { id, ...data } = updatedData;
   try {
-    if (!_.isEqual(agentData, oldAgentData)){
+    if (!_.isEqual(agentData, oldAgentData)) {
       yield call(api.agent.putAgentId, { id, body: data });
     }
-    if (oldAgentData.useWebhook){
-      if (agentData.useWebhook){
+    if (oldAgentData.useWebhook) {
+      if (agentData.useWebhook) {
         yield call(putWebhook, { api, id: agentData.id });
       }
       else {
-        yield call(deleteWebhook, {api, id: agentData.id});
+        yield call(deleteWebhook, { api, id: agentData.id });
       }
     }
     else {
-      if (agentData.useWebhook){
+      if (agentData.useWebhook) {
         yield call(postWebhook, { api, id: agentData.id });
+      }
+    }
+    if (oldAgentData.usePostFormat) {
+      if (agentData.usePostFormat) {
+        try {
+          yield call(putPostFormat, { api, id: agentData.id });
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      else {
+        yield call(deletePostFormat, { api, id: agentData.id });
+      }
+    }
+    else {
+      try {
+        yield call(postPostFormat, { api, id: agentData.id });
+      } catch (error) {
       }
     }
     yield put(updateAgentSuccess());
@@ -178,11 +269,11 @@ export function* putAgent(payload) {
     yield put(push('/domains'));
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(updateAgentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(updateAgentError({ message: errObject.err.response.obj.message }));
       }
       else {
@@ -203,20 +294,43 @@ export function* getWebhook(payload) {
   const { api, id } = payload;
   try {
     const response = yield call(api.agent.getAgentIdWebhook, { id });
-    
+
     const webhook = response.obj;
     yield put(loadWebhookSuccess(webhook));
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(loadWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(loadWebhookError({ message: errObject.err.response.obj.message }));
       }
       else {
         yield put(loadWebhookError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
+
+export function* getPostFormat(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.agent.getAgentIdPostformat, { id });
+
+    const postFormat = response.obj;
+    yield put(loadPostFormatSuccess(postFormat));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
+      yield put(loadPostFormatError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
+        yield put(loadPostFormatError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadPostFormatError({ message: 'Unknow API error' }));
       }
     }
   }
@@ -229,13 +343,15 @@ export function* getAgent(payload) {
     const agent = response.obj;
     agent.domainClassifierThreshold *= 100;
     yield put(loadAgentSuccess(agent));
+    yield put(loadWebhook(id));
+    yield put(loadPostFormat(id));
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
       yield put(loadAgentError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
         yield put(loadAgentError({ message: errObject.err.response.obj.message }));
       }
       else {
@@ -253,7 +369,7 @@ export function* loadAgent() {
   yield cancel(watcher);
 }
 
-export function* loadWebhook() {
+export function* loadWebhookSaga() {
   const watcher = yield takeLatest(LOAD_WEBHOOK, getWebhook);
 
   // Suspend execution until location changes
@@ -261,9 +377,19 @@ export function* loadWebhook() {
   yield cancel(watcher);
 }
 
+export function* loadPostFormatSaga() {
+  const watcher = yield takeLatest(LOAD_POSTFORMAT, getPostFormat);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+
 export default [
   createAgent,
   loadAgent,
-  loadWebhook,
+  loadWebhookSaga,
   updateAgent,
+  loadPostFormatSaga
 ];

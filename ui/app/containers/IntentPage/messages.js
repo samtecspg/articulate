@@ -5,6 +5,11 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_intent.title',
     defaultMessage: 'Creating New Intent',
   },
+  defaultPostFormat : {
+    id: 'boilerplate.containers.IntentPage.create_intent.defaultPostFormat',
+    defaultMessage: '{ "textResponse" : "{{ textResponse }}" }'
+  },
+
   createIntentDescription: {
     id: 'boilerplate.containers.IntentPage.create_intent.description',
     defaultMessage: 'Intents are grouped user sayings with a similar purpose. For example a user may say, ' +
@@ -158,6 +163,10 @@ export default defineMessages({
     id: 'boilerplate.containers.IntentPage.create_agent.missing_webhook_message',
     defaultMessage: 'Please add at the webhook url',
   },
+  missingPostFormatPayload: {
+    id: 'boilerplate.containers.IntentPage.create_agent.missing_postFormat_payload',
+    defaultMessage: 'Please add a POST format response for the intent, default one has been added.',
+  },
   invalidSlotNameInPrompt: {
     id: 'boilerplate.containers.IntentPage.create_agent.invalid_slot_name_prompt',
     defaultMessage: 'Please verify that every text prompt for required slots are referencing valid slots names',
@@ -200,5 +209,14 @@ export default defineMessages({
   useWebhook: {
     id: 'boilerplate.containers.IntentPage.create_agent.use_webhook',
     defaultMessage: 'Webhook',
+  },
+  usePostFormat:{
+    id: 'boilerplate.containers.IntentPage.create_agent.use_postFormat',
+    defaultMessage: 'Response formatting',
+  },
+  postFormat:{
+    id: 'boilerplate.containers.IntentPage.create_agent.postFormat',
+    defaultMessage: 'Response definition',
+
   }
 });

@@ -12,7 +12,8 @@ class IntentModel {
             domain: Joi.string().trim(),
             intentName: Joi.string().trim(),
             examples: Joi.array().items(ExampleIntentModel.schema),
-            useWebhook: Joi.boolean()
+            useWebhook: Joi.boolean(),
+            usePostFormat: Joi.boolean()
         };
     };
 }

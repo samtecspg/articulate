@@ -5,6 +5,8 @@ import {
   LOAD_WEBHOOK_ERROR,
   LOAD_WEBHOOK_SUCCESS,
   LOAD_WEBHOOK,
+  LOAD_POSTFORMAT_ERROR,
+  LOAD_POSTFORMAT_SUCCESS
 } from './constants';
 
 export function loadAgentError(error) {
@@ -32,6 +34,20 @@ export function loadWebhookSuccess(webhook) {
   return {
     type: LOAD_WEBHOOK_SUCCESS,
     webhook,
+  };
+}
+
+export function loadPostFormatError(error) {
+  return {
+    type: LOAD_POSTFORMAT_ERROR,
+    error,
+  };
+}
+
+export function loadPostFormatSuccess(postFormat) {
+  return {
+    type: LOAD_POSTFORMAT_SUCCESS,
+    postFormat,
   };
 }
 

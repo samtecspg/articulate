@@ -36,7 +36,7 @@ module.exports = (request, reply) => {
                 }
                 if (data){
                     data.agent = agent.agentName;
-                    return cb(null, Cast(Flat.unflatten(data), 'webhook'));
+                    return cb(null, Cast(Flat.unflatten(data), 'postFormat'));
                 }
                 const error = Boom.notFound('The specified post format doesn\'t exists');
                 return cb(error);

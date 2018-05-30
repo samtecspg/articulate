@@ -56,6 +56,8 @@ import {
   resetAgentData,
   removeAgentFallback,
   loadWebhook,
+  changePostFormatData,
+  loadPostFormat
 } from './actions';
 
 import messages from './messages';
@@ -63,7 +65,7 @@ import messages from './messages';
 import languages from 'languages';
 import timezones from 'timezones';
 
-import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData } from './selectors';
+import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData, makeSelectPostFormatData } from './selectors';
 
 const sampleData = [
   {
@@ -193,8 +195,16 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
         position: 'bottom'
       });
     }
+    else if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
+      this.props.onChangePostFormatData("postFormatPayloadDefault", messages.defaultPostFormat);
+
+      // this.props.postFormat.postFormatPayload = messages.defaultPostFormat;
+      Alert.warning(messages.missingPostFormatPayload.defaultMessage, {
+        position: 'bottom'
+      });
+    }
     else {
-      if (timezones.indexOf(this.props.agent.timezone) === -1){
+      if (timezones.indexOf(this.props.agent.timezone) === -1) {
         Alert.error(messages.invalidTimezone.defaultMessage, {
           position: 'bottom'
         });
@@ -205,6 +215,8 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
         } else {
           this.props.onCreate();
         }
+
+
       }
     }
   }
@@ -227,7 +239,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     }
   }
 
-  routerWillLeave(route){
+  routerWillLeave(route) {
     if (!this.state.waitingForConfirm && this.props.touched && !this.state.clickedSave) {
       this.state.nextRoute = route;
       this.state.displayModal = true;
@@ -237,12 +249,12 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     }
   }
 
-  onLeave(){
+  onLeave() {
     this.props.resetForm();
     this.props.router.push(this.state.nextRoute.pathname);
   }
 
-  onDismiss(){
+  onDismiss() {
     this.setState({
       displayModal: false,
       waitingForConfirm: false,
@@ -250,7 +262,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   }
 
   render() {
-    const { loading, error, success, agent, match, webhook } = this.props;
+    const { loading, error, success, agent, match, webhook, postFormat } = this.props;
     const agentProps = {
       loading,
       error,
@@ -260,9 +272,9 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     };
 
     const breadcrumbs = [{ label: 'Agent' },];
-    if(this.state.editMode){
+    if (this.state.editMode) {
       breadcrumbs.push({ label: 'Edit' })
-    }else{
+    } else {
       breadcrumbs.push({ label: '+ Create' })
     }
 
@@ -287,6 +299,16 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 right
                 onChange={this.props.onChangeAgentData.bind(null, 'useWebhook')}
                 checked={agent.useWebhook}
+              />
+
+
+            </Row>
+            <Row style={{ marginTop: '15px' }}>
+              <Toggle
+                label={"Post format"}
+                right
+                onChange={this.props.onChangeAgentData.bind(null, 'usePostFormat')}
+                checked={agent.usePostFormat}
               />
             </Row>
             <Row>
@@ -326,9 +348,9 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 {returnFormattedOptions(languages)}
               </Input>
               <Typeahead
-                id= 'timezone'
+                id='timezone'
                 name='timezone'
-			          maxSearchResults={10}
+                maxSearchResults={10}
                 callback={this.props.onChangeAgentData}
                 label={messages.timezone.defaultMessage}
                 value={agent.timezone}
@@ -338,7 +360,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
           </Form>
 
           <Row>
-            <br/>
+            <br />
             <SliderInput
               label={messages.domainClassifierThreshold}
               tooltip={messages.domainClassifierThresholdDescription.defaultMessage}
@@ -350,14 +372,14 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             />
           </Row>
 
-          <Form style={{marginTop: '0px'}}>
+          <Form style={{ marginTop: '0px' }}>
             <Row>
-                <FormTextInput
-                  id='fallbacks'
-                  label={messages.agentFallbackTitle}
-                  placeholder={messages.fallbackInput.defaultMessage}
-                  onKeyDown={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
-                />
+              <FormTextInput
+                id='fallbacks'
+                label={messages.agentFallbackTitle}
+                placeholder={messages.fallbackInput.defaultMessage}
+                onKeyDown={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
+              />
             </Row>
           </Form>
 
@@ -373,10 +395,10 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             : null
           }
 
-          <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el;}}>
+          <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el; }}>
           </div>
 
-          <Form style={{marginTop: '30px'}}>
+          <Form style={{ marginTop: '30px' }}>
             <Row>
               <Toggle
                 inline
@@ -397,13 +419,45 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               </Tooltip>
             </Row>
           </Form>
+          {
+            agent.usePostFormat ? <div><br /><ContentSubHeader title={messages.postFormat} /></div> : null
+          }
 
           {
-            agent.useWebhook ? <div><br/><ContentSubHeader title={messages.webhook} /></div> : null
+            agent.usePostFormat ?
+            <Form style={{ marginTop: '0px' }}>
+              <Row>
+                <AceEditor
+                  width="100%"
+                  height="250px"
+                  mode={'json'}
+                  theme="terminal"
+                  name="webhookPayload"
+                  readOnly={false}
+                  onLoad={this.onLoad}
+                  onChange={this.props.onChangePostFormatData.bind(null, 'postFormatPayload')}
+                  fontSize={14}
+                  showPrintMargin={true}
+                  showGutter={true}
+                  highlightActiveLine={true}
+                  value={postFormat.postFormatPayload}
+                  setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }} />
+              </Row>
+              </Form>
+               : null
+          }
+
+
+          {
+            agent.useWebhook ? <div><br /><ContentSubHeader title={messages.webhook} /></div> : null
           }
           {
             agent.useWebhook ?
-              <Form style={{marginTop: '0px'}}>
+              <Form style={{ marginTop: '0px' }}>
                 <Row>
                   <Input
                     s={2}
@@ -434,30 +488,32 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                     {returnFormattedOptions(payloadTypes)}
                   </Input>
                   {webhook.webhookPayloadType !== 'None' ?
-                  (<AceEditor
-                    width="100%"
-                    height="250px"
-                    mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
-                    theme="terminal"
-                    name="webhookPayload"
-                    readOnly={false}
-                    onLoad={this.onLoad}
-                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
-                    fontSize={14}
-                    showPrintMargin={true}
-                    showGutter={true}
-                    highlightActiveLine={true}
-                    value={webhook.webhookPayload}
-                    setOptions={{
-                    useWorker: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                    }}/>) : null}
+                    (<AceEditor
+                      width="100%"
+                      height="250px"
+                      mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                      theme="terminal"
+                      name="webhookPayload"
+                      readOnly={false}
+                      onLoad={this.onLoad}
+                      onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                      fontSize={14}
+                      showPrintMargin={true}
+                      showGutter={true}
+                      highlightActiveLine={true}
+                      value={webhook.webhookPayload}
+                      setOptions={{
+                        useWorker: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                      }} />) : null}
                 </Row>
               </Form>
-            : null
+              : null
           }
-          <br/>
+
+
+          <br />
         </Content>
         <ConfirmationModal
           isOpen={this.state.displayModal}
@@ -484,6 +540,7 @@ AgentPage.propTypes = {
   onUpdate: React.PropTypes.func,
   onChangeAgentData: React.PropTypes.func,
   onChangeWebhookData: React.PropTypes.func,
+  onChangePostFormatData: React.PropTypes.func,
   resetForm: React.PropTypes.func,
   onSuccess: React.PropTypes.func,
   onEditMode: React.PropTypes.func,
@@ -494,20 +551,31 @@ export function mapDispatchToProps(dispatch) {
   return {
     onChangeAgentData: (field, evt) => {
       dispatch(resetStatusFlags());
-      if (field === 'useWebhook' || field === 'extraTrainingData'){
+      if (field === 'useWebhook' || field === 'extraTrainingData' || field === 'usePostFormat') {
         evt.target.value = evt.target.checked;
       }
       dispatch(changeAgentData({ value: evt.target.value, field }));
     },
     onChangeWebhookData: (field, evt) => {
       dispatch(resetStatusFlags());
-      if (field === 'webhookPayload'){
+      if (field === 'webhookPayload') {
         const value = evt;
         dispatch(changeWebhookData({ value, field }));
       }
       else {
         dispatch(changeWebhookData({ value: evt.target.value, field }));
       }
+    },
+    onChangePostFormatData: (field, evt) => {
+      if (field === 'postFormatPayloadDefault') {
+        let field = 'postFormatPayload'
+        dispatch(changePostFormatData({ value: messages.defaultPostFormat.defaultMessage, field }))
+      }
+      if (field === 'postFormatPayload') {
+        const value = evt;
+        dispatch(changePostFormatData({ value, field }));
+      }
+
     },
     onCreate: () => {
       dispatch(createAgent());
@@ -528,6 +596,10 @@ export function mapDispatchToProps(dispatch) {
       if (props.agent.useWebhook) {
         dispatch(loadWebhook(props.params.id));
       }
+      if (props.agent.usePostFormat) {
+        dispatch(loadPostFormat(props.params.id));
+      }
+
     },
     onRemoveFallback: (fallbackIndex) => {
       dispatch(removeAgentFallback(fallbackIndex));
@@ -543,6 +615,7 @@ const mapStateToProps = createStructuredSelector({
   success: makeSelectSuccess(),
   inWizard: makeSelectInWizard(),
   error: makeSelectError(),
+  postFormat: makeSelectPostFormatData()
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentPage);

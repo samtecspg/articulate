@@ -64,7 +64,9 @@ import {
   tagEntity,
   toggleFlag,
   changeWebhookData,
+  changePostFormatData,
   loadWebhook,
+  loadPostFormat
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -80,6 +82,7 @@ import {
   makeSelectWindowSelection,
   makeSelectWebhookData,
   makeSelectOldIntentData,
+  makeSelectPostFormatData
 } from './selectors';
 
 const returnFormattedOptions = (options) => options.map((option, index) => (
@@ -159,7 +162,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     webhookPayloadJustOpen: false,
   };
 
-  componentWillMount(){
+  componentWillMount() {
     this.props.resetForm();
   }
 
@@ -167,7 +170,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     this.setEditMode(this.props.route.name === 'intentEdit');
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
     this.setState({
-      userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize)
+      userExamplesShown: this.props.intent.examples.slice(0, this.props.defaultUserExamplesPageSize)
     });
   }
 
@@ -205,13 +208,16 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         }
       }
     } else {
-      if (field === 'useWebhook' && value){
+      if (field === 'useWebhook' && value) {
         this.state.webhookJustOpen = true;
         this.props.onChangeIntentData(field, value);
       }
+      else if (field === 'usePostFormat' && value) {
+        this.props.onChangeIntentData(field, value);
+      }
       else {
-        if (field === 'webhookPayloadType'){
-          if (evt.target.value !== 'None'){
+        if (field === 'webhookPayloadType') {
+          if (evt.target.value !== 'None') {
             this.state.webhookPayloadJustOpen = true;
           }
           this.props.onChangeWebhookData('webhookPayloadType', evt)
@@ -225,19 +231,19 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   componentDidUpdate(prevProps, prevState, prevContext) {
     //If an example is added or removed then update the table to add/remove the new example
-    if (prevProps.intent.examples.length !== this.props.intent.examples.length){
-      if (prevProps.intent.examples.length < this.props.intent.examples.length){
+    if (prevProps.intent.examples.length !== this.props.intent.examples.length) {
+      if (prevProps.intent.examples.length < this.props.intent.examples.length) {
         this.setState({
           userExamplesPage: 0,
-          userExamplesPages: Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize),
-          userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize),
+          userExamplesPages: Math.ceil(this.props.intent.examples.length / this.props.defaultUserExamplesPageSize),
+          userExamplesShown: this.props.intent.examples.slice(0, this.props.defaultUserExamplesPageSize),
           showUserExamplesPagination: this.props.intent.examples.length > this.props.defaultUserExamplesPageSize
         });
       }
       else {
-          const oldNumOfPages = Math.ceil(prevProps.intent.examples.length/this.props.defaultUserExamplesPageSize);
-          const newNumOfPages = Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize);
-          const currentPage = oldNumOfPages > newNumOfPages ? this.state.userExamplesPage - 1 : this.state.userExamplesPage;
+        const oldNumOfPages = Math.ceil(prevProps.intent.examples.length / this.props.defaultUserExamplesPageSize);
+        const newNumOfPages = Math.ceil(this.props.intent.examples.length / this.props.defaultUserExamplesPageSize);
+        const currentPage = oldNumOfPages > newNumOfPages ? this.state.userExamplesPage - 1 : this.state.userExamplesPage;
         this.setState({
           userExamplesPage: currentPage,
           userExamplesPages: newNumOfPages,
@@ -247,12 +253,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       }
     }
     //if the filter changed filter the examples and slice the result. If the user removed the input show the first 10 examples
-    if (prevState.userExampleFilter !== this.state.userExampleFilter){
-      if (this.state.userExampleFilter === ''){
+    if (prevState.userExampleFilter !== this.state.userExampleFilter) {
+      if (this.state.userExampleFilter === '') {
         this.setState({
           userExamplesPage: 0,
-          userExamplesPages: Math.ceil(this.props.intent.examples.length/this.props.defaultUserExamplesPageSize),
-          userExamplesShown: this.props.intent.examples.slice(0,this.props.defaultUserExamplesPageSize),
+          userExamplesPages: Math.ceil(this.props.intent.examples.length / this.props.defaultUserExamplesPageSize),
+          userExamplesShown: this.props.intent.examples.slice(0, this.props.defaultUserExamplesPageSize),
           showUserExamplesPagination: this.props.intent.examples.length > this.props.defaultUserExamplesPageSize
         });
       }
@@ -261,7 +267,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           userExamplesPage: 0,
           userExamplesPages: Math.ceil(this.props.intent.examples.filter((example) => {
             return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
-          }).length/this.props.defaultUserExamplesPageSize),
+          }).length / this.props.defaultUserExamplesPageSize),
           userExamplesShown: this.props.intent.examples.filter((example) => {
             return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
           }).slice(0, this.props.defaultUserExamplesPageSize),
@@ -272,7 +278,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       }
     }
     //if the user just tagged an entity update the examples list to render the new tagged entity
-    if (this.state.entityTagged){
+    if (this.state.entityTagged) {
       this.setState({
         entityTagged: false,
         userExamplesShown: this.props.intent.examples.slice(this.state.userExamplesPage, this.props.defaultUserExamplesPageSize)
@@ -294,13 +300,13 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
       });
     }
 
-    if (this.state.webhookJustOpen){
+    if (this.state.webhookJustOpen) {
       this.state.webhookJustOpen = false;
       document.getElementById('webhookEditor').focus();
       document.getElementById('webhookEditor').scrollIntoView();
     }
 
-    if (this.state.webhookPayloadJustOpen){
+    if (this.state.webhookPayloadJustOpen) {
       this.state.webhookPayloadJustOpen = false;
       document.getElementById('webhookPayload').focus();
       document.getElementById('webhookPayload').scrollIntoView();
@@ -325,7 +331,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.state.clickedSave = true;
-    if (this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '' || (!this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) {
+    if (((this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '' ) || ( !this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) && ((this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload !== '')||(!this.props.intent.usePostFormat))) {
       if (this.state.editMode) {
         this.props.onUpdate();
       } else {
@@ -338,11 +344,18 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           position: 'bottom'
         });
       }
+      else if (this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
+        this.props.onChangePostFormatData("postFormatPayloadDefault",messages.defaultPostFormat);
+        Alert.warning(messages.missingPostFormatPayload.defaultMessage, {
+          position: 'bottom'
+        });
+      }
       else {
         Alert.warning(messages.missingResponsesMessage.defaultMessage, {
           position: 'bottom'
         });
       }
+
     }
   }
 
@@ -388,7 +401,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   }
 
   render() {
-    const { loading, error, success, intent, webhook, agentDomains, agentEntities, currentAgent } = this.props;
+    const { loading, error, success, intent, webhook, agentDomains, agentEntities, currentAgent, postFormat } = this.props;
     if (_.isNil(agentDomains) && _.isNil(agentEntities)) return undefined;
     const intentProps = {
       loading,
@@ -434,11 +447,11 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         />
         <Header
           breadcrumbs={breadcrumbs} actionButtons={
-          <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
-        }
+            <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
+          }
         />
         <Content>
-          <ContentHeader title={this.state.editMode ? messages.editIntentTitle : messages.createIntentTitle} subTitle={this.state.editMode ? messages.editIntentDescription : messages.createIntentDescription } />
+          <ContentHeader title={this.state.editMode ? messages.editIntentTitle : messages.createIntentTitle} subTitle={this.state.editMode ? messages.editIntentDescription : messages.createIntentDescription} />
           <Form>
             <Row>
               <Toggle
@@ -446,6 +459,14 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 right
                 onChange={(evt) => this.onChangeInput(evt, 'useWebhook')}
                 checked={intent.useWebhook}
+              />
+            </Row>
+            <Row  style={{ marginTop: '15px' }}>
+              <Toggle
+                label={messages.usePostFormat.defaultMessage}
+                right
+                onChange={(evt) => this.onChangeInput(evt, 'usePostFormat')}
+                checked={intent.usePostFormat}
               />
             </Row>
             <Row>
@@ -487,61 +508,61 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             <div>
               {
                 this.state.userExamplesShown.length > 0 ?
-                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
-                  <Table>
-                    <UserSayings
-                      page={this.state.userExamplesPage}
-                      defaultPageSize={this.props.defaultUserExamplesPageSize}
-                      examples={this.state.userExamplesShown}
-                      onRemoveExample={this.props.onRemoveExample}
-                      setWindowSelection={this.props.setWindowSelection}
-                      onTagEntity={this.handleOnTagEntity}
-                      agentEntities={agentEntities}
-                    />
-                  </Table>
-                </TableContainer> :
-                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
-                  <Table>
-                    <tbody>
-                      <tr style={{ width: '100%' }}>
-                        <td style={{ width: '100%', display: 'inline-block' }}>
-                          <div>
-                            <span>Nothing found...</span>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </TableContainer>
+                  <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px' }}>
+                    <Table>
+                      <UserSayings
+                        page={this.state.userExamplesPage}
+                        defaultPageSize={this.props.defaultUserExamplesPageSize}
+                        examples={this.state.userExamplesShown}
+                        onRemoveExample={this.props.onRemoveExample}
+                        setWindowSelection={this.props.setWindowSelection}
+                        onTagEntity={this.handleOnTagEntity}
+                        agentEntities={agentEntities}
+                      />
+                    </Table>
+                  </TableContainer> :
+                  <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px' }}>
+                    <Table>
+                      <tbody>
+                        <tr style={{ width: '100%' }}>
+                          <td style={{ width: '100%', display: 'inline-block' }}>
+                            <div>
+                              <span>Nothing found...</span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </TableContainer>
               }
               {
-              this.state.showUserExamplesPagination ?
-              <Row>
-                <Pagination
-                  pageText='Page'
-                  page={this.state.userExamplesPage}
-                  pages={this.state.userExamplesPages}
-                  canPrevious={this.state.userExamplesPage !== 0}
-                  canNext={this.state.userExamplesPage <= this.state.userExamplesPages}
-                  previousText='Previous'
-                  nextText='Next'
-                  ofText='of'
-                  style={{
-                    borderTop: '0px'
-                  }}
-                  showPageJump={true}
-                  onPageChange={(pageIndex) => {
-                    this.setState({
-                      userExamplesPage: pageIndex,
-                      userExamplesShown: this.state.userExampleFilter.length > 0 ? intent.examples.filter((example) => {
-                        return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
-                      }).slice(pageIndex * this.props.defaultUserExamplesPageSize, pageIndex * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize) :
-                      intent.examples.slice(pageIndex * this.props.defaultUserExamplesPageSize, pageIndex * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize)
-                    });
-                  }}
-                />
-              </Row>
-              : null
+                this.state.showUserExamplesPagination ?
+                  <Row>
+                    <Pagination
+                      pageText='Page'
+                      page={this.state.userExamplesPage}
+                      pages={this.state.userExamplesPages}
+                      canPrevious={this.state.userExamplesPage !== 0}
+                      canNext={this.state.userExamplesPage <= this.state.userExamplesPages}
+                      previousText='Previous'
+                      nextText='Next'
+                      ofText='of'
+                      style={{
+                        borderTop: '0px'
+                      }}
+                      showPageJump={true}
+                      onPageChange={(pageIndex) => {
+                        this.setState({
+                          userExamplesPage: pageIndex,
+                          userExamplesShown: this.state.userExampleFilter.length > 0 ? intent.examples.filter((example) => {
+                            return example.userSays.toLowerCase().indexOf(this.state.userExampleFilter.toLowerCase()) > -1;
+                          }).slice(pageIndex * this.props.defaultUserExamplesPageSize, pageIndex * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize) :
+                            intent.examples.slice(pageIndex * this.props.defaultUserExamplesPageSize, pageIndex * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize)
+                        });
+                      }}
+                    />
+                  </Row>
+                  : null
               }
             </div>
             : null
@@ -638,7 +659,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           }
           {
             intent.useWebhook ?
-              <Form style={{marginTop: '0px'}}>
+              <Form style={{ marginTop: '0px' }}>
                 <Row>
                   <Input
                     s={2}
@@ -670,29 +691,63 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                     {returnFormattedOptions(payloadTypes)}
                   </Input>
                   {webhook.webhookPayloadType !== 'None' ?
-                  (<AceEditor
+                    (<AceEditor
+                      width="100%"
+                      height="250px"
+                      mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                      theme="terminal"
+                      name="webhookPayload"
+                      readOnly={false}
+                      onLoad={this.onLoad}
+                      onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                      fontSize={14}
+                      showPrintMargin={true}
+                      showGutter={true}
+                      highlightActiveLine={true}
+                      value={webhook.webhookPayload}
+                      setOptions={{
+                        useWorker: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                      }} />) : null}
+                </Row>
+              </Form>
+              : null
+          }
+
+
+          {
+            intent.usePostFormat ? <ContentSubHeader title={messages.postFormat} /> : null
+          }
+          {
+            intent.usePostFormat ?
+              <Form style={{ marginTop: '0px' }}>
+                <Row>
+                  <AceEditor
                     width="100%"
                     height="250px"
-                    mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                    mode={'json'}
                     theme="terminal"
-                    name="webhookPayload"
+                    name="postFormatPayload"
                     readOnly={false}
                     onLoad={this.onLoad}
-                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                    onChange={this.props.onChangePostFormatData.bind(null, 'postFormatPayload')}
                     fontSize={14}
                     showPrintMargin={true}
                     showGutter={true}
                     highlightActiveLine={true}
-                    value={webhook.webhookPayload}
+                    value={postFormat.postFormatPayload}
                     setOptions={{
-                    useWorker: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                    }}/>) : null}
+                      useWorker: false,
+                      showLineNumbers: true,
+                      tabSize: 2,
+                    }} />
                 </Row>
-              </Form>
-            : null
+              </Form> : null
+
           }
+
+
 
         </Content>
         <ConfirmationModal
@@ -722,6 +777,7 @@ IntentPage.propTypes = {
   ]),
   onChangeIntentData: React.PropTypes.func,
   onChangeWebhookData: React.PropTypes.func,
+  onChangePostFormatData: React.PropTypes.func,
   onCreate: React.PropTypes.func,
   onUpdate: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
@@ -766,12 +822,23 @@ export function mapDispatchToProps(dispatch) {
     },
     onChangeWebhookData: (field, evt) => {
       dispatch(resetStatusFlags());
-      if (field === 'webhookPayload'){
+      if (field === 'webhookPayload') {
         const value = evt;
         dispatch(changeWebhookData({ value, field }));
       }
       else {
         dispatch(changeWebhookData({ value: evt.target.value, field }));
+      }
+    },
+    onChangePostFormatData: (field, evt) => {
+      dispatch(resetStatusFlags());
+      if (field === 'postFormatPayloadDefault') {
+        let field = 'postFormatPayload'
+        dispatch(changePostFormatData({value: messages.defaultPostFormat.defaultMessage,field }))
+      }
+      if (field === 'postFormatPayload') {
+        const value = evt;
+        dispatch(changePostFormatData({ value, field }));
       }
     },
     onRemoveExample: (exampleIndex, evt) => {
@@ -836,8 +903,17 @@ export function mapDispatchToProps(dispatch) {
     onEditMode: (props) => {
       dispatch(loadIntent(props.params.id));
       dispatch(loadScenario(props.params.id));
-      if (props.intent.useWebhook) {
+      try  {
         dispatch(loadWebhook(props.params.id));
+      }
+      catch(err){
+        console.log('Webhook not found for this intent');
+      }
+      try {
+        dispatch(loadPostFormat(props.params.id));
+      }
+      catch(err){
+        console.log('Post Format not found for this intent');
       }
     },
   };
@@ -856,6 +932,7 @@ const mapStateToProps = createStructuredSelector({
   agentDomains: makeSelectAgentDomains(),
   agentEntities: makeSelectAgentEntities(),
   currentAgent: makeSelectCurrentAgent(),
+  postFormat: makeSelectPostFormatData()
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(IntentPage);

@@ -12,6 +12,12 @@ const FindWebhookController = require('./findWebhook.intent.controller');
 const UpdateWebhookController = require('./updateWebhook.intent.controller');
 const DeleteWebhookController = require('./deleteWebhook.intent.controller');
 
+const AddPostFormatController  = require('./addPostFormat.intent.controller');
+const FindPostFormatController = require('./findPostFormat.intent.controller');
+const UpdatePostFormatController = require('./updatePostFormat.intent.controller');
+const DeletePostFormatController = require('./deletePostFormat.intent.controller');
+
+
 const IntentController = {
 
     add: AddController,
@@ -36,7 +42,15 @@ const IntentController = {
 
     updateWebhook: UpdateWebhookController,
 
-    deleteWebhook: DeleteWebhookController
+    deleteWebhook: DeleteWebhookController,
+
+    addPostFormat: AddPostFormatController,
+
+    findPostFormat: FindPostFormatController,
+
+    updatePostFormat: UpdatePostFormatController,
+
+    deletePostFormat: DeletePostFormatController
 };
 
 module.exports = IntentController;

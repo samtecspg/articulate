@@ -72,7 +72,6 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        let a = Cast(result.webhook, 'webhook');
         return reply(Cast(result.webhook, 'webhook'));
     });
 };

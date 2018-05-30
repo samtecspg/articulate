@@ -7,6 +7,7 @@ const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHel
 
 
 module.exports = (request, reply) => {
+
     RegisterHandlebarHelpers(Handlebars);
     const agentId = request.params.id;
     let sessionId;
@@ -96,6 +97,7 @@ module.exports = (request, reply) => {
                     }
                 });
             }
+
             AgentTools.respond(server, conversationStateObject, (err, result) => {
 
                 if (err) {
@@ -109,23 +111,43 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err);
         }
-        const compiledPostFormat = Handlebars.compile(conversationStateObject.agent.postFormat.postFormatPayload);
-        //let dd = {...conversationStateObject,textResponse: data.textResponse};
-        const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject, { textResponse: data.textResponse }));
-        let processedPostFormatJson = {};
-        try {
-            processedPostFormatJson = JSON.parse(processedPostFormat);
-        } catch (error) {
-            console.log('Error formatting the post response: ', error);
-            return reply({
-                textResponse: data.textResponse,
-                postFormating: 'Error formatting the post response: ' + error
-            });
+        let postFormatPayloadToUse;
+        let usedPostFormatIntent;
+        if (conversationStateObject.intent.usePostFormat) {
+            postFormatPayloadToUse = conversationStateObject.intent.postFormat.postFormatPayload;
+            usedPostFormatIntent = true;
         }
-        if (!processedPostFormatJson.textResponse) {
-            processedPostFormatJson.textResponse = data.textResponse;
+        else if (conversationStateObject.intent.usePostFormat) {
+            usedPostFormatIntent = false;
+            postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
         }
-        return reply(processedPostFormatJson);
+        if (postFormatPayloadToUse) {
+            try {
+                const compiledPostFormat = Handlebars.compile(postFormatPayloadToUse);
+                //let dd = {...conversationStateObject,textResponse: data.textResponse};
+                const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject, { textResponse: data.textResponse }));
+                let processedPostFormatJson = {};
+                processedPostFormatJson = JSON.parse(processedPostFormat);
+                if (!processedPostFormatJson.textResponse) {
+                    processedPostFormatJson.textResponse = data.textResponse;
+                }
+                return reply(processedPostFormatJson);
+            }
+            catch (error) {
+                const errorMessage = usedPostFormatIntent ? 'Error formatting the post response using intent POST format : ' : 'Error formatting the post response using agent POST format : ';
+                console.log(errorMessage, error);
+                return reply({
+                    textResponse: data.textResponse,
+                    postFormating: errorMessage + error
+                });
+            }
+
+        }
+
+        else {
+            return reply({ textResponse: data.textResponse });
+        }
+
 
     });
 };

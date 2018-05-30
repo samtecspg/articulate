@@ -148,6 +148,18 @@ class AgentValidate {
             })()
         };
 
+
+        this.findIntentPostFormatInDomainByIdByAgentId = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    domainId: DomainSchema.id.required().description('Id of the domain'),
+                    intentId: IntentSchema.id.required().description('Id of the intent')
+                };
+            })()
+        };
+
         this.add = {
             payload: (() => {
 
@@ -157,6 +169,7 @@ class AgentValidate {
                     language: AgentSchema.language.valid('en', 'es', 'de', 'fr', 'pt').required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
+                    usePostFormat: AgentSchema.usePostFormat.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
                     extraTrainingData: AgentSchema.extraTrainingData
@@ -179,6 +192,7 @@ class AgentValidate {
                     language: AgentSchema.language.valid('en', 'es', 'de', 'fr', 'pt').error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone,
                     useWebhook: AgentSchema.useWebhook,
+                    usePostFormat: AgentSchema.usePostFormat,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
                     status: AgentSchema.status,
@@ -395,14 +409,15 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: AgentSchema.id.required().description('Id of the agent')
+                    id: IntentSchema.id.required().description('Id of the agent')
                 };
             })(),
             payload: (() => {
 
                 return {
                     agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
-                    postFormatPayload: PostFormat.postFormatPayload.allow('').optional()
+                    postFormatPayload: PostFormat.postFormatPayload.required(),
+                    id : Joi.any().allow('').optional()
                 };
             })()
         };
@@ -426,7 +441,6 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
                     postFormatPayload: PostFormat.postFormatPayload.allow('').optional()
                 };
             })()

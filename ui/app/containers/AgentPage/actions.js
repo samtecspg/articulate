@@ -9,6 +9,10 @@ import {
   LOAD_WEBHOOK_ERROR,
   LOAD_WEBHOOK_SUCCESS,
   LOAD_WEBHOOK,
+  CHANGE_POSTFORMAT_DATA,
+  LOAD_POSTFORMAT_ERROR,
+  LOAD_POSTFORMAT_SUCCESS,
+  LOAD_POSTFORMAT
 } from './constants';
 
 export function changeAgentData(payload) {
@@ -18,9 +22,24 @@ export function changeAgentData(payload) {
   };
 }
 
+export function loadPostFormat(id){
+  return{
+    type: LOAD_POSTFORMAT,
+    apiCall: true,
+    id,
+  }
+}
+
 export function changeWebhookData(payload) {
   return {
     type: CHANGE_WEBHOOK_DATA,
+    payload,
+  };
+}
+
+export function changePostFormatData(payload) {
+  return {
+    type: CHANGE_POSTFORMAT_DATA,
     payload,
   };
 }
@@ -59,6 +78,20 @@ export function loadWebhookSuccess(webhook) {
   };
 }
 
+export function loadPostFormatError(error) {
+  return {
+    type: LOAD_POSTFORMAT_ERROR,
+    error,
+  };
+}
+
+export function loadPostFormatSuccess(postFormat) {
+  return {
+    type: LOAD_POSTFORMAT_SUCCESS,
+    postFormat,
+  };
+}
+
 export function loadAgent(id) {
   return {
     type: LOAD_AGENT,
@@ -82,3 +115,5 @@ export function removeAgentFallback(index) {
     index,
   };
 }
+
+

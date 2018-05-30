@@ -9,6 +9,9 @@ module.exports = (object, type) => {
             if (typeof object.useWebhook !== 'boolean'){
                 object.useWebhook = object.useWebhook === 'true';
             }
+            if (typeof object.usePostFormat !== 'boolean'){
+                object.usePostFormat = object.usePostFormat === 'true';
+            }
             if (typeof object.extraTrainingData !== 'boolean'){
                 object.extraTrainingData = object.extraTrainingData === 'true';
             }
@@ -33,6 +36,10 @@ module.exports = (object, type) => {
         case 'intent':
             if (typeof object.useWebhook !== 'boolean'){
                 object.useWebhook = object.useWebhook === 'true';
+            }
+
+            if (typeof object.usePostFormat !== 'boolean'){
+                object.usePostFormat = object.usePostFormat === 'true';
             }
             object.examples = object.examples.map((example) => {
 

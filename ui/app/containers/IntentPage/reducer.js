@@ -4,6 +4,7 @@ import {
   ADD_TEXT_PROMPT,
   CHANGE_INTENT_DATA,
   CHANGE_WEBHOOK_DATA,
+  CHANGE_POSTFORMAT_DATA,
   CHANGE_SLOT_NAME,
   DELETE_TEXT_PROMPT,
   LOAD_INTENT,
@@ -15,6 +16,9 @@ import {
   LOAD_WEBHOOK,
   LOAD_WEBHOOK_ERROR,
   LOAD_WEBHOOK_SUCCESS,
+  LOAD_POSTFORMAT,
+  LOAD_POSTFORMAT_ERROR,
+  LOAD_POSTFORMAT_SUCCESS,
   REMOVE_AGENT_RESPONSE,
   REMOVE_SLOT,
   REMOVE_USER_SAYING,
@@ -24,6 +28,7 @@ import {
   TOGGLE_FLAG,
   UNTAG_ENTITY,
 } from './constants';
+import messages from './messages';
 
 // The initial state of the App
 const initialState = Immutable({
@@ -34,6 +39,7 @@ const initialState = Immutable({
     intentName: '',
     examples: [],
     useWebhook: false,
+    usePostFormat: false,
   },
   scenarioData: {
     agent: null,
@@ -51,6 +57,12 @@ const initialState = Immutable({
     webhookVerb: 'GET',
     webhookPayloadType: 'None',
     webhookPayload: '',
+  },
+  postFormatData: {
+    agent: null,
+    domain: null,
+    intent: null,
+    postFormatPayload: ''
   },
   touched: false,
   oldIntent: null,
@@ -75,7 +87,30 @@ function intentReducer(state = initialState, action) {
         return state
           .setIn(['intentData', action.payload.field], action.payload.value)
           .set('touched', true);
-      } else if (action.payload.field === 'webhookUrl') {
+      }
+      else if (action.payload.field === 'usePostFormat') {
+        if ( state.oldIntent !== null ){
+          if ( !state.oldIntent.usePostFormat && action.payload.value){
+          return state
+          .setIn(['intentData', action.payload.field], action.payload.value)
+          .setIn(['postFormatData','postFormatPayload'],messages.defaultPostFormat.defaultMessage)
+          .set('touched', true);
+        }
+        else if (state.oldIntent.usePostFormat) {
+          return state
+          .setIn(['intentData', action.payload.field], action.payload.value)
+          .set('touched', true);
+        }
+      }
+      else {
+        return state
+        .setIn(['intentData', action.payload.field], action.payload.value)
+        .setIn(['postFormatData','postFormatPayload'],messages.defaultPostFormat.defaultMessage)
+        .set('touched', true);
+      }
+
+      }
+      else if (action.payload.field === 'webhookUrl') {
         return state
           .setIn(['scenarioData', 'webhookUrl'], action.payload.value)
           .set('touched', true);
@@ -85,6 +120,7 @@ function intentReducer(state = initialState, action) {
           .setIn(['scenarioData', 'intent'], action.payload.value)
           .setIn(['webhookData', 'intent'], action.payload.value)
           .setIn(['intentData', action.payload.field], action.payload.value)
+          .setIn(['postFormatData','intent'],action.payload.value)
           .set('touched', true);
       } else {
         return state
@@ -94,11 +130,11 @@ function intentReducer(state = initialState, action) {
           .set('touched', true);
       }
     case CHANGE_WEBHOOK_DATA:
-      if (action.payload.field === 'webhookPayloadType' && action.payload.value === 'None'){
-        if (state.webhookData.webhookPayloadType === 'JSON'){
+      if (action.payload.field === 'webhookPayloadType' && action.payload.value === 'None') {
+        if (state.webhookData.webhookPayloadType === 'JSON') {
           state = state.set('oldPayloadJSON', state.webhookData.webhookPayload);
         }
-        if (state.webhookData.webhookPayloadType === 'XML'){
+        if (state.webhookData.webhookPayloadType === 'XML') {
           state = state.set('oldPayloadXML', state.webhookData.webhookPayload);
         }
         return state
@@ -107,15 +143,15 @@ function intentReducer(state = initialState, action) {
           .set('touched', true);
       }
       else {
-        if (action.payload.field === 'webhookPayloadType'){
-          if(action.payload.value === 'JSON' && state.webhookData.webhookPayloadType !== 'JSON'){
-            if (state.webhookData.webhookPayloadType === 'XML'){
+        if (action.payload.field === 'webhookPayloadType') {
+          if (action.payload.value === 'JSON' && state.webhookData.webhookPayloadType !== 'JSON') {
+            if (state.webhookData.webhookPayloadType === 'XML') {
               state = state.set('oldPayloadXML', state.webhookData.webhookPayload);
             }
             state = state.setIn(['webhookData', 'webhookPayload'], state.oldPayloadJSON);
           }
-          if(action.payload.value === 'XML' && state.webhookData.webhookPayloadType !== 'XML'){
-            if (state.webhookData.webhookPayloadType === 'JSON'){
+          if (action.payload.value === 'XML' && state.webhookData.webhookPayloadType !== 'XML') {
+            if (state.webhookData.webhookPayloadType === 'JSON') {
               state = state.set('oldPayloadJSON', state.webhookData.webhookPayload);
             }
             state = state.setIn(['webhookData', 'webhookPayload'], state.oldPayloadXML);
@@ -125,6 +161,11 @@ function intentReducer(state = initialState, action) {
           .setIn(['webhookData', action.payload.field], action.payload.value)
           .set('touched', true);
       }
+    case CHANGE_POSTFORMAT_DATA:
+      
+      return state
+        .setIn(['postFormatData', 'postFormatPayload'], action.payload.value)
+        .set('touched', true);
     case RESET_INTENT_DATA:
       return initialState;
     case TAG_ENTITY:
@@ -145,7 +186,7 @@ function intentReducer(state = initialState, action) {
                 end,
                 entityId: action.payload.entity.id
               };
-              if (action.payload.entity.entityName.indexOf('sys.') !== -1){
+              if (action.payload.entity.entityName.indexOf('sys.') !== -1) {
                 entityToAdd.extractor = 'system';
                 entityToAdd.entityId = 0;
               }
@@ -272,6 +313,19 @@ function intentReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('error', false);
+    case LOAD_POSTFORMAT:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_POSTFORMAT_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case LOAD_POSTFORMAT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('postFormatData', action.postFormat);
     case LOAD_WEBHOOK_SUCCESS:
       return state
         .set('loading', false)

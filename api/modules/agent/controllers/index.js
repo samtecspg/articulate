@@ -27,6 +27,7 @@ const UpdatePostFormatController = require('./updatePostFormat.agent.controller'
 const UpdateWebhookController = require('./updateWebhook.agent.controller');
 const DeleteWebhookController = require('./deleteWebhook.agent.controller');
 const TrainController = require('./train.agent.controller');
+const FindIntentPostFormatInDomainByIdByAgentIdController = require('./findIntentPostFormatInDomainByIdByAgentId.agent.controller');
 
 
 const AgentController = {
@@ -50,6 +51,8 @@ const AgentController = {
     findDomainByIdByAgentId: FindDomainByIdByAgentIdController,
 
     findIntentByIdInDomainByIdByAgentId: FindIntentByIdInDomainByIdByAgentIdController,
+
+    findIntentPostFormatInDomainByIdByAgentId: FindIntentPostFormatInDomainByIdByAgentIdController,
 
     findIntentsInDomainByIdByAgentId: FindIntentsInDomainByIdByAgentIdController,
 

@@ -22,6 +22,10 @@ import {
   LOAD_WEBHOOK_ERROR,
   LOAD_WEBHOOK_SUCCESS,
   LOAD_WEBHOOK,
+  LOAD_POSTFORMAT,
+  LOAD_POSTFORMAT_ERROR,
+  LOAD_POSTFORMAT_SUCCESS,
+  CHANGE_POSTFORMAT_DATA
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -31,9 +35,17 @@ export function changeIntentData(payload) {
   };
 }
 
+
 export function changeWebhookData(payload) {
   return {
     type: CHANGE_WEBHOOK_DATA,
+    payload,
+  };
+}
+
+export function changePostFormatData(payload) {
+  return {
+    type: CHANGE_POSTFORMAT_DATA,
     payload,
   };
 }
@@ -182,6 +194,29 @@ export function loadWebhookSuccess(webhook) {
 export function loadWebhook(id) {
   return {
     type: LOAD_WEBHOOK,
+    apiCall: true,
+    id,
+  };
+}
+
+
+export function loadPostFormatError(error) {
+  return {
+    type: LOAD_POSTFORMAT_ERROR,
+    error,
+  };
+}
+
+export function loadPostFormatSuccess(postFormat) {
+  return {
+    type: LOAD_POSTFORMAT_SUCCESS,
+    postFormat,
+  };
+}
+
+export function loadPostFormat(id) {
+  return {
+    type: LOAD_POSTFORMAT,
     apiCall: true,
     id,
   };

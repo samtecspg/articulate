@@ -1,5 +1,6 @@
 export const CHANGE_INTENT_DATA = 'boilerplate/IntentPage/CHANGE_INTENT_DATA';
 export const CHANGE_WEBHOOK_DATA = 'boilerplate/IntentPage/CHANGE_WEBHOOK_DATA';
+export const CHANGE_POSTFORMAT_DATA = 'boilerplate/IntentPage/CHANGE_POSTFORMAT_DATA';
 export const RESET_INTENT_DATA = 'boilerplate/IntentPage/RESET_INTENT_DATA';
 export const TAG_ENTITY = 'boilerplate/IntentPage/TAG_ENTITY';
 export const UNTAG_ENTITY = 'boilerplate/IntentPage/UNTAG_ENTITY';
@@ -21,3 +22,6 @@ export const LOAD_SCENARIO_ERROR = 'boilerplate/IntentPage/LOAD_SCENARIO_ERROR';
 export const LOAD_WEBHOOK = 'boilerplate/AgentPage/LOAD_WEBHOOK';
 export const LOAD_WEBHOOK_SUCCESS = 'boilerplate/AgentPage/LOAD_WEBHOOK_SUCCESS';
 export const LOAD_WEBHOOK_ERROR = 'boilerplate/AgentPage/LOAD_WEBHOOK_ERROR';
+export const LOAD_POSTFORMAT = 'boilerplate/AgentPage/LOAD_POSTFORMAT';
+export const LOAD_POSTFORMAT_SUCCESS = 'boilerplate/AgentPage/LOAD_POSTFORMAT_SUCCESS';
+export const LOAD_POSTFORMAT_ERROR = 'boilerplate/AgentPage/LOAD_POSTFORMAT_ERROR';

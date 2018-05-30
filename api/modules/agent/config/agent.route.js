@@ -114,6 +114,16 @@ const AgentRoutes = [
         }
     },
     {
+        method: 'GET',
+        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/post-format',
+        config: {
+            description: 'Find the post format related with an intent, for the given domain and agent',
+            tags: ['api'],
+            validate: AgentValidator.findIntentPostFormatInDomainByIdByAgentId,
+            handler: AgentController.findIntentPostFormatInDomainByIdByAgentId
+        }
+    },
+    {
         method: 'POST',
         path: '/agent',
         config: {
