@@ -59,7 +59,7 @@ module.exports = (request, reply) => {
 
             const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'UTC');
             const languageToUse = agentData.agent.language ? agentData.agent.language : 'en';
-            AgentTools.parseText(redis, rasa, ERPipeline, duckling, text, timezoneToUse, languageToUse, agentData, (err, result) => {
+            AgentTools.parseText(redis, rasa, ERPipeline, duckling, text, timezoneToUse, languageToUse, agentData, server, (err, result) => {
 
                 if (err) {
                     return callback(err);

@@ -17,7 +17,7 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasa, ERPipeline, c
 
     Wreck.post(rasa + '/parse', { payload: requestPayload, json: true }, (err, wreckResponse, result) => {
 
-        if (err){
+        if (err) {
             const error = Boom.badImplementation(`Error calling rasa to parse text on domain ${trainedDomain.name}`);
             return callback(error, null);
         }
@@ -26,7 +26,7 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasa, ERPipeline, c
         const temporalParse = {
             domain: trainedDomain.name
         };
-        if (trainedDomain.justER){
+        if (trainedDomain.justER) {
             result.intent.name = trainedDomain.intent;
             result.intent.confidence = 1;
         }
@@ -51,7 +51,7 @@ const getDucklingParse = (textToParse, timezone, language, ducklingService, call
         json: 'force'
     }, (err, wreckResponse, payload) => {
 
-        if (err){
+        if (err) {
             const error = Boom.badImplementation('Error calling duckling to parse text');
             return callback(error, null);
         }
@@ -90,18 +90,30 @@ const castSysEntities = (parseResult) => {
         return tmpEntity;
     });
 
+    const regexEntities = _.map(parseResult.regex, (entity) => {
+
+        const tmpEntity = {
+            end: entity.end,
+            entity: 'sys.regex_' + entity.name,
+            extractor: 'regex',
+            start: entity.start,
+            value: { value: entity.resolvedRegex }
+        };
+        return tmpEntity;
+    });
+
     parseResult.rasa = _.map(parseResult.rasa, (rasaResult) => {
 
         const rasaEntities = _.map(rasaResult.entities, (entity) => {
 
-            if (entity.extractor === 'ner_spacy'){
+            if (entity.extractor === 'ner_spacy') {
                 entity.entity = 'sys.spacy_' + entity.entity.toLowerCase();
             }
             entity.value = { value: entity.value };
             return entity;
         });
 
-        rasaResult.entities = _.union(rasaEntities, ducklingEntities);
+        rasaResult.entities = _.union(rasaEntities, ducklingEntities, regexEntities);
 
         return rasaResult;
     });
@@ -111,7 +123,7 @@ const castSysEntities = (parseResult) => {
     return parseResult.rasa;
 };
 
-const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezone, language, agentData, cb) => {
+const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezone, language, agentData, server, cb) => {
 
     Async.parallel({
         rasa: (callback) => {
@@ -124,10 +136,10 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                         return trainedDomain.name.indexOf('_domain_recognizer') > -1;
                     });
                     domainRecognizerName = domainRecognizerName.length > 0 ? domainRecognizerName[0] : null;
-                    if (domainRecognizerName){
+                    if (domainRecognizerName) {
                         getRasaParse(textToParse, domainRecognizerName, agentData.agent.agentName, rasa, ERPipeline, (err, result) => {
 
-                            if (err){
+                            if (err) {
                                 return callbackGetDomainRecognizer(err, null);
                             }
                             return callbackGetDomainRecognizer(null, result);
@@ -142,16 +154,16 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                     const parsingResults = [];
                     Async.map(agentData.trainedDomains, (trainedDomain, callbk) => {
 
-                        if (!domainRecognitionResults || trainedDomain.name !== domainRecognitionResults.domain){
+                        if (!domainRecognitionResults || trainedDomain.name !== domainRecognitionResults.domain) {
                             const start = process.hrtime();
                             getRasaParse(textToParse, trainedDomain, agentData.agent.agentName, rasa, ERPipeline, (err, result) => {
 
-                                if (err){
+                                if (err) {
                                     return callbk(err, null);
                                 }
                                 const time = process.hrtime(start);
                                 result = Object.assign(result, { elapsed_time_ms: time[1] / 1000000 });
-                                if (domainRecognitionResults){
+                                if (domainRecognitionResults) {
                                     let domainScore = _.filter(domainRecognitionResults.intent_ranking, (recognizedDomain) => {
 
                                         return recognizedDomain.name === result.domain;
@@ -168,7 +180,7 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                         }
                     }, (err) => {
 
-                        if (err){
+                        if (err) {
                             return callbackGetParseForEachDomain(err, null);
                         }
 
@@ -177,7 +189,7 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                 }
             ], (err, results) => {
 
-                if (err){
+                if (err) {
                     return callback(err, null);
                 }
 
@@ -189,7 +201,7 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
             const start = process.hrtime();
             getDucklingParse(textToParse, timezone, language, ducklingService, (err, result) => {
 
-                if (err){
+                if (err) {
                     return callback(err, null);
                 }
                 const time = process.hrtime(start);
@@ -199,10 +211,54 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                 });
                 return callback(null, result);
             });
+        },
+        regex: (callback) => {
+
+            Async.waterfall([
+
+                (callbackGetAgent) => {
+
+                    server.inject(`/agent/${agentData.agent.id}/export?withReferences=true`, (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 400) {
+                                const errorNotFound = Boom.notFound(res.result.message);
+                                return callbackGetAgent(errorNotFound);
+                            }
+                            const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
+                            return callbackGetAgent(error, null);
+                        }
+                        return callbackGetAgent(null, res.result);
+                    });
+                },
+                (agent, callbackGetRegex) => {
+
+                    const regexs = [];
+                    agent.entities.forEach((ent) => {
+
+                        if (ent.regex && ent.regex !== ''){
+                            regexs.push({ name:ent.entityName,pattern:ent.regex });
+                        }
+                    });
+                    const results = [];
+                    regexs.forEach( (regex) => {
+
+                        const regexToTest = new RegExp(regex.pattern,'i');
+                        if (regexToTest.test(textToParse)){
+                            const resultParsed = regexToTest.exec(textToParse);
+                            const startIndex = textToParse.indexOf(resultParsed[0]);
+                            const endIndex = startIndex + textToParse.length;
+                            const resultToSend = Object.assign(regex,{ resolvedRegex: resultParsed[0], start: startIndex, end: endIndex });
+                            results.push(resultToSend);
+                        }
+                    });
+                    return callback(null, results);
+                }
+            ]);
         }
     }, (err, result) => {
 
-        if (err){
+        if (err) {
             return cb(err, null);
         }
 
@@ -221,19 +277,19 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
     });
 };
 
-module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, cb) => {
+module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, server, cb) => {
 
     const start = process.hrtime();
-    parseText(redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, (err, result) => {
+    parseText(redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, server, (err, result) => {
 
-        if (err){
+        if (err) {
             return cb(err, null);
         }
         const time = process.hrtime(start);
         const maximum_intent_score = _.max(_.compact(_.map(_.map(result.result.results, 'intent'), 'confidence')));
         const maximum_domain_score = _.max(_.compact(_.map(result.result.results, 'domainScore')));
         result.result.results = _.orderBy(result.result.results, 'domainScore', 'desc');
-        if (maximum_domain_score){
+        if (maximum_domain_score) {
             result.result = Object.assign(result.result, { maximum_domain_score, maximum_intent_score, total_elapsed_time_ms: time[1] / 1000000 });
         }
         else {
