@@ -25,6 +25,7 @@ let intent = null;
 let scenario = null;
 let agentWebhook = null;
 let intentWebhook = null;
+let exportedTestAgent = null;
 
 
 before({ timeout: 120000 }, (done) => {
@@ -517,6 +518,7 @@ suite('/agent/{id}/export', () => {
                 expect(res.result.domains[0].domainName).to.equal(domain.domainName);
                 expect(res.result.entities[0].entityName).to.equal(entity.entityName);
                 expect(res.result.domains[0].intents.length).to.equal(2);
+                exportedTestAgent = res.result;
                 done();
             });
         });
@@ -692,6 +694,25 @@ suite('/agent/import', () => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.agentName).to.equal(AgentToImport.agentName);
+                importedAgentId = res.result.id;
+                done();
+            });
+        });
+
+        test('should be able to import the exported agent in the export test and return the imported agent', (done) => {
+
+            exportedTestAgent.agentName = 'Exported-71999911-cb70-442c-8864-bc1d4e6a306e';
+
+            const options = {
+                method: 'POST',
+                url: '/agent/import',
+                payload: exportedTestAgent
+            };
+
+            server.inject(options, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.agentName).to.equal(exportedTestAgent.agentName);
                 importedAgentId = res.result.id;
                 done();
             });
