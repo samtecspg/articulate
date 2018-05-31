@@ -108,7 +108,7 @@
               "userSays": "Where is my car?",
               "entities": [
                 {
-                  "end": 14,
+                  "end": 15,
                   "start": 12,
                   "value": "car",
                   "entity": "Test Entity"
@@ -136,7 +136,7 @@
                 "slotName": "searchedObject",
                 "isRequired": true,
                 "textPrompts": [
-                  "What are you for?"
+                  "What are you looking for?"
                 ]
               }
             ],
