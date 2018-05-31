@@ -3,7 +3,33 @@ import SlotsRows from './SlotsRows';
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 
-export function Slots(props) {
+export class Slots extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+
+  componentWillReceiveProps(){
+    this.forceUpdate();
+  }
+
+  render() {
+    return (
+      this.props.agentEntities ? 
+        <SlotsRows
+        slots={this.props.slots}
+        onCheckboxChange={this.props.onCheckboxChange}
+        onAddTextPrompt={this.props.onAddTextPrompt}
+        onDeleteTextPrompt={this.props.onDeleteTextPrompt}
+        onRemoveSlot={this.props.onRemoveSlot}
+        onSlotNameChange={this.props.onSlotNameChange}
+        onSortSlots={this.props.onSortSlots}
+        agentEntities={this.props.agentEntities}
+        enableSlotOrder={this.props.enableSlotOrder}
+      />
+        : null
+    );
+  }
+}
+
+/*export function Slots(props) {
+
   return (
     props.agentEntities ? 
       <SlotsRows
@@ -15,10 +41,11 @@ export function Slots(props) {
       onSlotNameChange={props.onSlotNameChange}
       onSortSlots={props.onSortSlots}
       agentEntities={props.agentEntities}
+      enableSlotOrder={props.enableSlotOrder}
     />
       : null
   );
-}
+}*/
 
 Slots.propTypes = {
   slots: React.PropTypes.array,
@@ -32,6 +59,7 @@ Slots.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
+  enableSlotOrder: React.PropTypes.bool
 };
 
 export default DragDropContext(HTML5Backend)(Slots);

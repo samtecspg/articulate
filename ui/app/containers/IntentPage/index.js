@@ -5,6 +5,7 @@ import {
   Col,
   Input,
   Row,
+  Icon,
 } from 'react-materialize';
 
 import brace from 'brace';
@@ -158,6 +159,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     nextRoute: null,
     webhookJustOpen: false,
     webhookPayloadJustOpen: false,
+    enableSlotOrder: false,
   };
 
   componentWillMount(){
@@ -546,7 +548,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               }
             </div>
 
-          <Form style={{ marginTop: '0px' }}>
+          <Form style={{ marginTop: '20px' }}>
             <Row>
               <InputLabel text={messages.slots} />
             </Row>
@@ -557,29 +559,36 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               <TableHeader
                 columns={[
                   {
-                    width: '15%',
+                    width: '14%',
                     label: messages.slotNameTitle.defaultMessage,
                     tooltip: messages.slotNameTooltip.defaultMessage,
                   },
                   {
-                    width: '15%',
+                    width: '14%',
                     label: messages.slotEntityTitle.defaultMessage,
                     tooltip: messages.slotEntityTitle.defaultMessage,
                   },
                   {
-                    width: '10%',
+                    width: '9%',
                     label: messages.slotIsListTitle.defaultMessage,
                     tooltip: messages.slotIsListTitle.defaultMessage,
                   },
                   {
-                    width: '15%',
+                    width: '14%',
                     label: messages.slotIsRequiredTitle.defaultMessage,
                     tooltip: messages.slotIsRequiredTitle.defaultMessage,
                   },
                   {
-                    width: '45%',
+                    width: '39%',
                     label: messages.slotPromptTitle.defaultMessage,
                     tooltip: messages.slotPromptTitle.defaultMessage,
+                  },
+                  {
+                    width: '5%',
+                  },
+                  {
+                    width: '5%',
+                    icon: <a onClick={() => { this.setState({enableSlotOrder: !this.state.enableSlotOrder }) }}><Icon>reorder</Icon></a>
                   },
                 ]}
               />
@@ -593,6 +602,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onAddSlot={this.props.onAddSlot}
                 onSortSlots={this.props.onSortSlots}
                 agentEntities={agentEntities}
+                enableSlotOrder={this.state.enableSlotOrder}
               />
             </Table>
           </TableContainer>

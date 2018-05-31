@@ -102,11 +102,22 @@ class SortableSlotRow extends Component {
 			isDragging,
 			connectDragSource,
 			connectDropTarget,
+			index
 		} = this.props
 		const opacity = isDragging ? 0 : 1
 
-		return connectDragSource(
-			connectDropTarget(slotRow),
+		let originalSlotsRows = [...slotRow.props.children];
+		const drag_hanlder = originalSlotsRows[6];
+		originalSlotsRows.splice(-1,1);
+		return (
+			<tr style={{ width: '100%' }} key={index}>
+				{originalSlotsRows}
+				{connectDragSource(
+					connectDropTarget(
+						drag_hanlder
+					)
+				)}
+			</tr>
 		)
 	}
 }
