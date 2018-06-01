@@ -3,6 +3,7 @@
   "timezone": "UTC",
   "agentName": "71999911-cb70-442c-8864-bc1d4e6a306e",
   "useWebhook": true,
+  "usePostFormat": false,
   "description": "This is test agent",
   "fallbackResponses": [
     "Sorry, can you rephrase that?",
@@ -59,6 +60,7 @@
         {
           "intentName": "Test Intent",
           "useWebhook": true,
+          "usePostFormat": false,
           "examples": [
             {
               "userSays": "Show me my phone location",
@@ -154,6 +156,7 @@
         {
           "intentName": "Simple Test Intent",
           "useWebhook": true,
+          "usePostFormat": false,
           "examples": [
             {
               "userSays": "What can you find?",

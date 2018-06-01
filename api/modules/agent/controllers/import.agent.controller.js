@@ -335,38 +335,54 @@ module.exports = (request, reply) => {
                                             return callbackAddIntents(errScenario, null);
                                         }
                                         resultIntent.scenario = resultScenario.scenario;
-                                        if (intent.webhook) {
-                                            let webhookToInsert = intent.webhook;
-                                            webhookToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, webhookToInsert);
-                                            const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
-                                            redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
+                                        Async.parallel([
+                                            (callbackAddWebhookToIntent) => {
 
-                                                if (err) {
-                                                    const error = Boom.badImplementation('An error occurred adding the webhook data.');
-                                                    return callbackAddIntents(error, null);
+                                                if (intent.webhook) {
+                                                    let webhookToInsert = intent.webhook;
+                                                    webhookToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, webhookToInsert);
+                                                    const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
+                                                    redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
+
+                                                        if (err) {
+                                                            const error = Boom.badImplementation('An error occurred adding the webhook data.');
+                                                            return callbackAddWebhookToIntent(error, null);
+                                                        }
+                                                        resultIntent.webhook = webhookToInsert;
+                                                        return callbackAddWebhookToIntent(null);
+                                                    });
                                                 }
-                                                resultIntent.webhook = webhookToInsert;
-                                                return callbackAddIntents(null, resultIntent);
-                                            });
-                                        }
-                                        if (intent.postFormat) {
-                                            let postFormatToInsert = intent.postFormat;
-                                            postFormatToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, postFormatToInsert);
-                                            const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
-                                            redis.hmset(`intentPostFormat:${intentId}`, flatPostFormat, (err) => {
-
-                                                if (err) {
-                                                    const error = Boom.badImplementation('An error occurred adding the post format data.');
-                                                    return callbackAddIntents(error, null);
+                                                else {
+                                                    return callbackAddWebhookToIntent(null);
                                                 }
-                                                resultIntent.postFormat = postFormatToInsert;
-                                                return callbackAddIntents(null, resultIntent);
-                                            });
-                                        }
+                                            },
+                                            (callbackAddPostFormatToIntent) => {
 
-                                        else {
-                                            return callbackAddIntents(null, resultIntent);
-                                        }
+                                                if (intent.postFormat) {
+                                                    let postFormatToInsert = intent.postFormat;
+                                                    postFormatToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, postFormatToInsert);
+                                                    const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
+                                                    redis.hmset(`intentPostFormat:${intentId}`, flatPostFormat, (err) => {
+
+                                                        if (err) {
+                                                            const error = Boom.badImplementation('An error occurred adding the post format data.');
+                                                            return callbackAddPostFormatToIntent(error, null);
+                                                        }
+                                                        resultIntent.postFormat = postFormatToInsert;
+                                                        return callbackAddPostFormatToIntent(null);
+                                                    });
+                                                }
+                                                else {
+                                                    return callbackAddPostFormatToIntent(null);
+                                                }
+                                            }
+                                        ], (err) => {
+
+                                            if (err){
+                                                callbackAddIntents(err);
+                                            }
+                                            callbackAddIntents(null, resultIntent);
+                                        });
                                     });
                                 }
                                 else {
@@ -408,6 +424,9 @@ module.exports = (request, reply) => {
                             });
 
                         }
+                        else {
+                            return callbacksetAgentPostFormat(null);
+                        }
                     },
                     addedWebhook: (callBackAgentWebhook) => {
 
@@ -425,7 +444,9 @@ module.exports = (request, reply) => {
                             });
 
                         }
-
+                        else {
+                            return callBackAgentWebhook(null);
+                        }
                     }
                 }, (err, resultWebhookPostFormatCall) => {
 

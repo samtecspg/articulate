@@ -3,6 +3,7 @@
   "timezone": "UTC",
   "agentName": "c732e970-311b-4a3a-b9cd-c689a8554ef1",
   "useWebhook": true,
+  "usePostFormat": false,
   "description": "Test agent for import",
   "fallbackResponses": [
     "Sorry can you rephrase that?",
@@ -74,6 +75,7 @@
         {
           "intentName": "Order pizza",
           "useWebhook": false,
+          "usePostFormat": false,
           "examples": [
             {
               "userSays": "I want a ham and cheese pizza",
@@ -143,6 +145,7 @@
         {
           "intentName": "Greeting",
           "useWebhook": false,
+          "usePostFormat": false,
           "examples": [
             {
               "entities": [],

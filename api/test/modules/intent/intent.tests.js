@@ -89,7 +89,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {
@@ -157,7 +158,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {
@@ -206,7 +208,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {
@@ -255,7 +258,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {

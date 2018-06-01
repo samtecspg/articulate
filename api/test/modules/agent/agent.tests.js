@@ -113,7 +113,8 @@ suite('/agent', () => {
                 fallbackResponses: [
                     'Can you repeat that?'
                 ],
-                useWebhook: false
+                useWebhook: false,
+                usePostFormat: false
             };
             const options = {
                 method: 'POST',
@@ -170,7 +171,8 @@ suite('/agent/{id}', () => {
                 fallbackResponses: [
                     'updated'
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const updatedData = {
