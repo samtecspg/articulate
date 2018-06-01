@@ -308,7 +308,7 @@ class AgentValidate {
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     postFormat: {
-                        postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
+                        postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                     },
 
                     status: AgentSchema.status,
@@ -451,7 +451,7 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
+                    postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                 };
             })()
         };

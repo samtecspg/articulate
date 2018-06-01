@@ -220,7 +220,7 @@ class IntentValidate {
                     agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the post format.')),
                     domain: ScenarioSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the post format.')),
                     intent: ScenarioSchema.intent.required().error(new Error('The intent is required. Please specify an intent for the post format.')),
-                    postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
+                    postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                 };
             })()
         };
