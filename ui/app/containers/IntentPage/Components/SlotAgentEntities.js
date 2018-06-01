@@ -22,7 +22,7 @@ export function SlotAgentEntities(props) {
     });
   }
   return (
-    <td style={{ width: `${14 + (props.enableSlotOrder ? 1 : 0)}%`, display: 'inline-block', borderBottom: '1px solid #9e9e9e' }}>
+    <td style={{ width: `${14 + (props.enableSlotOrder ? 0 : 1)}%`, display: 'inline-block', borderBottom: '1px solid #9e9e9e' }}>
       <Dropdown
         className="dropdown-slot-entity-selector"
         trigger={

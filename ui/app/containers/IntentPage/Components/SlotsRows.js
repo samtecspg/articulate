@@ -14,7 +14,7 @@ export function SlotsRows(props) {
     }
     return (
       <tr style={{ width: '100%' }} key={slotIndex}>
-        <td style={{ width: `${14 + (props.enableSlotOrder ? 1 : 0)}%`, display: 'inline-block' }}>
+        <td style={{ width: `${14 + (props.enableSlotOrder ? 0 : 1)}%`, display: 'inline-block' }}>
           <TextInput
             style={{ marginBottom: '0px', color: agentEntity ? agentEntity.uiColor : '' }}
             placeholder=""
@@ -32,10 +32,10 @@ export function SlotsRows(props) {
           }}
           enableSlotOrder= {props.enableSlotOrder}
         />
-        <td style={{ width: `${9 + (props.enableSlotOrder ? 1 : 0)}%`, display: 'inline-block', paddingBottom: '0px' }}>
+        <td style={{ width: `${9 + (props.enableSlotOrder ? 0 : 1)}%`, display: 'inline-block', paddingBottom: '0px' }}>
           <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isList')} name="isList" type="checkbox" value="isList" label=" " className="filled-in" checked={slot.isList ? true : false} />
         </td>
-        <td style={{ width: `${14 + (props.enableSlotOrder ? 1 : 0)}%`, display: 'inline-block', paddingBottom: '0px' }}>
+        <td style={{ width: `${14 + (props.enableSlotOrder ? 0 : 1)}%`, display: 'inline-block', paddingBottom: '0px' }}>
           <Input onChange={props.onCheckboxChange.bind(null, slot.slotName, 'isRequired')} name="isRequired" type="checkbox" label=" " value="isRequired" className="filled-in" checked={slot.isRequired ? true : false} />
         </td>
         <TextPrompts

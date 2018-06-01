@@ -15,7 +15,7 @@ export function TextPrompts(props) {
   });
 
   return (
-    <td style={{ width: `${39 + (props.enableSlotOrder ? 1 : 0)}%`, display: 'inline-block' }}>
+    <td style={{ width: `${39 + (props.enableSlotOrder ? 0 : 1)}%`, display: 'inline-block' }}>
       {rows.concat(newTextPromptInput)}
     </td>
   );
