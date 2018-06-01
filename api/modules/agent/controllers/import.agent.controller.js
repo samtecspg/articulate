@@ -375,6 +375,7 @@ module.exports = (request, reply) => {
                 Async.parallel({
 
                     addedPostFormat: (callbacksetAgentPostFormat) => {
+
                         if (agent.usePostFormat) {
                             const postFormat = Object.assign({ id: agentId }, agent.postFormat);
                             const flatPostFormat = RemoveBlankArray(Flat(postFormat));
@@ -408,21 +409,22 @@ module.exports = (request, reply) => {
                         }
 
                     }
-                }, (err, result) => {
+                }, (err, resultWebhookPostFormatCall) => {
+
                     if (err) {
                         return reply(err);
                     }
-                    else {
-                        if (agent.usePostFormat) {
-                            agentResult.postFormat = result.addedPostFormat;
-                        }
-                        if (agent.useWebhook) {
-                            agentResult.webhook = result.addedWebhook;
-                        }
-                        return reply(agentResult);
+
+                    if (agent.usePostFormat) {
+                        agentResult.postFormat = resultWebhookPostFormatCall.addedPostFormat;
                     }
+                    if (agent.useWebhook) {
+                        agentResult.webhook = resultWebhookPostFormatCall.addedWebhook;
+                    }
+                    return reply(agentResult);
+
                 }
-                )
+                );
 
             });
         });
