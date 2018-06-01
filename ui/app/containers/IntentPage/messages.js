@@ -208,5 +208,17 @@ export default defineMessages({
   useWebhook: {
     id: 'boilerplate.containers.IntentPage.create_agent.use_webhook',
     defaultMessage: 'Webhook',
+  },
+  newSlotButton: {
+    id: 'boilerplate.containers.IntentPage.create_agent.new_slot_button',
+    defaultMessage: 'New +',
+  },
+  defaultNewSlotName: {
+    id: 'boilerplate.containers.IntentPage.create_agent.default_new_slot_name',
+    defaultMessage: 'New slot',
+  },
+  checkEntitiesOfSlots: {
+    id: 'boilerplate.containers.IntentPage.create_agent.default_new_slot_name',
+    defaultMessage: 'Please verify that every slot have an entity value',
   }
 });

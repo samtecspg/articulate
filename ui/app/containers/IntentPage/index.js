@@ -32,6 +32,7 @@ import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
 import Toggle from '../../components/Toggle';
+import Tooltip from '../../components/Tooltip';
 
 import {
   createIntent,
@@ -67,12 +68,16 @@ import {
   changeWebhookData,
   loadWebhook,
   sortSlots,
+  changeSlotAgent,
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
 import Slots from './Components/Slots';
 import UserSayings from './Components/UserSayings';
 import Pagination from './Components/Pagination';
+
+import iconOrganize from '../../img/icon-organize.svg';
+import iconOrganizeOutline from '../../img/icon-organize-outline.svg';
 
 import messages from './messages';
 import {
@@ -140,6 +145,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     this.submitForm = this.submitForm.bind(this);
     this.generateSlotObject = this.generateSlotObject.bind(this);
     this.handleOnTagEntity = this.handleOnTagEntity.bind(this);
+    this.handleOnAddSlot = this.handleOnAddSlot.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
     this.onLeave = this.onLeave.bind(this);
@@ -160,6 +166,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     webhookJustOpen: false,
     webhookPayloadJustOpen: false,
     enableSlotOrder: false,
+    countOfNewSlots: 0,
   };
 
   componentWillMount(){
@@ -328,30 +335,41 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.state.clickedSave = true;
-    if (this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '' || (!this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) {
-      if (this.state.editMode) {
-        this.props.onUpdate();
-      } else {
-        this.props.onCreate();
-      }
+    const invalidSlotEntities = this.props.scenarioData.slots.map((slot) => {
+
+      return !slot.entity;
+    });
+    if (invalidSlotEntities.indexOf(true) > -1){
+      Alert.warning(messages.checkEntitiesOfSlots.defaultMessage, {
+        position: 'bottom'
+      });
     }
     else {
-      if (this.props.intent.useWebhook) {
-        Alert.warning(messages.missingWebhookUrl.defaultMessage, {
-          position: 'bottom'
-        });
+      if (this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '' || (!this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) {
+        if (this.state.editMode) {
+          this.props.onUpdate();
+        } else {
+          this.props.onCreate();
+        }
       }
       else {
-        Alert.warning(messages.missingResponsesMessage.defaultMessage, {
-          position: 'bottom'
-        });
+        if (this.props.intent.useWebhook) {
+          Alert.warning(messages.missingWebhookUrl.defaultMessage, {
+            position: 'bottom'
+          });
+        }
+        else {
+          Alert.warning(messages.missingResponsesMessage.defaultMessage, {
+            position: 'bottom'
+          });
+        }
       }
     }
   }
 
-  generateSlotObject(data) {
+  generateSlotObject(data, slotName) {
     return {
-      slotName: data.entity,
+      slotName: slotName ? slotName: data.entity,
       entity: data.entity,
       isRequired: false,
       isList: false,
@@ -366,6 +384,15 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     });
     this.props.onTagEntity(userSays, entity, entityName);
     this.props.onAddSlot(this.generateSlotObject({ entity: entity.entityName }));
+  }
+
+  handleOnAddSlot() {
+    const currentNewSlotCount = this.state.countOfNewSlots;
+    const slotName = `${messages.defaultNewSlotName.defaultMessage} ${currentNewSlotCount === 0 ? '' : currentNewSlotCount}`;
+    this.props.onAddSlot(this.generateSlotObject({ entity: null }, slotName));
+    this.setState({
+      countOfNewSlots: currentNewSlotCount + 1
+    })
   }
 
   routerWillLeave(route) {
@@ -554,41 +581,49 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             </Row>
           </Form>
 
-          <TableContainer id="slotsTable">
+          <TableContainer id="slotsTable" disableSelection={true}>
             <Table>
               <TableHeader
                 columns={[
                   {
-                    width: '14%',
+                    width: '15%',
                     label: messages.slotNameTitle.defaultMessage,
                     tooltip: messages.slotNameTooltip.defaultMessage,
                   },
                   {
-                    width: '14%',
+                    width: '15%',
                     label: messages.slotEntityTitle.defaultMessage,
                     tooltip: messages.slotEntityTitle.defaultMessage,
                   },
                   {
-                    width: '9%',
+                    width: '10%',
                     label: messages.slotIsListTitle.defaultMessage,
                     tooltip: messages.slotIsListTitle.defaultMessage,
                   },
                   {
-                    width: '14%',
+                    width: '15%',
                     label: messages.slotIsRequiredTitle.defaultMessage,
                     tooltip: messages.slotIsRequiredTitle.defaultMessage,
                   },
                   {
-                    width: '39%',
+                    width: '40%',
                     label: messages.slotPromptTitle.defaultMessage,
                     tooltip: messages.slotPromptTitle.defaultMessage,
                   },
                   {
                     width: '5%',
-                  },
-                  {
-                    width: '5%',
-                    icon: <a onClick={() => { this.setState({enableSlotOrder: !this.state.enableSlotOrder }) }}><Icon>reorder</Icon></a>
+                    icon: (
+                            <Tooltip
+                              onClick={() => { this.setState({enableSlotOrder: !this.state.enableSlotOrder }) }}
+                              tooltip={'Sort slots'}
+                              delay={0}
+                              position="top"
+                            >
+                              <a>
+                                <img src={this.state.enableSlotOrder ? iconOrganize : iconOrganizeOutline} alt="" />
+                              </a>
+                            </Tooltip>
+                          )
                   },
                 ]}
               />
@@ -599,10 +634,11 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onDeleteTextPrompt={this.props.onDeleteTextPrompt}
                 onRemoveSlot={this.props.onRemoveSlot}
                 onSlotNameChange={this.props.onSlotNameChange}
-                onAddSlot={this.props.onAddSlot}
+                onAddSlot={this.handleOnAddSlot}
                 onSortSlots={this.props.onSortSlots}
                 agentEntities={agentEntities}
                 enableSlotOrder={this.state.enableSlotOrder}
+                onChangeAgent={this.props.onChangeAgentOfSlot}
               />
             </Table>
           </TableContainer>
@@ -768,6 +804,7 @@ IntentPage.propTypes = {
   resetForm: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
   onEditMode: React.PropTypes.func,
+  onChangeAgentOfSlot: React.PropTypes.func,
 };
 
 IntentPage.defaultProps = {
@@ -818,6 +855,10 @@ export function mapDispatchToProps(dispatch) {
       dispatch(dispatch(resetStatusFlags()));
       dispatch(changeSlotName({ slotName, value: evt.target.value }));
     },
+    onChangeAgentOfSlot: (slotName, entityName) => {
+      dispatch(dispatch(resetStatusFlags()));
+      dispatch(changeSlotAgent({ slotName, entityName }));
+    },
     onAddTextPrompt: (slotName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
       if (evt.keyCode === 13) {
@@ -862,7 +903,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onSortSlots: (oldIndex, newIndex) => {
       dispatch(sortSlots(oldIndex, newIndex));
-    }
+    },
   };
 }
 

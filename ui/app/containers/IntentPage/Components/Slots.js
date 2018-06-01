@@ -22,30 +22,13 @@ export class Slots extends React.PureComponent { // eslint-disable-line react/pr
         onSortSlots={this.props.onSortSlots}
         agentEntities={this.props.agentEntities}
         enableSlotOrder={this.props.enableSlotOrder}
+        onAddSlot={this.props.onAddSlot}
+        onChangeAgent={this.props.onChangeAgent}
       />
         : null
     );
   }
 }
-
-/*export function Slots(props) {
-
-  return (
-    props.agentEntities ? 
-      <SlotsRows
-      slots={props.slots}
-      onCheckboxChange={props.onCheckboxChange}
-      onAddTextPrompt={props.onAddTextPrompt}
-      onDeleteTextPrompt={props.onDeleteTextPrompt}
-      onRemoveSlot={props.onRemoveSlot}
-      onSlotNameChange={props.onSlotNameChange}
-      onSortSlots={props.onSortSlots}
-      agentEntities={props.agentEntities}
-      enableSlotOrder={props.enableSlotOrder}
-    />
-      : null
-  );
-}*/
 
 Slots.propTypes = {
   slots: React.PropTypes.array,
@@ -55,11 +38,13 @@ Slots.propTypes = {
   onRemoveSlot: React.PropTypes.func,
   onSlotNameChange: React.PropTypes.func,
   onSortSlots: React.PropTypes.func,
+  onAddSlot: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  enableSlotOrder: React.PropTypes.bool
+  enableSlotOrder: React.PropTypes.bool,
+  onChangeAgent: React.PropTypes.func,
 };
 
 export default DragDropContext(HTML5Backend)(Slots);

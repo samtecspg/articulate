@@ -23,6 +23,7 @@ import {
   LOAD_WEBHOOK_SUCCESS,
   LOAD_WEBHOOK,
   SORT_SLOTS,
+  CHANGE_SLOT_AGENT,
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -69,6 +70,13 @@ export function toggleFlag(payload) {
 export function changeSlotName(payload) {
   return {
     type: CHANGE_SLOT_NAME,
+    payload,
+  };
+}
+
+export function changeSlotAgent(payload) {
+  return {
+    type: CHANGE_SLOT_AGENT,
     payload,
   };
 }

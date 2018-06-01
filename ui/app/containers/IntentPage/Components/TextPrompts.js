@@ -15,7 +15,7 @@ export function TextPrompts(props) {
   });
 
   return (
-    <td style={{ width: `${39 + (props.enableSlotOrder ? 0 : 1)}%`, display: 'inline-block' }}>
+    <td style={{ width: '40%', display: 'inline-block' }}>
       {rows.concat(newTextPromptInput)}
     </td>
   );
@@ -25,7 +25,6 @@ TextPrompts.propTypes = {
   slot: React.PropTypes.object,
   onDeleteTextPrompt: React.PropTypes.func,
   onAddTextPrompt: React.PropTypes.func,
-  enableSlotOrder: React.PropTypes.bool,
 };
 
 export default TextPrompts;

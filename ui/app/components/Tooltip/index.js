@@ -18,6 +18,7 @@ class Tooltip extends Component {
       delay,
       position,
       html,
+      onClick,
     } = this.props;
 
     return React.cloneElement(children, {
@@ -25,6 +26,7 @@ class Tooltip extends Component {
       'data-delay': delay,
       'data-position': position,
       'data-html': html,
+      'onClick': onClick,
       className: cx(children.props.className, 'tooltipped'),
     });
   }
@@ -36,6 +38,7 @@ Tooltip.propTypes = {
   delay: PropTypes.number,
   html: PropTypes.bool,
   position: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
+  onClick: PropTypes.func,
 };
 
 Tooltip.defaultProps = {

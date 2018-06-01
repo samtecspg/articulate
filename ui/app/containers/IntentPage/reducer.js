@@ -5,6 +5,7 @@ import {
   CHANGE_INTENT_DATA,
   CHANGE_WEBHOOK_DATA,
   CHANGE_SLOT_NAME,
+  CHANGE_SLOT_AGENT,
   DELETE_TEXT_PROMPT,
   LOAD_INTENT,
   LOAD_INTENT_ERROR,
@@ -195,6 +196,20 @@ function intentReducer(state = initialState, action) {
           })
         )
         .set('touched', true);
+    case CHANGE_SLOT_AGENT:
+      return state
+        .updateIn(['scenarioData', 'slots'], slots =>
+          slots.map(slot => {
+            if (slot.slotName === action.payload.slotName){
+              return slot
+                .set('entity', action.payload.entityName);
+            }
+            else {
+              return slot;
+            }
+          })
+        )
+        .set('touched', true);
     case ADD_TEXT_PROMPT:
       return state
         .updateIn(['scenarioData', 'slots'], slots =>
@@ -229,7 +244,7 @@ function intentReducer(state = initialState, action) {
       return state
         .updateIn(['scenarioData', 'slots'], slots => {
           const existingSlots = slots.filter((slot) => {
-            return slot.entity === action.slot.entity;
+            return slot.entity && slot.entity === action.slot.entity;
           });
           if (existingSlots.length === 0) {
             return slots.concat(action.slot);

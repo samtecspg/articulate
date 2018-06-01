@@ -3,14 +3,6 @@ import PropTypes from 'prop-types'
 import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
 
-const style = {
-	border: '1px dashed gray',
-	padding: '0.5rem 1rem',
-	marginBottom: '.5rem',
-	backgroundColor: 'white',
-	cursor: 'move',
-}
-
 const cardSource = {
 	beginDrag(props) {
 		return {
@@ -102,23 +94,12 @@ class SortableSlotRow extends Component {
 			isDragging,
 			connectDragSource,
 			connectDropTarget,
-			index
+			index,
+			enableSlotOrder
 		} = this.props
-		const opacity = isDragging ? 0 : 1
+		const opacity = isDragging ? 0.5 : 1
 
-		let originalSlotsRows = [...slotRow.props.children];
-		const drag_hanlder = originalSlotsRows[6];
-		originalSlotsRows.splice(-1,1);
-		return (
-			<tr style={{ width: '100%' }} key={index}>
-				{originalSlotsRows}
-				{connectDragSource(
-					connectDropTarget(
-						drag_hanlder
-					)
-				)}
-			</tr>
-		)
+		return enableSlotOrder ? connectDragSource(connectDropTarget(slotRow)) : slotRow
 	}
 }
 

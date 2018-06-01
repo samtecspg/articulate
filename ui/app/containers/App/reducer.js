@@ -93,7 +93,7 @@ const initialState = Immutable({
   currentAgentStatus: undefined,
   agents: [],
   agentDomains: { domains: [], total: 0 },
-  agentEntities: { domains: [], total: 0 },
+  agentEntities: { entities: [], total: 0 },
   domainIntents: { intents: [], total: 0 },
   conversation: [],
   agent: undefined,
