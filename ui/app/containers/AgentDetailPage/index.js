@@ -92,7 +92,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
   componentWillUpdate(nextProps) {
     const { currentAgent } = nextProps;
     if ((currentAgent && this.props.currentAgent) && (currentAgent.id !== this.props.currentAgent.id)) {
-      this.props.onComponentWillMount(this.props);
+      this.props.onComponentWillMount(nextProps);
     }
   }
 
