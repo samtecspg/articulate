@@ -41,7 +41,7 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (cb) => {
 
-            server.inject(`/agent/${agentId}/post-format`, (res) => {
+            server.inject(`/agent/${agentId}/postFormat`, (res) => {
 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){

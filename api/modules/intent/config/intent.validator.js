@@ -244,10 +244,6 @@ class IntentValidate {
             payload: (() => {
 
                 return {
-                    // webhookUrl: WebhookSchema.webhookUrl,
-                    // webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
-                    // webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML', 'URL Encoded').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML, and URL Encoded.')),
-                    // webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                     postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
                 };
             })()

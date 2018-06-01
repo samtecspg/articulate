@@ -372,39 +372,58 @@ module.exports = (request, reply) => {
                 }
                 agentResult.domains = resultDomains;
 
-                if (agent.usePostFormat) {
-                    const postFormat = Object.assign({ id: agentId }, agent.postFormat);
-                    const flatPostFormat = RemoveBlankArray(Flat(postFormat));
-                    redis.hmset(`agentPostFormat:${agentId}`, flatPostFormat, (err) => {
+                Async.parallel({
 
-                        if (err) {
-                            const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
-                            return reply(error);
+                    addedPostFormat: (callbacksetAgentPostFormat) => {
+                        if (agent.usePostFormat) {
+                            const postFormat = Object.assign({ id: agentId }, agent.postFormat);
+                            const flatPostFormat = RemoveBlankArray(Flat(postFormat));
+                            redis.hmset(`agentPostFormat:${agentId}`, flatPostFormat, (err) => {
+
+                                if (err) {
+                                    const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
+                                    return callbacksetAgentPostFormat(error, null);
+                                }
+                                postFormat.agent = agent.agentName;
+                                return callbacksetAgentPostFormat(null, postFormat);
+                            });
+
                         }
-                        postFormat.agent = agent.agentName;
-                        agentResult.postFormat = postFormat;
-                    });
+                    },
+                    addedWebhook: (callBackAgentWebhook) => {
 
-                }
+                        if (agent.useWebhook) {
+                            const webhook = Object.assign({ id: agentId }, agent.webhook);
+                            const flatWebhook = RemoveBlankArray(Flat(webhook));
+                            redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
 
-                if (agent.useWebhook) {
-                    const webhook = Object.assign({ id: agentId }, agent.webhook);
-                    const flatWebhook = RemoveBlankArray(Flat(webhook));
-                    redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
+                                if (err) {
+                                    const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
+                                    return callBackAgentWebhook(error, null);
+                                }
+                                webhook.agent = agent.agentName;
+                                return callBackAgentWebhook(null, webhook);
+                            });
 
-                        if (err) {
-                            const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
-                            return reply(error);
                         }
-                        webhook.agent = agent.agentName;
-                        agentResult.webhook = webhook;
+
+                    }
+                }, (err, result) => {
+                    if (err) {
+                        return reply(err);
+                    }
+                    else {
+                        if (agent.usePostFormat) {
+                            agentResult.postFormat = result.addedPostFormat;
+                        }
+                        if (agent.useWebhook) {
+                            agentResult.webhook = result.addedWebhook;
+                        }
                         return reply(agentResult);
-                    });
+                    }
+                }
+                )
 
-                }
-                else {
-                    return reply(agentResult);
-                }
             });
         });
     });

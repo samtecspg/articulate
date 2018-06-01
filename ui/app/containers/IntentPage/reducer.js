@@ -89,25 +89,25 @@ function intentReducer(state = initialState, action) {
           .set('touched', true);
       }
       else if (action.payload.field === 'usePostFormat') {
-        if ( state.oldIntent !== null ){
-          if ( !state.oldIntent.usePostFormat && action.payload.value){
-          return state
-          .setIn(['intentData', action.payload.field], action.payload.value)
-          .setIn(['postFormatData','postFormatPayload'],messages.defaultPostFormat.defaultMessage)
-          .set('touched', true);
+        if (state.oldIntent !== null) {
+          if (!state.oldIntent.usePostFormat) {
+            return state
+              .setIn(['intentData', action.payload.field], action.payload.value)
+              .setIn(['postFormatData', 'postFormatPayload'], messages.defaultPostFormat.defaultMessage)
+              .set('touched', true);
+          }
+          else {
+            return state
+              .setIn(['intentData', action.payload.field], action.payload.value)
+              .set('touched', true);
+          }
         }
-        else if (state.oldIntent.usePostFormat) {
+        else {
           return state
-          .setIn(['intentData', action.payload.field], action.payload.value)
-          .set('touched', true);
+            .setIn(['intentData', action.payload.field], action.payload.value)
+            .setIn(['postFormatData', 'postFormatPayload'], messages.defaultPostFormat.defaultMessage)
+            .set('touched', true);
         }
-      }
-      else {
-        return state
-        .setIn(['intentData', action.payload.field], action.payload.value)
-        .setIn(['postFormatData','postFormatPayload'],messages.defaultPostFormat.defaultMessage)
-        .set('touched', true);
-      }
 
       }
       else if (action.payload.field === 'webhookUrl') {
@@ -120,7 +120,7 @@ function intentReducer(state = initialState, action) {
           .setIn(['scenarioData', 'intent'], action.payload.value)
           .setIn(['webhookData', 'intent'], action.payload.value)
           .setIn(['intentData', action.payload.field], action.payload.value)
-          .setIn(['postFormatData','intent'],action.payload.value)
+          .setIn(['postFormatData', 'intent'], action.payload.value)
           .set('touched', true);
       } else {
         return state
@@ -162,7 +162,7 @@ function intentReducer(state = initialState, action) {
           .set('touched', true);
       }
     case CHANGE_POSTFORMAT_DATA:
-      
+
       return state
         .setIn(['postFormatData', 'postFormatPayload'], action.payload.value)
         .set('touched', true);

@@ -137,11 +137,11 @@ export default defineMessages({
   },
   useWebhook: {
     id: 'boilerplate.containers.AgentPage.create_agent.use_webhook',
-    defaultMessage: 'Webhook',
+    defaultMessage: 'Webhook Definition',
   },
   usePostformat:{
     id: 'boilerplate.containers.AgentPage.create_agent.use_postFormat',
-    defaultMessage: 'PostFormat',
+    defaultMessage: 'Response Definition',
   },
   expandedTrainingData: {
     id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data',

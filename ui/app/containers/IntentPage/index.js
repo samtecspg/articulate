@@ -213,6 +213,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         this.props.onChangeIntentData(field, value);
       }
       else if (field === 'usePostFormat' && value) {
+        console.log(value);
         this.props.onChangeIntentData(field, value);
       }
       else {
@@ -331,7 +332,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.state.clickedSave = true;
-    if (((this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '' ) || ( !this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) && ((this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload !== '')||(!this.props.intent.usePostFormat))) {
+    if (((this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '') || (!this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) && ((this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload !== '') || (!this.props.intent.usePostFormat))) {
       if (this.state.editMode) {
         this.props.onUpdate();
       } else {
@@ -345,7 +346,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         });
       }
       else if (this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
-        this.props.onChangePostFormatData("postFormatPayloadDefault",messages.defaultPostFormat);
+        this.props.onChangePostFormatData("postFormatPayloadDefault", messages.defaultPostFormat);
         Alert.warning(messages.missingPostFormatPayload.defaultMessage, {
           position: 'bottom'
         });
@@ -453,22 +454,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         <Content>
           <ContentHeader title={this.state.editMode ? messages.editIntentTitle : messages.createIntentTitle} subTitle={this.state.editMode ? messages.editIntentDescription : messages.createIntentDescription} />
           <Form>
-            <Row>
-              <Toggle
-                label={messages.useWebhook.defaultMessage}
-                right
-                onChange={(evt) => this.onChangeInput(evt, 'useWebhook')}
-                checked={intent.useWebhook}
-              />
-            </Row>
-            <Row  style={{ marginTop: '15px' }}>
-              <Toggle
-                label={messages.usePostFormat.defaultMessage}
-                right
-                onChange={(evt) => this.onChangeInput(evt, 'usePostFormat')}
-                checked={intent.usePostFormat}
-              />
-            </Row>
             <Row>
               <Input
                 s={12}
@@ -653,13 +638,21 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             }}
           >
           </div>
+          <Form>
+          <Row style={{ marginTop: '15px', float: 'left', clear: 'both' }} >
+            <Toggle
+              label={messages.useWebhook.defaultMessage}
+              right
+              onChange={(evt) => this.onChangeInput(evt, 'useWebhook')}
+              checked={intent.useWebhook}
+            />
+          </Row>
+          </Form>
+
 
           {
-            intent.useWebhook ? <ContentSubHeader title={messages.webhook} /> : null
-          }
-          {
             intent.useWebhook ?
-              <Form style={{ marginTop: '0px' }}>
+              <Form style={{ marginTop: '70px' }}>
                 <Row>
                   <Input
                     s={2}
@@ -716,12 +709,18 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
           }
 
 
-          {
-            intent.usePostFormat ? <ContentSubHeader title={messages.postFormat} /> : null
-          }
+
+          <Row style={{ marginTop: '15px', float: 'left', clear: 'both' }} >
+            <Toggle
+              label={messages.usePostFormat.defaultMessage}
+              right
+              onChange={(evt) => this.onChangeInput(evt, 'usePostFormat')}
+              checked={intent.usePostFormat}
+            />
+          </Row>
           {
             intent.usePostFormat ?
-              <Form style={{ marginTop: '0px' }}>
+              <Form style={{ marginTop: '100px' }}>
                 <Row>
                   <AceEditor
                     width="100%"
@@ -834,7 +833,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(resetStatusFlags());
       if (field === 'postFormatPayloadDefault') {
         let field = 'postFormatPayload'
-        dispatch(changePostFormatData({value: messages.defaultPostFormat.defaultMessage,field }))
+        dispatch(changePostFormatData({ value: messages.defaultPostFormat.defaultMessage, field }))
       }
       if (field === 'postFormatPayload') {
         const value = evt;
@@ -903,16 +902,16 @@ export function mapDispatchToProps(dispatch) {
     onEditMode: (props) => {
       dispatch(loadIntent(props.params.id));
       dispatch(loadScenario(props.params.id));
-      try  {
+      try {
         dispatch(loadWebhook(props.params.id));
       }
-      catch(err){
+      catch (err) {
         console.log('Webhook not found for this intent');
       }
       try {
         dispatch(loadPostFormat(props.params.id));
       }
-      catch(err){
+      catch (err) {
         console.log('Post Format not found for this intent');
       }
     },

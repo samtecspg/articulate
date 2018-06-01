@@ -200,7 +200,6 @@ function* putPostFormat(payload) {
   const { api, id } = payload;
   const postFormatData = yield select(makeSelectPostFormatData());
   try {
-
     const { agent, domain, intent, ...data } = postFormatData;
     delete data.id;
     yield call(api.intent.putIntentIdPostformat, { id, body: data });

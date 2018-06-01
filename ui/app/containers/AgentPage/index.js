@@ -197,8 +197,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     }
     else if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
       this.props.onChangePostFormatData("postFormatPayloadDefault", messages.defaultPostFormat);
-
-      // this.props.postFormat.postFormatPayload = messages.defaultPostFormat;
       Alert.warning(messages.missingPostFormatPayload.defaultMessage, {
         position: 'bottom'
       });
@@ -293,24 +291,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
         <Content>
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>
-            <Row>
-              <Toggle
-                label={messages.useWebhook.defaultMessage}
-                right
-                onChange={this.props.onChangeAgentData.bind(null, 'useWebhook')}
-                checked={agent.useWebhook}
-              />
-
-
-            </Row>
-            <Row style={{ marginTop: '15px' }}>
-              <Toggle
-                label={"Post format"}
-                right
-                onChange={this.props.onChangeAgentData.bind(null, 'usePostFormat')}
-                checked={agent.usePostFormat}
-              />
-            </Row>
             <Row>
               <FormTextInput
                 id='agentName'
@@ -419,45 +399,21 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               </Tooltip>
             </Row>
           </Form>
-          {
-            agent.usePostFormat ? <div><br /><ContentSubHeader title={messages.postFormat} /></div> : null
-          }
-
-          {
-            agent.usePostFormat ?
-            <Form style={{ marginTop: '0px' }}>
-              <Row>
-                <AceEditor
-                  width="100%"
-                  height="250px"
-                  mode={'json'}
-                  theme="terminal"
-                  name="webhookPayload"
-                  readOnly={false}
-                  onLoad={this.onLoad}
-                  onChange={this.props.onChangePostFormatData.bind(null, 'postFormatPayload')}
-                  fontSize={14}
-                  showPrintMargin={true}
-                  showGutter={true}
-                  highlightActiveLine={true}
-                  value={postFormat.postFormatPayload}
-                  setOptions={{
-                    useWorker: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                  }} />
-              </Row>
-              </Form>
-               : null
-          }
 
 
-          {
-            agent.useWebhook ? <div><br /><ContentSubHeader title={messages.webhook} /></div> : null
-          }
+          <Row style={{ marginTop: '15px', float: 'left', clear : 'both'}}>
+            <Toggle
+              label={messages.useWebhook.defaultMessage}
+              right
+              onChange={this.props.onChangeAgentData.bind(null, 'useWebhook')}
+              checked={agent.useWebhook}
+            />
+          </Row>
+
+
           {
             agent.useWebhook ?
-              <Form style={{ marginTop: '0px' }}>
+              <Form style={{ marginTop: '70px' }}>
                 <Row>
                   <Input
                     s={2}
@@ -511,6 +467,43 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
               </Form>
               : null
           }
+          <Row style={{ marginTop: '15px', float: 'left', clear: 'both'}}>
+            <Toggle
+              label={messages.usePostformat.defaultMessage}
+              right
+              onChange={this.props.onChangeAgentData.bind(null, 'usePostFormat')}
+              checked={agent.usePostFormat}
+            />
+          </Row>
+
+          {
+            agent.usePostFormat ?
+              <Form style={{ marginTop: '100px' }}>
+                <Row>
+                  <AceEditor
+                    width="100%"
+                    height="250px"
+                    mode={'json'}
+                    theme="terminal"
+                    name="webhookPayload"
+                    readOnly={false}
+                    onLoad={this.onLoad}
+                    onChange={this.props.onChangePostFormatData.bind(null, 'postFormatPayload')}
+                    fontSize={14}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={postFormat.postFormatPayload}
+                    setOptions={{
+                      useWorker: false,
+                      showLineNumbers: true,
+                      tabSize: 2,
+                    }} />
+                </Row>
+              </Form>
+              : null
+          }
+
 
 
           <br />

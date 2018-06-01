@@ -115,7 +115,7 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/post-format',
+        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/postFormat',
         config: {
             description: 'Find the post format related with an intent, for the given domain and agent',
             tags: ['api'],
@@ -243,7 +243,7 @@ const AgentRoutes = [
     },
     {
         method: 'POST',
-        path: '/agent/{id}/post-format',
+        path: '/agent/{id}/postFormat',
         config: {
             description: 'Create a new instance of a post format for the agent and persist it into the data source',
             tags: ['api'],
@@ -253,7 +253,7 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/post-format',
+        path: '/agent/{id}/postFormat',
         config: {
             description: 'Find a post format by agent id from the data source',
             tags: ['api'],
@@ -263,7 +263,7 @@ const AgentRoutes = [
     },
     {
         method: 'DELETE',
-        path: '/agent/{id}/post-format',
+        path: '/agent/{id}/postFormat',
         config: {
             description: 'Delete a post format by agent id from the data source',
             tags: ['api'],
@@ -273,7 +273,7 @@ const AgentRoutes = [
     },
     {
         method: 'PUT',
-        path: '/agent/{id}/post-format',
+        path: '/agent/{id}/postFormat',
         config: {
             description: 'Update attributes of the post format of the agent and persist it into the data source',
             tags: ['api'],

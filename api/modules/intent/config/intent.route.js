@@ -138,7 +138,7 @@ const IntentRoutes = [
 
     {
         method: 'POST',
-        path: '/intent/{id}/post-format',
+        path: '/intent/{id}/postFormat',
         config: {
             description: 'Create a new instance of a post format for the intent and persist it into the data source',
             tags: ['api'],
@@ -148,7 +148,7 @@ const IntentRoutes = [
     },
     {
         method: 'GET',
-        path: '/intent/{id}/post-format',
+        path: '/intent/{id}/postFormat',
         config: {
             description: 'Find a post format by intent id from the data source',
             tags: ['api'],
@@ -158,9 +158,9 @@ const IntentRoutes = [
     },
     {
         method: 'PUT',
-        path: '/intent/{id}/post-format',
+        path: '/intent/{id}/postFormat',
         config: {
-            description: 'Update attributes of the webhook of the intent and persist it into the data source',
+            description: 'Update attributes of the post format of the intent and persist it into the data source',
             tags: ['api'],
             validate: IntentValidator.updatePostFormat,
             handler: IntentController.updatePostFormat
@@ -168,7 +168,7 @@ const IntentRoutes = [
     },
     {
         method: 'DELETE',
-        path: '/intent/{id}/post-format',
+        path: '/intent/{id}/postFormat',
         config: {
             description: 'Delete a webhook instance by id from the data source',
             tags: ['api'],

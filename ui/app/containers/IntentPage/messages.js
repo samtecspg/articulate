@@ -174,9 +174,6 @@ export default defineMessages({
   invalidSlotNameInResponse: {
     id: 'boilerplate.containers.IntentPage.create_agent.invalid_slot_name_response',
     defaultMessage: 'Please verify that every agent response are referencing valid slots names',
-  },webhook: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook',
-    defaultMessage: 'Webhook Definition',
   },
   webhookDescription: {
     id: 'boilerplate.containers.AgentPage.create_agent.webhook_description',
@@ -208,11 +205,11 @@ export default defineMessages({
   },
   useWebhook: {
     id: 'boilerplate.containers.IntentPage.create_agent.use_webhook',
-    defaultMessage: 'Webhook',
+    defaultMessage: 'Webhook Definition',
   },
   usePostFormat:{
     id: 'boilerplate.containers.IntentPage.create_agent.use_postFormat',
-    defaultMessage: 'Response formatting',
+    defaultMessage: 'Response Definition',
   },
   postFormat:{
     id: 'boilerplate.containers.IntentPage.create_agent.postFormat',
