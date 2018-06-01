@@ -5,6 +5,7 @@ import {
   Col,
   Input,
   Row,
+  Icon,
 } from 'react-materialize';
 
 import brace from 'brace';
@@ -31,6 +32,7 @@ import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 import TableHeader from '../../components/TableHeader';
 import Toggle from '../../components/Toggle';
+import Tooltip from '../../components/Tooltip';
 
 import {
   createIntent,
@@ -66,13 +68,18 @@ import {
   changeWebhookData,
   changePostFormatData,
   loadWebhook,
-  loadPostFormat
+  loadPostFormat,
+  sortSlots,
+  changeSlotAgent
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
 import Slots from './Components/Slots';
 import UserSayings from './Components/UserSayings';
 import Pagination from './Components/Pagination';
+
+import iconOrganize from '../../img/icon-organize.svg';
+import iconOrganizeOutline from '../../img/icon-organize-outline.svg';
 
 import messages from './messages';
 import {
@@ -141,6 +148,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     this.submitForm = this.submitForm.bind(this);
     this.generateSlotObject = this.generateSlotObject.bind(this);
     this.handleOnTagEntity = this.handleOnTagEntity.bind(this);
+    this.handleOnAddSlot = this.handleOnAddSlot.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
     this.onLeave = this.onLeave.bind(this);
@@ -160,6 +168,8 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     nextRoute: null,
     webhookJustOpen: false,
     webhookPayloadJustOpen: false,
+    enableSlotOrder: false,
+    countOfNewSlots: 0,
   };
 
   componentWillMount() {
@@ -331,18 +341,22 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
     this.state.clickedSave = true;
-    if (((this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '') || (!this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) && ((this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload !== '') || (!this.props.intent.usePostFormat))) {
-      if (this.state.editMode) {
-        this.props.onUpdate();
-      } else {
-        this.props.onCreate();
-      }
+    const invalidSlotEntities = this.props.scenarioData.slots.map((slot) => {
+
+      return !slot.entity;
+    });
+    if (invalidSlotEntities.indexOf(true) > -1){
+      Alert.warning(messages.checkEntitiesOfSlots.defaultMessage, {
+        position: 'bottom'
+      });
     }
     else {
-      if (this.props.intent.useWebhook) {
-        Alert.warning(messages.missingWebhookUrl.defaultMessage, {
-          position: 'bottom'
-        });
+      if (((this.props.intent.useWebhook && this.props.webhook.webhookUrl !== '') || (!this.props.intent.useWebhook && this.props.scenarioData.intentResponses.length > 0)) && ((this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload !== '') || (!this.props.intent.usePostFormat))) {
+        if (this.state.editMode) {
+          this.props.onUpdate();
+        } else {
+          this.props.onCreate();
+        }
       }
       else if (this.props.intent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
         this.props.onChangePostFormatData("postFormatPayloadDefault", messages.defaultPostFormat);
@@ -351,17 +365,24 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         });
       }
       else {
-        Alert.warning(messages.missingResponsesMessage.defaultMessage, {
-          position: 'bottom'
-        });
+        if (this.props.intent.useWebhook) {
+          Alert.warning(messages.missingWebhookUrl.defaultMessage, {
+            position: 'bottom'
+          });
+        }
+        else {
+          Alert.warning(messages.missingResponsesMessage.defaultMessage, {
+            position: 'bottom'
+          });
+        }
       }
 
     }
   }
 
-  generateSlotObject(data) {
+  generateSlotObject(data, slotName) {
     return {
-      slotName: data.entity,
+      slotName: slotName ? slotName: data.entity,
       entity: data.entity,
       isRequired: false,
       isList: false,
@@ -376,6 +397,15 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     });
     this.props.onTagEntity(userSays, entity, entityName);
     this.props.onAddSlot(this.generateSlotObject({ entity: entity.entityName }));
+  }
+
+  handleOnAddSlot() {
+    const currentNewSlotCount = this.state.countOfNewSlots;
+    const slotName = `${messages.defaultNewSlotName.defaultMessage} ${currentNewSlotCount === 0 ? '' : currentNewSlotCount}`;
+    this.props.onAddSlot(this.generateSlotObject({ entity: null }, slotName));
+    this.setState({
+      countOfNewSlots: currentNewSlotCount + 1
+    })
   }
 
   routerWillLeave(route) {
@@ -474,6 +504,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 label={messages.userSaysTitle}
                 placeholder={messages.userSaysInput.defaultMessage}
                 onKeyDown={(evt) => this.onChangeInput(evt, 'examples')}
+                icon={'keyboard_return'}
                 s={8}
               />
               <FormTextInput
@@ -488,36 +519,36 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
             </Row>
           </Form>
 
-          {agentEntities && (intent.examples.length > 0) ?
             <div>
               {
                 this.state.userExamplesShown.length > 0 ?
-                  <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px' }}>
-                    <Table>
-                      <UserSayings
-                        page={this.state.userExamplesPage}
-                        defaultPageSize={this.props.defaultUserExamplesPageSize}
-                        examples={this.state.userExamplesShown}
-                        onRemoveExample={this.props.onRemoveExample}
-                        setWindowSelection={this.props.setWindowSelection}
-                        onTagEntity={this.handleOnTagEntity}
-                        agentEntities={agentEntities}
-                      />
-                    </Table>
-                  </TableContainer> :
-                  <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px' }}>
-                    <Table>
-                      <tbody>
-                        <tr style={{ width: '100%' }}>
-                          <td style={{ width: '100%', display: 'inline-block' }}>
-                            <div>
-                              <span>Nothing found...</span>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </TableContainer>
+
+                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
+                  <Table>
+                    <UserSayings
+                      page={this.state.userExamplesPage}
+                      defaultPageSize={this.props.defaultUserExamplesPageSize}
+                      examples={this.state.userExamplesShown}
+                      onRemoveExample={this.props.onRemoveExample}
+                      setWindowSelection={this.props.setWindowSelection}
+                      onTagEntity={this.handleOnTagEntity}
+                      agentEntities={agentEntities}
+                    />
+                  </Table>
+                </TableContainer> :
+                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
+                  <Table>
+                    <tbody>
+                      <tr style={{ width: '100%' }}>
+                        <td style={{ width: '100%', display: 'inline-block' }}>
+                          <div>
+                            <span>{messages.userSaysExample.defaultMessage}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </TableContainer>
               }
               {
                 this.state.showUserExamplesPagination ?
@@ -549,16 +580,14 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   : null
               }
             </div>
-            : null
-          }
 
-          <Form style={{ marginTop: '0px' }}>
+          <Form style={{ marginTop: '20px' }}>
             <Row>
               <InputLabel text={messages.slots} />
             </Row>
           </Form>
 
-          <TableContainer id="slotsTable">
+          <TableContainer id="slotsTable" disableSelection={true}>
             <Table>
               <TableHeader
                 columns={[
@@ -583,9 +612,24 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                     tooltip: messages.slotIsRequiredTitle.defaultMessage,
                   },
                   {
-                    width: '45%',
+                    width: '40%',
                     label: messages.slotPromptTitle.defaultMessage,
                     tooltip: messages.slotPromptTitle.defaultMessage,
+                  },
+                  {
+                    width: '5%',
+                    icon: (
+                            <Tooltip
+                              onClick={() => { this.setState({enableSlotOrder: !this.state.enableSlotOrder }) }}
+                              tooltip={'Sort slots'}
+                              delay={0}
+                              position="top"
+                            >
+                              <a>
+                                <img src={this.state.enableSlotOrder ? iconOrganize : iconOrganizeOutline} alt="" />
+                              </a>
+                            </Tooltip>
+                          )
                   },
                 ]}
               />
@@ -596,8 +640,11 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 onDeleteTextPrompt={this.props.onDeleteTextPrompt}
                 onRemoveSlot={this.props.onRemoveSlot}
                 onSlotNameChange={this.props.onSlotNameChange}
-                onAddSlot={this.props.onAddSlot}
+                onAddSlot={this.handleOnAddSlot}
+                onSortSlots={this.props.onSortSlots}
                 agentEntities={agentEntities}
+                enableSlotOrder={this.state.enableSlotOrder}
+                onChangeAgent={this.props.onChangeAgentOfSlot}
               />
             </Table>
           </TableContainer>
@@ -615,21 +662,30 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                   label={messages.agentResponsesTitle}
                   placeholder={messages.responsesInput.defaultMessage}
                   onKeyDown={(evt) => this.onChangeInput(evt, 'responses')}
+                  icon={'keyboard_return'}
                 />
               </Row>
             </Form>
             : null}
-          {this.props.scenarioData.intentResponses.length > 0 ?
-            <TableContainer id="intentResponsesTable" quotes>
-              <Table>
-                <Responses
+          <TableContainer id="intentResponsesTable" quotes>
+            <Table>
+              {this.props.scenarioData.intentResponses.length > 0 ?
+                (<Responses
                   intentResponses={this.props.scenarioData.intentResponses}
                   onRemoveResponse={this.props.onRemoveResponse}
-                />
-              </Table>
-            </TableContainer>
-            : null
-          }
+                />) :
+                (<tbody>
+                <tr style={{ width: '100%' }}>
+                  <td style={{ width: '100%', display: 'inline-block' }}>
+                    <div>
+                      <span>{messages.agentResponseExample.defaultMessage}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>) 
+              }
+            </Table>
+          </TableContainer>
           <div
             style={{ float: 'left', clear: 'both' }}
             ref={(el) => {
@@ -786,6 +842,7 @@ IntentPage.propTypes = {
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
   onAddSlot: React.PropTypes.func,
+  onSortSlots: React.PropTypes.func,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
@@ -802,6 +859,7 @@ IntentPage.propTypes = {
   resetForm: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
   onEditMode: React.PropTypes.func,
+  onChangeAgentOfSlot: React.PropTypes.func,
 };
 
 IntentPage.defaultProps = {
@@ -863,6 +921,10 @@ export function mapDispatchToProps(dispatch) {
       dispatch(dispatch(resetStatusFlags()));
       dispatch(changeSlotName({ slotName, value: evt.target.value }));
     },
+    onChangeAgentOfSlot: (slotName, entityName) => {
+      dispatch(dispatch(resetStatusFlags()));
+      dispatch(changeSlotAgent({ slotName, entityName }));
+    },
     onAddTextPrompt: (slotName, evt) => {
       dispatch(dispatch(resetStatusFlags()));
       if (evt.keyCode === 13) {
@@ -913,6 +975,9 @@ export function mapDispatchToProps(dispatch) {
       catch (err) {
         console.log('Post Format not found for this intent');
       }
+    },
+    onSortSlots: (oldIndex, newIndex) => {
+      dispatch(sortSlots(oldIndex, newIndex));
     },
   };
 }

@@ -104,7 +104,9 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
 
   tick() {
     //reload to update status and last training date
-    this.props.onLoadAgentStatus(this.props.currentAgent ? this.props.currentAgent.id : null);
+    if (this.props.currentAgent){
+      this.props.onLoadAgentStatus(this.props.currentAgent.id);
+    }
   }
 
   renderMenu() {
@@ -140,9 +142,9 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
             </div>
             <a
               onClick={() => { this.props.onTrainAgent(this.props.currentAgent) }}
-              disabled={this.props.currentAgentStatus ? this.props.currentAgentStatus.status === 'Ready' : false}
+              disabled={this.props.currentAgent && this.props.currentAgentStatus ? this.props.currentAgentStatus.status === 'Ready' : true}
               className={`btn-floating btn-small right ${this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Training' ? 'activate-training' : '') : ''}`}>
-                {this.props.currentAgentStatus.status === 'Training' ? messages.trainInProcessButton.defaultMessage : messages.trainButton.defaultMessage}
+                { this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Training' ? messages.trainInProcessButton.defaultMessage : messages.trainButton.defaultMessage) : messages.trainButton.defaultMessage }
               </a>
           </div>
         </aside>

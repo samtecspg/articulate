@@ -6,6 +6,7 @@ import {
   CHANGE_WEBHOOK_DATA,
   CHANGE_POSTFORMAT_DATA,
   CHANGE_SLOT_NAME,
+  CHANGE_SLOT_AGENT,
   DELETE_TEXT_PROMPT,
   LOAD_INTENT,
   LOAD_INTENT_ERROR,
@@ -27,6 +28,7 @@ import {
   TAG_ENTITY,
   TOGGLE_FLAG,
   UNTAG_ENTITY,
+  SORT_SLOTS,
 } from './constants';
 import messages from './messages';
 
@@ -235,6 +237,20 @@ function intentReducer(state = initialState, action) {
           })
         )
         .set('touched', true);
+    case CHANGE_SLOT_AGENT:
+      return state
+        .updateIn(['scenarioData', 'slots'], slots =>
+          slots.map(slot => {
+            if (slot.slotName === action.payload.slotName){
+              return slot
+                .set('entity', action.payload.entityName);
+            }
+            else {
+              return slot;
+            }
+          })
+        )
+        .set('touched', true);
     case ADD_TEXT_PROMPT:
       return state
         .updateIn(['scenarioData', 'slots'], slots =>
@@ -269,7 +285,7 @@ function intentReducer(state = initialState, action) {
       return state
         .updateIn(['scenarioData', 'slots'], slots => {
           const existingSlots = slots.filter((slot) => {
-            return slot.entity === action.slot.entity;
+            return slot.entity && slot.entity === action.slot.entity;
           });
           if (existingSlots.length === 0) {
             return slots.concat(action.slot);
@@ -337,6 +353,11 @@ function intentReducer(state = initialState, action) {
         .set('error', action.error)
         .set('oldWebhook', null)
         .set('loading', false);
+    case SORT_SLOTS:
+      const tempSlots = Immutable.asMutable(state.scenarioData.slots, { deep: true});
+      tempSlots.splice(action.newIndex, 0, tempSlots.splice(action.oldIndex, 1)[0]);
+      return state
+        .setIn(['scenarioData', 'slots'], Immutable(tempSlots));
     default:
       return state;
   }

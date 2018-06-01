@@ -29,19 +29,24 @@ function TextInput(props) { // eslint-disable-line react/prefer-stateless-functi
             }
           </label>) : ''
       }
-      <input
-        id={props.id}
-        style={props.style}
-        placeholder={props.placeholder}
-        value={props.value}
-        onChange={props.onChange}
-        onKeyDown={props.onKeyDown}
-        required={props.required}
-        type="text"
-        className={props.className}
-        disabled={props.disabled}
-        defaultValue={props.defaultValue}
-      />
+      <div>
+        <input
+          id={props.id}
+          style={props.style}
+          placeholder={props.placeholder}
+          value={props.value}
+          onChange={props.onChange}
+          onKeyDown={props.onKeyDown}
+          required={props.required}
+          type="text"
+          className={props.className}
+          disabled={props.disabled}
+          defaultValue={props.defaultValue}
+        />
+        { props.icon ?
+          (<Icon className="input-icon">{props.icon}</Icon>) : ''
+        }
+      </div>
     </div>
   );
 }
@@ -59,6 +64,7 @@ TextInput.propTypes = {
   disabled: React.PropTypes.bool,
   className: React.PropTypes.string,
   tooltip: React.PropTypes.string,
+  icon: React.PropTypes.string
 };
 
 export default TextInput;

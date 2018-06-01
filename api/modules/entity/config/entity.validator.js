@@ -13,7 +13,7 @@ class EntityValidate {
                     entityName: EntitySchema.entityName.required(),
                     agent: EntitySchema.agent.required(),
                     uiColor: EntitySchema.uiColor,
-                    regex: EntitySchema.regex.allow(''),
+                    regex: EntitySchema.regex.allow('').allow(null),
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms.required()
@@ -52,7 +52,7 @@ class EntityValidate {
                 return {
                     entityName: EntitySchema.entityName,
                     uiColor: EntitySchema.uiColor,
-                    regex: EntitySchema.regex.allow(''),
+                    regex: EntitySchema.regex.allow('').allow(null),
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms.required()

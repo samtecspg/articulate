@@ -182,14 +182,13 @@ export class DomainPage extends React.PureComponent { // eslint-disable-line rea
                 onChange={this.props.onChangeDomainData.bind(null, { field: 'extraTrainingData' })}
                 checked={domainProps.domain.extraTrainingData}
               />
-              &nbsp;
               <Tooltip
                 tooltip={messages.expandedTrainingDataTooltip.defaultMessage}
                 delay={50}
                 position="top"
               >
                 <a>
-                  <Icon>help_outline</Icon>
+                  <Icon tiny>help_outline</Icon>
                 </a>
               </Tooltip>
             </Row>

@@ -103,6 +103,7 @@ module.exports = (request, reply) => {
                 (cb) => {
 
                     entity = Object.assign({ id: entityId, agent: agentResult.agentName }, entity);
+                    entity.regex = !entity.regex ? '' : entity.regex;
                     const flatEntity = RemoveBlankArray(Flat(entity));
                     redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 

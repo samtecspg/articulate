@@ -25,7 +25,9 @@ import {
   LOAD_POSTFORMAT,
   LOAD_POSTFORMAT_ERROR,
   LOAD_POSTFORMAT_SUCCESS,
-  CHANGE_POSTFORMAT_DATA
+  CHANGE_POSTFORMAT_DATA,
+  SORT_SLOTS,
+  CHANGE_SLOT_AGENT
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -80,6 +82,13 @@ export function toggleFlag(payload) {
 export function changeSlotName(payload) {
   return {
     type: CHANGE_SLOT_NAME,
+    payload,
+  };
+}
+
+export function changeSlotAgent(payload) {
+  return {
+    type: CHANGE_SLOT_AGENT,
     payload,
   };
 }
@@ -199,7 +208,6 @@ export function loadWebhook(id) {
   };
 }
 
-
 export function loadPostFormatError(error) {
   return {
     type: LOAD_POSTFORMAT_ERROR,
@@ -219,5 +227,13 @@ export function loadPostFormat(id) {
     type: LOAD_POSTFORMAT,
     apiCall: true,
     id,
+  };
+}
+
+export function sortSlots(oldIndex, newIndex) {
+  return {
+    type: SORT_SLOTS,
+    oldIndex,
+    newIndex
   };
 }

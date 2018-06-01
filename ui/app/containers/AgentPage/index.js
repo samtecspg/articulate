@@ -387,14 +387,13 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'extraTrainingData')}
                 checked={agent.extraTrainingData}
               />
-              &nbsp;
               <Tooltip
                 tooltip={messages.expandedTrainingDataTooltip.defaultMessage}
                 delay={50}
                 position="top"
               >
                 <a>
-                  <Icon>help_outline</Icon>
+                  <Icon tiny>help_outline</Icon>
                 </a>
               </Tooltip>
             </Row>

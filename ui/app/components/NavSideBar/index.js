@@ -45,6 +45,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
       browserHistory.push(`/agent/${agent.id}`);
     } else {
       this.props.onChangeCurrentAgent(false);
+      this.props.onChangeUrl('/');
     }
   }
 
@@ -128,7 +129,12 @@ NavSideBar.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeCurrentAgent: (agent) => {
-      return agent ? dispatch(loadCurrentAgent(agent.id)) : dispatch(resetCurrentAgent());
+      if (agent){
+        dispatch(loadCurrentAgent(agent.id))
+      }
+      else {
+        dispatch(resetCurrentAgent());
+      }
     },
     onChangeUrl: (url) => dispatch(push(url)),
     onComponentMounted: () => dispatch(loadAgents()),

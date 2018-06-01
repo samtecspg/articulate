@@ -5,22 +5,41 @@ import {
   NavItem,
 } from 'react-materialize';
 import messages from '../messages';
+import systemEntities from 'systemEntities';
+import Immutable from 'seamless-immutable';
 
 export function SlotAgentEntities(props) {
-  let items = [<NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="#">{messages.emptyEntityList.defaultMessage}</NavItem>];
+  let items = undefined;
+  let entitiesItems = undefined;
+  let formattedSystemEntities = undefined;
   if (props.agentEntities && props.agentEntities && props.agentEntities.entities.length > 0) {
-    items = props.agentEntities.entities.map((agentEntity, agentIndex) => {
+    entitiesItems = props.agentEntities.entities.map((agentEntity, agentEntityIndex) => {
       let entityColor = agentEntity.uiColor;
       return (
         <NavItem
           href={'#'}
-          onClick={props.onClickFunction.bind(null, agentEntity.entityName)}
-          key={agentIndex}
+          onClick={props.onChangeAgent.bind(null, props.slot.slotName, agentEntity.entityName)}
+          key={agentEntityIndex}
         ><span style={{ color: entityColor }}>{agentEntity.entityName}</span>
         </NavItem>
       );
     });
   }
+  formattedSystemEntities = systemEntities.map((systemEntity, systemEntityIndex) => {
+    return (
+      <NavItem
+        onClick={props.onChangeAgent.bind(null, props.slot.slotName, systemEntity.entityName)}
+        key={`sys.entity.${systemEntityIndex}`}
+      >
+        <span style={{ color: systemEntity.uiColor }}>
+                      @{systemEntity.entityName}
+        </span>
+      </NavItem>
+    );
+  });
+  items = Immutable([entitiesItems])
+    .concat(<NavItem key="dividerSysEntities" divider />)
+    .concat(formattedSystemEntities);
   return (
     <td style={{ width: '15%', display: 'inline-block', borderBottom: '1px solid #9e9e9e' }}>
       <Dropdown
@@ -48,7 +67,7 @@ SlotAgentEntities.propTypes = {
   slot: React.PropTypes.object,
   agentEntity: React.PropTypes.object,
   agentEntities: React.PropTypes.object,
-  onClickFunction: React.PropTypes.func,
+  onChangeAgent: React.PropTypes.func,
   index: React.PropTypes.number,
 };
 

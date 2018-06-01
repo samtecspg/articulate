@@ -15,7 +15,7 @@ export function AvailableSlots(props) {
         agentEntity = systemEntities.filter((sysEntity) => sysEntity.entityName === slot.entity)[0];
       }
       return (
-        <NavItem onClick={props.onClickFunction.bind(null, slot.slotName)} key={index}><span style={{ color: agentEntity.uiColor }}>{`{${slot.slotName}}`}</span></NavItem>
+        <NavItem onClick={props.onClickFunction.bind(null, slot.slotName)} key={index}><span style={agentEntity ? { color: agentEntity.uiColor } : {}}>{`{${slot.slotName}}`}</span></NavItem>
       );
     });
   }

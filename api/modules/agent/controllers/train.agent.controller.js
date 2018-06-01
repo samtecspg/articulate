@@ -124,7 +124,7 @@ module.exports = (request, reply) => {
                     ], (err) => {
 
                         if (err){
-                            return callbackMapOfDomain(error);
+                            return callbackMapOfDomain(err);
                         }
                         redis.hmset(`domain:${domain.id}`, { status: Status.ready }, (err) => {
 
