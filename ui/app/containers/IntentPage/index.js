@@ -213,7 +213,6 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
         this.props.onChangeIntentData(field, value);
       }
       else if (field === 'usePostFormat' && value) {
-        console.log(value);
         this.props.onChangeIntentData(field, value);
       }
       else {

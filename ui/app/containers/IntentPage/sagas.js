@@ -226,13 +226,11 @@ function* putScenario(payload) {
   try {
     if (!_.isEqual(scenarioData, oldScenarioData)) {
       const { agent, domain, intent, ...data } = scenarioData;
-      // delete data.usePostFormat;
       delete data.id;
       yield call(api.intent.putIntentIdScenario, { id, body: data });
     }
     yield put(updateScenarioSuccess());
   } catch ({ response }) {
-    console.log(response)
     yield put(updateScenarioError({ message: response.obj.message }));
     throw response;
   }
