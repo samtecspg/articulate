@@ -66,7 +66,7 @@ module.exports = (request, reply) => {
         },
         (cb) => {
 
-            server.inject(`/intent/${intentId}/post-format`, (res) => {
+            server.inject(`/intent/${intentId}/postFormat`, (res) => {
 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){

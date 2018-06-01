@@ -50,6 +50,7 @@ module.exports = (request, reply) => {
             delete clonedAgent.entities;
             delete clonedAgent.domains;
             delete clonedAgent.webhook;
+            delete clonedAgent.postFormat;
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
             clonedAgent.status = Status.outOfDate;
             const flatAgent = RemoveBlankArray(Flat(clonedAgent));
@@ -250,6 +251,7 @@ module.exports = (request, reply) => {
                                 let clonedIntent = _.cloneDeep(intent);
                                 delete clonedIntent.scenario;
                                 delete clonedIntent.webhook;
+                                delete clonedIntent.postFormat;
                                 clonedIntent = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedIntent);
                                 clonedIntent.examples = _.map(clonedIntent.examples, (example) => {
 
@@ -346,6 +348,21 @@ module.exports = (request, reply) => {
                                                 return callbackAddIntents(null, resultIntent);
                                             });
                                         }
+                                        if (intent.postFormat) {
+                                            let postFormatToInsert = intent.postFormat;
+                                            postFormatToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, postFormatToInsert);
+                                            const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
+                                            redis.hmset(`intentPostFormat:${intentId}`, flatPostFormat, (err) => {
+
+                                                if (err) {
+                                                    const error = Boom.badImplementation('An error occurred adding the post format data.');
+                                                    return callbackAddIntents(error, null);
+                                                }
+                                                resultIntent.postFormat = postFormatToInsert;
+                                                return callbackAddIntents(null, resultIntent);
+                                            });
+                                        }
+
                                         else {
                                             return callbackAddIntents(null, resultIntent);
                                         }

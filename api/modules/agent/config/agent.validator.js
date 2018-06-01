@@ -9,7 +9,7 @@ const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
 const WebhookSchema = require('../../../models/index').Webhook.schema;
 const ScenarioSchema = require('../../../models/index').Scenario.schema;
 const SlotSchema = require('../../../models/index').Slot.schema;
-const PostFormat = require('../../../models/index').PostFormat.schema;
+const PostFormatSchema = require('../../../models/index').PostFormat.schema;
 const Joi = require('joi');
 
 class AgentValidate {
@@ -306,6 +306,11 @@ class AgentValidate {
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
+                    usePostFormat: AgentSchema.usePostFormat.required(),
+                    postFormat: {
+                        postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
+                    },
+
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining,
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -362,6 +367,11 @@ class AgentValidate {
                                 webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                                 webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
                                 webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                            },
+
+                            usePostFormat: IntentSchema.usePostFormat.required(),
+                            postFormat: {
+                                postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                             }
                         })
                     })
@@ -416,7 +426,7 @@ class AgentValidate {
 
                 return {
                     agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
-                    postFormatPayload: PostFormat.postFormatPayload.required(),
+                    postFormatPayload: PostFormatSchema.postFormatPayload.required(),
                     id : Joi.any().allow('').optional()
                 };
             })()
@@ -441,7 +451,7 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    postFormatPayload: PostFormat.postFormatPayload.allow('').optional()
+                    postFormatPayload: PostFormatSchema.postFormatPayload.allow('').optional()
                 };
             })()
         };

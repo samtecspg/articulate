@@ -107,21 +107,13 @@ module.exports = (request, reply) => {
 
                                                 if (res.statusCode !== 200) {
                                                     if (res.statusCode === 404) {
-                                                        if (!withReferences) {
-                                                            delete exportedIntentForDomain.id;
-                                                            delete exportedIntentForDomain.agent;
-                                                            delete exportedIntentForDomain.domain;
-                                                        }
+
                                                         return callbackGetIntentWebhook(null, exportedIntentForDomain);
                                                     }
                                                     const error = Boom.create(res.statusCode, `An error occurred getting the webhook of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                     return callbackGetIntentWebhook(error, null);
                                                 }
                                                 if (!withReferences) {
-
-                                                    delete exportedIntentForDomain.id;
-                                                    delete exportedIntentForDomain.agent;
-                                                    delete exportedIntentForDomain.domain;
                                                     delete res.result.id;
                                                     delete res.result.agent;
                                                     delete res.result.domain;
@@ -142,14 +134,18 @@ module.exports = (request, reply) => {
 
                                         Async.map(exportedIntentsForDomain, (exportedIntentForDomain, callbackGetIntentPostFormat) => {
 
-                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/post-format`, (res) => {
+                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/postFormat`, (res) => {
 
-                                                if (res.statusCode !== 200 && exportedIntentForDomain.usePostFormat) {
+                                                if (res.statusCode !== 200 ) {
                                                     if (res.statusCode === 404) {
                                                         if (!withReferences) {
-                                                            return callbackGetIntentPostFormat(null, exportedIntentForDomain);
+                                                            delete exportedIntentForDomain.id;
+                                                            delete exportedIntentForDomain.agent;
+                                                            delete exportedIntentForDomain.domain;
                                                         }
-                                                        const error = Boom.create(res.statusCode, `An error occurred getting the post-format of intent ${exportedIntentForDomain.intentName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
+                                                        return callbackGetIntentPostFormat(null, exportedIntentForDomain);
+
+                                                        const error = Boom.create(res.statusCode, `An error occurred getting the post format of intent ${exportedIntentForDomain.intentName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
                                                         return callbackGetIntentPostFormat(error, null);
                                                     }
                                                 }
@@ -158,6 +154,9 @@ module.exports = (request, reply) => {
                                                     delete res.result.agent;
                                                     delete res.result.domain;
                                                     delete res.result.intent;
+                                                    delete exportedIntentForDomain.id;
+                                                    delete exportedIntentForDomain.agent;
+                                                    delete exportedIntentForDomain.domain;
                                                 }
                                                 return callbackGetIntentPostFormat(null, Object.assign(exportedIntentForDomain, { postFormat: res.result }));
                                             });
@@ -239,7 +238,7 @@ module.exports = (request, reply) => {
                 },
                 postFormat: (callbackGetPostFormat) => {
 
-                    server.inject(`/agent/${agentId}/post-format`, (res) => {
+                    server.inject(`/agent/${agentId}/postFormat`, (res) => {
 
                         if (res.statusCode !== 200) {
                             if (res.statusCode === 404) {
