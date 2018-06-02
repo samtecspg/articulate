@@ -6,7 +6,8 @@ import {
   LOAD_WEBHOOK_SUCCESS,
   LOAD_WEBHOOK,
   LOAD_POSTFORMAT_ERROR,
-  LOAD_POSTFORMAT_SUCCESS
+  LOAD_POSTFORMAT_SUCCESS,
+  LOAD_POSTFORMAT,
 } from './constants';
 
 export function loadAgentError(error) {
@@ -14,6 +15,14 @@ export function loadAgentError(error) {
     type: LOAD_AGENT_ERROR,
     error,
   };
+}
+
+export function loadPostFormat(id){
+  return{
+    type: LOAD_POSTFORMAT,
+    apiCall: true,
+    id,
+  }
 }
 
 export function loadAgentSuccess(agent) {

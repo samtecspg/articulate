@@ -1,12 +1,15 @@
 import Immutable from 'seamless-immutable';
 
 import {
-  LOAD_AGENT_ERROR,
-  LOAD_AGENT_SUCCESS,
-  LOAD_WEBHOOK_ERROR,
-  LOAD_WEBHOOK_SUCCESS,
   LOAD_AGENT,
+  LOAD_AGENT_SUCCESS,
+  LOAD_AGENT_ERROR,
   LOAD_WEBHOOK,
+  LOAD_WEBHOOK_SUCCESS,
+  LOAD_WEBHOOK_ERROR,
+  LOAD_POSTFORMAT,
+  LOAD_POSTFORMAT_SUCCESS,
+  LOAD_POSTFORMAT_ERROR,
 } from './constants';
 
 
@@ -27,6 +30,10 @@ const initialState = Immutable({
     webhookVerb: '',
     webhookPayloadType: '',
     webhookPayload: '',
+  },
+  postFormatData: {
+    agent: '',
+    postFormatPayload: ''
   },
 });
 
@@ -57,6 +64,18 @@ function agentReducer(state = initialState, action) {
     case LOAD_WEBHOOK_ERROR:
       return state
         .set('error', action.error)
+        .set('loading', false);
+    case LOAD_POSTFORMAT:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_POSTFORMAT_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('postFormatData', action.postFormat);
+    case LOAD_POSTFORMAT_ERROR:
+      return state
         .set('loading', false);
     default:
       return state;

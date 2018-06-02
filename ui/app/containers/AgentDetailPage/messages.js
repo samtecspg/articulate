@@ -115,4 +115,8 @@ export default defineMessages({
     id: 'boilerplate.containers.AgentPage.create_agent.expanded_training_data',
     defaultMessage: 'Generate extra training examples',
   },
+  postFormat: {
+    id: 'boilerplate.containers.AgentPage.create_agent.webhook',
+    defaultMessage: 'Response Definition',
+  },
 });

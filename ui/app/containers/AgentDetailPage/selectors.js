@@ -16,8 +16,14 @@ const makeSelectWebhookData = () => createSelector(
   (agentState) => agentState.webhookData,
 );
 
+const makeSelectPostFormatData = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.postFormatData,
+);
+
 export {
   selectAgent,
   makeSelectAgentData,
   makeSelectWebhookData,
+  makeSelectPostFormatData,
 };

@@ -44,8 +44,8 @@ import {
 import Responses from './Components/Responses';
 
 import messages from './messages';
-import { makeSelectAgentData, makeSelectWebhookData } from './selectors';
-import { loadAgent, loadWebhook } from './actions';
+import { makeSelectAgentData, makeSelectWebhookData, makeSelectPostFormatData } from './selectors';
+import { loadAgent, loadWebhook, loadPostFormat } from './actions';
 
 import languages from 'languages';
 
@@ -94,6 +94,12 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
     if ((currentAgent && this.props.currentAgent) && (currentAgent.id !== this.props.currentAgent.id)) {
       this.props.onComponentWillMount(nextProps);
     }
+    if ((currentAgent && !this.props.currentAgent)) {
+      if (!this.state.webhookLoaded){
+        const justWebhook = true;
+        this.props.onComponentWillMount(nextProps, justWebhook);
+      }
+    }
   }
 
   componentDidUpdate(){
@@ -124,7 +130,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
   }
 
   render() {
-    const { loading, error, currentAgent, webhook } = this.props;
+    const { loading, error, currentAgent, webhook, postFormat } = this.props;
 
     const agentProps = {
       loading,
@@ -303,6 +309,36 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               </Form>
             : null
           }
+
+          {
+            currentAgent.usePostFormat && postFormat.agent !== '' ? <ContentSubHeader title={messages.postFormat} /> : null
+          }
+          {
+            currentAgent.usePostFormat && postFormat.agent !== '' ?
+              <Form style={{marginTop: '0px'}}>
+                <Row>
+                  <AceEditor
+                    width="100%"
+                    height="250px"
+                    mode={'json'}
+                    theme="terminal"
+                    name="webhookPayload"
+                    readOnly={true}
+                    onLoad={this.onLoad}
+                    fontSize={14}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={postFormat.postFormatPayload}
+                    setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }}/>
+                </Row>
+              </Form>
+            : null
+          }
         </Content>
         <DeleteModal
           isOpen={this.state.deleteModalOpen}
@@ -335,8 +371,11 @@ export function mapDispatchToProps(dispatch) {
       if (!justWebhook){
         dispatch(loadAgent(props.params.id));
       }
-      if (props.agent.useWebhook) {
+      if (props.currentAgent && props.currentAgent.useWebhook) {
         dispatch(loadWebhook(props.params.id));
+      }
+      if (props.currentAgent && props.currentAgent.usePostFormat) {
+        dispatch(loadPostFormat(props.params.id));
       }
     },
     onDeleteAgent: (agent) => dispatch(deleteAgent(agent.id)),
@@ -350,6 +389,7 @@ const mapStateToProps = createStructuredSelector({
   currentAgent: makeSelectCurrentAgent(),
   agent: makeSelectAgentData(),
   webhook: makeSelectWebhookData(),
+  postFormat: makeSelectPostFormatData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentDetailPage);
