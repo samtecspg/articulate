@@ -80,7 +80,7 @@ module.exports = (request, reply) => {
             if (domains.length > 1){
                 domains.push({ domainRecognizer: true });
             }
-            if (!needToTrain){
+            if (!needToTrain && domains.length < 2){
                 return callbackTrainEachDomain(null);
             }
             Async.eachLimit(domains, limit, (domain, callbackMapOfDomain) => {

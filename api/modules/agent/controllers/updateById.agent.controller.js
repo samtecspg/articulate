@@ -52,6 +52,7 @@ module.exports = (request, reply) => {
         (currentAgent, cb) => {
 
             const requiresNameChanges = updateData.agentName && updateData.agentName !== currentAgent.agentName;
+            requiresRetrain = updateData.extraTrainingData !== undefined && updateData.extraTrainingData !== currentAgent.extraTrainingData;
             if (requiresNameChanges){
                 Async.waterfall([
                     (callback) => {

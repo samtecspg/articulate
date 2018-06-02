@@ -53,25 +53,26 @@ module.exports = (request, reply) => {
         },
         (currentDomain, cb) => {
 
+            redis.zscore('agents', currentDomain.agent, (err, id) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred checking if the agent exists.');
+                    return cb(error);
+                }
+                if (id){
+                    agentId = id;
+                    return cb(null, currentDomain);
+                }
+                const error = Boom.badRequest(`The agent ${currentDomain.agent} doesn't exist`);
+                return cb(error, null);
+            });
+        },
+        (currentDomain, cb) => {
+
             const requiresNameChanges = updateData.domainName && updateData.domainName !== currentDomain.domainName;
+            requiresRetrain = updateData.extraTrainingData !== undefined && updateData.extraTrainingData !== currentDomain.extraTrainingData;
             if (requiresNameChanges){
                 Async.waterfall([
-                    (callback) => {
-
-                        redis.zscore('agents', currentDomain.agent, (err, id) => {
-
-                            if (err){
-                                const error = Boom.badImplementation('An error occurred checking if the agent exists.');
-                                return callback(error);
-                            }
-                            if (id){
-                                agentId = id;
-                                return callback(null);
-                            }
-                            const error = Boom.badRequest(`The agent ${currentDomain.agent} doesn't exist`);
-                            return callback(error, null);
-                        });
-                    },
                     (callback) => {
 
                         redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, updateData.domainName, (err, addResponse) => {
