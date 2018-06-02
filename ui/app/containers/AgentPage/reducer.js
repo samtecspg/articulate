@@ -45,8 +45,8 @@ const initialState = Immutable({
     agent: '',
     postFormatPayload: ''
   },
-  oldPayloadJSON: '',
-  oldPayloadXML: '',
+  oldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"intent": {{{JSONstringify intent}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
+  oldPayloadXML: '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n\t<text>{{text}}</text>\n\t<intent>{{{toXML intent}}}</intent>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
   oldAgentData: null,
   oldWebhookData: null,
   touched: false,
