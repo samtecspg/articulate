@@ -19,6 +19,7 @@ let preCreatedAgent = null;
 let agentId = null;
 let preCreatedAgentId = null;
 let importedAgentId = null;
+let importedAgentFromExportId = null;
 let domain = null;
 let entity = null;
 let intent = null;
@@ -81,7 +82,18 @@ after((done) => {
                 message: 'Error deleting agent of the import endpoint test'
             });
         }
-        done();
+        server.inject({
+            method: 'DELETE',
+            url: '/agent/' + importedAgentFromExportId
+        }, (resDel) => {
+
+            if (resDel.statusCode !== 200){
+                done({
+                    message: 'Error deleting agent of the import from export endpoint test'
+                });
+            }
+            done();
+        });
     });
 });
 
@@ -732,7 +744,7 @@ suite('/agent/import', () => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.agentName).to.equal(exportedTestAgent.agentName);
-                importedAgentId = res.result.id;
+                importedAgentFromExportId = res.result.id;
                 done();
             });
         });
