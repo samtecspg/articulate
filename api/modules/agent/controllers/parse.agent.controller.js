@@ -2,7 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const AgentTools = require('../tools');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {

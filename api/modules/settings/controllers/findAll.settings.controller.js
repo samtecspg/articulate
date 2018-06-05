@@ -5,57 +5,51 @@ const Boom = require('boom');
 module.exports = (request, reply) => {
 
     const server = request.server;
+    const redis = server.app.redis;
+    const settingsResult = {};
 
-    Async.parallel({
-        uiLanguage: (cb) => {
+    Async.waterfall([
+        (cb) => {
 
-            server.inject('/settings/uiLanguage', (res) => {
+            redis.smembers('settings', (err, result) => {
 
-                if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the ui language setting');
-                    return cb(error, null);
+                if (err){
+                    const error = Boom.badImplementation('An error occurred getting the list of settings names');
+                    return cb(error);
                 }
-                return cb(null, res.result.uiLanguage);
+                return cb(null, result);
             });
         },
-        domainClassifierPipeline: (cb) => {
+        (settings, cb) => {
 
-            server.inject('/settings/domainClassifierPipeline', (res) => {
+            Async.each(settings, (setting, callback) => {
 
-                if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the domain classifier pipeline');
-                    return cb(error, null);
+                server.inject(`/settings/${setting}`, (res) => {
+
+                    if (res.statusCode !== 200){
+                        if (res.statusCode === 404){
+                            const error = Boom.notFound('The specified setting doesn\'t exists');
+                            return callback(error, null);
+                        }
+                        const error = Boom.create(res.statusCode, `An error occurred getting the setting ${setting}`);
+                        return callback(error, null);
+                    }
+                    settingsResult[setting] = res.result;
+                    return callback(null);
+                });
+            }, (err) => {
+
+                if (err){
+                    return cb(err);
                 }
-                return cb(null, res.result);
-            });
-        },
-        intentClassifierPipeline: (cb) => {
-
-            server.inject('/settings/intentClassifierPipeline', (res) => {
-
-                if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the intent classifer pipeline');
-                    return cb(error, null);
-                }
-                return cb(null, res.result);
-            });
-        },
-        entityClassifierPipeline: (cb) => {
-
-            server.inject('/settings/entityClassifierPipeline', (res) => {
-
-                if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the entity classifer pipeline');
-                    return cb(error, null);
-                }
-                return cb(null, res.result);
+                return cb(null);
             });
         }
-    }, (err, result) => {
+    ], (err) => {
 
         if (err){
             return reply(err);
         }
-        return reply(result);
+        return reply(settingsResult);
     });
 };

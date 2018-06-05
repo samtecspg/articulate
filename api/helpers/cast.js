@@ -89,7 +89,7 @@ module.exports = (object, type) => {
             break;
         case 'postFormat':
             break;
-        case 'pipeline':
+        case 'settings':
             const newObject = [];
             Object.keys(object).forEach((key) => {
 
