@@ -22,9 +22,6 @@ module.exports = (request, reply) => {
 
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
-    const ERPipeline = server.app.rasa_er_pipeline;
-    const duckling = server.app.duckling;
     let documentId;
 
     Async.waterfall([
@@ -46,6 +43,51 @@ module.exports = (request, reply) => {
                         }
                         return callbackGetAgent(null, res.result);
                     });
+                },
+                duckling: (callbackGetRasa) => {
+
+                    server.inject('/settings/ducklingURL', (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                const errorNotFound = Boom.notFound('The setting ducklingURL wasn\'t found');
+                                return callbackGetRasa(errorNotFound);
+                            }
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting ducklingURL');
+                            return callbackGetRasa(error, null);
+                        }
+                        return callbackGetRasa(null, res.result);
+                    });
+                },
+                rasa: (callbackGetRasa) => {
+
+                    server.inject('/settings/rasaURL', (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                const errorNotFound = Boom.notFound('The setting rasaURL wasn\'t found');
+                                return callbackGetRasa(errorNotFound);
+                            }
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting rasaURL');
+                            return callbackGetRasa(error, null);
+                        }
+                        return callbackGetRasa(null, res.result);
+                    });
+                },
+                ERPipeline: (callbackGetRasa) => {
+
+                    server.inject('/settings/entityClassifierPipeline', (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                const errorNotFound = Boom.notFound('The setting entityClassifierPipeline wasn\'t found');
+                                return callbackGetRasa(errorNotFound);
+                            }
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting entityClassifierPipeline');
+                            return callbackGetRasa(error, null);
+                        }
+                        return callbackGetRasa(null, res.result);
+                    });
                 }
             }, (err, result) => {
 
@@ -59,7 +101,7 @@ module.exports = (request, reply) => {
 
             const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'UTC');
             const languageToUse = agentData.agent.language ? agentData.agent.language : 'en';
-            AgentTools.parseText(redis, rasa, ERPipeline, duckling, text, timezoneToUse, languageToUse, agentData, server, (err, result) => {
+            AgentTools.parseText(redis, agentData.rasa, agentData.ERPipeline, agentData.duckling, text, timezoneToUse, languageToUse, agentData, server, (err, result) => {
 
                 if (err) {
                     return callback(err);

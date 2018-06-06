@@ -125,12 +125,12 @@ module.exports = (request, reply) => {
     let agent = null;
     let agentId = null;
     let domainId = null;
+    let rasa = null;
     let extraTrainingData = null;
     const updateData = request.payload;
 
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.waterfall([
         (cb) => {
@@ -226,6 +226,22 @@ module.exports = (request, reply) => {
             else {
                 return cb(null, currentIntent);
             }
+        },
+        (currentIntent, cb) => {
+
+            server.inject('/settings/rasaURL', (res) => {
+
+                if (res.statusCode !== 200) {
+                    if (res.statusCode === 404) {
+                        const errorNotFound = Boom.notFound('The setting rasaURL wasn\'t found');
+                        return cb(errorNotFound);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting rasaURL');
+                    return cb(error, null);
+                }
+                rasa = res.result;
+                return cb(null, currentIntent);
+            });
         },
         (currentIntent, cb) => {
 

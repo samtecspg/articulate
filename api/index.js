@@ -8,7 +8,6 @@ const Routes = require('./config/routes');
 const Redis = require('redis');
 const Async = require('async');
 const _ = require('lodash');
-const ERPipeline = require('./rasa-er-pipeline.json');
 const StartDB = require('./helpers/startDB');
 
 module.exports = (callback) => init(callback);
@@ -74,9 +73,6 @@ const initHapi = (next) => {
 
     const server = new Hapi.Server();
     server.connection({ port: 7500, routes: { cors: true } });
-    server.app.rasa = process.env.RASA_URL ? process.env.RASA_URL : 'http://localhost:5000';
-    server.app.duckling = process.env.DUCKLING_URL ? process.env.DUCKLING_URL : 'http://localhost:8000';
-    server.app.rasa_er_pipeline = ERPipeline;
 
     /* $lab:coverage:off$ */
     for (const route in Routes) {

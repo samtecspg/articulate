@@ -64,7 +64,7 @@
       }
     ],
     "rasaURL": "http://localhost:5000",
-    "ducklinURL": "http://localhost:8000",
+    "ducklingURL": "http://localhost:8000",
     "ducklingDimension": [
       "amount-of-money",
       "distance",
