@@ -285,7 +285,7 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                                 results.push(_.cloneDeep(resultToSend));
                             }
                         }
-                        if (regex.entityType === "regex") {
+                        if (regex.entityType === 'regex') {
                             regex.patterns.forEach((regexToTestForEntity) => {
 
                                 const regexToTest = new RegExp(regexToTestForEntity, 'i');
