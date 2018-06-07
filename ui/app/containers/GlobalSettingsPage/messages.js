@@ -77,4 +77,12 @@ export default defineMessages({
     id: 'boilerplate.containers.GlobalSettingsPage.default_fallback_input_placeholder',
     defaultMessage: 'example: Sorry I can\'t understand what you are saying',
   },
+  timezonesTooltip: {
+    id: 'boilerplate.containers.GlobalSettingsPage.default_fallback_input_placeholder',
+    defaultMessage: 'Some services like duckling use a timezone value to parase dates and times.',
+  },
+  agentLanguageTooltip: {
+    id: 'boilerplate.containers.GlobalSettingsPage.default_fallback_input_placeholder',
+    defaultMessage: 'Depending on the languages supported by the pipeline you are using your agent could use one of multiple languages. This will set the default language por new agents.',
+  }
 });

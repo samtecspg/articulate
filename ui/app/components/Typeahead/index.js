@@ -4,6 +4,8 @@ import PopoverAnimationVertical from 'material-ui/Popover/PopoverAnimationVertic
 import getMuiTheme          from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
 import { FormattedMessage } from 'react-intl';
+import Tooltip from '../Tooltip';
+import { Icon } from 'react-materialize';
 
 class Typeahead extends Component {
   constructor(props) {
@@ -22,7 +24,17 @@ class Typeahead extends Component {
   render() {
     return (
       <div style={this.props.style} className={`col input-field s${this.props.s}`}>
-        <label>{this.props.label}</label>
+        <label className="typeahead-label">{this.props.label}</label>
+        {this.props.tooltip ?
+        <Tooltip
+          tooltip={this.props.tooltip}
+          delay={50}
+          position="top"
+        >
+          <a style={{display: 'inline', top: '-10px', position: 'absolute'}}>
+            <Icon tiny>help_outline</Icon>
+          </a>
+        </Tooltip> : null}
         <MuiThemeProvider muiTheme={getMuiTheme()}>
           <AutoComplete
             id                  ={this.props.id}

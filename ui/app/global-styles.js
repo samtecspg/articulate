@@ -407,7 +407,14 @@ injectGlobal`
   .input-field label {
     height: auto !important;
     font-size: 1.4em;
-    color: #4e4e4e; }
+    color: #4e4e4e;
+  }
+
+  .typeahead-label{
+    top: -10px !important;
+    position: relative !important;
+    font-size: 1.1em !important;
+  }
 
   .input-field label:not(.label-icon).active {
     -webkit-transform: translateY(-25px) scale(0.8);

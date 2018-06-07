@@ -202,8 +202,22 @@ export class GlobalSettingsPage extends React.PureComponent { // eslint-disable-
                           [messages.errorParsingOptions.defaultMessage] :
                           globalSettings.timezones}
                 value={globalSettings.defaultTimezone}
+                tooltip={messages.timezonesTooltip.defaultMessage}
                 s={12}
               />
+              <Tooltip
+                tooltip={messages.agentLanguageTooltip.defaultMessage}
+                delay={50}
+                position="top"
+              >
+                <a style={{
+                    'top': '29px',
+                    'position': 'relative',
+                    'left': '209px'
+                }}>
+                  <Icon tiny>help_outline</Icon>
+                </a>
+              </Tooltip>
               <Input
                 s={12}
                 name="defaultAgentLanguage"
