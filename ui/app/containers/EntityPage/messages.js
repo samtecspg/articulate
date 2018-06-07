@@ -25,6 +25,10 @@ export default defineMessages({
     id: 'boilerplate.containers.EntityPage.create_entity.entityName',
     defaultMessage: 'Entity Name',
   },
+  entityType: {
+    id: 'boilerplate.containers.EntityPage.create_entity.entityType',
+    defaultMessage: 'Entity type',
+  },
   entityColor: {
     id: 'boilerplate.containers.EntityPage.create_entity.entityColor',
     defaultMessage: 'Entity Color',

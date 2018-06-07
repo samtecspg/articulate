@@ -22,6 +22,9 @@ export function AgentEntities(props) {
 
   const entitiesItems = props.agentEntities.entities
     .map((agentEntity, agentIndex) => {
+      if (agentEntity.type === 'regex'){
+        return null;
+      }
       return (
         <NavItem
           onClick={props.userSays ?
@@ -35,7 +38,7 @@ export function AgentEntities(props) {
         </NavItem>
       );
     });
-
+    
   if (props.createEntity) {
     items = Immutable([entitiesItems])
       .concat(<NavItem key="dividerSysEntities" divider />)

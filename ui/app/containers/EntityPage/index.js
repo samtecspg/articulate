@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import {
   Col,
   Row,
+  Input
 } from 'react-materialize';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -55,6 +56,12 @@ import {
   makeSelectEntityData,
   makeSelectTouched,
 } from './selectors';
+
+const returnFormattedOptions = (options) => options.map((option, index) => (
+  <option key={index} value={option.value}>
+    {option.text}
+  </option>
+));
 
 export class EntityPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
@@ -188,6 +195,12 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
       displayColorPicker,
     };
 
+    let typeSelect = [];
+    const defaultOptionType = { value: 'learned', text: 'learned', disabled: 'disabled' };
+    const regexOptionType = { value: 'regex', text: 'regex', disabled: 'disabled' };
+
+    typeSelect= [defaultOptionType, regexOptionType];
+
     let breadcrumbs = [
       { label: 'Agent' },
     ];
@@ -238,6 +251,15 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                 displayColorPicker={this.props.displayColorPicker}
                 s={2}
               />
+              <Input
+                s={12}
+                type="select"
+                label={messages.entityType.defaultMessage}
+                value={entity.type ? entity.type : 'learned'}
+                onChange={(evt) => this.onChangeInput(evt, 'type')}
+              >
+                {returnFormattedOptions(typeSelect)}
+              </Input>
               <FormTextInput
                   id='regex'
                   label={messages.regex}
