@@ -26,8 +26,8 @@ module.exports = (conversationStateObject, callback) => {
             return slot.isList;
         }), 'slotName');
         //Extract the recognized entities from the text parse
-        const recognizedEntities = conversationStateObject.rasaResult.entities;
         //Create an array of slots that existed before and are being overrided because of a new text parse
+        const recognizedEntities = conversationStateObject.rasaResult.entities;
         const overridedSlots = [];
         //Iterate over each recognized entity
         const recognizedEntitiesNames = _.map(recognizedEntities, (recognizedEntity) => {
