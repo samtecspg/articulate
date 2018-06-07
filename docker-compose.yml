@@ -20,8 +20,6 @@ services:
     environment:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
-      - RASA_URL=${RASA_URL:-http://rasa:5000}
-      - DUCKLING_URL=${DUCKLING_URL:-http://duckling:8000}
       - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
       - DOCKER_INSTANCE=${DOCKER_INSTANCE:-localhost}
       - SWAGGER_HOST=${SWAGGER_HOST:-localhost}:7500
