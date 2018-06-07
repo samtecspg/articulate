@@ -3,23 +3,15 @@ import { AutoComplete } from 'material-ui';
 import PopoverAnimationVertical from 'material-ui/Popover/PopoverAnimationVertical';
 import getMuiTheme          from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
-import timezones from 'timezones';
 import { FormattedMessage } from 'react-intl';
 
 class Typeahead extends Component {
   constructor(props) {
     super(props);
     this.onUpdateInput  = this.onUpdateInput.bind(this);
-    this.state = {
-      dataSource : timezones,
-      inputValue : props.value
-    }
   }
 
   onUpdateInput(inputValue) {
-    this.setState({
-      inputValue : inputValue
-    });
     const evt = {
       target: {
         value: inputValue
@@ -29,12 +21,12 @@ class Typeahead extends Component {
   }
   render() {
     return (
-      <div className={`col input-field s${this.props.s}`}>
+      <div style={this.props.style} className={`col input-field s${this.props.s}`}>
         <label>{this.props.label}</label>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
           <AutoComplete
             id                  ={this.props.id}
-            searchText          ={this.state.inputValue}
+            searchText          ={this.props.value}
             maxSearchResults    ={this.props.maxSearchResults}
             filter              ={function (searchText, key) {
               if (searchText.length >= 2){
@@ -44,13 +36,13 @@ class Typeahead extends Component {
             }}
             openOnFocus         ={true}
             fullWidth           ={true}
-            dataSource          ={this.state.dataSource}
+            dataSource          ={this.props.dataSource}
             onUpdateInput       ={this.onUpdateInput}
             animation           ={PopoverAnimationVertical}
             underlineShow       ={false}
             menuProps           ={{
               maxHeight: 250,
-              className: 'timezones',
+              className: this.props.menuClassName,
               menuItemStyle: {
                 fontFamily: 'Montserrat',
                 fontWeight: '300',

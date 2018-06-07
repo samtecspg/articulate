@@ -48,6 +48,7 @@ import {
   makeSelectInWizard,
   makeSelectLoading,
   makeSelectSuccess,
+  makeSelectGlobalSettingsData,
 } from '../App/selectors';
 import {
   changeAgentData,
@@ -61,9 +62,6 @@ import {
 } from './actions';
 
 import messages from './messages';
-
-import languages from 'languages';
-import timezones from 'timezones';
 
 import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData, makeSelectPostFormatData } from './selectors';
 
@@ -124,11 +122,22 @@ const payloadTypes = [
   },
 ];
 
-const returnFormattedOptions = (options) => options.map((option, index) => (
-  <option key={index} value={option.value}>
-    {option.text}
-  </option>
-));
+const returnFormattedOptions = (options) => {
+  try {
+    return options.map((option, index) => (
+      <option key={index} value={option.value}>
+        {option.text}
+      </option>
+    ));
+  }
+  catch (e){
+    return [
+      <option key={0} value={''}>
+        {messages.errorParsingOptions.defaultMessage}
+      </option>
+    ]
+  }
+};
 
 export class AgentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
@@ -155,7 +164,9 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'agentEdit');
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
-
+    this.props.onChangeAgentData('language', { target: { value: this.props.globalSettings.defaultAgentLanguage }});
+    this.props.onChangeAgentData('timezone', { target: { value: this.props.globalSettings.defaultTimezone }});
+    this.props.onChangeAgentData('fallbackResponses', { target: { value: this.props.globalSettings.defaultAgentFallbackResponses }});
     document.getElementById('agentName').focus();
   }
 
@@ -202,7 +213,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       });
     }
     else {
-      if (timezones.indexOf(this.props.agent.timezone) === -1) {
+      if (this.props.globalSettings.timezones.indexOf(this.props.agent.timezone) === -1) {
         Alert.error(messages.invalidTimezone.defaultMessage, {
           position: 'bottom'
         });
@@ -260,7 +271,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   }
 
   render() {
-    const { loading, error, success, agent, match, webhook, postFormat } = this.props;
+    const { loading, error, success, agent, match, webhook, postFormat, globalSettings } = this.props;
     const agentProps = {
       loading,
       error,
@@ -325,7 +336,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 value={agent.language}
                 onChange={this.props.onChangeAgentData.bind(null, 'language')}
               >
-                {returnFormattedOptions(languages)}
+                {returnFormattedOptions(globalSettings.agentLanguages)}
               </Input>
               <Typeahead
                 id='timezone'
@@ -333,6 +344,8 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 maxSearchResults={10}
                 callback={this.props.onChangeAgentData}
                 label={messages.timezone.defaultMessage}
+                menuClassName={'timezones'}
+                dataSource={globalSettings.timezones}
                 value={agent.timezone}
                 s={6}
               />
@@ -607,7 +620,8 @@ const mapStateToProps = createStructuredSelector({
   success: makeSelectSuccess(),
   inWizard: makeSelectInWizard(),
   error: makeSelectError(),
-  postFormat: makeSelectPostFormatData()
+  postFormat: makeSelectPostFormatData(),
+  globalSettings: makeSelectGlobalSettingsData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentPage);

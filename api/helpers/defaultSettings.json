@@ -1,5 +1,11 @@
 {
     "uiLanguage": "en",
+    "uiLanguages": [
+      {
+        "value": "en",
+        "text": "English"
+      }
+    ],
     "domainClassifierPipeline": [
       {
         "name": "nlp_spacy"
@@ -680,7 +686,7 @@
       "WET",
       "Zulu"
     ],
-    "defaultTimezone": "America/Kentucky/Louisville",
+    "defaultTimezone": "UTC",
     "agentLanguages": [
       {
         "value": "en",

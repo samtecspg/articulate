@@ -8,7 +8,7 @@ class SettingsValidate {
         this.update = {
             payload: (() => {
 
-                return Joi.any();
+                return Joi.object();
             })()
         };
 

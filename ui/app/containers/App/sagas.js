@@ -12,12 +12,15 @@ import {
   loadCurrentAgentError,
   loadCurrentAgentSuccess,
   loadCurrentAgentStatusSuccess,
+  loadGlobalSettingsSuccess,
+  loadGlobalSettingsError,
 } from '../../containers/App/actions';
 import {
   LOAD_AGENTS,
   LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_STATUS,
-  TRAIN_AGENT
+  TRAIN_AGENT,
+  LOAD_GLOBAL_SETTINGS,
 } from '../../containers/App/constants';
 
 export function* getAgents(payload) {
@@ -131,9 +134,41 @@ export function* trainAgent() {
   yield take(LOCATION_CHANGE);
 }
 
+export function* getGlobalSettings(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.settings.getSettings);
+    const settings = response.obj;
+    yield put(loadGlobalSettingsSuccess(settings));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadGlobalSettingsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadGlobalSettingsError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadGlobalSettingsError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
+
+export function* loadGlobalSettings() {
+  const watcher = yield takeLatest(LOAD_GLOBAL_SETTINGS, getGlobalSettings);
+
+  // Suspend execution until location changes
+  /*yield take(LOCATION_CHANGE);
+  yield cancel(watcher);*/
+}
+
+
 export default [
   loadAgents,
   loadCurrentAgent,
   loadCurrentAgentStatus,
   trainAgent,
+  loadGlobalSettings,
 ];

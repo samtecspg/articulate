@@ -49,13 +49,20 @@ module.exports = (request, reply) => {
                 else {
                     flatData = Flat(updateData[setting]);
                 }
-                redis.hmset(`settings:${setting}`, flatData, (err) => {
+                redis.del(`settings:${setting}`, (err) => {
 
                     if (err){
-                        const error = Boom.badImplementation(`An error occurred updating the setting ${setting}.`);
+                        const error = Boom.badImplementation('An error occurred temporaly removing the setting for the update.');
                         return callbck(error);
                     }
-                    return callbck(null);
+                    redis.hmset(`settings:${setting}`, flatData, (err) => {
+
+                        if (err){
+                            const error = Boom.badImplementation(`An error occurred updating the setting ${setting}.`);
+                            return callbck(error);
+                        }
+                        return callbck(null);
+                    });
                 });
             }
         ], (err) => {

@@ -39,6 +39,7 @@ import {
   makeSelectError,
   makeSelectLoading,
   makeSelectCurrentAgent,
+  makeSelectGlobalSettingsData,
 } from '../App/selectors';
 
 import Responses from './Components/Responses';
@@ -47,9 +48,7 @@ import messages from './messages';
 import { makeSelectAgentData, makeSelectWebhookData, makeSelectPostFormatData } from './selectors';
 import { loadAgent, loadWebhook, loadPostFormat } from './actions';
 
-import languages from 'languages';
-
-const getLanguageFromCode = (languageCode) => {
+const getLanguageFromCode = (languages, languageCode) => {
 
   return _.filter(languages, (language) => {
 
@@ -130,7 +129,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
   }
 
   render() {
-    const { loading, error, currentAgent, webhook, postFormat } = this.props;
+    const { loading, error, currentAgent, webhook, postFormat, globalSettings } = this.props;
 
     const agentProps = {
       loading,
@@ -205,7 +204,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               <FormTextInput
                 s={6}
                 label={messages.language}
-                value={getLanguageFromCode(currentAgent.language)}
+                value={getLanguageFromCode(globalSettings.agentLanguages, currentAgent.language)}
                 disabled
               />
               <FormTextInput
@@ -390,6 +389,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgentData(),
   webhook: makeSelectWebhookData(),
   postFormat: makeSelectPostFormatData(),
+  globalSettings: makeSelectGlobalSettingsData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentDetailPage);
