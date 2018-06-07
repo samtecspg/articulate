@@ -247,7 +247,7 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                         if (regexToTest.test(textToParse)){
                             const resultParsed = regexToTest.exec(textToParse);
                             const startIndex = textToParse.indexOf(resultParsed[0]);
-                            const endIndex = startIndex + textToParse.length;
+                            const endIndex = startIndex + resultParsed[0].length;
                             const resultToSend = Object.assign(regex,{ resolvedRegex: resultParsed[0], start: startIndex, end: endIndex });
                             results.push(resultToSend);
                         }
