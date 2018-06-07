@@ -231,7 +231,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onLoadAgentStatus: (agentId) => {
       if (agentId){
-        //dispatch(loadCurrentAgentStatus(agentId));
+        dispatch(loadCurrentAgentStatus(agentId));
       }
     },
   };
