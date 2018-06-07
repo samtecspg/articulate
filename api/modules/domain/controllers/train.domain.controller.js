@@ -9,10 +9,10 @@ module.exports = (request, reply) => {
     let agent = null;
     let agentId = null;
     let domain = null;
+    let rasa = null;
     const domainId = request.params.id;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.waterfall([
         (callback) => {
@@ -60,6 +60,22 @@ module.exports = (request, reply) => {
                     return callback(error, null);
                 }
                 agent = res.result;
+                return callback(null);
+            });
+        },
+        (callback) => {
+
+            server.inject('/settings/rasaURL', (res) => {
+
+                if (res.statusCode !== 200) {
+                    if (res.statusCode === 404) {
+                        const errorNotFound = Boom.notFound('The setting rasaURL wasn\'t found');
+                        return callback(errorNotFound);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting rasaURL');
+                    return callback(error, null);
+                }
+                rasa = res.result;
                 return callback(null);
             });
         },

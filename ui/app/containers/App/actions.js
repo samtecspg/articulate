@@ -83,6 +83,15 @@ import {
   MISSING_AGENT,
   CHECK_API,
   TRAIN_AGENT,
+  UPDATE_GLOBAL_SETTINGS,
+  UPDATE_GLOBAL_SETTINGS_ERROR,
+  UPDATE_GLOBAL_SETTINGS_SUCCESS,
+  LOAD_GLOBAL_SETTINGS,
+  LOAD_GLOBAL_SETTINGS_ERROR,
+  LOAD_GLOBAL_SETTINGS_SUCCESS,
+  CHANGE_GLOBAL_SETTINGS_DATA,
+  RESET_GLOBAL_SETTINGS_DATA,
+  REMOVE_GLOBAL_SETTINGS_FALLBACK,
 } from './constants';
 
 export function loadAgents() {
@@ -553,6 +562,27 @@ export function updateDomain() {
   };
 }
 
+export function updateGlobalSettingsError(error) {
+  return {
+    type: UPDATE_GLOBAL_SETTINGS_ERROR,
+    error,
+  };
+}
+
+export function updateGlobalSettingsSuccess(globalSettings) {
+  return {
+    type: UPDATE_GLOBAL_SETTINGS_SUCCESS,
+    globalSettings,
+  };
+}
+
+export function updateGlobalSettings() {
+  return {
+    type: UPDATE_GLOBAL_SETTINGS,
+    apiCall: true,
+  };
+}
+
 export function updateIntentError(error) {
   return {
     type: UPDATE_INTENT_ERROR,
@@ -680,4 +710,45 @@ export function traingAgentError(error){
     type: TRAIN_AGENT_ERROR,
     error
   }
+}
+
+export function loadGlobalSettingsError(error) {
+  return {
+    type: LOAD_GLOBAL_SETTINGS_ERROR,
+    error,
+  };
+}
+
+export function loadGlobalSettingsSuccess(globalSettings) {
+  return {
+    type: LOAD_GLOBAL_SETTINGS_SUCCESS,
+    globalSettings,
+  };
+}
+
+export function loadGlobalSettings() {
+  return {
+    type: LOAD_GLOBAL_SETTINGS,
+    apiCall: true,
+  };
+}
+
+export function changeGlobalSettingsData(payload) {
+  return {
+    type: CHANGE_GLOBAL_SETTINGS_DATA,
+    payload,
+  };
+}
+
+export function resetGlobalSettingsData() {
+  return {
+    type: RESET_GLOBAL_SETTINGS_DATA,
+  };
+}
+
+export function removeGlobalSettingsFallback(index) {
+  return {
+    type: REMOVE_GLOBAL_SETTINGS_FALLBACK,
+    index,
+  };
 }

@@ -179,6 +179,35 @@ injectGlobal`
     background-color: inherit;
   }
 
+  .settings-link {
+    font-weight: 300;
+    font-size: 1em;
+    color: #fff;
+    padding: 15px 28px;
+    cursor: pointer; }
+    .settings-link:hover {
+      background-color: rgba(0, 0, 0, 0.1); }
+
+  #side-nav .settings-link ul.sublinks {
+    display: none;
+    margin: 10px 0; }
+    #side-nav .settings-link ul.sublinks li {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.3s ease-in-out; }
+      #side-nav .settings-link ul.sublinks li a {
+        padding: 0;
+        opacity: 0.7;
+        transition: opacity 0.2s ease-out; }
+        #side-nav .settings-link ul.sublinks li a:hover {
+          opacity: 1;
+          background-color: transparent; }
+      #side-nav .settings-link ul.sublinks li .active {
+        opacity: 1; }
+    #side-nav .settings-link ul.sublinks li.slide-in {
+      opacity: 1;
+      transform: translateX(0px); }
+
   main > div > header {
     width: 100%;
     height: 70px;
@@ -378,7 +407,14 @@ injectGlobal`
   .input-field label {
     height: auto !important;
     font-size: 1.4em;
-    color: #4e4e4e; }
+    color: #4e4e4e;
+  }
+
+  .typeahead-label{
+    top: -10px !important;
+    position: relative !important;
+    font-size: 1.1em !important;
+  }
 
   .input-field label:not(.label-icon).active {
     -webkit-transform: translateY(-25px) scale(0.8);

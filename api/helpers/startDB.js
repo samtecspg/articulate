@@ -5,7 +5,7 @@ const DefaultSettings =  require('./defaultSettings.json');
 
 module.exports = (server, redis, callback) => {
 
-    Async.mapLimit(Object.keys(DefaultSettings), 1,
+    Async.eachLimit(Object.keys(DefaultSettings), 1,
         (setting, cb) => {
 
             server.inject(`/settings/${setting}`, (res) => {
@@ -17,10 +17,13 @@ module.exports = (server, redis, callback) => {
                     const error = Boom.create(res.statusCode, `An error occurred checking if the setting ${setting} exists`);
                     return cb(error, null);
                 }
+                const payload = {};
+                payload[setting] = DefaultSettings[setting];
+
                 const options = {
-                    url: `/settings/${setting}`,
+                    url: '/settings',
                     method: 'PUT',
-                    payload: setting === 'uiLanguage' ? { uiLanguage: DefaultSettings[setting] } : DefaultSettings[setting]
+                    payload
                 };
 
                 server.inject(options, (resPut) => {

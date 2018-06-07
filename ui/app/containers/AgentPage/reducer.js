@@ -23,13 +23,10 @@ const initialState = Immutable({
   agentData: {
     agentName: '',
     description: '',
-    language: 'en',
-    timezone: 'UTC',
+    language: '',
+    timezone: '',
     domainClassifierThreshold: 50,
-    fallbackResponses: [
-      'Sorry can you rephrase that?',
-      'I\'m still learning to speak with humans. What you mean?',
-    ],
+    fallbackResponses: [],
     useWebhook: false,
     usePostFormat: false,
     extraTrainingData: false,

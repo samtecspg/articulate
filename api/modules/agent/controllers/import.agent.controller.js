@@ -1,7 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const _ = require('lodash');
 const IntentTools = require('../../intent/tools');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');

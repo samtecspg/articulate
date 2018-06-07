@@ -321,6 +321,28 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/settings/global',
+      name: 'globalSettings',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/GlobalSettingsPage/reducer'),
+          import('containers/GlobalSettingsPage/sagas'),
+          import('containers/GlobalSettingsPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('globalSettings', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {
