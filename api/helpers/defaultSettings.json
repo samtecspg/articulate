@@ -69,8 +69,8 @@
         "name": "ner_spacy"
       }
     ],
-    "rasaURL": "http://localhost:5000",
-    "ducklingURL": "http://localhost:8000",
+    "rasaURL": "http://rasa:5000",
+    "ducklingURL": "http://duckling:8000",
     "ducklingDimension": [
       "amount-of-money",
       "distance",
