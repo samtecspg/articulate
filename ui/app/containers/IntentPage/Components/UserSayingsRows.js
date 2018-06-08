@@ -58,7 +58,6 @@ export function UserSayingsRows(props) {
               const endIndex = startIndex + resultParsed[0].length;
               const resultToSend = { value: resultParsed[0], entity: entityName, start: startIndex, end: endIndex };
               entities.push(_.cloneDeep(resultToSend));
-              console.log(resultToSend);
             }
           });
         })
