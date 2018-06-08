@@ -26,8 +26,44 @@ export function UserSayingsRows(props) {
   const rows = props.examples.map((value, valueIndex) => {
     const textValue = value['userSays'];
     let formattedText = null;
-    if (value.entities.length > 0) {
-      const sortedEntities = [...value.entities].sort(compareEntities);
+    if (!value.entities){
+      value.entities = [];
+    }
+    const entities = _.cloneDeep(value.entities);
+    const regexEntitiesDefinedAsSlot = props.agentEntities.entities.filter((ent) => {
+
+      return ent.type === 'regex' && props.slots.filter((slot) => {
+
+        return slot.entity === ent.entityName;
+      }).length > 0
+    });
+    if (entities.length > 0 || regexEntitiesDefinedAsSlot.length > 0) {
+
+      regexEntitiesDefinedAsSlot.forEach((regexEntity) => {
+
+        const entityName = regexEntity.entityName;
+        regexEntity.examples.forEach((regexExample) => {
+
+          const entityValue = regexExample.value;
+
+          if (regexExample.synonyms.indexOf(entityValue) < 0) {
+            regexExample.synonyms.push(entityValue);
+          }
+          regexExample.synonyms.forEach((syn) => {
+
+            const regexToTest = new RegExp(syn, 'i');
+            if (regexToTest.test(textValue)) {
+              const resultParsed = regexToTest.exec(textValue);
+              const startIndex = textValue.indexOf(resultParsed[0]);
+              const endIndex = startIndex + resultParsed[0].length;
+              const resultToSend = { value: resultParsed[0], entity: entityName, start: startIndex, end: endIndex };
+              entities.push(_.cloneDeep(resultToSend));
+              console.log(resultToSend);
+            }
+          });
+        })
+      });
+      const sortedEntities = [...entities].sort(compareEntities);
       formattedText = <FormattedText agentEntities={props.agentEntities} entities={sortedEntities} text={textValue} entityIndex={0} lastStart={0} />;
     }
     return (
@@ -53,7 +89,7 @@ export function UserSayingsRows(props) {
 
   return (
     <tbody>
-    {rows}
+      {rows}
     </tbody>
   );
 }
@@ -66,6 +102,7 @@ UserSayingsRows.propTypes = {
   onTagEntity: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
   agentEntities: React.PropTypes.object,
+  slots: React.PropTypes.array
 };
 
 export default UserSayingsRows;

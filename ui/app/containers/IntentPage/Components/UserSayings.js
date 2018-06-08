@@ -10,6 +10,7 @@ export function UserSayings(props) {
     onTagEntity={props.onTagEntity}
     setWindowSelection={props.setWindowSelection}
     agentEntities={props.agentEntities}
+    slots={props.slots}
   />;
 }
 
@@ -21,6 +22,7 @@ UserSayings.propTypes = {
   onTagEntity: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
   agentEntities: React.PropTypes.object,
+  slots: React.PropTypes.array,
 };
 
 export default UserSayings;
