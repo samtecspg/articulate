@@ -108,7 +108,7 @@ const castSysEntities = (parseResult) => {
                 entity: entity.name,
                 extractor: 'regex',
                 start: entity.start,
-                value: { value: entity.resolvedRegex }
+                value: { value: entity.entityValue }
             };
         }
         return tmpEntity;
@@ -252,22 +252,12 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                             regexs.push({ name: ent.entityName, pattern: ent.regex, entityType: ent.type });
                         }
                         if (ent.type === 'regex') {
-                            const patterns = [];
-                            ent.examples.forEach((example) => {
-
-                                patterns.push(example.value);
-                                example.synonyms.forEach((syn) => {
-
-                                    patterns.push(syn);
-                                });
-                            });
-
                             if (ent.regex && ent.regex !== '') {
-                                patterns.push(ent.regex);
-                                regexs.push({ name: ent.entityName, pattern: ent.regex, patterns, entityType: ent.type });
+                                ent.examples.push({ value: ent.regex, synonyms: [] });
+                                regexs.push({ name: ent.entityName, pattern: ent.regex, examples: ent.examples, entityType: ent.type });
                             }
                             else {
-                                regexs.push({ name: ent.entityName, patterns, entityType: ent.type });
+                                regexs.push({ name: ent.entityName, examples: ent.examples, entityType: ent.type });
                             }
                         }
 
@@ -286,16 +276,24 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                             }
                         }
                         if (regex.entityType === 'regex') {
-                            regex.patterns.forEach((regexToTestForEntity) => {
+                            regex.examples.forEach((regexExample) => {
 
-                                const regexToTest = new RegExp(regexToTestForEntity, 'i');
-                                if (regexToTest.test(textToParse)) {
-                                    const resultParsed = regexToTest.exec(textToParse);
-                                    const startIndex = textToParse.indexOf(resultParsed[0]);
-                                    const endIndex = startIndex + resultParsed[0].length;
-                                    const resultToSend = Object.assign(regex, { resolvedRegex: resultParsed[0], start: startIndex, end: endIndex, regexType: 'entityRegex' });
-                                    results.push(resultToSend);
+                                const entityValue = regexExample.value;
+                                if (regexExample.synonyms.indexOf(entityValue) < 0) {
+                                    regexExample.synonyms.push(entityValue);
                                 }
+                                regexExample.synonyms.forEach((syn) => {
+
+                                    const regexToTest = new RegExp(syn, 'i');
+                                    if (regexToTest.test(textToParse)) {
+                                        const resultParsed = regexToTest.exec(textToParse);
+                                        const startIndex = textToParse.indexOf(resultParsed[0]);
+                                        const endIndex = startIndex + resultParsed[0].length;
+                                        const resultToSend = Object.assign(regex, { resolvedRegex: resultParsed[0], entityValue, start: startIndex, end: endIndex, regexType: 'entityRegex' });
+                                        results.push(_.cloneDeep(resultToSend));
+                                    }
+
+                                });
                             });
                         }
 

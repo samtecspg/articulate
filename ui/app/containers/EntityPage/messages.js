@@ -49,6 +49,10 @@ export default defineMessages({
     id: 'boilerplate.containers.EntityPage.create_entity.examples',
     defaultMessage: 'Examples',
   },
+  regexValues: {
+    id: 'boilerplate.containers.EntityPage.create_entity.regex_values',
+    defaultMessage: 'Regex values',
+  },
   examplePlaceholder: {
     id: 'boilerplate.containers.EntityPage.create_entity.example_placeholder',
     defaultMessage: 'Add Value',

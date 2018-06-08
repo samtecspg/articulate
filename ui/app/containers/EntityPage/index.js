@@ -260,6 +260,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               >
                 {returnFormattedOptions(typeSelect)}
               </Input>
+              { entity.type !== 'regex' ?  
               <FormTextInput
                   id='regex'
                   label={messages.regex}
@@ -268,8 +269,10 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                   onChange={(evt) => this.onChangeInput(evt, 'regex')}
                   s={12}
                   value={entity.regex}
-                />
-              <InputLabel text={messages.examples} />
+                /> : null
+              }
+                { entity.type === 'regex' ? <InputLabel text={messages.regexValues} /> : <InputLabel text={messages.examples} />}
+              
             </Row>
           </Form>
 
