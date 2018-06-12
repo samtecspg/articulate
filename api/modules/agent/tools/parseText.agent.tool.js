@@ -108,7 +108,7 @@ const castSysEntities = (parseResult) => {
                 entity: entity.name,
                 extractor: 'regex',
                 start: entity.start,
-                value: { value: entity.resolvedRegex }
+                value: { value: entity.entityValue }
             };
         }
         return tmpEntity;
