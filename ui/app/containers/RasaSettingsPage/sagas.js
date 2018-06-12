@@ -26,14 +26,14 @@ import {
 import Immutable from 'seamless-immutable';
 
 
-export function* putGlobalSettings(payload) {
+export function* putRasaSettings(payload) {
   const { api } = payload;
-  const globalSettingsData = yield select(makeSelectSettingsData());
+  const rasaSettingsData = yield select(makeSelectSettingsData());
   try {
-    const response = yield call(api.settings.putSettings, { body: globalSettingsData });
-    const globalSettings = response.obj;
-    yield put(updateSettingsSuccess(globalSettings));
-    yield put(push('/settings/global'));
+    const response = yield call(api.settings.putSettings, { body: rasaSettingsData });
+    const rasaSettings = response.obj;
+    yield put(updateSettingsSuccess(rasaSettings));
+    yield put(push('/settings/rasa'));
   } catch (err) {
     const errObject = { err };
     if (errObject.err && errObject.err.message === 'Failed to fetch'){
@@ -50,14 +50,14 @@ export function* putGlobalSettings(payload) {
   }
 }
 
-export function* updateGlobalSettings() {
-  const watcher = yield takeLatest(UPDATE_SETTINGS, putGlobalSettings);
+export function* updateRasaSettings() {
+  const watcher = yield takeLatest(UPDATE_SETTINGS, putRasaSettings);
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
-export function* getGlobalSettings(payload) {
+export function* getRasaSettings(payload) {
   const { api, id } = payload;
   try {
     const response = yield call(api.settings.getSettings);
@@ -79,8 +79,8 @@ export function* getGlobalSettings(payload) {
   }
 }
 
-export function* loadGlobalSettings() {
-  const watcher = yield takeLatest(LOAD_SETTINGS, getGlobalSettings);
+export function* loadRasaSettings() {
+  const watcher = yield takeLatest(LOAD_SETTINGS, getRasaSettings);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
@@ -89,6 +89,6 @@ export function* loadGlobalSettings() {
 
 // Bootstrap sagas
 export default [
-  updateGlobalSettings,
-  loadGlobalSettings,
+  updateRasaSettings,
+  loadRasaSettings,
 ];

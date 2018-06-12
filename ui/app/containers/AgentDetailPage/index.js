@@ -39,7 +39,7 @@ import {
   makeSelectError,
   makeSelectLoading,
   makeSelectCurrentAgent,
-  makeSelectGlobalSettingsData,
+  makeSelectSettingsData,
 } from '../App/selectors';
 
 import Responses from './Components/Responses';
@@ -389,7 +389,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgentData(),
   webhook: makeSelectWebhookData(),
   postFormat: makeSelectPostFormatData(),
-  globalSettings: makeSelectGlobalSettingsData(),
+  globalSettings: makeSelectSettingsData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentDetailPage);

@@ -83,15 +83,15 @@ import {
   MISSING_AGENT,
   CHECK_API,
   TRAIN_AGENT,
-  UPDATE_GLOBAL_SETTINGS,
-  UPDATE_GLOBAL_SETTINGS_ERROR,
-  UPDATE_GLOBAL_SETTINGS_SUCCESS,
-  LOAD_GLOBAL_SETTINGS,
-  LOAD_GLOBAL_SETTINGS_ERROR,
-  LOAD_GLOBAL_SETTINGS_SUCCESS,
-  CHANGE_GLOBAL_SETTINGS_DATA,
-  RESET_GLOBAL_SETTINGS_DATA,
-  REMOVE_GLOBAL_SETTINGS_FALLBACK,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
+  LOAD_SETTINGS,
+  LOAD_SETTINGS_ERROR,
+  LOAD_SETTINGS_SUCCESS,
+  CHANGE_SETTINGS_DATA,
+  RESET_SETTINGS_DATA,
+  REMOVE_SETTINGS_FALLBACK,
 } from './constants';
 
 export function loadAgents() {
@@ -562,23 +562,23 @@ export function updateDomain() {
   };
 }
 
-export function updateGlobalSettingsError(error) {
+export function updateSettingsError(error) {
   return {
-    type: UPDATE_GLOBAL_SETTINGS_ERROR,
+    type: UPDATE_SETTINGS_ERROR,
     error,
   };
 }
 
-export function updateGlobalSettingsSuccess(globalSettings) {
+export function updateSettingsSuccess(settings) {
   return {
-    type: UPDATE_GLOBAL_SETTINGS_SUCCESS,
-    globalSettings,
+    type: UPDATE_SETTINGS_SUCCESS,
+    settings,
   };
 }
 
-export function updateGlobalSettings() {
+export function updateSettings() {
   return {
-    type: UPDATE_GLOBAL_SETTINGS,
+    type: UPDATE_SETTINGS,
     apiCall: true,
   };
 }
@@ -712,43 +712,43 @@ export function traingAgentError(error){
   }
 }
 
-export function loadGlobalSettingsError(error) {
+export function loadSettingsError(error) {
   return {
-    type: LOAD_GLOBAL_SETTINGS_ERROR,
+    type: LOAD_SETTINGS_ERROR,
     error,
   };
 }
 
-export function loadGlobalSettingsSuccess(globalSettings) {
+export function loadSettingsSuccess(settings) {
   return {
-    type: LOAD_GLOBAL_SETTINGS_SUCCESS,
-    globalSettings,
+    type: LOAD_SETTINGS_SUCCESS,
+    settings,
   };
 }
 
-export function loadGlobalSettings() {
+export function loadSettings() {
   return {
-    type: LOAD_GLOBAL_SETTINGS,
+    type: LOAD_SETTINGS,
     apiCall: true,
   };
 }
 
-export function changeGlobalSettingsData(payload) {
+export function changeSettingsData(payload) {
   return {
-    type: CHANGE_GLOBAL_SETTINGS_DATA,
+    type: CHANGE_SETTINGS_DATA,
     payload,
   };
 }
 
-export function resetGlobalSettingsData() {
+export function resetSettingsData() {
   return {
-    type: RESET_GLOBAL_SETTINGS_DATA,
+    type: RESET_SETTINGS_DATA,
   };
 }
 
-export function removeGlobalSettingsFallback(index) {
+export function removeSettingsFallback(index) {
   return {
-    type: REMOVE_GLOBAL_SETTINGS_FALLBACK,
+    type: REMOVE_SETTINGS_FALLBACK,
     index,
   };
 }

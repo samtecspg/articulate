@@ -343,6 +343,28 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/settings/rasa',
+      name: 'rasaSettings',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/RasaSettingsPage/reducer'),
+          import('containers/RasaSettingsPage/sagas'),
+          import('containers/RasaSettingsPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('rasaSettings', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

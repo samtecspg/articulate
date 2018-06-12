@@ -12,15 +12,15 @@ import {
   loadCurrentAgentError,
   loadCurrentAgentSuccess,
   loadCurrentAgentStatusSuccess,
-  loadGlobalSettingsSuccess,
-  loadGlobalSettingsError,
+  loadSettingsSuccess,
+  loadSettingsError,
 } from '../../containers/App/actions';
 import {
   LOAD_AGENTS,
   LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_STATUS,
   TRAIN_AGENT,
-  LOAD_GLOBAL_SETTINGS,
+  LOAD_SETTINGS,
 } from '../../containers/App/constants';
 
 export function* getAgents(payload) {
@@ -134,30 +134,30 @@ export function* trainAgent() {
   yield take(LOCATION_CHANGE);
 }
 
-export function* getGlobalSettings(payload) {
+export function* getSettings(payload) {
   const { api, id } = payload;
   try {
     const response = yield call(api.settings.getSettings);
     const settings = response.obj;
-    yield put(loadGlobalSettingsSuccess(settings));
+    yield put(loadSettingsSuccess(settings));
   } catch (err) {
     const errObject = { err };
     if (errObject.err && errObject.err.message === 'Failed to fetch'){
-      yield put(loadGlobalSettingsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+      yield put(loadSettingsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
       if (errObject.err.response.obj && errObject.err.response.obj.message){
-        yield put(loadGlobalSettingsError({ message: errObject.err.response.obj.message }));
+        yield put(loadSettingsError({ message: errObject.err.response.obj.message }));
       }
       else {
-        yield put(loadGlobalSettingsError({ message: 'Unknow API error' }));
+        yield put(loadSettingsError({ message: 'Unknow API error' }));
       }
     }
   }
 }
 
-export function* loadGlobalSettings() {
-  const watcher = yield takeLatest(LOAD_GLOBAL_SETTINGS, getGlobalSettings);
+export function* loadSettings() {
+  const watcher = yield takeLatest(LOAD_SETTINGS, getSettings);
 
   // Suspend execution until location changes
   /*yield take(LOCATION_CHANGE);
@@ -170,5 +170,5 @@ export default [
   loadCurrentAgent,
   loadCurrentAgentStatus,
   trainAgent,
-  loadGlobalSettings,
+  loadSettings,
 ];

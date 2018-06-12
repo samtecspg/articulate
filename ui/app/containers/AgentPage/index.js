@@ -48,7 +48,7 @@ import {
   makeSelectInWizard,
   makeSelectLoading,
   makeSelectSuccess,
-  makeSelectGlobalSettingsData,
+  makeSelectSettingsData,
 } from '../App/selectors';
 import {
   changeAgentData,
@@ -621,7 +621,7 @@ const mapStateToProps = createStructuredSelector({
   inWizard: makeSelectInWizard(),
   error: makeSelectError(),
   postFormat: makeSelectPostFormatData(),
-  globalSettings: makeSelectGlobalSettingsData(),
+  globalSettings: makeSelectSettingsData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentPage);

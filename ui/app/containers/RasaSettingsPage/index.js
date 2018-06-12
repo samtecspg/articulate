@@ -70,7 +70,7 @@ const returnFormattedOptions = (options) => {
   }
 };
 
-export class GlobalSettingsPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class RasaSettingsPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
     super();
     this.onChangeInput = this.onChangeInput.bind(this);
@@ -78,28 +78,18 @@ export class GlobalSettingsPage extends React.PureComponent { // eslint-disable-
   }
 
   onChangeInput(evt, field) {
-    if (['agentLanguages', 'timezones'].indexOf(field) > -1){
+    if (['entityClassifierPipeline', 'intentClassifierPipeline', 'domainClassifierPipeline'].indexOf(field) > -1){
       try {
         const value = JSON.parse(evt); //Ace editor send the value directly to the method as an string
-        this.props.onChangeGlobalSettingsData({ value, field });
+        this.props.onChangeRasaSettingsData({ value, field });
       } catch(e) {
         const value = evt; //Given the parse of the json failed store the value in the state as a string
-        this.props.onChangeGlobalSettingsData({ value, field });
+        this.props.onChangeRasaSettingsData({ value, field });
       }
     }
     else{
-      if (field === 'defaultAgentFallbackResponses'){
-        if (evt.keyCode === 13 && !_.isEmpty(evt.target.value)) { // If user hits enter add response
-          this.lastFallbackResponse.scrollIntoView(true);
-          const value = this.props.globalSettings.defaultAgentFallbackResponses.concat(evt.target.value);
-          this.props.onChangeGlobalSettingsData({ value , field });
-          evt.target.value = null;
-        }
-      }
-      else {
-        const value = evt.target.value;
-        this.props.onChangeGlobalSettingsData({ value , field });
-      }
+      const value = evt.target.value;
+      this.props.onChangeRasaSettingsData({ value , field });
     }
   }
 
@@ -124,54 +114,54 @@ export class GlobalSettingsPage extends React.PureComponent { // eslint-disable-
 
   submitForm(evt) {
     if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-    if(Array.isArray(this.props.globalSettings.timezones)){
-      if(Array.isArray(this.props.globalSettings.agentLanguages)){
-        if(this.props.globalSettings.timezones.indexOf(this.props.globalSettings.defaultTimezone) > -1){
+    if(Array.isArray(this.props.rasaSettings.domainClassifierPipeline)){
+      if(Array.isArray(this.props.rasaSettings.intentClassifierPipeline)){
+        if(Array.isArray(this.props.rasaSettings.entityClassifierPipeline)){
           this.props.onUpdate();
         }
         else {
-          Alert.warning(messages.timezoneNotInTimezonesWarningMessage.defaultMessage, {
+          Alert.warning(messages.entityClassifierPipelineWarningMessage.defaultMessage, {
             position: 'bottom'
           });
         }
       }
       else {
-        Alert.warning(messages.agentLanguagesWarningMessage.defaultMessage, {
+        Alert.warning(messages.intentClassifierPipelineWarningMessage.defaultMessage, {
           position: 'bottom'
         });
       }
     }
     else {
-      Alert.warning(messages.timezonesWarningMessage.defaultMessage, {
+      Alert.warning(messages.domainClassifierPipelineWarningMessage.defaultMessage, {
         position: 'bottom'
       });
     }
   }
 
   render() {
-    const { loading, error, success, globalSettings } = this.props;
-    const globalSettingsProps = {
+    const { loading, error, success, rasaSettings } = this.props;
+    const rasaSettingsProps = {
       loading,
       success,
       error,
-      globalSettings,
+      rasaSettings,
     };
 
     let breadcrumbs = [
       { label: 'Settings' },
-      { label: 'Global' },
+      { label: 'Rasa' },
     ];
-    const contentHeaderTitle = messages.globalSettingsTitle;
-    const contentHeaderSubTitle = messages.globalSettingsDescription;
+    const contentHeaderTitle = messages.rasaSettingsTitle;
+    const contentHeaderSubTitle = messages.rasaSettingsDescription;
     return (
       <div>
         <Col style={{ zIndex: 2, position: 'fixed', top: '50%', left: '45%' }} s={12}>
-          {globalSettingsProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
+          {rasaSettingsProps.loading ? <Preloader color='#00ca9f' size='big' /> : null}
         </Col>
         <Helmet
-          title={'Global Setttings'}
+          title={'Rasa Setttings'}
           meta={[
-            { name: 'description', content: 'View/Edit your global settings' },
+            { name: 'description', content: 'View/Edit your rasa settings' },
           ]}
         />
         <Header breadcrumbs={breadcrumbs} actionButtons={
@@ -180,158 +170,107 @@ export class GlobalSettingsPage extends React.PureComponent { // eslint-disable-
           <ContentHeader title={contentHeaderTitle} subTitle={contentHeaderSubTitle} />
           <Form>
             <Row>
-              <Input
-                s={12}
-                name="uiLanguage"
-                type="select"
-                label={messages.uiLanguage.defaultMessage}
-                value={globalSettings.uiLanguage}
-                onChange={(evt) => this.onChangeInput(evt, 'uiLanguage')}
-              >
-                {returnFormattedOptions(globalSettings.uiLanguages)}
-              </Input>
-              <Typeahead
-                style={{marginBottom: '20px'}}
-                id='defaultTimezone'
-                name='defaultTimezone'
-                maxSearchResults={10}
-                callback={(field, evt) => this.onChangeInput(evt, field)}
-                label={messages.defaultTimezone.defaultMessage}
-                menuClassName={'timezones'}
-                dataSource={typeof globalSettings.timezones === 'string' ?
-                          [messages.errorParsingOptions.defaultMessage] :
-                          globalSettings.timezones}
-                value={globalSettings.defaultTimezone}
-                tooltip={messages.timezonesTooltip.defaultMessage}
-                s={12}
-              />
-              <Tooltip
-                tooltip={messages.agentLanguageTooltip.defaultMessage}
-                delay={50}
-                position="top"
-              >
-                <a style={{
-                    'top': '29px',
-                    'position': 'relative',
-                    'left': '209px'
-                }}>
-                  <Icon tiny>help_outline</Icon>
-                </a>
-              </Tooltip>
-              <Input
-                s={12}
-                name="defaultAgentLanguage"
-                type="select"
-                label={messages.defaultAgentLanguage.defaultMessage}
-                value={globalSettings.defaultAgentLanguage}
-                onChange={(evt) => this.onChangeInput(evt, 'defaultAgentLanguage')}
-              >
-                {returnFormattedOptions(globalSettings.agentLanguages)}
-              </Input>
-              {/*<FormTextInput
+              <FormTextInput
                 id='rasaURL'
                 label={messages.rasaURL}
                 placeholder={messages.rasaURLPlaceholder.defaultMessage}
-                value={globalSettings.rasaURL}
+                value={rasaSettings.rasaURL}
                 onChange={(evt) => this.onChangeInput(evt, 'rasaURL')}
                 required
-              />
+              />{/*
               <FormTextInput
                 id='ducklingURL'
                 label={messages.ducklingURL}
                 placeholder={messages.ducklingURLPlaceholder.defaultMessage}
-                value={globalSettings.ducklingURL}
+                value={rasaSettings.ducklingURL}
                 onChange={(evt) => this.onChangeInput(evt, 'ducklingURL')}
                 required
               />*/}
-              <InputLabel text={messages.timezones} />
+              <InputLabel tooltip={messages.domainClassifierPipelineTooltip.defaultMessage} text={messages.domainClassifierPipeline} />
               <AceEditor
                 style={{marginBottom: '20px'}}
                 width="100%"
-                height="250px"
+                height="300px"
                 mode="json"
                 theme="terminal"
-                name="timezones"
+                name="domainClassifierPipeline"
                 readOnly={false}
-                onChange={(value) => this.onChangeInput(value, 'timezones')}
+                onChange={(value) => this.onChangeInput(value, 'domainClassifierPipeline')}
                 fontSize={14}
                 showPrintMargin={true}
                 showGutter={true}
                 highlightActiveLine={true}
-                value={typeof globalSettings.timezones === 'string' ?
-                        globalSettings.timezones :
-                        JSON.stringify(globalSettings.timezones, null, 2)}
+                value={typeof rasaSettings.domainClassifierPipeline === 'string' ?
+                        rasaSettings.domainClassifierPipeline :
+                        JSON.stringify(rasaSettings.domainClassifierPipeline, null, 2)}
                 setOptions={{
                   useWorker: true,
                   showLineNumbers: true,
                   tabSize: 2,
                 }} />
-              <InputLabel text={messages.agentLanguages} />
+              <InputLabel tooltip={messages.intentClassifierPipelineTooltip.defaultMessage} text={messages.intentClassifierPipeline} />
               <AceEditor
                 width="100%"
-                height="250px"
+                height="300px"
                 style={{marginBottom: '20px'}}
                 mode="json"
                 theme="terminal"
-                name="agentLanguages"
+                name="intentClassifierPipeline"
                 readOnly={false}
-                onChange={(value) => this.onChangeInput(value, 'agentLanguages')}
+                onChange={(value) => this.onChangeInput(value, 'intentClassifierPipeline')}
                 fontSize={14}
                 showPrintMargin={true}
                 showGutter={true}
                 highlightActiveLine={true}
-                value={typeof globalSettings.agentLanguages === 'string' ?
-                        globalSettings.agentLanguages :
-                        JSON.stringify(globalSettings.agentLanguages, null, 2)}
+                value={typeof rasaSettings.intentClassifierPipeline === 'string' ?
+                        rasaSettings.intentClassifierPipeline :
+                        JSON.stringify(rasaSettings.intentClassifierPipeline, null, 2)}
                 setOptions={{
                   useWorker: true,
                   showLineNumbers: true,
                   tabSize: 2,
                 }} />
+                <InputLabel tooltip={messages.entityClassifierPipelineTooltip.defaultMessage} text={messages.entityClassifierPipeline} />
+                <AceEditor
+                  width="100%"
+                  height="300px"
+                  style={{marginBottom: '20px'}}
+                  mode="json"
+                  theme="terminal"
+                  name="entityClassifierPipeline"
+                  readOnly={false}
+                  onChange={(value) => this.onChangeInput(value, 'entityClassifierPipeline')}
+                  fontSize={14}
+                  showPrintMargin={true}
+                  showGutter={true}
+                  highlightActiveLine={true}
+                  value={typeof rasaSettings.entityClassifierPipeline === 'string' ?
+                          rasaSettings.entityClassifierPipeline :
+                          JSON.stringify(rasaSettings.entityClassifierPipeline, null, 2)}
+                  setOptions={{
+                    useWorker: true,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }} />
             </Row>
           </Form>
-
-          <Form style={{ marginTop: '0px' }}>
-            <Row>
-              <FormTextInput
-                id='fallbacks'
-                label={messages.defaultFallback}
-                placeholder={messages.defaultFallbackPlaceholder.defaultMessage}
-                onKeyDown={(evt) => this.onChangeInput(evt, 'defaultAgentFallbackResponses')}
-              />
-            </Row>
-          </Form>
-
-          {globalSettings.defaultAgentFallbackResponses.length > 0 ?
-            <TableContainer id="fallbackResponsesTable" quotes>
-              <Table>
-                <Responses
-                  fallbackResponses={globalSettings.defaultAgentFallbackResponses}
-                  onRemoveResponse={this.props.onRemoveFallback}
-                />
-              </Table>
-            </TableContainer>
-            : null
-          }
-          <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastFallbackResponse = el; }}>
-          </div>
         </Content>
       </div>
     );
   }
 }
 
-GlobalSettingsPage.propTypes = {
+RasaSettingsPage.propTypes = {
   loading: React.PropTypes.bool,
   error: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  globalSettings: React.PropTypes.oneOfType([
+  rasaSettings: React.PropTypes.oneOfType([
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  onChangeGlobalSettingsData: React.PropTypes.func,
+  onChangeRasaSettingsData: React.PropTypes.func,
   onUpdate: React.PropTypes.func,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
@@ -343,7 +282,7 @@ GlobalSettingsPage.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
 
-    onChangeGlobalSettingsData: (data, evt) => {
+    onChangeRasaSettingsData: (data, evt) => {
       dispatch(resetStatusFlags());
       dispatch(changeSettingsData(data));
     },
@@ -364,10 +303,10 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  globalSettings: makeSelectSettingsData(),
+  rasaSettings: makeSelectSettingsData(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
   success: makeSelectSuccess(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GlobalSettingsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(RasaSettingsPage);

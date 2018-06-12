@@ -9,7 +9,7 @@ import { push } from 'react-router-redux';
 
 import NavSideBar from '../../components/NavSideBar';
 import withProgressBar from '../../components/ProgressBar';
-import { loadAgents, checkAPI, redirectMissingAPI, loadGlobalSettings } from '../../containers/App/actions';
+import { loadAgents, checkAPI, redirectMissingAPI, loadSettings } from '../../containers/App/actions';
 import {
   makeSelectAgents,
   makeSelectError,
@@ -24,7 +24,7 @@ export class App extends React.PureComponent {
 
 
   componentWillMount(){
-    this.props.onLoadGlobalSettings();
+    this.props.onLoadSettings();
     this.props.onCheckAPI();
   }
 
@@ -82,8 +82,8 @@ export function mapDispatchToProps(dispatch) {
       }
       dispatch(checkAPI());
     },
-    onLoadGlobalSettings: () => {
-      dispatch(loadGlobalSettings());
+    onLoadSettings: () => {
+      dispatch(loadSettings());
     }
   };
 }

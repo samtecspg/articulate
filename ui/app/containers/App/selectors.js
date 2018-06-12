@@ -128,7 +128,7 @@ const makeSelectEntityIntents = () => createSelector(
   (globalState) => globalState.entityIntents,
 );
 
-const makeSelectGlobalSettingsData = () => createSelector(
+const makeSelectSettingsData = () => createSelector(
   selectGlobal,
   (globalState) => globalState.settingsData,
 );
@@ -157,5 +157,5 @@ export {
   makeSelectDomainIntents,
   makeSelectRoute,
   makeSelectEntityIntents,
-  makeSelectGlobalSettingsData,
+  makeSelectSettingsData,
 };

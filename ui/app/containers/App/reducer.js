@@ -80,15 +80,15 @@ import {
   MISSING_API,
   CHECK_API,
   LOAD_CURRENT_AGENT_STATUS,
-  UPDATE_GLOBAL_SETTINGS,
-  UPDATE_GLOBAL_SETTINGS_ERROR,
-  UPDATE_GLOBAL_SETTINGS_SUCCESS,
-  LOAD_GLOBAL_SETTINGS,
-  LOAD_GLOBAL_SETTINGS_ERROR,
-  LOAD_GLOBAL_SETTINGS_SUCCESS,
-  CHANGE_GLOBAL_SETTINGS_DATA,
-  RESET_GLOBAL_SETTINGS_DATA,
-  REMOVE_GLOBAL_SETTINGS_FALLBACK
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
+  LOAD_SETTINGS,
+  LOAD_SETTINGS_ERROR,
+  LOAD_SETTINGS_SUCCESS,
+  CHANGE_SETTINGS_DATA,
+  RESET_SETTINGS_DATA,
+  REMOVE_SETTINGS_FALLBACK
 } from './constants';
 
 // The initial state of the App
@@ -488,40 +488,40 @@ function appReducer(state = initialState, action) {
     case RESET_MISSING_API:
       return state
         .set('missingAPI', false);
-    case UPDATE_GLOBAL_SETTINGS:
+    case UPDATE_SETTINGS:
       return state
         .set('loading', true)
         .set('error', false);
-    case UPDATE_GLOBAL_SETTINGS_SUCCESS:
+    case UPDATE_SETTINGS_SUCCESS:
       return state
         .set('loading', false)
         .set('error', false)
         .set('success', true);
-    case UPDATE_GLOBAL_SETTINGS_ERROR:
+    case UPDATE_SETTINGS_ERROR:
       return state
         .set('error', action.error)
         .set('success', false)
         .set('loading', false);
-    case LOAD_GLOBAL_SETTINGS:
+    case LOAD_SETTINGS:
       return state
         .set('loading', true)
         .set('error', false);
-    case LOAD_GLOBAL_SETTINGS_SUCCESS:
+    case LOAD_SETTINGS_SUCCESS:
       return state
         .set('loading', false)
         .set('error', false)
-        .set('settingsData', action.globalSettings);
-    case LOAD_GLOBAL_SETTINGS_ERROR:
+        .set('settingsData', action.settings);
+    case LOAD_SETTINGS_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);
-    case CHANGE_GLOBAL_SETTINGS_DATA:
+    case CHANGE_SETTINGS_DATA:
       return state
         .setIn(['settingsData', action.payload.field], action.payload.value);
-    case RESET_GLOBAL_SETTINGS_DATA:
+    case RESET_SETTINGS_DATA:
       return state
         .set('settingsData', initialState.settingsData);
-    case REMOVE_GLOBAL_SETTINGS_FALLBACK:
+    case REMOVE_SETTINGS_FALLBACK:
       return state
         .updateIn(['settingsData', 'defaultAgentFallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.index));
     default:

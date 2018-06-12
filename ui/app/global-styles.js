@@ -416,6 +416,12 @@ injectGlobal`
     font-size: 1.1em !important;
   }
 
+  .tooltipped-input-label{
+    top: -10px !important;
+    position: relative !important;
+    font-size: 1.1em !important;
+  }
+
   .input-field label:not(.label-icon).active {
     -webkit-transform: translateY(-25px) scale(0.8);
     transform: translateY(-25px) scale(0.8); }
