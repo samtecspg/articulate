@@ -51,6 +51,8 @@
     "moment-timezone": "^0.5.13",
     "ordinal": "^1.0.2",
     "redis": "^2.8.0",
+    "shortid": "^2.2.8",
+    "twilio": "^3.17.0",
     "vision": "^4.1.1",
     "wreck": "^12.2.0"
   },

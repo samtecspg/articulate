@@ -6,6 +6,7 @@ const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 const HapiSwaggerUI = require('hapi-swaggered-ui');
 const Pack = require('./package');
+const Ubiquity = require('./ubiquity');
 
 Server((err, server) => {
 
@@ -48,6 +49,7 @@ Server((err, server) => {
     server.register([
         Inert,
         Vision,
+        Ubiquity,
         { 'register': HapiSwagger, 'options': swaggerOptions },
         { 'register': HapiSwaggerUI, 'options': swaggerUIOptions }
     ], (err) => {
