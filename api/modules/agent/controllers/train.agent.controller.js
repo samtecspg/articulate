@@ -130,11 +130,18 @@ module.exports = (request, reply) => {
 
                             server.inject(`/domain/${domain.id}/train`, (res) => {
 
-                                if (res.statusCode !== 200){
-                                    const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain.domainName}`);
-                                    return callbackTrainDomain(error);
+                                if (res.statusCode === 200){
+                                    return callbackTrainDomain(null);
                                 }
-                                return callbackTrainDomain(null);
+                                const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain.domainName}`);
+                                redis.hmset(`domain:${domain.id}`, { status: Status.error }, (err) => {
+
+                                    if (err){
+                                        const error = Boom.badImplementation(`An error ocurred during the training of the domain ${domain.domainName}, and also an error occurred updating the domain status.`);
+                                        return callbackTrainDomain(error);
+                                    }
+                                    return callbackTrainDomain(error);
+                                });
                             });
                         }
                     ], (err) => {
