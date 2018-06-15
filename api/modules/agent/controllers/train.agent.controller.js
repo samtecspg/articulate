@@ -137,7 +137,7 @@ module.exports = (request, reply) => {
                                 redis.hmset(`domain:${domain.id}`, { status: Status.error }, (err) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation(`An error ocurred during the training of the domain ${domain.domainName}, and also an error occurred updating the domain status.`);
+                                        error = Boom.badImplementation(`An error ocurred during the training of the domain ${domain.domainName}, and also an error occurred updating the domain status.`);
                                         return callbackTrainDomain(error);
                                     }
                                     return callbackTrainDomain(error);
