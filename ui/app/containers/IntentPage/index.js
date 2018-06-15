@@ -5,7 +5,6 @@ import {
   Col,
   Input,
   Row,
-  Icon,
 } from 'react-materialize';
 
 import brace from 'brace';
@@ -22,7 +21,6 @@ import ActionButton from '../../components/ActionButton';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
-import ContentSubHeader from '../../components/ContentSubHeader';
 import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
@@ -47,7 +45,6 @@ import {
   makeSelectCurrentAgent,
   makeSelectError,
   makeSelectLoading,
-  makeSelectScenario,
   makeSelectSuccess,
 } from '../App/selectors';
 import {

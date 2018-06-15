@@ -46,7 +46,7 @@ module.exports = (request, reply) => {
                 },
                 duckling: (callbackGetRasa) => {
 
-                    server.inject('/settings/ducklingURL', (res) => {
+                    server.inject(`/agent/${agentId}/settings/ducklingURL`, (res) => {
 
                         if (res.statusCode !== 200) {
                             if (res.statusCode === 404) {
@@ -61,7 +61,7 @@ module.exports = (request, reply) => {
                 },
                 rasa: (callbackGetRasa) => {
 
-                    server.inject('/settings/rasaURL', (res) => {
+                    server.inject(`/agent/${agentId}/settings/rasaURL`, (res) => {
 
                         if (res.statusCode !== 200) {
                             if (res.statusCode === 404) {
@@ -74,9 +74,39 @@ module.exports = (request, reply) => {
                         return callbackGetRasa(null, res.result);
                     });
                 },
+                spacyPretrainedEntities: (callbackGetSpacyPretrainedEntities) => {
+
+                    server.inject(`/agent/${agentId}/settings/spacyPretrainedEntities`, (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                const errorNotFound = Boom.notFound('The setting spacyPretrainedEntities wasn\'t found');
+                                return callbackGetSpacyPretrainedEntities(errorNotFound);
+                            }
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting spacyPretrainedEntities');
+                            return callbackGetSpacyPretrainedEntities(error, null);
+                        }
+                        return callbackGetSpacyPretrainedEntities(null, res.result);
+                    });
+                },
+                ducklingDimension: (callbackGetDucklinDimensions) => {
+
+                    server.inject(`/agent/${agentId}/settings/ducklingDimension`, (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                const errorNotFound = Boom.notFound('The setting ducklingDimension wasn\'t found');
+                                return callbackGetDucklinDimensions(errorNotFound);
+                            }
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting ducklingDimension');
+                            return callbackGetDucklinDimensions(error, null);
+                        }
+                        return callbackGetDucklinDimensions(null, res.result);
+                    });
+                },
                 ERPipeline: (callbackGetRasa) => {
 
-                    server.inject('/settings/entityClassifierPipeline', (res) => {
+                    server.inject(`/agent/${agentId}/settings/entityClassifierPipeline`, (res) => {
 
                         if (res.statusCode !== 200) {
                             if (res.statusCode === 404) {
@@ -101,7 +131,7 @@ module.exports = (request, reply) => {
 
             const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'UTC');
             const languageToUse = agentData.agent.language ? agentData.agent.language : 'en';
-            AgentTools.parseText(redis, agentData.rasa, agentData.ERPipeline, agentData.duckling, text, timezoneToUse, languageToUse, agentData, server, (err, result) => {
+            AgentTools.parseText(agentData.rasa, agentData.spacyPretrainedEntities, agentData.ERPipeline, agentData.duckling, agentData.ducklingDimension, text, timezoneToUse, languageToUse, agentData, server, (err, result) => {
 
                 if (err) {
                     return callback(err);

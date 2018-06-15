@@ -7,8 +7,7 @@ import LoadingWave from '../../components/LoadingWave';
 import TestMessageInput from '../../components/TestMessageInput';
 import UserMessage from '../../components/UserMessage';
 import VoiceRecognition from '../../components/VoiceRecognition';
-import Header from 'components/Header';
-import { converse, resetSession, trainAgent, loadCurrentAgent, loadCurrentAgentStatus } from '../App/actions';
+import { converse, resetSession, trainAgent, loadCurrentAgentStatus } from '../App/actions';
 import {
   makeSelectConversation,
   makeSelectCurrentAgent,

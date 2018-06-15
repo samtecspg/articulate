@@ -51,6 +51,7 @@ module.exports = (request, reply) => {
             delete clonedAgent.domains;
             delete clonedAgent.webhook;
             delete clonedAgent.postFormat;
+            delete clonedAgent.settings;
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
             clonedAgent.status = Status.outOfDate;
             const flatAgent = RemoveBlankArray(Flat(clonedAgent));
@@ -447,6 +448,21 @@ module.exports = (request, reply) => {
                         else {
                             return callBackAgentWebhook(null);
                         }
+                    },
+                    addedSettings: (callBackAgentSettings) => {
+
+                        server.inject({
+                            method: 'PUT',
+                            url: `/agent/${agentId}/settings`,
+                            payload: agent.settings
+                        }, (res) => {
+
+                            if (res.statusCode !== 200) {
+                                const error = Boom.create(res.statusCode, 'An error occurred adding the settings of the agent');
+                                return callBackAgentSettings(error, null);
+                            }
+                            return callBackAgentSettings(null, res.result);
+                        });
                     }
                 }, (err, resultWebhookPostFormatCall) => {
 
@@ -460,11 +476,10 @@ module.exports = (request, reply) => {
                     if (agent.useWebhook) {
                         agentResult.webhook = resultWebhookPostFormatCall.addedWebhook;
                     }
+                    agentResult.settings = resultWebhookPostFormatCall.addedSettings;
                     return reply(agentResult);
 
-                }
-                );
-
+                });
             });
         });
     });

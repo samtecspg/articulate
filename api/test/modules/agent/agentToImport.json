@@ -186,5 +186,97 @@
         }
       ]
     }
-  ]
+  ],
+  "settings": {
+    "domainClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "intent_featurizer_spacy"
+      },
+      {
+        "name": "intent_classifier_sklearn"
+      }
+    ],
+    "intentClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "intent_featurizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "intent_classifier_sklearn"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "entityClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "rasaURL": "http://localhost:5000",
+    "ducklingURL": "http://localhost:8000",
+    "ducklingDimension": [
+      "amount-of-money",
+      "distance",
+      "duration",
+      "email",
+      "number",
+      "ordinal",
+      "phone-number",
+      "quantity",
+      "temperature",
+      "time",
+      "url",
+      "volume"
+    ],
+    "spacyPretrainedEntities": [
+      "PERSON",
+      "NORP",
+      "FAC",
+      "ORG",
+      "GPE",
+      "LOC",
+      "PRODUCT",
+      "EVENT",
+      "WORK_OF_ART",
+      "LAW",
+      "LANGUAGE",
+      "DATE",
+      "TIME",
+      "PERCENT",
+      "MONEY",
+      "QUANTITY",
+      "ORDINAL",
+      "CARDINAL"
+    ]
+  }
 }

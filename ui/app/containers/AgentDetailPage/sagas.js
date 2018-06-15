@@ -23,9 +23,16 @@ import {
   loadWebhookError,
   loadWebhookSuccess,
   loadPostFormatError,
-  loadPostFormatSuccess
+  loadPostFormatSuccess,
+  loadAgentSettingsError,
+  loadAgentSettingsSuccess,
 } from './actions';
-import { LOAD_AGENT, LOAD_WEBHOOK, LOAD_POSTFORMAT } from './constants';
+import {
+  LOAD_AGENT,
+  LOAD_WEBHOOK,
+  LOAD_POSTFORMAT,
+  LOAD_AGENT_SETTINGS
+} from './constants';
 
 export function* deleteAgent() {
   const action = function* (payload) {
@@ -89,18 +96,41 @@ export function* getPostFormat(payload) {
   } catch (err) {
     const errObject = { err };
     if (errObject.err && errObject.err.message === 'Failed to fetch'){
-      yield put(loadWebhookError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+      yield put(loadPostFormatError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
     }
     else {
       if (errObject.err.response.obj && errObject.err.response.obj.message){
-        yield put(loadWebhookError({ message: errObject.err.response.obj.message }));
+        yield put(loadPostFormatError({ message: errObject.err.response.obj.message }));
       }
       else {
-        yield put(loadWebhookError({ message: 'Unknow API error' }));
+        yield put(loadPostFormatError({ message: 'Unknow API error' }));
       }
     }
   }
 }
+
+export function* getAgentSettings(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.agent.getAgentIdSettings, { id });
+    const agentSettings = response.obj;
+    yield put(loadAgentSettingsSuccess(agentSettings));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
+      yield put(loadAgentSettingsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
+        yield put(loadAgentSettingsError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadAgentSettingsError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
+
 
 export function* getAgent(payload) {
   const { api, id } = payload;
@@ -149,10 +179,19 @@ export function* loadPostFormat() {
   yield cancel(watcher);
 }
 
+export function* loadAgentSettings() {
+  const watcher = yield takeLatest(LOAD_AGENT_SETTINGS, getAgentSettings);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 // All sagas to be loaded
 export default [
   deleteAgent,
   loadAgent,
   loadWebhook,
   loadPostFormat,
+  loadAgentSettings,
 ];

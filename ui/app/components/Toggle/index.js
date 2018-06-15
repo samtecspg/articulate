@@ -23,7 +23,6 @@ export function Toggle(props) { // eslint-disable-line react/prefer-stateless-fu
         }
         <input type="checkbox" disabled={props.disabled} onChange={props.onChange} checked={props.checked ? true : false} />
         <span className="lever"></span>
-        Enable
       </label>
     </div>
   );

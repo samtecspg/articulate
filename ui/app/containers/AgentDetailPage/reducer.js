@@ -10,6 +10,9 @@ import {
   LOAD_POSTFORMAT,
   LOAD_POSTFORMAT_SUCCESS,
   LOAD_POSTFORMAT_ERROR,
+  LOAD_AGENT_SETTINGS_ERROR,
+  LOAD_AGENT_SETTINGS_SUCCESS,
+  LOAD_AGENT_SETTINGS,
 } from './constants';
 
 
@@ -34,6 +37,15 @@ const initialState = Immutable({
   postFormatData: {
     agent: '',
     postFormatPayload: ''
+  },
+  agentSettingsData: {
+    rasaURL: '',
+    ducklingURL: '',
+    ducklingDimension: [],
+    spacyPretrainedEntities: [],
+    domainClassifierPipeline: [],
+    intentClassifierPipeline: [],
+    entityClassifierPipeline: [],
   },
 });
 
@@ -75,6 +87,18 @@ function agentReducer(state = initialState, action) {
         .set('error', false)
         .set('postFormatData', action.postFormat);
     case LOAD_POSTFORMAT_ERROR:
+      return state
+        .set('loading', false);
+    case LOAD_AGENT_SETTINGS:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_AGENT_SETTINGS_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('agentSettingsData', action.agentSettings);
+    case LOAD_AGENT_SETTINGS_ERROR:
       return state
         .set('loading', false);
     default:

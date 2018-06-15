@@ -65,7 +65,7 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            server.inject('/settings/rasaURL', (res) => {
+            server.inject(`/agent/${agentId}/settings/rasaURL`, (res) => {
 
                 if (res.statusCode !== 200) {
                     if (res.statusCode === 404) {
@@ -81,7 +81,7 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            DomainTools.retrainModelTool(server, rasa, agent.language, domain.agent, domain.domainName, domainId, domain.extraTrainingData, (err) => {
+            DomainTools.retrainModelTool(server, rasa, agent.language, domain.agent, agent.id, domain.domainName, domainId, domain.extraTrainingData, (err) => {
 
                 if (err) {
                     return callback(err);

@@ -1,16 +1,11 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { createStructuredSelector } from 'reselect';
-import { connect } from 'react-redux';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
 import Header from '../../components/Header';
-import { push } from 'react-router-redux';
 
 import image404 from '../../img/missing-api.svg';
 
 import messages from './messages';
-import { makeSelectMissingAPI, } from '../App/selectors';
 
 
 export default class MissingAPIPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function

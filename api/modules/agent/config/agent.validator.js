@@ -310,7 +310,6 @@ class AgentValidate {
                     postFormat: {
                         postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                     },
-
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining,
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -320,6 +319,7 @@ class AgentValidate {
                         webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
                         webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                     },
+                    settings: Joi.object(),
                     entities: Joi.array().items({
                         entityName: EntitySchema.entityName.required(),
                         uiColor: EntitySchema.uiColor,
@@ -506,6 +506,38 @@ class AgentValidate {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+
+        this.updateSettings = {
+            params: (() => {
+
+                return {
+                    id: Joi.string().required().description('The id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return Joi.object();
+            })()
+        };
+
+        this.findAllSettings = {
+            params: (() => {
+
+                return {
+                    id: Joi.string().required().description('The id of the agent')
+                };
+            })()
+        };
+
+        this.findSettingsByName = {
+            params: (() => {
+
+                return {
+                    id: Joi.string().required().description('The id of the agent'),
+                    name: Joi.string().required().description('The name of the setting')
                 };
             })()
         };

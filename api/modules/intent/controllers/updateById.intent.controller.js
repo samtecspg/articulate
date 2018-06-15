@@ -8,7 +8,7 @@ const _ = require('lodash');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 const Status = require('../../../helpers/status.json');
 
-const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, extraTrainingData, cb) => {
+const updateDataFunction = (redis, server, intentId, currentIntent, updateData, agentId, domainId, cb) => {
 
     const oldExamples = _.cloneDeep(currentIntent.examples);
     if (updateData.examples){
@@ -122,11 +122,8 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
 module.exports = (request, reply) => {
 
     const intentId = request.params.id;
-    let agent = null;
     let agentId = null;
     let domainId = null;
-    let rasa = null;
-    let extraTrainingData = null;
     const updateData = request.payload;
 
     const server = request.server;
@@ -166,22 +163,6 @@ module.exports = (request, reply) => {
         },
         (currentIntent, cb) => {
 
-            server.inject(`/agent/${agentId}`, (res) => {
-
-                if (res.statusCode !== 200){
-                    if (res.statusCode === 400){
-                        const errorNotFound = Boom.notFound(res.result.message);
-                        return cb(errorNotFound);
-                    }
-                    const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
-                    return cb(error, null);
-                }
-                agent = res.result;
-                return cb(null, currentIntent);
-            });
-        },
-        (currentIntent, cb) => {
-
             redis.zscore(`agentDomains:${agentId}`, currentIntent.domain, (err, id) => {
 
                 if (err){
@@ -198,22 +179,6 @@ module.exports = (request, reply) => {
         },
         (currentIntent, cb) => {
 
-            server.inject(`/domain/${domainId}`, (res) => {
-
-                if (res.statusCode !== 200) {
-                    if (res.statusCode === 400) {
-                        const errorNotFound = Boom.notFound(res.result.message);
-                        return cb(errorNotFound);
-                    }
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the domain data');
-                    return cb(error, null);
-                }
-                extraTrainingData = res.result.extraTrainingData;
-                return cb(null, currentIntent);
-            });
-        },
-        (currentIntent, cb) => {
-
             if (updateData.examples){
                 IntentTools.validateEntitiesTool(redis, agentId, updateData.examples, (err) => {
 
@@ -226,22 +191,6 @@ module.exports = (request, reply) => {
             else {
                 return cb(null, currentIntent);
             }
-        },
-        (currentIntent, cb) => {
-
-            server.inject('/settings/rasaURL', (res) => {
-
-                if (res.statusCode !== 200) {
-                    if (res.statusCode === 404) {
-                        const errorNotFound = Boom.notFound('The setting rasaURL wasn\'t found');
-                        return cb(errorNotFound);
-                    }
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting rasaURL');
-                    return cb(error, null);
-                }
-                rasa = res.result;
-                return cb(null, currentIntent);
-            });
         },
         (currentIntent, cb) => {
 
@@ -292,7 +241,7 @@ module.exports = (request, reply) => {
                     },
                     (callback) => {
 
-                        updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, extraTrainingData, (err, result) => {
+                        updateDataFunction(redis, server, intentId, currentIntent, updateData, agentId, domainId, (err, result) => {
 
                             if (err){
                                 const error = Boom.badImplementation('An error occurred adding the intent data.');
@@ -310,7 +259,7 @@ module.exports = (request, reply) => {
                 });
             }
             else {
-                updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, extraTrainingData, (err, result) => {
+                updateDataFunction(redis, server, intentId, currentIntent, updateData, agentId, domainId, (err, result) => {
 
                     if (err){
                         const error = Boom.badImplementation('An error occurred adding the intent data.');

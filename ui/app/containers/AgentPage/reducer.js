@@ -1,20 +1,24 @@
 import Immutable from 'seamless-immutable';
 
 import {
+  RESET_AGENT_DATA,
+  REMOVE_AGENT_FALLBACK,
   CHANGE_AGENT_DATA,
   CHANGE_WEBHOOK_DATA,
   CHANGE_POSTFORMAT_DATA,
-  LOAD_POSTFORMAT_ERROR,
-  LOAD_POSTFORMAT_SUCCESS,
+  CHANGE_AGENT_SETTINGS_DATA,
+  LOAD_AGENT,
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
+  LOAD_WEBHOOK,
   LOAD_WEBHOOK_ERROR,
   LOAD_WEBHOOK_SUCCESS,
-  RESET_AGENT_DATA,
-  LOAD_AGENT,
-  REMOVE_AGENT_FALLBACK,
-  LOAD_WEBHOOK,
   LOAD_POSTFORMAT,
+  LOAD_POSTFORMAT_ERROR,
+  LOAD_POSTFORMAT_SUCCESS,
+  LOAD_AGENT_SETTINGS,
+  LOAD_AGENT_SETTINGS_ERROR,
+  LOAD_AGENT_SETTINGS_SUCCESS,
 } from './constants';
 import messages from '../IntentPage/messages';
 
@@ -42,6 +46,15 @@ const initialState = Immutable({
     agent: '',
     postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}"\n}'
   },
+  agentSettingsData: {
+    rasaURL: '',
+    ducklingURL: '',
+    ducklingDimension: [],
+    spacyPretrainedEntities: [],
+    domainClassifierPipeline: [],
+    intentClassifierPipeline: [],
+    entityClassifierPipeline: [],
+  },
   oldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"intent": {{{JSONstringify intent}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   oldPayloadXML: '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n\t<text>{{text}}</text>\n\t<intent>{{{toXML intent}}}</intent>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
   oldAgentData: null,
@@ -52,51 +65,53 @@ const initialState = Immutable({
 function agentReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_AGENT_DATA:
+      let stateToReturn = null;
       if (action.payload.field === 'fallbackResponses') {
-        return state
-          .updateIn(['agentData', 'fallbackResponses'], fallbackResponses => fallbackResponses.concat(action.payload.value))
-          .set('touched', true);
+        stateToReturn = state
+          .updateIn(['agentData', 'fallbackResponses'], fallbackResponses => fallbackResponses.concat(action.payload.value));
       }
       else {
         if (action.payload.field === 'agentName') {
-          return state
+          stateToReturn = state
             .setIn(['agentData', action.payload.field], action.payload.value)
             .setIn(['webhookData', 'agent'], action.payload.value)
-            .setIn(['postFormatData', 'agent'], action.payload.value)
-            .set('touched', true);
+            .setIn(['postFormatData', 'agent'], action.payload.value);
 
         }
         else {
           if (action.payload.field === 'usePostFormat') {
             if (action.payload.value === 'true' && state.getIn(['postFormatData','postFormatPayload']) === ''){
-              return state
-              .setIn(['agentData', action.payload.field], action.payload.value === 'true')
-              .setIn(['postFormatData','postFormatPayload'],messages.defaultPostFormat.defaultMessage)
-              .set('touched', true);
+              stateToReturn = state
+                .setIn(['agentData', action.payload.field], action.payload.value === 'true')
+                .setIn(['postFormatData','postFormatPayload'],messages.defaultPostFormat.defaultMessage);
             }
-            return state
-              .setIn(['agentData', action.payload.field], action.payload.value === 'true')
-              .set('touched', true);
+            stateToReturn = state
+              .setIn(['agentData', action.payload.field], action.payload.value === 'true');
           }
           if (action.payload.field === 'useWebhook') {
-            return state
-              .setIn(['agentData', action.payload.field], action.payload.value === 'true')
-              .set('touched', true);
+            stateToReturn = state
+              .setIn(['agentData', action.payload.field], action.payload.value === 'true');
+          }
+          if (action.payload.field === 'usePostFormat') {
+            stateToReturn = state
+              .setIn(['agentData', action.payload.field], action.payload.value === 'true');
           }
           else {
             if (action.payload.field === 'extraTrainingData') {
-              return state
-                .setIn(['agentData', action.payload.field], action.payload.value === 'true')
-                .set('touched', true);
+              stateToReturn = state
+                .setIn(['agentData', action.payload.field], action.payload.value === 'true');
             }
             else {
-              return state
-                .setIn(['agentData', action.payload.field], action.payload.value)
-                .set('touched', true);
+              stateToReturn = state
+                .setIn(['agentData', action.payload.field], action.payload.value);
             }
           }
         }
       }
+      if (!action.initialLoad){
+        stateToReturn = stateToReturn.set('touched', true);
+      }
+      return stateToReturn;
     case CHANGE_WEBHOOK_DATA:
       if (action.payload.field === 'webhookPayloadType' && action.payload.value === 'None') {
         if (state.webhookData.webhookPayloadType === 'JSON') {
@@ -177,6 +192,26 @@ function agentReducer(state = initialState, action) {
     case REMOVE_AGENT_FALLBACK:
       return state
         .updateIn(['agentData', 'fallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.index));
+    case CHANGE_AGENT_SETTINGS_DATA:
+      if (!action.initialLoad){
+        return state
+          .setIn(['agentSettingsData', action.payload.field], action.payload.value)
+          .set('touched', true);
+      }
+      return state
+        .setIn(['agentSettingsData', action.payload.field], action.payload.value);
+    case LOAD_AGENT_SETTINGS:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_AGENT_SETTINGS_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('agentSettingsData', action.agentSettings);
+    case LOAD_AGENT_SETTINGS_ERROR:
+      return state
+        .set('loading', false);
     default:
       return state;
   }

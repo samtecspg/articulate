@@ -7,7 +7,7 @@ const Guid = require('guid');
 const BuildTrainingData = require('./buildTrainingData.domain.tool');
 const YAML = require('json2yaml');
 
-const retrainModel = (server, rasa, language, agentName, domainName, domainId, extraTrainingData, callback) => {
+const retrainModel = (server, rasa, language, agentName, agentId, domainName, domainId, extraTrainingData, callback) => {
 
     let model = Guid.create().toString();
     Async.waterfall([
@@ -29,7 +29,7 @@ const retrainModel = (server, rasa, language, agentName, domainName, domainId, e
         (trainingSet, cb) => {
 
             model = (trainingSet.numberOfIntents === 1 ? 'just_er_' : '') + model;
-            server.inject(`/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'intent'}ClassifierPipeline`, (res) => {
+            server.inject(`/agent/${agentId}/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'intent'}ClassifierPipeline`, (res) => {
 
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, 'An error occurred getting the data of the pipeline');

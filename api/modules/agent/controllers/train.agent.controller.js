@@ -37,7 +37,7 @@ module.exports = (request, reply) => {
         },
         (callbackGetRasa) => {
 
-            server.inject('/settings/rasaURL', (res) => {
+            server.inject(`/agent/${agentId}/settings/rasaURL`, (res) => {
 
                 if (res.statusCode !== 200) {
                     if (res.statusCode === 404) {

@@ -10,12 +10,9 @@ import 'brace/theme/terminal';
 import {
   Col,
   Row,
-  Icon,
-  Input,
 } from 'react-materialize';
 
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import Alert from 'react-s-alert';
 import { createStructuredSelector } from 'reselect';
 
@@ -27,14 +24,7 @@ import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
-import SliderInput from '../../components/SliderInput';
-import Toggle from '../../components/Toggle';
-import Tooltip from '../../components/Tooltip';
-import Typeahead from '../../components/Typeahead';
 import InputLabel from '../../components/InputLabel';
-import Table from '../../components/Table';
-import TableContainer from '../../components/TableContainer';
-import Responses from './Components/Responses';
 
 import {
   resetStatusFlags,
@@ -53,23 +43,6 @@ import {
 
 import messages from './messages';
 
-const returnFormattedOptions = (options) => {
-  try {
-    return options.map((option, index) => (
-      <option key={index} value={option.value}>
-        {option.text}
-      </option>
-    ));
-  }
-  catch (e){
-    return [
-      <option key={0} value={''}>
-        {messages.errorParsingOptions.defaultMessage}
-      </option>
-    ]
-  }
-};
-
 export class RasaSettingsPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor() {
     super();
@@ -78,7 +51,7 @@ export class RasaSettingsPage extends React.PureComponent { // eslint-disable-li
   }
 
   onChangeInput(evt, field) {
-    if (['entityClassifierPipeline', 'intentClassifierPipeline', 'domainClassifierPipeline'].indexOf(field) > -1){
+    if (['entityClassifierPipeline', 'intentClassifierPipeline', 'domainClassifierPipeline', 'spacyPretrainedEntities'].indexOf(field) > -1){
       try {
         const value = JSON.parse(evt); //Ace editor send the value directly to the method as an string
         this.props.onChangeRasaSettingsData({ value, field });
@@ -117,7 +90,14 @@ export class RasaSettingsPage extends React.PureComponent { // eslint-disable-li
     if(Array.isArray(this.props.rasaSettings.domainClassifierPipeline)){
       if(Array.isArray(this.props.rasaSettings.intentClassifierPipeline)){
         if(Array.isArray(this.props.rasaSettings.entityClassifierPipeline)){
-          this.props.onUpdate();
+          if(Array.isArray(this.props.rasaSettings.spacyPretrainedEntities)){
+            this.props.onUpdate();
+          }
+          else {
+            Alert.warning(messages.spacyEntitiesWarningMessage.defaultMessage, {
+              position: 'bottom'
+            });
+          }
         }
         else {
           Alert.warning(messages.entityClassifierPipelineWarningMessage.defaultMessage, {
@@ -177,15 +157,7 @@ export class RasaSettingsPage extends React.PureComponent { // eslint-disable-li
                 value={rasaSettings.rasaURL}
                 onChange={(evt) => this.onChangeInput(evt, 'rasaURL')}
                 required
-              />{/*
-              <FormTextInput
-                id='ducklingURL'
-                label={messages.ducklingURL}
-                placeholder={messages.ducklingURLPlaceholder.defaultMessage}
-                value={rasaSettings.ducklingURL}
-                onChange={(evt) => this.onChangeInput(evt, 'ducklingURL')}
-                required
-              />*/}
+              />
               <InputLabel tooltip={messages.domainClassifierPipelineTooltip.defaultMessage} text={messages.domainClassifierPipeline} />
               <AceEditor
                 style={{marginBottom: '20px'}}
@@ -252,6 +224,28 @@ export class RasaSettingsPage extends React.PureComponent { // eslint-disable-li
                     showLineNumbers: true,
                     tabSize: 2,
                   }} />
+                  <InputLabel tooltip={messages.spacyEntitiesTooltip.defaultMessage} text={messages.spacyEntities} />
+                  <AceEditor
+                    width="100%"
+                    height="300px"
+                    style={{marginBottom: '20px'}}
+                    mode="json"
+                    theme="terminal"
+                    name="spacyPretrainedEntities"
+                    readOnly={false}
+                    onChange={(value) => this.onChangeInput(value, 'spacyPretrainedEntities')}
+                    fontSize={14}
+                    showPrintMargin={true}
+                    showGutter={true}
+                    highlightActiveLine={true}
+                    value={typeof rasaSettings.spacyPretrainedEntities === 'string' ?
+                            rasaSettings.spacyPretrainedEntities :
+                            JSON.stringify(rasaSettings.spacyPretrainedEntities, null, 2)}
+                    setOptions={{
+                      useWorker: true,
+                      showLineNumbers: true,
+                      tabSize: 2,
+                    }} />
             </Row>
           </Form>
         </Content>

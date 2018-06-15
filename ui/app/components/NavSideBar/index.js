@@ -21,7 +21,6 @@ import entity from '../../img/entity-icon.svg';
 import folder from '../../img/folder-icon.svg';
 import intent from '../../img/intent-icon.svg';
 import logo from '../../img/logo.svg';
-import webhook from '../../img/webhook-icon.svg';
 import messages from './messages';
 
 import Settings from './Settings';

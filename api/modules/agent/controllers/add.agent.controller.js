@@ -9,6 +9,7 @@ module.exports = (request, reply) => {
 
     let agentId = null;
     let agent = request.payload;
+    let globalSettings = {};
 
     const server = request.server;
     const redis = server.app.redis;
@@ -54,6 +55,50 @@ module.exports = (request, reply) => {
                     return cb(error);
                 }
                 return cb(null, agent);
+            });
+        },
+        getGlobalSettings: (cb) => {
+
+            server.inject('/settings', (res) => {
+
+                if (res.statusCode !== 200) {
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the global settings');
+                    return cb(error, null);
+                }
+                globalSettings = res.result;
+                return cb(null);
+            });
+        },
+        setDefaultSettings: (cb) => {
+
+            const {
+                rasaURL,
+                ducklingURL,
+                ducklingDimension,
+                spacyPretrainedEntities,
+                domainClassifierPipeline,
+                intentClassifierPipeline,
+                entityClassifierPipeline
+            } = globalSettings;
+            server.inject({
+                method: 'PUT',
+                url: `/agent/${agentId}/settings`,
+                payload: {
+                    rasaURL,
+                    ducklingURL,
+                    ducklingDimension,
+                    spacyPretrainedEntities,
+                    domainClassifierPipeline,
+                    intentClassifierPipeline,
+                    entityClassifierPipeline
+                }
+            }, (res) => {
+
+                if (res.statusCode !== 200) {
+                    const error = Boom.create(res.statusCode, 'An error occurred adding the settings of the agent');
+                    return cb(error, null);
+                }
+                return cb(null);
             });
         }
     }, (err, result) => {

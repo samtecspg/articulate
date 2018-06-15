@@ -320,6 +320,36 @@ const AgentRoutes = [
             validate: AgentValidator.train,
             handler: AgentController.train
         }
+    },
+    {
+        method: 'PUT',
+        path: '/agent/{id}/settings',
+        config: {
+            description: 'Modifies the agent settings',
+            tags: ['api'],
+            validate: AgentValidator.updateSettings,
+            handler: AgentController.updateSettings
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/settings',
+        config: {
+            description: 'Return all the setings of the agent',
+            tags: ['api'],
+            validate: AgentValidator.findAllSettings,
+            handler: AgentController.findAllSettings
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/settings/{name}',
+        config: {
+            description: 'Return the settings value for the specified name for the agent',
+            tags: ['api'],
+            validate: AgentValidator.findSettingsByName,
+            handler: AgentController.findSettingsByName
+        }
     }
 ];
 

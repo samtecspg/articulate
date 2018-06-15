@@ -27,7 +27,7 @@ const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agent
         },
         (trainingSet, cb) => {
 
-            server.inject(`/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'domain'}ClassifierPipeline`, (res) => {
+            server.inject(`/agent/${agentId}/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'domain'}ClassifierPipeline`, (res) => {
 
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, 'An error occurred getting the data of the pipeline');

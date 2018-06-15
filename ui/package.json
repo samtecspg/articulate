@@ -226,6 +226,7 @@
     "material-ui": "^0.20.0",
     "minimist": "1.2.0",
     "react": "15.4.1",
+    "react-accessible-accordion": "^2.4.2",
     "react-ace": "^5.9.0",
     "react-chips": "^0.6.3",
     "react-color": "^2.13.8",

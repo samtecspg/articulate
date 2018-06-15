@@ -15,7 +15,6 @@ import {
 } from 'react-materialize';
 
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import Alert from 'react-s-alert';
 import { createStructuredSelector } from 'reselect';
 
@@ -27,8 +26,6 @@ import Form from '../../components/Form';
 import FormTextInput from '../../components/FormTextInput';
 import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
-import SliderInput from '../../components/SliderInput';
-import Toggle from '../../components/Toggle';
 import Tooltip from '../../components/Tooltip';
 import Typeahead from '../../components/Typeahead';
 import InputLabel from '../../components/InputLabel';

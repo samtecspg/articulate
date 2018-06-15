@@ -28,6 +28,9 @@ const UpdateWebhookController = require('./updateWebhook.agent.controller');
 const DeleteWebhookController = require('./deleteWebhook.agent.controller');
 const TrainController = require('./train.agent.controller');
 const FindIntentPostFormatInDomainByIdByAgentIdController = require('./findIntentPostFormatInDomainByIdByAgentId.agent.controller');
+const UpdateSettingsController = require('./putSettings.agent.controller');
+const FindSettingsByNameController = require('./findSettingsByName.agent.controller');
+const FindAllSettingsController = require('./findAllSettings.agent.controller');
 
 
 const AgentController = {
@@ -88,7 +91,13 @@ const AgentController = {
 
     deleteWebhook: DeleteWebhookController,
 
-    train: TrainController
+    train: TrainController,
+
+    updateSettings: UpdateSettingsController,
+
+    findSettingsByName: FindSettingsByNameController,
+
+    findAllSettings: FindAllSettingsController
 };
 
 module.exports = AgentController;

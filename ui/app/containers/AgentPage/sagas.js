@@ -12,7 +12,14 @@ import {
   take,
   takeLatest,
 } from 'redux-saga/effects';
-import { makeSelectAgentData, makeSelectOldWebhookData, makeSelectOldAgentData, makeSelectPostFormatData } from '../AgentPage/selectors';
+import {
+  makeSelectAgentData,
+  makeSelectOldWebhookData,
+  makeSelectOldAgentData,
+  makeSelectPostFormatData,
+  makeSelectWebhookData,
+  makeSelectAgentSettingsData,
+} from '../AgentPage/selectors';
 import {
   agentCreated,
   agentCreationError,
@@ -30,17 +37,45 @@ import {
 import { getAgents } from '../App/sagas';
 import { makeSelectInWizard } from '../App/selectors';
 import {
-  loadWebhook,
-  loadPostFormat,
   loadAgentError,
   loadAgentSuccess,
+  loadWebhook,
   loadWebhookError,
   loadWebhookSuccess,
+  loadPostFormat,
   loadPostFormatError,
-  loadPostFormatSuccess
+  loadPostFormatSuccess,
+  loadAgentSettings,
+  loadAgentSettingsError,
+  loadAgentSettingsSuccess,
 } from './actions';
-import { LOAD_AGENT, LOAD_WEBHOOK, LOAD_POSTFORMAT, LOAD_AGENT_SUCCESS } from './constants';
-import { makeSelectWebhookData } from './selectors';
+import {
+  LOAD_AGENT,
+  LOAD_WEBHOOK,
+  LOAD_POSTFORMAT,
+  LOAD_AGENT_SETTINGS
+} from './constants';
+
+function* putAgentSettings(payload) {
+  const { api, id } = payload;
+  const agentSettingsData = yield select(makeSelectAgentSettingsData());
+  try {
+    yield call(api.agent.putAgentIdSettings, { id, body: agentSettingsData });
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
+      yield put(updateAgentSettingsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
+        yield put(updateAgentSettingsError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateAgentSettingsError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
 
 function* postWebhook(payload) {
   const { api, id } = payload;
@@ -100,6 +135,7 @@ export function* postAgent(payload) {
     if (agent.usePostFormat) {
       yield call(postPostFormat, { api, id: agent.id });
     }
+    yield call(putAgentSettings, { api, id: agent.id });
     yield put(agentCreated(agent));
     yield call(getAgents, { api });
     //yield put(loadCurrentAgent(agent.id));
@@ -263,6 +299,7 @@ export function* putAgent(payload) {
       } catch (error) {
       }
     }
+    yield call(putAgentSettings, { api, id: agentData.id });
     yield put(updateAgentSuccess());
     yield call(getAgents, { api });
     yield put(loadCurrentAgent(agentData.id));
@@ -313,6 +350,28 @@ export function* getWebhook(payload) {
   }
 }
 
+export function* getAgentSettings(payload) {
+  const { api, id } = payload;
+  try {
+    const response = yield call(api.agent.getAgentIdSettings, { id });
+    const agentSettings = response.obj;
+    yield put(loadAgentSettingsSuccess(agentSettings));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch') {
+      yield put(loadAgentSettingsError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message) {
+        yield put(loadAgentSettingsError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadAgentSettingsError({ message: 'Unknow API error' }));
+      }
+    }
+  }
+}
+
 export function* getPostFormat(payload) {
   const { api, id } = payload;
   try {
@@ -345,6 +404,7 @@ export function* getAgent(payload) {
     yield put(loadAgentSuccess(agent));
     yield put(loadWebhook(id));
     yield put(loadPostFormat(id));
+    yield put(loadAgentSettings(id));
   } catch (err) {
     const errObject = { err };
     if (errObject.err && errObject.err.message === 'Failed to fetch') {
@@ -385,11 +445,19 @@ export function* loadPostFormatSaga() {
   yield cancel(watcher);
 }
 
+export function* loadAgentSettingsSaga() {
+  const watcher = yield takeLatest(LOAD_AGENT_SETTINGS, getAgentSettings);
+
+  // Suspend execution until location changes
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
 
 export default [
-  createAgent,
   loadAgent,
-  loadWebhookSaga,
+  createAgent,
   updateAgent,
-  loadPostFormatSaga
+  loadWebhookSaga,
+  loadPostFormatSaga,
+  loadAgentSettingsSaga
 ];

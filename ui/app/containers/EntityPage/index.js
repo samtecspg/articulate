@@ -30,7 +30,6 @@ import {
 import {
   makeSelectCurrentAgent,
   makeSelectError,
-  makeSelectIntentMissing,
   makeSelectInWizard,
   makeSelectLoading,
   makeSelectSuccess,

@@ -21,9 +21,15 @@ const makeSelectPostFormatData = () => createSelector(
   (agentState) => agentState.postFormatData,
 );
 
+const makeSelectAgentSettingsData = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.agentSettingsData,
+);
+
 export {
   selectAgent,
   makeSelectAgentData,
   makeSelectWebhookData,
   makeSelectPostFormatData,
+  makeSelectAgentSettingsData
 };

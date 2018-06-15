@@ -76,19 +76,23 @@ const replacer = (key, value) => {
     return value;
 };
 
-const castSysEntities = (parseResult) => {
+const castSysEntities = (parseResult, spacyPretrainedEntities, ducklingDimension) => {
 
-    const ducklingEntities = _.map(parseResult.duckling, (entity) => {
+    let ducklingEntities = _.map(parseResult.duckling, (entity) => {
 
-        const tmpEntity = {
-            end: entity.end,
-            entity: 'sys.duckling_' + entity.dim,
-            extractor: 'duckling',
-            start: entity.start,
-            value: JSON.parse(JSON.stringify(entity.value, replacer))
-        };
-        return tmpEntity;
+        if (ducklingDimension.indexOf(entity.dim) !== -1){
+            const tmpEntity = {
+                end: entity.end,
+                entity: 'sys.duckling_' + entity.dim,
+                extractor: 'duckling',
+                start: entity.start,
+                value: JSON.parse(JSON.stringify(entity.value, replacer))
+            };
+            return tmpEntity;
+        }
+        return null;
     });
+    ducklingEntities = _.compact(ducklingEntities);
 
     const regexEntities = _.map(parseResult.regex, (entity) => {
 
@@ -104,15 +108,21 @@ const castSysEntities = (parseResult) => {
 
     parseResult.rasa = _.map(parseResult.rasa, (rasaResult) => {
 
-        const rasaEntities = _.map(rasaResult.entities, (entity) => {
+        let rasaEntities = _.map(rasaResult.entities, (entity) => {
 
             if (entity.extractor === 'ner_spacy') {
-                entity.entity = 'sys.spacy_' + entity.entity.toLowerCase();
+                if (spacyPretrainedEntities.indexOf(entity.entity) !== -1){
+                    entity.entity = 'sys.spacy_' + entity.entity.toLowerCase();
+                }
+                else {
+                    return null;
+                }
             }
             entity.value = { value: entity.value };
             return entity;
         });
 
+        rasaEntities = _.compact(rasaEntities);
         rasaResult.entities = _.union(rasaEntities, ducklingEntities, regexEntities);
 
         return rasaResult;
@@ -123,7 +133,7 @@ const castSysEntities = (parseResult) => {
     return parseResult.rasa;
 };
 
-const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezone, language, agentData, server, cb) => {
+const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, ducklingDimension, textToParse, timezone, language, agentData, server, cb) => {
 
     Async.parallel({
         rasa: (callback) => {
@@ -264,7 +274,7 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
 
         const parsedDate = new Date();
 
-        result = castSysEntities(result);
+        result = castSysEntities(result, spacyPretrainedEntities, ducklingDimension);
 
         const temporalParse = {
             result: {
@@ -277,10 +287,10 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
     });
 };
 
-module.exports = (redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, server, cb) => {
+module.exports = (rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingDimension, textToParse, timezone, language, agentData, server, cb) => {
 
     const start = process.hrtime();
-    parseText(redis, rasa, ERPipeline, duckling, textToParse, timezone, language, agentData, server, (err, result) => {
+    parseText(rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingDimension, textToParse, timezone, language, agentData, server, (err, result) => {
 
         if (err) {
             return cb(err, null);

@@ -2,23 +2,23 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   agent: {
-    id: 'boilerplate.containers.IntentListPage.create_domain.agent',
+    id: 'containers.IntentListPage.create_domain.agent',
     defaultMessage: 'Agent',
   },
   domainListTitle: {
-    id: 'boilerplate.containers.IntentListPage.list.title',
+    id: 'containers.IntentListPage.list.title',
     defaultMessage: 'Agent Intents',
   },
   domain: {
-    id: 'boilerplate.containers.IntentListPage.list.title',
+    id: 'containers.IntentListPage.list.title',
     defaultMessage: 'Domains',
   },
   domainListDescription: {
-    id: 'boilerplate.containers.IntentListPage.list.description',
+    id: 'containers.IntentListPage.list.description',
     defaultMessage: 'List of intents for each domain in the agent.',
   },
   actionButton: {
-    id: 'boilerplate.containers.DomainListPage.list.action',
+    id: 'containers.IntentListPage.list.action',
     defaultMessage: '+ Create Intent',
   },
 });

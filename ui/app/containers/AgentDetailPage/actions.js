@@ -8,6 +8,9 @@ import {
   LOAD_POSTFORMAT_ERROR,
   LOAD_POSTFORMAT_SUCCESS,
   LOAD_POSTFORMAT,
+  LOAD_AGENT_SETTINGS_ERROR,
+  LOAD_AGENT_SETTINGS_SUCCESS,
+  LOAD_AGENT_SETTINGS,
 } from './constants';
 
 export function loadAgentError(error) {
@@ -73,5 +76,27 @@ export function loadWebhook(id) {
     type: LOAD_WEBHOOK,
     apiCall: true,
     id,
+  };
+}
+
+export function loadAgentSettings(id) {
+  return {
+    type: LOAD_AGENT_SETTINGS,
+    apiCall: true,
+    id,
+  };
+}
+
+export function loadAgentSettingsError(error) {
+  return {
+    type: LOAD_AGENT_SETTINGS_ERROR,
+    error,
+  };
+}
+
+export function loadAgentSettingsSuccess(agentSettings) {
+  return {
+    type: LOAD_AGENT_SETTINGS_SUCCESS,
+    agentSettings,
   };
 }

@@ -27,6 +27,7 @@ let scenario = null;
 let agentWebhook = null;
 let intentWebhook = null;
 let exportedTestAgent = null;
+let rasaURL = null;
 
 
 before({ timeout: 120000 }, (done) => {
@@ -621,6 +622,74 @@ suite('/agent/{id}/parse', () => {
                 expect(res.result.result.results[0].intent.name).to.equal(intent.intentName);
                 done();
             });
+        });
+    });
+
+});
+
+suite('/agent/{id}/settings', () => {
+
+    suite('/agent/{id}/settings/rasaURL', () => {
+
+        suite('/get', () => {
+
+            test('should respond with 200 successful operation and return an string', (done) => {
+
+                server.inject(`/agent/${preCreatedAgentId}/settings/rasaURL`, (res) => {
+
+                    expect(res.statusCode).to.equal(200);
+                    expect(res.result).to.be.an.string();
+                    rasaURL = res.result;
+                    done();
+                });
+
+            });
+        });
+    });
+
+    suite('/agent/{id}/settings', () => {
+
+        suite('/get', () => {
+
+            test('should respond with 200 successful operation and return an object', (done) => {
+
+                server.inject(`/agent/${preCreatedAgentId}/settings`, (res) => {
+
+                    expect(res.statusCode).to.equal(200);
+                    expect(res.result).to.be.an.object();
+                    expect(res.result.rasaURL).to.be.a.string();
+                    expect(res.result.spacyPretrainedEntities).to.be.an.array();
+                    expect(res.result.domainClassifierPipeline).to.be.an.array();
+                    expect(res.result.intentClassifierPipeline).to.be.an.array();
+                    expect(res.result.entityClassifierPipeline).to.be.an.array();
+                    expect(res.result.ducklingURL).to.be.a.string();
+                    expect(res.result.ducklingDimension).to.be.an.array();
+                    done();
+                });
+
+            });
+        });
+    });
+
+    suite('/put', () => {
+
+        test('should respond with 200 successful operation and return an object', (done) => {
+
+            const options = {
+                method: 'PUT',
+                url: `/agent/${preCreatedAgentId}/settings`,
+                payload: {
+                    rasaURL
+                }
+            };
+
+            server.inject(options, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.rasaURL).to.be.equal(rasaURL);
+                done();
+            });
+
         });
     });
 

@@ -3,7 +3,6 @@ import { AutoComplete } from 'material-ui';
 import PopoverAnimationVertical from 'material-ui/Popover/PopoverAnimationVertical';
 import getMuiTheme          from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
-import { FormattedMessage } from 'react-intl';
 import Tooltip from '../Tooltip';
 import { Icon } from 'react-materialize';
 

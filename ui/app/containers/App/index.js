@@ -9,7 +9,7 @@ import { push } from 'react-router-redux';
 
 import NavSideBar from '../../components/NavSideBar';
 import withProgressBar from '../../components/ProgressBar';
-import { loadAgents, checkAPI, redirectMissingAPI, loadSettings } from '../../containers/App/actions';
+import { checkAPI, loadSettings } from '../../containers/App/actions';
 import {
   makeSelectAgents,
   makeSelectError,
@@ -45,7 +45,7 @@ export class App extends React.PureComponent {
   }
 
   render() {
-    const { agents, children } = this.props;
+    const { children } = this.props;
     return (
       <div>
         <Alert stack={false} timeout={3000} />

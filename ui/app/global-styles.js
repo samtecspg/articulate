@@ -437,7 +437,8 @@ injectGlobal`
     top: -9px; }
 
   .input-field {
-    margin-top: 2.5rem; }
+    margin-top: 2.5rem;
+  }
 
   .input-synonym {
     margin: 0 !important;

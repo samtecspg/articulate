@@ -108,15 +108,20 @@ const initialState = Immutable({
   agent: undefined,
   entityIntents: {},
   settingsData: {
-    ducklingURL: '',
     rasaURL: '',
     uiLanguage: '',
+    ducklingURL: '',
     defaultTimezone: '',
     defaultAgentLanguage: '',
     timezones: [],
     uiLanguages: [],
     agentLanguages: [],
-    defaultAgentFallbackResponses: [],
+    ducklingDimension: [],
+    spacyPretrainedEntities: [],
+    domainClassifierPipeline: [],
+    intentClassifierPipeline: [],
+    entityClassifierPipeline: [],
+    defaultAgentFallbackResponses: []
   },
 });
 

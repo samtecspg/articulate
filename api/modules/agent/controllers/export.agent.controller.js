@@ -244,7 +244,7 @@ module.exports = (request, reply) => {
                             if (res.statusCode === 404) {
                                 return callbackGetPostFormat(null, exportedAgent);
                             }
-                            const error = Boom.create(res.statusCode, `An error occurred getting the webhook of the agent ${exportedAgent.agentName}`);
+                            const error = Boom.create(res.statusCode, `An error occurred getting the postFormat of the agent ${exportedAgent.agentName}`);
                             return callbackGetPostFormat(error, null);
                         }
 
@@ -254,6 +254,20 @@ module.exports = (request, reply) => {
                             delete res.result.agent;
                         }
                         return callbackGetPostFormat(null, Object.assign(exportedAgent, { postFormat: res.result }));
+                    });
+                },
+                settings: (callbackGetSettings) => {
+
+                    server.inject(`/agent/${agentId}/settings`, (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                return callbackGetSettings(null, exportedAgent);
+                            }
+                            const error = Boom.create(res.statusCode, `An error occurred getting the settings of the agent ${exportedAgent.agentName}`);
+                            return callbackGetSettings(error, null);
+                        }
+                        return callbackGetSettings(null, Object.assign(exportedAgent, { settings: res.result }));
                     });
                 }
             }, (err) => {
