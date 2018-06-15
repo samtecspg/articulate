@@ -46,6 +46,23 @@ const updateDataFunction = (redis, server, intentId, currentIntent, updateData, 
                 return callback(null);
             });
         },
+        intentEntitiesUnlink: (callback) => {
+
+            Async.eachSeries(oldExamples, (example, nextExample) => {
+
+                Async.eachSeries(example.entities, (entity, nextEntity) => {
+
+                    redis.zrem(`entityIntents:${entity.entityId}`, currentIntent.intentName, (err) => {
+
+                        if (err){
+                            const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the entity ${entity.entityId}`);
+                            return nextEntity(error);
+                        }
+                        return nextEntity(null);
+                    });
+                }, nextExample);
+            }, callback);
+        },
         intentEntitiesLink: (callback) => {
 
             Async.eachSeries(resultIntent.examples, (example, nextIntent) => {
@@ -221,23 +238,6 @@ module.exports = (request, reply) => {
                             }
                             return callback(null);
                         });
-                    },
-                    (callback) => {
-
-                        Async.eachSeries(currentIntent.examples, (example, nextIntent) => {
-
-                            Async.eachSeries(example.entities, (entity, nextEntity) => {
-
-                                redis.zrem(`entityIntents:${entity.entityId}`, currentIntent.intentName, (err, addResponse) => {
-
-                                    if (err){
-                                        const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the entity ${entity.entityId}`);
-                                        return nextEntity(error);
-                                    }
-                                    return nextEntity(null);
-                                });
-                            }, nextIntent);
-                        }, callback);
                     },
                     (callback) => {
 

@@ -188,7 +188,7 @@ const updateEntitiesDomain = (server, redis, intent, agentId, domainId, oldExamp
                                         }
                                     });
                                 }
-                            ], (err, result) => {
+                            ], (err) => {
 
                                 if (err){
                                     return cllbk(err);
@@ -197,7 +197,7 @@ const updateEntitiesDomain = (server, redis, intent, agentId, domainId, oldExamp
                             });
                         });
                     }
-                ], (err, result) => {
+                ], (err) => {
 
                     if (err){
                         return callback(err);
