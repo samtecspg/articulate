@@ -26,22 +26,27 @@ export function UserSayingsRows(props) {
   const rows = props.examples.map((value, valueIndex) => {
     const textValue = value['userSays'];
     let formattedText = null;
-    if (!value.entities){
+    if (!value.entities) {
       value.entities = [];
     }
     const entities = _.cloneDeep(value.entities);
+    let regexEntityIsList = [];
     const regexEntitiesDefinedAsSlot = props.agentEntities.entities.filter((ent) => {
 
       return ent.type === 'regex' && props.slots.filter((slot) => {
-
+        if (slot.entity === ent.entityName && ent.type === 'regex' && slot.isList) {
+          regexEntityIsList.push(ent.entityName);
+        }
         return slot.entity === ent.entityName;
       }).length > 0
     });
     if (entities.length > 0 || regexEntitiesDefinedAsSlot.length > 0) {
-
       regexEntitiesDefinedAsSlot.forEach((regexEntity) => {
 
         const entityName = regexEntity.entityName;
+        let entityIsList = regexEntityIsList.indexOf(entityName) >= 0;
+        let lastRegexMatch;
+        let indexLastMatch = 0;
         regexEntity.examples.forEach((regexExample) => {
 
           const entityValue = regexExample.value;
@@ -51,16 +56,29 @@ export function UserSayingsRows(props) {
           }
           regexExample.synonyms.forEach((syn) => {
 
-            const regexToTest = new RegExp(syn, 'i');
-            if (regexToTest.test(textValue)) {
-              const resultParsed = regexToTest.exec(textValue);
-              const startIndex = textValue.indexOf(resultParsed[0]);
-              const endIndex = startIndex + resultParsed[0].length;
-              const resultToSend = { value: resultParsed[0], entity: entityName, start: startIndex, end: endIndex };
-              entities.push(_.cloneDeep(resultToSend));
+            let regexToTest = null; // re intialize the regex as it has been defined globally
+            let match;
+            regexToTest = new RegExp(syn, 'ig');
+            match = regexToTest.exec(textValue)
+            while (match !==null) {
+              const startIndex = match.index;
+              const endIndex = startIndex + match[0].length;
+              const resultToSend = { value: match[0], entity: entityName, start: startIndex, end: endIndex };
+              match = regexToTest.exec(textValue);
+              if (entityIsList) {
+                entities.push(_.cloneDeep(resultToSend));
+              }
+              if (match === null && startIndex > indexLastMatch){ //save the last match and use it slot is not a list
+                lastRegexMatch = _.cloneDeep(resultToSend);
+                indexLastMatch = startIndex;
+              }
             }
           });
         })
+         if (!entityIsList){
+          //this is the last match kept int user saying row
+          entities.push(_.cloneDeep(lastRegexMatch));
+        }
       });
       const sortedEntities = [...entities].sort(compareEntities);
       formattedText = <FormattedText agentEntities={props.agentEntities} entities={sortedEntities} text={textValue} entityIndex={0} lastStart={0} />;

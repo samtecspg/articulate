@@ -108,7 +108,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     this.props.onChangeEntityData(field, evt.target.value);
   }
 
-  onAddExample(evt){
+  onAddExample(evt) {
     this.state.lastExampleEdited = true;
     this.props.onAddExample(evt);
   }
@@ -129,14 +129,14 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
         position: 'bottom'
       });
     }
-    if (this.state.lastExampleEdited){
+    if (this.state.lastExampleEdited) {
       this.state.lastExampleEdited = false;
       this.scrollToBottom();
     }
   }
 
   scrollToBottom = () => {
-    this.lastExample.scrollIntoView({block: 'end', behavior: 'smooth'});
+    this.lastExample.scrollIntoView({ block: 'end', behavior: 'smooth' });
   };
 
   setEditMode(isEditMode) {
@@ -163,7 +163,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
-  routerWillLeave(route){
+  routerWillLeave(route) {
     if (!this.state.waitingForConfirm && this.props.touched && !this.state.clickedSave) {
       this.state.nextRoute = route;
       this.state.displayModal = true;
@@ -173,12 +173,12 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     }
   }
 
-  onLeave(){
+  onLeave() {
     this.props.resetForm();
     this.props.router.push(this.state.nextRoute.pathname);
   }
 
-  onDismiss(){
+  onDismiss() {
     this.setState({
       displayModal: false,
       waitingForConfirm: false,
@@ -196,10 +196,10 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
     };
 
     let typeSelect = [];
-    const defaultOptionType = { value: 'learned', text: 'learned', disabled: 'disabled' };
-    const regexOptionType = { value: 'regex', text: 'regex', disabled: 'disabled' };
+    const defaultOptionType = { value: 'learned', text: 'Learned', disabled: 'disabled' };
+    const regexOptionType = { value: 'regex', text: 'Regex', disabled: 'disabled' };
 
-    typeSelect= [defaultOptionType, regexOptionType];
+    typeSelect = [defaultOptionType, regexOptionType];
 
     let breadcrumbs = [
       { label: 'Agent' },
@@ -225,7 +225,7 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
         />
         <Header breadcrumbs={breadcrumbs} actionButtons={
           <ActionButton label={this.state.editMode ? messages.editButton : messages.createButton} onClick={this.submitForm} />
-        }/>
+        } />
         <Content>
           <ContentHeader title={contentHeaderTitle} subTitle={contentHeaderSubTitle} />
           <Form>
@@ -260,8 +260,8 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
               >
                 {returnFormattedOptions(typeSelect)}
               </Input>
-              { entity.type !== 'regex' ?  
-              <FormTextInput
+              {entity.type !== 'regex' ?
+                <FormTextInput
                   id='regex'
                   label={messages.regex}
                   placeholder={messages.regexPlaceholder.defaultMessage}
@@ -271,37 +271,56 @@ export class EntityPage extends React.PureComponent { // eslint-disable-line rea
                   value={entity.regex}
                 /> : null
               }
-                { entity.type === 'regex' ? <InputLabel text={messages.regexValues} /> : <InputLabel text={messages.examples} />}
-              
+              {entity.type === 'regex' ? <InputLabel text={messages.regexValues} /> : <InputLabel text={messages.examples} />}
+
             </Row>
           </Form>
 
           <TableContainer id={'examplesTable'}>
             <Table>
-              <TableHeader
-                columns={[
-                  {
-                    label: messages.valueColumn.defaultMessage,
-                    tooltip: messages.valueColumnTooltip.defaultMessage,
-                    width: '30%',
-                  },
-                  {
-                    label: messages.synonymsColum.defaultMessage,
-                    tooltip: messages.synonymsColumTooltip.defaultMessage,
-                    width: '70%',
-                  },
-                ]}
-              />
+              {entity.type === 'regex' ?
+                <TableHeader
+                  columns={
+                    [
+                      {
+                        label: messages.valueColumn.regexMessage,
+                        tooltip: messages.valueColumnTooltip.regexMessage,
+                        width: '30%',
+                      },
+                      {
+                        label: messages.synonymsColum.defaultMessage,
+                        tooltip: messages.synonymsColumTooltip.regexMessage,
+                        width: '70%',
+                      },
+                    ]}
+                /> : <TableHeader
+                  columns={
+                    [
+                      {
+                        label: messages.valueColumn.defaultMessage,
+                        tooltip: messages.valueColumnTooltip.defaultMessage,
+                        width: '30%',
+                      },
+                      {
+                        label: messages.synonymsColum.defaultMessage,
+                        tooltip: messages.synonymsColumTooltip.defaultMessage,
+                        width: '70%',
+                      },
+                    ]
+                  }
+                />
+              }
+
               <Examples
                 examples={entity.examples}
-                addExampleFunction={(evt) => {  this.onAddExample(evt) }}
+                addExampleFunction={(evt) => { this.onAddExample(evt) }}
                 removeExampleFunction={this.props.onRemoveExample}
                 removeSynonymFunction={this.props.onRemoveSynonym}
                 addSynonymFunction={this.props.onAddSynonym}
               />
             </Table>
           </TableContainer>
-          <br/>
+          <br />
           <div
             ref={(el) => {
               this.lastExample = el;

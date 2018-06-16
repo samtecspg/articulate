@@ -252,13 +252,9 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                             regexs.push({ name: ent.entityName, pattern: ent.regex, entityType: ent.type });
                         }
                         if (ent.type === 'regex') {
-                            if (ent.regex && ent.regex !== '') {
-                                ent.examples.push({ value: ent.regex, synonyms: [] });
-                                regexs.push({ name: ent.entityName, pattern: ent.regex, examples: ent.examples, entityType: ent.type });
-                            }
-                            else {
-                                regexs.push({ name: ent.entityName, examples: ent.examples, entityType: ent.type });
-                            }
+
+                            regexs.push({ name: ent.entityName, examples: ent.examples, entityType: ent.type });
+
                         }
 
                     });
@@ -282,15 +278,26 @@ const parseText = (redis, rasa, ERPipeline, ducklingService, textToParse, timezo
                                 if (regexExample.synonyms.indexOf(entityValue) < 0) {
                                     regexExample.synonyms.push(entityValue);
                                 }
+                                const foundRegex = [];
                                 regexExample.synonyms.forEach((syn) => {
 
-                                    const regexToTest = new RegExp(syn, 'i');
-                                    if (regexToTest.test(textToParse)) {
-                                        const resultParsed = regexToTest.exec(textToParse);
-                                        const startIndex = textToParse.indexOf(resultParsed[0]);
-                                        const endIndex = startIndex + resultParsed[0].length;
-                                        const resultToSend = Object.assign(regex, { resolvedRegex: resultParsed[0], entityValue, start: startIndex, end: endIndex, regexType: 'entityRegex' });
-                                        results.push(_.cloneDeep(resultToSend));
+                                    let regexToTest = null; // re intialize the regex as it has been defined globally
+                                    let match;
+                                    regexToTest = new RegExp(syn, 'ig');
+
+                                    if (match = regexToTest.exec(textToParse)) {
+
+                                        while (match) {
+                                            if (foundRegex.indexOf(match) < 0) {
+                                                const startIndex = textToParse.indexOf(match[0]);
+                                                const endIndex = startIndex + match[0].length;
+                                                const resultToSend = Object.assign(regex, { resolvedRegex: match[0], entityValue, start: startIndex, end: endIndex, regexType: 'entityRegex' });
+                                                results.push(_.cloneDeep(resultToSend));
+                                                foundRegex.push(match[0]);
+                                                match = regexToTest.exec(textToParse);
+
+                                            }
+                                        }
                                     }
 
                                 });
