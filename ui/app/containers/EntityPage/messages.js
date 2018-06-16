@@ -25,6 +25,10 @@ export default defineMessages({
     id: 'containers.EntityPage.create_entity.entityName',
     defaultMessage: 'Entity Name',
   },
+  entityType: {
+    id: 'boilerplate.containers.EntityPage.create_entity.entityType',
+    defaultMessage: 'Entity type',
+  },
   entityColor: {
     id: 'containers.EntityPage.create_entity.entityColor',
     defaultMessage: 'Entity Color',
@@ -45,6 +49,10 @@ export default defineMessages({
     id: 'containers.EntityPage.create_entity.examples',
     defaultMessage: 'Examples',
   },
+  regexValues: {
+    id: 'boilerplate.containers.EntityPage.create_entity.regex_values',
+    defaultMessage: 'Regex values',
+  },
   examplePlaceholder: {
     id: 'containers.EntityPage.create_entity.example_placeholder',
     defaultMessage: 'Add Value',
@@ -64,6 +72,7 @@ export default defineMessages({
   valueColumn: {
     id: 'containers.EntityPage.create_agent.value_column',
     defaultMessage: 'Value',
+    regexMessage: 'Regex to match'
   },
   synonymsColum: {
     id: 'containers.EntityPage.create_agent.synonyms_colum',
@@ -72,10 +81,12 @@ export default defineMessages({
   valueColumnTooltip: {
     id: 'containers.EntityPage.create_agent.value_column_tooltip',
     defaultMessage: 'An instance of the intent you named upwards',
+    regexMessage: 'A regex to be matched (resolved value found in text will be set in slots.[entityName].original while its corresponding entity entry will be saved as slots.[entityName].value)',
   },
   synonymsColumTooltip: {
     id: 'containers.EntityPage.create_agent.synonyms_colum_tooltip',
     defaultMessage: 'Synonyms will help the agent to recognize this example in several different ways',
+    regexMessage: 'If there are multiple matches for a non list slot, the last one found in the sentance will be kept in slots.[entityName].original while the corresponding entity entry to the left will be set in slots.[entityName].value ',
   },
   successMessage: {
     id: 'containers.EntityPage.create_agent.success_message',

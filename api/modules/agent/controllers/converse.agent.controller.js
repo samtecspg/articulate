@@ -124,7 +124,6 @@ module.exports = (request, reply) => {
         if (postFormatPayloadToUse) {
             try {
                 const compiledPostFormat = Handlebars.compile(postFormatPayloadToUse);
-                //let dd = {...conversationStateObject,textResponse: data.textResponse};
                 const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject, { textResponse: data.textResponse }));
                 let processedPostFormatJson = {};
                 processedPostFormatJson = JSON.parse(processedPostFormat);

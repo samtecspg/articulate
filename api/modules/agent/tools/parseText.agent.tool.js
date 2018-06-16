@@ -96,13 +96,25 @@ const castSysEntities = (parseResult, spacyPretrainedEntities, ducklingDimension
 
     const regexEntities = _.map(parseResult.regex, (entity) => {
 
-        const tmpEntity = {
-            end: entity.end,
-            entity: 'sys.regex_' + entity.name,
-            extractor: 'regex',
-            start: entity.start,
-            value: { value: entity.resolvedRegex }
-        };
+        let tmpEntity = {};
+        if (entity.regexType === 'sysRegex') {
+            tmpEntity = {
+                end: entity.end,
+                entity: 'sys.regex_' + entity.name,
+                extractor: 'regex',
+                start: entity.start,
+                value: { value: entity.resolvedRegex }
+            };
+        }
+        else if (entity.regexType === 'entityRegex') {
+            tmpEntity = {
+                end: entity.end,
+                entity: entity.name,
+                extractor: 'regex',
+                start: entity.start,
+                value: { value: entity.entityValue }
+            };
+        }
         return tmpEntity;
     });
 
@@ -246,21 +258,63 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
                     const regexs = [];
                     agent.entities.forEach((ent) => {
 
-                        if (ent.regex && ent.regex !== ''){
-                            regexs.push({ name:ent.entityName,pattern:ent.regex });
+                        if (ent.regex && ent.regex !== '' && ent.type !== 'regex') {
+                            regexs.push({ name: ent.entityName, pattern: ent.regex, entityType: ent.type });
                         }
+                        if (ent.type === 'regex') {
+
+                            regexs.push({ name: ent.entityName, examples: ent.examples, entityType: ent.type });
+
+                        }
+
                     });
                     const results = [];
-                    regexs.forEach( (regex) => {
+                    regexs.forEach((regex) => {
 
-                        const regexToTest = new RegExp(regex.pattern,'i');
-                        if (regexToTest.test(textToParse)){
-                            const resultParsed = regexToTest.exec(textToParse);
-                            const startIndex = textToParse.indexOf(resultParsed[0]);
-                            const endIndex = startIndex + resultParsed[0].length;
-                            const resultToSend = Object.assign(regex,{ resolvedRegex: resultParsed[0], start: startIndex, end: endIndex });
-                            results.push(resultToSend);
+                        if (regex.pattern) {
+                            const regexToTest = new RegExp(regex.pattern, 'i');
+                            if (regexToTest.test(textToParse)) {
+                                const resultParsed = regexToTest.exec(textToParse);
+                                const startIndex = textToParse.indexOf(resultParsed[0]);
+                                const endIndex = startIndex + resultParsed[0].length;
+                                const resultToSend = Object.assign(regex, { resolvedRegex: resultParsed[0], start: startIndex, end: endIndex, regexType: 'sysRegex' });
+                                results.push(_.cloneDeep(resultToSend));
+                            }
                         }
+                        if (regex.entityType === 'regex') {
+                            regex.examples.forEach((regexExample) => {
+
+                                const entityValue = regexExample.value;
+                                if (regexExample.synonyms.indexOf(entityValue) < 0) {
+                                    regexExample.synonyms.push(entityValue);
+                                }
+                                const foundRegex = [];
+                                regexExample.synonyms.forEach((syn) => {
+
+                                    let regexToTest = null; // re intialize the regex as it has been defined globally
+                                    let match;
+                                    regexToTest = new RegExp(syn, 'ig');
+
+                                    if (match = regexToTest.exec(textToParse)) {
+
+                                        while (match) {
+                                            if (foundRegex.indexOf(match) < 0) {
+                                                const startIndex = textToParse.indexOf(match[0]);
+                                                const endIndex = startIndex + match[0].length;
+                                                const resultToSend = Object.assign(regex, { resolvedRegex: match[0], entityValue, start: startIndex, end: endIndex, regexType: 'entityRegex' });
+                                                results.push(_.cloneDeep(resultToSend));
+                                                foundRegex.push(match[0]);
+                                                match = regexToTest.exec(textToParse);
+
+                                            }
+                                        }
+                                    }
+
+                                });
+                            });
+                        }
+
+
                     });
                     return callback(null, results);
                 }
@@ -271,7 +325,6 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
         if (err) {
             return cb(err, null);
         }
-
         const parsedDate = new Date();
 
         result = castSysEntities(result, spacyPretrainedEntities, ducklingDimension);

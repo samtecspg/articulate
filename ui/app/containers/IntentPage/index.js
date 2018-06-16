@@ -530,6 +530,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                       setWindowSelection={this.props.setWindowSelection}
                       onTagEntity={this.handleOnTagEntity}
                       agentEntities={agentEntities}
+                      slots={Array.isArray(this.props.scenarioData.slots) ? this.props.scenarioData.slots : []}
                     />
                   </Table>
                 </TableContainer> :

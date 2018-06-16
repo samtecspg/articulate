@@ -18,6 +18,7 @@ const initialState = Immutable({
   displayColorPicker: false,
   entityData: {
     agent: null,
+    type: 'learned',
     entityName: '',
     uiColor: '#e91e63',
     examples: [],

@@ -323,6 +323,7 @@ class AgentValidate {
                     entities: Joi.array().items({
                         entityName: EntitySchema.entityName.required(),
                         uiColor: EntitySchema.uiColor,
+                        type: EntitySchema.type.allow('').allow(null).valid('learned','regex').optional().default('learned').error(new Error('Please provide valid entity type among learned and regex')),
                         regex: EntitySchema.regex.allow('').allow(null),
                         examples: Joi.array().items({
                             value: ExampleSchema.value.required(),

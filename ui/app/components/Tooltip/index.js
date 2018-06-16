@@ -10,6 +10,9 @@ class Tooltip extends Component {
   componentWillUnmount() {
     $('.tooltipped').tooltip('remove');
   }
+  componentDidUpdate() {
+    $('.tooltipped').tooltip()
+  }
 
   render() {
     const {
@@ -29,6 +32,7 @@ class Tooltip extends Component {
       'onClick': onClick,
       className: cx(children.props.className, 'tooltipped'),
     });
+    
   }
 }
 

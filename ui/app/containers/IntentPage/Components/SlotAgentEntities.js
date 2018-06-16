@@ -20,7 +20,7 @@ export function SlotAgentEntities(props) {
           href={'#'}
           onClick={props.onChangeAgent.bind(null, props.slot.slotName, agentEntity.entityName)}
           key={agentEntityIndex}
-        ><span style={{ color: entityColor }}>{agentEntity.entityName}</span>
+        ><span style={{ color: entityColor }}>{agentEntity.entityName} {agentEntity.type === 'regex' ? '(Regex)' : ''}  </span>
         </NavItem>
       );
     });
@@ -49,8 +49,11 @@ export function SlotAgentEntities(props) {
             style={{ fontWeight: 300, color: '#9e9e9e' }}
             id={`slotEntityDropdown_${props.index}`}
           >
-            {props.slot.entity ?
-              <span style={{ color: props.agentEntity.uiColor }}>{props.agentEntity.entityName}</span> :
+            { props.slot.entity ?
+              props.agentEntity.type === 'regex' ?
+              <span style={{ color: props.agentEntity.uiColor }}>{props.agentEntity.entityName} (Regex) </span> :
+                <span style={{ color: props.agentEntity.uiColor }}>{props.agentEntity.entityName}</span>
+              :
               <FormattedMessage {...messages.slotEntityPlaceholder} />}
           </span>}
         options={{

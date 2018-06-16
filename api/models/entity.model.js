@@ -11,7 +11,8 @@ class EntityModel {
             entityName: Joi.string().trim(),
             uiColor: Joi.string().trim(),
             examples: Joi.array().items(ExampleModel.schema),
-            regex : Joi.string().trim()
+            regex : Joi.string().trim(),
+            type: Joi.string().trim()
         };
     };
 }
