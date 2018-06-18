@@ -29,9 +29,9 @@ To get started
 
 2. **Downloading** - Download the current release from this page: [https://github.com/samtecspg/articulate/releases/latest](https://github.com/samtecspg/articulate/releases/latest)
 
-1. **Extracting** - Unzip and get a terminal or command prompt in the new  directory
+3. **Extracting** - Unzip and get a terminal or command prompt in the new  directory
 
-1. **Running** - run `docker-compose up`
+4. **Running** - run `docker-compose up`
 
 > There are two important notes here:
 > - `sudo` may be required depending on your platform and how you have Docker installed.
@@ -39,6 +39,6 @@ To get started
 > 
 > `PUBLIC_IP=xxx.xxx.xxx.xxx docker-compose up`
 
-1. **Accessing** - point your web browser at [http://localhost:3500](http://localhost:3500) and enjoy Articulate. If you're running on a VM replase `localhost` with you public IP.
+5. **Accessing** - point your web browser at [http://localhost:3500](http://localhost:3500) and enjoy Articulate. If you're running on a VM replase `localhost` with you public IP.
 
 To explore the API you can go to [http://localhost:7500/documentation](http://localhost:7500/documentation)
