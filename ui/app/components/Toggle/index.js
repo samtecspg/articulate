@@ -1,17 +1,28 @@
 import React, { PropTypes } from 'react';
+import propTypes from 'material-ui/utils/propTypes';
 
 export function Toggle(props) { // eslint-disable-line react/prefer-stateless-function
+  const style = {};
+  if (props.right){
+    style.float = 'right';
+  }
+  if (props.inline){
+    style.display = 'inline';
+  }
   return (
-    <div className="switch" style={props.right ? { float: 'right' } : {}}>
+    <div className="switch" style={style}>
       <label>
         {
+          (
+          props.strongLabel ?
           <strong>
             {props.label ? props.label : null}:
           </strong>
+          :
+          props.label ? props.label + ":" : null)
         }
-        <input type="checkbox" onChange={props.onChange} checked={props.checked ? true : false} />
+        <input type="checkbox" disabled={props.disabled} onChange={props.onChange} checked={props.checked ? true : false} />
         <span className="lever"></span>
-        Enable
       </label>
     </div>
   );
@@ -20,8 +31,15 @@ export function Toggle(props) { // eslint-disable-line react/prefer-stateless-fu
 Toggle.propTypes = {
   label: PropTypes.string,
   right: PropTypes.bool,
+  inline: PropTypes.bool,
   onChange: PropTypes.func,
-  checked: PropTypes.bool
+  checked: PropTypes.bool,
+  strongLabel: PropTypes.bool
 };
+
+Toggle.defaultProps = {
+  strongLabel: true,
+  disabled: false
+}
 
 export default Toggle;

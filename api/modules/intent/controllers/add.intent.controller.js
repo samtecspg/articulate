@@ -2,21 +2,19 @@
 const _ = require('lodash');
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const IntentTools = require('../tools');
-const DomainTools = require('../../domain/tools');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
     let intentId = null;
-    let agent = null;
     let agentId = null;
     let domainId = null;
     let intent = request.payload;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.series({
         fathersCheck: (cb) => {
@@ -36,22 +34,6 @@ module.exports = (request, reply) => {
                         }
                         const error = Boom.badRequest(`The agent ${intent.agent} doesn't exist`);
                         return callback(error, null);
-                    });
-                },
-                (callback) => {
-
-                    server.inject(`/agent/${agentId}`, (res) => {
-
-                        if (res.statusCode !== 200) {
-                            if (res.statusCode === 400) {
-                                const errorNotFound = Boom.notFound(res.result.message);
-                                return callback(errorNotFound);
-                            }
-                            const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
-                            return callback(error, null);
-                        }
-                        agent = res.result;
-                        return callback(null);
                     });
                 },
                 (callback) => {
@@ -132,6 +114,10 @@ module.exports = (request, reply) => {
 
                 Async.eachSeries(example.entities, (entity, nextEntity) => {
 
+                    //Only system entities have an extractor specified, so ignore sys entities
+                    if (entity.extractor){
+                        return nextEntity(null);
+                    }
                     redis.zadd(`entityIntents:${entity.entityId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
 
                         if (err) {
@@ -176,27 +162,26 @@ module.exports = (request, reply) => {
 
         const resultIntent = result.intent;
 
-        Async.series([
-            Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, resultIntent, agentId, domainId, null),
-            (cb) => {
-
-                Async.parallel([
-                    Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
-                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
-                ], (err) => {
-
-                    if (err) {
-                        return cb(err);
-                    }
-                    return cb(null);
-                });
-            }
-        ], (err) => {
+        IntentTools.updateEntitiesDomainTool(server, redis, resultIntent, agentId, domainId, null, (err) => {
 
             if (err) {
                 return reply(err);
             }
-            return reply(resultIntent);
+            redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred updating the agent status.');
+                    return reply(error);
+                }
+                redis.hmset(`domain:${domainId}`, { status: Status.outOfDate }, (err) => {
+
+                    if (err){
+                        const error = Boom.badImplementation('An error occurred updating the domain status.');
+                        return reply(error);
+                    }
+                    return reply(resultIntent);
+                });
+            });
         });
     });
 };

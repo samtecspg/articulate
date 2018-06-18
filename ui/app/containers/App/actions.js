@@ -47,6 +47,8 @@ import {
   LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_ERROR,
   LOAD_CURRENT_AGENT_SUCCESS,
+  LOAD_CURRENT_AGENT_STATUS,
+  LOAD_CURRENT_AGENT_STATUS_SUCCESS,
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
@@ -60,6 +62,7 @@ import {
   RESET_SESSION_ERROR,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
+  RESET_MISSING_API,
   SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
   UPDATE_AGENT,
@@ -78,6 +81,17 @@ import {
   UPDATE_SCENARIO_SUCCESS,
   UPDATE_WEBHOOK_ERROR,
   MISSING_AGENT,
+  CHECK_API,
+  TRAIN_AGENT,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
+  LOAD_SETTINGS,
+  LOAD_SETTINGS_ERROR,
+  LOAD_SETTINGS_SUCCESS,
+  CHANGE_SETTINGS_DATA,
+  RESET_SETTINGS_DATA,
+  REMOVE_SETTINGS_FALLBACK,
 } from './constants';
 
 export function loadAgents() {
@@ -94,13 +108,6 @@ export function agentsLoaded(data) {
   };
 }
 
-/*export function selectCurrentAgent(agent) {
-  return {
-    type: SELECT_CURRENT_AGENT,
-    agent,
-  };
-}*/
-
 export function loadCurrentAgentError(error) {
   return {
     type: LOAD_CURRENT_AGENT_ERROR,
@@ -115,9 +122,25 @@ export function loadCurrentAgentSuccess(agent) {
   };
 }
 
+export function loadCurrentAgentStatusSuccess(agentStatus) {
+  return {
+    type: LOAD_CURRENT_AGENT_STATUS_SUCCESS,
+    agentStatus,
+  };
+}
+
+
 export function loadCurrentAgent(id) {
   return {
     type: LOAD_CURRENT_AGENT,
+    apiCall: true,
+    id,
+  };
+}
+
+export function loadCurrentAgentStatus(id) {
+  return {
+    type: LOAD_CURRENT_AGENT_STATUS,
     apiCall: true,
     id,
   };
@@ -136,11 +159,13 @@ export function agentsLoadingError(error) {
   };
 }
 
-export function loadAgentDomains(agentId) {
+export function loadAgentDomains(agentId, page, filter) {
   return {
     type: LOAD_AGENT_DOMAINS,
     apiCall: true,
     agentId,
+    page,
+    filter,
   };
 }
 
@@ -164,11 +189,14 @@ export function agentDomainsLoadingError(error) {
   };
 }
 
-export function loadAgentEntities(agentId) {
+export function loadAgentEntities(agentId, page, filter, forIntentEdit) {
   return {
     type: LOAD_AGENT_ENTITIES,
     apiCall: true,
     agentId,
+    page,
+    filter,
+    forIntentEdit,
   };
 }
 
@@ -357,11 +385,13 @@ export function resetSessionError() {
   };
 }
 
-export function loadDomainIntents(domainId) {
+export function loadDomainIntents(domainId, page, filter) {
   return {
     type: LOAD_DOMAINS_INTENTS,
     apiCall: true,
     domainId,
+    page,
+    filter,
   };
 }
 
@@ -406,9 +436,10 @@ export function deleteDomainSuccess() {
   };
 }
 
-export function deleteDomainError() {
+export function deleteDomainError(error) {
   return {
     type: DELETE_DOMAIN_ERROR,
+    error,
   };
 }
 
@@ -428,9 +459,10 @@ export function deleteIntentSuccess() {
   };
 }
 
-export function deleteIntentError() {
+export function deleteIntentError(error) {
   return {
     type: DELETE_INTENT_ERROR,
+    error,
   };
 }
 
@@ -448,9 +480,10 @@ export function deleteAgentSuccess() {
   };
 }
 
-export function deleteAgentError() {
+export function deleteAgentError(error) {
   return {
     type: DELETE_AGENT_ERROR,
+    error,
   };
 }
 
@@ -468,9 +501,10 @@ export function deleteEntitySuccess() {
   };
 }
 
-export function deleteEntityError() {
+export function deleteEntityError(error) {
   return {
     type: DELETE_ENTITY_ERROR,
+    error,
   };
 };
 
@@ -524,6 +558,27 @@ export function updateDomainSuccess(domain) {
 export function updateDomain() {
   return {
     type: UPDATE_DOMAIN,
+    apiCall: true,
+  };
+}
+
+export function updateSettingsError(error) {
+  return {
+    type: UPDATE_SETTINGS_ERROR,
+    error,
+  };
+}
+
+export function updateSettingsSuccess(settings) {
+  return {
+    type: UPDATE_SETTINGS_SUCCESS,
+    settings,
+  };
+}
+
+export function updateSettings() {
+  return {
+    type: UPDATE_SETTINGS,
     apiCall: true,
   };
 }
@@ -582,11 +637,13 @@ export function updateEntity() {
   };
 }
 
-export function loadAgentIntents(agentId) {
+export function loadAgentIntents(agentId, page, filter) {
   return {
     type: LOAD_AGENT_INTENTS,
     apiCall: true,
     agentId,
+    page,
+    filter,
   };
 }
 
@@ -623,5 +680,75 @@ export function loadEntityIntentsError(error) {
   return {
     type: LOAD_ENTITY_INTENTS_ERROR,
     error,
+  };
+}
+
+export function checkAPI(refURL) {
+  return {
+    type: CHECK_API,
+    apiCall: true,
+    refURL,
+  };
+}
+
+export function resetMissingAPI() {
+  return {
+    type: RESET_MISSING_API,
+  };
+}
+
+export function trainAgent(agentId) {
+  return {
+    type: TRAIN_AGENT,
+    apiCall: true,
+    agentId,
+  }
+}
+
+export function traingAgentError(error){
+  return {
+    type: TRAIN_AGENT_ERROR,
+    error
+  }
+}
+
+export function loadSettingsError(error) {
+  return {
+    type: LOAD_SETTINGS_ERROR,
+    error,
+  };
+}
+
+export function loadSettingsSuccess(settings) {
+  return {
+    type: LOAD_SETTINGS_SUCCESS,
+    settings,
+  };
+}
+
+export function loadSettings() {
+  return {
+    type: LOAD_SETTINGS,
+    apiCall: true,
+  };
+}
+
+export function changeSettingsData(payload) {
+  return {
+    type: CHANGE_SETTINGS_DATA,
+    payload,
+  };
+}
+
+export function resetSettingsData() {
+  return {
+    type: RESET_SETTINGS_DATA,
+  };
+}
+
+export function removeSettingsFallback(index) {
+  return {
+    type: REMOVE_SETTINGS_FALLBACK,
+    index,
   };
 }

@@ -2,8 +2,10 @@
 const Async = require('async');
 const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
+
 
 const updateDataFunction = (redis, domainId, currentDomain, updateData, cb) => {
 
@@ -51,25 +53,26 @@ module.exports = (request, reply) => {
         },
         (currentDomain, cb) => {
 
+            redis.zscore('agents', currentDomain.agent, (err, id) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred checking if the agent exists.');
+                    return cb(error);
+                }
+                if (id){
+                    agentId = id;
+                    return cb(null, currentDomain);
+                }
+                const error = Boom.badRequest(`The agent ${currentDomain.agent} doesn't exist`);
+                return cb(error, null);
+            });
+        },
+        (currentDomain, cb) => {
+
             const requiresNameChanges = updateData.domainName && updateData.domainName !== currentDomain.domainName;
+            requiresRetrain = updateData.extraTrainingData !== undefined && updateData.extraTrainingData !== currentDomain.extraTrainingData;
             if (requiresNameChanges){
                 Async.waterfall([
-                    (callback) => {
-
-                        redis.zscore('agents', currentDomain.agent, (err, id) => {
-
-                            if (err){
-                                const error = Boom.badImplementation('An error occurred checking if the agent exists.');
-                                return callback(error);
-                            }
-                            if (id){
-                                agentId = id;
-                                return callback(null);
-                            }
-                            const error = Boom.badRequest(`The agent ${currentDomain.agent} doesn't exist`);
-                            return callback(error, null);
-                        });
-                    },
                     (callback) => {
 
                         redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, updateData.domainName, (err, addResponse) => {
@@ -96,7 +99,7 @@ module.exports = (request, reply) => {
                                         const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the domain ${currentDomain.domainName}`);
                                         return callbackGetIntents(error, null);
                                     }
-                                    return callbackGetIntents(null, res.result);
+                                    return callbackGetIntents(null, res.result.intents);
                                 });
                             },
                             (intents, callbackUpdateIntentAndScenario) => {
@@ -202,13 +205,20 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         if (requiresRetrain){
-            server.inject(`/domain/${domainId}/train`, (res) => {
+            redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
 
-                if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error occurred retraining the domain ${result.domain} after the update`);
-                    reply(error);
+                if (err){
+                    const error = Boom.badImplementation('An error occurred updating the agent status.');
+                    return reply(error);
                 }
-                reply(res.result);
+                redis.hmset(`domain:${domainId}`, { status: Status.outOfDate }, (err) => {
+
+                    if (err){
+                        const error = Boom.badImplementation('An error occurred updating the domain status.');
+                        return reply(error);
+                    }
+                    reply(Cast(result, 'domain'));
+                });
             });
         }
         else {

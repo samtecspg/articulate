@@ -5,11 +5,11 @@ class SlotModel {
     static get schema() {
 
         return {
-            slotName: Joi.string(),
-            entity: Joi.string(),
+            slotName: Joi.string().trim(),
+            entity: Joi.string().trim(),
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
-            textPrompts: Joi.array().items(Joi.string())
+            textPrompts: Joi.array().items(Joi.string().trim())
         };
     };
 }

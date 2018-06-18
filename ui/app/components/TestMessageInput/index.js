@@ -11,26 +11,26 @@ export function TestMessageInput(props) {
   return (
     <div id="form-section" style={{marginBottom: '60px'}}>
       <Row>
-        <div className="col input-field s8">
+        <div className="col input-field s10">
           <TextInput
             id={props.id}
             style={props.style}
             placeholder={props.placeholder}
             value={props.value}
             onChange={props.onChange}
-            onKeyPress={props.onKeyPress}
+            onKeyDown={props.onKeyDown}
             required={props.required}
             type="text"
             className={props.className ? props.className + ' validate' : 'validate'}
             disabled={props.disabled}
           />
         </div>
-        <div className="col input-field s2" style={{paddingRight: '0px'}}>
+        <div className="col input-field s1" style={{paddingRight: '0px'}}>
           <a onClick={props.onSpeakClick}>
             <Icon small className="mic-icon">mic</Icon>
           </a>
         </div>
-        <div className="col input-field s2">
+        <div className="col input-field s1">
           <Dropdown
               element={<Icon>more_vert</Icon>}
               menu={props.menu}
@@ -50,7 +50,7 @@ TestMessageInput.propTypes = {
   placeholder: React.PropTypes.string,
   value: React.PropTypes.string,
   onChange: React.PropTypes.func,
-  onKeyPress: React.PropTypes.func,
+  onKeyDown: React.PropTypes.func,
   onSpeakClick: React.PropTypes.func,
   required: React.PropTypes.bool,
   style: React.PropTypes.object,

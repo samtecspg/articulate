@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
@@ -8,6 +9,8 @@ module.exports = (request, reply) => {
     let domain;
     const server = request.server;
     const redis = server.app.redis;
+    let requiresRetrain = false;
+    let domainAgentId = null;
 
     Async.waterfall([
         (cb) => {
@@ -37,7 +40,8 @@ module.exports = (request, reply) => {
                             const error = Boom.create(res.statusCode, `An error occurred getting the intents to delete of the domain ${domainId}`);
                             return callbackGetIntents(error, null);
                         }
-                        return callbackGetIntents(null, res.result);
+                        requiresRetrain = res.result.intents.length > 0;
+                        return callbackGetIntents(null, res.result.intents);
                     });
                 },
                 (intents, callbackDeleteIntentAndScenario) => {
@@ -190,6 +194,7 @@ module.exports = (request, reply) => {
                                     const error = Boom.badImplementation( `An error occurred retrieving the id of the agent ${domain.agent}`);
                                     return callbackGetAgent(error);
                                 }
+                                domainAgentId = agentId;
                                 return callbackGetAgent(null, agentId);
                             });
                         },
@@ -225,7 +230,18 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        //retrain domain recognizer
-        return reply({ message: 'successful operation' }).code(200);
+        if (requiresRetrain){
+            redis.hmset(`agent:${domainAgentId}`, { status: Status.outOfDate }, (err) => {
+
+                if (err){
+                    const error = Boom.badImplementation('An error occurred updating the agent status.');
+                    return reply(error);
+                }
+                return reply({ message: 'successful operation' }).code(200);
+            });
+        }
+        else {
+            return reply({ message: 'successful operation' }).code(200);
+        }
     });
 };

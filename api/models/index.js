@@ -11,5 +11,6 @@ module.exports = {
     IntentEntity: require('./entity.intent.model'),
     Scenario: require('./scenario.model'),
     Slot: require('./slot.scenario.model'),
-    Webhook: require('./webhook.model')
+    Webhook: require('./webhook.model'),
+    PostFormat: require('./postFormat.model')
 };

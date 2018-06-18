@@ -9,10 +9,10 @@ module.exports = (request, reply) => {
     let agent = null;
     let agentId = null;
     let domain = null;
+    let rasa = null;
     const domainId = request.params.id;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.waterfall([
         (callback) => {
@@ -65,10 +65,23 @@ module.exports = (request, reply) => {
         },
         (callback) => {
 
-            Async.parallel([
-                Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, domain.agent, domain.domain, domainId),
-                Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, domain.agent, agentId)
-            ], (err) => {
+            server.inject(`/agent/${agentId}/settings/rasaURL`, (res) => {
+
+                if (res.statusCode !== 200) {
+                    if (res.statusCode === 404) {
+                        const errorNotFound = Boom.notFound('The setting rasaURL wasn\'t found');
+                        return callback(errorNotFound);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting rasaURL');
+                    return callback(error, null);
+                }
+                rasa = res.result;
+                return callback(null);
+            });
+        },
+        (callback) => {
+
+            DomainTools.retrainModelTool(server, rasa, agent.language, domain.agent, agent.id, domain.domainName, domainId, domain.extraTrainingData, (err) => {
 
                 if (err) {
                     return callback(err);

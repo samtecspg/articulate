@@ -3,6 +3,7 @@
   "timezone": "UTC",
   "agentName": "71999911-cb70-442c-8864-bc1d4e6a306e",
   "useWebhook": true,
+  "usePostFormat": false,
   "description": "This is test agent",
   "fallbackResponses": [
     "Sorry, can you rephrase that?",
@@ -19,6 +20,8 @@
     {
       "uiColor": "#e91e63",
       "entityName": "Test Entity",
+      "type": "learned",
+      "regex": null,
       "examples": [
         {
           "value": "car",
@@ -51,15 +54,15 @@
   ],
   "domains": [
     {
-      "model": "just_er_c67520da-cb61-d195-ff78-0fbd4aaddaaf",
       "enabled": true,
       "domainName": "Test Domain",
-      "lastTraining": "Fri Apr 27 2018 12:33:10 GMT-0600 (CST)",
+      "model": "Test Domain_a24ef9cb-88f6-3da5-a0df-bdec39bd3069",
       "intentThreshold": 0.7,
       "intents": [
         {
           "intentName": "Test Intent",
           "useWebhook": true,
+          "usePostFormat": false,
           "examples": [
             {
               "userSays": "Show me my phone location",
@@ -120,7 +123,7 @@
               "userSays": "Locate my car",
               "entities": [
                 {
-                  "end": 13,
+                  "end": 12,
                   "start": 10,
                   "value": "car",
                   "entity": "Test Entity"
@@ -137,7 +140,7 @@
                 "slotName": "searchedObject",
                 "isRequired": true,
                 "textPrompts": [
-                  "What are you for?"
+                  "What are you looking for?"
                 ]
               }
             ],
@@ -155,6 +158,7 @@
         {
           "intentName": "Simple Test Intent",
           "useWebhook": true,
+          "usePostFormat": false,
           "examples": [
             {
               "userSays": "What can you find?",
@@ -180,5 +184,97 @@
         }
       ]
     }
-  ]
+  ],
+  "settings": {
+    "domainClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "intent_featurizer_spacy"
+      },
+      {
+        "name": "intent_classifier_sklearn"
+      }
+    ],
+    "intentClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "intent_featurizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "intent_classifier_sklearn"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "entityClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "rasaURL": "http://localhost:5000",
+    "ducklingURL": "http://localhost:8000",
+    "ducklingDimension": [
+      "amount-of-money",
+      "distance",
+      "duration",
+      "email",
+      "number",
+      "ordinal",
+      "phone-number",
+      "quantity",
+      "temperature",
+      "time",
+      "url",
+      "volume"
+    ],
+    "spacyPretrainedEntities": [
+      "PERSON",
+      "NORP",
+      "FAC",
+      "ORG",
+      "GPE",
+      "LOC",
+      "PRODUCT",
+      "EVENT",
+      "WORK_OF_ART",
+      "LAW",
+      "LANGUAGE",
+      "DATE",
+      "TIME",
+      "PERCENT",
+      "MONEY",
+      "QUANTITY",
+      "ORDINAL",
+      "CARDINAL"
+    ]
+  }
 }

@@ -4,10 +4,20 @@ import {
   Col,
   Input,
   Row,
+  Icon,
 } from 'react-materialize';
 
 import brace from 'brace';
 import AceEditor from 'react-ace';
+
+import {
+  Accordion,
+  AccordionItem,
+  AccordionItemTitle,
+  AccordionItemBody,
+} from 'react-accessible-accordion';
+
+import 'react-accessible-accordion/dist/fancy-example.css';
 
 import 'brace/mode/xml';
 import 'brace/mode/json';
@@ -19,10 +29,8 @@ import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton';
 import Content from '../../components/Content';
 import ContentHeader from '../../components/ContentHeader';
-import ContentSubHeader from '../../components/ContentSubHeader';
 import Form from '../../components/Form';
 import ConfirmationModal from '../../components/ConfirmationModal';
-import InputLabel from '../../components/InputLabel';
 import Typeahead from '../../components/Typeahead';
 
 import FormTextInput from '../../components/FormTextInput';
@@ -30,7 +38,8 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import SliderInput from '../../components/SliderInput';
 import Toggle from '../../components/Toggle';
-
+import Tooltip from '../../components/Tooltip';
+import InputLabel from '../../components/InputLabel';
 import Table from '../../components/Table';
 import TableContainer from '../../components/TableContainer';
 
@@ -46,6 +55,7 @@ import {
   makeSelectInWizard,
   makeSelectLoading,
   makeSelectSuccess,
+  makeSelectSettingsData,
 } from '../App/selectors';
 import {
   changeAgentData,
@@ -54,29 +64,20 @@ import {
   resetAgentData,
   removeAgentFallback,
   loadWebhook,
+  changePostFormatData,
+  loadPostFormat,
+  changeAgentSettingsData
 } from './actions';
 
 import messages from './messages';
 
-import languages from 'languages';
-import timezones from 'timezones';
-
-import { makeSelectAgentData, makeSelectTouched, makeSelectWebhookData } from './selectors';
-
-const sampleData = [
-  {
-    value: 'smallTalk',
-    text: 'Small Talk Agent',
-  },
-  {
-    value: 'customerService',
-    text: 'Customer Service Agent',
-  },
-  {
-    value: 'bookings',
-    text: 'Bookings Agent',
-  },
-];
+import {
+  makeSelectAgentData,
+  makeSelectTouched,
+  makeSelectWebhookData,
+  makeSelectPostFormatData,
+  makeSelectAgentSettingsData
+} from './selectors';
 
 const verbs = [
   {
@@ -114,15 +115,31 @@ const payloadTypes = [
     value: 'XML',
     text: 'XML',
   },
+  {
+    value: 'URL Encoded',
+    text: 'URL Encoded',
+  },
 ];
 
-const returnFormattedOptions = (options) => options.map((option, index) => (
-  <option key={index} value={option.value}>
-    {option.text}
-  </option>
-));
+const returnFormattedOptions = (options) => {
+  try {
+    return options.map((option, index) => (
+      <option key={index} value={option.value}>
+        {option.text}
+      </option>
+    ));
+  }
+  catch (e){
+    return [
+      <option key={0} value={''}>
+        {messages.errorParsingOptions.defaultMessage}
+      </option>
+    ]
+  }
+};
 
 export class AgentPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+
   constructor() {
     super();
     this.setEditMode = this.setEditMode.bind(this);
@@ -140,14 +157,9 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     nextRoute: null,
   };
 
-  componentWillMount() {
-    sampleData.unshift({ value: 'none', text: messages.sampleDataPlaceholder.defaultMessage, disabled: 'disabled' });
-  }
-
   componentDidMount() {
     this.setEditMode(this.props.route.name === 'agentEdit');
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
-
     document.getElementById('agentName').focus();
   }
 
@@ -161,7 +173,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
       });
       this.props.onSuccess.bind(null, this.props.inWizard)();
     }
-
     if (this.props.error) {
       Alert.error(this.props.error.message, {
         position: 'bottom'
@@ -172,10 +183,20 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   setEditMode(isEditMode) {
     if (isEditMode) {
       this.setState({ editMode: true });
-      this.props.onEditMode(this.props.params.id);
+      this.props.onEditMode(this.props);
     } else {
       this.setState({ editMode: false });
       this.props.resetForm();
+      this.props.onChangeAgentData('language', { target: { value: this.props.globalSettings.defaultAgentLanguage }});
+      this.props.onChangeAgentData('timezone', { target: { value: this.props.globalSettings.defaultTimezone }});
+      this.props.onChangeAgentData('fallbackResponses', { target: { value: this.props.globalSettings.defaultAgentFallbackResponses }});
+      this.props.onChangeAgentSettingsData({ initialLoad: true, field: 'rasaURL',  value: this.props.globalSettings.rasaURL });
+      this.props.onChangeAgentSettingsData({ initialLoad: true, field: 'domainClassifierPipeline', value: this.props.globalSettings.domainClassifierPipeline });
+      this.props.onChangeAgentSettingsData({ initialLoad: true, field: 'intentClassifierPipeline', value: this.props.globalSettings.intentClassifierPipeline });
+      this.props.onChangeAgentSettingsData({ initialLoad: true, field: 'entityClassifierPipeline', value: this.props.globalSettings.entityClassifierPipeline });
+      this.props.onChangeAgentSettingsData({ initialLoad: true, field: 'spacyPretrainedEntities', value: this.props.globalSettings.spacyPretrainedEntities });
+      this.props.onChangeAgentSettingsData({ initialLoad: true, field: 'ducklingURL', value: this.props.globalSettings.ducklingURL });
+      this.props.onChangeAgentSettingsData({ initialLoad: true, field: 'ducklingDimension', value: this.props.globalSettings.ducklingDimension });
     }
   }
 
@@ -187,41 +208,107 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
         position: 'bottom'
       });
     }
+    else if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
+      this.props.onChangePostFormatData("postFormatPayloadDefault", messages.defaultPostFormat);
+      Alert.warning(messages.missingPostFormatPayload.defaultMessage, {
+        position: 'bottom'
+      });
+    }
     else {
-      if (timezones.indexOf(this.props.agent.timezone) === -1){
+      if (this.props.globalSettings.timezones.indexOf(this.props.agent.timezone) === -1) {
         Alert.error(messages.invalidTimezone.defaultMessage, {
           position: 'bottom'
         });
       }
       else {
-        if (this.state.editMode) {
-          this.props.onUpdate();
-        } else {
-          this.props.onCreate();
+        if(Array.isArray(this.props.agentSettings.domainClassifierPipeline)){
+          if(Array.isArray(this.props.agentSettings.intentClassifierPipeline)){
+            if(Array.isArray(this.props.agentSettings.entityClassifierPipeline)){
+              if(Array.isArray(this.props.agentSettings.spacyPretrainedEntities)){
+                if(Array.isArray(this.props.agentSettings.ducklingDimension)){
+                  if(this.props.agent.agentName.length > 0){
+                    if(this.props.agent.description.length > 0){
+                      if (this.state.editMode) {
+                        this.props.onUpdate();
+                      } else {
+                        this.props.onCreate();
+                      }
+                    }
+                    else {
+                      Alert.warning(messages.missingAgentDescription.defaultMessage, {
+                        position: 'bottom'
+                      });
+                    }
+                  }
+                  else {
+                    Alert.warning(messages.missingAgentName.defaultMessage, {
+                      position: 'bottom'
+                    });
+                  }
+                }
+                else {
+                  Alert.warning(messages.ducklingDimensionWarningMessage.defaultMessage, {
+                    position: 'bottom'
+                  });
+                }
+              }
+              else {
+                Alert.warning(messages.spacyEntitiesWarningMessage.defaultMessage, {
+                  position: 'bottom'
+                });
+              }
+            }
+            else {
+              Alert.warning(messages.entityClassifierPipelineWarningMessage.defaultMessage, {
+                position: 'bottom'
+              });
+            }
+          }
+          else {
+            Alert.warning(messages.intentClassifierPipelineWarningMessage.defaultMessage, {
+              position: 'bottom'
+            });
+          }
+        }
+        else {
+          Alert.warning(messages.domainClassifierPipelineWarningMessage.defaultMessage, {
+            position: 'bottom'
+          });
         }
       }
     }
   }
 
   onChangeInput(evt, field) {
-    let value;
-    if (evt) {
-      value = evt.target.value;
-    } else {
-      value = null;
+    if (['entityClassifierPipeline', 'intentClassifierPipeline', 'domainClassifierPipeline', 'spacyPretrainedEntities', 'ducklingDimension'].indexOf(field) > -1){
+      try {
+        const value = JSON.parse(evt); //Ace editor send the value directly to the method as an string
+        this.props.onChangeAgentSettingsData({ value, field });
+      } catch(e) {
+        const value = evt; //Given the parse of the json failed store the value in the state as a string
+        this.props.onChangeAgentSettingsData({ value, field });
+      }
     }
-    if (field === 'fallbackResponses') {
-      if (evt.charCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
-        if (field === 'fallbackResponses') {
-          this.lastAgentResponse.scrollIntoView(true);
+    else {
+      let value;
+      if (evt) {
+        value = evt.target.value;
+      } else {
+        value = null;
+      }
+      if (field === 'fallbackResponses') {
+        if (evt.keyCode === 13 && !_.isEmpty(value)) { // If user hits enter add response
+          if (field === 'fallbackResponses') {
+            this.lastAgentResponse.scrollIntoView(true);
+          }
+          this.props.onChangeAgentData(field, evt);
+          evt.target.value = null;
         }
-        this.props.onChangeAgentData(field, evt);
-        evt.target.value = null;
       }
     }
   }
 
-  routerWillLeave(route){
+  routerWillLeave(route) {
     if (!this.state.waitingForConfirm && this.props.touched && !this.state.clickedSave) {
       this.state.nextRoute = route;
       this.state.displayModal = true;
@@ -231,12 +318,12 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     }
   }
 
-  onLeave(){
+  onLeave() {
     this.props.resetForm();
     this.props.router.push(this.state.nextRoute.pathname);
   }
 
-  onDismiss(){
+  onDismiss() {
     this.setState({
       displayModal: false,
       waitingForConfirm: false,
@@ -244,7 +331,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
   }
 
   render() {
-    const { loading, error, success, agent, match, webhook } = this.props;
+    const { loading, error, success, agent, match, webhook, postFormat, globalSettings, agentSettings } = this.props;
     const agentProps = {
       loading,
       error,
@@ -254,9 +341,10 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
     };
 
     const breadcrumbs = [{ label: 'Agent' },];
-    if(this.state.editMode){
+
+    if (this.state.editMode) {
       breadcrumbs.push({ label: 'Edit' })
-    }else{
+    } else {
       breadcrumbs.push({ label: '+ Create' })
     }
 
@@ -276,14 +364,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
           <ContentHeader title={messages.createAgentTitle} subTitle={messages.createDescription} />
           <Form>
             <Row>
-              <Toggle
-                label={messages.useWebhook.defaultMessage}
-                right
-                onChange={this.props.onChangeAgentData.bind(null, 'useWebhook')}
-                checked={agent.useWebhook}
-              />
-            </Row>
-            <Row>
               <FormTextInput
                 id='agentName'
                 label={messages.agentName}
@@ -300,15 +380,6 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 onChange={this.props.onChangeAgentData.bind(null, 'description')}
                 value={agent.description}
               />
-              {/*<Input
-                s={12}
-                name="sampleData"
-                type="select"
-                label={messages.sampleData.defaultMessage}
-                onChange={this.props.onChangeAgentData.bind(null, 'sampleData')}
-              >
-                {returnFormattedOptions(sampleData)}
-              </Input>*/}
               <Input
                 s={6}
                 name="language"
@@ -317,34 +388,30 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 value={agent.language}
                 onChange={this.props.onChangeAgentData.bind(null, 'language')}
               >
-                {returnFormattedOptions(languages)}
+                {returnFormattedOptions(globalSettings.agentLanguages)}
               </Input>
-              {/*<Input
-                s={6}
-                name="timezone"
-                type="select"
-                label={messages.timezone.defaultMessage}
-                value={agent.timezone}
-                onChange={this.props.onChangeAgentData.bind(null, 'timezone')}
-              >
-                {returnFormattedOptions(timezones)}
-              </Input>*/}
               <Typeahead
-                id= 'timezone'
+                id='timezone'
                 name='timezone'
-			          maxResults='20'
+                maxSearchResults={10}
                 callback={this.props.onChangeAgentData}
                 label={messages.timezone.defaultMessage}
+                menuClassName={'timezones'}
+                dataSource={globalSettings.timezones}
                 value={agent.timezone}
                 s={6}
+                style={{
+                  marginTop: '23px'
+                }}
               />
             </Row>
           </Form>
 
           <Row>
-            <br/>
+            <br />
             <SliderInput
               label={messages.domainClassifierThreshold}
+              tooltip={messages.domainClassifierThresholdDescription.defaultMessage}
               id="domainClassifierThreshold"
               min="0"
               max="100"
@@ -353,14 +420,14 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             />
           </Row>
 
-          <Form style={{marginTop: '0px'}}>
+          <Form style={{ marginTop: '0px' }}>
             <Row>
-                <FormTextInput
-                  id='fallbacks'
-                  label={messages.agentFallbackTitle}
-                  placeholder={messages.fallbackInput.defaultMessage}
-                  onKeyPress={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
-                />
+              <FormTextInput
+                id='fallbacks'
+                label={messages.agentFallbackTitle}
+                placeholder={messages.fallbackInput.defaultMessage}
+                onKeyDown={(evt) => this.onChangeInput(evt, 'fallbackResponses')}
+              />
             </Row>
           </Form>
 
@@ -376,15 +443,200 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             : null
           }
 
-          <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el;}}>
+          <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.lastAgentResponse = el; }}>
           </div>
 
-          {
-            agent.useWebhook ? <ContentSubHeader title={messages.webhook} /> : null
-          }
+          <Form>
+            <Row>
+              <Accordion>
+                <AccordionItem>
+                  <AccordionItemTitle>
+                    {messages.rasaSettingsTitle.defaultMessage}
+                  </AccordionItemTitle>
+                  <AccordionItemBody>
+                    <p style={{marginLeft: '-10px'}}>{messages.rasaSettingsDescription.defaultMessage}</p>
+                    <Form>
+                      <Row>
+                        <FormTextInput
+                          id='rasaURL'
+                          label={messages.rasaURL}
+                          placeholder={messages.rasaURLPlaceholder.defaultMessage}
+                          value={agentSettings.rasaURL}
+                          onChange={(evt) => this.props.onChangeAgentSettingsData({ value: evt.target.value, field: 'rasaURL'})}
+                          required
+                        />
+                        <InputLabel tooltip={messages.domainClassifierPipelineTooltip.defaultMessage} text={messages.domainClassifierPipeline} />
+                        <AceEditor
+                          style={{marginBottom: '20px'}}
+                          width="100%"
+                          height="300px"
+                          mode="json"
+                          theme="terminal"
+                          name="domainClassifierPipeline"
+                          readOnly={false}
+                          onChange={(value) => this.onChangeInput(value, 'domainClassifierPipeline')}
+                          fontSize={14}
+                          showPrintMargin={true}
+                          showGutter={true}
+                          highlightActiveLine={true}
+                          value={typeof agentSettings.domainClassifierPipeline === 'string' ?
+                                  agentSettings.domainClassifierPipeline :
+                                  JSON.stringify(agentSettings.domainClassifierPipeline, null, 2)}
+                          setOptions={{
+                            useWorker: true,
+                            showLineNumbers: true,
+                            tabSize: 2,
+                          }} />
+                        <InputLabel tooltip={messages.intentClassifierPipelineTooltip.defaultMessage} text={messages.intentClassifierPipeline} />
+                        <AceEditor
+                          width="100%"
+                          height="300px"
+                          style={{marginBottom: '20px'}}
+                          mode="json"
+                          theme="terminal"
+                          name="intentClassifierPipeline"
+                          readOnly={false}
+                          onChange={(value) => this.onChangeInput(value, 'intentClassifierPipeline')}
+                          fontSize={14}
+                          showPrintMargin={true}
+                          showGutter={true}
+                          highlightActiveLine={true}
+                          value={typeof agentSettings.intentClassifierPipeline === 'string' ?
+                                  agentSettings.intentClassifierPipeline :
+                                  JSON.stringify(agentSettings.intentClassifierPipeline, null, 2)}
+                          setOptions={{
+                            useWorker: true,
+                            showLineNumbers: true,
+                            tabSize: 2,
+                          }} />
+                          <InputLabel tooltip={messages.entityClassifierPipelineTooltip.defaultMessage} text={messages.entityClassifierPipeline} />
+                          <AceEditor
+                            width="100%"
+                            height="300px"
+                            style={{marginBottom: '20px'}}
+                            mode="json"
+                            theme="terminal"
+                            name="entityClassifierPipeline"
+                            readOnly={false}
+                            onChange={(value) => this.onChangeInput(value, 'entityClassifierPipeline')}
+                            fontSize={14}
+                            showPrintMargin={true}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            value={typeof agentSettings.entityClassifierPipeline === 'string' ?
+                                    agentSettings.entityClassifierPipeline :
+                                    JSON.stringify(agentSettings.entityClassifierPipeline, null, 2)}
+                            setOptions={{
+                              useWorker: true,
+                              showLineNumbers: true,
+                              tabSize: 2,
+                            }} />
+                            <InputLabel tooltip={messages.spacyEntitiesTooltip.defaultMessage} text={messages.spacyEntities} />
+                            <AceEditor
+                              width="100%"
+                              height="300px"
+                              style={{marginBottom: '20px'}}
+                              mode="json"
+                              theme="terminal"
+                              name="spacyPretrainedEntities"
+                              readOnly={false}
+                              onChange={(value) => this.onChangeInput(value, 'spacyPretrainedEntities')}
+                              fontSize={14}
+                              showPrintMargin={true}
+                              showGutter={true}
+                              highlightActiveLine={true}
+                              value={typeof agentSettings.spacyPretrainedEntities === 'string' ?
+                                      agentSettings.spacyPretrainedEntities :
+                                      JSON.stringify(agentSettings.spacyPretrainedEntities, null, 2)}
+                              setOptions={{
+                                useWorker: true,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                              }} />
+                      </Row>
+                    </Form>
+                  </AccordionItemBody>
+                </AccordionItem>
+                <AccordionItem>
+                  <AccordionItemTitle>
+                    {messages.ducklingSettingsTitle.defaultMessage}
+                  </AccordionItemTitle>
+                  <AccordionItemBody>
+                    <p style={{marginLeft: '-10px'}}>{messages.ducklingSettingsDescription.defaultMessage}</p>
+                    <Form>
+                      <Row>
+                        <FormTextInput
+                          id='ducklingURL'
+                          label={messages.ducklingURL}
+                          placeholder={messages.ducklingURLPlaceholder.defaultMessage}
+                          value={agentSettings.ducklingURL}
+                          onChange={(evt) => this.props.onChangeAgentSettingsData({value: evt.target.value, field: 'ducklingURL'})}
+                          required
+                        />
+                        <InputLabel tooltip={messages.ducklingDimensionTooltip.defaultMessage} text={messages.ducklingDimension} />
+                        <AceEditor
+                          style={{marginBottom: '20px'}}
+                          width="100%"
+                          height="300px"
+                          mode="json"
+                          theme="terminal"
+                          name="ducklingDimension"
+                          readOnly={false}
+                          onChange={(value) => this.onChangeInput(value, 'ducklingDimension')}
+                          fontSize={14}
+                          showPrintMargin={true}
+                          showGutter={true}
+                          highlightActiveLine={true}
+                          value={typeof agentSettings.ducklingDimension === 'string' ?
+                                  agentSettings.ducklingDimension :
+                                  JSON.stringify(agentSettings.ducklingDimension, null, 2)}
+                          setOptions={{
+                            useWorker: true,
+                            showLineNumbers: true,
+                            tabSize: 2,
+                          }} />
+                      </Row>
+                    </Form>
+                  </AccordionItemBody>
+                </AccordionItem>
+              </Accordion>
+            </Row>
+          </Form>
+
+          <Form style={{ marginTop: '30px' }}>
+            <Row>
+              <Toggle
+                inline
+                strongLabel={false}
+                label={messages.expandedTrainingData.defaultMessage}
+                onChange={this.props.onChangeAgentData.bind(null, 'extraTrainingData')}
+                checked={agent.extraTrainingData}
+              />
+              <Tooltip
+                tooltip={messages.expandedTrainingDataTooltip.defaultMessage}
+                delay={50}
+                position="top"
+              >
+                <a style={{marginLeft: '-15px'}}>
+                  <Icon tiny>help_outline</Icon>
+                </a>
+              </Tooltip>
+            </Row>
+          </Form>
+
+
+          <Row style={{ marginTop: '15px', float: 'left', clear : 'both'}}>
+            <Toggle
+              label={messages.useWebhook.defaultMessage}
+              right
+              onChange={this.props.onChangeAgentData.bind(null, 'useWebhook')}
+              checked={agent.useWebhook}
+            />
+          </Row>
+
           {
             agent.useWebhook ?
-              <Form style={{marginTop: '0px'}}>
+              <Form style={{ marginTop: '70px' }}>
                 <Row>
                   <Input
                     s={2}
@@ -415,30 +667,68 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                     {returnFormattedOptions(payloadTypes)}
                   </Input>
                   {webhook.webhookPayloadType !== 'None' ?
-                  (<AceEditor
+                    (<AceEditor
+                      width="100%"
+                      height="250px"
+                      mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                      theme="terminal"
+                      name="webhookPayload"
+                      readOnly={false}
+                      onLoad={this.onLoad}
+                      onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                      fontSize={14}
+                      showPrintMargin={true}
+                      showGutter={true}
+                      highlightActiveLine={true}
+                      value={webhook.webhookPayload}
+                      setOptions={{
+                        useWorker: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                      }} />) : null}
+                </Row>
+              </Form>
+              : null
+          }
+
+          <Row style={{ marginTop: '15px', float: 'left', clear: 'both'}}>
+            <Toggle
+              label={messages.usePostformat.defaultMessage}
+              right
+              onChange={this.props.onChangeAgentData.bind(null, 'usePostFormat')}
+              checked={agent.usePostFormat}
+            />
+          </Row>
+
+          {
+            agent.usePostFormat ?
+              <Form style={{ marginTop: '100px' }}>
+                <Row>
+                  <AceEditor
                     width="100%"
                     height="250px"
-                    mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                    mode={'json'}
                     theme="terminal"
                     name="webhookPayload"
                     readOnly={false}
                     onLoad={this.onLoad}
-                    onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                    onChange={this.props.onChangePostFormatData.bind(null, 'postFormatPayload')}
                     fontSize={14}
                     showPrintMargin={true}
                     showGutter={true}
                     highlightActiveLine={true}
-                    value={webhook.webhookPayload}
+                    value={postFormat.postFormatPayload}
                     setOptions={{
-                    useWorker: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                    }}/>) : null}
+                      useWorker: false,
+                      showLineNumbers: true,
+                      tabSize: 2,
+                    }} />
                 </Row>
               </Form>
-            : null
+              : null
           }
-          <br/>
+
+          <br />
         </Content>
         <ConfirmationModal
           isOpen={this.state.displayModal}
@@ -465,6 +755,8 @@ AgentPage.propTypes = {
   onUpdate: React.PropTypes.func,
   onChangeAgentData: React.PropTypes.func,
   onChangeWebhookData: React.PropTypes.func,
+  onChangePostFormatData: React.PropTypes.func,
+  onChangeAgentSettingsData: React.PropTypes.func,
   resetForm: React.PropTypes.func,
   onSuccess: React.PropTypes.func,
   onEditMode: React.PropTypes.func,
@@ -475,20 +767,34 @@ export function mapDispatchToProps(dispatch) {
   return {
     onChangeAgentData: (field, evt) => {
       dispatch(resetStatusFlags());
-      if (field === 'useWebhook'){
+      if (field === 'useWebhook' || field === 'extraTrainingData' || field === 'usePostFormat') {
         evt.target.value = evt.target.checked;
       }
       dispatch(changeAgentData({ value: evt.target.value, field }));
     },
     onChangeWebhookData: (field, evt) => {
       dispatch(resetStatusFlags());
-      if (field === 'webhookPayload'){
+      if (field === 'webhookPayload') {
         const value = evt;
         dispatch(changeWebhookData({ value, field }));
       }
       else {
         dispatch(changeWebhookData({ value: evt.target.value, field }));
       }
+    },
+    onChangePostFormatData: (field, evt) => {
+      if (field === 'postFormatPayloadDefault') {
+        let field = 'postFormatPayload'
+        dispatch(changePostFormatData({ value: messages.defaultPostFormat.defaultMessage, field }))
+      }
+      if (field === 'postFormatPayload') {
+        const value = evt;
+        dispatch(changePostFormatData({ value, field }));
+      }
+    },
+    onChangeAgentSettingsData: (data) => {
+      dispatch(resetStatusFlags());
+      dispatch(changeAgentSettingsData(data));
     },
     onCreate: () => {
       dispatch(createAgent());
@@ -502,11 +808,17 @@ export function mapDispatchToProps(dispatch) {
     onSuccess: (inWizard) => {
 
     },
-    onEditMode: (agentId) => {
+    onEditMode: (props) => {
       dispatch(resetStatusFlags());
       dispatch(resetAgentData());
-      dispatch(loadAgent(agentId));
-      dispatch(loadWebhook(agentId));
+      dispatch(loadAgent(props.params.id));
+      if (props.agent.useWebhook) {
+        dispatch(loadWebhook(props.params.id));
+      }
+      if (props.agent.usePostFormat) {
+        dispatch(loadPostFormat(props.params.id));
+      }
+
     },
     onRemoveFallback: (fallbackIndex) => {
       dispatch(removeAgentFallback(fallbackIndex));
@@ -522,6 +834,9 @@ const mapStateToProps = createStructuredSelector({
   success: makeSelectSuccess(),
   inWizard: makeSelectInWizard(),
   error: makeSelectError(),
+  postFormat: makeSelectPostFormatData(),
+  globalSettings: makeSelectSettingsData(),
+  agentSettings: makeSelectAgentSettingsData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentPage);

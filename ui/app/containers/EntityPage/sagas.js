@@ -57,8 +57,19 @@ export function* putEntity(payload) {
     const entity = response.obj;
     yield put(updateEntitySuccess(entity));
     yield put(push('/entities'));
-  } catch ({ response }) {
-    yield put(updateEntityError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(updateEntityError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(updateEntityError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateEntityError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -75,8 +86,19 @@ export function* getEntity(payload) {
     const response = yield call(api.entity.getEntityId, { id });
     const entity = response.obj;
     yield put(loadEntitySuccess(entity));
-  } catch ({ response }) {
-    yield put(loadEntityError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadEntityError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadEntityError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadEntityError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 

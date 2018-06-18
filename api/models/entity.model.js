@@ -7,10 +7,12 @@ class EntityModel {
 
         return {
             id: Joi.number(),
-            agent: Joi.string(),
-            entityName: Joi.string(),
-            uiColor: Joi.string(),
-            examples: Joi.array().items(ExampleModel.schema)
+            agent: Joi.string().trim(),
+            entityName: Joi.string().trim(),
+            uiColor: Joi.string().trim(),
+            examples: Joi.array().items(ExampleModel.schema),
+            regex : Joi.string().trim(),
+            type: Joi.string().trim()
         };
     };
 }

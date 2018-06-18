@@ -2,15 +2,18 @@
 const Async = require('async');
 const AgentTools = require('../tools');
 const Boom = require('boom');
+const Handlebars = require('handlebars');
+const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
 
 
 module.exports = (request, reply) => {
 
+    RegisterHandlebarHelpers(Handlebars);
     const agentId = request.params.id;
     let sessionId;
     let text;
     let timezone;
-    if (request.payload){
+    if (request.payload) {
         sessionId = request.payload.sessionId;
         text = request.payload.text;
         timezone = request.payload.timezone;
@@ -28,10 +31,10 @@ module.exports = (request, reply) => {
             Async.parallel({
                 parse: (cb) => {
 
-                    server.inject(`/agent/${agentId}/parse?text=${text}${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
+                    server.inject(`/agent/${agentId}/parse?text=${text}&${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
 
-                        if (res.statusCode !== 200){
-                            if (res.statusCode === 404){
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return cb(errorNotFound);
                             }
@@ -45,8 +48,8 @@ module.exports = (request, reply) => {
 
                     server.inject(`/agent/${agentId}/export?withReferences=true`, (res) => {
 
-                        if (res.statusCode !== 200){
-                            if (res.statusCode === 400){
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 400) {
                                 const errorNotFound = Boom.notFound(res.result.message);
                                 return cb(errorNotFound);
                             }
@@ -60,7 +63,7 @@ module.exports = (request, reply) => {
 
                     server.inject(`/context/${sessionId}`, (res) => {
 
-                        if (res.statusCode !== 200){
+                        if (res.statusCode !== 200) {
                             const error = Boom.create(res.statusCode, `An error occurred getting the context of the session ${sessionId}`);
                             return cb(error, null);
                         }
@@ -69,7 +72,7 @@ module.exports = (request, reply) => {
                 }
             }, (err, results) => {
 
-                if (err){
+                if (err) {
                     return callback(err, null);
                 }
                 return callback(null, results);
@@ -81,33 +84,69 @@ module.exports = (request, reply) => {
             conversationStateObject.text = text;
             conversationStateObject.sessionId = sessionId;
             conversationStateObject.timezone = timezoneToUse;
-            if (request.payload){
-                Object.keys(request.payload).forEach( (key) => {
+            if (request.payload) {
+                Object.keys(request.payload).forEach((key) => {
 
-                    if (!conversationStateObject[key]){
+                    if (!conversationStateObject[key]) {
                         conversationStateObject[key] = request.payload[key];
                     }
                     else {
-                        if (['text', 'timezone', 'sessionId'].indexOf(key) === -1){
+                        if (['text', 'timezone', 'sessionId'].indexOf(key) === -1) {
                             console.error(`POST value {{${key}}} overwritten by Articulate. {{${key}}} is a reserved keyword.`);
                         }
                     }
                 });
             }
+
             AgentTools.respond(server, conversationStateObject, (err, result) => {
 
-                if (err){
-                    return callback(err, null);
+                if (err) {
+                    return callback(err, null, null);
                 }
-                return callback(null, result);
+                return callback(null, result, conversationStateObject);
             });
         }
-    ], (err, data) => {
+    ], (err, data, conversationStateObject) => {
 
-        if (err){
+        if (err) {
             return reply(err);
         }
+        let postFormatPayloadToUse;
+        let usedPostFormatIntent;
+        if (conversationStateObject.intent.usePostFormat) {
+            postFormatPayloadToUse = conversationStateObject.intent.postFormat.postFormatPayload;
+            usedPostFormatIntent = true;
+        }
+        else if (conversationStateObject.agent.usePostFormat) {
+            usedPostFormatIntent = false;
+            postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
+        }
+        if (postFormatPayloadToUse) {
+            try {
+                const compiledPostFormat = Handlebars.compile(postFormatPayloadToUse);
+                const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject, { textResponse: data.textResponse }));
+                let processedPostFormatJson = {};
+                processedPostFormatJson = JSON.parse(processedPostFormat);
+                if (!processedPostFormatJson.textResponse) {
+                    processedPostFormatJson.textResponse = data.textResponse;
+                }
+                return reply(processedPostFormatJson);
+            }
+            catch (error) {
+                const errorMessage = usedPostFormatIntent ? 'Error formatting the post response using intent POST format : ' : 'Error formatting the post response using agent POST format : ';
+                console.log(errorMessage, error);
+                return reply({
+                    textResponse: data.textResponse,
+                    postFormating: errorMessage + error
+                });
+            }
 
-        return reply(data);
+        }
+
+        else {
+            return reply({ textResponse: data.textResponse });
+        }
+
+
     });
 };

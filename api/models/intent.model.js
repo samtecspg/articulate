@@ -8,11 +8,12 @@ class IntentModel {
 
         return {
             id: Joi.number(),
-            agent: Joi.string(),
-            domain: Joi.string(),
-            intentName: Joi.string(),
+            agent: Joi.string().trim(),
+            domain: Joi.string().trim(),
+            intentName: Joi.string().trim(),
             examples: Joi.array().items(ExampleIntentModel.schema),
-            useWebhook: Joi.boolean()
+            useWebhook: Joi.boolean(),
+            usePostFormat: Joi.boolean()
         };
     };
 }

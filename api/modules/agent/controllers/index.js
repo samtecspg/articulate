@@ -17,11 +17,20 @@ const ParseController = require('./parse.agent.controller');
 const ConverseController = require('./converse.agent.controller');
 const ExportController = require('./export.agent.controller');
 const ImportController = require('./import.agent.controller');
-const FindIntentsByIdByAgentIdController = require('./findIntentsByIdByAgentId.agent.controller');
+const FindIntentsByAgentIdController = require('./findIntentsByAgentId.agent.controller');
 const AddWebhookController = require('./addWebhook.agent.controller');
+const AddPostFormatController = require('./addPostFormat.agent.controller');
 const FindWebhookController = require('./findWebhook.agent.controller');
+const FindPostFormatController = require('./findPostFormat.agent.controller');
+const DeletePostFormatController = require('./deletePostFormat.agent.controller');
+const UpdatePostFormatController = require('./updatePostFormat.agent.controller');
 const UpdateWebhookController = require('./updateWebhook.agent.controller');
 const DeleteWebhookController = require('./deleteWebhook.agent.controller');
+const TrainController = require('./train.agent.controller');
+const FindIntentPostFormatInDomainByIdByAgentIdController = require('./findIntentPostFormatInDomainByIdByAgentId.agent.controller');
+const UpdateSettingsController = require('./putSettings.agent.controller');
+const FindSettingsByNameController = require('./findSettingsByName.agent.controller');
+const FindAllSettingsController = require('./findAllSettings.agent.controller');
 
 
 const AgentController = {
@@ -46,6 +55,8 @@ const AgentController = {
 
     findIntentByIdInDomainByIdByAgentId: FindIntentByIdInDomainByIdByAgentIdController,
 
+    findIntentPostFormatInDomainByIdByAgentId: FindIntentPostFormatInDomainByIdByAgentIdController,
+
     findIntentsInDomainByIdByAgentId: FindIntentsInDomainByIdByAgentIdController,
 
     findIntentScenarioInDomainByIdByAgentId: FindIntentScenarioInDomainByIdByAgentIdController,
@@ -62,15 +73,31 @@ const AgentController = {
 
     import: ImportController,
 
-    findIntentsByAgentId: FindIntentsByIdByAgentIdController,
+    findIntentsByAgentId: FindIntentsByAgentIdController,
 
     addWebhook: AddWebhookController,
 
+    addPostFormat: AddPostFormatController,
+
     findWebhook: FindWebhookController,
+
+    findPostFormat : FindPostFormatController,
+
+    deletePostFormat : DeletePostFormatController,
+
+    updatePostFormat : UpdatePostFormatController,
 
     updateWebhook: UpdateWebhookController,
 
-    deleteWebhook: DeleteWebhookController
+    deleteWebhook: DeleteWebhookController,
+
+    train: TrainController,
+
+    updateSettings: UpdateSettingsController,
+
+    findSettingsByName: FindSettingsByNameController,
+
+    findAllSettings: FindAllSettingsController
 };
 
 module.exports = AgentController;

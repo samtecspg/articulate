@@ -11,7 +11,9 @@ function TableHeader(props) { // eslint-disable-line react/prefer-stateless-func
         props.columns.map((column, index) => {
           return (
             <th key={'th_' + index} style={{ width: column.width, display: 'inline-block' }}>
-              {column.label}
+              {column.icon ? column.icon : null}
+              {column.label ? column.label : ''}
+              {column.tooltip ? 
               <Tooltip
                 tooltip={column.tooltip}
                 delay={50}
@@ -21,6 +23,7 @@ function TableHeader(props) { // eslint-disable-line react/prefer-stateless-func
                   <Icon>help_outline</Icon>
                 </a>
               </Tooltip>
+              : null}
             </th>
           );
         })

@@ -1,7 +1,7 @@
 FROM alpine:3.7
 
 
-ENV RASA_RELEASE=0.11.4.a \
+ENV RASA_RELEASE=0.12.3.b \
     RASA_NLU_HOME=/app \
     RASA_NLU_PYTHON_PACKAGES=/usr/local/lib/python2.7/dist-packages
 
@@ -58,10 +58,10 @@ RUN pip install msgpack-python==0.5.2
 #only turn on if using mitie
 # RUN wget -P data/ https://s3-eu-west-1.amazonaws.com/mitie/total_word_feature_extractor.dat
 
-RUN cp  sample_configs/config_spacy_duckling.json ${RASA_NLU_HOME}/config.json
+RUN cp  sample_configs/config_spacy_duckling.yml ${RASA_NLU_HOME}/config.yml
 
 EXPOSE 5000
 
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["start", "-c", "config.json"]
+CMD ["start", "--path", "/app/projects", "-c", "config.yml", "--max_training_processes", "4"]
 

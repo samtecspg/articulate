@@ -16,6 +16,11 @@ const makeSelectWebhookData = () => createSelector(
   (agentState) => agentState.webhookData,
 );
 
+const makeSelectPostFormatData = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.postFormatData,
+);
+
 const makeSelectOldAgentData = () => createSelector(
   selectAgent,
   (agentState) => agentState.oldAgentData,
@@ -31,6 +36,11 @@ const makeSelectTouched = () => createSelector(
   (agentState) => agentState.touched,
 );
 
+const makeSelectAgentSettingsData = () => createSelector(
+  selectAgent,
+  (agentState) => agentState.agentSettingsData,
+);
+
 export {
   selectAgent,
   makeSelectAgentData,
@@ -38,4 +48,6 @@ export {
   makeSelectOldAgentData,
   makeSelectOldWebhookData,
   makeSelectTouched,
+  makeSelectPostFormatData,
+  makeSelectAgentSettingsData
 };

@@ -69,17 +69,20 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
     const {
       columns,
       menu,
+      borderContainer,
       highlightRow,
       striped,
       showSearchInput,
+      showPagination,
+      defaultPageSize,
       ...other,
     } = this.props;
     let newColumns;
 
-    const classNames = ['border-container '];
+    const classNames = [];
+    if (borderContainer) classNames.push('border-container ');
     if (highlightRow) classNames.push('-highlight');
     if (striped) classNames.push('-striped');
-
     // If menu object is available then render a new cell
     if (menu && menu.length > 0) {
       const menuCell = {
@@ -98,7 +101,9 @@ class Table2 extends React.Component { // eslint-disable-line react/prefer-state
       <ReactTable
         data={this.props.data}
         columns={newColumns.map(this.generateColumnDefinition)}
+        defaultPageSize={defaultPageSize}
         className={classNames.join(' ')}
+        showPagination={showPagination}
         {...other}
       />
     );
@@ -117,13 +122,14 @@ Table2.propTypes = {
   showSearchInput: React.PropTypes.bool,
   pivotBy: React.PropTypes.array,
   SubComponent: React.PropTypes.func,
+  defaultPageSize: React.PropTypes.number,
 };
 
 Table2.defaultProps = {
-  minRows: 15,
+  borderContainer: true,
   highlightRow: true,
   striped: false,
-  showPagination: false,
+  showPagination: true,
   showSearchInput: true,
   pivotBy: []
 };

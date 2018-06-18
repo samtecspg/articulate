@@ -15,44 +15,60 @@ const ducklingOutputToInterval = (ducklingOutput, timezone) => {
             return output;
         }
         const newOutput = _.cloneDeep(output);
-        if (output.value.type !== 'interval'){
+        const isAnIntervalWithoutFinish = (output.value.type === 'interval' && !output.value.to);
+        if (output.value.type !== 'interval' || isAnIntervalWithoutFinish){
             delete newOutput.value;
             newOutput.value = { type: output.value.type, values: output.value.values ? output.value.values : [] };
-            const time = Moment(output.value.value).tz(timezone);
-            switch (output.value.grain) {
+            const time = isAnIntervalWithoutFinish ? Moment(output.value.from.value).tz(timezone) : Moment(output.value.value).tz(timezone);
+            const todayTime = Moment().tz(timezone);
+            const grain =  isAnIntervalWithoutFinish ? output.value.from.grain : output.value.grain;
+            newOutput.value.from = {
+                value: time.format(),
+                grain
+            };
+            switch (grain) {
                 case 'second':
-                case 'minute':
-                case 'hour':
-                    newOutput.value.from = {
-                        value: time.format(),
-                        grain: output.value.grain
-                    };
                     newOutput.value.to = {
-                        value: time.add(1, output.value.grain + 's').format(),
-                        grain: output.value.grain
+                        value: isAnIntervalWithoutFinish ? time.add((todayTime.second() - time.second()), grain + 's').format() : time.add(1, grain + 's').format(),
+                        grain
+                    };
+                    break;
+                case 'minute':
+                    newOutput.value.to = {
+                        value: isAnIntervalWithoutFinish ? time.add((todayTime.minute() - time.minute()), grain + 's').format() : time.add(1, grain + 's').format(),
+                        grain
+                    };
+                    break;
+                case 'hour':
+                    newOutput.value.to = {
+                        value: isAnIntervalWithoutFinish ? time.add((todayTime.hour() - time.hour()), grain + 's').format() : time.add(1, grain + 's').format(),
+                        grain
                     };
                     break;
                 case 'day':
-                case 'week':
-                case 'month':
-                case 'year':
-                    newOutput.value.from = {
-                        value: time.format(),
-                        grain: output.value.grain
-                    };
                     newOutput.value.to = {
-                        value: time.add(1, output.value.grain + 's').format(),
-                        grain: output.value.grain
+                        value: isAnIntervalWithoutFinish ? time.add((todayTime.day() - time.day()), grain + 's').format() : time.add(1, grain + 's').format(),
+                        grain
+                    };
+                    break;
+                case 'week':
+                    newOutput.value.to = {
+                        value: isAnIntervalWithoutFinish ? time.add((todayTime.week() - time.week()), grain + 's').format() : time.add(1, grain + 's').format(),
+                        grain
+                    };
+                    break;
+                case 'month':
+                    break;
+                case 'year':
+                    newOutput.value.to = {
+                        value: isAnIntervalWithoutFinish ? time.add((todayTime.year() - time.year()), grain + 's').format() : time.add(1, grain + 's').format(),
+                        grain
                     };
                     break;
                 case 'quarter':
-                    newOutput.value.from = {
-                        value: time.format(),
-                        grain: output.value.grain
-                    };
                     newOutput.value.to = {
-                        value: time.add(3, 'months').format(),
-                        grain: output.value.grain
+                        value: isAnIntervalWithoutFinish ? time.add(todayTime.months() - time.months(), grain + 's').format() : time.add(3, 'months').format(),
+                        grain
                     };
                     break;
                 default:

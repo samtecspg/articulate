@@ -8,9 +8,10 @@ class IntentEntityModel {
         return {
             start: Joi.number(),
             end: Joi.number(),
-            value: Joi.string(),
-            entity: Joi.string(),
-            entityId: Joi.number()
+            value: Joi.string().trim(),
+            entity: Joi.string().trim(),
+            entityId: Joi.number(),
+            extractor: Joi.string().trim()
         };
     };
 }

@@ -3,6 +3,7 @@
   "timezone": "UTC",
   "agentName": "c732e970-311b-4a3a-b9cd-c689a8554ef1",
   "useWebhook": true,
+  "usePostFormat": false,
   "description": "Test agent for import",
   "fallbackResponses": [
     "Sorry can you rephrase that?",
@@ -19,6 +20,8 @@
     {
       "uiColor": "#e91e63",
       "entityName": "Toppings",
+      "type": "learned",
+      "regex": null,
       "examples": [
         {
           "value": "Cheese",
@@ -67,15 +70,14 @@
   ],
   "domains": [
     {
-      "model": "just_er_8ebb2d11-5ef2-3b32-7557-8620f5f2cef9",
       "enabled": true,
       "domainName": "Orders",
-      "lastTraining": "Fri Apr 27 2018 14:39:29 GMT-0600 (CST)",
       "intentThreshold": 0.7,
       "intents": [
         {
           "intentName": "Order pizza",
           "useWebhook": false,
+          "usePostFormat": false,
           "examples": [
             {
               "userSays": "I want a ham and cheese pizza",
@@ -138,15 +140,14 @@
       ]
     },
     {
-      "model": "just_er_baf9b400-34ad-73d3-9acf-6bc851aa1b81",
       "enabled": true,
       "domainName": "Small talk",
-      "lastTraining": "Fri Apr 27 2018 14:39:59 GMT-0600 (CST)",
       "intentThreshold": 0.7,
       "intents": [
         {
           "intentName": "Greeting",
           "useWebhook": false,
+          "usePostFormat": false,
           "examples": [
             {
               "entities": [],
@@ -187,5 +188,97 @@
         }
       ]
     }
-  ]
+  ],
+  "settings": {
+    "domainClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "intent_featurizer_spacy"
+      },
+      {
+        "name": "intent_classifier_sklearn"
+      }
+    ],
+    "intentClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "intent_featurizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "intent_classifier_sklearn"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "entityClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "rasaURL": "http://localhost:5000",
+    "ducklingURL": "http://localhost:8000",
+    "ducklingDimension": [
+      "amount-of-money",
+      "distance",
+      "duration",
+      "email",
+      "number",
+      "ordinal",
+      "phone-number",
+      "quantity",
+      "temperature",
+      "time",
+      "url",
+      "volume"
+    ],
+    "spacyPretrainedEntities": [
+      "PERSON",
+      "NORP",
+      "FAC",
+      "ORG",
+      "GPE",
+      "LOC",
+      "PRODUCT",
+      "EVENT",
+      "WORK_OF_ART",
+      "LAW",
+      "LANGUAGE",
+      "DATE",
+      "TIME",
+      "PERCENT",
+      "MONEY",
+      "QUANTITY",
+      "ORDINAL",
+      "CARDINAL"
+    ]
+  }
 }

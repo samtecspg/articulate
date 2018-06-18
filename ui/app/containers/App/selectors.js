@@ -33,6 +33,11 @@ const makeSelectCurrentAgent = () => createSelector(
   (globalState) => globalState.currentAgent,
 );
 
+const makeSelectCurrentAgentStatus = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.currentAgentStatus
+);
+
 const makeSelectLoading = () => createSelector(
   selectGlobal,
   (globalState) => globalState.loading,
@@ -41,6 +46,11 @@ const makeSelectLoading = () => createSelector(
 const makeSelectLoadingConversation = () => createSelector(
   selectGlobal,
   (globalState) => globalState.loadingConversation,
+);
+
+const makeSelectMissingAPI = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.missingAPI,
 );
 
 const makeSelectError = () => createSelector(
@@ -118,6 +128,11 @@ const makeSelectEntityIntents = () => createSelector(
   (globalState) => globalState.entityIntents,
 );
 
+const makeSelectSettingsData = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.settingsData,
+);
+
 export {
   selectGlobal,
   makeSelectAgents,
@@ -125,8 +140,10 @@ export {
   makeSelectAgentEntities,
   makeSelectConversation,
   makeSelectCurrentAgent,
+  makeSelectCurrentAgentStatus,
   makeSelectLoading,
   makeSelectLoadingConversation,
+  makeSelectMissingAPI,
   makeSelectError,
   makeSelectSuccess,
   makeSelectInWizard,
@@ -140,4 +157,5 @@ export {
   makeSelectDomainIntents,
   makeSelectRoute,
   makeSelectEntityIntents,
+  makeSelectSettingsData,
 };

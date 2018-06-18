@@ -6,6 +6,9 @@ const Helpers = require('handlebars-helpers');
 
 const buildListOfWords = (words, separator) => {
 
+    if (!Array.isArray(words)){
+        return words;
+    }
     if (words.length === 1){
         return words[0];
     }

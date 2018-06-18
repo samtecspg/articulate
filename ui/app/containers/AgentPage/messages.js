@@ -1,126 +1,257 @@
-/*
- * AgentPage Messages
- *
- * This contains all the text for the AgentPage component.
- */
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   createAgentTitle: {
-    id: 'boilerplate.containers.AgentPage.create_agent.title',
+    id: 'containers.AgentPage.create_agent.title',
     defaultMessage: 'Creating New Agent',
   },
+  defaultPostFormat : {
+    id: 'containers.AgentPage.create_agent.defaultPostFormat',
+    defaultMessage: '{ "textResponse" : "{{ textResponse }}" }'
+  },
   createDescription: {
-    id: 'boilerplate.containers.AgentPage.create_agent.description',
+    id: 'containers.AgentPage.create_agent.description',
     defaultMessage: 'An agent is capable of understand natural language and transform it into recognizable actions. ' +
     'You can insert agents in you environment to improve the user experience with your app.',
   },
   agentName: {
-    id: 'boilerplate.containers.AgentPage.create_agent.agent_name',
+    id: 'containers.AgentPage.create_agent.agent_name',
     defaultMessage: 'Agent Name',
   },
   agentNamePlaceholder: {
-    id: 'boilerplate.containers.AgentPage.create_agent.agent_name_placeholder',
+    id: 'containers.AgentPage.create_agent.agent_name_placeholder',
     defaultMessage: 'Type a name here',
   },
   description: {
-    id: 'boilerplate.containers.AgentPage.create_agent.agent_description',
+    id: 'containers.AgentPage.create_agent.agent_description',
     defaultMessage: 'Describe Agent',
   },
   descriptionPlaceholder: {
-    id: 'boilerplate.containers.AgentPage.create_agent.agent_description_placeholder',
+    id: 'containers.AgentPage.create_agent.agent_description_placeholder',
     defaultMessage: 'What does this Agent do?',
   },
   sampleData: {
-    id: 'boilerplate.containers.AgentPage.create_agent.sample_data',
+    id: 'containers.AgentPage.create_agent.sample_data',
     defaultMessage: '+ Sample Data',
   },
   sampleDataPlaceholder: {
-    id: 'boilerplate.containers.AgentPage.create_agent.sample_data_placeholder',
+    id: 'containers.AgentPage.create_agent.sample_data_placeholder',
     defaultMessage: 'Add a prebuilt agent that will respond to User intents',
   },
   language: {
-    id: 'boilerplate.containers.AgentPage.create_agent.language',
+    id: 'containers.AgentPage.create_agent.language',
     defaultMessage: 'Language',
   },
   languageWarning: {
-    id: 'boilerplate.containers.AgentPage.create_agent.language_warning',
+    id: 'containers.AgentPage.create_agent.language_warning',
     defaultMessage: 'Cannot be changed once Agent is created',
   },
   timezone: {
-    id: 'boilerplate.containers.AgentPage.create_agent.default_timezone',
+    id: 'containers.AgentPage.create_agent.default_timezone',
     defaultMessage: 'Default Time Zone',
   },
   domainClassifierThreshold: {
-    id: 'boilerplate.containers.AgentPage.create_agent.domain_classifier_threshold',
+    id: 'containers.AgentPage.create_agent.domain_classifier_threshold',
     defaultMessage: 'Domain Recognition Threshold',
   },
+  domainClassifierThresholdDescription: {
+    id: 'containers.AgentPage.create_agent.domain_classifier_threshold_description',
+    defaultMessage: 'This threshold determines how confident your agent has to be that a user\'s request matches a domain inside the agent. Requests not meeting the threshold will use the fallback responses below.'
+  },
   importAgent: {
-    id: 'boilerplate.containers.AgentPage.create_agent.import_agent',
+    id: 'containers.AgentPage.create_agent.import_agent',
     defaultMessage: 'Import agent from backup',
   },
   createButton: {
-    id: 'boilerplate.containers.AgentPage.create_agent.create_button',
+    id: 'containers.AgentPage.create_agent.create_button',
     defaultMessage: '+ Create',
   },
   editButton: {
-    id: 'boilerplate.containers.AgentPage.create_agent.edit_button',
+    id: 'containers.AgentPage.create_agent.edit_button',
     defaultMessage: '+ Update',
   },
   successMessage: {
-    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    id: 'containers.AgentPage.create_agent.success_message',
     defaultMessage: 'Agent created',
   },
   successMessageEdit: {
-    id: 'boilerplate.containers.AgentPage.create_agent.success_message_edit',
+    id: 'containers.AgentPage.create_agent.success_message_edit',
     defaultMessage: 'Agent updated',
   },
   fallbackInput: {
-    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    id: 'containers.AgentPage.create_agent.success_message',
     defaultMessage: 'example: Sorry I can\'t understand what you are saying',
   },
   agentFallbackTitle: {
-    id: 'boilerplate.containers.AgentPage.create_agent.success_message',
+    id: 'containers.AgentPage.create_agent.success_message',
     defaultMessage: 'Fallback Responses',
   },
   webhook: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook',
+    id: 'containers.AgentPage.create_agent.webhook',
     defaultMessage: 'Webhook Definition',
   },
+  postFormat: {
+    id: 'containers.AgentPage.create_agent.postFormat',
+    defaultMessage: 'Default agent response payload',
+  },
   webhookDescription: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook_description',
+    id: 'containers.AgentPage.create_agent.webhook_description',
     defaultMessage: 'A webhook will help you to process the parsed text by the agent in order to complete you business logic.',
   },
   webhookVerb: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook_verb',
+    id: 'containers.AgentPage.create_agent.webhook_verb',
     defaultMessage: 'Method',
   },
   webhookUrl: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook_url',
+    id: 'containers.AgentPage.create_agent.webhook_url',
     defaultMessage: 'URL',
   },
   webhookUrlPlaceholder: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook_url_placeholder',
+    id: 'containers.AgentPage.create_agent.webhook_url_placeholder',
     defaultMessage: 'http://localhost:3000',
   },
   webhookPayloadType: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook_payload_type',
+    id: 'containers.AgentPage.create_agent.webhook_payload_type',
     defaultMessage: 'Body Type',
   },
   webhookPayload: {
-    id: 'boilerplate.containers.AgentPage.create_agent.webhook_payload',
+    id: 'containers.AgentPage.create_agent.webhook_payload',
     defaultMessage: 'Body',
   },
   missingWebhookUrl: {
-    id: 'boilerplate.containers.AgentPage.create_agent.missing_webhook_url',
+    id: 'containers.AgentPage.create_agent.missing_webhook_url',
     defaultMessage: 'Please add a webhook url for your webhook',
   },
+  missingPostFormatPayload: {
+    id: 'containers.AgentPage.create_agent.missing_postFormatPayload',
+    defaultMessage: 'Please add a POST format response for the agent, default one has been added.',
+  },
   invalidTimezone: {
-    id: 'boilerplate.containers.AgentPage.create_agent.invalid_timezone',
+    id: 'containers.AgentPage.create_agent.invalid_timezone',
     defaultMessage: 'The specified timezone is not valid',
   },
   useWebhook: {
-    id: 'boilerplate.containers.IntentPage.create_agent.use_webhook',
-    defaultMessage: 'Webhook',
+    id: 'containers.AgentPage.create_agent.use_webhook',
+    defaultMessage: 'Webhook Definition',
+  },
+  usePostformat:{
+    id: 'containers.AgentPage.create_agent.use_postFormat',
+    defaultMessage: 'Response Definition',
+  },
+  usePostformat:{
+    id: 'containers.AgentPage.create_agent.use_postFormat',
+    defaultMessage: 'Response Definition',
+  },
+  expandedTrainingData: {
+    id: 'containers.AgentPage.create_agent.expanded_training_data',
+    defaultMessage: 'Generate extra training examples',
+  },
+  expandedTrainingDataTooltip: {
+    id: 'containers.AgentPage.create_agent.expanded_training_data_tooltip',
+    defaultMessage: 'Create combinations between your entities and intents. On small agents this can improve classification, as your agent grows this may increase training time.',
+  },
+  errorParsingOptions: {
+    id: 'containers.AgentPage.error_parsing_options',
+    defaultMessage: 'Unable to load options from settings',
+  },
+  rasaSettingsTitle: {
+    id: 'containers.AgentPage.rasa_settings_title',
+    defaultMessage: 'Agent Rasa Settings',
+  },
+  rasaSettingsDescription: {
+    id: 'containers.AgentPage.rasa_settings_description',
+    defaultMessage: 'If you modify these values the global settings for Rasa will be overriden.',
+  },
+  rasaURL: {
+    id: 'containers.AgentPage.rasa_url',
+    defaultMessage: 'Rasa URL',
+  },
+  rasaURLPlaceholder: {
+    id: 'containers.AgentPage.rasa_url_placeholder',
+    defaultMessage: 'Enter the URL of your rasa server',
+  },
+  domainClassifierPipeline: {
+    id: 'containers.AgentPage.domain_classifier_pipeline_label',
+    defaultMessage: 'Domain Classifier Pipeline',
+  },
+  intentClassifierPipeline: {
+    id: 'containers.AgentPage.intent_classifier_pipeline_label',
+    defaultMessage: 'Intent Classifier Pipeline',
+  },
+  entityClassifierPipeline: {
+    id: 'containers.AgentPage.entity_classifier_pipeline_label',
+    defaultMessage: 'Entity Classifier Pipeline',
+  },
+  spacyEntities: {
+    id: 'containers.AgentPage.spacy_entities_label',
+    defaultMessage: 'Spacy Entities',
+  },
+  domainClassifierPipelineTooltip: {
+    id: 'containers.AgentPage.domain_classifier_tooltip',
+    defaultMessage: 'An agent could have multiple domains. To identify the domain of a given user text we use a domain classifier.',
+  },
+  intentClassifierPipelineTooltip: {
+    id: 'containers.AgentPage.intent_classifier_tooltip',
+    defaultMessage: 'This pipeline will be the one in charge of generate the model that would classify intents and entities when more than one intent is specified in a domain.',
+  },
+  entityClassifierPipelineTooltip: {
+    id: 'containers.AgentPage.entity_classifier_tooltip',
+    defaultMessage: 'When the number of intents in the domain is just one, this pipeline is used to train a model that would only work for recognize entities',
+  },
+  spacyEntitiesTooltip: {
+    id: 'containers.AgentPage.spacy_entities_tooltip',
+    defaultMessage: 'Spacy have a series of entities that are recognized by it\'s trained models. With this setting, you are going to select the entities that you want to use from spacy as system entities.',
+  },
+  entityClassifierPipelineWarningMessage: {
+    id: 'containers.AgentPage.entity_classifier_format_warning',
+    defaultMessage: 'Please verify entity classifier pipeline is an array of objects with a name attribute',
+  },
+  intentClassifierPipelineWarningMessage: {
+    id: 'containers.AgentPage.intent_classifier_format_warning',
+    defaultMessage: 'Please verify intent classifier pipeline is an array of objects with a name attribute',
+  },
+  domainClassifierPipelineWarningMessage: {
+    id: 'containers.AgentPage.domain_classifier_format_warning',
+    defaultMessage: 'Please verify domain classifier pipeline is an array of objects with a name attribute',
+  },
+  spacyEntitiesWarningMessage: {
+    id: 'containers.AgentPage.timezone_not_in_timezones',
+    defaultMessage: 'Please verify spacy entities is an array of strings',
+  },
+  ducklingSettingsTitle: {
+    id: 'containers.AgentPage.duckling_settings_title',
+    defaultMessage: 'Agent Duckling Settings',
+  },
+  ducklingSettingsDescription: {
+    id: 'containers.AgentPage.duckling_settings_description',
+    defaultMessage: 'If you modify these values the global settings for Duckling will be overriden.',
+  },
+  ducklingURL: {
+    id: 'containers.AgentPage.duckling_url',
+    defaultMessage: 'Duckling URL',
+  },
+  ducklingURLPlaceholder: {
+    id: 'containers.AgentPage.duckling_url_placeholder',
+    defaultMessage: 'Enter the URL of your duckling server',
+  },
+  ducklingDimension: {
+    id: 'containers.AgentPage.domain_classifier_pipeline_label',
+    defaultMessage: 'Duckling Dimensions',
+  },
+  ducklingDimensionTooltip: {
+    id: 'containers.AgentPage.domain_classifier_tooltip',
+    defaultMessage: 'Duckling have multiple dimensions. With this setting you can control which dimensions you would like to be parsed in user text.',
+  },
+  ducklingDimensionWarningMessage: {
+    id: 'containers.AgentPage.domain_classifier_format_warning',
+    defaultMessage: 'Please verify duckling dimensions is an array of strings',
+  },
+  missingAgentName: {
+    id: 'containers.AgentPage.domain_classifier_format_warning',
+    defaultMessage: 'Please add an agent name',
+  },
+  missingAgentDescription: {
+    id: 'containers.AgentPage.domain_classifier_format_warning',
+    defaultMessage: 'Please add an agent description',
   }
 });

@@ -26,8 +26,8 @@ module.exports = (conversationStateObject, callback) => {
             return slot.isList;
         }), 'slotName');
         //Extract the recognized entities from the text parse
-        const recognizedEntities = conversationStateObject.rasaResult.entities;
         //Create an array of slots that existed before and are being overrided because of a new text parse
+        const recognizedEntities = conversationStateObject.rasaResult.entities;
         const overridedSlots = [];
         //Iterate over each recognized entity
         const recognizedEntitiesNames = _.map(recognizedEntities, (recognizedEntity) => {
@@ -37,9 +37,9 @@ module.exports = (conversationStateObject, callback) => {
                 //Get the slot name of the entity that was recognized using the index of the array of entities names
                 const slotName = intentSlotNames[intentSlotEntitiesNames.indexOf(recognizedEntity.entity)];
                 //If the slot is a list of elemnts
-                if (isListSlots.indexOf(slotName) > -1){
+                if (isListSlots.indexOf(slotName) > -1) {
                     //If there isn't a value for this slot name in the context
-                    if (!conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] || conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] === ''){
+                    if (!conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] || conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] === '') {
                         //Get the original and parsed value of the entity
                         const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text);
                         //Add these values to the context as a new slot
@@ -51,9 +51,9 @@ module.exports = (conversationStateObject, callback) => {
                     //If an slot in the context already exists for the recognized slot
                     else {
                         //If the value of the slot in the context is an array (This means that if the slot is a list)
-                        if (Array.isArray(conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName].value)){
+                        if (Array.isArray(conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName].value)) {
                             //If the slot haven't been overrided
-                            if (overridedSlots.indexOf(slotName) === -1){
+                            if (overridedSlots.indexOf(slotName) === -1) {
                                 //Add the slot name to the list of overrided slots
                                 overridedSlots.push(slotName);
                                 //And clear the context of this slot
@@ -86,20 +86,36 @@ module.exports = (conversationStateObject, callback) => {
                 }
                 //If slot is not a list
                 else {
-                    //Just insert an object with attributes value and original into the context slot
-                    conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = GetEntityValue(recognizedEntity, conversationStateObject.text);
+                    //Just insert an object with attributes value and original into the context slot after sorting the matching regex to keep the last one
+                    if (recognizedEntity.extractor === 'regex') {
+                        const allRecognizedEntitiesForRegex = recognizedEntities.filter((ent) => {
+
+                            return ent.entity === recognizedEntity.entity && ent.extractor === 'regex';
+
+                        });
+                        allRecognizedEntitiesForRegex.sort((a, b) => {
+
+                            return b.end - a.end;
+                        });
+                        conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = GetEntityValue(allRecognizedEntitiesForRegex[0], conversationStateObject.text);
+                    }
+                    else {
+                        conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName] = GetEntityValue(recognizedEntity, conversationStateObject.text);
+
+                    }
+
                 }
             }
             //If the slot wasn't part of the scenario slots array. This means that the slot is a system entity
             else {
                 //Check if it is a spacy or duckling system entity
-                if (recognizedEntity.entity.indexOf('sys.spacy_')  !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {
+                if (recognizedEntity.entity.indexOf('sys.spacy_') !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1 || recognizedEntity.entity.indexOf('sys.regex_') !== -1) {
                     //If there is a dictionary of slots in the current context, use this dictionary, if not, create an empty dictionary of slots
                     conversationStateObject.context[conversationStateObject.context.length - 1].slots = conversationStateObject.context[conversationStateObject.context.length - 1].slots ? conversationStateObject.context[conversationStateObject.context.length - 1].slots : {};
                     //If in the current dictionary of slots exists a dictionary for system entities, use it, else create an empty dir for sys entities
                     conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys = conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys ? conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys : {};
                     //Add the recognized system entities to the dir of system entities in the slots dir of the current context
-                    conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, conversationStateObject.text);
+                    conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.', '')] = GetEntityValue(recognizedEntity, conversationStateObject.text);
                 }
             }
             //Finally return the name of the recognized entity for further checks
@@ -113,7 +129,7 @@ module.exports = (conversationStateObject, callback) => {
         if (missingEntities.length > 0) {
             PromptMissingEntity(conversationStateObject, missingEntities[0], (err, response) => {
 
-                if (err){
+                if (err) {
                     return callback(err, null);
                 }
                 return callback(null, response);
@@ -122,7 +138,7 @@ module.exports = (conversationStateObject, callback) => {
         else {
             RespondFulfilledIntent(conversationStateObject, (err, response) => {
 
-                if (err){
+                if (err) {
                     return callback(err, null);
                 }
                 return callback(null, response);
@@ -137,13 +153,13 @@ module.exports = (conversationStateObject, callback) => {
             if (recognizedEntity.entity.indexOf('sys.spacy_') !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {
                 conversationStateObject.context[conversationStateObject.context.length - 1].slots = conversationStateObject.context[conversationStateObject.context.length - 1].slots ? conversationStateObject.context[conversationStateObject.context.length - 1].slots : {};
                 conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys = conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys ? conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys : {};
-                conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.','')] = GetEntityValue(recognizedEntity, conversationStateObject.text);
+                conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.', '')] = GetEntityValue(recognizedEntity, conversationStateObject.text);
             }
             return recognizedEntity.entity;
         });
         RespondFulfilledIntent(conversationStateObject, (err, response) => {
 
-            if (err){
+            if (err) {
                 return callback(err, null);
             }
             return callback(null, response);

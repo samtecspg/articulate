@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.34 18.6">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #4e4e4e;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+  </defs>
+  <title>icon-organize-outline</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <path class="cls-1" d="M.5,6.56l9.14,5.72a1,1,0,0,0,1.06,0l8-5,1.12-.7L16.19,4.27,10.17.5,9.61.85h0Z"/>
+      <path class="cls-1" d="M2.76,8,.5,9.39l9.14,5.72a1,1,0,0,0,1.06,0l8-5,1.12-.7-1.66-1L17.58,8"/>
+      <path class="cls-1" d="M2.76,10.81.5,12.23,9.64,18a1,1,0,0,0,1.06,0l8-5,1.12-.7-2.2-1.38"/>
+    </g>
+  </g>
+</svg>

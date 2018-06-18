@@ -14,8 +14,8 @@ module.exports = (request, reply) => {
 
             server.inject(`/agent/${agentId}`, (res) => {
 
-                if (res.statusCode !== 200){
-                    if (res.statusCode === 404){
+                if (res.statusCode !== 200) {
+                    if (res.statusCode === 404) {
                         const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
                         return callbackGetAgent(errorNotFound);
                     }
@@ -35,11 +35,11 @@ module.exports = (request, reply) => {
 
                             server.inject(`/agent/${agentId}/domain`, (res) => {
 
-                                if (res.statusCode !== 200){
+                                if (res.statusCode !== 200) {
                                     const error = Boom.create(res.statusCode, `An error occurred getting the list of domains of the agent ${exportedAgent.agent}`);
                                     return callbackGetDomains(error, null);
                                 }
-                                return callbackGetDomains(null, res.result);
+                                return callbackGetDomains(null, res.result.domains);
                             });
                         },
                         (exportedDomains, callbackGetDomainIntentAndScenarios) => {
@@ -51,12 +51,12 @@ module.exports = (request, reply) => {
 
                                         server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent`, (res) => {
 
-                                            if (res.statusCode !== 200){
+                                            if (res.statusCode !== 200) {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the list of intents for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                 return callbackGetIntentsFromDomain(error, null);
                                             }
-                                            if (!withReferences){
-                                                res.result.forEach((domainIntent) => {
+                                            if (!withReferences) {
+                                                res.result.intents.forEach((domainIntent) => {
 
                                                     domainIntent.examples.forEach((example) => {
 
@@ -67,7 +67,7 @@ module.exports = (request, reply) => {
                                                     });
                                                 });
                                             }
-                                            return callbackGetIntentsFromDomain(null, res.result);
+                                            return callbackGetIntentsFromDomain(null, res.result.intents);
                                         });
                                     },
                                     (exportedIntentsForDomain, callbackGetScenarioForEachIntent) => {
@@ -76,14 +76,14 @@ module.exports = (request, reply) => {
 
                                             server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/scenario`, (res) => {
 
-                                                if (res.statusCode !== 200){
-                                                    if (res.statusCode === 404){
+                                                if (res.statusCode !== 200) {
+                                                    if (res.statusCode === 404) {
                                                         return callbackGetIntentScenario(null, exportedIntentForDomain);
                                                     }
                                                     const error = Boom.create(res.statusCode, `An error occurred getting the scenario of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                     return callbackGetIntentScenario(error, null);
                                                 }
-                                                if (!withReferences){
+                                                if (!withReferences) {
                                                     delete res.result.id;
                                                     delete res.result.agent;
                                                     delete res.result.domain;
@@ -93,7 +93,7 @@ module.exports = (request, reply) => {
                                             });
                                         }, (err, intentsWithScenarios) => {
 
-                                            if (err){
+                                            if (err) {
                                                 return callbackGetScenarioForEachIntent(err);
                                             }
                                             return callbackGetScenarioForEachIntent(null, intentsWithScenarios);
@@ -105,23 +105,15 @@ module.exports = (request, reply) => {
 
                                             server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/webhook`, (res) => {
 
-                                                if (res.statusCode !== 200){
-                                                    if (res.statusCode === 404){
-                                                        if (!withReferences){
-                                                            delete exportedIntentForDomain.id;
-                                                            delete exportedIntentForDomain.agent;
-                                                            delete exportedIntentForDomain.domain;
-                                                        }
+                                                if (res.statusCode !== 200) {
+                                                    if (res.statusCode === 404) {
+
                                                         return callbackGetIntentWebhook(null, exportedIntentForDomain);
                                                     }
                                                     const error = Boom.create(res.statusCode, `An error occurred getting the webhook of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
                                                     return callbackGetIntentWebhook(error, null);
                                                 }
-                                                if (!withReferences){
-
-                                                    delete exportedIntentForDomain.id;
-                                                    delete exportedIntentForDomain.agent;
-                                                    delete exportedIntentForDomain.domain;
+                                                if (!withReferences) {
                                                     delete res.result.id;
                                                     delete res.result.agent;
                                                     delete res.result.domain;
@@ -131,36 +123,75 @@ module.exports = (request, reply) => {
                                             });
                                         }, (err, intentsWithWebhooks) => {
 
-                                            if (err){
+                                            if (err) {
                                                 return callbackGetWebhookForEachIntent(err);
                                             }
                                             return callbackGetWebhookForEachIntent(null, intentsWithWebhooks);
                                         });
-                                    }
-                                ], (err, intentsWithScenariosAndWebhooks) => {
+                                    },
 
-                                    if (err){
+                                    (exportedIntentsForDomain, callbackGetPostFormatForEachIntent) => {
+
+                                        Async.map(exportedIntentsForDomain, (exportedIntentForDomain, callbackGetIntentPostFormat) => {
+
+                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/postFormat`, (res) => {
+
+                                                if (res.statusCode !== 200 ) {
+                                                    if (res.statusCode === 404) {
+                                                        if (!withReferences) {
+                                                            delete exportedIntentForDomain.id;
+                                                            delete exportedIntentForDomain.agent;
+                                                            delete exportedIntentForDomain.domain;
+                                                        }
+                                                        return callbackGetIntentPostFormat(null, exportedIntentForDomain);
+
+                                                        const error = Boom.create(res.statusCode, `An error occurred getting the post format of intent ${exportedIntentForDomain.intentName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
+                                                        return callbackGetIntentPostFormat(error, null);
+                                                    }
+                                                }
+                                                if (!withReferences) {
+                                                    delete res.result.id;
+                                                    delete res.result.agent;
+                                                    delete res.result.domain;
+                                                    delete res.result.intent;
+                                                    delete exportedIntentForDomain.id;
+                                                    delete exportedIntentForDomain.agent;
+                                                    delete exportedIntentForDomain.domain;
+                                                }
+                                                return callbackGetIntentPostFormat(null, Object.assign(exportedIntentForDomain, { postFormat: res.result }));
+                                            });
+                                        }, (err, intentsWithPostFormats) => {
+
+                                            if (err) {
+                                                return callbackGetPostFormatForEachIntent(err);
+                                            }
+                                            return callbackGetPostFormatForEachIntent(null, intentsWithPostFormats);
+                                        });
+                                    }
+                                ], (err, intentsWithScenariosAndWebhooksAndPostFormat) => {
+
+                                    if (err) {
                                         return callbackGetDataDomain(err);
                                     }
 
-                                    if (!withReferences){
+                                    if (!withReferences) {
 
                                         delete exportedDomain.id;
                                         delete exportedDomain.agent;
                                     }
-                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, { intents: intentsWithScenariosAndWebhooks }));
+                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, { intents: intentsWithScenariosAndWebhooksAndPostFormat }));
                                 });
                             }, (err, domainsWithIntents) => {
 
-                                if (err){
+                                if (err) {
                                     return callbackGetDomainIntentAndScenarios(err);
                                 }
-                                return callbackGetDomainIntentAndScenarios(null, Object.assign(exportedAgent, { domains: domainsWithIntents } ));
+                                return callbackGetDomainIntentAndScenarios(null, Object.assign(exportedAgent, { domains: domainsWithIntents }));
                             });
                         }
                     ], (err, agentWithDomains) => {
 
-                        if (err){
+                        if (err) {
                             return callbackGetDomainsData(err);
                         }
                         return callbackGetDomainsData(null, agentWithDomains);
@@ -170,47 +201,81 @@ module.exports = (request, reply) => {
 
                     server.inject(`/agent/${agentId}/entity`, (res) => {
 
-                        if (res.statusCode !== 200){
+                        if (res.statusCode !== 200) {
                             const error = Boom.create(res.statusCode, `An error occurred getting the list of entities of agent ${exportedAgent.agentName}`);
                             return callbackGetEntities(error, null);
                         }
-                        if (!withReferences){
+                        if (!withReferences) {
 
-                            res.result.forEach((entity) => {
+                            res.result.entities.forEach((entity) => {
 
                                 delete entity.id;
                                 delete entity.agent;
                             });
                         }
-                        return callbackGetEntities(null, Object.assign(exportedAgent, { entities: res.result }));
+                        return callbackGetEntities(null, Object.assign(exportedAgent, { entities: res.result.entities }));
                     });
                 },
                 webhook: (callbackGetWebhook) => {
 
                     server.inject(`/agent/${agentId}/webhook`, (res) => {
 
-                        if (res.statusCode !== 200){
-                            if (res.statusCode === 404){
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
                                 return callbackGetWebhook(null, exportedAgent);
                             }
                             const error = Boom.create(res.statusCode, `An error occurred getting the webhook of the agent ${exportedAgent.agentName}`);
                             return callbackGetWebhook(error, null);
                         }
 
-                        if (!withReferences){
+                        if (!withReferences) {
 
                             delete res.result.id;
                             delete res.result.agent;
                         }
                         return callbackGetWebhook(null, Object.assign(exportedAgent, { webhook: res.result }));
                     });
+                },
+                postFormat: (callbackGetPostFormat) => {
+
+                    server.inject(`/agent/${agentId}/postFormat`, (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                return callbackGetPostFormat(null, exportedAgent);
+                            }
+                            const error = Boom.create(res.statusCode, `An error occurred getting the postFormat of the agent ${exportedAgent.agentName}`);
+                            return callbackGetPostFormat(error, null);
+                        }
+
+                        if (!withReferences) {
+
+                            delete res.result.id;
+                            delete res.result.agent;
+                        }
+                        return callbackGetPostFormat(null, Object.assign(exportedAgent, { postFormat: res.result }));
+                    });
+                },
+                settings: (callbackGetSettings) => {
+
+                    server.inject(`/agent/${agentId}/settings`, (res) => {
+
+                        if (res.statusCode !== 200) {
+                            if (res.statusCode === 404) {
+                                return callbackGetSettings(null, exportedAgent);
+                            }
+                            const error = Boom.create(res.statusCode, `An error occurred getting the settings of the agent ${exportedAgent.agentName}`);
+                            return callbackGetSettings(error, null);
+                        }
+                        return callbackGetSettings(null, Object.assign(exportedAgent, { settings: res.result }));
+                    });
                 }
             }, (err) => {
 
-                if (err){
+                if (err) {
                     return callbackGetAgentEntitiesAndDomains(err);
                 }
-                if (!withReferences){
+                if (!withReferences) {
 
                     delete exportedAgent.id;
                 }
@@ -219,7 +284,7 @@ module.exports = (request, reply) => {
         }
     ], (err, data) => {
 
-        if (err){
+        if (err) {
             return reply(err);
         }
 

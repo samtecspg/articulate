@@ -1,9 +1,10 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const Cast = require('../../../helpers/cast');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 const updateDataFunction = (redis, agentId, currentAgent, updateData, cb) => {
 
@@ -51,6 +52,7 @@ module.exports = (request, reply) => {
         (currentAgent, cb) => {
 
             const requiresNameChanges = updateData.agentName && updateData.agentName !== currentAgent.agentName;
+            requiresRetrain = updateData.extraTrainingData !== undefined && updateData.extraTrainingData !== currentAgent.extraTrainingData;
             if (requiresNameChanges){
                 Async.waterfall([
                     (callback) => {
@@ -82,7 +84,7 @@ module.exports = (request, reply) => {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the agent ${agentId}`);
                                                 return callbackGetDomains(error, null);
                                             }
-                                            return callbackGetDomains(null, res.result);
+                                            return callbackGetDomains(null, res.result.domains);
                                         });
                                     },
                                     (domains, callbackUpdateEachDomain) => {
@@ -115,7 +117,7 @@ module.exports = (request, reply) => {
                                                                     const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the domain ${domain.domainName}`);
                                                                     return callbackGetIntents(error, null);
                                                                 }
-                                                                return callbackGetIntents(null, res.result);
+                                                                return callbackGetIntents(null, res.result.intents);
                                                             });
                                                         },
                                                         (intents, callbackUpdateIntentAndScenario) => {
@@ -208,7 +210,7 @@ module.exports = (request, reply) => {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the entities to update of the agent ${agentId}`);
                                                 return callbackGetEntities(error, null);
                                             }
-                                            return callbackGetEntities(null, res.result);
+                                            return callbackGetEntities(null, res.result.entities);
                                         });
                                     },
                                     (entities, callbackUpdateEachEntity) => {
@@ -298,42 +300,13 @@ module.exports = (request, reply) => {
         }
         result = Cast(result, 'agent');
         if (requiresRetrain){
-            Async.waterfall([
-                (callbackGetDomains) => {
+            const status = Status.outOfDate;
+            result.status = status;
+            redis.hmset(`agent:${agentId}`, { status }, (err) => {
 
-                    server.inject(`/agent/${agentId}/domain`, (res) => {
-
-                        if (res.statusCode !== 200){
-                            const error = Boom.create(res.statusCode, 'An error occurred getting the domains of the agent to train them');
-                            return callbackGetDomains(error, null);
-                        }
-                        return callbackGetDomains(null, res.result);
-                    });
-                },
-                (domains, callbackTrainEachDomain) => {
-
-                    Async.eachLimit(domains, 1, (domain, callbackMapOfDomain) => {
-
-                        server.inject(`/domain/${domain.id}/train`, (res) => {
-
-                            if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain.domainName}`);
-                                return callbackMapOfDomain(error);
-                            }
-                            return callbackMapOfDomain(null);
-                        });
-                    }, (err) => {
-
-                        if (err){
-                            return callbackTrainEachDomain(err);
-                        }
-                        return callbackTrainEachDomain(null);
-                    });
-                }
-            ], (errTraining) => {
-
-                if (errTraining){
-                    return reply(errTraining);
+                if (err){
+                    const error = Boom.badImplementation('An error occurred updating the agent status.');
+                    return reply(error);
                 }
                 return reply(result);
             });

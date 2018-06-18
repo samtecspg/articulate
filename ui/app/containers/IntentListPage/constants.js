@@ -1,1 +1,1 @@
-export const CHANGE_CURRENT_AGENT = 'boilerplate/IntentListPage/CHANGE_CURRENT_AGENT';
+export const CHANGE_CURRENT_AGENT = 'IntentListPage/CHANGE_CURRENT_AGENT';

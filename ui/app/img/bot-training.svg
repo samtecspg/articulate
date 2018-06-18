@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 20" id="HJoNWLmym"><style>@-webkit-keyframes HJVo4ZUXJQ_r1mXGL7k7_Animation{0%{-webkit-transform: translate(0px, 0px);transform: translate(0px, 0px);}50%{-webkit-transform: translate(-12px, 0px);transform: translate(-12px, 0px);}100%{-webkit-transform: translate(0px, 0px);transform: translate(0px, 0px);}}@keyframes HJVo4ZUXJQ_r1mXGL7k7_Animation{0%{-webkit-transform: translate(0px, 0px);transform: translate(0px, 0px);}50%{-webkit-transform: translate(-12px, 0px);transform: translate(-12px, 0px);}100%{-webkit-transform: translate(0px, 0px);transform: translate(0px, 0px);}}#HJoNWLmym *{-webkit-animation-duration: 2s;animation-duration: 2s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: cubic-bezier(0, 0, 1, 1);animation-timing-function: cubic-bezier(0, 0, 1, 1);}#BkGjE-8XJQ{fill: none;stroke: #4e4e4e;stroke-linecap: round;stroke-linejoin: round;}#H17oE-ImJm{fill: none;stroke: #4e4e4e;stroke-miterlimit: 10;}#SyBo4Z8myX{fill: none;stroke: #4e4e4e;stroke-miterlimit: 10;}#HyUj4WI7yQ{fill: none;stroke: #4e4e4e;stroke-miterlimit: 10;}#HJVo4ZUXJQ_r1mXGL7k7{-webkit-animation-name: HJVo4ZUXJQ_r1mXGL7k7_Animation;animation-name: HJVo4ZUXJQ_r1mXGL7k7_Animation;-webkit-transform-origin: 50% 50%;transform-origin: 50% 50%;transform-box: fill-box;-webkit-transform: translate(0px, 0px);transform: translate(0px, 0px);}</style>
+  <defs>
+    
+  </defs>
+  <title>bot-outline</title>
+  <g id="B1ejVZLXJm" data-name="Layer 2">
+    <g id="H1biNZImJ7" data-name="Layer 1">
+      <path d="M15,6.53H2A1.46,1.46,0,0,0,.5,8V19.25a.89.89,0,0,0,.89.89H16.81a.89.89,0,0,0,.89-.89V8a1.46,1.46,0,0,0-1.46-1.46H15Z" id="BkGjE-8XJQ"/>
+      <path d="M5.6,15.23a1.69,1.69,0,1,1,1.69-1.69A1.69,1.69,0,0,1,5.6,15.23Zm7.21,0a1.69,1.69,0,1,1,1.69-1.69A1.69,1.69,0,0,1,12.81,15.23Z" id="H17oE-ImJm"/>
+      <g id="HJVo4ZUXJQ_r1mXGL7k7" data-animator-group="true" data-animator-type="0"><g id="HJVo4ZUXJQ">
+        <circle cx="15.52" cy="2.06" r="1.56" id="SyBo4Z8myX"/>
+        <line x1="15.52" y1="3.61" x2="15.52" y2="6.53" id="HyUj4WI7yQ"/>
+      </g></g>
+    </g>
+  </g>
+<script>(function(){var a=document.querySelector('#HJoNWLmym'),b=a.querySelectorAll('style'),c=function(d){b.forEach(function(f){var g=f.textContent;g&amp;&amp;(f.textContent=g.replace(/transform-box:[^;\r\n]*/gi,'transform-box: '+d))})};c('initial'),window.requestAnimationFrame(function(){return c('fill-box')})})();</script></svg>

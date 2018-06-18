@@ -6,6 +6,7 @@ import {
   Row,
 } from 'react-materialize';
 import { connect } from 'react-redux';
+import Alert from 'react-s-alert';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import ActionButton from '../../components/ActionButton/index';
@@ -63,6 +64,15 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     this.loadDomains(this.props.currentAgent);
   }
 
+  componentDidUpdate(){
+
+    if (this.props.error) {
+      Alert.error(this.props.error.message, {
+        position: 'bottom'
+      });
+    }
+  }
+
   componentWillReceiveProps(nextProps, nextContext) {
     if (!nextProps.currentAgent) return; // No agent selected
     if (!nextProps.agentDomains) { // Agent but no domains
@@ -72,9 +82,9 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     const nDomainId = _.isEmpty(nextProps.location.query) ? undefined : nextProps.location.query.domainId;
     if (nextProps.agentDomains) {
       if (nDomainId) {
-        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains, nDomainId); //Load Domain Intents
+        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains.domains, nDomainId); //Load Domain Intents
       } else {
-        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains); //Load All Intents
+        return this.loadIntents(nextProps.currentAgent, nextProps.agentDomains.domains); //Load All Intents
       }
     }
   }
@@ -140,11 +150,11 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
 
   renderMenu() {
     return [{
-      label: 'Delete',
-      action: (intent) => this.onDeletePrompt(intent),
-    }, {
       label: 'Edit',
       action: (intent) => this.props.onChangeUrl(`/intent/${intent.id}/edit/`),
+    }, {
+      label: 'Delete',
+      action: (intent) => this.onDeletePrompt(intent),
     }];
   }
 
@@ -168,7 +178,7 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
     if (agentDomains !== false) {
       const defaultOption = { value: 'default', text: 'Please choose a domain', disabled: 'disabled' };
 
-      const options = agentDomains.map((domain) => ({
+      const options = agentDomains.domains.map((domain) => ({
         value: domain.id,
         text: domain.domainName,
       }));
@@ -210,8 +220,9 @@ export class IntentListPage extends React.PureComponent { // eslint-disable-line
             </Row>
             <Row>
               <IntentsTable
-                data={domainIntents || []}
+                data={domainIntents || { intents: [], total: 0 }}
                 menu={this.renderMenu()}
+                onReloadData={this.props.onReloadData.bind(null, this.state.selectedDomain ? this.state.selectedDomain.id : null , currentAgent ? currentAgent.id : 0)}
                 onCellChange={() => {
                 }}
               />
@@ -240,11 +251,11 @@ IntentListPage.propTypes = {
   onLoadDomains: React.PropTypes.func,
   onReset: React.PropTypes.func,
   domainIntents: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   agentDomains: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   currentAgent: React.PropTypes.oneOfType([
@@ -262,17 +273,22 @@ export function mapDispatchToProps(dispatch) {
     onLoadDomains(agent) {
       dispatch(loadAgentDomains(agent.id));
     },
-
     onLoadIntents: (domain, agent) => {
       if (domain) {
-        return dispatch(loadDomainIntents(domain.id));
+        return dispatch(loadDomainIntents(domain.id,0));
       }
-      dispatch(loadAgentIntents(agent.id));
+      dispatch(loadAgentIntents(agent.id,0));
     },
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteIntent: (intent, parent, filter) => {
       dispatch(deleteIntent(intent.id, parent.id, filter));
     },
+    onReloadData: (domainId, agentId, page, filter) => {
+      if (domainId) {
+        return dispatch(loadDomainIntents(domainId, page, filter));
+      }
+      dispatch(loadAgentIntents(agentId, page, filter));
+    }
   };
 }
 

@@ -15,6 +15,11 @@ module.exports = (request, reply) => {
     if (request.query && request.query.limit > -1){
         limit = request.query.limit;
     }
+    let filter = '';
+    if (request.query.filter && request.query.filter.trim() !== ''){
+        filter = request.query.filter;
+    }
+    let total = 0;
     const domainId = request.params.id;
 
     Async.waterfall([
@@ -35,13 +40,28 @@ module.exports = (request, reply) => {
         },
         (cb) => {
 
-            redis.zrange(`domainIntents:${domainId}`, start, limit === -1 ? limit : limit - 1, 'withscores', (err, intents) => {
+            redis.zrange(`domainIntents:${domainId}`, 0, -1, 'withscores', (err, intents) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error occurred getting the intents from the sorted set.');
+                    const error = Boom.badImplementation('An error occurred getting the intents of the domain from the sorted set.');
                     return cb(error);
                 }
                 intents = _.chunk(intents, 2);
+                total = intents.length;
+                if (filter && filter !== ''){
+                    intents = _.filter(intents, (intent) => {
+
+                        return intent[0].toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+                    });
+                    total = intents.length;
+                }
+                intents = _.sortBy(_.map(intents, (intent) => {
+
+                    return { intentName: intent[0], id: intent[1] };
+                }), 'intentName');
+                if (limit !== -1){
+                    intents = intents.slice(start, limit);
+                }
                 return cb(null, intents);
             });
         },
@@ -49,10 +69,10 @@ module.exports = (request, reply) => {
 
             Async.map(intents, (intent, callback) => {
 
-                server.inject('/intent/' + intent[1], (res) => {
+                server.inject('/intent/' + intent.id, (res) => {
 
                     if (res.statusCode !== 200){
-                        const error = Boom.create(res.statusCode, `An error occurred getting the data of the intent ${intent[1]}`);
+                        const error = Boom.create(res.statusCode, `An error occurred getting the data of the intent ${intent.id}`);
                         return callback(error, null);
                     }
                     return callback(null, res.result);
@@ -62,7 +82,7 @@ module.exports = (request, reply) => {
                 if (err){
                     return cb(err, null);
                 }
-                return cb(null, result);
+                return cb(null, { intents: result, total });
             });
         }
     ], (err, result) => {

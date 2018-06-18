@@ -2,13 +2,13 @@
 const Async = require('async');
 const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const IntentTools = require('../tools');
-const DomainTools = require('../../domain/tools');
 const _ = require('lodash');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
-const updateDataFunction = (redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, cb) => {
+const updateDataFunction = (redis, server, intentId, currentIntent, updateData, agentId, domainId, cb) => {
 
     const oldExamples = _.cloneDeep(currentIntent.examples);
     if (updateData.examples){
@@ -46,12 +46,33 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                 return callback(null);
             });
         },
+        intentEntitiesUnlink: (callback) => {
+
+            Async.eachSeries(oldExamples, (example, nextExample) => {
+
+                Async.eachSeries(example.entities, (entity, nextEntity) => {
+
+                    redis.zrem(`entityIntents:${entity.entityId}`, currentIntent.intentName, (err) => {
+
+                        if (err){
+                            const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the entity ${entity.entityId}`);
+                            return nextEntity(error);
+                        }
+                        return nextEntity(null);
+                    });
+                }, nextExample);
+            }, callback);
+        },
         intentEntitiesLink: (callback) => {
 
             Async.eachSeries(resultIntent.examples, (example, nextIntent) => {
 
                 Async.eachSeries(example.entities, (entity, nextEntity) => {
 
+                    //Only system entities have an extractor specified, so ignore sys entities
+                    if (entity.extractor){
+                        return nextEntity(null);
+                    }
                     redis.zadd(`entityIntents:${entity.entityId}`, 'NX', intentId, resultIntent.intentName, (err, addResponse) => {
 
                         if (err) {
@@ -79,30 +100,27 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
                     requiresTraining =  requiresTraining || updateData.intentName !== currentIntent.intentName;
                 }
                 if (requiresTraining){
-                    Async.series([
-                        Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, resultIntent, agentId, domainId, oldExamples),
-                        (callb) => {
-
-                            Async.parallel([
-                                Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, resultIntent.agent, resultIntent.domain, domainId),
-                                Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, resultIntent.agent, agentId)
-                            ], (err) => {
-
-                                if (err){
-                                    return callb(err);
-                                }
-                                return callb(null);
-                            });
-                        }
-                    ], (err) => {
+                    IntentTools.updateEntitiesDomainTool(server, redis, resultIntent, agentId, domainId, oldExamples, (err) => {
 
                         if (err) {
                             return callback(err);
                         }
+                        redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
 
-                        return callback(null, resultIntent);
+                            if (err){
+                                const error = Boom.badImplementation('An error occurred updating the agent status.');
+                                return callback(error);
+                            }
+                            redis.hmset(`domain:${domainId}`, { status: Status.outOfDate }, (err) => {
+
+                                if (err){
+                                    const error = Boom.badImplementation('An error occurred updating the domain status.');
+                                    return callback(error);
+                                }
+                                return callback(null, resultIntent);
+                            });
+                        });
                     });
-
                 }
                 else {
                     return callback(null, resultIntent);
@@ -121,14 +139,12 @@ const updateDataFunction = (redis, server, rasa, intentId, currentIntent, update
 module.exports = (request, reply) => {
 
     const intentId = request.params.id;
-    let agent = null;
     let agentId = null;
     let domainId = null;
     const updateData = request.payload;
 
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.waterfall([
         (cb) => {
@@ -160,22 +176,6 @@ module.exports = (request, reply) => {
                 }
                 const error = Boom.badRequest(`The agent ${currentIntent.agent} doesn't exist`);
                 return cb(error, null);
-            });
-        },
-        (currentIntent, cb) => {
-
-            server.inject(`/agent/${agentId}`, (res) => {
-
-                if (res.statusCode !== 200){
-                    if (res.statusCode === 400){
-                        const errorNotFound = Boom.notFound(res.result.message);
-                        return cb(errorNotFound);
-                    }
-                    const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
-                    return cb(error, null);
-                }
-                agent = res.result;
-                return cb(null, currentIntent);
             });
         },
         (currentIntent, cb) => {
@@ -241,24 +241,7 @@ module.exports = (request, reply) => {
                     },
                     (callback) => {
 
-                        Async.eachSeries(currentIntent.examples, (example, nextIntent) => {
-
-                            Async.eachSeries(example.entities, (entity, nextEntity) => {
-
-                                redis.zrem(`entityIntents:${entity.entityId}`, currentIntent.intentName, (err, addResponse) => {
-
-                                    if (err){
-                                        const error = Boom.badImplementation( `An error occurred removing the intent ${intentId} from the intents list of the entity ${entity.entityId}`);
-                                        return nextEntity(error);
-                                    }
-                                    return nextEntity(null);
-                                });
-                            }, nextIntent);
-                        }, callback);
-                    },
-                    (callback) => {
-
-                        updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
+                        updateDataFunction(redis, server, intentId, currentIntent, updateData, agentId, domainId, (err, result) => {
 
                             if (err){
                                 const error = Boom.badImplementation('An error occurred adding the intent data.');
@@ -276,7 +259,7 @@ module.exports = (request, reply) => {
                 });
             }
             else {
-                updateDataFunction(redis, server, rasa, intentId, currentIntent, updateData, agent, agentId, domainId, (err, result) => {
+                updateDataFunction(redis, server, intentId, currentIntent, updateData, agentId, domainId, (err, result) => {
 
                     if (err){
                         const error = Boom.badImplementation('An error occurred adding the intent data.');

@@ -34,7 +34,7 @@ before((done) => {
                 done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
-                server.inject(`/agent/${resName.result.id}/export`, (resAgent) => {
+                server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
                         done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
@@ -69,7 +69,7 @@ suite('/intent', () => {
                         entities: [
                             {
                                 start: 10,
-                                end: 12,
+                                end: 13,
                                 value: 'car',
                                 entity: 'Test Entity',
                                 entityId
@@ -81,7 +81,7 @@ suite('/intent', () => {
                         entities: [
                             {
                                 start: 12,
-                                end: 14,
+                                end: 15,
                                 value: 'car',
                                 entity: 'Test Entity',
                                 entityId
@@ -89,7 +89,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {
@@ -157,7 +158,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {
@@ -206,7 +208,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {
@@ -255,7 +258,8 @@ suite('/intent', () => {
                         ]
                     }
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const options = {

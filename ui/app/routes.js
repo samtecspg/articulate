@@ -22,6 +22,15 @@ export default function createRoutes(store) {
       },
     },
     {
+      path: '/missing-api',
+      name: 'home',
+      getComponent(nextState, cb) {
+        import('containers/MissingAPIPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    },
+    {
       path: '/wizard/domain',
       name: 'wizardDomain',
       getComponent(nextState, cb) {
@@ -303,6 +312,72 @@ export default function createRoutes(store) {
 
         importModules.then(([reducer, sagas, component]) => {
           injectReducer('entity', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/settings/global',
+      name: 'globalSettings',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/GlobalSettingsPage/reducer'),
+          import('containers/GlobalSettingsPage/sagas'),
+          import('containers/GlobalSettingsPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('globalSettings', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/settings/rasa',
+      name: 'rasaSettings',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/RasaSettingsPage/reducer'),
+          import('containers/RasaSettingsPage/sagas'),
+          import('containers/RasaSettingsPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('rasaSettings', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/settings/duckling',
+      name: 'ducklingSettings',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/DucklingSettingsPage/reducer'),
+          import('containers/DucklingSettingsPage/sagas'),
+          import('containers/DucklingSettingsPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('ducklingSettings', reducer.default);
           injectSagas(sagas.default);
 
           renderRoute(component);

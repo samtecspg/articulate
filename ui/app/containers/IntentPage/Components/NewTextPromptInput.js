@@ -9,7 +9,7 @@ export function NewTextPromptInput(props) {
       style={{ marginBottom: '0px' }}
       placeholder={messages.slotPromptPlaceholder.defaultMessage}
       inputId={props.slot.value + '_newTextPrompt'}
-      onKeyPress={props.onAddTextPrompt.bind(null, props.slot.slotName)}
+      onKeyDown={props.onAddTextPrompt.bind(null, props.slot.slotName)}
       disabled={!props.slot.isRequired}
     />
   );

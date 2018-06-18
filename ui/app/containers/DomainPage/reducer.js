@@ -14,6 +14,7 @@ const initialState = Immutable({
     domainName: '',
     enabled: true,
     intentThreshold: 50,
+    extraTrainingData: false,
   },
 });
 

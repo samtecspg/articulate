@@ -15,7 +15,7 @@ module.exports = (server, redis, agentId, cb) => {
                     const error = Boom.create(res.statusCode, `An error occurred getting the list of domains from agent ${agentId}`);
                     return callbackGetDomainsOfAgent(error, null);
                 }
-                return callbackGetDomainsOfAgent(null, res.result);
+                return callbackGetDomainsOfAgent(null, res.result.domains);
             });
         },
         (domains, callbackFormatDomains) => {
@@ -49,8 +49,8 @@ module.exports = (server, redis, agentId, cb) => {
                             const error = Boom.create(res.statusCode, `An error occurred getting the list of intents of the domain ${domain.domainName}`);
                             return callbackFormatDomain(error);
                         }
-                        if (res.result.length > 0){
-                            const formattedDomain = { name: domainName, model: modelFolderName, justER, intent: res.result[0].intentName };
+                        if (res.result.intents.length > 0){
+                            const formattedDomain = { name: domainName, model: modelFolderName, justER, intent: res.result.intents[0].intentName };
                             formattedDomains.push(formattedDomain);
                             return callbackFormatDomain(null);
                         }

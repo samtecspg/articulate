@@ -46,6 +46,7 @@ import {
   LOAD_AGENTS_SUCCESS,
   LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_SUCCESS,
+  LOAD_CURRENT_AGENT_STATUS_SUCCESS,
   LOAD_DOMAINS_INTENTS,
   LOAD_DOMAINS_INTENTS_ERROR,
   LOAD_DOMAINS_INTENTS_SUCCESS,
@@ -59,7 +60,6 @@ import {
   RESET_SESSION_ERROR,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
-  //SELECT_CURRENT_AGENT,
   SET_IN_WIZARD,
   UPDATE_AGENT,
   UPDATE_AGENT_ERROR,
@@ -76,6 +76,19 @@ import {
   UPDATE_SCENARIO_ERROR,
   UPDATE_SCENARIO_SUCCESS,
   UPDATE_WEBHOOK_ERROR,
+  RESET_MISSING_API,
+  MISSING_API,
+  CHECK_API,
+  LOAD_CURRENT_AGENT_STATUS,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
+  LOAD_SETTINGS,
+  LOAD_SETTINGS_ERROR,
+  LOAD_SETTINGS_SUCCESS,
+  CHANGE_SETTINGS_DATA,
+  RESET_SETTINGS_DATA,
+  REMOVE_SETTINGS_FALLBACK
 } from './constants';
 
 // The initial state of the App
@@ -83,15 +96,33 @@ const initialState = Immutable({
   loading: false,
   error: false,
   success: false,
+  missingAPI: false,
   loadingConversation: false,
   currentAgent: undefined,
+  currentAgentStatus: undefined,
   agents: [],
-  agentDomains: [],
-  agentEntities: [],
-  domainIntents: [],
+  agentDomains: { domains: [], total: 0 },
+  agentEntities: { entities: [], total: 0 },
+  domainIntents: { intents: [], total: 0 },
   conversation: [],
   agent: undefined,
   entityIntents: {},
+  settingsData: {
+    rasaURL: '',
+    uiLanguage: '',
+    ducklingURL: '',
+    defaultTimezone: '',
+    defaultAgentLanguage: '',
+    timezones: [],
+    uiLanguages: [],
+    agentLanguages: [],
+    ducklingDimension: [],
+    spacyPretrainedEntities: [],
+    domainClassifierPipeline: [],
+    intentClassifierPipeline: [],
+    entityClassifierPipeline: [],
+    defaultAgentFallbackResponses: []
+  },
 });
 
 function appReducer(state = initialState, action) {
@@ -101,11 +132,6 @@ function appReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false)
         .set('agents', false);
-    /*case SELECT_CURRENT_AGENT :
-      return state
-        .set('loading', false)
-        .set('error', false)
-        .set('currentAgent', action.agent);*/
     case LOAD_CURRENT_AGENT:
       return state
         .set('loading', true)
@@ -114,12 +140,20 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', false)
-        .set('currentAgent', action.agent);
+        .set('currentAgent', action.agent)
+        .set('currentAgentStatus', {
+          status: action.agent.status,
+          lastTraining: action.agent.lastTraining,
+        });
+    case LOAD_CURRENT_AGENT_STATUS_SUCCESS:
+      return state
+        .set('currentAgentStatus', action.agentStatus);
     case RESET_CURRENT_AGENT:
       return state
         .set('loading', false)
         .set('error', false)
-        .set('currentAgent', false);
+        .set('currentAgent', false)
+        .set('currentAgentStatus', false);
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.data)
@@ -170,7 +204,11 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('success', true)
-        .set('currentAgent', action.agent);
+        .set('currentAgent', action.agent)
+        .set('currentAgentStatus', {
+          status: action.agent.status,
+          lastTraining: action.agent.lastTraining
+        });
     case CREATE_AGENT_ERROR:
       return state
         .set('error', action.error)
@@ -447,6 +485,50 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+    case CHECK_API:
+      return state;
+    case MISSING_API:
+      return state
+        .set('missingAPI', true);
+    case RESET_MISSING_API:
+      return state
+        .set('missingAPI', false);
+    case UPDATE_SETTINGS:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case UPDATE_SETTINGS_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('success', true);
+    case UPDATE_SETTINGS_ERROR:
+      return state
+        .set('error', action.error)
+        .set('success', false)
+        .set('loading', false);
+    case LOAD_SETTINGS:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_SETTINGS_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+        .set('settingsData', action.settings);
+    case LOAD_SETTINGS_ERROR:
+      return state
+        .set('error', action.error)
+        .set('loading', false);
+    case CHANGE_SETTINGS_DATA:
+      return state
+        .setIn(['settingsData', action.payload.field], action.payload.value);
+    case RESET_SETTINGS_DATA:
+      return state
+        .set('settingsData', initialState.settingsData);
+    case REMOVE_SETTINGS_FALLBACK:
+      return state
+        .updateIn(['settingsData', 'defaultAgentFallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.index));
     default:
       return state;
   }

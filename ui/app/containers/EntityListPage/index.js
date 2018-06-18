@@ -4,6 +4,7 @@ import {
   Col,
   Row,
 } from 'react-materialize';
+import Alert from 'react-s-alert';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
@@ -63,6 +64,15 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
     }
   }
 
+  componentDidUpdate(){
+
+    if (this.props.error) {
+      Alert.error(this.props.error.message, {
+        position: 'bottom'
+      });
+    }
+  }
+
   onCreateAction() {
     this.props.onChangeUrl('/entities/create');
   }
@@ -88,11 +98,11 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
 
   renderMenu() {
     return [{
-      label: 'Delete',
-      action: (entity) => this.onDeletePrompt(entity),
-    }, {
       label: 'Edit',
       action: (entity) => this.props.onChangeUrl(`/entity/${entity.id}/edit/`),
+    }, {
+      label: 'Delete',
+      action: (entity) => this.onDeletePrompt(entity),
     }];
   }
 
@@ -136,9 +146,10 @@ export class EntityListPage extends React.PureComponent { // eslint-disable-line
           <Form>
             <Row>
               <EntitiesTable
-                data={agentEntities || []}
+                data={agentEntities || { entities: [], total: 0 }}
                 intentData={entityIntents}
                 menu={this.renderMenu()}
+                onReloadData={this.props.onReloadData.bind(null, currentAgent ? currentAgent.id : 0)}
                 onFetchIntents={this.fetchEntityIntents}
                 onCellChange={() => {
                 }}
@@ -168,7 +179,7 @@ EntityListPage.propTypes = {
   onDeleteDomain: React.PropTypes.func,
   onFetchEntityIntents: React.PropTypes.func,
   agentEntities: React.PropTypes.oneOfType([
-    React.PropTypes.array,
+    React.PropTypes.object,
     React.PropTypes.bool,
   ]),
   currentAgent: React.PropTypes.oneOfType([
@@ -182,10 +193,12 @@ export function mapDispatchToProps(dispatch) {
     onFetchEntityIntents: (id) => {
       dispatch(loadEntityIntents(id));
     },
-    onComponentWillUpdate: (agent) => agent ? dispatch(loadAgentEntities(agent.id)) : dispatch(resetAgentDomains()), // TODO: Reset agent entities
+    onComponentWillUpdate: (agent) => agent ? dispatch(loadAgentEntities(agent.id, 0)) : dispatch(resetAgentDomains()), // TODO: Reset agent entities
     onChangeUrl: (url) => dispatch(push(url)),
     onDeleteDomain: (entity) => dispatch(deleteEntity(entity.id)),
-
+    onReloadData: (agentId, page, filter) => {
+      dispatch(loadAgentEntities(agentId, page, filter));
+    }
   };
 }
 

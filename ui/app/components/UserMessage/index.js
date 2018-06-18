@@ -14,9 +14,11 @@ export function UserMessage(props) {
       <Col s={6} m={2}>
       </Col>
       <Col s={6} m={10}>
-        <CardPanel className="teal accent-4 white-text message-card">
-          <Linkify properties={{target: '_blank', style: {color: 'blue'}}}><span>{props.text}</span></Linkify>
-        </CardPanel>
+        <div className="user-bubble right clearfix">
+					<div className="bubble-container">
+						<p><Linkify properties={{target: '_blank', style: {color: 'blue'}}}><span>{props.text}</span></Linkify></p>
+					</div>
+				</div>
       </Col>
     </Row>
   );

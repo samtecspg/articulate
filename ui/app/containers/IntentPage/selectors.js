@@ -17,6 +17,11 @@ const makeSelectWebhookData = () => createSelector(
   (scenarioState) => scenarioState.webhookData,
 );
 
+const makeSelectPostFormatData = () => createSelector(
+  selectIntent,
+  (intentState) => intentState.postFormatData,
+);
+
 const makeSelectOldIntentData = () => createSelector(
   selectIntent,
   (intentState) => intentState.oldIntent,
@@ -52,4 +57,5 @@ export {
   makeSelectOldScenarioData,
   makeSelectOldWebhookData,
   makeSelectTouched,
+  makeSelectPostFormatData
 };

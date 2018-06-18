@@ -1,7 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 module.exports = (request, reply) => {
@@ -61,6 +61,10 @@ module.exports = (request, reply) => {
 
             entity = Object.assign({ id: entityId }, entity);
             const flatEntity = RemoveBlankArray(Flat(entity));
+            if (!entity.regex){
+                entity.regex = null;
+                flatEntity.regex = '';
+            }
             redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 
                 if (err){

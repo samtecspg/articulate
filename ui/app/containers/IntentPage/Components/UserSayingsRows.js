@@ -23,12 +23,64 @@ function compareEntities(a, b) {
 }
 
 export function UserSayingsRows(props) {
-
   const rows = props.examples.map((value, valueIndex) => {
     const textValue = value['userSays'];
     let formattedText = null;
-    if (value.entities.length > 0) {
-      const sortedEntities = [...value.entities].sort(compareEntities);
+    if (!value.entities) {
+      value.entities = [];
+    }
+    const entities = _.cloneDeep(value.entities);
+    let regexEntityIsList = [];
+    const regexEntitiesDefinedAsSlot = props.agentEntities.entities.filter((ent) => {
+
+      return ent.type === 'regex' && props.slots.filter((slot) => {
+        if (slot.entity === ent.entityName && ent.type === 'regex' && slot.isList) {
+          regexEntityIsList.push(ent.entityName);
+        }
+        return slot.entity === ent.entityName;
+      }).length > 0
+    });
+    if (entities.length > 0 || regexEntitiesDefinedAsSlot.length > 0) {
+      regexEntitiesDefinedAsSlot.forEach((regexEntity) => {
+
+        const entityName = regexEntity.entityName;
+        let entityIsList = regexEntityIsList.indexOf(entityName) >= 0;
+        let lastRegexMatch;
+        let indexLastMatch = 0;
+        regexEntity.examples.forEach((regexExample) => {
+
+          const entityValue = regexExample.value;
+
+          if (regexExample.synonyms.indexOf(entityValue) < 0) {
+            regexExample.synonyms.push(entityValue);
+          }
+          regexExample.synonyms.forEach((syn) => {
+
+            let regexToTest = null; // re intialize the regex as it has been defined globally
+            let match;
+            regexToTest = new RegExp(syn, 'ig');
+            match = regexToTest.exec(textValue)
+            while (match !==null) {
+              const startIndex = match.index;
+              const endIndex = startIndex + match[0].length;
+              const resultToSend = { value: match[0], entity: entityName, start: startIndex, end: endIndex };
+              match = regexToTest.exec(textValue);
+              if (entityIsList) {
+                entities.push(_.cloneDeep(resultToSend));
+              }
+              if (match === null && startIndex > indexLastMatch){ //save the last match and use it slot is not a list
+                lastRegexMatch = _.cloneDeep(resultToSend);
+                indexLastMatch = startIndex;
+              }
+            }
+          });
+        })
+         if (!entityIsList){
+          //this is the last match kept int user saying row
+          entities.push(_.cloneDeep(lastRegexMatch));
+        }
+      });
+      const sortedEntities = [...entities].sort(compareEntities);
       formattedText = <FormattedText agentEntities={props.agentEntities} entities={sortedEntities} text={textValue} entityIndex={0} lastStart={0} />;
     }
     return (
@@ -43,7 +95,7 @@ export function UserSayingsRows(props) {
               onClickFunction={props.onTagEntity}
               createEntity={true}
             />
-            <a onClick={props.onRemoveExample.bind(null, valueIndex)}>
+            <a onClick={props.onRemoveExample.bind(null, props.page * props.defaultPageSize + valueIndex)}>
               <Icon className="table-delete-row">delete</Icon>
             </a>
           </div>
@@ -54,17 +106,20 @@ export function UserSayingsRows(props) {
 
   return (
     <tbody>
-    {rows}
+      {rows}
     </tbody>
   );
 }
 
 UserSayingsRows.propTypes = {
+  page: React.PropTypes.number,
+  defaultPageSize: React.PropTypes.number,
   examples: React.PropTypes.array,
   onRemoveExample: React.PropTypes.func,
   onTagEntity: React.PropTypes.func,
   setWindowSelection: React.PropTypes.func,
-  agentEntities: React.PropTypes.array,
+  agentEntities: React.PropTypes.object,
+  slots: React.PropTypes.array
 };
 
 export default UserSayingsRows;

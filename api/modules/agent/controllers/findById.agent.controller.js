@@ -1,6 +1,6 @@
 'use strict';
 const Boom = require('boom');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const Cast = require('../../../helpers/cast');
 
 module.exports = (request, reply) => {

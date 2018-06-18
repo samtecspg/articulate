@@ -2,18 +2,16 @@
 const Async = require('async');
 const Boom = require('boom');
 const IntentTools = require('../tools');
-const DomainTools = require('../../domain/tools');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
     const intentId = request.params.id;
     let intent;
-    let agent;
     let agentId;
     let domainId;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
 
     Async.waterfall([
         (cb) => {
@@ -83,22 +81,6 @@ module.exports = (request, reply) => {
                                 return callbackGetAgentId(null);
                             });
                         },
-                        (callbackGetAgentData) => {
-
-                            server.inject(`/agent/${agentId}`, (res) => {
-
-                                if (res.statusCode !== 200){
-                                    if (res.statusCode === 400){
-                                        const errorNotFound = Boom.notFound(res.result.message);
-                                        return callbackGetAgentData(errorNotFound);
-                                    }
-                                    const error = Boom.create(res.statusCode, 'An error occurred get the agent data');
-                                    return callbackGetAgentData(error, null);
-                                }
-                                agent = res.result;
-                                return callbackGetAgentData(null);
-                            });
-                        },
                         (callbackGetDomain) => {
 
                             redis.zscore(`agentDomains:${agentId}`, intent.domain, (err, score) => {
@@ -160,28 +142,26 @@ module.exports = (request, reply) => {
         if (err){
             return reply(err, null);
         }
-        Async.series([
-            Async.apply(IntentTools.updateEntitiesDomainTool, server, redis, { domain: intent.domain, examples: [] }, agentId, domainId, intent.examples),
-            (callback) => {
-
-                Async.parallel([
-                    Async.apply(DomainTools.retrainModelTool, server, rasa, agent.language, intent.agent, intent.domain, domainId),
-                    Async.apply(DomainTools.retrainDomainRecognizerTool, server, redis, rasa, agent.language, intent.agent, agentId)
-                ], (err) => {
-
-                    if (err){
-                        return callback(err);
-                    }
-                    return callback(null);
-                });
-            }
-        ], (err) => {
+        IntentTools.updateEntitiesDomainTool(server, redis, { domain: intent.domain, examples: [] }, agentId, domainId, intent.examples, (err) => {
 
             if (err) {
                 return reply(err);
             }
+            redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
 
-            return reply({ message: 'successful operation' }).code(200);
+                if (err){
+                    const error = Boom.badImplementation('An error occurred updating the agent status.');
+                    return reply(error);
+                }
+                redis.hmset(`domain:${domainId}`, { status: Status.outOfDate }, (err) => {
+
+                    if (err){
+                        const error = Boom.badImplementation('An error occurred updating the domain status.');
+                        return reply(error);
+                    }
+                    return reply({ message: 'successful operation' }).code(200);
+                });
+            });
         });
     });
 };

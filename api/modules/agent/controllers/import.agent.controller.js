@@ -1,11 +1,11 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const _ = require('lodash');
 const IntentTools = require('../../intent/tools');
-const DomainTools = require('../../domain/tools');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+const Status = require('../../../helpers/status.json');
 
 module.exports = (request, reply) => {
 
@@ -13,7 +13,6 @@ module.exports = (request, reply) => {
     const agent = request.payload;
     const server = request.server;
     const redis = server.app.redis;
-    const rasa = server.app.rasa;
     let agentResult;
     const entitiesDir = {};
 
@@ -22,7 +21,7 @@ module.exports = (request, reply) => {
 
             redis.incr('agentId', (err, newAgentId) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error occurred getting the new agent id.');
                     return cb(error);
                 }
@@ -34,11 +33,11 @@ module.exports = (request, reply) => {
 
             redis.zadd('agents', 'NX', agentId, agent.agentName, (err, addResponse) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error occurred adding the name to the agents list.');
                     return cb(error);
                 }
-                if (addResponse !== 0){
+                if (addResponse !== 0) {
                     return cb(null);
                 }
                 const error = Boom.badRequest('An agent with this name already exists.');
@@ -51,11 +50,14 @@ module.exports = (request, reply) => {
             delete clonedAgent.entities;
             delete clonedAgent.domains;
             delete clonedAgent.webhook;
+            delete clonedAgent.postFormat;
+            delete clonedAgent.settings;
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
+            clonedAgent.status = Status.outOfDate;
             const flatAgent = RemoveBlankArray(Flat(clonedAgent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
-                if (err){
+                if (err) {
                     const error = Boom.badImplementation('An error occurred adding the agent data.');
                     return cb(error);
                 }
@@ -64,7 +66,7 @@ module.exports = (request, reply) => {
         }
     }, (err, result) => {
 
-        if (err){
+        if (err) {
             return reply(err, null);
         }
         agentResult = result.agent;
@@ -76,7 +78,7 @@ module.exports = (request, reply) => {
 
                     redis.incr('entityId', (err, newEntityId) => {
 
-                        if (err){
+                        if (err) {
                             const error = Boom.badImplementation('An error occurred getting the new entity id.');
                             return cb(error);
                         }
@@ -88,11 +90,11 @@ module.exports = (request, reply) => {
 
                     redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, entity.entityName, (err, addResponse) => {
 
-                        if (err){
+                        if (err) {
                             const error = Boom.badImplementation('An error occurred adding the name to the entities list.');
                             return cb(error);
                         }
-                        if (addResponse !== 0){
+                        if (addResponse !== 0) {
                             return cb(null);
                         }
                         const error = Boom.badRequest(`A entity with the name ${entity.entityName} already exists in the agent ${agent.agentName}.`);
@@ -102,10 +104,11 @@ module.exports = (request, reply) => {
                 (cb) => {
 
                     entity = Object.assign({ id: entityId, agent: agentResult.agentName }, entity);
+                    entity.regex = !entity.regex ? '' : entity.regex;
                     const flatEntity = RemoveBlankArray(Flat(entity));
                     redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
 
-                        if (err){
+                        if (err) {
                             const error = Boom.badImplementation('An error occurred adding the entity data.');
                             return cb(error);
                         }
@@ -115,14 +118,14 @@ module.exports = (request, reply) => {
                 }
             ], (errEntity, resultEntity) => {
 
-                if (errEntity){
+                if (errEntity) {
                     return callbackAddEntities(errEntity, null);
                 }
                 return callbackAddEntities(null, entity);
             });
         }, (errEntities, resultEntities) => {
 
-            if (errEntities){
+            if (errEntities) {
                 return reply(errEntities, null);
             }
             agentResult.entities = resultEntities;
@@ -135,7 +138,7 @@ module.exports = (request, reply) => {
 
                         redis.incr('domainId', (err, newDomainId) => {
 
-                            if (err){
+                            if (err) {
                                 const error = Boom.badImplementation('An error occurred getting the new domain id.');
                                 return cb(error);
                             }
@@ -147,11 +150,11 @@ module.exports = (request, reply) => {
 
                         redis.zadd(`agentDomains:${agentId}`, 'NX', domainId, domain.domainName, (err, addResponse) => {
 
-                            if (err){
+                            if (err) {
                                 const error = Boom.badImplementation('An error occurred adding the name to the domains list.');
                                 return cb(error);
                             }
-                            if (addResponse !== 0){
+                            if (addResponse !== 0) {
                                 return cb(null);
                             }
                             const error = Boom.badRequest(`A domain with the name ${domain.domainName} already exists in the agent ${agent.agentName}.`);
@@ -161,12 +164,15 @@ module.exports = (request, reply) => {
                     (cb) => {
 
                         let clonedDomain = _.cloneDeep(domain);
+                        clonedDomain.status = Status.outOfDate;
                         delete clonedDomain.intents;
+                        delete clonedDomain.model; //This would make that the training process don't try to unload a non existent model
+                        delete clonedDomain.lastTraining;
                         clonedDomain = Object.assign({ id: domainId, agent: agent.agentName }, clonedDomain);
                         const flatDomain = RemoveBlankArray(Flat(clonedDomain));
                         redis.hmset(`domain:${domainId}`, flatDomain, (err) => {
 
-                            if (err){
+                            if (err) {
                                 const error = Boom.badImplementation('An error occurred adding the domain data.');
                                 return cb(error);
                             }
@@ -175,7 +181,7 @@ module.exports = (request, reply) => {
                     }
                 ], (errDomain, resultDomain) => {
 
-                    if (errDomain){
+                    if (errDomain) {
                         return callbackAddDomains(errDomain, null);
                     }
                     domainResult = resultDomain;
@@ -197,7 +203,7 @@ module.exports = (request, reply) => {
 
                                 redis.incr('intentId', (err, newIntentId) => {
 
-                                    if (err){
+                                    if (err) {
                                         const error = Boom.badImplementation('An error occurred getting the new intent id.');
                                         return cb(error);
                                     }
@@ -209,11 +215,11 @@ module.exports = (request, reply) => {
 
                                 redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
 
-                                    if (err){
+                                    if (err) {
                                         const error = Boom.badImplementation('An error occurred adding the name to the intents list.');
                                         return cb(error);
                                     }
-                                    if (addResponse !== 0){
+                                    if (addResponse !== 0) {
                                         return cb(null);
                                     }
                                     const error = Boom.badRequest(`A intent with the name ${intent.intentName} already exists in the domain ${domain.domainName}.`);
@@ -226,6 +232,10 @@ module.exports = (request, reply) => {
 
                                     Async.eachSeries(example.entities, (entity, nextEntity) => {
 
+                                        //Only system entities have an extractor specified, so ignore sys entities
+                                        if (entity.extractor) {
+                                            return nextEntity(null);
+                                        }
                                         redis.zadd(`entityIntents:${entitiesDir[entity.entity]}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
 
                                             if (err) {
@@ -243,6 +253,7 @@ module.exports = (request, reply) => {
                                 let clonedIntent = _.cloneDeep(intent);
                                 delete clonedIntent.scenario;
                                 delete clonedIntent.webhook;
+                                delete clonedIntent.postFormat;
                                 clonedIntent = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedIntent);
                                 clonedIntent.examples = _.map(clonedIntent.examples, (example) => {
 
@@ -259,7 +270,7 @@ module.exports = (request, reply) => {
                                 const flatIntent = RemoveBlankArray(Flat(clonedIntent));
                                 redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
 
-                                    if (err){
+                                    if (err) {
                                         const error = Boom.badImplementation('An error occurred adding the intent data.');
                                         return cb(error);
                                     }
@@ -268,7 +279,7 @@ module.exports = (request, reply) => {
                             }
                         }, (errAddIntent, resultAddIntent) => {
 
-                            if (errAddIntent){
+                            if (errAddIntent) {
                                 return callbackAddIntents(errAddIntent, null);
                             }
 
@@ -279,7 +290,7 @@ module.exports = (request, reply) => {
                                 if (errUpdateEntitiesDomains) {
                                     return callbackAddIntents(errUpdateEntitiesDomains);
                                 }
-                                if (intent.scenario){
+                                if (intent.scenario) {
 
                                     let scenarioId;
                                     Async.series({
@@ -297,7 +308,7 @@ module.exports = (request, reply) => {
 
                                             redis.incr('scenarioId', (err, newScenarioId) => {
 
-                                                if (err){
+                                                if (err) {
                                                     const error = Boom.badImplementation('An error occurred getting the new scenario id.');
                                                     return cb(error);
                                                 }
@@ -312,7 +323,7 @@ module.exports = (request, reply) => {
                                             const flatScenario = RemoveBlankArray(Flat(scenarioToInsert));
                                             redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
 
-                                                if (err){
+                                                if (err) {
                                                     const error = Boom.badImplementation('An error occurred adding the scenario data.');
                                                     return cb(error);
                                                 }
@@ -321,27 +332,58 @@ module.exports = (request, reply) => {
                                         }
                                     }, (errScenario, resultScenario) => {
 
-                                        if (errScenario){
+                                        if (errScenario) {
                                             return callbackAddIntents(errScenario, null);
                                         }
                                         resultIntent.scenario = resultScenario.scenario;
-                                        if (intent.webhook){
-                                            let webhookToInsert = intent.webhook;
-                                            webhookToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, webhookToInsert);
-                                            const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
-                                            redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
+                                        Async.parallel([
+                                            (callbackAddWebhookToIntent) => {
 
-                                                if (err){
-                                                    const error = Boom.badImplementation('An error occurred adding the webhook data.');
-                                                    return callbackAddIntents(error, null);
+                                                if (intent.webhook) {
+                                                    let webhookToInsert = intent.webhook;
+                                                    webhookToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, webhookToInsert);
+                                                    const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
+                                                    redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
+
+                                                        if (err) {
+                                                            const error = Boom.badImplementation('An error occurred adding the webhook data.');
+                                                            return callbackAddWebhookToIntent(error, null);
+                                                        }
+                                                        resultIntent.webhook = webhookToInsert;
+                                                        return callbackAddWebhookToIntent(null);
+                                                    });
                                                 }
-                                                resultIntent.webhook = webhookToInsert;
-                                                return callbackAddIntents(null, resultIntent);
-                                            });
-                                        }
-                                        else {
-                                            return callbackAddIntents(null, resultIntent);
-                                        }
+                                                else {
+                                                    return callbackAddWebhookToIntent(null);
+                                                }
+                                            },
+                                            (callbackAddPostFormatToIntent) => {
+
+                                                if (intent.postFormat) {
+                                                    let postFormatToInsert = intent.postFormat;
+                                                    postFormatToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, postFormatToInsert);
+                                                    const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
+                                                    redis.hmset(`intentPostFormat:${intentId}`, flatPostFormat, (err) => {
+
+                                                        if (err) {
+                                                            const error = Boom.badImplementation('An error occurred adding the post format data.');
+                                                            return callbackAddPostFormatToIntent(error, null);
+                                                        }
+                                                        resultIntent.postFormat = postFormatToInsert;
+                                                        return callbackAddPostFormatToIntent(null);
+                                                    });
+                                                }
+                                                else {
+                                                    return callbackAddPostFormatToIntent(null);
+                                                }
+                                            }
+                                        ], (err) => {
+
+                                            if (err){
+                                                callbackAddIntents(err);
+                                            }
+                                            callbackAddIntents(null, resultIntent);
+                                        });
                                     });
                                 }
                                 else {
@@ -351,49 +393,92 @@ module.exports = (request, reply) => {
                         });
                     }, (errIntents, resultIntents) => {
 
-                        if (errIntents){
+                        if (errIntents) {
                             return reply(errIntents, null);
                         }
                         domainResult.intents = resultIntents;
-
-                        DomainTools.retrainModelTool(server, rasa, agent.language, agentResult.agentName, domainResult.domainName, domainResult.id, (errTraining) => {
-
-                            if (errTraining){
-                                return callbackAddDomains(errTraining);
-                            }
-                            return callbackAddDomains(null, domainResult);
-                        });
+                        return callbackAddDomains(null, domainResult);
                     });
                 });
             }, (errDomains, resultDomains) => {
 
-                if (errDomains){
+                if (errDomains) {
                     return reply(errDomains);
                 }
                 agentResult.domains = resultDomains;
 
-                DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agentResult.agentName, agentResult.id, (errTraining) => {
+                Async.parallel({
 
-                    if (errTraining){
-                        return reply(errTraining);
-                    }
-                    if (agent.useWebhook){
-                        const webhook = Object.assign({ id: agentId }, agent.webhook);
-                        const flatWebhook = RemoveBlankArray(Flat(webhook));
-                        redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
+                    addedPostFormat: (callbacksetAgentPostFormat) => {
 
-                            if (err){
-                                const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
-                                return reply(error);
+                        if (agent.usePostFormat) {
+                            const postFormat = Object.assign({ id: agentId }, agent.postFormat);
+                            const flatPostFormat = RemoveBlankArray(Flat(postFormat));
+                            redis.hmset(`agentPostFormat:${agentId}`, flatPostFormat, (err) => {
+
+                                if (err) {
+                                    const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
+                                    return callbacksetAgentPostFormat(error, null);
+                                }
+                                postFormat.agent = agent.agentName;
+                                return callbacksetAgentPostFormat(null, postFormat);
+                            });
+
+                        }
+                        else {
+                            return callbacksetAgentPostFormat(null);
+                        }
+                    },
+                    addedWebhook: (callBackAgentWebhook) => {
+
+                        if (agent.useWebhook) {
+                            const webhook = Object.assign({ id: agentId }, agent.webhook);
+                            const flatWebhook = RemoveBlankArray(Flat(webhook));
+                            redis.hmset(`agentWebhook:${agentId}`, flatWebhook, (err) => {
+
+                                if (err) {
+                                    const error = Boom.badImplementation('An error occurred adding the webhook data of the imported agent.');
+                                    return callBackAgentWebhook(error, null);
+                                }
+                                webhook.agent = agent.agentName;
+                                return callBackAgentWebhook(null, webhook);
+                            });
+
+                        }
+                        else {
+                            return callBackAgentWebhook(null);
+                        }
+                    },
+                    addedSettings: (callBackAgentSettings) => {
+
+                        server.inject({
+                            method: 'PUT',
+                            url: `/agent/${agentId}/settings`,
+                            payload: agent.settings
+                        }, (res) => {
+
+                            if (res.statusCode !== 200) {
+                                const error = Boom.create(res.statusCode, 'An error occurred adding the settings of the agent');
+                                return callBackAgentSettings(error, null);
                             }
-                            webhook.agent = agent.agentName;
-                            agentResult.webhook = webhook;
-                            return reply(agentResult);
+                            return callBackAgentSettings(null, res.result);
                         });
                     }
-                    else {
-                        return reply(agentResult);
+                }, (err, resultWebhookPostFormatCall) => {
+
+                    if (err) {
+                        return reply(err);
                     }
+
+                    if (agent.usePostFormat) {
+                        agentResult.postFormat = resultWebhookPostFormatCall.addedPostFormat;
+                    }
+                    if (agent.useWebhook) {
+                        agentResult.webhook = resultWebhookPostFormatCall.addedWebhook;
+                    }
+                    agentResult.settings = resultWebhookPostFormatCall.addedSettings;
+                    return reply(agentResult);
+
                 });
             });
         });

@@ -22,6 +22,12 @@ import {
   LOAD_WEBHOOK_ERROR,
   LOAD_WEBHOOK_SUCCESS,
   LOAD_WEBHOOK,
+  LOAD_POSTFORMAT,
+  LOAD_POSTFORMAT_ERROR,
+  LOAD_POSTFORMAT_SUCCESS,
+  CHANGE_POSTFORMAT_DATA,
+  SORT_SLOTS,
+  CHANGE_SLOT_AGENT
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -31,9 +37,17 @@ export function changeIntentData(payload) {
   };
 }
 
+
 export function changeWebhookData(payload) {
   return {
     type: CHANGE_WEBHOOK_DATA,
+    payload,
+  };
+}
+
+export function changePostFormatData(payload) {
+  return {
+    type: CHANGE_POSTFORMAT_DATA,
     payload,
   };
 }
@@ -68,6 +82,13 @@ export function toggleFlag(payload) {
 export function changeSlotName(payload) {
   return {
     type: CHANGE_SLOT_NAME,
+    payload,
+  };
+}
+
+export function changeSlotAgent(payload) {
+  return {
+    type: CHANGE_SLOT_AGENT,
     payload,
   };
 }
@@ -184,5 +205,35 @@ export function loadWebhook(id) {
     type: LOAD_WEBHOOK,
     apiCall: true,
     id,
+  };
+}
+
+export function loadPostFormatError(error) {
+  return {
+    type: LOAD_POSTFORMAT_ERROR,
+    error,
+  };
+}
+
+export function loadPostFormatSuccess(postFormat) {
+  return {
+    type: LOAD_POSTFORMAT_SUCCESS,
+    postFormat,
+  };
+}
+
+export function loadPostFormat(id) {
+  return {
+    type: LOAD_POSTFORMAT,
+    apiCall: true,
+    id,
+  };
+}
+
+export function sortSlots(oldIndex, newIndex) {
+  return {
+    type: SORT_SLOTS,
+    oldIndex,
+    newIndex
   };
 }

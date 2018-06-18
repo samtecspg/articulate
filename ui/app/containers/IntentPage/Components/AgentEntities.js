@@ -20,8 +20,11 @@ export function AgentEntities(props) {
   const newEntity = <NavItem style={{ color: '#4e4e4e' }} key="newEntity" href="/entities/create">{messages.createEntity.defaultMessage}</NavItem>;
   let items = undefined;
 
-  const entitiesItems = props.agentEntities
+  const entitiesItems = props.agentEntities.entities
     .map((agentEntity, agentIndex) => {
+      if (agentEntity.type === 'regex'){
+        return null;
+      }
       return (
         <NavItem
           onClick={props.userSays ?
@@ -35,22 +38,17 @@ export function AgentEntities(props) {
         </NavItem>
       );
     });
-
-  if (props.agentEntities.length > 0){
-    if (props.createEntity) {
-      items = Immutable([entitiesItems])
-        .concat(<NavItem key="dividerSysEntities" divider />)
-        .concat(systemEntities)
-        .concat(<NavItem key="dividerNewEntity" divider />)
-        .concat(newEntity);
-    } else {
-      items = Immutable([entitiesItems])
-        .concat(<NavItem key="divider" divider />)
-        .concat(systemEntities);;
-    }
-  }
-  else{
-    items = Immutable([newEntityDefault])
+    
+  if (props.createEntity) {
+    items = Immutable([entitiesItems])
+      .concat(<NavItem key="dividerSysEntities" divider />)
+      .concat(systemEntities);
+      //.concat(<NavItem key="dividerNewEntity" divider />)
+      //.concat(newEntity);
+  } else {
+    items = Immutable([entitiesItems])
+      .concat(<NavItem key="divider" divider />)
+      .concat(systemEntities);;
   }
 
   return (
@@ -61,7 +59,7 @@ export function AgentEntities(props) {
 }
 
 AgentEntities.propTypes = {
-  agentEntities: React.PropTypes.array,
+  agentEntities: React.PropTypes.object,
   userSays: React.PropTypes.string,
   onClickFunction: React.PropTypes.func,
   index: React.PropTypes.number,

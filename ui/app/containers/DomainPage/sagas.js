@@ -60,8 +60,19 @@ export function* putDomain(payload) {
     const domain = response.obj;
     yield put(updateDomainSuccess(domain));
     yield put(push('/domains'));
-  } catch ({ response }) {
-    yield put(updateDomainError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(updateDomainError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(updateDomainError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(updateDomainError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 
@@ -79,8 +90,19 @@ export function* getDomain(payload) {
     const domain = response.obj;
     domain.intentThreshold *= 100;
     yield put(loadDomainSuccess(domain));
-  } catch ({ response }) {
-    yield put(loadDomainError({ message: response.obj.message }));
+  } catch (err) {
+    const errObject = { err };
+    if (errObject.err && errObject.err.message === 'Failed to fetch'){
+      yield put(loadDomainError({ message: 'Can\'t find a connection with the API. Please check your API is alive and configured properly.' }));
+    }
+    else {
+      if (errObject.err.response.obj && errObject.err.response.obj.message){
+        yield put(loadDomainError({ message: errObject.err.response.obj.message }));
+      }
+      else {
+        yield put(loadDomainError({ message: 'Unknow API error' }));
+      }
+    }
   }
 }
 

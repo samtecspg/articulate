@@ -2,19 +2,19 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   agent: {
-    id: 'boilerplate.containers.EntityListPage.create_entity.agent',
+    id: 'containers.EntityListPage.create_entity.agent',
     defaultMessage: 'Agent',
   },
   entityListTitle: {
-    id: 'boilerplate.containers.EntityListPage.list.title',
+    id: 'containers.EntityListPage.list.title',
     defaultMessage: 'Agent Entities',
   },
   entityListDescription: {
-    id: 'boilerplate.containers.EntityListPage.list.description',
+    id: 'containers.EntityListPage.list.description',
     defaultMessage: ' ',
   },
   actionButton: {
-    id: 'boilerplate.containers.EntityListPage.list.action',
+    id: 'containers.EntityListPage.list.action',
     defaultMessage: '+ Create Entity',
   },
 });

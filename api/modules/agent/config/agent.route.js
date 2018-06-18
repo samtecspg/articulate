@@ -114,6 +114,16 @@ const AgentRoutes = [
         }
     },
     {
+        method: 'GET',
+        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/postFormat',
+        config: {
+            description: 'Find the post format related with an intent, for the given domain and agent',
+            tags: ['api'],
+            validate: AgentValidator.findIntentPostFormatInDomainByIdByAgentId,
+            handler: AgentController.findIntentPostFormatInDomainByIdByAgentId
+        }
+    },
+    {
         method: 'POST',
         path: '/agent',
         config: {
@@ -232,6 +242,46 @@ const AgentRoutes = [
         }
     },
     {
+        method: 'POST',
+        path: '/agent/{id}/postFormat',
+        config: {
+            description: 'Create a new instance of a post format for the agent and persist it into the data source',
+            tags: ['api'],
+            validate: AgentValidator.addPostFormat,
+            handler: AgentController.addPostFormat
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/postFormat',
+        config: {
+            description: 'Find a post format by agent id from the data source',
+            tags: ['api'],
+            validate: AgentValidator.findPostFormat,
+            handler: AgentController.findPostFormat
+        }
+    },
+    {
+        method: 'DELETE',
+        path: '/agent/{id}/postFormat',
+        config: {
+            description: 'Delete a post format by agent id from the data source',
+            tags: ['api'],
+            validate: AgentValidator.deletePostFormat,
+            handler: AgentController.deletePostFormat
+        }
+    },
+    {
+        method: 'PUT',
+        path: '/agent/{id}/postFormat',
+        config: {
+            description: 'Update attributes of the post format of the agent and persist it into the data source',
+            tags: ['api'],
+            validate: AgentValidator.updatePostFormat,
+            handler: AgentController.updatePostFormat
+        }
+    },
+    {
         method: 'GET',
         path: '/agent/{id}/webhook',
         config: {
@@ -259,6 +309,46 @@ const AgentRoutes = [
             tags: ['api'],
             validate: AgentValidator.deleteWebhook,
             handler: AgentController.deleteWebhook
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/train',
+        config: {
+            description: 'Train the specified agent',
+            tags: ['api'],
+            validate: AgentValidator.train,
+            handler: AgentController.train
+        }
+    },
+    {
+        method: 'PUT',
+        path: '/agent/{id}/settings',
+        config: {
+            description: 'Modifies the agent settings',
+            tags: ['api'],
+            validate: AgentValidator.updateSettings,
+            handler: AgentController.updateSettings
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/settings',
+        config: {
+            description: 'Return all the setings of the agent',
+            tags: ['api'],
+            validate: AgentValidator.findAllSettings,
+            handler: AgentController.findAllSettings
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/settings/{name}',
+        config: {
+            description: 'Return the settings value for the specified name for the agent',
+            tags: ['api'],
+            validate: AgentValidator.findSettingsByName,
+            handler: AgentController.findSettingsByName
         }
     }
 ];

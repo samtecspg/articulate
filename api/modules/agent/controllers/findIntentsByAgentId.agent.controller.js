@@ -16,6 +16,11 @@ module.exports = (request, reply) => {
     if (request.query && request.query.limit > -1) {
         limit = request.query.limit;
     }
+    let filter = '';
+    if (request.query.filter && request.query.filter.trim() !== ''){
+        filter = request.query.filter;
+    }
+    let total = 0;
     const agentId = request.params.id;
 
     Async.waterfall([
@@ -35,13 +40,15 @@ module.exports = (request, reply) => {
 
             Async.map(domains, (domain, callback) => {
 
-                server.inject(`/domain/${domain[1]}/intent?start=${start}&limit=${limit}`, (res) => {
+                const url = `/domain/${domain[1]}/intent${filter !== '' ? `?filter=${filter}` : ''}`;
+                server.inject(url, (res) => {
 
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error occurred getting the data of the domain ${domain[0]} with id ${domain[1]}`);
                         return callback(error, null);
                     }
-                    return callback(null, res.result);
+                    total += res.result.total;
+                    return callback(null, res.result.intents);
                 });
 
             }, (err, result) => {
@@ -61,6 +68,10 @@ module.exports = (request, reply) => {
 
             return Cast(intent, 'intent');
         });
-        return reply(result);
+        result = _.sortBy(result, 'intentName');
+        if (limit !== -1){
+            result = result.slice(start, limit);
+        }
+        return reply({ intents: result, total });
     });
 };

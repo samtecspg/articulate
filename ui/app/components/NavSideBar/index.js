@@ -21,9 +21,9 @@ import entity from '../../img/entity-icon.svg';
 import folder from '../../img/folder-icon.svg';
 import intent from '../../img/intent-icon.svg';
 import logo from '../../img/logo.svg';
-import settings from '../../img/settings-icon.svg';
-import webhook from '../../img/webhook-icon.svg';
 import messages from './messages';
+
+import Settings from './Settings';
 
 class NavSideBar extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -45,6 +45,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
       browserHistory.push(`/agent/${agent.id}`);
     } else {
       this.props.onChangeCurrentAgent(false);
+      this.props.onChangeUrl('/');
     }
   }
 
@@ -96,7 +97,24 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
             <li>
               <Link to="/entities" activeClassName={'selected'}><img src={entity} alt="" /><span>Entity</span></Link>
             </li>
-          </ul>
+            <li>
+              <div className="divider" />
+            </li>
+            <Settings options={[
+              {
+                href: '/settings/global',
+                label: 'Global'
+              },
+              {
+                href: '/settings/rasa',
+                label: 'Rasa'
+              },
+              {
+                href: '/settings/duckling',
+                label: 'Duckling'
+              },
+            ]} />
+          </ul>{/*
           <ul className="bottom-nav">
             <li>
               <p>This is a pre-release of Articulate and is certain to have bugs or short comings. If you have any questions please <a target="_blank" href="https://github.com/samtecspg/articulate/issues/new">create an issue</a> or join us on <a target="_blank" href="https://gitter.im/samtecspg/articulate">Gitter</a>.</p>
@@ -104,7 +122,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
             <li>
               <p className="built-by">Built with <a target="_blank" href="https://rasa.com/">Rasa NLU</a></p>
             </li>
-          </ul>
+          </ul>*/}
         </nav>
       </aside>
     )
@@ -128,7 +146,12 @@ NavSideBar.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onChangeCurrentAgent: (agent) => {
-      return agent ? dispatch(loadCurrentAgent(agent.id)) : dispatch(resetCurrentAgent());
+      if (agent){
+        dispatch(loadCurrentAgent(agent.id))
+      }
+      else {
+        dispatch(resetCurrentAgent());
+      }
     },
     onChangeUrl: (url) => dispatch(push(url)),
     onComponentMounted: () => dispatch(loadAgents()),

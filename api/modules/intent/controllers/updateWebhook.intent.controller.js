@@ -2,7 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
-const Flat = require('flat');
+const Flat = require('../../../helpers/flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
 const updateDataFunction = (redis, intentId, currentWebhook, updateData, cb) => {

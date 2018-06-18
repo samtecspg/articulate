@@ -19,12 +19,15 @@ let preCreatedAgent = null;
 let agentId = null;
 let preCreatedAgentId = null;
 let importedAgentId = null;
+let importedAgentFromExportId = null;
 let domain = null;
 let entity = null;
 let intent = null;
 let scenario = null;
 let agentWebhook = null;
 let intentWebhook = null;
+let exportedTestAgent = null;
+let rasaURL = null;
 
 
 before({ timeout: 120000 }, (done) => {
@@ -42,7 +45,7 @@ before({ timeout: 120000 }, (done) => {
                 done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
-                server.inject(`/agent/${resName.result.id}/export`, (resAgent) => {
+                server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
                         done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
@@ -80,7 +83,18 @@ after((done) => {
                 message: 'Error deleting agent of the import endpoint test'
             });
         }
-        done();
+        server.inject({
+            method: 'DELETE',
+            url: '/agent/' + importedAgentFromExportId
+        }, (resDel) => {
+
+            if (resDel.statusCode !== 200){
+                done({
+                    message: 'Error deleting agent of the import from export endpoint test'
+                });
+            }
+            done();
+        });
     });
 });
 
@@ -112,7 +126,8 @@ suite('/agent', () => {
                 fallbackResponses: [
                     'Can you repeat that?'
                 ],
-                useWebhook: false
+                useWebhook: false,
+                usePostFormat: false
             };
             const options = {
                 method: 'POST',
@@ -162,12 +177,15 @@ suite('/agent/{id}', () => {
                 agentName: '71999911-cb70-442c-8864-bc1d4e6a306e Updated',
                 description: 'This is test agent',
                 language: 'en',
+                status: 'Ready',
                 timezone: 'UTC',
                 domainClassifierThreshold: 0.5,
+                extraTrainingData: false,
                 fallbackResponses: [
                     'updated'
                 ],
-                useWebhook: true
+                useWebhook: true,
+                usePostFormat: false
             };
 
             const updatedData = {
@@ -309,47 +327,6 @@ suite('/agent/{id}', () => {
 
 });
 
-suite('/agent/{id}/converse', () => {
-
-    suite('/get', () => {
-
-        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
-
-            server.inject('/agent/' + preCreatedAgentId + '/converse?sessionId=articulateAPI&text=Locate%20my%20car', (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your car is located at...');
-                done();
-            });
-        });
-    });
-
-    suite('/post', () => {
-
-        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
-
-            const data = {
-                sessionId: 'POST',
-                text: 'Locate my car',
-                timezone: 'UTC'
-            };
-            const options = {
-                method: 'POST',
-                url: `/agent/${preCreatedAgentId}/converse`,
-                payload: data
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your car is located at...');
-                done();
-            });
-        });
-    });
-
-});
-
 suite('/agent/{id}/domain', () => {
 
     suite('/get', () => {
@@ -359,7 +336,7 @@ suite('/agent/{id}/domain', () => {
             server.inject('/agent/' + preCreatedAgentId + '/domain', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result[0].domainName).to.equal(domain.domainName);
+                expect(res.result.domains[0].domainName).to.equal(domain.domainName);
                 done();
             });
         });
@@ -393,7 +370,7 @@ suite('/agent/{id}/domain/{domainId}/intent', () => {
             server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.length).to.equal(2);
+                expect(res.result.intents.length).to.equal(2);
                 done();
             });
         });
@@ -461,7 +438,7 @@ suite('/agent/{id}/entity', () => {
             server.inject('/agent/' + preCreatedAgentId + '/entity', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result[0].entityName).to.contain(entity.entityName);
+                expect(res.result.entities[0].entityName).to.contain(entity.entityName);
                 done();
             });
         });
@@ -492,7 +469,7 @@ suite('/agent/{id}/export', () => {
 
         test('should respond with 200 successful operation and return the agent will all its data', (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/export', (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/export?withReferences=true', (res) => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.id).to.equal(preCreatedAgentId);
@@ -516,6 +493,7 @@ suite('/agent/{id}/export', () => {
                 expect(res.result.domains[0].domainName).to.equal(domain.domainName);
                 expect(res.result.entities[0].entityName).to.equal(entity.entityName);
                 expect(res.result.domains[0].intents.length).to.equal(2);
+                exportedTestAgent = res.result;
                 done();
             });
         });
@@ -532,7 +510,64 @@ suite('/agent/{id}/intent', () => {
             server.inject(`/agent/${preCreatedAgentId}/intent`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result[0].intentName).to.contain(intent.intentName);
+                expect(res.result.intents[0].intentName).to.contain(intent.intentName);
+                done();
+            });
+        });
+    });
+
+});
+
+suite('/agent/{id}/train', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return an agent trained', { timeout: 60000 }, (done) => {
+
+            server.inject(`/agent/${preCreatedAgentId}/train`, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.status).to.equal('Ready');
+                done();
+            });
+        });
+    });
+});
+
+suite('/agent/{id}/converse', () => {
+
+    suite('/get', () => {
+
+        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
+
+            server.inject('/agent/' + preCreatedAgentId + '/converse?sessionId=articulateAPI&text=Locate%20my%20car', (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.textResponse).to.equal('Your car is located at...');
+                done();
+            });
+        });
+    });
+
+    suite('/post', () => {
+
+        test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
+
+            const data = {
+                sessionId: 'POST',
+                text: 'Locate my car',
+                timezone: 'UTC'
+            };
+            const options = {
+                method: 'POST',
+                url: `/agent/${preCreatedAgentId}/converse`,
+                payload: data
+            };
+
+            server.inject(options, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.textResponse).to.equal('Your car is located at...');
                 done();
             });
         });
@@ -587,6 +622,74 @@ suite('/agent/{id}/parse', () => {
                 expect(res.result.result.results[0].intent.name).to.equal(intent.intentName);
                 done();
             });
+        });
+    });
+
+});
+
+suite('/agent/{id}/settings', () => {
+
+    suite('/agent/{id}/settings/rasaURL', () => {
+
+        suite('/get', () => {
+
+            test('should respond with 200 successful operation and return an string', (done) => {
+
+                server.inject(`/agent/${preCreatedAgentId}/settings/rasaURL`, (res) => {
+
+                    expect(res.statusCode).to.equal(200);
+                    expect(res.result).to.be.an.string();
+                    rasaURL = res.result;
+                    done();
+                });
+
+            });
+        });
+    });
+
+    suite('/agent/{id}/settings', () => {
+
+        suite('/get', () => {
+
+            test('should respond with 200 successful operation and return an object', (done) => {
+
+                server.inject(`/agent/${preCreatedAgentId}/settings`, (res) => {
+
+                    expect(res.statusCode).to.equal(200);
+                    expect(res.result).to.be.an.object();
+                    expect(res.result.rasaURL).to.be.a.string();
+                    expect(res.result.spacyPretrainedEntities).to.be.an.array();
+                    expect(res.result.domainClassifierPipeline).to.be.an.array();
+                    expect(res.result.intentClassifierPipeline).to.be.an.array();
+                    expect(res.result.entityClassifierPipeline).to.be.an.array();
+                    expect(res.result.ducklingURL).to.be.a.string();
+                    expect(res.result.ducklingDimension).to.be.an.array();
+                    done();
+                });
+
+            });
+        });
+    });
+
+    suite('/put', () => {
+
+        test('should respond with 200 successful operation and return an object', (done) => {
+
+            const options = {
+                method: 'PUT',
+                url: `/agent/${preCreatedAgentId}/settings`,
+                payload: {
+                    rasaURL
+                }
+            };
+
+            server.inject(options, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.rasaURL).to.be.equal(rasaURL);
+                done();
+            });
+
         });
     });
 
@@ -692,6 +795,25 @@ suite('/agent/import', () => {
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.agentName).to.equal(AgentToImport.agentName);
                 importedAgentId = res.result.id;
+                done();
+            });
+        });
+
+        test('should be able to import the exported agent in the export test and return the imported agent', (done) => {
+
+            exportedTestAgent.agentName = 'Exported-71999911-cb70-442c-8864-bc1d4e6a306e';
+
+            const options = {
+                method: 'POST',
+                url: '/agent/import',
+                payload: exportedTestAgent
+            };
+
+            server.inject(options, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result.agentName).to.equal(exportedTestAgent.agentName);
+                importedAgentFromExportId = res.result.id;
                 done();
             });
         });
