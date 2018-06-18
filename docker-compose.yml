@@ -21,17 +21,16 @@ services:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
-      - DOCKER_INSTANCE=${DOCKER_INSTANCE:-localhost}
-      - SWAGGER_HOST=${SWAGGER_HOST:-localhost}:7500
+      - SWAGGER_HOST=${PUBLIC_IP:-localhost}:7500
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://${DOCKER_INSTANCE:-localhost}:7500/agent']
+      test: ['CMD', 'curl', '-f', 'http://${PUBLIC_IP:-localhost}:7500/agent']
   ui:
     image: samtecspg/articulate-ui:0.10.0
     ports: ['0.0.0.0:3000:3000']
     environment:
-      - API_URL=${API_URL:-http://localhost:7500}
+      - API_URL=http://${PUBLIC_IP:-localhost}:7500
     networks: ['alpha-nlu-network']
   rasa:
     image: samtecspg/articulate-rasa:0.10.0
