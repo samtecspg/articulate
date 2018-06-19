@@ -21,7 +21,6 @@ services:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
-      - SWAGGER_HOST=${PUBLIC_IP:-localhost}:7500
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
     healthcheck:
