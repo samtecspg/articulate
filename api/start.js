@@ -23,28 +23,26 @@ Server((err, server) => {
                 name: 'Smart Platform Group'
             }
         },
-        schemes: process.env.SWAGGER_SCHEMES ? [process.env.SWAGGER_SCHEMES] : ['http'],
-        host: process.env.SWAGGER_HOST || 'localhost:7500',
-        basePath: process.env.SWAGGER_BASE_PATH || '/',
         documentationPage: false
     };
 
-    const swaggerUIScheme = process.env.SWAGGER_SCHEMES ? [process.env.SWAGGER_SCHEMES][0] : 'http';
-    const swaggerUIPath = swaggerUIScheme + '://' +
-                        (process.env.SWAGGER_HOST || 'localhost:7500') +
-                        (process.env.SWAGGER_BASE_PATH || '');
+    process.env.SWAGGER_SCHEMES ? swaggerOptions.schemes = [process.env.SWAGGER_SCHEMES] : null
+    process.env.SWAGGER_HOST ? swaggerOptions.host = process.env.SWAGGER_HOST : null
+    process.env.SWAGGER_BASE_PATH ? swaggerOptions.basePath = process.env.SWAGGER_BASE_PATH : swaggerOptions.basePath = '/'
 
-
+    // We added in HapiSwaggerUI because HapiSwagger hadn't been updated and had an SSL bug.
     const swaggerUIOptions = {
         title: 'Articulate API Documentation',
         path: '/documentation',
-        basePath: swaggerUIPath,
+        // basePath: swaggerUIPath,
         swaggerOptions: {
             validatorUrl: false
         },
         authorization: false,
-        swaggerEndpoint: (process.env.SWAGGER_BASE_PATH || '') + '/swagger.json'
+        swaggerEndpoint: '/swagger.json'
     };
+
+    process.env.SWAGGER_BASE_PATH ? swaggerUIOptions.basePath = process.env.SWAGGER_BASE_PATH : swaggerUIOptions.basePath = '/'
 
     server.register([
         Inert,
