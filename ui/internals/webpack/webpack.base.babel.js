@@ -9,9 +9,6 @@ let processEnv = {
   NODE_ENV: JSON.stringify(process.env.NODE_ENV)
 };
 
-if (process.env.API_URL) {
-  processEnv.API_URL = JSON.stringify(process.env.API_URL);
-}
 module.exports = (options) => ({
   entry: options.entry,
   output: Object.assign({ // Compile into js/build.js

@@ -40,6 +40,9 @@ Server((err, server) => {
         authorization: false
     };
 
+    // We have to specify a swaggerEndpoint since we use hapi-swaggered-ui with hapi-swagger. It can't auto find the swagger.json
+    // to work behind a reverse proxy path we need to build the endpoint from the basePath when it is provided.
+    // All of this is specifically to get the swagger docs working.
     process.env.SWAGGER_BASE_PATH ? swaggerUIOptions.swaggerEndpoint = process.env.SWAGGER_BASE_PATH + '/swagger.json' : swaggerUIOptions.swaggerEndpoint = '/swagger.json'
     process.env.SWAGGER_BASE_PATH ? swaggerUIOptions.basePath = process.env.SWAGGER_BASE_PATH : swaggerUIOptions.basePath = '/'
 
