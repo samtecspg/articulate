@@ -54,7 +54,10 @@ const retryStrategy = (options) => {
 
 const initRedis = (next) => {
 
-    const client = Redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, { retry_strategy: retryStrategy });
+    const redisPort = process.env.REDIS_PORT || 6379;
+    const redisHost = process.env.REDIS_HOST || 'redis'
+
+    const client = Redis.createClient(redisPort, redisHost, { retry_strategy: retryStrategy });
     next = _.once(next); //Prevent calling the async next when there is an error after a successful connection
     // Wait for connection
     client.once('ready', () => {
