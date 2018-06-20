@@ -1,10 +1,5 @@
 version: '3.0'
 
-#
-# The behavor of this compose can be highly (site) customized by creating
-# a .env file in the root of the project.  see .env.example for an example
-#
-
 services:
   api:
     image: samtecspg/articulate-api:repo-head
