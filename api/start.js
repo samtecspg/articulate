@@ -34,14 +34,13 @@ Server((err, server) => {
     const swaggerUIOptions = {
         title: 'Articulate API Documentation',
         path: '/documentation',
-        // basePath: swaggerUIPath,
         swaggerOptions: {
             validatorUrl: false
         },
-        authorization: false,
-        swaggerEndpoint: '/swagger.json'
+        authorization: false
     };
 
+    process.env.SWAGGER_BASE_PATH ? swaggerUIOptions.swaggerEndpoint = process.env.SWAGGER_BASE_PATH + '/swagger.json' : swaggerUIOptions.swaggerEndpoint = '/swagger.json'
     process.env.SWAGGER_BASE_PATH ? swaggerUIOptions.basePath = process.env.SWAGGER_BASE_PATH : swaggerUIOptions.basePath = '/'
 
     server.register([
