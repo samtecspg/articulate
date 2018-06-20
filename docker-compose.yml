@@ -10,26 +10,10 @@ services:
     image: samtecspg/articulate-api:repo-head
     ports: ['0.0.0.0:7500:7500']
     networks: ['alpha-nlu-network']
-    # The following (crazy) block is about both:
-    # 1) setting default values for app parameteres
-    # 2) projecting any changes to those values set in the .env file
-    # a line should be added to this list for any env-var/param that the
-    # app might need, and its easiest to follow if the var name is kept the
-    # same for both the var thats projected into the app (the first name)
-    # and the name thats expected in the .env (the second name)
-    environment:
-      - REDIS_HOST=${REDIS_HOST:-redis}
-      - REDIS_PORT=${REDIS_PORT:-6379}
-      - MODEL_DIR=${MODEL_DIR:-./local-storage/rasa/nlu-model}
-    volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects"]
     entrypoint: ['node', 'start.js']
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://${PUBLIC_IP:-localhost}:7500/agent']
   ui:
     image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3000:3000']
-    environment:
-      - API_URL=http://${PUBLIC_IP:-localhost}:7500
     networks: ['alpha-nlu-network']
   rasa:
     image: samtecspg/articulate-rasa:repo-head
