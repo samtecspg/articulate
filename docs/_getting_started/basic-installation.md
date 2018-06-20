@@ -13,8 +13,7 @@ The easiest way to get started with Articulate is to use our included `docker-co
 | Loading and Training these language models dictates a certain amount of RAM. For experimenting with smaller agents 3Gb may be sufficient, but for larger agents much more RAM may be required. If training takes more than a few minutes for small agents or more than half an hour for large agents, it is a good indicator that you are running low on memory. |
 | On Windows, make sure you have shared the drive with Docker so that it can mount directories inside of the container. |
 
-### Download, Installation, and Running with Docker
-To get started
+## Setup
 
 1. **Installing Prerequisites** - Make sure you have Docker, Docker Compose, and Git installed:
 
@@ -26,14 +25,43 @@ To get started
 
 3. **Extracting** - Unzip and get a terminal or command prompt in the new  directory
 
-4. **Running** - run `docker-compose up`
+Once you've got everything extracted you're ready to start Articulate. The below instructions cover running locally and in the cloud:
 
-> There are two important notes here:
-> - `sudo` may be required depending on your platform and how you have Docker installed.
-> - When running on a cloud VM you need to tell Docker the public IP of the VM. Run your command like this:
-> 
-> `PUBLIC_IP=xxx.xxx.xxx.xxx docker-compose up`
+### Running Locally
 
-5. **Accessing** - point your web browser at [http://localhost:3500](http://localhost:3500) and enjoy Articulate. If you're running on a VM replace `localhost` with your public IP.
+This is the simplest setup and for most people wont required anything more than:
+
+```
+docker-compose up
+```
+
+A few gotchas:
+ - `sudo` may be required
+ - On Windows this will only work on Windows 10 running *Docker for Windows*
+
+### Running Remotely
+
+The only extra requirement when running this way is an environment variable which informs the UI where to look for the API (the public url).
+
+```
+API_URL=http://xxx.xx.xx.xx:7500 docker-compose up
+```
+
+Exceptions:
+ - replace the `x`s with your public IP or url
+ - `sudo` may be required
+ - On Windows specifying environment variables is a little bit more involved. The easiest way is to modify the `docker-compose.yml` file. Replace the ui service with something like this:
+ ```
+
+
+### Running Behind Nginx
+
+There are many reasons to run behind an nginx reverse proxy (like SSL and auth). Below we provide a sample nginx config, and commands.
+
+
+
+
+5. **Accessing** - point your web browser to your public IP and port `http://xxx.xx.xx.xx:3000` and enjoy Articulate.
 
 To explore the API you can go to [http://localhost:7500/documentation](http://localhost:7500/documentation)
+
