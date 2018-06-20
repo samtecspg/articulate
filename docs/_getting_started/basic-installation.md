@@ -39,6 +39,8 @@ A few gotchas:
  - `sudo` may be required
  - On Windows this will only work on Windows 10 running *Docker for Windows*
 
+After Docker downloads the images and starts all of them Articulate should be available at [http://localhost:3000](http://localhost:3000) and the API documentation should be available at [http://localhost:7500/documentation](http://localhost:7500/documentation)
+
 ### Running Remotely
 
 The only extra requirement when running this way is an environment variable which informs the UI where to look for the API (the public url).
@@ -52,16 +54,10 @@ Exceptions:
  - `sudo` may be required
  - On Windows specifying environment variables is a little bit more involved. The easiest way is to modify the `docker-compose.yml` file. Replace the ui service with something like this:
  ```
-
-
-### Running Behind Nginx
-
-There are many reasons to run behind an nginx reverse proxy (like SSL and auth). Below we provide a sample nginx config, and commands.
-
-
-
-
-5. **Accessing** - point your web browser to your public IP and port `http://xxx.xx.xx.xx:3000` and enjoy Articulate.
-
-To explore the API you can go to [http://localhost:7500/documentation](http://localhost:7500/documentation)
-
+ ui:
+  image: samtecspg/articulate-ui:repo-head
+  ports: ['0.0.0.0:3000:3000']
+  networks: ['alpha-nlu-network']
+  environment:
+    - API_URL=http://xxx.xx.xx.xx:7500
+ ```
