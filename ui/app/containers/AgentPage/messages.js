@@ -132,15 +132,11 @@ export default defineMessages({
   },
   useWebhook: {
     id: 'containers.AgentPage.create_agent.use_webhook',
-    defaultMessage: 'Webhook Definition',
+    defaultMessage: 'Enable',
   },
   usePostformat:{
     id: 'containers.AgentPage.create_agent.use_postFormat',
-    defaultMessage: 'Response Definition',
-  },
-  usePostformat:{
-    id: 'containers.AgentPage.create_agent.use_postFormat',
-    defaultMessage: 'Response Definition',
+    defaultMessage: 'Enable',
   },
   expandedTrainingData: {
     id: 'containers.AgentPage.create_agent.expanded_training_data',
@@ -261,5 +257,29 @@ export default defineMessages({
   enableModelsPerDomainTooltip: {
     id: 'containers.AgentPage.create_agent.enable_models_per_domain_tooltip',
     defaultMessage: 'Depending on the Rasa pipeline you are using, sometimes is better to use only one model for the agent. If you enable this toggle, a separate model will be generated for each domain in the agent.',
+  },
+  agentTrainingSettingsTitle: {
+    id: 'containers.AgentPage.agent_training_settings_title',
+    defaultMessage: 'Agent Training Settings',
+  },
+  agentTrainingSettingsDescription: {
+    id: 'containers.AgentPage.agent_training_settings_description',
+    defaultMessage: 'These settings will modify some elements of the training. Therefore, you can enable or disable them to impact the way the models are generated.',
+  },
+  webhookSettingsTitle: {
+    id: 'containers.AgentPage.webhook_settings_title',
+    defaultMessage: 'Agent Webhook Settings',
+  },
+  webhookSettingsDescription: {
+    id: 'containers.AgentPage.webhook_settings_description',
+    defaultMessage: 'If you want to define a global webhook that will called each time the user talks with your agent then you can do it here.',
+  },
+  responseDefinitionTitle: {
+    id: 'containers.AgentPage.response_definition_settings_title',
+    defaultMessage: 'Agent Response Settings',
+  },
+  responseDefinitionDescription: {
+    id: 'containers.AgentPage.response_definition_settings_description',
+    defaultMessage: 'Whenever you talk with your agent you may want to have additional data in your response beside the text. Here you can enable this settings to add more data to your /converse endpoint.',
   },
 });

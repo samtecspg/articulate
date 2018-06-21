@@ -112,7 +112,7 @@ export default defineMessages({
   },
   postFormat: {
     id: 'containers.AgentDetailPage.create_agent.webhook',
-    defaultMessage: 'Response Definition',
+    defaultMessage: 'Enable',
   },
   rasaSettingsTitle: {
     id: 'containers.AgentPage.rasa_settings_title',
@@ -216,14 +216,38 @@ export default defineMessages({
   },
   usePostformat:{
     id: 'containers.AgentPage.create_agent.use_postFormat',
-    defaultMessage: 'Response Definition',
+    defaultMessage: 'Enable',
   },
   useWebhook: {
     id: 'containers.AgentPage.create_agent.use_webhook',
-    defaultMessage: 'Webhook Definition',
+    defaultMessage: 'Enable',
   },
   enableModelsPerDomain: {
     id: 'containers.AgentPage.create_agent.enable_models_per_domain',
     defaultMessage: 'Generate separate models for each domain',
+  },
+  agentTrainingSettingsTitle: {
+    id: 'containers.AgentPage.agent_training_settings_title',
+    defaultMessage: 'Agent Training Settings',
+  },
+  agentTrainingSettingsDescription: {
+    id: 'containers.AgentPage.agent_training_settings_description',
+    defaultMessage: 'These settings will modify some elements of the training. Therefore, you can enable or disable them to impact the way the models are generated.',
+  },
+  webhookSettingsTitle: {
+    id: 'containers.AgentPage.webhook_settings_title',
+    defaultMessage: 'Agent Webhook Settings',
+  },
+  webhookSettingsDescription: {
+    id: 'containers.AgentPage.webhook_settings_description',
+    defaultMessage: 'If you want to define a global webhook that will called each time the user talks with your agent then you can do it here.',
+  },
+  responseDefinitionTitle: {
+    id: 'containers.AgentPage.response_definition_settings_title',
+    defaultMessage: 'Agent Response Settings',
+  },
+  responseDefinitionDescription: {
+    id: 'containers.AgentPage.response_definition_settings_description',
+    defaultMessage: 'Whenever you talk with your agent you may want to have additional data in your response beside the text. Here you can enable this settings to add more data to your /converse endpoint.',
   },
 });

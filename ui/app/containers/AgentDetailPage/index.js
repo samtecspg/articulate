@@ -256,7 +256,145 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               <Accordion>
                 <AccordionItem>
                   <AccordionItemTitle>
+                    {messages.webhookSettingsTitle.defaultMessage}
+                    <div className='accordion_arrow_inverted'></div>
+                  </AccordionItemTitle>
+                  <AccordionItemBody>
+                    <p style={{marginLeft: '-10px'}}>{messages.webhookSettingsDescription.defaultMessage}</p>
+                    <Form style={{ marginTop: '30px' }}>
+                      {
+                        <Row style={{ marginTop: '15px'}}>
+                          <Toggle
+                            strongLabel={false}
+                            label={messages.useWebhook.defaultMessage}
+                            checked={currentAgent.useWebhook}
+                            disabled
+                          />
+                        </Row>
+                      }
+                      {
+                        currentAgent.useWebhook && webhook.agent !== '' ?
+                        <Row>
+                          <FormTextInput
+                            s={2}
+                            label={messages.webhookVerb}
+                            value={webhook.webhookVerb}
+                            disabled
+                          />
+                          <FormTextInput
+                            label={messages.webhookUrl}
+                            value={webhook.webhookUrl}
+                            s={8}
+                            disabled
+                          />
+                          <FormTextInput
+                            s={2}
+                            label={messages.webhookPayloadType}
+                            value={webhook.webhookPayloadType}
+                            disabled
+                          />
+                          {webhook.webhookPayloadType !== 'None' ?
+                          (<AceEditor
+                            width="100%"
+                            height="250px"
+                            mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                            theme="terminal"
+                            name="webhookPayload"
+                            readOnly={true}
+                            onLoad={this.onLoad}
+                            fontSize={14}
+                            showPrintMargin={true}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            value={webhook.webhookPayload}
+                            setOptions={{
+                            useWorker: false,
+                            showLineNumbers: true,
+                            tabSize: 2,
+                            }}/>) : null}
+                        </Row>
+                        : null
+                      }
+                    </Form>
+                  </AccordionItemBody>
+                </AccordionItem>
+                <AccordionItem>
+                  <AccordionItemTitle>
+                    {messages.responseDefinitionTitle.defaultMessage}
+                    <div className='accordion_arrow_inverted'></div>
+                  </AccordionItemTitle>
+                  <AccordionItemBody>
+                    <p style={{marginLeft: '-10px'}}>{messages.responseDefinitionDescription.defaultMessage}</p>
+                    <Form>
+                      <Row style={{ marginTop: '15px'}}>
+                        <Toggle
+                          strongLabel={false}
+                          label={messages.usePostformat.defaultMessage}
+                          checked={currentAgent.usePostFormat}
+                          disabled
+                        />
+                      </Row>
+                      {
+                        currentAgent.usePostFormat && postFormat.agent !== '' ?
+                            <Row>
+                              <AceEditor
+                                width="100%"
+                                height="250px"
+                                mode={'json'}
+                                theme="terminal"
+                                name="webhookPayload"
+                                readOnly={true}
+                                onLoad={this.onLoad}
+                                fontSize={14}
+                                showPrintMargin={true}
+                                showGutter={true}
+                                highlightActiveLine={true}
+                                value={postFormat.postFormatPayload}
+                                setOptions={{
+                                useWorker: false,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                              }}/>
+                            </Row>
+                        : null
+                      }
+                    </Form>
+                  </AccordionItemBody>
+                </AccordionItem>
+                <AccordionItem>
+                  <AccordionItemTitle>
+                    {messages.agentTrainingSettingsTitle.defaultMessage}
+                    <div className='accordion_arrow_inverted'></div>
+                  </AccordionItemTitle>
+                  <AccordionItemBody>
+                    <p style={{marginLeft: '-10px'}}>{messages.agentTrainingSettingsDescription.defaultMessage}</p>
+                    <Form style={{marginTop: '30px'}}>
+                      <Row>
+                        <Toggle
+                          disabled
+                          inline
+                          strongLabel={false}
+                          label={messages.expandedTrainingData.defaultMessage}
+                          checked={currentAgent.extraTrainingData}
+                          onChange={() => {}}
+                        />
+                      </Row>
+                      <Row style={{ marginTop: '15px' }}>
+                        <Toggle
+                          disabled
+                          inline
+                          strongLabel={false}
+                          label={messages.enableModelsPerDomain.defaultMessage}
+                          checked={currentAgent.enableModelsPerDomain}
+                          onChange={() => {}}
+                        />
+                      </Row>
+                    </Form>
+                  </AccordionItemBody>
+                </AccordionItem><AccordionItem>
+                  <AccordionItemTitle>
                     {messages.rasaSettingsTitle.defaultMessage}
+                    <div className='accordion_arrow_inverted'></div>
                   </AccordionItemTitle>
                   <AccordionItemBody>
                     <p style={{marginLeft: '-10px'}}>{messages.rasaSettingsDescription.defaultMessage}</p>
@@ -364,6 +502,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
                 <AccordionItem>
                   <AccordionItemTitle>
                     {messages.ducklingSettingsTitle.defaultMessage}
+                    <div className='accordion_arrow_inverted'></div>
                   </AccordionItemTitle>
                   <AccordionItemBody>
                     <p style={{marginLeft: '-10px'}}>{messages.ducklingSettingsDescription.defaultMessage}</p>
@@ -405,128 +544,6 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
               </Accordion>
             </Row>
           </Form>
-
-          <Form style={{marginTop: '30px'}}>
-            <Row>
-              <Toggle
-                disabled
-                inline
-                strongLabel={false}
-                label={messages.expandedTrainingData.defaultMessage}
-                checked={currentAgent.extraTrainingData}
-                onChange={() => {}}
-              />
-            </Row>
-            <Row style={{ marginTop: '15px' }}>
-              <Toggle
-                disabled
-                inline
-                strongLabel={false}
-                label={messages.enableModelsPerDomain.defaultMessage}
-                checked={currentAgent.enableModelsPerDomain}
-                onChange={() => {}}
-              />
-            </Row>
-          </Form>
-
-          {
-            currentAgent.useWebhook && webhook.agent !== '' ?
-            <ContentSubHeader title={messages.webhook} /> :
-            <Row style={{ marginTop: '15px', float: 'left', clear : 'both'}}>
-              <Toggle
-                strongLabel={false}
-                label={messages.useWebhook.defaultMessage}
-                right
-                checked={currentAgent.useWebhook}
-                disabled
-              />
-            </Row>
-          }
-          {
-            currentAgent.useWebhook && webhook.agent !== '' ?
-              <Form style={{marginTop: '0px'}}>
-                <Row>
-                  <FormTextInput
-                    s={2}
-                    label={messages.webhookVerb}
-                    value={webhook.webhookVerb}
-                    disabled
-                  />
-                  <FormTextInput
-                    label={messages.webhookUrl}
-                    value={webhook.webhookUrl}
-                    s={8}
-                    disabled
-                  />
-                  <FormTextInput
-                    s={2}
-                    label={messages.webhookPayloadType}
-                    value={webhook.webhookPayloadType}
-                    disabled
-                  />
-                  {webhook.webhookPayloadType !== 'None' ?
-                  (<AceEditor
-                    width="100%"
-                    height="250px"
-                    mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
-                    theme="terminal"
-                    name="webhookPayload"
-                    readOnly={true}
-                    onLoad={this.onLoad}
-                    fontSize={14}
-                    showPrintMargin={true}
-                    showGutter={true}
-                    highlightActiveLine={true}
-                    value={webhook.webhookPayload}
-                    setOptions={{
-                    useWorker: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                    }}/>) : null}
-                </Row>
-              </Form>
-            : null
-          }
-
-          {
-            currentAgent.usePostFormat && postFormat.agent !== '' ?
-            <ContentSubHeader title={messages.postFormat} /> :
-            <Row style={{ marginTop: '15px', float: 'left', clear: 'both'}}>
-              <Toggle
-                strongLabel={false}
-                label={messages.usePostformat.defaultMessage}
-                right
-                checked={currentAgent.usePostFormat}
-                disabled
-              />
-            </Row>
-          }
-          {
-            currentAgent.usePostFormat && postFormat.agent !== '' ?
-              <Form style={{marginTop: '0px'}}>
-                <Row>
-                  <AceEditor
-                    width="100%"
-                    height="250px"
-                    mode={'json'}
-                    theme="terminal"
-                    name="webhookPayload"
-                    readOnly={true}
-                    onLoad={this.onLoad}
-                    fontSize={14}
-                    showPrintMargin={true}
-                    showGutter={true}
-                    highlightActiveLine={true}
-                    value={postFormat.postFormatPayload}
-                    setOptions={{
-                    useWorker: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                  }}/>
-                </Row>
-              </Form>
-            : null
-          }
         </Content>
         <DeleteModal
           isOpen={this.state.deleteModalOpen}

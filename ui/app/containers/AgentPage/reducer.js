@@ -77,41 +77,19 @@ function agentReducer(state = initialState, action) {
             .setIn(['agentData', action.payload.field], action.payload.value)
             .setIn(['webhookData', 'agent'], action.payload.value)
             .setIn(['postFormatData', 'agent'], action.payload.value);
-
         }
         else {
           if (action.payload.field === 'usePostFormat') {
-            if (action.payload.value === 'true' && state.getIn(['postFormatData','postFormatPayload']) === ''){
+            if (action.payload.value && state.getIn(['postFormatData','postFormatPayload']) === ''){
               stateToReturn = state
-                .setIn(['agentData', action.payload.field], action.payload.value === 'true')
                 .setIn(['postFormatData','postFormatPayload'],messages.defaultPostFormat.defaultMessage);
             }
             stateToReturn = state
-              .setIn(['agentData', action.payload.field], action.payload.value === 'true');
-          }
-          if (action.payload.field === 'useWebhook') {
-            stateToReturn = state
-              .setIn(['agentData', action.payload.field], action.payload.value === 'true');
-          }
-          if (action.payload.field === 'usePostFormat') {
-            stateToReturn = state
-              .setIn(['agentData', action.payload.field], action.payload.value === 'true');
+              .setIn(['agentData', action.payload.field], action.payload.value);
           }
           else {
-            if (action.payload.field === 'extraTrainingData') {
-              stateToReturn = state
-                .setIn(['agentData', action.payload.field], action.payload.value === 'true');
-            }
-            else {
-              if (action.payload.field === 'enableModelsPerDomain') {
-                stateToReturn = state
-                  .setIn(['agentData', action.payload.field], action.payload.value === 'true');
-              }
-              else {
-                stateToReturn = state
-                  .setIn(['agentData', action.payload.field], action.payload.value);
-              }
-            }
+            stateToReturn = state
+              .setIn(['agentData', action.payload.field], action.payload.value);
           }
         }
       }
