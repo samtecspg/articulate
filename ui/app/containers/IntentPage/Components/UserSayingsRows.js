@@ -68,7 +68,7 @@ export function UserSayingsRows(props) {
               if (entityIsList) {
                 entities.push(_.cloneDeep(resultToSend));
               }
-              if (match === null && startIndex > indexLastMatch){ //save the last match and use it slot is not a list
+              if (match === null && startIndex >= indexLastMatch){ //save the last match to use it if slot is not a list
                 lastRegexMatch = _.cloneDeep(resultToSend);
                 indexLastMatch = startIndex;
               }
