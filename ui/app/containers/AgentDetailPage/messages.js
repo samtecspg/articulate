@@ -222,4 +222,8 @@ export default defineMessages({
     id: 'containers.AgentPage.create_agent.use_webhook',
     defaultMessage: 'Webhook Definition',
   },
+  enableModelsPerDomain: {
+    id: 'containers.AgentPage.create_agent.enable_models_per_domain',
+    defaultMessage: 'Generate separate models for each domain',
+  },
 });

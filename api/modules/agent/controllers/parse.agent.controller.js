@@ -27,23 +27,23 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (callback) => {
 
+            server.inject('/agent/' + agentId, (res) => {
+
+                if (res.statusCode !== 200) {
+                    if (res.statusCode === 404) {
+                        const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
+                        return callback(errorNotFound);
+                    }
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the agent');
+                    return callback(error, null);
+                }
+                return callback(null, res.result);
+            });
+        },
+        (agent, callback) => {
+
             Async.parallel({
-                trainedDomains: Async.apply(AgentTools.getAvailableDomains, server, redis, agentId),
-                agent: (callbackGetAgent) => {
-
-                    server.inject('/agent/' + agentId, (res) => {
-
-                        if (res.statusCode !== 200) {
-                            if (res.statusCode === 404) {
-                                const errorNotFound = Boom.notFound('The specified agent doesn\'t exists');
-                                return callbackGetAgent(errorNotFound);
-                            }
-                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the agent');
-                            return callbackGetAgent(error, null);
-                        }
-                        return callbackGetAgent(null, res.result);
-                    });
-                },
+                trainedDomains: Async.apply(AgentTools.getAvailableDomains, server, redis, agent),
                 duckling: (callbackGetRasa) => {
 
                     server.inject(`/agent/${agentId}/settings/ducklingURL`, (res) => {
@@ -124,14 +124,13 @@ module.exports = (request, reply) => {
                 if (err) {
                     return callback(err, null);
                 }
-                return callback(null, result);
+                return callback(null, Object.assign(result, { agent }));
             });
         },
         (agentData, callback) => {
 
-            const timezoneToUse = timezone ? timezone : (agentData.agent.timezone ? agentData.agent.timezone : 'UTC');
-            const languageToUse = agentData.agent.language ? agentData.agent.language : 'en';
-            AgentTools.parseText(agentData.rasa, agentData.spacyPretrainedEntities, agentData.ERPipeline, agentData.duckling, agentData.ducklingDimension, text, timezoneToUse, languageToUse, agentData, server, (err, result) => {
+            agentData.agent.timezone = timezone ? timezone : agentData.agent.timezone;
+            AgentTools.parseText(agentData.rasa, agentData.spacyPretrainedEntities, agentData.ERPipeline, agentData.duckling, agentData.ducklingDimension, text, agentData, server, (err, result) => {
 
                 if (err) {
                     return callback(err);

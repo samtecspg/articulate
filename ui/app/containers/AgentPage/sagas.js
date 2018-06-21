@@ -283,20 +283,15 @@ export function* putAgent(payload) {
     }
     if (oldAgentData.usePostFormat) {
       if (agentData.usePostFormat) {
-        try {
-          yield call(putPostFormat, { api, id: agentData.id });
-        } catch (error) {
-          console.log(error)
-        }
+        yield call(putPostFormat, { api, id: agentData.id });
       }
       else {
         yield call(deletePostFormat, { api, id: agentData.id });
       }
     }
     else {
-      try {
+      if (agentData.usePostFormat) {
         yield call(postPostFormat, { api, id: agentData.id });
-      } catch (error) {
       }
     }
     yield call(putAgentSettings, { api, id: agentData.id });

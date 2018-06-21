@@ -172,7 +172,8 @@ class AgentValidate {
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
-                    extraTrainingData: AgentSchema.extraTrainingData
+                    extraTrainingData: AgentSchema.extraTrainingData,
+                    enableModelsPerDomain: AgentSchema.enableModelsPerDomain
                 };
             })()
         };
@@ -197,7 +198,9 @@ class AgentValidate {
                     fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining,
-                    extraTrainingData: AgentSchema.extraTrainingData
+                    extraTrainingData: AgentSchema.extraTrainingData,
+                    enableModelsPerDomain: AgentSchema.enableModelsPerDomain,
+                    model: AgentSchema.model
                 };
             })()
         };
@@ -313,6 +316,8 @@ class AgentValidate {
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining,
                     extraTrainingData: AgentSchema.extraTrainingData,
+                    enableModelsPerDomain: AgentSchema.enableModelsPerDomain,
+                    model: AgentSchema.model,
                     webhook: {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),

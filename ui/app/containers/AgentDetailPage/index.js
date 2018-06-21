@@ -417,6 +417,16 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
                 onChange={() => {}}
               />
             </Row>
+            <Row style={{ marginTop: '15px' }}>
+              <Toggle
+                disabled
+                inline
+                strongLabel={false}
+                label={messages.enableModelsPerDomain.defaultMessage}
+                checked={currentAgent.enableModelsPerDomain}
+                onChange={() => {}}
+              />
+            </Row>
           </Form>
 
           {
@@ -424,6 +434,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             <ContentSubHeader title={messages.webhook} /> :
             <Row style={{ marginTop: '15px', float: 'left', clear : 'both'}}>
               <Toggle
+                strongLabel={false}
                 label={messages.useWebhook.defaultMessage}
                 right
                 checked={currentAgent.useWebhook}
@@ -482,6 +493,7 @@ export class AgentDetailPage extends React.PureComponent { // eslint-disable-lin
             <ContentSubHeader title={messages.postFormat} /> :
             <Row style={{ marginTop: '15px', float: 'left', clear: 'both'}}>
               <Toggle
+                strongLabel={false}
                 label={messages.usePostformat.defaultMessage}
                 right
                 checked={currentAgent.usePostFormat}

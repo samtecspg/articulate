@@ -34,6 +34,7 @@ const initialState = Immutable({
     useWebhook: false,
     usePostFormat: false,
     extraTrainingData: false,
+    enableModelsPerDomain: true,
   },
   webhookData: {
     agent: '',
@@ -102,8 +103,14 @@ function agentReducer(state = initialState, action) {
                 .setIn(['agentData', action.payload.field], action.payload.value === 'true');
             }
             else {
-              stateToReturn = state
-                .setIn(['agentData', action.payload.field], action.payload.value);
+              if (action.payload.field === 'enableModelsPerDomain') {
+                stateToReturn = state
+                  .setIn(['agentData', action.payload.field], action.payload.value === 'true');
+              }
+              else {
+                stateToReturn = state
+                  .setIn(['agentData', action.payload.field], action.payload.value);
+              }
             }
           }
         }

@@ -16,7 +16,9 @@ class AgentModel {
             fallbackResponses: Joi.array().items(Joi.string().trim()),
             status: Joi.string().trim(),
             lastTraining: Joi.date(),
-            extraTrainingData: Joi.boolean()
+            extraTrainingData: Joi.boolean(),
+            enableModelsPerDomain: Joi.boolean(),
+            model: Joi.string()
         };
     };
 }

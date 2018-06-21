@@ -622,6 +622,24 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
                 </a>
               </Tooltip>
             </Row>
+            <Row style={{ marginTop: '15px' }}>
+              <Toggle
+                inline
+                strongLabel={false}
+                label={messages.enableModelsPerDomain.defaultMessage}
+                onChange={this.props.onChangeAgentData.bind(null, 'enableModelsPerDomain')}
+                checked={agent.enableModelsPerDomain}
+              />
+              <Tooltip
+                tooltip={messages.enableModelsPerDomainTooltip.defaultMessage}
+                delay={50}
+                position="top"
+              >
+                <a style={{marginLeft: '-15px'}}>
+                  <Icon tiny>help_outline</Icon>
+                </a>
+              </Tooltip>
+            </Row>
           </Form>
 
 
@@ -629,11 +647,11 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             <Toggle
               label={messages.useWebhook.defaultMessage}
               right
+              strongLabel={false}
               onChange={this.props.onChangeAgentData.bind(null, 'useWebhook')}
               checked={agent.useWebhook}
             />
           </Row>
-
           {
             agent.useWebhook ?
               <Form style={{ marginTop: '70px' }}>
@@ -695,6 +713,7 @@ export class AgentPage extends React.PureComponent { // eslint-disable-line reac
             <Toggle
               label={messages.usePostformat.defaultMessage}
               right
+              strongLabel={false}
               onChange={this.props.onChangeAgentData.bind(null, 'usePostFormat')}
               checked={agent.usePostFormat}
             />
@@ -767,7 +786,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     onChangeAgentData: (field, evt) => {
       dispatch(resetStatusFlags());
-      if (field === 'useWebhook' || field === 'extraTrainingData' || field === 'usePostFormat') {
+      if (field === 'useWebhook' || field === 'extraTrainingData' || field === 'usePostFormat' || field === 'enableModelsPerDomain') {
         evt.target.value = evt.target.checked;
       }
       dispatch(changeAgentData({ value: evt.target.value, field }));

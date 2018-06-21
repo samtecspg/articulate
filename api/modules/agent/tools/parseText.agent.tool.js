@@ -145,7 +145,7 @@ const castSysEntities = (parseResult, spacyPretrainedEntities, ducklingDimension
     return parseResult.rasa;
 };
 
-const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, ducklingDimension, textToParse, timezone, language, agentData, server, cb) => {
+const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, ducklingDimension, textToParse, agentData, server, cb) => {
 
     Async.parallel({
         rasa: (callback) => {
@@ -221,7 +221,7 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
         duckling: (callback) => {
 
             const start = process.hrtime();
-            getDucklingParse(textToParse, timezone, language, ducklingService, (err, result) => {
+            getDucklingParse(textToParse, agentData.agent.timezone, agentData.agent.language, ducklingService, (err, result) => {
 
                 if (err) {
                     return callback(err, null);
@@ -340,10 +340,10 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
     });
 };
 
-module.exports = (rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingDimension, textToParse, timezone, language, agentData, server, cb) => {
+module.exports = (rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingDimension, textToParse, agentData, server, cb) => {
 
     const start = process.hrtime();
-    parseText(rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingDimension, textToParse, timezone, language, agentData, server, (err, result) => {
+    parseText(rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingDimension, textToParse, agentData, server, (err, result) => {
 
         if (err) {
             return cb(err, null);

@@ -15,6 +15,9 @@ module.exports = (object, type) => {
             if (typeof object.extraTrainingData !== 'boolean'){
                 object.extraTrainingData = object.extraTrainingData === 'true';
             }
+            if (typeof object.enableModelsPerDomain !== 'boolean'){
+                object.enableModelsPerDomain = object.enableModelsPerDomain === 'true';
+            }
             object.domainClassifierThreshold = parseFloat(object.domainClassifierThreshold);
             break;
         case 'context':

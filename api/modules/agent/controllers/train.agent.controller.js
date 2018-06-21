@@ -1,6 +1,7 @@
 'use strict';
 const Async = require('async');
 const Boom = require('boom');
+const AgentTools = require('../tools');
 const DomainTools = require('../../domain/tools');
 const Wreck = require('wreck');
 const Status = require('../../../helpers/status.json');
@@ -67,18 +68,7 @@ module.exports = (request, reply) => {
                 return callbackGetRasaMaxTrainingProcesses(null, payload);
             });
         },
-        (rasaStatus, callbackGetDomains) => {
-
-            server.inject(`/agent/${agentId}/domain`, (res) => {
-
-                if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the domains of the agent to train them');
-                    return callbackGetDomains(error, null);
-                }
-                return callbackGetDomains(null, rasaStatus, res.result.domains);
-            });
-        },
-        (rasaStatus, domains, callbackSetAgentTrainingStatus) => {
+        (rasaStatus, callbackSetAgentTrainingStatus) => {
 
             redis.hmset(`agent:${agent.id}`, { status: Status.training }, (err) => {
 
@@ -86,86 +76,119 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred updating the agent status to training.');
                     return callbackSetAgentTrainingStatus(error);
                 }
-                return callbackSetAgentTrainingStatus(null, rasaStatus, domains);
+                return callbackSetAgentTrainingStatus(null, rasaStatus);
             });
         },
-        (rasaStatus, domains, callbackTrainEachDomain) => {
+        (rasaStatus, callbackTrain) => {
 
-            const limit = rasaStatus.max_training_processes - rasaStatus.current_training_processes;
-            const needToTrain = _.map(domains, 'status').indexOf(Status.outOfDate) !== -1 || _.map(domains, 'status').indexOf(Status.error) !== -1;
-            if (domains.length > 1){
-                domains.push({ domainRecognizer: true });
-            }
-            if (!needToTrain && domains.length < 2){
-                return callbackTrainEachDomain(null);
-            }
-            Async.eachLimit(domains, limit, (domain, callbackMapOfDomain) => {
+            if (agent.enableModelsPerDomain){
+                Async.waterfall([
+                    (callbackGetDomains) => {
 
-                if (domain.domainRecognizer){
-                    DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agent.agentName, agent.id, agent.extraTrainingData, (errTraining) => {
+                        server.inject(`/agent/${agentId}/domain`, (res) => {
 
-                        if (errTraining){
-                            return callbackMapOfDomain(errTraining);
+                            if (res.statusCode !== 200){
+                                const error = Boom.create(res.statusCode, 'An error occurred getting the domains of the agent to train them');
+                                return callbackGetDomains(error, null);
+                            }
+                            return callbackGetDomains(null, res.result.domains);
+                        });
+                    },
+                    (domains, callbackTrainEachDomain) => {
+
+                        const limit = rasaStatus.max_training_processes - rasaStatus.current_training_processes;
+                        const needToTrain = _.map(domains, 'status').indexOf(Status.outOfDate) !== -1 || _.map(domains, 'status').indexOf(Status.error) !== -1;
+                        if (domains.length > 1){
+                            domains.push({ domainRecognizer: true });
                         }
-                        return callbackMapOfDomain(null);
-                    });
-                }
-                else {
-                    if (domain.status === Status.ready || domain.status === Status.training){
-                        return callbackMapOfDomain(null);
-                    }
-                    Async.series([
-                        (callbackChangeDomainStatus) => {
+                        if (!needToTrain && domains.length < 2){
+                            return callbackTrainEachDomain(null);
+                        }
+                        Async.eachLimit(domains, limit, (domain, callbackMapOfDomain) => {
 
-                            redis.hmset(`domain:${domain.id}`, { status: Status.training }, (err) => {
+                            if (domain.domainRecognizer){
+                                DomainTools.retrainDomainRecognizerTool(server, redis, rasa, agent.language, agent.agentName, agent.id, agent.extraTrainingData, (errTraining) => {
 
-                                if (err){
-                                    const error = Boom.badImplementation('An error occurred updating the domain status.');
-                                    return callbackChangeDomainStatus(error);
+                                    if (errTraining){
+                                        return callbackMapOfDomain(errTraining);
+                                    }
+                                    return callbackMapOfDomain(null);
+                                });
+                            }
+                            else {
+                                if (domain.status === Status.ready || domain.status === Status.training){
+                                    return callbackMapOfDomain(null);
                                 }
-                                callbackChangeDomainStatus(null);
-                            });
-                        },
-                        (callbackTrainDomain) => {
+                                Async.series([
+                                    (callbackChangeDomainStatus) => {
 
-                            server.inject(`/domain/${domain.id}/train`, (res) => {
+                                        redis.hmset(`domain:${domain.id}`, { status: Status.training }, (err) => {
 
-                                if (res.statusCode === 200){
-                                    return callbackTrainDomain(null);
-                                }
-                                const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain.domainName}`);
-                                redis.hmset(`domain:${domain.id}`, { status: Status.error }, (err) => {
+                                            if (err){
+                                                const error = Boom.badImplementation('An error occurred updating the domain status.');
+                                                return callbackChangeDomainStatus(error);
+                                            }
+                                            callbackChangeDomainStatus(null);
+                                        });
+                                    },
+                                    (callbackTrainDomain) => {
+
+                                        server.inject(`/domain/${domain.id}/train`, (res) => {
+
+                                            if (res.statusCode === 200){
+                                                return callbackTrainDomain(null);
+                                            }
+                                            const error = Boom.create(res.statusCode, `An error occurred training the domain ${domain.domainName}`);
+                                            redis.hmset(`domain:${domain.id}`, { status: Status.error }, (err) => {
+
+                                                if (err){
+                                                    error = Boom.badImplementation(`An error ocurred during the training of the domain ${domain.domainName}, and also an error occurred updating the domain status.`);
+                                                    return callbackTrainDomain(error);
+                                                }
+                                                return callbackTrainDomain(error);
+                                            });
+                                        });
+                                    }
+                                ], (err) => {
 
                                     if (err){
-                                        error = Boom.badImplementation(`An error ocurred during the training of the domain ${domain.domainName}, and also an error occurred updating the domain status.`);
-                                        return callbackTrainDomain(error);
+                                        return callbackMapOfDomain(err);
                                     }
-                                    return callbackTrainDomain(error);
-                                });
-                            });
-                        }
-                    ], (err) => {
+                                    redis.hmset(`domain:${domain.id}`, { status: Status.ready }, (err) => {
 
-                        if (err){
-                            return callbackMapOfDomain(err);
-                        }
-                        redis.hmset(`domain:${domain.id}`, { status: Status.ready }, (err) => {
+                                        if (err){
+                                            const error = Boom.badImplementation('An error occurred updating the domain status.');
+                                            return callbackMapOfDomain(error);
+                                        }
+                                        return callbackMapOfDomain(null);
+                                    });
+                                });
+                            }
+                        }, (err) => {
 
                             if (err){
-                                const error = Boom.badImplementation('An error occurred updating the domain status.');
-                                return callbackMapOfDomain(error);
+                                return callbackTrainEachDomain(err);
                             }
-                            return callbackMapOfDomain(null);
+                            return callbackTrainEachDomain(null);
                         });
-                    });
-                }
-            }, (err) => {
+                    }
+                ], (err) => {
 
-                if (err){
-                    return callbackTrainEachDomain(err);
-                }
-                return callbackTrainEachDomain(null);
-            });
+                    if (err){
+                        return callbackTrain(err);
+                    }
+                    return callbackTrain(null);
+                });
+            }
+            else {
+                AgentTools.trainSingleDomain(server, rasa, agent, (err) => {
+
+                    if (err) {
+                        return callbackTrain(err);
+                    }
+                    return callbackTrain(null);
+                });
+            }
         }
     ], (errTraining) => {
 
