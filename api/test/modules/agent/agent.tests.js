@@ -185,7 +185,8 @@ suite('/agent/{id}', () => {
                     'updated'
                 ],
                 useWebhook: true,
-                usePostFormat: false
+                usePostFormat: false,
+                enableModelsPerDomain: true
             };
 
             const updatedData = {

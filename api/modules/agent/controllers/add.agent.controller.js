@@ -47,6 +47,7 @@ module.exports = (request, reply) => {
 
             agent = Object.assign({ id: agentId }, agent);
             agent.status = Status.ready;
+            agent.enableModelsPerDomain = agent.enableModelsPerDomain !== undefined ? agent.enableModelsPerDomain : true;
             const flatAgent = RemoveBlankArray(Flat(agent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 

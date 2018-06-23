@@ -2,6 +2,7 @@
 const GetAvailableTool = require('./getAvailableDomains.agent.tool');
 const ParseTextTool = require('./parseText.agent.tool');
 const RespondTool = require('./respond.agent.tool');
+const TrainSingleDomainTool = require('./trainSingleDomain.agent.tool');
 
 const AgentTools = {
 
@@ -9,7 +10,9 @@ const AgentTools = {
 
     parseText: ParseTextTool,
 
-    respond: RespondTool
+    respond: RespondTool,
+
+    trainSingleDomain: TrainSingleDomainTool
 };
 
 module.exports = AgentTools;

@@ -816,4 +816,62 @@ injectGlobal`
     -webkit-user-select: none; /* Chrome, Safari, and Opera */
     -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
    }
+
+  .accordion_arrow_inverted::before {
+    right: 4px;
+    transform: rotate(45deg);
+  }
+
+  [aria-expanded='true'] .accordion_arrow_inverted::before, [aria-selected='true'] .accordion_arrow_inverted::before {
+      transform: rotate(-45deg);
+  }
+
+  .accordion_arrow_inverted::after {
+      left: 4px;
+      transform: rotate(-45deg);
+  }
+
+  [aria-expanded='true'] .accordion_arrow_inverted::after, [aria-selected='true'] .accordion_arrow_inverted::after {
+      transform: rotate(45deg);
+  }
+
+  .accordion_arrow_inverted::before,
+  .accordion_arrow_inverted::after {
+      transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+  }
+
+  .accordion__title--animated:hover .accordion_arrow_inverted {
+      animation-name: move-down;
+      animation-duration: 1.5s;
+  }
+
+  .accordion__title--animated[aria-expanded='true']:hover .accordion_arrow_inverted {
+      animation-name: move-up;
+      animation-duration: 1.5s;
+  }
+
+
+  .accordion_arrow_inverted {
+    display: inline-block;
+    position: relative;
+    width: 24px;
+    height: 12px;
+    top: 50%;
+    right: 0;
+    float: right;
+    margin-top: 0px;
+    position: relative;
+  }
+
+  .accordion_arrow_inverted::after,
+  .accordion_arrow_inverted::before {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 2px;
+    background-color: currentColor;
+    content: '';
+  }
+
 `;

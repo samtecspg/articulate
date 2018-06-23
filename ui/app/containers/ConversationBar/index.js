@@ -124,7 +124,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
               <p
                 className="condition">
                 {messages.statusLabel.defaultMessage}:&nbsp;
-                <span style={{ color: this.props.currentAgentStatus && this.props.currentAgentStatus.status === 'Ready' ? '#00ca9f' : '#4e4e4e'}} >
+                <span style={{ color: this.props.currentAgentStatus ? (this.props.currentAgentStatus.status === 'Ready' ? '#00ca9f' : (['Out of Date', 'Error'].indexOf(this.props.currentAgentStatus.status) > -1 ? '#de5e56' : '#4e4e4e')) : '#4e4e4e'}} >
                   {this.props.currentAgentStatus && this.props.currentAgentStatus.status ? this.props.currentAgentStatus.status : '-'}
                 </span>
               </p>

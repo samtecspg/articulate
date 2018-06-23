@@ -54,6 +54,7 @@ module.exports = (request, reply) => {
             delete clonedAgent.settings;
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
             clonedAgent.status = Status.outOfDate;
+            clonedAgent.enableModelsPerDomain = clonedAgent.enableModelsPerDomain !== undefined ? clonedAgent.enableModelsPerDomain : true;
             const flatAgent = RemoveBlankArray(Flat(clonedAgent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 

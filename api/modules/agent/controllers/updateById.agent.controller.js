@@ -52,7 +52,7 @@ module.exports = (request, reply) => {
         (currentAgent, cb) => {
 
             const requiresNameChanges = updateData.agentName && updateData.agentName !== currentAgent.agentName;
-            requiresRetrain = updateData.extraTrainingData !== undefined && updateData.extraTrainingData !== currentAgent.extraTrainingData;
+            requiresRetrain = (updateData.extraTrainingData !== undefined && updateData.extraTrainingData !== currentAgent.extraTrainingData) || (updateData.enableModelsPerDomain !== undefined && updateData.enableModelsPerDomain !== currentAgent.enableModelsPerDomain);
             if (requiresNameChanges){
                 Async.waterfall([
                     (callback) => {

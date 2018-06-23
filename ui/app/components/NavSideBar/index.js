@@ -114,7 +114,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
                 label: 'Duckling'
               },
             ]} />
-          </ul>{/*
+          </ul>{
           <ul className="bottom-nav">
             <li>
               <p>This is a pre-release of Articulate and is certain to have bugs or short comings. If you have any questions please <a target="_blank" href="https://github.com/samtecspg/articulate/issues/new">create an issue</a> or join us on <a target="_blank" href="https://gitter.im/samtecspg/articulate">Gitter</a>.</p>
@@ -122,7 +122,7 @@ class NavSideBar extends React.Component { // eslint-disable-line react/prefer-s
             <li>
               <p className="built-by">Built with <a target="_blank" href="https://rasa.com/">Rasa NLU</a></p>
             </li>
-          </ul>*/}
+          </ul>}
         </nav>
       </aside>
     )
