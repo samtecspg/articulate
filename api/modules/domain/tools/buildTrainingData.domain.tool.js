@@ -75,7 +75,7 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
 
                     const newEntitiesList = [];
 
-                    intentExample.entities.forEach((tempEntity) => {
+                    entitiesList.forEach((tempEntity) => {
 
                         newEntitiesList.push({
                             start: tempEntity.start,
