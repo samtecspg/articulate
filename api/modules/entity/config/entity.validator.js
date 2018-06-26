@@ -18,7 +18,7 @@ class EntityValidate {
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms.required()
-                    }).required()
+                    }).min(1).required()
                 };
             })()
         };
