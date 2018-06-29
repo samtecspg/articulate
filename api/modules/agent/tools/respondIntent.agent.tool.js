@@ -106,18 +106,6 @@ module.exports = (conversationStateObject, callback) => {
 
                 }
             }
-            //If the slot wasn't part of the scenario slots array. This means that the slot is a system entity
-            else {
-                //Check if it is a spacy or duckling system entity
-                if (recognizedEntity.entity.indexOf('sys.spacy_') !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1 || recognizedEntity.entity.indexOf('sys.regex_') !== -1) {
-                    //If there is a dictionary of slots in the current context, use this dictionary, if not, create an empty dictionary of slots
-                    conversationStateObject.context[conversationStateObject.context.length - 1].slots = conversationStateObject.context[conversationStateObject.context.length - 1].slots ? conversationStateObject.context[conversationStateObject.context.length - 1].slots : {};
-                    //If in the current dictionary of slots exists a dictionary for system entities, use it, else create an empty dir for sys entities
-                    conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys = conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys ? conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys : {};
-                    //Add the recognized system entities to the dir of system entities in the slots dir of the current context
-                    conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.', '')] = GetEntityValue(recognizedEntity, conversationStateObject.text);
-                }
-            }
             //Finally return the name of the recognized entity for further checks
             return recognizedEntity.entity;
         });
