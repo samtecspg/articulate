@@ -549,7 +549,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                     />
                   </Table>
                 </TableContainer> :
-                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}}>
+                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}} style={{ backgroundColor: '#c5cbd8' }} >
                   <Table>
                     <tbody>
                       <tr style={{ width: '100%' }}>
@@ -680,25 +680,29 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
               </Row>
             </Form>
             : null}
-          <TableContainer id="intentResponsesTable" quotes>
-            <Table>
-              {this.props.scenarioData.intentResponses.length > 0 ?
-                (<Responses
+          {this.props.scenarioData.intentResponses.length > 0 ?
+            <TableContainer id="intentResponsesTable" quotes>
+              <Table>
+                <Responses
                   intentResponses={this.props.scenarioData.intentResponses}
                   onRemoveResponse={this.props.onRemoveResponse}
-                />) :
-                (<tbody>
-                <tr style={{ width: '100%' }}>
-                  <td style={{ width: '100%', display: 'inline-block' }}>
-                    <div>
-                      <span>{messages.agentResponseExample.defaultMessage}</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>) 
-              }
-            </Table>
-          </TableContainer>
+                />
+              </Table>
+            </TableContainer> :
+            <TableContainer id="intentResponsesTable" style={{ backgroundColor: '#c5cbd8' }} quotes>
+              <Table>            
+                <tbody>
+                  <tr style={{ width: '100%' }}>
+                    <td style={{ width: '100%', display: 'inline-block' }}>
+                      <div>
+                        <span>{messages.agentResponseExample.defaultMessage}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+            </TableContainer>
+          }
           <div
             style={{ float: 'left', clear: 'both' }}
             ref={(el) => {
