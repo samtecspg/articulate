@@ -38,7 +38,7 @@ import { translationMessages } from './i18n';
 import {
   loadState,
   saveState
-} from './localStorage';
+} from './sessionStorage';
 // Import root routes
 import createRoutes from './routes';
 import configureStore from './store';
