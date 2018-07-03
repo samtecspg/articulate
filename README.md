@@ -17,7 +17,7 @@ Make sure you've got these programs installed:
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
    
-> Running on Docker Machine or in the cloud, make sure to check out our [alternate installation](https://samtecspg.github.io/articulate/getting_started/cloud-installation) docs.
+> Running on Docker Machine or in the cloud, make sure to check out our [alternate installation](https://samtecspg.github.io/articulate/getting_started/basic-installation#running-remotely) docs.
 
 > Docker for Windows and Docker for mac users, make sure you are [allocating at least 4Gb of RAM to Docker](https://docs.docker.com/docker-for-mac/#advanced).
 
