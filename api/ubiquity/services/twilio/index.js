@@ -19,7 +19,7 @@ module.exports = {
     "description": "A quick connection to the webhook of Twilio SMS Numbers.",
     "documentation": null
   },
-  init: function(request) {
+  init: function(server, request) {
 
     let response = {
       id: shortid.generate(),
