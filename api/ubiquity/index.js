@@ -4,7 +4,7 @@ const Boom = require('boom');
 
 const Facebook = require('./services/facebook')
 const Twilio = require('./services/twilio')
-const Slack = require('./services/slack')
+const Slack = require('./services/slack-rtm')
 
 const ubiquity = {
   facebook: Facebook,
