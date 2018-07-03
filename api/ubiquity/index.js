@@ -1,5 +1,6 @@
 'use strict'
 const Joi = require('joi');
+const Boom = require('boom');
 
 const Facebook = require('./services/facebook')
 const Twilio = require('./services/twilio')
@@ -14,6 +15,19 @@ const ubiquity = {
 exports.register = function (server, options, next) {
 
   const redis = server.app.redis;
+
+  redis.hgetall('ubiquity', function( err, res ) {
+    if (err) {
+      Boom.badImplementation('Failed to get Ubiquity Details on startup.', err)
+    } else if (res) {
+      let channelIds = Object.keys(res);
+      channelIds.forEach((channelId) => {
+        let channel = JSON.parse(res[channelId])
+
+        ubiquity[channel.service].init(server, null, channel);
+      })
+    }
+  })
 
   server.route({
     method: 'GET',
@@ -30,13 +44,15 @@ exports.register = function (server, options, next) {
       })
 
       redis.hgetall('ubiquity', function( err, res ) {
-        if (err) throw err;
-
-        let channels = Object.keys(res);
-        channels.forEach((channel) => {
-          let channelId = channel.split(':')[1]
-          response.channels[channelId] = JSON.parse(res[channel])
-        })
+        if (err) {
+          Boom.badImplementation('Failed to get Ubiquity Details.', err)
+        } else if (res) {
+          let channels = Object.keys(res);
+          channels.forEach((channel) => {
+            let channelId = channel.split(':')[1]
+            response.channels[channelId] = JSON.parse(res[channel])
+          })
+        }
 
         reply(response)
       })
@@ -51,8 +67,11 @@ exports.register = function (server, options, next) {
       let response = ubiquity[request.payload.service].init(request);
 
       redis.hset('ubiquity', 'channel:' + response.id, JSON.stringify(response), function( err, res) {
-        if (err) throw err;
-        reply(response);
+        if (err) {
+          Boom.badImplementation('Failed to create channel.', err)
+        } else {
+          reply(response);
+        } 
       });
     },
     config: {
@@ -90,6 +109,19 @@ exports.register = function (server, options, next) {
 
         let channel = JSON.parse(res);
         let response = ubiquity[channel.service].handleGet(server, request, channel, reply);
+      })
+    }
+  })
+
+  server.route({
+    method: 'DELETE',
+    path: '/ubiquity/{id}',
+    handler: function (request, reply) {
+
+      redis.hdel('ubiquity', `channel:${request.params.id}`, function( err, res ) {
+        if (err) throw err;
+
+        reply(res)
       })
     }
   })

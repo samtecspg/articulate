@@ -26,6 +26,7 @@
     "npm-run-all": "^4.0.2"
   },
   "dependencies": {
+    "@slack/client": "^4.3.1",
     "async": "^2.4.0",
     "axios": "^0.18.0",
     "boom": "^4.3.1",
