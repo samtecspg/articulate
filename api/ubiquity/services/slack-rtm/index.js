@@ -64,6 +64,8 @@ let self = {
       }
     }
 
+    console.log(channel);
+
     // The client is initialized and then started to get an active connection to the platform
     self.rtmClients[channel.id] = new RTMClient(channel.botToken);
     self.rtmClients[channel.id].start();
@@ -85,7 +87,7 @@ let self = {
     });
 
     if (request) {
-      return response
+      return channel
     }
   },
   handleGet: function(server, request, channel, reply) {
@@ -97,81 +99,17 @@ let self = {
     const redis = server.app.redis;
 
     reply('Not Implemented').code(400)
+  },
+  handleDelete: function( server, request, channel, reply ) {
+    const redis = server.app.redis;
+
+    self.rtmClients[channel.id].disconnect();
+    redis.hdel('ubiquity', `channel:${request.params.id}`, function( err, res ) {
+      if (err) throw err;
+
+      reply(res)
+    })
   }
 }
 
 module.exports = self;
-
-
-
-// Old handle post functionality
-
-    // const redis = server.app.redis;
-    // let payload = request.payload;
-
-    // console.log(payload)
-
-    // if (payload.type == "url_verification") {
-    //   if (payload.token == channel.verificationToken) {
-
-    //     // Responds with the challenge token from the request
-    //     redis.hget('ubiquity', `channel:${channel.id}`, function( err, res ) {
-    //       if (err) throw err;
-
-    //       let channel = JSON.parse(res);
-    //       channel.status = 'Verified';
-    //       channel.dateModified = new Date();
-
-    //       redis.hset('ubiquity', `channel:${channel.id}`, JSON.stringify(channel), function( err, res ) {
-    //         reply(payload.challenge).type("text/plain").code(200)
-    //       })
-    //     })
-    //   } else {
-    //     reply("Tokens don't match").code(403)
-    //   }
-    // } else if (payload.type == "event_callback") {
-
-    //   if (!self.slackClients[channel.id]) {
-    //     self.slackClients[channel.id] = new WebClient(channel.botToken);
-    //   }
-    //   reply().code(200)
-
-    //   if (payload.event.type == "message") {
-        
-    //   }
-
-    //   if (payload.event.type == "app_mention") {
-    //     let userMessage = payload.event.text;
-    //     let slackChannel = payload.event.channel;
-    //     let botUsers = payload.authed_users
-    //     botUsers.forEach((bot) => {
-    //       let botId = `<@${bot}>`
-    //       let regex = new RegExp(botId, "g");
-    //       userMessage = userMessage.replace(regex,'');
-    //     })
-
-    //     let sessionId = hash(payload)
-    //     let options = {
-    //       method: 'POST',
-    //       url: `/agent/${channel.agent}/converse`,
-    //       payload: {
-    //         text: userMessage,
-    //         sessionId: sessionId
-    //       }
-    //     }
-
-    //     server.inject(options, (res) => {
-
-    //       const agentResponse = JSON.parse(res.payload).textResponse;
-    //       console.log(agentResponse)
-
-    //       self.slackClients[channel.id].chat.postMessage({ channel: slackChannel, text: agentResponse })
-    //         .then((res) => {
-    //           // `res` contains information about the posted message
-    //           console.log('Message sent: ', res.ts);
-    //         })
-    //         .catch(console.error);
-    //     })
-        
-    //   }
-    // }

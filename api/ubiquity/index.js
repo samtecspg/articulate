@@ -64,7 +64,7 @@ exports.register = function (server, options, next) {
     path: '/ubiquity',
     handler: function (request, reply) {
 
-      let response = ubiquity[request.payload.service].init(request);
+      let response = ubiquity[request.payload.service].init(server, request);
 
       redis.hset('ubiquity', 'channel:' + response.id, JSON.stringify(response), function( err, res) {
         if (err) {
@@ -94,7 +94,12 @@ exports.register = function (server, options, next) {
         if (err) throw err;
 
         let channel = JSON.parse(res);
-        let response = ubiquity[channel.service].handlePost(server, request, channel, reply);
+
+        if (channel) {
+          ubiquity[channel.service].handlePost(server, request, channel, reply);
+        } else {
+          reply('Channel not found.').code(404);
+        }
       })
     }
   })
@@ -108,7 +113,12 @@ exports.register = function (server, options, next) {
         if (err) throw err;
 
         let channel = JSON.parse(res);
-        let response = ubiquity[channel.service].handleGet(server, request, channel, reply);
+
+        if (channel) {
+          ubiquity[channel.service].handleGet(server, request, channel, reply);
+        } else {
+          reply('Channel not found.').code(404);
+        }
       })
     }
   })
@@ -118,10 +128,16 @@ exports.register = function (server, options, next) {
     path: '/ubiquity/{id}',
     handler: function (request, reply) {
 
-      redis.hdel('ubiquity', `channel:${request.params.id}`, function( err, res ) {
+      redis.hget('ubiquity', `channel:${request.params.id}`, function( err, res ) {
         if (err) throw err;
 
-        reply(res)
+        let channel = JSON.parse(res);
+
+        if (channel) {
+          ubiquity[channel.service].handleDelete(server, request, channel, reply);
+        } else {
+          reply('Channel not found.').code(404);
+        }
       })
     }
   })
