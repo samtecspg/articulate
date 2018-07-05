@@ -42,7 +42,6 @@ const getDucklingParse = (textToParse, timezone, language, ducklingService, call
         lang: language,
         tz: timezone
     };
-
     Wreck.post(ducklingService + '/parse', {
         payload: Querystring.stringify(ducklingPayload),
         headers: {
@@ -112,7 +111,7 @@ const castSysEntities = (parseResult, spacyPretrainedEntities, ducklingDimension
                 entity: entity.name,
                 extractor: 'regex',
                 start: entity.start,
-                value: { value: entity.entityValue }
+                value: { value: entity.entityValue, original: entity.resolvedRegex }
             };
         }
         return tmpEntity;

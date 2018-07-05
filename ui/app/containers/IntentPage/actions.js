@@ -27,7 +27,9 @@ import {
   LOAD_POSTFORMAT_SUCCESS,
   CHANGE_POSTFORMAT_DATA,
   SORT_SLOTS,
-  CHANGE_SLOT_AGENT
+  CHANGE_SLOT_AGENT,
+  FIND_SYS_ENTITES,
+  RELOAD_INTENT_WITH_SYS_ENTITIES
 } from './constants';
 
 export function changeIntentData(payload) {
@@ -156,9 +158,25 @@ export function loadIntentSuccess(intent) {
   };
 }
 
+export function loadSysEntitiesSucess(intent) {
+  return {
+    type: RELOAD_INTENT_WITH_SYS_ENTITIES,
+    intent,
+  };
+}
+
+
 export function loadIntent(id) {
   return {
     type: LOAD_INTENT,
+    apiCall: true,
+    id,
+  };
+}
+
+export function findSysEntities(id) {
+  return {
+    type: FIND_SYS_ENTITES,
     apiCall: true,
     id,
   };

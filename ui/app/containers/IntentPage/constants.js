@@ -1,6 +1,7 @@
 export const CHANGE_INTENT_DATA = 'IntentPage/CHANGE_INTENT_DATA';
 export const CHANGE_WEBHOOK_DATA = 'IntentPage/CHANGE_WEBHOOK_DATA';
 export const CHANGE_POSTFORMAT_DATA = 'IntentPage/CHANGE_POSTFORMAT_DATA';
+export const FIND_SYS_ENTITES = 'IntentPage/FIND_SYS_ENTITIES';
 export const RESET_INTENT_DATA = 'IntentPage/RESET_INTENT_DATA';
 export const TAG_ENTITY = 'IntentPage/TAG_ENTITY';
 export const UNTAG_ENTITY = 'IntentPage/UNTAG_ENTITY';
@@ -16,6 +17,7 @@ export const ADD_SLOT = 'IntentPage/ADD_SLOT';
 export const SET_WINDOW_SELECTION = 'IntentPage/SET_WINDOW_SELECTION';
 export const LOAD_INTENT = 'IntentPage/LOAD_INTENT';
 export const LOAD_INTENT_SUCCESS = 'IntentPage/LOAD_INTENT_SUCCESS';
+export const RELOAD_INTENT_WITH_SYS_ENTITIES = 'IntentPage/RELOAD_INTENT_WITH_SYS_ENTITIES'
 export const LOAD_INTENT_ERROR = 'IntentPage/LOAD_INTENT_ERROR';
 export const LOAD_SCENARIO = 'IntentPage/LOAD_SCENARIO';
 export const LOAD_SCENARIO_SUCCESS = 'IntentPage/LOAD_SCENARIO_SUCCESS';

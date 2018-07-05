@@ -9,7 +9,7 @@
     "Sorry, can you rephrase that?",
     "I'm still learning to speak with humans, can you rephrase that?"
   ],
-  "domainClassifierThreshold": 0.6,
+  "domainClassifierThreshold": 0.5,
   "webhook": {
     "webhookUrl": "http://localhost:3000/agent/{{agent.id}}",
     "webhookVerb": "GET",
@@ -50,6 +50,22 @@
           ]
         }
       ]
+    },
+    {
+      "uiColor": "#e91e62",
+      "entityName": "Test Regex Entity",
+      "type": "regex",
+      "regex": null,
+      "examples": [
+        {
+          "value": "regex",
+          "synonyms": [
+            "regex",
+            "regex2",
+            "regex3"
+          ]
+        }
+      ]
     }
   ],
   "domains": [
@@ -57,7 +73,7 @@
       "enabled": true,
       "domainName": "Test Domain",
       "model": "Test Domain_a24ef9cb-88f6-3da5-a0df-bdec39bd3069",
-      "intentThreshold": 0.7,
+      "intentThreshold": 0.5,
       "intents": [
         {
           "intentName": "Test Intent",
@@ -77,6 +93,28 @@
             },
             {
               "userSays": "I need to find my laptop",
+              "entities": [
+                {
+                  "end": 24,
+                  "value": "laptop",
+                  "start": 18,
+                  "entity": "Test Entity"
+                }
+              ]
+            },
+            {
+              "userSays": "I need to find my laptop please",
+              "entities": [
+                {
+                  "end": 24,
+                  "value": "laptop",
+                  "start": 18,
+                  "entity": "Test Entity"
+                }
+              ]
+            },
+            {
+              "userSays": "I specifically need to find my laptop please",
               "entities": [
                 {
                   "end": 24,
@@ -181,6 +219,46 @@
               "entities": []
             }
           ]
+        },
+        {
+          "intentName": "Test Regex Intent",
+          "useWebhook": false,
+          "usePostFormat": false,
+          "examples": [
+            {
+              "userSays": "Here's my regex",
+              "entities": []
+            },
+            {
+              "userSays": "Here's my regex2",
+              "entities": []
+            },
+            {
+              "userSays": "Do you need my regex3?",
+              "entities": []
+            },
+            {
+              "userSays": "This is my regex",
+              "entities": []
+            }
+          ],
+          "scenario": {
+            "scenarioName": "Test Regex Intent",
+            "slots": [
+              {
+                "entity": "Test Regex Entity",
+                "isList": false,
+                "slotName": "searchedRegex",
+                "isRequired": true,
+                "textPrompts": [
+                  "What are you looking for?"
+                ]
+              }
+            ],
+            "intentResponses": [
+              "Your regex is {{slots.searchedRegex.value}}."
+            ]
+          }
         }
       ]
     }

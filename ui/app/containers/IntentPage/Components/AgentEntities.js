@@ -38,18 +38,18 @@ export function AgentEntities(props) {
         </NavItem>
       );
     });
-    
-  if (props.createEntity) {
     items = Immutable([entitiesItems])
-      .concat(<NavItem key="dividerSysEntities" divider />)
-      .concat(systemEntities);
-      //.concat(<NavItem key="dividerNewEntity" divider />)
-      //.concat(newEntity);
-  } else {
-    items = Immutable([entitiesItems])
-      .concat(<NavItem key="divider" divider />)
-      .concat(systemEntities);;
-  }
+  // if (props.createEntity) {
+  //   items = Immutable([entitiesItems])
+  //     //.concat(<NavItem key="dividerSysEntities" divider />)
+  //     //.concat(systemEntities);
+  //     //.concat(<NavItem key="dividerNewEntity" divider />)
+  //     //.concat(newEntity);
+  // } else {
+  //   items = Immutable([entitiesItems])
+  //     .concat(<NavItem key="divider" divider />)
+  //     .concat(systemEntities);;
+  // }
 
   return (
     <Dropdown className="dropdown-entity-selector" trigger={<span id={`userSayingDropdown_${props.index}`}></span>} options={{ belowOrigin: true }}>
