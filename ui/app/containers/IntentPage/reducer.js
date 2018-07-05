@@ -11,6 +11,7 @@ import {
   LOAD_INTENT,
   LOAD_INTENT_ERROR,
   LOAD_INTENT_SUCCESS,
+  RELOAD_INTENT_WITH_SYS_ENTITIES,
   LOAD_SCENARIO,
   LOAD_SCENARIO_ERROR,
   LOAD_SCENARIO_SUCCESS,
@@ -305,6 +306,11 @@ function intentReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('oldIntent', action.intent)
+        .set('intentData', action.intent);
+    case RELOAD_INTENT_WITH_SYS_ENTITIES:
+        return state
+        .set('loading', false)
+        .set('error', false)
         .set('intentData', action.intent);
     case LOAD_INTENT_ERROR:
       return state

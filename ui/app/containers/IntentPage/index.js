@@ -67,7 +67,8 @@ import {
   loadWebhook,
   loadPostFormat,
   sortSlots,
-  changeSlotAgent
+  changeSlotAgent,
+  findSysEntities
 } from './actions';
 import AvailableSlots from './Components/AvailableSlots';
 import Responses from './Components/Responses';
@@ -153,6 +154,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   state = {
     entityTagged: false,
+    findNewSysEntities: false,
     userExamplesPage: 0,
     userExamplesPages: 0,
     userExamplesShown: [],
@@ -238,7 +240,14 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
 
   componentDidUpdate(prevProps, prevState, prevContext) {
     //If an example is added or removed then update the table to add/remove the new example
-    if (prevProps.intent.examples.length !== this.props.intent.examples.length) {
+    if (!_.isEqual(prevProps.scenarioData.slots,this.props.scenarioData.slots) || !_.isEqual(prevProps.intent.examples,this.props.intent.examples)){
+      this.setState({findNewSysEntities: true});
+      this.props.onFindSysEntities(this.props.currentAgent.id);
+    }
+    
+    if (prevProps.intent.examples.length !== this.props.intent.examples.length ) {
+      this.setState({findNewSysEntities: true});
+      this.props.onFindSysEntities(this.props.currentAgent.id);
       if (prevProps.intent.examples.length < this.props.intent.examples.length) {
         this.setState({
           userExamplesPage: 0,
@@ -288,6 +297,12 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     if (this.state.entityTagged) {
       this.setState({
         entityTagged: false,
+        userExamplesShown: this.props.intent.examples.slice(this.state.userExamplesPage, this.props.defaultUserExamplesPageSize)
+      });
+    }
+    if (this.state.findNewSysEntities) {
+      this.setState({
+        findNewSysEntities: false,
         userExamplesShown: this.props.intent.examples.slice(this.state.userExamplesPage, this.props.defaultUserExamplesPageSize)
       });
     }
@@ -840,6 +855,7 @@ IntentPage.propTypes = {
   onDeleteTextPrompt: React.PropTypes.func,
   onRemoveSlot: React.PropTypes.func,
   onAddSlot: React.PropTypes.func,
+  onFindSysEntities: React.PropTypes.func,
   onSortSlots: React.PropTypes.func,
   currentAgent: React.PropTypes.oneOfType([
     React.PropTypes.object,
@@ -907,6 +923,9 @@ export function mapDispatchToProps(dispatch) {
     onAddSlot: (slot) => {
       dispatch(addSlot(slot));
     },
+    onFindSysEntities: (agentId) =>{
+      dispatch(findSysEntities(agentId))
+    },
     onTagEntity: (userSays, entity) => {
       dispatch(dispatch(resetStatusFlags()));
       dispatch(tagEntity({ userSays, entity }));
@@ -959,8 +978,8 @@ export function mapDispatchToProps(dispatch) {
       dispatch(setWindowSelection(selection));
     },
     onEditMode: (props) => {
-      dispatch(loadIntent(props.params.id));
       dispatch(loadScenario(props.params.id));
+      dispatch(loadIntent(props.params.id));
       try {
         dispatch(loadWebhook(props.params.id));
       }
