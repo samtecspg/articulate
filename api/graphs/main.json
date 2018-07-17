@@ -1,0 +1,14 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "main",
+    "description": "Main Graph description",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {},
+  "outports": {
+  }
+}

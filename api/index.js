@@ -1,5 +1,7 @@
 'use strict';
 require('dotenv').load();
+const noflo = require('noflo');
+const util = require('util');
 const INIT_RETRY = process.env.INIT_RETRY || 10;
 const INIT_RETRY_TIMEOUT = process.env.INIT_RETRY_TIMEOUT || 15000;
 
@@ -14,7 +16,7 @@ module.exports = (callback) => init(callback);
 
 const init = (callback) => {
 
-    return Async.series({ redis: initRedis, server: initHapi },
+    return Async.series({ flow: initFlow, redis: initRedis, server: initHapi },
         (err, results) => {
 
             if (err) {
@@ -22,12 +24,13 @@ const init = (callback) => {
                 return callback(err);
             }
 
-            const { redis, server } = results;
+            const { redis, server, flow } = results;
             server.app.redis = redis;
+            server.app.flow = flow;
 
             StartDB(server, redis, (err) => {
 
-                if (err){
+                if (err) {
                     const error = new Error(`An error ocurred checking DB default settings. Error detail: ${err}`);
                     callback(error);
                 }
@@ -85,4 +88,23 @@ const initHapi = (next) => {
     }
     return next(null, server);
     /* $lab:coverage:on$ */
+};
+
+const initFlow = (next) => {
+    console.log(`index::initFlow`); // TODO: REMOVE!!!!
+    const graph = noflo.asCallback('alpha-nlu-api/main', {
+        baseDir: __dirname
+    });
+    const promisedGraph = util.debug()promisify(graph);
+    promisedGraph({
+        in: 'graph initial inport'
+    })
+        .then((result) => {
+            console.log(result.out);
+            next(null, graph);
+        })
+        .catch((err) => {
+            next(err);
+        });
+
 };
