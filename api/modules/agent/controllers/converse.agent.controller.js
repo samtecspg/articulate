@@ -5,24 +5,10 @@ const Boom = require('boom');
 const Handlebars = require('handlebars');
 const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
 
-
 module.exports = (request, reply) => {
 
+    const { id: agentId, sessionId, text, timezone } = request.plugins['flow-loader'];
     RegisterHandlebarHelpers(Handlebars);
-    const agentId = request.params.id;
-    let sessionId;
-    let text;
-    let timezone;
-    if (request.payload) {
-        sessionId = request.payload.sessionId;
-        text = request.payload.text;
-        timezone = request.payload.timezone;
-    }
-    else {
-        sessionId = request.query.sessionId;
-        text = request.query.text;
-        timezone = request.query.timezone;
-    }
     const server = request.server;
 
     Async.waterfall([
@@ -41,7 +27,7 @@ module.exports = (request, reply) => {
                             const error = Boom.create(res.statusCode, res.result.message);
                             return cb(error, null);
                         }
-                        return cb(null, res.result.result.results);
+                        return cb(null, res.result.result.results, res.result.id);
                     });
                 },
                 agent: (cb) => {
@@ -81,6 +67,8 @@ module.exports = (request, reply) => {
         (conversationStateObject, callback) => {
 
             const timezoneToUse = timezone ? timezone : (conversationStateObject.agent.timezone ? conversationStateObject.agent.timezone : 'UTC');
+            conversationStateObject.docId = conversationStateObject.parse[1];
+            conversationStateObject.parse = conversationStateObject.parse[0];
             conversationStateObject.text = text;
             conversationStateObject.sessionId = sessionId;
             conversationStateObject.timezone = timezoneToUse;
@@ -97,7 +85,6 @@ module.exports = (request, reply) => {
                     }
                 });
             }
-
             AgentTools.respond(server, conversationStateObject, (err, result) => {
 
                 if (err) {
@@ -111,44 +98,40 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err);
         }
+        data.docId = conversationStateObject.docId;
         let postFormatPayloadToUse;
-        let usedPostFormatIntent;
-        if (conversationStateObject.intent.usePostFormat) {
-            postFormatPayloadToUse = conversationStateObject.intent.postFormat.postFormatPayload;
-            usedPostFormatIntent = true;
+        let usedPostFormatAction;
+        if (conversationStateObject.action && conversationStateObject.action.usePostFormat) {
+            postFormatPayloadToUse = conversationStateObject.action.postFormat.postFormatPayload;
+            usedPostFormatAction = true;
         }
         else if (conversationStateObject.agent.usePostFormat) {
-            usedPostFormatIntent = false;
+            usedPostFormatAction = false;
             postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
         }
         if (postFormatPayloadToUse) {
             try {
                 const compiledPostFormat = Handlebars.compile(postFormatPayloadToUse);
                 const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject, { textResponse: data.textResponse }));
-                let processedPostFormatJson = {};
-                processedPostFormatJson = JSON.parse(processedPostFormat);
+                const processedPostFormatJson = JSON.parse(processedPostFormat);
+                processedPostFormatJson.docId = data.docId;
                 if (!processedPostFormatJson.textResponse) {
                     processedPostFormatJson.textResponse = data.textResponse;
-                }
-                if (data.isActionComplete) {
-                    processedPostFormatJson.isActionComplete = data.isActionComplete
                 }
                 return reply(processedPostFormatJson);
             }
             catch (error) {
-                const errorMessage = usedPostFormatIntent ? 'Error formatting the post response using intent POST format : ' : 'Error formatting the post response using agent POST format : ';
+                const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
                 console.log(errorMessage, error);
-                return reply({
-                    textResponse: data.textResponse,
-                    postFormatingError: errorMessage + error
-                });
+                return reply(Object.assign({
+                    postFormating: errorMessage + error
+                }, data));
             }
-        }
 
+        }
         else {
             return reply(data);
         }
-
 
     });
 };

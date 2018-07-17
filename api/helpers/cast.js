@@ -1,5 +1,4 @@
 'use strict';
-const _ = require('lodash');
 
 module.exports = (object, type) => {
 
@@ -18,6 +17,9 @@ module.exports = (object, type) => {
             if (typeof object.enableModelsPerDomain !== 'boolean'){
                 object.enableModelsPerDomain = object.enableModelsPerDomain === 'true';
             }
+            if (typeof object.multiDomain !== 'boolean'){
+                object.multiDomain = object.multiDomain === 'true';
+            }
             object.domainClassifierThreshold = parseFloat(object.domainClassifierThreshold);
             break;
         case 'context':
@@ -29,63 +31,60 @@ module.exports = (object, type) => {
             if (typeof object.extraTrainingData !== 'boolean'){
                 object.extraTrainingData = object.extraTrainingData === 'true';
             }
-            object.intentThreshold = parseFloat(object.intentThreshold);
+            object.actionThreshold = parseFloat(object.actionThreshold);
             break;
-        case 'entity':
+        case 'keyword':
             if (object.regex === '' || !object.regex || object.regex === 'null'){
                 object.regex = null;
             }
             break;
-        case 'intent':
+        case 'saying':
+            if (object.keywords !== undefined && object.keywords !== null){
+                if (Array.isArray(object.keywords)){
+                    object.keywords = object.keywords.map((keyword) => {
+
+                        if (keyword.keywordId) {
+                            keyword.keywordId = parseInt(keyword.keywordId);
+                        }
+                        keyword.start = parseInt(keyword.start);
+                        keyword.end = parseInt(keyword.end);
+                        return keyword;
+                    });
+                }
+                else {
+                    object.keywords = [];
+                }
+            }
+            if (object.actions !== undefined && object.actions !== null){
+                if (!Array.isArray(object.actions)){
+                    object.actions = [];
+                }
+            }
+            break;
+        case 'action':
             if (typeof object.useWebhook !== 'boolean'){
                 object.useWebhook = object.useWebhook === 'true';
             }
-
             if (typeof object.usePostFormat !== 'boolean'){
                 object.usePostFormat = object.usePostFormat === 'true';
             }
-            object.examples = object.examples.map((example) => {
-
-                if (example.entities === '') {
-                    example.entities = [];
-                }
-                else {
-                    example.entities = example.entities.map((entity) => {
-
-                        if (entity.entityId) {
-                            entity.entityId = parseInt(entity.entityId);
-                        }
-                        entity.start = parseInt(entity.start);
-                        entity.end = parseInt(entity.end);
-                        return entity;
-                    });
-                }
-                return example;
-            });
-            break;
-        case 'scenario':
-            if (object.slots === '') {
-                object.slots = [];
-            }
-            else {
+            if (object.slots){
                 object.slots = object.slots.map((slot) => {
 
-                    if (!_.isArray(slot.textPrompts)) {
-                        slot.textPrompts = [];
-                    }
-                    if (typeof object.isList !== 'boolean'){
+                    if (typeof slot.isList !== 'boolean'){
                         slot.isList = slot.isList === 'true';
                     }
-                    if (typeof object.isRequired !== 'boolean'){
+                    if (typeof slot.isRequired !== 'boolean'){
                         slot.isRequired = slot.isRequired === 'true';
+                    }
+                    if (slot.keywordId) {
+                        slot.keywordId = parseInt(slot.keywordId);
                     }
                     return slot;
                 });
             }
-            if (object.intentResponses === '') {
-                if (object.intentResponses.length === 0) {
-                    object.intentResponses = [];
-                }
+            else {
+                object.slots = [];
             }
             break;
         case 'webhook':
@@ -104,22 +103,22 @@ module.exports = (object, type) => {
             if (object.result && object.result.results){
                 object.result.results.forEach((result) => {
 
-                    if (result.intent){
-                        if (result.intent.name && (result.intent.name === '' || result.intent.name === 'null')){
-                            result.intent.name = null;
+                    if (result.saying){
+                        if (result.saying.name && (result.saying.name === '' || result.saying.name === 'null')){
+                            result.saying.name = null;
                         }
                     }
-                    if (result.entities !== undefined && result.entities !== null){
-                        if (Array.isArray(result.entities)){
-                            result.entities.forEach((entity) => {
+                    if (result.keywords !== undefined && result.keywords !== null){
+                        if (Array.isArray(result.keywords)){
+                            result.keywords.forEach((keyword) => {
 
-                                if (entity.confidence === ''){
-                                    entity.confidence = null;
+                                if (keyword.confidence === ''){
+                                    keyword.confidence = null;
                                 }
                             });
                         }
                         else {
-                            result.entities = [];
+                            result.keywords = [];
                         }
                     }
                 });

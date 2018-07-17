@@ -81,7 +81,7 @@ module.exports = (request, reply) => {
                                         server.inject(`/agent/${agentId}/domain`, (res) => {
 
                                             if (res.statusCode !== 200){
-                                                const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the agent ${agentId}`);
+                                                const error = Boom.create(res.statusCode, `An error occurred getting the sayings to update of the agent ${agentId}`);
                                                 return callbackGetDomains(error, null);
                                             }
                                             return callbackGetDomains(null, res.result.domains);
@@ -109,34 +109,34 @@ module.exports = (request, reply) => {
                                                 (callbackUpdateDomainSons) => {
 
                                                     Async.waterfall([
-                                                        (callbackGetIntents) => {
+                                                        (callbackGetSayings) => {
 
-                                                            server.inject(`/domain/${domain.id}/intent`, (res) => {
+                                                            server.inject(`/domain/${domain.id}/saying`, (res) => {
 
                                                                 if (res.statusCode !== 200){
-                                                                    const error = Boom.create(res.statusCode, `An error occurred getting the intents to update of the domain ${domain.domainName}`);
-                                                                    return callbackGetIntents(error, null);
+                                                                    const error = Boom.create(res.statusCode, `An error occurred getting the sayings to update of the domain ${domain.domainName}`);
+                                                                    return callbackGetSayings(error, null);
                                                                 }
-                                                                return callbackGetIntents(null, res.result.intents);
+                                                                return callbackGetSayings(null, res.result.sayings);
                                                             });
                                                         },
-                                                        (intents, callbackUpdateIntentAndScenario) => {
+                                                        (sayings, callbackUpdateSayingAndScenario) => {
 
-                                                            Async.map(intents, (intent, callbackMapOfIntent) => {
+                                                            Async.map(sayings, (saying, callbackMapOfSaying) => {
 
                                                                 requiresRetrain = true;
                                                                 Async.parallel([
-                                                                    (callbackUpdateIntent) => {
+                                                                    (callbackUpdateSaying) => {
 
-                                                                        intent.agent = updateData.agentName;
+                                                                        saying.agent = updateData.agentName;
 
-                                                                        redis.hmset(`intent:${intent.id}`, RemoveBlankArray(Flat(intent)), (err, result) => {
+                                                                        redis.hmset(`saying:${saying.id}`, RemoveBlankArray(Flat(saying)), (err, result) => {
 
                                                                             if (err){
-                                                                                const error = Boom.badImplementation(`An error occurred updating the intent ${intent.id} with the new values of the entity`);
-                                                                                return callbackUpdateIntent(error, null);
+                                                                                const error = Boom.badImplementation(`An error occurred updating the saying ${saying.id} with the new values of the keyword`);
+                                                                                return callbackUpdateSaying(error, null);
                                                                             }
-                                                                            return callbackUpdateIntent(null);
+                                                                            return callbackUpdateSaying(null);
                                                                         });
                                                                     },
                                                                     (callbackUpdateScenario) => {
@@ -144,10 +144,10 @@ module.exports = (request, reply) => {
                                                                         const updatedValues = {
                                                                             agent: updateData.agentName
                                                                         };
-                                                                        redis.hmset(`scenario:${intent.id}`, updatedValues, (err, result) => {
+                                                                        redis.hmset(`scenario:${saying.id}`, updatedValues, (err, result) => {
 
                                                                             if (err){
-                                                                                const error = Boom.badImplementation(`An error occurred updating the scenario of the intent ${intent.id} with the new values of the entity`);
+                                                                                const error = Boom.badImplementation(`An error occurred updating the scenario of the saying ${saying.id} with the new values of the keyword`);
                                                                                 return callbackUpdateScenario(error, null);
                                                                             }
                                                                             return callbackUpdateScenario(null);
@@ -156,16 +156,16 @@ module.exports = (request, reply) => {
                                                                 ], (err, result) => {
 
                                                                     if (err){
-                                                                        return callbackMapOfIntent(err);
+                                                                        return callbackMapOfSaying(err);
                                                                     }
-                                                                    return callbackMapOfIntent(null);
+                                                                    return callbackMapOfSaying(null);
                                                                 });
                                                             }, (err, result) => {
 
                                                                 if (err){
-                                                                    return callbackUpdateIntentAndScenario(err);
+                                                                    return callbackUpdateSayingAndScenario(err);
                                                                 }
-                                                                return callbackUpdateIntentAndScenario(null);
+                                                                return callbackUpdateSayingAndScenario(null);
                                                             });
                                                         }
                                                     ], (err, result) => {
@@ -199,49 +199,49 @@ module.exports = (request, reply) => {
                                     return callbackUpdateAgentDomains(null);
                                 });
                             },
-                            (callbackUpdateAgentEntities) => {
+                            (callbackUpdateAgentKeywords) => {
 
                                 Async.waterfall([
-                                    (callbackGetEntities) => {
+                                    (callbackGetKeywords) => {
 
-                                        server.inject(`/agent/${agentId}/entity`, (res) => {
+                                        server.inject(`/agent/${agentId}/keyword`, (res) => {
 
                                             if (res.statusCode !== 200){
-                                                const error = Boom.create(res.statusCode, `An error occurred getting the entities to update of the agent ${agentId}`);
-                                                return callbackGetEntities(error, null);
+                                                const error = Boom.create(res.statusCode, `An error occurred getting the keywords to update of the agent ${agentId}`);
+                                                return callbackGetKeywords(error, null);
                                             }
-                                            return callbackGetEntities(null, res.result.entities);
+                                            return callbackGetKeywords(null, res.result.keywords);
                                         });
                                     },
-                                    (entities, callbackUpdateEachEntity) => {
+                                    (keywords, callbackUpdateEachKeyword) => {
 
-                                        Async.map(entities, (entity, callbackMapOfEntity) => {
+                                        Async.map(keywords, (keyword, callbackMapOfKeyword) => {
 
-                                            entity.agent = updateData.agentName;
+                                            keyword.agent = updateData.agentName;
 
                                             requiresRetrain = true;
-                                            redis.hmset(`entity:${entity.id}`, RemoveBlankArray(Flat(entity)), (err, result) => {
+                                            redis.hmset(`keyword:${keyword.id}`, RemoveBlankArray(Flat(keyword)), (err, result) => {
 
                                                 if (err){
-                                                    const error = Boom.badImplementation(`An error occurred updating the entity ${entity.entityName} with the new values of the agent`);
-                                                    return callbackMapOfEntity(error, null);
+                                                    const error = Boom.badImplementation(`An error occurred updating the keyword ${keyword.keywordName} with the new values of the agent`);
+                                                    return callbackMapOfKeyword(error, null);
                                                 }
-                                                return callbackMapOfEntity(null);
+                                                return callbackMapOfKeyword(null);
                                             });
                                         }, (err, result) => {
 
                                             if (err){
-                                                return callbackUpdateEachEntity(err);
+                                                return callbackUpdateEachKeyword(err);
                                             }
-                                            return callbackUpdateEachEntity(null);
+                                            return callbackUpdateEachKeyword(null);
                                         });
                                     }
                                 ], (err, result) => {
 
                                     if (err){
-                                        return callbackUpdateAgentEntities(err);
+                                        return callbackUpdateAgentKeywords(err);
                                     }
-                                    return callbackUpdateAgentEntities(null);
+                                    return callbackUpdateAgentKeywords(null);
                                 });
                             }
                         ], (err, result) => {
@@ -308,6 +308,7 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred updating the agent status.');
                     return reply(error);
                 }
+                server.publish(`/agent/${result.id}`, result);
                 return reply(result);
             });
         }

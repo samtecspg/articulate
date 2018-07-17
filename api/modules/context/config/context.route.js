@@ -1,6 +1,7 @@
 'use strict';
 const ContextController = require('../controllers');
 const ContextValidator = require('./context.validator');
+const PKG = require('../../../package');
 
 const ContextRoutes = [
     {
@@ -19,6 +20,12 @@ const ContextRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/context.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: ContextValidator.findById,
             handler: ContextController.findById
         }

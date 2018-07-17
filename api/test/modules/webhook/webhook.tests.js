@@ -18,8 +18,8 @@ let preCreatedAgent = null;
 let agentName = null;
 let agentId = null;
 let domainName = null;
-let intentName = null;
-let intentId = null;
+let sayingName = null;
+let sayingId = null;
 
 before((done) => {
 
@@ -33,23 +33,23 @@ before((done) => {
         server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
             if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
-                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
+                done(new Error(`An error occurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
                 server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
-                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                        done(new Error(`An error occurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
                     }
                     else {
                         preCreatedAgent = resAgent.result;
                         agentName = preCreatedAgent.agentName;
                         agentId = preCreatedAgent.id;
                         domainName = preCreatedAgent.domains[0].domainName;
-                        intentName = 'Simple Test Intent';
-                        intentId = _.filter(preCreatedAgent.domains[0].intents, (tempIntent) => {
+                        sayingName = 'Simple Test Saying';
+                        sayingId = _.filter(preCreatedAgent.domains[0].sayings, (tempSaying) => {
 
-                            return tempIntent.intentName === intentName;
+                            return tempSaying.sayingName === sayingName;
                         })[0].id;
                         done();
                     }
@@ -77,7 +77,7 @@ after((done) => {
 
 suite('webhook', () => {
 
-    suite('/intent/{id}/webhook', () => {
+    suite('/saying/{id}/webhook', () => {
 
         suite('/post', () => {
 
@@ -86,7 +86,7 @@ suite('webhook', () => {
                 const data = {
                     agent: agentName,
                     domain: domainName,
-                    intent: intentName,
+                    saying: sayingName,
                     webhookUrl: 'http://localhost:3000/agent',
                     webhookVerb: 'GET',
                     webhookPayloadType: 'None',
@@ -95,7 +95,7 @@ suite('webhook', () => {
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/webhook`,
+                    url: `/saying/${sayingId}/webhook`,
                     payload: data
                 };
 
@@ -115,7 +115,7 @@ suite('webhook', () => {
                 };
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/webhook`,
+                    url: `/saying/${sayingId}/webhook`,
                     payload: data
                 };
 
@@ -132,7 +132,7 @@ suite('webhook', () => {
                 const data = {
                     agent: '-1',
                     domain: domainName,
-                    intent: intentName,
+                    saying: sayingName,
                     webhookUrl: 'http://localhost:3000/agent',
                     webhookVerb: 'GET',
                     webhookPayloadType: 'None',
@@ -141,7 +141,7 @@ suite('webhook', () => {
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/webhook`,
+                    url: `/saying/${sayingId}/webhook`,
                     payload: data
                 };
 
@@ -158,7 +158,7 @@ suite('webhook', () => {
                 const data = {
                     agent: agentName,
                     domain: '-1',
-                    intent: intentName,
+                    saying: sayingName,
                     webhookUrl: 'http://localhost:3000/agent',
                     webhookVerb: 'GET',
                     webhookPayloadType: 'None',
@@ -167,7 +167,7 @@ suite('webhook', () => {
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/webhook`,
+                    url: `/saying/${sayingId}/webhook`,
                     payload: data
                 };
 
@@ -182,7 +182,7 @@ suite('webhook', () => {
 
     });
 
-    suite('intent/{id}/webhook', () => {
+    suite('saying/{id}/webhook', () => {
 
         suite('/get', () => {
 
@@ -191,14 +191,14 @@ suite('webhook', () => {
                 const data = {
                     agent: agentName,
                     domain: domainName,
-                    intent: intentName,
+                    saying: sayingName,
                     webhookUrl: 'http://localhost:3000/agent',
                     webhookVerb: 'GET',
                     webhookPayloadType: 'None',
                     webhookPayload: ''
                 };
 
-                server.inject(`/intent/${intentId}/webhook`, (res) => {
+                server.inject(`/saying/${sayingId}/webhook`, (res) => {
 
                     expect(res.statusCode).to.equal(200);
                     expect(res.result.webhookUrl).to.be.equal(data.webhookUrl);
@@ -212,7 +212,7 @@ suite('webhook', () => {
                     id: '-1'
                 };
 
-                server.inject(`/intent/${data.id}/webhook`, (res) => {
+                server.inject(`/saying/${data.id}/webhook`, (res) => {
 
                     expect(res.statusCode).to.equal(404);
                     expect(res.result.message).to.contain('The specified webhook doesn\'t exists');
@@ -231,7 +231,7 @@ suite('webhook', () => {
 
                 const options = {
                     method: 'PUT',
-                    url: `/intent/${intentId}/webhook`,
+                    url: `/saying/${sayingId}/webhook`,
                     payload: updatedData
                 };
 
@@ -251,7 +251,7 @@ suite('webhook', () => {
 
                 const options = {
                     method: 'PUT',
-                    url: '/intent/-1/webhook',
+                    url: '/saying/-1/webhook',
                     payload: updatedData
                 };
 
@@ -270,7 +270,7 @@ suite('webhook', () => {
                 };
                 const options = {
                     method: 'PUT',
-                    url: `/intent/${intentId}/webhook`,
+                    url: `/saying/${sayingId}/webhook`,
                     payload: data
                 };
 
@@ -293,7 +293,7 @@ suite('webhook', () => {
 
                 const options = {
                     method: 'DELETE',
-                    url: `/intent/${data.id}/webhook`
+                    url: `/saying/${data.id}/webhook`
                 };
 
                 server.inject(options, (res) => {
@@ -307,11 +307,11 @@ suite('webhook', () => {
             test('should respond with 200 successful operation', (done) => {
 
                 const data = {
-                    id: intentId
+                    id: sayingId
                 };
                 const options = {
                     method: 'DELETE',
-                    url: `/intent/${data.id}/webhook`
+                    url: `/saying/${data.id}/webhook`
                 };
 
                 server.inject(options, (res) => {

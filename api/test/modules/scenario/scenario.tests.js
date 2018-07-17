@@ -17,9 +17,9 @@ let preCreatedAgent = null;
 let agentName = null;
 let agentId = null;
 let domainName = null;
-let entityName = null;
-let intentName = null;
-let intentId = null;
+let keywordName = null;
+let sayingName = null;
+let sayingId = null;
 
 before((done) => {
 
@@ -33,24 +33,24 @@ before((done) => {
         server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
             if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
-                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
+                done(new Error(`An error occurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
                 server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
-                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                        done(new Error(`An error occurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
                     }
                     else {
                         preCreatedAgent = resAgent.result;
                         agentName = preCreatedAgent.agentName;
                         agentId = preCreatedAgent.id;
                         domainName = preCreatedAgent.domains[0].domainName;
-                        entityName = preCreatedAgent.entities[0].entityName;
-                        intentName = 'Simple Test Intent';
-                        intentId = _.filter(preCreatedAgent.domains[0].intents, (tempIntent) => {
+                        keywordName = preCreatedAgent.keywords[0].keywordName;
+                        sayingName = 'Simple Test Saying';
+                        sayingId = _.filter(preCreatedAgent.domains[0].sayings, (tempSaying) => {
 
-                            return tempIntent.intentName === intentName;
+                            return tempSaying.sayingName === sayingName;
                         })[0].id;
                         done();
                     }
@@ -62,7 +62,7 @@ before((done) => {
 
 suite('scenario', () => {
 
-    suite('/intent/{id}/scenario', () => {
+    suite('/saying/{id}/scenario', () => {
 
         suite('/post', () => {
 
@@ -71,11 +71,11 @@ suite('scenario', () => {
                 const data = {
                     agent: agentName,
                     domain: domainName,
-                    intent: intentName,
+                    saying: sayingName,
                     scenarioName: 'Test Scenario 2',
                     slots: [{
                         slotName: 'searchedObject',
-                        entity: entityName,
+                        keyword: keywordName,
                         isList: false,
                         isRequired: true,
                         textPrompts: [
@@ -83,7 +83,7 @@ suite('scenario', () => {
                             'Are you trying to find something?'
                         ]
                     }],
-                    intentResponses: [
+                    sayingResponses: [
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
@@ -92,7 +92,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/saying/${sayingId}/scenario`,
                     payload: data
                 };
 
@@ -112,7 +112,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/saying/${sayingId}/scenario`,
                     payload: data
                 };
 
@@ -129,11 +129,11 @@ suite('scenario', () => {
                 const data = {
                     agent: '-1',
                     domain: domainName,
-                    intent: intentName,
+                    saying: sayingName,
                     scenarioName: 'Test Scenario 2',
                     slots: [{
                         slotName: 'searchedObject',
-                        entity: entityName,
+                        keyword: keywordName,
                         isList: false,
                         isRequired: true,
                         textPrompts: [
@@ -141,7 +141,7 @@ suite('scenario', () => {
                             'Are you trying to find something?'
                         ]
                     }],
-                    intentResponses: [
+                    sayingResponses: [
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
@@ -150,7 +150,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/saying/${sayingId}/scenario`,
                     payload: data
                 };
 
@@ -167,11 +167,11 @@ suite('scenario', () => {
                 const data = {
                     agent: agentName,
                     domain: '-1',
-                    intent: intentName,
+                    saying: sayingName,
                     scenarioName: 'Test Scenario 2',
                     slots: [{
                         slotName: 'searchedObject',
-                        entity: entityName,
+                        keyword: keywordName,
                         isList: false,
                         isRequired: true,
                         textPrompts: [
@@ -179,7 +179,7 @@ suite('scenario', () => {
                             'Are you trying to find something?'
                         ]
                     }],
-                    intentResponses: [
+                    sayingResponses: [
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
@@ -188,7 +188,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/saying/${sayingId}/scenario`,
                     payload: data
                 };
 
@@ -200,16 +200,16 @@ suite('scenario', () => {
                 });
             });
 
-            test('should respond with 400 because entity doesn\'t exists', (done) => {
+            test('should respond with 400 because keyword doesn\'t exists', (done) => {
 
                 const data = {
                     agent: agentName,
                     domain: domainName,
-                    intent: intentName,
+                    saying: sayingName,
                     scenarioName: 'Test Scenario 2',
                     slots: [{
                         slotName: 'searchedObject',
-                        entity: '-1',
+                        keyword: '-1',
                         isList: false,
                         isRequired: true,
                         textPrompts: [
@@ -217,7 +217,7 @@ suite('scenario', () => {
                             'Are you trying to find something?'
                         ]
                     }],
-                    intentResponses: [
+                    sayingResponses: [
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
@@ -226,14 +226,14 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'POST',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/saying/${sayingId}/scenario`,
                     payload: data
                 };
 
                 server.inject(options, (res) => {
 
                     expect(res.statusCode).to.equal(400);
-                    expect(res.result.message).to.be.equal(`The entity with the name -1 doesn't exist in the agent ${agentId}`);
+                    expect(res.result.message).to.be.equal(`The keyword with the name -1 doesn't exist in the agent ${agentId}`);
                     done();
                 });
             });
@@ -241,7 +241,7 @@ suite('scenario', () => {
 
     });
 
-    suite('intent/{id}/scenario', () => {
+    suite('saying/{id}/scenario', () => {
 
         suite('/get', () => {
 
@@ -250,11 +250,11 @@ suite('scenario', () => {
                 const data = {
                     agent: agentName,
                     domain: domainName,
-                    intent: intentName,
+                    saying: sayingName,
                     scenarioName: 'Test Scenario 2',
                     slots: [{
                         slotName: 'searchedObject',
-                        entity: entityName,
+                        keyword: keywordName,
                         isList: false,
                         isRequired: true,
                         textPrompts: [
@@ -262,14 +262,14 @@ suite('scenario', () => {
                             'Are you trying to find something?'
                         ]
                     }],
-                    intentResponses: [
+                    sayingResponses: [
                         'Your {searchedObject} is located at...',
                         'I was unable to find the {searchedObject}',
                         'The {searchedObject} is near 7th street at the downtown.'
                     ]
                 };
 
-                server.inject(`/intent/${intentId}/scenario`, (res) => {
+                server.inject(`/saying/${sayingId}/scenario`, (res) => {
 
                     expect(res.statusCode).to.equal(200);
                     expect(res.result.scenarioName).to.be.equal(data.scenarioName);
@@ -283,7 +283,7 @@ suite('scenario', () => {
                     id: '-1'
                 };
 
-                server.inject(`/intent/${data.id}/scenario`, (res) => {
+                server.inject(`/saying/${data.id}/scenario`, (res) => {
 
                     expect(res.statusCode).to.equal(404);
                     expect(res.result.message).to.contain('The specified scenario doesn\'t exists');
@@ -298,14 +298,14 @@ suite('scenario', () => {
 
                 const updatedData = {
                     scenarioName: 'Test Scenario 2 Updated',
-                    intentResponses: [
+                    sayingResponses: [
                         'Your {searchedObject} is located at...'
                     ]
                 };
 
                 const options = {
                     method: 'PUT',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/saying/${sayingId}/scenario`,
                     payload: updatedData
                 };
 
@@ -313,7 +313,7 @@ suite('scenario', () => {
 
                     expect(res.statusCode).to.equal(200);
                     expect(res.result.scenarioName).to.be.equal(updatedData.scenarioName);
-                    expect(res.result.intentResponses.length).to.be.equal(updatedData.intentResponses.length);
+                    expect(res.result.sayingResponses.length).to.be.equal(updatedData.sayingResponses.length);
                     done();
                 });
             });
@@ -322,14 +322,14 @@ suite('scenario', () => {
 
                 const updatedData = {
                     scenarioName: 'Test Scenario 2 Updated',
-                    intentResponses: [
+                    sayingResponses: [
                         'Your {searchedObject} is located at...'
                     ]
                 };
 
                 const options = {
                     method: 'PUT',
-                    url: '/intent/-1/scenario',
+                    url: '/saying/-1/scenario',
                     payload: updatedData
                 };
 
@@ -348,7 +348,7 @@ suite('scenario', () => {
                 };
                 const options = {
                     method: 'PUT',
-                    url: `/intent/${intentId}/scenario`,
+                    url: `/saying/${sayingId}/scenario`,
                     payload: data
                 };
 
@@ -371,7 +371,7 @@ suite('scenario', () => {
 
                 const options = {
                     method: 'DELETE',
-                    url: `/intent/${data.id}/scenario`
+                    url: `/saying/${data.id}/scenario`
                 };
 
                 server.inject(options, (res) => {
@@ -385,11 +385,11 @@ suite('scenario', () => {
             test('should respond with 200 successful operation', (done) => {
 
                 const data = {
-                    id: intentId
+                    id: sayingId
                 };
                 const options = {
                     method: 'DELETE',
-                    url: `/intent/${data.id}/scenario`
+                    url: `/saying/${data.id}/scenario`
                 };
 
                 server.inject(options, (res) => {

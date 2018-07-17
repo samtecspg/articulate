@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const GetDomainData = require('./getDomainData.domain.tool');
-const GetEntitiesCombinations = require('./getEntitiesCombinations.domain.tool');
+const GetKeywordsCombinations = require('./getKeywordsCombinations.domain.tool');
 
 const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
 
@@ -12,104 +12,101 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
             return callback(err, null);
         }
 
-        let entitiesCombinations = [];
+        let keywordsCombinations = [];
         if (extraTrainingData){
-            if (results.entities.length > 0){
-                entitiesCombinations = GetEntitiesCombinations(results.entities, results.intents);
+            if (results.keywords.length > 0){
+                keywordsCombinations = GetKeywordsCombinations(results.keywords, results.sayings);
             }
         }
 
-        const common_examples = _.uniq(_.flatten(_.map(results.intents, (intent) => {
+        const uniqueActionsCount = _.uniq(_.flattenDeep(_.map(results.sayings, 'actions'))).length;
 
-            const buildIntentsPerExamples = _.map(intent.examples, (intentExample) => {
+        const common_examples = _.uniq(_.flatten(_.map(results.sayings, (saying) => {
 
-                const entitiesList = _.compact(_.map(intentExample.entities, (entity) => {
+            const keywordsList = _.compact(_.map(saying.keywords, (keyword) => {
 
-                    return entity.extractor ? null : entity;
-                }));
+                return keyword.extractor ? null : keyword;
+            }));
 
-                if (entitiesList && entitiesList.length > 0){
-                    if (extraTrainingData){
-                        const entitiesOfIntent = _.map(entitiesList, 'entity');
-                        const keyOfEntities = entitiesOfIntent.join('-');
-                        let combinationsForThisIntent = entitiesCombinations[keyOfEntities];
+            if (keywordsList && keywordsList.length > 0){
+                if (extraTrainingData){
+                    const keywordsOfSaying = _.map(keywordsList, 'keyword');
+                    const keyOfKeywords = keywordsOfSaying.join('-');
+                    let combinationsForThisSaying = keywordsCombinations[keyOfKeywords];
 
-                        //If there is just one entity in the text of this intent, flat the array of combinations
-                        combinationsForThisIntent = combinationsForThisIntent.length === 1 ? _.flatten(combinationsForThisIntent) : combinationsForThisIntent;
+                    //If there is just one keyword in the text of this saying, flat the array of combinations
+                    combinationsForThisSaying = combinationsForThisSaying.length === 1 ? _.flatten(combinationsForThisSaying) : combinationsForThisSaying;
 
-                        const buildedIntents = _.map(combinationsForThisIntent, (combination) => {
+                    const buildedSayings = _.map(combinationsForThisSaying, (combination) => {
 
-                            let intentText = intentExample.userSays;
-                            const lowestStart = entitiesList[0].start;
-                            const newEntitiesList = [];
-                            let shift = 0;
-                            const combinationValues = Array.isArray(combination) ? combination : [combination];
+                        let sayingText = saying.userSays;
+                        const lowestStart = keywordsList[0].start;
+                        const newKeywordsList = [];
+                        let shift = 0;
+                        const combinationValues = Array.isArray(combination) ? combination : [combination];
 
-                            entitiesList.forEach( (entity, i) => {
+                        keywordsList.forEach( (keyword, i) => {
 
-                                const textValue = combinationValues[i].entityText;
-                                const entityValue = combinationValues[i].entityValue;
-                                const newStart = lowestStart === entity.start ? entity.start : entity.start + shift;
-                                const newEnd = newStart + textValue.length;
-                                const replacementStart = i === 0 ? entity.start : newStart;
-                                const replacementFinish = i === 0 ? entity.end : entity.end + shift;
-                                intentText = intentText.substring(0, replacementStart) + textValue + intentText.substring(replacementFinish);
-                                newEntitiesList.push({
-                                    start: newStart,
-                                    end: newEnd,
-                                    value: entityValue,
-                                    entity: entity.entity
-                                });
-                                shift = newEnd - entity.end;
+                            const textValue = combinationValues[i].keywordText;
+                            const keywordValue = combinationValues[i].keywordValue;
+                            const newStart = lowestStart === keyword.start ? keyword.start : keyword.start + shift;
+                            const newEnd = newStart + textValue.length;
+                            const replacementStart = i === 0 ? keyword.start : newStart;
+                            const replacementFinish = i === 0 ? keyword.end : keyword.end + shift;
+                            sayingText = sayingText.substring(0, replacementStart) + textValue + sayingText.substring(replacementFinish);
+                            newKeywordsList.push({
+                                start: newStart,
+                                end: newEnd,
+                                value: keywordValue,
+                                entity: keyword.keyword
                             });
-
-                            const buildedIntent = {
-                                text: intentText,
-                                intent: intent.intentName,
-                                entities: newEntitiesList
-                            };
-
-                            return buildedIntent;
+                            shift = newEnd - keyword.end;
                         });
 
-                        return buildedIntents;
-                    }
+                        const buildedSaying = {
+                            text: sayingText,
+                            intent: saying.actions.join('+'),
+                            entities: newKeywordsList
+                        };
 
-                    const newEntitiesList = [];
-
-                    entitiesList.forEach((tempEntity) => {
-
-                        newEntitiesList.push({
-                            start: tempEntity.start,
-                            end: tempEntity.end,
-                            value: tempEntity.value,
-                            entity: tempEntity.entity
-                        });
+                        return buildedSaying;
                     });
 
-                    const buildedIntent = {
-                        text: intentExample.userSays,
-                        intent: intent.intentName,
-                        entities: newEntitiesList
-                    };
-
-                    return buildedIntent;
+                    return buildedSayings;
                 }
 
-                const buildedIntent = {
-                    text: intentExample.userSays,
-                    intent: intent.intentName,
-                    entities: []
-                };
-                return buildedIntent;
-            });
+                const newKeywordsList = [];
 
-            return _.flatten(buildIntentsPerExamples);
+                keywordsList.forEach((tempKeyword) => {
+
+                    newKeywordsList.push({
+                        start: tempKeyword.start,
+                        end: tempKeyword.end,
+                        value: tempKeyword.value,
+                        entity: tempKeyword.keyword
+                    });
+                });
+
+                const buildedSaying = {
+                    text: saying.userSays,
+                    intent: saying.actions.join('+'),
+                    entities: newKeywordsList
+                };
+
+                return buildedSaying;
+            }
+
+            const buildedSaying = {
+                text: saying.userSays,
+                intent: saying.actions.join('+'),
+                entities: []
+            };
+            return buildedSaying;
         })));
 
-        let entity_synonyms = _.flatten(_.map(results.entities, (entity) => {
+        let keyword_synonyms = _.flatten(_.map(results.keywords, (keyword) => {
 
-            const entitySynonyms = _.map(entity.examples, (example) => {
+            const keywordSynonyms = _.map(keyword.examples, (example) => {
 
                 const result = {};
 
@@ -120,30 +117,30 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
                 });
                 return result;
             });
-            return _.flatten(entitySynonyms);
+            return _.flatten(keywordSynonyms);
         }));
 
-        //Add only those entities that have synonyms
-        entity_synonyms = _.filter(entity_synonyms, (entitySynonym) => {
+        //Add only those keywords that have synonyms
+        keyword_synonyms = _.filter(keyword_synonyms, (keywordSynonym) => {
 
-            return entitySynonym.synonyms.length > 0;
+            return keywordSynonym.synonyms.length > 0;
         });
 
         const regexs = [];
-        results.entities.forEach((ent) => {
+        results.keywords.forEach((ent) => {
 
             if (ent.regex && ent.regex !== ''){
-                regexs.push({ name:ent.entityName,pattern:ent.regex });
+                regexs.push({ name:ent.keywordName,pattern:ent.regex });
             }
         });
 
         const data = {
-            numberOfIntents: results.intents.length,
+            numberOfSayings: uniqueActionsCount,
             trainingSet: {
                 rasa_nlu_data: {
                     common_examples,
                     regex_features : regexs,
-                    entity_synonyms
+                    keyword_synonyms
                 }
             }
         };

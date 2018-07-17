@@ -2,7 +2,6 @@
 const Boom = require('boom');
 const _ = require('lodash');
 const Async = require('async');
-
 module.exports = (server, redis, agent, cb) => {
 
     if (!agent.enableModelsPerDomain){
@@ -16,20 +15,21 @@ module.exports = (server, redis, agent, cb) => {
             const formattedDomain = { name: 'default', model: modelFolderName, justER };
             return cb(null, [formattedDomain]);
         }
-        //Given that the agent only have one intent and is the model is just an ER, then we need the intent name
+        //Given that the agent only have one saying and is the model is just an ER, then we need the saying name
         server.inject(`/agent/${agent.id}/export`, (res) => {
 
             if (res.statusCode !== 200){
-                const error = Boom.create(res.statusCode, 'An error occurred getting the agent data to get the intent name');
+                const error = Boom.create(res.statusCode, 'An error occurred getting the agent data to get the saying name');
                 return cb(error);
             }
-            const uniqueIntentOfAgent = res.result.domains[0].intents[0].intentName;
-            const formattedDomain = { name: 'default', model: modelFolderName, justER, intent: uniqueIntentOfAgent };
+            const uniqueSayingOfAgent = res.result.domains[0].sayings[0].actions.lenght > 0 ? res.result.domains[0].sayings[0].actions.join('+') : res.result.domains[0].sayings[0].actions[0];
+            const formattedDomain = { name: 'default', model: modelFolderName, justER, saying: uniqueSayingOfAgent };
             return cb(null, [formattedDomain]);
         });
     }
     else {
         Async.waterfall([
+
             (callbackGetDomainsOfAgent) => {
 
                 server.inject(`/agent/${agent.id}/domain`, (res) => {
@@ -65,14 +65,15 @@ module.exports = (server, redis, agent, cb) => {
                     const modelFolderName = domainName + '_' + domain.model;
                     const justER = modelFolderName.indexOf('just_er') !== -1;
                     if (justER){
-                        server.inject(`/agent/${agent.id}/domain/${domain.id}/intent`, (res) => {
+                        server.inject(`/domain/${domain.id}/saying`, (res) => {
 
                             if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error occurred getting the list of intents of the domain ${domain.domainName}`);
+                                const error = Boom.create(res.statusCode, `An error occurred getting the list of sayings of the domain ${domain.domainName}`);
                                 return callbackFormatDomain(error);
                             }
-                            if (res.result.intents.length > 0){
-                                const formattedDomain = { name: domainName, model: modelFolderName, justER, intent: res.result.intents[0].intentName };
+                            if (res.result.sayings.length > 0){
+                                const sayingName = res.result.sayings[0].actions.lenght > 0 ? res.result.sayings[0].sayings[0].actions.join('+') : res.result.sayings[0].actions[0];
+                                const formattedDomain = { name: domainName, model: modelFolderName, justER, saying: sayingName };
                                 formattedDomains.push(formattedDomain);
                                 return callbackFormatDomain(null);
                             }

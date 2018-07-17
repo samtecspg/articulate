@@ -28,13 +28,13 @@ before({ timeout: 120000 }, (done) => {
         server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
             if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
-                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
+                done(new Error(`An error occurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
                 server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
-                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                        done(new Error(`An error occurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
                     }
                     else {
                         preCreatedAgent = resAgent.result;
@@ -58,7 +58,7 @@ suite('/domain', () => {
                 agent: agentName,
                 domainName: 'Test Domain 2',
                 enabled: true,
-                intentThreshold: 0.7
+                actionThreshold: 0.7
             };
             const options = {
                 method: 'POST',
@@ -98,7 +98,7 @@ suite('/domain', () => {
                 agent: '-1',
                 domainName: 'Test Domain',
                 enabled: true,
-                intentThreshold: 0.7
+                actionThreshold: 0.7
             };
 
             const options = {
@@ -130,7 +130,7 @@ suite('/domain/{id}', () => {
                 agent: agentName,
                 domainName: 'Test Domain 2',
                 enabled: true,
-                intentThreshold: 0.7
+                actionThreshold: 0.7
             };
 
             server.inject('/domain/' + data.id, (res) => {
@@ -165,13 +165,13 @@ suite('/domain/{id}', () => {
                 agent: agentName,
                 domainName: 'Test Domain 2 Updated',
                 enabled: false,
-                intentThreshold: 0.55
+                actionThreshold: 0.55
             };
 
             const updatedData = {
                 domainName: 'Test Domain 2 Updated',
                 enabled: false,
-                intentThreshold: 0.55
+                actionThreshold: 0.55
             };
 
             const options = {
@@ -271,13 +271,13 @@ suite('/domain/{id}', () => {
 
 });
 
-suite('/domain/{id}/entity', () => {
+suite('/domain/{id}/keyword', () => {
 
     suite('/get', () => {
 
         test('should respond with 200 successful operation and return a single object', (done) => {
 
-            server.inject(`/domain/${preCreatedDomain.id}/entity`, (res) => {
+            server.inject(`/domain/${preCreatedDomain.id}/keyword`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result).to.be.an.array();
@@ -288,7 +288,7 @@ suite('/domain/{id}/entity', () => {
 
         test('should respond with 404 Not Found', (done) => {
 
-            server.inject('/domain/-1/entity', (res) => {
+            server.inject('/domain/-1/keyword', (res) => {
 
                 expect(res.statusCode).to.equal(404);
                 expect(res.result.message).to.contain('The specified domain doesn\'t exists');
@@ -299,24 +299,24 @@ suite('/domain/{id}/entity', () => {
 
 });
 
-suite('/domain/{id}/intent', () => {
+suite('/domain/{id}/saying', () => {
 
     suite('/get', () => {
 
         test('should respond with 200 successful operation and return a single object', (done) => {
 
-            server.inject(`/domain/${preCreatedDomain.id}/intent`, (res) => {
+            server.inject(`/domain/${preCreatedDomain.id}/saying`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.intents).to.be.an.array();
-                expect(res.result.intents.length).to.be.greaterThan(0);
+                expect(res.result.sayings).to.be.an.array();
+                expect(res.result.sayings.length).to.be.greaterThan(0);
                 done();
             });
         });
 
         test('should respond with 404 Not Found', (done) => {
 
-            server.inject('/domain/-1/intent', (res) => {
+            server.inject('/domain/-1/saying', (res) => {
 
                 expect(res.statusCode).to.equal(404);
                 expect(res.result.message).to.contain('The specified domain doesn\'t exists');

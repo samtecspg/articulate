@@ -26,9 +26,27 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasa, ERPipeline, c
         const temporalParse = {
             domain: trainedDomain.name
         };
+        result.entities.forEach((entity, index) => {
+
+            result.entities[index].keyword = entity.entity;
+            delete result.entities[index].entity;
+        });
+        result.keywords = result.entities;
+        delete result.entities;
         if (trainedDomain.justER) {
-            result.intent.name = trainedDomain.intent;
-            result.intent.confidence = 1;
+            delete result.intent;
+            result.action = {
+                name: trainedDomain.saying,
+                confidence: 1
+            };
+        }
+        else {
+            result.action = result.intent;
+            delete result.intent;
+        }
+        if (result.intent_ranking){
+            result.action_ranking = result.intent_ranking;
+            delete result.intent_ranking;
         }
 
         return callback(null, Object.assign(temporalParse, result));
@@ -42,6 +60,7 @@ const getDucklingParse = (textToParse, timezone, language, ducklingService, call
         lang: language,
         tz: timezone
     };
+
     Wreck.post(ducklingService + '/parse', {
         payload: Querystring.stringify(ducklingPayload),
         headers: {
@@ -75,66 +94,68 @@ const replacer = (key, value) => {
     return value;
 };
 
-const castSysEntities = (parseResult, spacyPretrainedEntities, ducklingDimension) => {
+const castSysKeywords = (parseResult, spacyPretrainedEntities, ducklingDimension) => {
 
-    let ducklingEntities = _.map(parseResult.duckling, (entity) => {
+    let ducklingKeywords = _.map(parseResult.duckling, (keyword) => {
 
-        if (ducklingDimension.indexOf(entity.dim) !== -1){
-            const tmpEntity = {
-                end: entity.end,
-                entity: 'sys.duckling_' + entity.dim,
+        if (ducklingDimension.indexOf(keyword.dim) !== -1){
+            const tmpKeyword = {
+                end: keyword.end,
+                keyword: 'sys.duckling_' + keyword.dim,
                 extractor: 'duckling',
-                start: entity.start,
-                value: JSON.parse(JSON.stringify(entity.value, replacer))
+                start: keyword.start,
+                value: JSON.parse(JSON.stringify(keyword.value, replacer))
             };
-            return tmpEntity;
+            return tmpKeyword;
         }
         return null;
     });
-    ducklingEntities = _.compact(ducklingEntities);
+    ducklingKeywords = _.compact(ducklingKeywords);
 
-    const regexEntities = _.map(parseResult.regex, (entity) => {
+    const regexKeywords = _.map(parseResult.regex, (keyword) => {
 
-        let tmpEntity = {};
-        if (entity.regexType === 'sysRegex') {
-            tmpEntity = {
-                end: entity.end,
-                entity: 'sys.regex_' + entity.name,
+        let tmpKeyword = {};
+        if (keyword.regexType === 'sysRegex') {
+            tmpKeyword = {
+                end: keyword.end,
+                keyword: 'sys.regex_' + keyword.name,
                 extractor: 'regex',
-                start: entity.start,
-                value: { value: entity.resolvedRegex }
+                start: keyword.start,
+                value: keyword.resolvedRegex
             };
         }
-        else if (entity.regexType === 'entityRegex') {
-            tmpEntity = {
-                end: entity.end,
-                entity: entity.name,
+        else if (keyword.regexType === 'keywordRegex') {
+            tmpKeyword = {
+                end: keyword.end,
+                keyword: keyword.name,
                 extractor: 'regex',
-                start: entity.start,
-                value: { value: entity.entityValue, original: entity.resolvedRegex }
+                start: keyword.start,
+                value: keyword.keywordValue
             };
         }
-        return tmpEntity;
+        return tmpKeyword;
     });
 
     parseResult.rasa = _.map(parseResult.rasa, (rasaResult) => {
 
-        let rasaEntities = _.map(rasaResult.entities, (entity) => {
+        let rasaKeywords = _.map(rasaResult.keywords, (keyword) => {
 
-            if (entity.extractor === 'ner_spacy') {
-                if (spacyPretrainedEntities.indexOf(entity.entity) !== -1){
-                    entity.entity = 'sys.spacy_' + entity.entity.toLowerCase();
+            if (keyword.extractor === 'ner_spacy') {
+                if (spacyPretrainedEntities.indexOf(keyword.keyword) !== -1){
+                    keyword.keyword = 'sys.spacy_' + keyword.keyword.toLowerCase();
                 }
                 else {
                     return null;
                 }
             }
-            entity.value = { value: entity.value };
-            return entity;
+            keyword.value = {
+                value: keyword.value
+            };
+            return keyword;
         });
 
-        rasaEntities = _.compact(rasaEntities);
-        rasaResult.entities = _.union(rasaEntities, ducklingEntities, regexEntities);
+        rasaKeywords = _.compact(rasaKeywords);
+        rasaResult.keywords = _.union(rasaKeywords, ducklingKeywords, regexKeywords);
 
         return rasaResult;
     });
@@ -185,7 +206,7 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
                                 const time = process.hrtime(start);
                                 result = Object.assign(result, { elapsed_time_ms: time[1] / 1000000 });
                                 if (domainRecognitionResults) {
-                                    let domainScore = _.filter(domainRecognitionResults.intent_ranking, (recognizedDomain) => {
+                                    let domainScore = _.filter(domainRecognitionResults.action_ranking, (recognizedDomain) => {
 
                                         return recognizedDomain.name === result.domain;
                                     });
@@ -255,14 +276,14 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
                 (agent, callbackGetRegex) => {
 
                     const regexs = [];
-                    agent.entities.forEach((ent) => {
+                    agent.keywords.forEach((ent) => {
 
                         if (ent.regex && ent.regex !== '' && ent.type !== 'regex') {
-                            regexs.push({ name: ent.entityName, pattern: ent.regex, entityType: ent.type });
+                            regexs.push({ name: ent.keywordName, pattern: ent.regex, keywordType: ent.type });
                         }
                         if (ent.type === 'regex') {
 
-                            regexs.push({ name: ent.entityName, examples: ent.examples, entityType: ent.type });
+                            regexs.push({ name: ent.keywordName, examples: ent.examples, keywordType: ent.type });
 
                         }
 
@@ -280,12 +301,12 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
                                 results.push(_.cloneDeep(resultToSend));
                             }
                         }
-                        if (regex.entityType === 'regex') {
+                        if (regex.keywordType === 'regex') {
                             regex.examples.forEach((regexExample) => {
 
-                                const entityValue = regexExample.value;
-                                if (regexExample.synonyms.indexOf(entityValue) < 0) {
-                                    regexExample.synonyms.push(entityValue);
+                                const keywordValue = regexExample.value;
+                                if (regexExample.synonyms.indexOf(keywordValue) < 0) {
+                                    regexExample.synonyms.push(keywordValue);
                                 }
                                 const foundRegex = [];
                                 regexExample.synonyms.forEach((syn) => {
@@ -300,7 +321,7 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
                                             if (foundRegex.indexOf(match) < 0) {
                                                 const startIndex = textToParse.indexOf(match[0]);
                                                 const endIndex = startIndex + match[0].length;
-                                                const resultToSend = Object.assign(regex, { resolvedRegex: match[0], entityValue, start: startIndex, end: endIndex, regexType: 'entityRegex' });
+                                                const resultToSend = Object.assign(regex, { resolvedRegex: match[0], keywordValue, start: startIndex, end: endIndex, regexType: 'keywordRegex' });
                                                 results.push(_.cloneDeep(resultToSend));
                                                 foundRegex.push(match[0]);
                                                 match = regexToTest.exec(textToParse);
@@ -326,7 +347,7 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
         }
         const parsedDate = new Date();
 
-        result = castSysEntities(result, spacyPretrainedEntities, ducklingDimension);
+        result = castSysKeywords(result, spacyPretrainedEntities, ducklingDimension);
 
         const temporalParse = {
             result: {
@@ -348,14 +369,14 @@ module.exports = (rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingD
             return cb(err, null);
         }
         const time = process.hrtime(start);
-        const maximum_intent_score = _.max(_.compact(_.map(_.map(result.result.results, 'intent'), 'confidence')));
+        const maximum_saying_score = _.max(_.compact(_.map(_.map(result.result.results, 'action'), 'confidence')));
         const maximum_domain_score = _.max(_.compact(_.map(result.result.results, 'domainScore')));
         result.result.results = _.orderBy(result.result.results, 'domainScore', 'desc');
         if (maximum_domain_score) {
-            result.result = Object.assign(result.result, { maximum_domain_score, maximum_intent_score, total_elapsed_time_ms: time[1] / 1000000 });
+            result.result = Object.assign(result.result, { maximum_domain_score, maximum_saying_score, total_elapsed_time_ms: time[1] / 1000000 });
         }
         else {
-            result.result = Object.assign(result.result, { maximum_intent_score, total_elapsed_time_ms: time[1] / 1000000 });
+            result.result = Object.assign(result.result, { maximum_saying_score, total_elapsed_time_ms: time[1] / 1000000 });
         }
         return cb(null, result);
     });

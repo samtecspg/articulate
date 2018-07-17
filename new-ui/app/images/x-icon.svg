@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="9px" viewBox="0 0 8 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/x</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="icon/x" transform="translate(0.000000, 1.000000)" stroke="#4E4E4E" stroke-width="1.5">
+            <g id="Path-3">
+                <path d="M0.834228516,0.5 L6.83422852,6.5 L0.834228516,0.5 Z" transform="translate(3.834229, 3.500000) scale(-1, 1) translate(-3.834229, -3.500000) "></path>
+                <path d="M0.834228516,0.5 L6.83422852,6.5 L0.834228516,0.5 Z" fill="#D8D8D8"></path>
+            </g>
+        </g>
+    </g>
+</svg>

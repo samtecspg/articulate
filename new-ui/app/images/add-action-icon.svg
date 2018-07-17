@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="29px" height="20px" viewBox="0 0 29 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->
+    <title>btn/+tag/static</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="v.2---sayings-page" transform="translate(-562.000000, -483.000000)">
+            <g id="btn/+tag/static" transform="translate(562.837357, 482.275146)" stroke="#A2A7B1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7.46406544,2.62479111 L1.22430822,9.12427667 C0.522235803,9.85557267 0.522235803,11.0411586 1.22430822,11.7724546 L7.54916513,18.3605821 C8.04823933,18.8804301 8.72549101,19.1731332 9.4319957,19.1731332 L10.5950247,19.1731332 L17.8896635,19.1731332 C22.3503054,19.1731332 26.2640045,15.6680832 26.5326004,11.0300784 C26.8233577,5.99318482 22.9876666,1.81408671 18.2149925,1.81408671 L10.5391781,1.81408671 L9.34246373,1.81408671 C8.63773195,1.81408671 7.96225319,2.10586643 7.46406544,2.62479111 Z" id="Page-1" stroke-width="1.5"></path>
+                <g id="icon/add" transform="translate(8.943777, 4.538622)">
+                    <g id="Path-7">
+                        <polyline stroke-width="1.5" points="0.349609375 6.35986328 7.11523437 6.35986328 11.2407935 6.35986328"></polyline>
+                        <polyline stroke-width="1.5" transform="translate(5.795201, 6.359863) rotate(-90.000000) translate(-5.795201, -6.359863) " points="0.349609375 6.35986328 7.11523437 6.35986328 11.2407935 6.35986328"></polyline>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

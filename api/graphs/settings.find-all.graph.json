@@ -1,0 +1,93 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "SettingsFindAll",
+    "description": "SettingsFindAll",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": 36,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "redis": {
+      "process": "settings.find-all",
+      "port": "redis",
+      "metadata": {
+        "x": 36,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "settings.find-all",
+      "port": "out",
+      "metadata": {
+        "x": 684,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "settings.find-all",
+      "port": "error",
+      "metadata": {
+        "route": 1,
+        "x": 684,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "settings.find-all": {
+      "component": "alpha-nlu-api/settings.find-all",
+      "metadata": {
+        "x": 396,
+        "y": 144,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "label": "http.request-data-parser",
+        "x": 180,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "settings.find-all",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    }
+  ]
+}

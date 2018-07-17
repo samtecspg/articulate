@@ -2,9 +2,9 @@
 
 const _ = require('lodash');
 
-const cartesianProductOf = (entitiesList) => {
+const cartesianProductOf = (keywordsList) => {
 
-    return _.reduce(entitiesList, (a, b) => {
+    return _.reduce(keywordsList, (a, b) => {
 
         return _.flatten(_.map(a, (x) => {
 

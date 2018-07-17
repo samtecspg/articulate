@@ -1,0 +1,183 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "AgentFindWebhookByAgentId",
+    "description": "AgentFindWebhookByAgentId",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": 0,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "redis": {
+      "process": "redis",
+      "port": "redis",
+      "metadata": {
+        "x": 0,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "agent.find-webhook-by-agent",
+      "port": "out",
+      "metadata": {
+        "x": 936,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "error",
+      "port": "out",
+      "metadata": {
+        "route": 1,
+        "x": 936,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "error": {
+      "component": "core/Merge",
+      "metadata": {
+        "x": 720,
+        "y": 252,
+        "width": 72,
+        "height": 72,
+        "label": "error"
+      }
+    },
+    "agent.find-by-id": {
+      "component": "alpha-nlu-api/agent.find-by-id",
+      "metadata": {
+        "x": 396,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "redis": {
+      "component": "alpha-nlu-api/redis.client",
+      "metadata": {
+        "x": 180,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "agent.find-webhook-by-agent": {
+      "component": "alpha-nlu-api/agent.find-webhook-by-agent",
+      "metadata": {
+        "x": 540,
+        "y": 144,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "label": "http.request-data-parser",
+        "x": 180,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "agent.find-webhook-by-agent",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "agent.find-by-id",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "agent.find-webhook-by-agent",
+        "port": "in"
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "agent.find-by-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-webhook-by-agent",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    }
+  ]
+}

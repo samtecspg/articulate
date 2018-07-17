@@ -9,17 +9,17 @@
     "Sorry, can you rephrase that?",
     "I'm still learning to speak with humans, can you rephrase that?"
   ],
-  "domainClassifierThreshold": 0.5,
+  "domainClassifierThreshold": 0.6,
   "webhook": {
     "webhookUrl": "http://localhost:3000/agent/{{agent.id}}",
     "webhookVerb": "GET",
     "webhookPayload": "",
     "webhookPayloadType": "None"
   },
-  "entities": [
+  "keywords": [
     {
       "uiColor": "#e91e63",
-      "entityName": "Test Entity",
+      "keywordName": "Test Keyword",
       "type": "learned",
       "regex": null,
       "examples": [
@@ -50,22 +50,6 @@
           ]
         }
       ]
-    },
-    {
-      "uiColor": "#e91e62",
-      "entityName": "Test Regex Entity",
-      "type": "regex",
-      "regex": null,
-      "examples": [
-        {
-          "value": "regex",
-          "synonyms": [
-            "regex",
-            "regex2",
-            "regex3"
-          ]
-        }
-      ]
     }
   ],
   "domains": [
@@ -73,107 +57,85 @@
       "enabled": true,
       "domainName": "Test Domain",
       "model": "Test Domain_a24ef9cb-88f6-3da5-a0df-bdec39bd3069",
-      "intentThreshold": 0.5,
-      "intents": [
+      "actionThreshold": 0.7,
+      "sayings": [
         {
-          "intentName": "Test Intent",
+          "sayingName": "Test Saying",
           "useWebhook": true,
           "usePostFormat": false,
           "examples": [
             {
               "userSays": "Show me my phone location",
-              "entities": [
+              "keywords": [
                 {
                   "end": 16,
                   "start": 11,
                   "value": "phone",
-                  "entity": "Test Entity"
+                  "keyword": "Test Keyword"
                 }
               ]
             },
             {
               "userSays": "I need to find my laptop",
-              "entities": [
+              "keywords": [
                 {
                   "end": 24,
                   "value": "laptop",
                   "start": 18,
-                  "entity": "Test Entity"
-                }
-              ]
-            },
-            {
-              "userSays": "I need to find my laptop please",
-              "entities": [
-                {
-                  "end": 24,
-                  "value": "laptop",
-                  "start": 18,
-                  "entity": "Test Entity"
-                }
-              ]
-            },
-            {
-              "userSays": "I specifically need to find my laptop please",
-              "entities": [
-                {
-                  "end": 24,
-                  "value": "laptop",
-                  "start": 18,
-                  "entity": "Test Entity"
+                  "keyword": "Test Keyword"
                 }
               ]
             },
             {
               "userSays": "Have you seen my iphone?",
-              "entities": [
+              "keywords": [
                 {
                   "end": 23,
                   "value": "iphone",
                   "start": 17,
-                  "entity": "Test Entity"
+                  "keyword": "Test Keyword"
                 }
               ]
             },
             {
               "userSays": "Where do I left my car?",
-              "entities": [
+              "keywords": [
                 {
                   "end": 22,
                   "start": 19,
                   "value": "car",
-                  "entity": "Test Entity"
+                  "keyword": "Test Keyword"
                 }
               ]
             },
             {
               "userSays": "Where is my car?",
-              "entities": [
+              "keywords": [
                 {
                   "end": 15,
                   "start": 12,
                   "value": "car",
-                  "entity": "Test Entity"
+                  "keyword": "Test Keyword"
                 }
               ]
             },
             {
               "userSays": "Locate my car",
-              "entities": [
+              "keywords": [
                 {
                   "end": 12,
                   "start": 10,
                   "value": "car",
-                  "entity": "Test Entity"
+                  "keyword": "Test Keyword"
                 }
               ]
             }
           ],
           "scenario": {
-            "scenarioName": "Test Intent",
+            "scenarioName": "Test Saying",
             "slots": [
               {
-                "entity": "Test Entity",
+                "keyword": "Test Keyword",
                 "isList": false,
                 "slotName": "searchedObject",
                 "isRequired": true,
@@ -182,7 +144,7 @@
                 ]
               }
             ],
-            "intentResponses": [
+            "sayingResponses": [
               "Your {{slots.searchedObject.original}} is located at..."
             ]
           },
@@ -194,71 +156,31 @@
           }
         },
         {
-          "intentName": "Simple Test Intent",
+          "sayingName": "Simple Test Saying",
           "useWebhook": true,
           "usePostFormat": false,
           "examples": [
             {
               "userSays": "What can you find?",
-              "entities": []
+              "keywords": []
             },
             {
               "userSays": "What do you do?",
-              "entities": []
+              "keywords": []
             },
             {
               "userSays": "What can you do?",
-              "entities": []
+              "keywords": []
             },
             {
               "userSays": "What could you do for me?",
-              "entities": []
+              "keywords": []
             },
             {
               "userSays": "How you work?",
-              "entities": []
+              "keywords": []
             }
           ]
-        },
-        {
-          "intentName": "Test Regex Intent",
-          "useWebhook": false,
-          "usePostFormat": false,
-          "examples": [
-            {
-              "userSays": "Here's my regex",
-              "entities": []
-            },
-            {
-              "userSays": "Here's my regex2",
-              "entities": []
-            },
-            {
-              "userSays": "Do you need my regex3?",
-              "entities": []
-            },
-            {
-              "userSays": "This is my regex",
-              "entities": []
-            }
-          ],
-          "scenario": {
-            "scenarioName": "Test Regex Intent",
-            "slots": [
-              {
-                "entity": "Test Regex Entity",
-                "isList": false,
-                "slotName": "searchedRegex",
-                "isRequired": true,
-                "textPrompts": [
-                  "What are you looking for?"
-                ]
-              }
-            ],
-            "intentResponses": [
-              "Your regex is {{slots.searchedRegex.value}}."
-            ]
-          }
         }
       ]
     }
@@ -272,13 +194,13 @@
         "name": "tokenizer_spacy"
       },
       {
-        "name": "intent_featurizer_spacy"
+        "name": "saying_featurizer_spacy"
       },
       {
-        "name": "intent_classifier_sklearn"
+        "name": "saying_classifier_sklearn"
       }
     ],
-    "intentClassifierPipeline": [
+    "sayingClassifierPipeline": [
       {
         "name": "nlp_spacy"
       },
@@ -286,7 +208,7 @@
         "name": "tokenizer_spacy"
       },
       {
-        "name": "intent_featurizer_spacy"
+        "name": "saying_featurizer_spacy"
       },
       {
         "name": "ner_crf"
@@ -295,13 +217,13 @@
         "name": "ner_synonyms"
       },
       {
-        "name": "intent_classifier_sklearn"
+        "name": "saying_classifier_sklearn"
       },
       {
         "name": "ner_spacy"
       }
     ],
-    "entityClassifierPipeline": [
+    "keywordClassifierPipeline": [
       {
         "name": "nlp_spacy"
       },

@@ -53,7 +53,7 @@ module.exports = (request, reply) => {
                 redis.del(`agentSettings:${agentId}:${setting}`, (err) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error occurred temporaly removing the setting for the update.');
+                        const error = Boom.badImplementation('An error occurred temporarily removing the setting for the update.');
                         return callbck(error);
                     }
                     redis.hmset(`agentSettings:${agentId}:${setting}`, flatData, (err) => {

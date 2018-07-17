@@ -21,13 +21,11 @@ let preCreatedAgentId = null;
 let importedAgentId = null;
 let importedAgentFromExportId = null;
 let domain = null;
-let entity = null;
-let entityRegex = null;
-let intent = null;
-let intentRegex = null;
+let keyword = null;
+let saying = null;
 let scenario = null;
 let agentWebhook = null;
-let intentWebhook = null;
+let sayingWebhook = null;
 let exportedTestAgent = null;
 let rasaURL = null;
 
@@ -44,13 +42,13 @@ before({ timeout: 120000 }, (done) => {
         server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
             if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
-                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
+                done(new Error(`An error occurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
                 server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
-                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                        done(new Error(`An error occurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
                     }
                     else {
                         preCreatedAgent = resAgent.result;
@@ -58,18 +56,13 @@ before({ timeout: 120000 }, (done) => {
                         preCreatedAgentId = preCreatedAgent.id;
                         agentWebhook = preCreatedAgent.webhook;
                         domain = preCreatedAgent.domains[0];
-                        entity = preCreatedAgent.entities[0];
-                        entityRegex = preCreatedAgent.entities[1];
-                        intent = _.filter(preCreatedAgent.domains[0].intents, (tempIntent) => {
+                        keyword = preCreatedAgent.keywords[0];
+                        saying = _.filter(preCreatedAgent.domains[0].sayings, (tempSaying) => {
 
-                            return tempIntent.intentName === 'Test Intent';
+                            return tempSaying.sayingName === 'Test Saying';
                         })[0];
-                        intentRegex = _.filter(preCreatedAgent.domains[0].intents, (tempIntent) => {
-
-                            return tempIntent.intentName === 'Test Regex Intent';
-                        })[0];
-                        scenario = intent.scenario;
-                        intentWebhook = intent.webhook;
+                        scenario = saying.scenario;
+                        sayingWebhook = saying.webhook;
                         done();
                     }
                 });
@@ -369,16 +362,16 @@ suite('/agent/{id}/domain/{domainId}', () => {
 
 });
 
-suite('/agent/{id}/domain/{domainId}/intent', () => {
+suite('/agent/{id}/domain/{domainId}/saying', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return an array of intents', (done) => {
+        test('should respond with 200 successful operation and return an array of sayings', (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent', (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/saying', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.intents.length).to.equal(3);
+                expect(res.result.sayings.length).to.equal(2);
                 done();
             });
         });
@@ -386,16 +379,16 @@ suite('/agent/{id}/domain/{domainId}/intent', () => {
 
 });
 
-suite('/agent/{id}/domain/{domainId}/intent/{intentId}', () => {
+suite('/agent/{id}/domain/{domainId}/saying/{sayingId}', () => {
 
     suite('/get', () => {
 
         test('should respond with 200 successful operation and return an array of objects', (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent/' + intent.id, (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/saying/' + saying.id, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.intentName).to.equal(intent.intentName);
+                expect(res.result.sayingName).to.equal(saying.sayingName);
                 done();
             });
         });
@@ -403,13 +396,13 @@ suite('/agent/{id}/domain/{domainId}/intent/{intentId}', () => {
 
 });
 
-suite('/agent/{id}/domain/{domainId}/intent/{intentId}/scenario', () => {
+suite('/agent/{id}/domain/{domainId}/saying/{sayingId}/scenario', () => {
 
     suite('/get', () => {
 
         test('should respond with 200 successful operation and return a single object', (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent/' + intent.id + '/scenario', (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/saying/' + saying.id + '/scenario', (res) => {
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.scenarioName).to.equal(scenario.scenarioName);
@@ -420,16 +413,16 @@ suite('/agent/{id}/domain/{domainId}/intent/{intentId}/scenario', () => {
 
 });
 
-suite('/agent/{id}/domain/{domainId}/intent/{intentId}/webhook', () => {
+suite('/agent/{id}/domain/{domainId}/saying/{sayingId}/webhook', () => {
 
     suite('/get', () => {
 
         test('should respond with 200 successful operation and return a single object', (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/intent/' + intent.id + '/webhook', (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/domain/' + domain.id + '/saying/' + saying.id + '/webhook', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.webhookUrl).to.equal(intentWebhook.webhookUrl);
+                expect(res.result.webhookUrl).to.equal(sayingWebhook.webhookUrl);
                 done();
             });
         });
@@ -437,16 +430,16 @@ suite('/agent/{id}/domain/{domainId}/intent/{intentId}/webhook', () => {
 
 });
 
-suite('/agent/{id}/entity', () => {
+suite('/agent/{id}/keyword', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return an array of entities', (done) => {
+        test('should respond with 200 successful operation and return an array of keywords', (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/entity', (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/keyword', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.entities[0].entityName).to.contain(entity.entityName);
+                expect(res.result.keywords[0].keywordName).to.contain(keyword.keywordName);
                 done();
             });
         });
@@ -454,16 +447,16 @@ suite('/agent/{id}/entity', () => {
 
 });
 
-suite('/agent/{id}/entity/{entityId}', () => {
+suite('/agent/{id}/keyword/{keywordId}', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return a single entity item', (done) => {
+        test('should respond with 200 successful operation and return a single keyword item', (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/entity/' + entity.id, (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/keyword/' + keyword.id, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.entityName).to.contain(entity.entityName);
+                expect(res.result.keywordName).to.contain(keyword.keywordName);
                 done();
             });
         });
@@ -483,8 +476,8 @@ suite('/agent/{id}/export', () => {
                 expect(res.result.id).to.equal(preCreatedAgentId);
                 expect(res.result.webhook.webhookUrl).to.equal(agentWebhook.webhookUrl);
                 expect(res.result.domains[0].id).to.equal(domain.id);
-                expect(res.result.entities[0].id).to.equal(entity.id);
-                expect(res.result.domains[0].intents.length).to.equal(3);
+                expect(res.result.keywords[0].id).to.equal(keyword.id);
+                expect(res.result.domains[0].sayings.length).to.equal(2);
                 done();
             });
         });
@@ -499,8 +492,8 @@ suite('/agent/{id}/export', () => {
                 expect(res.statusCode).to.equal(200);
                 expect(res.result.webhook.webhookUrl).to.equal(agentWebhook.webhookUrl);
                 expect(res.result.domains[0].domainName).to.equal(domain.domainName);
-                expect(res.result.entities[0].entityName).to.equal(entity.entityName);
-                expect(res.result.domains[0].intents.length).to.equal(3);
+                expect(res.result.keywords[0].keywordName).to.equal(keyword.keywordName);
+                expect(res.result.domains[0].sayings.length).to.equal(2);
                 exportedTestAgent = res.result;
                 done();
             });
@@ -509,16 +502,16 @@ suite('/agent/{id}/export', () => {
 
 });
 
-suite('/agent/{id}/intent', () => {
+suite('/agent/{id}/saying', () => {
 
     suite('/get', () => {
 
-        test('should respond with 200 successful operation and return an array of intents', (done) => {
+        test('should respond with 200 successful operation and return an array of sayings', (done) => {
 
-            server.inject(`/agent/${preCreatedAgentId}/intent`, (res) => {
+            server.inject(`/agent/${preCreatedAgentId}/saying`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.intents[0].intentName).to.contain(intent.intentName);
+                expect(res.result.sayings[0].sayingName).to.contain(saying.sayingName);
                 done();
             });
         });
@@ -548,20 +541,10 @@ suite('/agent/{id}/converse', () => {
 
         test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
 
-            server.inject('/agent/' + preCreatedAgentId + '/converse?sessionId=articulateAPI&text=I%20need%20to%20find%20my%20laptop%20please', (res) => {
+            server.inject('/agent/' + preCreatedAgentId + '/converse?sessionId=articulateAPI&text=Locate%20my%20car', (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your laptop is located at...');
-                done();
-            });
-        });
-
-        test('should respond with 200 successful operation and return a text response with regex defined as slot', { timeout: 60000 }, (done) => {
-
-            server.inject('/agent/' + preCreatedAgentId + '/converse?sessionId=articulateAPI&text=This%20is%20%20my%20regex2', (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your regex is regex.');
+                expect(res.result.textResponse).to.equal('Your car is located at...');
                 done();
             });
         });
@@ -573,7 +556,7 @@ suite('/agent/{id}/converse', () => {
 
             const data = {
                 sessionId: 'POST',
-                text: 'I need to find my laptop please',
+                text: 'Locate my car',
                 timezone: 'UTC'
             };
             const options = {
@@ -585,27 +568,7 @@ suite('/agent/{id}/converse', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your laptop is located at...');
-                done();
-            });
-        });
-        test('should respond with 200 successful operation and return a text response with regex entity defined as slot', { timeout: 60000 }, (done) => {
-
-            const data = {
-                sessionId: 'POST',
-                text: 'Here\'s my regex3',
-                timezone: 'UTC'
-            };
-            const options = {
-                method: 'POST',
-                url: `/agent/${preCreatedAgentId}/converse`,
-                payload: data
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.textResponse).to.equal('Your regex is regex.');
+                expect(res.result.textResponse).to.equal('Your car is located at...');
                 done();
             });
         });
@@ -619,32 +582,16 @@ suite('/agent/{id}/parse', () => {
 
         test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
 
-            server.inject(`/agent/${preCreatedAgentId}/parse?text=I%20need%20to%20find%20my%20laptop%20please&timezone=UTC`, (res) => {
+            server.inject(`/agent/${preCreatedAgentId}/parse?text=Locate%20my%20car&timezone=UTC`, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.result.document).to.equal('I need to find my laptop please');
+                expect(res.result.result.document).to.equal('Locate my car');
                 expect(res.result.result.results.length).to.be.greaterThan(0);
                 expect(res.result.result.results[0].domain).to.equal(domain.domainName);
-                expect(res.result.result.results[0].entities.length).to.be.greaterThan(0);
-                expect(res.result.result.results[0].entities[0].entity).to.equal(entity.entityName);
-                expect(res.result.result.results[0].intent.confidence).to.be.a.number();
-                expect(res.result.result.results[0].intent.name).to.equal(intent.intentName);
-                done();
-            });
-        });
-
-        test('should respond with 200 successful operation and return a text response with regex entity', { timeout: 60000 }, (done) => {
-
-            server.inject(`/agent/${preCreatedAgentId}/parse?text=This%20is%20my%20regex&timezone=UTC`, (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.result.document).to.equal('This is my regex');
-                expect(res.result.result.results.length).to.be.greaterThan(0);
-                expect(res.result.result.results[0].domain).to.equal(domain.domainName);
-                expect(res.result.result.results[0].entities.length).to.be.greaterThan(0);
-                expect(res.result.result.results[0].entities[0].entity).to.equal(entityRegex.entityName);
-                expect(res.result.result.results[0].intent.confidence).to.be.a.number();
-                expect(res.result.result.results[0].intent.name).to.equal(intentRegex.intentName);
+                expect(res.result.result.results[0].keywords.length).to.be.greaterThan(0);
+                expect(res.result.result.results[0].keywords[0].keyword).to.equal(keyword.keywordName);
+                expect(res.result.result.results[0].saying.confidence).to.be.a.number();
+                expect(res.result.result.results[0].saying.name).to.equal(saying.sayingName);
                 done();
             });
         });
@@ -655,7 +602,7 @@ suite('/agent/{id}/parse', () => {
         test('should respond with 200 successful operation and return a text response', { timeout: 60000 }, (done) => {
 
             const data = {
-                text: 'I need to find my laptop please',
+                text: 'Locate my car',
                 timezone: 'UTC'
             };
             const options = {
@@ -667,39 +614,13 @@ suite('/agent/{id}/parse', () => {
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.result.document).to.equal('I need to find my laptop please');
+                expect(res.result.result.document).to.equal('Locate my car');
                 expect(res.result.result.results.length).to.be.greaterThan(0);
                 expect(res.result.result.results[0].domain).to.equal(domain.domainName);
-               // expect(res.result.result.results[0].entities.length).to.be.greaterThan(0); Same parsed sentance than the last one, different result => commented for now
-                expect(res.result.result.results[0].entities[0].entity).to.equal(entity.entityName);
-                expect(res.result.result.results[0].intent.confidence).to.be.a.number();
-                expect(res.result.result.results[0].intent.name).to.equal(intent.intentName);
-                done();
-            });
-        });
-
-        test('should respond with 200 successful operation and return a text response with regex entity', { timeout: 60000 }, (done) => {
-
-            const data = {
-                text: 'Here\'s my regex',
-                timezone: 'UTC'
-            };
-            const options = {
-                method: 'POST',
-                url: `/agent/${preCreatedAgentId}/parse`,
-                payload: data
-            };
-
-            server.inject(options, (res) => {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result.result.document).to.equal('Here\'s my regex');
-                expect(res.result.result.results.length).to.be.greaterThan(0);
-                expect(res.result.result.results[0].domain).to.equal(domain.domainName);
-                expect(res.result.result.results[0].entities.length).to.be.greaterThan(0);
-                expect(res.result.result.results[0].entities[0].entity).to.equal(entityRegex.entityName);
-                expect(res.result.result.results[0].intent.confidence).to.be.a.number();
-                expect(res.result.result.results[0].intent.name).to.equal(intentRegex.intentName);
+                expect(res.result.result.results[0].keywords.length).to.be.greaterThan(0);
+                expect(res.result.result.results[0].keywords[0].keyword).to.equal(keyword.keywordName);
+                expect(res.result.result.results[0].saying.confidence).to.be.a.number();
+                expect(res.result.result.results[0].saying.name).to.equal(saying.sayingName);
                 done();
             });
         });
@@ -740,8 +661,8 @@ suite('/agent/{id}/settings', () => {
                     expect(res.result.rasaURL).to.be.a.string();
                     expect(res.result.spacyPretrainedEntities).to.be.an.array();
                     expect(res.result.domainClassifierPipeline).to.be.an.array();
-                    expect(res.result.intentClassifierPipeline).to.be.an.array();
-                    expect(res.result.entityClassifierPipeline).to.be.an.array();
+                    expect(res.result.sayingClassifierPipeline).to.be.an.array();
+                    expect(res.result.keywordClassifierPipeline).to.be.an.array();
                     expect(res.result.ducklingURL).to.be.a.string();
                     expect(res.result.ducklingDimension).to.be.an.array();
                     done();

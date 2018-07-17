@@ -16,8 +16,7 @@ class ContextValidate {
             payload: (() => {
 
                 return {
-                    name: ContextSchema.name.required(),
-                    scenario: ContextSchema.scenario.required(),
+                    action: ContextSchema.action.required(),
                     slots: ContextSchema.slots
                 };
             })()

@@ -120,19 +120,7 @@ const generateRasaFormat = (text, intent, confidence, structuredEntities, agentD
 
 module.exports = (request, reply) => {
 
-    const agentId = request.params.id;
-
-    let text;
-    let timezone;
-    if (request.payload) {
-        text = request.payload.text;
-        timezone = request.payload.timezone;
-    }
-    else {
-        text = request.query.text;
-        timezone = request.query.timezone;
-    }
-
+    const { id: agentId, text, timezone } = request.plugins['flow-loader'];
     const server = request.server;
     const redis = server.app.redis;
     let documentId;
@@ -219,14 +207,14 @@ module.exports = (request, reply) => {
                 },
                 ERPipeline: (callbackGetRasa) => {
 
-                    server.inject(`/agent/${agentId}/settings/entityClassifierPipeline`, (res) => {
+                    server.inject(`/agent/${agentId}/settings/keywordClassifierPipeline`, (res) => {
 
                         if (res.statusCode !== 200) {
                             if (res.statusCode === 404) {
-                                const errorNotFound = Boom.notFound('The setting entityClassifierPipeline wasn\'t found');
+                                const errorNotFound = Boom.notFound('The setting keywordClassifierPipeline wasn\'t found');
                                 return callbackGetRasa(errorNotFound);
                             }
-                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting entityClassifierPipeline');
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the data of the setting keywordClassifierPipeline');
                             return callbackGetRasa(error, null);
                         }
                         return callbackGetRasa(null, res.result);
@@ -302,16 +290,16 @@ module.exports = (request, reply) => {
                 if (document.result && document.result.results){
                     document.result.results.forEach((result) => {
 
-                        if (result.intent){
-                            if (result.intent.name === null){
-                                result.intent.name = '';
+                        if (result.saying){
+                            if (result.saying.name === null){
+                                result.saying.name = '';
                             }
                         }
-                        if (result.entities){
-                            result.entities.forEach((entity) => {
+                        if (result.keywords){
+                            result.keywords.forEach((keyword) => {
 
-                                if (entity.confidence === null){
-                                    entity.confidence = '';
+                                if (keyword.confidence === null){
+                                    keyword.confidence = '';
                                 }
                             });
                         }

@@ -52,39 +52,39 @@ module.exports = (request, reply) => {
                                             (callbackDeleteDomainSons) => {
 
                                                 Async.waterfall([
-                                                    (callbackGetIntents) => {
+                                                    (callbackGetSayings) => {
 
-                                                        server.inject(`/domain/${domain.id}/intent`, (res) => {
+                                                        server.inject(`/domain/${domain.id}/saying`, (res) => {
 
                                                             if (res.statusCode !== 200){
-                                                                const error = Boom.create(res.statusCode, `An error occurred getting the intents to delete of the domain ${domain.domainName}`);
-                                                                return callbackGetIntents(error, null);
+                                                                const error = Boom.create(res.statusCode, `An error occurred getting the sayings to delete of the domain ${domain.domainName}`);
+                                                                return callbackGetSayings(error, null);
                                                             }
-                                                            return callbackGetIntents(null, res.result.intents);
+                                                            return callbackGetSayings(null, res.result.sayings);
                                                         });
                                                     },
-                                                    (intents, callbackDeleteIntentAndScenario) => {
+                                                    (sayings, callbackDeleteSayingAndScenario) => {
 
-                                                        Async.map(intents, (intent, callbackMapOfIntent) => {
+                                                        Async.map(sayings, (saying, callbackMapOfSaying) => {
 
                                                             Async.parallel([
-                                                                (callbackDeleteIntent) => {
+                                                                (callbackDeleteSaying) => {
 
-                                                                    redis.del(`intent:${intent.id}`, (err, result) => {
+                                                                    redis.del(`saying:${saying.id}`, (err, result) => {
 
                                                                         if (err){
-                                                                            const error = Boom.badImplementation(`An error occurred deleting the intent ${intent.id} linked with the agent ${agentId}`);
-                                                                            return callbackDeleteIntent(error, null);
+                                                                            const error = Boom.badImplementation(`An error occurred deleting the saying ${saying.id} linked with the agent ${agentId}`);
+                                                                            return callbackDeleteSaying(error, null);
                                                                         }
-                                                                        return callbackDeleteIntent(null);
+                                                                        return callbackDeleteSaying(null);
                                                                     });
                                                                 },
                                                                 (callbackDeleteScenario) => {
 
-                                                                    redis.del(`scenario:${intent.id}`, (err, result) => {
+                                                                    redis.del(`scenario:${saying.id}`, (err, result) => {
 
                                                                         if (err){
-                                                                            const error = Boom.badImplementation(`An error occurred deleting the scenario of the intent ${intent.id} linked with the agent ${agentId}`);
+                                                                            const error = Boom.badImplementation(`An error occurred deleting the scenario of the saying ${saying.id} linked with the agent ${agentId}`);
                                                                             return callbackDeleteScenario(error, null);
                                                                         }
                                                                         return callbackDeleteScenario(null);
@@ -93,16 +93,16 @@ module.exports = (request, reply) => {
                                                             ], (err, result) => {
 
                                                                 if (err){
-                                                                    return callbackMapOfIntent(err);
+                                                                    return callbackMapOfSaying(err);
                                                                 }
-                                                                return callbackMapOfIntent(null);
+                                                                return callbackMapOfSaying(null);
                                                             });
                                                         }, (err, result) => {
 
                                                             if (err){
-                                                                return callbackDeleteIntentAndScenario(err);
+                                                                return callbackDeleteSayingAndScenario(err);
                                                             }
-                                                            return callbackDeleteIntentAndScenario(null);
+                                                            return callbackDeleteSayingAndScenario(null);
                                                         });
                                                     }
                                                 ], (err, result) => {
@@ -127,26 +127,26 @@ module.exports = (request, reply) => {
                                                             return callbackDeleteDomain(null);
                                                         });
                                                     },
-                                                    (callbackDeleteDomainIntentsList) => {
+                                                    (callbackDeleteDomainSayingsList) => {
 
-                                                        redis.del(`domainIntents:${domain.id}`, (err, result) => {
+                                                        redis.del(`domainSayings:${domain.id}`, (err, result) => {
 
                                                             if (err){
-                                                                const error = Boom.badImplementation(`An error occurred deleting the list of intents for domain ${domain.id}`);
-                                                                return callbackDeleteDomainIntentsList(error, null);
+                                                                const error = Boom.badImplementation(`An error occurred deleting the list of sayings for domain ${domain.id}`);
+                                                                return callbackDeleteDomainSayingsList(error, null);
                                                             }
-                                                            return callbackDeleteDomainIntentsList(null);
+                                                            return callbackDeleteDomainSayingsList(null);
                                                         });
                                                     },
-                                                    (callbackDeleteDomainEntitiesList) => {
+                                                    (callbackDeleteDomainKeywordsList) => {
 
-                                                        redis.del(`domainEntities:${domain.id}`, (err, result) => {
+                                                        redis.del(`domainKeywords:${domain.id}`, (err, result) => {
 
                                                             if (err){
-                                                                const error = Boom.badImplementation(`An error occurred deleting the list of entities for domain ${domain.id}`);
-                                                                return callbackDeleteDomainEntitiesList(error, null);
+                                                                const error = Boom.badImplementation(`An error occurred deleting the list of keywords for domain ${domain.id}`);
+                                                                return callbackDeleteDomainKeywordsList(error, null);
                                                             }
-                                                            return callbackDeleteDomainEntitiesList(null);
+                                                            return callbackDeleteDomainKeywordsList(null);
                                                         });
                                                     }
                                                 ], (err, result) => {
@@ -180,68 +180,68 @@ module.exports = (request, reply) => {
                                 return callbackDeleteAgentDomains(null);
                             });
                         },
-                        (callbackDeleteAgentEntities) => {
+                        (callbackDeleteAgentKeywords) => {
 
                             Async.waterfall([
-                                (callbackGetEntities) => {
+                                (callbackGetKeywords) => {
 
-                                    server.inject(`/agent/${agentId}/entity`, (res) => {
+                                    server.inject(`/agent/${agentId}/keyword`, (res) => {
 
                                         if (res.statusCode !== 200){
-                                            const error = Boom.create(res.statusCode, `An error occurred getting the entities to delete of the agent ${agentId}`);
-                                            return callbackGetEntities(error, null);
+                                            const error = Boom.create(res.statusCode, `An error occurred getting the keywords to delete of the agent ${agentId}`);
+                                            return callbackGetKeywords(error, null);
                                         }
-                                        return callbackGetEntities(null, res.result.entities);
+                                        return callbackGetKeywords(null, res.result.keywords);
                                     });
                                 },
-                                (entities, callbackDeleteEachEntity) => {
+                                (keywords, callbackDeleteEachKeyword) => {
 
-                                    Async.map(entities, (entity, callbackMapOfEntity) => {
+                                    Async.map(keywords, (keyword, callbackMapOfKeyword) => {
 
                                         Async.parallel([
-                                            (callbackDeleteEntity) => {
+                                            (callbackDeleteKeyword) => {
 
-                                                redis.del(`entity:${entity.id}`, (err, result) => {
+                                                redis.del(`keyword:${keyword.id}`, (err, result) => {
 
                                                     if (err){
-                                                        const error = Boom.badImplementation(`An error occurred deleting the entity ${entity.id} linked with the agent ${agentId}`);
-                                                        return callbackDeleteEntity(error, null);
+                                                        const error = Boom.badImplementation(`An error occurred deleting the keyword ${keyword.id} linked with the agent ${agentId}`);
+                                                        return callbackDeleteKeyword(error, null);
                                                     }
-                                                    return callbackDeleteEntity(null);
+                                                    return callbackDeleteKeyword(null);
                                                 });
                                             },
-                                            (callbackDeleteEntitiesDomainList) => {
+                                            (callbackDeleteKeywordsDomainList) => {
 
-                                                redis.del(`entityDomain:${entity.id}`, (err, result) => {
+                                                redis.del(`keywordDomain:${keyword.id}`, (err, result) => {
 
                                                     if (err){
-                                                        const error = Boom.badImplementation(`An error occurred deleting the list of domains for entity ${entity.id}`);
-                                                        return callbackDeleteEntitiesDomainList(error, null);
+                                                        const error = Boom.badImplementation(`An error occurred deleting the list of domains for keyword ${keyword.id}`);
+                                                        return callbackDeleteKeywordsDomainList(error, null);
                                                     }
-                                                    return callbackDeleteEntitiesDomainList(null);
+                                                    return callbackDeleteKeywordsDomainList(null);
                                                 });
                                             }
                                         ], (err, result) => {
 
                                             if (err){
-                                                return callbackMapOfEntity(err);
+                                                return callbackMapOfKeyword(err);
                                             }
-                                            return callbackMapOfEntity(null, result);
+                                            return callbackMapOfKeyword(null, result);
                                         });
                                     }, (err, result) => {
 
                                         if (err){
-                                            return callbackDeleteEachEntity(err);
+                                            return callbackDeleteEachKeyword(err);
                                         }
-                                        return callbackDeleteEachEntity(null);
+                                        return callbackDeleteEachKeyword(null);
                                     });
                                 }
                             ], (err, result) => {
 
                                 if (err){
-                                    return callbackDeleteAgentEntities(err);
+                                    return callbackDeleteAgentKeywords(err);
                                 }
-                                return callbackDeleteAgentEntities(null);
+                                return callbackDeleteAgentKeywords(null);
                             });
                         }
                     ], (err, result) => {
@@ -299,15 +299,15 @@ module.exports = (request, reply) => {
                                 return callbackDeleteAgentDomainsList(null);
                             });
                         },
-                        (callbackDeleteAgentEntitiesList) => {
+                        (callbackDeleteAgentKeywordsList) => {
 
-                            redis.del(`agentEntities:${agentId}`, (err, result) => {
+                            redis.del(`agentKeywords:${agentId}`, (err, result) => {
 
                                 if (err){
                                     const error = Boom.badImplementation(`An error occurred deleting the agent ${agentId}`);
-                                    return callbackDeleteAgentEntitiesList(error, null);
+                                    return callbackDeleteAgentKeywordsList(error, null);
                                 }
-                                return callbackDeleteAgentEntitiesList(null);
+                                return callbackDeleteAgentKeywordsList(null);
                             });
                         }
                     ], (err, result) => {

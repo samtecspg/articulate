@@ -16,12 +16,12 @@ import {
   deleteEntitySuccess,
   loadEntityIntentsError,
   loadEntityIntentsSuccess,
-} from '../../containers/App/actions';
+} from '../App/actions';
 import {
   DELETE_ENTITY,
   LOAD_AGENT_ENTITIES,
   LOAD_ENTITY_INTENTS
-} from '../../containers/App/constants';
+} from '../App/constants';
 import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getAgentEntities(payload) {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="17px" viewBox="0 0 16 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>btn/edit/hover</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="category---step3" transform="translate(-474.000000, -560.000000)" stroke="#979797" stroke-width="1.5">
+            <g id="btn/edit/hover" transform="translate(475.030522, 559.331993)">
+                <g id="Page-1" transform="translate(0.107293, 0.895166)">
+                    <g id="Group-6" transform="translate(0.000000, 0.259941)">
+                        <path d="M11.9614946,5.93523131 L9.07529277,3.00051975" id="Stroke-1"></path>
+                        <polyline id="Stroke-2" points="11.9614946 5.93523131 3.49781941 14.6134802 0.61161756 11.6779819 11.1848552 0.836858422 14.038697 3.73931175 11.9614946 5.93523131"></polyline>
+                        <polyline id="Stroke-4" points="0.611232322 11.6778245 0.0426212786 15.2089198 3.49743417 14.6133229"></polyline>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

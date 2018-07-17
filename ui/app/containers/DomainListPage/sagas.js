@@ -14,11 +14,11 @@ import {
   agentDomainsLoadingError,
   deleteDomainError,
   deleteDomainSuccess
-} from '../../containers/App/actions';
+} from '../App/actions';
 import {
   DELETE_DOMAIN,
   LOAD_AGENT_DOMAINS,
-} from '../../containers/App/constants';
+} from '../App/constants';
 import { makeSelectCurrentAgent } from '../App/selectors';
 
 export function* getAgentDomains(payload) {

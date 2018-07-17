@@ -1,6 +1,7 @@
 'use strict';
 const DomainController = require('../controllers');
 const DomainValidator = require('./domain.validator');
+const PKG = require('../../../package');
 
 const DomainRoutes = [
     {
@@ -19,6 +20,12 @@ const DomainRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/domain.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: DomainValidator.findById,
             handler: DomainController.findById
         }
@@ -49,22 +56,28 @@ const DomainRoutes = [
     },
     {
         method: 'GET',
-        path: '/domain/{id}/entity',
+        path: '/domain/{id}/keyword',
         config: {
-            description: 'Find list of entities linked with a domain',
+            description: 'Find list of keywords linked with a domain',
             tags: ['api'],
-            validate: DomainValidator.findEntitiesByDomainId,
-            handler: DomainController.findEntitiesByDomainId
+            validate: DomainValidator.findKeywordsByDomainId,
+            handler: DomainController.findKeywordsByDomainId
         }
     },
     {
         method: 'GET',
-        path: '/domain/{id}/intent',
+        path: '/domain/{id}/saying',
         config: {
-            description: 'Find list of intents linked with a domain',
+            description: 'Find list of sayings linked with a domain',
             tags: ['api'],
-            validate: DomainValidator.findIntentsByDomainId,
-            handler: DomainController.findIntentsByDomainId
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/domain.find-sayings-by-domain-id.graph`,
+                    consumes: ['redis']
+                }
+            },
+            validate: DomainValidator.findSayingsByDomainId,
+            handler: DomainController.findSayingsByDomainId
         }
     },
     {

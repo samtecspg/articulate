@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "NLU API",
   "main": "start.js",
+  "engines": {
+    "node": ">=10.5.0"
+  },
   "scripts": {
     "test": "lab -v --lint --leaks",
     "lint": "lab -dL",
@@ -26,7 +29,6 @@
     "npm-run-all": "^4.0.2"
   },
   "dependencies": {
-    "@slack/client": "^4.3.1",
     "async": "^2.4.0",
     "axios": "^0.18.0",
     "boom": "^4.3.1",
@@ -34,7 +36,6 @@
     "dashify": "^0.2.2",
     "debug": "^2.6.7",
     "dotenv": "^4.0.0",
-    "elasticsearch": "^15.1.1",
     "flat": "^4.0.0",
     "guid": "^0.0.12",
     "handlebars": "^4.0.11",
@@ -45,18 +46,19 @@
     "hapi-swaggered-ui": "^2.6.2",
     "inert": "^4.2.0",
     "joi": "^10.4.1",
-    "joi-phone-number": "^2.0.12",
-    "jsesc": "^2.5.1",
     "json2xml": "^0.1.3",
     "json2yaml": "^1.1.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
-    "numeral": "^2.0.6",
+    "nes": "^6.4.3",
+    "noflo": "^1.1.3",
+    "noflo-core": "^0.5.0",
+    "noflo-flow": "^0.7.0",
+    "noflo-nodejs": "^0.10.1",
     "ordinal": "^1.0.2",
+    "random-material-color": "^1.0.3",
     "redis": "^2.8.0",
-    "shortid": "^2.2.8",
-    "twilio": "^3.17.0",
     "vision": "^4.1.1",
     "wreck": "^12.2.0"
   },
@@ -65,7 +67,7 @@
     "rules": {
       "quotes": [
         "error",
-        "double"
+        "single"
       ]
     }
   },

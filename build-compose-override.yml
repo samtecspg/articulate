@@ -1,11 +1,12 @@
-version: '3.0'
+version: '2.2'
 
 services:
   api:
-    build: './api/.'
+    build: './new-api/.'
+    entrypoint: ['yarn', 'start']
   ui:
     build:
-      context: './ui/.'
+      context: './new-ui/.'
       args:
         - API_URL=${API_URL:-http://localhost:7500} # Needed for running yarn build in Dockerfile
   rasa:

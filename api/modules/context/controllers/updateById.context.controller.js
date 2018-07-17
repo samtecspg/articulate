@@ -54,7 +54,7 @@ module.exports = (request, reply) => {
             redis.del(`context:${contextId}`, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error occurred temporaly removing the context for the update.');
+                    const error = Boom.badImplementation('An error occurred temporarily removing the context for the update.');
                     return cb(error);
                 }
                 return cb(null, currentContext);

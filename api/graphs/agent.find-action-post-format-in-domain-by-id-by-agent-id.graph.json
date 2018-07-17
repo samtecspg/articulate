@@ -1,0 +1,367 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "FindActionPostFormatInDomainByIdByAgentId",
+    "description": "FindActionPostFormatInDomainByIdByAgentId",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "redis": {
+      "process": "redis",
+      "port": "redis",
+      "metadata": {
+        "x": 72,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": 72,
+        "y": 324,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "action.find-post-format-by-action-id",
+      "port": "out",
+      "metadata": {
+        "x": 1872,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "error",
+      "port": "out",
+      "metadata": {
+        "route": 1,
+        "x": 1872,
+        "y": 360,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "error": {
+      "component": "core/Merge",
+      "metadata": {
+        "x": 1548,
+        "y": 360,
+        "width": 72,
+        "height": 72,
+        "label": "error"
+      }
+    },
+    "redis": {
+      "component": "alpha-nlu-api/redis.client",
+      "metadata": {
+        "x": 252,
+        "y": 36,
+        "width": 72,
+        "height": 72,
+        "label": "redis"
+      }
+    },
+    "data-router": {
+      "component": "alpha-nlu-api/agent.agent-domain-action.data-router",
+      "metadata": {
+        "x": 432,
+        "y": 324,
+        "width": 72,
+        "height": 72,
+        "label": "data-router"
+      }
+    },
+    "action.find-post-format-by-action-id": {
+      "component": "alpha-nlu-api/action.find-post-format-by-action-id",
+      "metadata": {
+        "x": 1548,
+        "y": 180,
+        "width": 72,
+        "height": 72,
+        "label": "action.find-post-format-by-action-id"
+      }
+    },
+    "agent.find-domain-by-id-by-agent-id": {
+      "component": "alpha-nlu-api/agent.find-domain-by-id-by-agent-id",
+      "metadata": {
+        "x": 1008,
+        "y": 180,
+        "width": 72,
+        "height": 72,
+        "label": "agent.find-domain-by-id-by-agent-id"
+      }
+    },
+    "agent.find-by-id": {
+      "component": "alpha-nlu-api/agent.find-by-id",
+      "metadata": {
+        "x": 828,
+        "y": 324,
+        "width": 72,
+        "height": 72,
+        "label": "agent.find-by-id"
+      }
+    },
+    "action.find-by-id": {
+      "component": "alpha-nlu-api/action.find-by-id",
+      "metadata": {
+        "x": 1080,
+        "y": 36,
+        "width": 72,
+        "height": 72,
+        "label": "action.find-by-id"
+      }
+    },
+    "validate": {
+      "component": "alpha-nlu-api/agent.agent-domain-action.validate-correlation",
+      "metadata": {
+        "x": 1332,
+        "y": 180,
+        "width": 72,
+        "height": 72,
+        "label": "validate"
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "x": 252,
+        "y": 324,
+        "width": 72,
+        "height": 72,
+        "label": "http.request-data-parser"
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "action.find-by-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "agent.find-by-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "data-router",
+        "port": "in"
+      }
+    },
+    {
+      "src": {
+        "process": "data-router",
+        "port": "agent_id"
+      },
+      "tgt": {
+        "process": "agent.find-by-id",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "data-router",
+        "port": "action_id"
+      },
+      "tgt": {
+        "process": "action.find-by-id",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "data-router",
+        "port": "domain_id"
+      },
+      "tgt": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "agent_object"
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "validate",
+        "port": "action_object"
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "validate",
+        "port": "domain_object"
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "validate",
+        "port": "agent_object"
+      }
+    },
+    {
+      "src": {
+        "process": "validate",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "action_object"
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "validate",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    }
+  ]
+}

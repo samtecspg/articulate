@@ -1,0 +1,92 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "ActionDeleteWebhookByActionId",
+    "description": "ActionDeleteWebhookByActionId",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": 36,
+        "y": 324,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "redis": {
+      "process": "action.delete-webhook-by-action-id",
+      "port": "redis",
+      "metadata": {
+        "x": 36,
+        "y": 72,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "action.delete-webhook-by-action-id",
+      "port": "out",
+      "metadata": {
+        "x": 720,
+        "y": 72,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "action.delete-webhook-by-action-id",
+      "port": "error",
+      "metadata": {
+        "route": 1,
+        "x": 720,
+        "y": 324,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "action.delete-webhook-by-action-id": {
+      "component": "alpha-nlu-api/action.delete-webhook-by-action-id",
+      "metadata": {
+        "x": 432,
+        "y": 180,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "x": 216,
+        "y": 324,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "action.delete-webhook-by-action-id",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    }
+  ]
+}

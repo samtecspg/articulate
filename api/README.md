@@ -1,6 +1,6 @@
 # NLU API
 
-This RESTful API helps in the management of entities, intents, and domains. Alongside, it exposes the parsing action, and also the management of parsed documents. It is based on [Rasa](https://rasa.ai/) for the NLU task, and also makes use of [Duckling](https://github.com/facebookincubator/duckling) to parse the text into structured data. For data persistence we are using [ElasticSearch](https://www.elastic.co/products/elasticsearch), and for development tasks, we use [Kibana](https://www.elastic.co/products/kibana).
+This RESTful API helps in the management of keywords, sayings, and domains. Alongside, it exposes the parsing action, and also the management of parsed documents. It is based on [Rasa](https://rasa.ai/) for the NLU task, and also makes use of [Duckling](https://github.com/facebookincubator/duckling) to parse the text into structured data. For data persistence we are using [ElasticSearch](https://www.elastic.co/products/elasticsearch), and for development tasks, we use [Kibana](https://www.elastic.co/products/kibana).
 
 ## Getting Started
 
@@ -48,22 +48,22 @@ Test the system, go to [http://localhost:7500/documentation](http://localhost:75
 
 ### Parsing your first document
 
-The NLU API represents a model of language trough domains. We defined a domain as a set of entities and intents, that are trained using an NLP engine in order to provide a model that is capable of recognize external examples of intents and entities. To create your first domain, you will ned a set of intents and entities that are going to be linked to your test domain. 
+The NLU API represents a model of language trough domains. We defined a domain as a set of keywords and sayings, that are trained using an NLP engine in order to provide a model that is capable of recognize external examples of sayings and keywords. To create your first domain, you will ned a set of sayings and keywords that are going to be linked to your test domain. 
 
-We provide test data for [intents](./test-data/intents.json) and [entities](./test-data/entities.json) in order to help you out in the creation of simple domain. This data is based on Rasa simple restaurant search bot [tutorial](https://rasa-nlu.readthedocs.io/en/latest/tutorial.html).
+We provide test data for [sayings](./test-data/sayings.json) and [keywords](./test-data/keywords.json) in order to help you out in the creation of simple domain. This data is based on Rasa simple restaurant search bot [tutorial](https://rasa-nlu.readthedocs.io/en/latest/tutorial.html).
 
-Use the `POST /intent/batch` and `POST /entity/batch` endpoints to create intents and entities respectively using the test data provided.
+Use the `POST /saying/batch` and `POST /keyword/batch` endpoints to create sayings and keywords respectively using the test data provided.
 
-Take note of the ids returned by the API for each intent and entity, and with those ids, create a json object like this:
+Take note of the ids returned by the API for each saying and keyword, and with those ids, create a json object like this:
 
 ```
 {
 	"name": "restaurant",
-	"entities": [
+	"keywords": [
 		"6d1347da-fe6b-5a5d-c8e8-ca1f1b6d253f",
 		...
 	],
-	"intents": [
+	"sayings": [
 		"aa5b0716-6992-089f-36a9-1e88be9a0138",
 		...
 	]
@@ -86,7 +86,7 @@ You can check the documents parsing history at the `doc` endpoint.
 * `results`:
   * `duckling`: an array of outputs from the duckling parse service. You will have as many results as elements were recognized in the text. To know more go to [Duckling project home page](https://github.com/facebookincubator/duckling)
   * `rasa`: an array of outputs from Rasa parse endpoint. Given that you can have more than one domain in your API, by default the API will parse the text for each domain. You can modify this by adding the `domain` parameter in the call to the `/parse` endpoint.
-* `maximum_intent_score`: maximum confidence obtained for an intent between all domains
+* `maximum_saying_score`: maximum confidence obtained for an saying between all domains
 * `total_elapsed_time`: total time of running the parsing process, without saving on elastic search time.
 
 ## Tests

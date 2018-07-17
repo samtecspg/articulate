@@ -78,8 +78,8 @@ module.exports = (request, reply) => {
                 ducklingDimension,
                 spacyPretrainedEntities,
                 domainClassifierPipeline,
-                intentClassifierPipeline,
-                entityClassifierPipeline
+                sayingClassifierPipeline,
+                keywordClassifierPipeline
             } = globalSettings;
             server.inject({
                 method: 'PUT',
@@ -90,8 +90,8 @@ module.exports = (request, reply) => {
                     ducklingDimension,
                     spacyPretrainedEntities,
                     domainClassifierPipeline,
-                    intentClassifierPipeline,
-                    entityClassifierPipeline
+                    sayingClassifierPipeline,
+                    keywordClassifierPipeline
                 }
             }, (res) => {
 

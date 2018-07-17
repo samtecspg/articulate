@@ -76,6 +76,8 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred updating the agent status to training.');
                     return callbackSetAgentTrainingStatus(error);
                 }
+                agent.status = Status.training;
+                server.publish(`/agent/${agent.id}`, agent);
                 return callbackSetAgentTrainingStatus(null, rasaStatus);
             });
         },
@@ -142,7 +144,7 @@ module.exports = (request, reply) => {
                                             redis.hmset(`domain:${domain.id}`, { status: Status.error }, (err) => {
 
                                                 if (err){
-                                                    error = Boom.badImplementation(`An error ocurred during the training of the domain ${domain.domainName}, and also an error occurred updating the domain status.`);
+                                                    error = Boom.badImplementation(`An error occurred during the training of the domain ${domain.domainName}, and also an error occurred updating the domain status.`);
                                                     return callbackTrainDomain(error);
                                                 }
                                                 return callbackTrainDomain(error);
@@ -196,9 +198,11 @@ module.exports = (request, reply) => {
             redis.hmset(`agent:${agent.id}`, { status: Status.error }, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error ocurred during training, and also an error occurred updating the agent status.');
+                    const error = Boom.badImplementation('An error occurred during training, and also an error occurred updating the agent status.');
                     return reply(error);
                 }
+                agent.status = Status.error;
+                server.publish(`/agent/${agent.id}`, agent);
                 return reply(errTraining);
             });
         }
@@ -212,6 +216,7 @@ module.exports = (request, reply) => {
                 }
                 agent.status = Status.ready;
                 agent.lastTraining = lastTraining;
+                server.publish(`/agent/${agent.id}`, agent);
                 return reply(agent);
             });
         }

@@ -1,0 +1,186 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "ActionFindPostFormatByActionId",
+    "description": "ActionFindPostFormatByActionId",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": 72,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "redis": {
+      "process": "redis",
+      "port": "redis",
+      "metadata": {
+        "x": 72,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "action.find-post-format-by-action-id",
+      "port": "out",
+      "metadata": {
+        "x": 1224,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "error",
+      "port": "out",
+      "metadata": {
+        "route": 1,
+        "x": 1224,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "error": {
+      "component": "core/Merge",
+      "metadata": {
+        "x": 936,
+        "y": 252,
+        "width": 72,
+        "height": 72,
+        "label": "error"
+      }
+    },
+    "redis": {
+      "component": "alpha-nlu-api/redis.client",
+      "metadata": {
+        "x": 252,
+        "y": 36,
+        "width": 72,
+        "height": 72,
+        "label": "redis"
+      }
+    },
+    "action.find-by-id": {
+      "component": "alpha-nlu-api/action.find-by-id",
+      "metadata": {
+        "x": 504,
+        "y": 252,
+        "width": 72,
+        "height": 72,
+        "label": "action.find-by-id"
+      }
+    },
+    "action.find-post-format-by-action-id": {
+      "component": "alpha-nlu-api/action.find-post-format-by-action-id",
+      "metadata": {
+        "x": 756,
+        "y": 144,
+        "width": 72,
+        "height": 72,
+        "label": "action.find-post-format-by-action-id"
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "x": 252,
+        "y": 252,
+        "width": 72,
+        "height": 72,
+        "label": "http.request-data-parser"
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "action.find-by-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "action.find-by-id",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "action_object"
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    }
+  ]
+}

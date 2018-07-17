@@ -1,0 +1,13 @@
+import Joi from 'joi';
+
+class ExampleModel {
+    static get schema() {
+
+        return {
+            value: Joi.string().trim(),
+            synonyms: Joi.array().items(Joi.string().trim())
+        };
+    };
+}
+
+module.exports = ExampleModel;

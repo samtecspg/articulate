@@ -1,4 +1,4 @@
-version: '3.0'
+version: '2.2'
 
 services:
   api:
@@ -7,7 +7,10 @@ services:
     networks: ['alpha-nlu-network']
     entrypoint: ['node', 'start.js']
     environment:
-     - SWAGGER_BASE_PATH
+      - SWAGGER_BASE_PATH
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
   ui:
     image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3000:3000']
@@ -18,6 +21,11 @@ services:
     image: samtecspg/articulate-rasa:repo-head
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
+    networks: ['alpha-nlu-network']
+  rasa-tf:
+    image: samtecspg/articulate-rasa:daniel-test-may25-2018-try03
+    ports: ['0.0.0.0:9000:5000']
+    volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config-tf.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
     networks: ['alpha-nlu-network']
   duckling:
     image: samtecspg/duckling:0.1.6.0
@@ -30,5 +38,24 @@ services:
     command: redis-server --appendonly yes
     volumes:
       - ${REDIS_DATA:-./local-storage/redis-data}:/data
-
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_TAG:-6.5.1}
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports: ['9200:9200']
+    networks: ['alpha-nlu-network']
+    volumes:
+      - ${ES_CONFIG:-./local-storage/elasticsearch/config/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ${ES_DATA:-./local-storage/elasticsearch/data}:/usr/share/elasticsearch/data
+      - ${ES_DATA:-./local-storage/elasticsearch/docker-healthcheck.sh}:/usr/share/docker-healthcheck.sh
+    healthcheck:
+      test: ["CMD", "/bin/bash", "/usr/share/docker-healthcheck.sh"]
+      timeout: 10s
+      retries: 10
 networks: {alpha-nlu-network: {}}

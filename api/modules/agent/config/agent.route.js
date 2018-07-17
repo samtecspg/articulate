@@ -1,7 +1,7 @@
 'use strict';
 const AgentController = require('../controllers');
 const AgentValidator = require('./agent.validator');
-
+const PKG = require('../../../package');
 const AgentRoutes = [
     {
         method: 'GET',
@@ -9,6 +9,12 @@ const AgentRoutes = [
         config: {
             description: 'Find all instances of the model from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-all.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findAll,
             handler: AgentController.findAll
         }
@@ -19,6 +25,12 @@ const AgentRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findById,
             handler: AgentController.findById
         }
@@ -35,22 +47,28 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/entity',
+        path: '/agent/{id}/keyword',
         config: {
-            description: 'Find list of entities linked with a model instance specified by id',
+            description: 'Find list of keywords linked with a model instance specified by id',
             tags: ['api'],
-            validate: AgentValidator.findEntitiesByAgentId,
-            handler: AgentController.findEntitiesByAgentId
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-keywords-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
+            validate: AgentValidator.findKeywordsByAgentId,
+            handler: AgentController.findKeywordsByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/entity/{entityId}',
+        path: '/agent/{id}/keyword/{keywordId}',
         config: {
-            description: 'Find an entity by id that belongs to the specified model instance',
+            description: 'Find an keyword by id that belongs to the specified model instance',
             tags: ['api'],
-            validate: AgentValidator.findEntityByIdByAgentId,
-            handler: AgentController.findEntityByIdByAgentId
+            validate: AgentValidator.findKeywordByIdByAgentId,
+            handler: AgentController.findKeywordByIdByAgentId
         }
     },
     {
@@ -59,6 +77,12 @@ const AgentRoutes = [
         config: {
             description: 'Find list of domains linked with a model instance specified by id',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-domains-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findDomainsByAgentId,
             handler: AgentController.findDomainsByAgentId
         }
@@ -69,58 +93,82 @@ const AgentRoutes = [
         config: {
             description: 'Find a domain by id that belongs to the specified model instance',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findDomainByIdByAgentId,
             handler: AgentController.findDomainByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent',
+        path: '/agent/{id}/action/{actionId}',
         config: {
-            description: 'Find list of intents for the given domain and agent',
+            description: 'Find an action by id given a domain and an agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentsInDomainByIdByAgentId,
-            handler: AgentController.findIntentsInDomainByIdByAgentId
+            validate: AgentValidator.findActionByIdByAgentId,
+            handler: AgentController.findActionByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}',
+        path: '/agent/{id}/domain/{domainId}/saying',
         config: {
-            description: 'Find an intent by id given a domain and an agent',
+            description: 'Find list of sayings for the given domain and agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentByIdInDomainByIdByAgentId,
-            handler: AgentController.findIntentByIdInDomainByIdByAgentId
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-sayings-in-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
+            validate: AgentValidator.findSayingsInDomainByIdByAgentId,
+            handler: AgentController.findSayingsInDomainByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/scenario',
+        path: '/agent/{id}/domain/{domainId}/saying/{sayingId}',
         config: {
-            description: 'Find the scenario related with an intent, for the given domain and agent',
+            description: 'Find an saying by id given a domain and an agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentScenarioInDomainByIdByAgentId,
-            handler: AgentController.findIntentScenarioInDomainByIdByAgentId
+            validate: AgentValidator.findSayingByIdInDomainByIdByAgentId,
+            handler: AgentController.findSayingByIdInDomainByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/webhook',
+        path: '/agent/{id}/action/{actionId}/webhook',
         config: {
-            description: 'Find the webhook related with an intent, for the given domain and agent',
+            description: 'Find the webhook related with an action, for the given domain and agent',
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-action-webhook-in-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             tags: ['api'],
-            validate: AgentValidator.findIntentWebhookInDomainByIdByAgentId,
-            handler: AgentController.findIntentWebhookInDomainByIdByAgentId
+            validate: AgentValidator.findActionWebhookByAgentId,
+            handler: AgentController.findActionWebhookByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/postFormat',
+        path: '/agent/{id}/action/{actionId}/postFormat',
         config: {
-            description: 'Find the post format related with an intent, for the given domain and agent',
+            description: 'Find the post format related with an action, for the given domain and agent',
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-action-post-format-in-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             tags: ['api'],
-            validate: AgentValidator.findIntentPostFormatInDomainByIdByAgentId,
-            handler: AgentController.findIntentPostFormatInDomainByIdByAgentId
+            validate: AgentValidator.findActionPostFormatByAgentId,
+            handler: AgentController.findActionPostFormatByAgentId
         }
     },
     {
@@ -140,11 +188,7 @@ const AgentRoutes = [
             description: 'Update attributes for a model instance and persist it into the data source',
             tags: ['api'],
             validate: AgentValidator.updateById,
-            handler: AgentController.updateById,
-            timeout: {
-                socket: 20 * 60 * 1000, //Max default training time 20 minutes
-                server: false
-            }
+            handler: AgentController.updateById
         }
     },
     {
@@ -163,6 +207,12 @@ const AgentRoutes = [
         config: {
             description: 'Parse a text for each domain in the agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.parse.graph`,
+                    consumes: []
+                }
+            },
             validate: AgentValidator.parse,
             handler: AgentController.parse
         }
@@ -173,6 +223,12 @@ const AgentRoutes = [
         config: {
             description: 'Parse a text for each domain in the agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.parse.graph`,
+                    consumes: []
+                }
+            },
             validate: AgentValidator.parsePost,
             handler: AgentController.parse
         }
@@ -183,6 +239,12 @@ const AgentRoutes = [
         config: {
             description: 'Converse with a trained agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.converse.graph`,
+                    consumes: []
+                }
+            },
             validate: AgentValidator.converse,
             handler: AgentController.converse
         }
@@ -193,6 +255,12 @@ const AgentRoutes = [
         config: {
             description: 'Converse with a trained agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.converse.graph`,
+                    consumes: []
+                }
+            },
             validate: AgentValidator.conversePost,
             handler: AgentController.converse
         }
@@ -214,21 +282,33 @@ const AgentRoutes = [
             description: 'Create a new instance of the model and persist it into the data source based on a given dataset',
             tags: ['api'],
             validate: AgentValidator.import,
-            handler: AgentController.import,
-            timeout: {
-                socket: 20 * 60 * 1000, //Max default training time 20 minutes
-                server: false
-            }
+            handler: AgentController.import
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/intent',
+        path: '/agent/{id}/saying',
         config: {
-            description: 'Find list of intents linked with a model instance specified by id',
+            description: 'Find list of sayings linked with a model instance specified by id',
             tags: ['api'],
-            validate: AgentValidator.findIntentsByAgentId,
-            handler: AgentController.findIntentsByAgentId
+            validate: AgentValidator.findSayingsByAgentId,
+            handler: AgentController.findSayingsByAgentId
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/action',
+        config: {
+            description: 'Find list of actions linked with a model instance specified by id',
+            tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-actions-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
+            validate: AgentValidator.findActionsByAgentId,
+            handler: AgentController.findActionsByAgentId
         }
     },
     {
@@ -287,6 +367,12 @@ const AgentRoutes = [
         config: {
             description: 'Find a webhook by agent id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-webhook-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findWebhook,
             handler: AgentController.findWebhook
         }
@@ -335,8 +421,14 @@ const AgentRoutes = [
         method: 'GET',
         path: '/agent/{id}/settings',
         config: {
-            description: 'Return all the setings of the agent',
+            description: 'Return all the settings of the agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-all-settings.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findAllSettings,
             handler: AgentController.findAllSettings
         }
@@ -347,8 +439,24 @@ const AgentRoutes = [
         config: {
             description: 'Return the settings value for the specified name for the agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-settings-by-name.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findSettingsByName,
             handler: AgentController.findSettingsByName
+        }
+    },
+    {
+        method: 'POST',
+        path: '/agent/convert',
+        config: {
+            description: 'Convert a JSON export from the older version of Articulate into the newer version that use sayings and keywords',
+            tags: ['api'],
+            validate: AgentValidator.convert,
+            handler: AgentController.convert
         }
     }
 ];
