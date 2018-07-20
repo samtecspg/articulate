@@ -62,7 +62,7 @@
     "rules": {
       "quotes": [
         "error",
-        "double"
+        "single"
       ]
     }
   },

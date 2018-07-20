@@ -1,0 +1,134 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "Main",
+    "description": "Main Graph description",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "in": {
+      "process": "alpha-nlu-api/Start_epk4v",
+      "port": "in",
+      "metadata": {
+        "x": -180,
+        "y": 72,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "error": {
+      "process": "Errors",
+      "port": "out",
+      "metadata": {
+        "x": 540,
+        "y": 144,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "out": {
+      "process": "alpha-nlu-api/End_a0bjl",
+      "port": "out",
+      "metadata": {
+        "x": 540,
+        "y": 0,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "alpha-nlu-api/Start_epk4v": {
+      "component": "alpha-nlu-api/Start",
+      "metadata": {
+        "label": "Start",
+        "x": 36,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "alpha-nlu-api/Console_1": {
+      "component": "alpha-nlu-api/Console",
+      "metadata": {
+        "label": "Console1",
+        "x": 144,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "alpha-nlu-api/Console_2": {
+      "component": "alpha-nlu-api/Console2",
+      "metadata": {
+        "label": "Console2",
+        "x": 164,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "alpha-nlu-api/End_a0bjl": {
+      "component": "alpha-nlu-api/End",
+      "metadata": {
+        "label": "End",
+        "x": 288,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "alpha-nlu-api/Start_epk4v",
+        "port": "out1"
+      },
+      "tgt": {
+        "process": "alpha-nlu-api/Console_1",
+        "port": "in"
+      },
+      "metadata": {}
+    },
+    {
+      "src": {
+        "process": "alpha-nlu-api/Start_epk4v",
+        "port": "out2"
+      },
+      "tgt": {
+        "process": "alpha-nlu-api/Console_2",
+        "port": "in"
+      },
+      "metadata": {}
+    },
+    {
+      "src": {
+        "process": "alpha-nlu-api/Console_1",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "alpha-nlu-api/End_a0bjl",
+        "port": "in"
+      },
+      "metadata": {}
+    },
+    {
+      "src": {
+        "process": "alpha-nlu-api/Console_2",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "alpha-nlu-api/End_a0bjl",
+        "port": "in"
+      },
+      "metadata": {}
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+const name='CONSOLE1';
 const noflo = require('noflo');
 const { inspect } = require('util');
 
@@ -13,9 +14,11 @@ const log = (options, data) => {
     return console.log(data);
 };
 
+
+
 exports.getComponent = () => {
     const c = new noflo.Component();
-    c.description = 'Sends the data items to console.log';
+    c.description = `[${name}] Sends the data items to console.log`;
     c.icon = 'bug';
 
     c.inPorts.add('in', {
@@ -32,6 +35,7 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
+        console.log(`[${name}]::Process`); // TODO: REMOVE!!!!
         if (!input.hasData('in')) {
             return;
         }
@@ -44,7 +48,7 @@ exports.getComponent = () => {
             options = input.getData('options');
         }
 
-        const data = input.getData('in');
+        const data = `${input.getData('in')}[${name}]`;
         log(options, data);
         output.sendDone({ out: data });
     });
