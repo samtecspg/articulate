@@ -1,7 +1,5 @@
 'use strict';
 require('dotenv').load();
-const noflo = require('noflo');
-const util = require('util');
 const INIT_RETRY = process.env.INIT_RETRY || 10;
 const INIT_RETRY_TIMEOUT = process.env.INIT_RETRY_TIMEOUT || 15000;
 
@@ -16,18 +14,16 @@ module.exports = (callback) => init(callback);
 
 const init = (callback) => {
 
-    return Async.series({ flow: initFlow, redis: initRedis, server: initHapi },
+    return Async.series({ redis: initRedis, server: initHapi },
         (err, results) => {
-            console.log(`index::`); // TODO: REMOVE!!!!
-            console.log('series end'); // TODO: REMOVE!!!!
+
             if (err) {
                 console.error('Failed during initialization');
                 return callback(err);
             }
 
-            const { redis, server, flow } = results;
+            const { redis, server } = results;
             server.app.redis = redis;
-            server.app.flow = flow;
 
             StartDB(server, redis, (err) => {
 
@@ -57,7 +53,7 @@ const retryStrategy = (options) => {
 };
 
 const initRedis = (next) => {
-    console.log(`index::initRedis`); // TODO: REMOVE!!!!
+
     const redisPort = process.env.REDIS_PORT || 6379;
     const redisHost = process.env.REDIS_HOST || 'redis';
 
@@ -77,7 +73,7 @@ const initRedis = (next) => {
 };
 
 const initHapi = (next) => {
-    console.log(`index::initHapi`); // TODO: REMOVE!!!!
+
     const server = new Hapi.Server();
     server.connection({ port: 7500, routes: { cors: true } });
 
@@ -89,34 +85,4 @@ const initHapi = (next) => {
     }
     return next(null, server);
     /* $lab:coverage:on$ */
-};
-
-const initFlow = (next) => {
-
-    const tag = 'initFlow';
-    console.log(`${tag}:start`); // TODO: REMOVE!!!!
-    console.time(tag);
-    console.time(`${tag}:graph`); // TODO: REMOVE!!!!
-    const graph = noflo.asCallback('alpha-nlu-api/Main', {
-        baseDir: __dirname
-    });
-    console.timeEnd(`${tag}:graph`); // TODO: REMOVE!!!!
-    const promisedGraph = util.promisify(graph);
-    console.time(`${tag}:graph:execute`); // TODO: REMOVE!!!!
-    promisedGraph({
-        in: '2'
-    })
-        .then((result) => {
-            console.timeEnd(`${tag}:graph:execute`); // TODO: REMOVE!!!!
-            console.log(`${tag}:complete`); // TODO: REMOVE!!!!
-            console.log(result);
-            console.timeEnd(tag);
-            return next(null, graph);
-        })
-        .catch((err) => {
-            console.log(`${tag}:error`); // TODO: REMOVE!!!!
-            console.timeEnd(tag);
-            next(err);
-        });
-
 };

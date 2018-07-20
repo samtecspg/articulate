@@ -5,6 +5,7 @@ const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 const HapiSwaggerUI = require('hapi-swaggered-ui');
+const FlowLoader = require('./plugins/flow-loader.plugin');
 const Pack = require('./package');
 
 Server((err, server) => {
@@ -39,6 +40,12 @@ Server((err, server) => {
         authorization: false
     };
 
+    const flowLoaderOptions = {
+        baseDir: __dirname,
+        cache: false,
+        discover: true
+    };
+
     // We have to specify a swaggerEndpoint since we use hapi-swaggered-ui with hapi-swagger. It can't auto find the swagger.json
     // to work behind a reverse proxy path we need to build the endpoint from the basePath when it is provided.
     // All of this is specifically to get the swagger docs working.
@@ -49,7 +56,8 @@ Server((err, server) => {
         Inert,
         Vision,
         { 'register': HapiSwagger, 'options': swaggerOptions },
-        { 'register': HapiSwaggerUI, 'options': swaggerUIOptions }
+        { 'register': HapiSwaggerUI, 'options': swaggerUIOptions },
+        { 'register': FlowLoader, 'options': flowLoaderOptions }
     ], (err) => {
 
         if (err) {

@@ -1,0 +1,15 @@
+{
+  "id": "00177cbd-833e-4b87-8d29-a2236257c982",
+  "label": "alpha-nlu-api NoFlo runtime",
+  "secret": "some-password",
+  "permissions": {
+    "some-password": [
+      "protocol:component",
+      "protocol:runtime",
+      "protocol:graph",
+      "protocol:network",
+      "component:getsource",
+      "component:setsource"
+    ]
+  }
+}

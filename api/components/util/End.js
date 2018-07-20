@@ -7,18 +7,15 @@ exports.getComponent = () => {
 
     c.inPorts.add('in', {
         datatypes: 'all',
-        description: 'Packet to be dropped',
+        description: 'Packet to be dropped'
     });
 
     c.outPorts.add('out', {
-        datatype: 'all',
+        datatype: 'all'
     });
 
-
     return c.process((input, output) => {
-        console.log(`End::Process`); // TODO: REMOVE!!!!
-        const data = `${input.getData('in')}[END]`;
-        console.log(data); // TODO: REMOVE!!!!
+        const data = input.getData('in');
         output.sendDone({ out: data });
     });
 };

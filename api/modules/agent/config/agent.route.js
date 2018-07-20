@@ -1,7 +1,7 @@
 'use strict';
 const AgentController = require('../controllers');
 const AgentValidator = require('./agent.validator');
-
+const pkg = require('../../../package');
 const AgentRoutes = [
     {
         method: 'GET',
@@ -183,6 +183,11 @@ const AgentRoutes = [
         config: {
             description: 'Converse with a trained agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${pkg.name}/AgentConverse`
+                }
+            },
             validate: AgentValidator.converse,
             handler: AgentController.converse
         }
@@ -193,6 +198,12 @@ const AgentRoutes = [
         config: {
             description: 'Converse with a trained agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${pkg.name}/AgentConverse`,
+                    port: 'in'
+                }
+            },
             validate: AgentValidator.conversePost,
             handler: AgentController.converse
         }

@@ -1,20 +1,20 @@
-const name='CONSOLE1';
+const name = 'Console';
 const noflo = require('noflo');
 const { inspect } = require('util');
 
 const log = (options, data) => {
     if (options != null) {
+        const { tag, ...rest } = options;
+        console.log(`[${tag}]`);
         return console.log(inspect(
             data,
-            options.showHidden,
-            options.depth,
-            options.colors,
+            rest.showHidden,
+            rest.depth,
+            rest.colors,
         ));
     }
     return console.log(data);
 };
-
-
 
 exports.getComponent = () => {
     const c = new noflo.Component();
@@ -35,7 +35,6 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
-        console.log(`[${name}]::Process`); // TODO: REMOVE!!!!
         if (!input.hasData('in')) {
             return;
         }
@@ -48,7 +47,7 @@ exports.getComponent = () => {
             options = input.getData('options');
         }
 
-        const data = `${input.getData('in')}[${name}]`;
+        const data = input.getData('in');
         log(options, data);
         output.sendDone({ out: data });
     });

@@ -5,24 +5,9 @@ const Boom = require('boom');
 const Handlebars = require('handlebars');
 const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
 
-
 module.exports = (request, reply) => {
-
+    const { id: agentId, sessionId, text, timezone } = request.plugins['flow-loader'];
     RegisterHandlebarHelpers(Handlebars);
-    const agentId = request.params.id;
-    let sessionId;
-    let text;
-    let timezone;
-    if (request.payload) {
-        sessionId = request.payload.sessionId;
-        text = request.payload.text;
-        timezone = request.payload.timezone;
-    }
-    else {
-        sessionId = request.query.sessionId;
-        text = request.query.text;
-        timezone = request.query.timezone;
-    }
     const server = request.server;
 
     Async.waterfall([
@@ -146,7 +131,6 @@ module.exports = (request, reply) => {
         else {
             return reply({ textResponse: data.textResponse });
         }
-
 
     });
 };
