@@ -8,10 +8,11 @@ order: 0
 
 The easiest way to get started with Articulate is to use our included `docker-compose` file. Articulate relies on several services besides it's own UI and API. These all get started when you use the provided compose.
 
-| Warning  /  Be aware  /  Notice  /  Look out  / etc... |
-|--------------------------------------------------------|
-| Loading and Training these language models dictates a certain amount of RAM. For experimenting with smaller agents 3Gb may be sufficient, but for larger agents much more RAM may be required. If training takes more than a few minutes for small agents or more than half an hour for large agents, it is a good indicator that you are running low on memory. |
-| On Windows, make sure you have shared the drive with Docker so that it can mount directories inside of the container. |
+| | Warning  /  Be aware  /  Notice  /  Look out  / etc... |
+|---------|--------------------------------------------------------|
+| **Memory Requirement** | Loading and Training these language models dictates a certain amount of RAM. For experimenting with smaller agents 3Gb may be sufficient, but for larger agents much more RAM may be required. If training takes more than a few minutes for small agents or more than half an hour for large agents, it is a good indicator that you are running low on memory. |
+| **Windows Shared Drives** | On Windows, make sure you have shared the drive with Docker so that it can mount directories inside of the container. |
+| **Docker Toolbox** | The below instructions work best on Linux and when using *Docker for Windows* or *Docker for Mac*. If you are using Docker toolbox follow the remote installation instructions to specify the docker machine IP via the `API_URL` environment variable. |
 
 ## Setup
 
