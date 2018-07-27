@@ -2,7 +2,7 @@
 const Boom = require('boom');
 const _ = require('lodash');
 const Async = require('async');
-
+// TODO: PATH 1.1.2
 module.exports = (server, redis, agent, cb) => {
 
     if (!agent.enableModelsPerDomain){
@@ -16,6 +16,7 @@ module.exports = (server, redis, agent, cb) => {
             const formattedDomain = { name: 'default', model: modelFolderName, justER };
             return cb(null, [formattedDomain]);
         }
+        // TODO: PATH 1.2 (2)
         //Given that the agent only have one intent and is the model is just an ER, then we need the intent name
         server.inject(`/agent/${agent.id}/export`, (res) => {
 
@@ -30,8 +31,9 @@ module.exports = (server, redis, agent, cb) => {
     }
     else {
         Async.waterfall([
-            (callbackGetDomainsOfAgent) => {
 
+            (callbackGetDomainsOfAgent) => {
+                // TODO: PATH 1.1.2.1
                 server.inject(`/agent/${agent.id}/domain`, (res) => {
 
                     if (res.statusCode !== 200){
@@ -42,7 +44,7 @@ module.exports = (server, redis, agent, cb) => {
                 });
             },
             (domains, callbackFormatDomains) => {
-
+                // TODO: PATH 1.1.2.2
                 if (domains.length === 0){
                     const error = Boom.badRequest('This agent doesn\'t have domains created. To parse text first create domains please.');
                     return callbackFormatDomains(error, null);
@@ -65,6 +67,7 @@ module.exports = (server, redis, agent, cb) => {
                     const modelFolderName = domainName + '_' + domain.model;
                     const justER = modelFolderName.indexOf('just_er') !== -1;
                     if (justER){
+                        // TODO: PATH 1.1.2.3
                         server.inject(`/agent/${agent.id}/domain/${domain.id}/intent`, (res) => {
 
                             if (res.statusCode !== 200){
@@ -94,7 +97,7 @@ module.exports = (server, redis, agent, cb) => {
                 });
             },
             (formattedDomains, callbackDomainRecognizer) => {
-
+                // TODO: PATH 1.1.2.4
                 redis.exists(`agentDomainRecognizer:${agent.id}`, (err, exists) => {
 
                     if (err){

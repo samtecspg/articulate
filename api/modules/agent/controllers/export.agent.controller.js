@@ -2,6 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 
+// TODO: PATH 1.2 (1)
 module.exports = (request, reply) => {
 
     const agentId = request.params.id;
@@ -11,7 +12,7 @@ module.exports = (request, reply) => {
     Async.waterfall([
 
         (callbackGetAgent) => {
-
+            // TODO: PATH 1.1.1 (2)
             server.inject(`/agent/${agentId}`, (res) => {
 
                 if (res.statusCode !== 200) {

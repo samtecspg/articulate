@@ -1,0 +1,90 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "AgentFindAll",
+    "description": "AgentFindAll",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": -108,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "redis": {
+      "process": "agent.find-all",
+      "port": "redis",
+      "metadata": {
+        "x": -108,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "agent.find-all",
+      "port": "out",
+      "metadata": {
+        "x": 720,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "agent.find-all",
+      "port": "error",
+      "metadata": {
+        "x": 684,
+        "y": 288,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "agent.find-all": {
+      "component": "alpha-nlu-api/agent.find-all",
+      "metadata": {
+        "label": "AgentFindById",
+        "x": 396,
+        "y": 180,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "label": "http.request-data-parser",
+        "x": 72,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "agent.find-all",
+        "port": "in"
+      }
+    }
+  ]
+}

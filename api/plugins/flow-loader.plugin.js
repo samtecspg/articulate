@@ -1,8 +1,9 @@
 'use strict';
 const noflo = require('noflo');
 const util = require('util');
+const Boom = require('boom');
 const name = 'flow-loader';
-
+const _ = require('lodash');
 exports.register = (server, options, next) => {
     const { baseDir, ...rest } = options;
     const loader = new noflo.ComponentLoader(baseDir, rest);
@@ -23,7 +24,8 @@ exports.register = (server, options, next) => {
                                 }
                                 const log = {
                                     name: componentName,
-                                    ready: component.isReady()
+                                    ready: component.isReady(),
+                                    subGraph: component.isSubgraph(),
                                 };
                                 console.log(util.inspect(log, { colors: true }));
                             });
@@ -31,22 +33,26 @@ exports.register = (server, options, next) => {
             });
         server.ext('onPreHandler', (request, reply) => {
             const settings = request.route.settings.plugins[name];
-            const inport = settings.port || 'in';
             if (settings) {
                 const graph = noflo.asCallback(settings.name, { loader });
                 const promisedGraph = util.promisify(graph);
-                promisedGraph({ [inport]: request })
+                let data = { request };
+                if (_.isArray(settings.consumes)) {
+                    settings.consumes.forEach((service) => {
+                        data[service] = server.app[service];
+                    });
+                }
+                promisedGraph(data)
                     .then((result) => {
                         if (result.error) {
                             return reply.continue();
                         }
-                        // TODO: configure outport from route config or default to `out`
                         request.plugins[name] = result.out;
                         return reply.continue();
                     })
                     .catch((err) => {
-                        // TODO: Manage error
-                        return reply.continue();
+                        const error = Boom.notFound(err.message);
+                        return reply(error);
                     });
 
             } else {

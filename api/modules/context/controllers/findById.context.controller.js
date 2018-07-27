@@ -3,7 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('../../../helpers/flat');
 const Cast = require('../../../helpers/cast');
-
+// TODO: PATH 1.3
 module.exports = (request, reply) => {
 
     const server = request.server;
@@ -12,7 +12,7 @@ module.exports = (request, reply) => {
 
     Async.waterfall([
         (cb) => {
-
+            // TODO: PATH 1.3.1
             redis.lrange(`sessionContexts:${sessionId}`, 0, -1, (err, contextIds) => {
 
                 if (err){

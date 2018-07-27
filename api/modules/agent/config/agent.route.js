@@ -9,6 +9,12 @@ const AgentRoutes = [
         config: {
             description: 'Find all instances of the model from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${pkg.name}/agent.find-all.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findAll,
             handler: AgentController.findAll
         }
@@ -19,6 +25,12 @@ const AgentRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${pkg.name}/agent.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findById,
             handler: AgentController.findById
         }
@@ -163,6 +175,12 @@ const AgentRoutes = [
         config: {
             description: 'Parse a text for each domain in the agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${pkg.name}/agent.parse.graph`,
+                    consumes: []
+                }
+            },
             validate: AgentValidator.parse,
             handler: AgentController.parse
         }
@@ -173,6 +191,12 @@ const AgentRoutes = [
         config: {
             description: 'Parse a text for each domain in the agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${pkg.name}/agent.parse.graph`,
+                    consumes: []
+                }
+            },
             validate: AgentValidator.parsePost,
             handler: AgentController.parse
         }
@@ -185,7 +209,8 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/AgentConverse`
+                    name: `${pkg.name}/agent.converse.graph`,
+                    consumes: []
                 }
             },
             validate: AgentValidator.converse,
@@ -200,8 +225,8 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/AgentConverse`,
-                    port: 'in'
+                    name: `${pkg.name}/agent.converse.graph`,
+                    consumes: []
                 }
             },
             validate: AgentValidator.conversePost,

@@ -1,0 +1,50 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "AgentConverse",
+    "description": "AgentConverse",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": -180,
+        "y": 72,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "http.request-data-parser",
+      "port": "out",
+      "metadata": {
+        "x": 720,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "label": "http.request-data-parser",
+        "x": -36,
+        "y": 72,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+  ]
+}
