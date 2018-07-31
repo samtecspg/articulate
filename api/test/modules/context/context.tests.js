@@ -37,7 +37,7 @@ suite('context', () => {
                     name: 'Test Scenario',
                     scenario: 'Test Scenario',
                     slots: {
-                        'Test Entity': {
+                        'Test Keyword': {
                             value: 'mobile',
                             original: 'cell phone'
                         }
@@ -111,7 +111,7 @@ suite('context', () => {
 
                 const updateData = {
                     slots: {
-                        'Test Entity': {
+                        'Test Keyword': {
                             value: 'mobile',
                             original: 'iphone'
                         }
@@ -127,7 +127,7 @@ suite('context', () => {
                 server.inject(options, (res) => {
 
                     expect(res.statusCode).to.equal(200);
-                    expect(res.result.slots['Test Entity'].value).to.be.equal('mobile');
+                    expect(res.result.slots['Test Keyword'].value).to.be.equal('mobile');
                     done();
                 });
             });

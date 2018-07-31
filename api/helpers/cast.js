@@ -29,14 +29,14 @@ module.exports = (object, type) => {
             if (typeof object.extraTrainingData !== 'boolean'){
                 object.extraTrainingData = object.extraTrainingData === 'true';
             }
-            object.intentThreshold = parseFloat(object.intentThreshold);
+            object.sayingThreshold = parseFloat(object.sayingThreshold);
             break;
-        case 'entity':
+        case 'keyword':
             if (object.regex === '' || !object.regex || object.regex === 'null'){
                 object.regex = null;
             }
             break;
-        case 'intent':
+        case 'saying':
             if (typeof object.useWebhook !== 'boolean'){
                 object.useWebhook = object.useWebhook === 'true';
             }
@@ -46,18 +46,18 @@ module.exports = (object, type) => {
             }
             object.examples = object.examples.map((example) => {
 
-                if (example.entities === '') {
-                    example.entities = [];
+                if (example.keywords === '') {
+                    example.keywords = [];
                 }
                 else {
-                    example.entities = example.entities.map((entity) => {
+                    example.keywords = example.keywords.map((keyword) => {
 
-                        if (entity.entityId) {
-                            entity.entityId = parseInt(entity.entityId);
+                        if (keyword.keywordId) {
+                            keyword.keywordId = parseInt(keyword.keywordId);
                         }
-                        entity.start = parseInt(entity.start);
-                        entity.end = parseInt(entity.end);
-                        return entity;
+                        keyword.start = parseInt(keyword.start);
+                        keyword.end = parseInt(keyword.end);
+                        return keyword;
                     });
                 }
                 return example;
@@ -82,9 +82,9 @@ module.exports = (object, type) => {
                     return slot;
                 });
             }
-            if (object.intentResponses === '') {
-                if (object.intentResponses.length === 0) {
-                    object.intentResponses = [];
+            if (object.sayingResponses === '') {
+                if (object.sayingResponses.length === 0) {
+                    object.sayingResponses = [];
                 }
             }
             break;
@@ -104,22 +104,22 @@ module.exports = (object, type) => {
             if (object.result && object.result.results){
                 object.result.results.forEach((result) => {
 
-                    if (result.intent){
-                        if (result.intent.name && (result.intent.name === '' || result.intent.name === 'null')){
-                            result.intent.name = null;
+                    if (result.saying){
+                        if (result.saying.name && (result.saying.name === '' || result.saying.name === 'null')){
+                            result.saying.name = null;
                         }
                     }
-                    if (result.entities !== undefined && result.entities !== null){
-                        if (Array.isArray(result.entities)){
-                            result.entities.forEach((entity) => {
+                    if (result.keywords !== undefined && result.keywords !== null){
+                        if (Array.isArray(result.keywords)){
+                            result.keywords.forEach((keyword) => {
 
-                                if (entity.confidence === ''){
-                                    entity.confidence = null;
+                                if (keyword.confidence === ''){
+                                    keyword.confidence = null;
                                 }
                             });
                         }
                         else {
-                            result.entities = [];
+                            result.keywords = [];
                         }
                     }
                 });

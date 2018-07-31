@@ -49,22 +49,22 @@ const DomainRoutes = [
     },
     {
         method: 'GET',
-        path: '/domain/{id}/entity',
+        path: '/domain/{id}/keyword',
         config: {
-            description: 'Find list of entities linked with a domain',
+            description: 'Find list of keywords linked with a domain',
             tags: ['api'],
-            validate: DomainValidator.findEntitiesByDomainId,
-            handler: DomainController.findEntitiesByDomainId
+            validate: DomainValidator.findKeywordsByDomainId,
+            handler: DomainController.findKeywordsByDomainId
         }
     },
     {
         method: 'GET',
-        path: '/domain/{id}/intent',
+        path: '/domain/{id}/saying',
         config: {
-            description: 'Find list of intents linked with a domain',
+            description: 'Find list of sayings linked with a domain',
             tags: ['api'],
-            validate: DomainValidator.findIntentsByDomainId,
-            handler: DomainController.findIntentsByDomainId
+            validate: DomainValidator.findSayingsByDomainId,
+            handler: DomainController.findSayingsByDomainId
         }
     },
     {

@@ -21,26 +21,26 @@ const getAgentData = (server, agentId, cb) => {
             Async.map(domains, (domain, cllback) => {
 
                 Async.parallel({
-                    entities: (cllbck) => {
+                    keywords: (cllbck) => {
 
-                        server.inject(`/domain/${domain.id}/entity`, (res) => {
+                        server.inject(`/domain/${domain.id}/keyword`, (res) => {
 
                             if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error occurred getting the entities of the domain ${domain.domainName}`);
+                                const error = Boom.create(res.statusCode, `An error occurred getting the keywords of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
                             }
                             return cllbck(null, res.result);
                         });
                     },
-                    intents: (cllbck) => {
+                    sayings: (cllbck) => {
 
-                        server.inject(`/domain/${domain.id}/intent`, (res) => {
+                        server.inject(`/domain/${domain.id}/saying`, (res) => {
 
                             if (res.statusCode !== 200){
-                                const error = Boom.create(res.statusCode, `An error occurred getting the intents of the domain ${domain.domainName}`);
+                                const error = Boom.create(res.statusCode, `An error occurred getting the sayings of the domain ${domain.domainName}`);
                                 return cllbck(error, null);
                             }
-                            return cllbck(null, res.result.intents);
+                            return cllbck(null, res.result.sayings);
                         });
                     }
 

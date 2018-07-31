@@ -20,7 +20,7 @@
         "name": "intent_classifier_sklearn"
       }
     ],
-    "intentClassifierPipeline": [
+    "sayingClassifierPipeline": [
       {
         "name": "nlp_spacy"
       },
@@ -43,7 +43,7 @@
         "name": "ner_spacy"
       }
     ],
-    "entityClassifierPipeline": [
+    "keywordClassifierPipeline": [
       {
         "name": "nlp_spacy"
       },

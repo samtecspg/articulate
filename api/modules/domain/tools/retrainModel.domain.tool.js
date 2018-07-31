@@ -18,7 +18,7 @@ const retrainModel = (server, rasa, language, agentName, agentId, domainName, do
                 if (err){
                     return cb(err);
                 }
-                if (trainingSet.numberOfIntents === 0){
+                if (trainingSet.numberOfSayings === 0){
                     const error = {};
                     error.noTrainingData = true;
                     return cb(error);
@@ -28,8 +28,8 @@ const retrainModel = (server, rasa, language, agentName, agentId, domainName, do
         },
         (trainingSet, cb) => {
 
-            model = (trainingSet.numberOfIntents === 1 ? 'just_er_' : '') + model;
-            server.inject(`/agent/${agentId}/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'intent'}ClassifierPipeline`, (res) => {
+            model = (trainingSet.numberOfSayings === 1 ? 'just_er_' : '') + model;
+            server.inject(`/agent/${agentId}/settings/${trainingSet.numberOfSayings === 1 ? 'keyword' : 'saying'}ClassifierPipeline`, (res) => {
 
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, 'An error occurred getting the data of the pipeline');

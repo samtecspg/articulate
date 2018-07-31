@@ -1,14 +1,12 @@
 'use strict';
 const AgentSchema = require('../../../models/index').Agent.schema;
-const EntitySchema = require('../../../models/index').Entity.schema;
+const KeywordSchema = require('../../../models/index').Keyword.schema;
 const ExampleSchema = require('../../../models/index').Example.schema;
 const DomainSchema = require('../../../models/index').Domain.schema;
-const IntentSchema = require('../../../models/index').Intent.schema;
-const IntentExampleSchema = require('../../../models/index').IntentExample.schema;
-const IntentEntitySchema = require('../../../models/index').IntentEntity.schema;
+const ActionSchema = require('../../../models/index').Action.schema;
+const SayingSchema = require('../../../models/index').Saying.schema;
+const SayingKeywordSchema = require('../../../models/index').SayingKeyword.schema;
 const WebhookSchema = require('../../../models/index').Webhook.schema;
-const ScenarioSchema = require('../../../models/index').Scenario.schema;
-const SlotSchema = require('../../../models/index').Slot.schema;
 const PostFormatSchema = require('../../../models/index').PostFormat.schema;
 const Joi = require('joi');
 
@@ -43,7 +41,7 @@ class AgentValidate {
             })()
         };
 
-        this.findEntitiesByAgentId = {
+        this.findKeywordsByAgentId = {
             params: (() => {
 
                 return {
@@ -55,17 +53,17 @@ class AgentValidate {
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
                     limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
-                    filter: Joi.string().description('String that will filter values to return only those entities with part of this filter in their names')
+                    filter: Joi.string().description('String that will filter values to return only those keywords with part of this filter in their names')
                 };
             })()
         };
 
-        this.findEntityByIdByAgentId = {
+        this.findKeywordByIdByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
-                    entityId: EntitySchema.id.required().description('Id of the entity')
+                    keywordId: KeywordSchema.id.required().description('Id of the keyword')
                 };
             })()
         };
@@ -97,7 +95,7 @@ class AgentValidate {
             })()
         };
 
-        this.findIntentsInDomainByIdByAgentId = {
+        this.findActionsInDomainByIdByAgentId = {
             params: (() => {
 
                 return {
@@ -110,52 +108,70 @@ class AgentValidate {
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
                     limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
-                    filter: Joi.string().description('String that will filter values to return only those intents with part of this filter in their names')
+                    filter: Joi.string().description('String that will filter values to return only those actions with part of this filter in their names')
                 };
             })()
         };
 
-        this.findIntentByIdInDomainByIdByAgentId = {
+        this.findActionByIdInDomainByIdByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    intentId: IntentSchema.id.required().description('Id of the intent')
+                    actionId: ActionSchema.id.required().description('Id of the action')
                 };
             })()
         };
 
-        this.findIntentScenarioInDomainByIdByAgentId = {
+        this.findSayingsInDomainByIdByAgentId = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent'),
+                    domainId: DomainSchema.id.required().description('Id of the domain')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
+                    filter: Joi.string().description('String that will filter values to return only those sayings with part of this filter in their names')
+                };
+            })()
+        };
+
+        this.findSayingByIdInDomainByIdByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    intentId: IntentSchema.id.required().description('Id of the intent')
+                    sayingId: SayingSchema.id.required().description('Id of the saying')
                 };
             })()
         };
 
-        this.findIntentWebhookInDomainByIdByAgentId = {
+        this.findActionWebhookInDomainByIdByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    intentId: IntentSchema.id.required().description('Id of the intent')
+                    actionID: ActionSchema.id.required().description('Id of the action')
                 };
             })()
         };
 
 
-        this.findIntentPostFormatInDomainByIdByAgentId = {
+        this.findActionPostFormatInDomainByIdByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    intentId: IntentSchema.id.required().description('Id of the intent')
+                    sayingId: ActionSchema.id.required().description('Id of the action')
                 };
             })()
         };
@@ -325,11 +341,11 @@ class AgentValidate {
                         webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                     },
                     settings: Joi.object(),
-                    entities: Joi.array().items({
-                        entityName: EntitySchema.entityName.required(),
-                        uiColor: EntitySchema.uiColor,
-                        type: EntitySchema.type.allow('').allow(null).valid('learned','regex').optional().default('learned').error(new Error('Please provide valid entity type among learned and regex')),
-                        regex: EntitySchema.regex.allow('').allow(null),
+                    keywords: Joi.array().items({
+                        keywordName: KeywordSchema.keywordName.required(),
+                        uiColor: KeywordSchema.uiColor,
+                        type: KeywordSchema.type.allow('').allow(null).valid('learned','regex').optional().default('learned').error(new Error('Please provide valid keyword type among learned and regex')),
+                        regex: KeywordSchema.regex.allow('').allow(null),
                         examples: Joi.array().items({
                             value: ExampleSchema.value.required(),
                             synonyms: ExampleSchema.synonyms
@@ -338,54 +354,28 @@ class AgentValidate {
                     domains: Joi.array().items({
                         domainName: DomainSchema.domainName.required(),
                         enabled: DomainSchema.enabled.required(),
-                        intentThreshold: DomainSchema.intentThreshold.required(),
+                        sayingThreshold: DomainSchema.sayingThreshold.required(),
                         lastTraining: DomainSchema.lastTraining,
                         model: DomainSchema.model,
                         status: DomainSchema.status,
                         lastTraining: DomainSchema.lastTraining,
                         extraTrainingData: DomainSchema.extraTrainingData,
-                        intents: Joi.array().items({
-                            intentName: IntentSchema.intentName.required(),
-                            examples: Joi.array().items({
-                                userSays: IntentExampleSchema.userSays.required().error(new Error('The user says text is required')),
-                                entities: Joi.array().items({
-                                    start: IntentEntitySchema.start.required().error(new Error('The start value should be an integer and it is required.')),
-                                    end: IntentEntitySchema.end.required().error(new Error('The end value should be an integer and it is required.')),
-                                    value: IntentEntitySchema.value.required().error(new Error('The parsed value is required.')),
-                                    entity: IntentEntitySchema.entity.required().error(new Error('The entity reference is required.')),
-                                    extractor: IntentEntitySchema.extractor
-                                }).required().allow([])
-                            }).required().min(2).error(new Error('Please specify at least two examples for your intent definition.')),
-                            scenario: {
-                                scenarioName: ScenarioSchema.scenarioName.required(),
-                                slots: Joi.array().items({
-                                    slotName: SlotSchema.slotName.required(),
-                                    entity: SlotSchema.entity.required(),
-                                    isList: SlotSchema.isList.required(),
-                                    isRequired: SlotSchema.isRequired.required(),
-                                    textPrompts: SlotSchema.textPrompts
-                                }),
-                                intentResponses: ScenarioSchema.intentResponses.required()
-                            },
-                            useWebhook: IntentSchema.useWebhook.required(),
-                            webhook: {
-                                webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
-                                webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
-                                webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                                webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
-                            },
-
-                            usePostFormat: IntentSchema.usePostFormat.required(),
-                            postFormat: {
-                                postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
-                            }
+                        sayings: Joi.array().items({
+                            userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
+                            keywords: Joi.array().items({
+                                start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
+                                end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
+                                value: SayingKeywordSchema.value.required().error(new Error('The parsed value is required.')),
+                                keyword: SayingKeywordSchema.keyword.required().error(new Error('The keyword reference is required.')),
+                                extractor: SayingKeywordSchema.extractor
+                            }).required().allow([])
                         })
                     })
                 };
             })()
         };
 
-        this.findIntentsByAgentId = {
+        this.findSayingsByAgentId = {
             params: (() => {
 
                 return {
@@ -397,7 +387,24 @@ class AgentValidate {
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
                     limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
-                    filter: Joi.string().description('String that will filter values to return only those intents with part of this filter in their names')
+                    filter: Joi.string().description('String that will filter values to return only those sayings with part of this filter in their names')
+                };
+            })()
+        };
+
+        this.findActionsByAgentId = {
+            params: (() => {
+
+                return {
+                    id: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
+                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
+                    filter: Joi.string().description('String that will filter values to return only those actions with part of this filter in their names')
                 };
             })()
         };
@@ -406,13 +413,13 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema.id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             payload: (() => {
 
                 return {
-                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
+                    agent: AgentSchema.agentName.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
@@ -425,13 +432,13 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema.id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })(),
             payload: (() => {
 
                 return {
-                    agent: ScenarioSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
+                    agent: AgentSchema.agentName.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
                     postFormatPayload: PostFormatSchema.postFormatPayload.required(),
                     id : Joi.any().allow('').optional()
                 };
@@ -442,7 +449,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema.id.required().description('Id of the agent')
+                    id: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };
@@ -475,7 +482,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema.id.required().description('Id of the intent')
+                    id: AgentSchema.id.required().description('Id of the saying')
                 };
             })()
         };
@@ -484,7 +491,7 @@ class AgentValidate {
             params: (() => {
 
                 return {
-                    id: IntentSchema.id.required().description('Id of the intent')
+                    id: AgentSchema.id.required().description('Id of the saying')
                 };
             })(),
             payload: (() => {

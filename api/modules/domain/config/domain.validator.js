@@ -12,7 +12,7 @@ class DomainValidate {
                     agent: DomainSchema.agent.required(),
                     domainName: DomainSchema.domainName.required(),
                     enabled: DomainSchema.enabled.required(),
-                    intentThreshold: DomainSchema.intentThreshold.required(),
+                    sayingThreshold: DomainSchema.sayingThreshold.required(),
                     lastTraining: DomainSchema.lastTraining,
                     model: DomainSchema.model,
                     extraTrainingData: DomainSchema.extraTrainingData
@@ -41,7 +41,7 @@ class DomainValidate {
                 return {
                     domainName: DomainSchema.domainName,
                     enabled: DomainSchema.enabled,
-                    intentThreshold: DomainSchema.intentThreshold,
+                    sayingThreshold: DomainSchema.sayingThreshold,
                     lastTraining: DomainSchema.lastTraining,
                     status: DomainSchema.status,
                     model: DomainSchema.model,
@@ -59,7 +59,7 @@ class DomainValidate {
             })()
         };
 
-        this.findEntitiesByDomainId = {
+        this.findKeywordsByDomainId = {
             params: (() => {
 
                 return {
@@ -68,7 +68,7 @@ class DomainValidate {
             })()
         };
 
-        this.findIntentsByDomainId = {
+        this.findSayingsByDomainId = {
             params: (() => {
 
                 return {
@@ -80,7 +80,7 @@ class DomainValidate {
                 return {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
                     limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
-                    filter: Joi.string().description('String that will filter values to return only those intents with part of this filter in their names')
+                    filter: Joi.string().description('String that will filter values to return only those sayings with part of this filter in their names')
                 };
             })()
         };

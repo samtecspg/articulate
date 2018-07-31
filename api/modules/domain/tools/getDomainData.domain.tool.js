@@ -5,26 +5,26 @@ const Boom = require('boom');
 const getDomainData = (server, domainId, cb) => {
 
     Async.parallel({
-        entities: (callback) => {
+        keywords: (callback) => {
 
-            server.inject(`/domain/${domainId}/entity`, (res) => {
+            server.inject(`/domain/${domainId}/keyword`, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error occurred getting the entities of the domain ${domainId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the keywords of the domain ${domainId}`);
                     return callback(error, null);
                 }
                 return callback(null, res.result);
             });
         },
-        intents: (callback) => {
+        sayings: (callback) => {
 
-            server.inject(`/domain/${domainId}/intent`, (res) => {
+            server.inject(`/domain/${domainId}/saying`, (res) => {
 
                 if (res.statusCode !== 200){
-                    const error = Boom.create(res.statusCode, `An error occurred getting the intents of the domain ${domainId}`);
+                    const error = Boom.create(res.statusCode, `An error occurred getting the sayings of the domain ${domainId}`);
                     return callback(error, null);
                 }
-                return callback(null, res.result.intents);
+                return callback(null, res.result.sayings);
             });
         }
 

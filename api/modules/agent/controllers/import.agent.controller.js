@@ -3,7 +3,7 @@ const Async = require('async');
 const Boom = require('boom');
 const Flat = require('../../../helpers/flat');
 const _ = require('lodash');
-const IntentTools = require('../../intent/tools');
+const SayingTools = require('../../saying/tools');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 const Status = require('../../../helpers/status.json');
 
@@ -14,7 +14,7 @@ module.exports = (request, reply) => {
     const server = request.server;
     const redis = server.app.redis;
     let agentResult;
-    const entitiesDir = {};
+    const keywordsDir = {};
 
     Async.series({
         agentId: (cb) => {
@@ -47,7 +47,7 @@ module.exports = (request, reply) => {
         agent: (cb) => {
 
             let clonedAgent = _.cloneDeep(agent);
-            delete clonedAgent.entities;
+            delete clonedAgent.keywords;
             delete clonedAgent.domains;
             delete clonedAgent.webhook;
             delete clonedAgent.postFormat;
@@ -71,65 +71,65 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         agentResult = result.agent;
-        Async.map(agent.entities, (entity, callbackAddEntities) => {
+        Async.map(agent.keywords, (keyword, callbackAddKeywords) => {
 
-            let entityId;
+            let keywordId;
             Async.waterfall([
                 (cb) => {
 
-                    redis.incr('entityId', (err, newEntityId) => {
+                    redis.incr('keywordId', (err, newKeywordId) => {
 
                         if (err) {
-                            const error = Boom.badImplementation('An error occurred getting the new entity id.');
+                            const error = Boom.badImplementation('An error occurred getting the new keyword id.');
                             return cb(error);
                         }
-                        entityId = newEntityId;
+                        keywordId = newKeywordId;
                         return cb(null);
                     });
                 },
                 (cb) => {
 
-                    redis.zadd(`agentEntities:${agentId}`, 'NX', entityId, entity.entityName, (err, addResponse) => {
+                    redis.zadd(`agentKeywords:${agentId}`, 'NX', keywordId, keyword.keywordName, (err, addResponse) => {
 
                         if (err) {
-                            const error = Boom.badImplementation('An error occurred adding the name to the entities list.');
+                            const error = Boom.badImplementation('An error occurred adding the name to the keywords list.');
                             return cb(error);
                         }
                         if (addResponse !== 0) {
                             return cb(null);
                         }
-                        const error = Boom.badRequest(`A entity with the name ${entity.entityName} already exists in the agent ${agent.agentName}.`);
+                        const error = Boom.badRequest(`A keyword with the name ${keyword.keywordName} already exists in the agent ${agent.agentName}.`);
                         return cb(error);
                     });
                 },
                 (cb) => {
 
-                    entity = Object.assign({ id: entityId, agent: agentResult.agentName }, entity);
-                    entity.regex = !entity.regex ? '' : entity.regex;
-                    const flatEntity = RemoveBlankArray(Flat(entity));
-                    redis.hmset(`entity:${entityId}`, flatEntity, (err) => {
+                    keyword = Object.assign({ id: keywordId, agent: agentResult.agentName }, keyword);
+                    keyword.regex = !keyword.regex ? '' : keyword.regex;
+                    const flatKeyword = RemoveBlankArray(Flat(keyword));
+                    redis.hmset(`keyword:${keywordId}`, flatKeyword, (err) => {
 
                         if (err) {
-                            const error = Boom.badImplementation('An error occurred adding the entity data.');
+                            const error = Boom.badImplementation('An error occurred adding the keyword data.');
                             return cb(error);
                         }
-                        entitiesDir[entity.entityName] = entityId;
-                        return cb(null, entity);
+                        keywordsDir[keyword.keywordName] = keywordId;
+                        return cb(null, keyword);
                     });
                 }
-            ], (errEntity, resultEntity) => {
+            ], (errKeyword, resultKeyword) => {
 
-                if (errEntity) {
-                    return callbackAddEntities(errEntity, null);
+                if (errKeyword) {
+                    return callbackAddKeywords(errKeyword, null);
                 }
-                return callbackAddEntities(null, entity);
+                return callbackAddKeywords(null, keyword);
             });
-        }, (errEntities, resultEntities) => {
+        }, (errKeywords, resultKeywords) => {
 
-            if (errEntities) {
-                return reply(errEntities, null);
+            if (errKeywords) {
+                return reply(errKeywords, null);
             }
-            agentResult.entities = resultEntities;
+            agentResult.keywords = resultKeywords;
             Async.mapLimit(agent.domains, 1, (domain, callbackAddDomains) => {
 
                 let domainId;
@@ -166,7 +166,7 @@ module.exports = (request, reply) => {
 
                         let clonedDomain = _.cloneDeep(domain);
                         clonedDomain.status = Status.outOfDate;
-                        delete clonedDomain.intents;
+                        delete clonedDomain.sayings;
                         delete clonedDomain.model; //This would make that the training process don't try to unload a non existent model
                         delete clonedDomain.lastTraining;
                         clonedDomain = Object.assign({ id: domainId, agent: agent.agentName }, clonedDomain);
@@ -186,13 +186,13 @@ module.exports = (request, reply) => {
                         return callbackAddDomains(errDomain, null);
                     }
                     domainResult = resultDomain;
-                    Async.map(domain.intents, (intent, callbackAddIntents) => {
+                    Async.map(domain.sayings, (saying, callbackAddSayings) => {
 
-                        let intentId;
+                        let sayingId;
                         Async.series({
-                            entitiesCheck: (cb) => {
+                            keywordsCheck: (cb) => {
 
-                                IntentTools.validateEntitiesTool(redis, agentId, intent.examples, (err) => {
+                                SayingTools.validateKeywordsTool(redis, agentId, saying.examples, (err) => {
 
                                     if (err) {
                                         return cb(err);
@@ -200,104 +200,104 @@ module.exports = (request, reply) => {
                                     return cb(null);
                                 });
                             },
-                            intentId: (cb) => {
+                            sayingId: (cb) => {
 
-                                redis.incr('intentId', (err, newIntentId) => {
+                                redis.incr('sayingId', (err, newSayingId) => {
 
                                     if (err) {
-                                        const error = Boom.badImplementation('An error occurred getting the new intent id.');
+                                        const error = Boom.badImplementation('An error occurred getting the new saying id.');
                                         return cb(error);
                                     }
-                                    intentId = newIntentId;
+                                    sayingId = newSayingId;
                                     return cb(null);
                                 });
                             },
                             addToDomain: (cb) => {
 
-                                redis.zadd(`domainIntents:${domainId}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
+                                redis.zadd(`domainSayings:${domainId}`, 'NX', sayingId, saying.sayingName, (err, addResponse) => {
 
                                     if (err) {
-                                        const error = Boom.badImplementation('An error occurred adding the name to the intents list.');
+                                        const error = Boom.badImplementation('An error occurred adding the name to the sayings list.');
                                         return cb(error);
                                     }
                                     if (addResponse !== 0) {
                                         return cb(null);
                                     }
-                                    const error = Boom.badRequest(`A intent with the name ${intent.intentName} already exists in the domain ${domain.domainName}.`);
+                                    const error = Boom.badRequest(`A saying with the name ${saying.sayingName} already exists in the domain ${domain.domainName}.`);
                                     return cb(error);
                                 });
                             },
-                            addToEntities: (cb) => {
+                            addToKeywords: (cb) => {
 
-                                Async.eachSeries(intent.examples, (example, nextIntent) => {
+                                Async.eachSeries(saying.examples, (example, nextSaying) => {
 
-                                    Async.eachSeries(example.entities, (entity, nextEntity) => {
+                                    Async.eachSeries(example.keywords, (keyword, nextKeyword) => {
 
-                                        //Only system entities have an extractor specified, so ignore sys entities
-                                        if (entity.extractor) {
-                                            return nextEntity(null);
+                                        //Only system keywords have an extractor specified, so ignore sys keywords
+                                        if (keyword.extractor) {
+                                            return nextKeyword(null);
                                         }
-                                        redis.zadd(`entityIntents:${entitiesDir[entity.entity]}`, 'NX', intentId, intent.intentName, (err, addResponse) => {
+                                        redis.zadd(`keywordSayings:${keywordsDir[keyword.keyword]}`, 'NX', sayingId, saying.sayingName, (err, addResponse) => {
 
                                             if (err) {
-                                                const error = Boom.badImplementation('An error occurred adding the intent to the entity list.');
-                                                return nextEntity(error);
+                                                const error = Boom.badImplementation('An error occurred adding the saying to the keyword list.');
+                                                return nextKeyword(error);
                                             }
-                                            entity.entityId = entitiesDir[entity.entity];
-                                            return nextEntity(null);
+                                            keyword.keywordId = keywordsDir[keyword.keyword];
+                                            return nextKeyword(null);
                                         });
-                                    }, nextIntent);
+                                    }, nextSaying);
                                 }, cb);
                             },
-                            intent: (cb) => {
+                            saying: (cb) => {
 
-                                let clonedIntent = _.cloneDeep(intent);
-                                delete clonedIntent.scenario;
-                                delete clonedIntent.webhook;
-                                delete clonedIntent.postFormat;
-                                clonedIntent = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedIntent);
-                                clonedIntent.examples = _.map(clonedIntent.examples, (example) => {
+                                let clonedSaying = _.cloneDeep(saying);
+                                delete clonedSaying.scenario;
+                                delete clonedSaying.webhook;
+                                delete clonedSaying.postFormat;
+                                clonedSaying = Object.assign({ id: sayingId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedSaying);
+                                clonedSaying.examples = _.map(clonedSaying.examples, (example) => {
 
-                                    if (example.entities && example.entities.length > 0) {
+                                    if (example.keywords && example.keywords.length > 0) {
 
-                                        const entities = _.sortBy(example.entities, (entity) => {
+                                        const keywords = _.sortBy(example.keywords, (keyword) => {
 
-                                            return entity.start;
+                                            return keyword.start;
                                         });
-                                        example.entities = entities;
+                                        example.keywords = keywords;
                                     }
                                     return example;
                                 });
-                                const flatIntent = RemoveBlankArray(Flat(clonedIntent));
-                                redis.hmset(`intent:${intentId}`, flatIntent, (err) => {
+                                const flatSaying = RemoveBlankArray(Flat(clonedSaying));
+                                redis.hmset(`saying:${sayingId}`, flatSaying, (err) => {
 
                                     if (err) {
-                                        const error = Boom.badImplementation('An error occurred adding the intent data.');
+                                        const error = Boom.badImplementation('An error occurred adding the saying data.');
                                         return cb(error);
                                     }
-                                    return cb(null, clonedIntent);
+                                    return cb(null, clonedSaying);
                                 });
                             }
-                        }, (errAddIntent, resultAddIntent) => {
+                        }, (errAddSaying, resultAddSaying) => {
 
-                            if (errAddIntent) {
-                                return callbackAddIntents(errAddIntent, null);
+                            if (errAddSaying) {
+                                return callbackAddSayings(errAddSaying, null);
                             }
 
-                            const resultIntent = resultAddIntent.intent;
+                            const resultSaying = resultAddSaying.saying;
 
-                            IntentTools.updateEntitiesDomainTool(server, redis, resultIntent, agentId, domainId, null, (errUpdateEntitiesDomains) => {
+                            SayingTools.updateKeywordsDomainTool(server, redis, resultSaying, agentId, domainId, null, (errUpdateKeywordsDomains) => {
 
-                                if (errUpdateEntitiesDomains) {
-                                    return callbackAddIntents(errUpdateEntitiesDomains);
+                                if (errUpdateKeywordsDomains) {
+                                    return callbackAddSayings(errUpdateKeywordsDomains);
                                 }
-                                if (intent.scenario) {
+                                if (saying.scenario) {
 
                                     let scenarioId;
                                     Async.series({
                                         fathersCheck: (cb) => {
 
-                                            IntentTools.validateEntitiesScenarioTool(redis, agentId, intent.scenario.slots, (err) => {
+                                            SayingTools.validateKeywordsScenarioTool(redis, agentId, saying.scenario.slots, (err) => {
 
                                                 if (err) {
                                                     return cb(err);
@@ -319,10 +319,10 @@ module.exports = (request, reply) => {
                                         },
                                         scenario: (cb) => {
 
-                                            let scenarioToInsert = intent.scenario;
-                                            scenarioToInsert = Object.assign({ id: scenarioId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, scenarioToInsert);
+                                            let scenarioToInsert = saying.scenario;
+                                            scenarioToInsert = Object.assign({ id: scenarioId, agent: agentResult.agentName, domain: domainResult.domainName, saying: resultSaying.sayingName }, scenarioToInsert);
                                             const flatScenario = RemoveBlankArray(Flat(scenarioToInsert));
-                                            redis.hmset(`scenario:${intentId}`, flatScenario, (err) => {
+                                            redis.hmset(`scenario:${sayingId}`, flatScenario, (err) => {
 
                                                 if (err) {
                                                     const error = Boom.badImplementation('An error occurred adding the scenario data.');
@@ -334,70 +334,70 @@ module.exports = (request, reply) => {
                                     }, (errScenario, resultScenario) => {
 
                                         if (errScenario) {
-                                            return callbackAddIntents(errScenario, null);
+                                            return callbackAddSayings(errScenario, null);
                                         }
-                                        resultIntent.scenario = resultScenario.scenario;
+                                        resultSaying.scenario = resultScenario.scenario;
                                         Async.parallel([
-                                            (callbackAddWebhookToIntent) => {
+                                            (callbackAddWebhookToSaying) => {
 
-                                                if (intent.webhook) {
-                                                    let webhookToInsert = intent.webhook;
-                                                    webhookToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, webhookToInsert);
+                                                if (saying.webhook) {
+                                                    let webhookToInsert = saying.webhook;
+                                                    webhookToInsert = Object.assign({ id: sayingId, agent: agentResult.agentName, domain: domainResult.domainName, saying: resultSaying.sayingName }, webhookToInsert);
                                                     const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
-                                                    redis.hmset(`intentWebhook:${intentId}`, flatWebhook, (err) => {
+                                                    redis.hmset(`sayingWebhook:${sayingId}`, flatWebhook, (err) => {
 
                                                         if (err) {
                                                             const error = Boom.badImplementation('An error occurred adding the webhook data.');
-                                                            return callbackAddWebhookToIntent(error, null);
+                                                            return callbackAddWebhookToSaying(error, null);
                                                         }
-                                                        resultIntent.webhook = webhookToInsert;
-                                                        return callbackAddWebhookToIntent(null);
+                                                        resultSaying.webhook = webhookToInsert;
+                                                        return callbackAddWebhookToSaying(null);
                                                     });
                                                 }
                                                 else {
-                                                    return callbackAddWebhookToIntent(null);
+                                                    return callbackAddWebhookToSaying(null);
                                                 }
                                             },
-                                            (callbackAddPostFormatToIntent) => {
+                                            (callbackAddPostFormatToSaying) => {
 
-                                                if (intent.postFormat) {
-                                                    let postFormatToInsert = intent.postFormat;
-                                                    postFormatToInsert = Object.assign({ id: intentId, agent: agentResult.agentName, domain: domainResult.domainName, intent: resultIntent.intentName }, postFormatToInsert);
+                                                if (saying.postFormat) {
+                                                    let postFormatToInsert = saying.postFormat;
+                                                    postFormatToInsert = Object.assign({ id: sayingId, agent: agentResult.agentName, domain: domainResult.domainName, saying: resultSaying.sayingName }, postFormatToInsert);
                                                     const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
-                                                    redis.hmset(`intentPostFormat:${intentId}`, flatPostFormat, (err) => {
+                                                    redis.hmset(`sayingPostFormat:${sayingId}`, flatPostFormat, (err) => {
 
                                                         if (err) {
                                                             const error = Boom.badImplementation('An error occurred adding the post format data.');
-                                                            return callbackAddPostFormatToIntent(error, null);
+                                                            return callbackAddPostFormatToSaying(error, null);
                                                         }
-                                                        resultIntent.postFormat = postFormatToInsert;
-                                                        return callbackAddPostFormatToIntent(null);
+                                                        resultSaying.postFormat = postFormatToInsert;
+                                                        return callbackAddPostFormatToSaying(null);
                                                     });
                                                 }
                                                 else {
-                                                    return callbackAddPostFormatToIntent(null);
+                                                    return callbackAddPostFormatToSaying(null);
                                                 }
                                             }
                                         ], (err) => {
 
                                             if (err){
-                                                callbackAddIntents(err);
+                                                callbackAddSayings(err);
                                             }
-                                            callbackAddIntents(null, resultIntent);
+                                            callbackAddSayings(null, resultSaying);
                                         });
                                     });
                                 }
                                 else {
-                                    return callbackAddIntents(null, resultIntent);
+                                    return callbackAddSayings(null, resultSaying);
                                 }
                             });
                         });
-                    }, (errIntents, resultIntents) => {
+                    }, (errSayings, resultSayings) => {
 
-                        if (errIntents) {
-                            return reply(errIntents, null);
+                        if (errSayings) {
+                            return reply(errSayings, null);
                         }
-                        domainResult.intents = resultIntents;
+                        domainResult.sayings = resultSayings;
                         return callbackAddDomains(null, domainResult);
                     });
                 });

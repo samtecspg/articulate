@@ -32,40 +32,40 @@ module.exports = (request, reply) => {
         (callbackDeleteDomainSons) => {
 
             Async.waterfall([
-                (callbackGetIntents) => {
+                (callbackGetSayings) => {
 
-                    server.inject(`/domain/${domain.id}/intent`, (res) => {
+                    server.inject(`/domain/${domain.id}/saying`, (res) => {
 
                         if (res.statusCode !== 200){
-                            const error = Boom.create(res.statusCode, `An error occurred getting the intents to delete of the domain ${domainId}`);
-                            return callbackGetIntents(error, null);
+                            const error = Boom.create(res.statusCode, `An error occurred getting the sayings to delete of the domain ${domainId}`);
+                            return callbackGetSayings(error, null);
                         }
-                        requiresRetrain = res.result.intents.length > 0;
-                        return callbackGetIntents(null, res.result.intents);
+                        requiresRetrain = res.result.sayings.length > 0;
+                        return callbackGetSayings(null, res.result.sayings);
                     });
                 },
-                (intents, callbackDeleteIntentAndScenario) => {
+                (sayings, callbackDeleteSayingAndScenario) => {
 
-                    Async.map(intents, (intent, callbackMapOfIntent) => {
+                    Async.map(sayings, (saying, callbackMapOfSaying) => {
 
                         Async.parallel([
-                            (callbackDeleteIntent) => {
+                            (callbackDeleteSaying) => {
 
-                                redis.del(`intent:${intent.id}`, (err, result) => {
+                                redis.del(`saying:${saying.id}`, (err, result) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation(`An error occurred deleting the intent ${intent.id} linked with the domain ${domainId}`);
-                                        return callbackDeleteIntent(error, null);
+                                        const error = Boom.badImplementation(`An error occurred deleting the saying ${saying.id} linked with the domain ${domainId}`);
+                                        return callbackDeleteSaying(error, null);
                                     }
-                                    return callbackDeleteIntent(null);
+                                    return callbackDeleteSaying(null);
                                 });
                             },
                             (callbackDeleteScenario) => {
 
-                                redis.del(`scenario:${intent.id}`, (err, result) => {
+                                redis.del(`scenario:${saying.id}`, (err, result) => {
 
                                     if (err){
-                                        const error = Boom.badImplementation(`An error occurred deleting the scenario of the intent ${intent.id} linked with the domain ${domainId}`);
+                                        const error = Boom.badImplementation(`An error occurred deleting the scenario of the saying ${saying.id} linked with the domain ${domainId}`);
                                         return callbackDeleteScenario(error, null);
                                     }
                                     return callbackDeleteScenario(null);
@@ -74,16 +74,16 @@ module.exports = (request, reply) => {
                         ], (err, result) => {
 
                             if (err){
-                                return callbackMapOfIntent(err);
+                                return callbackMapOfSaying(err);
                             }
-                            return callbackMapOfIntent(null);
+                            return callbackMapOfSaying(null);
                         });
                     }, (err, result) => {
 
                         if (err){
-                            return callbackDeleteIntentAndScenario(err);
+                            return callbackDeleteSayingAndScenario(err);
                         }
-                        return callbackDeleteIntentAndScenario(null);
+                        return callbackDeleteSayingAndScenario(null);
                     });
                 }
             ], (err, result) => {
@@ -108,79 +108,79 @@ module.exports = (request, reply) => {
                         return callbackDeleteDomain(null);
                     });
                 },
-                (callbackDeleteDomainIntentsList) => {
+                (callbackDeleteDomainSayingsList) => {
 
-                    redis.del(`domainIntents:${domainId}`, (err, result) => {
+                    redis.del(`domainSayings:${domainId}`, (err, result) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error occurred deleting the list of intents for domain ${domainId}`);
-                            return callbackDeleteDomainIntentsList(error, null);
+                            const error = Boom.badImplementation(`An error occurred deleting the list of sayings for domain ${domainId}`);
+                            return callbackDeleteDomainSayingsList(error, null);
                         }
-                        return callbackDeleteDomainIntentsList(null);
+                        return callbackDeleteDomainSayingsList(null);
                     });
                 },
-                (callbackDeleteDomainEntitiesListAndRemoveLink) => {
+                (callbackDeleteDomainKeywordsListAndRemoveLink) => {
 
                     Async.waterfall([
-                        (callbackDeleteDomainFromEntities) => {
+                        (callbackDeleteDomainFromKeywords) => {
 
                             Async.waterfall([
-                                (callbackGetEntitiesInDomain) => {
+                                (callbackGetKeywordsInDomain) => {
 
-                                    redis.smembers(`domainEntities:${domainId}`, (err, entities) => {
+                                    redis.smembers(`domainKeywords:${domainId}`, (err, keywords) => {
 
                                         if (err){
-                                            const error = Boom.badImplementation(`An error occurred getting the entities used by the domain ${domainId}`);
-                                            return callbackGetEntitiesInDomain(error);
+                                            const error = Boom.badImplementation(`An error occurred getting the keywords used by the domain ${domainId}`);
+                                            return callbackGetKeywordsInDomain(error);
                                         }
-                                        return callbackGetEntitiesInDomain(null, entities);
+                                        return callbackGetKeywordsInDomain(null, keywords);
                                     });
                                 },
-                                (entities, callbackRemoveLinkForEachEntity) => {
+                                (keywords, callbackRemoveLinkForEachKeyword) => {
 
-                                    Async.map(entities, (entity, callbackMapOfEntity) => {
+                                    Async.map(keywords, (keyword, callbackMapOfKeyword) => {
 
-                                        redis.srem(`entityDomain:${entity}`, domainId, (err, removeResult) => {
+                                        redis.srem(`keywordDomain:${keyword}`, domainId, (err, removeResult) => {
 
                                             if (err){
-                                                const error = Boom.badImplementation( `An error occurred removing the domain ${domainId} from the list of domains using the entity ${entity.id}`);
-                                                return callbackMapOfEntity(error);
+                                                const error = Boom.badImplementation( `An error occurred removing the domain ${domainId} from the list of domains using the keyword ${keyword.id}`);
+                                                return callbackMapOfKeyword(error);
                                             }
-                                            return callbackMapOfEntity(null);
+                                            return callbackMapOfKeyword(null);
                                         });
                                     }, (err, result) => {
 
                                         if (err){
-                                            return callbackRemoveLinkForEachEntity(err);
+                                            return callbackRemoveLinkForEachKeyword(err);
                                         }
-                                        return callbackRemoveLinkForEachEntity(null);
+                                        return callbackRemoveLinkForEachKeyword(null);
                                     });
                                 }
                             ], (err, result) => {
 
                                 if (err){
-                                    return callbackDeleteDomainFromEntities(err);
+                                    return callbackDeleteDomainFromKeywords(err);
                                 }
-                                return callbackDeleteDomainFromEntities(null);
+                                return callbackDeleteDomainFromKeywords(null);
                             });
                         },
-                        (callbackDeleteDomainEntitiesList) => {
+                        (callbackDeleteDomainKeywordsList) => {
 
-                            redis.del(`domainEntities:${domainId}`, (err, result) => {
+                            redis.del(`domainKeywords:${domainId}`, (err, result) => {
 
                                 if (err){
-                                    const error = Boom.badImplementation(`An error occurred deleting the list of entities used by the domain ${domainId}`);
-                                    return callbackDeleteDomainEntitiesList(error, null);
+                                    const error = Boom.badImplementation(`An error occurred deleting the list of keywords used by the domain ${domainId}`);
+                                    return callbackDeleteDomainKeywordsList(error, null);
                                 }
-                                return callbackDeleteDomainEntitiesList(null);
+                                return callbackDeleteDomainKeywordsList(null);
                             });
                         }
                     ], (err, result) => {
 
                         if (err){
-                            return callbackDeleteDomainEntitiesListAndRemoveLink(err);
+                            return callbackDeleteDomainKeywordsListAndRemoveLink(err);
                         }
-                        return callbackDeleteDomainEntitiesListAndRemoveLink(null);
+                        return callbackDeleteDomainKeywordsListAndRemoveLink(null);
                     });
                 },
                 (callbackDeleteDomainFromTheAgent) => {

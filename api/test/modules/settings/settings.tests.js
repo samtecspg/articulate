@@ -60,13 +60,13 @@ suite('settings', () => {
         });
     });
 
-    suite('/settings/intentClassifierPipeline', () => {
+    suite('/settings/sayingClassifierPipeline', () => {
 
         suite('/get', () => {
 
             test('should respond with 200 successful operation and return an object', (done) => {
 
-                server.inject('/settings/intentClassifierPipeline', (res) => {
+                server.inject('/settings/sayingClassifierPipeline', (res) => {
 
                     expect(res.statusCode).to.equal(200);
                     expect(res.result).to.be.an.array();
@@ -77,13 +77,13 @@ suite('settings', () => {
         });
     });
 
-    suite('/settings/entityClassifierPipeline', () => {
+    suite('/settings/keywordClassifierPipeline', () => {
 
         suite('/get', () => {
 
             test('should respond with 200 successful operation and return an object', (done) => {
 
-                server.inject('/settings/entityClassifierPipeline', (res) => {
+                server.inject('/settings/keywordClassifierPipeline', (res) => {
 
                     expect(res.statusCode).to.equal(200);
                     expect(res.result).to.be.an.array();

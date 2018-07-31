@@ -6,18 +6,21 @@ const FindByIdController = require('./findById.agent.controller');
 const FindByNameController = require('./findByName.agent.controller');
 const FindDomainsByAgentIdController = require('./findDomainsByAgentId.agent.controller');
 const FindDomainByIdByAgentIdController = require('./findDomainByIdByAgentId.agent.controller');
-const FindEntitiesByAgentIdController = require('./findEntitiesByAgentId.agent.controller');
-const FindEntityByIdByAgentIdController = require('./findEntityByIdByAgentId.agent.controller');
-const FindIntentByIdInDomainByIdByAgentIdController = require('./findIntentByIdInDomainByIdByAgentId.agent.controller');
-const FindIntentsInDomainByIdByAgentIdController = require('./findIntentsInDomainByIdByAgentId.agent.controller');
-const FindIntentScenarioInDomainByIdByAgentIdController = require('./findIntentScenarioInDomainByIdByAgentId.agent.controller');
-const FindIntentWebhookInDomainByIdByAgentIdController = require('./findIntentWebhookInDomainByIdByAgentId.agent.controller');
+const FindKeywordsByAgentIdController = require('./findKeywordsByAgentId.agent.controller');
+const FindKeywordByIdByAgentIdController = require('./findKeywordByIdByAgentId.agent.controller');
+const FindActionByIdInDomainByIdByAgentIdController = require('./findActionByIdInDomainByIdByAgentId.agent.controller');
+const FindActionsInDomainByIdByAgentIdController = require('./findActionsInDomainByIdByAgentId.agent.controller');
+const FindSayingByIdInDomainByIdByAgentIdController = require('./findSayingByIdInDomainByIdByAgentId.agent.controller');
+const FindSayingsInDomainByIdByAgentIdController = require('./findSayingsInDomainByIdByAgentId.agent.controller');
+const FindActionWebhookInDomainByIdByAgentIdController = require('./findActionWebhookInDomainByIdByAgentId.agent.controller');
+const FindActionPostFormatInDomainByIdByAgentIdController = require('./findActionPostFormatInDomainByIdByAgentId.agent.controller');
 const UpdateByIdController = require('./updateById.agent.controller');
 const ParseController = require('./parse.agent.controller');
 const ConverseController = require('./converse.agent.controller');
 const ExportController = require('./export.agent.controller');
 const ImportController = require('./import.agent.controller');
-const FindIntentsByAgentIdController = require('./findIntentsByAgentId.agent.controller');
+const FindSayingsByAgentIdController = require('./findSayingsByAgentId.agent.controller');
+const FindActionsByAgentIdController = require('./findActionsByAgentId.agent.controller');
 const AddWebhookController = require('./addWebhook.agent.controller');
 const AddPostFormatController = require('./addPostFormat.agent.controller');
 const FindWebhookController = require('./findWebhook.agent.controller');
@@ -27,7 +30,6 @@ const UpdatePostFormatController = require('./updatePostFormat.agent.controller'
 const UpdateWebhookController = require('./updateWebhook.agent.controller');
 const DeleteWebhookController = require('./deleteWebhook.agent.controller');
 const TrainController = require('./train.agent.controller');
-const FindIntentPostFormatInDomainByIdByAgentIdController = require('./findIntentPostFormatInDomainByIdByAgentId.agent.controller');
 const UpdateSettingsController = require('./putSettings.agent.controller');
 const FindSettingsByNameController = require('./findSettingsByName.agent.controller');
 const FindAllSettingsController = require('./findAllSettings.agent.controller');
@@ -45,23 +47,25 @@ const AgentController = {
 
     findByName: FindByNameController,
 
-    findEntitiesByAgentId: FindEntitiesByAgentIdController,
+    findKeywordsByAgentId: FindKeywordsByAgentIdController,
 
-    findEntityByIdByAgentId: FindEntityByIdByAgentIdController,
+    findKeywordByIdByAgentId: FindKeywordByIdByAgentIdController,
 
     findDomainsByAgentId: FindDomainsByAgentIdController,
 
     findDomainByIdByAgentId: FindDomainByIdByAgentIdController,
 
-    findIntentByIdInDomainByIdByAgentId: FindIntentByIdInDomainByIdByAgentIdController,
+    findActionByIdInDomainByIdByAgentId: FindActionByIdInDomainByIdByAgentIdController,
 
-    findIntentPostFormatInDomainByIdByAgentId: FindIntentPostFormatInDomainByIdByAgentIdController,
+    findActionsInDomainByIdByAgentId: FindActionsInDomainByIdByAgentIdController,
 
-    findIntentsInDomainByIdByAgentId: FindIntentsInDomainByIdByAgentIdController,
+    findSayingByIdInDomainByIdByAgentId: FindSayingByIdInDomainByIdByAgentIdController,
 
-    findIntentScenarioInDomainByIdByAgentId: FindIntentScenarioInDomainByIdByAgentIdController,
+    findSayingsInDomainByIdByAgentId: FindSayingsInDomainByIdByAgentIdController,
 
-    findIntentWebhookInDomainByIdByAgentId: FindIntentWebhookInDomainByIdByAgentIdController,
+    findActionWebhookInDomainByIdByAgentId: FindActionWebhookInDomainByIdByAgentIdController,
+
+    findActionPostFormatInDomainByIdByAgentId: FindActionPostFormatInDomainByIdByAgentIdController,
 
     updateById: UpdateByIdController,
 
@@ -73,7 +77,9 @@ const AgentController = {
 
     import: ImportController,
 
-    findIntentsByAgentId: FindIntentsByAgentIdController,
+    findSayingsByAgentId: FindSayingsByAgentIdController,
+
+    findActionsByAgentId: FindActionsByAgentIdController,
 
     addWebhook: AddWebhookController,
 

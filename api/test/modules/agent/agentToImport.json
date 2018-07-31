@@ -16,10 +16,10 @@
     "webhookPayload": "",
     "webhookPayloadType": "None"
   },
-  "entities": [
+  "keywords": [
     {
       "uiColor": "#e91e63",
-      "entityName": "Toppings",
+      "keywordName": "Toppings",
       "type": "learned",
       "regex": null,
       "examples": [
@@ -72,49 +72,49 @@
     {
       "enabled": true,
       "domainName": "Orders",
-      "intentThreshold": 0.7,
-      "intents": [
+      "sayingThreshold": 0.7,
+      "sayings": [
         {
-          "intentName": "Order pizza",
+          "sayingName": "Order pizza",
           "useWebhook": false,
           "usePostFormat": false,
           "examples": [
             {
               "userSays": "I want a ham and cheese pizza",
-              "entities": [
+              "keywords": [
                 {
                   "end": 12,
                   "start": 9,
                   "value": "ham",
-                  "entity": "Toppings"
+                  "keyword": "Toppings"
                 },
                 {
                   "end": 23,
                   "value": "cheese",
                   "start": 17,
-                  "entity": "Toppings"
+                  "keyword": "Toppings"
                 }
               ]
             },
             {
               "userSays": "Give me a pizza with mushrooms",
-              "entities": [
+              "keywords": [
                 {
                   "end": 30,
                   "value": "mushrooms",
                   "start": 21,
-                  "entity": "Toppings"
+                  "keyword": "Toppings"
                 }
               ]
             },
             {
               "userSays": "I would like a pizza with chicken",
-              "entities": [
+              "keywords": [
                 {
                   "end": 33,
                   "start": 26,
                   "value": "chicken",
-                  "entity": "Toppings"
+                  "keyword": "Toppings"
                 }
               ]
             }
@@ -123,7 +123,7 @@
             "scenarioName": "Order pizza",
             "slots": [
               {
-                "entity": "Toppings",
+                "keyword": "Toppings",
                 "isList": true,
                 "slotName": "Toppings",
                 "isRequired": true,
@@ -132,7 +132,7 @@
                 ]
               }
             ],
-            "intentResponses": [
+            "sayingResponses": [
               "I will prepare you a pizza with {{andList slots.Toppings.original}}, ok?"
             ]
           }
@@ -142,46 +142,46 @@
     {
       "enabled": true,
       "domainName": "Small talk",
-      "intentThreshold": 0.7,
-      "intents": [
+      "sayingThreshold": 0.7,
+      "sayings": [
         {
-          "intentName": "Greeting",
+          "sayingName": "Greeting",
           "useWebhook": false,
           "usePostFormat": false,
           "examples": [
             {
-              "entities": [],
+              "keywords": [],
               "userSays": "Hola"
             },
             {
-              "entities": [],
+              "keywords": [],
               "userSays": "hi"
             },
             {
-              "entities": [],
+              "keywords": [],
               "userSays": "hello"
             },
             {
               "userSays": "hey",
-              "entities": []
+              "keywords": []
             },
             {
               "userSays": "Hey",
-              "entities": []
+              "keywords": []
             },
             {
               "userSays": "Hello",
-              "entities": []
+              "keywords": []
             },
             {
-              "entities": [],
+              "keywords": [],
               "userSays": "Hi"
             }
           ],
           "scenario": {
             "slots": [],
             "scenarioName": "Greeting",
-            "intentResponses": [
+            "sayingResponses": [
               "Hi, how can I help you?"
             ]
           }
@@ -198,13 +198,13 @@
         "name": "tokenizer_spacy"
       },
       {
-        "name": "intent_featurizer_spacy"
+        "name": "saying_featurizer_spacy"
       },
       {
-        "name": "intent_classifier_sklearn"
+        "name": "saying_classifier_sklearn"
       }
     ],
-    "intentClassifierPipeline": [
+    "sayingClassifierPipeline": [
       {
         "name": "nlp_spacy"
       },
@@ -212,7 +212,7 @@
         "name": "tokenizer_spacy"
       },
       {
-        "name": "intent_featurizer_spacy"
+        "name": "saying_featurizer_spacy"
       },
       {
         "name": "ner_crf"
@@ -221,13 +221,13 @@
         "name": "ner_synonyms"
       },
       {
-        "name": "intent_classifier_sklearn"
+        "name": "saying_classifier_sklearn"
       },
       {
         "name": "ner_spacy"
       }
     ],
-    "entityClassifierPipeline": [
+    "keywordClassifierPipeline": [
       {
         "name": "nlp_spacy"
       },

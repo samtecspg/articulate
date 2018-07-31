@@ -16,8 +16,8 @@ let preCreatedAgent = null;
 let agentName = null;
 let agentId = null;
 let domainName = null;
-let entityId = null;
-let intentId = null;
+let keywordId = null;
+let sayingId = null;
 
 before((done) => {
 
@@ -44,7 +44,7 @@ before((done) => {
                         agentName = preCreatedAgent.agentName;
                         agentId = preCreatedAgent.id;
                         domainName = preCreatedAgent.domains[0].domainName;
-                        entityId = preCreatedAgent.entities[0].id;
+                        keywordId = preCreatedAgent.keywords[0].id;
                         done();
                     }
                 });
@@ -53,38 +53,38 @@ before((done) => {
     });
 });
 
-suite('/intent', () => {
+suite('/saying', () => {
 
     suite('/post', () => {
 
-        test('should respond with 200 successful operation and return an intent object', { timeout: 60000 }, (done) => {
+        test('should respond with 200 successful operation and return an saying object', { timeout: 60000 }, (done) => {
 
             const data = {
                 agent: agentName,
                 domain: domainName,
-                intentName: 'Test Intent 2',
+                sayingName: 'Test Saying 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 13,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 15,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     }
@@ -95,15 +95,15 @@ suite('/intent', () => {
 
             const options = {
                 method: 'POST',
-                url: '/intent',
+                url: '/saying',
                 payload: data
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.intentName).to.equal(data.intentName);
-                intentId = res.result.id;
+                expect(res.result.sayingName).to.equal(data.sayingName);
+                sayingId = res.result.id;
 
                 done();
             });
@@ -114,7 +114,7 @@ suite('/intent', () => {
             const data = { invalid: true };
             const options = {
                 method: 'POST',
-                url: '/intent',
+                url: '/saying',
                 payload: data
             };
 
@@ -131,29 +131,29 @@ suite('/intent', () => {
             const data = {
                 agent: '-1',
                 domain: domainName,
-                intentName: 'Test Intent 2',
+                sayingName: 'Test Saying 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     }
@@ -164,7 +164,7 @@ suite('/intent', () => {
 
             const options = {
                 method: 'POST',
-                url: '/intent',
+                url: '/saying',
                 payload: data
             };
 
@@ -181,29 +181,29 @@ suite('/intent', () => {
             const data = {
                 agent: agentName,
                 domain: '-1',
-                intentName: 'Test Intent 2',
+                sayingName: 'Test Saying 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     }
@@ -214,7 +214,7 @@ suite('/intent', () => {
 
             const options = {
                 method: 'POST',
-                url: '/intent',
+                url: '/saying',
                 payload: data
             };
 
@@ -226,34 +226,34 @@ suite('/intent', () => {
             });
         });
 
-        test('should respond with 400 because entity doesn\'t exists', (done) => {
+        test('should respond with 400 because keyword doesn\'t exists', (done) => {
 
             const data = {
                 agent: agentName,
                 domain: domainName,
-                intentName: 'Test Intent 2',
+                sayingName: 'Test Saying 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: '-1',
-                                entityId
+                                keyword: '-1',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: '-1',
-                                entityId
+                                keyword: '-1',
+                                keywordId
                             }
                         ]
                     }
@@ -264,14 +264,14 @@ suite('/intent', () => {
 
             const options = {
                 method: 'POST',
-                url: '/intent',
+                url: '/saying',
                 payload: data
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.be.equal(`The entity with the name -1 doesn't exist in the agent ${agentId}`);
+                expect(res.result.message).to.be.equal(`The keyword with the name -1 doesn't exist in the agent ${agentId}`);
                 done();
             });
         });
@@ -280,20 +280,20 @@ suite('/intent', () => {
 
 });
 
-suite('/intent/{id}', () => {
+suite('/saying/{id}', () => {
 
     suite('/get', () => {
 
         test('should respond with 200 successful operation and return a single object', (done) => {
 
             const data = {
-                intentName: 'Test Intent 2'
+                sayingName: 'Test Saying 2'
             };
 
-            server.inject('/intent/' + intentId, (res) => {
+            server.inject('/saying/' + sayingId, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.intentName).to.be.equal(data.intentName);
+                expect(res.result.sayingName).to.be.equal(data.sayingName);
                 done();
             });
         });
@@ -304,10 +304,10 @@ suite('/intent/{id}', () => {
                 id: '-1'
             };
 
-            server.inject('/intent/' + data.id, (res) => {
+            server.inject('/saying/' + data.id, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('The specified intent doesn\'t exists');
+                expect(res.result.message).to.contain('The specified saying doesn\'t exists');
                 done();
             });
         });
@@ -320,29 +320,29 @@ suite('/intent/{id}', () => {
             const data = {
                 agent: agentName,
                 domain: domainName,
-                intentName: 'Test Intent 2 Updated',
+                sayingName: 'Test Saying 2 Updated',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     }
@@ -351,29 +351,29 @@ suite('/intent/{id}', () => {
             };
 
             const updatedData = {
-                intentName: 'Test Intent 2 Updated',
+                sayingName: 'Test Saying 2 Updated',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     }
@@ -382,14 +382,14 @@ suite('/intent/{id}', () => {
 
             const options = {
                 method: 'PUT',
-                url: '/intent/' + intentId,
+                url: '/saying/' + sayingId,
                 payload: updatedData
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(200);
-                expect(res.result.intentName).to.be.equal(data.intentName);
+                expect(res.result.sayingName).to.be.equal(data.sayingName);
                 expect(res.result.examples.length).to.be.equal(updatedData.examples.length);
                 done();
             });
@@ -398,29 +398,29 @@ suite('/intent/{id}', () => {
         test('should respond with 404 Not Found', (done) => {
 
             const data = {
-                intentName: 'Test Intent 2',
+                sayingName: 'Test Saying 2',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: 'Test Entity',
-                                entityId
+                                keyword: 'Test Keyword',
+                                keywordId
                             }
                         ]
                     }
@@ -430,7 +430,7 @@ suite('/intent/{id}', () => {
 
             const options = {
                 method: 'PUT',
-                url: '/intent/-1',
+                url: '/saying/-1',
                 payload: data
             };
 
@@ -445,12 +445,12 @@ suite('/intent/{id}', () => {
         test('should respond with 400 Bad Request', (done) => {
 
             const data = {
-                id: intentId,
+                id: sayingId,
                 invalid: true
             };
             const options = {
                 method: 'PUT',
-                url: '/intent/' + data.id,
+                url: '/saying/' + data.id,
                 payload: data
             };
 
@@ -462,32 +462,32 @@ suite('/intent/{id}', () => {
             });
         });
 
-        test('should respond with 400 because entity doesn\'t exists', (done) => {
+        test('should respond with 400 because keyword doesn\'t exists', (done) => {
 
             const updatedData = {
-                intentName: 'Test Intent Updated',
+                sayingName: 'Test Saying Updated',
                 examples: [
                     {
                         userSays: 'Locate my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 10,
                                 end: 12,
                                 value: 'car',
-                                entity: '-1',
-                                entityId
+                                keyword: '-1',
+                                keywordId
                             }
                         ]
                     },
                     {
                         userSays: 'Where is my car',
-                        entities: [
+                        keywords: [
                             {
                                 start: 12,
                                 end: 14,
                                 value: 'car',
-                                entity: '-1',
-                                entityId
+                                keyword: '-1',
+                                keywordId
                             }
                         ]
                     }
@@ -497,14 +497,14 @@ suite('/intent/{id}', () => {
 
             const options = {
                 method: 'PUT',
-                url: '/intent/' + intentId,
+                url: '/saying/' + sayingId,
                 payload: updatedData
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(400);
-                expect(res.result.message).to.be.equal(`The entity with the name -1 doesn't exist in the agent ${agentId}`);
+                expect(res.result.message).to.be.equal(`The keyword with the name -1 doesn't exist in the agent ${agentId}`);
                 done();
             });
         });
@@ -520,13 +520,13 @@ suite('/intent/{id}', () => {
 
             const options = {
                 method: 'DELETE',
-                url: '/intent/' + data.id
+                url: '/saying/' + data.id
             };
 
             server.inject(options, (res) => {
 
                 expect(res.statusCode).to.equal(404);
-                expect(res.result.message).to.contain('The specified intent doesn\'t exists');
+                expect(res.result.message).to.contain('The specified saying doesn\'t exists');
                 done();
             });
         });
@@ -534,11 +534,11 @@ suite('/intent/{id}', () => {
         test('should respond with 200 successful operation', { timeout: 60000 }, (done) => {
 
             const data = {
-                id: intentId
+                id: sayingId
             };
             const options = {
                 method: 'DELETE',
-                url: '/intent/' + data.id
+                url: '/saying/' + data.id
             };
 
             server.inject(options, (res) => {

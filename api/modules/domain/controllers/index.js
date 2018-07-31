@@ -3,8 +3,8 @@ const AddController = require('./add.domain.controller');
 const FindByIdController = require('./findById.domain.controller');
 const UpdateByIdController = require('./updateById.domain.controller');
 const DeleteByIdController = require('./deleteById.domain.controller');
-const FindEntitiesByDomainIdController = require('./findEntitiesByDomainId.domain.controller');
-const FindIntentsByDomainIdController = require('./findIntentsByDomainId.domain.controller');
+const FindKeywordsByDomainIdController = require('./findKeywordsByDomainId.domain.controller');
+const FindSayingsByDomainIdController = require('./findSayingsByDomainId.domain.controller');
 const TrainController = require('./train.domain.controller');
 
 const DomainController = {
@@ -17,9 +17,9 @@ const DomainController = {
 
     deleteById: DeleteByIdController,
 
-    findEntitiesByDomainId: FindEntitiesByDomainIdController,
+    findKeywordsByDomainId: FindKeywordsByDomainIdController,
 
-    findIntentsByDomainId: FindIntentsByDomainIdController,
+    findSayingsByDomainId: FindSayingsByDomainIdController,
 
     train: TrainController
 };

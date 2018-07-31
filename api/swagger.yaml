@@ -9,13 +9,13 @@ info:
 host: data.samtec.com
 basePath: /nlu/v1
 tags:
-  - name: entity
+  - name: keyword
     description: >-
-      The entity endpoint is used to create, retrieve, update, and delete
-      developer-defined entity objects
-  - name: intent
+      The keyword endpoint is used to create, retrieve, update, and delete
+      developer-defined keyword objects
+  - name: saying
     description: >-
-      The intent endpoint is used to create, retrieve, update, and delete intent
+      The saying endpoint is used to create, retrieve, update, and delete saying
       objects.
   - name: domain
     description: >-
@@ -24,13 +24,13 @@ tags:
 schemes:
   - http
 paths:
-  /entity:
+  /keyword:
     get:
       tags:
-        - entity
+        - keyword
       summary: Retrieves a list of all entitites in the domain
       description: ''
-      operationId: findEntities
+      operationId: findKeywords
       produces:
         - application/json
       responses:
@@ -39,15 +39,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Entity'
+              $ref: '#/definitions/Keyword'
         '404':
-          description: Entities not found
+          description: Keywords not found
     post:
       tags:
-        - entity
-      summary: Creates one or multiple entities
+        - keyword
+      summary: Creates one or multiple keywords
       description: ''
-      operationId: createEntity
+      operationId: createKeyword
       consumes:
         - application/json
       produces:
@@ -55,27 +55,27 @@ paths:
       parameters:
         - in: body
           name: body
-          description: Array with the entities objects that needs to be created
+          description: Array with the keywords objects that needs to be created
           required: true
           schema:
             type: array
             items:
-              $ref: '#/definitions/Entity'
+              $ref: '#/definitions/Keyword'
       responses:
         '200':
           description: successful operation
           schema:
             type: array
             items:
-              $ref: '#/definitions/Entity'
+              $ref: '#/definitions/Keyword'
         '400':
           description: Bad Request
     put:
       tags:
-        - entity
-      summary: Updates or creates miltiple entities
+        - keyword
+      summary: Updates or creates miltiple keywords
       description: ''
-      operationId: upsertEntity
+      operationId: upsertKeyword
       consumes:
         - application/json
       produces:
@@ -84,13 +84,13 @@ paths:
         - in: body
           name: body
           description: >-
-            Array with the entity or entities that needs to be updated or
+            Array with the keyword or keywords that needs to be updated or
             created
           required: true
           schema:
             type: array
             items:
-              $ref: '#/definitions/Entity'
+              $ref: '#/definitions/Keyword'
       responses:
         '200':
           description: successful operation
@@ -99,29 +99,29 @@ paths:
   '/entitiy/{id}':
     get:
       tags:
-        - entity
-      summary: Find the specified entity
-      description: Returns a single entity
+        - keyword
+      summary: Find the specified keyword
+      description: Returns a single keyword
       operationId: findById
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: ID of the entity to return
+          description: ID of the keyword to return
           required: true
           type: string
       responses:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/Entity'
+            $ref: '#/definitions/Keyword'
         '404':
-          description: Entity not found
+          description: Keyword not found
     put:
       tags:
-        - entity
-      summary: Updates the specified entity
+        - keyword
+      summary: Updates the specified keyword
       description: ''
       operationId: updateById
       produces:
@@ -129,26 +129,26 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Entity id to update
+          description: Keyword id to update
           required: true
           type: string
         - in: body
           name: body
-          description: Entity object with updated values
+          description: Keyword object with updated values
           required: true
           schema:
-            $ref: '#/definitions/Entity'
+            $ref: '#/definitions/Keyword'
       responses:
         '200':
           description: successful operation
         '400':
           description: Bad Request
         '404':
-          description: Entity not found
+          description: Keyword not found
     delete:
       tags:
-        - entity
-      summary: Deletes the specified entity
+        - keyword
+      summary: Deletes the specified keyword
       description: ''
       operationId: deleteById
       produces:
@@ -156,21 +156,21 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Entity id to delete
+          description: Keyword id to delete
           required: true
           type: string
       responses:
         '200':
           description: successful operation
         '404':
-          description: Entity not found
-  /intent:
+          description: Keyword not found
+  /saying:
     get:
       tags:
-        - intent
-      summary: Retrieves a list of all intents in the domain
+        - saying
+      summary: Retrieves a list of all sayings in the domain
       description: ''
-      operationId: findIntents
+      operationId: findSayings
       produces:
         - application/json
       responses:
@@ -179,15 +179,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Intent'
+              $ref: '#/definitions/Saying'
         '404':
-          description: Intents not found
+          description: Sayings not found
     post:
       tags:
-        - intent
-      summary: Creates one or multiple intents
+        - saying
+      summary: Creates one or multiple sayings
       description: ''
-      operationId: createIntent
+      operationId: createSaying
       consumes:
         - application/json
       produces:
@@ -195,27 +195,27 @@ paths:
       parameters:
         - in: body
           name: body
-          description: Array with the intents objects that needs to be created
+          description: Array with the sayings objects that needs to be created
           required: true
           schema:
             type: array
             items:
-              $ref: '#/definitions/Intent'
+              $ref: '#/definitions/Saying'
       responses:
         '200':
           description: successful operation
           schema:
             type: array
             items:
-              $ref: '#/definitions/Intent'
+              $ref: '#/definitions/Saying'
         '400':
           description: Bad Request
     put:
       tags:
-        - intent
-      summary: Updates or creates miltiple intents
+        - saying
+      summary: Updates or creates miltiple sayings
       description: ''
-      operationId: upsertIntent
+      operationId: upsertSaying
       consumes:
         - application/json
       produces:
@@ -223,83 +223,83 @@ paths:
       parameters:
         - in: body
           name: body
-          description: Array with the intent or intents that needs to be updated or created
+          description: Array with the saying or sayings that needs to be updated or created
           required: true
           schema:
             type: array
             items:
-              $ref: '#/definitions/Intent'
+              $ref: '#/definitions/Saying'
       responses:
         '200':
           description: successful operation
         '400':
           description: Bad Request
-  '/intent/{id}':
+  '/saying/{id}':
     get:
       tags:
-        - intent
-      summary: Find the specified intent
-      description: Returns a single intent
-      operationId: findIntentById
+        - saying
+      summary: Find the specified saying
+      description: Returns a single saying
+      operationId: findSayingById
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: ID of the intent to return
+          description: ID of the saying to return
           required: true
           type: string
       responses:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/Intent'
+            $ref: '#/definitions/Saying'
         '404':
-          description: Intent not found
+          description: Saying not found
     put:
       tags:
-        - intent
-      summary: Updates the specified intent
+        - saying
+      summary: Updates the specified saying
       description: ''
-      operationId: updateIntentById
+      operationId: updateSayingById
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: Intent id to update
+          description: Saying id to update
           required: true
           type: string
         - in: body
           name: body
-          description: Intent object with updated values
+          description: Saying object with updated values
           required: true
           schema:
-            $ref: '#/definitions/Intent'
+            $ref: '#/definitions/Saying'
       responses:
         '200':
           description: successful operation
         '400':
           description: Bad Request
         '404':
-          description: Intent not found
+          description: Saying not found
     delete:
       tags:
-        - intent
-      summary: Deletes the specified intent
+        - saying
+      summary: Deletes the specified saying
       description: ''
-      operationId: deleteIntentById
+      operationId: deleteSayingById
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: Intent id to delete
+          description: Saying id to delete
           required: true
           type: string
       responses:
         '404':
-          description: Intent not found
+          description: Saying not found
   /domain:
     get:
       tags:
@@ -436,19 +436,19 @@ paths:
       responses:
         '404':
           description: Domain not found
-  '/domain/{id}/intent':
+  '/domain/{id}/saying':
     get:
       tags:
         - domain
-      summary: Find intents for the specified domain
+      summary: Find sayings for the specified domain
       description: ''
-      operationId: findIntentsByid
+      operationId: findSayingsByid
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: ID of the domain to return the intents
+          description: ID of the domain to return the sayings
           required: true
           type: string
       responses:
@@ -457,31 +457,31 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Intent'
+              $ref: '#/definitions/Saying'
         '404':
           description: Domain not found
     post:
       tags:
         - domain
-      summary: Add an array of intents to the specified domain
+      summary: Add an array of sayings to the specified domain
       description: ''
-      operationId: addIntentsByid
+      operationId: addSayingsByid
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: ID of the domain where the intents will be added
+          description: ID of the domain where the sayings will be added
           required: true
           type: string
         - in: body
           name: body
-          description: Array of Intents objects with updated values
+          description: Array of Sayings objects with updated values
           required: true
           schema:
             type: array
             items:
-              $ref: '#/definitions/Intent'
+              $ref: '#/definitions/Saying'
       responses:
         '200':
           description: successful operation
@@ -494,15 +494,15 @@ paths:
     delete:
       tags:
         - domain
-      summary: Deletes the intents for the specified domain
+      summary: Deletes the sayings for the specified domain
       description: ''
-      operationId: deleteIntentsByid
+      operationId: deleteSayingsByid
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: Domain id to where the intents area going to be delete
+          description: Domain id to where the sayings area going to be delete
           required: true
           type: string
       responses:
@@ -604,14 +604,14 @@ definitions:
       name:
         type: string
         example: restaurant
-      entities:
+      keywords:
         type: array
         items:
-          $ref: '#/definitions/Entity'
-      intents:
+          $ref: '#/definitions/Keyword'
+      sayings:
         type: array
         items:
-          $ref: '#/definitions/Intent'
+          $ref: '#/definitions/Saying'
       lastTraining:
         type: string
         format: date-time
@@ -632,7 +632,7 @@ definitions:
         items:
           type: string
         example: '[''indian'',''indi'']'
-  Entity:
+  Keyword:
     type: object
     required:
       - name
@@ -651,19 +651,19 @@ definitions:
         example: >-
           [{'value': 'indian', 'synonyms': ['indian', 'indi']},{'value':
           'italian', 'synonyms': ['italian']}]
-  Intent:
+  Saying:
     type: object
     properties:
       id:
         type: string
         example: 377efb40-9680-49ab-b119-e0345a48639c
-      intent:
+      saying:
         type: string
         example: restaurant_search
       text:
         type: string
         example: I'm looking for indian cuisine
-      entities:
+      keywords:
         type: array
         items:
           type: object
@@ -676,7 +676,7 @@ definitions:
               type: integer
               format: int32
               example: 22
-            entity:
+            keyword:
               type: string
               example: ab0e5373-78e7-4745-a058-6813d81eea60
   Document:
@@ -705,14 +705,14 @@ definitions:
             domain:
               type: string
               example: restaurant
-            intent:
+            saying:
               type: string
               example: restaurant_search
             confidence:
               type: number
               format: float
               example: 0.9127775465094253
-            entities:
+            keywords:
               type: array
               items:
                 type: object
@@ -725,26 +725,26 @@ definitions:
                     type: integer
                     format: int32
                     example: 28
-                  entityValue:
+                  keywordValue:
                     type: string
                     example: chinese
-                  entityName:
+                  keywordName:
                     type: string
                     example: cuisine
         example:
           - domain: food
-            intent: restaurant_search
+            saying: restaurant_search
             confidence: 0.9127775465094253
-            entities:
+            keywords:
               - start: 8
                 end: 15
-                entityValue: chinese
-                entityName: cuisine
+                keywordValue: chinese
+                keywordName: cuisine
           - domain: geo
-            intent: country_search
+            saying: country_search
             confidence: 0.1127775465094253
-            entities:
+            keywords:
               - start: 8
                 end: 15
-                entityValue: China
-                entityName: country
+                keywordValue: China
+                keywordName: country

@@ -2,7 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
-const RespondIntent = require('./respondIntent.agent.tool');
+const RespondSaying = require('./respondSaying.agent.tool');
 const RespondFallback = require('./respondFallback.agent.tool');
 
 const getCurrentContext = (conversationStateObject) => {
@@ -13,29 +13,29 @@ const getCurrentContext = (conversationStateObject) => {
     return null;
 };
 
-const recognizedEntitiesArePartOfTheContext = (currentContext, recognizedEntities) => {
+const recognizedKeywordsArePartOfTheContext = (currentContext, recognizedKeywords) => {
 
-    let results = _.map(recognizedEntities, (recognizedEntity) => {
+    let results = _.map(recognizedKeywords, (recognizedKeyword) => {
 
-        return Object.keys(currentContext.slots).indexOf(recognizedEntity.entity) > -1;
+        return Object.keys(currentContext.slots).indexOf(recognizedKeyword.keyword) > -1;
     });
     results = _.compact(results);
     return results.length > 0;
 };
 
-const getEntitiesFromRasaResults = (conversationStateObject) => {
+const getKeywordsFromRasaResults = (conversationStateObject) => {
 
-    const entities = _.flatMap(conversationStateObject.parse, (domain) => {
+    const keywords = _.flatMap(conversationStateObject.parse, (domain) => {
 
-        domain.entities = _.map(domain.entities, (entity) => {
+        domain.keywords = _.map(domain.keywords, (keyword) => {
 
-            entity.domain = domain.domain;
-            return entity;
+            keyword.domain = domain.domain;
+            return keyword;
         });
-        return domain.entities;
+        return domain.keywords;
     });
 
-    return entities;
+    return keywords;
 };
 
 const getBestRasaResult = (conversationStateObject) => {
@@ -52,7 +52,7 @@ const getBestRasaResult = (conversationStateObject) => {
             rasaResult = recognizedDomain;
         }
         else {
-            rasaResult.entities = getEntitiesFromRasaResults(conversationStateObject);
+            rasaResult.keywords = getKeywordsFromRasaResults(conversationStateObject);
         }
     }
 
@@ -61,8 +61,8 @@ const getBestRasaResult = (conversationStateObject) => {
 
 const getScenarioByName = (scenarioName, conversationStateObject) => {
 
-    const agentIntents = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'intents')));
-    const agentScenarios = _.compact(_.map(agentIntents, 'scenario'));
+    const agentSayings = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'sayings')));
+    const agentScenarios = _.compact(_.map(agentSayings, 'scenario'));
     const scenario = _.filter(agentScenarios, (agentScenario) => {
 
         return agentScenario.scenarioName === scenarioName;
@@ -70,54 +70,54 @@ const getScenarioByName = (scenarioName, conversationStateObject) => {
     return scenario;
 };
 
-const getIntentByName = (intentName, conversationStateObject) => {
+const getSayingByName = (sayingName, conversationStateObject) => {
 
-    const agentIntents = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'intents')));
-    const intent = _.filter(agentIntents, (agentIntent) => {
+    const agentSayings = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'sayings')));
+    const saying = _.filter(agentSayings, (agentSaying) => {
 
-        return agentIntent.intentName === intentName;
+        return agentSaying.sayingName === sayingName;
     })[0];
-    return intent;
+    return saying;
 };
 
-const getDomainOfIntent = (conversationStateObject) => {
+const getDomainOfSaying = (conversationStateObject) => {
 
-    if (conversationStateObject.intent) {
+    if (conversationStateObject.saying) {
         const domain = _.filter(conversationStateObject.agent.domains, (agentDomain) => {
 
-            return agentDomain.domainName === conversationStateObject.intent.domain;
+            return agentDomain.domainName === conversationStateObject.saying.domain;
         })[0];
         return domain;
     }
     return null;
 };
 
-const getIntentData = (conversationStateObject) => {
+const getSayingData = (conversationStateObject) => {
 
-    if (conversationStateObject.rasaResult.intent) {
+    if (conversationStateObject.rasaResult.saying) {
         if (conversationStateObject.agent.domains) {
-            const agentIntents = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'intents')));
-            const intent = _.filter(agentIntents, (agentIntent) => {
+            const agentSayings = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'sayings')));
+            const saying = _.filter(agentSayings, (agentSaying) => {
 
-                return agentIntent.intentName === conversationStateObject.rasaResult.intent.name;
+                return agentSaying.sayingName === conversationStateObject.rasaResult.saying.name;
             })[0];
-            return intent;
+            return saying;
         }
         return null;
     }
     return null;
 };
 
-const getLastContextWithValidSlots = (conversationStateObject, recognizedEntities) => {
+const getLastContextWithValidSlots = (conversationStateObject, recognizedKeywords) => {
 
-    const recognizedEntitiesNames = _.map(recognizedEntities, 'entity');
+    const recognizedKeywordsNames = _.map(recognizedKeywords, 'keyword');
     let keepGoing = true;
     let contextIndex = conversationStateObject.context.length - 1;
     let lastValidContext = null;
     while (keepGoing && contextIndex !== -1) {
 
         const contextSlots = conversationStateObject.context[contextIndex].slots ? Object.keys(conversationStateObject.context[contextIndex].slots) : [];
-        const intersection = _.intersection(recognizedEntitiesNames, contextSlots);
+        const intersection = _.intersection(recognizedKeywordsNames, contextSlots);
         if (intersection.length > 0) {
             keepGoing = false;
             lastValidContext = _.cloneDeep(conversationStateObject.context[contextIndex]);
@@ -188,9 +188,9 @@ module.exports = (server, conversationStateObject, callback) => {
     conversationStateObject.currentContext = getCurrentContext(conversationStateObject);
     if (conversationStateObject.parse) {
         conversationStateObject.rasaResult = getBestRasaResult(conversationStateObject);
-        conversationStateObject.intent = getIntentData(conversationStateObject);
-        conversationStateObject.scenario = conversationStateObject.intent ? conversationStateObject.intent.scenario : null;
-        if (conversationStateObject.intent && !conversationStateObject.scenario) {
+        conversationStateObject.saying = getSayingData(conversationStateObject);
+        conversationStateObject.scenario = conversationStateObject.saying ? conversationStateObject.saying.scenario : null;
+        if (conversationStateObject.saying && !conversationStateObject.scenario) {
             RespondFallback(conversationStateObject, (err, response) => {
 
                 if (err) {
@@ -206,17 +206,17 @@ module.exports = (server, conversationStateObject, callback) => {
             });
         }
         else {
-            conversationStateObject.domain = getDomainOfIntent(conversationStateObject);
-            if (conversationStateObject.intent && conversationStateObject.scenario && conversationStateObject.domain && conversationStateObject.rasaResult.intent.confidence > conversationStateObject.domain.intentThreshold) {
-                if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.intent.name !== conversationStateObject.currentContext.name)) {
+            conversationStateObject.domain = getDomainOfSaying(conversationStateObject);
+            if (conversationStateObject.saying && conversationStateObject.scenario && conversationStateObject.domain && conversationStateObject.rasaResult.saying.confidence > conversationStateObject.domain.sayingThreshold) {
+                if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.saying.name !== conversationStateObject.currentContext.name)) {
                     conversationStateObject.context.push({
-                        name: conversationStateObject.rasaResult.intent.name,
+                        name: conversationStateObject.rasaResult.saying.name,
                         scenario: conversationStateObject.scenario.scenarioName,
                         slots: {}
                     });
                     conversationStateObject.currentContext = getCurrentContext(conversationStateObject);
                 }
-                RespondIntent(conversationStateObject, (err, response) => {
+                RespondSaying(conversationStateObject, (err, response) => {
 
                     if (err) {
                         return callback(err, null);
@@ -231,13 +231,13 @@ module.exports = (server, conversationStateObject, callback) => {
                 });
             }
             else {
-                const recognizedEntities = !conversationStateObject.rasaResult.intent ? conversationStateObject.rasaResult.entities : getEntitiesFromRasaResults(conversationStateObject.parse);
+                const recognizedKeywords = !conversationStateObject.rasaResult.saying ? conversationStateObject.rasaResult.keywords : getKeywordsFromRasaResults(conversationStateObject.parse);
                 if (conversationStateObject.currentContext) {
-                    if (recognizedEntities.length > 0) {
-                        if (conversationStateObject.currentContext.slots && Object.keys(conversationStateObject.currentContext.slots).length > 0 && recognizedEntitiesArePartOfTheContext(conversationStateObject.currentContext, recognizedEntities)) {
+                    if (recognizedKeywords.length > 0) {
+                        if (conversationStateObject.currentContext.slots && Object.keys(conversationStateObject.currentContext.slots).length > 0 && recognizedKeywordsArePartOfTheContext(conversationStateObject.currentContext, recognizedKeywords)) {
                             conversationStateObject.scenario = getScenarioByName(conversationStateObject.currentContext.scenario, conversationStateObject);
-                            conversationStateObject.intent = getIntentByName(conversationStateObject.currentContext.name, conversationStateObject);
-                            RespondIntent(conversationStateObject, (err, response) => {
+                            conversationStateObject.saying = getSayingByName(conversationStateObject.currentContext.name, conversationStateObject);
+                            RespondSaying(conversationStateObject, (err, response) => {
 
                                 if (err) {
                                     return callback(err, null);
@@ -252,13 +252,13 @@ module.exports = (server, conversationStateObject, callback) => {
                             });
                         }
                         else {
-                            const lastValidContext = getLastContextWithValidSlots(conversationStateObject, recognizedEntities);
+                            const lastValidContext = getLastContextWithValidSlots(conversationStateObject, recognizedKeywords);
                             if (lastValidContext) {
                                 conversationStateObject.context.push(lastValidContext);
                                 conversationStateObject.currentContext = lastValidContext;
                                 conversationStateObject.scenario = getScenarioByName(conversationStateObject.currentContext.scenario, conversationStateObject);
-                                conversationStateObject.intent = getIntentByName(conversationStateObject.currentContext.name, conversationStateObject);
-                                RespondIntent(conversationStateObject, (err, response) => {
+                                conversationStateObject.saying = getSayingByName(conversationStateObject.currentContext.name, conversationStateObject);
+                                RespondSaying(conversationStateObject, (err, response) => {
 
                                     if (err) {
                                         return callback(err, null);

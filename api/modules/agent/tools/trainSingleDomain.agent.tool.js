@@ -19,7 +19,7 @@ const trainSingleDomain = (server, rasa, agent, callback) => {
                 if (err){
                     return cb(err);
                 }
-                if (trainingSet.numberOfIntents === 0){
+                if (trainingSet.numberOfSayings === 0){
                     const error = {};
                     error.noTrainingData = true;
                     return cb(error);
@@ -29,8 +29,8 @@ const trainSingleDomain = (server, rasa, agent, callback) => {
         },
         (trainingSet, cb) => {
 
-            model = (trainingSet.numberOfIntents === 1 ? 'just_er_' : '') + model;
-            server.inject(`/agent/${agent.id}/settings/${trainingSet.numberOfIntents === 1 ? 'entity' : 'intent'}ClassifierPipeline`, (res) => {
+            model = (trainingSet.numberOfSayings === 1 ? 'just_er_' : '') + model;
+            server.inject(`/agent/${agent.id}/settings/${trainingSet.numberOfSayings === 1 ? 'keyword' : 'saying'}ClassifierPipeline`, (res) => {
 
                 if (res.statusCode !== 200){
                     const error = Boom.create(res.statusCode, 'An error occurred getting the data of the pipeline');

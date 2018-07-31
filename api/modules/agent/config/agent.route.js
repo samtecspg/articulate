@@ -47,22 +47,22 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/entity',
+        path: '/agent/{id}/keyword',
         config: {
-            description: 'Find list of entities linked with a model instance specified by id',
+            description: 'Find list of keywords linked with a model instance specified by id',
             tags: ['api'],
-            validate: AgentValidator.findEntitiesByAgentId,
-            handler: AgentController.findEntitiesByAgentId
+            validate: AgentValidator.findKeywordsByAgentId,
+            handler: AgentController.findKeywordsByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/entity/{entityId}',
+        path: '/agent/{id}/keyword/{keywordId}',
         config: {
-            description: 'Find an entity by id that belongs to the specified model instance',
+            description: 'Find an keyword by id that belongs to the specified model instance',
             tags: ['api'],
-            validate: AgentValidator.findEntityByIdByAgentId,
-            handler: AgentController.findEntityByIdByAgentId
+            validate: AgentValidator.findKeywordByIdByAgentId,
+            handler: AgentController.findKeywordByIdByAgentId
         }
     },
     {
@@ -87,52 +87,62 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent',
+        path: '/agent/{id}/domain/{domainId}/action',
         config: {
-            description: 'Find list of intents for the given domain and agent',
+            description: 'Find list of actions for the given domain and agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentsInDomainByIdByAgentId,
-            handler: AgentController.findIntentsInDomainByIdByAgentId
+            validate: AgentValidator.findActionsInDomainByIdByAgentId,
+            handler: AgentController.findActionsInDomainByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}',
+        path: '/agent/{id}/domain/{domainId}/action/{actionId}',
         config: {
-            description: 'Find an intent by id given a domain and an agent',
+            description: 'Find an action by id given a domain and an agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentByIdInDomainByIdByAgentId,
-            handler: AgentController.findIntentByIdInDomainByIdByAgentId
+            validate: AgentValidator.findActionByIdInDomainByIdByAgentId,
+            handler: AgentController.findActionByIdInDomainByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/scenario',
+        path: '/agent/{id}/domain/{domainId}/saying',
         config: {
-            description: 'Find the scenario related with an intent, for the given domain and agent',
+            description: 'Find list of sayings for the given domain and agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentScenarioInDomainByIdByAgentId,
-            handler: AgentController.findIntentScenarioInDomainByIdByAgentId
+            validate: AgentValidator.findSayingsInDomainByIdByAgentId,
+            handler: AgentController.findSayingsInDomainByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/webhook',
+        path: '/agent/{id}/domain/{domainId}/saying/{sayingId}',
         config: {
-            description: 'Find the webhook related with an intent, for the given domain and agent',
+            description: 'Find an saying by id given a domain and an agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentWebhookInDomainByIdByAgentId,
-            handler: AgentController.findIntentWebhookInDomainByIdByAgentId
+            validate: AgentValidator.findSayingByIdInDomainByIdByAgentId,
+            handler: AgentController.findSayingByIdInDomainByIdByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/intent/{intentId}/postFormat',
+        path: '/agent/{id}/domain/{domainId}/action/{actionId}/webhook',
         config: {
-            description: 'Find the post format related with an intent, for the given domain and agent',
+            description: 'Find the webhook related with an action, for the given domain and agent',
             tags: ['api'],
-            validate: AgentValidator.findIntentPostFormatInDomainByIdByAgentId,
-            handler: AgentController.findIntentPostFormatInDomainByIdByAgentId
+            validate: AgentValidator.findActionWebhookInDomainByIdByAgentId,
+            handler: AgentController.findActionWebhookInDomainByIdByAgentId
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/domain/{domainId}/action/{actionId}/postFormat',
+        config: {
+            description: 'Find the post format related with an action, for the given domain and agent',
+            tags: ['api'],
+            validate: AgentValidator.findActionPostFormatInDomainByIdByAgentId,
+            handler: AgentController.findActionPostFormatInDomainByIdByAgentId
         }
     },
     {
@@ -259,12 +269,22 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/intent',
+        path: '/agent/{id}/saying',
         config: {
-            description: 'Find list of intents linked with a model instance specified by id',
+            description: 'Find list of sayings linked with a model instance specified by id',
             tags: ['api'],
-            validate: AgentValidator.findIntentsByAgentId,
-            handler: AgentController.findIntentsByAgentId
+            validate: AgentValidator.findSayingsByAgentId,
+            handler: AgentController.findSayingsByAgentId
+        }
+    },
+    {
+        method: 'GET',
+        path: '/agent/{id}/action',
+        config: {
+            description: 'Find list of actions linked with a model instance specified by id',
+            tags: ['api'],
+            validate: AgentValidator.findActionsByAgentId,
+            handler: AgentController.findActionsByAgentId
         }
     },
     {

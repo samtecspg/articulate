@@ -9,7 +9,7 @@ class DomainModel {
             agent: Joi.string().trim(),
             domainName: Joi.string().trim(),
             enabled: Joi.boolean(),
-            intentThreshold: Joi.number(),
+            sayingThreshold: Joi.number(),
             status: Joi.string().trim(),
             lastTraining: Joi.date(),
             model: Joi.string().trim(),

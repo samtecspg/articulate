@@ -26,7 +26,7 @@ module.exports = (request, reply) => {
                 return callbackGetAgent(null, res.result);
             });
         },
-        (exportedAgent, callbackGetAgentEntitiesAndDomains) => {
+        (exportedAgent, callbackGetAgentKeywordsAndDomains) => {
 
             Async.parallel({
                 domains: (callbackGetDomainsData) => {
@@ -43,133 +43,133 @@ module.exports = (request, reply) => {
                                 return callbackGetDomains(null, res.result.domains);
                             });
                         },
-                        (exportedDomains, callbackGetDomainIntentAndScenarios) => {
+                        (exportedDomains, callbackGetDomainSayingAndScenarios) => {
 
                             Async.map(exportedDomains, (exportedDomain, callbackGetDataDomain) => {
 
                                 Async.waterfall([
-                                    (callbackGetIntentsFromDomain) => {
+                                    (callbackGetSayingsFromDomain) => {
 
-                                        server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent`, (res) => {
+                                        server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying`, (res) => {
 
                                             if (res.statusCode !== 200) {
-                                                const error = Boom.create(res.statusCode, `An error occurred getting the list of intents for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                return callbackGetIntentsFromDomain(error, null);
+                                                const error = Boom.create(res.statusCode, `An error occurred getting the list of sayings for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
+                                                return callbackGetSayingsFromDomain(error, null);
                                             }
                                             if (!withReferences) {
-                                                res.result.intents.forEach((domainIntent) => {
+                                                res.result.sayings.forEach((domainSaying) => {
 
-                                                    domainIntent.examples.forEach((example) => {
+                                                    domainSaying.examples.forEach((example) => {
 
-                                                        example.entities.forEach((exampleEntity) => {
+                                                        example.keywords.forEach((exampleKeyword) => {
 
-                                                            delete exampleEntity.entityId;
+                                                            delete exampleKeyword.keywordId;
                                                         });
                                                     });
                                                 });
                                             }
-                                            return callbackGetIntentsFromDomain(null, res.result.intents);
+                                            return callbackGetSayingsFromDomain(null, res.result.sayings);
                                         });
                                     },
-                                    (exportedIntentsForDomain, callbackGetScenarioForEachIntent) => {
+                                    (exportedSayingsForDomain, callbackGetScenarioForEachSaying) => {
 
-                                        Async.map(exportedIntentsForDomain, (exportedIntentForDomain, callbackGetIntentScenario) => {
+                                        Async.map(exportedSayingsForDomain, (exportedSayingForDomain, callbackGetSayingScenario) => {
 
-                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/scenario`, (res) => {
+                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying/${exportedSayingForDomain.id}/scenario`, (res) => {
 
                                                 if (res.statusCode !== 200) {
                                                     if (res.statusCode === 404) {
-                                                        return callbackGetIntentScenario(null, exportedIntentForDomain);
+                                                        return callbackGetSayingScenario(null, exportedSayingForDomain);
                                                     }
-                                                    const error = Boom.create(res.statusCode, `An error occurred getting the scenario of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                    return callbackGetIntentScenario(error, null);
+                                                    const error = Boom.create(res.statusCode, `An error occurred getting the scenario of saying ${exportedSayingForDomain.saying} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
+                                                    return callbackGetSayingScenario(error, null);
                                                 }
                                                 if (!withReferences) {
                                                     delete res.result.id;
                                                     delete res.result.agent;
                                                     delete res.result.domain;
-                                                    delete res.result.intent;
+                                                    delete res.result.saying;
                                                 }
-                                                return callbackGetIntentScenario(null, Object.assign(exportedIntentForDomain, { scenario: res.result }));
+                                                return callbackGetSayingScenario(null, Object.assign(exportedSayingForDomain, { scenario: res.result }));
                                             });
-                                        }, (err, intentsWithScenarios) => {
+                                        }, (err, sayingsWithScenarios) => {
 
                                             if (err) {
-                                                return callbackGetScenarioForEachIntent(err);
+                                                return callbackGetScenarioForEachSaying(err);
                                             }
-                                            return callbackGetScenarioForEachIntent(null, intentsWithScenarios);
+                                            return callbackGetScenarioForEachSaying(null, sayingsWithScenarios);
                                         });
                                     },
-                                    (exportedIntentsForDomain, callbackGetWebhookForEachIntent) => {
+                                    (exportedSayingsForDomain, callbackGetWebhookForEachSaying) => {
 
-                                        Async.map(exportedIntentsForDomain, (exportedIntentForDomain, callbackGetIntentWebhook) => {
+                                        Async.map(exportedSayingsForDomain, (exportedSayingForDomain, callbackGetSayingWebhook) => {
 
-                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/webhook`, (res) => {
+                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying/${exportedSayingForDomain.id}/webhook`, (res) => {
 
                                                 if (res.statusCode !== 200) {
                                                     if (res.statusCode === 404) {
 
-                                                        return callbackGetIntentWebhook(null, exportedIntentForDomain);
+                                                        return callbackGetSayingWebhook(null, exportedSayingForDomain);
                                                     }
-                                                    const error = Boom.create(res.statusCode, `An error occurred getting the webhook of intent ${exportedIntentForDomain.intent} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                    return callbackGetIntentWebhook(error, null);
+                                                    const error = Boom.create(res.statusCode, `An error occurred getting the webhook of saying ${exportedSayingForDomain.saying} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
+                                                    return callbackGetSayingWebhook(error, null);
                                                 }
                                                 if (!withReferences) {
                                                     delete res.result.id;
                                                     delete res.result.agent;
                                                     delete res.result.domain;
-                                                    delete res.result.intent;
+                                                    delete res.result.saying;
                                                 }
-                                                return callbackGetIntentWebhook(null, Object.assign(exportedIntentForDomain, { webhook: res.result }));
+                                                return callbackGetSayingWebhook(null, Object.assign(exportedSayingForDomain, { webhook: res.result }));
                                             });
-                                        }, (err, intentsWithWebhooks) => {
+                                        }, (err, sayingsWithWebhooks) => {
 
                                             if (err) {
-                                                return callbackGetWebhookForEachIntent(err);
+                                                return callbackGetWebhookForEachSaying(err);
                                             }
-                                            return callbackGetWebhookForEachIntent(null, intentsWithWebhooks);
+                                            return callbackGetWebhookForEachSaying(null, sayingsWithWebhooks);
                                         });
                                     },
 
-                                    (exportedIntentsForDomain, callbackGetPostFormatForEachIntent) => {
+                                    (exportedSayingsForDomain, callbackGetPostFormatForEachSaying) => {
 
-                                        Async.map(exportedIntentsForDomain, (exportedIntentForDomain, callbackGetIntentPostFormat) => {
+                                        Async.map(exportedSayingsForDomain, (exportedSayingForDomain, callbackGetSayingPostFormat) => {
 
-                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/intent/${exportedIntentForDomain.id}/postFormat`, (res) => {
+                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying/${exportedSayingForDomain.id}/postFormat`, (res) => {
 
                                                 if (res.statusCode !== 200 ) {
                                                     if (res.statusCode === 404) {
                                                         if (!withReferences) {
-                                                            delete exportedIntentForDomain.id;
-                                                            delete exportedIntentForDomain.agent;
-                                                            delete exportedIntentForDomain.domain;
+                                                            delete exportedSayingForDomain.id;
+                                                            delete exportedSayingForDomain.agent;
+                                                            delete exportedSayingForDomain.domain;
                                                         }
-                                                        return callbackGetIntentPostFormat(null, exportedIntentForDomain);
+                                                        return callbackGetSayingPostFormat(null, exportedSayingForDomain);
 
-                                                        const error = Boom.create(res.statusCode, `An error occurred getting the post format of intent ${exportedIntentForDomain.intentName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
-                                                        return callbackGetIntentPostFormat(error, null);
+                                                        const error = Boom.create(res.statusCode, `An error occurred getting the post format of saying ${exportedSayingForDomain.sayingName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
+                                                        return callbackGetSayingPostFormat(error, null);
                                                     }
                                                 }
                                                 if (!withReferences) {
                                                     delete res.result.id;
                                                     delete res.result.agent;
                                                     delete res.result.domain;
-                                                    delete res.result.intent;
-                                                    delete exportedIntentForDomain.id;
-                                                    delete exportedIntentForDomain.agent;
-                                                    delete exportedIntentForDomain.domain;
+                                                    delete res.result.saying;
+                                                    delete exportedSayingForDomain.id;
+                                                    delete exportedSayingForDomain.agent;
+                                                    delete exportedSayingForDomain.domain;
                                                 }
-                                                return callbackGetIntentPostFormat(null, Object.assign(exportedIntentForDomain, { postFormat: res.result }));
+                                                return callbackGetSayingPostFormat(null, Object.assign(exportedSayingForDomain, { postFormat: res.result }));
                                             });
-                                        }, (err, intentsWithPostFormats) => {
+                                        }, (err, sayingsWithPostFormats) => {
 
                                             if (err) {
-                                                return callbackGetPostFormatForEachIntent(err);
+                                                return callbackGetPostFormatForEachSaying(err);
                                             }
-                                            return callbackGetPostFormatForEachIntent(null, intentsWithPostFormats);
+                                            return callbackGetPostFormatForEachSaying(null, sayingsWithPostFormats);
                                         });
                                     }
-                                ], (err, intentsWithScenariosAndWebhooksAndPostFormat) => {
+                                ], (err, sayingsWithScenariosAndWebhooksAndPostFormat) => {
 
                                     if (err) {
                                         return callbackGetDataDomain(err);
@@ -180,14 +180,14 @@ module.exports = (request, reply) => {
                                         delete exportedDomain.id;
                                         delete exportedDomain.agent;
                                     }
-                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, { intents: intentsWithScenariosAndWebhooksAndPostFormat }));
+                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, { sayings: sayingsWithScenariosAndWebhooksAndPostFormat }));
                                 });
-                            }, (err, domainsWithIntents) => {
+                            }, (err, domainsWithSayings) => {
 
                                 if (err) {
-                                    return callbackGetDomainIntentAndScenarios(err);
+                                    return callbackGetDomainSayingAndScenarios(err);
                                 }
-                                return callbackGetDomainIntentAndScenarios(null, Object.assign(exportedAgent, { domains: domainsWithIntents }));
+                                return callbackGetDomainSayingAndScenarios(null, Object.assign(exportedAgent, { domains: domainsWithSayings }));
                             });
                         }
                     ], (err, agentWithDomains) => {
@@ -198,23 +198,23 @@ module.exports = (request, reply) => {
                         return callbackGetDomainsData(null, agentWithDomains);
                     });
                 },
-                entities: (callbackGetEntities) => {
+                keywords: (callbackGetKeywords) => {
 
-                    server.inject(`/agent/${agentId}/entity`, (res) => {
+                    server.inject(`/agent/${agentId}/keyword`, (res) => {
 
                         if (res.statusCode !== 200) {
-                            const error = Boom.create(res.statusCode, `An error occurred getting the list of entities of agent ${exportedAgent.agentName}`);
-                            return callbackGetEntities(error, null);
+                            const error = Boom.create(res.statusCode, `An error occurred getting the list of keywords of agent ${exportedAgent.agentName}`);
+                            return callbackGetKeywords(error, null);
                         }
                         if (!withReferences) {
 
-                            res.result.entities.forEach((entity) => {
+                            res.result.keywords.forEach((keyword) => {
 
-                                delete entity.id;
-                                delete entity.agent;
+                                delete keyword.id;
+                                delete keyword.agent;
                             });
                         }
-                        return callbackGetEntities(null, Object.assign(exportedAgent, { entities: res.result.entities }));
+                        return callbackGetKeywords(null, Object.assign(exportedAgent, { keywords: res.result.keywords }));
                     });
                 },
                 webhook: (callbackGetWebhook) => {
@@ -274,13 +274,13 @@ module.exports = (request, reply) => {
             }, (err) => {
 
                 if (err) {
-                    return callbackGetAgentEntitiesAndDomains(err);
+                    return callbackGetAgentKeywordsAndDomains(err);
                 }
                 if (!withReferences) {
 
                     delete exportedAgent.id;
                 }
-                return callbackGetAgentEntitiesAndDomains(null, exportedAgent);
+                return callbackGetAgentKeywordsAndDomains(null, exportedAgent);
             });
         }
     ], (err, data) => {
