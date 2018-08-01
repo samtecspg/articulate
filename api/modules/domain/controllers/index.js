@@ -5,6 +5,7 @@ const UpdateByIdController = require('./updateById.domain.controller');
 const DeleteByIdController = require('./deleteById.domain.controller');
 const FindKeywordsByDomainIdController = require('./findKeywordsByDomainId.domain.controller');
 const FindSayingsByDomainIdController = require('./findSayingsByDomainId.domain.controller');
+const FindActionsByDomainIdController = require('./findActionsByDomainId.domain.controller');
 const TrainController = require('./train.domain.controller');
 
 const DomainController = {
@@ -20,6 +21,8 @@ const DomainController = {
     findKeywordsByDomainId: FindKeywordsByDomainIdController,
 
     findSayingsByDomainId: FindSayingsByDomainIdController,
+
+    findActionsByDomainId: FindActionsByDomainIdController,
 
     train: TrainController
 };

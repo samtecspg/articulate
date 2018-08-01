@@ -43,133 +43,122 @@ module.exports = (request, reply) => {
                                 return callbackGetDomains(null, res.result.domains);
                             });
                         },
-                        (exportedDomains, callbackGetDomainSayingAndScenarios) => {
+                        (exportedDomains, callbackGetDomainSayingsAndActions) => {
 
                             Async.map(exportedDomains, (exportedDomain, callbackGetDataDomain) => {
 
-                                Async.waterfall([
-                                    (callbackGetSayingsFromDomain) => {
+                                Async.parallel({
+                                    sayings: (callabckGetSayingsData) => {
 
                                         server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying`, (res) => {
 
                                             if (res.statusCode !== 200) {
                                                 const error = Boom.create(res.statusCode, `An error occurred getting the list of sayings for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                return callbackGetSayingsFromDomain(error, null);
+                                                return callabckGetSayingsData(error, null);
                                             }
                                             if (!withReferences) {
                                                 res.result.sayings.forEach((domainSaying) => {
 
-                                                    domainSaying.examples.forEach((example) => {
+                                                    domainSaying.keywords.forEach((keyword) => {
 
-                                                        example.keywords.forEach((exampleKeyword) => {
-
-                                                            delete exampleKeyword.keywordId;
-                                                        });
+                                                        delete keyword.keywordId;
                                                     });
                                                 });
                                             }
-                                            return callbackGetSayingsFromDomain(null, res.result.sayings);
+                                            return callabckGetSayingsData(null, res.result.sayings);
                                         });
                                     },
-                                    (exportedSayingsForDomain, callbackGetScenarioForEachSaying) => {
+                                    actions: (callbacGetActionsData) => {
 
-                                        Async.map(exportedSayingsForDomain, (exportedSayingForDomain, callbackGetSayingScenario) => {
+                                        Async.waterfall([
+                                            (callbackGetActionsFromDomain) => {
 
-                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying/${exportedSayingForDomain.id}/scenario`, (res) => {
+                                                server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action`, (res) => {
 
-                                                if (res.statusCode !== 200) {
-                                                    if (res.statusCode === 404) {
-                                                        return callbackGetSayingScenario(null, exportedSayingForDomain);
+                                                    if (res.statusCode !== 200) {
+                                                        const error = Boom.create(res.statusCode, `An error occurred getting the list of actions for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
+                                                        return callbackGetActionsFromDomain(error, null);
                                                     }
-                                                    const error = Boom.create(res.statusCode, `An error occurred getting the scenario of saying ${exportedSayingForDomain.saying} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                    return callbackGetSayingScenario(error, null);
-                                                }
-                                                if (!withReferences) {
-                                                    delete res.result.id;
-                                                    delete res.result.agent;
-                                                    delete res.result.domain;
-                                                    delete res.result.saying;
-                                                }
-                                                return callbackGetSayingScenario(null, Object.assign(exportedSayingForDomain, { scenario: res.result }));
-                                            });
-                                        }, (err, sayingsWithScenarios) => {
+                                                    return callbackGetActionsFromDomain(null, res.result.actions);
+                                                });
+                                            },
+                                            (exportedActionsForDomain, callbackGetWebhookForEachAction) => {
 
-                                            if (err) {
-                                                return callbackGetScenarioForEachSaying(err);
-                                            }
-                                            return callbackGetScenarioForEachSaying(null, sayingsWithScenarios);
-                                        });
-                                    },
-                                    (exportedSayingsForDomain, callbackGetWebhookForEachSaying) => {
+                                                Async.map(exportedActionsForDomain, (exportedActionForDomain, callbackGetActionWebhook) => {
 
-                                        Async.map(exportedSayingsForDomain, (exportedSayingForDomain, callbackGetSayingWebhook) => {
+                                                    server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action/${exportedActionForDomain.id}/webhook`, (res) => {
 
-                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying/${exportedSayingForDomain.id}/webhook`, (res) => {
+                                                        if (res.statusCode !== 200) {
+                                                            if (res.statusCode === 404) {
 
-                                                if (res.statusCode !== 200) {
-                                                    if (res.statusCode === 404) {
-
-                                                        return callbackGetSayingWebhook(null, exportedSayingForDomain);
-                                                    }
-                                                    const error = Boom.create(res.statusCode, `An error occurred getting the webhook of saying ${exportedSayingForDomain.saying} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                    return callbackGetSayingWebhook(error, null);
-                                                }
-                                                if (!withReferences) {
-                                                    delete res.result.id;
-                                                    delete res.result.agent;
-                                                    delete res.result.domain;
-                                                    delete res.result.saying;
-                                                }
-                                                return callbackGetSayingWebhook(null, Object.assign(exportedSayingForDomain, { webhook: res.result }));
-                                            });
-                                        }, (err, sayingsWithWebhooks) => {
-
-                                            if (err) {
-                                                return callbackGetWebhookForEachSaying(err);
-                                            }
-                                            return callbackGetWebhookForEachSaying(null, sayingsWithWebhooks);
-                                        });
-                                    },
-
-                                    (exportedSayingsForDomain, callbackGetPostFormatForEachSaying) => {
-
-                                        Async.map(exportedSayingsForDomain, (exportedSayingForDomain, callbackGetSayingPostFormat) => {
-
-                                            server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/saying/${exportedSayingForDomain.id}/postFormat`, (res) => {
-
-                                                if (res.statusCode !== 200 ) {
-                                                    if (res.statusCode === 404) {
-                                                        if (!withReferences) {
-                                                            delete exportedSayingForDomain.id;
-                                                            delete exportedSayingForDomain.agent;
-                                                            delete exportedSayingForDomain.domain;
+                                                                return callbackGetActionWebhook(null, exportedActionForDomain);
+                                                            }
+                                                            const error = Boom.create(res.statusCode, `An error occurred getting the webhook of action ${exportedActionForDomain.action} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
+                                                            return callbackGetActionWebhook(error, null);
                                                         }
-                                                        return callbackGetSayingPostFormat(null, exportedSayingForDomain);
+                                                        if (!withReferences) {
+                                                            delete res.result.id;
+                                                            delete res.result.agent;
+                                                            delete res.result.domain;
+                                                            delete res.result.action;
+                                                        }
+                                                        return callbackGetActionWebhook(null, Object.assign(exportedActionForDomain, { webhook: res.result }));
+                                                    });
+                                                }, (err, actionsWithWebhooks) => {
 
-                                                        const error = Boom.create(res.statusCode, `An error occurred getting the post format of saying ${exportedSayingForDomain.sayingName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
-                                                        return callbackGetSayingPostFormat(error, null);
+                                                    if (err) {
+                                                        return callbackGetWebhookForEachAction(err);
                                                     }
-                                                }
-                                                if (!withReferences) {
-                                                    delete res.result.id;
-                                                    delete res.result.agent;
-                                                    delete res.result.domain;
-                                                    delete res.result.saying;
-                                                    delete exportedSayingForDomain.id;
-                                                    delete exportedSayingForDomain.agent;
-                                                    delete exportedSayingForDomain.domain;
-                                                }
-                                                return callbackGetSayingPostFormat(null, Object.assign(exportedSayingForDomain, { postFormat: res.result }));
-                                            });
-                                        }, (err, sayingsWithPostFormats) => {
+                                                    return callbackGetWebhookForEachAction(null, actionsWithWebhooks);
+                                                });
+                                            },
+                                            (exportedActionsForDomain, callbackGetPostFormatForEachAction) => {
+
+                                                Async.map(exportedActionsForDomain, (exportedActionForDomain, callbackGetActionPostFormat) => {
+
+                                                    server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action/${exportedActionForDomain.id}/postFormat`, (res) => {
+
+                                                        if (res.statusCode !== 200 ) {
+                                                            if (res.statusCode === 404) {
+                                                                if (!withReferences) {
+                                                                    delete exportedActionForDomain.id;
+                                                                    delete exportedActionForDomain.agent;
+                                                                    delete exportedActionForDomain.domain;
+                                                                }
+                                                                return callbackGetActionPostFormat(null, exportedActionForDomain);
+
+                                                                const error = Boom.create(res.statusCode, `An error occurred getting the post format of action ${exportedActionForDomain.actionName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
+                                                                return callbackGetActionPostFormat(error, null);
+                                                            }
+                                                        }
+                                                        if (!withReferences) {
+                                                            delete res.result.id;
+                                                            delete res.result.agent;
+                                                            delete res.result.domain;
+                                                            delete res.result.action;
+                                                            delete exportedActionForDomain.id;
+                                                            delete exportedActionForDomain.agent;
+                                                            delete exportedActionForDomain.domain;
+                                                        }
+                                                        return callbackGetActionPostFormat(null, Object.assign(exportedActionForDomain, { postFormat: res.result }));
+                                                    });
+                                                }, (err, actionsWithPostFormats) => {
+
+                                                    if (err) {
+                                                        return callbackGetPostFormatForEachAction(err);
+                                                    }
+                                                    return callbackGetPostFormatForEachAction(null, actionsWithPostFormats);
+                                                });
+                                            }
+                                        ], (err, actionsWithWebhooksAndPostFormat) => {
 
                                             if (err) {
-                                                return callbackGetPostFormatForEachSaying(err);
+                                                return callbacGetActionsData(err);
                                             }
-                                            return callbackGetPostFormatForEachSaying(null, sayingsWithPostFormats);
+                                            return callbacGetActionsData(null, actionsWithWebhooksAndPostFormat);
                                         });
                                     }
-                                ], (err, sayingsWithScenariosAndWebhooksAndPostFormat) => {
+                                }, (err, sayingsAndActions) => {
 
                                     if (err) {
                                         return callbackGetDataDomain(err);
@@ -180,14 +169,14 @@ module.exports = (request, reply) => {
                                         delete exportedDomain.id;
                                         delete exportedDomain.agent;
                                     }
-                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, { sayings: sayingsWithScenariosAndWebhooksAndPostFormat }));
+                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, sayingsAndActions));
                                 });
-                            }, (err, domainsWithSayings) => {
+                            }, (err, domainsWithSayingsAndActions) => {
 
                                 if (err) {
-                                    return callbackGetDomainSayingAndScenarios(err);
+                                    return callbackGetDomainSayingsAndActions(err);
                                 }
-                                return callbackGetDomainSayingAndScenarios(null, Object.assign(exportedAgent, { domains: domainsWithSayings }));
+                                return callbackGetDomainSayingsAndActions(null, Object.assign(exportedAgent, { domains: domainsWithSayingsAndActions }));
                             });
                         }
                     ], (err, agentWithDomains) => {

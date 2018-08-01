@@ -8,7 +8,7 @@ module.exports = (request, reply) => {
     const server = request.server;
     const agentId = request.params.id;
     const domainId = request.params.domainId;
-    const sayingId = request.params.sayingId;
+    const actionId = request.params.actionId;
     let agentName;
     let domainName;
 
@@ -47,20 +47,20 @@ module.exports = (request, reply) => {
         },
         (cb) => {
 
-            server.inject(`/saying/${sayingId}`, (res) => {
+            server.inject(`/action/${actionId}`, (res) => {
 
                 if (res.statusCode !== 200){
                     if (res.statusCode === 404){
-                        const errorNotFound = Boom.notFound('The specified saying doesn\'t exists');
+                        const errorNotFound = Boom.notFound('The specified action doesn\'t exists');
                         return cb(errorNotFound);
                     }
-                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the saying');
+                    const error = Boom.create(res.statusCode, 'An error occurred getting the data of the action');
                     return cb(error, null);
                 }
                 if (res.result && res.result.agent && res.result.agent === agentName && res.result.domain && res.result.domain === domainName){
                     return cb(null, res.result);
                 }
-                const errorNotFoundInDomain = Boom.badRequest('The specified saying is not linked with this domain');
+                const errorNotFoundInDomain = Boom.badRequest('The specified action is not linked with this domain');
                 return cb(errorNotFoundInDomain);
             });
         }
@@ -69,6 +69,6 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
-        return reply(Cast(result, 'saying'));
+        return reply(Cast(result, 'action'));
     });
 };

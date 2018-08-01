@@ -57,7 +57,7 @@ module.exports = (request, reply) => {
         (domain, cb) => {
 
             if (domain){
-                server.inject(`/domain/${domain[1]}/saying?start=${start}&limit=${limit}${filter ? `&filter=${filter}` : ''}`, (res) => {
+                server.inject(`/domain/${domain[1]}/action?start=${start}&limit=${limit}${filter ? `&filter=${filter}` : ''}`, (res) => {
 
                     if (res.statusCode !== 200){
                         const error = Boom.create(res.statusCode, `An error occurred getting the data of the domain ${domain[0]} with id ${domain[1]}`);

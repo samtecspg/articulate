@@ -69,6 +69,16 @@ const DomainRoutes = [
     },
     {
         method: 'GET',
+        path: '/domain/{id}/action',
+        config: {
+            description: 'Find list of action linked with a domain',
+            tags: ['api'],
+            validate: DomainValidator.findActionsByDomainId,
+            handler: DomainController.findActionsByDomainId
+        }
+    },
+    {
+        method: 'GET',
         path: '/domain/{id}/train',
         config: {
             description: 'Train the specified domain',

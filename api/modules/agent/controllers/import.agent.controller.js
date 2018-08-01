@@ -55,6 +55,8 @@ module.exports = (request, reply) => {
             clonedAgent = Object.assign({ id: agentId }, clonedAgent);
             clonedAgent.status = Status.outOfDate;
             clonedAgent.enableModelsPerDomain = clonedAgent.enableModelsPerDomain !== undefined ? clonedAgent.enableModelsPerDomain : true;
+            clonedAgent.multiDomain = clonedAgent.multiDomain !== undefined ? clonedAgent.multiDomain : true;
+            clonedAgent.extraTrainingData = clonedAgent.extraTrainingData !== undefined ? clonedAgent.extraTrainingData : true;
             const flatAgent = RemoveBlankArray(Flat(clonedAgent));
             redis.hmset('agent:' + agentId, flatAgent, (err) => {
 
@@ -167,6 +169,7 @@ module.exports = (request, reply) => {
                         let clonedDomain = _.cloneDeep(domain);
                         clonedDomain.status = Status.outOfDate;
                         delete clonedDomain.sayings;
+                        delete clonedDomain.actions;
                         delete clonedDomain.model; //This would make that the training process don't try to unload a non existent model
                         delete clonedDomain.lastTraining;
                         clonedDomain = Object.assign({ id: domainId, agent: agent.agentName }, clonedDomain);

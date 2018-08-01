@@ -46,7 +46,7 @@ class SayingValidate {
             payload: (() => {
 
                 return {
-                    userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
+                    userSays: SayingSchema.userSays,
                     keywords: Joi.array().items({
                         keywordId: Joi.number(),
                         start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required for all keywords.')),
@@ -54,7 +54,7 @@ class SayingValidate {
                         value: SayingKeywordSchema.value.required().error(new Error('The value is required for all keywords.')),
                         keyword: SayingKeywordSchema.keyword.required().error(new Error('The keyword reference is required for all keywords in examples.')),
                         extractor: SayingKeywordSchema.extractor
-                    }).required().allow([]),
+                    }).allow([]),
                     actions: SayingSchema.actions.allow([])
                 };
             })()

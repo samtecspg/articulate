@@ -37,30 +37,32 @@ module.exports = (object, type) => {
             }
             break;
         case 'saying':
+            object.keywords = object.keywords.map((keyword) => {
+
+                if (keyword.keywordId) {
+                    keyword.keywordId = parseInt(keyword.keywordId);
+                }
+                keyword.start = parseInt(keyword.start);
+                keyword.end = parseInt(keyword.end);
+                return keyword;
+            });
+            break;
+        case 'action':
             if (typeof object.useWebhook !== 'boolean'){
                 object.useWebhook = object.useWebhook === 'true';
             }
-
             if (typeof object.usePostFormat !== 'boolean'){
                 object.usePostFormat = object.usePostFormat === 'true';
             }
-            object.examples = object.examples.map((example) => {
+            object.slots = object.slots.map((slot) => {
 
-                if (example.keywords === '') {
-                    example.keywords = [];
+                if (typeof slot.isList !== 'boolean'){
+                    slot.isList = slot.isList === 'true';
                 }
-                else {
-                    example.keywords = example.keywords.map((keyword) => {
-
-                        if (keyword.keywordId) {
-                            keyword.keywordId = parseInt(keyword.keywordId);
-                        }
-                        keyword.start = parseInt(keyword.start);
-                        keyword.end = parseInt(keyword.end);
-                        return keyword;
-                    });
+                if (typeof slot.isRequired !== 'boolean'){
+                    slot.isRequired = slot.isRequired === 'true';
                 }
-                return example;
+                return slot;
             });
             break;
         case 'scenario':

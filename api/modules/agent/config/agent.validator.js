@@ -159,7 +159,7 @@ class AgentValidate {
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    actionID: ActionSchema.id.required().description('Id of the action')
+                    actionId: ActionSchema.id.required().description('Id of the action')
                 };
             })()
         };
@@ -171,7 +171,7 @@ class AgentValidate {
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
                     domainId: DomainSchema.id.required().description('Id of the domain'),
-                    sayingId: ActionSchema.id.required().description('Id of the action')
+                    actionId: ActionSchema.id.required().description('Id of the action')
                 };
             })()
         };
@@ -186,6 +186,7 @@ class AgentValidate {
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
+                    multiDomain: AgentSchema.multiDomain.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -210,6 +211,7 @@ class AgentValidate {
                     timezone: AgentSchema.timezone,
                     useWebhook: AgentSchema.useWebhook,
                     usePostFormat: AgentSchema.usePostFormat,
+                    multiDomain: AgentSchema.multiDomain,
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
                     status: AgentSchema.status,
