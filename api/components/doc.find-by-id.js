@@ -10,7 +10,7 @@ const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 exports.getComponent = () => {
     const c = new noflo.Component();
-    c.description = 'Get agent by id';
+    c.description = 'Get document by id';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
@@ -40,17 +40,17 @@ exports.getComponent = () => {
             return;
         }
         const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
-        redis.hgetall(`agent:${id}`, (err, agent) => {
+        redis.hgetall(`document:${id}`, (err, document) => {
             if (err) {
                 err.key = id;
                 return output.sendDone({ [PORT_ERROR]: err });
             }
-            if (!agent) {
-                err = new Error('Agent not found');
+            if (!document) {
+                err = new Error('The specified document doesn\'t exists');
                 err.key = id;
                 return output.sendDone({ [PORT_ERROR]: err });
             }
-            return output.sendDone({ [PORT_OUT]: Cast(Flat.unflatten(agent), 'action') });
+            return output.sendDone({ [PORT_OUT]: Cast(Flat.unflatten(document), 'document') });
         });
     });
 };

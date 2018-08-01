@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "NLU API",
   "main": "start.js",
+  "engines": {
+    "node": ">=10.5.0"
+  },
   "scripts": {
     "test": "lab -v --lint --leaks",
     "lint": "lab -dL",

@@ -6,6 +6,8 @@ const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 const HapiSwaggerUI = require('hapi-swaggered-ui');
 const FlowLoader = require('./plugins/flow-loader.plugin');
+const Redis = require('./plugins/redis.plugin');
+const InitDefaultSettings = require('./plugins/init-defualt-settings.plugin');
 const Pack = require('./package');
 
 Server((err, server) => {
@@ -46,6 +48,13 @@ Server((err, server) => {
         discover: true
     };
 
+    const redisOptions = {
+        host: process.env.REDIS_HOST || 'redis',
+        port: process.env.REDIS_PORT || 6379,
+        retry: process.env.INIT_RETRY || 10,
+        retryTimeout: process.env.INIT_RETRY_TIMEOUT || 15000
+    };
+
     // We have to specify a swaggerEndpoint since we use hapi-swaggered-ui with hapi-swagger. It can't auto find the swagger.json
     // to work behind a reverse proxy path we need to build the endpoint from the basePath when it is provided.
     // All of this is specifically to get the swagger docs working.
@@ -57,7 +66,9 @@ Server((err, server) => {
         Vision,
         { 'register': HapiSwagger, 'options': swaggerOptions },
         { 'register': HapiSwaggerUI, 'options': swaggerUIOptions },
-        { 'register': FlowLoader, 'options': flowLoaderOptions }
+        { 'register': FlowLoader, 'options': flowLoaderOptions },
+        { 'register': Redis, 'options': redisOptions },
+        { 'register': InitDefaultSettings, 'options': {} }
     ], (err) => {
 
         if (err) {

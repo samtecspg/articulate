@@ -1,7 +1,7 @@
 'use strict';
 const AgentController = require('../controllers');
 const AgentValidator = require('./agent.validator');
-const pkg = require('../../../package');
+const PKG = require('../../../package');
 const AgentRoutes = [
     {
         method: 'GET',
@@ -11,7 +11,7 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/agent.find-all.graph`,
+                    name: `${PKG.name}/agent.find-all.graph`,
                     consumes: ['redis']
                 }
             },
@@ -27,7 +27,7 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/agent.find-by-id.graph`,
+                    name: `${PKG.name}/agent.find-by-id.graph`,
                     consumes: ['redis']
                 }
             },
@@ -187,7 +187,7 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/agent.parse.graph`,
+                    name: `${PKG.name}/agent.parse.graph`,
                     consumes: []
                 }
             },
@@ -203,7 +203,7 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/agent.parse.graph`,
+                    name: `${PKG.name}/agent.parse.graph`,
                     consumes: []
                 }
             },
@@ -219,7 +219,7 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/agent.converse.graph`,
+                    name: `${PKG.name}/agent.converse.graph`,
                     consumes: []
                 }
             },
@@ -235,7 +235,7 @@ const AgentRoutes = [
             tags: ['api'],
             plugins: {
                 'flow-loader': {
-                    name: `${pkg.name}/agent.converse.graph`,
+                    name: `${PKG.name}/agent.converse.graph`,
                     consumes: []
                 }
             },

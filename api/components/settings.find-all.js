@@ -2,10 +2,8 @@
 
 const Noflo = require('noflo');
 const Async = require('async');
-const Flat = require('../helpers/flat');
-const Cast = require('../helpers/cast');
-
 const _ = require('lodash');
+const Flat = require('../helpers/flat');
 const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
@@ -13,7 +11,7 @@ const PORT_IN = 'in';
 
 exports.getComponent = () => {
     const c = new Noflo.Component();
-    c.description = 'Get all agents';
+    c.description = 'Get all settings';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
@@ -33,6 +31,7 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
+
         if (!input.has(PORT_IN)) {
             return;
         }
@@ -41,37 +40,38 @@ exports.getComponent = () => {
             return;
         }
         const redis = input.getData(PORT_REDIS);
-        let { start, limit } = input.getData(PORT_IN);
-        start = start > -1 ? start : 0;
-        limit = limit > -1 ? limit : -1;
-        const getAgentById = ([name, id], cb) => {
+        const settings = {};
+        const settingByName = (name, cb) => {
 
-            redis.hgetall(`agent:${id}`, (err, agent) => {
+            redis.hgetall(`settings:${name}`, (err, setting) => {
+
                 if (err) {
-                    err.key = id;
+                    err.key = name;
                     return cb(err);
                 }
-                if (!agent) {
-                    err = new Error('Agent not found');
-                    err.key = id;
+                if (!setting) {
+                    err = new Error('Setting not found');
+                    err.key = name;
                     return cb(err);
                 }
-                return cb(null, Cast(Flat.unflatten(agent), 'action'));
+                let unflattenData = Flat.unflatten(setting);
+                unflattenData = unflattenData.string_value_setting ? unflattenData.string_value_setting : unflattenData;
+                settings[name] = unflattenData;
+                return cb();
             });
         };
 
-        redis.zrange('agents', start, limit === -1 ? limit : limit - 1, 'withscores', (err, agents) => {
+        redis.smembers('settings', (err, results) => {
 
             if (err) {
                 return output.sendDone({ [PORT_ERROR]: err });
             }
-            agents = _.chunk(agents, 2);
-            Async.map(agents, getAgentById, (err, results) => {
+            Async.each(results, settingByName, (err) => {
 
                 if (err) {
                     return output.sendDone({ [PORT_ERROR]: err });
                 }
-                return output.sendDone({ [PORT_OUT]: results });
+                return output.sendDone({ [PORT_OUT]: settings });
             });
         });
 

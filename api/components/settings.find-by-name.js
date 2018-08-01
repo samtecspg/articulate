@@ -2,7 +2,6 @@
 
 const noflo = require('noflo');
 const Flat = require('../helpers/flat');
-const Cast = require('../helpers/cast');
 
 const PORT_IN = 'in';
 const PORT_REDIS = 'redis';
@@ -10,8 +9,9 @@ const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 exports.getComponent = () => {
     const c = new noflo.Component();
-    c.description = 'Get agent by id';
-    c.icon = 'user';
+    c.description = 'Get settings by name';
+    c.icon = 'gear';
+
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
         description: 'Object with all parsed values.'
@@ -31,7 +31,6 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
-
         if (!input.has(PORT_IN)) {
             return;
         }
@@ -39,18 +38,20 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
-        const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
-        redis.hgetall(`agent:${id}`, (err, agent) => {
+        const [{ name }, redis] = input.getData(PORT_IN, PORT_REDIS);
+        redis.hgetall(`settings:${name}`, (err, setting) => {
             if (err) {
-                err.key = id;
+                err.key = name;
                 return output.sendDone({ [PORT_ERROR]: err });
             }
-            if (!agent) {
-                err = new Error('Agent not found');
-                err.key = id;
+            if (!setting) {
+                err = new Error('This setting doesn\'t exists');
+                err.key = name;
                 return output.sendDone({ [PORT_ERROR]: err });
             }
-            return output.sendDone({ [PORT_OUT]: Cast(Flat.unflatten(agent), 'action') });
+            let unflattenData = Flat.unflatten(setting);
+            unflattenData = unflattenData.string_value_setting ? unflattenData.string_value_setting : unflattenData;
+            return output.sendDone({ [PORT_OUT]: unflattenData });
         });
     });
 };
