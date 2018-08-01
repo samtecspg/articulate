@@ -391,7 +391,7 @@ const AgentRoutes = [
         method: 'GET',
         path: '/agent/{id}/settings',
         config: {
-            description: 'Return all the setings of the agent',
+            description: 'Return all the settings of the agent',
             tags: ['api'],
             validate: AgentValidator.findAllSettings,
             handler: AgentController.findAllSettings

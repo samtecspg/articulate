@@ -35,7 +35,7 @@ before({ timeout: 120000 }, (done) => {
             server.inject(`/agent/name/${PrecreatedAgentName}`, (res) => {
 
                 if (res.result && res.result.statusCode && res.result.statusCode !== 200){
-                    return cb(new Error(`An error ocurred getting the name of the test agent. Error message: ${res.result.message}`));
+                    return cb(new Error(`An error occurred getting the name of the test agent. Error message: ${res.result.message}`));
                 }
                 preCreatedAgent = res.result;
                 return cb(null);
@@ -46,7 +46,7 @@ before({ timeout: 120000 }, (done) => {
             server.inject(`/agent/${preCreatedAgent.id}/parse?text=Locate%20my%20car&timezone=UTC`, (res) => {
 
                 if (res.result && res.result.statusCode && res.result.statusCode !== 200){
-                    return cb(new Error(`An error ocurred parsing a sample text. Error message: ${res.result.message}`));
+                    return cb(new Error(`An error occurred parsing a sample text. Error message: ${res.result.message}`));
                 }
                 documentId = res.result.id;
                 return cb(null);

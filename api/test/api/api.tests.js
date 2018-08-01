@@ -44,7 +44,7 @@ suite('NLU API', () => {
                         server.inject(options, (res) => {
 
                             if (res.result && res.result.statusCode && res.result.statusCode !== 200){
-                                done(new Error(`An error ocurred creating an agent for the tests. Error message: ${res.result.message}`));
+                                done(new Error(`An error occurred creating an agent for the tests. Error message: ${res.result.message}`));
                             }
                             else {
                                 done();

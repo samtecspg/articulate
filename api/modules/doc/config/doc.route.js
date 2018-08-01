@@ -8,7 +8,7 @@ const docRoutes = [
         method: 'GET',
         path: '/doc/{id}',
         config: {
-            description: 'Return all the setings of the system',
+            description: 'Return all the settings of the system',
             tags: ['api'],
             plugins: {
                 'flow-loader': {

@@ -42,13 +42,13 @@ before({ timeout: 120000 }, (done) => {
         server.inject(`/agent/name/${PrecreatedAgentName}`, (resName) => {
 
             if (resName.result && resName.result.statusCode && resName.result.statusCode !== 200){
-                done(new Error(`An error ocurred getting the name of the test agent. Error message: ${resName.result.message}`));
+                done(new Error(`An error occurred getting the name of the test agent. Error message: ${resName.result.message}`));
             }
             else {
                 server.inject(`/agent/${resName.result.id}/export?withReferences=True`, (resAgent) => {
 
                     if (resAgent.result && resAgent.result.statusCode && resAgent.result.statusCode !== 200){
-                        done(new Error(`An error ocurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
+                        done(new Error(`An error occurred getting the data of the test agent. Error message: ${resAgent.result.message}`));
                     }
                     else {
                         preCreatedAgent = resAgent.result;
