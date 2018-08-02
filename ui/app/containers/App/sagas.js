@@ -87,17 +87,17 @@ export function* getCurrentAgentStatus(payload) {
     }));
   } catch (err) {
     const errObject = { err };
-    if (errObject.err && errObject.err.message === 'Failed to fetch'){
-      console.error('Can\'t find a connection with the API. Please check your API is alive and configured properly.');
-    }
-    else {
-      if (errObject.err.response.obj && errObject.err.response.obj.message){
-        console.error(errObject.err.response.obj.message);
-      }
-      else {
-        console.error('Unknow API error on getting current agent status');
-      }
-    }
+//     if (errObject.err && errObject.err.message === 'Failed to fetch'){
+//       console.error('Can\'t find a connection with the API. Please check your API is alive and configured properly.');
+//     }
+//     else {
+//       if (errObject.err.response.obj && errObject.err.response.obj.message){
+//         console.error(errObject.err.response.obj.message);
+//       }
+//       else {
+//         console.error('Unknow API error on getting current agent status');
+//       }
+//     }
   }
 }
 
