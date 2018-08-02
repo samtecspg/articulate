@@ -33,7 +33,7 @@ const updateDataFunction = (redis, server, sayingId, currentSaying, updateData, 
             redis.del(`saying:${sayingId}`, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error occurred temporaly removing the saying for the update.');
+                    const error = Boom.badImplementation('An error occurred temporarily removing the saying for the update.');
                     return callback(error);
                 }
                 return callback(null);

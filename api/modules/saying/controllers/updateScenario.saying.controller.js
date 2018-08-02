@@ -22,7 +22,7 @@ const updateDataFunction = (redis, sayingId, currentScenario, updateData, cb) =>
     redis.del(`scenario:${sayingId}`, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error occurred temporaly removing the scenario for the update.');
+            const error = Boom.badImplementation('An error occurred temporarily removing the scenario for the update.');
             return cb(error);
         }
         redis.hmset(`scenario:${sayingId}`, RemoveBlankArray(flatScenario), (err) => {

@@ -22,7 +22,7 @@ const updateDataFunction = (redis, actionId, currentWebhook, updateData, cb) => 
     redis.del(`actionWebhook:${actionId}`, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error occurred temporaly removing the webhook for the update.');
+            const error = Boom.badImplementation('An error occurred temporarily removing the webhook for the update.');
             return cb(error);
         }
         redis.hmset(`actionWebhook:${actionId}`, RemoveBlankArray(flatWebhook), (err) => {

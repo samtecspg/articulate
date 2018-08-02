@@ -16,7 +16,7 @@ const updateDataFunction = (redis, agentId, currentPostFormat, updateData, cb) =
     redis.del(`agentPostFormat:${agentId}`, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error occurred temporaly removing the post format for the update.');
+            const error = Boom.badImplementation('An error occurred temporarily removing the post format for the update.');
             return cb(error);
         }
         redis.hmset(`agentPostFormat:${agentId}`, RemoveBlankArray(flatPostFormat), (err) => {

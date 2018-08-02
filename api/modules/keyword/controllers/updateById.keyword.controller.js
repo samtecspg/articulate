@@ -24,7 +24,7 @@ const updateDataFunction = (redis, keywordId, currentKeyword, updateData, cb) =>
     redis.del(`keyword:${keywordId}`, (err) => {
 
         if (err){
-            const error = Boom.badImplementation('An error occurred temporaly removing the keyword for the update.');
+            const error = Boom.badImplementation('An error occurred temporarily removing the keyword for the update.');
             return cb(error);
         }
         redis.hmset(`keyword:${keywordId}`, RemoveBlankArray(flatKeyword), (err) => {

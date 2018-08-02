@@ -52,7 +52,7 @@ module.exports = (request, reply) => {
                 redis.del(`settings:${setting}`, (err) => {
 
                     if (err){
-                        const error = Boom.badImplementation('An error occurred temporaly removing the setting for the update.');
+                        const error = Boom.badImplementation('An error occurred temporarily removing the setting for the update.');
                         return callbck(error);
                     }
                     redis.hmset(`settings:${setting}`, flatData, (err) => {

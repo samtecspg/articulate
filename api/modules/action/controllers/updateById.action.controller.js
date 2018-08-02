@@ -28,7 +28,7 @@ const updateDataFunction = (redis, server, actionId, currentAction, updateData, 
             redis.del(`action:${actionId}`, (err) => {
 
                 if (err){
-                    const error = Boom.badImplementation('An error occurred temporaly removing the action for the update.');
+                    const error = Boom.badImplementation('An error occurred temporarily removing the action for the update.');
                     return callback(error);
                 }
                 return callback(null);
