@@ -2,7 +2,6 @@
 const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
-// TODO: PATH 1.1.2.1
 module.exports = (request, reply) => {
 
     const server = request.server;
@@ -24,7 +23,7 @@ module.exports = (request, reply) => {
 
     Async.waterfall([
         (cb) => {
-            // TODO: PATH 1.1.2.1.1
+
             redis.zrange(`agentDomains:${agentId}`, 0, -1, 'withscores', (err, domains) => {
 
                 if (err){
@@ -51,7 +50,7 @@ module.exports = (request, reply) => {
             });
         },
         (domains, cb) => {
-            // TODO: PATH 1.1.2.1.2
+
             Async.map(domains, (domain, callback) => {
 
                 server.inject('/domain/' + domain.id, (res) => {

@@ -5,7 +5,6 @@ const AgentTools = require('../tools');
 const Flat = require('../../../helpers/flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
-// TODO: PATH 1.1
 module.exports = (request, reply) => {
 
     const { id: agentId, text, timezone } = request.plugins['flow-loader'];
@@ -16,7 +15,6 @@ module.exports = (request, reply) => {
     Async.waterfall([
         (callback) => {
 
-            // TODO: PATH 1.1.1 (1)
             server.inject('/agent/' + agentId, (res) => {
 
                 if (res.statusCode !== 200) {
@@ -33,9 +31,7 @@ module.exports = (request, reply) => {
         (agent, callback) => {
 
             Async.parallel({
-                // TODO: PATH 1.1.2
                 trainedDomains: Async.apply(AgentTools.getAvailableDomains, server, redis, agent),
-                // TODO: PATH 1.1.3
                 duckling: (callbackGetRasa) => {
 
                     server.inject(`/agent/${agentId}/settings/ducklingURL`, (res) => {
@@ -51,7 +47,6 @@ module.exports = (request, reply) => {
                         return callbackGetRasa(null, res.result);
                     });
                 },
-                // TODO: PATH 1.1.4
                 rasa: (callbackGetRasa) => {
 
                     server.inject(`/agent/${agentId}/settings/rasaURL`, (res) => {
@@ -67,7 +62,6 @@ module.exports = (request, reply) => {
                         return callbackGetRasa(null, res.result);
                     });
                 },
-                // TODO: PATH 1.1.5
                 spacyPretrainedEntities: (callbackGetSpacyPretrainedEntities) => {
 
                     server.inject(`/agent/${agentId}/settings/spacyPretrainedEntities`, (res) => {
@@ -83,7 +77,6 @@ module.exports = (request, reply) => {
                         return callbackGetSpacyPretrainedEntities(null, res.result);
                     });
                 },
-                // TODO: PATH 1.1.6
                 ducklingDimension: (callbackGetDucklinDimensions) => {
 
                     server.inject(`/agent/${agentId}/settings/ducklingDimension`, (res) => {
@@ -99,7 +92,6 @@ module.exports = (request, reply) => {
                         return callbackGetDucklinDimensions(null, res.result);
                     });
                 },
-                // TODO: PATH 1.1.7
                 ERPipeline: (callbackGetRasa) => {
 
                     server.inject(`/agent/${agentId}/settings/keywordClassifierPipeline`, (res) => {
@@ -124,7 +116,7 @@ module.exports = (request, reply) => {
             });
         },
         (agentData, callback) => {
-            // TODO: PATH 1.1.8
+
             agentData.agent.timezone = timezone ? timezone : agentData.agent.timezone;
             AgentTools.parseText(agentData.rasa, agentData.spacyPretrainedEntities, agentData.ERPipeline, agentData.duckling, agentData.ducklingDimension, text, agentData, server, (err, result) => {
 
@@ -142,7 +134,7 @@ module.exports = (request, reply) => {
 
         Async.waterfall([
             (cb) => {
-                // TODO: PATH 1.1.9
+
                 redis.incr('documentId', (err, newDocumentId) => {
 
                     if (err) {
@@ -154,7 +146,7 @@ module.exports = (request, reply) => {
                 });
             },
             (cb) => {
-                // TODO: PATH 1.1.10
+
                 document = Object.assign({ id: documentId }, document);
                 if (document.result && document.result.results){
                     document.result.results.forEach((result) => {

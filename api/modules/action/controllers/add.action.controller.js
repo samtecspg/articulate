@@ -1,5 +1,4 @@
 'use strict';
-const _ = require('lodash');
 const Async = require('async');
 const Boom = require('boom');
 const Flat = require('../../../helpers/flat');

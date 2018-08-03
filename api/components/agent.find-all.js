@@ -1,17 +1,15 @@
 'use strict';
 
 const Noflo = require('noflo');
-const Async = require('async');
-const Flat = require('../helpers/flat');
-const Cast = require('../helpers/cast');
+const RedisDS = require('../datasources/redis.ds');
 
-const _ = require('lodash');
 const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 const PORT_IN = 'in';
 
 exports.getComponent = () => {
+
     const c = new Noflo.Component();
     c.description = 'Get all agents';
     c.icon = 'user';
@@ -33,6 +31,7 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
+
         if (!input.has(PORT_IN)) {
             return;
         }
@@ -41,39 +40,22 @@ exports.getComponent = () => {
             return;
         }
         const redis = input.getData(PORT_REDIS);
-        let { start, limit } = input.getData(PORT_IN);
-        start = start > -1 ? start : 0;
-        limit = limit > -1 ? limit : -1;
-        const getAgentById = ([name, id], cb) => {
+        const { start, limit } = input.getData(PORT_IN);
+        RedisDS
+            .findAll({
+                redis,
+                start,
+                limit,
+                type: 'agents',
+                subType: 'agent'
+            })
+            .then((agents) => {
 
-            redis.hgetall(`agent:${id}`, (err, agent) => {
-                if (err) {
-                    err.key = id;
-                    return cb(err);
-                }
-                if (!agent) {
-                    err = new Error('Agent not found');
-                    err.key = id;
-                    return cb(err);
-                }
-                return cb(null, Cast(Flat.unflatten(agent), 'action'));
-            });
-        };
+                return output.sendDone({ [PORT_OUT]: agents });
+            })
+            .catch((err) => {
 
-        redis.zrange('agents', start, limit === -1 ? limit : limit - 1, 'withscores', (err, agents) => {
-
-            if (err) {
                 return output.sendDone({ [PORT_ERROR]: err });
-            }
-            agents = _.chunk(agents, 2);
-            Async.map(agents, getAgentById, (err, results) => {
-
-                if (err) {
-                    return output.sendDone({ [PORT_ERROR]: err });
-                }
-                return output.sendDone({ [PORT_OUT]: results });
             });
-        });
-
     });
 };

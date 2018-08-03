@@ -5,11 +5,13 @@ const DefaultSettings = require('./defaultSettings.json');
 const Async = require('async');
 
 exports.register = (server, options, next) => {
+
     next = _.once(next); //Prevent calling the async next when there is an error after a successful connection
     Async.eachLimit(Object.keys(DefaultSettings), 1,
         (setting, cb) => {
 
             server.inject(`/settings/${setting}`, (res) => {
+
                 if (res.statusCode === 200) {
                     return cb(null);
                 }
@@ -20,13 +22,13 @@ exports.register = (server, options, next) => {
                 const payload = {};
                 payload[setting] = DefaultSettings[setting];
 
-                const options = {
+                const request = {
                     url: '/settings',
                     method: 'PUT',
                     payload
                 };
 
-                server.inject(options, (resPut) => {
+                server.inject(request, (resPut) => {
 
                     if (resPut.statusCode !== 200) {
                         return cb(resPut.result);

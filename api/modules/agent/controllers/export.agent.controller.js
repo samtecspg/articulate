@@ -2,7 +2,6 @@
 const Async = require('async');
 const Boom = require('boom');
 
-// TODO: PATH 1.2 (1)
 module.exports = (request, reply) => {
 
     const agentId = request.params.id;
@@ -12,7 +11,7 @@ module.exports = (request, reply) => {
     Async.waterfall([
 
         (callbackGetAgent) => {
-            // TODO: PATH 1.1.1 (2)
+
             server.inject(`/agent/${agentId}`, (res) => {
 
                 if (res.statusCode !== 200) {
@@ -118,7 +117,7 @@ module.exports = (request, reply) => {
 
                                                     server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action/${exportedActionForDomain.id}/postFormat`, (res) => {
 
-                                                        if (res.statusCode !== 200 ) {
+                                                        if (res.statusCode !== 200) {
                                                             if (res.statusCode === 404) {
                                                                 if (!withReferences) {
                                                                     delete exportedActionForDomain.id;

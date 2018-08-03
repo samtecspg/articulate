@@ -5,8 +5,8 @@ const Boom = require('boom');
 const Handlebars = require('handlebars');
 const RegisterHandlebarHelpers = require('../../../helpers/registerHandlebarsHelpers.js');
 
-// TODO: PATH 1
 module.exports = (request, reply) => {
+
     const { id: agentId, sessionId, text, timezone } = request.plugins['flow-loader'];
     RegisterHandlebarHelpers(Handlebars);
     const server = request.server;
@@ -16,7 +16,7 @@ module.exports = (request, reply) => {
 
             Async.parallel({
                 parse: (cb) => {
-                    // TODO: PATH 1.1
+
                     server.inject(`/agent/${agentId}/parse?text=${text}&${(timezone ? 'timezone=' + timezone : '')}`, (res) => {
 
                         if (res.statusCode !== 200) {
@@ -32,7 +32,6 @@ module.exports = (request, reply) => {
                 },
                 agent: (cb) => {
 
-                    // TODO: PATH 1.2
                     server.inject(`/agent/${agentId}/export?withReferences=true`, (res) => {
 
                         if (res.statusCode !== 200) {
@@ -46,7 +45,6 @@ module.exports = (request, reply) => {
                         return cb(null, res.result);
                     });
                 },
-                // TODO: PATH 1.3
                 context: (cb) => {
 
                     server.inject(`/context/${sessionId}`, (res) => {
@@ -66,7 +64,6 @@ module.exports = (request, reply) => {
                 return callback(null, results);
             });
         },
-        // TODO: PATH 1.4
         (conversationStateObject, callback) => {
 
             const timezoneToUse = timezone ? timezone : (conversationStateObject.agent.timezone ? conversationStateObject.agent.timezone : 'UTC');
@@ -86,7 +83,6 @@ module.exports = (request, reply) => {
                     }
                 });
             }
-            // TODO: PATH 1.4.1
             AgentTools.respond(server, conversationStateObject, (err, result) => {
 
                 if (err) {
@@ -114,8 +110,7 @@ module.exports = (request, reply) => {
             try {
                 const compiledPostFormat = Handlebars.compile(postFormatPayloadToUse);
                 const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject, { textResponse: data.textResponse }));
-                let processedPostFormatJson = {};
-                processedPostFormatJson = JSON.parse(processedPostFormat);
+                const processedPostFormatJson = JSON.parse(processedPostFormat);
                 if (!processedPostFormatJson.textResponse) {
                     processedPostFormatJson.textResponse = data.textResponse;
                 }

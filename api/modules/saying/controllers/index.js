@@ -13,7 +13,7 @@ const SayingController = {
 
     updateById: UpdateByIdController,
 
-    deleteById: DeleteByIdController,
+    deleteById: DeleteByIdController
 };
 
 module.exports = SayingController;

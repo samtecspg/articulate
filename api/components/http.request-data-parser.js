@@ -1,10 +1,11 @@
 'use strict';
 
-const noflo = require('noflo');
+const NoFlo = require('noflo');
 const POST_REQUEST = 'request';
 const POST_OUT = 'out';
 exports.getComponent = () => {
-    const c = new noflo.Component();
+
+    const c = new NoFlo.Component();
     c.description = 'Parses the data out of a request object';
     c.icon = 'forward';
 
@@ -18,12 +19,13 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
+
         if (!input.has(POST_REQUEST)) {
             return;
         }
         const request = input.getData(POST_REQUEST);
         const { params, query, payload } = request;
-        const data = { ...params, ...query, ...payload };
+        const data = Object.assign({}, params, query, payload);
         output.sendDone({ [POST_OUT]: data });
     });
 };

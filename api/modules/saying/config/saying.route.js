@@ -54,7 +54,7 @@ const SayingRoutes = [
                 server: false
             }
         }
-    },
+    }
 ];
 
 module.exports = SayingRoutes;

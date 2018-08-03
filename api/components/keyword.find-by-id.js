@@ -43,7 +43,7 @@ exports.getComponent = () => {
         RedisDS
             .findById({
                 redis,
-                type: 'agent',
+                type: 'keyword',
                 id
             })
             .then((agent) => {

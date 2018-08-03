@@ -3,13 +3,11 @@ const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 const Flat = require('../../../helpers/flat');
 
-//TODO: PATH 1.1.2.1
 module.exports = (request, reply) => {
 
     const domainId = request.params.id;
     const redis = request.server.app.redis;
 
-    //TODO: PATH 1.1.2.1.1
     redis.hgetall('domain:' + domainId, (err, data) => {
 
         if (err){

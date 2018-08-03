@@ -1,49 +1,59 @@
 'use strict';
-const noflo = require('noflo');
-const util = require('util');
+const NoFlo = require('noflo');
+const Util = require('util');
 const Boom = require('boom');
 const name = 'flow-loader';
 const _ = require('lodash');
+
 exports.register = (server, options, next) => {
-    const { baseDir, ...rest } = options;
-    const loader = new noflo.ComponentLoader(baseDir, rest);
+
+    const baseDir = _.pick(options, 'baseDir');
+    const rest = _.omit(options, 'baseDir');
+
+    const loader = new NoFlo.ComponentLoader(baseDir, rest);
     loader.listComponents(() => {
 
         Object
             .keys(loader.components)
             .forEach((componentName) => {
+
                 loader
                     .load(componentName, (err, component) => {
+
                         if (err) {
                             return next(err);
                         }
                         component
                             .start((err) => {
+
                                 if (err) {
                                     console.error(err);
                                 }
                                 const log = {
                                     name: componentName,
                                     ready: component.isReady(),
-                                    subGraph: component.isSubgraph(),
+                                    subGraph: component.isSubgraph()
                                 };
-                                console.log(util.inspect(log, { colors: true }));
+                                console.log(Util.inspect(log, { colors: true }));
                             });
                     });
             });
         server.ext('onPreHandler', (request, reply) => {
+
             const settings = request.route.settings.plugins[name];
             if (settings) {
-                const graph = noflo.asCallback(settings.name, { loader });
-                const promisedGraph = util.promisify(graph);
-                let data = { request };
+                const graph = NoFlo.asCallback(settings.name, { loader });
+                const promisedGraph = Util.promisify(graph);
+                const data = { request };
                 if (_.isArray(settings.consumes)) {
                     settings.consumes.forEach((service) => {
+
                         data[service] = server.app[service];
                     });
                 }
                 promisedGraph(data)
                     .then((result) => {
+
                         if (result.error) {
                             return reply.continue();
                         }
@@ -51,11 +61,13 @@ exports.register = (server, options, next) => {
                         return reply.continue();
                     })
                     .catch((err) => {
+
                         const error = Boom.notFound(err.message);
                         return reply(error);
                     });
 
-            } else {
+            }
+            else {
                 return reply.continue();
             }
         });

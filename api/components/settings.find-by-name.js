@@ -1,6 +1,6 @@
 'use strict';
 
-const noflo = require('noflo');
+const NoFlo = require('noflo');
 const Flat = require('../helpers/flat');
 
 const PORT_IN = 'in';
@@ -8,7 +8,8 @@ const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 exports.getComponent = () => {
-    const c = new noflo.Component();
+
+    const c = new NoFlo.Component();
     c.description = 'Get settings by name';
     c.icon = 'gear';
 
@@ -31,6 +32,7 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
+
         if (!input.has(PORT_IN)) {
             return;
         }
@@ -39,7 +41,10 @@ exports.getComponent = () => {
             return;
         }
         const [{ name }, redis] = input.getData(PORT_IN, PORT_REDIS);
+        // TODO: move to redis.ds, keeping ot here bcs it has a different Cast/Flat than others
+
         redis.hgetall(`settings:${name}`, (err, setting) => {
+
             if (err) {
                 err.key = name;
                 return output.sendDone({ [PORT_ERROR]: err });

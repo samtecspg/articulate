@@ -4,6 +4,7 @@ const _ = require('lodash');
 const Redis = require('redis');
 
 exports.register = (server, options, next) => {
+
     const { host, port, retry, retryTimeout } = options;
     next = _.once(next); //Prevent calling the async next when there is an error after a successful connection
 

@@ -6,7 +6,6 @@ const Flat = require('../../../helpers/flat');
 const ActionTools = require('../tools');
 const _ = require('lodash');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
-const Status = require('../../../helpers/status.json');
 
 const updateDataFunction = (redis, server, actionId, currentAction, updateData, agentId, domainId, cb) => {
 

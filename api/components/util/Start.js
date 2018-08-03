@@ -1,10 +1,11 @@
 'use strict';
 
-const noflo = require('noflo');
+const NoFlo = require('noflo');
 
 exports.getComponent = () => {
-    const c = new noflo.Component();
-    c.description = `[START] Forwards packets and metadata in the same way it receives them`;
+
+    const c = new NoFlo.Component();
+    c.description = '[START] Forwards packets and metadata in the same way it receives them';
     c.icon = 'forward';
     c.inPorts.add('in', {
         datatype: 'all',
@@ -24,6 +25,7 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
+
         if (!input.hasData('in')) {
             return;
         }

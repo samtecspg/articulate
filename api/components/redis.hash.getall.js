@@ -1,13 +1,14 @@
 'use strict';
 
-const noflo = require('noflo');
+const NoFlo = require('noflo');
 
 const PORT_IN = 'in';
 const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 exports.getComponent = () => {
-    const c = new noflo.Component();
+
+    const c = new NoFlo.Component();
     c.description = 'Get agent by id';
     c.icon = 'forward';
     c.inPorts.add(PORT_IN, {
@@ -29,6 +30,7 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
+
         if (!input.has(PORT_IN)) {
             return;
         }
@@ -38,6 +40,7 @@ exports.getComponent = () => {
         }
         const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
         redis.hgetall(`agent:${id}`, (err, reply) => {
+
             if (err) {
                 err.key = id;
                 output.done(err);
