@@ -12,7 +12,7 @@ class DomainValidate {
                     agent: DomainSchema.agent.required(),
                     domainName: DomainSchema.domainName.required(),
                     enabled: DomainSchema.enabled.required(),
-                    sayingThreshold: DomainSchema.sayingThreshold.required(),
+                    actionThreshold: DomainSchema.actionThreshold.required(),
                     lastTraining: DomainSchema.lastTraining,
                     model: DomainSchema.model,
                     extraTrainingData: DomainSchema.extraTrainingData
@@ -41,7 +41,7 @@ class DomainValidate {
                 return {
                     domainName: DomainSchema.domainName,
                     enabled: DomainSchema.enabled,
-                    sayingThreshold: DomainSchema.sayingThreshold,
+                    actionThreshold: DomainSchema.actionThreshold,
                     lastTraining: DomainSchema.lastTraining,
                     status: DomainSchema.status,
                     model: DomainSchema.model,

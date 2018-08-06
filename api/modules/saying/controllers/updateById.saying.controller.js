@@ -61,7 +61,7 @@ const updateDataFunction = (redis, server, sayingId, currentSaying, updateData, 
                 if (keyword.extractor){
                     return nextKeyword(null);
                 }
-                redis.zadd(`keywordSayings:${keyword.keywordId}`, 'NX', sayingId, resultSaying.sayingName, (err, addResponse) => {
+                redis.zadd(`keywordSayings:${keyword.keywordId}`, 'NX', sayingId, resultSaying.id, (err, addResponse) => {
 
                     if (err) {
                         const error = Boom.badImplementation('An error occurred adding the saying to the keyword list.');

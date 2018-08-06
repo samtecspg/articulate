@@ -6,8 +6,7 @@ class ScenarioModel {
 
         return {
             id: Joi.number(),
-            name: Joi.string().trim(),
-            scenario: Joi.string().trim(),
+            action: Joi.string().trim(),
             slots: Joi.object()
         };
     };

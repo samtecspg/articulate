@@ -97,13 +97,13 @@ module.exports = (request, reply) => {
             return reply(err);
         }
         let postFormatPayloadToUse;
-        let usedPostFormatSaying;
-        if (conversationStateObject.saying.usePostFormat) {
-            postFormatPayloadToUse = conversationStateObject.saying.postFormat.postFormatPayload;
-            usedPostFormatSaying = true;
+        let usedPostFormatAction;
+        if (conversationStateObject.action.usePostFormat) {
+            postFormatPayloadToUse = conversationStateObject.action.postFormat.postFormatPayload;
+            usedPostFormatAction = true;
         }
         else if (conversationStateObject.agent.usePostFormat) {
-            usedPostFormatSaying = false;
+            usedPostFormatAction = false;
             postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
         }
         if (postFormatPayloadToUse) {
@@ -117,7 +117,7 @@ module.exports = (request, reply) => {
                 return reply(processedPostFormatJson);
             }
             catch (error) {
-                const errorMessage = usedPostFormatSaying ? 'Error formatting the post response using saying POST format : ' : 'Error formatting the post response using agent POST format : ';
+                const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
                 console.log(errorMessage, error);
                 return reply({
                     textResponse: data.textResponse,

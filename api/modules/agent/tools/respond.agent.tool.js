@@ -2,7 +2,7 @@
 const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
-const RespondSaying = require('./respondSaying.agent.tool');
+const RespondAction = require('./respondAction.agent.tool');
 const RespondFallback = require('./respondFallback.agent.tool');
 
 const getCurrentContext = (conversationStateObject) => {
@@ -59,49 +59,38 @@ const getBestRasaResult = (conversationStateObject) => {
     return rasaResult;
 };
 
-const getScenarioByName = (scenarioName, conversationStateObject) => {
+const getActionByName = (actionName, conversationStateObject) => {
 
-    const agentSayings = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'sayings')));
-    const agentScenarios = _.compact(_.map(agentSayings, 'scenario'));
-    const scenario = _.filter(agentScenarios, (agentScenario) => {
+    const agentActions = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'actions')));
+    const action = _.filter(agentActions, (agentAction) => {
 
-        return agentScenario.scenarioName === scenarioName;
+        return agentAction.actionName === actionName;
     })[0];
-    return scenario;
+    return action;
 };
 
-const getSayingByName = (sayingName, conversationStateObject) => {
+const getDomainOfAction = (conversationStateObject) => {
 
-    const agentSayings = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'sayings')));
-    const saying = _.filter(agentSayings, (agentSaying) => {
-
-        return agentSaying.sayingName === sayingName;
-    })[0];
-    return saying;
-};
-
-const getDomainOfSaying = (conversationStateObject) => {
-
-    if (conversationStateObject.saying) {
+    if (conversationStateObject.action) {
         const domain = _.filter(conversationStateObject.agent.domains, (agentDomain) => {
 
-            return agentDomain.domainName === conversationStateObject.saying.domain;
+            return agentDomain.domainName === conversationStateObject.action.domain;
         })[0];
         return domain;
     }
     return null;
 };
 
-const getSayingData = (conversationStateObject) => {
+const getActionData = (conversationStateObject) => {
 
-    if (conversationStateObject.rasaResult.saying) {
+    if (conversationStateObject.rasaResult.action) {
         if (conversationStateObject.agent.domains) {
-            const agentSayings = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'sayings')));
-            const saying = _.filter(agentSayings, (agentSaying) => {
+            const agentActions = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'actions')));
+            const action = _.filter(agentActions, (agentAction) => {
 
-                return agentSaying.sayingName === conversationStateObject.rasaResult.saying.name;
+                return agentAction.actionName === conversationStateObject.rasaResult.action.name;
             })[0];
-            return saying;
+            return action;
         }
         return null;
     }
@@ -188,9 +177,8 @@ module.exports = (server, conversationStateObject, callback) => {
     conversationStateObject.currentContext = getCurrentContext(conversationStateObject);
     if (conversationStateObject.parse) {
         conversationStateObject.rasaResult = getBestRasaResult(conversationStateObject);
-        conversationStateObject.saying = getSayingData(conversationStateObject);
-        conversationStateObject.scenario = conversationStateObject.saying ? conversationStateObject.saying.scenario : null;
-        if (conversationStateObject.saying && !conversationStateObject.scenario) {
+        conversationStateObject.action = getActionData(conversationStateObject);
+        if (conversationStateObject.action && (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0)) {
             RespondFallback(conversationStateObject, (err, response) => {
 
                 if (err) {
@@ -206,17 +194,16 @@ module.exports = (server, conversationStateObject, callback) => {
             });
         }
         else {
-            conversationStateObject.domain = getDomainOfSaying(conversationStateObject);
-            if (conversationStateObject.saying && conversationStateObject.scenario && conversationStateObject.domain && conversationStateObject.rasaResult.saying.confidence > conversationStateObject.domain.sayingThreshold) {
-                if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.saying.name !== conversationStateObject.currentContext.name)) {
+            conversationStateObject.domain = getDomainOfAction(conversationStateObject);
+            if (conversationStateObject.action && conversationStateObject.domain && conversationStateObject.rasaResult.action.confidence > conversationStateObject.domain.actionThreshold) {
+                if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.action.name !== conversationStateObject.currentContext.action)) {
                     conversationStateObject.context.push({
-                        name: conversationStateObject.rasaResult.saying.name,
-                        scenario: conversationStateObject.scenario.scenarioName,
+                        action: conversationStateObject.rasaResult.action.name,
                         slots: {}
                     });
                     conversationStateObject.currentContext = getCurrentContext(conversationStateObject);
                 }
-                RespondSaying(conversationStateObject, (err, response) => {
+                RespondAction(conversationStateObject, (err, response) => {
 
                     if (err) {
                         return callback(err, null);
@@ -231,13 +218,12 @@ module.exports = (server, conversationStateObject, callback) => {
                 });
             }
             else {
-                const recognizedKeywords = !conversationStateObject.rasaResult.saying ? conversationStateObject.rasaResult.keywords : getKeywordsFromRasaResults(conversationStateObject.parse);
+                const recognizedKeywords = !conversationStateObject.rasaResult.action ? conversationStateObject.rasaResult.keywords : getKeywordsFromRasaResults(conversationStateObject.parse);
                 if (conversationStateObject.currentContext) {
                     if (recognizedKeywords.length > 0) {
                         if (conversationStateObject.currentContext.slots && Object.keys(conversationStateObject.currentContext.slots).length > 0 && recognizedKeywordsArePartOfTheContext(conversationStateObject.currentContext, recognizedKeywords)) {
-                            conversationStateObject.scenario = getScenarioByName(conversationStateObject.currentContext.scenario, conversationStateObject);
-                            conversationStateObject.saying = getSayingByName(conversationStateObject.currentContext.name, conversationStateObject);
-                            RespondSaying(conversationStateObject, (err, response) => {
+                            conversationStateObject.action = getActionByName(conversationStateObject.currentContext.action, conversationStateObject);
+                            RespondAction(conversationStateObject, (err, response) => {
 
                                 if (err) {
                                     return callback(err, null);
@@ -256,9 +242,8 @@ module.exports = (server, conversationStateObject, callback) => {
                             if (lastValidContext) {
                                 conversationStateObject.context.push(lastValidContext);
                                 conversationStateObject.currentContext = lastValidContext;
-                                conversationStateObject.scenario = getScenarioByName(conversationStateObject.currentContext.scenario, conversationStateObject);
-                                conversationStateObject.saying = getSayingByName(conversationStateObject.currentContext.name, conversationStateObject);
-                                RespondSaying(conversationStateObject, (err, response) => {
+                                conversationStateObject.action = getActionByName(conversationStateObject.currentContext.name, conversationStateObject);
+                                RespondAction(conversationStateObject, (err, response) => {
 
                                     if (err) {
                                         return callback(err, null);

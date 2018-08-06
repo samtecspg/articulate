@@ -150,7 +150,9 @@ const castSysKeywords = (parseResult, spacyPretrainedEntities, ducklingDimension
                     return null;
                 }
             }
-            keyword.value = keyword.value;
+            keyword.value = {
+                value: keyword.value
+            };
             return keyword;
         });
 
@@ -369,7 +371,7 @@ module.exports = (rasa, spacyPretrainedEntities, ERPipeline, duckling, ducklingD
             return cb(err, null);
         }
         const time = process.hrtime(start);
-        const maximum_saying_score = _.max(_.compact(_.map(_.map(result.result.results, 'saying'), 'confidence')));
+        const maximum_saying_score = _.max(_.compact(_.map(_.map(result.result.results, 'action'), 'confidence')));
         const maximum_domain_score = _.max(_.compact(_.map(result.result.results, 'domainScore')));
         result.result.results = _.orderBy(result.result.results, 'domainScore', 'desc');
         if (maximum_domain_score) {

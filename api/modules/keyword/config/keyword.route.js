@@ -1,6 +1,7 @@
 'use strict';
 const KeywordController = require('../controllers');
 const KeywordValidator = require('./keyword.validator');
+const PKG = require('../../../package');
 
 const keywordRoutes = [
     {
@@ -19,6 +20,12 @@ const keywordRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/keyword.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: KeywordValidator.findById,
             handler: KeywordController.findById
         }

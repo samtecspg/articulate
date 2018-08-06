@@ -9,22 +9,22 @@ const getTextResponse = (conversationStateObject, webhookResponse) => {
     if (webhookResponse){
         conversationStateObject = _.merge(conversationStateObject, { webhookResponse });
     }
-    const validResponses = BuildValidResponses(conversationStateObject, conversationStateObject.scenario.sayingResponses);
+    const validResponses = BuildValidResponses(conversationStateObject, conversationStateObject.action.responses);
     let textResponse;
     if (validResponses.length > 0){
         textResponse = validResponses[Math.floor(Math.random() * validResponses.length)].response;
     }
     else {
         textResponse = 'Sorry we’re not sure how to respond.';
-        console.error(`Failed to generate valid response for saying ${conversationStateObject.saying.sayingName}`);
+        console.error(`Failed to generate valid response for the action ${conversationStateObject.action.actionName}`);
     }
     return textResponse;
 };
 
 module.exports = (conversationStateObject, callback) => {
 
-    if (conversationStateObject.saying.useWebhook || conversationStateObject.agent.useWebhook) {
-        const webhookToUse = conversationStateObject.saying.useWebhook ? conversationStateObject.saying.webhook : conversationStateObject.agent.webhook;
+    if (conversationStateObject.action.useWebhook || conversationStateObject.agent.useWebhook) {
+        const webhookToUse = conversationStateObject.action.useWebhook ? conversationStateObject.action.webhook : conversationStateObject.agent.webhook;
         CallWebhook(webhookToUse, conversationStateObject, (webhookResponse) => {
 
             if (webhookResponse.textResponse){

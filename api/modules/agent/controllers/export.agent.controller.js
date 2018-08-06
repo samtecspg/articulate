@@ -58,6 +58,9 @@ module.exports = (request, reply) => {
                                             if (!withReferences) {
                                                 res.result.sayings.forEach((domainSaying) => {
 
+                                                    delete domainSaying.id;
+                                                    delete domainSaying.agent;
+                                                    delete domainSaying.domain;
                                                     domainSaying.keywords.forEach((keyword) => {
 
                                                         delete keyword.keywordId;
@@ -119,11 +122,6 @@ module.exports = (request, reply) => {
 
                                                         if (res.statusCode !== 200) {
                                                             if (res.statusCode === 404) {
-                                                                if (!withReferences) {
-                                                                    delete exportedActionForDomain.id;
-                                                                    delete exportedActionForDomain.agent;
-                                                                    delete exportedActionForDomain.domain;
-                                                                }
                                                                 return callbackGetActionPostFormat(null, exportedActionForDomain);
 
                                                                 const error = Boom.create(res.statusCode, `An error occurred getting the post format of action ${exportedActionForDomain.actionName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
@@ -135,9 +133,6 @@ module.exports = (request, reply) => {
                                                             delete res.result.agent;
                                                             delete res.result.domain;
                                                             delete res.result.action;
-                                                            delete exportedActionForDomain.id;
-                                                            delete exportedActionForDomain.agent;
-                                                            delete exportedActionForDomain.domain;
                                                         }
                                                         return callbackGetActionPostFormat(null, Object.assign(exportedActionForDomain, { postFormat: res.result }));
                                                     });
@@ -153,6 +148,20 @@ module.exports = (request, reply) => {
 
                                             if (err) {
                                                 return callbacGetActionsData(err);
+                                            }
+                                            if (!withReferences) {
+                                                actionsWithWebhooksAndPostFormat.forEach((action) => {
+
+                                                    delete action.id;
+                                                    delete action.agent;
+                                                    delete action.domain;
+                                                    if (action.slots){
+                                                        action.slots.forEach((slot) => {
+
+                                                            delete slot.keywordId;
+                                                        });
+                                                    }
+                                                });
                                             }
                                             return callbacGetActionsData(null, actionsWithWebhooksAndPostFormat);
                                         });

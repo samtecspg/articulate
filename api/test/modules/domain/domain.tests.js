@@ -58,7 +58,7 @@ suite('/domain', () => {
                 agent: agentName,
                 domainName: 'Test Domain 2',
                 enabled: true,
-                sayingThreshold: 0.7
+                actionThreshold: 0.7
             };
             const options = {
                 method: 'POST',
@@ -98,7 +98,7 @@ suite('/domain', () => {
                 agent: '-1',
                 domainName: 'Test Domain',
                 enabled: true,
-                sayingThreshold: 0.7
+                actionThreshold: 0.7
             };
 
             const options = {
@@ -130,7 +130,7 @@ suite('/domain/{id}', () => {
                 agent: agentName,
                 domainName: 'Test Domain 2',
                 enabled: true,
-                sayingThreshold: 0.7
+                actionThreshold: 0.7
             };
 
             server.inject('/domain/' + data.id, (res) => {
@@ -165,13 +165,13 @@ suite('/domain/{id}', () => {
                 agent: agentName,
                 domainName: 'Test Domain 2 Updated',
                 enabled: false,
-                sayingThreshold: 0.55
+                actionThreshold: 0.55
             };
 
             const updatedData = {
                 domainName: 'Test Domain 2 Updated',
                 enabled: false,
-                sayingThreshold: 0.55
+                actionThreshold: 0.55
             };
 
             const options = {

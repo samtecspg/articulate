@@ -32,7 +32,7 @@ module.exports = (object, type) => {
             if (typeof object.extraTrainingData !== 'boolean'){
                 object.extraTrainingData = object.extraTrainingData === 'true';
             }
-            object.sayingThreshold = parseFloat(object.sayingThreshold);
+            object.actionThreshold = parseFloat(object.actionThreshold);
             break;
         case 'keyword':
             if (object.regex === '' || !object.regex || object.regex === 'null'){
@@ -66,8 +66,8 @@ module.exports = (object, type) => {
                     if (typeof slot.isRequired !== 'boolean'){
                         slot.isRequired = slot.isRequired === 'true';
                     }
-                    if (keyword.keywordId) {
-                        keyword.keywordId = parseInt(keyword.keywordId);
+                    if (slot.keywordId) {
+                        slot.keywordId = parseInt(slot.keywordId);
                     }
                     return slot;
                 });

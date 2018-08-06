@@ -72,7 +72,7 @@
     {
       "enabled": true,
       "domainName": "Orders",
-      "sayingThreshold": 0.7,
+      "actionThreshold": 0.7,
       "sayings": [
         {
           "sayingName": "Order pizza",
@@ -142,7 +142,7 @@
     {
       "enabled": true,
       "domainName": "Small talk",
-      "sayingThreshold": 0.7,
+      "actionThreshold": 0.7,
       "sayings": [
         {
           "sayingName": "Greeting",

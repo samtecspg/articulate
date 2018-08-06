@@ -4,6 +4,7 @@ const KeywordSchema = require('../../../models/index').Keyword.schema;
 const ExampleSchema = require('../../../models/index').Example.schema;
 const DomainSchema = require('../../../models/index').Domain.schema;
 const ActionSchema = require('../../../models/index').Action.schema;
+const SlotSchema = require('../../../models/index').Slot.schema;
 const SayingSchema = require('../../../models/index').Saying.schema;
 const SayingKeywordSchema = require('../../../models/index').SayingKeyword.schema;
 const WebhookSchema = require('../../../models/index').Webhook.schema;
@@ -327,6 +328,7 @@ class AgentValidate {
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
+                    multiDomain: AgentSchema.multiDomain.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     postFormat: {
                         postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
@@ -356,7 +358,7 @@ class AgentValidate {
                     domains: Joi.array().items({
                         domainName: DomainSchema.domainName.required(),
                         enabled: DomainSchema.enabled.required(),
-                        sayingThreshold: DomainSchema.sayingThreshold.required(),
+                        actionThreshold: DomainSchema.actionThreshold.required(),
                         lastTraining: DomainSchema.lastTraining,
                         model: DomainSchema.model,
                         status: DomainSchema.status,
@@ -364,6 +366,7 @@ class AgentValidate {
                         extraTrainingData: DomainSchema.extraTrainingData,
                         sayings: Joi.array().items({
                             userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
+                            actions: SayingSchema.actions.allow([]),
                             keywords: Joi.array().items({
                                 start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                                 end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
@@ -371,6 +374,20 @@ class AgentValidate {
                                 keyword: SayingKeywordSchema.keyword.required().error(new Error('The keyword reference is required.')),
                                 extractor: SayingKeywordSchema.extractor
                             }).required().allow([])
+                        }),
+                        actions: Joi.array().items({
+                            actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
+                            useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
+                            usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fullfilment.')),
+                            responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
+                            slots: Joi.array().items({
+                                slotName: SlotSchema.slotName.required(),
+                                keyword: SlotSchema.keyword,
+                                keywordId: SlotSchema.keywordId,
+                                isList: SlotSchema.isList.required(),
+                                isRequired: SlotSchema.isRequired.required(),
+                                textPrompts: SlotSchema.textPrompts
+                            })
                         })
                     })
                 };

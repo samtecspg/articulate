@@ -1,6 +1,7 @@
 'use strict';
 const SayingController = require('../controllers');
 const SayingValidator = require('./saying.validator');
+const PKG = require('../../../package');
 
 const SayingRoutes = [
     {
@@ -23,6 +24,12 @@ const SayingRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/saying.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: SayingValidator.findById,
             handler: SayingController.findById
         }

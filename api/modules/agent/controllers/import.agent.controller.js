@@ -4,6 +4,7 @@ const Boom = require('boom');
 const Flat = require('../../../helpers/flat');
 const _ = require('lodash');
 const SayingTools = require('../../saying/tools');
+const ActionTools = require('../../action/tools');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 const Status = require('../../../helpers/status.json');
 
@@ -119,7 +120,7 @@ module.exports = (request, reply) => {
                         return cb(null, keyword);
                     });
                 }
-            ], (errKeyword, resultKeyword) => {
+            ], (errKeyword) => {
 
                 if (errKeyword) {
                     return callbackAddKeywords(errKeyword, null);
@@ -189,220 +190,264 @@ module.exports = (request, reply) => {
                         return callbackAddDomains(errDomain, null);
                     }
                     domainResult = resultDomain;
-                    Async.map(domain.sayings, (saying, callbackAddSayings) => {
+                    Async.parallel({
+                        sayings: (cbAddSayingsToDomain) => {
 
-                        let sayingId;
-                        Async.series({
-                            keywordsCheck: (cb) => {
+                            Async.map(domain.sayings, (saying, callbackAddSayings) => {
 
-                                SayingTools.validateKeywordsTool(redis, agentId, saying.examples, (err) => {
+                                let sayingId;
+                                Async.series({
+                                    keywordsCheck: (cb) => {
 
-                                    if (err) {
-                                        return cb(err);
-                                    }
-                                    return cb(null);
-                                });
-                            },
-                            sayingId: (cb) => {
-
-                                redis.incr('sayingId', (err, newSayingId) => {
-
-                                    if (err) {
-                                        const error = Boom.badImplementation('An error occurred getting the new saying id.');
-                                        return cb(error);
-                                    }
-                                    sayingId = newSayingId;
-                                    return cb(null);
-                                });
-                            },
-                            addToDomain: (cb) => {
-
-                                redis.zadd(`domainSayings:${domainId}`, 'NX', sayingId, sayingId, (err, addResponse) => {
-
-                                    if (err) {
-                                        const error = Boom.badImplementation('An error occurred adding the name to the sayings list.');
-                                        return cb(error);
-                                    }
-                                    if (addResponse !== 0) {
-                                        return cb(null);
-                                    }
-                                    const error = Boom.badRequest(`A saying with the name ${saying.sayingName} already exists in the domain ${domain.domainName}.`);
-                                    return cb(error);
-                                });
-                            },
-                            addToKeywords: (cb) => {
-
-                                Async.eachSeries(saying.examples, (example, nextSaying) => {
-
-                                    Async.eachSeries(example.keywords, (keyword, nextKeyword) => {
-
-                                        //Only system keywords have an extractor specified, so ignore sys keywords
-                                        if (keyword.extractor) {
-                                            return nextKeyword(null);
-                                        }
-                                        redis.zadd(`keywordSayings:${keywordsDir[keyword.keyword]}`, 'NX', sayingId, saying.sayingName, (err, addResponse) => {
+                                        SayingTools.validateKeywordsTool(redis, agentId, saying.examples, (err) => {
 
                                             if (err) {
-                                                const error = Boom.badImplementation('An error occurred adding the saying to the keyword list.');
-                                                return nextKeyword(error);
+                                                return cb(err);
                                             }
-                                            keyword.keywordId = keywordsDir[keyword.keyword];
-                                            return nextKeyword(null);
+                                            return cb(null);
                                         });
-                                    }, nextSaying);
-                                }, cb);
-                            },
-                            saying: (cb) => {
+                                    },
+                                    sayingId: (cb) => {
 
-                                let clonedSaying = _.cloneDeep(saying);
-                                delete clonedSaying.scenario;
-                                delete clonedSaying.webhook;
-                                delete clonedSaying.postFormat;
-                                clonedSaying = Object.assign({ id: sayingId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedSaying);
-                                clonedSaying.examples = _.map(clonedSaying.examples, (example) => {
+                                        redis.incr('sayingId', (err, newSayingId) => {
 
-                                    if (example.keywords && example.keywords.length > 0) {
+                                            if (err) {
+                                                const error = Boom.badImplementation('An error occurred getting the new saying id.');
+                                                return cb(error);
+                                            }
+                                            sayingId = newSayingId;
+                                            return cb(null);
+                                        });
+                                    },
+                                    addToDomain: (cb) => {
 
-                                        const keywords = _.sortBy(example.keywords, (keyword) => {
+                                        redis.zadd(`domainSayings:${domainId}`, 'NX', sayingId, sayingId, (err, addResponse) => {
+
+                                            if (err) {
+                                                const error = Boom.badImplementation('An error occurred adding the name to the sayings list.');
+                                                return cb(error);
+                                            }
+                                            if (addResponse !== 0) {
+                                                return cb(null);
+                                            }
+                                            const error = Boom.badRequest(`A saying with the name ${saying.sayingName} already exists in the domain ${domain.domainName}.`);
+                                            return cb(error);
+                                        });
+                                    },
+                                    addToKeywords: (cb) => {
+
+                                        Async.eachSeries(saying.keywords, (keyword, nextKeyword) => {
+
+                                            //Only system keywords have an extractor specified, so ignore sys keywords
+                                            if (keyword.extractor) {
+                                                return nextKeyword(null);
+                                            }
+                                            redis.zadd(`keywordSayings:${keywordsDir[keyword.keyword]}`, 'NX', sayingId, sayingId, (err) => {
+
+                                                if (err) {
+                                                    const error = Boom.badImplementation('An error occurred adding the saying to the keyword list.');
+                                                    return nextKeyword(error);
+                                                }
+                                                keyword.keywordId = keywordsDir[keyword.keyword];
+                                                return nextKeyword(null);
+                                            });
+                                        }, cb);
+                                    },
+                                    saying: (cb) => {
+
+                                        let clonedSaying = _.cloneDeep(saying);
+                                        clonedSaying = Object.assign({ id: sayingId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedSaying);
+                                        clonedSaying.keywords = _.sortBy(clonedSaying.keywords, (keyword) => {
 
                                             return keyword.start;
                                         });
-                                        example.keywords = keywords;
+                                        const flatSaying = RemoveBlankArray(Flat(clonedSaying));
+                                        redis.hmset(`saying:${sayingId}`, flatSaying, (err) => {
+
+                                            if (err) {
+                                                const error = Boom.badImplementation('An error occurred adding the saying data.');
+                                                return cb(error);
+                                            }
+                                            return cb(null, clonedSaying);
+                                        });
                                     }
-                                    return example;
-                                });
-                                const flatSaying = RemoveBlankArray(Flat(clonedSaying));
-                                redis.hmset(`saying:${sayingId}`, flatSaying, (err) => {
+                                }, (errAddSaying, resultAddSaying) => {
 
-                                    if (err) {
-                                        const error = Boom.badImplementation('An error occurred adding the saying data.');
-                                        return cb(error);
+                                    if (errAddSaying) {
+                                        return callbackAddSayings(errAddSaying, null);
                                     }
-                                    return cb(null, clonedSaying);
+
+                                    const resultSaying = resultAddSaying.saying;
+
+                                    SayingTools.updateKeywordsDomainTool(server, redis, resultSaying, agentId, domainId, null, (errUpdateKeywordsDomains) => {
+
+                                        if (errUpdateKeywordsDomains) {
+                                            return callbackAddSayings(errUpdateKeywordsDomains);
+                                        }
+                                        return callbackAddSayings(null, resultSaying);
+                                    });
                                 });
-                            }
-                        }, (errAddSaying, resultAddSaying) => {
+                            }, (errSayings, resultSayings) => {
 
-                            if (errAddSaying) {
-                                return callbackAddSayings(errAddSaying, null);
-                            }
-
-                            const resultSaying = resultAddSaying.saying;
-
-                            SayingTools.updateKeywordsDomainTool(server, redis, resultSaying, agentId, domainId, null, (errUpdateKeywordsDomains) => {
-
-                                if (errUpdateKeywordsDomains) {
-                                    return callbackAddSayings(errUpdateKeywordsDomains);
+                                if (errSayings) {
+                                    return cbAddSayingsToDomain(errSayings, null);
                                 }
-                                if (saying.scenario) {
+                                return cbAddSayingsToDomain(null, resultSayings);
+                            });
+                        },
+                        actions: (cbAddActionsToDomain) => {
 
-                                    let scenarioId;
-                                    Async.series({
-                                        fathersCheck: (cb) => {
+                            Async.map(domain.actions, (action, callbackAddActions) => {
 
-                                            SayingTools.validateKeywordsScenarioTool(redis, agentId, saying.scenario.slots, (err) => {
+                                let actionId;
+                                Async.series({
+                                    keywordsCheck: (cb) => {
 
-                                                if (err) {
-                                                    return cb(err);
-                                                }
+                                        ActionTools.validateKeywordsTool(redis, agentId, action.examples, (err) => {
+
+                                            if (err) {
+                                                return cb(err);
+                                            }
+                                            return cb(null);
+                                        });
+                                    },
+                                    actionId: (cb) => {
+
+                                        redis.incr('actionId', (err, newActionId) => {
+
+                                            if (err) {
+                                                const error = Boom.badImplementation('An error occurred getting the new action id.');
+                                                return cb(error);
+                                            }
+                                            actionId = newActionId;
+                                            return cb(null);
+                                        });
+                                    },
+                                    addToDomain: (cb) => {
+
+                                        redis.zadd(`domainActions:${domainId}`, 'NX', actionId, actionId, (err, addResponse) => {
+
+                                            if (err) {
+                                                const error = Boom.badImplementation('An error occurred adding the name to the actions list.');
+                                                return cb(error);
+                                            }
+                                            if (addResponse !== 0) {
                                                 return cb(null);
-                                            });
-                                        },
-                                        scenarioId: (cb) => {
+                                            }
+                                            const error = Boom.badRequest(`A action with the name ${action.actionName} already exists in the domain ${domain.domainName}.`);
+                                            return cb(error);
+                                        });
+                                    },
+                                    addToKeywords: (cb) => {
 
-                                            redis.incr('scenarioId', (err, newScenarioId) => {
+                                        Async.eachSeries(action.slots, (slot, nextSlot) => {
 
-                                                if (err) {
-                                                    const error = Boom.badImplementation('An error occurred getting the new scenario id.');
-                                                    return cb(error);
-                                                }
-                                                scenarioId = newScenarioId;
-                                                return cb(null);
-                                            });
-                                        },
-                                        scenario: (cb) => {
-
-                                            let scenarioToInsert = saying.scenario;
-                                            scenarioToInsert = Object.assign({ id: scenarioId, agent: agentResult.agentName, domain: domainResult.domainName, saying: resultSaying.sayingName }, scenarioToInsert);
-                                            const flatScenario = RemoveBlankArray(Flat(scenarioToInsert));
-                                            redis.hmset(`scenario:${sayingId}`, flatScenario, (err) => {
+                                            redis.zadd(`keywordActions:${keywordsDir[slot.keyword]}`, 'NX', actionId, actionId, (err, addResponse) => {
 
                                                 if (err) {
-                                                    const error = Boom.badImplementation('An error occurred adding the scenario data.');
-                                                    return cb(error);
+                                                    const error = Boom.badImplementation('An error occurred adding the action to the keyword list.');
+                                                    return nextSlot(error);
                                                 }
-                                                return cb(null, scenarioToInsert);
+                                                slot.keywordId = keywordsDir[slot.keyword];
+                                                return nextSlot(null);
                                             });
-                                        }
-                                    }, (errScenario, resultScenario) => {
+                                        }, cb);
+                                    },
+                                    action: (cb) => {
 
-                                        if (errScenario) {
-                                            return callbackAddSayings(errScenario, null);
+                                        let clonedAction = _.cloneDeep(action);
+                                        delete clonedAction.webhook;
+                                        delete clonedAction.postFormat;
+                                        clonedAction = Object.assign({ id: actionId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedAction);
+                                        const flatAction = RemoveBlankArray(Flat(clonedAction));
+                                        redis.hmset(`action:${actionId}`, flatAction, (err) => {
+
+                                            if (err) {
+                                                const error = Boom.badImplementation('An error occurred adding the action data.');
+                                                return cb(error);
+                                            }
+                                            return cb(null, clonedAction);
+                                        });
+                                    }
+                                }, (errAddAction, resultAddAction) => {
+
+                                    if (errAddAction) {
+                                        return callbackAddActions(errAddAction, null);
+                                    }
+
+                                    const resultAction = resultAddAction.action;
+
+                                    ActionTools.updateKeywordsDomainTool(server, redis, resultAction, agentId, domainId, null, (errUpdateKeywordsDomains) => {
+
+                                        if (errUpdateKeywordsDomains) {
+                                            return callbackAddActions(errUpdateKeywordsDomains);
                                         }
-                                        resultSaying.scenario = resultScenario.scenario;
+
                                         Async.parallel([
-                                            (callbackAddWebhookToSaying) => {
+                                            (callbackAddWebhookToAction) => {
 
-                                                if (saying.webhook) {
-                                                    let webhookToInsert = saying.webhook;
-                                                    webhookToInsert = Object.assign({ id: sayingId, agent: agentResult.agentName, domain: domainResult.domainName, saying: resultSaying.sayingName }, webhookToInsert);
+                                                if (action.webhook) {
+                                                    let webhookToInsert = action.webhook;
+                                                    webhookToInsert = Object.assign({ id: actionId, agent: agentResult.agentName, domain: domainResult.domainName, action: resultAction.actionName }, webhookToInsert);
                                                     const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
-                                                    redis.hmset(`sayingWebhook:${sayingId}`, flatWebhook, (err) => {
+                                                    redis.hmset(`actionWebhook:${actionId}`, flatWebhook, (err) => {
 
                                                         if (err) {
                                                             const error = Boom.badImplementation('An error occurred adding the webhook data.');
-                                                            return callbackAddWebhookToSaying(error, null);
+                                                            return callbackAddWebhookToAction(error, null);
                                                         }
-                                                        resultSaying.webhook = webhookToInsert;
-                                                        return callbackAddWebhookToSaying(null);
+                                                        resultAction.webhook = webhookToInsert;
+                                                        return callbackAddWebhookToAction(null);
                                                     });
                                                 }
                                                 else {
-                                                    return callbackAddWebhookToSaying(null);
+                                                    return callbackAddWebhookToAction(null);
                                                 }
                                             },
-                                            (callbackAddPostFormatToSaying) => {
+                                            (callbackAddPostFormatToAction) => {
 
-                                                if (saying.postFormat) {
-                                                    let postFormatToInsert = saying.postFormat;
-                                                    postFormatToInsert = Object.assign({ id: sayingId, agent: agentResult.agentName, domain: domainResult.domainName, saying: resultSaying.sayingName }, postFormatToInsert);
+                                                if (action.postFormat) {
+                                                    let postFormatToInsert = action.postFormat;
+                                                    postFormatToInsert = Object.assign({ id: actionId, agent: agentResult.agentName, domain: domainResult.domainName, action: resultAction.actionName }, postFormatToInsert);
                                                     const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
-                                                    redis.hmset(`sayingPostFormat:${sayingId}`, flatPostFormat, (err) => {
+                                                    redis.hmset(`actionPostFormat:${actionId}`, flatPostFormat, (err) => {
 
                                                         if (err) {
                                                             const error = Boom.badImplementation('An error occurred adding the post format data.');
-                                                            return callbackAddPostFormatToSaying(error, null);
+                                                            return callbackAddPostFormatToAction(error, null);
                                                         }
-                                                        resultSaying.postFormat = postFormatToInsert;
-                                                        return callbackAddPostFormatToSaying(null);
+                                                        resultAction.postFormat = postFormatToInsert;
+                                                        return callbackAddPostFormatToAction(null);
                                                     });
                                                 }
                                                 else {
-                                                    return callbackAddPostFormatToSaying(null);
+                                                    return callbackAddPostFormatToAction(null);
                                                 }
                                             }
                                         ], (err) => {
 
                                             if (err){
-                                                callbackAddSayings(err);
+                                                callbackAddActions(err);
                                             }
-                                            callbackAddSayings(null, resultSaying);
+                                            callbackAddActions(null, resultAction);
                                         });
                                     });
-                                }
-                                else {
-                                    return callbackAddSayings(null, resultSaying);
-                                }
-                            });
-                        });
-                    }, (errSayings, resultSayings) => {
+                                });
+                            }, (errActions, resultActions) => {
 
-                        if (errSayings) {
-                            return reply(errSayings, null);
+                                if (errActions) {
+                                    return cbAddActionsToDomain(errActions, null);
+                                }
+                                return cbAddActionsToDomain(null, resultActions);
+                            });
                         }
-                        domainResult.sayings = resultSayings;
-                        return callbackAddDomains(null, domainResult);
-                    });
+                    }, (errAddActionAndSayings, sayingsAndActions) => {
+
+                        if (errAddActionAndSayings){
+                            return callbackAddDomains(errAddActionAndSayings, null);
+                        }
+                        return callbackAddDomains(null, Object.assign(domainResult, sayingsAndActions));
+                    })
                 });
             }, (errDomains, resultDomains) => {
 

@@ -116,7 +116,7 @@ module.exports = (request, reply) => {
                 if (keyword.extractor){
                     return nextKeyword(null);
                 }
-                redis.zadd(`keywordSayings:${keyword.keywordId}`, 'NX', sayingId, saying.sayingName, (err) => {
+                redis.zadd(`keywordSayings:${keyword.keywordId}`, 'NX', sayingId, saying.id, (err) => {
 
                     if (err) {
                         const error = Boom.badImplementation('An error occurred adding the saying to the keyword list.');

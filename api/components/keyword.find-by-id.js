@@ -10,7 +10,7 @@ const PORT_ERROR = 'error';
 exports.getComponent = () => {
 
     const c = new NoFlo.Component();
-    c.description = 'Get agent by id';
+    c.description = 'Get keyword by id';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
@@ -46,9 +46,9 @@ exports.getComponent = () => {
                 type: 'keyword',
                 id
             })
-            .then((agent) => {
+            .then((keyword) => {
 
-                return output.sendDone({ [PORT_OUT]: agent });
+                return output.sendDone({ [PORT_OUT]: keyword });
             })
             .catch((err) => {
 

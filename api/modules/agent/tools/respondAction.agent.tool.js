@@ -2,26 +2,26 @@
 
 const _ = require('lodash');
 
-const RespondFulfilledSaying = require('./respondFulfilledSaying.agent.tool');
+const RespondFulfilledAction = require('./respondFulfilledAction.agent.tool');
 const PromptMissingKeyword = require('./promptMissingKeyword.agent.tool');
 const GetKeywordValue = require('./getKeywordValue.agent.tool');
 
 module.exports = (conversationStateObject, callback) => {
 
     //If there are slots in the scenario
-    if (conversationStateObject.scenario.slots && conversationStateObject.scenario.slots.length > 0) {
+    if (conversationStateObject.action.slots && conversationStateObject.action.slots.length > 0) {
         //Create an array of slot names
-        const sayingSlotNames = _.map(conversationStateObject.scenario.slots, 'slotName');
+        const actionSlotNames = _.map(conversationStateObject.action.slots, 'slotName');
         //Create an array of keyword names for each slot, with the same indexes than the previous array
-        const sayingSlotKeywordsNames = _.map(conversationStateObject.scenario.slots, 'keyword');
+        const actionSlotKeywordsNames = _.map(conversationStateObject.action.slots, 'keyword');
         //Create an array of required slots (retrieve the full slot object)
-        const requiredSlots = _.filter(conversationStateObject.scenario.slots, (slot) => {
+        const requiredSlots = _.filter(conversationStateObject.action.slots, (slot) => {
 
             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slot.slotName] = conversationStateObject.currentContext.slots[slot.slotName] ? conversationStateObject.currentContext.slots[slot.slotName] : '';
             return slot.isRequired;
         });
         //Create an array of slot names fo slots that are lists
-        const isListSlots = _.map(_.filter(conversationStateObject.scenario.slots, (slot) => {
+        const isListSlots = _.map(_.filter(conversationStateObject.action.slots, (slot) => {
 
             return slot.isList;
         }), 'slotName');
@@ -33,9 +33,9 @@ module.exports = (conversationStateObject, callback) => {
         const recognizedKeywordsNames = _.map(recognizedKeywords, (recognizedKeyword) => {
 
             //If the name of the recognized keyword match with an keyword name of an slot
-            if (sayingSlotKeywordsNames.indexOf(recognizedKeyword.keyword) > -1) {
+            if (actionSlotKeywordsNames.indexOf(recognizedKeyword.keyword) > -1) {
                 //Get the slot name of the keyword that was recognized using the index of the array of keywords names
-                const slotName = sayingSlotNames[sayingSlotKeywordsNames.indexOf(recognizedKeyword.keyword)];
+                const slotName = actionSlotNames[actionSlotKeywordsNames.indexOf(recognizedKeyword.keyword)];
                 //If the slot is a list of elemnts
                 if (isListSlots.indexOf(slotName) > -1) {
                     //If there isn't a value for this slot name in the context
@@ -136,7 +136,7 @@ module.exports = (conversationStateObject, callback) => {
             });
         }
         else {
-            RespondFulfilledSaying(conversationStateObject, (err, response) => {
+            RespondFulfilledAction(conversationStateObject, (err, response) => {
 
                 if (err) {
                     return callback(err, null);
@@ -157,7 +157,7 @@ module.exports = (conversationStateObject, callback) => {
             }
             return recognizedKeyword.keyword;
         });
-        RespondFulfilledSaying(conversationStateObject, (err, response) => {
+        RespondFulfilledAction(conversationStateObject, (err, response) => {
 
             if (err) {
                 return callback(err, null);
