@@ -1,5 +1,4 @@
 'use strict';
-const _ = require('lodash');
 
 module.exports = (object, type) => {
 

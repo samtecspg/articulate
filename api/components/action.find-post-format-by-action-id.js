@@ -10,7 +10,7 @@ const PORT_ERROR = 'error';
 exports.getComponent = () => {
 
     const c = new NoFlo.Component();
-    c.description = 'Get agent by id';
+    c.description = 'Get Post Format by Action id';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
@@ -43,12 +43,12 @@ exports.getComponent = () => {
         RedisDS
             .findById({
                 redis,
-                type: 'agent',
+                type: 'actionPostFormat',
                 id
             })
-            .then((agent) => {
+            .then((actionPostFormat) => {
 
-                return output.sendDone({ [PORT_OUT]: agent });
+                return output.sendDone({ [PORT_OUT]: actionPostFormat });
             })
             .catch((err) => {
 

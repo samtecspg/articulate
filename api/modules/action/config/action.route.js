@@ -19,6 +19,12 @@ const ActionRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/action.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: ActionValidator.findById,
             handler: ActionController.findById
         }
@@ -59,6 +65,12 @@ const ActionRoutes = [
         config: {
             description: 'Find a webhook by action id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/action.find-webhook-by-action-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: ActionValidator.findWebhook,
             handler: ActionController.findWebhook
         }
@@ -79,6 +91,12 @@ const ActionRoutes = [
         config: {
             description: 'Delete a webhook instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/action.delete-webhook-by-action-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: ActionValidator.deleteWebhook,
             handler: ActionController.deleteWebhook
         }
@@ -100,6 +118,12 @@ const ActionRoutes = [
         config: {
             description: 'Find a post format by action id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/action.find-post-format-by-action-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: ActionValidator.findPostFormat,
             handler: ActionController.findPostFormat
         }
@@ -120,6 +144,12 @@ const ActionRoutes = [
         config: {
             description: 'Delete a webhook instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/action.delete-post-format-by-action-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: ActionValidator.deletePostFormat,
             handler: ActionController.deletePostFormat
         }

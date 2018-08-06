@@ -10,7 +10,7 @@ const PORT_ERROR = 'error';
 exports.getComponent = () => {
 
     const c = new NoFlo.Component();
-    c.description = 'Get agent by id';
+    c.description = 'Delete Webhook by Action id';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
@@ -41,14 +41,14 @@ exports.getComponent = () => {
         }
         const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
         RedisDS
-            .findById({
+            .deleteById({
                 redis,
-                type: 'agent',
+                type: 'actionWebhook',
                 id
             })
-            .then((agent) => {
+            .then((success) => {
 
-                return output.sendDone({ [PORT_OUT]: agent });
+                return output.sendDone({ [PORT_OUT]: success });
             })
             .catch((err) => {
 

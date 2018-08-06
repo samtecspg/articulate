@@ -447,7 +447,7 @@ module.exports = (request, reply) => {
                             return callbackAddDomains(errAddActionAndSayings, null);
                         }
                         return callbackAddDomains(null, Object.assign(domainResult, sayingsAndActions));
-                    })
+                    });
                 });
             }, (errDomains, resultDomains) => {
 

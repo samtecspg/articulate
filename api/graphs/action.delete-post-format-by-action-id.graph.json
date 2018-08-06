@@ -1,0 +1,90 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "ActionDeletePostFormatByActionId",
+    "description": "ActionDeletePostFormatByActionId",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": -108,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "redis": {
+      "process": "action.delete-post-format-by-action-id",
+      "port": "redis",
+      "metadata": {
+        "x": -108,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "action.delete-post-format-by-action-id",
+      "port": "out",
+      "metadata": {
+        "x": 720,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "action.delete-post-format-by-action-id",
+      "port": "error",
+      "metadata": {
+        "x": 684,
+        "y": 288,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "action.delete-post-format-by-action-id": {
+      "component": "alpha-nlu-api/action.delete-post-format-by-action-id",
+      "metadata": {
+        "label": "ActionDeletePostFormatByActionId",
+        "x": 396,
+        "y": 180,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "label": "http.request-data-parser",
+        "x": 72,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "action.delete-post-format-by-action-id",
+        "port": "in"
+      }
+    }
+  ]
+}

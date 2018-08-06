@@ -1,48 +1,12 @@
 'use strict';
-const Boom = require('boom');
-const Async = require('async');
 
 module.exports = (request, reply) => {
 
-    const actionId = request.params.id;
-    const redis = request.server.app.redis;
-
-    Async.waterfall([
-        (cb) => {
-
-            redis.exists(`actionPostFormat:${actionId}`, (err, exists) => {
-
-                if (err){
-                    const error = Boom.badImplementation('An error occurred retrieving the post format.');
-                    return cb(error);
-                }
-                if (exists){
-                    return cb(null);
-                }
-                const error = Boom.notFound('The specified post format doesn\'t exists');
-                return cb(error);
-            });
-        },
-        (cb) => {
-
-            redis.del(`actionPostFormat:${actionId}`, (err, success) => {
-
-                if (err){
-                    const error = Boom.badImplementation('An error occurred deleting the post format.');
-                    return cb(error);
-                }
-                if (success === 1){
-                    return cb(null);
-                }
-                const error = Boom.notFound('The post format wasn\'t deleted');
-                return cb(error);
-            });
-        }
-    ], (err, result) => {
-
-        if (err){
-            return reply(err, null);
-        }
-        return reply({ message: 'successful operation' }).code(200);
-    });
+    /*
+    * If the operation encounters an error during the
+    * "action.delete-post-format-by-action-id.graph" execution
+    * then the error will be captured there and this controller
+    * will not be executed. So if it got here is because it was successful
+    * */
+    return reply({ message: 'successful operation' }).code(200);
 };

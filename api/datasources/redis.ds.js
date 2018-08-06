@@ -49,16 +49,45 @@ const findAll = ({ redis, type, subType = type, start = 0, limit = -1 }) => {
                 },
                 (err, mapResults) => {
 
-                    if (err) {
-                        return reject(err);
-                    }
-                    return resolve(mapResults);
+                    return err ? reject(err) : resolve(mapResults);
                 });
         });
     });
 };
 
+const exists = ({ redis, type, id }) => {
+
+    return new Promise((resolve, reject) => {
+
+        redis.exists(`${type}:${id}`, (err, exist) => {
+
+            return err ? reject(err) : resolve(exist);
+        });
+    });
+};
+
+const deleteById = ({ redis, type, id }) => {
+
+    const redisDel = (exist) => {
+
+        return new Promise((resolve, reject) => {
+
+            if (!exist) {
+                return reject(errorHandlerNotFound({ type, id }));
+            }
+            redis.del(`${type}:${id}`, (err) => {
+
+                return err ? reject(err) : resolve(true);
+            });
+        });
+    };
+    return exists({ redis, type, id }).then((exist) => redisDel(exist));
+
+};
+
 module.exports = {
     findById,
-    findAll
+    findAll,
+    exists,
+    deleteById
 };
