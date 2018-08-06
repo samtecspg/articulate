@@ -18,6 +18,9 @@ module.exports = (object, type) => {
             if (typeof object.enableModelsPerDomain !== 'boolean'){
                 object.enableModelsPerDomain = object.enableModelsPerDomain === 'true';
             }
+            if (typeof object.multiDomain !== 'boolean'){
+                object.multiDomain = object.multiDomain === 'true';
+            }
             object.domainClassifierThreshold = parseFloat(object.domainClassifierThreshold);
             break;
         case 'context':
@@ -54,40 +57,20 @@ module.exports = (object, type) => {
             if (typeof object.usePostFormat !== 'boolean'){
                 object.usePostFormat = object.usePostFormat === 'true';
             }
-            object.slots = object.slots.map((slot) => {
-
-                if (typeof slot.isList !== 'boolean'){
-                    slot.isList = slot.isList === 'true';
-                }
-                if (typeof slot.isRequired !== 'boolean'){
-                    slot.isRequired = slot.isRequired === 'true';
-                }
-                return slot;
-            });
-            break;
-        case 'scenario':
-            if (object.slots === '') {
-                object.slots = [];
-            }
-            else {
+            if (object.slots){
                 object.slots = object.slots.map((slot) => {
 
-                    if (!_.isArray(slot.textPrompts)) {
-                        slot.textPrompts = [];
-                    }
-                    if (typeof object.isList !== 'boolean'){
+                    if (typeof slot.isList !== 'boolean'){
                         slot.isList = slot.isList === 'true';
                     }
-                    if (typeof object.isRequired !== 'boolean'){
+                    if (typeof slot.isRequired !== 'boolean'){
                         slot.isRequired = slot.isRequired === 'true';
+                    }
+                    if (keyword.keywordId) {
+                        keyword.keywordId = parseInt(keyword.keywordId);
                     }
                     return slot;
                 });
-            }
-            if (object.sayingResponses === '') {
-                if (object.sayingResponses.length === 0) {
-                    object.sayingResponses = [];
-                }
             }
             break;
         case 'webhook':

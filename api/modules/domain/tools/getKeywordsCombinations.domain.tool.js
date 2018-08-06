@@ -23,15 +23,14 @@ const removeDuplicatesAndRepeatedValues = (keywordsCombinations) => {
 
 const getCombinationOfKeywords = (keywords, sayings) => {
 
-    const sayingExamples = _.flatten(_.map(sayings, 'examples'));
-    const usedKeywords = _.compact(_.uniq(_.map(sayingExamples, (example) => {
+    const usedKeywords = _.compact(_.uniq(_.map(sayings, (saying) => {
 
-        if (example.keywords){
-            const exampleKeywords = _.compact(_.map(example.keywords, (keyword) => {
+        if (saying.keywords){
+            const sayingKeywords = _.compact(_.map(saying.keywords, (keyword) => {
 
                 return keyword.extractor ? null : keyword.keyword;
             }));
-            return exampleKeywords;
+            return sayingKeywords;
         }
         return null;
     })));

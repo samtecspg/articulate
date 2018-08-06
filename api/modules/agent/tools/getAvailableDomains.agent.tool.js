@@ -22,7 +22,7 @@ module.exports = (server, redis, agent, cb) => {
                 const error = Boom.create(res.statusCode, 'An error occurred getting the agent data to get the saying name');
                 return cb(error);
             }
-            const uniqueSayingOfAgent = res.result.domains[0].sayings[0].sayingName;
+            const uniqueSayingOfAgent = res.result.domains[0].sayings[0].actions.lenght > 0 ? res.result.domains[0].sayings[0].actions.join('+') : res.result.domains[0].sayings[0].actions[0];
             const formattedDomain = { name: 'default', model: modelFolderName, justER, saying: uniqueSayingOfAgent };
             return cb(null, [formattedDomain]);
         });
@@ -72,7 +72,8 @@ module.exports = (server, redis, agent, cb) => {
                                 return callbackFormatDomain(error);
                             }
                             if (res.result.sayings.length > 0){
-                                const formattedDomain = { name: domainName, model: modelFolderName, justER, saying: res.result.sayings[0].sayingName };
+                                const sayingName = res.result.sayings[0].actions.lenght > 0 ? res.result.sayings[0].sayings[0].actions.join('+') : res.result.sayings[0].actions[0];
+                                const formattedDomain = { name: domainName, model: modelFolderName, justER, saying: sayingName };
                                 formattedDomains.push(formattedDomain);
                                 return callbackFormatDomain(null);
                             }

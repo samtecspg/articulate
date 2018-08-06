@@ -73,7 +73,7 @@ module.exports = (request, reply) => {
                         },
                         (callbackRemoveFromDomainsList) => {
 
-                            redis.zrem(`domainSayings:${domainId}`, saying.sayingName, (err, removeResult) => {
+                            redis.zrem(`domainSayings:${domainId}`, saying.id, (err, removeResult) => {
 
                                 if (err){
                                     const error = Boom.badImplementation( `An error occurred removing the saying ${sayingId} from the sayings list of the domain ${domainId}`);

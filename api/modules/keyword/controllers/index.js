@@ -4,6 +4,7 @@ const FindByIdController = require('./findById.keyword.controller');
 const UpdateByIdController = require('./updateById.keyword.controller');
 const DeleteByIdController = require('./deleteById.keyword.controller');
 const FindSayingsByKeywordIdController = require('./findSayingsByKeywordId.keyword.controller');
+const FindActionsByKeywordIdController = require('./findActionsByKeywordId.keyword.controller');
 
 const KeywordController = {
 
@@ -15,7 +16,9 @@ const KeywordController = {
 
     deleteById: DeleteByIdController,
 
-    findSayingsByKeywordId: FindSayingsByKeywordIdController
+    findSayingsByKeywordId: FindSayingsByKeywordIdController,
+
+    findActionsByKeywordId: FindActionsByKeywordIdController
 };
 
 module.exports = KeywordController;

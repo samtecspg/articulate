@@ -41,6 +41,15 @@ class KeywordValidate {
             })()
         };
 
+        this.findActionsByKeywordId = {
+            params: (() => {
+
+                return {
+                    id: KeywordSchema.id.required().description('Id of the keyword')
+                };
+            })()
+        };
+
         this.updateById = {
             params: (() => {
 

@@ -3,11 +3,12 @@ const _ = require('lodash');
 const Async = require('async');
 const Boom = require('boom');
 
-const updateKeywordsDomain = (server, redis, action, agentId, domainId, oldKeywords, cb) => {
+const updateKeywordsDomain = (server, redis, action, agentId, domainId, oldSlots, cb) => {
 
     const usedKeywords = _.map(action.slots, 'keyword');
     let removedKeywords = null;
-    if (oldKeywords){
+    if (oldSlots){
+        const oldKeywords = _.map(oldSlots, 'keyword');
         removedKeywords = _.difference(oldKeywords, usedKeywords);
     }
 
@@ -77,7 +78,7 @@ const updateKeywordsDomain = (server, redis, action, agentId, domainId, oldKeywo
                                     }
                                 });
                             }
-                        ], (err, result) => {
+                        ], (err) => {
 
                             if (err){
                                 return cllbk(err);
@@ -85,7 +86,7 @@ const updateKeywordsDomain = (server, redis, action, agentId, domainId, oldKeywo
                             return cllbk(null);
                         });
                     }
-                ], (err, result) => {
+                ], (err) => {
 
                     if (err){
                         return callback(err);

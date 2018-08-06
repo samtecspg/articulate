@@ -202,22 +202,22 @@ module.exports = (request, reply) => {
                 Async.waterfall([
                     (callback) => {
 
-                        redis.zadd(`domainSayings:${domainId}`, 'NX', sayingId, updateData.sayingName, (err, addResponse) => {
+                        redis.zadd(`domainSayings:${domainId}`, 'NX', sayingId, sayingId, (err, addResponse) => {
 
                             if (err) {
-                                const error = Boom.badImplementation(`An error occurred adding the name ${updateData.sayingName} to the sayings list of the domain ${currentSaying.domain}.`);
+                                const error = Boom.badImplementation(`An error occurred adding the name ${updateData.sayingId} to the sayings list of the domain ${currentSaying.domain}.`);
                                 return callback(error);
                             }
                             if (addResponse !== 0){
                                 return callback(null);
                             }
-                            const error = Boom.badRequest(`A saying with the name ${updateData.sayingName} already exists in the domain ${currentSaying.domain}.`);
+                            const error = Boom.badRequest(`A saying with the name ${updateData.sayingId} already exists in the domain ${currentSaying.domain}.`);
                             return callback(error, null);
                         });
                     },
                     (callback) => {
 
-                        redis.zrem(`domainSayings:${domainId}`, currentSaying.sayingName, (err) => {
+                        redis.zrem(`domainSayings:${domainId}`, currentSaying.id, (err) => {
 
                             if (err){
                                 const error = Boom.badImplementation( `An error occurred removing the name ${currentSaying.sayingName} from the sayings list of the agent ${currentSaying.agent}.`);

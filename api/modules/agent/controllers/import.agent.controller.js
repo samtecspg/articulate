@@ -217,7 +217,7 @@ module.exports = (request, reply) => {
                             },
                             addToDomain: (cb) => {
 
-                                redis.zadd(`domainSayings:${domainId}`, 'NX', sayingId, saying.sayingName, (err, addResponse) => {
+                                redis.zadd(`domainSayings:${domainId}`, 'NX', sayingId, sayingId, (err, addResponse) => {
 
                                     if (err) {
                                         const error = Boom.badImplementation('An error occurred adding the name to the sayings list.');

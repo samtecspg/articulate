@@ -48,20 +48,20 @@ module.exports = (request, reply) => {
                 }
                 sayings = _.chunk(sayings, 2);
                 total = sayings.length;
-                if (filter && filter !== ''){
+                /*if (filter && filter !== ''){
                     sayings = _.filter(sayings, (saying) => {
 
                         return saying[0].toLowerCase().indexOf(filter.toLowerCase()) !== -1;
                     });
                     total = sayings.length;
-                }
+                }*/
                 sayings = _.sortBy(_.map(sayings, (saying) => {
 
                     return { sayingName: saying[0], id: saying[1] };
                 }), 'sayingName');
-                if (limit !== -1){
+                /*if (limit !== -1){
                     sayings = sayings.slice(start, limit);
-                }
+                }*/
                 return cb(null, sayings);
             });
         },

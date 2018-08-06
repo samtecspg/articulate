@@ -19,90 +19,85 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
 
         const common_examples = _.uniq(_.flatten(_.map(results.sayings, (saying) => {
 
-            const buildSayingsPerExamples = _.map(saying.examples, (sayingExample) => {
+            const keywordsList = _.compact(_.map(saying.keywords, (keyword) => {
 
-                const keywordsList = _.compact(_.map(sayingExample.keywords, (keyword) => {
+                return keyword.extractor ? null : keyword;
+            }));
 
-                    return keyword.extractor ? null : keyword;
-                }));
+            if (keywordsList && keywordsList.length > 0){
+                if (extraTrainingData){
+                    const keywordsOfSaying = _.map(keywordsList, 'keyword');
+                    const keyOfKeywords = keywordsOfSaying.join('-');
+                    let combinationsForThisSaying = keywordsCombinations[keyOfKeywords];
 
-                if (keywordsList && keywordsList.length > 0){
-                    if (extraTrainingData){
-                        const keywordsOfSaying = _.map(keywordsList, 'keyword');
-                        const keyOfKeywords = keywordsOfSaying.join('-');
-                        let combinationsForThisSaying = keywordsCombinations[keyOfKeywords];
+                    //If there is just one keyword in the text of this saying, flat the array of combinations
+                    combinationsForThisSaying = combinationsForThisSaying.length === 1 ? _.flatten(combinationsForThisSaying) : combinationsForThisSaying;
 
-                        //If there is just one keyword in the text of this saying, flat the array of combinations
-                        combinationsForThisSaying = combinationsForThisSaying.length === 1 ? _.flatten(combinationsForThisSaying) : combinationsForThisSaying;
+                    const buildedSayings = _.map(combinationsForThisSaying, (combination) => {
 
-                        const buildedSayings = _.map(combinationsForThisSaying, (combination) => {
+                        let sayingText = saying.userSays;
+                        const lowestStart = keywordsList[0].start;
+                        const newKeywordsList = [];
+                        let shift = 0;
+                        const combinationValues = Array.isArray(combination) ? combination : [combination];
 
-                            let sayingText = sayingExample.userSays;
-                            const lowestStart = keywordsList[0].start;
-                            const newKeywordsList = [];
-                            let shift = 0;
-                            const combinationValues = Array.isArray(combination) ? combination : [combination];
+                        keywordsList.forEach( (keyword, i) => {
 
-                            keywordsList.forEach( (keyword, i) => {
-
-                                const textValue = combinationValues[i].keywordText;
-                                const keywordValue = combinationValues[i].keywordValue;
-                                const newStart = lowestStart === keyword.start ? keyword.start : keyword.start + shift;
-                                const newEnd = newStart + textValue.length;
-                                const replacementStart = i === 0 ? keyword.start : newStart;
-                                const replacementFinish = i === 0 ? keyword.end : keyword.end + shift;
-                                sayingText = sayingText.substring(0, replacementStart) + textValue + sayingText.substring(replacementFinish);
-                                newKeywordsList.push({
-                                    start: newStart,
-                                    end: newEnd,
-                                    value: keywordValue,
-                                    keyword: keyword.keyword
-                                });
-                                shift = newEnd - keyword.end;
+                            const textValue = combinationValues[i].keywordText;
+                            const keywordValue = combinationValues[i].keywordValue;
+                            const newStart = lowestStart === keyword.start ? keyword.start : keyword.start + shift;
+                            const newEnd = newStart + textValue.length;
+                            const replacementStart = i === 0 ? keyword.start : newStart;
+                            const replacementFinish = i === 0 ? keyword.end : keyword.end + shift;
+                            sayingText = sayingText.substring(0, replacementStart) + textValue + sayingText.substring(replacementFinish);
+                            newKeywordsList.push({
+                                start: newStart,
+                                end: newEnd,
+                                value: keywordValue,
+                                entity: keyword.keyword
                             });
-
-                            const buildedSaying = {
-                                text: sayingText,
-                                saying: saying.sayingName,
-                                keywords: newKeywordsList
-                            };
-
-                            return buildedSaying;
+                            shift = newEnd - keyword.end;
                         });
 
-                        return buildedSayings;
-                    }
+                        const buildedSaying = {
+                            text: sayingText,
+                            intent: saying.actions.join('+'),
+                            entities: newKeywordsList
+                        };
 
-                    const newKeywordsList = [];
-
-                    keywordsList.forEach((tempKeyword) => {
-
-                        newKeywordsList.push({
-                            start: tempKeyword.start,
-                            end: tempKeyword.end,
-                            value: tempKeyword.value,
-                            keyword: tempKeyword.keyword
-                        });
+                        return buildedSaying;
                     });
 
-                    const buildedSaying = {
-                        text: sayingExample.userSays,
-                        saying: saying.sayingName,
-                        keywords: newKeywordsList
-                    };
-
-                    return buildedSaying;
+                    return buildedSayings;
                 }
 
-                const buildedSaying = {
-                    text: sayingExample.userSays,
-                    saying: saying.sayingName,
-                    keywords: []
-                };
-                return buildedSaying;
-            });
+                const newKeywordsList = [];
 
-            return _.flatten(buildSayingsPerExamples);
+                keywordsList.forEach((tempKeyword) => {
+
+                    newKeywordsList.push({
+                        start: tempKeyword.start,
+                        end: tempKeyword.end,
+                        value: tempKeyword.value,
+                        entity: tempKeyword.keyword
+                    });
+                });
+
+                const buildedSaying = {
+                    text: saying.userSays,
+                    intent: saying.actions.join('+'),
+                    entities: newKeywordsList
+                };
+
+                return buildedSaying;
+            }
+
+            const buildedSaying = {
+                text: saying.userSays,
+                intent: saying.actions.join('+'),
+                entities: []
+            };
+            return buildedSaying;
         })));
 
         let keyword_synonyms = _.flatten(_.map(results.keywords, (keyword) => {

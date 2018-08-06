@@ -34,6 +34,16 @@ const keywordRoutes = [
         }
     },
     {
+        method: 'GET',
+        path: '/keyword/{id}/action',
+        config: {
+            description: 'Find a model instance by id from the data source',
+            tags: ['api'],
+            validate: KeywordValidator.findActionsByKeywordId,
+            handler: KeywordController.findActionsByKeywordId
+        }
+    },
+    {
         method: 'PUT',
         path: '/keyword/{id}',
         config: {

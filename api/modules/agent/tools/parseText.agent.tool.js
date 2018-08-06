@@ -26,9 +26,29 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasa, ERPipeline, c
         const temporalParse = {
             domain: trainedDomain.name
         };
+        result.entities.forEach((entity, index) => {
+
+            result.entities[index].keyword = entity.entity;
+            delete result.entities[index].entity;
+        });
+        result.keywords = result.entities;
+        delete result.entities;
         if (trainedDomain.justER) {
-            result.saying.name = trainedDomain.saying;
-            result.saying.confidence = 1;
+            delete result.intent;
+            result.action = {
+                name: trainedDomain.saying,
+                confidence: 1
+            };
+        }
+        else {
+            if (result.intent){
+                result.action = result.intent;
+                delete result.intent;
+            }
+        }
+        if (result.intent_ranking){
+            result.action_ranking = result.intent_ranking;
+            delete result.intent_ranking;
         }
 
         return callback(null, Object.assign(temporalParse, result));
@@ -103,7 +123,7 @@ const castSysKeywords = (parseResult, spacyPretrainedEntities, ducklingDimension
                 keyword: 'sys.regex_' + keyword.name,
                 extractor: 'regex',
                 start: keyword.start,
-                value: { value: keyword.resolvedRegex }
+                value: keyword.resolvedRegex
             };
         }
         else if (keyword.regexType === 'keywordRegex') {
@@ -112,7 +132,7 @@ const castSysKeywords = (parseResult, spacyPretrainedEntities, ducklingDimension
                 keyword: keyword.name,
                 extractor: 'regex',
                 start: keyword.start,
-                value: { value: keyword.keywordValue }
+                value: keyword.keywordValue
             };
         }
         return tmpKeyword;
@@ -130,7 +150,7 @@ const castSysKeywords = (parseResult, spacyPretrainedEntities, ducklingDimension
                     return null;
                 }
             }
-            keyword.value = { value: keyword.value };
+            keyword.value = keyword.value;
             return keyword;
         });
 

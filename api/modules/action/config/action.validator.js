@@ -22,6 +22,7 @@ class ActionValidate {
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         keyword: SlotSchema.keyword,
+                        keywordId: SlotSchema.keywordId,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         textPrompts: SlotSchema.textPrompts
@@ -56,6 +57,7 @@ class ActionValidate {
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         keyword: SlotSchema.keyword,
+                        keywordId: SlotSchema.keywordId,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         textPrompts: SlotSchema.textPrompts
