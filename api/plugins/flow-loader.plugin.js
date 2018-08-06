@@ -7,7 +7,7 @@ const _ = require('lodash');
 
 exports.register = (server, options, next) => {
 
-    const baseDir = _.pick(options, 'baseDir');
+    const baseDir = options.baseDir;
     const rest = _.omit(options, 'baseDir');
 
     const loader = new NoFlo.ComponentLoader(baseDir, rest);

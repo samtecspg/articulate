@@ -8,7 +8,7 @@ const { inspect } = require('util');
 const log = (options, data) => {
 
     if (options !== null) {
-        const tag = _.pick(options, 'tag');
+        const tag = options.tag;
         const rest = _.omit(options, 'tag');
         console.log(`[${tag}]`);
         return console.log(inspect(
