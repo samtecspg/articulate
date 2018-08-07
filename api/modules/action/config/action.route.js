@@ -1,6 +1,7 @@
 'use strict';
 const ActionController = require('../controllers');
 const ActionValidator = require('./action.validator');
+const PKG = require('../../../package');
 
 const ActionRoutes = [
     {
