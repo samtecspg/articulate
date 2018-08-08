@@ -26,7 +26,7 @@ const findById = ({ redis, type, id }) => {
     });
 };
 
-const findAll = ({ redis, type, subType = type, start = 0, limit = -1 }) => {
+const findAllInSet = ({ redis, type, subType = type, start = 0, limit = -1 }) => {
 
     start = start > -1 ? start : 0;
     limit = limit > -1 ? limit - 1 : -1;
@@ -44,6 +44,35 @@ const findAll = ({ redis, type, subType = type, start = 0, limit = -1 }) => {
                 (item, cb) => {
 
                     findById({ redis, type: subType, id: item[1] })
+                        .then((result) => cb(null, result))
+                        .catch(cb);
+                },
+                (err, mapResults) => {
+
+                    return err ? reject(err) : resolve(mapResults);
+                });
+        });
+    });
+};
+
+const findAllByIdInList = ({ redis, type, subType = type, id, start = 0, limit = -1 }) => {
+
+    start = start > -1 ? start : 0;
+    limit = limit > -1 ? limit - 1 : -1;
+    return new Promise((resolve, reject) => {
+
+        redis.lrange(`${type}:${id}`, start, limit, (err, listOfIds) => {
+
+            if (err) {
+                return reject(err);
+            }
+            listOfIds = _.chunk(listOfIds, 2);
+
+            Async.map(
+                listOfIds,
+                (item, cb) => {
+
+                    findById({ redis, type: subType, id: item })
                         .then((result) => cb(null, result))
                         .catch(cb);
                 },
@@ -87,7 +116,8 @@ const deleteById = ({ redis, type, id }) => {
 
 module.exports = {
     findById,
-    findAll,
+    findAllInSet,
+    findAllByIdInList,
     exists,
     deleteById
 };
