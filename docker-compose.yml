@@ -2,20 +2,20 @@ version: '3.0'
 
 services:
   api:
-    image: samtecspg/articulate-api:0.11.0
+    image: samtecspg/articulate-api:0.11.1
     ports: ['0.0.0.0:7500:7500']
     networks: ['alpha-nlu-network']
     entrypoint: ['node', 'start.js']
     environment:
      - SWAGGER_BASE_PATH
   ui:
-    image: samtecspg/articulate-ui:0.11.0
+    image: samtecspg/articulate-ui:0.11.1
     ports: ['0.0.0.0:3000:3000']
     networks: ['alpha-nlu-network']
     environment:
      - API_URL
   rasa:
-    image: samtecspg/articulate-rasa:0.11.0
+    image: samtecspg/articulate-rasa:0.11.1
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
     networks: ['alpha-nlu-network']
