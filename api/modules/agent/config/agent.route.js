@@ -71,6 +71,12 @@ const AgentRoutes = [
         config: {
             description: 'Find list of domains linked with a model instance specified by id',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-domains-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findDomainsByAgentId,
             handler: AgentController.findDomainsByAgentId
         }
