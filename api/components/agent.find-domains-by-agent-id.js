@@ -51,6 +51,7 @@ exports.getComponent = () => {
                 subType: 'domain'
             })
             .then((domains) => {
+
                 total = domains.length;
                 // TODO: Do the filtering and sorting on the DB
                 if (filter && filter !== '') {

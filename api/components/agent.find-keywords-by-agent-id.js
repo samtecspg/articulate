@@ -51,6 +51,7 @@ exports.getComponent = () => {
                 subType: 'keyword'
             })
             .then((keywords) => {
+
                 total = keywords.length;
                 // TODO: Do the filtering and sorting on the DB
                 if (filter && filter !== '') {

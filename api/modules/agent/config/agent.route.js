@@ -51,6 +51,12 @@ const AgentRoutes = [
         config: {
             description: 'Find list of keywords linked with a model instance specified by id',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-keywords-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findKeywordsByAgentId,
             handler: AgentController.findKeywordsByAgentId
         }
