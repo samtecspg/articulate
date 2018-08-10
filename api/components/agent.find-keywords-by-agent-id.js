@@ -11,7 +11,7 @@ const PORT_IN = 'in';
 exports.getComponent = () => {
 
     const c = new Noflo.Component();
-    c.description = 'Get all domains by agent id';
+    c.description = 'Get all Keywords by agent id';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
@@ -47,24 +47,24 @@ exports.getComponent = () => {
                 redis,
                 start: 0,
                 limit: -1,
-                type: `agentDomains:${id}`,
-                subType: 'domain'
+                type: `agentKeywords:${id}`,
+                subType: 'keyword'
             })
-            .then((domains) => {
-                total = domains.length;
+            .then((keywords) => {
+                total = keywords.length;
                 // TODO: Do the filtering and sorting on the DB
                 if (filter && filter !== '') {
-                    domains = _.filter(domains, (domain) => {
+                    keywords = _.filter(keywords, (keyword) => {
 
-                        return domain.domainName.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+                        return keyword.keywordName.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
                     });
-                    total = domains.length;
+                    total = keywords.length;
                 }
-                domains = _.sortBy(domains, 'domainName');
+                keywords = _.sortBy(keywords, 'keywordName');
                 if (limit !== -1) {
-                    domains = domains.slice(start, limit);
+                    keywords = keywords.slice(start, limit);
                 }
-                return output.sendDone({ [PORT_OUT]: { domains, total } });
+                return output.sendDone({ [PORT_OUT]: { keywords, total } });
             })
             .catch((err) => {
 
