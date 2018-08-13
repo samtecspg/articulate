@@ -5,7 +5,7 @@ const Async = require('async');
 
 const validateKeywords = (redis, agent, keywords, cb) => {
 
-    const usedKeywords = _.map(keywords, 'keyword'); ;
+    const usedKeywords = _.uniq(_.map(keywords, 'keyword'));
 
     Async.forEach(usedKeywords, (keyword, callback) => {
 

@@ -1,7 +1,0 @@
-/*
- *
- * SayingsPage constants
- *
- */
-
-

@@ -68,7 +68,7 @@ module.exports = (request, reply) => {
 
             return Cast(saying, 'saying');
         });
-        result = _.sortBy(result, 'sayingName');
+        result = _.orderBy(result, 'id', 'desc');
         if (limit !== -1){
             result = result.slice(start, limit);
         }

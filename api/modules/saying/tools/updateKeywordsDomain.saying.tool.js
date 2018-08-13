@@ -5,10 +5,11 @@ const Boom = require('boom');
 
 const updateKeywordsDomain = (server, redis, saying, agentId, domainId, oldKeywords, cb) => {
 
-    const usedKeywords = _.map(saying.keywords, 'keyword');
+    const usedKeywords = _.uniq(_.map(saying.keywords, 'keyword'));
     let removedKeywords = null;
     if (oldKeywords){
-        removedKeywords = _.difference(oldKeywords, usedKeywords);
+        const oldKeywordsValues = _.uniq(_.map(oldKeywords, 'keyword'));
+        removedKeywords = _.difference(oldKeywordsValues, usedKeywords);
     }
 
     Async.parallel([

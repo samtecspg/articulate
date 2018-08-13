@@ -29,8 +29,26 @@ const styles = {
   },
 }
 
+const getStringSetting = (setting) => {
+
+  if (typeof setting === 'string'){
+    return setting;
+  }
+  return JSON.stringify(setting, null, 2);
+}
+
 /* eslint-disable react/prefer-stateless-function */
 export class RasaSettings extends React.Component {
+
+  onChangeEditorValue(field, editorValue) {
+    try {
+      const value = JSON.parse(editorValue); //Ace editor send the value directly to the method as an string
+      this.props.onChangeSettingsData(field, value);
+    } catch(e) {
+      const value = editorValue; //Given the parse of the json failed store the value in the state as a string
+      this.props.onChangeSettingsData(field, value);
+    }
+  }
 
   render() {
     const { classes, intl, settings } = this.props;
@@ -75,13 +93,13 @@ export class RasaSettings extends React.Component {
             name='domainClassifierPipeline'
             readOnly={false}
             onChange={value =>
-              this.props.onChangeSettingsData('domainClassifierPipeline', value)
+              this.onChangeEditorValue('domainClassifierPipeline', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={settings.domainClassifierPipeline}
+            value={getStringSetting(settings.domainClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
@@ -107,13 +125,13 @@ export class RasaSettings extends React.Component {
             name='intentClassifierPipeline'
             readOnly={false}
             onChange={value =>
-                this.props.onChangeSettingsData('intentClassifierPipeline', value)
+                this.onChangeEditorValue('intentClassifierPipeline', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={settings.intentClassifierPipeline}
+            value={getStringSetting(settings.intentClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
@@ -139,13 +157,13 @@ export class RasaSettings extends React.Component {
             name='entityClassifierPipeline'
             readOnly={false}
             onChange={value =>
-              this.props.onChangeSettingsData('entityClassifierPipeline', value)
+              this.onChangeEditorValue('entityClassifierPipeline', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={settings.entityClassifierPipeline}
+            value={getStringSetting(settings.entityClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
@@ -171,13 +189,13 @@ export class RasaSettings extends React.Component {
             name='spacyPretrainedEntities'
             readOnly={false}
             onChange={value =>
-              this.props.onChangeSettingsData('spacyPretrainedEntities', value)
+              this.onChangeEditorValue('spacyPretrainedEntities', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={settings.spacyPretrainedEntities}
+            value={getStringSetting(settings.spacyPretrainedEntities)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,

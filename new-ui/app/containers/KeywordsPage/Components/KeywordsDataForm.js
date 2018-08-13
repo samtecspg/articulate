@@ -100,7 +100,7 @@ class KeywordsDataForm extends React.Component {
                         <Grid item lg={12} md={12} sm={12} xs={12}>
                             <Button
                                 variant='raised'
-                                onClick={() => {this.props.onCreateKeyword('/agent/81/keyword/create')}}
+                                onClick={() => {this.props.onCreateKeyword(`/agent/${this.props.agentId}/keyword/create`)}}
                             >
                                 <FormattedMessage {...messages.create} />
                             </Button>
@@ -117,7 +117,7 @@ class KeywordsDataForm extends React.Component {
                                                 return (
                                                 <TableRow key={`${keyword}_${index}`}>
                                                     <TableCell>
-                                                        <Link className={classes.keywordLink} to={`agent/81/keyword/${keyword.id}`}>
+                                                        <Link className={classes.keywordLink} to={`/agent/${this.props.agentId}/keyword/${keyword.id}`}>
                                                             <span style={{backgroundColor: keyword.uiColor}} className={classes.dot}></span>
                                                             <span>{keyword.keywordName}</span>
                                                         </Link>
@@ -180,6 +180,7 @@ class KeywordsDataForm extends React.Component {
 KeywordsDataForm.propTypes = {
     classes: PropTypes.object.isRequired,
     keywords: PropTypes.array,
+    agentId: PropTypes.number,
     onDeleteKeyword: PropTypes.func.isRequired,
     onCreateKeyword: PropTypes.func.isRequired,
     currentPage: PropTypes.number,

@@ -48,20 +48,10 @@ module.exports = (request, reply) => {
                 }
                 sayings = _.chunk(sayings, 2);
                 total = sayings.length;
-                /*if (filter && filter !== ''){
-                    sayings = _.filter(sayings, (saying) => {
-
-                        return saying[0].toLowerCase().indexOf(filter.toLowerCase()) !== -1;
-                    });
-                    total = sayings.length;
-                }*/
                 sayings = _.sortBy(_.map(sayings, (saying) => {
 
                     return { sayingName: saying[0], id: saying[1] };
                 }), 'sayingName');
-                /*if (limit !== -1){
-                    sayings = sayings.slice(start, limit);
-                }*/
                 return cb(null, sayings);
             });
         },
@@ -89,6 +79,17 @@ module.exports = (request, reply) => {
 
         if (err) {
             return reply(err, null);
+        }
+
+        if (filter && filter !== ''){
+            result.sayings = _.filter(result.sayings, (saying) => {
+
+                return saying.userSays.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+            });
+            if (limit !== -1){
+                result.sayings = result.sayings.slice(start, limit);
+            }
+            result.total = result.sayings.length;
         }
         return reply(result);
     });

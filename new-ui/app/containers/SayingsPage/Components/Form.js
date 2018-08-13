@@ -149,13 +149,14 @@ class Form extends React.Component {
         </Grid>
         <Grid item xs={12}>
           {<SayingsDataForm
+            agentId={this.props.agentId}
             sayings={this.props.sayings}
             agentKeywords={this.props.agentKeywords}
             onAddSaying={this.props.onAddSaying}
             onDeleteSaying={this.props.onDeleteSaying}
             onDeleteAction={this.props.onDeleteAction}
-            onTagEntity={this.props.onTagEntity}
-            onDeleteHighlight={this.props.onDeleteHighlight}
+            onTagKeyword={this.props.onTagKeyword}
+            onUntagKeyword={this.props.onUntagKeyword}
             onAddAction={this.props.onAddAction}
             onCreateAction={this.props.onCreateAction}
             currentPage={this.props.currentPage}
@@ -174,12 +175,13 @@ Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   sayings: PropTypes.array,
+  agentId: PropTypes.number,
   agentKeywords: PropTypes.object,
   onAddSaying: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
-  onTagEntity: PropTypes.func,
-  onDeleteHighlight: PropTypes.func,
+  onTagKeyword: PropTypes.func,
+  onUntagKeyword: PropTypes.func,
   onSearchSaying: PropTypes.func,
   onAddAction: PropTypes.func,
   onCreateAction: PropTypes.func,

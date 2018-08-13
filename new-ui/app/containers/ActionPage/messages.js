@@ -107,9 +107,9 @@ export default defineMessages({
       id: 'app.containers.ActionPage.component.SlotsForm.newSlotTab',
       defaultMessage: '+ Add Slot'
     },
-    entitySelect: {
-      id: 'app.containers.ActionPage.component.SlotForm.entitySelect',
-      defaultMessage: 'Entity'
+    keywordSelect: {
+      id: 'app.containers.ActionPage.component.SlotForm.keywordSelect',
+      defaultMessage: 'Keyword'
     },
     webhookFormTitle: {
       id: 'app.containers.ActionPage.component.WebhookForm.webhookFormTitle',
@@ -117,7 +117,7 @@ export default defineMessages({
     },
     webhookFormDescription: {
       id: 'app.containers.ActionPage.component.WebhookForm.webhookFormDescription',
-      defaultMessage: 'This is a local webhook that will be called when the ML engine resolves into an intent that execute this action.'
+      defaultMessage: 'This is a local webhook that will be called when the ML engine resolves that this action is being triggered by the user.'
     },
     responseFormTitle: {
       id: 'app.containers.ActionPage.component.ResponseForm.responseFormTitle',

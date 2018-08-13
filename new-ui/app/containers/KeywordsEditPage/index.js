@@ -20,7 +20,10 @@ import Form from './Components/Form';
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
-import { makeSelectKeyword } from './selectors';
+import {
+  makeSelectKeyword,
+  makeSelectAgent,
+} from '../App/selectors';
 
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsEditPage extends React.Component {
@@ -30,7 +33,7 @@ export class KeywordsEditPage extends React.Component {
       this.props.onResetData();
     }
     else {
-      this.props.onLoadAction(this.props.match.params.id);
+      this.props.onLoadKeywords(this.props.match.params.id);
     }
   }
 
@@ -49,9 +52,9 @@ export class KeywordsEditPage extends React.Component {
           enableTabs={true}
           selectedTab={'keywords'}
           agentForm={Link}
-          agentURL={'/agent/81'}
+          agentURL={`/agent/${this.props.agent.id}`}
           sayingsForm={Link}
-          sayingsURL={'/agent/81/sayings'}
+          sayingsURL={`/agent/${this.props.agent.id}/sayings`}
           keywordsForm={
             <Form
               onSearchKeyword={this.onSearchKeyword}
@@ -66,13 +69,15 @@ export class KeywordsEditPage extends React.Component {
 }
 
 KeywordsEditPage.propTypes = {
+  agent: PropTypes.object,
   keywords: PropTypes.object,
   onLoadKeywords: PropTypes.func,
   onDeleteKeyword: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
-  keyword: makeSelectKeyword()
+  agent: makeSelectAgent(),
+  keyword: makeSelectKeyword(),
 });
 
 function mapDispatchToProps(dispatch) {

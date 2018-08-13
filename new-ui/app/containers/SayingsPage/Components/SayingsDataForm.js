@@ -80,10 +80,6 @@ class SayingsDataForm extends React.Component {
         super();
     }
 
-    state = {
-        agentNameError: false,
-    }
-
     render(){
         const { classes, intl, sayings } = this.props;
         return (
@@ -140,11 +136,12 @@ class SayingsDataForm extends React.Component {
                                                 <TableRow key={`${saying}_${index}`}>
                                                     <TableCell>
                                                         <SayingRow
+                                                            agentId={this.props.agentId}
                                                             saying={saying}
                                                             onDeleteAction={this.props.onDeleteAction}
                                                             agentKeywords={this.props.agentKeywords}
-                                                            onTagEntity={this.props.onTagEntity}
-                                                            onDeleteHighlight={this.props.onDeleteHighlight}
+                                                            onTagKeyword={this.props.onTagKeyword}
+                                                            onUntagKeyword={this.props.onUntagKeyword}
                                                             onAddAction={this.props.onAddAction}
                                                             onCreateAction={this.props.onCreateAction}
                                                         />
@@ -158,7 +155,7 @@ class SayingsDataForm extends React.Component {
                                         </TableBody>
                                     </Table>
                                     <Grid className={classes.pageControl} item xs={12}>
-                                        <Typography onClick={this.props.movePageBack} className={this.props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
+                                        <Typography onClick={this.props.currentPage > 1 ? this.props.movePageBack : null} className={this.props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
                                             <FormattedMessage {...messages.backPage} />
                                         </Typography>
                                         <TextField
@@ -189,7 +186,7 @@ class SayingsDataForm extends React.Component {
                                         <Typography className={classes.pagesLabel}>
                                             / {this.props.numberOfPages}
                                         </Typography>
-                                        <Typography onClick={this.props.movePageForward} className={this.props.currentPage < this.props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
+                                        <Typography onClick={this.props.currentPage < this.props.numberOfPages ? this.props.movePageForward : null} className={this.props.currentPage < this.props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
                                             <FormattedMessage {...messages.nextPage} />
                                         </Typography>
                                     </Grid>
@@ -208,12 +205,13 @@ SayingsDataForm.propTypes = {
     classes: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
     sayings: PropTypes.array,
+    agentId: PropTypes.number,
     agentKeywords: PropTypes.object,
     onAddSaying: PropTypes.func.isRequired,
     onDeleteSaying: PropTypes.func.isRequired,
     onDeleteAction: PropTypes.func.isRequired,
-    onTagEntity: PropTypes.func,
-    onDeleteHighlight: PropTypes.func,
+    onTagKeyword: PropTypes.func,
+    onUntagKeyword: PropTypes.func,
     onAddAction: PropTypes.func,
     onCreateAction: PropTypes.func,
     currentPage: PropTypes.number,

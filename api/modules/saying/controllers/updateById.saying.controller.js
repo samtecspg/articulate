@@ -19,11 +19,19 @@ const updateDataFunction = (redis, server, sayingId, currentSaying, updateData, 
         return keyword.start;
     });
     currentSaying.keywords = keywords;
+
+    //const oldActions = _.cloneDeep(currentSaying.actions);
+    if (updateData.actions){
+        currentSaying.actions = updateData.actions;
+    }
+
     const flatSaying = Flat(currentSaying);
     const flatUpdateData = Flat(updateData);
     Object.keys(flatUpdateData).forEach( (key) => {
 
-        flatSaying[key] = flatUpdateData[key];
+        if (key.indexOf('keyword') === -1 && key.indexOf('actions') === -1){
+            flatSaying[key] = flatUpdateData[key];
+        }
     });
     const resultSaying = Flat.unflatten(flatSaying);
 
@@ -82,9 +90,6 @@ const updateDataFunction = (redis, server, sayingId, currentSaying, updateData, 
                 let requiresTraining = false;
                 if (updateData.keywords){
                     requiresTraining = !_.isEqual(updateData.keywords, oldKeywords);
-                }
-                if (updateData.sayingName){
-                    requiresTraining =  requiresTraining || updateData.sayingName !== currentSaying.sayingName;
                 }
                 if (requiresTraining){
                     SayingTools.updateKeywordsDomainTool(server, redis, resultSaying, agentId, domainId, oldKeywords, (err) => {

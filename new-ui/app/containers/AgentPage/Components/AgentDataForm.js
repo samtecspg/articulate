@@ -135,13 +135,13 @@ class AgentDataForm extends React.Component {
                             }}
                             helperText={intl.formatMessage(messages.requiredField)}
                         >
-                            <MenuItem key={'utc'} value={'utc'}>
+                            <MenuItem key={'utc'} value={'UTC'}>
                                 UTC
                             </MenuItem>
-                            <MenuItem key={'america/chicago'} value={'america/chicago'}>
+                            <MenuItem key={'america/chicago'} value={'America/Chicago'}>
                                 America/Chicago
                             </MenuItem>
-                            <MenuItem key={'america/kentucky/louisville'} value={'america/kentucky/louisville'}>
+                            <MenuItem key={'america/kentucky/louisville'} value={'America/Kentucky/Louisville'}>
                                 America/Kentucky/Louisville
                             </MenuItem>
                         </TextField>

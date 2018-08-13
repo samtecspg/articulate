@@ -1,15 +1,16 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
-import request from 'utils/request';
-import { loadAgentError, loadAgentSuccess } from './actions';
-import { LOAD_AGENT } from './constants';
+import { loadAgentError, loadAgentSuccess } from '../App/actions';
+import { LOAD_AGENT } from '../App/constants';
 
 export function* getAgent(payload) {
-  const { agentId } = payload;
-  const requestURL = `http://localhost:7500/agent/${agentId}`;
+  const { api, agentId } = payload;
   try {
-    const agent = yield call(request, requestURL);
+    let response = yield call(api.agent.getAgentId, { id: agentId });
+    const agent = response.obj;
     agent.domainClassifierThreshold = agent.domainClassifierThreshold * 100;
-    yield put(loadAgentSuccess(agent));
+    response = yield call(api.agent.getAgentIdSettings, { id: agentId });
+    const settings = response.obj;
+    yield put(loadAgentSuccess({ agent, settings }));
   } catch (err) {
     yield put(loadAgentError(err));
   }

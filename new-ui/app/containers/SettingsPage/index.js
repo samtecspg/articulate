@@ -12,8 +12,6 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 import injectSaga from 'utils/injectSaga';
-import makeSelectSettingsPage from './selectors';
-import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 
@@ -33,7 +31,7 @@ SettingsPage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  settingspage: makeSelectSettingsPage(),
+
 });
 
 function mapDispatchToProps(dispatch) {

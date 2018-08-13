@@ -176,6 +176,7 @@
     "redux-seamless-immutable": "^0.4.0",
     "reselect": "3.0.1",
     "seamless-immutable": "^7.1.3",
+    "swagger-client": "^3.8.12",
     "typeface-roboto": "0.0.54",
     "warning": "4.0.1",
     "whatwg-fetch": "2.0.4"

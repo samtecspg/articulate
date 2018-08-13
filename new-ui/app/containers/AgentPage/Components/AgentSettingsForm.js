@@ -1,5 +1,5 @@
 import React from "react";
-import { FormattedMessage, injectIntl, intlShape } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import PropTypes from "prop-types";
 import {
@@ -77,7 +77,7 @@ class AgentSettingsForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, agent, webhook, postFormat, settings } = this.props;
+    const { classes, agent, webhook, postFormat, settings } = this.props;
     const { expanded } = this.state;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
@@ -220,7 +220,6 @@ class AgentSettingsForm extends React.Component {
 
 AgentSettingsForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  intl: intlShape.isRequired,
   agent: PropTypes.object,
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
@@ -232,4 +231,4 @@ AgentSettingsForm.propTypes = {
   onChangeSettingsData: PropTypes.func
 };
 
-export default injectIntl(withStyles(styles)(AgentSettingsForm));
+export default withStyles(styles)(AgentSettingsForm);

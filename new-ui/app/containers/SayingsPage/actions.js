@@ -1,6 +1,0 @@
-/*
- *
- * SayingsPage actions
- *
- */
-

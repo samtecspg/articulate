@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-const compareEntities = (a, b) => {
+const compareKeywords = (a, b) => {
     if (a.start < b.start)
       return -1;
     if (a.start > b.start)
@@ -12,11 +12,11 @@ const compareEntities = (a, b) => {
 
 const systemKeywords = [
     {
-        entityName: 'sys.spacy_person',
+        keywordName: 'sys.spacy_person',
         uiColor: '#f44336'
     },
     {
-        entityName: 'sys.spacy_norp',
+        keywordName: 'sys.spacy_norp',
         uiColor: '#e91e63'
     }
 ];
@@ -34,7 +34,7 @@ const styles = {
 
 const SingleHighlightedSaying = withStyles(styles)((props) => {
     const { classes } = props;
-    const keywords = [...props.keywords].sort(compareEntities);
+    const keywords = [...props.keywords].sort(compareKeywords);
     const keyword = keywords.length > 0 ? keywords.splice(0, 1)[0] : null;
     let formattedElement = null;
     if (keyword) {
@@ -44,9 +44,9 @@ const SingleHighlightedSaying = withStyles(styles)((props) => {
         const beforeTaggedText = props.text.substring(0, start - lastStart);
         const taggedText = props.text.substring(start - lastStart, end - lastStart);
         const afterTaggedText = props.text.substring(end - lastStart, props.text.length);
-        let filteredKeyword = props.agentKeywords.keywords.filter((agentKeyword) => { return agentKeyword.keywordName === keyword.entity })[0];
+        let filteredKeyword = props.agentKeywords.keywords.filter((agentKeyword) => { return agentKeyword.keywordName === keyword.keyword })[0];
         if (!filteredKeyword){
-        filteredKeyword = systemKeywords.filter((sysKeyword) => { return sysKeyword.keywordName === keyword.entity})[0];
+        filteredKeyword = systemKeywords.filter((sysKeyword) => { return sysKeyword.keywordName === keyword.keyword})[0];
         }
         let highlightColor = filteredKeyword.uiColor;
         formattedElement = (

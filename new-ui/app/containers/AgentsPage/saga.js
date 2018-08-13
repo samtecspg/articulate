@@ -1,14 +1,13 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
-import request from 'utils/request';
-import { loadAgentsError, loadAgentsSuccess } from './actions';
-import { LOAD_AGENTS } from './constants';
+import { loadAgentsError, loadAgentsSuccess } from '../App/actions';
+import { LOAD_AGENTS } from '../App/constants';
 
-export function* getAgents() {
-  const requestURL = `http://localhost:7500/agent`;
+export function* getAgents(payload) {
+  const { api } = payload;
 
   try {
-    const agents = yield call(request, requestURL);
-    yield put(loadAgentsSuccess(agents));
+    const response = yield call(api.agent.getAgent, {});
+    yield put(loadAgentsSuccess(response.obj));
   } catch (err) {
     yield put(loadAgentsError(err));
   }

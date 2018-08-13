@@ -22,8 +22,8 @@ import injectSaga from 'utils/injectSaga';
 
 import saga from './saga';
 import messages from './messages';
-import { makeSelectAgents } from './selectors';
-import { loadAgents } from './actions';
+import { makeSelectAgents } from '../App/selectors';
+import { loadAgents } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {

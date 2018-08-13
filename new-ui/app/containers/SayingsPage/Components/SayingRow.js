@@ -96,14 +96,17 @@ class SayingRow extends React.Component {
     handleChange(selectName, selectedValue){
         if (selectName === 'actions'){
             if (selectedValue === 'create'){
-                this.props.onCreateAction('/agent/81/action/create');
+                this.props.onCreateAction(`/agent/${this.props.agentId}/action/create`);
             }
             else {
-                this.props.onAddAction(this.props.saying.id, selectedValue)
+                this.props.onAddAction(this.props.saying, selectedValue)
             }
         }
         if (selectName === 'keywords'){
-            this.props.onTagEntity(this.props.saying.userSays, window.getSelection().toString(), selectedValue)
+            const keyword = selectedValue.split(',');
+            const keywordId = parseInt(keyword[0]);
+            const keywordName = keyword[1];
+            this.props.onTagKeyword(this.props.saying, window.getSelection().toString(), keywordId, keywordName)
         }
     }
 
@@ -129,18 +132,18 @@ class SayingRow extends React.Component {
                     <span className={classes.userSays} onMouseUp={this.onHighlight}>
                         <HighlightedSaying
                             agentKeywords={agentKeywords}
-                            keywords={saying.entities}
+                            keywords={saying.keywords}
                             text={saying.userSays}
                             keywordIndex={0}
                             lastStart={0}
-                            onDeleteHighlight={this.props.onDeleteHighlight.bind(null, saying.userSays)}
+                            onUntagKeyword={this.props.onUntagKeyword.bind(null, saying)}
                         />
                     </span>
                     {saying.actions.map((action, index) => {
                         return (
                             <div key={`action_${index}`}  className={classes.actionBackgroundContainer}>
                                 <span>{action}</span>
-                                <a onClick={() => { this.props.onDeleteAction(saying.id, action) }} className={classes.deleteActionX}>x</a>
+                                <a onClick={() => { this.props.onDeleteAction(saying, action) }} className={classes.deleteActionX}>x</a>
                             </div>
                         )
                     })}
@@ -168,7 +171,6 @@ class SayingRow extends React.Component {
                             <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
                             <MenuItem value='orderPizza'>orderPizza</MenuItem>
                             <MenuItem value='greeting'>greeting</MenuItem>
-                            <MenuItem value='goodbye'>goodbye</MenuItem>
                         </Select>
                         <Select
                             style={{
@@ -188,7 +190,7 @@ class SayingRow extends React.Component {
                         >
                             {agentKeywords.keywords.map((keyword, index) => {
                                 return (
-                                    <MenuItem key={`keyword_${index}`} value={keyword.keywordName}>
+                                    <MenuItem key={`keyword_${index}`} value={`${keyword.id},${keyword.keywordName}`}>
                                         <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>
                                     </MenuItem>
                                 );
@@ -204,10 +206,11 @@ class SayingRow extends React.Component {
 SayingRow.propTypes = {
     classes: PropTypes.object,
     saying: PropTypes.object,
+    agentId: PropTypes.number,
     agentKeywords: PropTypes.object,
     onDeleteAction: PropTypes.func,
-    onDeleteHighlight: PropTypes.func,
-    onTagEntity: PropTypes.func,
+    onUntagKeyword: PropTypes.func,
+    onTagKeyword: PropTypes.func,
     onAddAction: PropTypes.func,
     onCreateAction: PropTypes.func,
 };

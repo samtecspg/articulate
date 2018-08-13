@@ -23,7 +23,11 @@ import ResponseForm from './Components/ResponseForm';
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
-import { makeSelectAction, makeSelectActionWebhook, makeSelectActionPostFormat } from './selectors';
+import {
+  makeSelectAction,
+  makeSelectActionWebhook,
+  makeSelectActionPostFormat
+} from '../App/selectors';
 
 const styles = {
   goBackCard: {
@@ -82,7 +86,6 @@ export class ActionPage extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     const { classes } = this.props;
     return (
       <Grid container>
@@ -121,20 +124,20 @@ export class ActionPage extends React.Component {
               saying={{
                 id: 1,
                 userSays: 'Prepare me a ham and cheese pizza',
-                entities: [
+                keywords: [
                   {
                     end: 16,
                     value: 'ham',
                     start: 13,
-                    entity: 'Toppings',
-                    entityId: 74
+                    keyword: 'Toppings',
+                    keywordId: 74
                   },
                   {
                     end: 27,
                     value: 'cheese',
                     start: 21,
-                    entity: 'Toppings',
-                    entityId: 74
+                    keyword: 'Toppings',
+                    keywordId: 74
                   }
                 ],
                 actions: ['orderPizza']
@@ -175,20 +178,20 @@ export class ActionPage extends React.Component {
               saying={{
                 id: 1,
                 userSays: 'Prepare me a ham and cheese pizza',
-                entities: [
+                keywords: [
                   {
                     end: 16,
                     value: 'ham',
                     start: 13,
-                    entity: 'Toppings',
-                    entityId: 74
+                    keyword: 'Toppings',
+                    keywordId: 74
                   },
                   {
                     end: 27,
                     value: 'cheese',
                     start: 21,
-                    entity: 'Toppings',
-                    entityId: 74
+                    keyword: 'Toppings',
+                    keywordId: 74
                   }
                 ],
                 actions: ['orderPizza']

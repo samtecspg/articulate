@@ -7,13 +7,7 @@ import Immutable from 'seamless-immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
-import agentsReducer from 'containers/AgentsPage/reducer';
-import agentReducer from 'containers/AgentPage/reducer';
-import sayingsReducer from 'containers/SayingsPage/reducer';
-import keywordsReducer from 'containers/KeywordsPage/reducer';
-import keywordsEditReducer from 'containers/KeywordsEditPage/reducer';
-import actionReducer from 'containers/ActionPage/reducer';
-import settingsReducer from 'containers/AgentsPage/reducer';
+import appReducer from 'containers/App/reducer';
 
 /*
  * routeReducer
@@ -49,13 +43,7 @@ export function routeReducer(state = routeInitialState, action) {
 export default function createReducer() {
   return combineReducers({
     route: routeReducer,
+    global: appReducer,
     language: languageProviderReducer,
-    agents: agentsReducer,
-    agent: agentReducer,
-    sayings: sayingsReducer,
-    keywords: keywordsReducer,
-    keywordsEdit: keywordsEditReducer,
-    settings: settingsReducer,
-    action: actionReducer,
   });
 }

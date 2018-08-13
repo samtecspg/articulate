@@ -156,7 +156,7 @@ class ResponseForm extends React.Component {
               <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
               <SingleHighlightedSaying
                 agentKeywords={this.props.agentKeywords}
-                keywords={this.props.saying.entities}
+                keywords={this.props.saying.keywords}
                 text={this.props.saying.userSays}
                 keywordIndex={0}
                 lastStart={0}
@@ -187,14 +187,14 @@ class ResponseForm extends React.Component {
                     }}
                     helperText={intl.formatMessage(messages.responseHelperText)}
                   />
-                  {action.intentResponses.length > 0 ?
+                  {action.responses.length > 0 ?
                     <Table className={classes.table}>
                       <TableBody>
-                        {action.intentResponses.map((intentResponse, index) => {
+                        {action.responses.map((response, index) => {
                           return (
-                            <TableRow key={`${intentResponse}_${index}`}>
+                            <TableRow key={`${response}_${index}`}>
                               <TableCell>
-                                {intentResponse}
+                                {response}
                               </TableCell>
                               <TableCell className={classes.deleteCell}>
                                 <img onClick={() => { this.props.onDeleteResponse(index) }} className={classes.deleteIcon} src={trashIcon} />

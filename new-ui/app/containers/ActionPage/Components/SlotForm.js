@@ -62,16 +62,16 @@ class SlotForm extends React.Component {
     replaceValuesWithSlotName(saying){
         let newUserSays = [];
         let newStart = 0;
-        saying.entities.forEach((entity, index) => {
-            if (newStart !== entity.start){
-            newUserSays.push(<span key={`preSlotText_${index}`}>{saying.userSays.substring(newStart, entity.start)}</span>);
+        saying.keywords.forEach((keyword, index) => {
+            if (newStart !== keyword.start){
+            newUserSays.push(<span key={`preSlotText_${index}`}>{saying.userSays.substring(newStart, keyword.start)}</span>);
             }
             newUserSays.push(
-                <span className={this.props.classes.userSayingSlot} key={`slotEntity_${index}`}>
-                    {`{{slots.${entity.entity.indexOf(' ') !== -1 ? `[${entity.entity}]` : entity.entity}.value}}`}
+                <span className={this.props.classes.userSayingSlot} key={`slotKeyword_${index}`}>
+                    {`{{slots.${keyword.keyword.indexOf(' ') !== -1 ? `[${keyword.keyword}]` : keyword.keyword}.value}}`}
                 </span>
             );
-            newStart = entity.end;
+            newStart = keyword.end;
         });
         newUserSays.push(<span key={'finaText'}>{saying.userSays.substring(newStart)}</span>);
         return newUserSays;
@@ -102,10 +102,10 @@ class SlotForm extends React.Component {
                         <Grid item lg={6} md={6} sm={12} xs={12}>
                             <TextField
                                 select
-                                id='entity'
-                                value={slot.entity}
-                                label={intl.formatMessage(messages.entitySelect)}
-                                onChange={(evt) => { this.props.onChangeSlotData('entity', evt.target.value) }}
+                                id='keyword'
+                                value={slot.keyword}
+                                label={intl.formatMessage(messages.keywordSelect)}
+                                onChange={(evt) => { this.props.onChangeSlotData('keyword', evt.target.value) }}
                                 margin='normal'
                                 fullWidth
                                 InputLabelProps={{

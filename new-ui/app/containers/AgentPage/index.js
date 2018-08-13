@@ -14,10 +14,10 @@ import { compose } from 'redux';
 import injectSaga from 'utils/injectSaga';
 import {
   makeSelectAgent,
-  makeSelectWebhook,
-  makeSelectPostFormat,
+  makeSelectAgentWebhook,
+  makeSelectAgentPostFormat,
   makeSelectSettings,
-} from './selectors';
+} from '../App/selectors';
 import saga from './saga';
 import messages from './messages';
 
@@ -26,8 +26,9 @@ import ContentHeader from 'components/ContentHeader';
 import MainTab from 'components/MainTab';
 import Form from './Components/Form';
 import ActionButtons from './Components/ActionButtons';
+
 import {
-  resetData,
+  resetAgentData,
   loadAgent,
   changeAgentData,
   changeAgentName,
@@ -38,7 +39,7 @@ import {
   changeWebhookPayloadType,
   changePostFormatData,
   changeSettingsData,
-} from './actions';
+} from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
@@ -119,15 +120,15 @@ AgentPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
-  webhook: makeSelectWebhook(),
-  postFormat: makeSelectPostFormat(),
+  webhook: makeSelectAgentWebhook(),
+  postFormat: makeSelectAgentPostFormat(),
   settings: makeSelectSettings(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onResetData: () => {
-      dispatch(resetData());
+      dispatch(resetAgentData());
     },
     onLoadAgent: (agentId) => {
       dispatch(loadAgent(agentId));

@@ -149,6 +149,7 @@ class Form extends React.Component {
         </Grid>
         <Grid item xs={12}>
           {<KeywordsDataForm
+            agentId={this.props.agentId}
             keywords={this.props.keywords}
             onDeleteKeyword={this.props.onDeleteKeyword}
             onCreateKeyword={this.props.onCreateKeyword}
@@ -167,6 +168,7 @@ class Form extends React.Component {
 Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
+  agentId: PropTypes.number,
   onSearchKeyword: PropTypes.func,
   onCreateKeyword: PropTypes.func,
   keywords: PropTypes.array,

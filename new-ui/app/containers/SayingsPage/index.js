@@ -20,7 +20,20 @@ import Form from './Components/Form';
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
-import { makeSelectSayings } from './selectors';
+import {
+  makeSelectSayings,
+  makeSelectAgent,
+  makeSelectTotalSayings
+} from '../App/selectors';
+import {
+  loadSayings,
+  addSaying,
+  deleteSaying,
+  tagKeyword,
+  untagKeyword,
+  addAction,
+  deleteAction,
+} from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class SayingsPage extends React.Component {
@@ -31,12 +44,27 @@ export class SayingsPage extends React.Component {
     this.movePageBack = this.movePageBack.bind(this);
     this.movePageForward = this.movePageForward.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
+    this.getTotalPages = this.getTotalPages.bind(this);
   }
 
   state = {
     filter: '',
     currentPage: 1,
-    numberOfPages: 10,
+  }
+
+  componentWillMount() {
+    if(this.props.agent.id) {
+      this.props.onLoadSayings('', this.state.currentPage);
+    }
+    else {
+      //TODO: An action when there isn't an agent
+      console.log('YOU HAVEN\'T SELECTED AN AGENT');
+    }
+  }
+
+  getTotalPages(){
+    const itemsByPage = 5;
+    return Math.ceil(this.props.totalSayings / itemsByPage);
   }
 
   changePage(pageNumber){
@@ -56,7 +84,7 @@ export class SayingsPage extends React.Component {
 
   movePageForward(){
     let newPage = this.state.currentPage;
-    if (this.state.currentPage < this.state.numberOfPages){
+    if (this.state.currentPage < this.getTotalPages()){
         newPage = this.state.currentPage + 1;
     }
     this.changePage(newPage);
@@ -80,21 +108,25 @@ export class SayingsPage extends React.Component {
           enableTabs={true}
           selectedTab={'sayings'}
           agentForm={Link}
-          agentURL={'/agent/81'}
+          agentURL={`/agent/${this.props.agent.id}`}
           sayingsForm={
             <Form
+              agentId={this.props.agent.id}
               sayings={this.props.sayings}
               agentKeywords={{
                 keywords: [
                   {
-                    keywordName: 'Toppings',
+                    id: 1,
+                    keywordName: 'Topping',
                     uiColor: '#f44336'
                   },
                   {
+                    id: 2,
                     keywordName: 'Size',
                     uiColor: '#e91e63'
                   },
                   {
+                    id: 2,
                     keywordName: 'Address',
                     uiColor: '#9575cd'
                   }
@@ -102,21 +134,21 @@ export class SayingsPage extends React.Component {
               }}
               onAddSaying={this.props.onAddSaying}
               onDeleteSaying={this.props.onDeleteSaying}
-              onDeleteAction={this.props.onDeleteAction}
-              onTagEntity={this.props.onTagEntity}
-              onDeleteHighlight={this.props.onDeleteHighlight}
-              onAddAction={this.props.onAddAction}
+              onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage)}
+              onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage)}
+              onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage)}
+              onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage)}
               onSearchSaying={this.onSearchSaying}
               onCreateAction={this.props.onCreateAction}
               currentPage={this.state.currentPage}
-              numberOfPages={this.state.numberOfPages}
+              numberOfPages={this.getTotalPages()}
               changePage={this.changePage}
               movePageBack={this.movePageBack}
               movePageForward={this.movePageForward}
             />
           }
           keywordsForm={Link}
-          keywordsURL={'/agent/81/keywords'}
+          keywordsURL={`/agent/${this.props.agent.id}/keywords`}
         />
       </Grid>
     );
@@ -124,48 +156,48 @@ export class SayingsPage extends React.Component {
 }
 
 SayingsPage.propTypes = {
+  agent: PropTypes.object,
   onLoadSayings: PropTypes.func,
   onChangeSayingsData: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
-  onChangePage: PropTypes.func,
-  onTagEntity: PropTypes.func,
-  onDeleteHighlight: PropTypes.func,
+  onTagKeyword: PropTypes.func,
+  onUntagKeyword: PropTypes.func,
   onAddAction: PropTypes.func,
   onCreateAction: PropTypes.func,
   sayings: PropTypes.array,
+  totalSayings: PropTypes.number,
   agentKeywords: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
-  sayings: makeSelectSayings()
+  agent: makeSelectAgent(),
+  sayings: makeSelectSayings(),
+  totalSayings: makeSelectTotalSayings(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onLoadSayings: (filter, page) => {
-      console.log(filter, page);
+      dispatch(loadSayings(filter, page));
     },
     onAddSaying: (value) => {
-      console.log(value)
+      dispatch(addSaying(value));
     },
-    onDeleteSaying: (sayingIndex) => {
-      console.log(sayingIndex);
+    onDeleteSaying: (sayingId) => {
+      dispatch(deleteSaying(sayingId));
     },
-    onDeleteAction: (sayingId, action) => {
-      console.log(sayingId, action);
+    onTagKeyword: (filter, page, saying, taggedText, keywordId, keywordName) => {
+      dispatch(tagKeyword(filter, page, saying, taggedText, keywordId, keywordName));
     },
-    onChangePage: (pageNumber) => {
-      console.log(pageNumber);
+    onUntagKeyword: (filter, page, saying, start, end) => {
+      dispatch(untagKeyword(filter, page, saying, start, end));
     },
-    onTagEntity: (userSays, taggedText, entity) => {
-      console.log(userSays, taggedText, entity);
+    onAddAction: (filter, page, saying, actionName) => {
+      dispatch(addAction(filter, page, saying, actionName));
     },
-    onDeleteHighlight: (userSays, text, start, end) => {
-      console.log(userSays, text, start, end);
-    },
-    onAddAction: (sayingId, actionName) => {
-      console.log(sayingId, actionName);
+    onDeleteAction: (filter, page, saying, actionName) => {
+      dispatch(deleteAction(filter, page, saying, actionName));
     },
     onCreateAction: (url) => {
       dispatch(push(url));

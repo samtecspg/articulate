@@ -160,7 +160,7 @@ class SlotsForm extends React.Component {
               <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
               <SingleHighlightedSaying
                 agentKeywords={this.props.agentKeywords}
-                keywords={this.props.saying.entities}
+                keywords={this.props.saying.keywords}
                 text={this.props.saying.userSays}
                 keywordIndex={0}
                 lastStart={0}

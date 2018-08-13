@@ -39,15 +39,27 @@ module.exports = (object, type) => {
             }
             break;
         case 'saying':
-            object.keywords = object.keywords.map((keyword) => {
+            if (object.keywords !== undefined && object.keywords !== null){
+                if (Array.isArray(object.keywords)){
+                    object.keywords = object.keywords.map((keyword) => {
 
-                if (keyword.keywordId) {
-                    keyword.keywordId = parseInt(keyword.keywordId);
+                        if (keyword.keywordId) {
+                            keyword.keywordId = parseInt(keyword.keywordId);
+                        }
+                        keyword.start = parseInt(keyword.start);
+                        keyword.end = parseInt(keyword.end);
+                        return keyword;
+                    });
                 }
-                keyword.start = parseInt(keyword.start);
-                keyword.end = parseInt(keyword.end);
-                return keyword;
-            });
+                else {
+                    object.keywords = [];
+                }
+            }
+            if (object.actions !== undefined && object.actions !== null){
+                if (!Array.isArray(object.actions)){
+                    object.actions = [];
+                }
+            }
             break;
         case 'action':
             if (typeof object.useWebhook !== 'boolean'){

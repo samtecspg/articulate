@@ -29,8 +29,26 @@ const styles = {
   },
 }
 
+const getStringSetting = (setting) => {
+
+  if (typeof setting === 'string'){
+    return setting;
+  }
+  return JSON.stringify(setting, null, 2);
+}
+
 /* eslint-disable react/prefer-stateless-function */
 export class DucklingSettings extends React.Component {
+
+  onChangeEditorValue(field, editorValue) {
+    try {
+      const value = JSON.parse(editorValue); //Ace editor send the value directly to the method as an string
+      this.props.onChangeSettingsData(field, value);
+    } catch(e) {
+      const value = editorValue; //Given the parse of the json failed store the value in the state as a string
+      this.props.onChangeSettingsData(field, value);
+    }
+  }
 
   render() {
     const { classes, intl, settings } = this.props;
@@ -86,13 +104,13 @@ export class DucklingSettings extends React.Component {
             name="ducklingDimension"
             readOnly={false}
             onChange={value =>
-              this.props.onChangeSettingsData('ducklingDimension', value)
+              this.onChangeEditorValue('ducklingDimension', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={settings.ducklingDimension}
+            value={getStringSetting(settings.ducklingDimension)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
