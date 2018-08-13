@@ -119,16 +119,6 @@ export class SayingsPage extends React.Component {
                     id: 1,
                     keywordName: 'Topping',
                     uiColor: '#f44336'
-                  },
-                  {
-                    id: 2,
-                    keywordName: 'Size',
-                    uiColor: '#e91e63'
-                  },
-                  {
-                    id: 2,
-                    keywordName: 'Address',
-                    uiColor: '#9575cd'
                   }
                 ]
               }}

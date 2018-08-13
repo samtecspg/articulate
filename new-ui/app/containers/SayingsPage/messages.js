@@ -54,5 +54,9 @@ export default defineMessages({
     newAction: {
         id: 'app.containers.SayingsPage.component.SayingRow.newAction',
         defaultMessage: '+ New Action'
+    },
+    newKeyword: {
+        id: 'app.containers.SayingsPage.component.SayingRow.newKeyword',
+        defaultMessage: '+ New Keyword'
     }
 });

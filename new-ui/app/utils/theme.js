@@ -206,6 +206,11 @@ export default createMuiTheme({
           "backgroundColor": "#fff",
           "borderRadius": "5px"
         }
+      },
+      "MuiMenuItem": {
+        "root": {
+          "color": "#4e4e4e"
+        }
       }
     },
     "palette": {

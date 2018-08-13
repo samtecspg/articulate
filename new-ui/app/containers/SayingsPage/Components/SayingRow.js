@@ -103,10 +103,15 @@ class SayingRow extends React.Component {
             }
         }
         if (selectName === 'keywords'){
-            const keyword = selectedValue.split(',');
-            const keywordId = parseInt(keyword[0]);
-            const keywordName = keyword[1];
-            this.props.onTagKeyword(this.props.saying, window.getSelection().toString(), keywordId, keywordName)
+            if (selectedValue === 'create'){
+                this.props.onCreateAction(`/agent/${this.props.agentId}/keyword/create`);
+            }
+            else {
+                const keyword = selectedValue.split(',');
+                const keywordId = parseInt(keyword[0]);
+                const keywordName = keyword[1];
+                this.props.onTagKeyword(this.props.saying, window.getSelection().toString(), keywordId, keywordName);
+            }
         }
     }
 
@@ -168,7 +173,7 @@ class SayingRow extends React.Component {
                                 }
                             }}
                         >
-                            <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
+                            <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction}/></MenuItem>
                             <MenuItem value='orderPizza'>orderPizza</MenuItem>
                             <MenuItem value='greeting'>greeting</MenuItem>
                         </Select>
@@ -188,6 +193,7 @@ class SayingRow extends React.Component {
                                 }
                             }}
                         >
+                            <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newKeyword}/></MenuItem>
                             {agentKeywords.keywords.map((keyword, index) => {
                                 return (
                                     <MenuItem key={`keyword_${index}`} value={`${keyword.id},${keyword.keywordName}`}>
