@@ -71,6 +71,13 @@ const makeSelectKeywords = () => createSelector(
   }
 );
 
+const makeSelectTotalKeywords = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.totalKeywords;
+  }
+);
+
 /* Sayings */
 const makeSelectSayings = () => createSelector(
   selectGlobalDomain,
@@ -124,6 +131,7 @@ export {
   makeSelectKeyword,
 
   makeSelectKeywords,
+  makeSelectTotalKeywords,
 
   makeSelectSayings,
   makeSelectTotalSayings,

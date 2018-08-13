@@ -21,9 +21,15 @@ import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
 import {
-  makeSelectKeywords,
   makeSelectAgent,
+  makeSelectKeywords,
+  makeSelectTotalKeywords,
 } from '../App/selectors';
+
+import {
+  loadKeywords,
+  deleteKeyword,
+} from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsPage extends React.Component {
@@ -34,12 +40,27 @@ export class KeywordsPage extends React.Component {
     this.movePageBack = this.movePageBack.bind(this);
     this.movePageForward = this.movePageForward.bind(this);
     this.onSearchKeyword = this.onSearchKeyword.bind(this);
+    this.getTotalPages = this.getTotalPages.bind(this);
   }
 
   state = {
     filter: '',
     currentPage: 1,
-    numberOfPages: 10,
+  }
+
+  componentWillMount() {
+    if(this.props.agent.id) {
+      this.props.onLoadKeywords('', this.state.currentPage);
+    }
+    else {
+      //TODO: An action when there isn't an agent
+      console.log('YOU HAVEN\'T SELECTED AN AGENT');
+    }
+  }
+
+  getTotalPages(){
+    const itemsByPage = 5;
+    return Math.ceil(this.props.totalKeywords / itemsByPage);
   }
 
   changePage(pageNumber){
@@ -59,7 +80,7 @@ export class KeywordsPage extends React.Component {
 
   movePageForward(){
     let newPage = this.state.currentPage;
-    if (this.state.currentPage < this.state.numberOfPages){
+    if (this.state.currentPage < this.getTotalPages()){
         newPage = this.state.currentPage + 1;
     }
     this.changePage(newPage);
@@ -77,7 +98,7 @@ export class KeywordsPage extends React.Component {
       <Grid container>
         <ContentHeader
           title={messages.title}
-          subtitle={'Pizza Agent'}
+          subtitle={this.props.agent.agentName}
         />
         <MainTab
           enableTabs={true}
@@ -115,16 +136,17 @@ KeywordsPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
-  keywords: makeSelectKeywords()
+  keywords: makeSelectKeywords(),
+  totalKeywords: makeSelectTotalKeywords(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onLoadKeywords: (filter, page) => {
-      console.log(filter, page);
+      dispatch(loadKeywords(filter, page));
     },
-    onDeleteKeyword: (keywordIndex) => {
-      console.log(keywordIndex);
+    onDeleteKeyword: (keywordId) => {
+      dispatch(deleteKeyword(keywordId));
     },
     onCreateKeyword: (url) => {
       dispatch(push(url))

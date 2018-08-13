@@ -33,6 +33,12 @@ import {
   UPDATE_SAYING_ERROR,
   ADD_ACTION,
   DELETE_ACTION,
+
+  LOAD_KEYWORDS,
+  LOAD_KEYWORDS_ERROR,
+  LOAD_KEYWORDS_SUCCESS,
+  DELETE_KEYWORD,
+  DELETE_KEYWORD_ERROR,
 } from './constants';
 
 // The initial state of the App
@@ -132,85 +138,8 @@ const initialState = Immutable({
         }
         ]
     },
-    keywords: [
-        {
-            id: 1,
-            type: 'regex',
-            agent: 'Pizza Agent',
-            regex: null,
-            uiColor: '#7986cb',
-            keywordName: 'PhoneNumber',
-            examples: [
-            {
-                value: '[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]',
-                synonyms: [
-                '[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]',
-                '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'
-                ]
-            }
-            ]
-        },
-        {
-            id: 2,
-            type: 'learned',
-            regex: null,
-            agent: 'Pizza Agent',
-            uiColor: '#e91e63',
-            keywordName: 'Toppings',
-            examples: [
-            {
-                value: 'Mushrooms',
-                synonyms: [
-                'Mushrooms'
-                ]
-            },
-            {
-                value: 'Onions',
-                synonyms: [
-                'Onions'
-                ]
-            },
-            {
-                value: 'peppers',
-                synonyms: [
-                'peppers'
-                ]
-            },
-            {
-                value: 'pepperoni',
-                synonyms: [
-                'pepperoni'
-                ]
-            },
-            {
-                value: 'olives',
-                synonyms: [
-                'olives'
-                ]
-            },
-            {
-                value: 'chicken',
-                synonyms: [
-                'chicken'
-                ]
-            },
-            {
-                value: 'meat',
-                synonyms: [
-                'meat'
-                ]
-            },
-            {
-                value: 'ham',
-                synonyms: [
-                'ham',
-                'canadian bacon'
-                ]
-            }
-            ]
-        }
-    ],
-    totalKeywords: 2,
+    keywords: [],
+    totalKeywords: 0,
     sayings: [],
     totalSayings: 0,
     agentOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
@@ -399,6 +328,29 @@ function appReducer(state = initialState, action) {
     case UPDATE_SAYING_ERROR:
       return state.set('loading', false)
         .set('error', action.error);
+
+    /* Keywords */
+    case LOAD_KEYWORDS:
+      return state.set('keywords', [])
+      .set('totalKeywords', 0)
+      .set('loading', true)
+      .set('error', false);
+    case LOAD_KEYWORDS_ERROR:
+      return state.set('keywords', [])
+      .set('totalKeywords', 0)
+      .set('loading', false)
+      .set('error', action.error);
+    case LOAD_KEYWORDS_SUCCESS:
+      return state.set('keywords', action.keywords.keywords)
+      .set('totalKeywords', action.keywords.total)
+      .set('loading', false)
+      .set('error', false);
+    case DELETE_KEYWORD:
+      return state.set('loading', true)
+      .set('error', false);
+    case DELETE_KEYWORD_ERROR:
+      return state.set('loading', false)
+      .set('error', action.error);
   }
 }
 

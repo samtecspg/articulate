@@ -50,3 +50,12 @@ export const UNTAG_KEYWORD = 'app/SayingsPage/UNTAG_KEYWORD';
 export const UPDATE_SAYING_ERROR = 'app/SayingsPage/UPDATE_SAYING_ERROR';
 export const ADD_ACTION = 'app/SayingsPage/ADD_ACTION';
 export const DELETE_ACTION = 'app/SayingsPage/DELETE_ACTION';
+
+/*
+ * Keywords
+ */
+export const LOAD_KEYWORDS = 'app/SayingsPage/LOAD_KEYWORDS';
+export const LOAD_KEYWORDS_ERROR = 'app/SayingsPage/LOAD_KEYWORDS_ERROR';
+export const LOAD_KEYWORDS_SUCCESS = 'app/SayingsPage/LOAD_KEYWORDS_SUCCESS';
+export const DELETE_KEYWORD = 'app/SayingsPage/DELETE_KEYWORD';
+export const DELETE_KEYWORD_ERROR = 'app/SayingsPage/DELETE_KEYWORD_ERROR';

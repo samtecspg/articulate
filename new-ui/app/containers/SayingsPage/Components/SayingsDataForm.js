@@ -206,7 +206,7 @@ SayingsDataForm.propTypes = {
     intl: intlShape.isRequired,
     sayings: PropTypes.array,
     agentId: PropTypes.number,
-    agentKeywords: PropTypes.object,
+    agentKeywords: PropTypes.array,
     onAddSaying: PropTypes.func.isRequired,
     onDeleteSaying: PropTypes.func.isRequired,
     onDeleteAction: PropTypes.func.isRequired,

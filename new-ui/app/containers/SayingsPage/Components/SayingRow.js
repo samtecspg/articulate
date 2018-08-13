@@ -194,7 +194,7 @@ class SayingRow extends React.Component {
                             }}
                         >
                             <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newKeyword}/></MenuItem>
-                            {agentKeywords.keywords.map((keyword, index) => {
+                            {agentKeywords.map((keyword, index) => {
                                 return (
                                     <MenuItem key={`keyword_${index}`} value={`${keyword.id},${keyword.keywordName}`}>
                                         <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>
@@ -213,7 +213,7 @@ SayingRow.propTypes = {
     classes: PropTypes.object,
     saying: PropTypes.object,
     agentId: PropTypes.number,
-    agentKeywords: PropTypes.object,
+    agentKeywords: PropTypes.array,
     onDeleteAction: PropTypes.func,
     onUntagKeyword: PropTypes.func,
     onTagKeyword: PropTypes.func,

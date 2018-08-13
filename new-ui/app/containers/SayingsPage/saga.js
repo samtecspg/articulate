@@ -17,6 +17,7 @@ import {
 
 import {
     LOAD_SAYINGS,
+    LOAD_KEYWORDS,
     ADD_SAYING,
     DELETE_SAYING,
     TAG_KEYWORD,
@@ -28,6 +29,8 @@ import {
 import {
     makeSelectAgent,
 } from '../App/selectors';
+
+import { getKeywords } from '../KeywordsPage/saga';
 
 export function* getSayings(payload) {
     const agent = yield select(makeSelectAgent());
@@ -200,4 +203,5 @@ export default function* rootSaga() {
     yield takeLatest(UNTAG_KEYWORD, untagKeyword);
     yield takeLatest(ADD_ACTION, addAction);
     yield takeLatest(DELETE_ACTION, deleteAction);
+    yield takeLatest(LOAD_KEYWORDS, getKeywords);
 };

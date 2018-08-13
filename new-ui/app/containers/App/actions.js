@@ -37,6 +37,12 @@ import {
   UPDATE_SAYING_ERROR,
   ADD_ACTION,
   DELETE_ACTION,
+
+  LOAD_KEYWORDS,
+  LOAD_KEYWORDS_ERROR,
+  LOAD_KEYWORDS_SUCCESS,
+  DELETE_KEYWORD,
+  DELETE_KEYWORD_ERROR,
 } from './constants';
 
 /*
@@ -285,5 +291,46 @@ export function deleteAction(filter, page, saying, actionName){
     page,
     saying,
     actionName,
+  };
+}
+
+/*
+* Keywords
+*/
+export function loadKeywords(filter, page) {
+  return {
+    type: LOAD_KEYWORDS,
+    apiCall: true,
+    filter,
+    page,
+  };
+}
+
+export function loadKeywordsError(error) {
+  return {
+    type: LOAD_KEYWORDS_ERROR,
+    error,
+  };
+}
+
+export function loadKeywordsSuccess(keywords) {
+  return {
+    type: LOAD_KEYWORDS_SUCCESS,
+    keywords,
+  };
+}
+
+export function deleteKeyword(keywordId) {
+  return {
+    type: DELETE_KEYWORD,
+    apiCall: true,
+    keywordId,
+  }
+}
+
+export function deleteKeywordError(error) {
+  return {
+    type: DELETE_KEYWORD_ERROR,
+    error,
   };
 }

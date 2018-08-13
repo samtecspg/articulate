@@ -64,7 +64,7 @@ const HighlightedSaying = withStyles(styles)((props) => {
         const beforeTaggedText = props.text.substring(0, start - lastStart);
         const taggedText = props.text.substring(start - lastStart, end - lastStart);
         const afterTaggedText = props.text.substring(end - lastStart, props.text.length);
-        let filteredKeyword = props.agentKeywords.keywords.filter((agentKeyword) => { return agentKeyword.keywordName === keyword.keyword })[0];
+        let filteredKeyword = props.agentKeywords.filter((agentKeyword) => { return agentKeyword.keywordName === keyword.keyword })[0];
         if (!filteredKeyword){
         filteredKeyword = systemKeywords.filter((sysKeyword) => { return sysKeyword.keywordName === keyword.keyword})[0];
         }
@@ -102,7 +102,7 @@ const HighlightedSaying = withStyles(styles)((props) => {
 });
 
 HighlightedSaying.propTypes = {
-  agentKeywords: PropTypes.object,
+  agentKeywords: PropTypes.array,
   keywords: PropTypes.array,
   text: PropTypes.string,
   keywordIndex: PropTypes.number,

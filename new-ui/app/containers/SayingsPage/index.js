@@ -21,9 +21,10 @@ import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
 import {
-  makeSelectSayings,
   makeSelectAgent,
-  makeSelectTotalSayings
+  makeSelectSayings,
+  makeSelectTotalSayings,
+  makeSelectKeywords,
 } from '../App/selectors';
 import {
   loadSayings,
@@ -33,6 +34,7 @@ import {
   untagKeyword,
   addAction,
   deleteAction,
+  loadKeywords,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -54,6 +56,7 @@ export class SayingsPage extends React.Component {
 
   componentWillMount() {
     if(this.props.agent.id) {
+      this.props.onLoadKeywords();
       this.props.onLoadSayings('', this.state.currentPage);
     }
     else {
@@ -102,7 +105,7 @@ export class SayingsPage extends React.Component {
       <Grid container>
         <ContentHeader
           title={messages.title}
-          subtitle={'Pizza Agent'}
+          subtitle={this.props.agent.agentName}
         />
         <MainTab
           enableTabs={true}
@@ -113,15 +116,7 @@ export class SayingsPage extends React.Component {
             <Form
               agentId={this.props.agent.id}
               sayings={this.props.sayings}
-              agentKeywords={{
-                keywords: [
-                  {
-                    id: 1,
-                    keywordName: 'Topping',
-                    uiColor: '#f44336'
-                  }
-                ]
-              }}
+              agentKeywords={this.props.agentKeywords}
               onAddSaying={this.props.onAddSaying}
               onDeleteSaying={this.props.onDeleteSaying}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage)}
@@ -148,6 +143,7 @@ export class SayingsPage extends React.Component {
 SayingsPage.propTypes = {
   agent: PropTypes.object,
   onLoadSayings: PropTypes.func,
+  onLoadKeywords: PropTypes.func,
   onChangeSayingsData: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
@@ -157,19 +153,23 @@ SayingsPage.propTypes = {
   onCreateAction: PropTypes.func,
   sayings: PropTypes.array,
   totalSayings: PropTypes.number,
-  agentKeywords: PropTypes.object,
+  agentKeywords: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   sayings: makeSelectSayings(),
   totalSayings: makeSelectTotalSayings(),
+  agentKeywords: makeSelectKeywords(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onLoadSayings: (filter, page) => {
       dispatch(loadSayings(filter, page));
+    },
+    onLoadKeywords: () => {
+      dispatch(loadKeywords());
     },
     onAddSaying: (value) => {
       dispatch(addSaying(value));
