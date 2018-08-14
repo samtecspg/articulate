@@ -12,6 +12,9 @@ import {
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
+  ADD_AGENT,
+  ADD_AGENT_ERROR,
+  ADD_AGENT_SUCCESS,
 
   LOAD_AGENT,
   LOAD_AGENT_ERROR,
@@ -21,9 +24,9 @@ import {
   CHANGE_WEBHOOK_DATA,
   CHANGE_WEBHOOK_PAYLOAD_TYPE,
   CHANGE_POST_FORMAT_DATA,
-  CHANGE_SETTINGS_DATA,
-  ADD_FALLBACK,
-  DELETE_FALLBACK,
+  CHANGE_AGENT_SETTINGS_DATA,
+  ADD_AGENT_FALLBACK,
+  DELETE_AGENT_FALLBACK,
 
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
@@ -43,6 +46,16 @@ import {
   LOAD_KEYWORDS_SUCCESS,
   DELETE_KEYWORD,
   DELETE_KEYWORD_ERROR,
+
+  LOAD_SETTINGS,
+  LOAD_SETTINGS_ERROR,
+  LOAD_SETTINGS_SUCCESS,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
+  CHANGE_SETTINGS_DATA,
+  ADD_FALLBACK,
+  DELETE_FALLBACK,
 } from './constants';
 
 /*
@@ -142,16 +155,16 @@ export function changeDomainClassifierThreshold(value) {
   };
 }
 
-export function addFallbackResponse(newFallback) {
+export function addAgentFallbackResponse(newFallback) {
   return {
-    type: ADD_FALLBACK,
+    type: ADD_AGENT_FALLBACK,
     newFallback,
   }
 }
 
-export function deleteFallbackResponse(fallbackIndex) {
+export function deleteAgentFallbackResponse(fallbackIndex) {
   return {
-    type: DELETE_FALLBACK,
+    type: DELETE_AGENT_FALLBACK,
     fallbackIndex,
   }
 }
@@ -177,10 +190,32 @@ export function changePostFormatData(payload) {
   };
 }
 
-export function changeSettingsData(payload) {
+export function changeAgentSettingsData(payload) {
   return {
-    type: CHANGE_SETTINGS_DATA,
+    type: CHANGE_AGENT_SETTINGS_DATA,
     payload,
+  }
+}
+
+export function addAgent(){
+  return {
+    type: ADD_AGENT,
+    apiCall: true
+  }
+}
+
+export function addAgentError(){
+  return {
+    type: ADD_AGENT_ERROR,
+    apiCall: true
+  }
+}
+
+export function addAgentSuccess(agent){
+  return {
+    type: ADD_AGENT_SUCCESS,
+    apiCall: true,
+    agent
   }
 }
 
@@ -333,4 +368,69 @@ export function deleteKeywordError(error) {
     type: DELETE_KEYWORD_ERROR,
     error,
   };
+}
+
+/*
+* Settings
+*/
+export function loadSettings() {
+  return {
+    type: LOAD_SETTINGS,
+    apiCall: true,
+  };
+}
+
+export function loadSettingsError(error) {
+  return {
+    type: LOAD_SETTINGS_ERROR,
+    error,
+  };
+}
+
+export function loadSettingsSuccess(settings) {
+  return {
+    type: LOAD_SETTINGS_SUCCESS,
+    settings,
+  };
+}
+
+export function updateSettings() {
+  return {
+    type: UPDATE_SETTINGS,
+    apiCall: true,
+  };
+}
+
+export function updateSettingsError(error){
+  return {
+    type: UPDATE_SETTINGS_ERROR,
+    error,
+  };
+}
+
+export function updateSettingsSuccess(){
+  return {
+    type: UPDATE_SETTINGS_SUCCESS,
+  };
+}
+
+export function changeSettingsData(payload) {
+  return {
+    type: CHANGE_SETTINGS_DATA,
+    payload,
+  }
+}
+
+export function addFallbackResponse(newFallback) {
+  return {
+    type: ADD_FALLBACK,
+    newFallback,
+  }
+}
+
+export function deleteFallbackResponse(fallbackIndex) {
+  return {
+    type: DELETE_FALLBACK,
+    fallbackIndex,
+  }
 }

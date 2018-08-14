@@ -7,12 +7,10 @@ import { withStyles } from "@material-ui/core/styles";
 
 import messages from "../messages";
 
-import agentIcon from "../../../images/agents-icon.svg";
-import playHelpIcon from "../../../images/play-help-icon.svg";
 import settingsIcon from "../../../images/settings-icon.svg";
+import playHelpIcon from "../../../images/play-help-icon.svg";
 
-import AgentDataForm from "./AgentDataForm";
-import AgentSettingsForm from "./AgentSettingsForm";
+import SettingsDataForm from "./SettingsDataForm";
 
 const styles = {
   headerContainer: {
@@ -24,15 +22,15 @@ const styles = {
   titleContainer: {
     padding: "25px"
   },
-  agentIcon: {
-    display: "inline",
-    paddingRight: "10px",
-    height: "30px"
-  },
   titleTextHelpContainer: {
     display: "inline",
     position: "relative",
     bottom: "6px"
+  },
+  settingsIcon: {
+    display: "inline",
+    paddingRight: "10px",
+    height: "30px"
   },
   title: {
     display: "inline",
@@ -53,9 +51,6 @@ const styles = {
     bottom: "2px",
     paddingLeft: "2px"
   },
-  agentTabs: {
-    paddingLeft: "5px"
-  },
   modalContent: {
     top: "50%",
     left: "50%",
@@ -67,10 +62,6 @@ const styles = {
     boxShadow:
       "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)"
   },
-  settingsIcon: {
-    height: "18px",
-    paddingRight: "5px"
-  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -103,7 +94,7 @@ class Form extends React.Component {
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
-          <img className={classes.agentIcon} src={agentIcon} />
+          <img className={classes.settingsIcon} src={settingsIcon} />
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant="display3">
               <FormattedMessage {...messages.title} />
@@ -137,48 +128,12 @@ class Form extends React.Component {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Tabs
-            className={classes.agentTabs}
-            value={this.state.selectedTab}
-            indicatorColor="primary"
-            textColor="secondary"
-            scrollable
-            scrollButtons="off"
-            onChange={(evt, value) => {
-              this.handleChange(evt, value);
-            }}
-          >
-            <Tab label={intl.formatMessage(messages.main)} />
-            <Tab
-              icon={<img className={classes.settingsIcon} src={settingsIcon} />}
-              label={intl.formatMessage(messages.settings)}
-            />
-          </Tabs>
-          {this.state.selectedTab === 0 && (
-            <AgentDataForm
-              agent={this.props.agent}
-              onChangeAgentData={this.props.onChangeAgentData}
-              onChangeAgentName={this.props.onChangeAgentName}
-              onChangeDomainClassifierThreshold={
-                this.props.onChangeDomainClassifierThreshold
-              }
-              onAddFallbackResponse={this.props.onAddFallbackResponse}
-              onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
-            />
-          )}
-          {this.state.selectedTab === 1 && (
-            <AgentSettingsForm
-              agent={this.props.agent}
-              webhook={this.props.webhook}
-              postFormat={this.props.postFormat}
-              settings={this.props.settings}
-              onChangeAgentData={this.props.onChangeAgentData}
-              onChangeWebhookData={this.props.onChangeWebhookData}
-              onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
-              onChangePostFormatData={this.props.onChangePostFormatData}
-              onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
-            />
-          )}
+          <SettingsDataForm
+            settings={this.props.settings}
+            onChangeSettingsData={this.props.onChangeSettingsData}
+            onAddFallbackResponse={this.props.onAddFallbackResponse}
+            onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
+          />
         </Grid>
       </Grid>
     );
@@ -188,19 +143,10 @@ class Form extends React.Component {
 Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  agent: PropTypes.object,
-  webhook: PropTypes.object,
-  postFormat: PropTypes.object,
   settings: PropTypes.object,
-  onChangeAgentData: PropTypes.func,
-  onChangeAgentName: PropTypes.func,
-  onChangeWebhookData: PropTypes.func,
-  onChangeWebhookPayloadType: PropTypes.func,
-  onChangePostFormatData: PropTypes.func,
-  onChangeAgentSettingsData: PropTypes.func,
-  onChangeDomainClassifierThreshold: PropTypes.func,
-  onAddFallbackResponse: PropTypes.func,
-  onDeleteFallbackResponse: PropTypes.func
+  onChangeSettingsData: PropTypes.func,
+  onAddFallbackResponse: PropTypes.func.isRequired,
+  onDeleteFallbackResponse: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(Form));

@@ -184,7 +184,7 @@ class AgentSettingsForm extends React.Component {
               <ExpansionPanelDetails>
                 <RasaSettings
                   settings={settings}
-                  onChangeSettingsData={this.props.onChangeSettingsData}
+                  onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -207,7 +207,7 @@ class AgentSettingsForm extends React.Component {
               <ExpansionPanelDetails>
                 <DucklingSettings
                   settings={settings}
-                  onChangeSettingsData={this.props.onChangeSettingsData}
+                  onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -228,7 +228,7 @@ AgentSettingsForm.propTypes = {
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
-  onChangeSettingsData: PropTypes.func
+  onChangeAgentSettingsData: PropTypes.func
 };
 
 export default withStyles(styles)(AgentSettingsForm);

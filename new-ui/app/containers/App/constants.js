@@ -8,6 +8,10 @@
  * Follow this format:
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
+
+/*
+ * Global
+ */
 export const MISSING_API = 'app/App/MISSING_API';
 export const RESET_MISSING_API = 'app/App/RESET_MISSING_API';
 export const CHECK_API = 'app/App/CHECK_API';
@@ -18,6 +22,9 @@ export const CHECK_API = 'app/App/CHECK_API';
 export const LOAD_AGENTS = 'app/AgentsPage/LOAD_AGENTS';
 export const LOAD_AGENTS_SUCCESS = 'app/AgentsPage/LOAD_AGENTS_SUCCESS';
 export const LOAD_AGENTS_ERROR = 'app/AgentsPage/LOAD_AGENTS_ERROR';
+export const ADD_AGENT = 'app/AgentsPage/ADD_AGENT';
+export const ADD_AGENT_ERROR = 'app/AgentsPage/ADD_AGENT_ERROR';
+export const ADD_AGENT_SUCCESS = 'app/AgentsPage/ADD_AGENT_SUCCESS';
 
 /*
  * Agent
@@ -31,9 +38,9 @@ export const CHANGE_AGENT_NAME = 'app/AgentPage/CHANGE_AGENT_NAME';
 export const CHANGE_WEBHOOK_DATA = 'app/AgentPage/CHANGE_WEBHOOK_DATA';
 export const CHANGE_WEBHOOK_PAYLOAD_TYPE = 'app/AgentPage/CHANGE_WEBHOOK_PAYLOAD_TYPE';
 export const CHANGE_POST_FORMAT_DATA = 'app/AgentPage/CHANGE_POST_FORMAT_DATA';
-export const CHANGE_SETTINGS_DATA = 'app/AgentPage/CHANGE_SETTINGS_DATA';
-export const ADD_FALLBACK = 'app/AgentPage/ADD_FALLBACK';
-export const DELETE_FALLBACK = 'app/AgentPage/DELETE_FALLBACK';
+export const CHANGE_AGENT_SETTINGS_DATA = 'app/AgentPage/CHANGE_AGENT_SETTINGS_DATA';
+export const ADD_AGENT_FALLBACK = 'app/AgentPage/ADD_AGENT_FALLBACK';
+export const DELETE_AGENT_FALLBACK = 'app/AgentPage/DELETE_AGENT_FALLBACK';
 
 /*
  * Sayings
@@ -54,8 +61,21 @@ export const DELETE_ACTION = 'app/SayingsPage/DELETE_ACTION';
 /*
  * Keywords
  */
-export const LOAD_KEYWORDS = 'app/SayingsPage/LOAD_KEYWORDS';
-export const LOAD_KEYWORDS_ERROR = 'app/SayingsPage/LOAD_KEYWORDS_ERROR';
-export const LOAD_KEYWORDS_SUCCESS = 'app/SayingsPage/LOAD_KEYWORDS_SUCCESS';
-export const DELETE_KEYWORD = 'app/SayingsPage/DELETE_KEYWORD';
-export const DELETE_KEYWORD_ERROR = 'app/SayingsPage/DELETE_KEYWORD_ERROR';
+export const LOAD_KEYWORDS = 'app/KeywordsPage/LOAD_KEYWORDS';
+export const LOAD_KEYWORDS_ERROR = 'app/KeywordsPage/LOAD_KEYWORDS_ERROR';
+export const LOAD_KEYWORDS_SUCCESS = 'app/KeywordsPage/LOAD_KEYWORDS_SUCCESS';
+export const DELETE_KEYWORD = 'app/KeywordsPage/DELETE_KEYWORD';
+export const DELETE_KEYWORD_ERROR = 'app/KeywordsPage/DELETE_KEYWORD_ERROR';
+
+/*
+ * Settings
+ */
+export const LOAD_SETTINGS = 'app/SettingsPage/LOAD_SETTINGS';
+export const LOAD_SETTINGS_ERROR = 'app/SettingsPage/LOAD_SETTINGS_ERROR';
+export const LOAD_SETTINGS_SUCCESS = 'app/SettingsPage/LOAD_SETTINGS_SUCCESS';
+export const UPDATE_SETTINGS = 'app/SettingsPage/UPDATE_SETTINGS';
+export const UPDATE_SETTINGS_ERROR = 'app/SettingsPage/UPDATE_SETTINGS_ERROR';
+export const UPDATE_SETTINGS_SUCCESS = 'app/SettingsPage/UPDATE_SETTINGS_SUCCESS';
+export const CHANGE_SETTINGS_DATA = 'app/SettingsPage/CHANGE_SETTINGS_DATA';
+export const ADD_FALLBACK = 'app/AgentPage/ADD_FALLBACK';
+export const DELETE_FALLBACK = 'app/AgentPage/DELETE_FALLBACK';

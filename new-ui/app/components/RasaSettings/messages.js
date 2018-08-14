@@ -8,7 +8,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   rasaSettingDescription: {
     id: 'app.components.RasaSettings.rasaSettingDescription',
-    defaultMessage: 'If you modify these values the global settings for Rasa will be overriden.'
+    defaultMessage: 'You can configure the address of your rasa instance and the desired pipelines you would like for your models. This values are overwritable at agent level.'
   },
   rasaURL: {
     id: 'app.components.RasaSettings.rasaURL',

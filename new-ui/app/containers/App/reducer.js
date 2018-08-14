@@ -7,6 +7,9 @@ import {
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
+  ADD_AGENT,
+  ADD_AGENT_ERROR,
+  ADD_AGENT_SUCCESS,
 
   RESET_AGENT_DATA,
   LOAD_AGENT,
@@ -17,9 +20,9 @@ import {
   CHANGE_WEBHOOK_DATA,
   CHANGE_WEBHOOK_PAYLOAD_TYPE,
   CHANGE_POST_FORMAT_DATA,
-  CHANGE_SETTINGS_DATA,
-  ADD_FALLBACK,
-  DELETE_FALLBACK,
+  CHANGE_AGENT_SETTINGS_DATA,
+  ADD_AGENT_FALLBACK,
+  DELETE_AGENT_FALLBACK,
 
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
@@ -39,151 +42,178 @@ import {
   LOAD_KEYWORDS_SUCCESS,
   DELETE_KEYWORD,
   DELETE_KEYWORD_ERROR,
+
+  LOAD_SETTINGS,
+  LOAD_SETTINGS_ERROR,
+  LOAD_SETTINGS_SUCCESS,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
+  CHANGE_SETTINGS_DATA,
+  ADD_FALLBACK,
+  DELETE_FALLBACK,
 } from './constants';
 
 // The initial state of the App
 const initialState = Immutable({
-    agents: [],
-    agent: {
-        agentName: '',
-        description: '',
-        language: 'en',
-        timezone: 'utc',
-        useWebhook: false,
-        usePostFormat: false,
-        extraTrainingData: false,
-        enableModelsPerDomain: true,
-        fallbackResponses: [
-        'Sorry, can you rephrase that?',
-        'I\'m sorry, I\'m still learning to speak with humans'
-        ],
-        domainClassifierThreshold: 50,
-    },
-    agentWebhook: {
-      agent: '',
-      webhookUrl: '',
-      webhookVerb: 'GET',
-      webhookPayloadType: 'None',
-      webhookPayload: '',
-    },
-    agentPostFormat: {
-      agent: '',
-      postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}"\n}'
-    },
-    agentSettings: {
-      rasaURL: '',
-      ducklingURL: '',
-      ducklingDimension: '[]',
-      spacyPretrainedEntities: '[]',
-      domainClassifierPipeline: '[]',
-      intentClassifierPipeline: '[]',
-      entityClassifierPipeline: '[]',
-    },
-    keyword: {
-        id: 2,
-        type: 'learned',
-        regex: '',
-        agent: 'Pizza Agent',
-        uiColor: '#e91e63',
-        keywordName: 'Toppings',
-        examples: [
-        {
-            value: 'Mushrooms',
-            synonyms: [
-            'Mushrooms'
-            ]
-        },
-        {
-            value: 'Onions',
-            synonyms: [
-            'Onions'
-            ]
-        },
-        {
-            value: 'peppers',
-            synonyms: [
-            'peppers'
-            ]
-        },
-        {
-            value: 'pepperoni',
-            synonyms: [
-            'pepperoni'
-            ]
-        },
-        {
-            value: 'olives',
-            synonyms: [
-            'olives'
-            ]
-        },
-        {
-            value: 'chicken',
-            synonyms: [
-            'chicken'
-            ]
-        },
-        {
-            value: 'meat',
-            synonyms: [
-            'meat'
-            ]
-        },
-        {
-            value: 'ham',
-            synonyms: [
-            'ham',
-            'canadian bacon'
-            ]
-        }
-        ]
-    },
-    keywords: [],
-    totalKeywords: 0,
-    sayings: [],
-    totalSayings: 0,
-    agentOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
-    agentOldPayloadXML: '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
-    agentTouched: false,
-    missingAPI: false,
-    action: {
-      id: 129,
-      agent: 'Pizza Agent',
-      domain: 'Orders',
-      actionName: 'Order pizza',
+  agents: [],
+  agent: {
+      agentName: '',
+      description: '',
+      language: 'en',
+      timezone: 'UTC',
       useWebhook: false,
       usePostFormat: false,
-      slots: [
-        {
-          uiColor: '#f44336',
-          keyword: 'Toppings',
-          isList: true,
-          slotName: 'Toppings',
-          isRequired: true,
-          textPrompts: [
-            'What toppings would you like?'
-          ]
-        }
+      extraTrainingData: false,
+      enableModelsPerDomain: true,
+      fallbackResponses: [
+        'Sorry, can you rephrase that?',
+        'I\'m sorry, I\'m still learning to speak with humans'
       ],
-      responses: [
-        'Sure we will prepare your pizza with {{andList slots.Toppings.original}}'
+      domainClassifierThreshold: 50,
+  },
+  agentWebhook: {
+    agent: '',
+    webhookUrl: '',
+    webhookVerb: 'GET',
+    webhookPayloadType: 'None',
+    webhookPayload: '',
+  },
+  agentPostFormat: {
+    agent: '',
+    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}"\n}'
+  },
+  agentSettings: {
+    rasaURL: '',
+    ducklingURL: '',
+    ducklingDimension: '[]',
+    spacyPretrainedEntities: '[]',
+    domainClassifierPipeline: '[]',
+    intentClassifierPipeline: '[]',
+    entityClassifierPipeline: '[]',
+  },
+  keyword: {
+      id: 2,
+      type: 'learned',
+      regex: '',
+      agent: 'Pizza Agent',
+      uiColor: '#e91e63',
+      keywordName: 'Toppings',
+      examples: [
+      {
+          value: 'Mushrooms',
+          synonyms: [
+          'Mushrooms'
+          ]
+      },
+      {
+          value: 'Onions',
+          synonyms: [
+          'Onions'
+          ]
+      },
+      {
+          value: 'peppers',
+          synonyms: [
+          'peppers'
+          ]
+      },
+      {
+          value: 'pepperoni',
+          synonyms: [
+          'pepperoni'
+          ]
+      },
+      {
+          value: 'olives',
+          synonyms: [
+          'olives'
+          ]
+      },
+      {
+          value: 'chicken',
+          synonyms: [
+          'chicken'
+          ]
+      },
+      {
+          value: 'meat',
+          synonyms: [
+          'meat'
+          ]
+      },
+      {
+          value: 'ham',
+          synonyms: [
+          'ham',
+          'canadian bacon'
+          ]
+      }
       ]
-    },
-    actionWebhook: {
-      agent: '',
-      domain: '',
-      webhookUrl: '',
-      webhookVerb: 'GET',
-      webhookPayloadType: 'None',
-      webhookPayload: ''
-    },
-    actionPostFormat: {
-      agent: '',
-      domain: '',
-      postFormatPayload: ''
-    },
-    actionOldPayloadJSON: "{\n\t'text': '{{text}}',\n\t'action': {{{JSONstringify action}}},\n\t'slots': {{{JSONstringify slots}}}\n}",
-    actionOldPayloadXML: "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
+  },
+  keywords: [],
+  totalKeywords: 0,
+  sayings: [],
+  totalSayings: 0,
+  agentOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
+  agentOldPayloadXML: '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
+  agentTouched: false,
+  missingAPI: false,
+  action: {
+    id: 129,
+    agent: 'Pizza Agent',
+    domain: 'Orders',
+    actionName: 'Order pizza',
+    useWebhook: false,
+    usePostFormat: false,
+    slots: [
+      {
+        uiColor: '#f44336',
+        keyword: 'Toppings',
+        isList: true,
+        slotName: 'Toppings',
+        isRequired: true,
+        textPrompts: [
+          'What toppings would you like?'
+        ]
+      }
+    ],
+    responses: [
+      'Sure we will prepare your pizza with {{andList slots.Toppings.original}}'
+    ]
+  },
+  actionWebhook: {
+    agent: '',
+    domain: '',
+    webhookUrl: '',
+    webhookVerb: 'GET',
+    webhookPayloadType: 'None',
+    webhookPayload: ''
+  },
+  actionPostFormat: {
+    agent: '',
+    domain: '',
+    postFormatPayload: ''
+  },
+  actionOldPayloadJSON: "{\n\t'text': '{{text}}',\n\t'action': {{{JSONstringify action}}},\n\t'slots': {{{JSONstringify slots}}}\n}",
+  actionOldPayloadXML: "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
+  settings: {
+    rasaURL: '',
+    uiLanguage: '',
+    ducklingURL: '',
+    defaultTimezone: '',
+    defaultAgentLanguage: '',
+    timezones: [],
+    uiLanguages: [],
+    agentLanguages: [],
+    ducklingDimension: [],
+    spacyPretrainedEntities: [],
+    domainClassifierPipeline: [],
+    intentClassifierPipeline: [],
+    entityClassifierPipeline: [],
+    defaultAgentFallbackResponses: []
+  },
+  settingsTouched: false,
 });
 
 function appReducer(state = initialState, action) {
@@ -201,16 +231,16 @@ function appReducer(state = initialState, action) {
     /* Agents */
     case LOAD_AGENTS:
       return state.set('agents', [])
-      .set('loading', true)
-      .set('error', false);
+        .set('loading', true)
+        .set('error', false);
     case LOAD_AGENTS_ERROR:
       return state.set('agents', [])
-      .set('loading', false)
-      .set('error', action.error);
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_AGENTS_SUCCESS:
       return state.set('agents', action.agents)
-      .set('loading', false)
-      .set('error', false);
+        .set('loading', false)
+        .set('error', false);
 
     /* Agent */
     case RESET_AGENT_DATA:
@@ -274,45 +304,53 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['postFormat', action.payload.field], action.payload.value)
         .set('agentTouched', true);
-    case CHANGE_SETTINGS_DATA:
+    case CHANGE_AGENT_SETTINGS_DATA:
       return state
         .setIn(['agentSettings', action.payload.field], action.payload.value)
         .set('agentTouched', true);
-    case ADD_FALLBACK:
+    case ADD_AGENT_FALLBACK:
       return state.updateIn(['agent', 'fallbackResponses'], fallbackResponses => fallbackResponses.concat(action.newFallback));
-    case DELETE_FALLBACK:
+    case DELETE_AGENT_FALLBACK:
       return state.updateIn(['agent', 'fallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.fallbackIndex));
-    default:
-      return state;
+    case ADD_AGENT:
+      return state.set('loading', true)
+        .set('error', false);
+    case ADD_AGENT_ERROR:
+      return state.set('loading', false)
+        .set('error', action.error);
+    case ADD_AGENT_SUCCESS:
+      return state.set('agent', action.agent)
+        .set('loading', false)
+        .set('error', false);
 
     /* Sayings */
     case LOAD_SAYINGS:
       return state.set('sayings', [])
-      .set('totalSayings', 0)
-      .set('loading', true)
-      .set('error', false);
+        .set('totalSayings', 0)
+        .set('loading', true)
+        .set('error', false);
     case LOAD_SAYINGS_ERROR:
       return state.set('sayings', [])
-      .set('totalSayings', 0)
-      .set('loading', false)
-      .set('error', action.error);
+        .set('totalSayings', 0)
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_SAYINGS_SUCCESS:
       return state.set('sayings', action.sayings.sayings)
-      .set('totalSayings', action.sayings.total)
-      .set('loading', false)
-      .set('error', false);
+        .set('totalSayings', action.sayings.total)
+        .set('loading', false)
+        .set('error', false);
     case ADD_SAYING:
       return state.set('loading', true)
-      .set('error', false);
+        .set('error', false);
     case ADD_SAYING_ERROR:
       return state.set('loading', false)
-      .set('error', action.error);
+        .set('error', action.error);
     case DELETE_SAYING:
       return state.set('loading', true)
-      .set('error', false);
+        .set('error', false);
     case DELETE_SAYING_ERROR:
       return state.set('loading', false)
-      .set('error', action.error);
+        .set('error', action.error);
     case TAG_KEYWORD:
       return state.set('loading', true)
         .set('error', false);
@@ -351,6 +389,39 @@ function appReducer(state = initialState, action) {
     case DELETE_KEYWORD_ERROR:
       return state.set('loading', false)
       .set('error', action.error);
+
+    /* Settings */
+    case LOAD_SETTINGS:
+      return state.set('loading', true)
+        .set('error', false);
+    case LOAD_SETTINGS_ERROR:
+      return state.set('settings', initialState.settings)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_SETTINGS_SUCCESS:
+      return state.set('settings', action.settings)
+        .set('loading', false)
+        .set('error', false);
+    case UPDATE_SETTINGS:
+      return state.set('loading', true)
+        .set('error', false);
+    case UPDATE_SETTINGS_ERROR:
+      return state.set('loading', false)
+        .set('error', action.error);
+    case UPDATE_SETTINGS_SUCCESS:
+      return state.set('loading', false)
+        .set('error', false);
+    case CHANGE_SETTINGS_DATA:
+      return state
+        .setIn(['settings', action.payload.field], action.payload.value)
+        .set('settingsTouched', true);
+    case ADD_FALLBACK:
+      return state.updateIn(['settings', 'defaultAgentFallbackResponses'], defaultAgentFallbackResponses => defaultAgentFallbackResponses.concat(action.newFallback));
+    case DELETE_FALLBACK:
+      return state.updateIn(['settings', 'defaultAgentFallbackResponses'], defaultAgentFallbackResponses => defaultAgentFallbackResponses.filter((item, index) => index !== action.fallbackIndex));
+
+    default:
+      return state;
   }
 }
 

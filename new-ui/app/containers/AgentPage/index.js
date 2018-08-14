@@ -16,7 +16,7 @@ import {
   makeSelectAgent,
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
-  makeSelectSettings,
+  makeSelectAgentSettings,
 } from '../App/selectors';
 import saga from './saga';
 import messages from './messages';
@@ -33,12 +33,12 @@ import {
   changeAgentData,
   changeAgentName,
   changeDomainClassifierThreshold,
-  addFallbackResponse,
-  deleteFallbackResponse,
+  addAgentFallbackResponse,
+  deleteAgentFallbackResponse,
   changeWebhookData,
   changeWebhookPayloadType,
   changePostFormatData,
-  changeSettingsData,
+  changeAgentSettingsData,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -83,7 +83,7 @@ export class AgentPage extends React.PureComponent {
               onChangeWebhookData={this.props.onChangeWebhookData}
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
               onChangePostFormatData={this.props.onChangePostFormatData}
-              onChangeSettingsData={this.props.onChangeSettingsData}
+              onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
               onChangeDomainClassifierThreshold={this.props.onChangeDomainClassifierThreshold}
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
@@ -111,7 +111,7 @@ AgentPage.propTypes = {
   onChangeWebhookPayloadType: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
   onChangeDomainClassifierThreshold: PropTypes.func,
-  onChangeSettingsData: PropTypes.func,
+  onChangeAgentSettingsData: PropTypes.func,
   onAddFallbackResponse: PropTypes.func,
   onDeleteFallbackResponse: PropTypes.func,
   onAddNewAgent: PropTypes.func,
@@ -122,7 +122,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   webhook: makeSelectAgentWebhook(),
   postFormat: makeSelectAgentPostFormat(),
-  settings: makeSelectSettings(),
+  settings: makeSelectAgentSettings(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -148,17 +148,17 @@ function mapDispatchToProps(dispatch) {
     onChangePostFormatData: (field, value) => {
       dispatch(changePostFormatData({ field, value }));
     },
-    onChangeSettingsData: (field, value) => {
-      dispatch(changeSettingsData({ field, value }));
+    onChangeAgentSettingsData: (field, value) => {
+      dispatch(changeAgentSettingsData({ field, value }));
     },
     onChangeDomainClassifierThreshold: (value) => {
       dispatch(changeDomainClassifierThreshold(value));
     },
     onAddFallbackResponse: (newFallback) => {
-      dispatch(addFallbackResponse(newFallback));
+      dispatch(addAgentFallbackResponse(newFallback));
     },
     onDeleteFallbackResponse: (fallbackIndex) => {
-      dispatch(deleteFallbackResponse(fallbackIndex));
+      dispatch(deleteAgentFallbackResponse(fallbackIndex));
     },
     onAddNewAgent: () => {
       console.log('add new agent');

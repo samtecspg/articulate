@@ -48,7 +48,7 @@ const makeSelectAgentPostFormat = () => createSelector(
   }
 );
 
-const makeSelectSettings = () => createSelector(
+const makeSelectAgentSettings = () => createSelector(
   selectGlobalDomain,
   (globalState) => {
       return globalState.agentSettings;
@@ -116,6 +116,13 @@ const makeSelectActionPostFormat = () => createSelector(
   }
 );
 
+/* Settings */ 
+const makeSelectSettings = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+      return globalState.settings;
+  }
+);
 
 export {
   makeSelectLocation,
@@ -126,7 +133,7 @@ export {
   makeSelectAgent,
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
-  makeSelectSettings,
+  makeSelectAgentSettings,
 
   makeSelectKeyword,
 
@@ -138,5 +145,7 @@ export {
 
   makeSelectAction,
   makeSelectActionWebhook,
-  makeSelectActionPostFormat
+  makeSelectActionPostFormat,
+
+  makeSelectSettings
 };
