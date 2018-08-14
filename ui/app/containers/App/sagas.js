@@ -14,14 +14,14 @@ import {
   loadCurrentAgentStatusSuccess,
   loadSettingsSuccess,
   loadSettingsError,
-} from '../../containers/App/actions';
+} from './actions';
 import {
   LOAD_AGENTS,
   LOAD_CURRENT_AGENT,
   LOAD_CURRENT_AGENT_STATUS,
   TRAIN_AGENT,
   LOAD_SETTINGS,
-} from '../../containers/App/constants';
+} from './constants';
 
 export function* getAgents(payload) {
   const { api } = payload;
