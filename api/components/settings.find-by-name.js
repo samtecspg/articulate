@@ -40,6 +40,7 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
+        const { scope } = input;
         const [{ name }, redis] = input.getData(PORT_IN, PORT_REDIS);
         // TODO: move to redis.ds, keeping ot here bcs it has a different Cast/Flat than others
 
@@ -47,16 +48,16 @@ exports.getComponent = () => {
 
             if (err) {
                 err.key = name;
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
             }
             if (!setting) {
                 err = new Error('This setting doesn\'t exists');
                 err.key = name;
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
             }
             let unflattenData = Flat.unflatten(setting);
             unflattenData = unflattenData.string_value_setting ? unflattenData.string_value_setting : unflattenData;
-            return output.sendDone({ [PORT_OUT]: unflattenData });
+            return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', unflattenData, { scope }) });
         });
     });
 };

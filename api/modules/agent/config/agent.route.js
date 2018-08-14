@@ -355,6 +355,12 @@ const AgentRoutes = [
         config: {
             description: 'Find a webhook by agent id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-webhook-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findWebhook,
             handler: AgentController.findWebhook
         }

@@ -41,19 +41,24 @@ exports.register = (server, options, next) => {
         server.ext('onPreHandler', (request, reply) => {
 
             const settings = request.route.settings.plugins[name];
+
             if (settings) {
-                const graph = NoFlo.asCallback(settings.name, { loader });
-                const promisedGraph = Util.promisify(graph);
-                const data = { request };
+
+                const data = { request: new NoFlo.IP('data', request, { scope: request.id }) };
                 if (_.isArray(settings.consumes)) {
                     settings.consumes.forEach((service) => {
 
-                        data[service] = server.app[service];
+                        data[service] = new NoFlo.IP('data', server.app[service], { scope: request.id });
                     });
                 }
+                const graph = NoFlo.asCallback(settings.name, { loader });
+                const promisedGraph = Util.promisify(graph);
                 promisedGraph(data)
                     .then((result) => {
 
+                        if (!result) {
+                            return reply.continue();
+                        }
                         if (result.error) {
                             return reply.continue();
                         }

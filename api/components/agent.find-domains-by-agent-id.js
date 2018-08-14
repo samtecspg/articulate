@@ -39,6 +39,7 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
+        const { scope } = input;
         const redis = input.getData(PORT_REDIS);
         const { start, limit, filter, id } = input.getData(PORT_IN);
         let total = 0;
@@ -65,11 +66,11 @@ exports.getComponent = () => {
                 if (limit !== -1) {
                     domains = domains.slice(start, limit);
                 }
-                return output.sendDone({ [PORT_OUT]: { domains, total } });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', { domains, total }, { scope }) });
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
             });
     });
 };

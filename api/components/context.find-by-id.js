@@ -39,6 +39,7 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
+        const { scope } = input;
         const [{ sessionId }, redis] = input.getData(PORT_IN, PORT_REDIS);
         RedisDS
             .findAllByIdInList({
@@ -49,11 +50,11 @@ exports.getComponent = () => {
             })
             .then((context) => {
 
-                return output.sendDone({ [PORT_OUT]: context });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', context, { scope }) });
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
             });
 
     });

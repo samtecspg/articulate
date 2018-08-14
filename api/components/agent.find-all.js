@@ -51,11 +51,11 @@ exports.getComponent = () => {
             })
             .then((agents) => {
 
-                return output.sendDone({ [PORT_OUT]: agents });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', agents, { scope }) });
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope })  });
             });
     });
 };

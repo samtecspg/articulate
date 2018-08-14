@@ -48,11 +48,11 @@ exports.getComponent = () => {
             })
             .then((actionPostFormat) => {
 
-                return output.sendDone({ [PORT_OUT]: actionPostFormat });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', actionPostFormat, { scope }) });
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope })  });
             });
 
     });

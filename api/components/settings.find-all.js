@@ -39,6 +39,7 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
+        const { scope } = input;
         const redis = input.getData(PORT_REDIS);
         const settings = {};
         // TODO: move to redis.ds, keeping ot here bcs it has a different Cast/Flat than others
@@ -65,14 +66,14 @@ exports.getComponent = () => {
         redis.smembers('settings', (err, results) => {
 
             if (err) {
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
             }
             Async.each(results, settingByName, (err) => {
 
                 if (err) {
-                    return output.sendDone({ [PORT_ERROR]: err });
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
                 }
-                return output.sendDone({ [PORT_OUT]: settings });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', settings, { scope }) });
             });
         });
 

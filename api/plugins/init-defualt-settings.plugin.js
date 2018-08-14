@@ -3,6 +3,7 @@ const name = 'initDefaultSettings';
 const _ = require('lodash');
 const DefaultSettings = require('./defaultSettings.json');
 const Async = require('async');
+const Boom = require('boom');
 
 exports.register = (server, options, next) => {
 

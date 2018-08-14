@@ -39,6 +39,7 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
+        const { scope } = input;
         const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
         RedisDS
             .deleteById({
@@ -48,11 +49,12 @@ exports.getComponent = () => {
             })
             .then((success) => {
 
-                return output.sendDone({ [PORT_OUT]: success });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', success, { scope }) });
+
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope })  });
             });
 
     });

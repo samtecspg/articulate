@@ -48,11 +48,11 @@ exports.getComponent = () => {
             })
             .then((actionWebhook) => {
 
-                return output.sendDone({ [PORT_OUT]: actionWebhook });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', actionWebhook, { scope }) });
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope })  });
             });
 
     });
