@@ -40,11 +40,10 @@ exports.register = (server, options, next) => {
             });
         server.ext('onPreHandler', (request, reply) => {
 
-            console.log(`flow-loader.plugin-> ${JSON.stringify(request.path)}`); // TODO: REMOVE!!!!
             const settings = request.route.settings.plugins[name];
 
             if (settings) {
-
+                console.log(Util.inspect(`flow-loader.plugin [${settings.name}] -> ${JSON.stringify(request.path)} `, { colors: true })); // TODO: REMOVE!!!!
                 const data = { request: new NoFlo.IP('data', request, { scope: request.id }) };
                 if (_.isArray(settings.consumes)) {
                     settings.consumes.forEach((service) => {

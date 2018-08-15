@@ -1,6 +1,7 @@
 'use strict';
 const DomainController = require('../controllers');
 const DomainValidator = require('./domain.validator');
+const PKG = require('../../../package');
 
 const DomainRoutes = [
     {
@@ -19,6 +20,12 @@ const DomainRoutes = [
         config: {
             description: 'Find a model instance by id from the data source',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/domain.find-by-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: DomainValidator.findById,
             handler: DomainController.findById
         }
