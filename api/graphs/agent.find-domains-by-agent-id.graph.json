@@ -20,7 +20,7 @@
       }
     },
     "redis": {
-      "process": "agent.find-all",
+      "process": "agent.find-domains-by-agent-id",
       "port": "redis",
       "metadata": {
         "x": -108,
@@ -32,7 +32,7 @@
   },
   "outports": {
     "out": {
-      "process": "agent.find-all",
+      "process": "agent.find-domains-by-agent-id",
       "port": "out",
       "metadata": {
         "x": 720,
@@ -42,7 +42,7 @@
       }
     },
     "error": {
-      "process": "agent.find-all",
+      "process": "agent.find-domains-by-agent-id",
       "port": "error",
       "metadata": {
         "x": 684,
@@ -54,8 +54,8 @@
   },
   "groups": [],
   "processes": {
-    "agent.find-all": {
-      "component": "alpha-nlu-api/agent.find-all",
+    "agent.find-domains-by-agent-id": {
+      "component": "alpha-nlu-api/agent.find-domains-by-agent-id",
       "metadata": {
         "label": "AgentFindById",
         "x": 396,
@@ -82,7 +82,7 @@
         "port": "out"
       },
       "tgt": {
-        "process": "agent.find-all",
+        "process": "agent.find-domains-by-agent-id",
         "port": "in"
       }
     }

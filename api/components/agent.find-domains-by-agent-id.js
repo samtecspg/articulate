@@ -2,7 +2,7 @@
 
 const NoFlo = require('noflo');
 const RedisDS = require('../datasources/redis.ds');
-
+const _ = require('lodash');
 const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
