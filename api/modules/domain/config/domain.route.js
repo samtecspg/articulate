@@ -80,6 +80,12 @@ const DomainRoutes = [
         config: {
             description: 'Find list of action linked with a domain',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/domain.find-actions-by-domain-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: DomainValidator.findActionsByDomainId,
             handler: DomainController.findActionsByDomainId
         }
