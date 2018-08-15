@@ -1,6 +1,6 @@
 'use strict';
 
-const Noflo = require('noflo');
+const NoFlo = require('noflo');
 const RedisDS = require('../datasources/redis.ds');
 
 const PORT_REDIS = 'redis';
@@ -10,7 +10,7 @@ const PORT_IN = 'in';
 
 exports.getComponent = () => {
 
-    const c = new Noflo.Component();
+    const c = new NoFlo.Component();
     c.description = 'Get all domains by agent id';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {

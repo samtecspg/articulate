@@ -1,6 +1,6 @@
 'use strict';
 
-const Noflo = require('noflo');
+const NoFlo = require('noflo');
 const RedisDS = require('../datasources/redis.ds');
 const _ = require('lodash');
 
@@ -11,7 +11,7 @@ const PORT_IN = 'in';
 
 exports.getComponent = () => {
 
-    const c = new Noflo.Component();
+    const c = new NoFlo.Component();
     c.description = 'Get all Keywords by agent id';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
@@ -40,6 +40,7 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
+        const { scope } = input;
         const redis = input.getData(PORT_REDIS);
         const { start, limit, filter, id } = input.getData(PORT_IN);
         let total = 0;
@@ -66,11 +67,11 @@ exports.getComponent = () => {
                 if (limit !== -1) {
                     keywords = keywords.slice(start, limit);
                 }
-                return output.sendDone({ [PORT_OUT]: { keywords, total } });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', { keywords, total }, { scope }) });
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: err });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
             });
     });
 };

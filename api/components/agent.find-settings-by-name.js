@@ -51,9 +51,9 @@ exports.getComponent = () => {
                 type: 'agentSettings',
                 id: `${id}:${name}`
             })
-            .then((settings) => {
+            .then((setting) => {
 
-                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', settings, { scope }) });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', setting, { scope }) });
             })
             .catch((err) => {
 
