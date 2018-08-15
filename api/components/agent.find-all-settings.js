@@ -11,7 +11,7 @@ const PORT_IN = 'in';
 exports.getComponent = () => {
 
     const c = new NoFlo.Component();
-    c.description = 'Get all settings';
+    c.description = 'Get all settings by agent';
     c.icon = 'user';
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
@@ -40,14 +40,13 @@ exports.getComponent = () => {
             return;
         }
         const { scope } = input;
-        const redis = input.getData(PORT_REDIS);
+        const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
 
         RedisDS
             .findAllSettings({
                 redis,
-                type: 'settings',
-                unflatten: true,
-                cast: false
+                type: 'agentSettings',
+                id
             })
             .then((settings) => {
 
@@ -55,8 +54,7 @@ exports.getComponent = () => {
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope })  });
             });
-
     });
 };

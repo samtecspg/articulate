@@ -411,6 +411,12 @@ const AgentRoutes = [
         config: {
             description: 'Return all the settings of the agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-all-settings.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findAllSettings,
             handler: AgentController.findAllSettings
         }

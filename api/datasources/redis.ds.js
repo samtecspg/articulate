@@ -9,7 +9,7 @@ const errorHandlerNotFound = ({ type }) => {
     return new Error(`[${_.startCase(type)}] not found.`);
 };
 
-const findById = ({ redis, type, id }) => {
+const findById = ({ redis, type, id, unflatten = true, cast = true }) => {
 
     return new Promise((resolve, reject) => {
 
@@ -21,7 +21,9 @@ const findById = ({ redis, type, id }) => {
             if (!result) {
                 return reject(errorHandlerNotFound({ type, id }));
             }
-            return resolve(Cast(Flat.unflatten(result), type));
+            result = unflatten ? Flat.unflatten(result) : result;
+            result = cast ? Cast(result, type) : result;
+            return resolve(result);
         });
     });
 };
@@ -50,6 +52,38 @@ const findAllInSet = ({ redis, type, subType = type, start = 0, limit = -1 }) =>
                 (err, mapResults) => {
 
                     return err ? reject(err) : resolve(mapResults);
+                });
+        });
+    });
+};
+
+// Settings are stored differently than most other models
+const findAllSettings = ({ redis, type, id, unflatten, cast }) => {
+
+    return new Promise((resolve, reject) => {
+
+        redis.smembers(`${type}${id ? `:${id}` : ''}`, (err, results) => {
+
+            if (err) {
+                return reject(err);
+            }
+            const finalResults = {};
+            Async.each(
+                results,
+                (settings, cb) => {
+
+                    findById({ redis, type, id: `${id ? `${id}:` : ''}${settings}`, unflatten, cast })
+                        .then((result) => {
+
+                            result = result.string_value_setting ? result.string_value_setting : result;
+                            finalResults[settings] = result;
+                            return cb();
+                        })
+                        .catch(cb);
+                },
+                (err) => {
+
+                    return err ? reject(err) : resolve(finalResults);
                 });
         });
     });
@@ -117,6 +151,7 @@ const deleteById = ({ redis, type, id }) => {
 module.exports = {
     findById,
     findAllInSet,
+    findAllSettings,
     findAllByIdInList,
     exists,
     deleteById

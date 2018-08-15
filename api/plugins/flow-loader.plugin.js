@@ -40,6 +40,7 @@ exports.register = (server, options, next) => {
             });
         server.ext('onPreHandler', (request, reply) => {
 
+            console.log(`flow-loader.plugin-> ${JSON.stringify(request.path)}`); // TODO: REMOVE!!!!
             const settings = request.route.settings.plugins[name];
 
             if (settings) {
