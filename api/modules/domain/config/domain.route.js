@@ -70,6 +70,12 @@ const DomainRoutes = [
         config: {
             description: 'Find list of sayings linked with a domain',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/domain.find-sayings-by-domain-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: DomainValidator.findSayingsByDomainId,
             handler: DomainController.findSayingsByDomainId
         }
