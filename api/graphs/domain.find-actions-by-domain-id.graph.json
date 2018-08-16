@@ -9,22 +9,22 @@
     }
   },
   "inports": {
+    "redis": {
+      "process": "redis",
+      "port": "redis",
+      "metadata": {
+        "x": -108,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
     "request": {
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
         "x": -108,
         "y": 252,
-        "width": 72,
-        "height": 72
-      }
-    },
-    "redis": {
-      "process": "domain.find-actions-by-agent-id",
-      "port": "redis",
-      "metadata": {
-        "x": -108,
-        "y": 36,
         "width": 72,
         "height": 72
       }
@@ -35,7 +35,7 @@
       "process": "domain.find-actions-by-agent-id",
       "port": "out",
       "metadata": {
-        "x": 720,
+        "x": 936,
         "y": 36,
         "width": 72,
         "height": 72
@@ -45,8 +45,8 @@
       "process": "domain.find-actions-by-agent-id",
       "port": "error",
       "metadata": {
-        "x": 684,
-        "y": 288,
+        "x": 936,
+        "y": 324,
         "width": 72,
         "height": 72
       }
@@ -54,12 +54,29 @@
   },
   "groups": [],
   "processes": {
+    "redis": {
+      "component": "alpha-nlu-api/redis.client",
+      "metadata": {
+        "x": 72,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
     "domain.find-actions-by-agent-id": {
       "component": "alpha-nlu-api/domain.find-actions-by-agent-id",
       "metadata": {
-        "label": "AgentFindById",
-        "x": 396,
-        "y": 180,
+        "x": 648,
+        "y": 144,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "domain.exists-by-id": {
+      "component": "alpha-nlu-api/domain.exists-by-id",
+      "metadata": {
+        "x": 252,
+        "y": 144,
         "width": 72,
         "height": 72
       }
@@ -78,11 +95,51 @@
   "connections": [
     {
       "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "domain.find-actions-by-agent-id",
+        "port": "redis"
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "domain.exists-by-id",
+        "port": "redis"
+      }
+    },
+    {
+      "src": {
+        "process": "domain.exists-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "domain.find-actions-by-agent-id",
+        "port": "domain"
+      }
+    },
+    {
+      "src": {
         "process": "http.request-data-parser",
         "port": "out"
       },
       "tgt": {
         "process": "domain.find-actions-by-agent-id",
+        "port": "in"
+      }
+    },
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "domain.exists-by-id",
         "port": "in"
       }
     }

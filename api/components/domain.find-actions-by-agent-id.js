@@ -7,16 +7,24 @@ const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 const PORT_IN = 'in';
+const PORT_DOMAIN_EXISTS = 'domainExists';
 
 exports.getComponent = () => {
 
     const c = new NoFlo.Component();
     c.description = 'Get all actions by agent id';
     c.icon = 'user';
+
     c.inPorts.add(PORT_IN, {
         datatype: 'object',
         description: 'Object with all parsed values.'
     });
+
+    c.inPorts.add(PORT_DOMAIN_EXISTS, {
+        datatype: 'bool',
+        description: 'Domain Exists'
+    });
+
     c.inPorts.add(PORT_REDIS, {
         datatype: 'object',
         description: 'Redis client'
@@ -31,17 +39,21 @@ exports.getComponent = () => {
     });
 
     return c.process((input, output) => {
-
-        if (!input.has(PORT_IN)) {
+        console.log(`domain.find-actions-by-agent-id::`); // TODO: REMOVE!!!!
+        console.log(input.has(PORT_IN, PORT_REDIS, PORT_DOMAIN_EXISTS)); // TODO: REMOVE!!!!
+        if (!input.has(PORT_IN, PORT_REDIS, PORT_DOMAIN_EXISTS)) {
             return;
         }
 
-        if (!input.has(PORT_REDIS)) {
-            return;
-        }
         const { scope } = input;
         const redis = input.getData(PORT_REDIS);
+        const domainExists = input.getData(PORT_DOMAIN_EXISTS);
         const { start, limit, filter, id } = input.getData(PORT_IN);
+
+        if (!domainExists) {
+            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', `Domain [${id}] doens't exists`, { scope }) });
+
+        }
         let total = 0;
         RedisDS
             .findAllInSet({
