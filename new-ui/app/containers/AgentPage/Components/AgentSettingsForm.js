@@ -77,7 +77,7 @@ class AgentSettingsForm extends React.Component {
   };
 
   render() {
-    const { classes, agent, webhook, postFormat, settings } = this.props;
+    const { classes, agent, webhook, postFormat, agentSettings } = this.props;
     const { expanded } = this.state;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
@@ -183,8 +183,8 @@ class AgentSettingsForm extends React.Component {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <RasaSettings
-                  settings={settings}
-                  onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
+                  settings={agentSettings}
+                  onChangeSettingsData={this.props.onChangeAgentSettingsData}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -206,8 +206,8 @@ class AgentSettingsForm extends React.Component {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <DucklingSettings
-                  settings={settings}
-                  onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
+                  settings={agentSettings}
+                  onChangeSettingsData={this.props.onChangeAgentSettingsData}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -223,7 +223,7 @@ AgentSettingsForm.propTypes = {
   agent: PropTypes.object,
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
-  settings: PropTypes.object,
+  agentSettings: PropTypes.object,
   onChangeAgentData: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,

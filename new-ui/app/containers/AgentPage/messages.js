@@ -126,5 +126,13 @@ export default defineMessages({
   webhookSettingDescription: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.webhookSettingDescription',
     defaultMessage: 'If you want to define a global webhook that will be called each time the user talks with your agent then you can do it here. If you define a webhook for an action, then that webhook will override this configuration.'
-  }
+  },
+  multipleIntentRecognition: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.multipleIntentRecognition',
+    defaultMessage: 'Multiple action recognition using Tensorflow pipeline (This will disable domains)'
+  },
+  multiDomain: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.multiDomain',
+    defaultMessage: 'Use domains for the agent (This will disable multiple action recognition)'
+  },
 });

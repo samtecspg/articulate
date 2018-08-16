@@ -15,6 +15,7 @@
 export const MISSING_API = 'app/App/MISSING_API';
 export const RESET_MISSING_API = 'app/App/RESET_MISSING_API';
 export const CHECK_API = 'app/App/CHECK_API';
+export const RESET_STATUS_FLAGS = 'app/App/RESET_STATUS_FLAGS';
 
 /*
  * Agents

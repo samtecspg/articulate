@@ -13,7 +13,7 @@ export default defineMessages({
   },
   createSubtitle: {
     id: 'app.containers.SettingsPage.createSubtitle',
-    defaultMessage: 'Config',
+    defaultMessage: 'System configuration',
   },
   help: {
     id: 'app.containers.SettingsPage.help',

@@ -157,6 +157,7 @@ class Form extends React.Component {
           {this.state.selectedTab === 0 && (
             <AgentDataForm
               agent={this.props.agent}
+              settings={this.props.settings}
               onChangeAgentData={this.props.onChangeAgentData}
               onChangeAgentName={this.props.onChangeAgentName}
               onChangeDomainClassifierThreshold={
@@ -171,7 +172,7 @@ class Form extends React.Component {
               agent={this.props.agent}
               webhook={this.props.webhook}
               postFormat={this.props.postFormat}
-              settings={this.props.settings}
+              agentSettings={this.props.agentSettings}
               onChangeAgentData={this.props.onChangeAgentData}
               onChangeWebhookData={this.props.onChangeWebhookData}
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
@@ -192,6 +193,7 @@ Form.propTypes = {
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
   settings: PropTypes.object,
+  agentSettings: PropTypes.object,
   onChangeAgentData: PropTypes.func,
   onChangeAgentName: PropTypes.func,
   onChangeWebhookData: PropTypes.func,

@@ -8,6 +8,7 @@ import {
   CHECK_API,
   RESET_MISSING_API,
   RESET_AGENT_DATA,
+  RESET_STATUS_FLAGS,
 
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
@@ -73,6 +74,12 @@ export function resetMissingAPI() {
   return {
     type: RESET_MISSING_API,
   };
+}
+
+export function resetStatusFlag() {
+  return {
+    type: RESET_STATUS_FLAGS,
+  }
 }
 
 /*

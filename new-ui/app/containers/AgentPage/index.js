@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { push } from 'react-router-redux';
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -17,6 +18,8 @@ import {
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
+  makeSelectSettings,
+  makeSelectSuccess,
 } from '../App/selectors';
 import saga from './saga';
 import messages from './messages';
@@ -39,12 +42,35 @@ import {
   changeWebhookPayloadType,
   changePostFormatData,
   changeAgentSettingsData,
+  addAgent,
+  resetStatusFlag,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
 
   componentDidMount() {
+    if (this.state.isNewAgent){
+      this.props.onChangeAgentData('language', this.props.settings.defaultAgentLanguage);
+      this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
+      this.props.onChangeAgentData('fallbackResponses', this.props.settings.defaultAgentFallbackResponses);
+      this.props.onChangeAgentSettingsData('rasaURL', this.props.settings.rasaURL);
+      this.props.onChangeAgentSettingsData('domainClassifierPipeline', this.props.settings.domainClassifierPipeline);
+      this.props.onChangeAgentSettingsData('intentClassifierPipeline', this.props.settings.intentClassifierPipeline);
+      this.props.onChangeAgentSettingsData('entityClassifierPipeline', this.props.settings.entityClassifierPipeline);
+      this.props.onChangeAgentSettingsData('spacyPretrainedEntities', this.props.settings.spacyPretrainedEntities);
+      this.props.onChangeAgentSettingsData('ducklingURL', this.props.settings.ducklingURL);
+      this.props.onChangeAgentSettingsData('ducklingDimension', this.props.settings.ducklingDimension);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.success) {
+      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
+    }
+  }
+
+  componentWillMount() {
     if(this.state.isNewAgent) {
       this.props.onResetData();
     }
@@ -78,6 +104,7 @@ export class AgentPage extends React.PureComponent {
               webhook={this.props.webhook}
               postFormat={this.props.postFormat}
               settings={this.props.settings}
+              agentSettings={this.props.agentSettings}
               onChangeAgentData={this.props.onChangeAgentData}
               onChangeAgentName={this.props.onChangeAgentName}
               onChangeWebhookData={this.props.onChangeWebhookData}
@@ -104,6 +131,7 @@ AgentPage.propTypes = {
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
   settings: PropTypes.object,
+  agentSettings: PropTypes.object,
   onLoadAgent: PropTypes.func,
   onChangeAgentData: PropTypes.func,
   onChangeAgentName: PropTypes.func,
@@ -116,13 +144,17 @@ AgentPage.propTypes = {
   onDeleteFallbackResponse: PropTypes.func,
   onAddNewAgent: PropTypes.func,
   onEditAgent: PropTypes.func,
+  onSuccess: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   webhook: makeSelectAgentWebhook(),
   postFormat: makeSelectAgentPostFormat(),
-  settings: makeSelectAgentSettings(),
+  settings: makeSelectSettings(),
+  agentSettings: makeSelectAgentSettings(),
+  settings: makeSelectSettings(),
+  success: makeSelectSuccess(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -161,7 +193,11 @@ function mapDispatchToProps(dispatch) {
       dispatch(deleteAgentFallbackResponse(fallbackIndex));
     },
     onAddNewAgent: () => {
-      console.log('add new agent');
+      dispatch(addAgent());
+    },
+    onSuccess: (url) => {
+      dispatch(resetStatusFlag());
+      dispatch(push(url));
     },
     onEditAgent: () => {
       console.log('edit agent');

@@ -18,6 +18,27 @@ const makeSelectMissingAPI = () => createSelector(
   }
 );
 
+const makeSelectLoading = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.loading;
+  }
+);
+
+const makeSelectError = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.error;
+  }
+);
+
+const makeSelectSuccess = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.success;
+  }
+);
+
 /* Agents */
 const makeSelectAgents = () => createSelector(
   selectGlobalDomain,
@@ -116,7 +137,7 @@ const makeSelectActionPostFormat = () => createSelector(
   }
 );
 
-/* Settings */ 
+/* Settings */
 const makeSelectSettings = () => createSelector(
   selectGlobalDomain,
   (globalState) => {
@@ -127,6 +148,9 @@ const makeSelectSettings = () => createSelector(
 export {
   makeSelectLocation,
   makeSelectMissingAPI,
+  makeSelectLoading,
+  makeSelectError,
+  makeSelectSuccess,
 
   makeSelectAgents,
 

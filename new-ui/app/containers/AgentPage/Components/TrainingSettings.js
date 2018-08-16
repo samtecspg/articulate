@@ -56,6 +56,48 @@ export class TrainingSettings extends React.Component {
           <FormControlLabel
             control={
               <Switch
+                checked={!agent.multiDomain}
+                onChange={() => {
+                  if (agent.multiDomain){
+                    this.props.onChangeAgentData(
+                      "enableModelsPerDomain",
+                      false
+                    );
+                  }
+                  this.props.onChangeAgentData(
+                    "multiDomain",
+                    !agent.multiDomain
+                  );
+                }}
+                value="multiDomain"
+                color="primary"
+              />
+            }
+            label={intl.formatMessage(messages.multipleIntentRecognition)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={agent.multiDomain}
+                onChange={() => {
+                  this.props.onChangeAgentData(
+                    "multiDomain",
+                    !agent.multiDomain
+                  );
+                }}
+                value="multiDomain"
+                color="primary"
+              />
+            }
+            label={intl.formatMessage(messages.multiDomain)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Switch
                 checked={agent.enableModelsPerDomain}
                 onChange={() => {
                   this.props.onChangeAgentData(

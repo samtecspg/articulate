@@ -49,7 +49,7 @@ class AgentDataForm extends React.Component {
     }
 
     render(){
-        const { classes, intl, agent } = this.props;
+        const { classes, intl, agent, settings } = this.props;
         return (
             <Grid className={classes.formContainer} container item xs={12}>
                 <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
@@ -104,21 +104,15 @@ class AgentDataForm extends React.Component {
                                 }}
                                 helperText={intl.formatMessage(messages.requiredField)}
                             >
-                                <MenuItem key={'en'} value={'en'}>
-                                    English
-                                </MenuItem>
-                                <MenuItem key={'fr'} value={'fr'}>
-                                    French
-                                </MenuItem>
-                                <MenuItem key={'de'} value={'de'}>
-                                    German
-                                </MenuItem>
-                                <MenuItem key={'pt'} value={'pt'}>
-                                    Portuguese
-                                </MenuItem>
-                                <MenuItem key={'es'} value={'es'}>
-                                    Spanish
-                                </MenuItem>
+                                {
+                                    settings.agentLanguages.map((language) => {
+                                        return (
+                                            <MenuItem key={language.value} value={language.value}>
+                                                {language.text}
+                                            </MenuItem>
+                                        )
+                                    })
+                                }
                             </TextField>
                         </Grid>
                         <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -135,60 +129,64 @@ class AgentDataForm extends React.Component {
                             }}
                             helperText={intl.formatMessage(messages.requiredField)}
                         >
-                            <MenuItem key={'utc'} value={'UTC'}>
-                                UTC
-                            </MenuItem>
-                            <MenuItem key={'america/chicago'} value={'America/Chicago'}>
-                                America/Chicago
-                            </MenuItem>
-                            <MenuItem key={'america/kentucky/louisville'} value={'America/Kentucky/Louisville'}>
-                                America/Kentucky/Louisville
-                            </MenuItem>
+                            {
+                                this.props.settings.timezones.map((timezone) => {
+                                    return (
+                                        <MenuItem key={timezone} value={timezone}>
+                                            {timezone}
+                                        </MenuItem>
+                                    )
+                                })
+                            }
                         </TextField>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={24} item xs={12}>
-                        <Grid item lg={4} md={10} sm={9} xs={8}>
-                            <Typography className={classes.sliderLabel} id='domainClassifierThreshold'>
-                                <FormattedMessage {...messages.sliderDomainRecognitionThresholdLabel} />
-                            </Typography>
-                            <Slider
+                    {
+                        this.props.agent.multiDomain ?
+                        <Grid container spacing={24} item xs={12}>
+                            <Grid item lg={4} md={10} sm={9} xs={8}>
+                                <Typography className={classes.sliderLabel} id='domainClassifierThreshold'>
+                                    <FormattedMessage {...messages.sliderDomainRecognitionThresholdLabel} />
+                                </Typography>
+                                <Slider
+                                    value={agent.domainClassifierThreshold}
+                                    min={0}
+                                    max={100}
+                                    step={1}
+                                    aria-labelledby='domainClassifierThreshold'
+                                    onChange={(evt, value) => { this.props.onChangeDomainClassifierThreshold(value) }} />
+                            </Grid>
+                            <Grid item lg={2} md={2} sm={3} xs={4}>
+                            <TextField
+                                id='name'
+                                margin='normal'
                                 value={agent.domainClassifierThreshold}
-                                min={0}
-                                max={100}
-                                step={1}
-                                aria-labelledby='domainClassifierThreshold'
-                                onChange={(evt, value) => { this.props.onChangeDomainClassifierThreshold(value) }} />
-                        </Grid>
-                        <Grid item lg={2} md={2} sm={3} xs={4}>
-                        <TextField
-                            id='name'
-                            margin='normal'
-                            value={agent.domainClassifierThreshold}
-                            onChange={(evt) => {
-                                evt.target.value === '' ?
-                                this.props.onChangeDomainClassifierThreshold(0) :
-                                (evt.target.value <= 100 && evt.target.value >= 0 ?
-                                    this.props.onChangeDomainClassifierThreshold(evt.target.value) :
-                                    false) }}
-                            fullWidth
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            inputProps={{
-                                style: {
-                                    textAlign: 'center'
-                                },
-                                min: 0,
-                                max: 100,
-                                step: 1
-                            }}
-                            className={classes.sliderTextField}
-                            helperText={intl.formatMessage(messages.requiredField)}
-                            type='number'
-                        />
-                        </Grid>
-                    </Grid>
+                                onChange={(evt) => {
+                                    evt.target.value === '' ?
+                                    this.props.onChangeDomainClassifierThreshold(0) :
+                                    (evt.target.value <= 100 && evt.target.value >= 0 ?
+                                        this.props.onChangeDomainClassifierThreshold(evt.target.value) :
+                                        false) }}
+                                fullWidth
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    style: {
+                                        textAlign: 'center'
+                                    },
+                                    min: 0,
+                                    max: 100,
+                                    step: 1
+                                }}
+                                className={classes.sliderTextField}
+                                helperText={intl.formatMessage(messages.requiredField)}
+                                type='number'
+                            />
+                            </Grid>
+                        </Grid> :
+                        null
+                    }
                     <Grid container spacing={24} item xs={12}>
                         <Grid item lg={12} md={12} sm={12} xs={12}>
                             {/*<div style={{display: 'inline'}}>
@@ -263,7 +261,8 @@ AgentDataForm.propTypes = {
     onChangeDomainClassifierThreshold: PropTypes.func.isRequired,
     onAddFallbackResponse: PropTypes.func.isRequired,
     onDeleteFallbackResponse: PropTypes.func.isRequired,
-    agent: PropTypes.object
+    agent: PropTypes.object,
+    settings: PropTypes.object
 };
 
 export default injectIntl(withStyles(styles)(AgentDataForm));

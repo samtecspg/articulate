@@ -3,6 +3,7 @@ import {
   RESET_MISSING_API,
   MISSING_API,
   CHECK_API,
+  RESET_STATUS_FLAGS,
 
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
@@ -65,11 +66,9 @@ const initialState = Immutable({
       useWebhook: false,
       usePostFormat: false,
       extraTrainingData: false,
-      enableModelsPerDomain: true,
-      fallbackResponses: [
-        'Sorry, can you rephrase that?',
-        'I\'m sorry, I\'m still learning to speak with humans'
-      ],
+      enableModelsPerDomain: false,
+      multiDomain: false,
+      fallbackResponses: [],
       domainClassifierThreshold: 50,
   },
   agentWebhook: {
@@ -214,6 +213,9 @@ const initialState = Immutable({
     defaultAgentFallbackResponses: []
   },
   settingsTouched: false,
+  loading: false,
+  error: false,
+  success: false,
 });
 
 function appReducer(state = initialState, action) {
@@ -227,6 +229,10 @@ function appReducer(state = initialState, action) {
     case RESET_MISSING_API:
       return state
         .set('missingAPI', false);
+    case RESET_STATUS_FLAGS:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', false);
 
     /* Agents */
     case LOAD_AGENTS:
@@ -244,7 +250,10 @@ function appReducer(state = initialState, action) {
 
     /* Agent */
     case RESET_AGENT_DATA:
-        return initialState;
+        return state.set('agent', initialState.agent)
+          .set('agentWebhook', initialState.agentWebhook)
+          .set('agentPostFormat', initialState.agentPostFormat)
+          .set('agentSettings', initialState.agentSettings);
     case LOAD_AGENT:
       return state
         .set('loading', true)
@@ -314,13 +323,16 @@ function appReducer(state = initialState, action) {
       return state.updateIn(['agent', 'fallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.fallbackIndex));
     case ADD_AGENT:
       return state.set('loading', true)
+        .set('success', false)
         .set('error', false);
     case ADD_AGENT_ERROR:
       return state.set('loading', false)
+        .set('success', false)
         .set('error', action.error);
     case ADD_AGENT_SUCCESS:
       return state.set('agent', action.agent)
         .set('loading', false)
+        .set('success', true)
         .set('error', false);
 
     /* Sayings */
@@ -404,12 +416,15 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case UPDATE_SETTINGS:
       return state.set('loading', true)
+        .set('success', false)
         .set('error', false);
     case UPDATE_SETTINGS_ERROR:
       return state.set('loading', false)
+        .set('success', false)
         .set('error', action.error);
     case UPDATE_SETTINGS_SUCCESS:
       return state.set('loading', false)
+        .set('success', true)
         .set('error', false);
     case CHANGE_SETTINGS_DATA:
       return state

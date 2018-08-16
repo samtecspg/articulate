@@ -14,6 +14,10 @@ import { push } from 'react-router-redux';
 import { Switch, Route } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
+import injectSaga from 'utils/injectSaga';
+
+import saga from './saga';
+
 import AppHeader from 'components/AppHeader';
 import AppContent from 'components/AppContent';
 
@@ -29,7 +33,8 @@ import MissingAPIPage from 'containers/MissingAPIPage/Loadable';
 
 
 import {
-  checkAPI
+  checkAPI,
+  loadSettings,
 } from './actions';
 
 import {
@@ -40,6 +45,7 @@ import {
 class App extends React.Component {
 
   componentWillMount(){
+    this.props.onLoadSettings();
     this.props.onCheckAPI();
   }
 
@@ -86,6 +92,7 @@ App.propTypes = {
   location: PropTypes.object,
   onMissingAPI: PropTypes.func,
   onCheckAPI: PropTypes.func,
+  onLoadSettings: PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -101,6 +108,9 @@ export function mapDispatchToProps(dispatch) {
       }
       dispatch(checkAPI());
     },
+    onLoadSettings: () => {
+      dispatch(loadSettings());
+    }
   };
 }
 
@@ -114,5 +124,6 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
+const withSaga = injectSaga({ key: 'app', saga });
 
-export default withConnect(App);
+export default withSaga(withConnect(App));
