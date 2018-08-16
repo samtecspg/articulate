@@ -297,7 +297,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
     if (this.state.entityTagged) {
       this.setState({
         entityTagged: false,
-        userExamplesShown: this.props.intent.examples.slice(this.state.userExamplesPage, this.props.defaultUserExamplesPageSize)
+        userExamplesShown: this.props.intent.examples.slice(this.state.userExamplesPage * this.props.defaultUserExamplesPageSize, this.state.userExamplesPage * this.props.defaultUserExamplesPageSize + this.props.defaultUserExamplesPageSize),
       });
     }
     if (this.state.findNewSysEntities) {
