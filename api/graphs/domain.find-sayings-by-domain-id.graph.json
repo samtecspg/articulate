@@ -73,8 +73,8 @@
         "height": 72
       }
     },
-    "domain.exists-by-id": {
-      "component": "alpha-nlu-api/domain.exists-by-id",
+    "domain.find-by-id": {
+      "component": "alpha-nlu-api/domain.find-by-id",
       "metadata": {
         "x": 252,
         "y": 144,
@@ -110,18 +110,18 @@
         "port": "redis"
       },
       "tgt": {
-        "process": "domain.exists-by-id",
+        "process": "domain.find-by-id",
         "port": "redis"
       }
     },
     {
       "src": {
-        "process": "domain.exists-by-id",
+        "process": "domain.find-by-id",
         "port": "out"
       },
       "tgt": {
         "process": "domain.find-sayings-by-domain-id",
-        "port": "domain_exists"
+        "port": "domain_object"
       }
     },
     {
@@ -140,7 +140,7 @@
         "port": "out"
       },
       "tgt": {
-        "process": "domain.exists-by-id",
+        "process": "domain.find-by-id",
         "port": "in"
       }
     }
