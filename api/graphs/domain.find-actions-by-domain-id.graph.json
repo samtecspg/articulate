@@ -120,7 +120,7 @@
       },
       "tgt": {
         "process": "domain.find-actions-by-agent-id",
-        "port": "domain"
+        "port": "domain_exists"
       }
     },
     {

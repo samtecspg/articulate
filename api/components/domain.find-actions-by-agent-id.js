@@ -7,7 +7,7 @@ const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 const PORT_IN = 'in';
-const PORT_DOMAIN_EXISTS = 'domainExists';
+const PORT_DOMAIN_EXISTS = 'domain_exists';
 
 exports.getComponent = () => {
 
@@ -21,7 +21,7 @@ exports.getComponent = () => {
     });
 
     c.inPorts.add(PORT_DOMAIN_EXISTS, {
-        datatype: 'bool',
+        datatype: 'boolean',
         description: 'Domain Exists'
     });
 
