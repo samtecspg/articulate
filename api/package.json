@@ -36,7 +36,6 @@
     "dashify": "^0.2.2",
     "debug": "^2.6.7",
     "dotenv": "^4.0.0",
-    "elasticsearch": "^13.0.1",
     "flat": "^4.0.0",
     "guid": "^0.0.12",
     "handlebars": "^4.0.11",
