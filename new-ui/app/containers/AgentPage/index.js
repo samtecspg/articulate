@@ -44,6 +44,7 @@ import {
   changeAgentSettingsData,
   addAgent,
   resetStatusFlag,
+  updateAgent,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -200,7 +201,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(push(url));
     },
     onEditAgent: () => {
-      console.log('edit agent');
+      dispatch(updateAgent());
     }
   };
 }

@@ -16,6 +16,12 @@ import {
   ADD_AGENT,
   ADD_AGENT_ERROR,
   ADD_AGENT_SUCCESS,
+  UPDATE_AGENT,
+  UPDATE_AGENT_ERROR,
+  UPDATE_AGENT_SUCCESS,
+  DELETE_AGENT,
+  DELETE_AGENT_ERROR,
+  DELETE_AGENT_SUCCESS,
 
   LOAD_AGENT,
   LOAD_AGENT_ERROR,
@@ -214,15 +220,52 @@ export function addAgent(){
 export function addAgentError(){
   return {
     type: ADD_AGENT_ERROR,
-    apiCall: true
   }
 }
 
 export function addAgentSuccess(agent){
   return {
     type: ADD_AGENT_SUCCESS,
-    apiCall: true,
     agent
+  }
+}
+
+export function updateAgent(){
+  return {
+    type: UPDATE_AGENT,
+    apiCall: true
+  }
+}
+
+export function updateAgentError(){
+  return {
+    type: UPDATE_AGENT_ERROR,
+  }
+}
+
+export function updateAgentSuccess(agent){
+  return {
+    type: UPDATE_AGENT_SUCCESS,
+    agent
+  }
+}
+
+export function deleteAgent(){
+  return {
+    type: DELETE_AGENT,
+    apiCall: true
+  }
+}
+
+export function deleteAgentError(){
+  return {
+    type: DELETE_AGENT_ERROR,
+  }
+}
+
+export function deleteAgentSuccess(){
+  return {
+    type: DELETE_AGENT_SUCCESS,
   }
 }
 

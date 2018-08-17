@@ -11,6 +11,12 @@ import {
   ADD_AGENT,
   ADD_AGENT_ERROR,
   ADD_AGENT_SUCCESS,
+  UPDATE_AGENT,
+  UPDATE_AGENT_ERROR,
+  UPDATE_AGENT_SUCCESS,
+  DELETE_AGENT,
+  DELETE_AGENT_ERROR,
+  DELETE_AGENT_SUCCESS,
 
   RESET_AGENT_DATA,
   LOAD_AGENT,
@@ -58,6 +64,19 @@ import {
 // The initial state of the App
 const initialState = Immutable({
   agents: [],
+  currentAgent: {
+      agentName: '',
+      description: '',
+      language: 'en',
+      timezone: 'UTC',
+      useWebhook: false,
+      usePostFormat: false,
+      extraTrainingData: false,
+      enableModelsPerDomain: false,
+      multiDomain: false,
+      fallbackResponses: [],
+      domainClassifierThreshold: 50,
+  },
   agent: {
       agentName: '',
       description: '',
@@ -251,6 +270,7 @@ function appReducer(state = initialState, action) {
     /* Agent */
     case RESET_AGENT_DATA:
         return state.set('agent', initialState.agent)
+          .set('currentAgent', initialState.currentAgent)
           .set('agentWebhook', initialState.agentWebhook)
           .set('agentPostFormat', initialState.agentPostFormat)
           .set('agentSettings', initialState.agentSettings);
@@ -260,58 +280,77 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case LOAD_AGENT_ERROR:
       return state
-        .set('agent', {})
+        .set('agent', initialState.agent)
+        .set('currentAgent', initialState.currentAgent)
         .set('loading', false)
         .set('error', action.error);
     case LOAD_AGENT_SUCCESS:
+      let agentWebhook, agentPostFormat;
+      if (!action.payload.agent.useWebhook){
+        agentWebhook = initialState.agentWebhook;
+        agentWebhook = agentWebhook.set('agent', action.payload.agent.agentName);
+      }
+      else {
+        agentWebhook = action.payload.webhook;
+      }
+      if (!action.payload.agent.usePostFormat){
+        agentPostFormat = initialState.agentPostFormat;
+        agentPostFormat = agentPostFormat.set('agent', action.payload.agent.agentName);
+      }
+      else {
+        agentPostFormat = action.payload.postFormat;
+      }
       return state
         .set('agent', action.payload.agent)
+        .set('currentAgent', action.payload.agent)
         .set('agentSettings', action.payload.settings)
+        .set('agentWebhook', agentWebhook)
+        .set('agentPostFormat', agentPostFormat)
         .set('loading', false)
         .set('error', false);
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)
-        .setIn(['webhook', 'agent'], action.payload.value)
-        .setIn(['postFormatData', 'agent'], action.payload.value)
+        .setIn(['agentWebhook', 'agent'], action.payload.value)
+        .setIn(['agentPostFormat', 'agent'], action.payload.value)
         .set('agentTouched', true);;
     case CHANGE_AGENT_DATA:
       return state.setIn(['agent', action.payload.field], action.payload.value);
     case CHANGE_WEBHOOK_DATA:
-      return state.setIn(['webhook', action.payload.field], action.payload.value);
+      return state.setIn(['agentWebhook', action.payload.field], action.payload.value);
     case CHANGE_WEBHOOK_PAYLOAD_TYPE:
       if (action.payload.value === 'None') {
-        if (state.webhook.webhookPayloadType === 'JSON') {
-          state = state.set('agentOldPayloadJSON', state.webhook.webhookPayload);
+        if (state.agentWebhook.webhookPayloadType === 'JSON') {
+          state = state.set('agentOldPayloadJSON', state.agentWebhook.webhookPayload);
         }
-        if (state.webhook.webhookPayloadType === 'XML') {
-          state = state.set('agentOldPayloadXML', state.webhook.webhookPayload);
+        if (state.agentWebhook.webhookPayloadType === 'XML') {
+          state = state.set('agentOldPayloadXML', state.agentWebhook.webhookPayload);
         }
         return state
-          .setIn(['webhook', 'webhookPayload'], '')
-          .setIn(['webhook', action.payload.field], action.payload.value)
+          .setIn(['agentWebhook', 'webhookPayload'], '')
+          .setIn(['agentWebhook', action.payload.field], action.payload.value)
           .set('agentTouched', true);
       }
       else {
-        if (action.payload.value === 'JSON' && state.webhook.webhookPayloadType !== 'JSON') {
-          if (state.webhook.webhookPayloadType === 'XML') {
-            state = state.set('agentOldPayloadXML', state.webhook.webhookPayload);
+        if (action.payload.value === 'JSON' && state.agentWebhook.webhookPayloadType !== 'JSON') {
+          if (state.agentWebhook.webhookPayloadType === 'XML') {
+            state = state.set('agentOldPayloadXML', state.agentWebhook.webhookPayload);
           }
-          state = state.setIn(['webhook', 'webhookPayload'], state.agentOldPayloadJSON);
+          state = state.setIn(['agentWebhook', 'webhookPayload'], state.agentOldPayloadJSON);
         }
-        if (action.payload.value === 'XML' && state.webhook.webhookPayloadType !== 'XML') {
-          if (state.webhook.webhookPayloadType === 'JSON') {
-            state = state.set('agentOldPayloadJSON', state.webhook.webhookPayload);
+        if (action.payload.value === 'XML' && state.agentWebhook.webhookPayloadType !== 'XML') {
+          if (state.agentWebhook.webhookPayloadType === 'JSON') {
+            state = state.set('agentOldPayloadJSON', state.agentWebhook.webhookPayload);
           }
-          state = state.setIn(['webhook', 'webhookPayload'], state.agentOldPayloadXML);
+          state = state.setIn(['agentWebhook', 'webhookPayload'], state.agentOldPayloadXML);
         }
         return state
-          .setIn(['webhook', action.payload.field], action.payload.value)
+          .setIn(['agentWebhook', action.payload.field], action.payload.value)
           .set('agentTouched', true);
       }
     case CHANGE_POST_FORMAT_DATA:
       return state
-        .setIn(['postFormat', action.payload.field], action.payload.value)
+        .setIn(['agentPostFormat', action.payload.field], action.payload.value)
         .set('agentTouched', true);
     case CHANGE_AGENT_SETTINGS_DATA:
       return state
@@ -331,6 +370,38 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case ADD_AGENT_SUCCESS:
       return state.set('agent', action.agent)
+        .set('currentAgent', action.agent)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case UPDATE_AGENT:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_AGENT_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case UPDATE_AGENT_SUCCESS:
+      return state.set('agent', action.agent)
+        .set('currentAgent', action.agent)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case DELETE_AGENT:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case DELETE_AGENT_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case DELETE_AGENT_SUCCESS:
+      return state.set('agent', initialState.agent)
+        .set('currentAgent', initialState.currentAgent)
+        .set('agentWebhook', initialState.agentWebhook)
+        .set('agentPostFormat', initialState.agentPostFormat)
+        .set('agentSettings', initialState.agentSettings)
         .set('loading', false)
         .set('success', true)
         .set('error', false);

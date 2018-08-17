@@ -54,6 +54,12 @@ const makeSelectAgent = () => createSelector(
       return globalState.agent;
   }
 );
+const makeSelectCurrentAgent = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+      return globalState.currentAgent;
+  }
+);
 
 const makeSelectAgentWebhook = () => createSelector(
   selectGlobalDomain,
@@ -155,6 +161,7 @@ export {
   makeSelectAgents,
 
   makeSelectAgent,
+  makeSelectCurrentAgent,
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,

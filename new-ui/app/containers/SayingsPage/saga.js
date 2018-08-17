@@ -103,7 +103,6 @@ export function* putSaying(payload) {
             page: page,
         });
     } catch (err) {
-        console.log(err);
         yield put(updateSayingError(err));
     }
 }
@@ -134,7 +133,6 @@ export function* tagKeyword(payload) {
             page: page,
         });
     } catch (err) {
-        console.log(err);
         yield put(updateSayingError(err));
     }
 }
@@ -153,7 +151,6 @@ export function* untagKeyword(payload) {
             page: page,
         });
     } catch (err) {
-        console.log(err);
         yield put(updateSayingError(err));
     }
 }
@@ -170,7 +167,6 @@ export function* addAction(payload) {
             page: page,
         });
     } catch (err) {
-        console.log(err);
         yield put(updateSayingError(err));
     }
 }
@@ -190,7 +186,6 @@ export function* deleteAction(payload) {
             page: page,
         });
     } catch (err) {
-        console.log(err);
         yield put(updateSayingError(err));
     }
 }

@@ -19,7 +19,6 @@ export default function swaggerMiddleware(opts) {
       .then(result => {
           const { apiCall, ...rest } = action;
           api = result.apis;
-          console.log(api);
           if (getState().global.missingAPI){
             dispatch(resetMissingAPI());
             dispatch(loadAgents());

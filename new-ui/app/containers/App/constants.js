@@ -23,9 +23,6 @@ export const RESET_STATUS_FLAGS = 'app/App/RESET_STATUS_FLAGS';
 export const LOAD_AGENTS = 'app/AgentsPage/LOAD_AGENTS';
 export const LOAD_AGENTS_SUCCESS = 'app/AgentsPage/LOAD_AGENTS_SUCCESS';
 export const LOAD_AGENTS_ERROR = 'app/AgentsPage/LOAD_AGENTS_ERROR';
-export const ADD_AGENT = 'app/AgentsPage/ADD_AGENT';
-export const ADD_AGENT_ERROR = 'app/AgentsPage/ADD_AGENT_ERROR';
-export const ADD_AGENT_SUCCESS = 'app/AgentsPage/ADD_AGENT_SUCCESS';
 
 /*
  * Agent
@@ -42,6 +39,15 @@ export const CHANGE_POST_FORMAT_DATA = 'app/AgentPage/CHANGE_POST_FORMAT_DATA';
 export const CHANGE_AGENT_SETTINGS_DATA = 'app/AgentPage/CHANGE_AGENT_SETTINGS_DATA';
 export const ADD_AGENT_FALLBACK = 'app/AgentPage/ADD_AGENT_FALLBACK';
 export const DELETE_AGENT_FALLBACK = 'app/AgentPage/DELETE_AGENT_FALLBACK';
+export const ADD_AGENT = 'app/AgentsPage/ADD_AGENT';
+export const ADD_AGENT_ERROR = 'app/AgentsPage/ADD_AGENT_ERROR';
+export const ADD_AGENT_SUCCESS = 'app/AgentsPage/ADD_AGENT_SUCCESS';
+export const UPDATE_AGENT = 'app/AgentsPage/UPDATE_AGENT';
+export const UPDATE_AGENT_ERROR = 'app/AgentsPage/UPDATE_AGENT_ERROR';
+export const UPDATE_AGENT_SUCCESS = 'app/AgentsPage/UPDATE_AGENT_SUCCESS';
+export const DELETE_AGENT = 'app/AgentsPage/DELETE_AGENT';
+export const DELETE_AGENT_ERROR = 'app/AgentsPage/DELETE_AGENT_ERROR';
+export const DELETE_AGENT_SUCCESS = 'app/AgentsPage/DELETE_AGENT_SUCCESS';
 
 /*
  * Sayings
