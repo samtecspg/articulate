@@ -160,6 +160,12 @@ const AgentRoutes = [
         path: '/agent/{id}/domain/{domainId}/action/{actionId}/webhook',
         config: {
             description: 'Find the webhook related with an action, for the given domain and agent',
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-action-webhook-in-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             tags: ['api'],
             validate: AgentValidator.findActionWebhookInDomainByIdByAgentId,
             handler: AgentController.findActionWebhookInDomainByIdByAgentId

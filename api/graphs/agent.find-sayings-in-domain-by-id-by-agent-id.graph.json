@@ -81,7 +81,8 @@
         "x": 1224,
         "y": 144,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "domain.find-sayings-by-domain-id"
       }
     },
     "agent.find-domain-by-id-by-agent-id": {
@@ -90,16 +91,18 @@
         "x": 936,
         "y": 216,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "agent.find-domain-by-id-by-agent-id"
       }
     },
-    "agent.exists-by-id": {
-      "component": "alpha-nlu-api/agent.exists-by-id",
+    "agent.find-by-id": {
+      "component": "alpha-nlu-api/agent.find-by-id",
       "metadata": {
         "x": 720,
         "y": 324,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "agent.find-by-id"
       }
     },
     "http.request-data-parser": {
@@ -122,6 +125,9 @@
       "tgt": {
         "process": "domain.find-sayings-by-domain-id",
         "port": "redis"
+      },
+      "metadata": {
+        "route": 10
       }
     },
     {
@@ -132,6 +138,9 @@
       "tgt": {
         "process": "agent.find-domain-by-id-by-agent-id",
         "port": "redis"
+      },
+      "metadata": {
+        "route": 10
       }
     },
     {
@@ -140,8 +149,11 @@
         "port": "redis"
       },
       "tgt": {
-        "process": "agent.exists-by-id",
+        "process": "agent.find-by-id",
         "port": "redis"
+      },
+      "metadata": {
+        "route": 10
       }
     },
     {
@@ -160,8 +172,11 @@
         "port": "agent_id"
       },
       "tgt": {
-        "process": "agent.exists-by-id",
+        "process": "agent.find-by-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     },
     {
@@ -172,6 +187,9 @@
       "tgt": {
         "process": "agent.find-domain-by-id-by-agent-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     },
     {
@@ -182,16 +200,19 @@
       "tgt": {
         "process": "domain.find-sayings-by-domain-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     },
     {
       "src": {
-        "process": "agent.exists-by-id",
+        "process": "agent.find-by-id",
         "port": "out"
       },
       "tgt": {
         "process": "agent.find-domain-by-id-by-agent-id",
-        "port": "agent_exists"
+        "port": "agent_object"
       }
     },
     {

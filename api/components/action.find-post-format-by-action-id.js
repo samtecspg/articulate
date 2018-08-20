@@ -39,6 +39,7 @@ exports.getComponent = () => {
         if (!input.has(PORT_REDIS)) {
             return;
         }
+        const { scope } = input;
         const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
         RedisDS
             .findById({

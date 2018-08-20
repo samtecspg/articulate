@@ -56,6 +56,7 @@ exports.register = (server, options, next) => {
                 promisedGraph(data)
                     .then((result) => {
 
+                        //TODO on complete stop graph?
                         if (!result) {
                             return reply.continue();
                         }
@@ -67,6 +68,7 @@ exports.register = (server, options, next) => {
                     })
                     .catch((err) => {
 
+                        //TODO on error stop graph
                         const error = Boom.notFound(err.message);
                         return reply(error);
                     });

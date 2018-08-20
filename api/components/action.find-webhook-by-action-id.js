@@ -2,7 +2,7 @@
 
 const NoFlo = require('noflo');
 const RedisDS = require('../datasources/redis.ds');
-const PORT_IN = 'in';
+const PORT_ACTION = 'action_object';
 const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
@@ -12,9 +12,8 @@ exports.getComponent = () => {
     const c = new NoFlo.Component();
     c.description = 'Get Webhook by Action id';
     c.icon = 'user';
-    c.inPorts.add(PORT_IN, {
-        datatype: 'object',
-        description: 'Object with all parsed values.'
+    c.inPorts.add(PORT_ACTION, {
+        datatype: 'object'
     });
 
     c.inPorts.add(PORT_REDIS, {
@@ -32,14 +31,16 @@ exports.getComponent = () => {
 
     return c.process((input, output) => {
 
-        if (!input.has(PORT_IN)) {
+        if (!input.has(PORT_ACTION)) {
             return;
         }
 
         if (!input.has(PORT_REDIS)) {
             return;
         }
-        const [{ id }, redis] = input.getData(PORT_IN, PORT_REDIS);
+        const { scope } = input;
+        const [action, redis] = input.getData(PORT_ACTION, PORT_REDIS);
+        const { id } = action;
         RedisDS
             .findById({
                 redis,
@@ -52,7 +53,7 @@ exports.getComponent = () => {
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope })  });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
             });
 
     });

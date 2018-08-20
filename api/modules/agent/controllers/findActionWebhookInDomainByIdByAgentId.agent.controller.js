@@ -3,7 +3,14 @@ const Async = require('async');
 const Boom = require('boom');
 const Cast = require('../../../helpers/cast');
 
+'use strict';
+
 module.exports = (request, reply) => {
+
+    return reply(null, request.plugins['flow-loader']);
+};
+
+module.lol = (request, reply) => {
 
     const server = request.server;
     const agentId = request.params.id;

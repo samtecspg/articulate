@@ -7,7 +7,7 @@ const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 const PORT_IN = 'in';
-const PORT_AGENT_EXISTS = 'agent_exists';
+const PORT_AGENT = 'agent_object';
 
 exports.getComponent = () => {
 
@@ -20,9 +20,9 @@ exports.getComponent = () => {
         description: 'Object with all parsed values.'
     });
 
-    c.inPorts.add(PORT_AGENT_EXISTS, {
+    c.inPorts.add(PORT_AGENT, {
         datatype: 'boolean',
-        description: 'Agent Exists'
+        description: 'Agent'
     });
 
     c.inPorts.add(PORT_REDIS, {
@@ -40,17 +40,17 @@ exports.getComponent = () => {
 
     return c.process((input, output) => {
 
-        if (!input.has(PORT_IN, PORT_REDIS, PORT_AGENT_EXISTS)) {
+        if (!input.has(PORT_IN, PORT_REDIS, PORT_AGENT)) {
             return;
         }
 
         const { scope } = input;
         const redis = input.getData(PORT_REDIS);
-        const agentExists = input.getData(PORT_AGENT_EXISTS);
-        const { id, domainId } = input.getData(PORT_IN);
+        const agent = input.getData(PORT_AGENT);
+        const { domainId } = input.getData(PORT_IN);
 
-        if (!agentExists) {
-            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', `Agent [${id}] doesn't exists`, { scope }) });
+        if (!agent) {
+            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', 'Agent doesn\'t exists', { scope }) });
 
         }
         RedisDS
@@ -58,7 +58,7 @@ exports.getComponent = () => {
                 redis,
                 start: 0,
                 limit: -1,
-                type: `agentDomains:${id}`,
+                type: `agentDomains:${agent.id}`,
                 subType: 'domain'
             })
             .then((domains) => {

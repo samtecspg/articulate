@@ -13,7 +13,7 @@
       "process": "redis",
       "port": "redis",
       "metadata": {
-        "x": -108,
+        "x": 36,
         "y": 36,
         "width": 72,
         "height": 72
@@ -23,7 +23,7 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -108,
+        "x": 36,
         "y": 252,
         "width": 72,
         "height": 72
@@ -35,7 +35,7 @@
       "process": "agent.find-domain-by-id-by-agent-id",
       "port": "out",
       "metadata": {
-        "x": 936,
+        "x": 1044,
         "y": 36,
         "width": 72,
         "height": 72
@@ -46,7 +46,7 @@
       "port": "error",
       "metadata": {
         "route": 1,
-        "x": 936,
+        "x": 1008,
         "y": 324,
         "width": 72,
         "height": 72
@@ -58,35 +58,38 @@
     "redis": {
       "component": "alpha-nlu-api/redis.client",
       "metadata": {
-        "x": 72,
+        "x": 216,
         "y": 36,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "redis"
       }
     },
     "agent.find-domain-by-id-by-agent-id": {
       "component": "alpha-nlu-api/agent.find-domain-by-id-by-agent-id",
       "metadata": {
-        "x": 648,
-        "y": 144,
+        "x": 792,
+        "y": 180,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "agent.find-domain-by-id-by-agent-id"
       }
     },
-    "agent.exists-by-id": {
-      "component": "alpha-nlu-api/agent.exists-by-id",
+    "agent.find-by-id": {
+      "component": "alpha-nlu-api/agent.find-by-id",
       "metadata": {
-        "x": 252,
+        "x": 360,
         "y": 144,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "agent.find-by-id"
       }
     },
     "http.request-data-parser": {
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
         "label": "http.request-data-parser",
-        "x": 72,
+        "x": 216,
         "y": 252,
         "width": 72,
         "height": 72
@@ -102,6 +105,9 @@
       "tgt": {
         "process": "agent.find-domain-by-id-by-agent-id",
         "port": "redis"
+      },
+      "metadata": {
+        "route": 10
       }
     },
     {
@@ -110,18 +116,21 @@
         "port": "redis"
       },
       "tgt": {
-        "process": "agent.exists-by-id",
+        "process": "agent.find-by-id",
         "port": "redis"
+      },
+      "metadata": {
+        "route": 10
       }
     },
     {
       "src": {
-        "process": "agent.exists-by-id",
+        "process": "agent.find-by-id",
         "port": "out"
       },
       "tgt": {
         "process": "agent.find-domain-by-id-by-agent-id",
-        "port": "agent_exists"
+        "port": "agent_object"
       }
     },
     {
@@ -140,7 +149,7 @@
         "port": "out"
       },
       "tgt": {
-        "process": "agent.exists-by-id",
+        "process": "agent.find-by-id",
         "port": "in"
       }
     }
