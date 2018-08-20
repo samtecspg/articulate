@@ -1,0 +1,208 @@
+{
+  "caseSensitive": false,
+  "properties": {
+    "name": "FindSayingsInDomainByIdByAgentId",
+    "description": "FindSayingsInDomainByIdByAgentId",
+    "icon": "file",
+    "environment": {
+      "type": "noflo-nodejs"
+    }
+  },
+  "inports": {
+    "redis": {
+      "process": "redis",
+      "port": "redis",
+      "metadata": {
+        "x": 72,
+        "y": 36,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "request": {
+      "process": "http.request-data-parser",
+      "port": "request",
+      "metadata": {
+        "x": 72,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "outports": {
+    "out": {
+      "process": "domain.find-sayings-by-domain-id",
+      "port": "out",
+      "metadata": {
+        "x": 1584,
+        "y": 0,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "error": {
+      "process": "domain.find-sayings-by-domain-id",
+      "port": "error",
+      "metadata": {
+        "route": 1,
+        "x": 1548,
+        "y": 288,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "groups": [],
+  "processes": {
+    "redis": {
+      "component": "alpha-nlu-api/redis.client",
+      "metadata": {
+        "x": 252,
+        "y": 36,
+        "width": 72,
+        "height": 72,
+        "label": "redis"
+      }
+    },
+    "data-router": {
+      "component": "alpha-nlu-api/agent.find-sayings-in-domain-by-id-by-agent-id.data-router",
+      "metadata": {
+        "x": 432,
+        "y": 252,
+        "width": 72,
+        "height": 72,
+        "label": "data-router"
+      }
+    },
+    "domain.find-sayings-by-domain-id": {
+      "component": "alpha-nlu-api/domain.find-sayings-by-domain-id",
+      "metadata": {
+        "x": 1224,
+        "y": 144,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "agent.find-domain-by-id-by-agent-id": {
+      "component": "alpha-nlu-api/agent.find-domain-by-id-by-agent-id",
+      "metadata": {
+        "x": 936,
+        "y": 216,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "agent.exists-by-id": {
+      "component": "alpha-nlu-api/agent.exists-by-id",
+      "metadata": {
+        "x": 720,
+        "y": 324,
+        "width": 72,
+        "height": 72
+      }
+    },
+    "http.request-data-parser": {
+      "component": "alpha-nlu-api/http.request-data-parser",
+      "metadata": {
+        "label": "http.request-data-parser",
+        "x": 252,
+        "y": 252,
+        "width": 72,
+        "height": 72
+      }
+    }
+  },
+  "connections": [
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "domain.find-sayings-by-domain-id",
+        "port": "redis"
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "redis"
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "agent.exists-by-id",
+        "port": "redis"
+      }
+    },
+    {
+      "src": {
+        "process": "http.request-data-parser",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "data-router",
+        "port": "in"
+      }
+    },
+    {
+      "src": {
+        "process": "data-router",
+        "port": "agent_id"
+      },
+      "tgt": {
+        "process": "agent.exists-by-id",
+        "port": "in"
+      }
+    },
+    {
+      "src": {
+        "process": "data-router",
+        "port": "domain_id_agent_id"
+      },
+      "tgt": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "in"
+      }
+    },
+    {
+      "src": {
+        "process": "data-router",
+        "port": "all"
+      },
+      "tgt": {
+        "process": "domain.find-sayings-by-domain-id",
+        "port": "in"
+      }
+    },
+    {
+      "src": {
+        "process": "agent.exists-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "agent_exists"
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "domain.find-sayings-by-domain-id",
+        "port": "domain_object"
+      }
+    }
+  ]
+}
