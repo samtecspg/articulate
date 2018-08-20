@@ -379,6 +379,15 @@ class AgentValidate {
                             actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
                             useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
                             usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fullfilment.')),
+                            postFormat: {
+                                postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
+                            },
+                            webhook: {
+                                webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
+                                webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                                webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                                webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                            },
                             responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
                             slots: Joi.array().items({
                                 slotName: SlotSchema.slotName.required(),
