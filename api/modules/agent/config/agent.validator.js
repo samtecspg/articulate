@@ -359,7 +359,6 @@ class AgentValidate {
                         domainName: DomainSchema.domainName.required(),
                         enabled: DomainSchema.enabled.required(),
                         actionThreshold: DomainSchema.actionThreshold.required(),
-                        lastTraining: DomainSchema.lastTraining,
                         model: DomainSchema.model,
                         status: DomainSchema.status,
                         lastTraining: DomainSchema.lastTraining,
