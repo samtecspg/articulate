@@ -23,9 +23,11 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
 
         const domainsExamples = data.map( (domain) => {
 
-            let entitiesCombinations = [];
-            if (domain.entities.length > 0){
-                entitiesCombinations = GetEntitiesCombinations(domain.entities, domain.intents);
+            if (extraTrainingData){
+                let entitiesCombinations = [];
+                if (domain.entities.length > 0){
+                    entitiesCombinations = GetEntitiesCombinations(domain.entities, domain.intents);
+                }
             }
 
             const common_examples = _.uniq(_.flatten(_.map(domain.intents, (intent) => {

@@ -82,6 +82,7 @@ const retrainModel = (server, rasa, language, agentName, agentId, domainName, do
 
                 if (err) {
                     console.log(`The model ${domain.domainName}_${domain.model} wasn't unloaded`);
+                    return cb(null);
                 }
                 return cb(null);
             });

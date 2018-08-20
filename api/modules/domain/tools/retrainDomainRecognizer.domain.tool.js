@@ -65,6 +65,7 @@ const retrainDomainRecognizer = (server, redis, rasa, language, agentName, agent
 
                 if (err) {
                     console.log(`The model ${agentName}_domain_recognizer wasn't unloaded`);
+                    return cb(null);
                 }
                 return cb(null);
             });

@@ -72,6 +72,7 @@ const trainSingleDomain = (server, rasa, agent, callback) => {
 
                 if (err) {
                     console.log(`The model default_${agent.model} wasn't unloaded`);
+                    return cb(null);
                 }
                 return cb(null);
             });

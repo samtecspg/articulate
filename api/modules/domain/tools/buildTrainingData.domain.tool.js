@@ -12,9 +12,11 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
             return callback(err, null);
         }
 
-        let entitiesCombinations = [];
-        if (results.entities.length > 0){
-            entitiesCombinations = GetEntitiesCombinations(results.entities, results.intents);
+        if (extraTrainingData){
+            let entitiesCombinations = [];
+            if (results.entities.length > 0){
+                entitiesCombinations = GetEntitiesCombinations(results.entities, results.intents);
+            }
         }
 
         const common_examples = _.uniq(_.flatten(_.map(results.intents, (intent) => {

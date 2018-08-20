@@ -14,9 +14,11 @@ const buildSingleDomainTrainingData = (server, agentId, extraTrainingData, callb
         const agentEntities = _.flatten(_.map(agentData, 'entities'));
         const agentIntents = _.flatten(_.map(agentData, 'intents'));
 
-        let entitiesCombinations = [];
-        if (agentEntities.length > 0){
-            entitiesCombinations = DomainTools.getEntitiesCombinations(agentEntities, agentIntents);
+        if (extraTrainingData){
+            let entitiesCombinations = [];
+            if (agentEntities.length > 0){
+                entitiesCombinations = DomainTools.getEntitiesCombinations(agentEntities, agentIntents);
+            }
         }
 
         const common_examples = _.uniq(_.flatten(_.map(agentIntents, (intent) => {
