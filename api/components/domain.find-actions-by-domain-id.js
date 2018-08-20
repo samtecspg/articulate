@@ -7,7 +7,7 @@ const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 const PORT_IN = 'in';
-const PORT_DOMAIN_EXISTS = 'domain_exists';
+const PORT_DOMAIN = 'domain_object';
 
 exports.getComponent = () => {
 
@@ -20,7 +20,7 @@ exports.getComponent = () => {
         description: 'Object with all parsed values.'
     });
 
-    c.inPorts.add(PORT_DOMAIN_EXISTS, {
+    c.inPorts.add(PORT_DOMAIN, {
         datatype: 'boolean',
         description: 'Domain Exists'
     });
@@ -40,17 +40,17 @@ exports.getComponent = () => {
 
     return c.process((input, output) => {
 
-        if (!input.has(PORT_IN, PORT_REDIS, PORT_DOMAIN_EXISTS)) {
+        if (!input.has(PORT_IN, PORT_REDIS, PORT_DOMAIN)) {
             return;
         }
 
         const { scope } = input;
         const redis = input.getData(PORT_REDIS);
-        const domainExists = input.getData(PORT_DOMAIN_EXISTS);
+        const domain = input.getData(PORT_DOMAIN);
         const { start, limit, filter, id } = input.getData(PORT_IN);
 
-        if (!domainExists) {
-            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', `Domain [${id}] doens't exists`, { scope }) });
+        if (!domain) {
+            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', `Domain [${id}] doesn't exists`, { scope }) });
 
         }
         let total = 0;

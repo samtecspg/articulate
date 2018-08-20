@@ -109,6 +109,12 @@ const AgentRoutes = [
         config: {
             description: 'Find list of actions for the given domain and agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-actions-in-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findActionsInDomainByIdByAgentId,
             handler: AgentController.findActionsInDomainByIdByAgentId
         }
