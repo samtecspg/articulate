@@ -40,8 +40,6 @@ exports.getComponent = () => {
 
     return c.process((input, output) => {
 
-        console.log('domain.find-actions-by-agent-id::'); // TODO: REMOVE!!!!
-        console.log(input.has(PORT_IN, PORT_REDIS, PORT_DOMAIN_EXISTS)); // TODO: REMOVE!!!!
         if (!input.has(PORT_IN, PORT_REDIS, PORT_DOMAIN_EXISTS)) {
             return;
         }
