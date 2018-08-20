@@ -1,4 +1,18 @@
 'use strict';
+
+// TODO: Get Agent DONE
+// TODO: Get Agent's domains DONE
+// TODO: Get get domain by id DONE
+// TODO: Get sayings for that domain DONE
+// TODO: test
+
+module.exports = (request, reply) => {
+
+    return reply(null, request.plugins['flow-loader']);
+};
+
+/*
+'use strict';
 const Async = require('async');
 const Boom = require('boom');
 const _ = require('lodash');
@@ -79,3 +93,4 @@ module.exports = (request, reply) => {
         return reply(result);
     });
 };
+*/

@@ -129,6 +129,12 @@ const AgentRoutes = [
         config: {
             description: 'Find list of sayings for the given domain and agent',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-sayings-in-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findSayingsInDomainByIdByAgentId,
             handler: AgentController.findSayingsInDomainByIdByAgentId
         }
