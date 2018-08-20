@@ -13,17 +13,17 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -108,
+        "x": 72,
         "y": 252,
         "width": 72,
         "height": 72
       }
     },
     "redis": {
-      "process": "action.find-post-format-by-action-id",
+      "process": "redis",
       "port": "redis",
       "metadata": {
-        "x": -108,
+        "x": 72,
         "y": 36,
         "width": 72,
         "height": 72
@@ -35,7 +35,7 @@
       "process": "action.find-post-format-by-action-id",
       "port": "out",
       "metadata": {
-        "x": 720,
+        "x": 1224,
         "y": 36,
         "width": 72,
         "height": 72
@@ -45,7 +45,7 @@
       "process": "action.find-post-format-by-action-id",
       "port": "error",
       "metadata": {
-        "x": 684,
+        "x": 1188,
         "y": 288,
         "width": 72,
         "height": 72
@@ -54,36 +54,95 @@
   },
   "groups": [],
   "processes": {
+    "redis": {
+      "component": "alpha-nlu-api/redis.client",
+      "metadata": {
+        "x": 252,
+        "y": 36,
+        "width": 72,
+        "height": 72,
+        "label": "redis"
+      }
+    },
+    "action.find-by-id": {
+      "component": "alpha-nlu-api/action.find-by-id",
+      "metadata": {
+        "x": 576,
+        "y": 252,
+        "width": 72,
+        "height": 72,
+        "label": "action.find-by-id"
+      }
+    },
     "action.find-post-format-by-action-id": {
       "component": "alpha-nlu-api/action.find-post-format-by-action-id",
       "metadata": {
-        "label": "ActionFindPostFormatByActionId",
-        "x": 396,
-        "y": 180,
+        "x": 864,
+        "y": 144,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "action.find-post-format-by-action-id"
       }
     },
     "http.request-data-parser": {
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
-        "label": "http.request-data-parser",
-        "x": 72,
+        "x": 252,
         "y": 252,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "http.request-data-parser"
       }
     }
   },
   "connections": [
     {
       "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "action.find-by-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
+        "process": "redis",
+        "port": "redis"
+      },
+      "tgt": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "redis"
+      },
+      "metadata": {
+        "route": 10
+      }
+    },
+    {
+      "src": {
         "process": "http.request-data-parser",
         "port": "out"
       },
       "tgt": {
-        "process": "action.find-post-format-by-action-id",
+        "process": "action.find-by-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-by-id",
+        "port": "out"
+      },
+      "tgt": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "action_object"
       }
     }
   ]

@@ -176,6 +176,12 @@ const AgentRoutes = [
         path: '/agent/{id}/domain/{domainId}/action/{actionId}/postFormat',
         config: {
             description: 'Find the post format related with an action, for the given domain and agent',
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-action-post-format-in-domain-by-id-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             tags: ['api'],
             validate: AgentValidator.findActionPostFormatInDomainByIdByAgentId,
             handler: AgentController.findActionPostFormatInDomainByIdByAgentId

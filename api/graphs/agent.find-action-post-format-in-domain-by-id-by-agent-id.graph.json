@@ -1,8 +1,8 @@
 {
   "caseSensitive": false,
   "properties": {
-    "name": "FindActionWebhookInDomainByIdByAgentId",
-    "description": "FindActionWebhookInDomainByIdByAgentId",
+    "name": "FindActionPostFormatInDomainByIdByAgentId",
+    "description": "FindActionPostFormatInDomainByIdByAgentId",
     "icon": "file",
     "environment": {
       "type": "noflo-nodejs"
@@ -32,7 +32,7 @@
   },
   "outports": {
     "out": {
-      "process": "action.find-webhook-by-action-id",
+      "process": "action.find-post-format-by-action-id",
       "port": "out",
       "metadata": {
         "x": 1764,
@@ -42,7 +42,7 @@
       }
     },
     "error": {
-      "process": "action.find-webhook-by-action-id",
+      "process": "action.find-post-format-by-action-id",
       "port": "error",
       "metadata": {
         "route": 1,
@@ -75,14 +75,14 @@
         "label": "data-router"
       }
     },
-    "action.find-webhook-by-action-id": {
-      "component": "alpha-nlu-api/action.find-webhook-by-action-id",
+    "action.find-post-format-by-action-id": {
+      "component": "alpha-nlu-api/action.find-post-format-by-action-id",
       "metadata": {
         "x": 1512,
         "y": 288,
         "width": 72,
         "height": 72,
-        "label": "action.find-webhook-by-action-id"
+        "label": "action.find-post-format-by-action-id"
       }
     },
     "agent.find-domain-by-id-by-agent-id": {
@@ -182,7 +182,7 @@
         "port": "redis"
       },
       "tgt": {
-        "process": "action.find-webhook-by-action-id",
+        "process": "action.find-post-format-by-action-id",
         "port": "redis"
       },
       "metadata": {
@@ -284,7 +284,7 @@
         "port": "out"
       },
       "tgt": {
-        "process": "action.find-webhook-by-action-id",
+        "process": "action.find-post-format-by-action-id",
         "port": "action_object"
       }
     }
