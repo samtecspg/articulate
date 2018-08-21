@@ -496,6 +496,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 value={intent.intentName}
                 onChange={(evt) => this.onChangeInput(evt, 'intentName')}
                 required
+                disabled = {this.state.editMode}
               />
               <FormTextInput
                 label={messages.userSaysTitle}
