@@ -13,7 +13,7 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -180,
+        "x": 0,
         "y": 72,
         "width": 72,
         "height": 72
@@ -25,8 +25,8 @@
       "process": "http.request-data-parser",
       "port": "out",
       "metadata": {
-        "x": 720,
-        "y": 36,
+        "x": 324,
+        "y": 72,
         "width": 72,
         "height": 72
       }
@@ -38,13 +38,12 @@
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
         "label": "http.request-data-parser",
-        "x": -36,
+        "x": 144,
         "y": 72,
         "width": 72,
         "height": 72
       }
     }
   },
-  "connections": [
-  ]
+  "connections": []
 }

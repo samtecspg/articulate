@@ -2,6 +2,7 @@
 
 const NoFlo = require('noflo');
 const RedisDS = require('../datasources/redis.ds');
+const Boom = require('boom');
 const PORT_IN = 'in';
 const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
@@ -50,7 +51,7 @@ exports.getComponent = () => {
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.internal(err.message), { scope }) });
             });
 
     });

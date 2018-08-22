@@ -13,7 +13,7 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -108,
+        "x": 0,
         "y": 252,
         "width": 72,
         "height": 72
@@ -23,7 +23,7 @@
       "process": "saying.find-by-id",
       "port": "redis",
       "metadata": {
-        "x": -108,
+        "x": 0,
         "y": 36,
         "width": 72,
         "height": 72
@@ -35,7 +35,7 @@
       "process": "saying.find-by-id",
       "port": "out",
       "metadata": {
-        "x": 720,
+        "x": 684,
         "y": 36,
         "width": 72,
         "height": 72
@@ -45,6 +45,8 @@
       "process": "saying.find-by-id",
       "port": "error",
       "metadata": {
+        "route": 1,
+        "route": 1,
         "x": 684,
         "y": 288,
         "width": 72,
@@ -57,9 +59,8 @@
     "saying.find-by-id": {
       "component": "alpha-nlu-api/saying.find-by-id",
       "metadata": {
-        "label": "SayingFindById",
         "x": 396,
-        "y": 180,
+        "y": 144,
         "width": 72,
         "height": 72
       }
@@ -68,7 +69,7 @@
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
         "label": "http.request-data-parser",
-        "x": 72,
+        "x": 180,
         "y": 252,
         "width": 72,
         "height": 72
@@ -84,6 +85,9 @@
       "tgt": {
         "process": "saying.find-by-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     }
   ]

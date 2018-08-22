@@ -13,7 +13,7 @@
       "process": "redis",
       "port": "redis",
       "metadata": {
-        "x": -108,
+        "x": 0,
         "y": 36,
         "width": 72,
         "height": 72
@@ -23,7 +23,7 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -108,
+        "x": 0,
         "y": 252,
         "width": 72,
         "height": 72
@@ -35,18 +35,19 @@
       "process": "domain.find-actions-by-domain-id",
       "port": "out",
       "metadata": {
-        "x": 936,
+        "x": 1152,
         "y": 36,
         "width": 72,
         "height": 72
       }
     },
     "error": {
-      "process": "domain.find-actions-by-domain-id",
-      "port": "error",
+      "process": "error",
+      "port": "out",
       "metadata": {
-        "x": 936,
-        "y": 324,
+        "route": 1,
+        "x": 1152,
+        "y": 288,
         "width": 72,
         "height": 72
       }
@@ -54,38 +55,51 @@
   },
   "groups": [],
   "processes": {
+    "error": {
+      "component": "core/Merge",
+      "metadata": {
+        "x": 936,
+        "y": 288,
+        "width": 72,
+        "height": 72,
+        "label": "error"
+      }
+    },
     "redis": {
       "component": "alpha-nlu-api/redis.client",
       "metadata": {
-        "x": 72,
+        "x": 180,
         "y": 36,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "redis"
       }
     },
     "domain.find-actions-by-domain-id": {
       "component": "alpha-nlu-api/domain.find-actions-by-domain-id",
       "metadata": {
-        "x": 648,
+        "x": 720,
         "y": 144,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "domain.find-actions-by-domain-id"
       }
     },
     "domain.find-by-id": {
       "component": "alpha-nlu-api/domain.find-by-id",
       "metadata": {
-        "x": 252,
+        "x": 360,
         "y": 144,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "domain.find-by-id"
       }
     },
     "http.request-data-parser": {
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
         "label": "http.request-data-parser",
-        "x": 72,
+        "x": 180,
         "y": 252,
         "width": 72,
         "height": 72
@@ -101,6 +115,9 @@
       "tgt": {
         "process": "domain.find-actions-by-domain-id",
         "port": "redis"
+      },
+      "metadata": {
+        "route": 9
       }
     },
     {
@@ -111,6 +128,9 @@
       "tgt": {
         "process": "domain.find-by-id",
         "port": "redis"
+      },
+      "metadata": {
+        "route": 9
       }
     },
     {
@@ -131,6 +151,9 @@
       "tgt": {
         "process": "domain.find-actions-by-domain-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     },
     {
@@ -141,6 +164,35 @@
       "tgt": {
         "process": "domain.find-by-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "domain.find-actions-by-domain-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "domain.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
       }
     }
   ]

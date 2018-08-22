@@ -13,7 +13,7 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -108,
+        "x": 36,
         "y": 252,
         "width": 72,
         "height": 72
@@ -23,7 +23,7 @@
       "process": "agent.find-domains-by-agent-id",
       "port": "redis",
       "metadata": {
-        "x": -108,
+        "x": 36,
         "y": 36,
         "width": 72,
         "height": 72
@@ -45,6 +45,7 @@
       "process": "agent.find-domains-by-agent-id",
       "port": "error",
       "metadata": {
+        "route": 1,
         "x": 684,
         "y": 288,
         "width": 72,
@@ -57,7 +58,6 @@
     "agent.find-domains-by-agent-id": {
       "component": "alpha-nlu-api/agent.find-domains-by-agent-id",
       "metadata": {
-        "label": "AgentFindById",
         "x": 396,
         "y": 180,
         "width": 72,
@@ -68,7 +68,7 @@
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
         "label": "http.request-data-parser",
-        "x": 72,
+        "x": 216,
         "y": 252,
         "width": 72,
         "height": 72
@@ -84,6 +84,9 @@
       "tgt": {
         "process": "agent.find-domains-by-agent-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     }
   ]

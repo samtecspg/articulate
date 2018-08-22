@@ -6,7 +6,7 @@ const Async = require('async');
 
 const errorHandlerNotFound = ({ type }) => {
 
-    return new Error(`[${_.startCase(type)}] not found.`);
+    return new Error(`${_.startCase(type)} not found.`);
 };
 
 const findById = ({ redis, type, id, unflatten = true, cast = true }) => {

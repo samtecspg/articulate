@@ -35,19 +35,19 @@
       "process": "action.find-post-format-by-action-id",
       "port": "out",
       "metadata": {
-        "x": 1764,
-        "y": 108,
+        "x": 1872,
+        "y": 36,
         "width": 72,
         "height": 72
       }
     },
     "error": {
-      "process": "action.find-post-format-by-action-id",
-      "port": "error",
+      "process": "error",
+      "port": "out",
       "metadata": {
         "route": 1,
-        "x": 1764,
-        "y": 432,
+        "x": 1872,
+        "y": 360,
         "width": 72,
         "height": 72
       }
@@ -55,6 +55,16 @@
   },
   "groups": [],
   "processes": {
+    "error": {
+      "component": "core/Merge",
+      "metadata": {
+        "x": 1548,
+        "y": 360,
+        "width": 72,
+        "height": 72,
+        "label": "error"
+      }
+    },
     "redis": {
       "component": "alpha-nlu-api/redis.client",
       "metadata": {
@@ -78,8 +88,8 @@
     "action.find-post-format-by-action-id": {
       "component": "alpha-nlu-api/action.find-post-format-by-action-id",
       "metadata": {
-        "x": 1512,
-        "y": 288,
+        "x": 1548,
+        "y": 180,
         "width": 72,
         "height": 72,
         "label": "action.find-post-format-by-action-id"
@@ -88,8 +98,8 @@
     "agent.find-domain-by-id-by-agent-id": {
       "component": "alpha-nlu-api/agent.find-domain-by-id-by-agent-id",
       "metadata": {
-        "x": 936,
-        "y": 288,
+        "x": 1008,
+        "y": 180,
         "width": 72,
         "height": 72,
         "label": "agent.find-domain-by-id-by-agent-id"
@@ -98,8 +108,8 @@
     "agent.find-by-id": {
       "component": "alpha-nlu-api/agent.find-by-id",
       "metadata": {
-        "x": 792,
-        "y": 468,
+        "x": 828,
+        "y": 324,
         "width": 72,
         "height": 72,
         "label": "agent.find-by-id"
@@ -108,8 +118,8 @@
     "action.find-by-id": {
       "component": "alpha-nlu-api/action.find-by-id",
       "metadata": {
-        "x": 1044,
-        "y": 144,
+        "x": 1080,
+        "y": 36,
         "width": 72,
         "height": 72,
         "label": "action.find-by-id"
@@ -118,8 +128,8 @@
     "validate": {
       "component": "alpha-nlu-api/agent.agent-domain-action.validate-correlation",
       "metadata": {
-        "x": 1296,
-        "y": 288,
+        "x": 1332,
+        "y": 180,
         "width": 72,
         "height": 72,
         "label": "validate"
@@ -286,6 +296,71 @@
       "tgt": {
         "process": "action.find-post-format-by-action-id",
         "port": "action_object"
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-post-format-by-action-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "validate",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
       }
     }
   ]

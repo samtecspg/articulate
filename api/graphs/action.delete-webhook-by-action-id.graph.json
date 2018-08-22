@@ -13,8 +13,8 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -108,
-        "y": 252,
+        "x": 36,
+        "y": 324,
         "width": 72,
         "height": 72
       }
@@ -23,8 +23,8 @@
       "process": "action.delete-webhook-by-action-id",
       "port": "redis",
       "metadata": {
-        "x": -108,
-        "y": 36,
+        "x": 36,
+        "y": 72,
         "width": 72,
         "height": 72
       }
@@ -36,7 +36,7 @@
       "port": "out",
       "metadata": {
         "x": 720,
-        "y": 36,
+        "y": 72,
         "width": 72,
         "height": 72
       }
@@ -45,8 +45,9 @@
       "process": "action.delete-webhook-by-action-id",
       "port": "error",
       "metadata": {
-        "x": 684,
-        "y": 288,
+        "route": 1,
+        "x": 720,
+        "y": 324,
         "width": 72,
         "height": 72
       }
@@ -57,8 +58,7 @@
     "action.delete-webhook-by-action-id": {
       "component": "alpha-nlu-api/action.delete-webhook-by-action-id",
       "metadata": {
-        "label": "ActionDeleteWebhookByActionId",
-        "x": 396,
+        "x": 432,
         "y": 180,
         "width": 72,
         "height": 72
@@ -67,9 +67,8 @@
     "http.request-data-parser": {
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
-        "label": "http.request-data-parser",
-        "x": 72,
-        "y": 252,
+        "x": 216,
+        "y": 324,
         "width": 72,
         "height": 72
       }
@@ -84,6 +83,9 @@
       "tgt": {
         "process": "action.delete-webhook-by-action-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     }
   ]

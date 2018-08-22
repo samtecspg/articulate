@@ -13,7 +13,7 @@
       "process": "http.request-data-parser",
       "port": "request",
       "metadata": {
-        "x": -108,
+        "x": 72,
         "y": 252,
         "width": 72,
         "height": 72
@@ -23,7 +23,7 @@
       "process": "action.delete-post-format-by-action-id",
       "port": "redis",
       "metadata": {
-        "x": -108,
+        "x": 72,
         "y": 36,
         "width": 72,
         "height": 72
@@ -35,7 +35,7 @@
       "process": "action.delete-post-format-by-action-id",
       "port": "out",
       "metadata": {
-        "x": 720,
+        "x": 828,
         "y": 36,
         "width": 72,
         "height": 72
@@ -45,7 +45,8 @@
       "process": "action.delete-post-format-by-action-id",
       "port": "error",
       "metadata": {
-        "x": 684,
+        "route": 1,
+        "x": 828,
         "y": 288,
         "width": 72,
         "height": 72
@@ -57,21 +58,21 @@
     "action.delete-post-format-by-action-id": {
       "component": "alpha-nlu-api/action.delete-post-format-by-action-id",
       "metadata": {
-        "label": "ActionDeletePostFormatByActionId",
-        "x": 396,
-        "y": 180,
+        "x": 540,
+        "y": 144,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "action.delete-post-format-by-action-id"
       }
     },
     "http.request-data-parser": {
       "component": "alpha-nlu-api/http.request-data-parser",
       "metadata": {
-        "label": "http.request-data-parser",
-        "x": 72,
+        "x": 288,
         "y": 252,
         "width": 72,
-        "height": 72
+        "height": 72,
+        "label": "http.request-data-parser"
       }
     }
   },
@@ -84,6 +85,9 @@
       "tgt": {
         "process": "action.delete-post-format-by-action-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     }
   ]

@@ -35,18 +35,19 @@
       "process": "action.find-webhook-by-action-id",
       "port": "out",
       "metadata": {
-        "x": 1224,
+        "x": 1008,
         "y": 36,
         "width": 72,
         "height": 72
       }
     },
     "error": {
-      "process": "action.find-webhook-by-action-id",
-      "port": "error",
+      "process": "error",
+      "port": "out",
       "metadata": {
-        "x": 1188,
-        "y": 288,
+        "route": 1,
+        "x": 1044,
+        "y": 252,
         "width": 72,
         "height": 72
       }
@@ -54,6 +55,16 @@
   },
   "groups": [],
   "processes": {
+    "error": {
+      "component": "core/Merge",
+      "metadata": {
+        "x": 864,
+        "y": 252,
+        "width": 72,
+        "height": 72,
+        "label": "error"
+      }
+    },
     "redis": {
       "component": "alpha-nlu-api/redis.client",
       "metadata": {
@@ -67,7 +78,7 @@
     "action.find-by-id": {
       "component": "alpha-nlu-api/action.find-by-id",
       "metadata": {
-        "x": 576,
+        "x": 468,
         "y": 252,
         "width": 72,
         "height": 72,
@@ -77,7 +88,7 @@
     "action.find-webhook-by-action-id": {
       "component": "alpha-nlu-api/action.find-webhook-by-action-id",
       "metadata": {
-        "x": 864,
+        "x": 648,
         "y": 144,
         "width": 72,
         "height": 72,
@@ -143,6 +154,32 @@
       "tgt": {
         "process": "action.find-webhook-by-action-id",
         "port": "action_object"
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "action.find-webhook-by-action-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
       }
     }
   ]

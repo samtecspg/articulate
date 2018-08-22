@@ -1,10 +1,10 @@
 'use strict';
 
 const NoFlo = require('noflo');
+const Boom = require('boom');
 const PORT_AGENT = 'agent_object';
 const PORT_ACTION = 'action_object';
 const PORT_DOMAIN = 'domain_object';
-
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 
@@ -53,14 +53,13 @@ exports.getComponent = () => {
             errors.push(`Action [${action.id}] doesn't exists`);
         }
         if (errors.length > 0) {
-            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', errors.join('\n'), { scope }) });
-
+            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.badRequest(errors.join('\n')), { scope }) });
         }
         if (
             (action.agent === agent.agentName) &&
             (action.domain === domain.domainName)) {
             return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', action, { scope }) });
         }
-        return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', 'The specified action is not linked with this domain or agent.', { scope }) });
+        return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.badRequest('The specified action is not linked with this domain or agent'), { scope }) });
     });
 };

@@ -3,6 +3,7 @@
 const NoFlo = require('noflo');
 const RedisDS = require('../datasources/redis.ds');
 const _ = require('lodash');
+const Boom = require('boom');
 const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
@@ -50,8 +51,7 @@ exports.getComponent = () => {
         const { domainId } = input.getData(PORT_IN);
 
         if (!agent) {
-            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', 'Agent doesn\'t exists', { scope }) });
-
+            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound('Agent not found'), { scope }) });
         }
         RedisDS
             .findAllInSet({
@@ -68,13 +68,13 @@ exports.getComponent = () => {
                     return tempDomain.id.toString() === domainId.toString();
                 });
                 if (domain && domain.length === 0) {
-                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', 'Domain Not Found', { scope }) });
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound('Domain not found'), { scope }) });
                 }
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', domain[0], { scope }) });
             })
             .catch((err) => {
 
-                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', err, { scope }) });
+                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.internal(err.message), { scope }) });
             });
     });
 };

@@ -35,18 +35,18 @@
       "process": "agent.find-domain-by-id-by-agent-id",
       "port": "out",
       "metadata": {
-        "x": 1044,
-        "y": 36,
+        "x": 1080,
+        "y": 144,
         "width": 72,
         "height": 72
       }
     },
     "error": {
-      "process": "agent.find-domain-by-id-by-agent-id",
-      "port": "error",
+      "process": "error",
+      "port": "out",
       "metadata": {
         "route": 1,
-        "x": 1008,
+        "x": 1080,
         "y": 324,
         "width": 72,
         "height": 72
@@ -55,6 +55,16 @@
   },
   "groups": [],
   "processes": {
+    "error": {
+      "component": "core/Merge",
+      "metadata": {
+        "x": 900,
+        "y": 324,
+        "width": 72,
+        "height": 72,
+        "label": "error"
+      }
+    },
     "redis": {
       "component": "alpha-nlu-api/redis.client",
       "metadata": {
@@ -68,8 +78,8 @@
     "agent.find-domain-by-id-by-agent-id": {
       "component": "alpha-nlu-api/agent.find-domain-by-id-by-agent-id",
       "metadata": {
-        "x": 792,
-        "y": 180,
+        "x": 684,
+        "y": 144,
         "width": 72,
         "height": 72,
         "label": "agent.find-domain-by-id-by-agent-id"
@@ -141,6 +151,9 @@
       "tgt": {
         "process": "agent.find-domain-by-id-by-agent-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
       }
     },
     {
@@ -151,6 +164,35 @@
       "tgt": {
         "process": "agent.find-by-id",
         "port": "in"
+      },
+      "metadata": {
+        "route": 5
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-domain-by-id-by-agent-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
+      }
+    },
+    {
+      "src": {
+        "process": "agent.find-by-id",
+        "port": "error"
+      },
+      "tgt": {
+        "process": "error",
+        "port": "in"
+      },
+      "metadata": {
+        "route": 1
       }
     }
   ]

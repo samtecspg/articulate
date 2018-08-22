@@ -29,12 +29,12 @@ exports.register = (server, options, next) => {
                                 if (err) {
                                     console.error(err);
                                 }
-                                const log = {
-                                    name: componentName,
-                                    ready: component.isReady(),
-                                    subGraph: component.isSubgraph()
-                                };
-                                console.log(Util.inspect(log, { colors: true }));
+                                /* const log = {
+                                     name: componentName,
+                                     ready: component.isReady(),
+                                     subGraph: component.isSubgraph()
+                                 };
+                                 console.log(Util.inspect(log, { colors: true }));*/
                             });
                     });
             });
@@ -43,7 +43,7 @@ exports.register = (server, options, next) => {
             const settings = request.route.settings.plugins[name];
 
             if (settings) {
-                console.log(Util.inspect(`flow-loader.plugin [${settings.name}] -> ${JSON.stringify(request.path)} `, { colors: true })); // TODO: REMOVE!!!!
+                //console.log(Util.inspect(`flow-loader.plugin [${settings.name}] -> ${JSON.stringify(request.path)} `, { colors: true })); // TODO: REMOVE!!!!
                 const data = { request: new NoFlo.IP('data', request, { scope: request.id }) };
                 if (_.isArray(settings.consumes)) {
                     settings.consumes.forEach((service) => {
@@ -56,21 +56,23 @@ exports.register = (server, options, next) => {
                 promisedGraph(data)
                     .then((result) => {
 
-                        //TODO on complete stop graph?
                         if (!result) {
                             return reply.continue();
                         }
                         if (result.error) {
-                            return reply.continue();
+                            throw new Error(new Boom.internal(result.error));
                         }
                         request.plugins[name] = result.out;
                         return reply.continue();
                     })
                     .catch((err) => {
 
-                        //TODO on error stop graph
-                        const error = Boom.notFound(err.message);
-                        return reply(error);
+                        console.error(err);
+                        if (_.isArray(err)) {
+                            const errors = err.map((item) => item.message);
+                            return reply(new Boom.badRequest(errors.join('\n')));
+                        }
+                        return reply(err);
                     });
 
             }
