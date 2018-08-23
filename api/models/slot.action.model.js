@@ -6,6 +6,7 @@ class SlotModel {
 
         return {
             slotName: Joi.string().trim(),
+            uiColor: Joi.string().trim(),
             keywordId: Joi.number(),
             keyword: Joi.string().trim(),
             isList: Joi.boolean(),

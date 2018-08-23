@@ -234,7 +234,7 @@ ResponseForm.propTypes = {
   action: PropTypes.object,
   postFormat: PropTypes.object,
   saying: PropTypes.object,
-  agentKeywords: PropTypes.object,
+  agentKeywords: PropTypes.array,
   onChangeActionData: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
   onAddResponse: PropTypes.func,

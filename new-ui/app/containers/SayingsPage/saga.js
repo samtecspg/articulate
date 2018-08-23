@@ -24,6 +24,7 @@ import {
     UNTAG_KEYWORD,
     ADD_ACTION,
     DELETE_ACTION,
+    LOAD_ACTIONS,
 } from '../App/constants';
 
 import {
@@ -31,6 +32,7 @@ import {
 } from '../App/selectors';
 
 import { getKeywords } from '../KeywordsPage/saga';
+import { getActions } from '../ActionPage/saga';
 
 export function* getSayings(payload) {
     const agent = yield select(makeSelectAgent());
@@ -60,7 +62,7 @@ export function* postSaying(payload) {
     try {
         const newSayingData = {
             agent: agent.agentName,
-            domain: 'Default',
+            domain: 'default',
             userSays: value,
             keywords: [],
             actions: [],
@@ -199,4 +201,5 @@ export default function* rootSaga() {
     yield takeLatest(ADD_ACTION, addAction);
     yield takeLatest(DELETE_ACTION, deleteAction);
     yield takeLatest(LOAD_KEYWORDS, getKeywords);
+    yield takeLatest(LOAD_ACTIONS, getActions);
 };

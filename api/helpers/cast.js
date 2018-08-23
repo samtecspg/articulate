@@ -83,6 +83,9 @@ module.exports = (object, type) => {
                     return slot;
                 });
             }
+            else {
+                object.slots = [];
+            }
             break;
         case 'webhook':
             break;

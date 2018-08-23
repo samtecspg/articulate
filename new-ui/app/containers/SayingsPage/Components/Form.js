@@ -152,13 +152,15 @@ class Form extends React.Component {
             agentId={this.props.agentId}
             sayings={this.props.sayings}
             agentKeywords={this.props.agentKeywords}
+            agentActions={this.props.agentActions}
             onAddSaying={this.props.onAddSaying}
             onDeleteSaying={this.props.onDeleteSaying}
             onDeleteAction={this.props.onDeleteAction}
             onTagKeyword={this.props.onTagKeyword}
             onUntagKeyword={this.props.onUntagKeyword}
             onAddAction={this.props.onAddAction}
-            onCreateAction={this.props.onCreateAction}
+            onGoToUrl={this.props.onGoToUrl}
+            onSendSayingToAction={this.props.onSendSayingToAction}
             currentPage={this.props.currentPage}
             numberOfPages={this.props.numberOfPages}
             changePage={this.props.changePage}
@@ -177,6 +179,7 @@ Form.propTypes = {
   sayings: PropTypes.array,
   agentId: PropTypes.number,
   agentKeywords: PropTypes.array,
+  agentActions: PropTypes.array,
   onAddSaying: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
@@ -184,7 +187,8 @@ Form.propTypes = {
   onUntagKeyword: PropTypes.func,
   onSearchSaying: PropTypes.func,
   onAddAction: PropTypes.func,
-  onCreateAction: PropTypes.func,
+  onGoToUrl: PropTypes.func,
+  onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
   numberOfPages: PropTypes.number,
   changePage: PropTypes.func,

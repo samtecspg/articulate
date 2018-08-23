@@ -7,7 +7,7 @@ const ActionTools = require('../tools');
 const _ = require('lodash');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 
-const updateDataFunction = (redis, server, actionId, currentAction, updateData, agentId, domainId, cb) => {
+const updateDataFunction = (redis, actionId, currentAction, updateData, cb) => {
 
     const oldSlots = _.cloneDeep(currentAction.slots);
     if (updateData.slots){
@@ -146,7 +146,7 @@ module.exports = (request, reply) => {
         (currentAction, cb) => {
 
             if (updateData.slots){
-                ActionTools.validateKeywordsTool(redis, agentId, action.slots, (err) => {
+                ActionTools.validateKeywordsTool(redis, agentId, updateData.slots, (err) => {
 
                     if (err) {
                         return cb(err);

@@ -211,6 +211,11 @@ export default createMuiTheme({
         "root": {
           "color": "#4e4e4e"
         }
+      },
+      "MuiTabScrollButton": {
+        "root": {
+          "flex": "0 0 30px"
+        }
       }
     },
     "palette": {

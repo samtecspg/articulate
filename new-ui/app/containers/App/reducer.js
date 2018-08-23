@@ -41,8 +41,9 @@ import {
   TAG_KEYWORD,
   UNTAG_KEYWORD,
   UPDATE_SAYING_ERROR,
-  ADD_ACTION,
-  DELETE_ACTION,
+  ADD_ACTION_SAYING,
+  DELETE_ACTION_SAYING,
+  SEND_SAYING_TO_ACTION,
 
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
@@ -59,6 +60,35 @@ import {
   CHANGE_SETTINGS_DATA,
   ADD_FALLBACK,
   DELETE_FALLBACK,
+
+  RESET_ACTION_DATA,
+  LOAD_ACTIONS,
+  LOAD_ACTIONS_ERROR,
+  LOAD_ACTIONS_SUCCESS,
+  LOAD_ACTION,
+  LOAD_ACTION_ERROR,
+  LOAD_ACTION_SUCCESS,
+  CHANGE_ACTION_NAME,
+  CHANGE_ACTION_DATA,
+  ADD_NEW_SLOT,
+  ADD_ACTION_RESPONSE,
+  DELETE_ACTION_RESPONSE,
+  CHANGE_SLOT_NAME,
+  CHANGE_SLOT_DATA,
+  ADD_SLOT_TEXT_PROMPT_SLOT,
+  DELETE_SLOT_TEXT_PROMPT_SLOT,
+  CHANGE_ACTION_WEBHOOK_DATA,
+  CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE,
+  CHANGE_ACTION_POST_FORMAT_DATA,
+  ADD_ACTION,
+  ADD_ACTION_ERROR,
+  ADD_ACTION_SUCCESS,
+  UPDATE_ACTION,
+  UPDATE_ACTION_ERROR,
+  UPDATE_ACTION_SUCCESS,
+  DELETE_ACTION,
+  DELETE_ACTION_ERROR,
+  DELETE_ACTION_SUCCESS
 } from './constants';
 
 // The initial state of the App
@@ -177,28 +207,21 @@ const initialState = Immutable({
   agentOldPayloadXML: '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
   agentTouched: false,
   missingAPI: false,
+  sayingForAction: {
+    agent: '',
+    domain: '',
+    userSays: '',
+    keywords: [],
+    actions: []
+  },
   action: {
-    id: 129,
-    agent: 'Pizza Agent',
-    domain: 'Orders',
-    actionName: 'Order pizza',
+    agent: '',
+    domain: '',
+    actionName: '',
     useWebhook: false,
     usePostFormat: false,
-    slots: [
-      {
-        uiColor: '#f44336',
-        keyword: 'Toppings',
-        isList: true,
-        slotName: 'Toppings',
-        isRequired: true,
-        textPrompts: [
-          'What toppings would you like?'
-        ]
-      }
-    ],
-    responses: [
-      'Sure we will prepare your pizza with {{andList slots.Toppings.original}}'
-    ]
+    slots: [],
+    responses: []
   },
   actionWebhook: {
     agent: '',
@@ -211,10 +234,31 @@ const initialState = Immutable({
   actionPostFormat: {
     agent: '',
     domain: '',
-    postFormatPayload: ''
+    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}"\n}'
   },
-  actionOldPayloadJSON: "{\n\t'text': '{{text}}',\n\t'action': {{{JSONstringify action}}},\n\t'slots': {{{JSONstringify slots}}}\n}",
+  actionOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   actionOldPayloadXML: "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
+  actions: [],
+  actionTouched: false,
+  newSlot: {
+    slotName: 'New Slot',
+    uiColor: '#4e4e4e',
+    keyword: '',
+    keywordId: 0,
+    isList: true,
+    isRequired: true,
+    textPrompts: []
+  },
+  totalActions: 0,
+  currentAction: {
+    agent: '',
+    domain: '',
+    actionName: '',
+    useWebhook: false,
+    usePostFormat: false,
+    slots: [],
+    responses: []
+  },
   settings: {
     rasaURL: '',
     uiLanguage: '',
@@ -313,7 +357,7 @@ function appReducer(state = initialState, action) {
         .setIn(['agent', action.payload.field], action.payload.value)
         .setIn(['agentWebhook', 'agent'], action.payload.value)
         .setIn(['agentPostFormat', 'agent'], action.payload.value)
-        .set('agentTouched', true);;
+        .set('agentTouched', true);
     case CHANGE_AGENT_DATA:
       return state.setIn(['agent', action.payload.field], action.payload.value);
     case CHANGE_WEBHOOK_DATA:
@@ -440,15 +484,17 @@ function appReducer(state = initialState, action) {
     case UNTAG_KEYWORD:
       return state.set('loading', true)
         .set('error', false);
-    case ADD_ACTION:
+    case ADD_ACTION_SAYING:
       return state.set('loading', true)
         .set('error', false);
-    case DELETE_ACTION:
+    case DELETE_ACTION_SAYING:
       return state.set('loading', true)
         .set('error', false);
     case UPDATE_SAYING_ERROR:
       return state.set('loading', false)
         .set('error', action.error);
+    case SEND_SAYING_TO_ACTION:
+      return state.set('sayingForAction', action.saying);
 
     /* Keywords */
     case LOAD_KEYWORDS:
@@ -505,6 +551,213 @@ function appReducer(state = initialState, action) {
       return state.updateIn(['settings', 'defaultAgentFallbackResponses'], defaultAgentFallbackResponses => defaultAgentFallbackResponses.concat(action.newFallback));
     case DELETE_FALLBACK:
       return state.updateIn(['settings', 'defaultAgentFallbackResponses'], defaultAgentFallbackResponses => defaultAgentFallbackResponses.filter((item, index) => index !== action.fallbackIndex));
+
+    /* Actions */
+    case RESET_ACTION_DATA:
+      return state.set('action', initialState.agent)
+        .set('actionWebhook', initialState.agentWebhook)
+        .set('actionPostFormat', initialState.agentPostFormat)
+        .set('sayingForAction', initialState.sayingForAction);
+    case LOAD_ACTIONS:
+      return state.set('actions', [])
+      .set('totalActions', 0)
+      .set('loading', true)
+      .set('error', false);
+    case LOAD_ACTIONS_ERROR:
+      return state.set('actions', [])
+      .set('totalActions', 0)
+      .set('loading', false)
+      .set('error', action.error);
+    case LOAD_ACTIONS_SUCCESS:
+      return state.set('actions', action.actions.actions)
+      .set('totalActions', action.actions.total)
+      .set('loading', false)
+      .set('error', false);
+    case LOAD_ACTION:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_ACTION_ERROR:
+      return state
+        .set('action', initialState.action)
+        .set('currentAction', initialState.currentAction)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_ACTION_SUCCESS:
+      let actionWebhook, actionPostFormat;
+      if (!action.payload.action.useWebhook){
+        actionWebhook = initialState.actionWebhook;
+        actionWebhook = actionWebhook.set('action', action.payload.action.actionName);
+      }
+      else {
+        actionWebhook = action.payload.webhook;
+      }
+      if (!action.payload.action.usePostFormat){
+        actionPostFormat = initialState.actionPostFormat;
+        actionPostFormat = actionPostFormat.set('action', action.payload.action.actionName);
+      }
+      else {
+        actionPostFormat = action.payload.postFormat;
+      }
+      return state
+        .set('action', action.payload.action)
+        .set('currentAction', action.payload.action)
+        .set('actionSettings', action.payload.settings)
+        .set('actionWebhook', actionWebhook)
+        .set('actionPostFormat', actionPostFormat)
+        .set('loading', false)
+        .set('error', false);
+    case CHANGE_ACTION_NAME:
+      return state
+        .setIn(['action', action.payload.field], action.payload.value)
+        .setIn(['actionWebhook', 'action'], action.payload.value)
+        .setIn(['actionPostFormat', 'action'], action.payload.value)
+        .set('actionTouched', true);
+    case CHANGE_ACTION_DATA:
+      return state.setIn(['action', action.payload.field], action.payload.value);
+    case ADD_NEW_SLOT:
+      return state.updateIn(['action', 'slots'], slots => slots.concat(state.newSlot));
+    case ADD_ACTION_RESPONSE:
+      return state.updateIn(['action', 'responses'], responses => responses.concat(action.newResponse));
+    case DELETE_ACTION_RESPONSE:
+      return state.updateIn(['action', 'responses'], responses => responses.filter((item, index) => index !== action.responseIndex));
+    case CHANGE_SLOT_NAME:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex){
+              const slotName = action.payload.slotName;
+              return slot
+                .set('slotName', slotName);
+            }
+            else {
+              return slot;
+            }
+          })
+        )
+        .set('actionTouched', true);
+    case CHANGE_SLOT_DATA:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex){
+              return slot
+                .set(action.payload.field, action.payload.value);
+            }
+            else {
+              return slot;
+            }
+          })
+        )
+        .set('actionTouched', true);
+    case ADD_SLOT_TEXT_PROMPT_SLOT:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex){
+              return slot
+                .update('textPrompts', textPrompts => textPrompts.concat(action.payload.newTextPrompt));
+            }
+            else {
+              return slot;
+            }
+          })
+        )
+        .set('actionTouched', true);
+    case DELETE_SLOT_TEXT_PROMPT_SLOT:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex){
+              return slot
+                .update('textPrompts', textPrompts => textPrompts.filter((item, index) => index !== action.payload.textPromptIndex));
+            }
+            else {
+              return slot;
+            }
+          })
+        )
+        .set('actionTouched', true);
+    case CHANGE_ACTION_WEBHOOK_DATA:
+      return state.setIn(['actionWebhook', action.payload.field], action.payload.value);
+    case CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE:
+      if (action.payload.value === 'None') {
+        if (state.actionWebhook.webhookPayloadType === 'JSON') {
+          state = state.set('actionOldPayloadJSON', state.actionWebhook.webhookPayload);
+        }
+        if (state.actionWebhook.webhookPayloadType === 'XML') {
+          state = state.set('actionOldPayloadXML', state.actionWebhook.webhookPayload);
+        }
+        return state
+          .setIn(['actionWebhook', 'webhookPayload'], '')
+          .setIn(['actionWebhook', action.payload.field], action.payload.value)
+          .set('actionTouched', true);
+      }
+      else {
+        if (action.payload.value === 'JSON' && state.actionWebhook.webhookPayloadType !== 'JSON') {
+          if (state.actionWebhook.webhookPayloadType === 'XML') {
+            state = state.set('actionOldPayloadXML', state.actionWebhook.webhookPayload);
+          }
+          state = state.setIn(['actionWebhook', 'webhookPayload'], state.actionOldPayloadJSON);
+        }
+        if (action.payload.value === 'XML' && state.actionWebhook.webhookPayloadType !== 'XML') {
+          if (state.actionWebhook.webhookPayloadType === 'JSON') {
+            state = state.set('actionOldPayloadJSON', state.actionWebhook.webhookPayload);
+          }
+          state = state.setIn(['actionWebhook', 'webhookPayload'], state.actionOldPayloadXML);
+        }
+        return state
+          .setIn(['actionWebhook', action.payload.field], action.payload.value)
+          .set('actionTouched', true);
+      }
+    case CHANGE_ACTION_POST_FORMAT_DATA:
+      return state
+        .setIn(['actionPostFormat', action.payload.field], action.payload.value)
+        .set('actionTouched', true);
+    case ADD_ACTION:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case ADD_ACTION_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case ADD_ACTION_SUCCESS:
+      return state.set('action', action.action)
+        .set('currentAction', action.action)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case UPDATE_ACTION:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_ACTION_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case UPDATE_ACTION_SUCCESS:
+      return state.set('action', action.action)
+        .set('currentAction', action.action)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case DELETE_ACTION:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case DELETE_ACTION_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case DELETE_ACTION_SUCCESS:
+      return state.set('action', initialState.action)
+        .set('currentAction', initialState.currentAction)
+        .set('actionWebhook', initialState.actionWebhook)
+        .set('actionPostFormat', initialState.actionPostFormat)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
 
     default:
       return state;

@@ -39,15 +39,15 @@ export const CHANGE_POST_FORMAT_DATA = 'app/AgentPage/CHANGE_POST_FORMAT_DATA';
 export const CHANGE_AGENT_SETTINGS_DATA = 'app/AgentPage/CHANGE_AGENT_SETTINGS_DATA';
 export const ADD_AGENT_FALLBACK = 'app/AgentPage/ADD_AGENT_FALLBACK';
 export const DELETE_AGENT_FALLBACK = 'app/AgentPage/DELETE_AGENT_FALLBACK';
-export const ADD_AGENT = 'app/AgentsPage/ADD_AGENT';
-export const ADD_AGENT_ERROR = 'app/AgentsPage/ADD_AGENT_ERROR';
-export const ADD_AGENT_SUCCESS = 'app/AgentsPage/ADD_AGENT_SUCCESS';
-export const UPDATE_AGENT = 'app/AgentsPage/UPDATE_AGENT';
-export const UPDATE_AGENT_ERROR = 'app/AgentsPage/UPDATE_AGENT_ERROR';
-export const UPDATE_AGENT_SUCCESS = 'app/AgentsPage/UPDATE_AGENT_SUCCESS';
-export const DELETE_AGENT = 'app/AgentsPage/DELETE_AGENT';
-export const DELETE_AGENT_ERROR = 'app/AgentsPage/DELETE_AGENT_ERROR';
-export const DELETE_AGENT_SUCCESS = 'app/AgentsPage/DELETE_AGENT_SUCCESS';
+export const ADD_AGENT = 'app/AgentPage/ADD_AGENT';
+export const ADD_AGENT_ERROR = 'app/AgentPage/ADD_AGENT_ERROR';
+export const ADD_AGENT_SUCCESS = 'app/AgentPage/ADD_AGENT_SUCCESS';
+export const UPDATE_AGENT = 'app/AgentPage/UPDATE_AGENT';
+export const UPDATE_AGENT_ERROR = 'app/AgentPage/UPDATE_AGENT_ERROR';
+export const UPDATE_AGENT_SUCCESS = 'app/AgentPage/UPDATE_AGENT_SUCCESS';
+export const DELETE_AGENT = 'app/AgentPage/DELETE_AGENT';
+export const DELETE_AGENT_ERROR = 'app/AgentPage/DELETE_AGENT_ERROR';
+export const DELETE_AGENT_SUCCESS = 'app/AgentPage/DELETE_AGENT_SUCCESS';
 
 /*
  * Sayings
@@ -62,8 +62,9 @@ export const DELETE_SAYING_ERROR = 'app/SayingsPage/DELETE_SAYING_ERROR';
 export const TAG_KEYWORD = 'app/SayingsPage/TAG_KEYWORD';
 export const UNTAG_KEYWORD = 'app/SayingsPage/UNTAG_KEYWORD';
 export const UPDATE_SAYING_ERROR = 'app/SayingsPage/UPDATE_SAYING_ERROR';
-export const ADD_ACTION = 'app/SayingsPage/ADD_ACTION';
-export const DELETE_ACTION = 'app/SayingsPage/DELETE_ACTION';
+export const ADD_ACTION_SAYING = 'app/SayingsPage/ADD_ACTION_SAYING';
+export const DELETE_ACTION_SAYING = 'app/SayingsPage/DELETE_ACTION_SAYING';
+export const SEND_SAYING_TO_ACTION = 'app/SayingsPage/SEND_SAYING_TO_ACTION';
 
 /*
  * Keywords
@@ -84,5 +85,37 @@ export const UPDATE_SETTINGS = 'app/SettingsPage/UPDATE_SETTINGS';
 export const UPDATE_SETTINGS_ERROR = 'app/SettingsPage/UPDATE_SETTINGS_ERROR';
 export const UPDATE_SETTINGS_SUCCESS = 'app/SettingsPage/UPDATE_SETTINGS_SUCCESS';
 export const CHANGE_SETTINGS_DATA = 'app/SettingsPage/CHANGE_SETTINGS_DATA';
-export const ADD_FALLBACK = 'app/AgentPage/ADD_FALLBACK';
-export const DELETE_FALLBACK = 'app/AgentPage/DELETE_FALLBACK';
+export const ADD_FALLBACK = 'app/SettingsPage/ADD_FALLBACK';
+export const DELETE_FALLBACK = 'app/SettingsPage/DELETE_FALLBACK';
+
+/*
+ * Actions
+ */
+export const RESET_ACTION_DATA = 'app/ActionPage/RESET_ACTION_DATA';
+export const LOAD_ACTIONS = 'app/ActionPage/LOAD_ACTIONS';
+export const LOAD_ACTIONS_ERROR = 'app/ActionPage/LOAD_ACTIONS_ERROR';
+export const LOAD_ACTIONS_SUCCESS = 'app/ActionPage/LOAD_ACTIONS_SUCCESS';
+export const LOAD_ACTION = 'app/ActionPage/LOAD_ACTION';
+export const LOAD_ACTION_ERROR = 'app/ActionPage/LOAD_ACTION_ERROR';
+export const LOAD_ACTION_SUCCESS = 'app/ActionPage/LOAD_ACTION_SUCCESS';
+export const CHANGE_ACTION_NAME = 'app/ActionPage/CHANGE_ACTION_NAME';
+export const CHANGE_ACTION_DATA = 'app/ActionPage/CHANGE_ACTION_DATA';
+export const ADD_NEW_SLOT = 'app/ActionPage/ADD_NEW_SLOT';
+export const ADD_ACTION_RESPONSE = 'app/ActionPage/ADD_ACTION_RESPONSE';
+export const DELETE_ACTION_RESPONSE = 'app/ActionPage/DELETE_ACTION_RESPONSE';
+export const CHANGE_SLOT_NAME = 'app/ActionPage/CHANGE_SLOT_NAME';
+export const CHANGE_SLOT_DATA = 'app/ActionPage/CHANGE_SLOT_DATA';
+export const ADD_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/ADD_SLOT_TEXT_PROMPT_SLOT';
+export const DELETE_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/DELETE_SLOT_TEXT_PROMPT_SLOT';
+export const CHANGE_ACTION_WEBHOOK_DATA = 'app/ActionPage/CHANGE_ACTION_WEBHOOK_DATA';
+export const CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE = 'app/ActionPage/CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE';
+export const CHANGE_ACTION_POST_FORMAT_DATA = 'app/ActionPage/CHANGE_ACTION_POST_FORMAT_DATA';
+export const ADD_ACTION = 'app/ActionPage/ADD_ACTION';
+export const ADD_ACTION_ERROR = 'app/ActionPage/ADD_ACTION_ERROR';
+export const ADD_ACTION_SUCCESS = 'app/ActionPage/ADD_ACTION_SUCCESS';
+export const UPDATE_ACTION = 'app/ActionPage/UPDATE_ACTION';
+export const UPDATE_ACTION_ERROR = 'app/ActionPage/UPDATE_ACTION_ERROR';
+export const UPDATE_ACTION_SUCCESS = 'app/ActionPage/UPDATE_ACTION_SUCCESS';
+export const DELETE_ACTION = 'app/ActionPage/DELETE_ACTION';
+export const DELETE_ACTION_ERROR = 'app/ActionPage/DELETE_ACTION_ERROR';
+export const DELETE_ACTION_SUCCESS = 'app/ActionPage/DELETE_ACTION_SUCCESS';

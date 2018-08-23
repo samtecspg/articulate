@@ -25,6 +25,7 @@ import {
   makeSelectSayings,
   makeSelectTotalSayings,
   makeSelectKeywords,
+  makeSelectActions,
 } from '../App/selectors';
 import {
   loadSayings,
@@ -32,9 +33,11 @@ import {
   deleteSaying,
   tagKeyword,
   untagKeyword,
-  addAction,
-  deleteAction,
+  addActionSaying,
+  deleteActionSaying,
   loadKeywords,
+  loadActions,
+  sendSayingToAction,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -57,6 +60,7 @@ export class SayingsPage extends React.Component {
   componentWillMount() {
     if(this.props.agent.id) {
       this.props.onLoadKeywords();
+      this.props.onLoadActions();
       this.props.onLoadSayings('', this.state.currentPage);
     }
     else {
@@ -117,6 +121,7 @@ export class SayingsPage extends React.Component {
               agentId={this.props.agent.id}
               sayings={this.props.sayings}
               agentKeywords={this.props.agentKeywords}
+              agentActions={this.props.agentActions}
               onAddSaying={this.props.onAddSaying}
               onDeleteSaying={this.props.onDeleteSaying}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage)}
@@ -124,7 +129,8 @@ export class SayingsPage extends React.Component {
               onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage)}
               onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage)}
               onSearchSaying={this.onSearchSaying}
-              onCreateAction={this.props.onCreateAction}
+              onGoToUrl={this.props.onGoToUrl}
+              onSendSayingToAction={this.props.onSendSayingToAction}
               currentPage={this.state.currentPage}
               numberOfPages={this.getTotalPages()}
               changePage={this.changePage}
@@ -144,16 +150,19 @@ SayingsPage.propTypes = {
   agent: PropTypes.object,
   onLoadSayings: PropTypes.func,
   onLoadKeywords: PropTypes.func,
+  onLoadActions: PropTypes.func,
   onChangeSayingsData: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
   onTagKeyword: PropTypes.func,
   onUntagKeyword: PropTypes.func,
   onAddAction: PropTypes.func,
-  onCreateAction: PropTypes.func,
+  onGoToUrl: PropTypes.func,
+  onSendSayingToAction: PropTypes.func,
   sayings: PropTypes.array,
   totalSayings: PropTypes.number,
   agentKeywords: PropTypes.array,
+  agentActions: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -161,6 +170,7 @@ const mapStateToProps = createStructuredSelector({
   sayings: makeSelectSayings(),
   totalSayings: makeSelectTotalSayings(),
   agentKeywords: makeSelectKeywords(),
+  agentActions: makeSelectActions(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -170,6 +180,9 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadKeywords: () => {
       dispatch(loadKeywords());
+    },
+    onLoadActions: () => {
+      dispatch(loadActions());
     },
     onAddSaying: (value) => {
       dispatch(addSaying(value));
@@ -184,13 +197,16 @@ function mapDispatchToProps(dispatch) {
       dispatch(untagKeyword(filter, page, saying, start, end));
     },
     onAddAction: (filter, page, saying, actionName) => {
-      dispatch(addAction(filter, page, saying, actionName));
+      dispatch(addActionSaying(filter, page, saying, actionName));
     },
     onDeleteAction: (filter, page, saying, actionName) => {
-      dispatch(deleteAction(filter, page, saying, actionName));
+      dispatch(deleteActionSaying(filter, page, saying, actionName));
     },
-    onCreateAction: (url) => {
+    onGoToUrl: (url) => {
       dispatch(push(url));
+    },
+    onSendSayingToAction: (saying) => {
+      dispatch(sendSayingToAction(saying));
     }
   };
 }

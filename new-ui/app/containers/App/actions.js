@@ -7,9 +7,9 @@
 import {
   CHECK_API,
   RESET_MISSING_API,
-  RESET_AGENT_DATA,
   RESET_STATUS_FLAGS,
 
+  RESET_AGENT_DATA,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
@@ -45,8 +45,9 @@ import {
   TAG_KEYWORD,
   UNTAG_KEYWORD,
   UPDATE_SAYING_ERROR,
-  ADD_ACTION,
-  DELETE_ACTION,
+  ADD_ACTION_SAYING,
+  DELETE_ACTION_SAYING,
+  SEND_SAYING_TO_ACTION,
 
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
@@ -63,6 +64,34 @@ import {
   CHANGE_SETTINGS_DATA,
   ADD_FALLBACK,
   DELETE_FALLBACK,
+
+  LOAD_ACTIONS,
+  LOAD_ACTIONS_ERROR,
+  LOAD_ACTIONS_SUCCESS,
+  LOAD_ACTION,
+  LOAD_ACTION_ERROR,
+  LOAD_ACTION_SUCCESS,
+  CHANGE_ACTION_NAME,
+  CHANGE_ACTION_DATA,
+  ADD_NEW_SLOT,
+  ADD_ACTION_RESPONSE,
+  DELETE_ACTION_RESPONSE,
+  CHANGE_SLOT_NAME,
+  CHANGE_SLOT_DATA,
+  ADD_SLOT_TEXT_PROMPT_SLOT,
+  DELETE_SLOT_TEXT_PROMPT_SLOT,
+  CHANGE_ACTION_WEBHOOK_DATA,
+  CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE,
+  CHANGE_ACTION_POST_FORMAT_DATA,
+  ADD_ACTION,
+  ADD_ACTION_ERROR,
+  ADD_ACTION_SUCCESS,
+  UPDATE_ACTION,
+  UPDATE_ACTION_ERROR,
+  UPDATE_ACTION_SUCCESS,
+  DELETE_ACTION,
+  DELETE_ACTION_ERROR,
+  DELETE_ACTION_SUCCESS
 } from './constants';
 
 /*
@@ -357,9 +386,9 @@ export function updateSayingError(error){
   };
 }
 
-export function addAction(filter, page, saying, actionName){
+export function addActionSaying(filter, page, saying, actionName){
   return {
-    type: ADD_ACTION,
+    type: ADD_ACTION_SAYING,
     apiCall: true,
     filter,
     page,
@@ -368,15 +397,22 @@ export function addAction(filter, page, saying, actionName){
   };
 }
 
-export function deleteAction(filter, page, saying, actionName){
+export function deleteActionSaying(filter, page, saying, actionName){
   return {
-    type: DELETE_ACTION,
+    type: DELETE_ACTION_SAYING,
     apiCall: true,
     filter,
     page,
     saying,
     actionName,
   };
+}
+
+export function sendSayingToAction(saying){
+  return {
+    type: SEND_SAYING_TO_ACTION,
+    saying,
+  }
 }
 
 /*
@@ -482,5 +518,199 @@ export function deleteFallbackResponse(fallbackIndex) {
   return {
     type: DELETE_FALLBACK,
     fallbackIndex,
+  }
+}
+
+/*
+* Actions
+*/
+export function resetActionData() {
+  return {
+    type: RESET_ACTION_DATA,
+  }
+}
+
+export function loadActions() {
+  return {
+    type: LOAD_ACTIONS,
+    apiCall: true,
+  }
+}
+
+export function loadActionsError(error) {
+  return {
+    type: LOAD_ACTIONS_ERROR,
+    error,
+  };
+}
+
+export function loadActionsSuccess(actions) {
+  return {
+    type: LOAD_ACTIONS_SUCCESS,
+    actions,
+  };
+}
+
+export function loadAction(actionId) {
+  return {
+    type: LOAD_ACTION,
+    actionId,
+    apiCall: true
+  }
+}
+
+export function loadActionError(error) {
+  return {
+    type: LOAD_ACTION_ERROR,
+    error,
+  };
+}
+
+export function loadActionSuccess(payload) {
+  return {
+    type: LOAD_ACTION_SUCCESS,
+    payload,
+  };
+}
+
+export function changeActionName(payload) {
+  return {
+    type: CHANGE_ACTION_NAME,
+    payload,
+  }
+}
+
+export function changeActionData(payload) {
+  return {
+    type: CHANGE_ACTION_DATA,
+    payload,
+  };
+}
+
+export function addNewSlot(){
+  return {
+    type: ADD_NEW_SLOT,
+  };
+}
+
+export function addActionResponse(newResponse) {
+  return {
+    type: ADD_ACTION_RESPONSE,
+    newResponse,
+  }
+}
+
+export function deleteActionResponse(responseIndex) {
+  return {
+    type: DELETE_ACTION_RESPONSE,
+    responseIndex,
+  }
+}
+
+export function changeSlotName(payload) {
+  return {
+    type: CHANGE_SLOT_NAME,
+    payload,
+  }
+}
+
+export function changeSlotData(payload) {
+  return {
+    type: CHANGE_SLOT_DATA,
+    payload,
+  };
+}
+
+export function addSlotTextPrompt(payload) {
+  return {
+    type: ADD_SLOT_TEXT_PROMPT_SLOT,
+    payload,
+  }
+}
+
+export function deleteSlotTextPrompt(payload) {
+  return {
+    type: DELETE_SLOT_TEXT_PROMPT_SLOT,
+    payload,
+  }
+}
+
+export function changeActionWebhookData(payload) {
+  return {
+    type: CHANGE_ACTION_WEBHOOK_DATA,
+    payload
+  };
+}
+
+export function changeActionWebhookPayloadType(payload) {
+  return {
+    type: CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE,
+    payload
+  };
+}
+
+export function changeActionPostFormatData(payload) {
+  return {
+    type: CHANGE_ACTION_POST_FORMAT_DATA,
+    payload,
+  };
+}
+
+export function addAction(){
+  return {
+    type: ADD_ACTION,
+    apiCall: true
+  }
+}
+
+export function addActionError(){
+  return {
+    type: ADD_ACTION_ERROR,
+  }
+}
+
+export function addActionSuccess(action){
+  return {
+    type: ADD_ACTION_SUCCESS,
+    action
+  }
+}
+
+export function updateAction(){
+  return {
+    type: UPDATE_ACTION,
+    apiCall: true
+  }
+}
+
+export function updateActionError(){
+  return {
+    type: UPDATE_ACTION_ERROR,
+  }
+}
+
+export function updateActionSuccess(action){
+  return {
+    type: UPDATE_ACTION_SUCCESS,
+    action
+  }
+}
+
+export function deleteAction(){
+  return {
+    type: DELETE_ACTION,
+    apiCall: true
+  }
+}
+
+export function deleteActionError(){
+  return {
+    type: DELETE_ACTION_ERROR,
+  }
+}
+
+export function deleteActionSuccess(){
+  return {
+    type: DELETE_ACTION_SUCCESS,
   }
 }

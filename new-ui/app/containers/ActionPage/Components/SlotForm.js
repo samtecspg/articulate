@@ -103,9 +103,13 @@ class SlotForm extends React.Component {
                             <TextField
                                 select
                                 id='keyword'
-                                value={slot.keyword}
+                                value={`${slot.uiColor}~${slot.keyword}`}
                                 label={intl.formatMessage(messages.keywordSelect)}
-                                onChange={(evt) => { this.props.onChangeSlotData('keyword', evt.target.value) }}
+                                onChange={(evt) => {
+                                    const keywordValue = evt.target.value.split('~');
+                                    this.props.onChangeSlotData('uiColor', keywordValue[0]);
+                                    this.props.onChangeSlotData('keyword', keywordValue[1]);
+                                }}
                                 margin='normal'
                                 fullWidth
                                 InputLabelProps={{
@@ -113,9 +117,9 @@ class SlotForm extends React.Component {
                                 }}
                                 helperText={intl.formatMessage(messages.requiredField)}
                             >
-                                {agentKeywords.keywords.map((keyword, index) => {
+                                {agentKeywords.map((keyword, index) => {
                                     return (
-                                        <MenuItem key={`keyword_${index}`} value={keyword.keywordName}>
+                                        <MenuItem key={`keyword_${index}`} value={`${keyword.uiColor}~${keyword.keywordName}`}>
                                             <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>
                                         </MenuItem>
                                     );
@@ -204,7 +208,7 @@ SlotForm.propTypes = {
     intl: intlShape.isRequired,
     slot: PropTypes.object,
     saying: PropTypes.object,
-    agentKeywords: PropTypes.object,
+    agentKeywords: PropTypes.array,
     onChangeSlotData: PropTypes.func.isRequired,
     onAddTextPrompt: PropTypes.func.isRequired,
     onDeleteTextPrompt: PropTypes.func.isRequired,

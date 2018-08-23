@@ -140,10 +140,12 @@ class SayingsDataForm extends React.Component {
                                                             saying={saying}
                                                             onDeleteAction={this.props.onDeleteAction}
                                                             agentKeywords={this.props.agentKeywords}
+                                                            agentActions={this.props.agentActions}
                                                             onTagKeyword={this.props.onTagKeyword}
                                                             onUntagKeyword={this.props.onUntagKeyword}
                                                             onAddAction={this.props.onAddAction}
-                                                            onCreateAction={this.props.onCreateAction}
+                                                            onGoToUrl={this.props.onGoToUrl}
+                                                            onSendSayingToAction={this.props.onSendSayingToAction}
                                                         />
                                                     </TableCell>
                                                     <TableCell className={classes.deleteCell}>
@@ -207,13 +209,15 @@ SayingsDataForm.propTypes = {
     sayings: PropTypes.array,
     agentId: PropTypes.number,
     agentKeywords: PropTypes.array,
+    agentActions: PropTypes.array,
     onAddSaying: PropTypes.func.isRequired,
     onDeleteSaying: PropTypes.func.isRequired,
     onDeleteAction: PropTypes.func.isRequired,
     onTagKeyword: PropTypes.func,
     onUntagKeyword: PropTypes.func,
     onAddAction: PropTypes.func,
-    onCreateAction: PropTypes.func,
+    onGoToUrl: PropTypes.func,
+    onSendSayingToAction: PropTypes.func,
     currentPage: PropTypes.number,
     numberOfPages: PropTypes.number,
     changePage: PropTypes.func,

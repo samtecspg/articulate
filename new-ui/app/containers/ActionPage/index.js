@@ -7,6 +7,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { withStyles } from "@material-ui/core/styles";
@@ -23,11 +24,37 @@ import ResponseForm from './Components/ResponseForm';
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
+
 import {
   makeSelectAction,
   makeSelectActionWebhook,
-  makeSelectActionPostFormat
+  makeSelectActionPostFormat,
+  makeSelectKeywords,
+  makeSelectSuccess,
+  makeSelectAgent,
+  makeSelectSayingForAction
 } from '../App/selectors';
+
+import {
+  loadAction,
+  loadKeywords,
+  resetAgentData,
+  changeActionName,
+  changeActionData,
+  addNewSlot,
+  addActionResponse,
+  deleteActionResponse,
+  changeSlotName,
+  changeSlotData,
+  addSlotTextPrompt,
+  deleteSlotTextPrompt,
+  changeActionWebhookData,
+  changeActionWebhookPayloadType,
+  changeActionPostFormatData,
+  addAction,
+  updateAction,
+  resetStatusFlag,
+} from '../App/actions';
 
 const styles = {
   goBackCard: {
@@ -53,11 +80,18 @@ export class ActionPage extends React.Component {
   }
 
   componentDidMount() {
+    this.props.onLoadKeywords();
     if(this.state.isNewAction) {
       this.props.onResetData();
     }
     else {
-      this.props.onLoadAction(this.props.match.params.id);
+      this.props.onLoadAction(this.props.match.params.actionId);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.success) {
+      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
     }
   }
 
@@ -94,7 +128,7 @@ export class ActionPage extends React.Component {
         </Grid>
         <ContentHeader
           title={messages.title}
-          subtitle={this.state.isNewAction ? messages.createSubtitle : this.props.action.scenarioName}
+          subtitle={this.state.isNewAction ? messages.createSubtitle : this.props.action.actionName}
           inlineElement={
             <ActionButtons
               hideFinishButton={this.state.currentTab === 'action' && !this.state.userCompletedAllRequiredFields}
@@ -116,48 +150,14 @@ export class ActionPage extends React.Component {
           slotsForm={
             <SlotsForm
               action={this.props.action}
+              newSlot={this.props.newSlot}
               onChangeSlotData={this.props.onChangeSlotData}
               onAddTextPrompt={this.props.onAddTextPrompt}
               onDeleteTextPrompt={this.props.onDeleteTextPrompt}
               onAddNewSlot={this.props.onAddNewSlot}
               onChangeSlotName={this.props.onChangeSlotName}
-              saying={{
-                id: 1,
-                userSays: 'Prepare me a ham and cheese pizza',
-                keywords: [
-                  {
-                    end: 16,
-                    value: 'ham',
-                    start: 13,
-                    keyword: 'Toppings',
-                    keywordId: 74
-                  },
-                  {
-                    end: 27,
-                    value: 'cheese',
-                    start: 21,
-                    keyword: 'Toppings',
-                    keywordId: 74
-                  }
-                ],
-                actions: ['orderPizza']
-              }}
-              agentKeywords={{
-                keywords: [
-                  {
-                    keywordName: 'Toppings',
-                    uiColor: '#f44336'
-                  },
-                  {
-                    keywordName: 'Size',
-                    uiColor: '#e91e63'
-                  },
-                  {
-                    keywordName: 'Address',
-                    uiColor: '#9575cd'
-                  }
-                ]
-              }}
+              saying={this.props.saying}
+              agentKeywords={this.props.agentKeywords}
             />
           }
           webhookForm={
@@ -175,43 +175,8 @@ export class ActionPage extends React.Component {
               postFormat={this.props.postFormat}
               onChangeActionData={this.props.onChangeActionData}
               onChangePostFormatData={this.props.onChangePostFormatData}
-              saying={{
-                id: 1,
-                userSays: 'Prepare me a ham and cheese pizza',
-                keywords: [
-                  {
-                    end: 16,
-                    value: 'ham',
-                    start: 13,
-                    keyword: 'Toppings',
-                    keywordId: 74
-                  },
-                  {
-                    end: 27,
-                    value: 'cheese',
-                    start: 21,
-                    keyword: 'Toppings',
-                    keywordId: 74
-                  }
-                ],
-                actions: ['orderPizza']
-              }}
-              agentKeywords={{
-                keywords: [
-                  {
-                    keywordName: 'Toppings',
-                    uiColor: '#f44336'
-                  },
-                  {
-                    keywordName: 'Size',
-                    uiColor: '#e91e63'
-                  },
-                  {
-                    keywordName: 'Address',
-                    uiColor: '#9575cd'
-                  }
-                ]
-              }}
+              saying={this.props.saying}
+              agentKeywords={this.props.agentKeywords}
               onAddResponse={this.props.onAddResponse}
               onDeleteResponse={this.props.onDeleteResponse}
             />
@@ -226,10 +191,14 @@ export class ActionPage extends React.Component {
 ActionPage.propTypes = {
   classes: PropTypes.object.isRequired,
   action: PropTypes.object,
+  newSlot: PropTypes.object,
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
+  success: PropTypes.bool,
+  agentKeywords: PropTypes.array,
   onResetData: PropTypes.func,
   onLoadAction: PropTypes.func,
+  onLoadKeywords: PropTypes.func,
   onAddNewAction: PropTypes.func,
   onEditAction: PropTypes.func,
   onChangeActionName: PropTypes.func,
@@ -244,63 +213,75 @@ ActionPage.propTypes = {
   onChangePostFormatData: PropTypes.func,
   onAddResponse: PropTypes.func,
   onDeleteResponse: PropTypes.func,
+  onSuccess: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
+  agent: makeSelectAgent(),
   action: makeSelectAction(),
   webhook: makeSelectActionWebhook(),
   postFormat: makeSelectActionPostFormat(),
+  agentKeywords: makeSelectKeywords(),
+  success: makeSelectSuccess(),
+  saying: makeSelectSayingForAction(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onResetData: () => {
-      console.log('reset data');
+      dispatch(resetAgentData());
     },
     onLoadAction: (actionId) => {
-      console.log('load action: ', actionId);
+      dispatch(loadAction(actionId));
     },
-    onAddNewAction: () => {
-      console.log('add new action');
+    onLoadKeywords: () => {
+      dispatch(loadKeywords());
     },
-    onEditAction: () => {
-      console.log('edit action');
-    },
-    onChangeActionName: (actionName) => {
-      console.log('name: ', actionName)
+    onChangeActionName: (field, value) => {
+      dispatch(changeActionName({ field, value }));
     },
     onChangeActionData: (field, value) => {
-      console.log(field, value)
-    },
-    onChangeSlotData: (field, value) => {
-      console.log(field, value);
-    },
-    onAddTextPrompt: (textPrompt) => {
-      console.log('textPrompt: ', textPrompt)
-    },
-    onDeleteTextPrompt: (textPromptIndex) => {
-      console.log('text prompt to delete: ', textPromptIndex);
+      dispatch(changeActionData({ field, value }));
     },
     onAddNewSlot: () => {
-      console.log('adding new slot');
-    },
-    onChangeSlotName: (slotName) => {
-      console.log(slotName);
-    },
-    onChangeWebhookData: (field, value) => {
-      console.log({ field, value });
-    },
-    onChangeWebhookPayloadType: (field, value) => {
-      console.log({ field, value });
-    },
-    onChangePostFormatData: (field, value) => {
-      console.log({ field, value });
+      dispatch(addNewSlot());
     },
     onAddResponse: (response) => {
-      console.log('response: ', response)
+      dispatch(addActionResponse(response));
     },
     onDeleteResponse: (responseIndex) => {
-      console.log('response to delete: ', responseIndex);
+      dispatch(deleteActionResponse(responseIndex));
+    },
+    onChangeSlotName: (slotIndex, slotName) => {
+      dispatch(changeSlotName({slotIndex, slotName}));
+    },
+    onChangeSlotData: (slotIndex, field, value) => {
+      dispatch(changeSlotData({slotIndex, field, value}))
+    },
+    onAddTextPrompt: (slotIndex, newTextPrompt) => {
+      dispatch(addSlotTextPrompt({slotIndex, newTextPrompt}))
+    },
+    onDeleteTextPrompt: (slotIndex, textPromptIndex) => {
+      dispatch(deleteSlotTextPrompt({slotIndex, textPromptIndex}));
+    },
+    onChangeWebhookData: (field, value) => {
+      dispatch(changeActionWebhookData({field, value}));
+    },
+    onChangeWebhookPayloadType: (field, value) => {
+      dispatch(changeActionWebhookPayloadType({field, value}));
+    },
+    onChangePostFormatData: (field, value) => {
+      dispatch(changeActionPostFormatData({field, value}));
+    },
+    onAddNewAction: () => {
+      dispatch(addAction());
+    },
+    onSuccess: (url) => {
+      dispatch(resetStatusFlag());
+      dispatch(push(url));
+    },
+    onEditAction: () => {
+      dispatch(updateAction());
     },
   };
 }

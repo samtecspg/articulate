@@ -54,6 +54,7 @@ const makeSelectAgent = () => createSelector(
       return globalState.agent;
   }
 );
+
 const makeSelectCurrentAgent = () => createSelector(
   selectGlobalDomain,
   (globalState) => {
@@ -121,25 +122,55 @@ const makeSelectTotalSayings = () => createSelector(
 );
 
 
-/* Action */
+
+
+/* Actions */
+const makeSelectActions = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.actions;
+  }
+);
+
+const makeSelectCurrentAction = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+      return globalState.currentAction;
+  }
+);
+
+const makeSelectTotalActions = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.totalActions;
+  }
+);
+
 const makeSelectAction = () => createSelector(
   selectGlobalDomain,
   (globalState) => {
-    return globalState.action;
+      return globalState.action;
   }
 );
 
 const makeSelectActionWebhook = () => createSelector(
   selectGlobalDomain,
   (globalState) => {
-    return globalState.actionWebhook;
+      return globalState.actionWebhook;
   }
 );
 
 const makeSelectActionPostFormat = () => createSelector(
   selectGlobalDomain,
   (globalState) => {
-    globalState.actionPostFormat
+      return globalState.actionPostFormat;
+  }
+);
+
+const makeSelectSayingForAction = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+      return globalState.sayingForAction;
   }
 );
 
@@ -174,9 +205,13 @@ export {
   makeSelectSayings,
   makeSelectTotalSayings,
 
+  makeSelectActions,
+  makeSelectTotalActions,
   makeSelectAction,
+  makeSelectCurrentAction,
   makeSelectActionWebhook,
   makeSelectActionPostFormat,
+  makeSelectSayingForAction,
 
-  makeSelectSettings
+  makeSelectSettings,
 };

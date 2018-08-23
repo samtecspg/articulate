@@ -78,7 +78,7 @@ const styles = {
     paddingRight: '10px'
   },
   actionTabs: {
-    paddingLeft: '25px'
+    paddingLeft: '0px'
   },
   slotTabLabel: {
     padding: '0px 10px'
@@ -175,7 +175,6 @@ class SlotsForm extends React.Component {
             indicatorColor="primary"
             textColor="secondary"
             scrollable
-            scrollButtons="off"
             onChange={(evt, value) => {
               if (value === action.slots.length) {
                 this.props.onAddNewSlot();
@@ -212,27 +211,15 @@ class SlotsForm extends React.Component {
                   slot={slot}
                   key={`slotForm_${index}`}
                   agentKeywords={this.props.agentKeywords}
-                  onChangeSlotData={this.props.onChangeSlotData}
-                  onAddTextPrompt={this.props.onAddTextPrompt}
-                  onDeleteTextPrompt={this.props.onDeleteTextPrompt}
-                  onChangeSlotName={this.props.onChangeSlotName}
+                  onAddTextPrompt={this.props.onAddTextPrompt.bind(null, index)}
+                  onDeleteTextPrompt={this.props.onDeleteTextPrompt.bind(null, index)}
+                  onChangeSlotData={this.props.onChangeSlotData.bind(null, index)}
+                  onChangeSlotName={this.props.onChangeSlotName.bind(null, index)}
                   saying={this.props.saying}
                 />
                 : null
             )
           })}
-          {this.state.selectedTab === action.slots.length ?
-            <SlotForm
-              slot={slot}
-              key={`slotForm_${index}`}
-              onChangeSlotData={this.props.onChangeSlotData}
-              onAddTextPrompt={this.props.onAddTextPrompt}
-              onDeleteTextPrompt={this.props.onDeleteTextPrompt}
-              onChangeSlotName={this.props.onChangeSlotName}
-              saying={this.props.saying}
-            /> :
-            null
-          }
         </Grid>
       </Grid>
     );
@@ -243,8 +230,9 @@ SlotsForm.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   action: PropTypes.object,
+  newSlot: PropTypes.object,
   saying: PropTypes.object,
-  agentKeywords: PropTypes.object,
+  agentKeywords: PropTypes.array,
   onChangeSlotData: PropTypes.func,
   onAddTextPrompt: PropTypes.func,
   onDeleteTextPrompt: PropTypes.func,

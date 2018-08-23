@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { Grid, FormControl, MenuItem, Select } from '@material-ui/core';
@@ -35,7 +36,11 @@ const styles = {
         display: 'inline-block',
         position: 'relative',
         borderRadius: '10px',
-        marginTop: '2px'
+        marginTop: '2px',
+    },
+    actionLabel: {
+        textDecoration: 'none',
+        color: 'inherit'
     },
     deleteActionX: {
         '&:hover': {
@@ -46,6 +51,15 @@ const styles = {
         cursor: 'pointer'
     }
 }
+
+const getCountOfUnasignedActions = (sayingActions, agentActions) => {
+
+    const unasignedActions = agentActions.filter((action) => {
+
+        return sayingActions.indexOf(action.actionName) === -1;
+    });
+    return unasignedActions.length;
+};
 
 /* eslint-disable react/prefer-stateless-function */
 class SayingRow extends React.Component {
@@ -74,9 +88,10 @@ class SayingRow extends React.Component {
         }
     };
 
-    handleOpen = (selectName, target) => {
+    handleOpen = (selectName, target, countOfUnasignedActions) => {
         const newX = target.x + 20;
-        const newY = window.innerHeight - target.y < 210 ? target.y - 180 : target.y - 80;
+        let newY = window.innerHeight - target.y < 210 ? target.y - 180 : target.y - 80;
+        newY += countOfUnasignedActions === 1 ? 56 : 0;
         if (selectName === 'actions'){
             this.setState({
                 actionsDialogX: newX,
@@ -96,7 +111,8 @@ class SayingRow extends React.Component {
     handleChange(selectName, selectedValue){
         if (selectName === 'actions'){
             if (selectedValue === 'create'){
-                this.props.onCreateAction(`/agent/${this.props.agentId}/action/create`);
+                this.props.onSendSayingToAction(this.props.saying);
+                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create?sayingId=${this.props.saying.id}`);
             }
             else {
                 this.props.onAddAction(this.props.saying, selectedValue)
@@ -104,7 +120,7 @@ class SayingRow extends React.Component {
         }
         if (selectName === 'keywords'){
             if (selectedValue === 'create'){
-                this.props.onCreateAction(`/agent/${this.props.agentId}/keyword/create`);
+                this.props.onGoToUrl(`/agent/${this.props.agentId}/keyword/create`);
             }
             else {
                 const keyword = selectedValue.split(',');
@@ -145,15 +161,26 @@ class SayingRow extends React.Component {
                         />
                     </span>
                     {saying.actions.map((action, index) => {
+                        let actionId = this.props.agentActions.filter((agentAction) => {
+                            return agentAction.actionName === action;
+                        });
+                        actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
                         return (
-                            <div key={`action_${index}`}  className={classes.actionBackgroundContainer}>
-                                <span>{action}</span>
+                            <div key={`sayingAction_${index}`} className={classes.actionBackgroundContainer}>
+                                <span
+                                    className={classes.actionLabel}
+                                    onClick={() => {
+                                        this.props.onSendSayingToAction(saying);
+                                        this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}?sayingId=${saying.id}`)
+                                    }
+                                }
+                                >{action}</span>
                                 <a onClick={() => { this.props.onDeleteAction(saying, action) }} className={classes.deleteActionX}>x</a>
                             </div>
                         )
                     })}
                     <img
-                        onClick={(evt) => this.handleOpen('actions', evt.target)}
+                        onClick={(evt) => this.handleOpen('actions', evt.target, getCountOfUnasignedActions(saying.actions, this.props.agentActions))}
                         className={classes.addActionIcon} src={addActionIcon}
                     />
                     <FormControl className={classes.formControl}>
@@ -168,14 +195,23 @@ class SayingRow extends React.Component {
                             onChange={(evt) => { evt.preventDefault(); this.handleChange('actions', evt.target.value)}}
                             MenuProps={{
                                 style:{
+                                    minHeight: '300px',
+                                    maxHeight: '300px',
                                     top: `${this.state.actionsDialogY}px`,
                                     left: `${this.state.actionsDialogX}px`
                                 }
                             }}
                         >
                             <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction}/></MenuItem>
-                            <MenuItem value='orderPizza'>orderPizza</MenuItem>
-                            <MenuItem value='greeting'>greeting</MenuItem>
+                            {
+                                this.props.agentActions.map((action) => {
+                                    return (
+                                        saying.actions.indexOf(action.actionName) === -1 ?
+                                        <MenuItem key={`action_${action.id}`} value={action.actionName}>{action.actionName}</MenuItem> :
+                                        null
+                                    )
+                                })
+                            }
                         </Select>
                         <Select
                             style={{
@@ -214,11 +250,13 @@ SayingRow.propTypes = {
     saying: PropTypes.object,
     agentId: PropTypes.number,
     agentKeywords: PropTypes.array,
+    agentActions: PropTypes.array,
     onDeleteAction: PropTypes.func,
     onUntagKeyword: PropTypes.func,
     onTagKeyword: PropTypes.func,
     onAddAction: PropTypes.func,
-    onCreateAction: PropTypes.func,
+    onGoToUrl: PropTypes.func,
+    onSendSayingToAction: PropTypes.func,
 };
 
 export default withStyles(styles)(SayingRow);

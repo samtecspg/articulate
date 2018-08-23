@@ -73,6 +73,13 @@ const styles = {
   formSubContainer: {
       padding: '40px 25px'
   },
+  panelContent: {
+      display: 'inline',
+      fontSize: '14px',
+      fontWeight: 300,
+      color: '#4e4e4e',
+      width: '95%'
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -130,15 +137,15 @@ class WebhookForm extends React.Component {
               </Grid>
             </Modal>
           </Grid>
-          <Grid className={classes.formDescriptionContainer} container>
-            <Typography className={classes.formDescription}>
-              <FormattedMessage {...messages.webhookFormDescription} />
-            </Typography>
-          </Grid>
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
             <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
+              <Typography className={classes.panelContent}>
+                <FormattedMessage
+                  {...messages.webhookFormDescription}
+                />
+              </Typography>
               <WebhookSettings
                 webhook={webhook}
                 useWebhook={action.useWebhook}

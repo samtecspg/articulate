@@ -21,6 +21,7 @@ class ActionValidate {
                     responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
+                        uiColor: SlotSchema.uiColor.required(),
                         keyword: SlotSchema.keyword,
                         keywordId: SlotSchema.keywordId,
                         isList: SlotSchema.isList.required(),
@@ -56,6 +57,7 @@ class ActionValidate {
                     responses: ActionSchema.responses,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
+                        uiColor: SlotSchema.uiColor.required(),
                         keyword: SlotSchema.keyword,
                         keywordId: SlotSchema.keywordId,
                         isList: SlotSchema.isList.required(),

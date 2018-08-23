@@ -14,6 +14,8 @@ import {
   addAgentError,
   deleteAgentError,
   deleteAgentSuccess,
+  updateAgentSuccess,
+  updateAgentError,
 } from '../App/actions';
 
 import {
@@ -145,6 +147,13 @@ export function* postAgent(payload) {
         yield call(postAgentPostFormat, { id: response.obj.id, api });
       }
       yield call(putAgentSettings, { id: response.obj.id, api });
+      yield call(api.domain.postDomain, { body: {
+        agent: agent.agentName,
+        domainName: 'default',
+        enabled: true,
+        actionThreshold: 0,
+        extraTrainingData: false,
+      }});
       yield put(addAgentSuccess(response.obj));
   } catch (err) {
       yield put(addAgentError(err));
@@ -191,9 +200,9 @@ export function* putAgent(payload) {
         }
       }
       yield call(putAgentSettings, { id: currentAgent.id, api });
-      yield put(addAgentSuccess(response.obj));
+      yield put(updateAgentSuccess(response.obj));
   } catch (err) {
-      yield put(addAgentError(err));
+      yield put(updateAgentError(err));
   }
 }
 
@@ -201,7 +210,7 @@ export function* deleteAgent(payload) {
   const agent = yield select(makeSelectAgent());
   const { api } = payload;
   try {
-    yield call(api.agent.putAgentIdSettings, { id: agent.id });
+    yield call(api.agent.deleteAgentId, { id: agent.id });
     yield put(deleteAgentSuccess());
   } catch (err) {
       yield put(deleteAgentError(err));
