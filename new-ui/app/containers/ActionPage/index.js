@@ -38,7 +38,6 @@ import {
 import {
   loadAction,
   loadKeywords,
-  resetAgentData,
   changeActionName,
   changeActionData,
   addNewSlot,
@@ -54,6 +53,7 @@ import {
   addAction,
   updateAction,
   resetStatusFlag,
+  resetActionData,
 } from '../App/actions';
 
 const styles = {
@@ -229,7 +229,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     onResetData: () => {
-      dispatch(resetAgentData());
+      dispatch(resetActionData());
     },
     onLoadAction: (actionId) => {
       dispatch(loadAction(actionId));
