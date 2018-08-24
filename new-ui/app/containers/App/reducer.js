@@ -554,10 +554,9 @@ function appReducer(state = initialState, action) {
 
     /* Actions */
     case RESET_ACTION_DATA:
-      return state.set('action', initialState.agent)
-        .set('actionWebhook', initialState.agentWebhook)
-        .set('actionPostFormat', initialState.agentPostFormat)
-        .set('sayingForAction', initialState.sayingForAction);
+      return state.set('action', initialState.action)
+        .set('actionWebhook', initialState.actionWebhook)
+        .set('actionPostFormat', initialState.actionPostFormat);
     case LOAD_ACTIONS:
       return state.set('actions', [])
       .set('totalActions', 0)

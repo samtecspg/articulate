@@ -22,8 +22,8 @@ import {
     DELETE_SAYING,
     TAG_KEYWORD,
     UNTAG_KEYWORD,
-    ADD_ACTION,
-    DELETE_ACTION,
+    ADD_ACTION_SAYING,
+    DELETE_ACTION_SAYING,
     LOAD_ACTIONS,
 } from '../App/constants';
 
@@ -198,8 +198,8 @@ export default function* rootSaga() {
     yield takeLatest(DELETE_SAYING, deleteSaying);
     yield takeLatest(TAG_KEYWORD, tagKeyword);
     yield takeLatest(UNTAG_KEYWORD, untagKeyword);
-    yield takeLatest(ADD_ACTION, addAction);
-    yield takeLatest(DELETE_ACTION, deleteAction);
+    yield takeLatest(ADD_ACTION_SAYING, addAction);
+    yield takeLatest(DELETE_ACTION_SAYING, deleteAction);
     yield takeLatest(LOAD_KEYWORDS, getKeywords);
     yield takeLatest(LOAD_ACTIONS, getActions);
 };

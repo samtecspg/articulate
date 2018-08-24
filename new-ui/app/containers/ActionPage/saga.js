@@ -35,9 +35,11 @@ import {
   makeSelectCurrentAction,
   makeSelectActionWebhook,
   makeSelectActionPostFormat,
+  makeSelectSayingForAction,
 } from '../App/selectors';
 
 import { getKeywords } from '../KeywordsPage/saga';
+import { putSaying } from '../SayingsPage/saga';
 
 export function* getActions(payload) {
   const agent = yield select(makeSelectAgent());
@@ -75,11 +77,12 @@ export function* getAction(payload) {
 function* postActionWebhook(payload) {
   const actionWebhook = yield select(makeSelectActionWebhook());
   const agent = yield select(makeSelectAgent());
-  actionWebhook.set('agent', agent.agentName);
-  actionWebhook.set('domain', 'default');
+  const mutableActionWebhook = Immutable.asMutable(actionWebhook, { deep: true });
+  mutableActionWebhook.agent = agent.agentName;
+  mutableActionWebhook.domain = 'default';
   const { api, id } = payload;
   try {
-      yield call(api.action.postActionIdWebhook, { id, body: actionWebhook });
+      yield call(api.action.postActionIdWebhook, { id, body: mutableActionWebhook });
   } catch (err) {
       yield put(addActionError(err));
   }
@@ -88,11 +91,12 @@ function* postActionWebhook(payload) {
 function* postActionPostFormat(payload) {
   const actionPostFormat = yield select(makeSelectActionPostFormat());
   const agent = yield select(makeSelectAgent());
-  actionPostFormat.set('agent', agent.agentName);
-  actionPostFormat.set('domain', 'default');
+  const mutableActionPostFormat = Immutable.asMutable(actionPostFormat, { deep: true });
+  mutableActionPostFormat.agent = agent.agentName;
+  mutableActionPostFormat.domain = 'default';
   const { api, id } = payload;
   try {
-      yield call(api.action.postActionIdPostformat, { id, body: actionPostFormat });
+      yield call(api.action.postActionIdPostformat, { id, body: mutableActionPostFormat });
   } catch (err) {
       yield put(addActionError(err));
   }
@@ -153,20 +157,26 @@ function* deleteActionPostFormat(payload) {
 export function* postAction(payload) {
   const action = yield select(makeSelectAction());
   const agent = yield select(makeSelectAgent());
-  action.set('agent', agent.agentName);
-  action.set('domain', 'default');
+  const mutableAction = Immutable.asMutable(action, {deep: true});
+  mutableAction.agent = agent.agentName;
+  mutableAction.domain = 'default';
   const { api } = payload;
   try {
-      const response = yield call(api.action.postAction, { body: action });
-      if (action.useWebhook){
-        yield call(postActionWebhook, { id: response.obj.id, api });
-      }
-      if (action.usePostFormat){
-        yield call(postActionPostFormat, { id: response.obj.id, api });
-      }
-      yield put(addActionSuccess(response.obj));
+    const response = yield call(api.action.postAction, { body: mutableAction });
+    if (action.useWebhook){
+      yield call(postActionWebhook, { id: response.obj.id, api });
+    }
+    if (action.usePostFormat){
+      yield call(postActionPostFormat, { id: response.obj.id, api });
+    }
+    const sayingForAction = yield select(makeSelectSayingForAction());
+    const mutableSayingForAction = Immutable.asMutable(sayingForAction, {deep: true});
+    mutableSayingForAction.actions.push(response.obj.actionName);
+    const updateSayingPayload = { api, sayingId: sayingForAction.id, saying: mutableSayingForAction };
+    yield call(putSaying, updateSayingPayload);
+    yield put(addActionSuccess(response.obj));
   } catch (err) {
-      yield put(addActionError(err));
+    yield put(addActionError(err));
   }
 }
 
