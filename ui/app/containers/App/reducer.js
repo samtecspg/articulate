@@ -61,6 +61,7 @@ import {
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
   SET_IN_WIZARD,
+  TRAIN_AGENT, 
   UPDATE_AGENT,
   UPDATE_AGENT_ERROR,
   UPDATE_AGENT_SUCCESS,
@@ -194,6 +195,12 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('loading', false);
+    case TRAIN_AGENT:
+      return state
+        .set('currentAgentStatus', {
+          status: "Training",
+          lastTraining: null
+        })
     case CREATE_AGENT:
       return state
         .set('loading', true)
