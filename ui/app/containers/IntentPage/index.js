@@ -550,7 +550,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                     />
                   </Table>
                 </TableContainer> :
-                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}} style={{ backgroundColor: '#c5cbd8' }} >
+                <TableContainer id="userSayingsTable" quotes tableStyle={{ marginBottom: '0px'}} style={{ backgroundColor: '#e2e5ee' }} >
                   <Table>
                     <tbody>
                       <tr style={{ width: '100%' }}>
@@ -690,7 +690,7 @@ export class IntentPage extends React.PureComponent { // eslint-disable-line rea
                 />
               </Table>
             </TableContainer> :
-            <TableContainer id="intentResponsesTable" style={{ backgroundColor: '#c5cbd8' }} quotes>
+            <TableContainer id="intentResponsesTable" style={{ backgroundColor: '#e2e5ee' }} quotes>
               <Table>            
                 <tbody>
                   <tr style={{ width: '100%' }}>
