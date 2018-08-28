@@ -1,7 +1,7 @@
-FROM alpine:3.7
+FROM alpine:3.8
 
 
-ENV RASA_RELEASE=0.12.3.b \
+ENV RASA_RELEASE=0.13.1 \
     RASA_NLU_HOME=/app \
     RASA_NLU_PYTHON_PACKAGES=/usr/local/lib/python2.7/dist-packages
 
@@ -14,10 +14,11 @@ RUN apk --update add --virtual scipy-runtime python py-pip \
     && apk add --virtual scipy-build \
         build-base python-dev openblas-dev freetype-dev pkgconfig gfortran \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
-    && pip install --no-cache-dir numpy \ 
-#    && pip install --no-cache-dir matplotlib \
-    && pip install --no-cache-dir scipy \
+    && pip install --upgrade pip
+RUN pip install --no-cache-dir scipy \
 #    && apk del scipy-build \
+#    && pip install --no-cache-dir 'numpy>=1.14.5' \ 
+#    && pip install --no-cache-dir matplotlib \
     && apk add --virtual scipy-runtime \
         freetype libgfortran libgcc libpng  libstdc++ musl openblas tcl tk \
     && rm -rf /var/cache/apk/*
@@ -26,12 +27,15 @@ RUN apk --update add --virtual scipy-runtime python py-pip \
 
 RUN apk add git bash --update-cache
 
-RUN wget -O - https://github.com/dcalvom/rasa_nlu/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
+RUN wget -O - https://github.com/RasaHQ/rasa_nlu/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
 RUN mv rasa_nlu-${RASA_RELEASE} ${RASA_NLU_HOME}
 
 WORKDIR ${RASA_NLU_HOME}
 
 RUN sed -i '/matplotlib/d' alt_requirements/requirements_bare.txt
+
+# We install numpy above, not certain why, but we do.
+RUN sed -i '/numpy/d' alt_requirements/requirements_bare.txt
 
 #only turn on if you want mitie too (in which case turn on the wget below too
 #RUN pip install -r alt_requirements/requirements_full.txt
