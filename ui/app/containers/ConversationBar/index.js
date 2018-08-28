@@ -45,7 +45,7 @@ class ConversationBar extends React.Component { // eslint-disable-line react/pre
 
   componentDidMount() {
     //Interval defined to refresh agent status
-    this.interval = setInterval(() => this.tick(), 5000);
+    this.interval = setInterval(() => this.tick(), 10000);
     this.scrollToBottom();
   }
 

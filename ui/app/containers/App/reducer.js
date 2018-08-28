@@ -247,6 +247,10 @@ function appReducer(state = initialState, action) {
         .set('loading', false);
     case CREATE_INTENT:
       return state
+        .set('currentAgentStatus', {
+          status: "Out of Date",
+          lastTraining: state.currentAgentStatus.lastTraining
+        })
         .set('loading', true)
         .set('error', false);
     case CREATE_INTENT_SUCCESS:
