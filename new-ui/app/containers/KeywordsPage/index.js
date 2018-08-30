@@ -48,6 +48,11 @@ export class KeywordsPage extends React.Component {
     currentPage: 1,
   }
 
+  getTotalPages(){
+    const itemsByPage = 5;
+    return Math.ceil(this.props.totalSayings / itemsByPage);
+  }
+
   componentWillMount() {
     if(this.props.agent.id) {
       this.props.onLoadKeywords('', this.state.currentPage);

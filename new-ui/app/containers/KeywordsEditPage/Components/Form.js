@@ -148,6 +148,9 @@ class Form extends React.Component {
           {<KeywordDataForm
             keyword={this.props.keyword}
             onChangeKeywordData={this.props.onChangeKeywordData}
+            onAddKeywordExample={this.props.onAddKeywordExample}
+            onDeleteKeywordExample={this.props.onDeleteKeywordExample}
+            onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
           />}
         </Grid>
       </Grid>
@@ -160,6 +163,10 @@ Form.propTypes = {
   intl: intlShape.isRequired,
   keyword: PropTypes.object,
   onChangeKeywordData: PropTypes.func.isRequired,
+  onChangeKeywordData: PropTypes.func,
+  onAddKeywordExample: PropTypes.func,
+  onDeleteKeywordExample: PropTypes.func,
+  onChangeExampleSynonyms: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

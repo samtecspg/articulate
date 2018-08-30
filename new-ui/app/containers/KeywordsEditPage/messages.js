@@ -91,4 +91,12 @@ export default defineMessages({
       id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.newKeywordValueSynonymTextFieldPlaceholder',
       defaultMessage: '+ Synonym'
     },
+    finishButton: {
+      id: 'app.containers.KeywordsEditPage.component.ActionButtons.finishButton',
+      defaultMessage: 'Finish'
+    },
+    cancelButton: {
+      id: 'app.containers.KeywordsEditPage.component.ActionButtons.cancelButton',
+      defaultMessage: 'Cancel'
+    },
 });

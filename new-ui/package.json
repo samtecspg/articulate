@@ -158,6 +158,7 @@
     "ip": "1.1.5",
     "lodash": "4.17.10",
     "material-ui": "^1.0.0-beta.47",
+    "material-ui-chip-input": "^1.0.0-beta.6",
     "minimist": "1.2.0",
     "prop-types": "15.6.1",
     "react": "16.4.1",

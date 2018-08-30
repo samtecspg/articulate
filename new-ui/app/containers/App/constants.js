@@ -119,3 +119,21 @@ export const UPDATE_ACTION_SUCCESS = 'app/ActionPage/UPDATE_ACTION_SUCCESS';
 export const DELETE_ACTION = 'app/ActionPage/DELETE_ACTION';
 export const DELETE_ACTION_ERROR = 'app/ActionPage/DELETE_ACTION_ERROR';
 export const DELETE_ACTION_SUCCESS = 'app/ActionPage/DELETE_ACTION_SUCCESS';
+
+/*
+ * Keyword
+ */
+export const RESET_KEYWORD_DATA = 'app/KeywordsEditPage/RESET_KEYWORD_DATA';
+export const LOAD_KEYWORD = 'app/KeywordsEditPage/LOAD_KEYWORD';
+export const LOAD_KEYWORD_ERROR = 'app/KeywordsEditPage/LOAD_KEYWORD_ERROR';
+export const LOAD_KEYWORD_SUCCESS = 'app/KeywordsEditPage/LOAD_KEYWORD_SUCCESS';
+export const CREATE_KEYWORD = 'app/KeywordsEditPage/CREATE_KEYWORD';
+export const CREATE_KEYWORD_ERROR = 'app/KeywordsEditPage/CREATE_KEYWORD_ERROR';
+export const CREATE_KEYWORD_SUCCESS = 'app/KeywordsEditPage/CREATE_KEYWORD_SUCCESS';
+export const UPDATE_KEYWORD = 'app/KeywordsEditPage/UPDATE_KEYWORD';
+export const UPDATE_KEYWORD_ERROR = 'app/KeywordsEditPage/UPDATE_KEYWORD_ERROR';
+export const UPDATE_KEYWORD_SUCCESS = 'app/KeywordsEditPage/UPDATE_KEYWORD_SUCCESS';
+export const CHANGE_KEYWORD_DATA = 'app/KeywordsEditPage/CHANGE_KEYWORD_DATA'
+export const ADD_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/ADD_KEYWORD_EXAMPLE';
+export const DELETE_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/DELETE_KEYWORD_EXAMPLE';
+export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNONYMS';

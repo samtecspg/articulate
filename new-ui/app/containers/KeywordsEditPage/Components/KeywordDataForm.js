@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'seamless-immutable';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
@@ -6,6 +7,7 @@ import { Grid, TextField, MenuItem, Typography  } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import ColorPicker from 'components/ColorPicker';
+import ChipInput from 'components/ChipInput'
 
 import messages from '../messages';
 
@@ -31,13 +33,37 @@ const styles = {
     },
     keywordValueInput: {
         marginTop: '0px'
-    }
+    },
+    chipInputRootFirst: {
+        marginTop: 16,
+        marginBottom: 8
+    },
+    chipInputRoot: {
+        marginBottom: 8
+    },
+    chipContainer: {
+        border: '1px solid #a2a7b1',
+        borderRadius: '5px',
+        marginTop: '25px !important',
+    },
+    inputRoot: {
+        display: 'block',
+        marginTop: '0px !important',
+    },
+    chip: {
+        margin: '8px 0px 8px 8px',
+    },
+    chipInput: {
+        border: 'none'
+    },
 }
 
 /* eslint-disable react/prefer-stateless-function */
 class KeywordDataForm extends React.Component {
 
     state = {
+        newKeyword: '',
+        newSyonynm: '',
         keywordNameError: false,
         displayColorPicker: false,
     }
@@ -151,23 +177,22 @@ class KeywordDataForm extends React.Component {
                                     />
                                 </Grid>
                                 <Grid className={classes.keywordValueInputContainer} item xs={9}>
-                                    {example.synonyms.map((synonym, synonymIndex) => {
-                                        return (
-                                            <TextField
-                                                id='keywordName'
-                                                key={`synonym_${synonymIndex}`}
-                                                className={exampleIndex !== 0 ? classes.keywordValueInput : ''}
-                                                value={synonym}
-                                                placeholder={intl.formatMessage(messages.newKeywordValueSynonymTextFieldPlaceholder)}
-                                                onChange={(evt) => { this.props.onChangeKeywordData('keywordName', evt.target.value) }}
-                                                margin='normal'
-                                                fullWidth
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                            />
-                                        )
-                                    })}
+                                    <ChipInput
+                                        defaultValue={Immutable.asMutable(example.synonyms, {deep:true})}
+                                        onChange={(synonyms) => { this.props.onChangeExampleSynonyms(exampleIndex, synonyms) } }
+                                        fullWidth
+                                        disableUnderline
+                                        classes={{
+                                            root: exampleIndex !== 0 ? classes.chipInputRoot : classes.chipInputRootFirst,
+                                            chipContainer: classes.chipContainer,
+                                            inputRoot: classes.inputRoot,
+                                            chip: classes.chip,
+                                            input: classes.chipInput,
+                                        }}
+                                        onDeleteAll={() => {
+                                            this.props.onDeleteKeywordExample(exampleIndex);
+                                        }}
+                                    />
                                 </Grid>
                             </Grid>
                         )
@@ -176,24 +201,23 @@ class KeywordDataForm extends React.Component {
                         <Grid className={classes.keywordValueInputContainer} item xs={3}>
                             <TextField
                                 id='keywordName'
-                                value={''}
+                                value={this.state.newKeyword}
                                 className={classes.keywordValueInput}
                                 placeholder={intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder)}
-                                onChange={(evt) => { this.props.onChangeKeywordData('keywordName', evt.target.value) }}
-                                margin='normal'
-                                fullWidth
-                                InputLabelProps={{
-                                    shrink: true,
+                                onKeyPress={(evt) => {
+                                    if(evt.key === 'Enter'){
+                                        evt.preventDefault();
+                                        this.props.onAddKeywordExample({ value: evt.target.value, synonyms: [evt.target.value] });
+                                        this.setState({
+                                            newKeyword: '',
+                                        })
+                                    }
                                 }}
-                            />
-                        </Grid>
-                        <Grid className={classes.keywordValueInputContainer} item xs={9}>
-                            <TextField
-                                id='keywordName'
-                                value={''}
-                                className={classes.keywordValueInput}
-                                placeholder={intl.formatMessage(messages.newKeywordValueSynonymTextFieldPlaceholder)}
-                                onChange={(evt) => { this.props.onChangeKeywordData('keywordName', evt.target.value) }}
+                                onChange={(evt) => {
+                                    this.setState({
+                                        newKeyword: evt.target.value,
+                                    });
+                                }}
                                 margin='normal'
                                 fullWidth
                                 InputLabelProps={{
@@ -213,6 +237,10 @@ KeywordDataForm.propTypes = {
     intl: intlShape.isRequired,
     keyword: PropTypes.object,
     onChangeKeywordData: PropTypes.func.isRequired,
+    onChangeKeywordData: PropTypes.func,
+    onAddKeywordExample: PropTypes.func,
+    onDeleteKeywordExample: PropTypes.func,
+    onChangeExampleSynonyms: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(KeywordDataForm));

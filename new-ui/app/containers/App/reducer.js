@@ -88,7 +88,22 @@ import {
   UPDATE_ACTION_SUCCESS,
   DELETE_ACTION,
   DELETE_ACTION_ERROR,
-  DELETE_ACTION_SUCCESS
+  DELETE_ACTION_SUCCESS,
+
+  LOAD_KEYWORD,
+  LOAD_KEYWORD_ERROR,
+  LOAD_KEYWORD_SUCCESS,
+  CHANGE_KEYWORD_DATA,
+  CREATE_KEYWORD,
+  CREATE_KEYWORD_ERROR,
+  CREATE_KEYWORD_SUCCESS,
+  RESET_KEYWORD_DATA,
+  UPDATE_KEYWORD,
+  UPDATE_KEYWORD_ERROR,
+  UPDATE_KEYWORD_SUCCESS,
+  ADD_KEYWORD_EXAMPLE,
+  DELETE_KEYWORD_EXAMPLE,
+  CHANGE_EXAMPLE_SYNONYMS
 } from './constants';
 
 // The initial state of the App
@@ -141,63 +156,12 @@ const initialState = Immutable({
     entityClassifierPipeline: '[]',
   },
   keyword: {
-      id: 2,
       type: 'learned',
       regex: '',
-      agent: 'Pizza Agent',
+      agent: '',
       uiColor: '#e91e63',
-      keywordName: 'Toppings',
-      examples: [
-      {
-          value: 'Mushrooms',
-          synonyms: [
-          'Mushrooms'
-          ]
-      },
-      {
-          value: 'Onions',
-          synonyms: [
-          'Onions'
-          ]
-      },
-      {
-          value: 'peppers',
-          synonyms: [
-          'peppers'
-          ]
-      },
-      {
-          value: 'pepperoni',
-          synonyms: [
-          'pepperoni'
-          ]
-      },
-      {
-          value: 'olives',
-          synonyms: [
-          'olives'
-          ]
-      },
-      {
-          value: 'chicken',
-          synonyms: [
-          'chicken'
-          ]
-      },
-      {
-          value: 'meat',
-          synonyms: [
-          'meat'
-          ]
-      },
-      {
-          value: 'ham',
-          synonyms: [
-          'ham',
-          'canadian bacon'
-          ]
-      }
-      ]
+      keywordName: '',
+      examples: []
   },
   keywords: [],
   totalKeywords: 0,
@@ -757,6 +721,60 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false);
+
+    case CHANGE_KEYWORD_DATA:
+      return state.setIn(['keyword', action.payload.field], action.payload.value);
+    case CREATE_KEYWORD:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case CREATE_KEYWORD_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case CREATE_KEYWORD_SUCCESS:
+      return state.set('keyword', action.keyword)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case RESET_KEYWORD_DATA:
+        return state.set('keyword', initialState.keyword)
+    case UPDATE_KEYWORD:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_KEYWORD_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case UPDATE_KEYWORD_SUCCESS:
+      return state.set('keyword', action.keyword)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case ADD_KEYWORD_EXAMPLE:
+      return state.updateIn(['keyword', 'examples'], examples => examples.concat(action.newExample));
+    case DELETE_KEYWORD_EXAMPLE:
+      return state.updateIn(['keyword', 'examples'], examples => examples.filter((item, index) => index !== action.exampleIndex));
+    case CHANGE_EXAMPLE_SYNONYMS:
+      return state.updateIn(['keyword', 'examples'], examples => examples.map((example, index) => {
+        if(index === action.exampleIndex){
+          return example.set('synonyms', action.synonyms);
+        }
+        return example;
+      }));
+    case LOAD_KEYWORD:
+      return state.set('keyword', initialState.keyword)
+      .set('loading', true)
+      .set('error', false);
+    case LOAD_KEYWORD_ERROR:
+      return state.set('keyword', initialState.keyword)
+      .set('loading', false)
+      .set('error', action.error);
+    case LOAD_KEYWORD_SUCCESS:
+      return state.set('keyword', action.keyword)
+      .set('loading', false)
+      .set('error', false);
 
     default:
       return state;

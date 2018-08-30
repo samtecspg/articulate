@@ -7,7 +7,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
@@ -23,7 +22,22 @@ import messages from './messages';
 import {
   makeSelectKeyword,
   makeSelectAgent,
+  makeSelectSuccess,
 } from '../App/selectors';
+
+import {
+  changeKeywordData,
+  addKeywordExample,
+  deleteKeywordExample,
+  loadKeyword,
+  resetKeywordData,
+  createKeyword,
+  updateKeyword,
+  changeExampleSynonyms,
+  resetStatusFlag
+} from '../App/actions';
+import ActionButtons from './Components/ActionButtons';
+import { push } from 'react-router-redux';
 
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsEditPage extends React.Component {
@@ -33,9 +47,17 @@ export class KeywordsEditPage extends React.Component {
       this.props.onResetData();
     }
     else {
-      this.props.onLoadKeywords(this.props.match.params.id);
+      this.props.onLoadKeyword(this.props.match.params.keywordId);
     }
   }
+
+  componentDidUpdate() {
+    console.log(this.props.success);
+    if (this.props.success) {
+      this.props.onSuccess(`/agent/${this.props.agent.id}/keywords`);
+    }
+  }
+
 
   state = {
     isNewKeyword: this.props.match.params.keywordId === 'create'
@@ -46,7 +68,16 @@ export class KeywordsEditPage extends React.Component {
       <Grid container>
         <ContentHeader
           title={messages.title}
-          subtitle={'Pizza Agent'}
+          subtitle={this.props.agent.agentName}
+          inlineElement={
+            <ActionButtons
+              agentId={this.props.agent.id}
+              onFinishAction={this.state.isNewKeyword ? this.props.onCreateKeyword.bind(null, this.props.agent.id) : this.props.onUpdateKeyword.bind(null, this.props.agent.id)}
+            />
+          }
+          backButton={messages.backButton}
+
+
         />
         <MainTab
           enableTabs={true}
@@ -57,9 +88,11 @@ export class KeywordsEditPage extends React.Component {
           sayingsURL={`/agent/${this.props.agent.id}/sayings`}
           keywordsForm={
             <Form
-              onSearchKeyword={this.onSearchKeyword}
               keyword={this.props.keyword}
               onChangeKeywordData={this.props.onChangeKeywordData}
+              onAddKeywordExample={this.props.onAddKeywordExample}
+              onDeleteKeywordExample={this.props.onDeleteKeywordExample}
+              onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
             />
           }
         />
@@ -71,32 +104,52 @@ export class KeywordsEditPage extends React.Component {
 KeywordsEditPage.propTypes = {
   agent: PropTypes.object,
   keywords: PropTypes.object,
-  onLoadKeywords: PropTypes.func,
-  onDeleteKeyword: PropTypes.func.isRequired,
+  onResetData: PropTypes.func,
+  onLoadKeyword: PropTypes.func,
+  onCreateKeyword: PropTypes.func,
+  onUpdateKeyword: PropTypes.func,
+  onChangeKeywordData: PropTypes.func,
+  onAddKeywordExample: PropTypes.func,
+  onDeleteKeywordExample: PropTypes.func,
+  onChangeExampleSynonyms: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   keyword: makeSelectKeyword(),
+  success: makeSelectSuccess()
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onResetData: () => {
-      console.log('reset data');
+      dispatch(resetKeywordData());
     },
-    onLoadKeywords: (filter, page) => {
-      console.log(filter, page);
+    onLoadKeyword: (id) => {
+      dispatch(loadKeyword(id));
     },
-    onDeleteKeyword: (keywordIndex) => {
-      console.log(keywordIndex);
+    onCreateKeyword: (agentId) => {
+      dispatch(createKeyword());
     },
-    onCreateKeyword: (url) => {
-      dispatch(push(url))
+    onUpdateKeyword: (agentId) => {
+      dispatch(updateKeyword());
     },
     onChangeKeywordData: (field, value) => {
-      console.log(field, value);
-    }
+      dispatch(changeKeywordData({field, value}));
+    },
+    onAddKeywordExample: (newExample) => {
+      dispatch(addKeywordExample(newExample));
+    },
+    onDeleteKeywordExample: (exampleIndex) => {
+      dispatch(deleteKeywordExample(exampleIndex));
+    },
+    onChangeExampleSynonyms: (exampleIndex, synonyms) => {
+      dispatch(changeExampleSynonyms(exampleIndex, synonyms));
+    },
+    onSuccess: (url) => {
+      dispatch(resetStatusFlag());
+      dispatch(push(url));
+    },
   };
 }
 

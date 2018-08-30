@@ -20,6 +20,8 @@ import {
     makeSelectAgent,
 } from '../App/selectors';
 
+import { push } from 'react-router-redux';
+
 export function* getKeywords(payload) {
     const agent = yield select(makeSelectAgent());
     const { api, filter, page } = payload;

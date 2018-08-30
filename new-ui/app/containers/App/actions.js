@@ -93,6 +93,21 @@ import {
   DELETE_ACTION_ERROR,
   DELETE_ACTION_SUCCESS,
   RESET_ACTION_DATA,
+
+  RESET_KEYWORD_DATA,
+  LOAD_KEYWORD,
+  LOAD_KEYWORD_ERROR,
+  LOAD_KEYWORD_SUCCESS,
+  CREATE_KEYWORD,
+  UPDATE_KEYWORD,
+  CHANGE_KEYWORD_DATA,
+  CREATE_KEYWORD_ERROR,
+  CREATE_KEYWORD_SUCCESS,
+  ADD_KEYWORD_EXAMPLE,
+  DELETE_KEYWORD_EXAMPLE,
+  CHANGE_EXAMPLE_SYNONYMS,
+  UPDATE_KEYWORD_ERROR,
+  UPDATE_KEYWORD_SUCCESS
 } from './constants';
 
 /*
@@ -713,5 +728,105 @@ export function deleteActionError(){
 export function deleteActionSuccess(){
   return {
     type: DELETE_ACTION_SUCCESS,
+  }
+}
+
+/* Keyword */
+export function resetKeywordData(){
+  return {
+    type: RESET_KEYWORD_DATA,
+  }
+}
+
+export function loadKeyword(id){
+  return {
+    type: LOAD_KEYWORD,
+    apiCall: true,
+    id,
+  }
+}
+
+export function loadKeywordError(error){
+  return {
+    type: LOAD_KEYWORD_ERROR,
+    error
+  }
+}
+
+export function loadKeywordSuccess(keyword){
+  return {
+    type: LOAD_KEYWORD_SUCCESS,
+    keyword
+  }
+}
+
+export function createKeyword(){
+  return {
+    type: CREATE_KEYWORD,
+    apiCall: true,
+  }
+}
+
+export function createKeywordError(error){
+  return {
+    type: CREATE_KEYWORD_ERROR,
+    error
+  }
+}
+
+export function createKeywordSuccess(keyword){
+  return {
+    type: CREATE_KEYWORD_SUCCESS,
+    keyword,
+  }
+}
+
+export function updateKeyword(){
+  return {
+    type: UPDATE_KEYWORD,
+    apiCall: true,
+  }
+}
+
+export function updateKeywordError(error){
+  return {
+    type: UPDATE_KEYWORD_ERROR,
+    error
+  }
+}
+
+export function updateKeywordSuccess(keyword){
+  return {
+    type: UPDATE_KEYWORD_SUCCESS,
+    keyword
+  }
+}
+
+export function changeKeywordData(payload){
+  return {
+    type: CHANGE_KEYWORD_DATA,
+    payload,
+  }
+}
+
+export function addKeywordExample(newExample) {
+  return {
+    type: ADD_KEYWORD_EXAMPLE,
+    newExample,
+  }
+}
+
+export function deleteKeywordExample(exampleIndex) {
+  return {
+    type: DELETE_KEYWORD_EXAMPLE,
+    exampleIndex,
+  }
+}
+
+export function changeExampleSynonyms(exampleIndex, synonyms) {
+  return {
+    type: CHANGE_EXAMPLE_SYNONYMS,
+    exampleIndex,
+    synonyms,
   }
 }

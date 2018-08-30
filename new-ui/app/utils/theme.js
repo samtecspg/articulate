@@ -216,6 +216,14 @@ export default createMuiTheme({
         "root": {
           "flex": "0 0 30px"
         }
+      },
+      "MuiChip": {
+        "root": {
+          "color": "#4e4e4e",
+          "border": "1px solid #a2a7b1",
+          "borderRadius": "5px",
+          "backgroundColor": "none",
+        }
       }
     },
     "palette": {
