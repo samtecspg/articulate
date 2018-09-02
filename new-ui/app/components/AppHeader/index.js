@@ -12,6 +12,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Hidden, Button }  from '@material-ui/core';
 
+import ConversationBar from '../ConversationBar';
+import { compose } from 'redux';
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -41,56 +44,108 @@ const styles = {
 };
 
 /* eslint-disable react/prefer-stateless-function */
-function AppHeader(props) {
-  const { classes, intl } = props;
-  return (
-    <Grid container className={classes.header} item xs={12}>
-      <Hidden only={['xs', 'sm']}>
-        <Grid item xl={2} lg={2} md={2}>
-          <Link to='/'>
-            <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-          </Link>
-        </Grid>
-        <Grid item xl={3} lg={3} md={3}/>
-        <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
-          <Link to='/' className={classes.link}>
-            <Button variant='raised'>
-              <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              <FormattedMessage {...messages.agentsButton} />
+export class AppHeader extends React.Component {
+
+  render(){
+    const { classes, intl, conversationBarOpen } = this.props;
+    return (
+      conversationBarOpen ?
+      <Grid container className={classes.header} item xs={12}>
+        <Hidden only={['xs', 'sm']}>
+          <ConversationBar
+            onToggleConversationBar={this.props.onToggleConversationBar}
+          />
+          <Grid item xl={2} lg={2} md={2}>
+            <Link to='/'>
+              <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+            </Link>
+          </Grid>
+          <Grid item xl={2} lg={2} md={2}/>
+          <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
+            <Link to='/' className={classes.link}>
+              <Button variant='raised'>
+                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                <FormattedMessage {...messages.agentsButton} />
+              </Button>
+            </Link>
+          </Grid>
+        </Hidden>
+        <Hidden only={['md', 'lg', 'xl']}>
+          <ConversationBar
+            onToggleConversationBar={this.props.onToggleConversationBar}
+          />
+          <Grid item sm={6} xs={6}>
+            <Link to='/' className={classes.link}>
+              <Button variant='raised'>
+                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                <FormattedMessage {...messages.agentsButton} />
+              </Button>
+            </Link>
+          </Grid>
+          <Grid item sm={6} xs={6}>
+            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='raised' className={classes.openChat}>
+              <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+              <FormattedMessage {...messages.openChatButton} />
             </Button>
-          </Link>
-        </Grid>
-        <Grid item xl={3} lg={3} md={3}/>
-        <Grid item xl={2} lg={2} md={2}>
-          <Button color='primary' variant='raised' className={classes.openChat}>
-            <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-            <FormattedMessage {...messages.openChatButton} />
-          </Button>
-        </Grid>
-      </Hidden>
-      <Hidden only={['md', 'lg', 'xl']}>
-        <Grid item sm={6} xs={6}>
-          <Link to='/' className={classes.link}>
-            <Button variant='raised'>
-              <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              <FormattedMessage {...messages.agentsButton} />
+          </Grid>
+        </Hidden>
+      </Grid>
+      :
+      <Grid container className={classes.header} item xs={12}>
+        <Hidden only={['xs', 'sm']}>
+          <Grid item xl={2} lg={2} md={2}>
+            <Link to='/'>
+              <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+            </Link>
+          </Grid>
+          <Grid item xl={3} lg={3} md={3}/>
+          <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
+            <Link to='/' className={classes.link}>
+              <Button variant='raised'>
+                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                <FormattedMessage {...messages.agentsButton} />
+              </Button>
+            </Link>
+          </Grid>
+          <Grid item xl={3} lg={3} md={3}/>
+          <Grid item xl={2} lg={2} md={2}>
+            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='raised' className={classes.openChat}>
+              <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+              <FormattedMessage {...messages.openChatButton} />
             </Button>
-          </Link>
-        </Grid>
-        <Grid item sm={6} xs={6}>
-          <Button color='primary' variant='raised' className={classes.openChat}>
-            <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-            <FormattedMessage {...messages.openChatButton} />
-          </Button>
-        </Grid>
-      </Hidden>
-    </Grid>
-  );
+          </Grid>
+        </Hidden>
+        <Hidden only={['md', 'lg', 'xl']}>
+          <Grid item sm={6} xs={6}>
+            <Link to='/' className={classes.link}>
+              <Button variant='raised'>
+                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                <FormattedMessage {...messages.agentsButton} />
+              </Button>
+            </Link>
+          </Grid>
+          <Grid item sm={6} xs={6}>
+            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='raised' className={classes.openChat}>
+              <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+              <FormattedMessage {...messages.openChatButton} />
+            </Button>
+          </Grid>
+        </Hidden>
+      </Grid>
+    );
+  }
 }
 
 AppHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
+  conversationBarOpen: PropTypes.bool,
+  onToggleConversationBar: PropTypes.func,
 };
 
-export default injectIntl(withStyles(styles)(AppHeader));
+const withDefinedStyles = withStyles(styles);
+
+export default compose(
+  withDefinedStyles,
+  injectIntl
+)(AppHeader);

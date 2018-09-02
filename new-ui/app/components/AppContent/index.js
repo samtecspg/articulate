@@ -15,36 +15,53 @@ const styles = {
     padding: 17,
     position: 'fixed',
     bottom: 0,
-    left: 0
+    left: 0,
   }
 };
 
-
 /* eslint-disable react/prefer-stateless-function */
-function AppContent(props) {
-  const { classes, intl } = props;
-  return (
-    <Grid container>
-      <Grid container item xs={12}>
-        <Grid item xl={2} lg={2} md={2} sm={1} xs={1}/>
-        <Grid item xl={8} lg={8} md={8} sm={10} xs={10}>
-          { props.children }
+export class AppContent extends React.Component {
+  render(){
+    const { classes, intl, conversationBarOpen } = this.props;
+    return (
+      conversationBarOpen ?
+        <Grid container>
+          <Grid container item xs={12}>
+            <Grid item xs={1}/>
+            <Grid item xl={8} lg={8} md={8} sm={10} xs={10}>
+              { this.props.children }
+            </Grid>
+          </Grid>
+          <Grid className={classes.settings} item xs={12}>
+            <Link id='settings' to='/settings'>
+              <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} />
+            </Link>
+          </Grid>
         </Grid>
-        <Grid item xl={2} lg={2} md={2} sm={1} xs={1}/>
-      </Grid>
-      <Grid className={classes.settings} item xs={12}>
-        <Link id='settings' to='/settings'>
-          <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} />
-        </Link>
-      </Grid>
-    </Grid>
-  );
+        :
+        <Grid container>
+          <Grid container item xs={12}>
+            <Grid item xl={2} lg={2} md={2} sm={1} xs={1}/>
+            <Grid item xl={8} lg={8} md={8} sm={10} xs={10}>
+              { this.props.children }
+            </Grid>
+            <Grid item xl={2} lg={2} md={2} sm={1} xs={1}/>
+          </Grid>
+          <Grid className={classes.settings} item xs={12}>
+            <Link id='settings' to='/settings'>
+              <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} />
+            </Link>
+          </Grid>
+        </Grid>
+    );
+  }
 }
 
 AppContent.propTypes = {
   children: PropTypes.node,
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
+  conversationBarOpen: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(AppContent));

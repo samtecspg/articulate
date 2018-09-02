@@ -4,6 +4,8 @@ import {
   MISSING_API,
   CHECK_API,
   RESET_STATUS_FLAGS,
+  TOGGLE_CONVERSATION_BAR,
+  CLOSE_NOTIFICATION,
 
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
@@ -30,6 +32,8 @@ import {
   CHANGE_AGENT_SETTINGS_DATA,
   ADD_AGENT_FALLBACK,
   DELETE_AGENT_FALLBACK,
+  TRAIN_AGENT,
+  TRAIN_AGENT_ERROR,
 
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
@@ -103,11 +107,54 @@ import {
   UPDATE_KEYWORD_SUCCESS,
   ADD_KEYWORD_EXAMPLE,
   DELETE_KEYWORD_EXAMPLE,
-  CHANGE_EXAMPLE_SYNONYMS
+  CHANGE_EXAMPLE_SYNONYMS,
 } from './constants';
 
 // The initial state of the App
 const initialState = Immutable({
+  conversationBarOpen: false,
+  notifications: [
+    'Notification: Action onTimeDeliver created successfully🎉',
+    'Notification: Congrats on your very first Agent Samson! 🤗 🥇',
+  ],
+  messages: [
+    {
+      message: 'Hello! I would like a pizza',
+      author: 'User',
+    },
+    {
+      message: 'Ok what toppings would you like on your pizza?',
+      author: 'Samson',
+      docId: 1,
+    },
+    {
+      message: 'I would like ham and mushrooms',
+      author: 'User',
+    },
+    {
+      message: 'Perfect, and what size?',
+      author: 'Samson',
+      docId: 2,
+    },
+    {
+      message: 'I want the big one',
+      author: 'User',
+    },
+    {
+      message: 'Awesome. Are you going to pick it up or you want it for delivery?',
+      author: 'Samson',
+      docId: 3,
+    },
+    {
+      message: 'Send it to my home at 123 st, Kentucky, 33126.',
+      author: 'User',
+    },
+    {
+      message: 'Perfect. You pizza will be there in 35 minutes.',
+      author: 'Samson',
+      docId: 4,
+    }
+  ],
   agents: [],
   currentAgent: {
       agentName: '',
@@ -260,6 +307,10 @@ function appReducer(state = initialState, action) {
       return state.set('loading', false)
         .set('success', false)
         .set('error', false);
+    case TOGGLE_CONVERSATION_BAR:
+      return state.set('conversationBarOpen', action.value);
+    case CLOSE_NOTIFICATION:
+      return state.update('notifications', notifications => notifications.filter((item, index) => index !== action.index));
 
     /* Agents */
     case LOAD_AGENTS:
@@ -413,6 +464,12 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false);
+    case TRAIN_AGENT:
+      return state.setIn(['agent', 'status'], 'Training')
+        .set('error', false)
+    case TRAIN_AGENT_ERROR:
+      return state.setIn(['agent', 'status'], 'Error')
+        .set('error', action.error);
 
     /* Sayings */
     case LOAD_SAYINGS:

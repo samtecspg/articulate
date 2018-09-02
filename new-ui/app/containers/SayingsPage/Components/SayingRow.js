@@ -29,6 +29,7 @@ const styles = {
             backgroundColor: '#4e4e4e',
             color: '#fff',
         },
+        cursor: 'pointer',
         margin: '0px 5px 0px 5px',
         fontSize: '12px',
         padding: '4px 8px 4px 10px',

@@ -35,11 +35,13 @@ import MissingAPIPage from 'containers/MissingAPIPage/Loadable';
 import {
   checkAPI,
   loadSettings,
+  toggleConversationBar,
 } from './actions';
 
 import {
   makeSelectMissingAPI,
   makeSelectLocation,
+  makeSelectConversationBarOpen,
 } from './selectors';
 
 class App extends React.Component {
@@ -66,10 +68,11 @@ class App extends React.Component {
   }
 
   render (){
+    const { conversationBarOpen, onToggleConversationBar } = this.props;
     return (
       <div>
-        <AppHeader/>
-        <AppContent>
+        <AppHeader onToggleConversationBar={onToggleConversationBar} conversationBarOpen={conversationBarOpen}/>
+        <AppContent conversationBarOpen={conversationBarOpen}>
           <Switch>
             <Route exact path='/' component={AgentsPage} />
             <Route exact path='/agent/:id' component={AgentPage} />
@@ -93,6 +96,7 @@ App.propTypes = {
   onMissingAPI: PropTypes.func,
   onCheckAPI: PropTypes.func,
   onLoadSettings: PropTypes.func,
+  onToggleConversationBar: PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -110,6 +114,9 @@ export function mapDispatchToProps(dispatch) {
     },
     onLoadSettings: () => {
       dispatch(loadSettings());
+    },
+    onToggleConversationBar: (value) => {
+      dispatch(toggleConversationBar(value));
     }
   };
 }
@@ -117,6 +124,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   missingAPI: makeSelectMissingAPI(),
   location: makeSelectLocation(),
+  conversationBarOpen: makeSelectConversationBarOpen(),
 });
 
 const withConnect = connect(

@@ -16,6 +16,8 @@ export const MISSING_API = 'app/App/MISSING_API';
 export const RESET_MISSING_API = 'app/App/RESET_MISSING_API';
 export const CHECK_API = 'app/App/CHECK_API';
 export const RESET_STATUS_FLAGS = 'app/App/RESET_STATUS_FLAGS';
+export const TOGGLE_CONVERSATION_BAR = 'app/App/TOGGLE_CONVERSATION_BAR';
+export const CLOSE_NOTIFICATION = 'app/App/CLOSE_NOTIFICATION';
 
 /*
  * Agents
@@ -48,6 +50,8 @@ export const UPDATE_AGENT_SUCCESS = 'app/AgentPage/UPDATE_AGENT_SUCCESS';
 export const DELETE_AGENT = 'app/AgentPage/DELETE_AGENT';
 export const DELETE_AGENT_ERROR = 'app/AgentPage/DELETE_AGENT_ERROR';
 export const DELETE_AGENT_SUCCESS = 'app/AgentPage/DELETE_AGENT_SUCCESS';
+export const TRAIN_AGENT = 'app/AgentPage/TRAIN_AGENT';
+export const TRAIN_AGENT_ERROR = 'app/AgentPage/TRAIN_AGENT_ERROR';
 
 /*
  * Sayings

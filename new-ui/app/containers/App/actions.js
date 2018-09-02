@@ -8,6 +8,8 @@ import {
   CHECK_API,
   RESET_MISSING_API,
   RESET_STATUS_FLAGS,
+  TOGGLE_CONVERSATION_BAR,
+  CLOSE_NOTIFICATION,
 
   RESET_AGENT_DATA,
   LOAD_AGENTS,
@@ -34,6 +36,8 @@ import {
   CHANGE_AGENT_SETTINGS_DATA,
   ADD_AGENT_FALLBACK,
   DELETE_AGENT_FALLBACK,
+  TRAIN_AGENT,
+  TRAIN_AGENT_ERROR,
 
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
@@ -107,7 +111,7 @@ import {
   DELETE_KEYWORD_EXAMPLE,
   CHANGE_EXAMPLE_SYNONYMS,
   UPDATE_KEYWORD_ERROR,
-  UPDATE_KEYWORD_SUCCESS
+  UPDATE_KEYWORD_SUCCESS,
 } from './constants';
 
 /*
@@ -130,6 +134,20 @@ export function resetMissingAPI() {
 export function resetStatusFlag() {
   return {
     type: RESET_STATUS_FLAGS,
+  }
+}
+
+export function toggleConversationBar(value) {
+  return {
+    type: TOGGLE_CONVERSATION_BAR,
+    value,
+  }
+}
+
+export function closeNotification(index) {
+  return {
+    type: CLOSE_NOTIFICATION,
+    index,
   }
 }
 
@@ -311,6 +329,21 @@ export function deleteAgentError(){
 export function deleteAgentSuccess(){
   return {
     type: DELETE_AGENT_SUCCESS,
+  }
+}
+
+
+export function trainAgent(){
+  return {
+    type: TRAIN_AGENT,
+    apiCall: true,
+  }
+}
+
+export function trainAgentError(error){
+  return {
+    type: TRAIN_AGENT_ERROR,
+    error
   }
 }
 

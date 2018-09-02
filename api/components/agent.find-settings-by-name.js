@@ -54,7 +54,8 @@ exports.getComponent = () => {
             })
             .then((setting) => {
 
-                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', setting, { scope }) });
+                const settingData = setting.string_value_setting ? setting.string_value_setting : setting;
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', settingData, { scope }) });
             })
             .catch((err) => {
 

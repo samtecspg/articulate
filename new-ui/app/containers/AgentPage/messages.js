@@ -75,6 +75,10 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentDataForm.requiredField',
     defaultMessage: '*Required'
   },
+  trainButton: {
+    id: 'app.containers.AgentPage.trainButton',
+    defaultMessage: 'Train'
+  },
   finishButton: {
     id: 'app.containers.AgentPage.finishButton',
     defaultMessage: 'Save'

@@ -16,6 +16,8 @@ import {
   deleteAgentSuccess,
   updateAgentSuccess,
   updateAgentError,
+  trainAgent,
+  trainAgentError,
 } from '../App/actions';
 
 import {
@@ -23,6 +25,7 @@ import {
   ADD_AGENT,
   UPDATE_AGENT,
   DELETE_AGENT,
+  TRAIN_AGENT,
 } from '../App/constants';
 
 import {
@@ -217,9 +220,20 @@ export function* deleteAgent(payload) {
   }
 }
 
+export function* getTrainAgent(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api } = payload;
+  try {
+    yield call(api.agent.getAgentIdTrain, { id: agent.id });
+  } catch (err) {
+      yield put(trainAgentError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(ADD_AGENT, postAgent);
   yield takeLatest(UPDATE_AGENT, putAgent);
   yield takeLatest(DELETE_AGENT, deleteAgent);
+  yield takeLatest(TRAIN_AGENT, getTrainAgent);
 };

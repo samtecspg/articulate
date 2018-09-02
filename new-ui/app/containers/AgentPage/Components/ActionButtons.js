@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
+import ta from 'time-ago'
+
 import PropTypes from 'prop-types';
-import { Grid, Button, Hidden, Icon } from '@material-ui/core';
+import { Grid, Button, Hidden, Icon, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
@@ -11,11 +13,20 @@ import messages from '../messages';
 const styles = {
     container: {
         display: 'inline',
+    },
+    actionContainer: {
+        display: 'inline',
         float: 'right'
+    },
+    trainContainer: {
+        display: 'inline',
+        marginLeft: '15px',
+        position: 'relative',
+        bottom: '5px'
     },
     buttonContainer: {
         position: 'relative',
-        bottom: '10px'
+        bottom: '5px'
     },
     icon: {
         padding: '0px 10px',
@@ -24,36 +35,73 @@ const styles = {
     link: {
         color: '#4e4e4e',
         textDecoration: 'none'
+    },
+    button: {
+        display: 'inline'
+    },
+    trainingStatusLabel: {
+        fontWeight: 300,
+        fontSize: '12px',
+        marginLeft: '15px',
+        display: 'inline'
     }
+}
+
+const getLastTrainingTime = (lastTraining) => {
+
+    if (lastTraining){
+        const timeAgo = ta.ago(lastTraining);
+        if (timeAgo.indexOf('second') !== -1 || timeAgo.indexOf(' ms ') !== -1){
+            return 'just now';
+        }
+        return timeAgo;
+    }
+    return 'never trained';
 }
 
 /* eslint-disable react/prefer-stateless-function */
 class ActionButtons extends React.Component {
 
     render(){
-        const { classes } = this.props;
+        const { classes, agentStatus, lastTraining } = this.props;
         return (
             <Grid className={classes.container}>
-                <Hidden only={['xl', 'lg', 'md']}>
-                    <Link className={`${classes.icon} ${classes.link}`} to='/'>
-                        <Icon>arrow_back</Icon>
-                    </Link>
-                    <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
-                        <Icon>save</Icon>
-                    </a>
-                </Hidden>
-                <Hidden only={['sm', 'xs']}>
-                    <Grid className={classes.buttonContainer}>
-                        <Button key='btnCancel'>
-                            <Link className={classes.link} to='/'>
-                                <FormattedMessage {...messages.cancelButton} />
-                            </Link>
-                        </Button>
-                        <Button onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
-                            <FormattedMessage {...messages.finishButton} />
-                        </Button>
-                    </Grid>
-                </Hidden>
+                <Grid item className={classes.trainContainer}>
+                    <Button className={classes.button} onClick={this.props.onTrain} key='btnFinish' variant='raised'>
+                        <FormattedMessage {...messages.trainButton} />
+                    </Button>
+                    <Typography className={classes.trainingStatusLabel}>
+                        {agentStatus === 'Training' ?
+                            'Updating agent…' :
+                            (agentStatus === 'Error' ?
+                                'Error on training' :
+                                agentStatus === 'Out of Date' ?
+                                    'Training update: out of date' :
+                                    `Training update: ${getLastTrainingTime(lastTraining)}`)}
+                    </Typography>
+                </Grid>
+                <Grid item className={classes.actionContainer}>
+                    <Hidden only={['xl', 'lg', 'md']}>
+                        <Link className={`${classes.icon} ${classes.link}`} to='/'>
+                            <Icon>arrow_back</Icon>
+                        </Link>
+                        <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
+                            <Icon>save</Icon>
+                        </a>
+                    </Hidden>
+                    <Hidden only={['sm', 'xs']}>
+                        <Grid className={classes.buttonContainer}>
+                            <Button key='btnCancel'>
+                                <Link className={classes.link} to='/'>
+                                    <FormattedMessage {...messages.cancelButton} />
+                                </Link>
+                            </Button>
+                            <Button onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
+                                <FormattedMessage {...messages.finishButton} />
+                            </Button>
+                        </Grid>
+                    </Hidden>
+                </Grid>
             </Grid>
         );
     }
@@ -61,7 +109,10 @@ class ActionButtons extends React.Component {
 
 ActionButtons.propTypes = {
     classes: PropTypes.object.isRequired,
-    onFinishAction: PropTypes.func.isRequired
+    onFinishAction: PropTypes.func.isRequired,
+    onTrain: PropTypes.func,
+    agentStatus: PropTypes.string,
+    lastTraining: PropTypes.string,
 };
 
 export default withStyles(styles)(ActionButtons);

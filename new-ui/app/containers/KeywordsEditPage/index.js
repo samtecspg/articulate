@@ -72,7 +72,7 @@ export class KeywordsEditPage extends React.Component {
           inlineElement={
             <ActionButtons
               agentId={this.props.agent.id}
-              onFinishAction={this.state.isNewKeyword ? this.props.onCreateKeyword.bind(null, this.props.agent.id) : this.props.onUpdateKeyword.bind(null, this.props.agent.id)}
+              onFinishAction={this.state.isNewKeyword ? this.props.onCreateKeyword : this.props.onUpdateKeyword}
             />
           }
           backButton={messages.backButton}
@@ -128,10 +128,10 @@ function mapDispatchToProps(dispatch) {
     onLoadKeyword: (id) => {
       dispatch(loadKeyword(id));
     },
-    onCreateKeyword: (agentId) => {
+    onCreateKeyword: () => {
       dispatch(createKeyword());
     },
-    onUpdateKeyword: (agentId) => {
+    onUpdateKeyword: () => {
       dispatch(updateKeyword());
     },
     onChangeKeywordData: (field, value) => {

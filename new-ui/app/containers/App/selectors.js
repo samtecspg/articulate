@@ -39,6 +39,27 @@ const makeSelectSuccess = () => createSelector(
   }
 );
 
+const makeSelectConversationBarOpen = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.conversationBarOpen;
+  }
+);
+
+const makeSelectNotifications = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.notifications;
+  }
+);
+
+const makeSelectMessages = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.messages;
+  }
+);
+
 /* Agents */
 const makeSelectAgents = () => createSelector(
   selectGlobalDomain,
@@ -188,6 +209,9 @@ export {
   makeSelectLoading,
   makeSelectError,
   makeSelectSuccess,
+  makeSelectConversationBarOpen,
+  makeSelectNotifications,
+  makeSelectMessages,
 
   makeSelectAgents,
 

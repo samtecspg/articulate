@@ -45,6 +45,7 @@ import {
   addAgent,
   resetStatusFlag,
   updateAgent,
+  trainAgent,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -93,6 +94,9 @@ export class AgentPage extends React.PureComponent {
           inlineElement={
             <ActionButtons
               onFinishAction={this.state.isNewAgent ? this.props.onAddNewAgent : this.props.onEditAgent}
+              onTrain={this.props.onTrain}
+              agentStatus={this.props.agent.status}
+              lastTraining={this.props.agent.lastTraining}
             />
           }
         />
@@ -146,6 +150,7 @@ AgentPage.propTypes = {
   onAddNewAgent: PropTypes.func,
   onEditAgent: PropTypes.func,
   onSuccess: PropTypes.func,
+  onTrain: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -202,6 +207,9 @@ function mapDispatchToProps(dispatch) {
     },
     onEditAgent: () => {
       dispatch(updateAgent());
+    },
+    onTrain: () => {
+      dispatch(trainAgent());
     }
   };
 }
