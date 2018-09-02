@@ -130,6 +130,10 @@ module.exports = (request, reply) => {
                 if (!processedPostFormatJson.textResponse) {
                     processedPostFormatJson.textResponse = data.textResponse;
                 }
+
+                if (data.isActionComplete) {
+                    processedPostFormatJson.isActionComplete = data.isActionComplete
+                }
                 return reply(processedPostFormatJson);
             }
             catch (error) {
@@ -137,14 +141,14 @@ module.exports = (request, reply) => {
                 console.log(errorMessage, error);
                 return reply({
                     textResponse: data.textResponse,
-                    postFormating: errorMessage + error
+                    postFormatingError: errorMessage + error
                 });
             }
 
         }
 
         else {
-            return reply({ textResponse: data.textResponse });
+            return reply(data);
         }
 
 

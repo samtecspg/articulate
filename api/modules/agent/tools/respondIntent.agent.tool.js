@@ -20,9 +20,9 @@ module.exports = (conversationStateObject, callback) => {
             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slot.slotName] = conversationStateObject.currentContext.slots[slot.slotName] ? conversationStateObject.currentContext.slots[slot.slotName] : '';
             return slot.isRequired;
         });
-        //Create an array of slot names fo slots that are lists
+        //Create an array of slot names for slots that are lists
         const isListSlots = _.map(_.filter(conversationStateObject.scenario.slots, (slot) => {
-
+            
             return slot.isList;
         }), 'slotName');
         //Extract the recognized entities from the text parse
@@ -68,7 +68,7 @@ module.exports = (conversationStateObject, callback) => {
                             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName].value.push(entityValue.value);
                             conversationStateObject.context[conversationStateObject.context.length - 1].slots[slotName].original.push(entityValue.original);
                         }
-                        //If the slot ias a list, and it exists in the context but it wasn't an array
+                        //If the slot is a list, and it exists in the context but it wasn't an array
                         else {
                             //Get the original and parsed value of the entity
                             const entityValue = GetEntityValue(recognizedEntity, conversationStateObject.text);
@@ -134,17 +134,6 @@ module.exports = (conversationStateObject, callback) => {
         }
     }
     else {
-        conversationStateObject.slots = {};
-        const recognizedEntities = conversationStateObject.rasaResult.entities;
-        _.map(recognizedEntities, (recognizedEntity) => {
-
-            if (recognizedEntity.entity.indexOf('sys.spacy_') !== -1 || recognizedEntity.entity.indexOf('sys.duckling_') !== -1) {
-                conversationStateObject.context[conversationStateObject.context.length - 1].slots = conversationStateObject.context[conversationStateObject.context.length - 1].slots ? conversationStateObject.context[conversationStateObject.context.length - 1].slots : {};
-                conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys = conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys ? conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys : {};
-                conversationStateObject.context[conversationStateObject.context.length - 1].slots.sys[recognizedEntity.entity.replace('sys.', '')] = GetEntityValue(recognizedEntity, conversationStateObject.text);
-            }
-            return recognizedEntity.entity;
-        });
         RespondFulfilledIntent(conversationStateObject, (err, response) => {
 
             if (err) {
