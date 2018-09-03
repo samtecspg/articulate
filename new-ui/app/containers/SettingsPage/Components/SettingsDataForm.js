@@ -11,8 +11,8 @@ import {
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
-import RasaSettings from 'Components/RasaSettings';
-import DucklingSettings from 'Components/DucklingSettings';
+import RasaSettings from 'components/RasaSettings';
+import DucklingSettings from 'components/DucklingSettings';
 import GeneralSettings from './GeneralSettings';
 
 import messages from "../messages";

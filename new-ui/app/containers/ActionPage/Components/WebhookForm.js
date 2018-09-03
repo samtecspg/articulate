@@ -6,7 +6,7 @@ import { Grid, Typography, Button, Modal, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 
-import WebhookSettings from 'Components/WebhookSettings';
+import WebhookSettings from 'components/WebhookSettings';
 
 import messages from "../messages";
 

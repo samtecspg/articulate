@@ -11,10 +11,10 @@ import {
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
-import WebhookSettings from 'Components/WebhookSettings';
-import ResponseSettings from 'Components/ResponseSettings';
-import RasaSettings from 'Components/RasaSettings';
-import DucklingSettings from 'Components/DucklingSettings';
+import WebhookSettings from 'components/WebhookSettings';
+import ResponseSettings from 'components/ResponseSettings';
+import RasaSettings from 'components/RasaSettings';
+import DucklingSettings from 'components/DucklingSettings';
 import TrainingSettings from './TrainingSettings';
 
 import messages from "../messages";

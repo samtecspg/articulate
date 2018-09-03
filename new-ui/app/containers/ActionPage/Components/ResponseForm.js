@@ -6,7 +6,7 @@ import { Grid, Typography, Button, Modal, TextField, Table, TableBody, TableRow,
 import { withStyles } from "@material-ui/core/styles";
 
 import SingleHighlightedSaying from './SingleHighlightedSaying';
-import ResponseSettings from 'Components/ResponseSettings';
+import ResponseSettings from 'components/ResponseSettings';
 
 import messages from "../messages";
 
