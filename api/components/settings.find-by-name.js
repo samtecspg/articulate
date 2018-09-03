@@ -54,11 +54,12 @@ exports.getComponent = () => {
             if (!setting) {
                 err = new Error('This setting doesn\'t exists');
                 err.key = name;
-                return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.internal(err), { scope }) });
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', Boom.notFound(err), { scope }) });
+            } else {
+                let unflattenData = Flat.unflatten(setting);
+                unflattenData = unflattenData.string_value_setting ? unflattenData.string_value_setting : unflattenData;
+                return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', unflattenData, { scope }) });
             }
-            let unflattenData = Flat.unflatten(setting);
-            unflattenData = unflattenData.string_value_setting ? unflattenData.string_value_setting : unflattenData;
-            return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', unflattenData, { scope }) });
         });
     });
 };

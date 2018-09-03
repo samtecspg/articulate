@@ -7,7 +7,7 @@ const HapiSwagger = require('hapi-swagger');
 const HapiSwaggerUI = require('hapi-swaggered-ui');
 const FlowLoader = require('./plugins/flow-loader.plugin');
 const Redis = require('./plugins/redis.plugin');
-const InitDefaultSettings = require('./plugins/init-defualt-settings.plugin');
+const InitDefaultSettings = require('./plugins/init-default-settings.plugin');
 const Pack = require('./package');
 
 Server((err, server) => {
