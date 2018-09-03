@@ -88,6 +88,9 @@ module.exports = (request, reply) => {
 
                                                 Async.map(exportedActionsForDomain, (exportedActionForDomain, callbackGetActionWebhook) => {
 
+                                                    if (!exportedActionForDomain.useWebhook){
+                                                        return callbackGetActionWebhook(null, exportedActionForDomain);
+                                                    }
                                                     server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action/${exportedActionForDomain.id}/webhook`, (res) => {
 
                                                         if (res.statusCode !== 200) {
@@ -118,6 +121,9 @@ module.exports = (request, reply) => {
 
                                                 Async.map(exportedActionsForDomain, (exportedActionForDomain, callbackGetActionPostFormat) => {
 
+                                                    if (!exportedActionForDomain.usePostFormat){
+                                                        return callbackGetActionPostFormat(null, exportedActionForDomain);
+                                                    }
                                                     server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action/${exportedActionForDomain.id}/postFormat`, (res) => {
 
                                                         if (res.statusCode !== 200) {
@@ -216,6 +222,9 @@ module.exports = (request, reply) => {
                 },
                 webhook: (callbackGetWebhook) => {
 
+                    if (!exportedAgent.useWebhook){
+                        return callbackGetWebhook(null, exportedAgent);
+                    }
                     server.inject(`/agent/${agentId}/webhook`, (res) => {
 
                         if (res.statusCode !== 200) {
@@ -236,6 +245,9 @@ module.exports = (request, reply) => {
                 },
                 postFormat: (callbackGetPostFormat) => {
 
+                    if (!exportedAgent.usePostFormat){
+                        return callbackGetPostFormat(null, exportedAgent);
+                    }
                     server.inject(`/agent/${agentId}/postFormat`, (res) => {
 
                         if (res.statusCode !== 200) {

@@ -60,6 +60,13 @@ const makeSelectMessages = () => createSelector(
   }
 );
 
+const makeSelectWaitingResponse = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.waitingResponse;
+  }
+);
+
 /* Agents */
 const makeSelectAgents = () => createSelector(
   selectGlobalDomain,
@@ -212,6 +219,7 @@ export {
   makeSelectConversationBarOpen,
   makeSelectNotifications,
   makeSelectMessages,
+  makeSelectWaitingResponse,
 
   makeSelectAgents,
 

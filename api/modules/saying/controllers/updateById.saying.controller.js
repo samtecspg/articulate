@@ -51,7 +51,7 @@ const updateDataFunction = (redis, server, sayingId, currentSaying, updateData, 
 
             Async.eachSeries(oldKeywords, (keyword, nextKeyword) => {
 
-                redis.zrem(`keywordSayings:${keyword.keywordId}`, currentSaying.sayingName, (err) => {
+                redis.zrem(`keywordSayings:${keyword.keywordId}`, currentSaying.id, (err) => {
 
                     if (err){
                         const error = Boom.badImplementation( `An error occurred removing the saying ${sayingId} from the sayings list of the keyword ${keyword.keywordId}`);

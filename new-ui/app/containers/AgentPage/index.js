@@ -51,8 +51,14 @@ import {
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
 
-  componentDidMount() {
-    if (this.state.isNewAgent){
+  componentDidUpdate() {
+    if (this.props.success) {
+      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
+    }
+  }
+
+  componentWillUpdate() {
+    if (this.state.isNewAgent && !this.state.settingsLoaded){
       this.props.onChangeAgentData('language', this.props.settings.defaultAgentLanguage);
       this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
       this.props.onChangeAgentData('fallbackResponses', this.props.settings.defaultAgentFallbackResponses);
@@ -63,12 +69,9 @@ export class AgentPage extends React.PureComponent {
       this.props.onChangeAgentSettingsData('spacyPretrainedEntities', this.props.settings.spacyPretrainedEntities);
       this.props.onChangeAgentSettingsData('ducklingURL', this.props.settings.ducklingURL);
       this.props.onChangeAgentSettingsData('ducklingDimension', this.props.settings.ducklingDimension);
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.props.success) {
-      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
+      this.setState({
+        settingsLoaded: true,
+      });
     }
   }
 
@@ -82,7 +85,8 @@ export class AgentPage extends React.PureComponent {
   }
 
   state = {
-    isNewAgent: this.props.match.params.id === 'create'
+    isNewAgent: this.props.match.params.id === 'create',
+    settingsLoaded: false,
   };
 
   render() {

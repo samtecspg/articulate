@@ -28,14 +28,23 @@ module.exports = (conversationStateObject, callback) => {
         CallWebhook(webhookToUse, conversationStateObject, (webhookResponse) => {
 
             if (webhookResponse.textResponse){
-                return callback(null, { textResponse: webhookResponse.textResponse });
+                return callback(null, {
+                    textResponse: webhookResponse.textResponse,
+                    docId: conversationStateObject.docId
+                });
             }
             const textResponse = getTextResponse(conversationStateObject, webhookResponse);
-            return callback(null, Object.assign( { webhookResponse }, { textResponse }));
+            return callback(null, Object.assign( { webhookResponse }, {
+                textResponse,
+                docId: conversationStateObject.docId
+            }));
         });
     }
     else {
         const textResponse = getTextResponse(conversationStateObject);
-        return callback(null, { textResponse });
+        return callback(null, {
+            textResponse,
+            docId: conversationStateObject.docId
+        });
     }
 };

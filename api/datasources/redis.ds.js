@@ -100,7 +100,6 @@ const findAllByIdInList = ({ redis, type, subType = type, id, start = 0, limit =
             if (err) {
                 return reject(err);
             }
-            listOfIds = _.chunk(listOfIds, 2);
 
             Async.map(
                 listOfIds,

@@ -52,7 +52,6 @@ export class KeywordsEditPage extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(this.props.success);
     if (this.props.success) {
       this.props.onSuccess(`/agent/${this.props.agent.id}/keywords`);
     }

@@ -6,6 +6,10 @@ import {
   RESET_STATUS_FLAGS,
   TOGGLE_CONVERSATION_BAR,
   CLOSE_NOTIFICATION,
+  SEND_MESSAGE,
+  RESPOND_MESSAGE,
+  RESET_SESSION,
+  RESET_SESSION_SUCCESS,
 
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
@@ -113,48 +117,12 @@ import {
 // The initial state of the App
 const initialState = Immutable({
   conversationBarOpen: false,
+  waitingResponse: false,
   notifications: [
     'Notification: Action onTimeDeliver created successfully🎉',
     'Notification: Congrats on your very first Agent Samson! 🤗 🥇',
   ],
-  messages: [
-    {
-      message: 'Hello! I would like a pizza',
-      author: 'User',
-    },
-    {
-      message: 'Ok what toppings would you like on your pizza?',
-      author: 'Samson',
-      docId: 1,
-    },
-    {
-      message: 'I would like ham and mushrooms',
-      author: 'User',
-    },
-    {
-      message: 'Perfect, and what size?',
-      author: 'Samson',
-      docId: 2,
-    },
-    {
-      message: 'I want the big one',
-      author: 'User',
-    },
-    {
-      message: 'Awesome. Are you going to pick it up or you want it for delivery?',
-      author: 'Samson',
-      docId: 3,
-    },
-    {
-      message: 'Send it to my home at 123 st, Kentucky, 33126.',
-      author: 'User',
-    },
-    {
-      message: 'Perfect. You pizza will be there in 35 minutes.',
-      author: 'Samson',
-      docId: 4,
-    }
-  ],
+  messages: [],
   agents: [],
   currentAgent: {
       agentName: '',
@@ -311,6 +279,15 @@ function appReducer(state = initialState, action) {
       return state.set('conversationBarOpen', action.value);
     case CLOSE_NOTIFICATION:
       return state.update('notifications', notifications => notifications.filter((item, index) => index !== action.index));
+    case SEND_MESSAGE:
+      return state.update('messages', messages => messages.concat(action.message))
+        .set('waitingResponse', true);
+    case RESPOND_MESSAGE:
+      return state.update('messages', messages => messages.concat(action.message))
+        .set('waitingResponse', false);
+    case RESET_SESSION_SUCCESS:
+      return state.set('messages', [])
+        .set('notifications', []);
 
     /* Agents */
     case LOAD_AGENTS:

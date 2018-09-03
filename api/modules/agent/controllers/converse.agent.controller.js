@@ -27,7 +27,7 @@ module.exports = (request, reply) => {
                             const error = Boom.create(res.statusCode, res.result.message);
                             return cb(error, null);
                         }
-                        return cb(null, res.result.result.results);
+                        return cb(null, res.result.result.results, res.result.id);
                     });
                 },
                 agent: (cb) => {
@@ -67,6 +67,8 @@ module.exports = (request, reply) => {
         (conversationStateObject, callback) => {
 
             const timezoneToUse = timezone ? timezone : (conversationStateObject.agent.timezone ? conversationStateObject.agent.timezone : 'UTC');
+            conversationStateObject.docId = conversationStateObject.parse[1];
+            conversationStateObject.parse = conversationStateObject.parse[0];
             conversationStateObject.text = text;
             conversationStateObject.sessionId = sessionId;
             conversationStateObject.timezone = timezoneToUse;
@@ -111,6 +113,7 @@ module.exports = (request, reply) => {
                 const compiledPostFormat = Handlebars.compile(postFormatPayloadToUse);
                 const processedPostFormat = compiledPostFormat(Object.assign(conversationStateObject, { textResponse: data.textResponse }));
                 const processedPostFormatJson = JSON.parse(processedPostFormat);
+                processedPostFormatJson.docId = data.docId;
                 if (!processedPostFormatJson.textResponse) {
                     processedPostFormatJson.textResponse = data.textResponse;
                 }
@@ -119,16 +122,15 @@ module.exports = (request, reply) => {
             catch (error) {
                 const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
                 console.log(errorMessage, error);
-                return reply({
-                    textResponse: data.textResponse,
+                return reply(Object.assign({
                     postFormating: errorMessage + error
-                });
+                }, data));
             }
 
         }
 
         else {
-            return reply({ textResponse: data.textResponse });
+            return reply(data);
         }
 
     });

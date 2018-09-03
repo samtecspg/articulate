@@ -41,10 +41,8 @@ const getRasaParse = (textToParse, trainedDomain, agentName, rasa, ERPipeline, c
             };
         }
         else {
-            if (result.intent){
-                result.action = result.intent;
-                delete result.intent;
-            }
+            result.action = result.intent;
+            delete result.intent;
         }
         if (result.intent_ranking){
             result.action_ranking = result.intent_ranking;

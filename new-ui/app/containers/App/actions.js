@@ -10,6 +10,10 @@ import {
   RESET_STATUS_FLAGS,
   TOGGLE_CONVERSATION_BAR,
   CLOSE_NOTIFICATION,
+  SEND_MESSAGE,
+  RESPOND_MESSAGE,
+  RESET_SESSION,
+  RESET_SESSION_SUCCESS,
 
   RESET_AGENT_DATA,
   LOAD_AGENTS,
@@ -150,6 +154,35 @@ export function closeNotification(index) {
     index,
   }
 }
+
+export function sendMessage(message) {
+  return {
+    type: SEND_MESSAGE,
+    apiCall: true,
+    message,
+  }
+}
+
+export function respondMessage(message) {
+  return {
+    type: RESPOND_MESSAGE,
+    message,
+  }
+}
+
+export function resetSession() {
+  return {
+    type: RESET_SESSION,
+    apiCall: true,
+  }
+}
+
+export function resetSessionSuccess() {
+  return {
+    type: RESET_SESSION_SUCCESS,
+  }
+}
+
 
 /*
 * Agents

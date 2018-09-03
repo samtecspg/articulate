@@ -18,8 +18,10 @@ import rightArrowIcon from '../../images/right-arrow-icon.svg';
 import messages from './messages';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { makeSelectNotifications, makeSelectMessages } from '../../containers/App/selectors';
-import { closeNotification } from '../../containers/App/actions';
+import { makeSelectNotifications, makeSelectMessages, makeSelectAgent, makeSelectWaitingResponse } from '../../containers/App/selectors';
+import { closeNotification, sendMessage, resetSession } from '../../containers/App/actions';
+
+import LoadingWave from '../LoadingWave';
 
 const styles = {
     container: {
@@ -31,7 +33,6 @@ const styles = {
       right: 0,
       backgroundColor: '#fff',
       overflowX: 'hidden',
-      paddingTop: '20px',
       borderLeft: '1px solid #c5cbd8'
     },
     clearAll: {
@@ -61,6 +62,7 @@ const styles = {
       borderRadius: '3px 0px 0px 3px',
       position: 'fixed',
       right: '300px',
+      top: '20px',
       zIndex: 2,
       backgroundColor: '#00c582',
       boxShadow: '0 1px 4px 1px #00bd6f'
@@ -147,12 +149,12 @@ const styles = {
       borderRadius: '3px',
       padding: '8px',
       marginRight: '60px',
-      marginLeft: '25px',
+      marginLeft: '15px',
       marginBottom: '16px',
     },
     agentName: {
       display: 'block',
-      marginLeft: '25px',
+      marginLeft: '15px',
       fontWeight: '300',
       fontSize: '10px',
       color: '#a2a7b1',
@@ -168,10 +170,12 @@ const styles = {
       marginTop: '10px',
     },
     contentContainer: {
+      width: '317px',
       position: 'fixed',
       top: '50px',
       bottom: '80px',
       overflowY: 'scroll',
+      overflowX: 'hidden',
     }
 }
 
@@ -180,13 +184,26 @@ export class ConversationBar extends React.PureComponent {
 
   state = {
     userMessage: '',
+    repeatPreviousMessage: null,
   }
+
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView(true);
+  };
 
   render() {
     const { classes, intl } = this.props;
     return (
       <Grid className={classes.container}>
-        <Grid container className={classes.clearAll}>
+        <Grid onClick={() => this.props.onResetSession()} container className={classes.clearAll}>
           <Typography className={classes.clearAllLabel}>
             Clear All
           </Typography>
@@ -215,57 +232,87 @@ export class ConversationBar extends React.PureComponent {
             }
           </Grid>
           <Grid className={classes.messagesContainer}>
-          {
-            this.props.messages.map((message, index) => {
-              if (message.author === 'User'){
-                return (
-                  <Grid key={`message_${index}`} item className={classes.userMessageContainer}>
-                    <Typography className={classes.userMessage}>
+            {
+              this.props.messages.map((message, index) => {
+                if (message.author === 'User'){
+                  return (
+                    <Grid key={`message_${index}`} item className={classes.userMessageContainer}>
+                      <Typography className={classes.userMessage}>
+                          {message.message}
+                      </Typography>
+                    </Grid>
+                  );
+                }
+                else{
+                  return (
+                    <Grid key={`message_${index}`}>
+                      <Typography className={classes.agentName}>
+                        {message.author}
+                      </Typography>
+                      <Typography className={classes.agentMessage}>
                         {message.message}
-                    </Typography>
-                  </Grid>
-                );
-              }
-              else{
-                return (
-                  <Grid key={`message_${index}`}>
-                    <Typography className={classes.agentName}>
-                      {message.author}
-                    </Typography>
-                    <Typography className={classes.agentMessage}>
-                      {message.message}
-                      <span onClick={() => {window.open(`${process.env.API_URL}\\doc\\${message.docId}`, "_blank")}} className={classes.messageSource}>
-                        {'</> '}<span className={classes.messageSourceLink}>See Source</span>
-                      </span>
-                    </Typography>
-                  </Grid>
-                );
-              }
-            })
-          }
+                        {message.docId !== null ?
+                        <span onClick={() => {window.open(`${process.env.API_URL}\\doc\\${message.docId}`, "_blank")}} className={classes.messageSource}>
+                          {'</> '}<span className={classes.messageSourceLink}>See Source</span>
+                        </span>
+                        : null}
+                      </Typography>
+                    </Grid>
+                  );
+                }
+              })
+            }
+            {
+              this.props.waitingResponse ?
+              <LoadingWave agentName={this.props.agent.agentName} /> :
+                null
+            }
+            <div
+              style={{ float: 'left', clear: 'both' }}
+              ref={(el) => {
+                this.messagesEnd = el;
+              }}
+            >
+            </div>
           </Grid>
         </Grid>
         <Grid container className={classes.inputContainer}>
-            <Grid item xs={12}>
-              <TextField
-                id='userMessage'
-                value={this.state.userMessage}
-                placeholder={intl.formatMessage(messages.userMessagePlaceholder)}
-                onChange={(evt) => { this.setState({ userMessage: evt.target.value }) }}
-                onKeyPress={(evt) => {
-                  if(evt.key === 'Enter'){
-                    evt.preventDefault();
-                    this.props.onSendMessage(evt.target.value);
-                    this.setState({
-                        userMessage: '',
-                    })
+          <Grid item xs={12}>
+            <TextField
+              id='userMessage'
+              value={this.state.userMessage}
+              placeholder={intl.formatMessage(messages.userMessagePlaceholder)}
+              onChange={(evt) => { this.setState({ userMessage: evt.target.value }) }}
+              onKeyDown={(evt) => {
+                if(evt.key === 'Enter' && evt.target.value !== ''){
+                  evt.preventDefault();
+                  this.props.onSendMessage(evt.target.value);
+                  this.setState({
+                      userMessage: '',
+                  })
+                }
+                if (evt.key === 'ArrowUp') {
+                  if (this.props.messages.length > 0) {
+                    let messages = this.props.messages;
+                    let len = this.state.repeatPreviousMessage || messages.length;
+                    let message = null;
+
+                    while (len-- && !message) {
+                      if (messages[len].author === "User") {
+                        this.state.repeatPreviousMessage = len
+                        message = messages[len].message;
+                      }
+                    }
+
+                    evt.target.value = message;
                   }
-                }}
-                margin='normal'
-                fullWidth
-              />
-            </Grid>
+                }
+              }}
+              margin='normal'
+              fullWidth
+            />
           </Grid>
+        </Grid>
       </Grid>
     );
   }
@@ -279,17 +326,25 @@ ConversationBar.propTypes = {
 }; 
 
 const mapStateToProps = createStructuredSelector({
+  agent: makeSelectAgent(),
   notifications: makeSelectNotifications(),
   messages: makeSelectMessages(),
+  waitingResponse: makeSelectWaitingResponse(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    onResetSession: () => {
+      dispatch(resetSession());
+    },
     onCloseNotification: (index) => {
       dispatch(closeNotification(index));
     },
     onSendMessage: (message) => {
-      console.log('message: ', message);
+      dispatch(sendMessage({
+        author: 'User',
+        message,
+      }));
     },
   };
 }
