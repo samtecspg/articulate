@@ -19,7 +19,7 @@ const findById = ({ redis, type, id, unflatten = true, cast = true }) => {
                 return reject(err);
             }
             if (!result) {
-                return reject(errorHandlerNotFound({ type, id }));
+                return resolve(result);
             }
             result = unflatten ? Flat.unflatten(result) : result;
             result = cast ? Cast(result, type) : result;

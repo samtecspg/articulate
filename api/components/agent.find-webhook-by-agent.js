@@ -46,6 +46,10 @@ exports.getComponent = () => {
             })
             .then((webhook) => {
 
+                if (!webhook) {
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound(`Webhook [${id}] not found`), { scope }) });
+                }
+
                 webhook.agent = agentName;
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', webhook, { scope }) });
             })

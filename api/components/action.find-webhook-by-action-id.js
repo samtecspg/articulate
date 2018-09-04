@@ -50,6 +50,10 @@ exports.getComponent = () => {
             })
             .then((actionWebhook) => {
 
+                if (!actionWebhook) {
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound(`Webhook [${id}] not found`), { scope }) });
+                }
+
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', actionWebhook, { scope }) });
             })
             .catch((err) => {

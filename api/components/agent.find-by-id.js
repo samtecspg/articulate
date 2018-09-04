@@ -54,6 +54,10 @@ exports.getComponent = () => {
             })
             .then((agent) => {
 
+                if (!agent) {
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound(`Agent [${id}] not found`), { scope }) });
+                }
+
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', agent, { scope }) });
             })
             .catch((err) => {

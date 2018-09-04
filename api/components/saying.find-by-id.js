@@ -50,6 +50,10 @@ exports.getComponent = () => {
             })
             .then((saying) => {
 
+                if (!saying) {
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound(`Saying [${id}] not found`), { scope }) });
+                }
+
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', saying, { scope }) });
             })
             .catch((err) => {

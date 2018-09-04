@@ -49,6 +49,10 @@ exports.getComponent = () => {
             })
             .then((document) => {
 
+                if (!document) {
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound(`Document [${id}] not found`), { scope }) });
+                }
+
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', document, { scope }) });
             })
             .catch((err) => {

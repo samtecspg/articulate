@@ -51,6 +51,10 @@ exports.getComponent = () => {
             })
             .then((actionPostFormat) => {
 
+                if (!actionPostFormat) {
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound(`Action Post Format [${id}] not found`), { scope }) });
+                }
+
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', actionPostFormat, { scope }) });
             })
             .catch((err) => {

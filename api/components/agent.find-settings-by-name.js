@@ -54,6 +54,10 @@ exports.getComponent = () => {
             })
             .then((setting) => {
 
+                if (!setting) {
+                    return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound(`Setting [${id}] not found`), { scope }) });
+                }
+
                 const settingData = setting.string_value_setting ? setting.string_value_setting : setting;
                 return output.sendDone({ [PORT_OUT]: new NoFlo.IP('data', settingData, { scope }) });
             })
