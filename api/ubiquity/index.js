@@ -65,14 +65,17 @@ exports.register = function (server, options, next) {
     handler: function (request, reply) {
 
       let response = ubiquity[request.payload.service].init(server, request);
-
-      redis.hset('ubiquity', 'channel:' + response.id, JSON.stringify(response), function( err, res) {
-        if (err) {
-          Boom.badImplementation('Failed to create channel.', err)
-        } else {
-          reply(response);
-        } 
-      });
+      if (response.isBoom) {
+        reply(response)
+      } else {
+        redis.hset('ubiquity', 'channel:' + response.id, JSON.stringify(response), function( err, res) {
+          if (err) {
+            Boom.badImplementation('Failed to create channel.', err)
+          } else {
+            reply(response);
+          } 
+        });
+      }
     },
     config: {
       validate: {

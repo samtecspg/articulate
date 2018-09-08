@@ -1,8 +1,9 @@
 'use strict'
 const shortid = require('shortid');
 const Crypto = require('crypto');
-const Wreck = require('wreck');
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
+const Twilio = require('twilio');
+
+const validateInit = require('./methods/validateInit');
 
 function hash( message ) {
   var secret = {
@@ -21,16 +22,29 @@ module.exports = {
   },
   init: function(server, request) {
 
-    let response = {
-      id: shortid.generate(),
-      agent: request.payload.agent,
-      service: request.payload.service,
-      status: 'Created',
-      dateCreated: new Date(),
-      dateModified: new Date()
-    }
+    if (request) {
+      const requestValidation = validateInit(request.payload);
+      if (requestValidation.error === null) {
 
-    return response
+        let response = {
+          id: shortid.generate(),
+          agent: request.payload.agent,
+          service: request.payload.service,
+          authToken: request.payload.details.authToken,
+          status: 'Created',
+          dateCreated: new Date(),
+          dateModified: new Date()
+        }
+
+        if (requestValidation.value.details.whiteList) {
+          response.whiteList = requestValidation.value.details.whiteList;
+        }
+
+        return response
+      } else {
+        return Boom.badRequest('Invalid Request', requestValidation.error.ValidationError)
+      }
+    }
   },
   handleGet: function(server, request, channel, reply) {
     const redis = server.app.redis;
@@ -41,28 +55,43 @@ module.exports = {
     const redis = server.app.redis;
     let payload = request.payload;
 
-    // Checks this is an event from a page subscription
-    if (payload.From && payload.Body) {
+    //Using ngrok requests look like http even though the Twilio url is https
+    //This causes validation to fail. For now forcing https.
+    //console.log(request.connection.info)
+    //Validate Request
+    const url = 'https://' 
+    + request.info.host 
+    + request.url.path;
+    const twilioSignature = request.headers['x-twilio-signature'];
+    let validation = Twilio.validateRequest(channel.authToken, twilioSignature, url, payload)
 
-      let sessionId = hash(payload)
-      let options = {
-        method: 'POST',
-        url: `/agent/${channel.agent}/converse`,
-        payload: {
-          text: payload.Body,
-          sessionId: sessionId
+    if (validation) {
+      if (payload.From && payload.Body) {
+        if ((channel.whiteList && channel.whiteList.indexOf(payload.From) != -1) || !channel.whiteList || channel.whiteList == []) {
+          let sessionId = hash(payload)
+          let options = {
+            method: 'POST',
+            url: `/agent/${channel.agent}/converse`,
+            payload: {
+              text: payload.Body,
+              sessionId: sessionId,
+              ubiquity: {
+                twilio: payload
+              }
+            }
+          }
+    
+          server.inject(options, (res) => {
+    
+            var twiml = new Twilio.twiml.MessagingResponse();
+            twiml.message(JSON.parse(res.payload).textResponse);
+    
+            reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
+          })
         }
+      } else {
+        reply().code(400)
       }
-
-      server.inject(options, (res) => {
-
-        var twiml = new MessagingResponse();
-        twiml.message(JSON.parse(res.payload).textResponse);
-
-        reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
-      })
-    } else {
-      reply().code(400)
     }
   }
 }

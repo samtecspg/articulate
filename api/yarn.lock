@@ -1732,6 +1732,10 @@ globby@^5.0.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
+google-libphonenumber@3.1.12:
+  version "3.1.12"
+  resolved "https://registry.yarnpkg.com/google-libphonenumber/-/google-libphonenumber-3.1.12.tgz#2f42df8bc4d6a6b6a10929840563fce27112f7f8"
+
 got@^6.7.1:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/got/-/got-6.7.1.tgz#240cd05785a9a18e561dc1b44b41c763ef1e8db0"
@@ -2530,6 +2534,12 @@ items@2.x.x:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/items/-/items-2.1.1.tgz#8bd16d9c83b19529de5aea321acaada78364a198"
 
+joi-phone-number@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/joi-phone-number/-/joi-phone-number-2.0.12.tgz#55ee6868e73d179d5ed69cf0dcc8fa3d6ee81a31"
+  dependencies:
+    google-libphonenumber "3.1.12"
+
 joi@10.2.2:
   version "10.2.2"
   resolved "https://registry.yarnpkg.com/joi/-/joi-10.2.2.tgz#dc5a792b7b4c6fffa562242a95b55d9d3f077e24"
@@ -2571,6 +2581,10 @@ js-yaml@^3.4.6, js-yaml@^3.5.1, js-yaml@^3.6.0:
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
+
+jsesc@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.1.tgz#e421a2a8e20d6b0819df28908f782526b96dd1fe"
 
 json-buffer@3.0.0:
   version "3.0.0"
