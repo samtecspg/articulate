@@ -13,10 +13,16 @@ import {
     addSayingError,
     deleteSayingError,
     updateSayingError,
+    loadDomainsSuccess,
+    loadDomainsError,
+    loadFilteredDomainsSuccess,
+    loadFilteredDomainsError,
 } from '../App/actions';
 
 import {
     LOAD_SAYINGS,
+    LOAD_DOMAINS,
+    LOAD_FILTERED_DOMAINS,
     LOAD_KEYWORDS,
     ADD_SAYING,
     DELETE_SAYING,
@@ -28,7 +34,7 @@ import {
 } from '../App/constants';
 
 import {
-    makeSelectAgent,
+    makeSelectAgent, makeSelectSelectedDomain,
 } from '../App/selectors';
 
 import { getKeywords } from '../KeywordsPage/saga';
@@ -58,11 +64,12 @@ export function* getSayings(payload) {
 
 export function* postSaying(payload) {
     const agent = yield select(makeSelectAgent());
+    const domain = yield select(makeSelectSelectedDomain());
     const { api, value } = payload;
     try {
         const newSayingData = {
             agent: agent.agentName,
-            domain: 'default',
+            domain,
             userSays: value,
             keywords: [],
             actions: [],
@@ -192,6 +199,35 @@ export function* deleteAction(payload) {
     }
 }
 
+export function* getDomains(payload) {
+    const agent = yield select(makeSelectAgent());
+    const { api, filter } = payload;
+    const start = 0;
+    const limit = -1;
+    try {
+        const response = yield call(api.agent.getAgentIdDomain, {
+            id: agent.id,
+            filter,
+            start,
+            limit,
+        });
+        if (filter !== undefined){
+            yield put(loadFilteredDomainsSuccess(response.obj));
+        }
+        else {
+            yield put(loadDomainsSuccess(response.obj));
+            yield put(loadFilteredDomainsSuccess(response.obj));
+        }
+    } catch (err) {
+        if (filter !== undefined){
+            yield put(loadFilteredDomainsError(response.obj));
+        }
+        else {
+            yield put(loadDomainsError(err));
+        }
+    }
+}
+
 export default function* rootSaga() {
     yield takeLatest(LOAD_SAYINGS, getSayings);
     yield takeLatest(ADD_SAYING, postSaying);
@@ -202,4 +238,6 @@ export default function* rootSaga() {
     yield takeLatest(DELETE_ACTION_SAYING, deleteAction);
     yield takeLatest(LOAD_KEYWORDS, getKeywords);
     yield takeLatest(LOAD_ACTIONS, getActions);
+    yield takeLatest(LOAD_DOMAINS, getDomains);
+    yield takeLatest(LOAD_FILTERED_DOMAINS, getDomains);
 };

@@ -8,7 +8,6 @@ import {
   CLOSE_NOTIFICATION,
   SEND_MESSAGE,
   RESPOND_MESSAGE,
-  RESET_SESSION,
   RESET_SESSION_SUCCESS,
 
   LOAD_AGENTS,
@@ -52,6 +51,13 @@ import {
   ADD_ACTION_SAYING,
   DELETE_ACTION_SAYING,
   SEND_SAYING_TO_ACTION,
+  LOAD_DOMAINS,
+  LOAD_DOMAINS_ERROR,
+  LOAD_DOMAINS_SUCCESS,
+  LOAD_FILTERED_DOMAINS,
+  LOAD_FILTERED_DOMAINS_ERROR,
+  LOAD_FILTERED_DOMAINS_SUCCESS,
+  SELECT_DOMAIN,
 
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
@@ -112,6 +118,18 @@ import {
   ADD_KEYWORD_EXAMPLE,
   DELETE_KEYWORD_EXAMPLE,
   CHANGE_EXAMPLE_SYNONYMS,
+
+  LOAD_DOMAIN,
+  LOAD_DOMAIN_ERROR,
+  LOAD_DOMAIN_SUCCESS,
+  CHANGE_DOMAIN_DATA,
+  CREATE_DOMAIN,
+  CREATE_DOMAIN_ERROR,
+  CREATE_DOMAIN_SUCCESS,
+  RESET_DOMAIN_DATA,
+  UPDATE_DOMAIN,
+  UPDATE_DOMAIN_ERROR,
+  UPDATE_DOMAIN_SUCCESS,
 } from './constants';
 
 // The initial state of the App
@@ -123,6 +141,14 @@ const initialState = Immutable({
     'Notification: Congrats on your very first Agent Samson! 🤗 🥇',
   ],
   messages: [],
+  domain: {
+    domainName: '',
+    enabled: true,
+    actionThreshold: 50,
+    extraTrainingData: false,
+  },
+  domains: [],
+  filteredDomains: [],
   agents: [],
   currentAgent: {
       agentName: '',
@@ -180,6 +206,7 @@ const initialState = Immutable({
   },
   keywords: [],
   totalKeywords: 0,
+  selectedDomain: '',
   sayings: [],
   totalSayings: 0,
   agentOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
@@ -493,6 +520,32 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case SEND_SAYING_TO_ACTION:
       return state.set('sayingForAction', action.saying);
+    case LOAD_DOMAINS:
+      return state.set('domains', [])
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_DOMAINS_ERROR:
+      return state.set('domains', [])
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_DOMAINS_SUCCESS:
+      return state.set('domains', action.domains.domains)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_FILTERED_DOMAINS:
+      return state.set('filteredDomains', [])
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_FILTERED_DOMAINS_ERROR:
+      return state.set('filteredDomains', [])
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_FILTERED_DOMAINS_SUCCESS:
+      return state.set('filteredDomains', action.domains.domains)
+        .set('loading', false)
+        .set('error', false);
+    case SELECT_DOMAIN:
+      return state.set('selectedDomain', action.domainName);
 
     /* Keywords */
     case LOAD_KEYWORDS:
@@ -756,6 +809,7 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false);
 
+    /* Keyword */
     case CHANGE_KEYWORD_DATA:
       return state.setIn(['keyword', action.payload.field], action.payload.value);
     case CREATE_KEYWORD:
@@ -809,6 +863,50 @@ function appReducer(state = initialState, action) {
       return state.set('keyword', action.keyword)
       .set('loading', false)
       .set('error', false);
+
+    /* Domain */
+    case LOAD_DOMAIN:
+      return state.set('domain', initialState.domain)
+      .set('loading', true)
+      .set('error', false);
+    case LOAD_DOMAIN_ERROR:
+      return state.set('domain', initialState.domain)
+      .set('loading', false)
+      .set('error', action.error);
+    case LOAD_DOMAIN_SUCCESS:
+      return state.set('domain', action.domain)
+      .set('loading', false)
+      .set('error', false);
+    case CHANGE_DOMAIN_DATA:
+      return state.setIn(['domain', action.payload.field], action.payload.value);
+    case CREATE_DOMAIN:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case CREATE_DOMAIN_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case CREATE_DOMAIN_SUCCESS:
+      return state.set('domain', action.domain)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case RESET_DOMAIN_DATA:
+        return state.set('domain', initialState.domain)
+    case UPDATE_DOMAIN:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_DOMAIN_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case UPDATE_DOMAIN_SUCCESS:
+      return state.set('domain', action.domain)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
 
     default:
       return state;

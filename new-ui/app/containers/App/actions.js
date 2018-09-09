@@ -56,6 +56,13 @@ import {
   ADD_ACTION_SAYING,
   DELETE_ACTION_SAYING,
   SEND_SAYING_TO_ACTION,
+  LOAD_DOMAINS,
+  LOAD_DOMAINS_ERROR,
+  LOAD_DOMAINS_SUCCESS,
+  LOAD_FILTERED_DOMAINS,
+  LOAD_FILTERED_DOMAINS_ERROR,
+  LOAD_FILTERED_DOMAINS_SUCCESS,
+  SELECT_DOMAIN,
 
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
@@ -116,6 +123,18 @@ import {
   CHANGE_EXAMPLE_SYNONYMS,
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
+
+  RESET_DOMAIN_DATA,
+  LOAD_DOMAIN,
+  LOAD_DOMAIN_ERROR,
+  LOAD_DOMAIN_SUCCESS,
+  CREATE_DOMAIN,
+  UPDATE_DOMAIN,
+  CHANGE_DOMAIN_DATA,
+  CREATE_DOMAIN_ERROR,
+  CREATE_DOMAIN_SUCCESS,
+  UPDATE_DOMAIN_ERROR,
+  UPDATE_DOMAIN_SUCCESS,
 } from './constants';
 
 /*
@@ -494,6 +513,56 @@ export function sendSayingToAction(saying){
   return {
     type: SEND_SAYING_TO_ACTION,
     saying,
+  }
+}
+
+export function loadDomains(){
+  return {
+    type: LOAD_DOMAINS,
+    apiCall: true,
+  }
+}
+
+export function loadDomainsError(error){
+  return {
+    type: LOAD_DOMAINS_ERROR,
+    error,
+  }
+}
+
+export function loadDomainsSuccess(domains){
+  return {
+    type: LOAD_DOMAINS_SUCCESS,
+    domains,
+  }
+}
+
+export function loadFilteredDomains(filter){
+  return {
+    type: LOAD_FILTERED_DOMAINS,
+    filter,
+    apiCall: true,
+  }
+}
+
+export function loadFilteredDomainsError(error){
+  return {
+    type: LOAD_FILTERED_DOMAINS_ERROR,
+    error,
+  }
+}
+
+export function loadFilteredDomainsSuccess(domains){
+  return {
+    type: LOAD_FILTERED_DOMAINS_SUCCESS,
+    domains,
+  }
+}
+
+export function selectDomain(domainName){
+  return {
+    type: SELECT_DOMAIN,
+    domainName,
   }
 }
 
@@ -895,4 +964,92 @@ export function changeExampleSynonyms(exampleIndex, synonyms) {
     exampleIndex,
     synonyms,
   }
+}
+
+/* Domain */
+export function resetDomainData(){
+  return {
+    type: RESET_DOMAIN_DATA,
+  }
+}
+
+export function loadDomain(id){
+  return {
+    type: LOAD_DOMAIN,
+    apiCall: true,
+    id,
+  }
+}
+
+export function loadDomainError(error){
+  return {
+    type: LOAD_DOMAIN_ERROR,
+    error
+  }
+}
+
+export function loadDomainSuccess(domain){
+  return {
+    type: LOAD_DOMAIN_SUCCESS,
+    domain
+  }
+}
+
+export function createDomain(){
+  return {
+    type: CREATE_DOMAIN,
+    apiCall: true,
+  }
+}
+
+export function createDomainError(error){
+  return {
+    type: CREATE_DOMAIN_ERROR,
+    error
+  }
+}
+
+export function createDomainSuccess(domain){
+  return {
+    type: CREATE_DOMAIN_SUCCESS,
+    domain,
+  }
+}
+
+export function updateDomain(){
+  return {
+    type: UPDATE_DOMAIN,
+    apiCall: true,
+  }
+}
+
+export function updateDomainError(error){
+  return {
+    type: UPDATE_DOMAIN_ERROR,
+    error
+  }
+}
+
+export function updateDomainSuccess(domain){
+  return {
+    type: UPDATE_DOMAIN_SUCCESS,
+    domain
+  }
+}
+
+export function changeDomainData(payload){
+  return {
+    type: CHANGE_DOMAIN_DATA,
+    payload,
+  }
+}
+
+export function changeActionThreshold(value) {
+  return {
+    type: CHANGE_DOMAIN_DATA,
+    payload: {
+      field: 'actionThreshold',
+      value: parseInt(value)
+    },
+  };
 }

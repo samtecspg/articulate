@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
-import { Grid, FormControl, MenuItem, Select } from '@material-ui/core';
+import { Grid, FormControl, MenuItem, Select, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
@@ -36,7 +36,7 @@ const styles = {
         backgroundColor: '#e2e5e7',
         display: 'inline-block',
         position: 'relative',
-        borderRadius: '10px',
+        borderRadius: '5px',
         marginTop: '2px',
     },
     actionLabel: {
@@ -50,6 +50,34 @@ const styles = {
         paddingLeft: '5px',
         fontWeight: 300,
         cursor: 'pointer'
+    },
+    domainBackgroundContainer: {
+        margin: '0px 5px 0px 0px',
+        fontSize: '12px',
+        padding: '4px 8px 4px 10px',
+        backgroundColor: '#f6f7f8',
+        display: 'inline-block',
+        position: 'relative',
+        borderRadius: '5px',
+        marginTop: '2px',
+    },
+    domainLabel: {
+        textDecoration: 'none',
+        color: 'inherit'
+    },
+    categorySelectContainer: {
+        margin: '0px',
+    },
+    categorySelectInputContainer: {
+        margin: '0px !important',
+    },
+    categorySelect: {
+        padding: '5px',
+        backgroundColor: '#f6f7f8',
+        border: 'none',
+    },
+    categoryLabel: {
+        fontSize: '12px',
     }
 }
 
@@ -151,95 +179,124 @@ class SayingRow extends React.Component {
         return (
             <Grid container>
                 <Grid item xs={12}>
-                    <span className={classes.userSays} onMouseUp={this.onHighlight}>
-                        <HighlightedSaying
-                            agentKeywords={agentKeywords}
-                            keywords={saying.keywords}
-                            text={saying.userSays}
-                            keywordIndex={0}
-                            lastStart={0}
-                            onUntagKeyword={this.props.onUntagKeyword.bind(null, saying)}
-                        />
-                    </span>
-                    {saying.actions.map((action, index) => {
-                        let actionId = this.props.agentActions.filter((agentAction) => {
-                            return agentAction.actionName === action;
-                        });
-                        actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
-                        return (
-                            <div key={`sayingAction_${index}`} className={classes.actionBackgroundContainer}>
-                                <span
-                                    className={classes.actionLabel}
-                                    onClick={() => {
-                                        this.props.onSendSayingToAction(saying);
-                                        this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}?sayingId=${saying.id}`)
-                                    }
-                                }
-                                >{action}</span>
-                                <a onClick={() => { this.props.onDeleteAction(saying, action) }} className={classes.deleteActionX}>x</a>
-                            </div>
-                        )
-                    })}
-                    <img
-                        onClick={(evt) => this.handleOpen('actions', evt.target, getCountOfUnasignedActions(saying.actions, this.props.agentActions))}
-                        className={classes.addActionIcon} src={addActionIcon}
-                    />
-                    <FormControl className={classes.formControl}>
-                        <Select
-                            style={{
-                                display:'none',
-                            }}
-                            open={this.state.openActions}
-                            onClose={() => this.handleClose('actions')}
-                            onOpen={() => this.handleOpen('actions')}
-                            value={10}
-                            onChange={(evt) => { evt.preventDefault(); this.handleChange('actions', evt.target.value)}}
-                            MenuProps={{
-                                style:{
-                                    minHeight: '300px',
-                                    maxHeight: '300px',
-                                    top: `${this.state.actionsDialogY}px`,
-                                    left: `${this.state.actionsDialogX}px`
-                                }
-                            }}
-                        >
-                            <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction}/></MenuItem>
-                            {
-                                this.props.agentActions.map((action) => {
+                    <Grid container spacing={16}>
+                        <div style={{ width: '100px', marginTop: '5px'}}>
+                            <TextField
+                                className={classes.categorySelectContainer}
+                                select
+                                id='category'
+                                value={saying.domain}
+                                onChange={() => { console.error('Updating the domain of a saying is still not implemented. Sorry') }}
+                                margin='normal'
+                                fullWidth
+                                InputProps={{
+                                    className: classes.categorySelectInputContainer,
+                                }}
+                                inputProps={{
+                                    className: classes.categorySelect,
+                                }}
+                            >
+                                {this.props.agentDomains.map((domain, index) => {
                                     return (
-                                        saying.actions.indexOf(action.actionName) === -1 ?
-                                        <MenuItem key={`action_${action.id}`} value={action.actionName}>{action.actionName}</MenuItem> :
-                                        null
+                                        <MenuItem key={`domain_${index}`} style={{minWidth: '150px'}} value={domain.domainName}>
+                                            <span className={classes.categoryLabel}>{domain.domainName}</span>
+                                        </MenuItem>
                                     )
-                                })
-                            }
-                        </Select>
-                        <Select
-                            style={{
-                                display:'none',
-                            }}
-                            open={this.state.openKeywords}
-                            onClose={() => this.handleClose('keywords')}
-                            onOpen={() => this.handleOpen('keywords')}
-                            value={10}
-                            onChange={(evt) => { evt.preventDefault(); this.handleChange('keywords', evt.target.value)}}
-                            MenuProps={{
-                                style:{
-                                    top: `${this.state.keywordsDialogY}px`,
-                                    left: `${this.state.keywordsDialogX}px`
-                                }
-                            }}
-                        >
-                            <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newKeyword}/></MenuItem>
-                            {agentKeywords.map((keyword, index) => {
+                                })}
+                            </TextField>
+                        </div>
+                        <Grid item md={10} xs={8}>
+                            <span className={classes.userSays} onMouseUp={this.onHighlight}>
+                                <HighlightedSaying
+                                    agentKeywords={agentKeywords}
+                                    keywords={saying.keywords}
+                                    text={saying.userSays}
+                                    keywordIndex={0}
+                                    lastStart={0}
+                                    onUntagKeyword={this.props.onUntagKeyword.bind(null, saying)}
+                                />
+                            </span>
+                            {saying.actions.map((action, index) => {
+                                let actionId = this.props.agentActions.filter((agentAction) => {
+                                    return agentAction.actionName === action;
+                                });
+                                actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
                                 return (
-                                    <MenuItem key={`keyword_${index}`} value={`${keyword.id},${keyword.keywordName}`}>
-                                        <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>
-                                    </MenuItem>
-                                );
+                                    <div key={`sayingAction_${index}`} className={classes.actionBackgroundContainer}>
+                                        <span
+                                            className={classes.actionLabel}
+                                            onClick={() => {
+                                                this.props.onSendSayingToAction(saying);
+                                                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}?sayingId=${saying.id}`)
+                                            }
+                                        }
+                                        >{action}</span>
+                                        <a onClick={() => { this.props.onDeleteAction(saying, action) }} className={classes.deleteActionX}>x</a>
+                                    </div>
+                                )
                             })}
-                        </Select>
-                    </FormControl>
+                            <img
+                                onClick={(evt) => this.handleOpen('actions', evt.target, getCountOfUnasignedActions(saying.actions, this.props.agentActions))}
+                                className={classes.addActionIcon} src={addActionIcon}
+                            />
+                            <FormControl className={classes.formControl}>
+                                <Select
+                                    style={{
+                                        display:'none',
+                                    }}
+                                    open={this.state.openActions}
+                                    onClose={() => this.handleClose('actions')}
+                                    onOpen={() => this.handleOpen('actions')}
+                                    value={10}
+                                    onChange={(evt) => { evt.preventDefault(); this.handleChange('actions', evt.target.value)}}
+                                    MenuProps={{
+                                        style:{
+                                            minHeight: '300px',
+                                            maxHeight: '300px',
+                                            top: `${this.state.actionsDialogY}px`,
+                                            left: `${this.state.actionsDialogX}px`
+                                        }
+                                    }}
+                                >
+                                    <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction}/></MenuItem>
+                                    {
+                                        this.props.agentActions.map((action) => {
+                                            return (
+                                                saying.actions.indexOf(action.actionName) === -1 ?
+                                                <MenuItem key={`action_${action.id}`} value={action.actionName}>{action.actionName}</MenuItem> :
+                                                null
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                <Select
+                                    style={{
+                                        display:'none',
+                                    }}
+                                    open={this.state.openKeywords}
+                                    onClose={() => this.handleClose('keywords')}
+                                    onOpen={() => this.handleOpen('keywords')}
+                                    value={10}
+                                    onChange={(evt) => { evt.preventDefault(); this.handleChange('keywords', evt.target.value)}}
+                                    MenuProps={{
+                                        style:{
+                                            top: `${this.state.keywordsDialogY}px`,
+                                            left: `${this.state.keywordsDialogX}px`
+                                        }
+                                    }}
+                                >
+                                    <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newKeyword}/></MenuItem>
+                                    {agentKeywords.map((keyword, index) => {
+                                        return (
+                                            <MenuItem key={`keyword_${index}`} value={`${keyword.id},${keyword.keywordName}`}>
+                                                <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         );
@@ -252,6 +309,7 @@ SayingRow.propTypes = {
     agentId: PropTypes.number,
     agentKeywords: PropTypes.array,
     agentActions: PropTypes.array,
+    agentDomains: PropTypes.array,
     onDeleteAction: PropTypes.func,
     onUntagKeyword: PropTypes.func,
     onTagKeyword: PropTypes.func,

@@ -26,6 +26,9 @@ import {
   makeSelectTotalSayings,
   makeSelectKeywords,
   makeSelectActions,
+  makeSelectDomains,
+  makeSelectSelectedDomain,
+  makeSelectFilteredDomains,
 } from '../App/selectors';
 import {
   loadSayings,
@@ -38,6 +41,9 @@ import {
   loadKeywords,
   loadActions,
   sendSayingToAction,
+  loadDomains,
+  selectDomain,
+  loadFilteredDomains,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -49,11 +55,13 @@ export class SayingsPage extends React.Component {
     this.movePageBack = this.movePageBack.bind(this);
     this.movePageForward = this.movePageForward.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
+    this.onSearchDomain = this.onSearchDomain.bind(this);
     this.getTotalPages = this.getTotalPages.bind(this);
   }
 
   state = {
     filter: '',
+    domainFilter: '',
     currentPage: 1,
   }
 
@@ -61,6 +69,7 @@ export class SayingsPage extends React.Component {
     if(this.props.agent.id) {
       this.props.onLoadKeywords();
       this.props.onLoadActions();
+      this.props.onLoadDomains();
       this.props.onLoadSayings('', this.state.currentPage);
     }
     else {
@@ -104,6 +113,13 @@ export class SayingsPage extends React.Component {
     this.props.onLoadSayings(filter, this.state.currentPage);
   }
 
+  onSearchDomain(domainFilter){
+    this.setState({
+      domainFilter
+    });
+    this.props.onLoadFilteredDomains(domainFilter);
+  }
+
   render() {
     return (
       <Grid container>
@@ -122,6 +138,8 @@ export class SayingsPage extends React.Component {
               sayings={this.props.sayings}
               agentKeywords={this.props.agentKeywords}
               agentActions={this.props.agentActions}
+              agentDomains={this.props.agentDomains}
+              agentFilteredDomains={this.props.agentFilteredDomains}
               onAddSaying={this.props.onAddSaying}
               onDeleteSaying={this.props.onDeleteSaying}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage)}
@@ -129,6 +147,7 @@ export class SayingsPage extends React.Component {
               onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage)}
               onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage)}
               onSearchSaying={this.onSearchSaying}
+              onSearchDomain={this.onSearchDomain}
               onGoToUrl={this.props.onGoToUrl}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentPage={this.state.currentPage}
@@ -136,6 +155,8 @@ export class SayingsPage extends React.Component {
               changePage={this.changePage}
               movePageBack={this.movePageBack}
               movePageForward={this.movePageForward}
+              onSelectDomain={this.props.onSelectDomain}
+              domain={this.props.domain}
             />
           }
           keywordsForm={Link}
@@ -161,22 +182,35 @@ SayingsPage.propTypes = {
   onSendSayingToAction: PropTypes.func,
   sayings: PropTypes.array,
   totalSayings: PropTypes.number,
+  agentDomains: PropTypes.array,
+  agentFilteredDomains: PropTypes.array,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
+  onSelectDomain: PropTypes.func,
+  domain: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   sayings: makeSelectSayings(),
   totalSayings: makeSelectTotalSayings(),
+  agentDomains: makeSelectDomains(),
+  agentFilteredDomains: makeSelectFilteredDomains(),
   agentKeywords: makeSelectKeywords(),
   agentActions: makeSelectActions(),
+  domain: makeSelectSelectedDomain(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onLoadSayings: (filter, page) => {
       dispatch(loadSayings(filter, page));
+    },
+    onLoadFilteredDomains: (filter) => {
+      dispatch(loadFilteredDomains(filter));
+    },
+    onLoadDomains: () => {
+      dispatch(loadDomains());
     },
     onLoadKeywords: () => {
       dispatch(loadKeywords());
@@ -207,6 +241,9 @@ function mapDispatchToProps(dispatch) {
     },
     onSendSayingToAction: (saying) => {
       dispatch(sendSayingToAction(saying));
+    },
+    onSelectDomain: (domainName) => {
+      dispatch(selectDomain(domainName));
     }
   };
 }

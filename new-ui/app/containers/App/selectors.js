@@ -111,14 +111,6 @@ const makeSelectAgentSettings = () => createSelector(
   }
 );
 
-/* Keyword */
-const makeSelectKeyword = () => createSelector(
-  selectGlobalDomain,
-  (globalState) => {
-    return globalState.keyword;
-  }
-);
-
 /* Keywords */
 const makeSelectKeywords = () => createSelector(
   selectGlobalDomain,
@@ -149,8 +141,26 @@ const makeSelectTotalSayings = () => createSelector(
   }
 );
 
+const makeSelectDomains = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.domains;
+  }
+);
 
+const makeSelectFilteredDomains = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.filteredDomains;
+  }
+);
 
+const makeSelectSelectedDomain = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.selectedDomain;
+  }
+);
 
 /* Actions */
 const makeSelectActions = () => createSelector(
@@ -210,6 +220,22 @@ const makeSelectSettings = () => createSelector(
   }
 );
 
+/* Keyword */
+const makeSelectKeyword = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.keyword;
+  }
+);
+
+/* Domain */
+const makeSelectDomain = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.domain;
+  }
+);
+
 export {
   makeSelectLocation,
   makeSelectMissingAPI,
@@ -229,13 +255,14 @@ export {
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
 
-  makeSelectKeyword,
-
   makeSelectKeywords,
   makeSelectTotalKeywords,
 
   makeSelectSayings,
   makeSelectTotalSayings,
+  makeSelectDomains,
+  makeSelectFilteredDomains,
+  makeSelectSelectedDomain,
 
   makeSelectActions,
   makeSelectTotalActions,
@@ -246,4 +273,8 @@ export {
   makeSelectSayingForAction,
 
   makeSelectSettings,
+
+  makeSelectKeyword,
+
+  makeSelectDomain,
 };

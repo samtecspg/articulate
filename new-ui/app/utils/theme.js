@@ -121,7 +121,8 @@ export default createMuiTheme({
       "MuiPopover": {
         "paper": {
           "backgroundColor": "#fafafa",
-          "border": "1px solid #00bd6f"
+          "border": "1px solid #4e4e4e",
+          "borderRadius": "5px",
         }
       },
       "MuiSelect": {

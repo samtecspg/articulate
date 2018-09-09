@@ -16,7 +16,6 @@ import {
   deleteAgentSuccess,
   updateAgentSuccess,
   updateAgentError,
-  trainAgent,
   trainAgentError,
 } from '../App/actions';
 
@@ -150,13 +149,6 @@ export function* postAgent(payload) {
         yield call(postAgentPostFormat, { id: response.obj.id, api });
       }
       yield call(putAgentSettings, { id: response.obj.id, api });
-      yield call(api.domain.postDomain, { body: {
-        agent: agent.agentName,
-        domainName: 'default',
-        enabled: true,
-        actionThreshold: 0,
-        extraTrainingData: false,
-      }});
       yield put(addAgentSuccess(response.obj));
   } catch (err) {
       yield put(addAgentError(err));

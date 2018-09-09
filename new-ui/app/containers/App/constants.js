@@ -73,6 +73,13 @@ export const UPDATE_SAYING_ERROR = 'app/SayingsPage/UPDATE_SAYING_ERROR';
 export const ADD_ACTION_SAYING = 'app/SayingsPage/ADD_ACTION_SAYING';
 export const DELETE_ACTION_SAYING = 'app/SayingsPage/DELETE_ACTION_SAYING';
 export const SEND_SAYING_TO_ACTION = 'app/SayingsPage/SEND_SAYING_TO_ACTION';
+export const LOAD_DOMAINS = 'app/SayingsPage/LOAD_DOMAINS';
+export const LOAD_DOMAINS_ERROR = 'app/SayingsPage/LOAD_DOMAINS_ERROR';
+export const LOAD_DOMAINS_SUCCESS = 'app/SayingsPage/LOAD_DOMAINS_SUCCESS';
+export const LOAD_FILTERED_DOMAINS = 'app/SayingsPage/LOAD_FILTERED_DOMAINS';
+export const LOAD_FILTERED_DOMAINS_ERROR = 'app/SayingsPage/LOAD_FILTERED_DOMAINS_ERROR';
+export const LOAD_FILTERED_DOMAINS_SUCCESS = 'app/SayingsPage/LOAD_FILTERED_DOMAINS_SUCCESS';
+export const SELECT_DOMAIN = 'app/SayingsPage/SELECT_DOMAIN';
 
 /*
  * Keywords
@@ -145,3 +152,18 @@ export const CHANGE_KEYWORD_DATA = 'app/KeywordsEditPage/CHANGE_KEYWORD_DATA'
 export const ADD_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/ADD_KEYWORD_EXAMPLE';
 export const DELETE_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/DELETE_KEYWORD_EXAMPLE';
 export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNONYMS';
+
+/*
+ * Domain
+ */
+export const RESET_DOMAIN_DATA = 'app/DomainPage/RESET_DOMAIN_DATA';
+export const LOAD_DOMAIN = 'app/DomainPage/LOAD_DOMAIN';
+export const LOAD_DOMAIN_ERROR = 'app/DomainPage/LOAD_DOMAIN_ERROR';
+export const LOAD_DOMAIN_SUCCESS = 'app/DomainPage/LOAD_DOMAIN_SUCCESS';
+export const CREATE_DOMAIN = 'app/DomainPage/CREATE_DOMAIN';
+export const CREATE_DOMAIN_ERROR = 'app/DomainPage/CREATE_DOMAIN_ERROR';
+export const CREATE_DOMAIN_SUCCESS = 'app/DomainPage/CREATE_DOMAIN_SUCCESS';
+export const UPDATE_DOMAIN = 'app/DomainPage/UPDATE_DOMAIN';
+export const UPDATE_DOMAIN_ERROR = 'app/DomainPage/UPDATE_DOMAIN_ERROR';
+export const UPDATE_DOMAIN_SUCCESS = 'app/DomainPage/UPDATE_DOMAIN_SUCCESS';
+export const CHANGE_DOMAIN_DATA = 'app/DomainPage/CHANGE_DOMAIN_DATA'

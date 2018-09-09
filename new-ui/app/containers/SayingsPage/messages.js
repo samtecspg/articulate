@@ -58,5 +58,9 @@ export default defineMessages({
     newKeyword: {
         id: 'app.containers.SayingsPage.component.SayingRow.newKeyword',
         defaultMessage: '+ New Keyword'
+    },
+    categorySelect: {
+        id: 'app.containers.SayingsPage.component.SayingDataForm.categorySelect',
+        defaultMessage: 'Categories'
     }
 });

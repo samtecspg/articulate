@@ -26,6 +26,7 @@ import AgentPage from 'containers/AgentPage/Loadable';
 import SayingsPage from 'containers/SayingsPage/Loadable';
 import KeywordsPage from 'containers/KeywordsPage/Loadable';
 import KeywordsEditPage from 'containers/KeywordsEditPage/Loadable';
+import DomainPage from 'containers/DomainPage/Loadable';
 import ActionPage from 'containers/ActionPage/Loadable';
 import SettingsPage from 'containers/SettingsPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
@@ -79,6 +80,7 @@ class App extends React.Component {
             <Route exact path='/agent/:id/sayings' component={SayingsPage} />
             <Route exact path='/agent/:id/keywords' component={KeywordsPage} />
             <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
+            <Route exact path='/agent/:id/domain/:domainId' component={DomainPage} />
             <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
             <Route exact path='/settings' component={SettingsPage} />
             <Route exact path='/missing-api' component={MissingAPIPage} />

@@ -11,6 +11,7 @@ import {
   loadKeywordSuccess,
   loadKeywordError,
   createKeywordSuccess,
+  createKeywordError,
   updateKeywordSuccess,
   updateKeywordError,
 } from '../App/actions';
@@ -48,7 +49,7 @@ export function* postKeyword(payload) {
         const response = yield call(api.keyword.postKeyword, { body: newKeyword });
         yield put(createKeywordSuccess(response.obj));
     } catch (err) {
-        yield put(addSayingError(err));
+        yield put(createKeywordError(err));
     }
 }
 

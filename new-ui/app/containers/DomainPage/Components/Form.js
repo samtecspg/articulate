@@ -2,16 +2,14 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, Input } from '@material-ui/core';
+import { Grid, Typography, Button, Modal } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
 
-import sayingsIcon from '../../../images/sayings-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';
-import searchIcon from '../../../images/search-icon.svg';
 
-import SayingsDataForm from './SayingsDataForm';
+import DomainDataForm from './DomainDataForm';
 
 const styles = {
   headerContainer: {
@@ -22,11 +20,6 @@ const styles = {
   },
   titleContainer: {
     padding: '25px'
-  },
-  sayingsIcon: {
-    display: 'inline',
-    paddingRight: '10px',
-    height: '30px'
   },
   titleTextHelpContainer: {
     display: 'inline',
@@ -74,7 +67,14 @@ const styles = {
     width: '250px',
     paddingLeft: '5px',
     fontSize: '14px'
-  }
+  },
+  formDescriptionContainer: {
+    margin: '15px 0px'
+  },
+  formDescription: {
+    fontSize: '14px',
+    fontWeight: 300
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -100,7 +100,6 @@ class Form extends React.Component {
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
-          <img className={classes.sayingsIcon} src={sayingsIcon} />
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant='display3'>
               <FormattedMessage {...messages.formTitle} />
@@ -119,20 +118,6 @@ class Form extends React.Component {
                 <FormattedMessage {...messages.help} />
               </span>
             </Button>
-            <form className={classes.searchForm}>
-              <img src={searchIcon} alt={intl.formatMessage(messages.searchSayingsAlt)} />
-              <Input
-                inputProps={{
-                  style: {
-                    border: 'none'
-                  }
-                }}
-                disableUnderline
-                className={classes.searchInputField}
-                placeholder={intl.formatMessage(messages.searchSayingPlaceholder)}
-                onChange={(evt) => { this.props.onSearchSaying(evt.target.value) }}
-              />
-            </form>
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
@@ -146,31 +131,17 @@ class Form extends React.Component {
               </Grid>
             </Modal>
           </Grid>
+          <Grid className={classes.formDescriptionContainer} container>
+            <Typography className={classes.formDescription}>
+              <FormattedMessage {...messages.domainEditDescription} />
+            </Typography>
+          </Grid>
         </Grid>
         <Grid item xs={12}>
-          {<SayingsDataForm
-            agentId={this.props.agentId}
-            sayings={this.props.sayings}
-            agentKeywords={this.props.agentKeywords}
-            agentActions={this.props.agentActions}
-            agentDomains={this.props.agentDomains}
-            agentFilteredDomains={this.props.agentFilteredDomains}
-            onAddSaying={this.props.onAddSaying}
-            onDeleteSaying={this.props.onDeleteSaying}
-            onDeleteAction={this.props.onDeleteAction}
-            onTagKeyword={this.props.onTagKeyword}
-            onUntagKeyword={this.props.onUntagKeyword}
-            onAddAction={this.props.onAddAction}
-            onGoToUrl={this.props.onGoToUrl}
-            onSendSayingToAction={this.props.onSendSayingToAction}
-            currentPage={this.props.currentPage}
-            numberOfPages={this.props.numberOfPages}
-            changePage={this.props.changePage}
-            movePageBack={this.props.movePageBack}
-            movePageForward={this.props.movePageForward}
-            onSelectDomain={this.props.onSelectDomain}
+          {<DomainDataForm
             domain={this.props.domain}
-            onSearchDomain={this.props.onSearchDomain}
+            onChangeDomainData={this.props.onChangeDomainData}
+            onChangeActionThreshold={this.props.onChangeActionThreshold}
           />}
         </Grid>
       </Grid>
@@ -181,29 +152,9 @@ class Form extends React.Component {
 Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  sayings: PropTypes.array,
-  agentId: PropTypes.number,
-  agentKeywords: PropTypes.array,
-  agentActions: PropTypes.array,
-  agentDomains: PropTypes.array,
-  agentFilteredDomains: PropTypes.array,
-  onAddSaying: PropTypes.func,
-  onDeleteSaying: PropTypes.func,
-  onDeleteAction: PropTypes.func,
-  onTagKeyword: PropTypes.func,
-  onUntagKeyword: PropTypes.func,
-  onSearchSaying: PropTypes.func,
-  onSearchDomain: PropTypes.func,
-  onAddAction: PropTypes.func,
-  onGoToUrl: PropTypes.func,
-  onSendSayingToAction: PropTypes.func,
-  currentPage: PropTypes.number,
-  numberOfPages: PropTypes.number,
-  changePage: PropTypes.func,
-  movePageBack: PropTypes.func,
-  movePageForward: PropTypes.func,
-  onSelectDomain: PropTypes.func,
-  domain: PropTypes.string,
+  domain: PropTypes.object,
+  onChangeDomainData: PropTypes.func.isRequired,
+  onChangeActionThreshold: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));
