@@ -311,7 +311,7 @@ class SayingsDataForm extends React.Component {
                             </div>*/}
                         </Grid>
                     </Grid>
-                    <Grid>
+                    <Grid container item xs={12}>
                     {sayings.length > 0 ?
                         <Grid container>
                             <Typography className={classes.highlightLabel}>
