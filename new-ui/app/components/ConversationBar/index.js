@@ -32,7 +32,6 @@ const styles = {
       top: 0,
       right: 0,
       backgroundColor: '#fff',
-      overflowX: 'hidden',
       borderLeft: '1px solid #c5cbd8'
     },
     clearAll: {
