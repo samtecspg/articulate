@@ -79,7 +79,6 @@ function* postActionWebhook(payload) {
   const agent = yield select(makeSelectAgent());
   const mutableActionWebhook = Immutable.asMutable(actionWebhook, { deep: true });
   mutableActionWebhook.agent = agent.agentName;
-  mutableActionWebhook.domain = 'default';
   const { api, id } = payload;
   try {
       yield call(api.action.postActionIdWebhook, { id, body: mutableActionWebhook });
@@ -93,7 +92,6 @@ function* postActionPostFormat(payload) {
   const agent = yield select(makeSelectAgent());
   const mutableActionPostFormat = Immutable.asMutable(actionPostFormat, { deep: true });
   mutableActionPostFormat.agent = agent.agentName;
-  mutableActionPostFormat.domain = 'default';
   const { api, id } = payload;
   try {
       yield call(api.action.postActionIdPostformat, { id, body: mutableActionPostFormat });
@@ -107,7 +105,6 @@ function* putActionWebhook(payload) {
   const mutableActionWebhook = Immutable.asMutable(actionWebhook);
   const { api, id } = payload;
   delete mutableActionWebhook.agent;
-  delete mutableActionWebhook.domain;
   delete mutableActionWebhook.action;
   if (mutableActionWebhook.id){ //TODO: Check why webhook have an id
     delete mutableActionWebhook.id;
@@ -124,7 +121,6 @@ function* putActionPostFormat(payload) {
   const mutablePostFormat = Immutable.asMutable(actionPostFormat);
   const { api, id } = payload;
   delete mutablePostFormat.agent;
-  delete mutablePostFormat.domain;
   delete mutablePostFormat.action;
   if (mutablePostFormat.id){ //TODO: Check why post format have an id
     delete mutablePostFormat.id;
@@ -159,7 +155,6 @@ export function* postAction(payload) {
   const agent = yield select(makeSelectAgent());
   const mutableAction = Immutable.asMutable(action, {deep: true});
   mutableAction.agent = agent.agentName;
-  mutableAction.domain = 'default';
   const { api } = payload;
   try {
     const response = yield call(api.action.postAction, { body: mutableAction });
@@ -187,7 +182,6 @@ export function* putAction(payload) {
   const { api } = payload;
   delete mutableAction.id;
   delete mutableAction.agent;
-  delete mutableAction.domain;
   try {
       const response = yield call(api.action.putActionId, { id: currentAction.id, body: mutableAction });
       if (!currentAction.useWebhook){

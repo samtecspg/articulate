@@ -9,6 +9,9 @@ import {
   SEND_MESSAGE,
   RESPOND_MESSAGE,
   RESET_SESSION_SUCCESS,
+  LOAD_DOC,
+  LOAD_DOC_ERROR,
+  LOAD_DOC_SUCCESS,
 
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
@@ -147,6 +150,7 @@ const initialState = Immutable({
     actionThreshold: 50,
     extraTrainingData: false,
   },
+  doc: {},
   domains: [],
   filteredDomains: [],
   agents: [],
@@ -222,7 +226,6 @@ const initialState = Immutable({
   },
   action: {
     agent: '',
-    domain: '',
     actionName: '',
     useWebhook: false,
     usePostFormat: false,
@@ -231,7 +234,6 @@ const initialState = Immutable({
   },
   actionWebhook: {
     agent: '',
-    domain: '',
     webhookUrl: '',
     webhookVerb: 'GET',
     webhookPayloadType: 'None',
@@ -239,7 +241,6 @@ const initialState = Immutable({
   },
   actionPostFormat: {
     agent: '',
-    domain: '',
     postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}"\n}'
   },
   actionOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
@@ -315,6 +316,18 @@ function appReducer(state = initialState, action) {
     case RESET_SESSION_SUCCESS:
       return state.set('messages', [])
         .set('notifications', []);
+    case LOAD_DOC:
+      return state.set('doc', initialState.doc)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_DOC_ERROR:
+      return state.set('doc', initialState.doc)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_DOC_SUCCESS:
+      return state.set('doc', action.doc)
+        .set('loading', false)
+        .set('error', false);
 
     /* Agents */
     case LOAD_AGENTS:

@@ -263,7 +263,7 @@ class SayingRow extends React.Component {
                                         this.props.agentActions.map((action) => {
                                             return (
                                                 saying.actions.indexOf(action.actionName) === -1 ?
-                                                <MenuItem key={`action_${action.id}`} value={action.actionName}>{action.actionName}</MenuItem> :
+                                                <MenuItem style={{width: '200px'}} key={`action_${action.id}`} value={action.actionName}>{action.actionName}</MenuItem> :
                                                 null
                                             )
                                         })

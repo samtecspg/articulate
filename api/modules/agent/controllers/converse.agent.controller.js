@@ -98,9 +98,10 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err);
         }
+        data.docId = conversationStateObject.docId;
         let postFormatPayloadToUse;
         let usedPostFormatAction;
-        if (conversationStateObject.action.usePostFormat) {
+        if (conversationStateObject.action && conversationStateObject.action.usePostFormat) {
             postFormatPayloadToUse = conversationStateObject.action.postFormat.postFormatPayload;
             usedPostFormatAction = true;
         }
@@ -128,7 +129,6 @@ module.exports = (request, reply) => {
             }
 
         }
-
         else {
             return reply(data);
         }

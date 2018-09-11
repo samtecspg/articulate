@@ -8,7 +8,6 @@ class ActionModel {
         return {
             id: Joi.string().trim(),
             agent: Joi.string().trim(),
-            domain: Joi.string().trim(),
             actionName: Joi.string().trim(),
             slots: Joi.array().items(SlotModel.schema),
             responses: Joi.array().items(Joi.string().trim()),

@@ -8,7 +8,6 @@ const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 module.exports = (request, reply) => {
 
     let agentId = null;
-    let domainId = null;
     let actionId = null;
     let postFormat = request.payload;
     const redis = request.server.app.redis;
@@ -35,33 +34,17 @@ module.exports = (request, reply) => {
                 },
                 (callback) => {
 
-                    redis.zscore(`agentDomains:${agentId}`, postFormat.domain, (err, id) => {
+                    redis.zscore(`agentActions:${agentId}`, postFormat.action, (err, id) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error occurred checking if the domain ${postFormat.domain} exists in the agent ${postFormat.agent}.`);
-                            return callback(error);
-                        }
-                        if (id){
-                            domainId = id;
-                            return callback(null);
-                        }
-                        const error = Boom.badRequest(`The domain ${postFormat.domain} doesn't exist in the agent ${postFormat.agent}`);
-                        return callback(error);
-                    });
-                },
-                (callback) => {
-
-                    redis.zscore(`domainActions:${domainId}`, postFormat.action, (err, id) => {
-
-                        if (err){
-                            const error = Boom.badImplementation(`An error occurred checking if the action ${postFormat.action} exists in the domain ${postFormat.domain}.`);
+                            const error = Boom.badImplementation(`An error occurred checking if the action ${postFormat.action} exists in the agent ${postFormat.agent}.`);
                             return cllbk(error);
                         }
                         if (id){
                             actionId = id;
                             return callback(null);
                         }
-                        const error = Boom.badRequest(`The action ${postFormat.action} doesn't exist in the domain ${postFormat.domain}`);
+                        const error = Boom.badRequest(`The action ${postFormat.action} doesn't exist in the agent ${postFormat.agent}`);
                         return callback(error);
                     });
                 },

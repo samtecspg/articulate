@@ -22,6 +22,9 @@ export const SEND_MESSAGE = 'app/App/SEND_MESSAGE';
 export const RESPOND_MESSAGE = 'app/App/RESPOND_MESSAGE';
 export const RESET_SESSION = 'app/App/RESET_SESSION'
 export const RESET_SESSION_SUCCESS = 'app/App/RESET_SESSION_SUCCESS';
+export const LOAD_DOC = 'app/App/LOAD_DOC';
+export const LOAD_DOC_ERROR = 'app/App/LOAD_DOC_ERROR'
+export const LOAD_DOC_SUCCESS = 'app/App/LOAD_DOC_SUCCESS';
 
 /*
  * Agents

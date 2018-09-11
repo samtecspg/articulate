@@ -18,10 +18,11 @@ import rightArrowIcon from '../../images/right-arrow-icon.svg';
 import messages from './messages';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { makeSelectNotifications, makeSelectMessages, makeSelectAgent, makeSelectWaitingResponse } from '../../containers/App/selectors';
-import { closeNotification, sendMessage, resetSession } from '../../containers/App/actions';
+import { makeSelectNotifications, makeSelectMessages, makeSelectAgent, makeSelectWaitingResponse, makeSelectDoc } from '../../containers/App/selectors';
+import { closeNotification, sendMessage, resetSession, loadDoc } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
+import CodeModal from '../CodeModal';
 
 const styles = {
     container: {
@@ -172,7 +173,7 @@ const styles = {
       width: '317px',
       position: 'fixed',
       top: '50px',
-      bottom: '80px',
+      bottom: '95px',
       overflowY: 'scroll',
       overflowX: 'hidden',
     }
@@ -184,6 +185,7 @@ export class ConversationBar extends React.PureComponent {
   state = {
     userMessage: '',
     repeatPreviousMessage: null,
+    openCodeModal: false,
   }
 
   componentDidMount() {
@@ -251,7 +253,7 @@ export class ConversationBar extends React.PureComponent {
                       <Typography className={classes.agentMessage}>
                         {message.message}
                         {message.docId !== null ?
-                        <span onClick={() => {window.open(`${process.env.API_URL}\\doc\\${message.docId}`, "_blank")}} className={classes.messageSource}>
+                        <span onClick={() => { this.props.onLoadDoc(message.docId); this.setState({openCodeModal: true})}} className={classes.messageSource}>
                           {'</> '}<span className={classes.messageSourceLink}>See Source</span>
                         </span>
                         : null}
@@ -312,6 +314,7 @@ export class ConversationBar extends React.PureComponent {
             />
           </Grid>
         </Grid>
+        <CodeModal handleClose={() => { this.setState({ openCodeModal: false }) }} doc={this.props.doc} open={this.state.openCodeModal} />
       </Grid>
     );
   }
@@ -320,8 +323,12 @@ export class ConversationBar extends React.PureComponent {
 ConversationBar.propTypes = {
   classes: PropTypes.object,
   intl: intlShape.isRequired,
-  onToggleConversationBar: PropTypes.func,
   notifications: PropTypes.array,
+  doc: PropTypes.object,
+  onResetSession: PropTypes.func,
+  onCloseNotification: PropTypes.func,
+  onSendMessage: PropTypes.func,
+  onLoadDoc: PropTypes.func,
 }; 
 
 const mapStateToProps = createStructuredSelector({
@@ -329,6 +336,7 @@ const mapStateToProps = createStructuredSelector({
   notifications: makeSelectNotifications(),
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
+  doc: makeSelectDoc()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -345,6 +353,9 @@ function mapDispatchToProps(dispatch) {
         message,
       }));
     },
+    onLoadDoc: (docId) => {
+      dispatch(loadDoc(docId));
+    }
   };
 }
 

@@ -42,7 +42,7 @@ module.exports = (request, reply) => {
                                 return callbackGetDomains(null, res.result.domains);
                             });
                         },
-                        (exportedDomains, callbackGetDomainSayingsAndActions) => {
+                        (exportedDomains, callbackGetDomainSayings) => {
 
                             Async.map(exportedDomains, (exportedDomain, callbackGetDataDomain) => {
 
@@ -70,109 +70,7 @@ module.exports = (request, reply) => {
                                             return callabckGetSayingsData(null, res.result.sayings);
                                         });
                                     },
-                                    actions: (callbacGetActionsData) => {
-
-                                        Async.waterfall([
-                                            (callbackGetActionsFromDomain) => {
-
-                                                server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action`, (res) => {
-
-                                                    if (res.statusCode !== 200) {
-                                                        const error = Boom.create(res.statusCode, `An error occurred getting the list of actions for domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                        return callbackGetActionsFromDomain(error, null);
-                                                    }
-                                                    return callbackGetActionsFromDomain(null, res.result.actions);
-                                                });
-                                            },
-                                            (exportedActionsForDomain, callbackGetWebhookForEachAction) => {
-
-                                                Async.map(exportedActionsForDomain, (exportedActionForDomain, callbackGetActionWebhook) => {
-
-                                                    if (!exportedActionForDomain.useWebhook){
-                                                        return callbackGetActionWebhook(null, exportedActionForDomain);
-                                                    }
-                                                    server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action/${exportedActionForDomain.id}/webhook`, (res) => {
-
-                                                        if (res.statusCode !== 200) {
-                                                            if (res.statusCode === 404) {
-
-                                                                return callbackGetActionWebhook(null, exportedActionForDomain);
-                                                            }
-                                                            const error = Boom.create(res.statusCode, `An error occurred getting the webhook of action ${exportedActionForDomain.action} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
-                                                            return callbackGetActionWebhook(error, null);
-                                                        }
-                                                        if (!withReferences) {
-                                                            delete res.result.id;
-                                                            delete res.result.agent;
-                                                            delete res.result.domain;
-                                                            delete res.result.action;
-                                                        }
-                                                        return callbackGetActionWebhook(null, Object.assign(exportedActionForDomain, { webhook: res.result }));
-                                                    });
-                                                }, (err, actionsWithWebhooks) => {
-
-                                                    if (err) {
-                                                        return callbackGetWebhookForEachAction(err);
-                                                    }
-                                                    return callbackGetWebhookForEachAction(null, actionsWithWebhooks);
-                                                });
-                                            },
-                                            (exportedActionsForDomain, callbackGetPostFormatForEachAction) => {
-
-                                                Async.map(exportedActionsForDomain, (exportedActionForDomain, callbackGetActionPostFormat) => {
-
-                                                    if (!exportedActionForDomain.usePostFormat){
-                                                        return callbackGetActionPostFormat(null, exportedActionForDomain);
-                                                    }
-                                                    server.inject(`/agent/${agentId}/domain/${exportedDomain.id}/action/${exportedActionForDomain.id}/postFormat`, (res) => {
-
-                                                        if (res.statusCode !== 200) {
-                                                            if (res.statusCode === 404) {
-                                                                return callbackGetActionPostFormat(null, exportedActionForDomain);
-
-                                                                const error = Boom.create(res.statusCode, `An error occurred getting the post format of action ${exportedActionForDomain.actionName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
-                                                                return callbackGetActionPostFormat(error, null);
-                                                            }
-                                                        }
-                                                        if (!withReferences) {
-                                                            delete res.result.id;
-                                                            delete res.result.agent;
-                                                            delete res.result.domain;
-                                                            delete res.result.action;
-                                                        }
-                                                        return callbackGetActionPostFormat(null, Object.assign(exportedActionForDomain, { postFormat: res.result }));
-                                                    });
-                                                }, (err, actionsWithPostFormats) => {
-
-                                                    if (err) {
-                                                        return callbackGetPostFormatForEachAction(err);
-                                                    }
-                                                    return callbackGetPostFormatForEachAction(null, actionsWithPostFormats);
-                                                });
-                                            }
-                                        ], (err, actionsWithWebhooksAndPostFormat) => {
-
-                                            if (err) {
-                                                return callbacGetActionsData(err);
-                                            }
-                                            if (!withReferences) {
-                                                actionsWithWebhooksAndPostFormat.forEach((action) => {
-
-                                                    delete action.id;
-                                                    delete action.agent;
-                                                    delete action.domain;
-                                                    if (action.slots){
-                                                        action.slots.forEach((slot) => {
-
-                                                            delete slot.keywordId;
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                            return callbacGetActionsData(null, actionsWithWebhooksAndPostFormat);
-                                        });
-                                    }
-                                }, (err, sayingsAndActions) => {
+                                }, (err, sayings) => {
 
                                     if (err) {
                                         return callbackGetDataDomain(err);
@@ -183,14 +81,14 @@ module.exports = (request, reply) => {
                                         delete exportedDomain.id;
                                         delete exportedDomain.agent;
                                     }
-                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, sayingsAndActions));
+                                    return callbackGetDataDomain(null, Object.assign(exportedDomain, sayings));
                                 });
-                            }, (err, domainsWithSayingsAndActions) => {
+                            }, (err, domainsWithSayings) => {
 
                                 if (err) {
-                                    return callbackGetDomainSayingsAndActions(err);
+                                    return callbackGetDomainSayings(err);
                                 }
-                                return callbackGetDomainSayingsAndActions(null, Object.assign(exportedAgent, { domains: domainsWithSayingsAndActions }));
+                                return callbackGetDomainSayings(null, Object.assign(exportedAgent, { domains: domainsWithSayings }));
                             });
                         }
                     ], (err, agentWithDomains) => {
@@ -218,6 +116,105 @@ module.exports = (request, reply) => {
                             });
                         }
                         return callbackGetKeywords(null, Object.assign(exportedAgent, { keywords: res.result.keywords }));
+                    });
+                },
+                actions: (callbacGetActionsData) => {
+
+                    Async.waterfall([
+                        (callbackGetActionsFromAgent) => {
+
+                            server.inject(`/agent/${agentId}/action`, (res) => {
+
+                                if (res.statusCode !== 200) {
+                                    const error = Boom.create(res.statusCode, `An error occurred getting the list of actions of the agent ${exportedAgent.agent}`);
+                                    return callbackGetActionsFromAgent(error, null);
+                                }
+                                return callbackGetActionsFromAgent(null, res.result.actions);
+                            });
+                        },
+                        (exportedActionsForAgent, callbackGetWebhookForEachAction) => {
+
+                            Async.map(exportedActionsForAgent, (exportedActionForAgent, callbackGetActionWebhook) => {
+
+                                if (!exportedActionForAgent.useWebhook){
+                                    return callbackGetActionWebhook(null, exportedActionForAgent);
+                                }
+                                server.inject(`/action/${exportedActionForAgent.id}/webhook`, (res) => {
+
+                                    if (res.statusCode !== 200) {
+                                        if (res.statusCode === 404) {
+
+                                            return callbackGetActionWebhook(null, exportedActionForAgent);
+                                        }
+                                        const error = Boom.create(res.statusCode, `An error occurred getting the webhook of action ${exportedActionForAgent.action} in domain ${exportedDomain.domain} of the agent ${exportedAgent.agent}`);
+                                        return callbackGetActionWebhook(error, null);
+                                    }
+                                    if (!withReferences) {
+                                        delete res.result.id;
+                                        delete res.result.agent;
+                                        delete res.result.action;
+                                    }
+                                    return callbackGetActionWebhook(null, Object.assign(exportedActionForAgent, { webhook: res.result }));
+                                });
+                            }, (err, actionsWithWebhooks) => {
+
+                                if (err) {
+                                    return callbackGetWebhookForEachAction(err);
+                                }
+                                return callbackGetWebhookForEachAction(null, actionsWithWebhooks);
+                            });
+                        },
+                        (exportedActionsForAgent, callbackGetPostFormatForEachAction) => {
+
+                            Async.map(exportedActionsForAgent, (exportedActionForAgent, callbackGetActionPostFormat) => {
+
+                                if (!exportedActionForAgent.usePostFormat){
+                                    return callbackGetActionPostFormat(null, exportedActionForAgent);
+                                }
+                                server.inject(`/action/${exportedActionForAgent.id}/postFormat`, (res) => {
+
+                                    if (res.statusCode !== 200) {
+                                        if (res.statusCode === 404) {
+                                            return callbackGetActionPostFormat(null, exportedActionForAgent);
+
+                                            const error = Boom.create(res.statusCode, `An error occurred getting the post format of action ${exportedActionForAgent.actionName} in domain ${exportedDomain.domainName} of the agent ${exportedAgent.agentName}`);
+                                            return callbackGetActionPostFormat(error, null);
+                                        }
+                                    }
+                                    if (!withReferences) {
+                                        delete res.result.id;
+                                        delete res.result.agent;
+                                        delete res.result.action;
+                                    }
+                                    return callbackGetActionPostFormat(null, Object.assign(exportedActionForAgent, { postFormat: res.result }));
+                                });
+                            }, (err, actionsWithPostFormats) => {
+
+                                if (err) {
+                                    return callbackGetPostFormatForEachAction(err);
+                                }
+                                return callbackGetPostFormatForEachAction(null, actionsWithPostFormats);
+                            });
+                        }
+                    ], (err, actionsWithWebhooksAndPostFormat) => {
+
+                        if (err) {
+                            return callbacGetActionsData(err);
+                        }
+                        if (!withReferences) {
+                            actionsWithWebhooksAndPostFormat.forEach((action) => {
+
+                                delete action.id;
+                                delete action.agent;
+                                if (action.slots){
+                                    action.slots.forEach((slot) => {
+
+                                        delete slot.keywordId;
+                                    });
+                                }
+                            });
+                        }
+                        return callbacGetActionsData(null, Object.assign(exportedAgent, { actions: actionsWithWebhooksAndPostFormat }));
                     });
                 },
                 webhook: (callbackGetWebhook) => {

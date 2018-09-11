@@ -61,7 +61,7 @@ const getBestRasaResult = (conversationStateObject) => {
 
 const getActionByName = (actionName, conversationStateObject) => {
 
-    const agentActions = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'actions')));
+    const agentActions = conversationStateObject.agent.actions;
     const action = _.filter(agentActions, (agentAction) => {
 
         return agentAction.actionName === actionName;
@@ -69,30 +69,15 @@ const getActionByName = (actionName, conversationStateObject) => {
     return action;
 };
 
-const getDomainOfAction = (conversationStateObject) => {
-
-    if (conversationStateObject.action) {
-        const domain = _.filter(conversationStateObject.agent.domains, (agentDomain) => {
-
-            return agentDomain.domainName === conversationStateObject.action.domain;
-        })[0];
-        return domain;
-    }
-    return null;
-};
-
 const getActionData = (conversationStateObject) => {
 
     if (conversationStateObject.rasaResult.action) {
-        if (conversationStateObject.agent.domains) {
-            const agentActions = _.compact(_.flatten(_.map(conversationStateObject.agent.domains, 'actions')));
-            const action = _.filter(agentActions, (agentAction) => {
+        const agentActions = conversationStateObject.agent.actions;
+        const action = _.filter(agentActions, (agentAction) => {
 
-                return agentAction.actionName === conversationStateObject.rasaResult.action.name;
-            })[0];
-            return action;
-        }
-        return null;
+            return agentAction.actionName === conversationStateObject.rasaResult.action.name;
+        })[0];
+        return action;
     }
     return null;
 };
@@ -172,6 +157,15 @@ const persistContext = (server, conversationStateObject, cb) => {
     });
 };
 
+const getDomainByName = (conversationStateObject, domainName) => {
+
+    const domain = _.filter(conversationStateObject.agent.domains, (agentDomain) => {
+
+        return agentDomain.domainName === domainName;
+    })[0];
+    return domain;
+};
+
 module.exports = (server, conversationStateObject, callback) => {
 
     conversationStateObject.currentContext = getCurrentContext(conversationStateObject);
@@ -194,7 +188,7 @@ module.exports = (server, conversationStateObject, callback) => {
             });
         }
         else {
-            conversationStateObject.domain = getDomainOfAction(conversationStateObject);
+            conversationStateObject.domain = getDomainByName(conversationStateObject, conversationStateObject.rasaResult.domain);
             if (conversationStateObject.action && conversationStateObject.domain && conversationStateObject.rasaResult.action.confidence > conversationStateObject.domain.actionThreshold) {
                 if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.action.name !== conversationStateObject.currentContext.action)) {
                     conversationStateObject.context.push({
@@ -263,7 +257,7 @@ module.exports = (server, conversationStateObject, callback) => {
                                     if (err) {
                                         return callback(err, null);
                                     }
-                                    return callback(response);
+                                    return callback(null, response);
                                 });
                             }
                         }
@@ -274,7 +268,7 @@ module.exports = (server, conversationStateObject, callback) => {
                             if (err) {
                                 return callback(err, null);
                             }
-                            return callback(response);
+                            return callback(null, response);
                         });
                     }
                 }
@@ -284,7 +278,7 @@ module.exports = (server, conversationStateObject, callback) => {
                         if (err) {
                             return callback(err, null);
                         }
-                        return callback(response);
+                        return callback(null, response);
                     });
                 }
             }

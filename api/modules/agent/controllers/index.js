@@ -8,19 +8,18 @@ const FindDomainsByAgentIdController = require('./findDomainsByAgentId.agent.con
 const FindDomainByIdByAgentIdController = require('./findDomainByIdByAgentId.agent.controller');
 const FindKeywordsByAgentIdController = require('./findKeywordsByAgentId.agent.controller');
 const FindKeywordByIdByAgentIdController = require('./findKeywordByIdByAgentId.agent.controller');
-const FindActionByIdInDomainByIdByAgentIdController = require('./findActionByIdInDomainByIdByAgentId.agent.controller');
-const FindActionsInDomainByIdByAgentIdController = require('./findActionsInDomainByIdByAgentId.agent.controller');
+const FindActionByIdByAgentIdController = require('./findActionByIdByAgentId.agent.controller');
+const FindActionsByAgentIdController = require('./findActionsByAgentId.agent.controller');
 const FindSayingByIdInDomainByIdByAgentIdController = require('./findSayingByIdInDomainByIdByAgentId.agent.controller');
 const FindSayingsInDomainByIdByAgentIdController = require('./findSayingsInDomainByIdByAgentId.agent.controller');
-const FindActionWebhookInDomainByIdByAgentIdController = require('./findActionWebhookInDomainByIdByAgentId.agent.controller');
-const FindActionPostFormatInDomainByIdByAgentIdController = require('./findActionPostFormatInDomainByIdByAgentId.agent.controller');
+const FindActionWebhookByAgentIdController = require('./findActionWebhookByAgentId.agent.controller');
+const FindActionPostFormatByAgentIdController = require('./findActionPostFormatByAgentId.agent.controller');
 const UpdateByIdController = require('./updateById.agent.controller');
 const ParseController = require('./parse.agent.controller');
 const ConverseController = require('./converse.agent.controller');
 const ExportController = require('./export.agent.controller');
 const ImportController = require('./import.agent.controller');
 const FindSayingsByAgentIdController = require('./findSayingsByAgentId.agent.controller');
-const FindActionsByAgentIdController = require('./findActionsByAgentId.agent.controller');
 const AddWebhookController = require('./addWebhook.agent.controller');
 const AddPostFormatController = require('./addPostFormat.agent.controller');
 const FindWebhookController = require('./findWebhook.agent.controller');
@@ -55,17 +54,17 @@ const AgentController = {
 
     findDomainByIdByAgentId: FindDomainByIdByAgentIdController,
 
-    findActionByIdInDomainByIdByAgentId: FindActionByIdInDomainByIdByAgentIdController,
+    findActionByIdByAgentId: FindActionByIdByAgentIdController,
 
-    findActionsInDomainByIdByAgentId: FindActionsInDomainByIdByAgentIdController,
+    findActionsByAgentId: FindActionsByAgentIdController,
 
     findSayingByIdInDomainByIdByAgentId: FindSayingByIdInDomainByIdByAgentIdController,
 
     findSayingsInDomainByIdByAgentId: FindSayingsInDomainByIdByAgentIdController,
 
-    findActionWebhookInDomainByIdByAgentId: FindActionWebhookInDomainByIdByAgentIdController,
+    findActionWebhookByAgentId: FindActionWebhookByAgentIdController,
 
-    findActionPostFormatInDomainByIdByAgentId: FindActionPostFormatInDomainByIdByAgentIdController,
+    findActionPostFormatByAgentId: FindActionPostFormatByAgentIdController,
 
     updateById: UpdateByIdController,
 

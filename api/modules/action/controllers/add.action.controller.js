@@ -10,7 +10,6 @@ module.exports = (request, reply) => {
 
     let actionId = null;
     let agentId = null;
-    let domainId = null;
     let action = request.payload;
     const server = request.server;
     const redis = server.app.redis;
@@ -37,34 +36,7 @@ module.exports = (request, reply) => {
                 },
                 (callback) => {
 
-                    Async.parallel([
-                        (cllbk) => {
-
-                            redis.zscore(`agentDomains:${agentId}`, action.domain, (err, id) => {
-
-                                if (err) {
-                                    const error = Boom.badImplementation(`An error occurred checking if the domain ${action.domain} exists in the agent ${action.agent}.`);
-                                    return cllbk(error);
-                                }
-                                if (id) {
-                                    domainId = id;
-                                    return cllbk(null);
-                                }
-                                const error = Boom.badRequest(`The domain ${action.domain} doesn't exist in the agent ${action.agent}`);
-                                return cllbk(error);
-                            });
-                        },
-                        (cllbk) => {
-
-                            ActionTools.validateKeywordsTool(redis, agentId, action.slots, (err) => {
-
-                                if (err) {
-                                    return cllbk(err);
-                                }
-                                return cllbk(null);
-                            });
-                        }
-                    ], (err) => {
+                    ActionTools.validateKeywordsTool(redis, agentId, action.slots, (err) => {
 
                         if (err) {
                             return callback(err);
@@ -92,9 +64,9 @@ module.exports = (request, reply) => {
                 return cb(null);
             });
         },
-        addToDomain: (cb) => {
+        addToAgent: (cb) => {
 
-            redis.zadd(`domainActions:${domainId}`, 'NX', actionId, action.actionName, (err, addResponse) => {
+            redis.zadd(`agentActions:${agentId}`, 'NX', actionId, action.actionName, (err, addResponse) => {
 
                 if (err) {
                     const error = Boom.badImplementation('An error occurred adding the name to the actions list.');
@@ -103,7 +75,7 @@ module.exports = (request, reply) => {
                 if (addResponse !== 0) {
                     return cb(null);
                 }
-                const error = Boom.badRequest(`A action with this name already exists in the domain ${action.domain}.`);
+                const error = Boom.badRequest(`A action with this name already exists in the agent ${action.agent}.`);
                 return cb(error);
             });
         },
@@ -143,29 +115,6 @@ module.exports = (request, reply) => {
         if (err) {
             return reply(err, null);
         }
-
-        const resultAction = result.action;
-
-        ActionTools.updateKeywordsDomainTool(server, redis, resultAction, agentId, domainId, null, (err) => {
-
-            if (err) {
-                return reply(err);
-            }
-            redis.hmset(`agent:${agentId}`, { status: Status.outOfDate }, (err) => {
-
-                if (err){
-                    const error = Boom.badImplementation('An error occurred updating the agent status.');
-                    return reply(error);
-                }
-                redis.hmset(`domain:${domainId}`, { status: Status.outOfDate }, (err) => {
-
-                    if (err){
-                        const error = Boom.badImplementation('An error occurred updating the domain status.');
-                        return reply(error);
-                    }
-                    return reply(resultAction);
-                });
-            });
-        });
+        return reply(result.action);
     });
 };

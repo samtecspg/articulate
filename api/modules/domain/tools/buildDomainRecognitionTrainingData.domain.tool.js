@@ -72,7 +72,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
 
                             const buildedSaying = {
                                 text: sayingText,
-                                saying: domain.domainName,
+                                intent: domain.domainName,
                                 entities: newKeywordsList
                             };
 
@@ -96,7 +96,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
 
                     const buildedSaying = {
                         text: saying.userSays,
-                        saying: domain.domainName,
+                        intent: domain.domainName,
                         entities: newKeywordsList
                     };
 
@@ -105,7 +105,7 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
 
                 const buildedSaying = {
                     text: saying.userSays,
-                    saying: domain.domainName,
+                    intent: domain.domainName,
                     entities: []
                 };
                 return buildedSaying;

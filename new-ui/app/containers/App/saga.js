@@ -6,6 +6,7 @@ import {
 } from 'redux-saga/effects';
 
 import {
+  LOAD_DOC,
   LOAD_SETTINGS,
   SEND_MESSAGE,
   RESET_SESSION,
@@ -16,7 +17,7 @@ import {
 } from '../SettingsPage/saga';
 
 import {
-  respondMessage, resetSessionSuccess
+  respondMessage, resetSessionSuccess, loadDocSuccess, loadDocError
 } from './actions';
 
 import {
@@ -74,8 +75,19 @@ export function* deleteSession(payload) {
   }
 }
 
+export function* getDoc(payload) {
+  const { api, docId } = payload;
+  try {
+    const response = yield call(api.doc.getDocId, { id: docId });
+    yield put(loadDocSuccess({ doc: response.obj }));
+  } catch (err) {
+    yield put(loadDocError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(SEND_MESSAGE, getConverse);
   yield takeLatest(RESET_SESSION, deleteSession);
+  yield takeLatest(LOAD_DOC, getDoc);
 };

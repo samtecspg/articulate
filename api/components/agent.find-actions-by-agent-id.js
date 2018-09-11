@@ -8,7 +8,7 @@ const PORT_REDIS = 'redis';
 const PORT_OUT = 'out';
 const PORT_ERROR = 'error';
 const PORT_IN = 'in';
-const PORT_DOMAIN = 'domain_object';
+const PORT_DOMAIN = 'agent_object';
 
 exports.getComponent = () => {
 
@@ -23,7 +23,7 @@ exports.getComponent = () => {
 
     c.inPorts.add(PORT_DOMAIN, {
         datatype: 'boolean',
-        description: 'Domain Exists'
+        description: 'Actioin Exists'
     });
 
     c.inPorts.add(PORT_REDIS, {
@@ -47,11 +47,11 @@ exports.getComponent = () => {
 
         const { scope } = input;
         const redis = input.getData(PORT_REDIS);
-        const domain = input.getData(PORT_DOMAIN);
+        const agent = input.getData(PORT_DOMAIN);
         const { start, limit, filter, id } = input.getData(PORT_IN);
 
-        if (!domain) {
-            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound('Domain not found'), { scope }) });
+        if (!agent) {
+            return output.sendDone({ [PORT_ERROR]: new NoFlo.IP('data', Boom.notFound('Agent not found'), { scope }) });
         }
         let total = 0;
         RedisDS
@@ -59,7 +59,7 @@ exports.getComponent = () => {
                 redis,
                 start: 0,
                 limit: -1,
-                type: `domainActions:${id}`,
+                type: `agentActions:${id}`,
                 subType: 'action'
             })
             .then((actions) => {

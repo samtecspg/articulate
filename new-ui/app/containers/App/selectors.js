@@ -67,6 +67,13 @@ const makeSelectWaitingResponse = () => createSelector(
   }
 );
 
+const makeSelectDoc = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.doc;
+  }
+);
+
 /* Agents */
 const makeSelectAgents = () => createSelector(
   selectGlobalDomain,
@@ -246,6 +253,7 @@ export {
   makeSelectNotifications,
   makeSelectMessages,
   makeSelectWaitingResponse,
+  makeSelectDoc,
 
   makeSelectAgents,
 

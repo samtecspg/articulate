@@ -89,7 +89,6 @@ module.exports = (request, reply) => {
 
     const actionId = request.params.id;
     let agentId = null;
-    let domainId = null;
     const updateData = request.payload;
 
     const server = request.server;
@@ -129,22 +128,6 @@ module.exports = (request, reply) => {
         },
         (currentAction, cb) => {
 
-            redis.zscore(`agentDomains:${agentId}`, currentAction.domain, (err, id) => {
-
-                if (err){
-                    const error = Boom.badImplementation('An error occurred getting the id of the domain.');
-                    return cb(error);
-                }
-                if (id){
-                    domainId = id;
-                    return cb(null, currentAction);
-                }
-                const error = Boom.badRequest(`The domain ${currentAction.domain} doesn't exist`);
-                return cb(error, null);
-            });
-        },
-        (currentAction, cb) => {
-
             if (updateData.slots){
                 ActionTools.validateKeywordsTool(redis, agentId, updateData.slots, (err) => {
 
@@ -164,22 +147,22 @@ module.exports = (request, reply) => {
                 Async.waterfall([
                     (callback) => {
 
-                        redis.zadd(`domainActions:${domainId}`, 'NX', actionId, updateData.actionName, (err, addResponse) => {
+                        redis.zadd(`agentActions:${agentId}`, 'NX', actionId, updateData.actionName, (err, addResponse) => {
 
                             if (err) {
-                                const error = Boom.badImplementation(`An error occurred adding the name ${updateData.actionName} to the actions list of the domain ${currentAction.domain}.`);
+                                const error = Boom.badImplementation(`An error occurred adding the name ${updateData.actionName} to the actions list of the agent ${currentAction.agent}.`);
                                 return callback(error);
                             }
                             if (addResponse !== 0){
                                 return callback(null);
                             }
-                            const error = Boom.badRequest(`A action with the name ${updateData.actionName} already exists in the domain ${currentAction.domain}.`);
+                            const error = Boom.badRequest(`A action with the name ${updateData.actionName} already exists in the agent ${currentAction.agent}.`);
                             return callback(error, null);
                         });
                     },
                     (callback) => {
 
-                        redis.zrem(`domainActions:${domainId}`, currentAction.actionName, (err) => {
+                        redis.zrem(`agentActions:${agentId}`, currentAction.actionName, (err) => {
 
                             if (err){
                                 const error = Boom.badImplementation( `An error occurred removing the name ${currentAction.actionName} from the actions list of the agent ${currentAction.agent}.`);
@@ -190,7 +173,7 @@ module.exports = (request, reply) => {
                     },
                     (callback) => {
 
-                        updateDataFunction(redis, server, actionId, currentAction, updateData, agentId, domainId, (err, result) => {
+                        updateDataFunction(redis, server, actionId, currentAction, updateData, (err, result) => {
 
                             if (err){
                                 const error = Boom.badImplementation('An error occurred adding the action data.');
@@ -208,7 +191,7 @@ module.exports = (request, reply) => {
                 });
             }
             else {
-                updateDataFunction(redis, server, actionId, currentAction, updateData, agentId, domainId, (err, result) => {
+                updateDataFunction(redis, server, actionId, currentAction, updateData, (err, result) => {
 
                     if (err){
                         const error = Boom.badImplementation('An error occurred adding the action data.');
@@ -224,25 +207,93 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
 
-        redis.exists(`actionWebhook:${result.id}`, (err, exists) => {
+        Async.parallel([
+            (cb) => {
+                Async.series([
+                    (cbCheckExistence) => {
 
-            if (err){
-                const error = Boom.badImplementation('Action updated. An error occurred checking if the scenario exists.');
-                return reply(error);
-            }
-            if (exists){
-                redis.hmset(`actionWebhook:${result.id}`, { action: result.actionName }, (err) => {
+                        redis.exists(`actionWebhook:${result.id}`, (err, exists) => {
 
-                    if (err){
-                        const error = Boom.badImplementation('Action updated. An error occurred updating the new values in the scenario of the action.');
-                        return reply(error);
+                            if (err){
+                                const error = Boom.badImplementation('Action updated. An error occurred checking if the webhook exists.');
+                                return cbCheckExistence(error);
+                            }
+                            if (exists){
+                                return cbCheckExistence(null);
+                            }
+                            else {
+                                return cbCheckExistence({ webhookNotExists: true });
+                            }
+                        });
+                    },
+                    (cbUpdateWebhook) => {
+
+                        redis.hmset(`actionWebhook:${result.id}`, { action: result.actionName }, (err) => {
+
+                            if (err){
+                                const error = Boom.badImplementation('Action updated. An error occurred updating the new values in the webhook of the action.');
+                                return cbUpdateWebhook(error);
+                            }
+                            return cbUpdateWebhook(null);
+                        });
                     }
-                    return reply(Cast(result, 'action'));
+                ], (errUpdateWebhook) => {
+
+                    if (errUpdateWebhook){
+                        if (errUpdateWebhook.webhookNotExists) {
+                            return cb(null);
+                        }
+                        return cb(errUpdateWebhook);
+                    }
+                    return cb(null);
+                });
+            },
+            (cb) => {
+                Async.series([
+                    (cbCheckExistence) => {
+
+                        redis.exists(`actionPostFormat:${result.id}`, (err, exists) => {
+
+                            if (err){
+                                const error = Boom.badImplementation('Action updated. An error occurred checking if the post format exists.');
+                                return cbCheckExistence(error);
+                            }
+                            if (exists){
+                                return cbCheckExistence(null);
+                            }
+                            else {
+                                return cbCheckExistence({ postFormatNotExists: true });
+                            }
+                        });
+                    },
+                    (updatePostFormat) => {
+
+                        redis.hmset(`actionPostFormat:${result.id}`, { action: result.actionName }, (err) => {
+
+                            if (err){
+                                const error = Boom.badImplementation('Action updated. An error occurred updating the new values in the post format of the action.');
+                                return updatePostFormat(error);
+                            }
+                            return updatePostFormat(null);
+                        });
+                    }
+                ], (errUpdatePostFormat) => {
+
+                    if (errUpdatePostFormat){
+                        if (errUpdatePostFormat.postFormatNotExists) {
+                            return cb(null);
+                        }
+                        return cb(errUpdatePostFormat);
+                    }
+                    return cb(null);
                 });
             }
-            else {
-                return reply(Cast(result, 'action'));
+        ], (errUpdate) => {
+
+            if (errUpdate){
+                return reply(err);
             }
+            return reply(Cast(result, 'action'));
         });
     });
 };

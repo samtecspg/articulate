@@ -14,7 +14,6 @@ class ActionValidate {
 
                 return {
                     agent: ActionSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the action.')),
-                    domain: ActionSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the action')),
                     actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
                     useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
                     usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fullfilment.')),
@@ -88,7 +87,6 @@ class ActionValidate {
 
                 return {
                     agent: ActionSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the webhook.')),
-                    domain: ActionSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the webhook.')),
                     action: ActionSchema.actionName.required().error(new Error('The action is required. Please specify an action for the webhook.')),
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.required().valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
@@ -146,7 +144,6 @@ class ActionValidate {
 
                 return {
                     agent: ActionSchema.agent.required().error(new Error('The agent is required. Please specify an agent for the post format.')),
-                    domain: ActionSchema.domain.required().error(new Error('The domain is required. Please specify a domain for the post format.')),
                     action: ActionSchema.actionName.required().error(new Error('The action is required. Please specify an action for the post format.')),
                     postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                 };

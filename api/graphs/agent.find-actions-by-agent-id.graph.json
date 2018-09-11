@@ -1,8 +1,8 @@
 {
   "caseSensitive": false,
   "properties": {
-    "name": "DomainFindActionsByDomainId",
-    "description": "DomainFindActionsByDomainId",
+    "name": "AgentFindActionsByAgentId",
+    "description": "AgentFindActionsByAgentId",
     "icon": "file",
     "environment": {
       "type": "noflo-nodejs"
@@ -32,7 +32,7 @@
   },
   "outports": {
     "out": {
-      "process": "domain.find-actions-by-domain-id",
+      "process": "agent.find-actions-by-agent-id",
       "port": "out",
       "metadata": {
         "x": 1152,
@@ -75,24 +75,24 @@
         "label": "redis"
       }
     },
-    "domain.find-actions-by-domain-id": {
-      "component": "alpha-nlu-api/domain.find-actions-by-domain-id",
+    "agent.find-actions-by-agent-id": {
+      "component": "alpha-nlu-api/agent.find-actions-by-agent-id",
       "metadata": {
         "x": 720,
         "y": 144,
         "width": 72,
         "height": 72,
-        "label": "domain.find-actions-by-domain-id"
+        "label": "agent.find-actions-by-agent-id"
       }
     },
-    "domain.find-by-id": {
-      "component": "alpha-nlu-api/domain.find-by-id",
+    "agent.find-by-id": {
+      "component": "alpha-nlu-api/agent.find-by-id",
       "metadata": {
         "x": 360,
         "y": 144,
         "width": 72,
         "height": 72,
-        "label": "domain.find-by-id"
+        "label": "agent.find-by-id"
       }
     },
     "http.request-data-parser": {
@@ -113,7 +113,7 @@
         "port": "redis"
       },
       "tgt": {
-        "process": "domain.find-actions-by-domain-id",
+        "process": "agent.find-actions-by-agent-id",
         "port": "redis"
       },
       "metadata": {
@@ -126,7 +126,7 @@
         "port": "redis"
       },
       "tgt": {
-        "process": "domain.find-by-id",
+        "process": "agent.find-by-id",
         "port": "redis"
       },
       "metadata": {
@@ -135,12 +135,12 @@
     },
     {
       "src": {
-        "process": "domain.find-by-id",
+        "process": "agent.find-by-id",
         "port": "out"
       },
       "tgt": {
-        "process": "domain.find-actions-by-domain-id",
-        "port": "domain_object"
+        "process": "agent.find-actions-by-agent-id",
+        "port": "agent_object"
       }
     },
     {
@@ -149,7 +149,7 @@
         "port": "out"
       },
       "tgt": {
-        "process": "domain.find-actions-by-domain-id",
+        "process": "agent.find-actions-by-agent-id",
         "port": "in"
       },
       "metadata": {
@@ -162,7 +162,7 @@
         "port": "out"
       },
       "tgt": {
-        "process": "domain.find-by-id",
+        "process": "agent.find-by-id",
         "port": "in"
       },
       "metadata": {
@@ -171,7 +171,7 @@
     },
     {
       "src": {
-        "process": "domain.find-actions-by-domain-id",
+        "process": "agent.find-actions-by-agent-id",
         "port": "error"
       },
       "tgt": {
@@ -184,7 +184,7 @@
     },
     {
       "src": {
-        "process": "domain.find-by-id",
+        "process": "agent.find-by-id",
         "port": "error"
       },
       "tgt": {

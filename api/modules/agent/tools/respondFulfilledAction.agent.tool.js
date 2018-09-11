@@ -30,13 +30,11 @@ module.exports = (conversationStateObject, callback) => {
             if (webhookResponse.textResponse){
                 return callback(null, {
                     textResponse: webhookResponse.textResponse,
-                    docId: conversationStateObject.docId
                 });
             }
             const textResponse = getTextResponse(conversationStateObject, webhookResponse);
             return callback(null, Object.assign( { webhookResponse }, {
                 textResponse,
-                docId: conversationStateObject.docId
             }));
         });
     }
@@ -44,7 +42,6 @@ module.exports = (conversationStateObject, callback) => {
         const textResponse = getTextResponse(conversationStateObject);
         return callback(null, {
             textResponse,
-            docId: conversationStateObject.docId
         });
     }
 };

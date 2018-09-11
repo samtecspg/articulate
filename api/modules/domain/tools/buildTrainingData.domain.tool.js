@@ -13,9 +13,13 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
         }
 
         let keywordsCombinations = [];
-        if (results.keywords.length > 0){
-            keywordsCombinations = GetKeywordsCombinations(results.keywords, results.sayings);
+        if (extraTrainingData){
+            if (results.keywords.length > 0){
+                keywordsCombinations = GetKeywordsCombinations(results.keywords, results.sayings);
+            }
         }
+
+        const uniqueActionsCount = _.uniq(_.flattenDeep(_.map(results.sayings, 'actions'))).length;
 
         const common_examples = _.uniq(_.flatten(_.map(results.sayings, (saying) => {
 
@@ -131,7 +135,7 @@ const buildTrainingData = (server, domainId, extraTrainingData, callback) => {
         });
 
         const data = {
-            numberOfSayings: results.sayings.length,
+            numberOfSayings: uniqueActionsCount,
             trainingSet: {
                 rasa_nlu_data: {
                     common_examples,

@@ -65,7 +65,7 @@ module.exports = (server, redis, agent, cb) => {
                     const modelFolderName = domainName + '_' + domain.model;
                     const justER = modelFolderName.indexOf('just_er') !== -1;
                     if (justER){
-                        server.inject(`/agent/${agent.id}/domain/${domain.id}/saying`, (res) => {
+                        server.inject(`/domain/${domain.id}/saying`, (res) => {
 
                             if (res.statusCode !== 200){
                                 const error = Boom.create(res.statusCode, `An error occurred getting the list of sayings of the domain ${domain.domainName}`);

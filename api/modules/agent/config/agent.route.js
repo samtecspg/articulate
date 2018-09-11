@@ -105,28 +105,12 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/action',
-        config: {
-            description: 'Find list of actions for the given domain and agent',
-            tags: ['api'],
-            plugins: {
-                'flow-loader': {
-                    name: `${PKG.name}/agent.find-actions-in-domain-by-id-by-agent-id.graph`,
-                    consumes: ['redis']
-                }
-            },
-            validate: AgentValidator.findActionsInDomainByIdByAgentId,
-            handler: AgentController.findActionsInDomainByIdByAgentId
-        }
-    },
-    {
-        method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/action/{actionId}',
+        path: '/agent/{id}/action/{actionId}',
         config: {
             description: 'Find an action by id given a domain and an agent',
             tags: ['api'],
-            validate: AgentValidator.findActionByIdInDomainByIdByAgentId,
-            handler: AgentController.findActionByIdInDomainByIdByAgentId
+            validate: AgentValidator.findActionByIdByAgentId,
+            handler: AgentController.findActionByIdByAgentId
         }
     },
     {
@@ -157,7 +141,7 @@ const AgentRoutes = [
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/action/{actionId}/webhook',
+        path: '/agent/{id}/action/{actionId}/webhook',
         config: {
             description: 'Find the webhook related with an action, for the given domain and agent',
             plugins: {
@@ -167,13 +151,13 @@ const AgentRoutes = [
                 }
             },
             tags: ['api'],
-            validate: AgentValidator.findActionWebhookInDomainByIdByAgentId,
-            handler: AgentController.findActionWebhookInDomainByIdByAgentId
+            validate: AgentValidator.findActionWebhookByAgentId,
+            handler: AgentController.findActionWebhookByAgentId
         }
     },
     {
         method: 'GET',
-        path: '/agent/{id}/domain/{domainId}/action/{actionId}/postFormat',
+        path: '/agent/{id}/action/{actionId}/postFormat',
         config: {
             description: 'Find the post format related with an action, for the given domain and agent',
             plugins: {
@@ -183,8 +167,8 @@ const AgentRoutes = [
                 }
             },
             tags: ['api'],
-            validate: AgentValidator.findActionPostFormatInDomainByIdByAgentId,
-            handler: AgentController.findActionPostFormatInDomainByIdByAgentId
+            validate: AgentValidator.findActionPostFormatByAgentId,
+            handler: AgentController.findActionPostFormatByAgentId
         }
     },
     {
@@ -325,6 +309,12 @@ const AgentRoutes = [
         config: {
             description: 'Find list of actions linked with a model instance specified by id',
             tags: ['api'],
+            plugins: {
+                'flow-loader': {
+                    name: `${PKG.name}/agent.find-actions-by-agent-id.graph`,
+                    consumes: ['redis']
+                }
+            },
             validate: AgentValidator.findActionsByAgentId,
             handler: AgentController.findActionsByAgentId
         }

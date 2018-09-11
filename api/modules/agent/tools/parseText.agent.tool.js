@@ -206,7 +206,7 @@ const parseText = (rasa, spacyPretrainedEntities, ERPipeline, ducklingService, d
                                 const time = process.hrtime(start);
                                 result = Object.assign(result, { elapsed_time_ms: time[1] / 1000000 });
                                 if (domainRecognitionResults) {
-                                    let domainScore = _.filter(domainRecognitionResults.saying_ranking, (recognizedDomain) => {
+                                    let domainScore = _.filter(domainRecognitionResults.action_ranking, (recognizedDomain) => {
 
                                         return recognizedDomain.name === result.domain;
                                     });

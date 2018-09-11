@@ -14,6 +14,9 @@ import {
   RESPOND_MESSAGE,
   RESET_SESSION,
   RESET_SESSION_SUCCESS,
+  LOAD_DOC,
+  LOAD_DOC_ERROR,
+  LOAD_DOC_SUCCESS,
 
   RESET_AGENT_DATA,
   LOAD_AGENTS,
@@ -200,6 +203,28 @@ export function resetSessionSuccess() {
   return {
     type: RESET_SESSION_SUCCESS,
   }
+}
+
+export function loadDoc(docId) {
+  return {
+    type: LOAD_DOC,
+    apiCall: true,
+    docId,
+  };
+}
+
+export function loadDocError(error) {
+  return {
+    type: LOAD_DOC_ERROR,
+    error,
+  };
+}
+
+export function loadDocSuccess(doc) {
+  return {
+    type: LOAD_DOC_SUCCESS,
+    doc,
+  };
 }
 
 

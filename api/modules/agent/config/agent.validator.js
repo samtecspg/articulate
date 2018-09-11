@@ -96,12 +96,11 @@ class AgentValidate {
             })()
         };
 
-        this.findActionsInDomainByIdByAgentId = {
+        this.findActionsByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
-                    domainId: DomainSchema.id.required().description('Id of the domain')
                 };
             })(),
             query: (() => {
@@ -114,12 +113,11 @@ class AgentValidate {
             })()
         };
 
-        this.findActionByIdInDomainByIdByAgentId = {
+        this.findActionByIdByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
-                    domainId: DomainSchema.id.required().description('Id of the domain'),
                     actionId: ActionSchema.id.required().description('Id of the action')
                 };
             })()
@@ -154,24 +152,22 @@ class AgentValidate {
             })()
         };
 
-        this.findActionWebhookInDomainByIdByAgentId = {
+        this.findActionWebhookByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
-                    domainId: DomainSchema.id.required().description('Id of the domain'),
                     actionId: ActionSchema.id.required().description('Id of the action')
                 };
             })()
         };
 
 
-        this.findActionPostFormatInDomainByIdByAgentId = {
+        this.findActionPostFormatByAgentId = {
             params: (() => {
 
                 return {
                     id: AgentSchema.id.required().description('Id of the agent'),
-                    domainId: DomainSchema.id.required().description('Id of the domain'),
                     actionId: ActionSchema.id.required().description('Id of the action')
                 };
             })()
@@ -416,23 +412,6 @@ class AgentValidate {
                     start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
                     limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
                     filter: Joi.string().description('String that will filter values to return only those sayings with part of this filter in their names')
-                };
-            })()
-        };
-
-        this.findActionsByAgentId = {
-            params: (() => {
-
-                return {
-                    id: AgentSchema.id.required().description('Id of the agent')
-                };
-            })(),
-            query: (() => {
-
-                return {
-                    start: Joi.number().description('The index of the first element to return. 0 is the default start.'),
-                    limit: Joi.number().description('Number of elements to return from start. All the elements are returned by default'),
-                    filter: Joi.string().description('String that will filter values to return only those actions with part of this filter in their names')
                 };
             })()
         };

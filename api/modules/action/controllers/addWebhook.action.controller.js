@@ -8,7 +8,6 @@ const RemoveBlankArray = require('../../../helpers/removeBlankArray');
 module.exports = (request, reply) => {
 
     let agentId = null;
-    let domainId = null;
     let actionId = null;
     let webhook = request.payload;
     const redis = request.server.app.redis;
@@ -35,33 +34,17 @@ module.exports = (request, reply) => {
                 },
                 (callback) => {
 
-                    redis.zscore(`agentDomains:${agentId}`, webhook.domain, (err, id) => {
+                    redis.zscore(`agentActions:${agentId}`, webhook.action, (err, id) => {
 
                         if (err){
-                            const error = Boom.badImplementation(`An error occurred checking if the domain ${webhook.domain} exists in the agent ${webhook.agent}.`);
-                            return callback(error);
-                        }
-                        if (id){
-                            domainId = id;
-                            return callback(null);
-                        }
-                        const error = Boom.badRequest(`The domain ${webhook.domain} doesn't exist in the agent ${webhook.agent}`);
-                        return callback(error);
-                    });
-                },
-                (callback) => {
-
-                    redis.zscore(`domainActions:${domainId}`, webhook.action, (err, id) => {
-
-                        if (err){
-                            const error = Boom.badImplementation(`An error occurred checking if the action ${webhook.action} exists in the domain ${webhook.domain}.`);
+                            const error = Boom.badImplementation(`An error occurred checking if the action ${webhook.action} exists in the agent ${webhook.agent}.`);
                             return cllbk(error);
                         }
                         if (id){
                             actionId = id;
                             return callback(null);
                         }
-                        const error = Boom.badRequest(`The action ${webhook.action} doesn't exist in the domain ${webhook.domain}`);
+                        const error = Boom.badRequest(`The action ${webhook.action} doesn't exist in the agent ${webhook.agent}`);
                         return callback(error);
                     });
                 },
