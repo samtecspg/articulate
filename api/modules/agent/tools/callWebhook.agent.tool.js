@@ -12,18 +12,30 @@ module.exports = (webhook, conversationStateObject, callback) => {
     const processedWebhookUrl = compiledWebhookUrl(conversationStateObject);
     let compiledWebhookPayload;
     let processedWebhookPayload;
+
+    let options = {
+        method: webhook.webhookVerb,
+        url: processedWebhookUrl,
+        responseType: webhook.webhookPayloadType === 'XML' ? 'text' : 'json'
+    }
+
     if (webhook.webhookPayloadType !== 'None' && webhook.webhookPayload !== ''){
         compiledWebhookPayload = Handlebars.compile(webhook.webhookPayload);
         processedWebhookPayload = compiledWebhookPayload(conversationStateObject);
+        options.data = processedWebhookPayload ? (webhook.webhookPayloadType === 'URL Encoded' ? Querystring.stringify(JSON.parse(webhook.webhookPayload)) : (webhook.webhookPayloadType === 'JSON' ? JSON.parse(processedWebhookPayload) : processedWebhookPayload)) : '';
+        options.headers = {
+            'Content-Type': processedWebhookPayload ? (webhook.webhookPayloadType === 'URL Encoded' ? 'application/x-www-form-urlencoded' : (webhook.webhookPayloadType === 'JSON' ? 'application/json' : 'text/xml')) : ''
+        };
     }
 
-    Axios({
-        method: webhook.webhookVerb,
-        url: processedWebhookUrl,
-        data: processedWebhookPayload ? (webhook.webhookPayloadType === 'URL Encoded' ? Querystring.stringify(JSON.parse(webhook.webhookPayload)) : (webhook.webhookPayloadType === 'JSON' ? JSON.parse(processedWebhookPayload) : processedWebhookPayload)) : '',
-        headers: { 'Content-Type': processedWebhookPayload ? (webhook.webhookPayloadType === 'URL Encoded' ? 'application/x-www-form-urlencoded' : (webhook.webhookPayloadType === 'JSON' ? 'application/json' : 'text/xml')) : '' },
-        responseType: webhook.webhookPayloadType === 'XML' ? 'text' : 'json'
-    })
+    if (webhook.webhookUsername !== 'None' && webhook.webhookUsername !== '') {
+        options.auth = {
+            username: webhook.webhookUsername,
+            password: webhook.webhookPassword
+        }
+    };
+
+    Axios(options)
     .then((response) => {
 
         return callback(response.data);

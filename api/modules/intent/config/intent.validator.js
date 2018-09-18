@@ -165,7 +165,9 @@ class IntentValidate {
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.required().valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.required().valid('None', 'JSON', 'XML', 'URL Encoded').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML, and URL Encoded.')),
-                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                    webhookUsername: WebhookSchema.webhookUsername.allow('').optional(),
+                    webhookPassword: WebhookSchema.webhookPassword.allow('').optional()
                 };
             })()
         };
@@ -192,7 +194,9 @@ class IntentValidate {
                     webhookUrl: WebhookSchema.webhookUrl,
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML', 'URL Encoded').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML, and URL Encoded.')),
-                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                    webhookUsername: WebhookSchema.webhookUsername.allow('').optional(),
+                    webhookPassword: WebhookSchema.webhookPassword.allow('').optional()
                 };
             })()
         };

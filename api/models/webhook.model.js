@@ -10,7 +10,9 @@ class WebhookModel {
             webhookUrl: Joi.string().trim(),
             webhookVerb: Joi.string().trim(),
             webhookPayloadType: Joi.string().trim(),
-            webhookPayload: Joi.string().trim()
+            webhookPayload: Joi.string().trim(),
+            webhookUsername: Joi.string().trim(),
+            webhookPassword: Joi.string().trim()
         };
     };
 }
