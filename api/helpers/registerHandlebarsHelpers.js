@@ -3,6 +3,17 @@ const Moment = require('moment');
 const Json2Xml = require('json2xml');
 const HandlebarsIntl = require('handlebars-intl');
 const Helpers = require('handlebars-helpers');
+const Numeral = require('numeral');
+const _ = require('lodash');
+
+_.assign(Numeral.localeData('en'), {
+    abbreviations: {
+        thousand: "K",
+        million: "M",
+        billion: "B",
+        trillion: "T"
+    }
+});
 
 const buildListOfWords = (words, separator) => {
 
@@ -33,6 +44,10 @@ module.exports = (Handlebars) => {
     Handlebars.registerHelper('toXML', (obj) => {
 
         return Json2Xml(obj);
+    });
+
+    Handlebars.registerHelper('numeral', (number, format) => {
+        return Numeral(number).format(format);
     });
 
     Handlebars.registerHelper('dateTimeFormat', (datetime, format) => Moment(datetime).format(format));
