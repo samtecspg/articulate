@@ -25,6 +25,8 @@ import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
 
+import qs from 'query-string';
+
 import {
   makeSelectAction,
   makeSelectActionWebhook,
@@ -91,14 +93,16 @@ export class ActionPage extends React.Component {
 
   componentDidUpdate() {
     if (this.props.success) {
-      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
+      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
     }
   }
 
   state = {
     isNewAction: this.props.match.params.actionId === 'create',
     currentTab: 'action',
-    userCompletedAllRequiredFields: false
+    userCompletedAllRequiredFields: false,
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
   };
 
   moveNextTab(){
@@ -124,7 +128,7 @@ export class ActionPage extends React.Component {
     return (
       <Grid container>
         <Grid container>
-          <Grid className={classes.goBackCard} onClick={this.props.history.goBack} />
+          <Grid className={classes.goBackCard} onClick={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}} />
         </Grid>
         <ContentHeader
           title={messages.title}
@@ -138,6 +142,7 @@ export class ActionPage extends React.Component {
             />
           }
           backButton={messages.backButton}
+          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
         />
         <MainTab
           selectedTab={this.state.currentTab}
@@ -282,6 +287,9 @@ function mapDispatchToProps(dispatch) {
     },
     onEditAction: () => {
       dispatch(updateAction());
+    },
+    onGoToUrl: (url) => {
+      dispatch(push(url));
     },
   };
 }
