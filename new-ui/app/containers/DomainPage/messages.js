@@ -47,6 +47,10 @@ export default defineMessages({
       id: 'app.containers.DomainEditPage.component.ActionButtons.finishButton',
       defaultMessage: 'Save'
     },
+    backButton: {
+      id: 'app.containers.DomainEditPage.backButton',
+      defaultMessage: 'Back'
+    },
     cancelButton: {
       id: 'app.containers.DomainEditPage.component.ActionButtons.cancelButton',
       defaultMessage: 'Cancel'

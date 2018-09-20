@@ -170,7 +170,13 @@ module.exports = (request, reply) => {
                         const error = Boom.badImplementation('An error occurred updating the domain status.');
                         return reply(error);
                     }
-                    return reply(resultSaying);
+                    server.inject(`/agent/${agentId}`, (res) => {
+
+                        if (res.statusCode === 200){
+                            server.publish(`/agent/${agentId}`, res.result);
+                        }
+                        return reply(resultSaying);
+                    });
                 });
             });
         });

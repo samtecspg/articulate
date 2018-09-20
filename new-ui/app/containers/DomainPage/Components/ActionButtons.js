@@ -35,7 +35,7 @@ class ActionButtons extends React.Component {
         return (
             <Grid className={classes.container}>
                 <Hidden only={['xl', 'lg', 'md']}>
-                    <Link className={`${classes.icon} ${classes.link}`} to='/agent/${this.props.agentId}/sayings'>
+                    <Link className={`${classes.icon} ${classes.link}`} to={`/agent/${this.props.agentId}/sayings?filter=${this.props.filter}&page=${this.props.page}`}>
                         <Icon>arrow_back</Icon>
                     </Link>
                     <a key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
@@ -45,7 +45,7 @@ class ActionButtons extends React.Component {
                 <Hidden only={['sm', 'xs']}>
                     <Grid className={classes.buttonContainer}>
                         <Button key='btnCancel'>
-                            <Link className={classes.link} to={`/agent/${this.props.agentId}/sayings`}>
+                            <Link className={classes.link} to={`/agent/${this.props.agentId}/sayings?filter=${this.props.filter}&page=${this.props.page}`}>
                                 <FormattedMessage {...messages.cancelButton} />
                             </Link>
                         </Button>

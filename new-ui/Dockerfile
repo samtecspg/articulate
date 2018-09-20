@@ -2,6 +2,8 @@ FROM node:10.5.0
 # Needed for running yarn build
 ARG API_URLi=http://localhost:7500
 ENV API_URL=$API_URL
+ARG WS_URL=ws://localhost:7500
+ENV WS_URL=$WS_URL
 
 WORKDIR /reactapp
 

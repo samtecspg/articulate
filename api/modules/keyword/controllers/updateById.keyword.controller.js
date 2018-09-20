@@ -350,7 +350,13 @@ module.exports = (request, reply) => {
                         const error = Boom.badImplementation('An error occurred updating the agent status.');
                         return reply(error);
                     }
-                    return reply(Cast(updatedKeyword, 'keyword'));
+                    server.inject(`/agent/${agentId}`, (res) => {
+
+                        if (res.statusCode === 200){
+                            server.publish(`/agent/${agentId}`, res.result);
+                        }
+                        return reply(Cast(updatedKeyword, 'keyword'));
+                    });
                 });
             });
         }
@@ -405,7 +411,13 @@ module.exports = (request, reply) => {
                         const error = Boom.badImplementation('An error occurred updating the agent status.');
                         return reply(error);
                     }
-                    return reply(Cast(updatedKeyword, 'keyword'));
+                    server.inject(`/agent/${agentId}`, (res) => {
+
+                        if (res.statusCode === 200){
+                            server.publish(`/agent/${agentId}`, res.result);
+                        }
+                        return reply(Cast(updatedKeyword, 'keyword'));
+                    });
                 });
             });
         }

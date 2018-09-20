@@ -308,6 +308,7 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred updating the agent status.');
                     return reply(error);
                 }
+                server.publish(`/agent/${result.id}`, result);
                 return reply(result);
             });
         }

@@ -19,6 +19,9 @@ import Form from './Components/Form';
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
+
+import qs from 'query-string';
+
 import {
   makeSelectDomain,
   makeSelectAgent,
@@ -51,13 +54,15 @@ export class DomainsEditPage extends React.Component {
 
   componentDidUpdate() {
     if (this.props.success) {
-      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
+      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
     }
   }
 
 
   state = {
-    isNewDomain: this.props.match.params.domainId === 'create'
+    isNewDomain: this.props.match.params.domainId === 'create',
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
   };
 
   render() {
@@ -69,11 +74,14 @@ export class DomainsEditPage extends React.Component {
           subtitle={this.state.isNewDomain ? intl.formatMessage(messages.newCategory) : this.props.domain.domainName}
           inlineElement={
             <ActionButtons
+              page={this.state.page}
+              filter={this.state.filter}
               agentId={this.props.agent.id}
               onFinishAction={this.state.isNewDomain ? this.props.onCreateDomain : this.props.onUpdateDomain}
             />
           }
           backButton={messages.backButton}
+          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
         />
         <Form
           domain={this.props.domain}
@@ -128,6 +136,9 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeActionThreshold: (value) => {
       dispatch(changeActionThreshold(value));
+    },
+    onGoToUrl: (url) => {
+      dispatch(push(url));
     },
   };
 }

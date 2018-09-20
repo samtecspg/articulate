@@ -10,6 +10,7 @@ import {
   LOAD_SETTINGS,
   SEND_MESSAGE,
   RESET_SESSION,
+  TRAIN_AGENT,
 } from '../App/constants';
 
 import {
@@ -17,7 +18,11 @@ import {
 } from '../SettingsPage/saga';
 
 import {
-  respondMessage, resetSessionSuccess, loadDocSuccess, loadDocError
+  respondMessage,
+  resetSessionSuccess,
+  loadDocSuccess,
+  loadDocError,
+  trainAgentError,
 } from './actions';
 
 import {
@@ -85,9 +90,20 @@ export function* getDoc(payload) {
   }
 }
 
+export function* getTrainAgent(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api } = payload;
+  try {
+    yield call(api.agent.getAgentIdTrain, { id: agent.id });
+  } catch (err) {
+      yield put(trainAgentError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(SEND_MESSAGE, getConverse);
   yield takeLatest(RESET_SESSION, deleteSession);
   yield takeLatest(LOAD_DOC, getDoc);
+  yield takeLatest(TRAIN_AGENT, getTrainAgent);
 };

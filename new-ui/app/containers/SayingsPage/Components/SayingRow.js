@@ -141,7 +141,7 @@ class SayingRow extends React.Component {
         if (selectName === 'actions'){
             if (selectedValue === 'create'){
                 this.props.onSendSayingToAction(this.props.saying);
-                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create?sayingId=${this.props.saying.id}`);
+                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
             }
             else {
                 this.props.onAddAction(this.props.saying, selectedValue)
@@ -227,7 +227,7 @@ class SayingRow extends React.Component {
                                             className={classes.actionLabel}
                                             onClick={() => {
                                                 this.props.onSendSayingToAction(saying);
-                                                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}?sayingId=${saying.id}`)
+                                                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`)
                                             }
                                         }
                                         >{action}</span>

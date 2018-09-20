@@ -237,7 +237,13 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred updating the agent status.');
                     return reply(error);
                 }
-                return reply({ message: 'successful operation' }).code(200);
+                server.inject(`/agent/${domainAgentId}`, (res) => {
+
+                    if (res.statusCode === 200){
+                        server.publish(`/agent/${agentId}`, res.result);
+                    }
+                    return reply({ message: 'successful operation' }).code(200);
+                });
             });
         }
         else {

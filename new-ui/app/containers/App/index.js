@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Switch, Route } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
+import Nes from 'nes';
 
 import injectSaga from 'utils/injectSaga';
 
@@ -37,9 +38,11 @@ import {
   checkAPI,
   loadSettings,
   toggleConversationBar,
+  loadAgentSuccess,
 } from './actions';
 
 import {
+  makeSelectAgent,
   makeSelectMissingAPI,
   makeSelectLocation,
   makeSelectConversationBarOpen,
@@ -47,9 +50,28 @@ import {
 
 class App extends React.Component {
 
+  state = {
+    agent: null,
+    client: null,
+    socketClientConnected: false,
+  }
+
   componentWillMount(){
     this.props.onLoadSettings();
     this.props.onCheckAPI();
+    if (!this.state.socketClientConnected){
+      const client = new Nes.Client(process.env.WS_URL);
+      client.connect((err) => {
+
+        if (err){
+          console.error('An error ocurred connecting to the socket: ', err);
+        }
+        this.setState({
+          client,
+          socketClientConnected: true,
+        });
+      });
+    }
   }
 
   componentDidMount(){
@@ -65,6 +87,31 @@ class App extends React.Component {
   componentDidUpdate(){
     if (this.props.missingAPI){
       this.props.onMissingAPI(this.props.location.pathname);
+    }
+    //If an agent is loaded
+    if (this.props.agent.id){
+      //If is different than the current agent
+      if (this.props.agent.id !== this.state.agent){
+        //If the socket was already subscribed to an agent
+        if (this.state.agent){
+          //Unscribe from the agent
+          this.state.client.unsubscribe(`/agent/${this.state.agent}`);
+        }
+        const handler = (agent) => {
+
+          if (agent){
+            this.props.onRefreshAgent(agent);
+          }
+        };
+        this.state.client.subscribe(`/agent/${this.props.agent.id}`, handler, (errSubscription) => {
+          if (errSubscription){
+            console.error(`An error ocurred subscribing to the agent ${this.props.agent.agentName}: ${errSubscription}`);
+          }
+        });
+        this.setState({
+          agent: this.props.agent.id
+        });
+      }
     }
   }
 
@@ -93,12 +140,14 @@ class App extends React.Component {
 }
 
 App.propTypes = {
+  agent: PropTypes.object,
   missingAPI: PropTypes.bool,
   location: PropTypes.object,
   onMissingAPI: PropTypes.func,
   onCheckAPI: PropTypes.func,
   onLoadSettings: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
+  onRefreshAgent: PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -119,11 +168,15 @@ export function mapDispatchToProps(dispatch) {
     },
     onToggleConversationBar: (value) => {
       dispatch(toggleConversationBar(value));
+    },
+    onRefreshAgent: (agent) => {
+      dispatch(loadAgentSuccess({agent}))
     }
   };
 }
 
 const mapStateToProps = createStructuredSelector({
+  agent: makeSelectAgent(),
   missingAPI: makeSelectMissingAPI(),
   location: makeSelectLocation(),
   conversationBarOpen: makeSelectConversationBarOpen(),

@@ -48,7 +48,7 @@ export class ContentHeader extends React.Component {
       <Grid className={classes.container} item xs={12}>
         {this.props.backButton ?
         [<span className={classes.backArrow} key='backArrow'>{'< '}</span>,
-        <a key='backLink' className={classes.backButton} onClick={this.props.history.goBack}>
+        <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
             <FormattedMessage {...this.props.backButton} />
         </a>] :
         null}
@@ -79,6 +79,7 @@ ContentHeader.propTypes = {
   inlineElement: PropTypes.node,
   classes: PropTypes.object.isRequired,
   sizesForHideInlineElement: PropTypes.array,
+  goBack: PropTypes.func,
 };
 
 ContentHeader.defaultProps = {

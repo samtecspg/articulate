@@ -76,6 +76,8 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred updating the agent status to training.');
                     return callbackSetAgentTrainingStatus(error);
                 }
+                agent.status = Status.training;
+                server.publish(`/agent/${agent.id}`, agent);
                 return callbackSetAgentTrainingStatus(null, rasaStatus);
             });
         },
@@ -199,6 +201,8 @@ module.exports = (request, reply) => {
                     const error = Boom.badImplementation('An error occurred during training, and also an error occurred updating the agent status.');
                     return reply(error);
                 }
+                agent.status = Status.error;
+                server.publish(`/agent/${agent.id}`, agent);
                 return reply(errTraining);
             });
         }
@@ -212,6 +216,7 @@ module.exports = (request, reply) => {
                 }
                 agent.status = Status.ready;
                 agent.lastTraining = lastTraining;
+                server.publish(`/agent/${agent.id}`, agent);
                 return reply(agent);
             });
         }

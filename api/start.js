@@ -9,6 +9,7 @@ const FlowLoader = require('./plugins/flow-loader.plugin');
 const Redis = require('./plugins/redis.plugin');
 const InitDefaultSettings = require('./plugins/init-default-settings.plugin');
 const Pack = require('./package');
+const Nes = require('nes');
 
 Server((err, server) => {
 
@@ -62,6 +63,7 @@ Server((err, server) => {
     process.env.SWAGGER_BASE_PATH ? swaggerUIOptions.basePath = process.env.SWAGGER_BASE_PATH : null;
 
     server.register([
+        Nes,
         Inert,
         Vision,
         { 'register': HapiSwagger, 'options': swaggerOptions },
@@ -74,6 +76,8 @@ Server((err, server) => {
         if (err) {
             console.log(err);
         }
+
+        server.subscription('/agent/{id}');
         server.start((errStart) => {
 
             if (errStart) {

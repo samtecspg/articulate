@@ -126,6 +126,7 @@ module.exports = options => ({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         API_URL: JSON.stringify(process.env.API_URL),
+        WS_URL: JSON.stringify(process.env.WS_URL),
       },
     }),
   ]),
