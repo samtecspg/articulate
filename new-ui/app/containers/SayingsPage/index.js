@@ -16,6 +16,7 @@ import { Grid } from '@material-ui/core';
 import ContentHeader from 'components/ContentHeader';
 import MainTab from 'components/MainTab';
 import Form from './Components/Form';
+import ActionButtons from './Components/ActionButtons';
 
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
@@ -44,13 +45,16 @@ import {
   loadDomains,
   selectDomain,
   loadFilteredDomains,
+  trainAgent,
 } from '../App/actions';
+
+import qs from 'query-string';
 
 /* eslint-disable react/prefer-stateless-function */
 export class SayingsPage extends React.Component {
 
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.changePage = this.changePage.bind(this);
     this.movePageBack = this.movePageBack.bind(this);
     this.movePageForward = this.movePageForward.bind(this);
@@ -60,9 +64,9 @@ export class SayingsPage extends React.Component {
   }
 
   state = {
-    filter: '',
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
     domainFilter: '',
-    currentPage: 1,
+    currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
   }
 
   componentWillMount() {
@@ -108,9 +112,10 @@ export class SayingsPage extends React.Component {
 
   onSearchSaying(filter){
     this.setState({
-      filter
+      filter,
+      currentPage: 1,
     });
-    this.props.onLoadSayings(filter, this.state.currentPage);
+    this.props.onLoadSayings(filter, 1);
   }
 
   onSearchDomain(domainFilter){
@@ -126,6 +131,13 @@ export class SayingsPage extends React.Component {
         <ContentHeader
           title={messages.title}
           subtitle={this.props.agent.agentName}
+          inlineElement={
+            <ActionButtons
+              onTrain={this.props.onTrain}
+              agentStatus={this.props.agent.status}
+              lastTraining={this.props.agent.lastTraining}
+            />
+          }
         />
         <MainTab
           enableTabs={true}
@@ -148,7 +160,7 @@ export class SayingsPage extends React.Component {
               onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage)}
               onSearchSaying={this.onSearchSaying}
               onSearchDomain={this.onSearchDomain}
-              onGoToUrl={this.props.onGoToUrl}
+              onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentPage)}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentPage={this.state.currentPage}
               numberOfPages={this.getTotalPages()}
@@ -188,6 +200,7 @@ SayingsPage.propTypes = {
   agentActions: PropTypes.array,
   onSelectDomain: PropTypes.func,
   domain: PropTypes.string,
+  onTrain: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -236,15 +249,18 @@ function mapDispatchToProps(dispatch) {
     onDeleteAction: (filter, page, saying, actionName) => {
       dispatch(deleteActionSaying(filter, page, saying, actionName));
     },
-    onGoToUrl: (url) => {
-      dispatch(push(url));
+    onGoToUrl: (filter, page, url) => {
+      dispatch(push(`${url}?filter=${filter}&page=${page}`));
     },
     onSendSayingToAction: (saying) => {
       dispatch(sendSayingToAction(saying));
     },
     onSelectDomain: (domainName) => {
       dispatch(selectDomain(domainName));
-    }
+    },
+    onTrain: () => {
+      dispatch(trainAgent());
+    },
   };
 }
 

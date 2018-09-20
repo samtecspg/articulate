@@ -47,4 +47,8 @@ export default defineMessages({
         id: 'app.containers.KeywordsPage.component.KeywordsDataForm.create',
         defaultMessage: 'Create'
     },
+    trainButton: {
+      id: 'app.containers.SayingsPage.trainButton',
+      defaultMessage: 'Train'
+    },
 });

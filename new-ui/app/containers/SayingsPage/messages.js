@@ -62,5 +62,9 @@ export default defineMessages({
     categorySelect: {
         id: 'app.containers.SayingsPage.component.SayingDataForm.categorySelect',
         defaultMessage: 'Categories'
-    }
+    },
+    trainButton: {
+      id: 'app.containers.SayingsPage.trainButton',
+      defaultMessage: 'Train'
+    },
 });

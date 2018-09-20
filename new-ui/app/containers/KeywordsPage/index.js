@@ -16,6 +16,7 @@ import { Grid } from '@material-ui/core';
 import ContentHeader from 'components/ContentHeader';
 import MainTab from 'components/MainTab';
 import Form from './Components/Form';
+import ActionButtons from './Components/ActionButtons';
 
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
@@ -29,6 +30,7 @@ import {
 import {
   loadKeywords,
   deleteKeyword,
+  trainAgent,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -104,6 +106,13 @@ export class KeywordsPage extends React.Component {
         <ContentHeader
           title={messages.title}
           subtitle={this.props.agent.agentName}
+          inlineElement={
+            <ActionButtons
+              onTrain={this.props.onTrain}
+              agentStatus={this.props.agent.status}
+              lastTraining={this.props.agent.lastTraining}
+            />
+          }
         />
         <MainTab
           enableTabs={true}
@@ -137,6 +146,7 @@ KeywordsPage.propTypes = {
   keywords: PropTypes.array,
   onLoadKeywords: PropTypes.func,
   onDeleteKeyword: PropTypes.func.isRequired,
+  onTrain: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -155,6 +165,9 @@ function mapDispatchToProps(dispatch) {
     },
     onCreateKeyword: (url) => {
       dispatch(push(url))
+    },
+    onTrain: () => {
+      dispatch(trainAgent());
     }
   };
 }
