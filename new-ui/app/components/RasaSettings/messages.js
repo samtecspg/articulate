@@ -22,12 +22,12 @@ export default defineMessages({
     id: 'app.components.RasaSettings.domainClassifierPipeline',
     defaultMessage: 'Domain Classifier Pipeline:',
   },
-  intentClassifierPipeline: {
-    id: 'app.components.RasaSettings.intentClassifierPipeline',
+  sayingClassifierPipeline: {
+    id: 'app.components.RasaSettings.sayingClassifierPipeline',
     defaultMessage: 'Intent Classifier Pipeline:',
   },
-  entityClassifierPipeline: {
-    id: 'app.components.RasaSettings.entityClassifierPipeline',
+  keywordClassifierPipeline: {
+    id: 'app.components.RasaSettings.keywordClassifierPipeline',
     defaultMessage: 'Entity Classifier Pipeline:',
   },
   spacyPretrainedEntities: {

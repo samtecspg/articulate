@@ -18,6 +18,18 @@ const systemKeywords = [
     {
         keywordName: 'sys.spacy_norp',
         uiColor: '#e91e63'
+    },
+    {
+        keywordName: 'sys.spacy_org',
+        uiColor: '#e91e63'
+    },
+    {
+        keywordName: 'sys.spacy_date',
+        uiColor: '#e91e63'
+    },
+    {
+        keywordName: 'sys.duckling_time',
+        uiColor: '#e91e63'
     }
 ];
 

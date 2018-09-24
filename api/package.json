@@ -57,6 +57,7 @@
     "noflo-flow": "^0.7.0",
     "noflo-nodejs": "^0.10.1",
     "ordinal": "^1.0.2",
+    "random-material-color": "^1.0.3",
     "redis": "^2.8.0",
     "vision": "^4.1.1",
     "wreck": "^12.2.0"

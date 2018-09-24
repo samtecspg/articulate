@@ -64,8 +64,8 @@ export class AgentPage extends React.PureComponent {
       this.props.onChangeAgentData('fallbackResponses', this.props.settings.defaultAgentFallbackResponses);
       this.props.onChangeAgentSettingsData('rasaURL', this.props.settings.rasaURL);
       this.props.onChangeAgentSettingsData('domainClassifierPipeline', this.props.settings.domainClassifierPipeline);
-      this.props.onChangeAgentSettingsData('intentClassifierPipeline', this.props.settings.intentClassifierPipeline);
-      this.props.onChangeAgentSettingsData('entityClassifierPipeline', this.props.settings.entityClassifierPipeline);
+      this.props.onChangeAgentSettingsData('sayingClassifierPipeline', this.props.settings.sayingClassifierPipeline);
+      this.props.onChangeAgentSettingsData('keywordClassifierPipeline', this.props.settings.keywordClassifierPipeline);
       this.props.onChangeAgentSettingsData('spacyPretrainedEntities', this.props.settings.spacyPretrainedEntities);
       this.props.onChangeAgentSettingsData('ducklingURL', this.props.settings.ducklingURL);
       this.props.onChangeAgentSettingsData('ducklingDimension', this.props.settings.ducklingDimension);

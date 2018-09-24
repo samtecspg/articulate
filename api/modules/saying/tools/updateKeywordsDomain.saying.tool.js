@@ -5,10 +5,18 @@ const Boom = require('boom');
 
 const updateKeywordsDomain = (server, redis, saying, agentId, domainId, oldKeywords, cb) => {
 
-    const usedKeywords = _.uniq(_.map(saying.keywords, 'keyword'));
+    let usedKeywords = _.uniq(_.map(saying.keywords, 'keyword'));
+    usedKeywords = _.filter(usedKeywords, (keyword) => {
+
+        return keyword.indexOf('sys.') === -1;
+    });
     let removedKeywords = null;
     if (oldKeywords){
-        const oldKeywordsValues = _.uniq(_.map(oldKeywords, 'keyword'));
+        let oldKeywordsValues = _.uniq(_.map(oldKeywords, 'keyword'));
+        oldKeywordsValues = _.filter(oldKeywordsValues, (keyword) => {
+
+            return keyword.indexOf('sys.') === -1;
+        });
         removedKeywords = _.difference(oldKeywordsValues, usedKeywords);
     }
 

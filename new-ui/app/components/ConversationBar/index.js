@@ -117,6 +117,7 @@ const styles = {
       width: 298
     },
     messagesContainer: {
+      marginRight: '20px',
       marginTop: '20px',
     },
     userMessage: {

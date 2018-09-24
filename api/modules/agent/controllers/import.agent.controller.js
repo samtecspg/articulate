@@ -50,6 +50,7 @@ module.exports = (request, reply) => {
             let clonedAgent = _.cloneDeep(agent);
             delete clonedAgent.keywords;
             delete clonedAgent.domains;
+            delete clonedAgent.actions;
             delete clonedAgent.webhook;
             delete clonedAgent.postFormat;
             delete clonedAgent.settings;
@@ -67,6 +68,148 @@ module.exports = (request, reply) => {
                 }
                 return cb(null, clonedAgent);
             });
+        },
+        actions: (cbAddActionsToAgent) => {
+
+            Async.map(agent.actions, (action, callbackAddActions) => {
+
+                let actionId;
+                Async.series({
+                    keywordsCheck: (cb) => {
+
+                        ActionTools.validateKeywordsTool(redis, agentId, action.examples, (err) => {
+
+                            if (err) {
+                                return cb(err);
+                            }
+                            return cb(null);
+                        });
+                    },
+                    actionId: (cb) => {
+
+                        redis.incr('actionId', (err, newActionId) => {
+
+                            if (err) {
+                                const error = Boom.badImplementation('An error occurred getting the new action id.');
+                                return cb(error);
+                            }
+                            actionId = newActionId;
+                            return cb(null);
+                        });
+                    },
+                    addToDomain: (cb) => {
+
+                        redis.zadd(`agentActions:${agentId}`, 'NX', actionId, action.actionName, (err, addResponse) => {
+
+                            if (err) {
+                                const error = Boom.badImplementation('An error occurred adding the name to the actions list.');
+                                return cb(error);
+                            }
+                            if (addResponse !== 0) {
+                                return cb(null);
+                            }
+                            const error = Boom.badRequest(`A action with the name ${action.actionName} already exists in the domain ${domain.domainName}.`);
+                            return cb(error);
+                        });
+                    },
+                    addToKeywords: (cb) => {
+
+                        Async.eachSeries(action.slots, (slot, nextSlot) => {
+
+                            //Only system keywords have an extractor specified, so ignore sys keywords
+                            if (slot.keyword.indexOf('sys.') > -1){
+                                return nextSlot(null);
+                            }
+                            redis.zadd(`keywordActions:${slot.keywordId}`, 'NX', actionId, action.actionName, (err) => {
+
+                                if (err) {
+                                    const error = Boom.badImplementation('An error occurred adding the action to the keyword list.');
+                                    return nextSlot(error);
+                                }
+                                return nextSlot(null);
+                            });
+                        }, cb);
+                    },
+                    action: (cb) => {
+
+                        let clonedAction = _.cloneDeep(action);
+                        delete clonedAction.webhook;
+                        delete clonedAction.postFormat;
+                        clonedAction = Object.assign({ id: actionId, agent: agent.agentName }, clonedAction);
+                        const flatAction = RemoveBlankArray(Flat(clonedAction));
+                        redis.hmset(`action:${actionId}`, flatAction, (err) => {
+
+                            if (err) {
+                                const error = Boom.badImplementation('An error occurred adding the action data.');
+                                return cb(error);
+                            }
+                            return cb(null, clonedAction);
+                        });
+                    }
+                }, (errAddAction, resultAddAction) => {
+
+                    if (errAddAction) {
+                        return callbackAddActions(errAddAction, null);
+                    }
+
+                    const resultAction = resultAddAction.action;
+
+                    Async.parallel([
+                        (callbackAddWebhookToAction) => {
+
+                            if (action.webhook) {
+                                let webhookToInsert = action.webhook;
+                                webhookToInsert = Object.assign({ id: actionId, agent: agent.agentName, action: resultAction.actionName }, webhookToInsert);
+                                const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
+                                redis.hmset(`actionWebhook:${actionId}`, flatWebhook, (err) => {
+
+                                    if (err) {
+                                        const error = Boom.badImplementation('An error occurred adding the webhook data.');
+                                        return callbackAddWebhookToAction(error, null);
+                                    }
+                                    resultAction.webhook = webhookToInsert;
+                                    return callbackAddWebhookToAction(null);
+                                });
+                            }
+                            else {
+                                return callbackAddWebhookToAction(null);
+                            }
+                        },
+                        (callbackAddPostFormatToAction) => {
+
+                            if (action.postFormat) {
+                                let postFormatToInsert = action.postFormat;
+                                postFormatToInsert = Object.assign({ id: actionId, agent: agent.agentName, action: resultAction.actionName }, postFormatToInsert);
+                                const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
+                                redis.hmset(`actionPostFormat:${actionId}`, flatPostFormat, (err) => {
+
+                                    if (err) {
+                                        const error = Boom.badImplementation('An error occurred adding the post format data.');
+                                        return callbackAddPostFormatToAction(error, null);
+                                    }
+                                    resultAction.postFormat = postFormatToInsert;
+                                    return callbackAddPostFormatToAction(null);
+                                });
+                            }
+                            else {
+                                return callbackAddPostFormatToAction(null);
+                            }
+                        }
+                    ], (err) => {
+
+                        if (err){
+                            callbackAddActions(err);
+                        }
+                        callbackAddActions(null, resultAction);
+                    });
+                });
+            }, (errActions, resultActions) => {
+
+                if (errActions) {
+                    return cbAddActionsToAgent(errActions, null);
+                }
+                return cbAddActionsToAgent(null, resultActions);
+            });
         }
     }, (err, result) => {
 
@@ -74,6 +217,7 @@ module.exports = (request, reply) => {
             return reply(err, null);
         }
         agentResult = result.agent;
+        agentResult.actions = result.actions;
         Async.map(agent.keywords, (keyword, callbackAddKeywords) => {
 
             let keywordId;
@@ -170,7 +314,6 @@ module.exports = (request, reply) => {
                         let clonedDomain = _.cloneDeep(domain);
                         clonedDomain.status = Status.outOfDate;
                         delete clonedDomain.sayings;
-                        delete clonedDomain.actions;
                         delete clonedDomain.model; //This would make that the training process don't try to unload a non existent model
                         delete clonedDomain.lastTraining;
                         clonedDomain = Object.assign({ id: domainId, agent: agent.agentName }, clonedDomain);
@@ -295,152 +438,6 @@ module.exports = (request, reply) => {
                                 return cbAddSayingsToDomain(null, resultSayings);
                             });
                         },
-                        actions: (cbAddActionsToDomain) => {
-
-                            Async.map(domain.actions, (action, callbackAddActions) => {
-
-                                let actionId;
-                                Async.series({
-                                    keywordsCheck: (cb) => {
-
-                                        ActionTools.validateKeywordsTool(redis, agentId, action.examples, (err) => {
-
-                                            if (err) {
-                                                return cb(err);
-                                            }
-                                            return cb(null);
-                                        });
-                                    },
-                                    actionId: (cb) => {
-
-                                        redis.incr('actionId', (err, newActionId) => {
-
-                                            if (err) {
-                                                const error = Boom.badImplementation('An error occurred getting the new action id.');
-                                                return cb(error);
-                                            }
-                                            actionId = newActionId;
-                                            return cb(null);
-                                        });
-                                    },
-                                    addToDomain: (cb) => {
-
-                                        redis.zadd(`domainActions:${domainId}`, 'NX', actionId, actionId, (err, addResponse) => {
-
-                                            if (err) {
-                                                const error = Boom.badImplementation('An error occurred adding the name to the actions list.');
-                                                return cb(error);
-                                            }
-                                            if (addResponse !== 0) {
-                                                return cb(null);
-                                            }
-                                            const error = Boom.badRequest(`A action with the name ${action.actionName} already exists in the domain ${domain.domainName}.`);
-                                            return cb(error);
-                                        });
-                                    },
-                                    addToKeywords: (cb) => {
-
-                                        Async.eachSeries(action.slots, (slot, nextSlot) => {
-
-                                            redis.zadd(`keywordActions:${keywordsDir[slot.keyword]}`, 'NX', actionId, actionId, (err, addResponse) => {
-
-                                                if (err) {
-                                                    const error = Boom.badImplementation('An error occurred adding the action to the keyword list.');
-                                                    return nextSlot(error);
-                                                }
-                                                slot.keywordId = keywordsDir[slot.keyword];
-                                                return nextSlot(null);
-                                            });
-                                        }, cb);
-                                    },
-                                    action: (cb) => {
-
-                                        let clonedAction = _.cloneDeep(action);
-                                        delete clonedAction.webhook;
-                                        delete clonedAction.postFormat;
-                                        clonedAction = Object.assign({ id: actionId, agent: agentResult.agentName, domain: domainResult.domainName }, clonedAction);
-                                        const flatAction = RemoveBlankArray(Flat(clonedAction));
-                                        redis.hmset(`action:${actionId}`, flatAction, (err) => {
-
-                                            if (err) {
-                                                const error = Boom.badImplementation('An error occurred adding the action data.');
-                                                return cb(error);
-                                            }
-                                            return cb(null, clonedAction);
-                                        });
-                                    }
-                                }, (errAddAction, resultAddAction) => {
-
-                                    if (errAddAction) {
-                                        return callbackAddActions(errAddAction, null);
-                                    }
-
-                                    const resultAction = resultAddAction.action;
-
-                                    ActionTools.updateKeywordsDomainTool(server, redis, resultAction, agentId, domainId, null, (errUpdateKeywordsDomains) => {
-
-                                        if (errUpdateKeywordsDomains) {
-                                            return callbackAddActions(errUpdateKeywordsDomains);
-                                        }
-
-                                        Async.parallel([
-                                            (callbackAddWebhookToAction) => {
-
-                                                if (action.webhook) {
-                                                    let webhookToInsert = action.webhook;
-                                                    webhookToInsert = Object.assign({ id: actionId, agent: agentResult.agentName, domain: domainResult.domainName, action: resultAction.actionName }, webhookToInsert);
-                                                    const flatWebhook = RemoveBlankArray(Flat(webhookToInsert));
-                                                    redis.hmset(`actionWebhook:${actionId}`, flatWebhook, (err) => {
-
-                                                        if (err) {
-                                                            const error = Boom.badImplementation('An error occurred adding the webhook data.');
-                                                            return callbackAddWebhookToAction(error, null);
-                                                        }
-                                                        resultAction.webhook = webhookToInsert;
-                                                        return callbackAddWebhookToAction(null);
-                                                    });
-                                                }
-                                                else {
-                                                    return callbackAddWebhookToAction(null);
-                                                }
-                                            },
-                                            (callbackAddPostFormatToAction) => {
-
-                                                if (action.postFormat) {
-                                                    let postFormatToInsert = action.postFormat;
-                                                    postFormatToInsert = Object.assign({ id: actionId, agent: agentResult.agentName, domain: domainResult.domainName, action: resultAction.actionName }, postFormatToInsert);
-                                                    const flatPostFormat = RemoveBlankArray(Flat(postFormatToInsert));
-                                                    redis.hmset(`actionPostFormat:${actionId}`, flatPostFormat, (err) => {
-
-                                                        if (err) {
-                                                            const error = Boom.badImplementation('An error occurred adding the post format data.');
-                                                            return callbackAddPostFormatToAction(error, null);
-                                                        }
-                                                        resultAction.postFormat = postFormatToInsert;
-                                                        return callbackAddPostFormatToAction(null);
-                                                    });
-                                                }
-                                                else {
-                                                    return callbackAddPostFormatToAction(null);
-                                                }
-                                            }
-                                        ], (err) => {
-
-                                            if (err){
-                                                callbackAddActions(err);
-                                            }
-                                            callbackAddActions(null, resultAction);
-                                        });
-                                    });
-                                });
-                            }, (errActions, resultActions) => {
-
-                                if (errActions) {
-                                    return cbAddActionsToDomain(errActions, null);
-                                }
-                                return cbAddActionsToDomain(null, resultActions);
-                            });
-                        }
                     }, (errAddActionAndSayings, sayingsAndActions) => {
 
                         if (errAddActionAndSayings){

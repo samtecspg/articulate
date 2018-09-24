@@ -188,11 +188,7 @@ const AgentRoutes = [
             description: 'Update attributes for a model instance and persist it into the data source',
             tags: ['api'],
             validate: AgentValidator.updateById,
-            handler: AgentController.updateById,
-            timeout: {
-                socket: 20 * 60 * 1000, //Max default training time 20 minutes
-                server: false
-            }
+            handler: AgentController.updateById
         }
     },
     {
@@ -286,11 +282,7 @@ const AgentRoutes = [
             description: 'Create a new instance of the model and persist it into the data source based on a given dataset',
             tags: ['api'],
             validate: AgentValidator.import,
-            handler: AgentController.import,
-            timeout: {
-                socket: 20 * 60 * 1000, //Max default training time 20 minutes
-                server: false
-            }
+            handler: AgentController.import
         }
     },
     {
@@ -455,6 +447,16 @@ const AgentRoutes = [
             },
             validate: AgentValidator.findSettingsByName,
             handler: AgentController.findSettingsByName
+        }
+    },
+    {
+        method: 'POST',
+        path: '/agent/convert',
+        config: {
+            description: 'Convert a JSON export from the older version of Articulate into the newer version that use sayings and keywords',
+            tags: ['api'],
+            validate: AgentValidator.convert,
+            handler: AgentController.convert
         }
     }
 ];

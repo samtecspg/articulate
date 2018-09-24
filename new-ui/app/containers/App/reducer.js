@@ -197,8 +197,8 @@ const initialState = Immutable({
     ducklingDimension: '[]',
     spacyPretrainedEntities: '[]',
     domainClassifierPipeline: '[]',
-    intentClassifierPipeline: '[]',
-    entityClassifierPipeline: '[]',
+    sayingClassifierPipeline: '[]',
+    keywordClassifierPipeline: '[]',
   },
   keyword: {
       type: 'learned',
@@ -278,8 +278,8 @@ const initialState = Immutable({
     ducklingDimension: [],
     spacyPretrainedEntities: [],
     domainClassifierPipeline: [],
-    intentClassifierPipeline: [],
-    entityClassifierPipeline: [],
+    sayingClassifierPipeline: [],
+    keywordClassifierPipeline: [],
     defaultAgentFallbackResponses: []
   },
   settingsTouched: false,

@@ -369,30 +369,29 @@ class AgentValidate {
                                 keyword: SayingKeywordSchema.keyword.required().error(new Error('The keyword reference is required.')),
                                 extractor: SayingKeywordSchema.extractor
                             }).required().allow([])
-                        }),
-                        actions: Joi.array().items({
-                            actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
-                            useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
-                            usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fullfilment.')),
-                            postFormat: {
-                                postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
-                            },
-                            webhook: {
-                                webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
-                                webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
-                                webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                                webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
-                            },
-                            responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
-                            slots: Joi.array().items({
-                                slotName: SlotSchema.slotName.required(),
-                                uiColor: SlotSchema.uiColor.required(),
-                                keyword: SlotSchema.keyword,
-                                keywordId: SlotSchema.keywordId,
-                                isList: SlotSchema.isList.required(),
-                                isRequired: SlotSchema.isRequired.required(),
-                                textPrompts: SlotSchema.textPrompts
-                            })
+                        })
+                    }),
+                    actions: Joi.array().items({
+                        actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
+                        useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
+                        usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fullfilment.')),
+                        postFormat: {
+                            postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
+                        },
+                        webhook: {
+                            webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
+                            webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                            webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                            webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                        },
+                        responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
+                        slots: Joi.array().items({
+                            slotName: SlotSchema.slotName.required(),
+                            uiColor: SlotSchema.uiColor.required(),
+                            keyword: SlotSchema.keyword,
+                            isList: SlotSchema.isList.required(),
+                            isRequired: SlotSchema.isRequired.required(),
+                            textPrompts: SlotSchema.textPrompts
                         })
                     })
                 };
@@ -559,6 +558,13 @@ class AgentValidate {
                     id: Joi.string().required().description('The id of the agent'),
                     name: Joi.string().required().description('The name of the setting')
                 };
+            })()
+        };
+
+        this.convert = {
+            payload: (() => {
+
+                return Joi.object();
             })()
         };
     }

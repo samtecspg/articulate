@@ -32,6 +32,7 @@ const TrainController = require('./train.agent.controller');
 const UpdateSettingsController = require('./putSettings.agent.controller');
 const FindSettingsByNameController = require('./findSettingsByName.agent.controller');
 const FindAllSettingsController = require('./findAllSettings.agent.controller');
+const ConvertController = require('./convert.agent.controller');
 
 
 const AgentController = {
@@ -102,7 +103,9 @@ const AgentController = {
 
     findSettingsByName: FindSettingsByNameController,
 
-    findAllSettings: FindAllSettingsController
+    findAllSettings: FindAllSettingsController,
+
+    convert: ConvertController
 };
 
 module.exports = AgentController;

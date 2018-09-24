@@ -21,6 +21,18 @@ const systemKeywords = [
     {
         keywordName: 'sys.spacy_norp',
         uiColor: '#e91e63'
+    },
+    {
+        keywordName: 'sys.spacy_org',
+        uiColor: '#e91e63'
+    },
+    {
+        keywordName: 'sys.spacy_date',
+        uiColor: '#e91e63'
+    },
+    {
+        keywordName: 'sys.duckling_time',
+        uiColor: '#e91e63'
     }
 ];
 
@@ -66,7 +78,9 @@ const HighlightedSaying = withStyles(styles)((props) => {
         const afterTaggedText = props.text.substring(end - lastStart, props.text.length);
         let filteredKeyword = props.agentKeywords.filter((agentKeyword) => { return agentKeyword.keywordName === keyword.keyword })[0];
         if (!filteredKeyword){
-        filteredKeyword = systemKeywords.filter((sysKeyword) => { return sysKeyword.keywordName === keyword.keyword})[0];
+            filteredKeyword = systemKeywords.filter((sysKeyword) => {
+                return sysKeyword.keywordName === keyword.keyword
+            })[0];
         }
         let highlightColor = filteredKeyword.uiColor;
         formattedElement = (

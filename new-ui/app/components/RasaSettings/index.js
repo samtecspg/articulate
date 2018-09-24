@@ -113,25 +113,25 @@ export class RasaSettings extends React.Component {
         <Grid item xs={12}>
           <Typography
             className={classes.settingEditorLabel}
-            id='intentClassifierPipeline'
+            id='sayingClassifierPipeline'
           >
-            <FormattedMessage {...messages.intentClassifierPipeline} />
+            <FormattedMessage {...messages.sayingClassifierPipeline} />
           </Typography>
           <AceEditor
             width='100%'
             height='300px'
             mode='json'
             theme='terminal'
-            name='intentClassifierPipeline'
+            name='sayingClassifierPipeline'
             readOnly={false}
             onChange={value =>
-                this.onChangeEditorValue('intentClassifierPipeline', value)
+                this.onChangeEditorValue('sayingClassifierPipeline', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={getStringSetting(settings.intentClassifierPipeline)}
+            value={getStringSetting(settings.sayingClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
@@ -145,25 +145,25 @@ export class RasaSettings extends React.Component {
         <Grid item xs={12}>
           <Typography
             className={classes.settingEditorLabel}
-            id='entityClassifierPipeline'
+            id='keywordClassifierPipeline'
           >
-            <FormattedMessage {...messages.entityClassifierPipeline} />
+            <FormattedMessage {...messages.keywordClassifierPipeline} />
           </Typography>
           <AceEditor
             width='100%'
             height='300px'
             mode='json'
             theme='terminal'
-            name='entityClassifierPipeline'
+            name='keywordClassifierPipeline'
             readOnly={false}
             onChange={value =>
-              this.onChangeEditorValue('entityClassifierPipeline', value)
+              this.onChangeEditorValue('keywordClassifierPipeline', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={getStringSetting(settings.entityClassifierPipeline)}
+            value={getStringSetting(settings.keywordClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
