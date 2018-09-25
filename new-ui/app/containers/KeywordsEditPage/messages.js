@@ -93,7 +93,7 @@ export default defineMessages({
     },
     finishButton: {
       id: 'app.containers.KeywordsEditPage.component.ActionButtons.finishButton',
-      defaultMessage: 'Finish'
+      defaultMessage: 'Save'
     },
     cancelButton: {
       id: 'app.containers.KeywordsEditPage.component.ActionButtons.cancelButton',

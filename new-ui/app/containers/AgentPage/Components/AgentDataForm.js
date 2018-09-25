@@ -9,8 +9,6 @@ import { withStyles } from '@material-ui/core/styles';
 import messages from '../messages';
 
 import trashIcon from '../../../images/trash-icon.svg';
-import openingQuotes from '../../../images/opening-quotes.svg';
-import closingQuotes from '../../../images/closing-quotes.svg';
 
 const styles = {
     formContainer: {
@@ -44,10 +42,6 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class AgentDataForm extends React.Component {
 
-    state = {
-        agentNameError: false
-    }
-
     render(){
         const { classes, intl, agent, settings } = this.props;
         return (
@@ -67,7 +61,7 @@ class AgentDataForm extends React.Component {
                                     shrink: true,
                                 }}
                                 helperText={intl.formatMessage(messages.requiredField)}
-                                error={this.state.agentNameError}
+                                error={this.props.errorState.agentName}
                             />
                         </Grid>
                     </Grid>
@@ -189,14 +183,6 @@ class AgentDataForm extends React.Component {
                     }
                     <Grid container spacing={24} item xs={12}>
                         <Grid item lg={12} md={12} sm={12} xs={12}>
-                            {/*<div style={{display: 'inline'}}>
-                                <img style={{
-                                height: '15px',
-                                width: '20px',
-                                transform: 'translate(-52%,409%)',
-                                backgroundColor: '#fff'
-                                }} src={openingQuotes}/>
-                            </div>*/}
                             <TextField
                                 id='newFallbackResponses'
                                 label={intl.formatMessage(messages.fallbackTextField)}
@@ -214,18 +200,8 @@ class AgentDataForm extends React.Component {
                                     shrink: true,
                                 }}
                                 helperText={intl.formatMessage(messages.fallbackHelperText)}
+                                error={this.props.errorState.fallbackResponses}
                             />
-                            {/*<div style={{display: 'inline'}}>
-                                <img style={{
-                                display: 'inline',
-                                height: '20px',
-                                width: '20px',
-                                position: 'absolute',
-                                transform: 'translate(-56%,207%)',
-                                backgroundColor: '#fff',
-                                padding: '5px'
-                                }} src={closingQuotes}/>
-                            </div>*/}
                             {agent.fallbackResponses.length > 0 ?
                                 <Table className={classes.table}>
                                     <TableBody>
@@ -256,6 +232,7 @@ class AgentDataForm extends React.Component {
 AgentDataForm.propTypes = {
     classes: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    errorState: PropTypes.object,
     onChangeAgentData: PropTypes.func.isRequired,
     onChangeAgentName: PropTypes.func.isRequired,
     onChangeDomainClassifierThreshold: PropTypes.func.isRequired,

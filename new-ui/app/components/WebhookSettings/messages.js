@@ -26,4 +26,8 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.requiredField',
     defaultMessage: '*Required'
   },
+  payloadError: {
+    id: 'app.components.WebhookSettings.payloadError',
+    defaultMessage: 'Please specify the payload value. It should be a JSON object.'
+  },
 });

@@ -27,6 +27,10 @@ const styles = {
       fontSize: '12px',
       color: '#a2a7b1',
   },
+  errorLabel: {
+    color: '#f44336',
+    marginTop: '8px',
+  }
 }
 
 const getStringSetting = (setting) => {
@@ -86,6 +90,7 @@ export class DucklingSettings extends React.Component {
                 shrink: true
               }}
               helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.ducklingURL}
             />
           </Grid>
         </Grid>
@@ -120,6 +125,16 @@ export class DucklingSettings extends React.Component {
               $blockScrolling: Infinity
             }}
           />
+          {
+            this.props.errorState.ducklingDimension ?
+            <Typography
+              variant='caption'
+              className={classes.errorLabel}
+            >
+              <FormattedMessage {...messages.ducklingDimensionError} />
+            </Typography> :
+            null
+          }
         </Grid>
       </Grid>
     );
@@ -131,6 +146,7 @@ DucklingSettings.propTypes = {
   intl: intlShape.isRequired,
   settings: PropTypes.object,
   onChangeSettingsData: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(DucklingSettings));

@@ -114,6 +114,7 @@ class AgentSettingsForm extends React.Component {
                   onChangeWebhookData={this.props.onChangeWebhookData}
                   onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
                   webhookSettingDescription={messages.webhookSettingDescription}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -141,6 +142,7 @@ class AgentSettingsForm extends React.Component {
                   onChangeUsePostFormatData={this.props.onChangeAgentData}
                   onChangePostFormatData={this.props.onChangePostFormatData}
                   responseSettingDescription={messages.responseSettingDescription}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -185,6 +187,7 @@ class AgentSettingsForm extends React.Component {
                 <RasaSettings
                   settings={agentSettings}
                   onChangeSettingsData={this.props.onChangeAgentSettingsData}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -208,6 +211,7 @@ class AgentSettingsForm extends React.Component {
                 <DucklingSettings
                   settings={agentSettings}
                   onChangeSettingsData={this.props.onChangeAgentSettingsData}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -228,7 +232,8 @@ AgentSettingsForm.propTypes = {
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
-  onChangeAgentSettingsData: PropTypes.func
+  onChangeAgentSettingsData: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default withStyles(styles)(AgentSettingsForm);

@@ -29,6 +29,10 @@ const styles = {
       color: '#4e4e4e',
       width: '95%'
   },
+  errorLabel: {
+    color: '#f44336',
+    marginTop: '8px',
+  }
 }
 
 /* eslint-disable react/prefer-stateless-function */
@@ -122,6 +126,7 @@ export class WebhookSettings extends React.Component {
                       shrink: true
                     }}
                     helperText={intl.formatMessage(messages.requiredField)}
+                    error={this.props.errorState.webhookUrl}
                   />
                 </Grid>
                 <Grid item lg={2} md={2} sm={12} xs={12}>
@@ -159,9 +164,10 @@ export class WebhookSettings extends React.Component {
               </Grid>,
               <Grid key='grid-editor' item xs={12}>
             {webhook.webhookPayloadType !== "None" ? (
-              <AceEditor
-                width="100%"
-                height="300px"
+              [<AceEditor
+                key='webhookPayload'
+                width='100%'
+                height='300px'
                 mode={
                   webhook.webhookPayloadType === "JSON" ? "json" : "xml"
                 }
@@ -186,7 +192,17 @@ export class WebhookSettings extends React.Component {
                   showLineNumbers: true,
                   tabSize: 2
                 }}
-              />
+              />,
+                this.props.errorState.webhookPayload ?
+                <Typography
+                  key='webhookPayloadError'
+                  variant='caption'
+                  className={classes.errorLabel}
+                >
+                  <FormattedMessage {...messages.payloadError} />
+                </Typography> :
+                null
+              ]
             ) : null}
           </Grid>
             ] : null
@@ -205,6 +221,7 @@ WebhookSettings.propTypes = {
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
   webhookSettingDescription: PropTypes.object,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(WebhookSettings));

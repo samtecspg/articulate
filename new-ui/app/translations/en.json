@@ -56,7 +56,7 @@
   "app.containers.AgentPage.component.Form.main": "Main",
   "app.containers.AgentPage.component.Form.settings": "Settings",
   "app.containers.AgentPage.createSubtitle": "Create",
-  "app.containers.AgentPage.finishButton": "Finish",
+  "app.containers.AgentPage.finishButton": "Save",
   "app.containers.AgentPage.help": "Help?",
   "app.containers.AgentPage.playHelpAlt": "Play video off how to add/edit an Agent",
   "app.containers.AgentPage.title": "Agent",

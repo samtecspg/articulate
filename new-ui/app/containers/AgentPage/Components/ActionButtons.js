@@ -96,7 +96,7 @@ class ActionButtons extends React.Component {
                                     <FormattedMessage {...messages.cancelButton} />
                                 </Link>
                             </Button>
-                            <Button onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
+                            <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
                                 <FormattedMessage {...messages.finishButton} />
                             </Button>
                         </Grid>
@@ -113,6 +113,7 @@ ActionButtons.propTypes = {
     onTrain: PropTypes.func,
     agentStatus: PropTypes.string,
     lastTraining: PropTypes.string,
+    formError: PropTypes.bool,
 };
 
 export default withStyles(styles)(ActionButtons);

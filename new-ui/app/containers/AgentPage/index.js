@@ -51,6 +51,11 @@ import {
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
 
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+  }
+
   componentDidUpdate() {
     if (this.props.success) {
       this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
@@ -87,7 +92,161 @@ export class AgentPage extends React.PureComponent {
   state = {
     isNewAgent: this.props.match.params.id === 'create',
     settingsLoaded: false,
+    formError: false,
+    errorState: {
+      agentName: false,
+      fallbackResponses: false,
+      webhookUrl: false,
+      rasaURL: false,
+      ducklingURL: false,
+      ducklingDimension: false,
+      domainClassifierPipeline: false,
+      sayingClassifierPipeline: false,
+      keywordClassifierPipeline: false,
+      spacyPretrainedEntities: false,
+      postFormatPayload: false,
+      webhookPayload: false,
+    },
   };
+
+  submit(){
+    let errors = false;
+    const newErrorState = {
+      agentName: false,
+      fallbackResponses: false,
+      webhookUrl: false,
+      rasaURL: false,
+      ducklingURL: false,
+      ducklingDimension: false,
+      domainClassifierPipeline: false,
+      sayingClassifierPipeline: false,
+      keywordClassifierPipeline: false,
+      spacyPretrainedEntities: false,
+    }
+    if (!this.props.agent.agentName || this.props.agent.agentName === ''){
+      errors = true;
+      newErrorState.agentName = true;
+    }
+    else {
+      newErrorState.agentName = false;
+    }
+    if (!this.props.agent.fallbackResponses || this.props.agent.fallbackResponses.length === 0){
+      errors = true;
+      newErrorState.fallbackResponses = true;
+    }
+    else {
+      newErrorState.fallbackResponses = false;
+    }
+    if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')){
+      errors = true;
+      newErrorState.webhookUrl = true;
+    }
+    else {
+      newErrorState.webhookUrl = false;
+    }
+    if (!this.props.agentSettings.rasaURL || this.props.agentSettings.rasaURL === ''){
+      errors = true;
+      newErrorState.rasaURL = true;
+    }
+    else {
+      newErrorState.rasaURL = false;
+    }
+    if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === ''){
+      errors = true;
+      newErrorState.ducklingURL = true;
+    }
+    else {
+      newErrorState.ducklingURL = false;
+    }
+
+    try {
+      if (!Array.isArray(this.props.agentSettings.ducklingDimension)){
+        throw 'Duckling dimensiones is not an array';
+      }
+      newErrorState.ducklingDimension = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.ducklingDimension = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.agentSettings.domainClassifierPipeline)){
+        throw 'Domain classifier pipeline is not an array';
+      }
+      newErrorState.domainClassifierPipeline = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.domainClassifierPipeline = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.agentSettings.sayingClassifierPipeline)){
+        throw 'Saying classifier pipeline is not an array';
+      }
+      newErrorState.sayingClassifierPipeline = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.sayingClassifierPipeline = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.agentSettings.keywordClassifierPipeline)){
+        throw 'Keyword classifier pipeline is not an array';
+      }
+      newErrorState.keywordClassifierPipeline = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.keywordClassifierPipeline = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.agentSettings.spacyPretrainedEntities)){
+        throw 'Spacy pretrained entities is not an array';
+      }
+      newErrorState.spacyPretrainedEntities = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.spacyPretrainedEntities = true;
+    }
+
+    try {
+      if (this.props.agent.usePostFormat && typeof this.props.postFormat.postFormatPayload === ''){
+        throw 'Response payload is not an object';
+      }
+      newErrorState.postFormatPayload = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.postFormatPayload = true;
+    }
+
+    try {
+      if (this.props.agent.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === ''){
+        throw 'Webhook payload is not an object';
+      }
+      newErrorState.webhookPayload = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.webhookPayload = true;
+    }
+
+    if (!errors){
+      this.setState({
+        formError: false,
+      });
+      if (this.state.isNewAgent){
+        this.props.onAddNewAgent();
+      }
+      else {
+        this.props.onEditAgent();
+      };
+    }
+    else {
+      this.setState({
+        formError: true,
+        errorState: {...newErrorState},
+      });
+    }
+  }
 
   render() {
     return (
@@ -97,7 +256,8 @@ export class AgentPage extends React.PureComponent {
           subtitle={this.state.isNewAgent ? messages.createSubtitle : this.props.agent.agentName}
           inlineElement={
             <ActionButtons
-              onFinishAction={this.state.isNewAgent ? this.props.onAddNewAgent : this.props.onEditAgent}
+              formError={this.state.formError}
+              onFinishAction={this.submit}
               onTrain={this.props.onTrain}
               agentStatus={this.props.agent.status}
               lastTraining={this.props.agent.lastTraining}
@@ -109,6 +269,8 @@ export class AgentPage extends React.PureComponent {
           selectedTab={'agents'}
           agentForm={
             <Form
+              agentNameErrorState={this.state.errorState.agentName}
+              errorState={this.state.errorState}
               agent={this.props.agent}
               webhook={this.props.webhook}
               postFormat={this.props.postFormat}

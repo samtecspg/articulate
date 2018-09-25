@@ -27,6 +27,10 @@ const styles = {
       fontSize: '12px',
       color: '#a2a7b1',
   },
+  errorLabel: {
+    color: '#f44336',
+    marginTop: '8px',
+  }
 }
 
 const getStringSetting = (setting) => {
@@ -75,6 +79,7 @@ export class RasaSettings extends React.Component {
                 shrink: true
               }}
               helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.rasaURL}
             />
           </Grid>
         </Grid>
@@ -109,6 +114,16 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity
             }}
           />
+          {
+            this.props.errorState.domainClassifierPipeline ?
+            <Typography
+              variant='caption'
+              className={classes.errorLabel}
+            >
+              <FormattedMessage {...messages.pipelineError} />
+            </Typography> :
+            null
+          }
         </Grid>
         <Grid item xs={12}>
           <Typography
@@ -141,6 +156,16 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity
             }}
           />
+          {
+            this.props.errorState.sayingClassifierPipeline ?
+            <Typography
+              variant='caption'
+              className={classes.errorLabel}
+            >
+              <FormattedMessage {...messages.pipelineError} />
+            </Typography> :
+            null
+          }
         </Grid>
         <Grid item xs={12}>
           <Typography
@@ -173,6 +198,16 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity
             }}
           />
+          {
+            this.props.errorState.keywordClassifierPipeline ?
+            <Typography
+              variant='caption'
+              className={classes.errorLabel}
+            >
+              <FormattedMessage {...messages.pipelineError} />
+            </Typography> :
+            null
+          }
         </Grid>
         <Grid item xs={12}>
           <Typography
@@ -205,6 +240,16 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity
             }}
           />
+          {
+            this.props.errorState.spacyPretrainedEntities ?
+            <Typography
+              variant='caption'
+              className={classes.errorLabel}
+            >
+              <FormattedMessage {...messages.spacyPretrainedEntitiesError} />
+            </Typography> :
+            null
+          }
         </Grid>
       </Grid>
     );
@@ -216,6 +261,7 @@ RasaSettings.propTypes = {
   intl: intlShape.isRequired,
   settings: PropTypes.object,
   onChangeSettingsData: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(RasaSettings));

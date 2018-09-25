@@ -38,4 +38,12 @@ export default defineMessages({
     id: 'app.components.RasaSettings.requiredField',
     defaultMessage: '*Required'
   },
+  pipelineError: {
+    id: 'app.components.RasaSettings.pipelineError',
+    defaultMessage: 'This value is not valid for a rasa pipeline. Please specify an array of objects like the following: [{ "name": "nlp_spacy" }]',
+  },
+  spacyPretrainedEntitiesError: {
+    id: 'app.components.RasaSettings.spacyPretrainedEntitiesError',
+    defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].'
+  },
 });

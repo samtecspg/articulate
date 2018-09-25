@@ -26,4 +26,8 @@ export default defineMessages({
     id: 'app.components.DucklingSettings.requiredField',
     defaultMessage: '*Required'
   },
+  ducklingDimensionError: {
+    id: 'app.components.DucklingSettings.ducklingDimensionError',
+    defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].'
+  },
 });

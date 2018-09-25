@@ -12,6 +12,8 @@ import 'brace/mode/xml';
 import 'brace/mode/json';
 import 'brace/theme/terminal';
 
+import messages from './messages';
+
 const styles = {
   toggleContainer: {
     display: "inline"
@@ -27,6 +29,10 @@ const styles = {
       color: '#4e4e4e',
       width: '95%'
   },
+  errorLabel: {
+    color: '#f44336',
+    marginTop: '8px',
+  }
 }
 
 /* eslint-disable react/prefer-stateless-function */
@@ -63,7 +69,8 @@ export class ResponseSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           {usePostFormat ? (
-            <AceEditor
+            [<AceEditor
+              key='postFormatEditor'
               width="100%"
               height="300px"
               mode={"json"}
@@ -88,7 +95,17 @@ export class ResponseSettings extends React.Component {
                 showLineNumbers: true,
                 tabSize: 2
               }}
-            />
+            />,
+              this.props.errorState.postFormatPayload ?
+              <Typography
+                key='postFormatPayloadError'
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.payloadError} />
+              </Typography> :
+              null
+            ]
           ) : null}
         </Grid>
       </Grid>
@@ -102,7 +119,8 @@ ResponseSettings.propTypes = {
   postFormat: PropTypes.object,
   onChangeUsePostFormatData: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
-  responseSettingDescription: PropTypes.object
+  responseSettingDescription: PropTypes.object,
+  errorState: PropTypes.object,
 };
 
 export default withStyles(styles)(ResponseSettings);

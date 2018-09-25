@@ -165,6 +165,7 @@ class Form extends React.Component {
               }
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
+              errorState={this.props.errorState}
             />
           )}
           {this.state.selectedTab === 1 && (
@@ -178,6 +179,7 @@ class Form extends React.Component {
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
+              errorState={this.props.errorState}
             />
           )}
         </Grid>
@@ -194,6 +196,7 @@ Form.propTypes = {
   postFormat: PropTypes.object,
   settings: PropTypes.object,
   agentSettings: PropTypes.object,
+  errorState: PropTypes.object,
   onChangeAgentData: PropTypes.func,
   onChangeAgentName: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
