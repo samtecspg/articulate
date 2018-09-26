@@ -166,7 +166,7 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr', 'pt').required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
+                    language: AgentSchema.language.valid('en', 'es', 'de', 'fr', 'pt', 'zh').required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr, zh')),
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
