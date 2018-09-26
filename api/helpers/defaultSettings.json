@@ -701,6 +701,10 @@
       {
         "value": "es",
         "text": "Spanish"
+      },
+      {
+        "value": "zh",
+        "text": "简体中文"
       }
     ],
     "defaultAgentLanguage": "en",
