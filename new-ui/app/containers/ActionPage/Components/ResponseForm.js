@@ -186,6 +186,7 @@ class ResponseForm extends React.Component {
                       shrink: true,
                     }}
                     helperText={intl.formatMessage(messages.responseHelperText)}
+                    error={this.props.errorState.responses}
                   />
                   {action.responses.length > 0 ?
                     <Table className={classes.table}>
@@ -217,6 +218,7 @@ class ResponseForm extends React.Component {
                     onChangeUsePostFormatData={this.props.onChangeActionData}
                     onChangePostFormatData={this.props.onChangePostFormatData}
                     responseSettingDescription={messages.responseFormDescription}
+                    errorState={this.props.errorState}
                   />
                 </Grid>
               </Grid>
@@ -239,6 +241,7 @@ ResponseForm.propTypes = {
   onChangePostFormatData: PropTypes.func,
   onAddResponse: PropTypes.func,
   onDeleteResponse: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

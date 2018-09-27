@@ -41,7 +41,6 @@ class DomainDataForm extends React.Component {
     state = {
         newDomain: '',
         newSyonynm: '',
-        domainNameError: false,
         displayColorPicker: false,
     }
 
@@ -76,7 +75,7 @@ class DomainDataForm extends React.Component {
                                     shrink: true,
                                 }}
                                 helperText={intl.formatMessage(messages.requiredField)}
-                                error={this.state.domainNameError}
+                                error={this.props.errorState.domainName}
                             />
                         </Grid>
                     </Grid>
@@ -154,6 +153,7 @@ DomainDataForm.propTypes = {
     domain: PropTypes.object,
     onChangeDomainData: PropTypes.func.isRequired,
     onChangeActionThreshold: PropTypes.func,
+    errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(DomainDataForm));

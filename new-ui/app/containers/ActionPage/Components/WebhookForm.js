@@ -152,6 +152,7 @@ class WebhookForm extends React.Component {
                 onChangeUseWebhook={this.props.onChangeActionData}
                 onChangeWebhookData={this.props.onChangeWebhookData}
                 onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+                errorState={this.props.errorState}
               />
             </Grid>
           </Grid>
@@ -169,6 +170,7 @@ WebhookForm.propTypes = {
   onChangeActionData: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(WebhookForm));

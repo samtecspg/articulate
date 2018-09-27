@@ -151,6 +151,7 @@ class Form extends React.Component {
             onAddKeywordExample={this.props.onAddKeywordExample}
             onDeleteKeywordExample={this.props.onDeleteKeywordExample}
             onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
+            errorState={this.props.errorState}
           />}
         </Grid>
       </Grid>
@@ -167,6 +168,7 @@ Form.propTypes = {
   onAddKeywordExample: PropTypes.func,
   onDeleteKeywordExample: PropTypes.func,
   onChangeExampleSynonyms: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(Form));

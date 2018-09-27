@@ -216,6 +216,7 @@ class SlotsForm extends React.Component {
                   onChangeSlotData={this.props.onChangeSlotData.bind(null, index)}
                   onChangeSlotName={this.props.onChangeSlotName.bind(null, index)}
                   saying={this.props.saying}
+                  errorState={this.props.errorState.slots[index]}
                 />
                 : null
             )
@@ -238,6 +239,7 @@ SlotsForm.propTypes = {
   onDeleteTextPrompt: PropTypes.func,
   onAddNewSlot: PropTypes.func,
   onChangeSlotName: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(SlotsForm));

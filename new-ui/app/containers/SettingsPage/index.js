@@ -33,8 +33,201 @@ import {
 /* eslint-disable react/prefer-stateless-function */
 export class SettingsPage extends React.PureComponent {
 
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+  }
+
   componentWillMount() {
     this.props.onLoadSettings();
+  }
+
+  state = {
+    formError: false,
+    errorState: {
+      rasaURL: false,
+      ducklingURL: false,
+      ducklingDimension: false,
+      domainClassifierPipeline: false,
+      sayingClassifierPipeline: false,
+      keywordClassifierPipeline: false,
+      spacyPretrainedEntities: false,
+      timezones: false,
+      agentLanguages: false,
+      uiLanguages: false,
+      defaultTimezone: false,
+      defaultAgentFallbackResponses: false,
+    },
+  };
+
+  submit(){
+    let errors = false;
+    const newErrorState = {
+      rasaURL: false,
+      ducklingURL: false,
+      ducklingDimension: false,
+      domainClassifierPipeline: false,
+      sayingClassifierPipeline: false,
+      keywordClassifierPipeline: false,
+      spacyPretrainedEntities: false,
+      timezones: false,
+      agentLanguages: false,
+      uiLanguages: false,
+      defaultTimezone: false,
+      defaultAgentLanguage: false,
+      uiLanguage: false,
+      defaultAgentFallbackResponses: false,
+    }
+
+    if (!this.props.settings.rasaURL || this.props.settings.rasaURL === ''){
+      errors = true;
+      newErrorState.rasaURL = true;
+    }
+    else {
+      newErrorState.rasaURL = false;
+    }
+
+    if (!this.props.settings.ducklingURL || this.props.settings.ducklingURL === ''){
+      errors = true;
+      newErrorState.ducklingURL = true;
+    }
+    else {
+      newErrorState.ducklingURL = false;
+    }
+
+    if (!this.props.settings.defaultAgentFallbackResponses || this.props.settings.defaultAgentFallbackResponses.length === 0){
+      errors = true;
+      newErrorState.defaultAgentFallbackResponses = true;
+    }
+    else {
+      newErrorState.defaultAgentFallbackResponses = false;
+    }
+
+    if (!Array.isArray(this.props.settings.agentLanguages) ||
+    (Array.isArray(this.props.settings.agentLanguages) &&
+    this.props.settings.agentLanguages.filter((agentLanguage) => { return agentLanguage.value === this.props.settings.defaultAgentLanguage }).length === 0)  ||
+      !this.props.settings.defaultAgentLanguage || this.props.settings.defaultAgentLanguage === ''){
+      errors = true;
+      newErrorState.defaultAgentLanguage = true;
+    }
+    else {
+      newErrorState.defaultAgentLanguage = false;
+    }
+
+    if (!Array.isArray(this.props.settings.uiLanguages) ||
+      (Array.isArray(this.props.settings.uiLanguages) &&
+        this.props.settings.uiLanguages.filter((uiLanguage) => { return uiLanguage.value === this.props.settings.uiLanguage }).length === 0) ||
+      !this.props.settings.uiLanguage || this.props.settings.uiLanguage === ''){
+      errors = true;
+      newErrorState.uiLanguage = true;
+    }
+    else {
+      newErrorState.uiLanguage = false;
+    }
+
+    if (!Array.isArray(this.props.settings.timezones) ||
+      (Array.isArray(this.props.settings.timezones) &&
+        this.props.settings.timezones.indexOf(this.props.settings.defaultTimezone) === -1) ||
+      !this.props.settings.defaultTimezone || this.props.settings.defaultTimezone === ''){
+      errors = true;
+      newErrorState.defaultTimezone = true;
+    }
+    else {
+      newErrorState.defaultTimezone = false;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.ducklingDimension)){
+        throw 'Duckling dimensiones is not an array';
+      }
+      newErrorState.ducklingDimension = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.ducklingDimension = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.domainClassifierPipeline)){
+        throw 'Domain classifier pipeline is not an array';
+      }
+      newErrorState.domainClassifierPipeline = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.domainClassifierPipeline = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.sayingClassifierPipeline)){
+        throw 'Saying classifier pipeline is not an array';
+      }
+      newErrorState.sayingClassifierPipeline = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.sayingClassifierPipeline = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.keywordClassifierPipeline)){
+        throw 'Keyword classifier pipeline is not an array';
+      }
+      newErrorState.keywordClassifierPipeline = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.keywordClassifierPipeline = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.spacyPretrainedEntities)){
+        throw 'Spacy pretrained entities is not an array';
+      }
+      newErrorState.spacyPretrainedEntities = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.spacyPretrainedEntities = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.timezones)){
+        throw 'Timezones is not an array';
+      }
+      newErrorState.timezones = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.timezones = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.agentLanguages)){
+        throw 'Agent languages is not an array of object';
+      }
+      newErrorState.agentLanguages = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.agentLanguages = true;
+    }
+
+    try {
+      if (!Array.isArray(this.props.settings.uiLanguages)){
+        throw 'UI languages is not an array of object';
+      }
+      newErrorState.uiLanguages = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.uiLanguages = true;
+    }
+
+    if (!errors){
+      this.setState({
+        formError: false,
+      });
+      this.props.onSaveChanges();
+    }
+    else {
+      this.setState({
+        formError: true,
+        errorState: {...newErrorState},
+      });
+    }
   }
 
   render() {
@@ -45,7 +238,8 @@ export class SettingsPage extends React.PureComponent {
           subtitle={messages.createSubtitle}
           inlineElement={
             <ActionButtons
-              onFinishAction={this.props.onSaveChanges}
+              formError={this.state.formError}
+              onFinishAction={this.submit}
             />
           }
         />
@@ -54,6 +248,7 @@ export class SettingsPage extends React.PureComponent {
           onChangeSettingsData={this.props.onChangeSettingsData}
           onAddFallbackResponse={this.props.onAddFallbackResponse}
           onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
+          errorState={this.state.errorState}
         />
       </Grid>
     );

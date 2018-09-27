@@ -210,7 +210,7 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (this.props.agent.usePostFormat && typeof this.props.postFormat.postFormatPayload === ''){
+      if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === ''){
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;

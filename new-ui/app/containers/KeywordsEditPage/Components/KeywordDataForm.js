@@ -99,7 +99,7 @@ class KeywordDataForm extends React.Component {
                                     shrink: true,
                                 }}
                                 helperText={intl.formatMessage(messages.requiredField)}
-                                error={this.state.keywordNameError}
+                                error={this.props.errorState.keywordName}
                             />
                         </Grid>
                         <Grid item md={3} sm={4} xs={12}>
@@ -223,6 +223,8 @@ class KeywordDataForm extends React.Component {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                helperText={this.props.errorState.keywordName ? intl.formatMessage(messages.keywordValuesError) : ''}
+                                error={this.props.errorState.examples}
                             />
                         </Grid>
                     </Grid>
@@ -241,6 +243,7 @@ KeywordDataForm.propTypes = {
     onAddKeywordExample: PropTypes.func,
     onDeleteKeywordExample: PropTypes.func,
     onChangeExampleSynonyms: PropTypes.func,
+    errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(KeywordDataForm));

@@ -150,7 +150,7 @@ class ActionForm extends React.Component {
                           shrink: true,
                       }}
                       helperText={intl.formatMessage(messages.requiredField)}
-                      error={this.state.actionNameError}
+                      error={this.props.errorState.actionName}
                   />
                 </Grid>
               </Grid>
@@ -167,6 +167,7 @@ ActionForm.propTypes = {
   intl: intlShape.isRequired,
   action: PropTypes.object,
   onChangeActionName: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(ActionForm));

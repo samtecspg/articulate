@@ -67,4 +67,8 @@ export default defineMessages({
       id: 'app.containers.SayingsPage.trainButton',
       defaultMessage: 'Train'
     },
+    requiredField: {
+      id: 'app.containers.SayingsPage.component.SayingDataForm.requiredField',
+      defaultMessage: '*Required'
+    },
 });

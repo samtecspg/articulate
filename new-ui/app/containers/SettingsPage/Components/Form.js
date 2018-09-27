@@ -133,6 +133,7 @@ class Form extends React.Component {
             onChangeSettingsData={this.props.onChangeSettingsData}
             onAddFallbackResponse={this.props.onAddFallbackResponse}
             onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
+            errorState={this.props.errorState}
           />
         </Grid>
       </Grid>
@@ -147,6 +148,7 @@ Form.propTypes = {
   onChangeSettingsData: PropTypes.func,
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(Form));

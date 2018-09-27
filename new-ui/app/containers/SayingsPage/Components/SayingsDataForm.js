@@ -142,10 +142,11 @@ class SayingsDataForm extends React.Component {
         filterInput: '',
         filteringDomains: false,
         categoriesDropdownOpen: false,
+        errorDomain: false,
     }
 
     render(){
-        const { classes, intl, sayings } = this.props;
+        const { classes, intl, sayings, domain } = this.props;
         return (
             <Grid className={classes.formContainer} container item xs={12}>
                 <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
@@ -154,7 +155,7 @@ class SayingsDataForm extends React.Component {
                             <TextField
                                 select
                                 id='category'
-                                value={this.props.domain}
+                                value={domain}
                                 label={intl.formatMessage(messages.categorySelect)}
                                 onClick={
                                     () => {
@@ -176,6 +177,8 @@ class SayingsDataForm extends React.Component {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                helperText={this.state.errorDomain ? intl.formatMessage(messages.requiredField) : ''}
+                                error={this.state.errorDomain}
                             >
                                 <MenuItem className={classes.searchCategoryContainer} value={'filter'}>
                                     <Grid container justify='flex-end'>
@@ -219,19 +222,19 @@ class SayingsDataForm extends React.Component {
                                 {
                                     this.state.filteringDomains ?
                                         this.props.agentFilteredDomains.length > 0 ?
-                                            this.props.agentFilteredDomains.map((domain, index) => {
+                                            this.props.agentFilteredDomains.map((filteredDomain, index) => {
                                                 return (
-                                                    <MenuItem key={`domain_${index}`} value={domain.domainName}>
+                                                    <MenuItem key={`domain_${index}`} value={filteredDomain.domainName}>
                                                         <Grid container justify='space-between'>
                                                             <div className={classes.categoryDataContainer}>
-                                                                <span>{domain.domainName}</span>
+                                                                <span>{filteredDomain.domainName}</span>
                                                             </div>
                                                             {
-                                                                domain.domainName === this.props.domain && !this.state.categoriesDropdownOpen ?
+                                                                filteredDomain.domainName === domain && !this.state.categoriesDropdownOpen ?
                                                                 null :
                                                                 <div className={classes.categoryDataContainer}>
-                                                                    <span>{domain.actionThreshold * 100}%</span>
-                                                                    <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/${domain.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
+                                                                    <span>{filteredDomain.actionThreshold * 100}%</span>
+                                                                    <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/${filteredDomain.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
                                                                 </div>
                                                             }
                                                         </Grid>
@@ -246,19 +249,19 @@ class SayingsDataForm extends React.Component {
                                                 <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/create`); }} className={classes.addCategoryButton} variant='raised'>+ Add</Button>
                                             </MenuItem>]
                                     :
-                                        this.props.agentDomains.map((domain, index) => {
+                                        this.props.agentDomains.map((agentDomain, index) => {
                                             return (
-                                                <MenuItem key={`domain_${index}`} value={domain.domainName}>
+                                                <MenuItem key={`domain_${index}`} value={agentDomain.domainName}>
                                                     <Grid container justify='space-between'>
                                                         <div className={classes.categoryDataContainer}>
-                                                            <span>{domain.domainName}</span>
+                                                            <span>{agentDomain.domainName}</span>
                                                         </div>
                                                         {
-                                                            domain.domainName === this.props.domain && !this.state.categoriesDropdownOpen ?
+                                                            agentDomain.domainName === domain && !this.state.categoriesDropdownOpen ?
                                                             null :
                                                             <div className={classes.categoryDataContainer}>
-                                                                <span>{domain.actionThreshold * 100}%</span>
-                                                                <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/${domain.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
+                                                                <span>{agentDomain.actionThreshold * 100}%</span>
+                                                                <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/${agentDomain.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
                                                             </div>
                                                         }
                                                     </Grid>
@@ -269,14 +272,6 @@ class SayingsDataForm extends React.Component {
                             </TextField>
                         </Grid>
                         <Grid item lg={10} md={10} sm={8} xs={8}>
-                            {/*<div style={{display: 'inline'}}>
-                                <img style={{
-                                height: '15px',
-                                width: '20px',
-                                transform: 'translate(-52%,409%)',
-                                backgroundColor: '#fff'
-                                }} src={openingQuotes}/>
-                            </div>*/}
                             <TextField
                                 icon={<img src={trashIcon} />}
                                 id='newSaying'
@@ -284,9 +279,19 @@ class SayingsDataForm extends React.Component {
                                 placeholder={intl.formatMessage(messages.sayingTextFieldPlaceholder)}
                                 onKeyPress={(ev) => {
                                     if (ev.key === 'Enter') {
-                                        ev.preventDefault();
-                                        this.props.onAddSaying(ev.target.value)
-                                        ev.target.value = '';
+                                        if (!domain || domain === ''){
+                                            this.setState({
+                                                errorDomain: true,
+                                            });
+                                        }
+                                        else {
+                                            this.setState({
+                                                errorDomain: false,
+                                            });
+                                            ev.preventDefault();
+                                            this.props.onAddSaying(ev.target.value)
+                                            ev.target.value = '';
+                                        }
                                     }
                                 }}
                                 margin='normal'
@@ -298,17 +303,6 @@ class SayingsDataForm extends React.Component {
                                     className: classes.sayingInput,
                                 }}
                             />
-                            {/*<div style={{display: 'inline'}}>
-                                <img style={{
-                                display: 'inline',
-                                height: '20px',
-                                width: '20px',
-                                position: 'absolute',
-                                transform: 'translate(-56%,207%)',
-                                backgroundColor: '#fff',
-                                padding: '5px'
-                                }} src={closingQuotes}/>
-                            </div>*/}
                         </Grid>
                     </Grid>
                     <Grid container item xs={12}>

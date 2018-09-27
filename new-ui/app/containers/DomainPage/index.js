@@ -43,6 +43,11 @@ import ActionButtons from './Components/ActionButtons';
 /* eslint-disable react/prefer-stateless-function */
 export class DomainsEditPage extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+  }
+
   componentDidMount() {
     if(this.state.isNewDomain) {
       this.props.onResetData();
@@ -58,12 +63,48 @@ export class DomainsEditPage extends React.Component {
     }
   }
 
-
   state = {
     isNewDomain: this.props.match.params.domainId === 'create',
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
+    formError: false,
+    errorState: {
+      domainName: false,
+    },
   };
+
+  submit(){
+    let errors = false;
+    const newErrorState = {
+      domainName: false,
+    }
+
+    if (!this.props.domain.domainName || this.props.domain.domainName === ''){
+      errors = true;
+      newErrorState.domainName = true;
+    }
+    else {
+      newErrorState.domainName = false;
+    }
+
+    if (!errors){
+      this.setState({
+        formError: false,
+      });
+      if (this.state.isNewDomain){
+        this.props.onCreateDomain();
+      }
+      else {
+        this.props.onUpdateDomain();
+      };
+    }
+    else {
+      this.setState({
+        formError: true,
+        errorState: {...newErrorState},
+      });
+    }
+  }
 
   render() {
     const { intl } = this.props;
@@ -74,10 +115,11 @@ export class DomainsEditPage extends React.Component {
           subtitle={this.state.isNewDomain ? intl.formatMessage(messages.newCategory) : this.props.domain.domainName}
           inlineElement={
             <ActionButtons
+              formError={this.state.formError}
               page={this.state.page}
               filter={this.state.filter}
               agentId={this.props.agent.id}
-              onFinishAction={this.state.isNewDomain ? this.props.onCreateDomain : this.props.onUpdateDomain}
+              onFinishAction={this.submit}
             />
           }
           backButton={messages.backButton}
@@ -87,6 +129,7 @@ export class DomainsEditPage extends React.Component {
           domain={this.props.domain}
           onChangeDomainData={this.props.onChangeDomainData}
           onChangeActionThreshold={this.props.onChangeActionThreshold}
+          errorState={this.state.errorState}
         />
       </Grid>
     );

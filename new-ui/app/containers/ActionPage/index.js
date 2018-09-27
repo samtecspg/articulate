@@ -79,6 +79,7 @@ export class ActionPage extends React.Component {
     super(props);
     this.moveNextTab = this.moveNextTab.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
   componentDidMount() {
@@ -102,7 +103,16 @@ export class ActionPage extends React.Component {
     currentTab: 'action',
     userCompletedAllRequiredFields: false,
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
+    formError: false,
+    errorState: {
+      actionName: false,
+      postFormatPayload: false,
+      webhookUrl: false,
+      webhookPayload: false,
+      responses: false,
+      slots: [],
+    },
   };
 
   moveNextTab(){
@@ -123,6 +133,112 @@ export class ActionPage extends React.Component {
     });
   }
 
+  submit(){
+    let errors = false;
+    const newErrorState = {
+      actionName: false,
+      postFormatPayload: false,
+      webhookUrl: false,
+      webhookPayload: false,
+      responses: false,
+      slots: [],
+    }
+
+    if (!this.props.action.actionName || this.props.action.actionName === ''){
+      errors = true;
+      newErrorState.actionName = true;
+    }
+    else {
+      newErrorState.actionName = false;
+    }
+
+    if (this.props.action.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')){
+      errors = true;
+      newErrorState.webhookUrl = true;
+    }
+    else {
+      newErrorState.webhookUrl = false;
+    }
+
+    if (!this.props.action.responses || this.props.action.responses.length === 0){
+      errors = true;
+      newErrorState.responses = true;
+    }
+    else {
+      newErrorState.responses = false;
+    }
+
+    if (this.props.action.slots.length > 0){
+      this.props.action.slots.forEach((slot) => {
+        const newSlotError = {
+          slotName: false,
+          keyword: false,
+          textPrompts: false,
+        };
+        if (!slot.slotName){
+          errors = true;
+          newSlotError.slotName = true;
+        }
+        else{
+          newSlotError.slotName = false;
+        }
+        if (!slot.keyword){
+          errors = true;
+          newSlotError.keyword = true;
+        }
+        else{
+          newSlotError.keyword = false;
+        }
+        if (slot.isRequired && slot.textPrompts.length === 0){
+          errors = true;
+          newSlotError.textPrompts = true;
+        }
+        else{
+          newSlotError.textPrompts = false;
+        }
+        newErrorState.slots.push(newSlotError);
+      });
+    }
+
+    try {
+      if (this.props.action.usePostFormat && this.props.postFormat.postFormatPayload === ''){
+        throw 'Response payload is not an object';
+      }
+      newErrorState.postFormatPayload = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.postFormatPayload = true;
+    }
+
+    try {
+      if (this.props.action.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === ''){
+        throw 'Webhook payload is not an object';
+      }
+      newErrorState.webhookPayload = false;
+    } catch(e) {
+      errors = true;
+      newErrorState.webhookPayload = true;
+    }
+
+    if (!errors){
+      this.setState({
+        formError: false,
+      });
+      if (this.state.isNewAction){
+        this.props.onAddNewAction();
+      }
+      else {
+        this.props.onEditAction();
+      };
+    }
+    else {
+      this.setState({
+        formError: true,
+        errorState: {...newErrorState},
+      });
+    }
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -135,9 +251,10 @@ export class ActionPage extends React.Component {
           subtitle={this.state.isNewAction ? messages.createSubtitle : this.props.action.actionName}
           inlineElement={
             <ActionButtons
+              formError={this.state.formError}
               hideFinishButton={this.state.currentTab === 'action' && !this.state.userCompletedAllRequiredFields}
               isLastTab={this.state.currentTab === 'response'}
-              onFinishAction={this.state.isNewAction ? this.props.onAddNewAction : this.props.onEditAction}
+              onFinishAction={this.submit}
               onNextAction={this.moveNextTab}
             />
           }
@@ -150,6 +267,7 @@ export class ActionPage extends React.Component {
             <ActionForm
               action={this.props.action}
               onChangeActionName={this.props.onChangeActionName}
+              errorState={this.state.errorState}
             />
           }
           slotsForm={
@@ -163,6 +281,7 @@ export class ActionPage extends React.Component {
               onChangeSlotName={this.props.onChangeSlotName}
               saying={this.props.saying}
               agentKeywords={this.props.agentKeywords}
+              errorState={this.state.errorState}
             />
           }
           webhookForm={
@@ -172,6 +291,7 @@ export class ActionPage extends React.Component {
               onChangeActionData={this.props.onChangeActionData}
               onChangeWebhookData={this.props.onChangeWebhookData}
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+              errorState={this.state.errorState}
             />
           }
           responseForm={
@@ -184,6 +304,7 @@ export class ActionPage extends React.Component {
               agentKeywords={this.props.agentKeywords}
               onAddResponse={this.props.onAddResponse}
               onDeleteResponse={this.props.onDeleteResponse}
+              errorState={this.state.errorState}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -232,7 +353,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-  return {
+    return {
     onResetData: () => {
       dispatch(resetActionData());
     },

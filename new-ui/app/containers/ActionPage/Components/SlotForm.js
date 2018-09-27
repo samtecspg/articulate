@@ -96,7 +96,7 @@ class SlotForm extends React.Component {
                                     shrink: true,
                                 }}
                                 helperText={intl.formatMessage(messages.requiredField)}
-                                error={this.state.actionNameError}
+                                error={this.props.errorState ? this.props.errorState.slotName : false}
                             />
                         </Grid>
                         <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -116,6 +116,7 @@ class SlotForm extends React.Component {
                                     shrink: true,
                                 }}
                                 helperText={intl.formatMessage(messages.requiredField)}
+                                error={this.props.errorState ? this.props.errorState.keyword : false}
                             >
                                 {agentKeywords.map((keyword, index) => {
                                     return (
@@ -175,6 +176,7 @@ class SlotForm extends React.Component {
                                     disabled: !slot.isRequired
                                 }}
                                 helperText={intl.formatMessage(messages.textpromptHelperText)}
+                                error={this.props.errorState ? this.props.errorState.textPrompts : false}
                             />
                             {slot.textPrompts.length > 0 ?
                                 <Table className={classes.table}>
@@ -213,6 +215,7 @@ SlotForm.propTypes = {
     onAddTextPrompt: PropTypes.func.isRequired,
     onDeleteTextPrompt: PropTypes.func.isRequired,
     onChangeSlotName: PropTypes.func.isRequired,
+    errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(SlotForm));

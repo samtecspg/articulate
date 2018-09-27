@@ -47,6 +47,10 @@ export default defineMessages({
       id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.requiredField',
       defaultMessage: '*Required'
     },
+    keywordValuesError: {
+      id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.keywordValuesError',
+      defaultMessage: '*At least one value is required'
+    },
     typeSelect: {
       id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.typeSelect',
       defaultMessage: 'Type:'

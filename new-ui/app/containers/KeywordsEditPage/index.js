@@ -42,6 +42,11 @@ import { push } from 'react-router-redux';
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsEditPage extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+  }
+
   componentDidMount() {
     if(this.state.isNewKeyword) {
       this.props.onResetData();
@@ -59,8 +64,55 @@ export class KeywordsEditPage extends React.Component {
 
 
   state = {
-    isNewKeyword: this.props.match.params.keywordId === 'create'
+    isNewKeyword: this.props.match.params.keywordId === 'create',
+    formError: false,
+    errorState: {
+      keywordName: false,
+      examples: false,
+    },
   };
+
+  submit(){
+    let errors = false;
+    const newErrorState = {
+      keywordName: false,
+      examples: false,
+    }
+
+    if (!this.props.keyword.keywordName || this.props.keyword.keywordName === ''){
+      errors = true;
+      newErrorState.keywordName = true;
+    }
+    else {
+      newErrorState.keywordName = false;
+    }
+
+    if (!this.props.keyword.examples || this.props.keyword.examples.length === 0){
+      errors = true;
+      newErrorState.examples = true;
+    }
+    else {
+      newErrorState.examples = false;
+    }
+
+    if (!errors){
+      this.setState({
+        formError: false,
+      });
+      if (this.state.isNewKeyword){
+        this.props.onCreateKeyword();
+      }
+      else {
+        this.props.onUpdateKeyword();
+      };
+    }
+    else {
+      this.setState({
+        formError: true,
+        errorState: {...newErrorState},
+      });
+    }
+  }
 
   render() {
     return (
@@ -70,13 +122,12 @@ export class KeywordsEditPage extends React.Component {
           subtitle={this.props.agent.agentName}
           inlineElement={
             <ActionButtons
+              formError={this.state.formError}
               agentId={this.props.agent.id}
-              onFinishAction={this.state.isNewKeyword ? this.props.onCreateKeyword : this.props.onUpdateKeyword}
+              onFinishAction={this.submit}
             />
           }
           backButton={messages.backButton}
-
-
         />
         <MainTab
           enableTabs={true}
@@ -92,6 +143,7 @@ export class KeywordsEditPage extends React.Component {
               onAddKeywordExample={this.props.onAddKeywordExample}
               onDeleteKeywordExample={this.props.onDeleteKeywordExample}
               onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
+              errorState={this.state.errorState}
             />
           }
         />

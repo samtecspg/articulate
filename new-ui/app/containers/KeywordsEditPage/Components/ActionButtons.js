@@ -38,7 +38,7 @@ class ActionButtons extends React.Component {
                     <Link className={`${classes.icon} ${classes.link}`} to='/'>
                         <Icon>arrow_back</Icon>
                     </Link>
-                    <a key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
+                    <a  style={{color: this.props.formError ? '#f44336' : ''}}key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
                         <Icon>save</Icon>
                     </a>
                 </Hidden>
@@ -49,7 +49,7 @@ class ActionButtons extends React.Component {
                                 <FormattedMessage {...messages.cancelButton} />
                             </Link>
                         </Button>
-                        <Button onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
+                        <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
                             <FormattedMessage {...messages.finishButton} />
                         </Button>
                     </Grid>
@@ -63,6 +63,7 @@ ActionButtons.propTypes = {
     classes: PropTypes.object.isRequired,
     onFinishAction: PropTypes.func.isRequired,
     agentId: PropTypes.number,
+    formError: PropTypes.bool,
 };
 
 export default withStyles(styles)(ActionButtons);

@@ -90,6 +90,7 @@ class SettingsDataForm extends React.Component {
                   onChangeSettingsData={this.props.onChangeSettingsData}
                   onAddFallbackResponse={this.props.onAddFallbackResponse}
                   onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -110,6 +111,7 @@ class SettingsDataForm extends React.Component {
                 <RasaSettings
                   settings={settings}
                   onChangeSettingsData={this.props.onChangeSettingsData}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -130,6 +132,7 @@ class SettingsDataForm extends React.Component {
                 <DucklingSettings
                   settings={settings}
                   onChangeSettingsData={this.props.onChangeSettingsData}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -146,6 +149,7 @@ SettingsDataForm.propTypes = {
   onChangeSettingsData: PropTypes.func,
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
+  errorState: PropTypes.object,
 };
 
 export default withStyles(styles)(SettingsDataForm);

@@ -43,11 +43,11 @@ class ActionButtons extends React.Component {
                     :
                         (
                             this.props.isLastTab ?
-                                <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
+                                <a style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
                                     <Icon>save</Icon>
                                 </a>
                             :
-                                [<a key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
+                                [<a style={{color: this.props.formError ? '#f44336' : ''}} key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
                                     <Icon>save</Icon>
                                 </a>,
                                 <a key='btnNext' onClick={this.props.onNextAction} className={`${classes.icon} ${classes.link}`}>
@@ -67,11 +67,11 @@ class ActionButtons extends React.Component {
                         :
                             (
                                 this.props.isLastTab ?
-                                    <Button onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
+                                    <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
                                         <FormattedMessage {...messages.finishButton} />
                                     </Button>
                                 :
-                                    [<Button onClick={this.props.onFinishAction} key='btnFinish'>
+                                    [<Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish'>
                                         <FormattedMessage {...messages.finishButton} />
                                     </Button>,
                                     <Button onClick={this.props.onNextAction} key='btnNext' variant='raised'>
@@ -91,7 +91,8 @@ ActionButtons.propTypes = {
     onFinishAction: PropTypes.func.isRequired,
     onNextAction: PropTypes.func.isRequired,
     hideFinishButton: PropTypes.bool,
-    isLastTab: PropTypes.bool
+    isLastTab: PropTypes.bool,
+    formError: PropTypes.bool,
 };
 
 export default withStyles(styles)(ActionButtons);

@@ -142,6 +142,7 @@ class Form extends React.Component {
             domain={this.props.domain}
             onChangeDomainData={this.props.onChangeDomainData}
             onChangeActionThreshold={this.props.onChangeActionThreshold}
+            errorState={this.props.errorState}
           />}
         </Grid>
       </Grid>
@@ -155,6 +156,7 @@ Form.propTypes = {
   domain: PropTypes.object,
   onChangeDomainData: PropTypes.func.isRequired,
   onChangeActionThreshold: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(Form));

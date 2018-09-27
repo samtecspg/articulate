@@ -90,5 +90,17 @@ export default defineMessages({
   uiLanguages: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.uiLanguages',
     defaultMessage: 'UI Languages:'
+  },
+  timezonesError: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.timezonesError',
+    defaultMessage: 'Please verify this value. It should be an array of strings. Example: ["Africa/Abidjan", "Africa/Accra"].'
+  },
+  agentLanguagesError: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.agentLanguagesError',
+    defaultMessage: 'Please verify this value. It should be an array of JSON objects. Example: [{"text": "English","value": "en"}].'
+  },
+  uiLanguagesError: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.uiLanguagesError',
+    defaultMessage: 'Please verify this value. It should be an array of JSON objects. Example: [{"text": "English","value": "en"}].'
   }
 });

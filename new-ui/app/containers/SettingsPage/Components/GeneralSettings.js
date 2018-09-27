@@ -15,8 +15,6 @@ import 'brace/theme/terminal';
 import messages from '../messages';
 
 import trashIcon from '../../../images/trash-icon.svg';
-import openingQuotes from '../../../images/opening-quotes.svg';
-import closingQuotes from '../../../images/closing-quotes.svg';
 
 const styles = {
   panelContent: {
@@ -40,6 +38,10 @@ const styles = {
   deleteIcon: {
       cursor: 'pointer'
   },
+  errorLabel: {
+    color: '#f44336',
+    marginTop: '8px',
+  }
 }
 
 const getStringSetting = (setting) => {
@@ -88,14 +90,16 @@ export class GeneralSettings extends React.Component {
                   shrink: true,
               }}
               helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.uiLanguage}
             >
-              {settings.uiLanguages.map((language) => {
+              {Array.isArray(settings.uiLanguages) ?
+                settings.uiLanguages.map((language) => {
                   return (
                     <MenuItem key={language.text} value={language.value}>
                       {language.text}
                     </MenuItem>
                   )
-              })}
+              }) : null}
             </TextField>
           </Grid>
         </Grid>
@@ -113,14 +117,16 @@ export class GeneralSettings extends React.Component {
                   shrink: true,
               }}
               helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.defaultAgentLanguage}
             >
-              {settings.agentLanguages.map((agentLanguage) => {
+              {Array.isArray(settings.agentLanguages) ?
+                settings.agentLanguages.map((agentLanguage) => {
                   return (
                     <MenuItem key={agentLanguage.text} value={agentLanguage.value}>
                       {agentLanguage.text}
                     </MenuItem>
                   )
-              })}
+              }) : null}
             </TextField>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -136,14 +142,16 @@ export class GeneralSettings extends React.Component {
                   shrink: true,
               }}
               helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.defaultTimezone}
             >
-              {settings.timezones.map((timezone) => {
+              {Array.isArray(settings.timezones) ?
+                settings.timezones.map((timezone) => {
                   return (
                     <MenuItem key={timezone} value={timezone}>
                       {timezone}
                     </MenuItem>
                   )
-              })}
+              }) : null}
             </TextField>
           </Grid>
           <Grid item xs={12}>
@@ -177,6 +185,16 @@ export class GeneralSettings extends React.Component {
                 $blockScrolling: Infinity
               }}
             />
+            {
+              this.props.errorState.timezones ?
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.timezonesError} />
+              </Typography> :
+              null
+            }
           </Grid>
           <Grid item xs={12}>
             <Typography
@@ -209,6 +227,16 @@ export class GeneralSettings extends React.Component {
                 $blockScrolling: Infinity
               }}
             />
+            {
+              this.props.errorState.agentLanguages ?
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.agentLanguagesError} />
+              </Typography> :
+              null
+            }
           </Grid>
           <Grid item xs={12}>
             <Typography
@@ -241,17 +269,19 @@ export class GeneralSettings extends React.Component {
                 $blockScrolling: Infinity
               }}
             />
+            {
+              this.props.errorState.uiLanguages ?
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.uiLanguagesError} />
+              </Typography> :
+              null
+            }
           </Grid>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
-              {/*<div style={{display: 'inline'}}>
-                  <img style={{
-                  height: '15px',
-                  width: '20px',
-                  transform: 'translate(-52%,409%)',
-                  backgroundColor: '#fff'
-                  }} src={openingQuotes}/>
-              </div>*/}
               <TextField
                 id='newFallbackResponses'
                 label={intl.formatMessage(messages.fallbackTextField)}
@@ -269,18 +299,8 @@ export class GeneralSettings extends React.Component {
                     shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.fallbackHelperText)}
+                error={this.props.errorState.defaultAgentFallbackResponses}
               />
-                {/*<div style={{display: 'inline'}}>
-                  <img style={{
-                  display: 'inline',
-                  height: '20px',
-                  width: '20px',
-                  position: 'absolute',
-                  transform: 'translate(-56%,207%)',
-                  backgroundColor: '#fff',
-                  padding: '5px'
-                  }} src={closingQuotes}/>
-                </div>*/}
                 {settings.defaultAgentFallbackResponses.length > 0 ?
                     <Table className={classes.table}>
                       <TableBody>
@@ -315,6 +335,7 @@ GeneralSettings.propTypes = {
   onChangeSettingsData: PropTypes.func,
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(GeneralSettings));
