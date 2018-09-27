@@ -390,9 +390,10 @@ export function updateAgentSuccess(agent){
   }
 }
 
-export function deleteAgent(){
+export function deleteAgent(id){
   return {
     type: DELETE_AGENT,
+    id,
     apiCall: true
   }
 }

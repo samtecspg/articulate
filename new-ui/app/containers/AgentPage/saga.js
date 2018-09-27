@@ -12,8 +12,6 @@ import {
   loadAgentSuccess,
   addAgentSuccess,
   addAgentError,
-  deleteAgentError,
-  deleteAgentSuccess,
   updateAgentSuccess,
   updateAgentError,
 } from '../App/actions';
@@ -22,7 +20,6 @@ import {
   LOAD_AGENT,
   ADD_AGENT,
   UPDATE_AGENT,
-  DELETE_AGENT,
 } from '../App/constants';
 
 import {
@@ -199,20 +196,8 @@ export function* putAgent(payload) {
   }
 }
 
-export function* deleteAgent(payload) {
-  const agent = yield select(makeSelectAgent());
-  const { api } = payload;
-  try {
-    yield call(api.agent.deleteAgentId, { id: agent.id });
-    yield put(deleteAgentSuccess());
-  } catch (err) {
-      yield put(deleteAgentError(err));
-  }
-}
-
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(ADD_AGENT, postAgent);
   yield takeLatest(UPDATE_AGENT, putAgent);
-  yield takeLatest(DELETE_AGENT, deleteAgent);
 };

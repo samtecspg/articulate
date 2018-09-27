@@ -23,7 +23,7 @@ import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
 import { makeSelectAgents } from '../App/selectors';
-import { loadAgents } from '../App/actions';
+import { loadAgents, deleteAgent } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {
@@ -44,7 +44,7 @@ export class AgentsPage extends React.PureComponent {
           }
           sizesForHideInlineElement={['sm', 'xs']}
         />
-        <AgentsCards agents={agents} />
+        <AgentsCards onDeleteAgent={this.props.onDeleteAgent} agents={agents} />
       </Grid>
     );
   }
@@ -69,6 +69,9 @@ function mapDispatchToProps(dispatch) {
     onComponentMounted: () => {
       dispatch(loadAgents())
     },
+    onDeleteAgent: (id) => {
+      dispatch(deleteAgent(id));
+    }
   };
 }
 

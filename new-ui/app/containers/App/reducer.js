@@ -342,6 +342,23 @@ function appReducer(state = initialState, action) {
       return state.set('agents', action.agents)
         .set('loading', false)
         .set('error', false);
+    case DELETE_AGENT:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case DELETE_AGENT_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case DELETE_AGENT_SUCCESS:
+      return state.set('agent', initialState.agent)
+        .set('currentAgent', initialState.currentAgent)
+        .set('agentWebhook', initialState.agentWebhook)
+        .set('agentPostFormat', initialState.agentPostFormat)
+        .set('agentSettings', initialState.agentSettings)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
 
     /* Agent */
     case RESET_AGENT_DATA:
@@ -461,23 +478,6 @@ function appReducer(state = initialState, action) {
     case UPDATE_AGENT_SUCCESS:
       return state.set('agent', action.agent)
         .set('currentAgent', action.agent)
-        .set('loading', false)
-        .set('success', true)
-        .set('error', false);
-    case DELETE_AGENT:
-      return state.set('loading', true)
-        .set('success', false)
-        .set('error', false);
-    case DELETE_AGENT_ERROR:
-      return state.set('loading', false)
-        .set('success', false)
-        .set('error', action.error);
-    case DELETE_AGENT_SUCCESS:
-      return state.set('agent', initialState.agent)
-        .set('currentAgent', initialState.currentAgent)
-        .set('agentWebhook', initialState.agentWebhook)
-        .set('agentPostFormat', initialState.agentPostFormat)
-        .set('agentSettings', initialState.agentSettings)
         .set('loading', false)
         .set('success', true)
         .set('error', false);
