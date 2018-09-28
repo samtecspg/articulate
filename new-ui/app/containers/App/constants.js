@@ -78,6 +78,7 @@ export const DELETE_ACTION_SAYING = 'app/SayingsPage/DELETE_ACTION_SAYING';
 export const ADD_ACTION_NEW_SAYING = 'app/SayingsPage/ADD_ACTION_NEW_SAYING';
 export const DELETE_ACTION_NEW_SAYING = 'app/SayingsPage/DELETE_ACTION_NEW_SAYING';
 export const SEND_SAYING_TO_ACTION = 'app/SayingsPage/SEND_SAYING_TO_ACTION';
+export const CLEAR_SAYING_TO_ACTION = 'app/SayingsPage/CLEAR_SAYING_TO_ACTION';
 export const LOAD_DOMAINS = 'app/SayingsPage/LOAD_DOMAINS';
 export const LOAD_DOMAINS_ERROR = 'app/SayingsPage/LOAD_DOMAINS_ERROR';
 export const LOAD_DOMAINS_SUCCESS = 'app/SayingsPage/LOAD_DOMAINS_SUCCESS';

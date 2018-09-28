@@ -368,6 +368,10 @@ class SayingsDataForm extends React.Component {
                                                     <div key={`newSayingAction_${index}`} className={classes.actionBackgroundContainer}>
                                                         <span
                                                             className={classes.actionLabel}
+                                                            onClick={() => {
+                                                                this.props.onClearSayingToAction();
+                                                                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`)
+                                                            }}
                                                         >{action}</span>
                                                         <a onClick={() => { this.props.onDeleteNewSayingAction(action) }} className={classes.deleteActionX}>x</a>
                                                     </div>
@@ -410,7 +414,11 @@ class SayingsDataForm extends React.Component {
                                         openActions: false,
                                         anchorEl: null,
                                     });
-                                    if (evt.target.value !== 'noAgents'){
+                                    if (evt.target.value === 'create'){
+                                        this.props.onClearSayingToAction();
+                                        this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
+                                    }
+                                    else{
                                         this.props.onAddNewSayingAction(evt.target.value);
                                     }
                                 }}
@@ -422,16 +430,15 @@ class SayingsDataForm extends React.Component {
                                     anchorEl: this.state.anchorEl
                                 }}
                             >
+                                <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction}/></MenuItem>
                                 {
-                                    this.props.agentActions.length > 0 ?
                                     this.props.agentActions.map((action) => {
                                         return (
                                             this.props.newSayingActions.indexOf(action.actionName) === -1 ?
                                             <MenuItem style={{width: '200px'}} key={`action_${action.id}`} value={action.actionName}>{action.actionName}</MenuItem> :
                                             null
                                         )
-                                    }) :
-                                    <MenuItem value='noAgents'><FormattedMessage className={classes.newItem} {...messages.noActionsFound}/></MenuItem>
+                                    })
                                 }
                             </Select>
                         </Grid>
@@ -544,6 +551,7 @@ SayingsDataForm.propTypes = {
     newSayingActions: PropTypes.array,
     onAddNewSayingAction: PropTypes.func,
     onDeleteNewSayingAction: PropTypes.func,
+    onClearSayingToAction: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(SayingsDataForm));

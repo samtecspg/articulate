@@ -56,6 +56,7 @@ import {
   ADD_ACTION_NEW_SAYING,
   DELETE_ACTION_NEW_SAYING,
   SEND_SAYING_TO_ACTION,
+  CLEAR_SAYING_TO_ACTION,
   LOAD_DOMAINS,
   LOAD_DOMAINS_ERROR,
   LOAD_DOMAINS_SUCCESS,
@@ -541,6 +542,8 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case SEND_SAYING_TO_ACTION:
       return state.set('sayingForAction', action.saying);
+    case CLEAR_SAYING_TO_ACTION:
+      return state.set('sayingForAction', initialState.sayingForAction);
     case LOAD_DOMAINS:
       return state.set('domains', [])
         .set('loading', true)

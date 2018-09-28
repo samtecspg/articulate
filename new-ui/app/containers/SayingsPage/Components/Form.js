@@ -174,6 +174,7 @@ class Form extends React.Component {
             domain={this.props.domain}
             onSearchDomain={this.props.onSearchDomain}
             newSayingActions={this.props.newSayingActions}
+            onClearSayingToAction={this.props.onClearSayingToAction}
           />}
         </Grid>
       </Grid>
@@ -210,6 +211,7 @@ Form.propTypes = {
   newSayingActions: PropTypes.array,
   onAddNewSayingAction: PropTypes.func,
   onDeleteNewSayingAction: PropTypes.func,
+  onClearSayingToAction: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

@@ -151,6 +151,8 @@ class ResponseForm extends React.Component {
               </Grid>
             </Modal>
           </Grid>
+          {
+            this.props.saying.userSays ?
           <Grid className={classes.formDescriptionContainer} container>
             <Typography className={classes.formDescription}>
               <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
@@ -162,7 +164,7 @@ class ResponseForm extends React.Component {
                 lastStart={0}
               />
             </Typography>
-          </Grid>
+          </Grid> : null}
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>

@@ -155,18 +155,21 @@ class SlotsForm extends React.Component {
               </Grid>
             </Modal>
           </Grid>
-          <Grid className={classes.formDescriptionContainer} container>
-            <Typography className={classes.formDescription}>
-              <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
-              <SingleHighlightedSaying
-                agentKeywords={this.props.agentKeywords}
-                keywords={this.props.saying.keywords}
-                text={this.props.saying.userSays}
-                keywordIndex={0}
-                lastStart={0}
-              />
-            </Typography>
-          </Grid>
+          {
+            this.props.saying.userSays ?
+            <Grid className={classes.formDescriptionContainer} container>
+              <Typography className={classes.formDescription}>
+                <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
+                <SingleHighlightedSaying
+                  agentKeywords={this.props.agentKeywords}
+                  keywords={this.props.saying.keywords}
+                  text={this.props.saying.userSays}
+                  keywordIndex={0}
+                  lastStart={0}
+                />
+              </Typography>
+            </Grid> : null
+          }
         </Grid>
         <Grid item xs={12}>
           <Tabs

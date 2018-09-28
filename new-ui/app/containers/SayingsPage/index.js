@@ -49,6 +49,7 @@ import {
   trainAgent,
   addActionNewSaying,
   deleteActionNewSaying,
+  clearSayingToAction,
 } from '../App/actions';
 
 import qs from 'query-string';
@@ -175,6 +176,7 @@ export class SayingsPage extends React.Component {
               onSelectDomain={this.props.onSelectDomain}
               domain={this.props.domain}
               newSayingActions={this.props.newSayingActions}
+              onClearSayingToAction={this.props.onClearSayingToAction}
             />
           }
           keywordsForm={Link}
@@ -200,6 +202,7 @@ SayingsPage.propTypes = {
   onUntagKeyword: PropTypes.func,
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
+  onClearSayingToAction: PropTypes.func,
   sayings: PropTypes.array,
   totalSayings: PropTypes.number,
   agentDomains: PropTypes.array,
@@ -270,6 +273,9 @@ function mapDispatchToProps(dispatch) {
     },
     onSendSayingToAction: (saying) => {
       dispatch(sendSayingToAction(saying));
+    },
+    onClearSayingToAction: () => {
+      dispatch(clearSayingToAction());
     },
     onSelectDomain: (domainName) => {
       dispatch(selectDomain(domainName));

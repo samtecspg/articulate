@@ -61,6 +61,7 @@ import {
   ADD_ACTION_NEW_SAYING,
   DELETE_ACTION_NEW_SAYING,
   SEND_SAYING_TO_ACTION,
+  CLEAR_SAYING_TO_ACTION,
   LOAD_DOMAINS,
   LOAD_DOMAINS_ERROR,
   LOAD_DOMAINS_SUCCESS,
@@ -549,6 +550,12 @@ export function deleteActionNewSaying(actionName){
     type: DELETE_ACTION_NEW_SAYING,
     actionName,
   };
+}
+
+export function clearSayingToAction(){
+  return {
+    type: CLEAR_SAYING_TO_ACTION,
+  }
 }
 
 export function sendSayingToAction(saying){
