@@ -32,7 +32,8 @@ const styles = {
     agentCard: {
       border: '1px solid #a2a7b1',
       height: '205px',
-      width: '205px'
+      width: '205px',
+      cursor: 'pointer'
     },
     agentCardHeader: {
       color: '#4e4e4e',
@@ -58,9 +59,10 @@ const styles = {
     },
     menuIcon: {
         float: 'right',
-        marginTop: '23px',
-        marginRight: '20px',
+        top: '23px',
+        right: '20px',
         cursor: 'pointer',
+        position: 'relative'
     },
     trashIcon: {
         position: 'relative',
@@ -207,23 +209,23 @@ class AgentsCards extends React.Component {
 
                         return (
                             <Grid key={`agentCard_${index}`} item>
-                                    <Card className={classes.agentCard}>
-                                        <img
-                                            id={`menu_${index}`}
-                                            className={classes.menuIcon}
-                                            src={menuIcon}
-                                            onClick={(evt) => {
-                                                this.setState({
-                                                    selectedAgent: agent.id,
-                                                    openDeleteMenu: true,
-                                                    anchorEl: evt.currentTarget,
-                                                });
-                                            }}
-                                        >
-                                        </img>
-                                        <CardHeader className={classes.agentCardHeader} title={agent.agentName}/>
-                                        <CardContent className={classes.agentCardContent}>{agent.description}</CardContent>
-                                    </Card>
+                                <img
+                                    id={`menu_${index}`}
+                                    className={classes.menuIcon}
+                                    src={menuIcon}
+                                    onClick={(evt) => {
+                                        this.setState({
+                                            selectedAgent: agent.id,
+                                            openDeleteMenu: true,
+                                            anchorEl: evt.currentTarget,
+                                        });
+                                    }}
+                                >
+                                </img>
+                                <Card onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCard}>
+                                    <CardHeader className={classes.agentCardHeader} title={agent.agentName}/>
+                                    <CardContent className={classes.agentCardContent}>{agent.description}</CardContent>
+                                </Card>
                             </Grid>
                         );
                     })}
@@ -241,6 +243,7 @@ AgentsCards.propTypes = {
     classes: PropTypes.object.isRequired,
     agents: PropTypes.array.isRequired,
     onDeleteAgent: PropTypes.func,
+    onGoToUrl: PropTypes.func,
 };
 
 export default withStyles(styles)(AgentsCards);
