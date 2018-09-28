@@ -58,6 +58,8 @@ import {
   UPDATE_SAYING_ERROR,
   ADD_ACTION_SAYING,
   DELETE_ACTION_SAYING,
+  ADD_ACTION_NEW_SAYING,
+  DELETE_ACTION_NEW_SAYING,
   SEND_SAYING_TO_ACTION,
   LOAD_DOMAINS,
   LOAD_DOMAINS_ERROR,
@@ -531,6 +533,20 @@ export function deleteActionSaying(filter, page, saying, actionName){
     filter,
     page,
     saying,
+    actionName,
+  };
+}
+
+export function addActionNewSaying(actionName){
+  return {
+    type: ADD_ACTION_NEW_SAYING,
+    actionName,
+  };
+}
+
+export function deleteActionNewSaying(actionName){
+  return {
+    type: DELETE_ACTION_NEW_SAYING,
     actionName,
   };
 }

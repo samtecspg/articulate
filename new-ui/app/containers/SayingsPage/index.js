@@ -30,6 +30,7 @@ import {
   makeSelectDomains,
   makeSelectSelectedDomain,
   makeSelectFilteredDomains,
+  makeSelectNewSayingActions,
 } from '../App/selectors';
 import {
   loadSayings,
@@ -46,6 +47,8 @@ import {
   selectDomain,
   loadFilteredDomains,
   trainAgent,
+  addActionNewSaying,
+  deleteActionNewSaying,
 } from '../App/actions';
 
 import qs from 'query-string';
@@ -158,6 +161,8 @@ export class SayingsPage extends React.Component {
               onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage)}
               onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage)}
               onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage)}
+              onAddNewSayingAction={this.props.onAddNewSayingAction}
+              onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
               onSearchDomain={this.onSearchDomain}
               onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentPage)}
@@ -169,6 +174,7 @@ export class SayingsPage extends React.Component {
               movePageForward={this.movePageForward}
               onSelectDomain={this.props.onSelectDomain}
               domain={this.props.domain}
+              newSayingActions={this.props.newSayingActions}
             />
           }
           keywordsForm={Link}
@@ -186,10 +192,12 @@ SayingsPage.propTypes = {
   onLoadActions: PropTypes.func,
   onChangeSayingsData: PropTypes.func,
   onDeleteSaying: PropTypes.func,
+  onAddAction: PropTypes.func,
   onDeleteAction: PropTypes.func,
+  onAddNewSayingAction: PropTypes.func,
+  onDeleteNewSayingAction: PropTypes.func,
   onTagKeyword: PropTypes.func,
   onUntagKeyword: PropTypes.func,
-  onAddAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   sayings: PropTypes.array,
@@ -201,6 +209,7 @@ SayingsPage.propTypes = {
   onSelectDomain: PropTypes.func,
   domain: PropTypes.string,
   onTrain: PropTypes.func,
+  newSayingActions: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -212,6 +221,7 @@ const mapStateToProps = createStructuredSelector({
   agentKeywords: makeSelectKeywords(),
   agentActions: makeSelectActions(),
   domain: makeSelectSelectedDomain(),
+  newSayingActions: makeSelectNewSayingActions(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -248,6 +258,12 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteAction: (filter, page, saying, actionName) => {
       dispatch(deleteActionSaying(filter, page, saying, actionName));
+    },
+    onAddNewSayingAction: (actionName) => {
+      dispatch(addActionNewSaying(actionName));
+    },
+    onDeleteNewSayingAction: (actionName) => {
+      dispatch(deleteActionNewSaying(actionName));
     },
     onGoToUrl: (filter, page, url) => {
       dispatch(push(`${url}?filter=${filter}&page=${page}`));

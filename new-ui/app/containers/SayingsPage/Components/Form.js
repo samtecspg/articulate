@@ -157,10 +157,12 @@ class Form extends React.Component {
             agentFilteredDomains={this.props.agentFilteredDomains}
             onAddSaying={this.props.onAddSaying}
             onDeleteSaying={this.props.onDeleteSaying}
-            onDeleteAction={this.props.onDeleteAction}
             onTagKeyword={this.props.onTagKeyword}
             onUntagKeyword={this.props.onUntagKeyword}
             onAddAction={this.props.onAddAction}
+            onDeleteAction={this.props.onDeleteAction}
+            onAddNewSayingAction={this.props.onAddNewSayingAction}
+            onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
             onGoToUrl={this.props.onGoToUrl}
             onSendSayingToAction={this.props.onSendSayingToAction}
             currentPage={this.props.currentPage}
@@ -171,6 +173,7 @@ class Form extends React.Component {
             onSelectDomain={this.props.onSelectDomain}
             domain={this.props.domain}
             onSearchDomain={this.props.onSearchDomain}
+            newSayingActions={this.props.newSayingActions}
           />}
         </Grid>
       </Grid>
@@ -204,6 +207,9 @@ Form.propTypes = {
   movePageForward: PropTypes.func,
   onSelectDomain: PropTypes.func,
   domain: PropTypes.string,
+  newSayingActions: PropTypes.array,
+  onAddNewSayingAction: PropTypes.func,
+  onDeleteNewSayingAction: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

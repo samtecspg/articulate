@@ -53,6 +53,8 @@ import {
   UPDATE_SAYING_ERROR,
   ADD_ACTION_SAYING,
   DELETE_ACTION_SAYING,
+  ADD_ACTION_NEW_SAYING,
+  DELETE_ACTION_NEW_SAYING,
   SEND_SAYING_TO_ACTION,
   LOAD_DOMAINS,
   LOAD_DOMAINS_ERROR,
@@ -246,6 +248,7 @@ const initialState = Immutable({
   actionOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   actionOldPayloadXML: "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
   actions: [],
+  newSayingActions: [],
   actionTouched: false,
   newSlot: {
     slotName: 'New Slot',
@@ -528,6 +531,11 @@ function appReducer(state = initialState, action) {
     case DELETE_ACTION_SAYING:
       return state.set('loading', true)
         .set('error', false);
+    case ADD_ACTION_NEW_SAYING:
+      return state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.actionName));
+    case DELETE_ACTION_NEW_SAYING:
+      return state.update('newSayingActions', newSayingActions => newSayingActions.filter((item) => item !== action.actionName));
+
     case UPDATE_SAYING_ERROR:
       return state.set('loading', false)
         .set('error', action.error);

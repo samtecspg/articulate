@@ -34,7 +34,7 @@ import {
 } from '../App/constants';
 
 import {
-    makeSelectAgent, makeSelectSelectedDomain,
+    makeSelectAgent, makeSelectSelectedDomain, makeSelectNewSayingActions,
 } from '../App/selectors';
 
 import { getKeywords } from '../KeywordsPage/saga';
@@ -65,6 +65,7 @@ export function* getSayings(payload) {
 export function* postSaying(payload) {
     const agent = yield select(makeSelectAgent());
     const domain = yield select(makeSelectSelectedDomain());
+    const actions = yield select(makeSelectNewSayingActions());
     const { api, value } = payload;
     try {
         const newSayingData = {
@@ -72,7 +73,7 @@ export function* postSaying(payload) {
             domain,
             userSays: value,
             keywords: [],
-            actions: [],
+            actions,
         }
         yield call(api.saying.postSaying, { body: newSayingData });
         yield call(getSayings, {

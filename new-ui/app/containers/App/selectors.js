@@ -169,6 +169,13 @@ const makeSelectSelectedDomain = () => createSelector(
   }
 );
 
+const makeSelectNewSayingActions = () => createSelector(
+  selectGlobalDomain,
+  (globalState) => {
+    return globalState.newSayingActions;
+  }
+);
+
 /* Actions */
 const makeSelectActions = () => createSelector(
   selectGlobalDomain,
@@ -271,6 +278,7 @@ export {
   makeSelectDomains,
   makeSelectFilteredDomains,
   makeSelectSelectedDomain,
+  makeSelectNewSayingActions,
 
   makeSelectActions,
   makeSelectTotalActions,

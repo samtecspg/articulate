@@ -55,6 +55,10 @@ export default defineMessages({
         id: 'app.containers.SayingsPage.component.SayingRow.newAction',
         defaultMessage: '+ New Action'
     },
+    noActionsFound: {
+        id: 'app.containers.SayingsPage.component.SayingDataForm.newActinoActionsFoundon',
+        defaultMessage: 'No actions found'
+    },
     newKeyword: {
         id: 'app.containers.SayingsPage.component.SayingRow.newKeyword',
         defaultMessage: '+ New Keyword'
