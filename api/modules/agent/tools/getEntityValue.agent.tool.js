@@ -48,6 +48,11 @@ module.exports = (recognizedEntity, userText) => {
             };
             break;
     };
-    value.original = userText.substring(recognizedEntity.start, recognizedEntity.end);
+    if (recognizedEntity.start && recognizedEntity.end){
+        value.original = userText.substring(recognizedEntity.start, recognizedEntity.end);
+    }
+    else {
+        value.original = value.value;
+    }
     return value;
 };

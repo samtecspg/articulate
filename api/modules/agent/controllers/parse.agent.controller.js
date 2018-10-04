@@ -1,9 +1,122 @@
 'use strict';
+const _ = require('lodash');
 const Async = require('async');
 const Boom = require('boom');
 const AgentTools = require('../tools');
 const Flat = require('../../../helpers/flat');
 const RemoveBlankArray = require('../../../helpers/removeBlankArray');
+
+const getConfidence = (confidence) => {
+
+    if (confidence){
+        try {
+            return parseFloat(confidence.replace('@', ''));
+        } catch (error) {
+            return {
+                error: true,
+                message: `An error ocurred parsing the confidence with the value: ${confidence}. Error: ${error}`
+            };
+        }
+    }
+    else {
+        return 1.0;
+    }
+};
+
+const getEntities = (structuredEntities) => {
+
+    if (structuredEntities){
+        try {
+            const parsedEntities = JSON.parse(structuredEntities);
+            const entities = [];
+            Object.keys(parsedEntities).forEach((entity) => {
+
+                const newEntity = {
+                    extractor: 'structured_text',
+                    confidence: 1,
+                    entity,
+                    value: {
+                        value: parsedEntities[entity]
+                    }
+                };
+                entities.push(newEntity);
+            });
+            return entities;
+        } catch (error) {
+            return {
+                error: true,
+                message: `An error ocurred parsing the entities in the structured text. Error: ${error}` 
+            };
+        }
+    }
+    else{
+        return [];
+    }
+};
+
+const generateRasaFormat = (text, intent, confidence, structuredEntities, agentData) => {
+
+    const start = process.hrtime();
+    const agentIntents = agentData.intents.intents;
+    const intentExists = _.filter(agentIntents, (tempIntent) => {
+
+        return tempIntent.intentName === intent;
+    })[0];
+    if (intentExists){
+        const domains = _.uniq(_.map(agentIntents, 'domain'));
+        const domainOfIntent = intentExists.domain;
+        const confidenceResult = getConfidence(confidence);
+        if (confidenceResult.error){
+            return confidenceResult;
+        }
+        const entities = getEntities(structuredEntities);
+        if (entities.error){
+            return entities;
+        }
+        let results = _.map(domains, (domain) => {
+
+            let intentRanking = _.map(agentIntents, (tempIntent) => {
+
+                if (tempIntent.domain === domain){
+                    return {
+                        confidence: tempIntent.intentName === intent ? confidenceResult : 0,
+                        name: tempIntent.intentName
+                    }
+                }
+                return null;
+            });
+            intentRanking = _.compact(intentRanking);
+            intentRanking = _.orderBy(intentRanking, 'confidence', 'desc');
+            const domainTime = process.hrtime(start);
+            const elapsed_time_ms = domainTime[1] / 1000000;
+            return {
+                domain,
+                project: agentData.agent.agentName,
+                entities,
+                intent: intentRanking[0],
+                intentRanking,
+                elapsed_time_ms,
+                domainScore: domain === domainOfIntent ? 1 : 0
+            }
+        });
+        results = _.orderBy(results, 'domainScore', 'desc');
+        const result = {
+            result: {
+                document: text,
+                time_stamp: new Date().toISOString(),
+                results,
+                maximum_domain_score: 1,
+                maximum_intent_score: confidenceResult
+            }
+        };
+        const time = process.hrtime(start);
+        result.result.total_elapsed_time_ms = time[1] / 1000000;
+        return result;
+    }
+    else {
+        return null;
+    }
+};
 
 module.exports = (request, reply) => {
 
@@ -118,6 +231,17 @@ module.exports = (request, reply) => {
                         }
                         return callbackGetRasa(null, res.result);
                     });
+                },
+                intents: (callbackGetIntent) => {
+
+                    server.inject(`/agent/${agentId}/intent`, (res) => {
+
+                        if (res.statusCode !== 200) {
+                            const error = Boom.create(res.statusCode, 'An error occurred getting the intents of the agent');
+                            return callbackGetIntent(error, null);
+                        }
+                        return callbackGetIntent(null, res.result);
+                    });
                 }
             }, (err, result) => {
 
@@ -129,14 +253,29 @@ module.exports = (request, reply) => {
         },
         (agentData, callback) => {
 
-            agentData.agent.timezone = timezone ? timezone : agentData.agent.timezone;
-            AgentTools.parseText(agentData.rasa, agentData.spacyPretrainedEntities, agentData.ERPipeline, agentData.duckling, agentData.ducklingDimension, text, agentData, server, (err, result) => {
-
-                if (err) {
-                    return callback(err);
+            const structuredTextRegex = /^[/]([^{@]+)(@[0-9.]+)?([{].+)?/;
+            const regexParseResult = structuredTextRegex.exec(text);
+            if (regexParseResult){
+                const intent =  regexParseResult[1];
+                const confidence = regexParseResult[2];
+                const structuredEntities = regexParseResult[3];
+                const rasaFormattedResponse = generateRasaFormat(text, intent, confidence, structuredEntities, agentData);
+                if (rasaFormattedResponse.error){
+                    const error = Boom.badRequest(rasaFormattedResponse.message);
+                    return callback(error);
                 }
-                return callback(null, result);
-            });
+                return callback(null, rasaFormattedResponse);
+            }
+            else {
+                agentData.agent.timezone = timezone ? timezone : agentData.agent.timezone;
+                AgentTools.parseText(agentData.rasa, agentData.spacyPretrainedEntities, agentData.ERPipeline, agentData.duckling, agentData.ducklingDimension, text, agentData, server, (err, result) => {
+
+                    if (err) {
+                        return callback(err);
+                    }
+                    return callback(null, result);
+                });
+            }
         }
     ], (err, document) => {
 

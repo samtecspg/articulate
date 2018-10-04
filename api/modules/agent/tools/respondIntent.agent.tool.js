@@ -22,7 +22,7 @@ module.exports = (conversationStateObject, callback) => {
         });
         //Create an array of slot names for slots that are lists
         const isListSlots = _.map(_.filter(conversationStateObject.scenario.slots, (slot) => {
-            
+
             return slot.isList;
         }), 'slotName');
         //Extract the recognized entities from the text parse
