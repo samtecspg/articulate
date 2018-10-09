@@ -76,6 +76,7 @@ module.exports = {
               text: payload.Body,
               sessionId: sessionId,
               ubiquity: {
+                sessionId,
                 twilio: payload
               }
             }
