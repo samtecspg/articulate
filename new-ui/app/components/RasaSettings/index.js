@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, TextField, Typography } from '@material-ui/core';
+import { Grid, TextField, Typography, Menu, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import brace from 'brace';
@@ -11,6 +11,8 @@ import AceEditor from 'react-ace';
 import 'brace/mode/xml';
 import 'brace/mode/json';
 import 'brace/theme/terminal';
+
+import addPipelineIcon from '../../images/add-pipeline-icon.svg';
 
 import messages from './messages';
 
@@ -22,16 +24,96 @@ const styles = {
       color: '#4e4e4e',
       width: '95%'
   },
+  labelContainer: {
+    paddingBottom: '20px',
+  },
   settingEditorLabel: {
-      paddingBottom: '20px',
-      fontSize: '12px',
-      color: '#a2a7b1',
+    fontSize: '12px',
+    color: '#a2a7b1',
+    display: 'inline'
   },
   errorLabel: {
     color: '#f44336',
     marginTop: '8px',
+  },
+  addPipelineIcon: {
+    '&:hover': {
+      filter: 'invert(1)'
+    },
+    cursor: 'pointer',
+    height: '17px',
+    display: 'inline',
+    float: 'right'
   }
 }
+
+const spacyPipeline = [
+  {
+    name: 'nlp_spacy'
+  },
+  {
+    name: 'tokenizer_spacy'
+  },
+  {
+    name: 'intent_featurizer_spacy'
+  },
+  {
+    name: 'ner_crf'
+  },
+  {
+    name: 'ner_synonyms'
+  },
+  {
+    name: 'intent_classifier_sklearn'
+  },
+  {
+    name: 'ner_spacy'
+  }
+];
+
+const keywordsPipeline = [
+  {
+    name: 'nlp_spacy'
+  },
+  {
+    name: 'tokenizer_spacy'
+  },
+  {
+    name: 'ner_crf'
+  },
+  {
+    name: 'ner_synonyms'
+  },
+  {
+    name: 'ner_spacy'
+  }
+];
+
+const tensorflowPipeline = [
+  {
+    name: 'intent_featurizer_count_vectors'
+  },
+  {
+    name: 'intent_classifier_tensorflow_embedding',
+    intent_tokenization_flag: true,
+    intent_split_symbol: '+'
+  },
+  {
+    name: 'nlp_spacy'
+  },
+  {
+    name: 'tokenizer_spacy'
+  },
+  {
+    name: 'ner_crf'
+  },
+  {
+    name: 'ner_synonyms'
+  },
+  {
+    name: 'ner_spacy'
+  }
+];
 
 const getStringSetting = (setting) => {
 
@@ -43,6 +125,12 @@ const getStringSetting = (setting) => {
 
 /* eslint-disable react/prefer-stateless-function */
 export class RasaSettings extends React.Component {
+
+  state = {
+    pipeline: null,
+    openPipelineMenu: false,
+    anchorEl: null,
+  }
 
   onChangeEditorValue(field, editorValue) {
     try {
@@ -56,8 +144,54 @@ export class RasaSettings extends React.Component {
 
   render() {
     const { classes, intl, settings } = this.props;
+    const { anchorEl } = this.state;
     return (
       <Grid container spacing={16}>
+        <Menu
+          id='long-menu'
+          anchorEl={anchorEl}
+          open={this.state.openPipelineMenu}
+          onClose={() => {
+              this.setState({
+                  openPipelineMenu: false,
+                  anchorEl: null,
+              });
+          }}
+        >
+          <MenuItem onClick={() => {
+            this.setState({
+              openPipelineMenu: false,
+              anchorEl: null,
+            });
+
+          }}>
+            <Typography className={classes.panelContent}>
+              <FormattedMessage {...messages.keywords} />
+            </Typography>
+          </MenuItem>
+          <MenuItem onClick={() => {
+            this.setState({
+              pipeline: 'tensorflow',
+              openPipelineMenu: false,
+              anchorEl: null,
+            });
+          }}>
+            <Typography className={classes.panelContent}>
+              <FormattedMessage {...messages.tensorflow} />
+            </Typography>
+          </MenuItem>
+          <MenuItem onClick={() => {
+            this.setState({
+              pipeline: 'spacy',
+              openPipelineMenu: false,
+              anchorEl: null,
+            });
+          }}>
+            <Typography className={classes.panelContent}>
+              <FormattedMessage {...messages.spacy} />
+            </Typography>
+          </MenuItem>
+        </Menu>
         <Grid container item xs={12}>
           <Typography className={classes.panelContent}>
             <FormattedMessage {...messages.rasaSettingDescription} />
@@ -84,12 +218,20 @@ export class RasaSettings extends React.Component {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Typography
-            className={classes.settingEditorLabel}
-            id='domainClassifierPipeline'
-          >
-            <FormattedMessage {...messages.domainClassifierPipeline} />
-          </Typography>
+          <Grid item xs={12} className={classes.labelContainer}>
+            <Typography
+              className={classes.settingEditorLabel}
+              id='domainClassifierPipeline'
+            >
+              <FormattedMessage {...messages.domainClassifierPipeline} />
+            </Typography>
+            <img onClick={(evt) => {
+              this.setState({
+                openPipelineMenu: true,
+                anchorEl: evt.currentTarget,
+              });}
+            } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+          </Grid>
           <AceEditor
             width='100%'
             height='300px'
@@ -126,12 +268,20 @@ export class RasaSettings extends React.Component {
           }
         </Grid>
         <Grid item xs={12}>
-          <Typography
-            className={classes.settingEditorLabel}
-            id='sayingClassifierPipeline'
-          >
-            <FormattedMessage {...messages.sayingClassifierPipeline} />
-          </Typography>
+          <Grid item xs={12} className={classes.labelContainer}>
+            <Typography
+              className={classes.settingEditorLabel}
+              id='sayingClassifierPipeline'
+            >
+              <FormattedMessage {...messages.sayingClassifierPipeline} />
+            </Typography>
+            <img onClick={(evt) => {
+              this.setState({
+                openPipelineMenu: true,
+                anchorEl: evt.currentTarget,
+              });}
+            } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+          </Grid>
           <AceEditor
             width='100%'
             height='300px'
@@ -168,12 +318,20 @@ export class RasaSettings extends React.Component {
           }
         </Grid>
         <Grid item xs={12}>
-          <Typography
-            className={classes.settingEditorLabel}
-            id='keywordClassifierPipeline'
-          >
-            <FormattedMessage {...messages.keywordClassifierPipeline} />
-          </Typography>
+          <Grid item xs={12} className={classes.labelContainer}>
+            <Typography
+              className={classes.settingEditorLabel}
+              id='keywordClassifierPipeline'
+            >
+              <FormattedMessage {...messages.keywordClassifierPipeline} />
+            </Typography>
+            <img onClick={(evt) => {
+              this.setState({
+                openPipelineMenu: true,
+                anchorEl: evt.currentTarget,
+              });}
+            } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+          </Grid>
           <AceEditor
             width='100%'
             height='300px'
@@ -210,12 +368,14 @@ export class RasaSettings extends React.Component {
           }
         </Grid>
         <Grid item xs={12}>
-          <Typography
-            className={classes.settingEditorLabel}
-            id='spacyPretrainedEntities'
-          >
-            <FormattedMessage {...messages.spacyPretrainedEntities} />
-          </Typography>
+          <Grid item xs={12} className={classes.labelContainer}>
+            <Typography
+              className={classes.settingEditorLabel}
+              id='spacyPretrainedEntities'
+            >
+              <FormattedMessage {...messages.spacyPretrainedEntities} />
+            </Typography>
+          </Grid>
           <AceEditor
             width='100%'
             height='300px'

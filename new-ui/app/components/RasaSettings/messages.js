@@ -46,4 +46,16 @@ export default defineMessages({
     id: 'app.components.RasaSettings.spacyPretrainedEntitiesError',
     defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].'
   },
+  keywords: {
+    id: 'app.components.RasaSettings.keywords',
+    defaultMessage: 'Keywords'
+  },
+  tensorflow: {
+    id: 'app.components.RasaSettings.tensorflow',
+    defaultMessage: 'Tensorflow',
+  },
+  spacy: {
+    id: 'app.components.RasaSettings.spacy',
+    defaultMessage: 'Spacy'
+  },
 });
