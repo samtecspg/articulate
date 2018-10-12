@@ -79,10 +79,10 @@ export default defineMessages({
   },
   timezonesTooltip: {
     id: 'containers.GlobalSettingsPage.default_fallback_input_placeholder',
-    defaultMessage: 'Some services like duckling use a timezone value to parase dates and times.',
+    defaultMessage: 'Some services like duckling use a timezone value to parse dates and times.',
   },
   agentLanguageTooltip: {
     id: 'containers.GlobalSettingsPage.default_fallback_input_placeholder',
-    defaultMessage: 'Depending on the languages supported by the pipeline you are using your agent could use one of multiple languages. This will set the default language por new agents.',
+    defaultMessage: 'Depending on the languages supported by the pipeline you are using your agent could use one of multiple languages. This will set the default language for new agents.',
   }
 });
