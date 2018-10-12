@@ -159,21 +159,23 @@ export class RasaSettings extends React.Component {
           }}
         >
           <MenuItem onClick={() => {
+            this.onChangeEditorValue(this.state.pipeline, keywordsPipeline);
             this.setState({
               openPipelineMenu: false,
               anchorEl: null,
+              pipeline: null,
             });
-
           }}>
             <Typography className={classes.panelContent}>
               <FormattedMessage {...messages.keywords} />
             </Typography>
           </MenuItem>
           <MenuItem onClick={() => {
+            this.onChangeEditorValue(this.state.pipeline, tensorflowPipeline);
             this.setState({
-              pipeline: 'tensorflow',
               openPipelineMenu: false,
               anchorEl: null,
+              pipeline: null,
             });
           }}>
             <Typography className={classes.panelContent}>
@@ -181,10 +183,11 @@ export class RasaSettings extends React.Component {
             </Typography>
           </MenuItem>
           <MenuItem onClick={() => {
+            this.onChangeEditorValue(this.state.pipeline, spacyPipeline);
             this.setState({
-              pipeline: 'spacy',
               openPipelineMenu: false,
               anchorEl: null,
+              pipeline: null,
             });
           }}>
             <Typography className={classes.panelContent}>
@@ -229,6 +232,7 @@ export class RasaSettings extends React.Component {
               this.setState({
                 openPipelineMenu: true,
                 anchorEl: evt.currentTarget,
+                pipeline: 'domainClassifierPipeline',
               });}
             } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
           </Grid>
@@ -279,6 +283,7 @@ export class RasaSettings extends React.Component {
               this.setState({
                 openPipelineMenu: true,
                 anchorEl: evt.currentTarget,
+                pipeline: 'sayingClassifierPipeline',
               });}
             } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
           </Grid>
@@ -329,6 +334,7 @@ export class RasaSettings extends React.Component {
               this.setState({
                 openPipelineMenu: true,
                 anchorEl: evt.currentTarget,
+                pipeline: 'keywordClassifierPipeline',
               });}
             } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
           </Grid>
