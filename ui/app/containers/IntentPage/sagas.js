@@ -411,7 +411,7 @@ export function* getSysEntities(payload) {
 
             if (foundSysEntities.indexOf(entity.entity) > -1) {
 
-              intentData.examples[i].entities = [...intentData.examples[i].entities, { value: entity.value.value, entity: entity.entity, start: entity.start, end: entity.end, extractor: 'system', entityId: 0 }];
+              intentData.examples[i].entities = [...intentData.examples[i].entities, { value: entity.value.value || entity.value.values[0].value, entity: entity.entity, start: entity.start, end: entity.end, extractor: 'system', entityId: 0 }];
 
             }
           })
