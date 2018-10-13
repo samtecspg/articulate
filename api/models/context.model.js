@@ -8,7 +8,7 @@ class ScenarioModel {
             id: Joi.number(),
             name: Joi.string().trim(),
             scenario: Joi.string().trim(),
-            slots: Joi.object()
+            slots: Joi.object().min(1)
         };
     };
 }
