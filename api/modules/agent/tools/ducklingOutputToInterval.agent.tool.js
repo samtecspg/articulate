@@ -58,6 +58,10 @@ const ducklingOutputToInterval = (ducklingOutput, timezone) => {
                     };
                     break;
                 case 'month':
+                    newOutput.value.to = {
+                        value: isAnIntervalWithoutFinish ? time.add((todayTime.month() - time.month()), grain + 's').format() : time.add(1, grain + 's').format(),
+                        grain
+                    }
                     break;
                 case 'year':
                     newOutput.value.to = {
