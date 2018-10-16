@@ -59,11 +59,12 @@ module.exports = {
     //This causes validation to fail. For now forcing https.
     //console.log(request.connection.info)
     //Validate Request
-    const url = 'https://' 
-    + request.info.host 
-    + request.url.path;
-    const twilioSignature = request.headers['x-twilio-signature'];
-    let validation = Twilio.validateRequest(channel.authToken, twilioSignature, url, payload)
+      const url = (request.headers.schema || "https") + "://"
+      + (request.headers.host || request.info.host)
+      + (request.headers.basePath || "")
+      + (request.headers.path || request.url.path);
+      const twilioSignature = request.headers["x-twilio-signature"];
+      const validation = Twilio.validateRequest(channel.authToken, twilioSignature, url, payload);
 
     if (validation) {
       if (payload.From && payload.Body) {
