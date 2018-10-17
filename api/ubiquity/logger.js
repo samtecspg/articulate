@@ -7,7 +7,6 @@ const slackURL = process.env.SLACK_LOG_URL;
 
 logger.log = (request, response, timing) => {
 
-
     const responseTime = timing / 1000;
     if (slackURL) {
         const slackMessage = {
@@ -18,20 +17,33 @@ logger.log = (request, response, timing) => {
                     "author_name": "User",
                     "text": request,
                     "color": "#36a64f"
-                },
-                {
-                    "fallback": response,
-                    "author_name": "Bot",
-                    "text": response,
-                    "color": "#ef7e31"
                 }
             ]
         };
+
+        if (response.textResponse) {
+            slackMessage.attachments.push(
+                {
+                    "fallback": response.textResponse,
+                    "author_name": "Bot",
+                    "text": response.textResponse,
+                    "color": "#ef7e31"
+                }
+            );
+        } else {
+            slackMessage.attachments.push(
+                {
+                    "fallback": response.message || "Articulate produced an error",
+                    "author_name": "Bot",
+                    "title": response.message || "There was an error"
+                }
+            );
+        }
         Wreck.post(slackURL, { payload: slackMessage }, (err,res) => {
 
-          if (err) {
-            console.log('Ubiquity Logging Error', err);
-          }
+            if (err) {
+                console.log('Ubiquity Logging Error', err);
+            }
         });
     }
 };

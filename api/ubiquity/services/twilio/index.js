@@ -91,7 +91,7 @@ module.exports = {
                 const twiml = new Twilio.twiml.MessagingResponse();
                 twiml.message(JSON.parse(res.payload).textResponse);
 
-                Logger.log(payload.Body, JSON.parse(res.payload).textResponse, requestTime);
+                Logger.log(payload.Body, JSON.parse(res.payload), requestTime);
 
                 reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
           })
