@@ -2,6 +2,7 @@
 const shortid = require('shortid');
 const Crypto = require('crypto');
 const Twilio = require('twilio');
+const Logger = require("../../logger.js");
 
 const validateInit = require('./methods/validateInit');
 
@@ -83,12 +84,16 @@ module.exports = {
             }
           }
     
-          server.inject(options, (res) => {
-    
-            var twiml = new Twilio.twiml.MessagingResponse();
-            twiml.message(JSON.parse(res.payload).textResponse);
-    
-            reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
+            const requestStart = new Date();
+            server.inject(options, (res) => {
+
+                const requestTime = new Date() - requestStart;
+                const twiml = new Twilio.twiml.MessagingResponse();
+                twiml.message(JSON.parse(res.payload).textResponse);
+
+                Logger.log(payload.Body, JSON.parse(res.payload).textResponse, requestTime);
+
+                reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
           })
         }
       } else {
