@@ -1,24 +1,24 @@
-'use strict'
-const shortid = require('shortid');
-const Crypto = require('crypto');
-const { RTMClient, WebClient } = require('@slack/client');
+"use strict";
+const ShortId = require("ShortId");
+const Crypto = require("crypto");
+const { RTMClient, WebClient } = require("@slack/client");
 
 let self = {
-  webClients: {},
-  rtmClients: {},
-  info: {
-    "name": "Slack",
-    "description": "A quick connection to Slack using the Events API.",
-    "documentation": null
-  },
-  hash: function( message ) {
-    var secret = {
-      channel: message.channel
-    }
-    var hash = Crypto.createHmac('sha256', JSON.stringify(secret)).digest('hex');;
-  
-    return hash
-  },
+    webClients: {},
+    rtmClients: {},
+    info: {
+        "name": "Slack",
+        "description": "A quick connection to Slack using the Events API.",
+        "documentation": null
+    },
+    hash: (message) => {
+
+        const secret = {
+            channel: message.channel
+        };
+        const hash = Crypto.createHmac("sha256", JSON.stringify(secret)).digest("hex");
+        return hash;
+    },
   converse: function(server, channel, message) {
     let sessionId = self.hash(message)
     let options = {
@@ -54,7 +54,7 @@ let self = {
 
     if (request) {
       channel = {
-        id: shortid.generate(),
+        id: ShortId.generate(),
         agent: request.payload.agent,
         service: request.payload.service,
         botToken: request.payload.details.botToken,

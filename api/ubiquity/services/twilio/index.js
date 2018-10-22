@@ -78,12 +78,11 @@ module.exports = {
               text: payload.Body,
               sessionId: sessionId,
               ubiquity: {
-                sessionId,
                 twilio: payload
               }
             }
           }
-    
+
             const requestStart = new Date();
             server.inject(options, (res) => {
 
@@ -91,7 +90,7 @@ module.exports = {
                 const twiml = new Twilio.twiml.MessagingResponse();
                 twiml.message(JSON.parse(res.payload).textResponse);
 
-                Logger.log(payload.Body, JSON.parse(res.payload), requestTime);
+                Logger.log(options.payload, JSON.parse(res.payload), requestTime);
 
                 reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
           })
