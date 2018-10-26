@@ -1,0 +1,36 @@
+import _ from 'lodash';
+import Moment from 'moment';
+import {
+    CONFIG_SETTINGS_DEFAULT_AGENT,
+    MODEL_AGENT,
+    STATUS_READY
+} from '../../../util/constants';
+import RedisErrorHandler from '../../errors/redis.error-handler';
+
+module.exports = async function ({ data, returnModel = false }) {
+
+    const { redis } = this.server.app;
+    const { settingsService } = await this.server.services();
+
+    data.status = data.status || STATUS_READY;
+    data.lastTraining = Moment(data.lastTraining).utc().format();
+    data.settings = {};
+    if (data.enableModelsPerDomain === undefined) {
+        data.enableModelsPerDomain = true;
+    }
+
+    const AgentModel = await redis.factory(MODEL_AGENT);
+    try {
+        const allSettings = await settingsService.findAll();
+
+        _.each(CONFIG_SETTINGS_DEFAULT_AGENT, (value) => {
+
+            data.settings[value] = allSettings[value];
+        });
+        await AgentModel.createInstance({ data });
+        return returnModel ? AgentModel : AgentModel.allProperties();
+    }
+    catch (error) {
+        throw RedisErrorHandler({ error });
+    }
+};
