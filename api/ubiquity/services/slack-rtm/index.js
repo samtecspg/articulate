@@ -1,5 +1,5 @@
 "use strict";
-const ShortId = require("ShortId");
+const ShortId = require("shortid");
 const Crypto = require("crypto");
 const { RTMClient, WebClient } = require("@slack/client");
 
