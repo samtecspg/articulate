@@ -1,6 +1,15 @@
 import { MODEL_CONTEXT } from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
 
+const schema = {
+    session: {
+        type: 'string',
+        unique: true,
+        index: true,
+        defaultSort: true
+    }
+};
+
 class ContextRedisModel extends BaseModel {
 
     static get modelName() {
@@ -15,14 +24,7 @@ class ContextRedisModel extends BaseModel {
 
     static get definitions() {
 
-        return {
-            action:{
-                type: 'string'
-            },
-            slots: { //TODO: LINK
-                type: 'json'
-            }
-        };
+        return schema;
     }
 
 }

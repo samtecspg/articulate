@@ -5,8 +5,10 @@ class ScenarioModel {
 
         return {
             id: Joi.string(), // using UUID on redis
-            action: Joi.string().trim(),
-            slots: Joi.object()
+            session: Joi
+                .string()
+                .description('Session')
+                .trim()
         };
     };
 }

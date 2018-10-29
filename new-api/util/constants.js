@@ -15,6 +15,7 @@ export const MODEL_RELATION_USED = 'usedBy';
 export const MODEL_ACTION = 'Action';
 export const MODEL_AGENT = 'Agent';
 export const MODEL_CONTEXT = 'Context';
+export const MODEL_FRAME = 'Frame';
 export const MODEL_DOMAIN = 'Domain';
 export const MODEL_DOC = 'Doc';
 export const MODEL_KEYWORD = 'Keyword';
@@ -50,6 +51,7 @@ export const PARAM_NAME = 'name';
 export const PARAM_SKIP = 'skip';
 export const PARAM_LIMIT = 'limit';
 export const PARAM_DIRECTION = 'direction';
+export const PARAM_SESSION = 'session';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
