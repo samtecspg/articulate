@@ -17,7 +17,7 @@ export const MODEL_AGENT = 'Agent';
 export const MODEL_CONTEXT = 'Context';
 export const MODEL_FRAME = 'Frame';
 export const MODEL_DOMAIN = 'Domain';
-export const MODEL_DOC = 'Doc';
+export const MODEL_DOCUMENT = 'Document';
 export const MODEL_KEYWORD = 'Keyword';
 export const MODEL_POST_FORMAT = 'PostFormat';
 export const MODEL_SAYING = 'Saying';
@@ -28,7 +28,7 @@ export const MODEL_WEBHOOK = 'Webhook';
 export const ROUTE_ACTION = 'action';
 export const ROUTE_AGENT = 'agent';
 export const ROUTE_CONTEXT = 'context';
-export const ROUTE_DOC = 'doc';
+export const ROUTE_DOCUMENT = 'doc';
 export const ROUTE_DOMAIN = 'domain';
 export const ROUTE_POST_FORMAT = 'postFormat';
 export const ROUTE_KEYWORD = 'keyword';
@@ -58,12 +58,16 @@ export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
 export const PARAM_DOMAIN_ID = ROUTE_DOMAIN + PARAMS_POSTFIX_ID;
 export const PARAM_KEYWORD_ID = ROUTE_KEYWORD + PARAMS_POSTFIX_ID;
 export const PARAM_SAYING_ID = ROUTE_SAYING + PARAMS_POSTFIX_ID;
+export const PARAM_DOCUMENT_TIME_STAMP = 'time_stamp';
+export const PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE = 'maximum_saying_score';
+export const PARAM_DOCUMENT_TOTAL_ELAPSED_TIME = 'total_elapsed_time_ms';
+export const PARAM_DOCUMENT_RASA_RESULTS = 'rasa_results';
 
 export const ROUTE_TO_MODEL = {
     [ROUTE_ACTION]: MODEL_ACTION,
     [ROUTE_AGENT]: MODEL_AGENT,
     [ROUTE_CONTEXT]: MODEL_CONTEXT,
-    [ROUTE_DOC]: MODEL_DOC,
+    [ROUTE_DOCUMENT]: MODEL_DOCUMENT,
     [ROUTE_DOMAIN]: MODEL_DOMAIN,
     [ROUTE_KEYWORD]: MODEL_KEYWORD,
     [ROUTE_SAYING]: MODEL_SAYING,
