@@ -7,7 +7,12 @@ import Create from './agent/agent.create.service';
 import Export from './agent/agent.export.service';
 import FindAllSettings from './agent/agent.find-all-settings.service';
 import FindSettingByName from './agent/agent.find-setting-by-name.service';
+import GetTrainedDomains from './agent/agent.get-trained-domains.service';
 import Import from './agent/agent.import.service';
+import ParseDucklingKeywords from './agent/agent.parse-duckling-keywords.service';
+import ParseRasaKeywords from './agent/agent.parse-rasa-keywords.service';
+import ParseRegexKeywords from './agent/agent.parse-regex-keywords.service';
+import Parse from './agent/agent.parse.service';
 import RemoveAction from './agent/agent.remove-action.service';
 import RemoveDomain from './agent/agent.remove-domain.service';
 import RemoveKeyword from './agent/agent.remove-keyword.service';
@@ -168,6 +173,31 @@ module.exports = class AgentService extends Schmervice.Service {
     async train() {
 
         return await Train.apply(this, arguments);
+    }
+
+    async parse() {
+
+        return await Parse.apply(this, arguments);
+    }
+
+    async parseRegexKeywords() {
+
+        return await ParseRegexKeywords.apply(this, arguments);
+    }
+
+    async parseDucklingKeywords() {
+
+        return await ParseDucklingKeywords.apply(this, arguments);
+    }
+
+    async parseRasaKeywords() {
+
+        return await ParseRasaKeywords.apply(this, arguments);
+    }
+
+    async getTrainedDomains() {
+
+        return await GetTrainedDomains.apply(this, arguments);
     }
 
 };

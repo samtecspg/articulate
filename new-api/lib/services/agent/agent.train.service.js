@@ -11,11 +11,10 @@ import {
     MODEL_KEYWORD,
     MODEL_SAYING,
     RASA_COMMON_EXAMPLES,
-    RASA_CURRENT_TRAINING_PROCESSES,
     RASA_KEYWORD_SYNONYMS,
-    RASA_MAX_TRAINING_PROCESSES,
     RASA_MODEL_DEFAULT,
     RASA_MODEL_DOMAIN_RECOGNIZER,
+    RASA_MODEL_JUST_ER,
     RASA_NLU_DATA,
     RASA_REGEX_FEATURES,
     STATUS_ERROR,
@@ -27,20 +26,20 @@ import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ id, returnModel = false }) {
 
-    const { redis, [`rasa-nlu`]: rasaNLU } = this.server.app;
+    const { redis/*, [`rasa-nlu`]: rasaNLU*/ } = this.server.app;
 
     const { globalService, domainService, rasaNLUService } = await this.server.services();
     let model = Guid.create().toString();
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
         const agent = AgentModel.allProperties();
-        const rasaStatus = await rasaNLU.Status();
+        //const rasaStatus = await rasaNLU.Status();
         AgentModel.property('status', STATUS_TRAINING);
         await AgentModel.save();
         //TODO: Publish agent update
         if (agent.enableModelsPerDomain) {
             const DomainModels = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN), returnModel: true });
-            const trainingLimit = rasaStatus[RASA_MAX_TRAINING_PROCESSES] - rasaStatus[RASA_CURRENT_TRAINING_PROCESSES];
+            //const trainingLimit = rasaStatus[RASA_MAX_TRAINING_PROCESSES] - rasaStatus[RASA_CURRENT_TRAINING_PROCESSES];
             const DomainModelsToTrain = DomainModels.filter((DomainModel) => {
 
                 const status = DomainModel.property('status');
@@ -109,7 +108,7 @@ module.exports = async function ({ id, returnModel = false }) {
                 return;
             }
             const pipeline = trainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
-            model = (trainingData.numberOfSayings === 1 ? 'just_er_' : '') + model;
+            model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
             model = `${RASA_MODEL_DEFAULT}${model}`;
             await rasaNLUService.train({
                 project: agent.agentName,

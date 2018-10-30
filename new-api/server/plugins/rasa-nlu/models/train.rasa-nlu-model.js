@@ -9,12 +9,13 @@ export const path = '/train';
 
 export default ({ http }) => {
 
-    return async ({ language, project, model, payload }) => {
+    return async ({ language, project, model, payload, baseURL = null }) => {
 
         const response = await http.post(path, payload,
             {
                 ...config,
                 ...{
+                    baseURL,
                     params: {
                         language,
                         project,

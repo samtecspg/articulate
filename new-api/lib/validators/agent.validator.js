@@ -22,6 +22,7 @@ const KeywordExampledSchema = require('../models/keyword-example.model').schema;
 const SettingsSchema = require('../models/settings.model').schema;
 const SayingSchema = require('../models/saying.model').schema;
 const SayingKeywordSchema = require('../models/saying.keyword.model').schema;
+const ParseSchema = require('../models/parse.model').schema;
 
 class AgentValidate {
     constructor() {
@@ -510,6 +511,38 @@ class AgentValidate {
                             textPrompts: SlotSchema.textPrompts
                         })
                     })
+                };
+            })()
+        };
+
+        this.parseGet = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    text: ParseSchema.text.required(),
+                    timezone: ParseSchema.timezone
+                };
+            })()
+        };
+
+        this.parsePost = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    text: ParseSchema.text.required(),
+                    timezone: ParseSchema.timezone
                 };
             })()
         };

@@ -36,6 +36,7 @@ export const ROUTE_SAYING = 'saying';
 export const ROUTE_SETTINGS = 'settings';
 export const ROUTE_WEBHOOK = 'webhook';
 export const ROUTE_TRAIN = 'train';
+export const ROUTE_PARSE = 'parse';
 
 // STATUS
 export const STATUS_READY = 'Ready';
@@ -60,8 +61,11 @@ export const PARAM_KEYWORD_ID = ROUTE_KEYWORD + PARAMS_POSTFIX_ID;
 export const PARAM_SAYING_ID = ROUTE_SAYING + PARAMS_POSTFIX_ID;
 export const PARAM_DOCUMENT_TIME_STAMP = 'time_stamp';
 export const PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE = 'maximum_saying_score';
+export const PARAM_DOCUMENT_MAXIMUM_DOMAIN_SCORE = 'maximum_domain_score';
 export const PARAM_DOCUMENT_TOTAL_ELAPSED_TIME = 'total_elapsed_time_ms';
+export const PARAM_DOCUMENT_ELAPSED_TIME = 'elapsed_time_ms';
 export const PARAM_DOCUMENT_RASA_RESULTS = 'rasa_results';
+export const PARAM_DOCUMENT_ACTION_RANKING = 'action_ranking';
 
 export const ROUTE_TO_MODEL = {
     [ROUTE_ACTION]: MODEL_ACTION,
@@ -135,7 +139,10 @@ export const RASA_KEYWORD_SYNONYMS = 'keyword_synonyms';
 export const RASA_ENTITY_SYNONYMS = 'keyword_synonyms';
 export const RASA_COMMON_EXAMPLES = 'common_examples';
 export const RASA_REGEX_FEATURES = 'regex_features';
+export const RASA_INTENT_RANKING = 'intent_ranking';
+export const RASA_ACTION_RANKING = 'action_ranking';
 
 export const RASA_MODEL_DOMAIN_RECOGNIZER = '_domain_recognizer';
 export const RASA_MODEL_DEFAULT = 'default_';
+export const RASA_MODEL_JUST_ER = 'just_er_';
 

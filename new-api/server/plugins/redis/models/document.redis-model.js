@@ -11,6 +11,9 @@ const schema = {
     maximum_saying_score: {
         type: 'float'
     },
+    maximum_domain_score: {
+        type: 'float'
+    },
     total_elapsed_time_ms: {
         type: 'string'
     },

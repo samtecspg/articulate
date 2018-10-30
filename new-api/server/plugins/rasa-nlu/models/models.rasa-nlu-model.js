@@ -9,9 +9,9 @@ export const path = '/models';
 
 export default ({ http }) => {
 
-    return async ({ project, model }) => {
+    return async ({ project, model, baseURL = null }) => {
 
-        const response = await http.delete(path, { project, model }, config);
+        const response = await http.delete(path, { project, model }, { ...config, ...{ baseURL } });
         return response.data;
     };
 };

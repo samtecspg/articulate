@@ -1,9 +1,7 @@
 import Boom from 'boom';
 import {
     PARAM_AGENT_ID,
-    PARAM_DOMAIN_ID,
     ROUTE_AGENT,
-    ROUTE_DOMAIN,
     ROUTE_TRAIN
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';

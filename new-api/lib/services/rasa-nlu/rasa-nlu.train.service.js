@@ -9,7 +9,7 @@ module.exports = async function (
         trainingSet,
         pipeline,
         language,
-        baseURL
+        baseURL = null
     }) {
 
     const { [`rasa-nlu`]: rasaNLU } = this.server.app;

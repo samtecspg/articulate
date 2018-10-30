@@ -35,8 +35,7 @@ module.exports = {
             client.once('ready', async () => {
 
                 logger.info('ready');
-                const nohm = await InitializeModels({ redis: client, path: `${__dirname}/models` });
-                server.app[name] = nohm;
+                server.app[name] = await InitializeModels({ redis: client, path: `${__dirname}/models` });
                 resolve();
             });
 

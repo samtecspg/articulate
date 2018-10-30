@@ -3,9 +3,9 @@ export const path = '/status';
 
 export default ({ http }) => {
 
-    return async () => {
+    return async ({ baseURL = null }) => {
 
-        const response = await http.get(path);
+        const response = await http.get(path, { baseURL });
         return response.data;
     };
 };

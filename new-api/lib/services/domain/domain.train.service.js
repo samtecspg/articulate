@@ -6,6 +6,7 @@ import {
     CONFIG_SETTINGS_SAYING_PIPELINE,
     MODEL_KEYWORD,
     MODEL_SAYING,
+    RASA_MODEL_JUST_ER,
     STATUS_ERROR,
     STATUS_READY,
     STATUS_TRAINING
@@ -28,7 +29,7 @@ module.exports = async function ({ AgentModel, DomainModel, returnModel = false 
             return;
         }
         const pipeline = trainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
-        model = (trainingData.numberOfSayings === 1 ? 'just_er_' : '') + model;
+        model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
         model = domain.domainName + '_' + model;
 
         await rasaNLUService.train({
