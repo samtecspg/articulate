@@ -12,7 +12,7 @@ const schema = {
         type: 'boolean'
     },
     actionThreshold: {
-        type: 'integer'
+        type: 'float'
     },
     status: {
         type: 'string'

@@ -28,7 +28,7 @@ const schema = {
         type: 'boolean'
     },
     domainClassifierThreshold: {
-        type: 'integer'
+        type: 'float'
     },
     fallbackResponses: {
         type: 'json'
