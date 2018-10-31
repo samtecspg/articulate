@@ -29,6 +29,7 @@ import UpdateById from './agent/agent.update-by-id.service';
 import UpdateDomain from './agent/agent.update-domain.service';
 import UpdateKeyword from './agent/agent.update-keyword.service';
 import UpdatePostFormat from './agent/agent.update-post-format.service';
+import UpdateWebhook from './agent/agent.update-webhook.service';
 import UpsertAction from './agent/agent.upsert-action.service';
 import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action.service';
 import UpsertSayingInDomain from './agent/agent.upsert-saying-in-domain.service';
@@ -204,6 +205,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async getTrainedDomains() {
 
         return await GetTrainedDomains.apply(this, arguments);
+    }
+
+    async updateWebhook() {
+
+        return await UpdateWebhook.apply(this, arguments);
     }
 
 };
