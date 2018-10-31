@@ -19,6 +19,11 @@ module.exports = class ContextService extends Schmervice.Service {
 
         return await CreateFrame.apply(this, arguments);
     }
+
+    async removeBySession() {
+
+        return await CreateFrame.apply(this, arguments);
+    }
 };
 
 
