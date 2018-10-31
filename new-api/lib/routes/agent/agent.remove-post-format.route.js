@@ -12,7 +12,7 @@ module.exports = {
     path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_POST_FORMAT}`,
     options: {
         tags: ['api'],
-        validate: AgentValidator.findAllDomain,
+        validate: AgentValidator.removePostFormat,
         handler: async (request, h) => {
 
             const { agentService } = await request.services();

@@ -211,6 +211,15 @@ class AgentValidate {
             })()
         };
 
+        this.removeWebhook = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+
         this.removeWebhookInAction = {
             params: (() => {
 
@@ -221,6 +230,14 @@ class AgentValidate {
             })()
         };
 
+        this.removePostFormat = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
         this.removePostFormatInAction = {
             params: (() => {
 

@@ -2,26 +2,24 @@ import Boom from 'boom';
 import {
     PARAM_AGENT_ID,
     ROUTE_AGENT,
-    ROUTE_TRAIN
+    ROUTE_WEBHOOK
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';
-
 //const logger = require('../../../util/logger')({ name: `route:agent:create` });
 
 module.exports = {
-    method: 'post',
-    path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_TRAIN}`,
+    method: 'delete',
+    path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_WEBHOOK}`,
     options: {
         tags: ['api'],
-        validate: AgentValidator.train,
-        handler: async (request) => {
+        validate: AgentValidator.removeWebhook,
+        handler: async (request, h) => {
 
             const { agentService } = await request.services();
-            const {
-                [PARAM_AGENT_ID]: agentId
-            } = request.params;
+            const { [PARAM_AGENT_ID]: id } = request.params;
             try {
-                return await agentService.train({ id: agentId });
+                await agentService.removeWebhook({ id });
+                return h.continue;
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

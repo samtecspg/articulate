@@ -20,6 +20,7 @@ import RemovePostFormatInAction from './agent/agent.remove-post-format-in-action
 import RemovePostFormat from './agent/agent.remove-post-format.service';
 import RemoveSayingInDomain from './agent/agent.remove-saying-in-domain.service';
 import RemoveWebhookInAction from './agent/agent.remove-webhook-in-action.service';
+import RemoveWebhook from './agent/agent.remove-webhook.service';
 import Remove from './agent/agent.remove.service';
 import TrainDomain from './agent/agent.train-domain.service';
 import Train from './agent/agent.train.service';
@@ -78,6 +79,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async removePostFormat() {
 
         return await RemovePostFormat.apply(this, arguments);
+    }
+
+    async removeWebhook() {
+
+        return await RemoveWebhook.apply(this, arguments);
     }
 
     async updatePostFormat() {

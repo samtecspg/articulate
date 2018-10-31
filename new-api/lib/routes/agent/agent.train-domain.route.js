@@ -12,7 +12,7 @@ import AgentValidator from '../../validators/agent.validator';
 
 module.exports = {
     method: 'post',
-    path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_DOMAIN}/{${PARAM_DOMAIN_ID}}/{${ROUTE_TRAIN}}`,
+    path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_DOMAIN}/{${PARAM_DOMAIN_ID}}/${ROUTE_TRAIN}`,
     options: {
         tags: ['api'],
         validate: AgentValidator.trainDomain,
