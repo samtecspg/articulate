@@ -87,8 +87,34 @@ class AgentValidate {
             params: (() => {
 
                 return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
+                    useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fulfilment.')),
+                    usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fulfilment.')),
+                    responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
+                    slots: Joi.array().items({
+                        slotName: SlotSchema.slotName.required(),
+                        uiColor: SlotSchema.uiColor.required(),
+                        keywordId: SlotSchema.keywordId,
+                        isList: SlotSchema.isList.required(),
+                        isRequired: SlotSchema.isRequired.required(),
+                        textPrompts: SlotSchema.textPrompts
+                    })
+                };
+            })()
+        };
+
+        this.updateAction = {
+            params: (() => {
+
+                return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
-                    [PARAM_ACTION_ID]: ActionSchema.id.optional().description('Id of the action')
+                    [PARAM_ACTION_ID]: ActionSchema.id.required().description('Id of the action')
                 };
             })(),
             payload: (() => {
@@ -312,7 +338,29 @@ class AgentValidate {
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
                     [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain'),
-                    [PARAM_SAYING_ID]: SayingSchema.id.description('Id of the saying')
+                    [PARAM_SAYING_ID]: SayingSchema.id.required().description('Id of the saying')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
+                    keywords: Joi.array().items({
+                        keywordId: KeywordSchema.id.required().error(new Error('You must specify the id of the keyword that you are tagging in the examples')),
+                        start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
+                        end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
+                        extractor: SayingKeywordSchema.extractor
+                    }).required().allow([]),
+                    actions: SayingSchema.actions.allow([])
+                };
+            })()
+        };
+        this.createSayingInDomain = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
+                    [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain')
                 };
             })(),
             payload: (() => {
