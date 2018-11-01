@@ -20,34 +20,35 @@ import {
     makeSelectAgent,
 } from '../App/selectors';
 
-import { push } from 'react-router-redux';
 
 export function* getKeywords(payload) {
     const agent = yield select(makeSelectAgent());
     const { api, filter, page } = payload;
-    let start = 0;
-    let limit = -1;
+    let skip = 0;
+    let limit = 100; //TODO: enable in the API the usage of -1 to request all the keywords
     if (page){
-        start = (page - 1) * 5;
-        limit = start + 5;
+        skip = (page - 1) * 5;
+        limit = skip + 5;
     }
     try {
-        const response = yield call(api.agent.getAgentIdKeyword, {
-            id: agent.id,
+        const response = yield call(api.agent.getAgentAgentidKeyword, {
+            agentId: agent.id,
             filter,
-            start,
+            skip,
             limit,
         });
-        yield put(loadKeywordsSuccess(response.obj));
+        //TODO: Fix in the api the return of total sayings
+        yield put(loadKeywordsSuccess({keywords: response.obj, total: 100}));
     } catch (err) {
         yield put(loadKeywordsError(err));
     }
 }
 
 export function* deleteKeyword(payload) {
+    const agent = yield select(makeSelectAgent());
     const { api, keywordId } = payload;
     try {
-        yield call(api.keyword.deleteKeywordId, { id: keywordId });
+        yield call(api.agent.deleteAgentAgentidKeywordKeywordid, { agentId: agent.id, keywordId });
         yield call(getKeywords, {
             api,
             filter: '',

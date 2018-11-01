@@ -153,7 +153,7 @@ class SayingRow extends React.Component {
             }
             else {
                 const keyword = selectedValue.split(',');
-                const keywordId = parseInt(keyword[0]);
+                const keywordId = keyword[0]; //TODO: change this to parseInt(keyword[0]) when the id of the keyword transforms into an integer
                 const keywordName = keyword[1];
                 this.props.onTagKeyword(this.props.saying, window.getSelection().toString(), keywordId, keywordName);
             }
@@ -197,8 +197,9 @@ class SayingRow extends React.Component {
                                 }}
                             >
                                 {this.props.agentDomains.map((domain, index) => {
+                                    //TODO: return the domain id in the API to be able to select the domain id of the saying in
                                     return (
-                                        <MenuItem key={`domain_${index}`} style={{minWidth: '150px'}} value={domain.domainName}>
+                                        <MenuItem key={`domain_${index}`} style={{minWidth: '150px'}} value={domain.id}>
                                             <span className={classes.categoryLabel}>{domain.domainName}</span>
                                         </MenuItem>
                                     )
@@ -306,7 +307,7 @@ class SayingRow extends React.Component {
 SayingRow.propTypes = {
     classes: PropTypes.object,
     saying: PropTypes.object,
-    agentId: PropTypes.number,
+    agentId: PropTypes.string,
     agentKeywords: PropTypes.array,
     agentActions: PropTypes.array,
     agentDomains: PropTypes.array,

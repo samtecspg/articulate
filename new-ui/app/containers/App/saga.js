@@ -83,7 +83,7 @@ export function* deleteSession(payload) {
 export function* getDoc(payload) {
   const { api, docId } = payload;
   try {
-    const response = yield call(api.doc.getDocId, { id: docId });
+    const response = yield call(api.doc.getDocDocid, { docId });
     yield put(loadDocSuccess({ doc: response.obj }));
   } catch (err) {
     yield put(loadDocError(err));
@@ -94,7 +94,7 @@ export function* getTrainAgent(payload) {
   const agent = yield select(makeSelectAgent());
   const { api } = payload;
   try {
-    yield call(api.agent.getAgentIdTrain, { id: agent.id });
+    yield call(api.agent.postAgentAgentidTrain, { agentId: agent.id });
   } catch (err) {
       yield put(trainAgentError(err));
   }

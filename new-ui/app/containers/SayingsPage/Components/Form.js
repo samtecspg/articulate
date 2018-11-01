@@ -186,7 +186,7 @@ Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   sayings: PropTypes.array,
-  agentId: PropTypes.number,
+  agentId: PropTypes.string,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
   agentDomains: PropTypes.array,

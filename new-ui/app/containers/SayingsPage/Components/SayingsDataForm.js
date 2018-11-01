@@ -275,13 +275,13 @@ class SayingsDataForm extends React.Component {
                                         this.props.agentFilteredDomains.length > 0 ?
                                             this.props.agentFilteredDomains.map((filteredDomain, index) => {
                                                 return (
-                                                    <MenuItem key={`domain_${index}`} value={filteredDomain.domainName}>
+                                                    <MenuItem key={`domain_${index}`} value={filteredDomain.id}>
                                                         <Grid container justify='space-between'>
                                                             <div className={classes.categoryDataContainer}>
                                                                 <span>{filteredDomain.domainName}</span>
                                                             </div>
                                                             {
-                                                                filteredDomain.domainName === domain && !this.state.categoriesDropdownOpen ?
+                                                                filteredDomain.id === domain && !this.state.categoriesDropdownOpen ?
                                                                 null :
                                                                 <div className={classes.categoryDataContainer}>
                                                                     <span>{filteredDomain.actionThreshold * 100}%</span>
@@ -302,13 +302,13 @@ class SayingsDataForm extends React.Component {
                                     :
                                         this.props.agentDomains.map((agentDomain, index) => {
                                             return (
-                                                <MenuItem key={`domain_${index}`} value={agentDomain.domainName}>
+                                                <MenuItem key={`domain_${index}`} value={agentDomain.id}>
                                                     <Grid container justify='space-between'>
                                                         <div className={classes.categoryDataContainer}>
                                                             <span>{agentDomain.domainName}</span>
                                                         </div>
                                                         {
-                                                            agentDomain.domainName === domain && !this.state.categoriesDropdownOpen ?
+                                                            agentDomain.id === domain && !this.state.categoriesDropdownOpen ?
                                                             null :
                                                             <div className={classes.categoryDataContainer}>
                                                                 <span>{agentDomain.actionThreshold * 100}%</span>
@@ -527,7 +527,7 @@ SayingsDataForm.propTypes = {
     classes: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
     sayings: PropTypes.array,
-    agentId: PropTypes.number,
+    agentId: PropTypes.string,
     agentKeywords: PropTypes.array,
     agentActions: PropTypes.array,
     agentDomains: PropTypes.array,

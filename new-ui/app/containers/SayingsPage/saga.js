@@ -43,20 +43,22 @@ import { getActions } from '../ActionPage/saga';
 export function* getSayings(payload) {
     const agent = yield select(makeSelectAgent());
     const { api, filter, page } = payload;
-    let start = 0;
+    const tempFilter = filter === '' ? undefined : filter;
+    let skip = 0;
     let limit = -1;
     if (page){
-        start = (page - 1) * 5;
-        limit = start + 5;
+        skip = (page - 1) * 5;
+        limit = skip + 5;
     }
     try {
-        const response = yield call(api.agent.getAgentIdSaying, {
-            id: agent.id,
-            filter,
-            start,
+        const response = yield call(api.agent.getAgentAgentidSaying, {
+            agentId: agent.id,
+            tempFilter,
+            skip,
             limit,
         });
-        yield put(loadSayingsSuccess(response.obj));
+        //TODO: Fix in the api the return of total sayings
+        yield put(loadSayingsSuccess({ sayings: response.obj, total: 100}));
     } catch (err) {
         yield put(loadSayingsError(err));
     }
@@ -69,13 +71,15 @@ export function* postSaying(payload) {
     const { api, value } = payload;
     try {
         const newSayingData = {
-            agent: agent.agentName,
-            domain,
             userSays: value,
             keywords: [],
             actions,
         }
-        yield call(api.saying.postSaying, { body: newSayingData });
+        yield call(api.agent.postAgentAgentidDomainDomainidSaying, {
+            agentId: agent.id,
+            domainId: domain, 
+            body: newSayingData 
+        });
         yield call(getSayings, {
             api,
             filter: '',
@@ -87,9 +91,15 @@ export function* postSaying(payload) {
 }
 
 export function* deleteSaying(payload) {
+    const agent = yield select(makeSelectAgent());
+    const domain = yield select(makeSelectSelectedDomain());
     const { api, sayingId } = payload;
     try {
-        yield call(api.saying.deleteSayingId, { id: sayingId });
+        yield call(api.agent.deleteAgentAgentidDomainDomainidSayingSayingid, { 
+            agentId: agent.id,
+            domainId: domain.id,
+            id: sayingId 
+        });
         yield call(getSayings, {
             api,
             filter: '',
@@ -101,12 +111,18 @@ export function* deleteSaying(payload) {
 }
 
 export function* putSaying(payload) {
+    const agent = yield select(makeSelectAgent());
+    const domain = yield select(makeSelectSelectedDomain());
     const { api, sayingId, saying, filter, page } = payload;
     delete saying.id;
     delete saying.agent;
     delete saying.domain;
     try {
-        yield call(api.saying.putSayingId, { id: sayingId, body: saying });
+        yield call(api.agent.putAgentAgentidDomainDomainidSayingSayingid, {
+            agentId: agent.id,
+            domainId: domain.id, 
+            sayingId, 
+            body: saying });
         yield call(getSayings, {
             api,
             filter: filter,
@@ -143,6 +159,7 @@ export function* tagKeyword(payload) {
             page: page,
         });
     } catch (err) {
+        console.log(err);
         yield put(updateSayingError(err));
     }
 }
@@ -161,6 +178,7 @@ export function* untagKeyword(payload) {
             page: page,
         });
     } catch (err) {
+        console.log(err);
         yield put(updateSayingError(err));
     }
 }
@@ -203,21 +221,23 @@ export function* deleteAction(payload) {
 export function* getDomains(payload) {
     const agent = yield select(makeSelectAgent());
     const { api, filter } = payload;
-    const start = 0;
+    const skip = 0;
     const limit = -1;
     try {
-        const response = yield call(api.agent.getAgentIdDomain, {
-            id: agent.id,
+        const response = yield call(api.agent.getAgentAgentidDomain, {
+            agentId: agent.id,
             filter,
-            start,
+            skip,
             limit,
         });
         if (filter !== undefined){
-            yield put(loadFilteredDomainsSuccess(response.obj));
+            //TODO: Fix in the api the return of total sayings
+            yield put(loadFilteredDomainsSuccess({ domains: response.obj }));
         }
         else {
-            yield put(loadDomainsSuccess(response.obj));
-            yield put(loadFilteredDomainsSuccess(response.obj));
+            //TODO: Fix in the api the return of total sayings
+            yield put(loadDomainsSuccess({domains: response.obj }));
+            yield put(loadFilteredDomainsSuccess({domains: response.obj }));
         }
     } catch (err) {
         if (filter !== undefined){

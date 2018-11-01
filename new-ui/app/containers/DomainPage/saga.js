@@ -27,10 +27,11 @@ import {
 } from '../App/selectors';
 
 export function* getDomain(payload) {
+  const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    const response = yield call(api.domain.getDomainId, {
-        id
+    const response = yield call(api.agent.getAgentAgentidDomainDomainid, {
+        agentId: agent.id, domainId: id
     });
     response.obj.actionThreshold = response.obj.actionThreshold * 100;
     yield put(loadDomainSuccess(response.obj));
@@ -43,11 +44,13 @@ export function* postDomain(payload) {
     const agent = yield select(makeSelectAgent());
     const domain = yield select(makeSelectDomain());
     const newDomain = Immutable.asMutable(domain, { deep: true });
-    newDomain.agent = agent.agentName;
     newDomain.actionThreshold = newDomain.actionThreshold / 100;
     const { api } = payload;
     try {
-        const response = yield call(api.domain.postDomain, { body: newDomain });
+        const response = yield call(api.agent.postAgentAgentidDomain, { 
+            agentId: agent.id,
+            body: newDomain
+        });
         yield put(createDomainSuccess(response.obj));
     } catch (err) {
         yield put(createDomainError(err));
@@ -55,6 +58,7 @@ export function* postDomain(payload) {
 }
 
 export function* putDomain(payload) {
+    const agent = yield select(makeSelectAgent());
     const domain = yield select(makeSelectDomain());
     const mutableDomain = Immutable.asMutable(domain, { deep: true });
     const domainId = domain.id;
@@ -63,7 +67,7 @@ export function* putDomain(payload) {
     delete mutableDomain.agent;
     mutableDomain.actionThreshold = mutableDomain.actionThreshold / 100;
     try {
-        const response = yield call(api.domain.putDomainId, { id: domainId, body: mutableDomain });
+        const response = yield call(api.agent.putAgentAgentidDomainDomainid, { agentId: agent.id, domainId: domainId, body: mutableDomain });
         yield put(updateDomainSuccess(response.obj));
     } catch (err) {
         yield put(updateDomainError(err));

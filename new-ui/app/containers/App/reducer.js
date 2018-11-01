@@ -400,7 +400,7 @@ function appReducer(state = initialState, action) {
       return state
         .set('agent', action.payload.agent)
         .set('currentAgent', action.payload.agent)
-        .set('agentSettings', action.payload.settings)
+        .set('agentSettings', action.payload.agent.settings)
         .set('agentWebhook', agentWebhook)
         .set('agentPostFormat', agentPostFormat)
         .set('loading', false)

@@ -62,7 +62,7 @@ class ActionButtons extends React.Component {
 ActionButtons.propTypes = {
     classes: PropTypes.object.isRequired,
     onFinishAction: PropTypes.func.isRequired,
-    agentId: PropTypes.number,
+    agentId: PropTypes.string,
     formError: PropTypes.bool,
 };
 

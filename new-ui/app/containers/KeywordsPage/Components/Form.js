@@ -168,7 +168,7 @@ class Form extends React.Component {
 Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  agentId: PropTypes.number,
+  agentId: PropTypes.string,
   onSearchKeyword: PropTypes.func,
   onCreateKeyword: PropTypes.func,
   keywords: PropTypes.array,

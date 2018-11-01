@@ -180,7 +180,7 @@ class KeywordsDataForm extends React.Component {
 KeywordsDataForm.propTypes = {
     classes: PropTypes.object.isRequired,
     keywords: PropTypes.array,
-    agentId: PropTypes.number,
+    agentId: PropTypes.string,
     onDeleteKeyword: PropTypes.func.isRequired,
     onCreateKeyword: PropTypes.func.isRequired,
     currentPage: PropTypes.number,
