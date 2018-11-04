@@ -55,6 +55,11 @@ module.exports = new Confidence.Store({
                 }
             },
             {
+
+                plugin: './plugins/handlebars',
+                options: {}
+            },
+            {
                 plugin: Nes,
                 options: {}
             },
