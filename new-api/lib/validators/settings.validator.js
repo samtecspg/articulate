@@ -1,3 +1,5 @@
+import Joi from 'joi';
+
 import {
     CONFIG_SETTINGS_ALL,
     PARAM_NAME,
@@ -44,6 +46,20 @@ class SettingsValidate {
             payload: (() => {
 
                 return SettingsModel.value.required();
+            })()
+        };
+
+        this.updateAll = {
+            payload: (() => {
+
+                const keys = {};
+                CONFIG_SETTINGS_ALL.forEach((key) => {
+
+                    keys[key] = SettingsModel
+                        .value
+                        .optional();
+                });
+                return Joi.object().keys(keys);
             })()
         };
 
