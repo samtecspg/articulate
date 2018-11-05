@@ -98,7 +98,12 @@ module.exports = class BaseModel extends NohmModel {
             sortedIds = await this.sort({ field, direction, limit }, ids);
         }
         else {
-            sortedIds = ids.slice(skip, skip + limit);
+            if (limit === -1){
+                sortedIds = ids.slice(skip, ids.length);
+            }
+            else {
+                sortedIds = ids.slice(skip, skip + limit);
+            }
         }
         if (sortedIds.length === 0) {
             return [];

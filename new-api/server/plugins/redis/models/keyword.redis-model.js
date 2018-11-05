@@ -8,7 +8,8 @@ const schema = {
     keywordName: {
         type: 'string',
         unique: true,
-        index: true
+        index: true,
+        defaultSort: true
     },
     uiColor: {
         type: 'string'
