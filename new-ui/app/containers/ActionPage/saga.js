@@ -48,8 +48,7 @@ export function* getActions(payload) {
       const response = yield call(api.agent.getAgentAgentidAction, {
           agentId: agent.id,
       });
-      //TODO: Fix in the api the return of total sayings
-      yield put(loadActionsSuccess({actions: response.obj, total: 100}));
+      yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
   } catch (err) {
       yield put(loadActionsError(err));
   }

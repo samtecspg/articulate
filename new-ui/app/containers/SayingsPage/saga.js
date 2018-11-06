@@ -57,8 +57,7 @@ export function* getSayings(payload) {
             skip,
             limit,
         });
-        //TODO: Fix in the api the return of total sayings
-        yield put(loadSayingsSuccess({ sayings: response.obj, total: 100}));
+        yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));
     } catch (err) {
         yield put(loadSayingsError(err));
     }
@@ -231,13 +230,11 @@ export function* getDomains(payload) {
             limit,
         });
         if (filter !== undefined){
-            //TODO: Fix in the api the return of total sayings
-            yield put(loadFilteredDomainsSuccess({ domains: response.obj }));
+            yield put(loadFilteredDomainsSuccess({ domains: response.obj.data }));
         }
         else {
-            //TODO: Fix in the api the return of total sayings
-            yield put(loadDomainsSuccess({domains: response.obj }));
-            yield put(loadFilteredDomainsSuccess({domains: response.obj }));
+            yield put(loadDomainsSuccess({domains: response.obj.data }));
+            yield put(loadFilteredDomainsSuccess({domains: response.obj.data }));
         }
     } catch (err) {
         if (filter !== undefined){

@@ -38,7 +38,7 @@ export function* getKeywords(payload) {
             limit,
         });
         //TODO: Fix in the api the return of total sayings
-        yield put(loadKeywordsSuccess({keywords: response.obj, total: 100}));
+        yield put(loadKeywordsSuccess({keywords: response.obj.data, total: response.obj.totalCount }));
     } catch (err) {
         yield put(loadKeywordsError(err));
     }

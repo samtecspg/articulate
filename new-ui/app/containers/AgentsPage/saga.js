@@ -16,7 +16,7 @@ export function* getAgents(payload) {
 
   try {
     const response = yield call(api.agent.getAgent, {});
-    yield put(loadAgentsSuccess(response.obj));
+    yield put(loadAgentsSuccess(response.obj.data));
   } catch (err) {
     yield put(loadAgentsError(err));
   }
