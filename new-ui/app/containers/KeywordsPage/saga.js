@@ -25,7 +25,7 @@ export function* getKeywords(payload) {
     const agent = yield select(makeSelectAgent());
     const { api, filter, page } = payload;
     let skip = 0;
-    let limit = 100; //TODO: enable in the API the usage of -1 to request all the keywords
+    let limit = -1;
     if (page){
         skip = (page - 1) * 5;
         limit = skip + 5;
