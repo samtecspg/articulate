@@ -10,7 +10,9 @@ module.exports = async function ({ skip, limit, direction, field, model, returnM
         if (returnModel) {
             return allResultsModels;
         }
-        return allResultsModels.map((resultModel) => resultModel.allProperties());
+        const totalCount = await Model.count();
+        const data = allResultsModels.map((resultModel) => resultModel.allProperties());
+        return { data, totalCount }
     }
     catch (error) {
         throw RedisErrorHandler({ error });

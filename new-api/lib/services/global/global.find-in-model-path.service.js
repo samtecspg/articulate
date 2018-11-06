@@ -7,6 +7,7 @@ module.exports = async function ({ modelPath, isSingleResult, skip, limit, direc
     //TODO: Needs refactoring, should handle a single function but is doing 3 different things
 
     const { redis } = this.server.app;
+    let totalCount = 0;
 
     try {
         const findById = async ({ model, id }) => {
@@ -35,6 +36,7 @@ module.exports = async function ({ modelPath, isSingleResult, skip, limit, direc
             if (!id) {
 
                 const ids = await parentModel.getAll(model, model);
+                totalCount = ids.length;
 
                 //if single result then only get the first one
                 const childModel = await findById({ model, id: isSingleResult ? ids[0] : null });
@@ -69,7 +71,8 @@ module.exports = async function ({ modelPath, isSingleResult, skip, limit, direc
                 subId: current.id
             });
         };
-        return await modelPath.reduce(reducer, null);
+        const data = await modelPath.reduce(reducer, null);
+        return { data, totalCount };
     }
     catch (error) {
         throw RedisErrorHandler({ error });

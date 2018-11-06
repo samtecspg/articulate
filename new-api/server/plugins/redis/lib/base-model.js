@@ -86,6 +86,12 @@ module.exports = class BaseModel extends NohmModel {
         return await this.loadAllByIds({ ids });
     }
 
+    async count() {
+
+        const ids = await this.find();
+        return ids.length;
+    }
+
     async findAllByIds({ ids, skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field }) {
 
         if (!_.isArray(ids) || ids.leading === 0) {
