@@ -48,7 +48,7 @@ export function* getSayings(payload) {
     let limit = -1;
     if (page){
         skip = (page - 1) * 5;
-        limit = skip + 5;
+        limit = 5;
     }
     try {
         const response = yield call(api.agent.getAgentAgentidSaying, {
@@ -56,6 +56,7 @@ export function* getSayings(payload) {
             tempFilter,
             skip,
             limit,
+            loadDomainId: true,
         });
         yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));
     } catch (err) {
@@ -91,13 +92,12 @@ export function* postSaying(payload) {
 
 export function* deleteSaying(payload) {
     const agent = yield select(makeSelectAgent());
-    const domain = yield select(makeSelectSelectedDomain());
-    const { api, sayingId } = payload;
+    const { api, sayingId, domainId} = payload;
     try {
         yield call(api.agent.deleteAgentAgentidDomainDomainidSayingSayingid, { 
             agentId: agent.id,
-            domainId: domain.id,
-            id: sayingId 
+            domainId,
+            sayingId 
         });
         yield call(getSayings, {
             api,
@@ -111,15 +111,15 @@ export function* deleteSaying(payload) {
 
 export function* putSaying(payload) {
     const agent = yield select(makeSelectAgent());
-    const domain = yield select(makeSelectSelectedDomain());
     const { api, sayingId, saying, filter, page } = payload;
+    const domainId = saying.domain;
     delete saying.id;
     delete saying.agent;
     delete saying.domain;
     try {
         yield call(api.agent.putAgentAgentidDomainDomainidSayingSayingid, {
             agentId: agent.id,
-            domainId: domain.id, 
+            domainId, 
             sayingId, 
             body: saying });
         yield call(getSayings, {

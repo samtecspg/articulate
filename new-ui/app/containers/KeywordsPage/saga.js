@@ -28,7 +28,7 @@ export function* getKeywords(payload) {
     let limit = -1;
     if (page){
         skip = (page - 1) * 5;
-        limit = skip + 5;
+        limit = 5;
     }
     try {
         const response = yield call(api.agent.getAgentAgentidKeyword, {

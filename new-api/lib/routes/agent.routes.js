@@ -33,7 +33,6 @@ module.exports = [
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_KEYWORD], isFindById: true }), //agent/{agentId}/keyword/{keywordId}
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_KEYWORD, MODEL_ACTION] }),//agent/{agentId}/keyword/{keywordId}/action
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_KEYWORD, MODEL_SAYING] }),//agent/{agentId}/keyword/{keywordId}/saying
-    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_SAYING] }), //agent/{agentId}/saying
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_WEBHOOK], isSingleResult: true }), //agent/{agentId}/webhook
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_POST_FORMAT], isSingleResult: true })  //agent/{agentId}/postFormat
 ];

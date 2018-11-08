@@ -470,7 +470,7 @@ class SayingsDataForm extends React.Component {
                                                 />
                                             </TableCell>
                                             <TableCell className={classes.deleteCell}>
-                                                <img onClick={() => { this.props.onDeleteSaying(saying.id) }} className={classes.deleteIcon} src={trashIcon} />
+                                                <img onClick={() => { this.props.onDeleteSaying(saying.id, saying.domain) }} className={classes.deleteIcon} src={trashIcon} />
                                             </TableCell>
                                         </TableRow>
                                         );

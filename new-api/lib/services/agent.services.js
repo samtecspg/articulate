@@ -5,6 +5,7 @@ import CreatePostFormat from './agent/agent.create-post-format.service';
 import CreateWebhook from './agent/agent.create-webhook.service';
 import Create from './agent/agent.create.service';
 import Export from './agent/agent.export.service';
+import FindAllSayings from './agent/agent.find-all-sayings.service';
 import FindAllSettings from './agent/agent.find-all-settings.service';
 import FindSettingByName from './agent/agent.find-setting-by-name.service';
 import GetTrainedDomains from './agent/agent.get-trained-domains.service';
@@ -95,6 +96,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async createWebhook() {
 
         return await CreateWebhook.apply(this, arguments);
+    }
+
+    async findAllSayings() {
+
+        return await FindAllSayings.apply(this, arguments);
     }
 
     async findAllSettings() {

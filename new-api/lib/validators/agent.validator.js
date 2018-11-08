@@ -8,7 +8,11 @@ import {
     PARAM_DOMAIN_ID,
     PARAM_KEYWORD_ID,
     PARAM_NAME,
-    PARAM_SAYING_ID
+    PARAM_SAYING_ID,
+    PARAM_SKIP,
+    PARAM_LIMIT,
+    PARAM_DIRECTION,
+    PARAM_FIELD,
 } from '../../util/constants';
 
 const AgentSchema = require('../models/agent.model').schema;
@@ -289,6 +293,41 @@ class AgentValidate {
             })()
         };
 
+        this.findAllSayings = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    loadDomainId: Joi.boolean().default(false),
+                    [PARAM_SKIP]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to skip. Default=0'),
+                    [PARAM_LIMIT]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to return. Default=50'),
+                    [PARAM_DIRECTION]: Joi
+                        .string()
+                        .optional()
+                        .allow('ASC', 'DESC')
+                        .description('Sort direction. Default= ASC'),
+                    [PARAM_FIELD]: Joi
+                        .string()
+                        .optional()
+                        .description('Field used to do the sorting')
+                };
+            })()
+        };
+
         this.findAllSettings = {
             params: (() => {
 
@@ -346,6 +385,8 @@ class AgentValidate {
                 return {
                     userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
                     keywords: Joi.array().items({
+                        value: SayingKeywordSchema.value.required().error(new Error('You must specify the value that this keyword represents in the user saying')),
+                        keyword: SayingKeywordSchema.keyword.required().error(new Error('You must specify the keyword name')),
                         keywordId: KeywordSchema.id.required().error(new Error('You must specify the id of the keyword that you are tagging in the examples')),
                         start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                         end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),

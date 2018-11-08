@@ -469,11 +469,12 @@ export function addSayingError(error) {
   };
 }
 
-export function deleteSaying(sayingId) {
+export function deleteSaying(sayingId, domainId) {
   return {
     type: DELETE_SAYING,
     apiCall: true,
     sayingId,
+    domainId,
   }
 }
 

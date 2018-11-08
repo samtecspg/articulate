@@ -82,6 +82,7 @@ module.exports = async function (
             await domainService.unlinkKeywords({ model: DomainModel, keywordModels: removedKeywordModels });
         }
         else { // Create
+            SayingModel.link(DomainModel, MODEL_DOMAIN);
             // ADD Parent ---> Saying
             await SayingModel.createInstance({ data: sayingData, parentModels });
             // ADD Domain <---> NewKeyword

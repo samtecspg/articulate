@@ -7,6 +7,7 @@ class SayingKeywordModel {
             start: Joi.number(),
             end: Joi.number(),
             value: Joi.string().trim(),
+            keyword: Joi.string().trim(),
             keywordId: Joi.string(),
             extractor: Joi.string().trim()
         };
