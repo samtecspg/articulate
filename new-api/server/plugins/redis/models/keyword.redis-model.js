@@ -7,7 +7,6 @@ const schema = {
     },
     keywordName: {
         type: 'string',
-        unique: true,
         index: true,
         defaultSort: true
     },

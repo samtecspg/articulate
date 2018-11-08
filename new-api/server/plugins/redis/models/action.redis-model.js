@@ -4,7 +4,6 @@ import BaseModel from '../lib/base-model';
 const schema = {
     actionName: {
         type: 'string',
-        unique: true,
         index: true
     },
     slots: {

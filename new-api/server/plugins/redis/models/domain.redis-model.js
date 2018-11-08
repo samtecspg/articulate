@@ -4,7 +4,6 @@ import BaseModel from '../lib/base-model';
 const schema = {
     domainName: {
         type: 'string',
-        unique: true,
         index: true,
         defaultSort: true
     },
