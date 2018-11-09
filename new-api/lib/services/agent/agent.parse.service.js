@@ -3,7 +3,7 @@ import Moment from 'moment';
 import { MODEL_AGENT } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, text, timezone, returnModel = false }) {
+module.exports = async function ({ id, AgentModel, text, timezone, returnModel = false }) {
 
     const startTime = new Moment();
     const { redis } = this.server.app;
@@ -14,7 +14,7 @@ module.exports = async function ({ id, text, timezone, returnModel = false }) {
     } = await this.server.services();
 
     try {
-        const AgentModel = await redis.factory(MODEL_AGENT, id);
+        AgentModel = AgentModel || await redis.factory(MODEL_AGENT, id);
         const agent = AgentModel.allProperties();
         const trainedDomains = await agentService.getTrainedDomains({ AgentModel });
         const {

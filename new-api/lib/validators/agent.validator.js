@@ -5,14 +5,17 @@ import {
     CONFIG_SETTINGS_DEFAULT_AGENT,
     PARAM_ACTION_ID,
     PARAM_AGENT_ID,
+    PARAM_DIRECTION,
     PARAM_DOMAIN_ID,
+    PARAM_FIELD,
     PARAM_KEYWORD_ID,
+    PARAM_LIMIT,
     PARAM_NAME,
     PARAM_SAYING_ID,
+    PARAM_SESSION,
     PARAM_SKIP,
-    PARAM_LIMIT,
-    PARAM_DIRECTION,
-    PARAM_FIELD,
+    PARAM_TEXT,
+    PARAM_TIMEZONE
 } from '../../util/constants';
 
 const AgentSchema = require('../models/agent.model').schema;
@@ -469,7 +472,7 @@ class AgentValidate {
                     extraTrainingData: DomainSchema.extraTrainingData,
                     lastTraining: DomainSchema.lastTraining,
                     model: DomainSchema.model,
-                    status: DomainSchema.status,
+                    status: DomainSchema.status
                 };
             })()
         };
@@ -490,6 +493,26 @@ class AgentValidate {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
+        };
+
+        this.converse = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    [PARAM_SESSION]: Joi.string().required().description('Id of the session'),
+                    [PARAM_TEXT]: Joi.string().required().description('Text to parse'),
+                    [PARAM_TIMEZONE]: Joi.string().description('Timezone for duckling parse. Default UTC')
+                };
+            })(),
+            options: {
+                allowUnknown: true
+            }
         };
 
         this.removeAction = {

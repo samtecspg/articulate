@@ -37,6 +37,7 @@ export const ROUTE_SETTINGS = 'settings';
 export const ROUTE_WEBHOOK = 'webhook';
 export const ROUTE_TRAIN = 'train';
 export const ROUTE_PARSE = 'parse';
+export const ROUTE_CONVERSE = 'converse';
 
 // STATUS
 export const STATUS_READY = 'Ready';
@@ -52,7 +53,9 @@ export const PARAM_NAME = 'name';
 export const PARAM_SKIP = 'skip';
 export const PARAM_LIMIT = 'limit';
 export const PARAM_DIRECTION = 'direction';
-export const PARAM_SESSION = 'session';
+export const PARAM_SESSION = 'sessionId';
+export const PARAM_TEXT = 'text';
+export const PARAM_TIMEZONE = 'timezone';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
@@ -145,4 +148,29 @@ export const RASA_ACTION_RANKING = 'action_ranking';
 export const RASA_MODEL_DOMAIN_RECOGNIZER = '_domain_recognizer';
 export const RASA_MODEL_DEFAULT = 'default_';
 export const RASA_MODEL_JUST_ER = 'just_er_';
+
+// Conversation State Object properties
+
+export const CSO_AGENT = 'agent';
+export const CSO_CONTEXT = 'context';
+export const CSO_TIMEZONE_DEFAULT = 'UTL';
+
+// Keywords
+export const KEYWORD_PREFIX_SYS = 'sys.';
+export const KEYWORD_PREFIX_SPACY = 'spacy_';
+export const KEYWORD_PREFIX_SYS_SPACY = `${KEYWORD_PREFIX_SYS}${KEYWORD_PREFIX_SPACY}`;
+export const KEYWORD_PREFIX_DUCKLING = 'duckling_';
+export const KEYWORD_PREFIX_SYS_DUCKLING = `${KEYWORD_PREFIX_SYS}${KEYWORD_PREFIX_DUCKLING}`;
+export const KEYWORD_PREFIX_REGEX = 'regex_';
+export const KEYWORD_PREFIX_SYS_REGEX = `${KEYWORD_PREFIX_SYS}${KEYWORD_PREFIX_REGEX}`;
+
+// Duckling keyword
+export const DUCKLING_TIME = `${KEYWORD_PREFIX_DUCKLING}time`;
+export const DUCKLING_DISTANCE = `${KEYWORD_PREFIX_DUCKLING}distance`;
+export const DUCKLING_DURATION = `${KEYWORD_PREFIX_DUCKLING}duration`;
+export const DUCKLING_TEMPERATURE = `${KEYWORD_PREFIX_DUCKLING}temperature`;
+export const DUCKLING_VOLUME = `${KEYWORD_PREFIX_DUCKLING}volume`;
+export const DUCKLING_QUANTITY = `${KEYWORD_PREFIX_DUCKLING}duration`;
+export const DUCKLING_URL = `${KEYWORD_PREFIX_DUCKLING}quantity`;
+
 

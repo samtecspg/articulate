@@ -2,7 +2,7 @@ import { MODEL_CONTEXT } from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {
-    session: {
+    sessionId: {
         type: 'string',
         unique: true,
         index: true,
@@ -25,6 +25,11 @@ class ContextRedisModel extends BaseModel {
     static get definitions() {
 
         return schema;
+    }
+
+    async findBySessionId({ sessionId }) {
+
+        return await this.searchByField({ field: 'sessionId', value: sessionId });
     }
 
 }

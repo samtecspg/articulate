@@ -12,7 +12,6 @@ module.exports = {
 
         // Set config defaults when creating the instance
         const axios = Axios.create(options);
-        //TODO: Add configuration override to calls to the endpoints
         server.app[name] = await InitializeModels({ http: axios, path: `${__dirname}/models` });
         logger.info('registered');
     }

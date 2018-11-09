@@ -1,4 +1,10 @@
 import Schmervice from 'schmervice';
+import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
+import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
+import ConverseGenerateResponseFallback from './agent/agent.converse-generate-response-fallback.service';
+import ConverseGenerateResponse from './agent/agent.converse-generate-response.service';
+import ConverseUpdateContextFrames from './agent/agent.converse-update-context-frames.service';
+import Converse from './agent/agent.converse.service';
 import CreateDomain from './agent/agent.create-domain.service';
 import CreateKeyword from './agent/agent.create-keyword.service';
 import CreatePostFormat from './agent/agent.create-post-format.service';
@@ -218,6 +224,35 @@ module.exports = class AgentService extends Schmervice.Service {
         return await UpdateWebhook.apply(this, arguments);
     }
 
+    async converse() {
+
+        return await Converse.apply(this, arguments);
+    }
+
+    async converseGenerateResponseFallback() {
+
+        return await ConverseGenerateResponseFallback.apply(this, arguments);
+    }
+
+    async converseGenerateResponse() {
+
+        return await ConverseGenerateResponse.apply(this, arguments);
+    }
+
+    async converseUpdateContextFrames() {
+
+        return await ConverseUpdateContextFrames.apply(this, arguments);
+    }
+
+    async converseCompileResponseTemplates() {
+
+        return await ConverseCompileResponseTemplates.apply(this, arguments);
+    }
+
+    async converseCallWebhook() {
+
+        return await ConverseCallWebhook.apply(this, arguments);
+    }
 };
 
 

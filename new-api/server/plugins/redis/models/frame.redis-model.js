@@ -30,10 +30,7 @@ class FrameRedisModel extends BaseModel {
         return schema;
     }
 
-    async findBySession({ session }) {
 
-        return await this.searchByField({ field: 'session', value: session });
-    }
 
 }
 
