@@ -38,7 +38,11 @@ module.exports = async function ({ id, returnModel = false }) {
         await AgentModel.save();
         //TODO: Publish agent update
         if (agent.enableModelsPerDomain) {
-            const DomainModels = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN), returnModel: true });
+            const DomainModels = await globalService.loadAllByIds({ 
+                ids: await AgentModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN),
+                model: MODEL_DOMAIN,
+                returnModel: true 
+            });
             //const trainingLimit = rasaStatus[RASA_MAX_TRAINING_PROCESSES] - rasaStatus[RASA_CURRENT_TRAINING_PROCESSES];
             const DomainModelsToTrain = DomainModels.filter((DomainModel) => {
 

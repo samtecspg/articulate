@@ -158,7 +158,6 @@ export function* tagKeyword(payload) {
             page: page,
         });
     } catch (err) {
-        console.log(err);
         yield put(updateSayingError(err));
     }
 }
@@ -177,7 +176,6 @@ export function* untagKeyword(payload) {
             page: page,
         });
     } catch (err) {
-        console.log(err);
         yield put(updateSayingError(err));
     }
 }

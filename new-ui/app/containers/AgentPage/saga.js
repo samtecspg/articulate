@@ -159,6 +159,7 @@ export function* putAgent(payload) {
   mutableAgent.domainClassifierThreshold = agent.domainClassifierThreshold / 100;
   const { api } = payload;
   delete mutableAgent.id;
+  delete mutableAgent.settings;
   try {
       const response = yield call(api.agent.putAgentAgentid, { agentId: currentAgent.id, body: mutableAgent });
       if (!currentAgent.useWebhook){

@@ -2,7 +2,7 @@ import GlobalNotFound from '../../errors/global.not-found-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 import RedisNotLinkedError from '../../errors/redis.not-linked-error';
 
-module.exports = async function ({ modelPath, isSingleResult, skip, limit, direction, field, returnModel = false }) {
+module.exports = async function ({ modelPath, isFindById, isSingleResult, skip, limit, direction, field, returnModel = false }) {
 
     //TODO: Needs refactoring, should handle a single function but is doing 3 different things
 
@@ -72,7 +72,12 @@ module.exports = async function ({ modelPath, isSingleResult, skip, limit, direc
             });
         };
         const data = await modelPath.reduce(reducer, null);
-        return { data, totalCount };
+        if (isFindById || isSingleResult){
+            return { ...data };
+        }
+        else {
+            return { data, totalCount };
+        }
     }
     catch (error) {
         throw RedisErrorHandler({ error });

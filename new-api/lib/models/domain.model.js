@@ -19,8 +19,8 @@ class DomainModel {
                 .string()
                 .trim()
                 .valid(STATUS_READY, STATUS_TRAINING, STATUS_ERROR, STATUS_OUT_OF_DATE),
-            lastTraining: Joi.date(),
-            model: Joi.string().trim(),
+            lastTraining: Joi.date().allow(''),
+            model: Joi.string().trim().allow(''),
             extraTrainingData: Joi.boolean()
         };
     };

@@ -51,6 +51,7 @@ class AgentValidate {
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     multiDomain: AgentSchema.multiDomain.required(),
+                    domainRecognizer: AgentSchema.domainRecognizer.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -105,6 +106,7 @@ class AgentValidate {
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
                         keywordId: SlotSchema.keywordId,
+                        keyword: SlotSchema.keyword,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         textPrompts: SlotSchema.textPrompts
@@ -132,6 +134,7 @@ class AgentValidate {
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
                         keywordId: SlotSchema.keywordId,
+                        keyword: SlotSchema.keyword,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         textPrompts: SlotSchema.textPrompts
@@ -185,7 +188,8 @@ class AgentValidate {
                     lastTraining: AgentSchema.lastTraining,
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerDomain: AgentSchema.enableModelsPerDomain,
-                    model: AgentSchema.model
+                    model: AgentSchema.model,
+                    domainRecognizer: AgentSchema.domainRecognizer
                 };
             })()
         };
@@ -459,12 +463,13 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    domainName: DomainSchema.domainName.required(),
-                    enabled: DomainSchema.enabled.required(),
-                    actionThreshold: DomainSchema.actionThreshold.required(),
+                    actionThreshold: DomainSchema.actionThreshold,
+                    domainName: DomainSchema.domainName,
+                    enabled: DomainSchema.enabled,
+                    extraTrainingData: DomainSchema.extraTrainingData,
                     lastTraining: DomainSchema.lastTraining,
                     model: DomainSchema.model,
-                    extraTrainingData: DomainSchema.extraTrainingData
+                    status: DomainSchema.status,
                 };
             })()
         };

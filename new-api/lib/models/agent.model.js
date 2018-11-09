@@ -18,7 +18,8 @@ class AgentModel {
             lastTraining: Joi.date(),
             extraTrainingData: Joi.boolean(),
             enableModelsPerDomain: Joi.boolean(),
-            model: Joi.string().allow('')
+            model: Joi.string().allow(''),
+            domainRecognizer: Joi.boolean()
         };
     };
 }

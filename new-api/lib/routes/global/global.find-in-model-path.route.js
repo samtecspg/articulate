@@ -94,7 +94,7 @@ module.exports = ({ models, isFindById = false, isSingleResult = false }) => {
                 const modelPath = _(modelRouteMap).map(getParametersFromRequest).value();
 
                 try {
-                    return await globalService.findInModelPath({ modelPath, isSingleResult, skip, limit, direction, field });
+                    return await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
                 }
                 catch ({ message, statusCode }) {
 

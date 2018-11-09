@@ -255,7 +255,7 @@ const initialState = Immutable({
     slotName: 'New Slot',
     uiColor: '#4e4e4e',
     keyword: '',
-    keywordId: 0,
+    keywordId: '0',
     isList: false,
     isRequired: false,
     textPrompts: []
