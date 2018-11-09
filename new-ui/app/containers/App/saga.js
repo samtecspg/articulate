@@ -90,7 +90,7 @@ export function* getDoc(payload) {
   }
 }
 
-export function* getTrainAgent(payload) {
+export function* postTrainAgent(payload) {
   const agent = yield select(makeSelectAgent());
   const { api } = payload;
   try {
@@ -105,5 +105,5 @@ export default function* rootSaga() {
   yield takeLatest(SEND_MESSAGE, getConverse);
   yield takeLatest(RESET_SESSION, deleteSession);
   yield takeLatest(LOAD_DOC, getDoc);
-  yield takeLatest(TRAIN_AGENT, getTrainAgent);
+  yield takeLatest(TRAIN_AGENT, postTrainAgent);
 };
