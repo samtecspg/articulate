@@ -1,11 +1,17 @@
 import _ from 'lodash';
 
-module.exports = ({ list }) =>
+const cartesianProductOf = async function(entitiesList){
 
-    _.reduce(list, (a, b) =>
+    return await _.reduce(entitiesList, (a, b) => {
 
-        _.flatten(_.map(a, (x) =>
+        return _.flatten(_.map(a, (x) => {
 
-            _.map(b, (y) =>
+            return _.map(b, (y) => {
 
-                x.concat([y]))), true), [[]]);
+                return x.concat([y]);
+            });
+        }), true);
+    }, [[]]);
+};
+
+module.exports = cartesianProductOf;

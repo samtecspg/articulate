@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
     MODEL_AGENT,
     MODEL_DOMAIN,
@@ -14,7 +15,8 @@ module.exports = async function ({ id = null, AgentModel = null }) {
     const { globalService } = await this.server.services();
     const getFirstSayingName = async ({ DomainModel }) => {
 
-        const firstDomainSayingId = await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING)[0];
+        const domainSayingsIds = await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING);
+        const firstDomainSayingId = domainSayingsIds[0];
         const firstDomainSaying = await globalService.findById({ id: firstDomainSayingId, model: MODEL_SAYING });
         return firstDomainSaying.actions.join('+');
     };
@@ -66,6 +68,8 @@ module.exports = async function ({ id = null, AgentModel = null }) {
                 }
                 return { name: domain.domainName, model: domain.model, justER };
             }));
+
+            formattedDomains = _.flatten(formattedDomains);
         }
 
         if (agent.domainRecognizer) {

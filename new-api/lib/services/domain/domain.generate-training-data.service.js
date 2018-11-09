@@ -126,12 +126,10 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
 
         return {
             numberOfSayings: uniqueActionsCount,
-            trainingSet: {
-                [RASA_NLU_DATA]: {
-                    [RASA_COMMON_EXAMPLES]: commonExamples,
-                    [RASA_REGEX_FEATURES]: regexs,
-                    [`${isKeyword ? RASA_KEYWORD_SYNONYMS : RASA_ENTITY_SYNONYMS}`]: keywordSynonyms
-                }
+            [RASA_NLU_DATA]: {
+                [RASA_COMMON_EXAMPLES]: commonExamples,
+                [RASA_REGEX_FEATURES]: regexs,
+                [`${isKeyword ? RASA_KEYWORD_SYNONYMS : RASA_ENTITY_SYNONYMS}`]: keywordSynonyms
             }
         };
     }

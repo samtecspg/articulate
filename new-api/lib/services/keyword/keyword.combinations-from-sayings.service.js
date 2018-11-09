@@ -21,7 +21,7 @@ module.exports = async function ({ keywords, sayings }) {
 
     const {  globalService  } = await this.server.services();
 
-    const usedKeywords = _.compact(_.uniq(_.map(sayings, (saying) => {
+    const usedKeywords = _.compact(_.uniq(_.map(_.map(sayings, (saying) => {
 
         if (saying.keywords) {
             return _.compact(_.map(saying.keywords, (keyword) => {
@@ -30,12 +30,15 @@ module.exports = async function ({ keywords, sayings }) {
             }));
         }
         return null;
+    }), (tuple) => {
+
+        return tuple.join('-');
     })));
 
     const combinations = {};
-    _.map(usedKeywords, (tupleOfKeywords) => {
+    await Promise.all(_.map(usedKeywords, async (key) => {
 
-        const key = tupleOfKeywords.join('-');
+        const tupleOfKeywords = key.split('-');
 
         if (!combinations[key]) {
 
@@ -59,7 +62,7 @@ module.exports = async function ({ keywords, sayings }) {
 
             let keywordsCombinations;
             if (keywordsList.length > 1 && Array.isArray(keywordsList[0])) {
-                keywordsCombinations = globalService.cartesianProduct({ list: keywordsList });
+                keywordsCombinations = await globalService.cartesianProduct(keywordsList);
                 keywordsCombinations = removeDuplicatesAndRepeatedValues(keywordsCombinations);
             }
             else {
@@ -68,7 +71,7 @@ module.exports = async function ({ keywords, sayings }) {
 
             combinations[key] = keywordsCombinations;
         }
-    });
+    }));
 
     return combinations;
 };

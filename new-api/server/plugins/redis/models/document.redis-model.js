@@ -23,6 +23,10 @@ const schema = {
 };
 
 module.exports = class DocumentRedisModel extends BaseModel {
+    constructor() {
+
+        super({ schema });
+    }
 
     static get modelName() {
 

@@ -24,8 +24,8 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
             ducklingDimension
         } = agent.settings;
 
-        const rasaKeywords = await agentService.parseRasaKeywords({ AgentModel, text, trainedDomains, rasaURL });
-        const ducklingKeywords = await agentService.parseDucklingKeywords({ AgentModel, text, timezone, ducklingURL });
+        const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedDomains, rasaURL }));
+        const ducklingKeywords = _.compact(await agentService.parseDucklingKeywords({ AgentModel, text, timezone, ducklingURL }));
         const regexKeywords = await agentService.parseRegexKeywords({ AgentModel, text });
 
         const parsedSystemKeywords = await keywordService.parseSystemKeywords({
@@ -38,10 +38,10 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
             ducklingDimension
         });
         const endTime = new Moment();
-        const duration = Moment.duration(endTime.diff(startTime).asMilliseconds());
+        const duration = Moment.duration(endTime.diff(startTime));
         const maximumSayingScore = _.max(_.compact(_.map(_.map(parsedSystemKeywords, 'action'), 'confidence')));
         const maximumDomainScore = _.max(_.compact(_.map(parsedSystemKeywords, 'domainScore')));
-        return await documentService.create({
+        const documentModel = await documentService.create({
             document: text,
             timeStamp: new Date().toISOString(),
             rasaResults: _.orderBy(parsedSystemKeywords, 'domainScore', 'desc'),
@@ -50,6 +50,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
             maximumDomainScore: maximumDomainScore || null,
             returnModel
         });
+        return documentModel.allProperties();
     }
     catch (error) {
         throw RedisErrorHandler({ error });

@@ -13,7 +13,7 @@ module.exports = async function (
 
     const { [`rasa-nlu`]: rasaNLU } = this.server.app;
 
-    const result = await rasaNLU.parse({
+    const result = await rasaNLU.Parse({
         q: text,
         project,
         model: trainedDomain.model,

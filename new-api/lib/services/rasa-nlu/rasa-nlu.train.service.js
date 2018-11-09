@@ -15,7 +15,7 @@ module.exports = async function (
     const { [`rasa-nlu`]: rasaNLU } = this.server.app;
 
     try {
-        const stringTrainingSet = JSON.stringify(trainingSet.trainingSet, null, 2);
+        const stringTrainingSet = JSON.stringify(trainingSet, null, 2);
         let payload = {
             language,
             pipeline
@@ -28,13 +28,13 @@ module.exports = async function (
             payload,
             baseURL
         });
-        if (oldModel) {
+        /*if (oldModel) {
             await rasaNLU.Models({
                 project,
                 model: oldModel,
                 baseURL
             });
-        }
+        }*/
     }
     catch (error) {
         throw RedisErrorHandler({ error });

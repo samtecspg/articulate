@@ -25,7 +25,7 @@ module.exports = {
                 timezone
             } = request.query;
             try {
-                return await agentService.parse({ id: agentId, text, timezone });
+                return await agentService.parse({ id: agentId, text, timezone, returnModel: true });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

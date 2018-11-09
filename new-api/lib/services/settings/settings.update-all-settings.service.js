@@ -7,8 +7,14 @@ module.exports = async function ({ settingsData, returnModel = false }) {
     const Model = await redis.factory(MODEL_SETTINGS);
     try {
         for (const name of Object.keys(settingsData)){
-            await Model.findByName({ name });
-            await Model.updateInstance({ data: { value: settingsData[name] } });
+            const existingSetting = await Model.findByName({ name });
+            if (!Array.isArray(existingSetting) && existingSetting.id){
+                await Model.updateInstance({ data: { value: settingsData[name] } });
+            }
+            else {
+                const newModel = await redis.factory(MODEL_SETTINGS);
+                await newModel.createInstance({ data: { name, value: settingsData[name] } });
+            }
         }
         const settingsArray = await Model.findAll();
         const settings = {};

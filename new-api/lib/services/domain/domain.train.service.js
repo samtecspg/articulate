@@ -9,7 +9,8 @@ import {
     RASA_MODEL_JUST_ER,
     STATUS_ERROR,
     STATUS_READY,
-    STATUS_TRAINING
+    STATUS_TRAINING,
+    RASA_NLU_DATA
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
@@ -20,11 +21,9 @@ module.exports = async function ({ AgentModel, DomainModel, returnModel = false 
     const { domainService, globalService, rasaNLUService } = await this.server.services();
     let model = Guid.create().toString();
     try {
-        DomainModel.property('status', STATUS_TRAINING);
-        await DomainModel.save();
-        const keywords = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD) });
-        const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING) });
-        const trainingData = domainService.generateTrainingData({ keywords, sayings, extraTrainingData: domain.extraTrainingData });
+        const keywords = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
+        const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING  });
+        const trainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData: domain.extraTrainingData });
         if (trainingData.numberOfSayings === 0) {
             return;
         }
@@ -32,11 +31,16 @@ module.exports = async function ({ AgentModel, DomainModel, returnModel = false 
         model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
         model = domain.domainName + '_' + model;
 
+        DomainModel.property('status', STATUS_TRAINING);
+        await DomainModel.save();
+        
         await rasaNLUService.train({
             project: agent.agentName,
             model,
             oldModel: domain.model || null,
-            trainingSet: trainingData.trainingSet,
+            trainingSet: {
+                [RASA_NLU_DATA]: trainingData[RASA_NLU_DATA]
+            },
             pipeline,
             language: agent.language,
             baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
