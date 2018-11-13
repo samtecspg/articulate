@@ -58,9 +58,9 @@ module.exports = async function ({ id, returnModel = false }) {
                     [RASA_KEYWORD_SYNONYMS]: []
                 };
 
-                await Promise.all(DomainModels.forEach(async (DomainModel) => {
+                for(let DomainModel of DomainModels){
 
-                    const sayingIds = await DomainModel.getAll(MODEL_SAYING);
+                    const sayingIds = await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING);
                     if (sayingIds.length === 0) {
                         return;
                     }
@@ -72,7 +72,7 @@ module.exports = async function ({ id, returnModel = false }) {
                     rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], domainTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
                     rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], domainTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
 
-                }));
+                };
                 const pipeline = agent.settings[CONFIG_SETTINGS_DOMAIN_PIPELINE];
                 const domainRecognizerModel = `${agent.agentName}${RASA_MODEL_DOMAIN_RECOGNIZER}`;
                 await rasaNLUService.train({
