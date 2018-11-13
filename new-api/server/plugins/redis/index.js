@@ -10,7 +10,7 @@ module.exports = {
     pkg: Package,
     async register(server, options) {
 
-        const { host, port, retry, retryTimeout } = options;
+        const { host, port, retry, retryTimeout, prefix } = options;
 
         const retryStrategy = (settings) => {
 
@@ -35,7 +35,7 @@ module.exports = {
             client.once('ready', async () => {
 
                 logger.info('ready');
-                server.app[name] = await InitializeModels({ redis: client, path: `${__dirname}/models` });
+                server.app[name] = await InitializeModels({ redis: client, path: `${__dirname}/models`, prefix });
                 resolve();
             });
 

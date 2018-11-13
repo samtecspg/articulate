@@ -4,6 +4,8 @@ import Dotenv from 'dotenv';
 import Nes from 'nes';
 import Schmervice from 'schmervice';
 import Toys from 'toys';
+import Package from '../package.json';
+
 // Pull .env into process.env
 Dotenv.config({ path: `${__dirname}/.env` });
 
@@ -66,7 +68,8 @@ module.exports = new Confidence.Store({
                     host: process.env.REDIS_HOST || 'redis',
                     port: process.env.REDIS_PORT || 6379,
                     retry: process.env.INIT_RETRY || 10,
-                    retryTimeout: process.env.INIT_RETRY_TIMEOUT || 15000
+                    retryTimeout: process.env.INIT_RETRY_TIMEOUT || 15000,
+                    prefix: process.env.REDIS_PREFIX || Package.name
                 }
             },
             {
