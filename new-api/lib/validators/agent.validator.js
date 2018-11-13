@@ -54,7 +54,6 @@ class AgentValidate {
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     multiDomain: AgentSchema.multiDomain.required(),
-                    domainRecognizer: AgentSchema.domainRecognizer.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
                     extraTrainingData: AgentSchema.extraTrainingData,

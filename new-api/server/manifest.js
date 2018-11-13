@@ -1,9 +1,9 @@
+import Boom from 'boom';
 import Confidence from 'confidence';
 import Dotenv from 'dotenv';
 import Nes from 'nes';
 import Schmervice from 'schmervice';
 import Toys from 'toys';
-
 // Pull .env into process.env
 Dotenv.config({ path: `${__dirname}/.env` });
 
@@ -13,7 +13,22 @@ module.exports = new Confidence.Store({
         host: '0.0.0.0',
         port: process.env.PORT || 7500,
         routes: {
-            cors: true
+            cors: true,
+            validate: {
+                failAction: (request, h, err) => {
+
+                    if (process.env.NODE_ENV === 'production') {
+                        // In prod, log a limited error message and throw the default Bad Request error.
+                        console.error('ValidationError:', err.message);
+                        throw Boom.badRequest(`Invalid request payload input`);
+                    }
+                    else {
+                        // During development, log and respond with the full error.
+                        console.error(err);
+                        throw err;
+                    }
+                }
+            }
         },
         debug: {
             $filter: 'NODE_ENV',
