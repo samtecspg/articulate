@@ -5,7 +5,7 @@ class ActionModel {
     static get schema() {
 
         return {
-            id: Joi.string(), // using UUID on redis
+            id: Joi.number(),
             actionName: Joi.string().trim(),
             slots: Joi.array().items(SlotModel.schema),
             responses: Joi.array().items(Joi.string().trim()),

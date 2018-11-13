@@ -4,7 +4,7 @@ class WebhookModel {
     static get schema() {
 
         return {
-            id: Joi.string(), // using UUID on redis
+            id: Joi.number(),
             webhookUrl: Joi.string().trim(),
             webhookVerb: Joi
                 .string()

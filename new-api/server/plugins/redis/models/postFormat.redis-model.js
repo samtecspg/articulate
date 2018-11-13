@@ -20,8 +20,8 @@ class PostFormatRedisModel extends BaseModel {
     }
 
     static get idGenerator() {
-        //return 'increment';
-        return 'default';
+
+        return 'increment';
     }
 
     static get definitions() {

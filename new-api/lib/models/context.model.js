@@ -4,7 +4,7 @@ class ScenarioModel {
     static get schema() {
 
         return {
-            id: Joi.string(), // using UUID on redis
+            id: Joi.number(),
             session: Joi
                 .string()
                 .description('Session')

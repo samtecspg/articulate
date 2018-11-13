@@ -10,7 +10,7 @@ class DomainModel {
     static get schema() {
 
         return {
-            id: Joi.string(), // using UUID on redis
+            id: Joi.number(),
             agent: Joi.string().trim(),
             domainName: Joi.string().trim(),
             enabled: Joi.boolean(),

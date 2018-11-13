@@ -4,7 +4,7 @@ class PostFormat {
     static get schema() {
 
         return {
-            id: Joi.string().trim(),
+            id: Joi.number(),
             postFormatPayload: Joi.string().trim()
         };
     };

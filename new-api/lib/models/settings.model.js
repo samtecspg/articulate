@@ -4,7 +4,7 @@ class SettingsModel {
     static get schema() {
 
         return {
-            id: Joi.string(), // using UUID on redis
+            id: Joi.number(),
             name: Joi.string().trim().description('Setting Name'),
             value: Joi.any().description('Setting Value (string|object|array)')
         };

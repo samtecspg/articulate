@@ -5,7 +5,7 @@ class KeywordModel {
     static get schema() {
 
         return {
-            id: Joi.string(), // using UUID on redis
+            id: Joi.number(),
             keywordName: Joi.string().trim(),
             uiColor: Joi.string().trim(),
             examples: Joi.array().items(KeywordExampleModel.schema),

@@ -21,16 +21,14 @@ class FrameRedisModel extends BaseModel {
     }
 
     static get idGenerator() {
-        //return 'increment';
-        return 'default';
+
+        return 'increment';
     }
 
     static get definitions() {
 
         return schema;
     }
-
-
 
 }
 

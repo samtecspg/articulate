@@ -1,4 +1,4 @@
-import AsyncRedis from 'async-redis';
+import Redis from 'redis';
 import Package from '../../../package.json';
 import InitializeModels from './lib/initialize-models';
 
@@ -30,7 +30,7 @@ module.exports = {
         };
         await new Promise((resolve, reject) => {
 
-            const client = AsyncRedis.createClient(port, host, { retry_strategy: retryStrategy });
+            const client = Redis.createClient(port, host, { retry_strategy: retryStrategy });
             // Wait for connection
             client.once('ready', async () => {
 

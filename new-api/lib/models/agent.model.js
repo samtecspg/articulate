@@ -4,7 +4,7 @@ class AgentModel {
     static get schema() {
 
         return {
-            id: Joi.string(), // using UUID on redis
+            id: Joi.number(),
             agentName: Joi.string().trim(),
             description: Joi.string().trim(),
             language: Joi.string().trim().valid('en', 'es', 'de', 'fr', 'pt'),
