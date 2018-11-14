@@ -8,7 +8,7 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ keywords, sayings, extraTrainingData, isKeyword = true }) {
+module.exports = async function ({ keywords, sayings, extraTrainingData, isKeyword = true, domainName = null }) {
 
     const {
         keywordService
@@ -63,7 +63,7 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
 
                         return {
                             text: sayingText,
-                            intent: saying.actions.join('+'),
+                            intent: domainName || saying.actions.join('+'),
                             entities: newKeywordsList
                         };
                     });
@@ -83,14 +83,14 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
 
                 return {
                     text: saying.userSays,
-                    intent: saying.actions.join('+'),
+                    intent: domainName || saying.actions.join('+'),
                     entities: newKeywordsList
                 };
             }
 
             return {
                 text: saying.userSays,
-                intent: saying.actions.join('+'),
+                intent: domainName || saying.actions.join('+'),
                 entities: []
             };
         })));

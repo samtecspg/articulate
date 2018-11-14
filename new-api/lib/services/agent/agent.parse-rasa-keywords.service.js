@@ -23,14 +23,15 @@ module.exports = async function (
 
     domainRecognizerTrainedDomain = domainRecognizerTrainedDomain.length > 0 ? domainRecognizerTrainedDomain[0] : null;
     let domainRecognitionResults;
-    /*if (domainRecognizerTrainedDomain) {
+    if (domainRecognizerTrainedDomain) {
 
         domainRecognitionResults = await rasaNLUService.parse({
             text,
             project: agent.agentName,
-            trainedDomain: domainRecognizerTrainedDomain
+            trainedDomain: domainRecognizerTrainedDomain,
+            baseURL: rasaURL
         });
-    }*/
+    }
     return Promise.all(trainedDomains.map(async (trainedDomain) => {
 
         if (!domainRecognitionResults || trainedDomain.name !== domainRecognitionResults.domain) {
@@ -43,7 +44,7 @@ module.exports = async function (
                 baseURL: rasaURL
             });
             const endTime = new Moment();
-            const duration = Moment.duration(endTime.diff(startTime));
+            const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
             domainRasaResults = { ...domainRasaResults, ...{ elapsed_time_ms: duration } };
             if (domainRecognitionResults) {
                 let domainScore = _.filter(domainRecognitionResults[RASA_ACTION_RANKING], (recognizedDomain) => {

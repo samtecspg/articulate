@@ -64,10 +64,11 @@ module.exports = async function ({ id, returnModel = false }) {
                     if (sayingIds.length === 0) {
                         return;
                     }
+                    const domainName = DomainModel.property('domainName');
                     const extraTrainingData = DomainModel.property('extraTrainingData');
                     const keywords = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
                     const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
-                    const domainTrainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData });
+                    const domainTrainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData, domainName });
                     rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], domainTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
                     rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], domainTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
                     rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], domainTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);

@@ -13,7 +13,7 @@ module.exports = async function ({ AgentModel, text, timezone, ducklingURL }) {
         baseURL: ducklingURL
     });
     const endTime = new Moment();
-    const duration = Moment.duration(endTime.diff(startTime));
+    const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
     return ducklingParseResponse.map((ducklingParse) => {
 
         return { ...ducklingParse, ...{ elapsed_time_ms: duration / ducklingParseResponse.length } };

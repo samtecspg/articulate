@@ -38,7 +38,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
             ducklingDimension
         });
         const endTime = new Moment();
-        const duration = Moment.duration(endTime.diff(startTime));
+        const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         const maximumSayingScore = _.max(_.compact(_.map(_.map(parsedSystemKeywords, 'action'), 'confidence')));
         const maximumDomainScore = _.max(_.compact(_.map(parsedSystemKeywords, 'domainScore')));
         const documentModel = await documentService.create({
