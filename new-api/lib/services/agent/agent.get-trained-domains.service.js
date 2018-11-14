@@ -64,7 +64,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
                 const domain = DomainModel.allProperties();
                 const justER = domain.model.indexOf(RASA_MODEL_JUST_ER) !== -1;
                 if (justER) {
-                    return [{ name: 'default', model: domain.model, justER, saying: await getFirstSayingName({ DomainModel }) }];
+                    return [{ name: domain.domainName, model: domain.model, justER, saying: await getFirstSayingName({ DomainModel }) }];
                 }
                 return { name: domain.domainName, model: domain.model, justER };
             }));
