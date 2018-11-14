@@ -56,6 +56,8 @@ export function* getSayings(payload) {
             tempFilter,
             skip,
             limit,
+            field: 'id',
+            direction: 'DESC',
             loadDomainId: true,
         });
         yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));

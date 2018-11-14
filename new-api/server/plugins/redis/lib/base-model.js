@@ -70,8 +70,21 @@ module.exports = class BaseModel extends NohmModel {
         let ids = [];
         field = field ? field : this.defaultSortField();
         if (field) {
-            limit = getLimit({ skip, limit });
-            ids = await this.sort({ field, direction, limit });
+            if (field === 'id'){
+                if (direction === 'DESC'){
+                    ids = ids.reverse();
+                }
+                if (limit === -1){
+                    ids = ids.slice(skip, ids.length);
+                }
+                else {
+                    ids = ids.slice(skip, skip + limit);
+                }
+            }
+            else {
+                limit = getLimit({ skip, limit });
+                ids = await this.sort({ field, direction, limit });
+            }
         }
         else {
             ids = await this.find();
@@ -100,8 +113,21 @@ module.exports = class BaseModel extends NohmModel {
         let sortedIds = [];
         field = field ? field : this.defaultSortField();
         if (field) {
-            limit = getLimit({ skip, limit });
-            sortedIds = await this.sort({ field, direction, limit }, ids);
+            if (field === 'id'){
+                if (direction === 'DESC'){
+                    sortedIds = ids.reverse();
+                }
+                if (limit === -1){
+                    sortedIds = sortedIds.slice(skip, sortedIds.length);
+                }
+                else {
+                    sortedIds = sortedIds.slice(skip, skip + limit);
+                }
+            }
+            else {
+                limit = getLimit({ skip, limit });
+                sortedIds = await this.sort({ field, direction, limit }, ids);
+            }
         }
         else {
             if (limit === -1){
