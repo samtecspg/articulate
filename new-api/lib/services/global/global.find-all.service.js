@@ -12,7 +12,7 @@ module.exports = async function ({ skip, limit, direction, field, model, returnM
         }
         const totalCount = await Model.count();
         const data = allResultsModels.map((resultModel) => resultModel.allProperties());
-        return { data, totalCount }
+        return { data, totalCount };
     }
     catch (error) {
         throw RedisErrorHandler({ error });

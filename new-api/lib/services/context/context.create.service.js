@@ -6,7 +6,7 @@ module.exports = async function ({ data, returnModel = false }) {
     const { redis } = this.server.app;
     const Model = await redis.factory(MODEL_CONTEXT);
     try {
-        await Model.createInstance({ data });
+        await Model.createInstance({ data, ...{ frames: [] } });
         return returnModel ? Model : Model.allProperties();
     }
     catch (error) {

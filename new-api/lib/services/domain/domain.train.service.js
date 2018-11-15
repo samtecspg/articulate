@@ -7,10 +7,10 @@ import {
     MODEL_KEYWORD,
     MODEL_SAYING,
     RASA_MODEL_JUST_ER,
+    RASA_NLU_DATA,
     STATUS_ERROR,
     STATUS_READY,
-    STATUS_TRAINING,
-    RASA_NLU_DATA
+    STATUS_TRAINING
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
@@ -33,7 +33,7 @@ module.exports = async function ({ AgentModel, DomainModel, returnModel = false 
 
         DomainModel.property('status', STATUS_TRAINING);
         await DomainModel.save();
-        
+
         await rasaNLUService.train({
             project: agent.agentName,
             model,

@@ -2,8 +2,7 @@ import Boom from 'boom';
 import {
     PARAM_AGENT_ID,
     ROUTE_AGENT,
-    ROUTE_SAYING,
-    QUERY_LOAD_DOMAIN_ID
+    ROUTE_SAYING
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';
 

@@ -75,9 +75,9 @@ module.exports = async function ({ modelPath, isFindById, isSingleResult, skip, 
         if (isFindById || isSingleResult){
             return { ...data };
         }
-        else {
-            return { data, totalCount };
-        }
+
+        return { data, totalCount };
+
     }
     catch (error) {
         throw RedisErrorHandler({ error });

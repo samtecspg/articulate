@@ -10,7 +10,8 @@ module.exports = {
     pkg: Package,
     async register(server) {
 
-        server.app[name] = await InitializeHelpers({ Handlebars, path: `${__dirname}/helpers` });
+        await InitializeHelpers({ Handlebars, path: `${__dirname}/helpers` });
+        server.app[name] = Handlebars;
         logger.info('registered');
     }
 };

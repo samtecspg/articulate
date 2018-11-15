@@ -41,7 +41,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
         const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         const maximumSayingScore = _.max(_.compact(_.map(_.map(parsedSystemKeywords, 'action'), 'confidence')));
         const maximumDomainScore = _.max(_.compact(_.map(parsedSystemKeywords, 'domainScore')));
-        const documentModel = await documentService.create({
+        return await documentService.create({
             document: text,
             timeStamp: new Date().toISOString(),
             rasaResults: _.orderBy(parsedSystemKeywords, 'domainScore', 'desc'),
@@ -50,7 +50,6 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
             maximumDomainScore: maximumDomainScore || null,
             returnModel
         });
-        return documentModel.allProperties();
     }
     catch (error) {
         throw RedisErrorHandler({ error });

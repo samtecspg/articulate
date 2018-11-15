@@ -2,10 +2,7 @@ import { MODEL_FRAME } from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {
-    intent: {
-        type: 'string'
-    },
-    scenario: {
+    action: {
         type: 'string'
     },
     slots: {
@@ -14,6 +11,11 @@ const schema = {
 };
 
 class FrameRedisModel extends BaseModel {
+
+    constructor() {
+
+        super({ schema });
+    }
 
     static get modelName() {
 

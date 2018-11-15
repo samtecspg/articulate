@@ -42,7 +42,8 @@ module.exports = async function (
         sayingData.keywords = _.sortBy(sayingData.keywords, (keyword) => keyword.start);
 
         // Create lists of keywords to be used later
-        const agentKeywordIds = await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD);
+        let agentKeywordIds = await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD);
+        agentKeywordIds = agentKeywordIds.map((agentKeywordId) => parseInt(agentKeywordId));
         const keywordIds = keywordService.splitAddedOldRemovedIds({
             oldKeywords: SayingModel.isLoaded ? _(SayingModel.property('keywords')) : [],
             newKeywords: sayingData.keywords

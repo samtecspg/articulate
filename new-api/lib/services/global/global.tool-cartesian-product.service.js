@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const cartesianProductOf = async function(entitiesList){
+const cartesianProductOf = async function (entitiesList) {
 
     return await _.reduce(entitiesList, (a, b) => {
 

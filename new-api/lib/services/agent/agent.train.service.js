@@ -38,10 +38,10 @@ module.exports = async function ({ id, returnModel = false }) {
         await AgentModel.save();
         //TODO: Publish agent update
         if (agent.enableModelsPerDomain) {
-            const DomainModels = await globalService.loadAllByIds({ 
+            const DomainModels = await globalService.loadAllByIds({
                 ids: await AgentModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN),
                 model: MODEL_DOMAIN,
-                returnModel: true 
+                returnModel: true
             });
             //const trainingLimit = rasaStatus[RASA_MAX_TRAINING_PROCESSES] - rasaStatus[RASA_CURRENT_TRAINING_PROCESSES];
             const DomainModelsToTrain = DomainModels.filter((DomainModel) => {
@@ -58,7 +58,7 @@ module.exports = async function ({ id, returnModel = false }) {
                     [RASA_KEYWORD_SYNONYMS]: []
                 };
 
-                for(let DomainModel of DomainModels){
+                for (const DomainModel of DomainModels) {
 
                     const sayingIds = await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING);
                     if (sayingIds.length === 0) {
@@ -73,7 +73,7 @@ module.exports = async function ({ id, returnModel = false }) {
                     rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], domainTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
                     rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], domainTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
 
-                };
+                }
                 const pipeline = agent.settings[CONFIG_SETTINGS_DOMAIN_PIPELINE];
                 const domainRecognizerModel = `${agent.agentName}${RASA_MODEL_DOMAIN_RECOGNIZER}`;
                 await rasaNLUService.train({

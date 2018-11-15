@@ -10,10 +10,10 @@ import {
 module.exports = async function ({ agent, action, context, currentContext, rasaResult, text }) {
 
     const { agentService, keywordService } = await this.server.services();
-    let slots = null; //TODO: need to move this somewhere
-    const conversationStateObject = null; //TODO: need to refactor the CSO creation since is no longer passed to other functions
+    //TODO: need to refactor the CSO creation since is no longer passed to other functions
+    const conversationStateObject = { agent, action, context, currentContext, rasaResult, text };
     //TODO: remove context update, and move it somewhere else
-    const lastContextIndex = context.length - 1;
+    const lastFrame = context.frames[context.frames.length - 1];
     //MARK: action.slots > 0
     if (action.slots && action.slots.length > 0) {
         //MARK: Create an array of slot names
@@ -23,7 +23,7 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         //MARK: Check if slot from action.slot exists in context slot and return it if they are required
         const requiredSlots = _.filter(action.slots, (slot) => {
 
-            context[lastContextIndex].slots[slot.slotName] = currentContext.slots[slot.slotName] ? currentContext.slots[slot.slotName] : '';
+            lastFrame.slots[slot.slotName] = currentContext.slots[slot.slotName] ? currentContext.slots[slot.slotName] : '';
             return slot.isRequired;
         });
         //MARK: create list if slots type list
@@ -44,11 +44,11 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                 //If the slot is a list of elemnts
                 if (isListActionSlotName.indexOf(slotName) > -1) {
                     //If there isn't a value for this slot name in the context
-                    if (!context[lastContextIndex].slots[slotName] || context[lastContextIndex].slots[slotName] === '') {
+                    if (!lastFrame.slots[slotName] || lastFrame.slots[slotName] === '') {
                         //Get the original and parsed value of the keyword
                         const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
                         //Add these values to the context as a new slot
-                        context[lastContextIndex].slots[slotName] = {
+                        lastFrame.slots[slotName] = {
                             value: keywordValue.value,
                             original: keywordValue.original
                         };
@@ -56,13 +56,13 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                     //If an slot in the context already exists for the recognized slot
                     else {
                         //If the value of the slot in the context is an array (This means that if the slot is a list)
-                        if (Array.isArray(context[lastContextIndex].slots[slotName].value)) {
+                        if (Array.isArray(lastFrame.slots[slotName].value)) {
                             //If the slot haven't been overrided
                             if (overridedSlots.indexOf(slotName) === -1) {
                                 //Add the slot name to the list of overrided slots
                                 overridedSlots.push(slotName);
                                 //And clear the context of this slot
-                                context[lastContextIndex].slots[slotName] = {
+                                lastFrame.slots[slotName] = {
                                     value: [],
                                     original: []
                                 };
@@ -70,21 +70,21 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                             //Get the original and parsed value of the keyword
                             const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
                             //Push the recognized values to the current context slot value and original attribute
-                            context[lastContextIndex].slots[slotName].value.push(keywordValue.value);
-                            context[lastContextIndex].slots[slotName].original.push(keywordValue.original);
+                            lastFrame.slots[slotName].value.push(keywordValue.value);
+                            lastFrame.slots[slotName].original.push(keywordValue.original);
                         }
                         //If the slot ias a list, and it exists in the context but it wasn't an array
                         else {
                             //Get the original and parsed value of the keyword
                             const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
                             //Transform the current slot in the context to an array and insert the existent values in this array
-                            context[lastContextIndex].slots[slotName] = {
-                                value: [context[lastContextIndex].slots[slotName].value],
-                                original: [context[lastContextIndex].slots[slotName].original]
+                            lastFrame.slots[slotName] = {
+                                value: [lastFrame.slots[slotName].value],
+                                original: [lastFrame.slots[slotName].original]
                             };
                             //Push the new recognized values to the list
-                            context[lastContextIndex].slots[slotName].value.push(keywordValue.value);
-                            context[lastContextIndex].slots[slotName].original.push(keywordValue.original);
+                            lastFrame.slots[slotName].value.push(keywordValue.value);
+                            lastFrame.slots[slotName].original.push(keywordValue.original);
                             overridedSlots.push(slotName);
                         }
                     }
@@ -103,10 +103,10 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                             return b.end - a.end;
                         });
 
-                        context[lastContextIndex].slots[slotName] = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text });
+                        lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text });
                     }
                     else {
-                        context[lastContextIndex].slots[slotName] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                        lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
 
                     }
 
@@ -117,11 +117,11 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                 //Check if it is a spacy or duckling system keyword
                 if (recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_SPACY) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_DUCKLING) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_REGEX) !== -1) {
                     //If there is a dictionary of slots in the current context, use this dictionary, if not, create an empty dictionary of slots
-                    context[lastContextIndex].slots = context[lastContextIndex].slots ? context[lastContextIndex].slots : {};
+                    lastFrame.slots = lastFrame.slots ? lastFrame.slots : {};
                     //If in the current dictionary of slots exists a dictionary for system keywords, use it, else create an empty dir for sys keywords
-                    context[lastContextIndex].slots.sys = context[lastContextIndex].slots.sys ? context[lastContextIndex].slots.sys : {};
+                    lastFrame.slots.sys = lastFrame.slots.sys ? lastFrame.slots.sys : {};
                     //Add the recognized system keywords to the dir of system keywords in the slots dir of the current context
-                    context[lastContextIndex].slots.sys[recognizedKeyword.keyword.replace(KEYWORD_PREFIX_SYS, '')] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                    lastFrame.slots.sys[recognizedKeyword.keyword.replace(KEYWORD_PREFIX_SYS, '')] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
                 }
             }
             //Finally return the name of the recognized keyword for further checks
@@ -131,21 +131,21 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
 
             return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentContext.slots[slot.slotName];
         });
-        slots = currentContext.slots;
+        conversationStateObject.slots = currentContext.slots;
         if (missingKeywords.length > 0) {
-            return agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject });
+            const textResponse = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject });
+            return { textResponse };
         }
     }
     //MARK: action.slots === 0
     else {
-        slots = {};
         const recognizedKeywords = rasaResult.keywords;
         _.map(recognizedKeywords, (recognizedKeyword) => {
 
             if (recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_SPACY) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_DUCKLING) !== -1) {
-                context[lastContextIndex].slots = context[lastContextIndex].slots ? context[lastContextIndex].slots : {};
-                context[lastContextIndex].slots.sys = context[lastContextIndex].slots.sys ? context[lastContextIndex].slots.sys : {};
-                context[lastContextIndex].slots.sys[recognizedKeyword.keyword.replace(KEYWORD_PREFIX_SYS, '')] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                lastFrame.slots = lastFrame.slots ? lastFrame.slots : {};
+                lastFrame.slots.sys = lastFrame.slots.sys ? lastFrame.slots.sys : {};
+                lastFrame.slots.sys[recognizedKeyword.keyword.replace(KEYWORD_PREFIX_SYS, '')] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
             }
             return recognizedKeyword.keyword;
         });
@@ -162,8 +162,9 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         if (webhookResponse.textResponse) {
             return webhookResponse.textResponse;
         }
-        const textResponse = agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
+        const textResponse = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
         return { ...webhookResponse, ...{ textResponse } };
     }
-    return agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
+    const textResponse = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
+    return { textResponse };
 };

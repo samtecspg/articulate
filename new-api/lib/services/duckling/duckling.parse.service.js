@@ -13,7 +13,7 @@ module.exports = async function (
         payload: {
             text,
             lang: language,
-            tz: timezone,
+            tz: timezone
         },
         baseURL
     });

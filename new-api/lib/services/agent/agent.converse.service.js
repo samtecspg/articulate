@@ -3,7 +3,9 @@ import {
     CSO_AGENT,
     CSO_CONTEXT,
     CSO_TIMEZONE_DEFAULT,
+    MODEL_ACTION,
     MODEL_AGENT,
+    MODEL_DOMAIN,
     PARAM_DOCUMENT_RASA_RESULTS
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
@@ -12,7 +14,7 @@ import RedisErrorHandler from '../../errors/redis.error-handler';
 module.exports = async function ({ id, sessionId, text, timezone, additionalKeys = null }) {
 
     const { redis, handlebars } = this.server.app;
-    const { agentService, contextService } = await this.server.services();
+    const { agentService, contextService, globalService } = await this.server.services();
 
     //MARK: get all the keywords for all the domains
     const getKeywordsFromRasaResults = ({ rasaResults }) => {
@@ -122,13 +124,13 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
     const response = async ({ conversationStateObject }) => {
 
         //MARK: Get the last frame context from the context array
-        conversationStateObject.currentContext = _.last(conversationStateObject);
+        conversationStateObject.currentContext = _.last(conversationStateObject.context.frames);
         //MARK: CSO.parse ===true
         if (conversationStateObject.parse) {
             //MARK: get domain recognizer, 1 domain or list of keywords from all domains
             conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, domainClassifierThreshold: conversationStateObject.agent.domainClassifierThreshold });
             //MARK: if there is an action, look for it in the agent actions
-            conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult });
+            conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult, agentActions: conversationStateObject.agent.actions });
             //MARK: if there is an action but no responses call RespondFallback and persist context
             if (conversationStateObject.action && (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0)) {
                 const actionResponse = agentService.converseGenerateResponse({
@@ -150,14 +152,16 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             if (conversationStateObject.action && conversationStateObject.domain && conversationStateObject.rasaResult.action.confidence > conversationStateObject.domain.actionThreshold) {
                 //MARK: if the current context is empty or the current OR if the action name is the same as the current context action add a new frame with empty slots
                 if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.action.name !== conversationStateObject.currentContext.action)) {
-                    conversationStateObject.context.push({
+                    const frame = {
                         action: conversationStateObject.rasaResult.action.name,
                         slots: {}
-                    });
+                    };
+                    conversationStateObject.context.frames.push(frame);
                     //MARK: get the last context, but it is the same that was pushed above?
-                    conversationStateObject.currentContext = _.last(conversationStateObject);
+                    conversationStateObject.currentContext = frame;
                 }
-                const actionResponse = agentService.converseGenerateResponse({
+                const actionResponse = await agentService.converseGenerateResponse({
+                    agent: conversationStateObject.agent,
                     action: conversationStateObject.action,
                     context: conversationStateObject.context,
                     currentContext: conversationStateObject.currentContext,
@@ -165,7 +169,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
                     text: conversationStateObject.text
                 });
                 //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
+                await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                 return actionResponse;
             }
             //MARK: if there is an action and a domain, check if the action confidence y bigger than the domain threshold === false
@@ -220,17 +224,19 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
     const conversationStateObject = {};
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
-        const context = contextService.findBySession({ sessionId, loadFrames: false });
+        const context = await contextService.findBySession({ sessionId, loadFrames: true });
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true });
 
         conversationStateObject[CSO_CONTEXT] = context;
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
+        conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false });
+        conversationStateObject[CSO_AGENT].domains = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_DOMAIN, returnModel: false });
         conversationStateObject.docId = ParsedDocument.id;
         conversationStateObject.parse = ParsedDocument.property(PARAM_DOCUMENT_RASA_RESULTS);
         conversationStateObject.text = text;
         conversationStateObject.sessionId = sessionId;
         conversationStateObject.timezone = timezone || conversationStateObject[CSO_AGENT].timezone || CSO_TIMEZONE_DEFAULT;
-        if (additionalKeys) {
+        if (!_.isEmpty(additionalKeys)) {
             _.mapKeys(additionalKeys, (value, key) => {
 
                 if (!conversationStateObject[key]) {
@@ -239,7 +245,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             });
         }
 
-        const agentToolResponse = response({ conversationStateObject }); // comes from AgentTools.respond
+        const agentToolResponse = await response({ conversationStateObject }); // comes from AgentTools.respond
 
         agentToolResponse.docId = conversationStateObject.docId;
         let postFormatPayloadToUse;

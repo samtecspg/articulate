@@ -12,6 +12,11 @@ const schema = {
 
 class ContextRedisModel extends BaseModel {
 
+    constructor() {
+
+        super({ schema });
+    }
+
     static get modelName() {
 
         return MODEL_CONTEXT;

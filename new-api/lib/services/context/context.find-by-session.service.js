@@ -13,8 +13,7 @@ module.exports = async function ({ sessionId, loadFrames = false, returnModel = 
         await Model.findBySessionId({ sessionId });
         //Only load frames if we are NOT returning the model, or else we can't create and object with a frames list.
         if (!returnModel && loadFrames) {
-            await globalService.loadAllByIds({ ids: await Model.getAll(MODEL_FRAME, MODEL_FRAME), returnModel });
-            const frames = await globalService.loadAllByIds({ ids: await Model.getAll(MODEL_FRAME, MODEL_FRAME), returnModel });
+            const frames = await globalService.loadAllLinked({ parentModel: Model, model: MODEL_FRAME, returnModel });
             const context = Model.allProperties();
             context.frames = frames;
             return context;
