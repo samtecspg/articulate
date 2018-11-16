@@ -14,9 +14,9 @@ module.exports = {
         handler: async (request) => {
 
             const { contextService } = await request.services();
-            const { [PARAM_SESSION]: session } = request.params;
+            const { [PARAM_SESSION]: sessionId } = request.params;
             try {
-                return await contextService.findBySession({ session });
+                return await contextService.findBySession({ sessionId });
             }
             catch ({ message, statusCode }) {
 
