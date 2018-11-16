@@ -54,6 +54,7 @@ export const PARAM_SKIP = 'skip';
 export const PARAM_LIMIT = 'limit';
 export const PARAM_DIRECTION = 'direction';
 export const PARAM_SESSION = 'sessionId';
+export const PARAM_LOAD_FRAMES = 'loadFrames';
 export const PARAM_TEXT = 'text';
 export const PARAM_TIMEZONE = 'timezone';
 

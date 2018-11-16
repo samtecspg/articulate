@@ -1,5 +1,6 @@
 import Boom from 'boom';
 import {
+    PARAM_LOAD_FRAMES,
     PARAM_SESSION,
     ROUTE_CONTEXT
 } from '../../../util/constants';
@@ -14,9 +15,14 @@ module.exports = {
         handler: async (request) => {
 
             const { contextService } = await request.services();
-            const { [PARAM_SESSION]: sessionId } = request.params;
+            const {
+                [PARAM_SESSION]: sessionId
+            } = request.params;
+            const {
+                [PARAM_LOAD_FRAMES]: loadFrames
+            } = request.query;
             try {
-                return await contextService.findBySession({ sessionId });
+                return await contextService.findBySession({ sessionId, loadFrames });
             }
             catch ({ message, statusCode }) {
 

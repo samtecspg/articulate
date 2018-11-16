@@ -1,4 +1,8 @@
-import { PARAM_SESSION } from '../../util/constants';
+import Joi from 'joi';
+import {
+    PARAM_LOAD_FRAMES,
+    PARAM_SESSION
+} from '../../util/constants';
 
 const ContextModel = require('../models/context.model').schema;
 
@@ -18,6 +22,12 @@ class ContextValidate {
 
                 return {
                     [PARAM_SESSION]: ContextModel.session.required()
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    [PARAM_LOAD_FRAMES]: Joi.boolean().optional().default(false)
                 };
             })()
         };
