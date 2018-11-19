@@ -29,15 +29,17 @@ import {
   makeSelectAgent
 } from './selectors';
 
-export function* getConverse(payload) {
+export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
   if (agent.id){
     const { api, message } = payload;
     try {
-        const response = yield call(api.agent.getAgentIdConverse, {
-          id: agent.id,
-          sessionId: 'articulateUI',
-          text: message.message,
+        const response = yield call(api.agent.postAgentAgentidConverse, {
+          agentId: agent.id,
+          body: {
+            sessionId: 'articulateUI',
+            text: message.message,
+          }
         });
         yield put(respondMessage({
           author: agent.agentName,
@@ -45,6 +47,7 @@ export function* getConverse(payload) {
           message: response.obj.textResponse,
         }));
     } catch (err) {
+      console.log(err);
         yield put(respondMessage({
           author: 'Error',
           docId: null,
@@ -102,7 +105,7 @@ export function* postTrainAgent(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
-  yield takeLatest(SEND_MESSAGE, getConverse);
+  yield takeLatest(SEND_MESSAGE, postConverse);
   yield takeLatest(RESET_SESSION, deleteSession);
   yield takeLatest(LOAD_DOC, getDoc);
   yield takeLatest(TRAIN_AGENT, postTrainAgent);

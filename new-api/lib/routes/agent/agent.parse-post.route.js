@@ -25,7 +25,8 @@ module.exports = {
                 timezone
             } = request.payload;
             try {
-                return await agentService.parse({ id: agentId, text, timezone, returnModel: true });
+                const documentModel = await agentService.parse({ id: agentId, text, timezone, returnModel: true });
+                return await documentModel.allProperties();
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

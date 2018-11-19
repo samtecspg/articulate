@@ -51,7 +51,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
                     message: `The Agent id=[${agent.id}] doesn't have any domains.`
                 }));
             }
-            const TrainedDomainModels = DomainModels.filter((DomainModel) => DomainModel.property('lastTraining'));
+            const TrainedDomainModels = DomainModels.filter((DomainModel) => DomainModel.property('model'));
 
             if (TrainedDomainModels.length === 0) {
                 return Promise.reject(GlobalDefaultError({

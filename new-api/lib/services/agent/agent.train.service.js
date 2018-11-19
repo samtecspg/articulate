@@ -52,6 +52,7 @@ module.exports = async function ({ id, returnModel = false }) {
 
             //Train domain identifier
             if (DomainModels.length > 1) {
+                let countOfDomainsWithData = 0;
                 const rasaNLUData = {
                     [RASA_COMMON_EXAMPLES]: [],
                     [RASA_REGEX_FEATURES]: [],
@@ -61,33 +62,34 @@ module.exports = async function ({ id, returnModel = false }) {
                 for (const DomainModel of DomainModels) {
 
                     const sayingIds = await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING);
-                    if (sayingIds.length === 0) {
-                        return;
+                    if (sayingIds.length > 0) {
+                        countOfDomainsWithData++;
+                        const domainName = DomainModel.property('domainName');
+                        const extraTrainingData = DomainModel.property('extraTrainingData');
+                        const keywords = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
+                        const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
+                        const domainTrainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData, domainName });
+                        rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], domainTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
+                        rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], domainTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
+                        rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], domainTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
                     }
-                    const domainName = DomainModel.property('domainName');
-                    const extraTrainingData = DomainModel.property('extraTrainingData');
-                    const keywords = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
-                    const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
-                    const domainTrainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData, domainName });
-                    rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], domainTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
-                    rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], domainTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
-                    rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], domainTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
-
                 }
-                const pipeline = agent.settings[CONFIG_SETTINGS_DOMAIN_PIPELINE];
-                const domainRecognizerModel = `${agent.agentName}${RASA_MODEL_DOMAIN_RECOGNIZER}`;
-                await rasaNLUService.train({
-                    project: agent.agentName,
-                    model: domainRecognizerModel,
-                    oldModel: domainRecognizerModel,
-                    trainingSet: {
-                        [RASA_NLU_DATA]: rasaNLUData
-                    },
-                    pipeline,
-                    language: agent.language,
-                    baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
-                });
-                AgentModel.property('domainRecognizer', true);
+                if (countOfDomainsWithData > 1){
+                    const pipeline = agent.settings[CONFIG_SETTINGS_DOMAIN_PIPELINE];
+                    const domainRecognizerModel = `${agent.agentName}${RASA_MODEL_DOMAIN_RECOGNIZER}`;
+                    await rasaNLUService.train({
+                        project: agent.agentName,
+                        model: domainRecognizerModel,
+                        oldModel: domainRecognizerModel,
+                        trainingSet: {
+                            [RASA_NLU_DATA]: rasaNLUData
+                        },
+                        pipeline,
+                        language: agent.language,
+                        baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
+                    });
+                    AgentModel.property('domainRecognizer', true);
+                }
             }
 
             //Train each domain that need it

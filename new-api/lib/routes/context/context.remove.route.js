@@ -14,9 +14,9 @@ module.exports = {
         handler: async (request) => {
 
             const { contextService } = await request.services();
-            const { [PARAM_SESSION]: session } = request.payload;
+            const { [PARAM_SESSION]: sessionId } = request.params;
             try {
-                return await contextService.removeBySession({ session });
+                return await contextService.removeBySession({ sessionId });
             }
             catch ({ message, statusCode }) {
 
