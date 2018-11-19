@@ -250,8 +250,8 @@ function mapDispatchToProps(dispatch) {
     onDeleteSaying: (sayingId, domainId) => {
       dispatch(deleteSaying(sayingId, domainId));
     },
-    onTagKeyword: (filter, page, saying, taggedText, keywordId, keywordName) => {
-      dispatch(tagKeyword(filter, page, saying, taggedText, keywordId, keywordName));
+    onTagKeyword: (filter, page, saying, value, start, end, keywordId, keywordName) => {
+      dispatch(tagKeyword(filter, page, saying, value, start, end, keywordId, keywordName));
     },
     onUntagKeyword: (filter, page, saying, start, end) => {
       dispatch(untagKeyword(filter, page, saying, start, end));

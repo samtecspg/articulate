@@ -135,10 +135,7 @@ export function* putSaying(payload) {
 }
 
 export function* tagKeyword(payload) {
-    const { api, saying, taggedText, keywordId, keywordName, filter, page } = payload;
-    const start = saying.userSays.indexOf(taggedText);
-    const end = start + taggedText.length;
-    const value = saying.userSays.substring(start, end);
+    const { api, saying, value, start, end, keywordId, keywordName, filter, page } = payload;
     const mutableSaying = Immutable.asMutable(saying, { deep: true} );
     const keywordToAdd = {
         value,

@@ -485,14 +485,16 @@ export function deleteSayingError(error) {
   };
 }
 
-export function tagKeyword(filter, page, saying, taggedText, keywordId, keywordName){
+export function tagKeyword(filter, page, saying, value, start, end, keywordId, keywordName){
   return {
     type: TAG_KEYWORD,
     apiCall: true,
     filter,
     page,
     saying,
-    taggedText,
+    value,
+    start,
+    end,
     keywordId,
     keywordName,
   }

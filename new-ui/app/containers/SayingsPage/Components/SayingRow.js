@@ -81,15 +81,6 @@ const styles = {
     }
 }
 
-const getCountOfUnasignedActions = (sayingActions, agentActions) => {
-
-    const unasignedActions = agentActions.filter((action) => {
-
-        return sayingActions.indexOf(action.actionName) === -1;
-    });
-    return unasignedActions.length;
-};
-
 /* eslint-disable react/prefer-stateless-function */
 class SayingRow extends React.Component {
 
@@ -102,36 +93,37 @@ class SayingRow extends React.Component {
     state = {
         openActions: false,
         openKeywords: false,
-        actionsDialogX: 16,
-        actionsDialogY: 16,
-        keywordsDialogX: 16,
-        keywordsDialogY: 16,
+        anchorEl: null,
+        highlightedValue: null,
+        start: null,
+        end: null,
     };
 
     handleClose = (selectName) => {
         if (selectName === 'actions'){
-            this.setState({ openActions: false });
+            this.setState({
+                openActions: false,
+                anchorEl: null
+            });
         }
         if (selectName === 'keywords'){
-            this.setState({ openKeywords: false });
+            this.setState({
+                openKeywords: false,
+                anchorEl: null
+            });
         }
     };
 
-    handleOpen = (selectName, target, countOfUnasignedActions) => {
-        const newX = target.x + 20;
-        let newY = window.innerHeight - target.y < 210 ? target.y - 180 : target.y - 80;
-        newY += countOfUnasignedActions === 1 ? 56 : 0;
+    handleOpen = (selectName, target) => {
         if (selectName === 'actions'){
             this.setState({
-                actionsDialogX: newX,
-                actionsDialogY: newY,
+                anchorEl: target,
                 openActions: true
             });
         }
         if (selectName === 'keywords'){
             this.setState({
-                keywordsDialogX: newX,
-                keywordsDialogY: newY,
+                anchorEl: target,
                 openKeywords: true
             });
         }
@@ -155,22 +147,25 @@ class SayingRow extends React.Component {
                 const keyword = selectedValue.split(',');
                 const keywordId = keyword[0]; //TODO: change this to parseInt(keyword[0]) when the id of the keyword transforms into an integer
                 const keywordName = keyword[1];
-                this.props.onTagKeyword(this.props.saying, window.getSelection().toString(), keywordId, keywordName);
+                this.props.onTagKeyword(this.props.saying, this.state.highlightedValue, this.state.start, this.state.end, keywordId, keywordName);
             }
         }
     }
 
-    onHighlight(){
+    onHighlight(evt){
         const selection = window.getSelection();
         const text = selection.toString();
+        const offset = this.props.saying.userSays.indexOf(selection.anchorNode.textContent); //calculates where the chunk starts in the saying
+        const start = selection.getRangeAt(0).startOffset + offset; 
+        const end = selection.getRangeAt(0).endOffset + offset;
+        const highlightedValue = selection.anchorNode.parentElement.parentElement.innerText.substring(start, end);
         if(text.trim()){
-            const range = selection.getRangeAt(0);
-            const clientRects = range.getClientRects();
-            const target = {
-                x: clientRects[0].x + clientRects[0].width - 30,
-                y: clientRects[0].y,
-            }
-            this.handleOpen('keywords', target);
+            this.setState({
+                highlightedValue,
+                start,
+                end,
+            });
+            this.handleOpen('keywords', evt.target);
         }
     }
 
@@ -207,7 +202,7 @@ class SayingRow extends React.Component {
                             </TextField>
                         </div>
                         <Grid item md={10} xs={8}>
-                            <span className={classes.userSays} onMouseUp={this.onHighlight}>
+                            <span className={classes.userSays} onMouseUp={(evt) => { this.onHighlight(evt) }}>
                                 <HighlightedSaying
                                     agentKeywords={agentKeywords}
                                     keywords={saying.keywords}
@@ -237,7 +232,7 @@ class SayingRow extends React.Component {
                                 )
                             })}
                             <img
-                                onClick={(evt) => this.handleOpen('actions', evt.target, getCountOfUnasignedActions(saying.actions, this.props.agentActions))}
+                                onClick={(evt) => this.handleOpen('actions', evt.target)}
                                 className={classes.addActionIcon} src={addActionIcon}
                             />
                             <FormControl className={classes.formControl}>
@@ -247,16 +242,15 @@ class SayingRow extends React.Component {
                                     }}
                                     open={this.state.openActions}
                                     onClose={() => this.handleClose('actions')}
-                                    onOpen={() => this.handleOpen('actions')}
+                                    onOpen={(evt) => this.handleOpen('actions', evt.target)}
                                     value={10}
                                     onChange={(evt) => { evt.preventDefault(); this.handleChange('actions', evt.target.value)}}
                                     MenuProps={{
                                         style:{
                                             minHeight: '300px',
                                             maxHeight: '300px',
-                                            top: `${this.state.actionsDialogY}px`,
-                                            left: `${this.state.actionsDialogX}px`
-                                        }
+                                        },
+                                        anchorEl: this.state.anchorEl
                                     }}
                                 >
                                     <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction}/></MenuItem>
@@ -276,14 +270,11 @@ class SayingRow extends React.Component {
                                     }}
                                     open={this.state.openKeywords}
                                     onClose={() => this.handleClose('keywords')}
-                                    onOpen={() => this.handleOpen('keywords')}
+                                    onOpen={(evt) => this.handleOpen('keywords', evt.target)}
                                     value={10}
                                     onChange={(evt) => { evt.preventDefault(); this.handleChange('keywords', evt.target.value)}}
                                     MenuProps={{
-                                        style:{
-                                            top: `${this.state.keywordsDialogY}px`,
-                                            left: `${this.state.keywordsDialogX}px`
-                                        }
+                                        anchorEl: this.state.anchorEl
                                     }}
                                 >
                                     <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newKeyword}/></MenuItem>
