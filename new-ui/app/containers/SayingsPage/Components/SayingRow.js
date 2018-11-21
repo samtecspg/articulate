@@ -154,12 +154,11 @@ class SayingRow extends React.Component {
 
     onHighlight(evt){
         const selection = window.getSelection();
-        const text = selection.toString();
+        const highlightedValue = selection.toString();
         const offset = this.props.saying.userSays.indexOf(selection.anchorNode.textContent); //calculates where the chunk starts in the saying
         const start = selection.getRangeAt(0).startOffset + offset; 
         const end = selection.getRangeAt(0).endOffset + offset;
-        const highlightedValue = selection.anchorNode.parentElement.parentElement.innerText.substring(start, end);
-        if(text.trim()){
+        if(highlightedValue.trim()){
             this.setState({
                 highlightedValue,
                 start,
