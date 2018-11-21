@@ -8,6 +8,13 @@ import Package from '../package.json';
 
 // Pull .env into process.env
 Dotenv.config({ path: `${__dirname}/.env` });
+const redisOptions = {
+    host: process.env.REDIS_HOST || 'redis',
+    port: process.env.REDIS_PORT || 6379,
+    retry: process.env.INIT_RETRY || 10,
+    retryTimeout: process.env.INIT_RETRY_TIMEOUT || 15000,
+    prefix: process.env.REDIS_PREFIX || Package.name
+};
 
 // Glue manifest as a confidence store
 module.exports = new Confidence.Store({
@@ -62,15 +69,12 @@ module.exports = new Confidence.Store({
                 }
             },
             {
-
                 plugin: './plugins/redis',
-                options: {
-                    host: process.env.REDIS_HOST || 'redis',
-                    port: process.env.REDIS_PORT || 6379,
-                    retry: process.env.INIT_RETRY || 10,
-                    retryTimeout: process.env.INIT_RETRY_TIMEOUT || 15000,
-                    prefix: process.env.REDIS_PREFIX || Package.name
-                }
+                options: redisOptions
+            },
+            {
+                plugin: './plugins/redis-messaging',
+                options: redisOptions
             },
             {
 

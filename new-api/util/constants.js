@@ -23,6 +23,18 @@ export const MODEL_POST_FORMAT = 'PostFormat';
 export const MODEL_SAYING = 'Saying';
 export const MODEL_SETTINGS = 'Settings';
 export const MODEL_WEBHOOK = 'Webhook';
+export const MODEL_ALL = [
+    MODEL_ACTION,
+    MODEL_AGENT,
+    MODEL_CONTEXT,
+    MODEL_DOCUMENT,
+    MODEL_DOMAIN,
+    MODEL_KEYWORD,
+    MODEL_SAYING,
+    MODEL_SETTINGS,
+    MODEL_WEBHOOK,
+    MODEL_POST_FORMAT
+];
 
 //ROUTES
 export const ROUTE_ACTION = 'action';
@@ -175,5 +187,24 @@ export const DUCKLING_TEMPERATURE = `${KEYWORD_PREFIX_DUCKLING}temperature`;
 export const DUCKLING_VOLUME = `${KEYWORD_PREFIX_DUCKLING}volume`;
 export const DUCKLING_QUANTITY = `${KEYWORD_PREFIX_DUCKLING}duration`;
 export const DUCKLING_URL = `${KEYWORD_PREFIX_DUCKLING}quantity`;
+
+// Nohm subscribe actions
+
+export const NOHM_SUB_CREATE = 'create';
+export const NOHM_SUB_UPDATE = 'update';
+export const NOHM_SUB_SAVE = 'save';
+export const NOHM_SUB_REMOVE = 'remove';
+export const NOHM_SUB_LINK = 'link';
+export const NOHM_SUB_UNLINK = 'unlink';
+export const NOHM_SUB_ALL = [
+    NOHM_SUB_CREATE,
+    NOHM_SUB_UPDATE,
+    NOHM_SUB_SAVE,
+    NOHM_SUB_REMOVE,
+    NOHM_SUB_LINK,
+    NOHM_SUB_UNLINK
+];
+
+
 
 

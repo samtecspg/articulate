@@ -29,18 +29,18 @@ module.exports = async function ({ payload }) {
             returnModel: true
         });
 
-        if (settings){
-            await agentService.updateAllSettings({ AgentModel, settingsData: settings })
+        if (settings) {
+            await agentService.updateAllSettings({ AgentModel, settingsData: settings });
         }
 
-        if (agent.usePostFormat){
+        if (agent.usePostFormat) {
             await agentService.createPostFormat({
                 AgentModel,
                 postFormatData: agentPostFormat
             });
         }
 
-        if (agent.useWebhook){
+        if (agent.useWebhook) {
             await agentService.createWebhook({
                 AgentModel,
                 webhookData: agentWebhook
@@ -67,6 +67,7 @@ module.exports = async function ({ payload }) {
             return await Promise.all(sayings.map(async (saying) => {
 
                 saying.keywords.forEach((tempKeyword) => {
+
                     tempKeyword.keywordId = keywordsDir[tempKeyword.keyword];
                 });
                 return await agentService.upsertSayingInDomain({
@@ -84,23 +85,21 @@ module.exports = async function ({ payload }) {
                 actionData
             });
 
-            if (action.usePostFormat){
+            if (action.usePostFormat) {
                 await agentService.upsertPostFormatInAction({
                     id: AgentModel.id,
                     actionId: ActionModel.id,
                     postFormatData: postFormat
                 });
             }
-    
-            if (action.useWebhook){
+
+            if (action.useWebhook) {
                 await agentService.upsertWebhookInAction({
                     id: AgentModel.id,
                     actionId: ActionModel.id,
                     data: webhook
                 });
             }
-
-            return;
         }));
         return await agentService.export({ id: AgentModel.id });
     }

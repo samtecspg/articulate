@@ -1,10 +1,16 @@
 module.exports = {
     remove: ['models'],
-    add: [{
-        place: 'init',
-        list: true,
-        //signature: ['name', 'init'],
-        method: 'services',
-        after: ['plugins', 'register']
-    }]
+    add: [
+        {
+            place: 'init',
+            list: true,
+            method: 'services',
+            after: ['plugins', 'register']
+        },
+        {
+            place: 'websocket',
+            list: true,
+            method: 'services',
+            after: ['plugins', 'register']
+        }]
 };

@@ -7,6 +7,7 @@ module.exports = async ({ redis, path, prefix }) => {
 
     Nohm.setPrefix(prefix);
     Nohm.setClient(redis);
+    Nohm.setPublish(true);
     const Mods = require(path);
     await _.each(Mods, (model) => {
 
