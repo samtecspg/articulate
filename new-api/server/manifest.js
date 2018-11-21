@@ -12,7 +12,7 @@ Dotenv.config({ path: `${__dirname}/.env` });
 // Glue manifest as a confidence store
 module.exports = new Confidence.Store({
     server: {
-        host: '0.0.0.0',
+        host: process.env.HOST || '0.0.0.0',
         port: process.env.PORT || 7500,
         routes: {
             cors: true,

@@ -3,7 +3,7 @@ import Create from './settings/settings.create.service';
 import FindAll from './settings/settings.find-all.service';
 import FindByName from './settings/settings.find-by-name.service';
 import UpdateByName from './settings/settings.update-by-name.service';
-import UpdateAll from './settings/settings.update-all-settings.service';
+import UpsertAll from './settings/settings.upsert-all-settings.service';
 
 module.exports = class SettingsService extends Schmervice.Service {
 
@@ -27,9 +27,9 @@ module.exports = class SettingsService extends Schmervice.Service {
         return await UpdateByName.apply(this, arguments);
     }
 
-    async updateAll() {
+    async upsertAll() {
 
-        return await UpdateAll.apply(this, arguments);
+        return await UpsertAll.apply(this, arguments);
     }
 
 };
