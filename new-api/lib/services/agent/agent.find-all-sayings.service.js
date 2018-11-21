@@ -14,7 +14,7 @@ module.exports = async function ({ id, loadDomainId, skip, limit, direction, fie
         const AgentModel = await globalService.findById({ id, model: MODEL_AGENT, returnModel: true });
         const sayingsIds = await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING);
         const SayingModel = await redis.factory(MODEL_SAYING);
-        const totalCount = await SayingModel.count();
+        const totalCount = sayingsIds.length;
 
         const SayingModels = await SayingModel.findAllByIds({ ids: sayingsIds, skip, limit, direction, field });
         const data = await Promise.all(SayingModels.map(async (sayingModel) => {
