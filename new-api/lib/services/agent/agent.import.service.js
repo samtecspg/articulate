@@ -9,10 +9,12 @@ module.exports = async function ({ payload }) {
         actions,
         domains,
         keywords,
+        settings,
         postFormat: agentPostFormat,
         webhook: agentWebhook,
         ...agent
     } = payload;
+    const keywordsDir = {};
     try {
         const AgentModel = await agentService.create({
             data: {
@@ -27,23 +29,32 @@ module.exports = async function ({ payload }) {
             returnModel: true
         });
 
-        await agentService.createPostFormat({
-            AgentModel,
-            postFormatData: agentPostFormat
-        });
+        if (settings){
+            await agentService.updateAllSettings({ AgentModel, settingsData: settings })
+        }
 
-        await agentService.createWebhook({
-            AgentModel,
-            webhookData: agentWebhook
-        });
+        if (agent.usePostFormat){
+            await agentService.createPostFormat({
+                AgentModel,
+                postFormatData: agentPostFormat
+            });
+        }
 
-        await Promise.all(keywords.map(async (keyword) =>
+        if (agent.useWebhook){
+            await agentService.createWebhook({
+                AgentModel,
+                webhookData: agentWebhook
+            });
+        }
 
-            await agentService.createKeyword({
+        await Promise.all(keywords.map(async (keyword) => {
+
+            const newKeyword = await agentService.createKeyword({
                 AgentModel,
                 keywordData: keyword
-            })
-        ));
+            });
+            keywordsDir[newKeyword.keywordName] = parseInt(newKeyword.id);
+        }));
 
         await Promise.all(domains.map(async (domain) => {
 
@@ -55,6 +66,9 @@ module.exports = async function ({ payload }) {
             });
             return await Promise.all(sayings.map(async (saying) => {
 
+                saying.keywords.forEach((tempKeyword) => {
+                    tempKeyword.keywordId = keywordsDir[tempKeyword.keyword];
+                });
                 return await agentService.upsertSayingInDomain({
                     id: AgentModel.id,
                     domainId: DomainModel.id,
@@ -69,19 +83,26 @@ module.exports = async function ({ payload }) {
                 AgentModel,
                 actionData
             });
-            return await Promise.all([
+
+            if (action.usePostFormat){
                 await agentService.upsertPostFormatInAction({
                     id: AgentModel.id,
                     actionId: ActionModel.id,
                     postFormatData: postFormat
-                }),
+                });
+            }
+    
+            if (action.useWebhook){
                 await agentService.upsertWebhookInAction({
                     id: AgentModel.id,
                     actionId: ActionModel.id,
                     data: webhook
-                })
-            ]);
+                });
+            }
+
+            return;
         }));
+        return await agentService.export({ id: AgentModel.id });
     }
     catch (error) {
         throw RedisErrorHandler({ error });

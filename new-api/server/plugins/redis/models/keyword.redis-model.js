@@ -2,9 +2,6 @@ import { MODEL_KEYWORD } from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {
-    agent: {
-        type: 'json'
-    },
     keywordName: {
         type: 'string',
         index: true,

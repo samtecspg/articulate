@@ -14,8 +14,8 @@ module.exports = {
 
             const { agentService } = await request.services();
             try {
-                await agentService.import({ payload: request.payload });
-                return h.continue;
+                return await agentService.import({ payload: request.payload });
+                //return h.continue;
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

@@ -416,6 +416,8 @@ class AgentValidate {
                 return {
                     userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
                     keywords: Joi.array().items({
+                        value: SayingKeywordSchema.value.required().error(new Error('You must specify the value that this keyword represents in the user saying')),
+                        keyword: SayingKeywordSchema.keyword.required().error(new Error('You must specify the keyword name')),
                         keywordId: KeywordSchema.id.required().error(new Error('You must specify the id of the keyword that you are tagging in the examples')),
                         start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                         end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
@@ -574,6 +576,7 @@ class AgentValidate {
                     language: AgentSchema.language.required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone.required(),
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
+                    domainRecognizer: AgentSchema.domainRecognizer,
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     multiDomain: AgentSchema.multiDomain.required(),
@@ -616,6 +619,8 @@ class AgentValidate {
                             actions: SayingSchema.actions.allow([]),
                             keywords: Joi.array().items({
                                 keywordId: KeywordSchema.id.required().error(new Error('You must specify the id of the keyword that you are tagging in the examples')),
+                                value: SayingKeywordSchema.value.required().error(new Error('You must specify the value that this keyword represents in the user saying')),
+                                keyword: SayingKeywordSchema.keyword.required().error(new Error('You must specify the keyword name')),
                                 start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                                 end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
                                 extractor: SayingKeywordSchema.extractor
@@ -640,6 +645,7 @@ class AgentValidate {
                             slotName: SlotSchema.slotName.required(),
                             uiColor: SlotSchema.uiColor.required(),
                             keywordId: SlotSchema.keywordId,
+                            keyword: SlotSchema.keyword,
                             isList: SlotSchema.isList.required(),
                             isRequired: SlotSchema.isRequired.required(),
                             textPrompts: SlotSchema.textPrompts
