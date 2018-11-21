@@ -38,6 +38,7 @@ export const ROUTE_WEBHOOK = 'webhook';
 export const ROUTE_TRAIN = 'train';
 export const ROUTE_PARSE = 'parse';
 export const ROUTE_CONVERSE = 'converse';
+export const ROUTE_FRAME = 'frame';
 
 // STATUS
 export const STATUS_READY = 'Ready';

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { NohmModel } from 'nohm';
 import * as Constants from '../../../../util/constants';
 
-const logger = require('../../../../util/logger')({ name: `plugin:redis:base-model` });
+//const logger = require('../../../../util/logger')({ name: `plugin:redis:base-model` });
 const defaults = {
     SKIP: 0,
     LIMIT: 50,
@@ -70,11 +70,11 @@ module.exports = class BaseModel extends NohmModel {
         let ids = [];
         field = field ? field : this.defaultSortField();
         if (field) {
-            if (field === 'id'){
-                if (direction === 'DESC'){
+            if (field === 'id') {
+                if (direction === 'DESC') {
                     ids = ids.reverse();
                 }
-                if (limit === -1){
+                if (limit === -1) {
                     ids = ids.slice(skip, ids.length);
                 }
                 else {
@@ -113,11 +113,11 @@ module.exports = class BaseModel extends NohmModel {
         let sortedIds = [];
         field = field ? field : this.defaultSortField();
         if (field) {
-            if (field === 'id'){
-                if (direction === 'DESC'){
+            if (field === 'id') {
+                if (direction === 'DESC') {
                     sortedIds = ids.reverse();
                 }
-                if (limit === -1){
+                if (limit === -1) {
                     sortedIds = sortedIds.slice(skip, sortedIds.length);
                 }
                 else {
@@ -130,7 +130,7 @@ module.exports = class BaseModel extends NohmModel {
             }
         }
         else {
-            if (limit === -1){
+            if (limit === -1) {
                 sortedIds = ids.slice(skip, ids.length);
             }
             else {
@@ -181,8 +181,7 @@ module.exports = class BaseModel extends NohmModel {
         const ids = await this.find({
             [field]: value
         });
-        logger.debug(field, value);
-        logger.debug(ids);
+
         if (ids.length > 0) {
             if (schemaField.unique) {
                 return await this.findById({ id: ids[0] });
