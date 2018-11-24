@@ -8,10 +8,6 @@ import { Grid }  from '@material-ui/core';
 import expandSingleIcon from '../../images/expand-single-icon.svg';
 
 const styles = {
-    color: {
-      borderRadius: '5px',
-      height: '40px'
-    },
     swatchContainer: {
         height: '52px',
         padding: '0',
@@ -38,13 +34,10 @@ const styles = {
       bottom: '0px',
       left: '0px',
     },
-    dot: {
-      marginTop: 12,
-      marginLeft: 5,
-      height: 15,
-      width: 15,
-      borderRadius: '50%',
-      display: 'inline-block',
+    color: {
+        borderRadius: '3px',
+        width: '100%',
+        height: '2.4rem'
     },
     expandArrow: {
       float:'right',
@@ -59,8 +52,7 @@ function ColorPicker(props) { // eslint-disable-line react/prefer-stateless-func
     return (
         <Grid className={classes.swatchContainer}>
             <Grid className={ classes.swatch } onClick={ props.handleOpen }>
-                <span style={{backgroundColor: props.color}} className={classes.dot}/>
-                <img className={classes.expandArrow} src={expandSingleIcon} />
+                <div style={{background: props.color }} className={ classes.color } />
             </Grid>
             {
                 props.displayColorPicker ?
