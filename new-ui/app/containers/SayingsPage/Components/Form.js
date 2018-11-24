@@ -166,10 +166,12 @@ class Form extends React.Component {
             onGoToUrl={this.props.onGoToUrl}
             onSendSayingToAction={this.props.onSendSayingToAction}
             currentPage={this.props.currentPage}
+            pageSize={this.props.pageSize}
             numberOfPages={this.props.numberOfPages}
             changePage={this.props.changePage}
             movePageBack={this.props.movePageBack}
             movePageForward={this.props.movePageForward}
+            changePageSize={this.props.changePageSize}
             onSelectDomain={this.props.onSelectDomain}
             domain={this.props.domain}
             onSearchDomain={this.props.onSearchDomain}
@@ -202,10 +204,12 @@ Form.propTypes = {
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
+  pageSize: PropTypes.number,
   numberOfPages: PropTypes.number,
   changePage: PropTypes.func,
   movePageBack: PropTypes.func,
   movePageForward: PropTypes.func,
+  changePageSize: PropTypes.func,
   onSelectDomain: PropTypes.func,
   domain: PropTypes.string,
   newSayingActions: PropTypes.array,

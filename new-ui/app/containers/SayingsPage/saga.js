@@ -42,13 +42,13 @@ import { getActions } from '../ActionPage/saga';
 
 export function* getSayings(payload) {
     const agent = yield select(makeSelectAgent());
-    const { api, filter, page } = payload;
+    const { api, filter, page, pageSize } = payload;
     const tempFilter = filter === '' ? undefined : filter;
     let skip = 0;
     let limit = -1;
     if (page){
-        skip = (page - 1) * 5;
-        limit = 5;
+        skip = (page - 1) * pageSize;
+        limit = pageSize;
     }
     try {
         const response = yield call(api.agent.getAgentAgentidSaying, {
@@ -113,7 +113,7 @@ export function* deleteSaying(payload) {
 
 export function* putSaying(payload) {
     const agent = yield select(makeSelectAgent());
-    const { api, sayingId, saying, filter, page } = payload;
+    const { api, sayingId, saying, filter, page, pageSize } = payload;
     const domainId = saying.domain;
     delete saying.id;
     delete saying.agent;
@@ -126,8 +126,9 @@ export function* putSaying(payload) {
             body: saying });
         yield call(getSayings, {
             api,
-            filter: filter,
-            page: page,
+            filter,
+            page,
+            pageSize 
         });
     } catch (err) {
         yield put(updateSayingError(err));
@@ -135,7 +136,7 @@ export function* putSaying(payload) {
 }
 
 export function* tagKeyword(payload) {
-    const { api, saying, value, start, end, keywordId, keywordName, filter, page } = payload;
+    const { api, saying, value, start, end, keywordId, keywordName, filter, page, pageSize } = payload;
     const mutableSaying = Immutable.asMutable(saying, { deep: true} );
     const keywordToAdd = {
         value,
@@ -150,65 +151,45 @@ export function* tagKeyword(payload) {
     }
     mutableSaying.keywords.push(keywordToAdd);
     try {
-        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page });
-        yield call(getSayings, {
-            api,
-            filter: filter,
-            page: page,
-        });
+        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
     } catch (err) {
         yield put(updateSayingError(err));
     }
 }
 
 export function* untagKeyword(payload) {
-    const { api, saying, start, end, filter, page } = payload;
+    const { api, saying, start, end, filter, page, pageSize } = payload;
     const mutableSaying = Immutable.asMutable(saying, { deep: true} );
     mutableSaying.keywords = mutableSaying.keywords.filter((keyword) => {
         return keyword.start !== start || keyword.end !== end;
     });
     try {
-        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page });
-        yield call(getSayings, {
-            api,
-            filter: filter,
-            page: page,
-        });
+        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
     } catch (err) {
         yield put(updateSayingError(err));
     }
 }
 
 export function* addAction(payload) {
-    const { api, saying, actionName, filter, page } = payload;
+    const { api, saying, actionName, filter, page, pageSize } = payload;
     const mutableSaying = Immutable.asMutable(saying, { deep: true} );
     mutableSaying.actions.push(actionName);
     try {
-        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page });
-        yield call(getSayings, {
-            api,
-            filter: filter,
-            page: page,
-        });
+        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
     } catch (err) {
         yield put(updateSayingError(err));
     }
 }
 
 export function* deleteAction(payload) {
-    const { api, saying, actionName, filter, page } = payload;
+    const { api, saying, actionName, filter, page, pageSize } = payload;
     const mutableSaying = Immutable.asMutable(saying, { deep: true} );
     mutableSaying.actions = mutableSaying.actions.filter((action) => {
 
         return action !== actionName;
     });
     try {
-        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page });
-        yield call(getSayings, {
-            api,
-            filter: filter,
-            page: page,
-        });
+        yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
     } catch (err) {
         yield put(updateSayingError(err));
     }

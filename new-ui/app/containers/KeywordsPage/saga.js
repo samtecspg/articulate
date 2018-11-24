@@ -23,12 +23,12 @@ import {
 
 export function* getKeywords(payload) {
     const agent = yield select(makeSelectAgent());
-    const { api, filter, page } = payload;
+    const { api, filter, page, pageSize } = payload;
     let skip = 0;
     let limit = -1;
     if (page){
-        skip = (page - 1) * 5;
-        limit = 5;
+        skip = (page - 1) * pageSize;
+        limit = pageSize;
     }
     try {
         const response = yield call(api.agent.getAgentAgentidKeyword, {

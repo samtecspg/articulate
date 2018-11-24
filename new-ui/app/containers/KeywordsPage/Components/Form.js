@@ -154,8 +154,10 @@ class Form extends React.Component {
             onDeleteKeyword={this.props.onDeleteKeyword}
             onCreateKeyword={this.props.onCreateKeyword}
             currentPage={this.props.currentPage}
+            pageSize={this.props.pageSize}
             numberOfPages={this.props.numberOfPages}
             changePage={this.props.changePage}
+            changePageSize={this.props.changePageSize}
             movePageBack={this.props.movePageBack}
             movePageForward={this.props.movePageForward}
           />}
@@ -174,8 +176,10 @@ Form.propTypes = {
   keywords: PropTypes.array,
   onDeleteKeyword: PropTypes.func.isRequired,
   currentPage: PropTypes.number,
+  pageSize: PropTypes.number,
   numberOfPages: PropTypes.number,
   changePage: PropTypes.func,
+  changePageSize: PropTypes.func,
   movePageBack: PropTypes.func,
   movePageForward: PropTypes.func,
 };

@@ -34,7 +34,8 @@ import {
   createKeyword,
   updateKeyword,
   changeExampleSynonyms,
-  resetStatusFlag
+  resetStatusFlag,
+  changeExampleName
 } from '../App/actions';
 import ActionButtons from './Components/ActionButtons';
 import { push } from 'react-router-redux';
@@ -142,6 +143,7 @@ export class KeywordsEditPage extends React.Component {
               onChangeKeywordData={this.props.onChangeKeywordData}
               onAddKeywordExample={this.props.onAddKeywordExample}
               onDeleteKeywordExample={this.props.onDeleteKeywordExample}
+              onChangeExampleName={this.props.onChangeExampleName}
               onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
               errorState={this.state.errorState}
             />
@@ -193,6 +195,9 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteKeywordExample: (exampleIndex) => {
       dispatch(deleteKeywordExample(exampleIndex));
+    },
+    onChangeExampleName: (exampleIndex, name) => {
+      dispatch(changeExampleName(exampleIndex, name));
     },
     onChangeExampleSynonyms: (exampleIndex, synonyms) => {
       dispatch(changeExampleSynonyms(exampleIndex, synonyms));

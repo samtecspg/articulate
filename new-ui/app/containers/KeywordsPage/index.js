@@ -42,22 +42,21 @@ export class KeywordsPage extends React.Component {
     this.movePageBack = this.movePageBack.bind(this);
     this.movePageForward = this.movePageForward.bind(this);
     this.onSearchKeyword = this.onSearchKeyword.bind(this);
-    this.getTotalPages = this.getTotalPages.bind(this);
+    this.setNumberOfPages = this.setNumberOfPages.bind(this);
+    this.changePageSize = this.changePageSize.bind(this);
   }
 
   state = {
     filter: '',
     currentPage: 1,
-  }
-
-  getTotalPages(){
-    const itemsByPage = 5;
-    return Math.ceil(this.props.totalSayings / itemsByPage);
+    pageSize: 5,
+    numberOfPages: null,
+    totalKeywords: null,
   }
 
   componentWillMount() {
     if(this.props.agent.id) {
-      this.props.onLoadKeywords('', this.state.currentPage);
+      this.props.onLoadKeywords('', this.state.currentPage, this.state.pageSize);
     }
     else {
       //TODO: An action when there isn't an agent
@@ -65,16 +64,27 @@ export class KeywordsPage extends React.Component {
     }
   }
 
-  getTotalPages(){
-    const itemsByPage = 5;
-    return Math.ceil(this.props.totalKeywords / itemsByPage);
+  componentDidUpdate(){
+    if (this.props.totalKeywords !== this.state.totalKeywords){
+      this.setState({
+        totalKeywords: this.props.totalKeywords
+      });
+      this.setNumberOfPages(this.state.pageSize);
+    }
+  }
+
+  setNumberOfPages(pageSize){
+    const numberOfPages = Math.ceil(this.props.totalKeywords / pageSize);
+    this.setState({
+      numberOfPages
+    });
   }
 
   changePage(pageNumber){
     this.setState({
         currentPage: pageNumber
     });
-    this.props.onLoadKeywords(this.state.filter, pageNumber);
+    this.props.onLoadKeywords(this.state.filter, pageNumber, this.state.pageSize);
   }
 
   movePageBack(){
@@ -93,11 +103,19 @@ export class KeywordsPage extends React.Component {
     this.changePage(newPage);
   }
 
+  changePageSize(pageSize){
+    this.setState({
+      currentPage: 1,
+      pageSize
+    });
+    this.props.onLoadKeywords(this.state.filter, 1, pageSize);
+  }
+
   onSearchKeyword(filter){
     this.setState({
       filter
     });
-    this.props.onLoadKeywords(filter, this.state.currentPage);
+    this.props.onLoadKeywords(filter, this.state.currentPage, this.state.pageSize);
   }
 
   render() {
@@ -129,8 +147,10 @@ export class KeywordsPage extends React.Component {
               onDeleteKeyword={this.props.onDeleteKeyword}
               onCreateKeyword={this.props.onCreateKeyword}
               currentPage={this.state.currentPage}
+              pageSize={this.state.pageSize}
               numberOfPages={this.state.numberOfPages}
               changePage={this.changePage}
+              changePageSize={this.changePageSize}
               movePageBack={this.movePageBack}
               movePageForward={this.movePageForward}
             />
@@ -157,8 +177,8 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onLoadKeywords: (filter, page) => {
-      dispatch(loadKeywords(filter, page));
+    onLoadKeywords: (filter, page, pageSize) => {
+      dispatch(loadKeywords(filter, page, pageSize));
     },
     onDeleteKeyword: (keywordId) => {
       dispatch(deleteKeyword(keywordId));

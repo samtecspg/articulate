@@ -158,6 +158,7 @@ export const CHANGE_KEYWORD_DATA = 'app/KeywordsEditPage/CHANGE_KEYWORD_DATA'
 export const ADD_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/ADD_KEYWORD_EXAMPLE';
 export const DELETE_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/DELETE_KEYWORD_EXAMPLE';
 export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNONYMS';
+export const CHANGE_EXAMPLE_NAME = 'app/KeywordsEditPage/CHANGE_EXAMPLE_NAME';
 
 /*
  * Domain

@@ -124,6 +124,7 @@ import {
   ADD_KEYWORD_EXAMPLE,
   DELETE_KEYWORD_EXAMPLE,
   CHANGE_EXAMPLE_SYNONYMS,
+  CHANGE_EXAMPLE_NAME,
 
   LOAD_DOMAIN,
   LOAD_DOMAIN_ERROR,
@@ -872,6 +873,13 @@ function appReducer(state = initialState, action) {
       return state.updateIn(['keyword', 'examples'], examples => examples.map((example, index) => {
         if(index === action.exampleIndex){
           return example.set('synonyms', action.synonyms);
+        }
+        return example;
+      }));
+    case CHANGE_EXAMPLE_NAME:
+      return state.updateIn(['keyword', 'examples'], examples => examples.map((example, index) => {
+        if(index === action.exampleIndex){
+          return example.set('value', action.name);
         }
         return example;
       }));

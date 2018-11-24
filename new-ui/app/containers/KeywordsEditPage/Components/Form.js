@@ -151,6 +151,7 @@ class Form extends React.Component {
             onAddKeywordExample={this.props.onAddKeywordExample}
             onDeleteKeywordExample={this.props.onDeleteKeywordExample}
             onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
+            onChangeExampleName={this.props.onChangeExampleName}
             errorState={this.props.errorState}
           />}
         </Grid>
@@ -168,6 +169,7 @@ Form.propTypes = {
   onAddKeywordExample: PropTypes.func,
   onDeleteKeywordExample: PropTypes.func,
   onChangeExampleSynonyms: PropTypes.func,
+  onChangeExampleName: PropTypes.func,
   errorState: PropTypes.object,
 };
 

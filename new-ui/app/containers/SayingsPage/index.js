@@ -62,15 +62,19 @@ export class SayingsPage extends React.Component {
     this.changePage = this.changePage.bind(this);
     this.movePageBack = this.movePageBack.bind(this);
     this.movePageForward = this.movePageForward.bind(this);
+    this.changePageSize = this.changePageSize.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.onSearchDomain = this.onSearchDomain.bind(this);
-    this.getTotalPages = this.getTotalPages.bind(this);
+    this.setNumberOfPages = this.setNumberOfPages.bind(this);
   }
 
   state = {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
     domainFilter: '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
+    pageSize: 5,
+    numberOfPages: null,
+    totalSayings: null,
   }
 
   componentWillMount() {
@@ -78,7 +82,7 @@ export class SayingsPage extends React.Component {
       this.props.onLoadKeywords();
       this.props.onLoadActions();
       this.props.onLoadDomains();
-      this.props.onLoadSayings('', this.state.currentPage);
+      this.props.onLoadSayings('', this.state.currentPage, this.state.pageSize);
     }
     else {
       //TODO: An action when there isn't an agent
@@ -86,16 +90,27 @@ export class SayingsPage extends React.Component {
     }
   }
 
-  getTotalPages(){
-    const itemsByPage = 5;
-    return Math.ceil(this.props.totalSayings / itemsByPage);
+  componentDidUpdate(){
+    if (this.props.totalSayings !== this.state.totalSayings){
+      this.setState({
+        totalSayings: this.props.totalSayings
+      });
+      this.setNumberOfPages(this.state.pageSize);
+    }
+  }
+
+  setNumberOfPages(pageSize){
+    const numberOfPages = Math.ceil(this.props.totalSayings / pageSize);
+    this.setState({
+      numberOfPages
+    });
   }
 
   changePage(pageNumber){
     this.setState({
         currentPage: pageNumber
     });
-    this.props.onLoadSayings(this.state.filter, pageNumber);
+    this.props.onLoadSayings(this.state.filter, pageNumber, this.state.pageSize);
   }
 
   movePageBack(){
@@ -108,10 +123,18 @@ export class SayingsPage extends React.Component {
 
   movePageForward(){
     let newPage = this.state.currentPage;
-    if (this.state.currentPage < this.getTotalPages()){
+    if (this.state.currentPage < this.state.numberOfPages){
         newPage = this.state.currentPage + 1;
     }
     this.changePage(newPage);
+  }
+
+  changePageSize(pageSize){
+    this.setState({
+      currentPage: 1,
+      pageSize
+    });
+    this.props.onLoadSayings(this.state.filter, 1, pageSize);
   }
 
   onSearchSaying(filter){
@@ -119,7 +142,7 @@ export class SayingsPage extends React.Component {
       filter,
       currentPage: 1,
     });
-    this.props.onLoadSayings(filter, 1);
+    this.props.onLoadSayings(filter, 1, this.state.pageSize);
   }
 
   onSearchDomain(domainFilter){
@@ -158,21 +181,23 @@ export class SayingsPage extends React.Component {
               agentFilteredDomains={this.props.agentFilteredDomains}
               onAddSaying={this.props.onAddSaying}
               onDeleteSaying={this.props.onDeleteSaying}
-              onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage)}
-              onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage)}
-              onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage)}
-              onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage)}
+              onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+              onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+              onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+              onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onAddNewSayingAction={this.props.onAddNewSayingAction}
               onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
               onSearchDomain={this.onSearchDomain}
-              onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentPage)}
+              onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentPage={this.state.currentPage}
-              numberOfPages={this.getTotalPages()}
+              pageSize={this.state.pageSize}
+              numberOfPages={this.state.numberOfPages}
               changePage={this.changePage}
               movePageBack={this.movePageBack}
               movePageForward={this.movePageForward}
+              changePageSize={this.changePageSize}
               onSelectDomain={this.props.onSelectDomain}
               domain={this.props.domain}
               newSayingActions={this.props.newSayingActions}
@@ -229,8 +254,8 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onLoadSayings: (filter, page) => {
-      dispatch(loadSayings(filter, page));
+    onLoadSayings: (filter, page, pageSize) => {
+      dispatch(loadSayings(filter, page, pageSize));
     },
     onLoadFilteredDomains: (filter) => {
       dispatch(loadFilteredDomains(filter));
@@ -250,17 +275,17 @@ function mapDispatchToProps(dispatch) {
     onDeleteSaying: (sayingId, domainId) => {
       dispatch(deleteSaying(sayingId, domainId));
     },
-    onTagKeyword: (filter, page, saying, value, start, end, keywordId, keywordName) => {
-      dispatch(tagKeyword(filter, page, saying, value, start, end, keywordId, keywordName));
+    onTagKeyword: (filter, page, pageSize, saying, value, start, end, keywordId, keywordName) => {
+      dispatch(tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName));
     },
-    onUntagKeyword: (filter, page, saying, start, end) => {
-      dispatch(untagKeyword(filter, page, saying, start, end));
+    onUntagKeyword: (filter, page, pageSize, saying, start, end) => {
+      dispatch(untagKeyword(filter, page, pageSize, saying, start, end));
     },
-    onAddAction: (filter, page, saying, actionName) => {
-      dispatch(addActionSaying(filter, page, saying, actionName));
+    onAddAction: (filter, page, pageSize, saying, actionName) => {
+      dispatch(addActionSaying(filter, page, pageSize, saying, actionName));
     },
-    onDeleteAction: (filter, page, saying, actionName) => {
-      dispatch(deleteActionSaying(filter, page, saying, actionName));
+    onDeleteAction: (filter, page, pageSize, saying, actionName) => {
+      dispatch(deleteActionSaying(filter, page, pageSize, saying, actionName));
     },
     onAddNewSayingAction: (actionName) => {
       dispatch(addActionNewSaying(actionName));
@@ -268,8 +293,8 @@ function mapDispatchToProps(dispatch) {
     onDeleteNewSayingAction: (actionName) => {
       dispatch(deleteActionNewSaying(actionName));
     },
-    onGoToUrl: (filter, page, url) => {
-      dispatch(push(`${url}?filter=${filter}&page=${page}`));
+    onGoToUrl: (filter, page, pageSize, url) => {
+      dispatch(push(`${url}?filter=${filter}&page=${page}&pageSize=${pageSize}`));
     },
     onSendSayingToAction: (saying) => {
       dispatch(sendSayingToAction(saying));

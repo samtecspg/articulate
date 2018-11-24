@@ -51,4 +51,12 @@ export default defineMessages({
       id: 'app.containers.SayingsPage.trainButton',
       defaultMessage: 'Train'
     },
+    show: {
+        id: 'app.containers.SayingsPage.component.SayingDataForm.show',
+        defaultMessage: 'Show'
+    },
+    entries: {
+        id: 'app.containers.SayingsPage.component.SayingDataForm.entries',
+        defaultMessage: 'entries'
+    }
 });

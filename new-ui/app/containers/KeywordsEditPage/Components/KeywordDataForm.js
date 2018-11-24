@@ -163,12 +163,12 @@ class KeywordDataForm extends React.Component {
                             <Grid key={`value_${exampleIndex}`} container justify='space-between' spacing={24} item xs={12}>
                                 <Grid className={classes.keywordValueInputContainer} item xs={3}>
                                     <TextField
-                                        id='keywordName'
+                                        id='exampleValue'
                                         className={exampleIndex !== 0 ? classes.keywordValueInput : ''}
                                         value={example.value}
                                         label={exampleIndex === 0 ? intl.formatMessage(messages.newKeywordValueTextField) : null}
                                         placeholder={intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder)}
-                                        onChange={(evt) => { this.props.onChangeKeywordData('keywordName', evt.target.value) }}
+                                        onChange={(evt) => { this.props.onChangeExampleName(exampleIndex, evt.target.value) }}
                                         margin='normal'
                                         fullWidth
                                         InputLabelProps={{
@@ -200,7 +200,7 @@ class KeywordDataForm extends React.Component {
                     <Grid container justify='space-between' spacing={24} item xs={12}>
                         <Grid className={classes.keywordValueInputContainer} item xs={3}>
                             <TextField
-                                id='keywordName'
+                                id='newExampleValue'
                                 value={this.state.newKeyword}
                                 className={classes.keywordValueInput}
                                 placeholder={intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder)}
@@ -243,6 +243,7 @@ KeywordDataForm.propTypes = {
     onAddKeywordExample: PropTypes.func,
     onDeleteKeywordExample: PropTypes.func,
     onChangeExampleSynonyms: PropTypes.func,
+    onChangeExampleName: PropTypes.func,
     errorState: PropTypes.object,
 };
 

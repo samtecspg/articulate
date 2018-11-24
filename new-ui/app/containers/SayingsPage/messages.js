@@ -75,4 +75,12 @@ export default defineMessages({
       id: 'app.containers.SayingsPage.component.SayingDataForm.requiredField',
       defaultMessage: '*Required'
     },
+    show: {
+        id: 'app.containers.SayingsPage.component.SayingDataForm.show',
+        defaultMessage: 'Show'
+    },
+    entries: {
+        id: 'app.containers.SayingsPage.component.SayingDataForm.entries',
+        defaultMessage: 'entries'
+    }
 });

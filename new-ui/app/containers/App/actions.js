@@ -126,6 +126,7 @@ import {
   CREATE_KEYWORD_SUCCESS,
   ADD_KEYWORD_EXAMPLE,
   DELETE_KEYWORD_EXAMPLE,
+  CHANGE_EXAMPLE_NAME,
   CHANGE_EXAMPLE_SYNONYMS,
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
@@ -431,12 +432,13 @@ export function trainAgentError(error){
 /*
 * Sayings
 */
-export function loadSayings(filter, page) {
+export function loadSayings(filter, page, pageSize) {
   return {
     type: LOAD_SAYINGS,
     apiCall: true,
     filter,
     page,
+    pageSize,
   };
 }
 
@@ -485,12 +487,13 @@ export function deleteSayingError(error) {
   };
 }
 
-export function tagKeyword(filter, page, saying, value, start, end, keywordId, keywordName){
+export function tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName){
   return {
     type: TAG_KEYWORD,
     apiCall: true,
     filter,
     page,
+    pageSize,
     saying,
     value,
     start,
@@ -500,12 +503,13 @@ export function tagKeyword(filter, page, saying, value, start, end, keywordId, k
   }
 }
 
-export function untagKeyword(filter, page, saying, start, end){
+export function untagKeyword(filter, page, pageSize, saying, start, end){
   return {
     type: UNTAG_KEYWORD,
     apiCall: true,
     filter,
     page,
+    pageSize,
     saying,
     start,
     end,
@@ -519,23 +523,25 @@ export function updateSayingError(error){
   };
 }
 
-export function addActionSaying(filter, page, saying, actionName){
+export function addActionSaying(filter, page, pageSize, saying, actionName){
   return {
     type: ADD_ACTION_SAYING,
     apiCall: true,
     filter,
     page,
+    pageSize,
     saying,
     actionName,
   };
 }
 
-export function deleteActionSaying(filter, page, saying, actionName){
+export function deleteActionSaying(filter, page, pageSize, saying, actionName){
   return {
     type: DELETE_ACTION_SAYING,
     apiCall: true,
     filter,
     page,
+    pageSize,
     saying,
     actionName,
   };
@@ -621,12 +627,13 @@ export function selectDomain(domainName){
 /*
 * Keywords
 */
-export function loadKeywords(filter, page) {
+export function loadKeywords(filter, page, pageSize) {
   return {
     type: LOAD_KEYWORDS,
     apiCall: true,
     filter,
     page,
+    pageSize,
   };
 }
 
@@ -1007,6 +1014,14 @@ export function deleteKeywordExample(exampleIndex) {
   return {
     type: DELETE_KEYWORD_EXAMPLE,
     exampleIndex,
+  }
+}
+
+export function changeExampleName(exampleIndex, name) {
+  return {
+    type: CHANGE_EXAMPLE_NAME,
+    exampleIndex,
+    name,
   }
 }
 

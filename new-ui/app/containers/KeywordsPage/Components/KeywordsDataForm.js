@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, TextField, Table, TableBody, TableRow, TableCell, Typography, Button  } from '@material-ui/core';
+import { Grid, TextField, Table, TableBody, TableRow, TableCell, Typography, Button, MenuItem  } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
@@ -42,13 +42,19 @@ const styles = {
         padding: '5px'
     },
     pageControl: {
-        direction: 'rtl',
         webkitTouchCallout: 'none',
         webkitUserSelect: 'none',
         khtmlUserSelect: 'none',
         mozUserSelect: 'none',
         msUserSelect: 'none',
         userSelect: 'none',
+    },
+    pageSubControl: {
+        display: 'inline'
+    },
+    pageNumberSubControl: {
+        display: 'inline',
+        float: 'right'
     },
     pageTextfield: {
         width: '75px',
@@ -66,6 +72,10 @@ const styles = {
         display: 'inline',
         padding: '5px',
         color: '#a2a7b1'
+    },
+    pageSizeLabels: {
+        display: 'inline',
+        margin: '0px 5px'
     },
     keywordLink: {
         textDecoration: 'none',
@@ -131,40 +141,74 @@ class KeywordsDataForm extends React.Component {
                                         </TableBody>
                                     </Table>
                                     <Grid className={classes.pageControl} item xs={12}>
-                                        <Typography onClick={this.props.movePageBack} className={this.props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
-                                            <FormattedMessage {...messages.backPage} />
-                                        </Typography>
-                                        <TextField
-                                            id='page'
-                                            margin='normal'
-                                            value={this.props.currentPage}
-                                            onChange={(evt) => {
-                                                evt.target.value === '' ?
-                                                this.props.changePage(0) :
-                                                (evt.target.value <= this.props.numberOfPages && evt.target.value >= 0 ?
-                                                    this.props.changePage(evt.target.value) :
-                                                    false) }}
-                                            fullWidth
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                            inputProps={{
-                                                style: {
-                                                    textAlign: 'center'
-                                                },
-                                                min: 1,
-                                                max: this.props.numberOfPages,
-                                                step: 1
-                                            }}
-                                            className={classes.pageTextfield}
-                                            type='number'
-                                        />
-                                        <Typography className={classes.pagesLabel}>
-                                            / {this.props.numberOfPages}
-                                        </Typography>
-                                        <Typography onClick={this.props.movePageForward} className={this.props.currentPage < this.props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
-                                            <FormattedMessage {...messages.nextPage} />
-                                        </Typography>
+                                        <Grid className={classes.pageSubControl}>
+                                            <Typography className={classes.pageSizeLabels}>
+                                                <FormattedMessage {...messages.show} />
+                                            </Typography>
+                                            <TextField
+                                                select
+                                                className={classes.pageTextfield}
+                                                id='pageSize'
+                                                value={this.props.pageSize}
+                                                onChange={(evt) => { this.props.changePageSize(evt.target.value) }}
+                                                margin='normal'
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                            >
+                                                <MenuItem key={5} value={5}>
+                                                    5
+                                                </MenuItem>
+                                                <MenuItem key={10} value={10}>
+                                                    10
+                                                </MenuItem>
+                                                <MenuItem key={25} value={25}>
+                                                    25
+                                                </MenuItem>
+                                                <MenuItem key={50} value={50}>
+                                                    50
+                                                </MenuItem>
+                                            </TextField>
+                                            <Typography className={classes.pageSizeLabels}>
+                                                <FormattedMessage {...messages.entries} />
+                                            </Typography>
+                                        </Grid>
+                                        <Grid className={classes.pageNumberSubControl}>
+                                            <Typography onClick={this.props.currentPage > 1 ? this.props.movePageBack : null} className={this.props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
+                                                <FormattedMessage {...messages.backPage} />
+                                            </Typography>
+                                            <TextField
+                                                id='page'
+                                                margin='normal'
+                                                value={this.props.currentPage}
+                                                onChange={(evt) => {
+                                                    evt.target.value === '' ?
+                                                    this.props.changePage(0) :
+                                                    (evt.target.value <= this.props.numberOfPages && evt.target.value >= 0 ?
+                                                        this.props.changePage(evt.target.value) :
+                                                        false) }}
+                                                fullWidth
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                inputProps={{
+                                                    style: {
+                                                        textAlign: 'center'
+                                                    },
+                                                    min: 1,
+                                                    max: this.props.numberOfPages,
+                                                    step: 1
+                                                }}
+                                                className={classes.pageTextfield}
+                                                type='number'
+                                            />
+                                            <Typography className={classes.pagesLabel}>
+                                                / {this.props.numberOfPages}
+                                            </Typography>
+                                            <Typography onClick={this.props.currentPage < this.props.numberOfPages ? this.props.movePageForward : null} className={this.props.currentPage < this.props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
+                                                <FormattedMessage {...messages.nextPage} />
+                                            </Typography>
+                                        </Grid>
                                     </Grid>
                                 </Grid> :
                                 null
@@ -184,8 +228,10 @@ KeywordsDataForm.propTypes = {
     onDeleteKeyword: PropTypes.func.isRequired,
     onCreateKeyword: PropTypes.func.isRequired,
     currentPage: PropTypes.number,
+    pageSize: PropTypes.number,
     numberOfPages: PropTypes.number,
     changePage: PropTypes.func,
+    changePageSize: PropTypes.func,
     movePageBack: PropTypes.func,
     movePageForward: PropTypes.func,
 };
