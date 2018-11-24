@@ -113,7 +113,8 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                 }
             }
             //If the slot wasn't part of the scenario slots array. This means that the slot is a system keyword
-            else {
+            //This block is commented to remove sys entities to be by default on slots 
+            /*else {
                 //Check if it is a spacy or duckling system keyword
                 if (recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_SPACY) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_DUCKLING) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_REGEX) !== -1) {
                     //If there is a dictionary of slots in the current context, use this dictionary, if not, create an empty dictionary of slots
@@ -123,7 +124,7 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                     //Add the recognized system keywords to the dir of system keywords in the slots dir of the current context
                     lastFrame.slots.sys[recognizedKeyword.keyword.replace(KEYWORD_PREFIX_SYS, '')] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
                 }
-            }
+            }*/
             //Finally return the name of the recognized keyword for further checks
             return recognizedKeyword.keyword;
         });
@@ -140,7 +141,8 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
     //MARK: action.slots === 0
     else {
         const recognizedKeywords = rasaResult.keywords;
-        _.map(recognizedKeywords, (recognizedKeyword) => {
+        //This block is commented to remove sys entities to be by default on slots 
+        /*_.map(recognizedKeywords, (recognizedKeyword) => {
 
             if (recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_SPACY) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_DUCKLING) !== -1) {
                 lastFrame.slots = lastFrame.slots ? lastFrame.slots : {};
@@ -148,7 +150,7 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                 lastFrame.slots.sys[recognizedKeyword.keyword.replace(KEYWORD_PREFIX_SYS, '')] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
             }
             return recognizedKeyword.keyword;
-        });
+        });*/
     }
     if (action.useWebhook || agent.useWebhook) {
         const webhook = action.useWebhook ? action.webhook : agent.webhook;
