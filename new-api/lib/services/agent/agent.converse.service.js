@@ -224,7 +224,23 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
     const conversationStateObject = {};
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
-        const context = await contextService.findBySession({ sessionId, loadFrames: true });
+        
+        //This block will handle sessionIds that doesn't exists
+        //If the sessionId doesn't exists it creates one context for that session
+        //And adds a frames attribute which is an empty array
+        //The frames will be updated once converse resolve the value
+        let context;
+        try {
+            context = await contextService.findBySession({ sessionId, loadFrames: true });
+        } catch (error) {
+            if (error.statusCode && error.statusCode === 404){
+                context = await contextService.create({ data: { sessionId } });
+                context.frames = [];
+            }
+            else {
+                throw error;
+            }
+        }
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true });
 
         conversationStateObject[CSO_CONTEXT] = context;
