@@ -40,10 +40,21 @@ const styles = {
         display: 'inline'
     },
     trainingStatusLabel: {
-        fontWeight: 300,
         fontSize: '12px',
         marginLeft: '15px',
         display: 'inline'
+    },
+    trainingLabel: {
+        color: '#4e4e4e',
+        fontWeight: 'bold'
+    },
+    errorLabel: {
+        color: '#de5e56',
+        fontWeight: 'bold'
+    },
+    readyLabel: {
+        color: '#00ca9f',
+        fontWeight: 'bold'
     }
 }
 
@@ -72,12 +83,12 @@ class ActionButtons extends React.Component {
                     </Button>
                     <Typography className={classes.trainingStatusLabel}>
                         {agentStatus === 'Training' ?
-                            'Updating agent…' :
+                            <span className={classes.trainingLabel}>Status: updating agent…</span> :
                             (agentStatus === 'Error' ?
-                                'Error on training' :
+                                <span className={classes.errorLabel}>Status: error on training</span> :
                                 agentStatus === 'Out of Date' ?
-                                    'Training update: out of date' :
-                                    `Training update: ${getLastTrainingTime(lastTraining)}`)}
+                                    <span className={classes.errorLabel}>Status: out of date</span> :
+                                    <span className={classes.readyLabel}>{`Last Trained: ${getLastTrainingTime(lastTraining)}`}</span>)}
                     </Typography>
                 </Grid>
                 <Grid item className={classes.actionContainer}>
