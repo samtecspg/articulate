@@ -19,7 +19,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
     //MARK: get all the keywords for all the domains
     const getKeywordsFromRasaResults = ({ rasaResults }) => {
 
-        const keywords = _.flatMap(rasaResults, (domain) => {
+        return _.flatMap(rasaResults, (domain) => {
 
             domain.keywords = _.map(domain.keywords, (keyword) => {
 
@@ -29,8 +29,6 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             });
             return domain.keywords;
         });
-
-        return keywords;
     };
 
     //MARK: returns the domain recognizer, or the only domain or just list of keywords
@@ -224,7 +222,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
     const conversationStateObject = {};
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
-        
+
         //This block will handle sessionIds that doesn't exists
         //If the sessionId doesn't exists it creates one context for that session
         //And adds a frames attribute which is an empty array
@@ -232,13 +230,14 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
         let context;
         try {
             context = await contextService.findBySession({ sessionId, loadFrames: true });
-        } catch (error) {
-            if (error.statusCode && error.statusCode === 404){
+        }
+        catch (error) {
+            if (error.statusCode && error.statusCode === 404) {
                 context = await contextService.create({ data: { sessionId } });
                 context.frames = [];
             }
             else {
-                throw error;
+                return Promise.reject(error);
             }
         }
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true });

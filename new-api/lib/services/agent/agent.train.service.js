@@ -74,7 +74,7 @@ module.exports = async function ({ id, returnModel = false }) {
                         rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], domainTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
                     }
                 }
-                if (countOfDomainsWithData > 1){
+                if (countOfDomainsWithData > 1) {
                     const pipeline = agent.settings[CONFIG_SETTINGS_DOMAIN_PIPELINE];
                     const domainRecognizerModel = `${agent.agentName}${RASA_MODEL_DOMAIN_RECOGNIZER}`;
                     await rasaNLUService.train({
@@ -108,9 +108,9 @@ module.exports = async function ({ id, returnModel = false }) {
         }
         else {
             //Train default model
-            const keywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD) });
-            const sayings = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING) });
-            const trainingData = domainService.generateTrainingData({ keywords, sayings, extraTrainingData: agent.extraTrainingData, isKeyword: false });
+            const keywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
+            const sayings = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
+            const trainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData: agent.extraTrainingData, isKeyword: false });
             if (trainingData.numberOfSayings === 0) {
                 return;
             }
@@ -122,7 +122,7 @@ module.exports = async function ({ id, returnModel = false }) {
                 model,
                 oldModel: agent.model || null,
                 trainingSet: {
-                    [RASA_NLU_DATA]: trainingSet[RASA_NLU_DATA]
+                    [RASA_NLU_DATA]: trainingData[RASA_NLU_DATA]
                 },
                 pipeline,
                 language: agent.language,

@@ -1,11 +1,5 @@
 import _ from 'lodash';
-import {
-    CONFIG_KEYWORD_TYPE_REGEX,
-    KEYWORD_PREFIX_SYS,
-    KEYWORD_PREFIX_SYS_DUCKLING,
-    KEYWORD_PREFIX_SYS_REGEX,
-    KEYWORD_PREFIX_SYS_SPACY
-} from '../../../util/constants';
+import { CONFIG_KEYWORD_TYPE_REGEX } from '../../../util/constants';
 
 module.exports = async function ({ agent, action, context, currentContext, rasaResult, text }) {
 
@@ -14,28 +8,21 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
     const conversationStateObject = { agent, action, context, currentContext, rasaResult, text };
     //TODO: remove context update, and move it somewhere else
     const lastFrame = context.frames[context.frames.length - 1];
-    //MARK: action.slots > 0
     if (action.slots && action.slots.length > 0) {
-        //MARK: Create an array of slot names
         const actionSlotNames = _.map(action.slots, 'slotName');
-        //MARK: Create an array of keyword names for each slot, with the same indexes than the previous array
         const actionSlotKeywordsNames = _.map(action.slots, 'keyword');
-        //MARK: Check if slot from action.slot exists in context slot and return it if they are required
         const requiredSlots = _.filter(action.slots, (slot) => {
 
             lastFrame.slots[slot.slotName] = currentContext.slots[slot.slotName] ? currentContext.slots[slot.slotName] : '';
             return slot.isRequired;
         });
-        //MARK: create list if slots type list
         const isListActionSlotName = _.map(_.filter(action.slots, (slot) => {
 
             return slot.isList;
         }), 'slotName');
-        //MARK: Extract the recognized keywords from the text parse
         //Create an array of slots that existed before and are being overrided because of a new text parse
         const recognizedKeywords = rasaResult.keywords;
         const overridedSlots = [];
-        //MARK: Iterate over each recognized keyword
         const recognizedKeywordsNames = _.map(recognizedKeywords, (recognizedKeyword) => {
             //If the name of the recognized keyword match with an keyword name of an slot
             if (actionSlotKeywordsNames.indexOf(recognizedKeyword.keyword) > -1) {
@@ -113,7 +100,7 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
                 }
             }
             //If the slot wasn't part of the scenario slots array. This means that the slot is a system keyword
-            //This block is commented to remove sys entities to be by default on slots 
+            //This block is commented to remove sys entities to be by default on slots
             /*else {
                 //Check if it is a spacy or duckling system keyword
                 if (recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_SPACY) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_DUCKLING) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_REGEX) !== -1) {
@@ -138,10 +125,9 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
             return { textResponse };
         }
     }
-    //MARK: action.slots === 0
     else {
-        const recognizedKeywords = rasaResult.keywords;
-        //This block is commented to remove sys entities to be by default on slots 
+        //const recognizedKeywords = rasaResult.keywords;
+        //This block is commented to remove sys entities to be by default on slots
         /*_.map(recognizedKeywords, (recognizedKeyword) => {
 
             if (recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_SPACY) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_DUCKLING) !== -1) {
