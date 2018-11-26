@@ -16,6 +16,7 @@ import FindAllSettings from './agent/agent.find-all-settings.service';
 import FindSettingByName from './agent/agent.find-setting-by-name.service';
 import GetTrainedDomains from './agent/agent.get-trained-domains.service';
 import Import from './agent/agent.import.service';
+import IsModelUnique from './agent/agent.is-model-unique.service';
 import ParseDucklingKeywords from './agent/agent.parse-duckling-keywords.service';
 import ParseRasaKeywords from './agent/agent.parse-rasa-keywords.service';
 import ParseRegexKeywords from './agent/agent.parse-regex-keywords.service';
@@ -252,6 +253,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async converseCallWebhook() {
 
         return await ConverseCallWebhook.apply(this, arguments);
+    }
+
+    async isModelUnique() {
+
+        return await IsModelUnique.apply(this, arguments);
     }
 };
 
