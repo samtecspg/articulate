@@ -3,7 +3,7 @@ import Moment from 'moment';
 import {
     CONFIG_SETTINGS_DEFAULT_AGENT,
     MODEL_AGENT,
-    STATUS_READY
+    STATUS_OUT_OF_DATE
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
@@ -12,8 +12,7 @@ module.exports = async function ({ data, returnModel = false }) {
     const { redis } = this.server.app;
     const { settingsService } = await this.server.services();
 
-    data.status = data.status || STATUS_READY;
-    data.lastTraining = Moment(data.lastTraining).utc().format();
+    data.status = data.status || STATUS_OUT_OF_DATE;
     data.settings = {};
     if (data.enableModelsPerDomain === undefined) {
         data.enableModelsPerDomain = true;
