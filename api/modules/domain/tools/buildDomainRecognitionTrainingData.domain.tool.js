@@ -22,9 +22,9 @@ const buildDomainRecognitionTrainingData = (server, agentId, extraTrainingData, 
         }
 
         const domainsExamples = data.map( (domain) => {
-
+            
+            let entitiesCombinations = [];
             if (extraTrainingData){
-                let entitiesCombinations = [];
                 if (domain.entities.length > 0){
                     entitiesCombinations = GetEntitiesCombinations(domain.entities, domain.intents);
                 }
