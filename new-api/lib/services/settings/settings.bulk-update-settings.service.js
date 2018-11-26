@@ -5,27 +5,21 @@ import RedisErrorHandler from '../../errors/redis.error-handler';
 module.exports = async function ({ settingsData }) {
 
     const { redis } = this.server.app;
-    const Model = await redis.factory(MODEL_SETTINGS);
+    const { settingsService } = await this.server.services();
     try {
-        const settingsProperties = await Promise.all(_.map(settingsData, async (value, name) => {
+        await Promise.all(_.map(settingsData, async (value, name) => {
 
-            await Model.findByName({ name });
+            const Model = await redis.factory(MODEL_SETTINGS);
+            await Model.findByName({ name, returnModel: true });
             if (Model.inDb) {
                 await Model.updateInstance({ data: { value } });
             }
             else {
                 await Model.createInstance({ data: { name, value } });
             }
-            return Model.allProperties();
         }));
 
-        const settings = {};
-        settingsProperties.forEach(({ name, value }) => {
-
-            settings[name] = value;
-        });
-
-        return settings;
+        return await settingsService.findAll();
     }
     catch (error) {
         throw RedisErrorHandler({ error });

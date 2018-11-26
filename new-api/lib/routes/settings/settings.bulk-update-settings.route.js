@@ -8,17 +8,17 @@ import SettingsValidator from '../../validators/settings.validator';
 //const logger = require('../../../util/logger')({ name: `route:agent:create` });
 
 module.exports = {
-    method: 'post',
+    method: 'put',
     path: `/${ROUTE_SETTINGS}/${PARAM_BULK}`,
     options: {
         tags: ['api'],
-        description: 'Bulk create or update settings',
+        description: 'Bulk update settings',
         validate: SettingsValidator.updateAll,
         handler: async (request) => {
 
             const { settingsService } = await request.services();
             try {
-                return await settingsService.bulkCreate({ settingsData: request.payload });
+                return await settingsService.bulkUpdate({ settingsData: request.payload });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

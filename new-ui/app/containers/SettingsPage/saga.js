@@ -32,7 +32,7 @@ export function* putSettings(payload) {
   const settings = yield select(makeSelectSettings());
   const { api } = payload;
   try {
-      const response = yield call(api.settings.putSettings, { body: settings });
+      const response = yield call(api.settings.putSettingsBulk, { body: settings });
       yield put(updateSettingsSuccess(response.obj));
   } catch (err) {
       yield put(updateSettingsError(err));

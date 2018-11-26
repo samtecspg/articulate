@@ -3,7 +3,8 @@ import Create from './settings/settings.create.service';
 import FindAll from './settings/settings.find-all.service';
 import FindByName from './settings/settings.find-by-name.service';
 import UpdateByName from './settings/settings.update-by-name.service';
-import UpsertAll from './settings/settings.upsert-all-settings.service';
+import BulkCreate from './settings/settings.bulk-create-settings.service';
+import BulkUpdate from './settings/settings.bulk-update-settings.service';
 
 module.exports = class SettingsService extends Schmervice.Service {
 
@@ -27,9 +28,14 @@ module.exports = class SettingsService extends Schmervice.Service {
         return await UpdateByName.apply(this, arguments);
     }
 
-    async upsertAll() {
+    async bulkCreate() {
 
-        return await UpsertAll.apply(this, arguments);
+        return await BulkCreate.apply(this, arguments);
+    }
+
+    async bulkUpdate() {
+
+        return await BulkUpdate.apply(this, arguments);
     }
 
 };
