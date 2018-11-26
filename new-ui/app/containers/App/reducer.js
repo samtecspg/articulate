@@ -193,7 +193,7 @@ const initialState = Immutable({
   },
   agentPostFormat: {
     agent: '',
-    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}"\n}'
+    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}'
   },
   agentSettings: {
     rasaURL: '',
@@ -245,7 +245,7 @@ const initialState = Immutable({
   },
   actionPostFormat: {
     agent: '',
-    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}"\n}'
+    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}'
   },
   actionOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   actionOldPayloadXML: "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
