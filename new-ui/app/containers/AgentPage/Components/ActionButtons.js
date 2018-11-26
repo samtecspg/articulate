@@ -88,7 +88,9 @@ class ActionButtons extends React.Component {
                                 <span className={classes.errorLabel}>Status: error on training</span> :
                                 agentStatus === 'Out of Date' ?
                                     <span className={classes.errorLabel}>Status: out of date</span> :
-                                    <span className={classes.readyLabel}>{`Last Trained: ${getLastTrainingTime(lastTraining)}`}</span>)}
+                                    agentStatus === 'Ready' ?
+                                    <span className={classes.readyLabel}>{`Last Trained: ${getLastTrainingTime(lastTraining)}`}</span> :
+                                    null)}
                     </Typography>
                 </Grid>
                 <Grid item className={classes.actionContainer}>
