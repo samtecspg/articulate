@@ -48,15 +48,31 @@ export default defineMessages({
         defaultMessage: 'Create'
     },
     trainButton: {
-      id: 'app.containers.SayingsPage.trainButton',
+      id: 'app.containers.KeywordsPage.trainButton',
       defaultMessage: 'Train'
     },
     show: {
-        id: 'app.containers.SayingsPage.component.SayingDataForm.show',
+        id: 'app.containers.KeywordsPage.component.SayingDataForm.show',
         defaultMessage: 'Show'
     },
     entries: {
-        id: 'app.containers.SayingsPage.component.SayingDataForm.entries',
+        id: 'app.containers.KeywordsPage.component.SayingDataForm.entries',
         defaultMessage: 'entries'
-    }
+    },
+    statusOutOfDate: {
+      id: 'app.containers.KeywordsPage.component.ActionButtons.statusOutOfDate',
+      defaultMessage: 'Status: out of date'
+    },
+    statusError: {
+      id: 'app.containers.KeywordsPage.component.ActionButtons.statusError',
+      defaultMessage: 'Status: error on training'
+    },
+    statusTraining: {
+      id: 'app.containers.KeywordsPage.component.ActionButtons.statusTraining',
+      defaultMessage: 'Status: updating agent…'
+    },
+    statusReady: {
+      id: 'app.containers.KeywordsPage.component.ActionButtons.statusReady',
+      defaultMessage: 'Last Trained: '
+    },
 });

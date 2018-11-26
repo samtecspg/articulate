@@ -83,13 +83,13 @@ class ActionButtons extends React.Component {
                     </Button>
                     <Typography className={classes.trainingStatusLabel}>
                         {agentStatus === 'Training' ?
-                            <span className={classes.trainingLabel}>Status: updating agent…</span> :
+                            <span className={classes.trainingLabel}><FormattedMessage {...messages.statusTraining} /></span> :
                             (agentStatus === 'Error' ?
-                                <span className={classes.errorLabel}>Status: error on training</span> :
+                                <span className={classes.errorLabel}><FormattedMessage {...messages.statusError} /></span> :
                                 agentStatus === 'Out of Date' ?
-                                    <span className={classes.errorLabel}>Status: out of date</span> :
+                                    <span className={classes.errorLabel}><FormattedMessage {...messages.statusOutOfDate} /></span> :
                                     agentStatus === 'Ready' ?
-                                    <span className={classes.readyLabel}>{`Last Trained: ${getLastTrainingTime(lastTraining)}`}</span> :
+                                    <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{getLastTrainingTime(lastTraining)}</span> :
                                     null)}
                     </Typography>
                 </Grid>
