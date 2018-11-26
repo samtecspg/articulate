@@ -456,11 +456,12 @@ export function loadSayingsSuccess(sayings) {
   };
 }
 
-export function addSaying(value) {
+export function addSaying(pageSize, value) {
   return {
     type: ADD_SAYING,
     apiCall: true,
     value,
+    pageSize,
   }
 }
 
@@ -471,12 +472,13 @@ export function addSayingError(error) {
   };
 }
 
-export function deleteSaying(sayingId, domainId) {
+export function deleteSaying(pageSize, sayingId, domainId) {
   return {
     type: DELETE_SAYING,
     apiCall: true,
     sayingId,
     domainId,
+    pageSize,
   }
 }
 

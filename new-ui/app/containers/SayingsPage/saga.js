@@ -70,7 +70,7 @@ export function* postSaying(payload) {
     const agent = yield select(makeSelectAgent());
     const domain = yield select(makeSelectSelectedDomain());
     const actions = yield select(makeSelectNewSayingActions());
-    const { api, value } = payload;
+    const { api, value, pageSize } = payload;
     try {
         const newSayingData = {
             userSays: value,
@@ -85,6 +85,7 @@ export function* postSaying(payload) {
         yield call(getSayings, {
             api,
             filter: '',
+            pageSize,
             page: 1,
         });
     } catch (err) {
@@ -94,17 +95,18 @@ export function* postSaying(payload) {
 
 export function* deleteSaying(payload) {
     const agent = yield select(makeSelectAgent());
-    const { api, sayingId, domainId} = payload;
+    const { api, sayingId, domainId, pageSize } = payload;
     try {
         yield call(api.agent.deleteAgentAgentidDomainDomainidSayingSayingid, { 
             agentId: agent.id,
             domainId,
-            sayingId 
+            sayingId
         });
         yield call(getSayings, {
             api,
             filter: '',
             page: 1,
+            pageSize
         });
     } catch (err) {
         yield put(deleteSayingError(err));

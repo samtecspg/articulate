@@ -179,8 +179,8 @@ export class SayingsPage extends React.Component {
               agentActions={this.props.agentActions}
               agentDomains={this.props.agentDomains}
               agentFilteredDomains={this.props.agentFilteredDomains}
-              onAddSaying={this.props.onAddSaying}
-              onDeleteSaying={this.props.onDeleteSaying}
+              onAddSaying={this.props.onAddSaying.bind(null, this.state.pageSize)}
+              onDeleteSaying={this.props.onDeleteSaying.bind(null, this.state.pageSize)}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
@@ -269,11 +269,11 @@ function mapDispatchToProps(dispatch) {
     onLoadActions: () => {
       dispatch(loadActions());
     },
-    onAddSaying: (value) => {
-      dispatch(addSaying(value));
+    onAddSaying: (pageSize, value) => {
+      dispatch(addSaying(pageSize, value));
     },
-    onDeleteSaying: (sayingId, domainId) => {
-      dispatch(deleteSaying(sayingId, domainId));
+    onDeleteSaying: (pageSize, sayingId, domainId) => {
+      dispatch(deleteSaying(pageSize, sayingId, domainId));
     },
     onTagKeyword: (filter, page, pageSize, saying, value, start, end, keywordId, keywordName) => {
       dispatch(tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName));
