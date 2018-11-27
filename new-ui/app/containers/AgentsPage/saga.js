@@ -28,7 +28,7 @@ export function* deleteAgent(payload) {
     yield call(api.agent.deleteAgentAgentid, { agentId: id });
     yield put(deleteAgentSuccess());
     const response = yield call(api.agent.getAgent, {});
-    yield put(loadAgentsSuccess(response.obj));
+    yield put(loadAgentsSuccess(response.obj.data));
   } catch (err) {
       yield put(deleteAgentError(err));
   }
