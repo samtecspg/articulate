@@ -188,10 +188,10 @@ class AgentValidate {
                     domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
                     status: AgentSchema.status,
-                    lastTraining: AgentSchema.lastTraining,
+                    lastTraining: AgentSchema.lastTraining.allow(''),
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerDomain: AgentSchema.enableModelsPerDomain,
-                    model: AgentSchema.model,
+                    model: AgentSchema.model.allow(''),
                     domainRecognizer: AgentSchema.domainRecognizer
                 };
             })()
