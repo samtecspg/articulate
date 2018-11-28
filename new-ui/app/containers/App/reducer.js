@@ -336,11 +336,11 @@ function appReducer(state = initialState, action) {
 
     /* Agents */
     case LOAD_AGENTS:
-      return state.set('agents', [])
+      return state.set('agents', false)
         .set('loading', true)
         .set('error', false);
     case LOAD_AGENTS_ERROR:
-      return state.set('agents', [])
+      return state.set('agents', false)
         .set('loading', false)
         .set('error', action.error);
     case LOAD_AGENTS_SUCCESS:
