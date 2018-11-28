@@ -157,7 +157,7 @@ const initialState = Immutable({
   doc: {},
   domains: [],
   filteredDomains: [],
-  agents: [],
+  agents: false,
   currentAgent: {
       agentName: '',
       description: '',

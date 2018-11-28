@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 
 import ContentHeader from 'components/ContentHeader';
 import SearchAgent from './Components/SearchAgent';
@@ -29,24 +29,27 @@ import { push } from 'react-router-redux';
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.onComponentMounted();
   }
 
   render() {
     const { agents } = this.props;
     return (
-      <Grid container>
-        <ContentHeader
-          title={messages.title}
-          subtitle={messages.subtitle}
-          inlineElement={
-            <SearchAgent/>
-          }
-          sizesForHideInlineElement={['sm', 'xs']}
-        />
-        <AgentsCards onGoToUrl={this.props.onGoToUrl} onDeleteAgent={this.props.onDeleteAgent} agents={agents} />
-      </Grid>
+        agents ? 
+          <Grid container>
+              <ContentHeader
+              title={messages.title}
+              subtitle={messages.subtitle}
+              inlineElement={
+                <SearchAgent/>
+              }
+              sizesForHideInlineElement={['sm', 'xs']}
+            />
+            <AgentsCards onGoToUrl={this.props.onGoToUrl} onDeleteAgent={this.props.onDeleteAgent} agents={agents} />
+          </Grid>
+        :
+          <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }
@@ -58,7 +61,10 @@ AgentsPage.propTypes = {
     PropTypes.object,
     PropTypes.bool,
   ]),
-  agents: PropTypes.array,
+  agents: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.bool,
+  ]),
 };
 
 const mapStateToProps = createStructuredSelector({
