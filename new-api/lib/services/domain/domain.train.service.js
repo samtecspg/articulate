@@ -22,32 +22,35 @@ module.exports = async function ({ AgentModel, DomainModel, returnModel = false 
     let model = Guid.create().toString();
     try {
         const keywords = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
-        const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING  });
+        const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
         const trainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData: domain.extraTrainingData });
-        if (trainingData.numberOfSayings === 0) {
-            return;
+        if (trainingData.numberOfSayings < 2) {
+            DomainModel.property('status', STATUS_ERROR);
         }
-        const pipeline = trainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
-        model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
-        model = domain.domainName + '_' + model;
+        else {
+            const pipeline = trainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
+            model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
+            model = domain.domainName + '_' + model;
 
-        DomainModel.property('status', STATUS_TRAINING);
-        await DomainModel.save();
+            DomainModel.property('status', STATUS_TRAINING);
+            await DomainModel.save();
 
-        await rasaNLUService.train({
-            project: agent.agentName,
-            model,
-            oldModel: domain.model || null,
-            trainingSet: {
-                [RASA_NLU_DATA]: trainingData[RASA_NLU_DATA]
-            },
-            pipeline,
-            language: agent.language,
-            baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
-        });
-        DomainModel.property('lastTraining', Moment().utc().format());
-        DomainModel.property('model', model);
-        DomainModel.property('status', STATUS_READY);
+            await rasaNLUService.train({
+                project: agent.agentName,
+                model,
+                oldModel: domain.model || null,
+                trainingSet: {
+                    [RASA_NLU_DATA]: trainingData[RASA_NLU_DATA]
+                },
+                pipeline,
+                language: agent.language,
+                baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
+            });
+            DomainModel.property('lastTraining', Moment().utc().format());
+            DomainModel.property('model', model);
+            DomainModel.property('status', STATUS_READY);
+        }
+
         await DomainModel.save();
         return returnModel ? DomainModel : DomainModel.allProperties();
     }

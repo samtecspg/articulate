@@ -36,7 +36,6 @@ module.exports = async function ({ id, returnModel = false }) {
         //const rasaStatus = await rasaNLU.Status();
         AgentModel.property('status', STATUS_TRAINING);
         await AgentModel.save();
-        //TODO: Publish agent update
         if (agent.enableModelsPerDomain) {
             const DomainModels = await globalService.loadAllByIds({
                 ids: await AgentModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN),
@@ -62,7 +61,7 @@ module.exports = async function ({ id, returnModel = false }) {
                 for (const DomainModel of DomainModels) {
 
                     const sayingIds = await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING);
-                    if (sayingIds.length > 0) {
+                    if (sayingIds.length > 1) { // If the domain only have 1 saying then RASA will fail during training
                         countOfDomainsWithData++;
                         const domainName = DomainModel.property('domainName');
                         const extraTrainingData = DomainModel.property('extraTrainingData');
