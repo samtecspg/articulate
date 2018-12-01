@@ -229,6 +229,9 @@ class SayingsDataForm extends React.Component {
                                     if (['filter', 'create', 'no results'].indexOf(evt.target.value) === -1) {
                                         this.props.onSelectDomain(evt.target.value);
                                     }
+                                    this.setState({
+                                        categoriesDropdownOpen: false,
+                                    });
                                 }}
                                 margin='normal'
                                 fullWidth
