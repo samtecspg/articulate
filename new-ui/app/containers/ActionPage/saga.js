@@ -148,7 +148,7 @@ export function* postAction(payload) {
   const agent = yield select(makeSelectAgent());
   const mutableAction = Immutable.asMutable(action, {deep: true});
   delete mutableAction.agent;
-  const { api } = payload;
+  const { api, addToNewSayingActions } = payload;
   try {
     const response = yield call(api.agent.postAgentAgentidAction, { agentId: agent.id ,body: mutableAction });
     if (action.useWebhook){
@@ -162,7 +162,7 @@ export function* postAction(payload) {
     mutableSayingForAction.actions.push(response.obj.actionName);
     const updateSayingPayload = { api, sayingId: sayingForAction.id, saying: mutableSayingForAction };
     yield call(putSaying, updateSayingPayload);
-    yield put(addActionSuccess(response.obj));
+    yield put(addActionSuccess({ action: response.obj, addToNewSayingActions }));
   } catch (err) {
     yield put(addActionError(err));
   }

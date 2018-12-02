@@ -798,8 +798,11 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case ADD_ACTION_SUCCESS:
-      return state.set('action', action.action)
-        .set('currentAction', action.action)
+      if (action.payload.addToNewSayingActions){
+        state = state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.payload.action.actionName));
+      }
+      return state.set('action', action.payload.action)
+        .set('currentAction', action.payload.action)
         .set('loading', false)
         .set('success', true)
         .set('error', false);

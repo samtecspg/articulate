@@ -868,10 +868,11 @@ export function changeActionPostFormatData(payload) {
   };
 }
 
-export function addAction(){
+export function addAction(addToNewSayingActions){
   return {
     type: ADD_ACTION,
-    apiCall: true
+    apiCall: true,
+    addToNewSayingActions
   }
 }
 
@@ -881,10 +882,10 @@ export function addActionError(){
   }
 }
 
-export function addActionSuccess(action){
+export function addActionSuccess(payload){
   return {
     type: ADD_ACTION_SUCCESS,
-    action
+    payload
   }
 }
 

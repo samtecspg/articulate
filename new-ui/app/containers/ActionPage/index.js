@@ -225,7 +225,8 @@ export class ActionPage extends React.Component {
         formError: false,
       });
       if (this.state.isNewAction){
-        this.props.onAddNewAction();
+        //If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
+        this.props.onAddNewAction(this.props.saying.agent === '');
       }
       else {
         this.props.onEditAction();
@@ -399,8 +400,8 @@ function mapDispatchToProps(dispatch) {
     onChangePostFormatData: (field, value) => {
       dispatch(changeActionPostFormatData({field, value}));
     },
-    onAddNewAction: () => {
-      dispatch(addAction());
+    onAddNewAction: (addToNewSayingActions) => {
+      dispatch(addAction(addToNewSayingActions));
     },
     onSuccess: (url) => {
       dispatch(resetStatusFlag());

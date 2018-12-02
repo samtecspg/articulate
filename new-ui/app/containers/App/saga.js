@@ -47,7 +47,6 @@ export function* postConverse(payload) {
           message: response.obj.textResponse,
         }));
     } catch (err) {
-      console.log(err);
         yield put(respondMessage({
           author: 'Error',
           docId: null,
