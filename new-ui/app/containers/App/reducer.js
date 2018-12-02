@@ -924,6 +924,7 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case CREATE_DOMAIN_SUCCESS:
       return state.set('domain', action.domain)
+        .set('selectedDomain', action.domain.id)
         .set('loading', false)
         .set('success', true)
         .set('error', false);
