@@ -113,6 +113,7 @@ export class AgentPage extends React.PureComponent {
     let errors = false;
     const newErrorState = {
       agentName: false,
+      agentDescription: false,
       fallbackResponses: false,
       webhookUrl: false,
       rasaURL: false,
@@ -129,6 +130,13 @@ export class AgentPage extends React.PureComponent {
     }
     else {
       newErrorState.agentName = false;
+    }
+    if (!this.props.agent.description || this.props.agent.description === ''){
+      errors = true;
+      newErrorState.agentDescription = true;
+    }
+    else {
+      newErrorState.agentDescription = false;
     }
     if (!this.props.agent.fallbackResponses || this.props.agent.fallbackResponses.length === 0){
       errors = true;

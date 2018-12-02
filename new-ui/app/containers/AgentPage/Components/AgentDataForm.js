@@ -68,7 +68,7 @@ class AgentDataForm extends React.Component {
                     <Grid container spacing={24} item xs={12}>
                         <Grid item lg={6} md={12} sm={12} xs={12}>
                         <TextField
-                            id='name'
+                            id='description'
                             label={intl.formatMessage(messages.descriptionTextField)}
                             value={agent.description}
                             placeholder={intl.formatMessage(messages.descriptionTextFieldPlaceholder)}
@@ -80,6 +80,8 @@ class AgentDataForm extends React.Component {
                             }}
                             multiline
                             rows={4}
+                            helperText={intl.formatMessage(messages.requiredField)}
+                            error={this.props.errorState.agentDescription}
                         />
                         </Grid>
                     </Grid>
@@ -87,7 +89,7 @@ class AgentDataForm extends React.Component {
                         <Grid item lg={6} md={12} sm={12} xs={12}>
                             <TextField
                                 select
-                                id='name'
+                                id='language'
                                 value={agent.language}
                                 label={intl.formatMessage(messages.languageSelect)}
                                 onChange={(evt) => { this.props.onChangeAgentData('language', evt.target.value) }}
@@ -112,7 +114,7 @@ class AgentDataForm extends React.Component {
                         <Grid item lg={6} md={12} sm={12} xs={12}>
                         <TextField
                             select
-                            id='name'
+                            id='timezone'
                             value={agent.timezone}
                             label={intl.formatMessage(messages.timezoneSelect)}
                             onChange={(evt) => { this.props.onChangeAgentData('timezone', evt.target.value) }}
@@ -152,7 +154,7 @@ class AgentDataForm extends React.Component {
                             </Grid>
                             <Grid item lg={2} md={2} sm={3} xs={4}>
                             <TextField
-                                id='name'
+                                id='domainClassifierThreshold'
                                 margin='normal'
                                 value={agent.domainClassifierThreshold}
                                 onChange={(evt) => {
