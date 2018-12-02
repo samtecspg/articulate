@@ -97,6 +97,7 @@ class SayingRow extends React.Component {
         highlightedValue: null,
         start: null,
         end: null,
+        menuLocation: {}
     };
 
     handleClose = (selectName) => {
@@ -154,12 +155,20 @@ class SayingRow extends React.Component {
 
     onHighlight(evt){
         const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
         const highlightedValue = selection.toString();
         const offset = this.props.saying.userSays.indexOf(selection.anchorNode.textContent); //calculates where the chunk starts in the saying
-        const start = selection.getRangeAt(0).startOffset + offset; 
-        const end = selection.getRangeAt(0).endOffset + offset;
+        const start = range.startOffset + offset; 
+        const end = range.endOffset + offset;
+
+        const highlightRectangle = range.getClientRects();
+
         if(highlightedValue.trim()){
             this.setState({
+                menuLocation: {
+                    left: highlightRectangle[0].right + 5, //The menu is going to open just to the right of the highlight,
+                    top: highlightRectangle[0].top,
+                },
                 highlightedValue,
                 start,
                 end,
@@ -247,7 +256,7 @@ class SayingRow extends React.Component {
                                     MenuProps={{
                                         style:{
                                             minHeight: '300px',
-                                            maxHeight: '300px',
+                                            maxHeight: '300px'
                                         },
                                         anchorEl: this.state.anchorEl
                                     }}
@@ -269,11 +278,14 @@ class SayingRow extends React.Component {
                                     }}
                                     open={this.state.openKeywords}
                                     onClose={() => this.handleClose('keywords')}
-                                    onOpen={(evt) => this.handleOpen('keywords', evt.target)}
                                     value={10}
                                     onChange={(evt) => { evt.preventDefault(); this.handleChange('keywords', evt.target.value)}}
                                     MenuProps={{
-                                        anchorEl: this.state.anchorEl
+                                        anchorPosition: {
+                                            left: this.state.menuLocation.left,
+                                            top: this.state.menuLocation.top,
+                                        },
+                                        anchorReference: 'anchorPosition'
                                     }}
                                 >
                                     <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newKeyword}/></MenuItem>
