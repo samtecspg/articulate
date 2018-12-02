@@ -16,6 +16,7 @@ import {
     InputAdornment,
     Select
 } from '@material-ui/core';
+
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
@@ -79,7 +80,6 @@ const styles = {
     pageTextfield: {
         width: '75px',
         margin: '5px',
-        height: 0,
         marginTop: '0px !important',
         direction: 'ltr'
     },
