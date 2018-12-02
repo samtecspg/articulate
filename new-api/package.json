@@ -27,6 +27,7 @@
     "confidence": "3.x.x",
     "debug": "^4.0.1",
     "dotenv": "^6.0.0",
+    "elasticsearch": "^15.2.0",
     "glue": "5.x.x",
     "guid": "^0.0.12",
     "handlebars": "^4.0.12",

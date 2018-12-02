@@ -27,7 +27,8 @@ module.exports = async function ({ data, returnModel = false }) {
         });
         await AgentModel.createInstance({ data });
         return returnModel ? AgentModel : AgentModel.allProperties();
-    } catch (error) {
+    }
+    catch (error) {
         throw RedisErrorHandler({ error });
     }
 };

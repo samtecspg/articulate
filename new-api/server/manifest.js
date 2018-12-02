@@ -73,6 +73,13 @@ module.exports = new Confidence.Store({
                 options: redisOptions
             },
             {
+                plugin: './plugins/es',
+                options: {
+                    host: process.env.ES_HOST || 'http://elasticsearch:9200',
+                    log: process.env.ES_LOG || 'error'
+                }
+            },
+            {
                 plugin: './plugins/redis-messaging',
                 options: redisOptions
             },
