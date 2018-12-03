@@ -39,14 +39,16 @@ const styles = {
 class ActionButtons extends React.Component {
 
     render(){
-        const { classes, agentStatus, lastTraining, onTrain } = this.props;
+        const { classes, agentStatus, lastTraining, onTrain, newAgent } = this.props;
         return (
             <Grid className={classes.container}>
-                <TrainButton
-                    agentStatus={agentStatus}
-                    lastTraining={lastTraining}
-                    onTrain={onTrain}
-                />
+                { newAgent ? null : 
+                    <TrainButton
+                        agentStatus={agentStatus}
+                        lastTraining={lastTraining}
+                        onTrain={onTrain}
+                    />                
+                }
                 <Grid item className={classes.actionContainer}>
                     <Hidden only={['xl', 'lg', 'md']}>
                         <Link className={`${classes.icon} ${classes.link}`} to='/'>
@@ -81,6 +83,7 @@ ActionButtons.propTypes = {
     agentStatus: PropTypes.string,
     lastTraining: PropTypes.string,
     formError: PropTypes.bool,
+    newAgent: PropTypes.bool
 };
 
 export default withStyles(styles)(ActionButtons);

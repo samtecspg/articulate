@@ -264,6 +264,7 @@ export class AgentPage extends React.PureComponent {
           subtitle={this.state.isNewAgent ? messages.createSubtitle : this.props.agent.agentName}
           inlineElement={
             <ActionButtons
+              newAgent={this.state.isNewAgent}
               formError={this.state.formError}
               onFinishAction={this.submit}
               onTrain={this.props.onTrain}
