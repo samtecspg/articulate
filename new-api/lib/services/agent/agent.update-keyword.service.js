@@ -32,7 +32,8 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
         const models = await globalService.getAllModelsInPath({ modelPath, ids: modelPathIds, returnModel: true });
         const AgentModel = models[MODEL_AGENT];
         const KeywordModel = models[MODEL_KEYWORD];
-        const requiresRetrain = validateExamplesAreEqual({ prevExamples: KeywordModel.property('examples'), newExamples: keywordData.examples });
+        let requiresRetrain = validateExamplesAreEqual({ prevExamples: KeywordModel.property('examples'), newExamples: keywordData.examples });
+        requiresRetrain = requiresRetrain || keywordData.regex !== KeywordModel.property('regex');
         await KeywordModel.updateInstance({ data: keywordData });
 
         if (requiresRetrain) {
