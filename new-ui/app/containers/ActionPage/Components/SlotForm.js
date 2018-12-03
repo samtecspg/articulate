@@ -154,51 +154,56 @@ class SlotForm extends React.Component {
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={24} item xs={12}>
-                        <Grid item xs={12}>
-                            <TextField
-                                id='newTextPrompt'
-                                label={intl.formatMessage(messages.textpromptTextField)}
-                                placeholder={intl.formatMessage(messages.textpromptTextFieldPlaceholder)}
-                                onKeyPress={(ev) => {
-                                    if (ev.key === 'Enter') {
-                                        ev.preventDefault();
-                                        this.props.onAddTextPrompt(ev.target.value)
-                                        ev.target.value = '';
-                                    }
-                                }}
-                                margin='normal'
-                                fullWidth
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                InputProps={{
-                                    disabled: !slot.isRequired
-                                }}
-                                helperText={intl.formatMessage(messages.textpromptHelperText)}
-                                error={this.props.errorState ? this.props.errorState.textPrompts : false}
-                            />
-                            {slot.textPrompts.length > 0 ?
-                                <Table className={classes.table}>
-                                    <TableBody>
-                                        {slot.textPrompts.map((textPrompt, index) => {
-                                            return (
-                                            <TableRow key={`${textPrompt}_${index}`}>
-                                                <TableCell>
-                                                    {textPrompt}
-                                                </TableCell>
-                                                <TableCell className={classes.deleteCell}>
-                                                    <img onClick={() => { this.props.onDeleteTextPrompt(index) }} className={classes.deleteIcon} src={trashIcon} />
-                                                </TableCell>
-                                            </TableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table> :
-                                null
-                            }
-                        </Grid>
-                    </Grid>
+                    { slot.isRequired ? 
+                        <Grid container spacing={24} item xs={12}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id='newTextPrompt'
+                                    label={intl.formatMessage(messages.textpromptTextField)}
+                                    placeholder={intl.formatMessage(messages.textpromptTextFieldPlaceholder)}
+                                    onKeyPress={(ev) => {
+                                        if (ev.key === 'Enter') {
+                                            ev.preventDefault();
+                                            if (ev.target.value !== ''){
+                                                this.props.onAddTextPrompt(ev.target.value)
+                                                ev.target.value = '';
+                                            }
+                                        }
+                                    }}
+                                    margin='normal'
+                                    fullWidth
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    InputProps={{
+                                        disabled: !slot.isRequired
+                                    }}
+                                    helperText={intl.formatMessage(messages.textpromptHelperText)}
+                                    error={this.props.errorState ? this.props.errorState.textPrompts : false}
+                                />
+                                {slot.textPrompts.length > 0 ?
+                                    <Table className={classes.table}>
+                                        <TableBody>
+                                            {slot.textPrompts.map((textPrompt, index) => {
+                                                return (
+                                                <TableRow key={`${textPrompt}_${index}`}>
+                                                    <TableCell>
+                                                        {textPrompt}
+                                                    </TableCell>
+                                                    <TableCell className={classes.deleteCell}>
+                                                        <img onClick={() => { this.props.onDeleteTextPrompt(index) }} className={classes.deleteIcon} src={trashIcon} />
+                                                    </TableCell>
+                                                </TableRow>
+                                                );
+                                            })}
+                                        </TableBody>
+                                    </Table> :
+                                    null
+                                }
+                            </Grid>
+                        </Grid>                    
+                        : null 
+                    }
                 </Grid>
             </Grid>
         );
