@@ -1,40 +1,68 @@
-/**
- * NotFoundPage
- *
- * This is the page we show when the user visits a url that doesn't have a route
- *
- * NOTE: while this component should technically be a stateless functional
- * component (SFC), hot reloading does not currently support SFCs. If hot
- * reloading is not a necessity for you then you can refactor it and remove
- * the linting exception.
- */
-
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+import { Grid, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 import image404 from '../../images/404-img.svg';
 import messages from './messages';
 
-/* eslint-disable react/prefer-stateless-function */
-export default class NotFound extends React.PureComponent {
+const styles = {
+  mainContainer: {
+    marginTop: '60px'
+  },
+  image: {
+    width: '300px',
+    height: '300px',
+    display: 'block',
+    margin: 'auto',
+    width: '50%'
+  },
+  needHelpLink: {
+    cursor: 'pointer',
+    left: -15,
+    fontSize: '14px',
+    fontFamily: 'Montserrat',
+    fontWeight: 400,
+    position: 'relative',
+  }
+}
+
+class NotFoundPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
   render() {
+    const { classes } = this.props;
     return (
-      <Grid>
-        <p>
-          {messages.notFoundTitle.defaultMessage}{messages.notFoundDescription.defaultMessage}
-        </p>
-        <img className="error-img" src={image404} alt="" />
-        <p className="error-paragraph">{messages.notFoundParagraph.defaultMessage}</p>
-        <div className="error-btn-container">
-          <a onClick={() => goBack()} className="btn-floating btn-large">Go Back</a>
-          <a target="_blank" style={{ marginLeft: '5px' }} className="btn-floating secondary-btn btn-large" href="https://samtecspg.github.io/articulate/">See Docs</a>
-        </div>
-        <div className="fixed-action-btn">
-          <a style={ { right: '310px' } } className="btn-floating btn-large" href="/agent/create">
-          + Create Agent
-          </a>
-        </div>
+      <Grid className={classes.mainContainer} container justify='center' spacing={8}>
+        <Grid item xs={12}>
+          <Typography align='center'>
+            <FormattedMessage {...messages.notFoundTitle} />
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <img className={classes.image} src={image404} alt="" />
+        </Grid>
+        <Grid item xs={6}>
+          <Typography align='center'>
+            <FormattedMessage {...messages.notFoundParagraph} />
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+        </Grid>
+        <Grid item xs={12}>
+            <a className={classes.needHelpLink} target="_blank" href='https://samtecspg.github.io/articulate/'>
+              <Typography align='center'>
+                <FormattedMessage {...messages.needHelp} />
+              </Typography>
+            </a>
+        </Grid>
       </Grid>
     );
   }
 }
+
+NotFoundPage.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(NotFoundPage);
