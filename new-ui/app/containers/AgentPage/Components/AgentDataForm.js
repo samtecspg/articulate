@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, TextField, MenuItem, Paper, Table, TableBody, TableRow, TableCell  } from '@material-ui/core';
+import { Grid, Typography, TextField, MenuItem, Table, TableBody, TableRow, TableCell  } from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider'
 import { withStyles } from '@material-ui/core/styles';
 

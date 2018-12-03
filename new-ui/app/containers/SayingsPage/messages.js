@@ -67,10 +67,6 @@ export default defineMessages({
         id: 'app.containers.SayingsPage.component.SayingDataForm.categorySelect',
         defaultMessage: 'Categories'
     },
-    trainButton: {
-      id: 'app.containers.SayingsPage.trainButton',
-      defaultMessage: 'Train'
-    },
     requiredField: {
       id: 'app.containers.SayingsPage.component.SayingDataForm.requiredField',
       defaultMessage: '*Required'
@@ -82,21 +78,5 @@ export default defineMessages({
     entries: {
         id: 'app.containers.SayingsPage.component.SayingDataForm.entries',
         defaultMessage: 'entries'
-    },
-    statusOutOfDate: {
-      id: 'app.containers.SayingsPage.component.ActionButtons.statusOutOfDate',
-      defaultMessage: 'Status: out of date'
-    },
-    statusError: {
-      id: 'app.containers.SayingsPage.component.ActionButtons.statusError',
-      defaultMessage: 'Status: error on training'
-    },
-    statusTraining: {
-      id: 'app.containers.SayingsPage.component.ActionButtons.statusTraining',
-      defaultMessage: 'Status: updating agent…'
-    },
-    statusReady: {
-      id: 'app.containers.SayingsPage.component.ActionButtons.statusReady',
-      defaultMessage: 'Last Trained: '
     },
 });

@@ -15,8 +15,8 @@ import { Link } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import ContentHeader from 'components/ContentHeader';
 import MainTab from 'components/MainTab';
+import TrainButton from 'components/TrainButton';
 import Form from './Components/Form';
-import ActionButtons from './Components/ActionButtons';
 
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
@@ -159,7 +159,7 @@ export class SayingsPage extends React.Component {
           title={messages.title}
           subtitle={this.props.agent.agentName}
           inlineElement={
-            <ActionButtons
+            <TrainButton
               onTrain={this.props.onTrain}
               agentStatus={this.props.agent.status}
               lastTraining={this.props.agent.lastTraining}
