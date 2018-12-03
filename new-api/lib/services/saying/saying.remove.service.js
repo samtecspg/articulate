@@ -7,10 +7,10 @@ import {
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id = null, SayingModel = null, AgentModel, DomainModel }) {
+module.exports = async function ({ id = null, SayingModel = null, AgentModel, CategoryModel }) {
 
     const { redis } = this.server.app;
-    const { domainService, globalService } = this.server.services();
+    const { categoryService, globalService } = this.server.services();
     if (id === null && SayingModel === null) {
         return Promise.reject(GlobalDefaultError({
             message: 'Saying id or model needed'
@@ -24,13 +24,13 @@ module.exports = async function ({ id = null, SayingModel = null, AgentModel, Do
             model: MODEL_KEYWORD,
             returnModel: true
         });
-        await domainService.unlinkKeywords({ model: DomainModel, keywordModels: removedKeywordModels });
+        await categoryService.unlinkKeywords({ model: CategoryModel, keywordModels: removedKeywordModels });
 
         // Update status
         AgentModel.property('status', STATUS_OUT_OF_DATE);
-        DomainModel.property('status', STATUS_OUT_OF_DATE);
+        CategoryModel.property('status', STATUS_OUT_OF_DATE);
         await AgentModel.save();
-        await DomainModel.save();
+        await CategoryModel.save();
         return await SayingModel.removeInstance();
     }
     catch (error) {

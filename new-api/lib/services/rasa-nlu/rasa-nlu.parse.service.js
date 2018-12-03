@@ -7,7 +7,7 @@ module.exports = async function (
     {
         text,
         project,
-        trainedDomain,
+        trainedCategory,
         baseURL = null
     }) {
 
@@ -16,12 +16,12 @@ module.exports = async function (
     const result = await rasaNLU.Parse({
         q: text,
         project,
-        model: trainedDomain.model,
+        model: trainedCategory.model,
         baseURL
     });
     delete result.text;
     const temporalParse = {
-        domain: trainedDomain.name
+        category: trainedCategory.name
     };
     result.entities.forEach((entity, index) => {
 
@@ -30,10 +30,10 @@ module.exports = async function (
     });
     result.keywords = result.entities;
     delete result.entities;
-    if (trainedDomain.justER) {
+    if (trainedCategory.justER) {
         delete result.intent;
         result.action = {
-            name: trainedDomain.saying,
+            name: trainedCategory.saying,
             confidence: 1
         };
     }

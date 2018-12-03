@@ -27,9 +27,9 @@ import {
   makeSelectTotalSayings,
   makeSelectKeywords,
   makeSelectActions,
-  makeSelectDomains,
-  makeSelectSelectedDomain,
-  makeSelectFilteredDomains,
+  makeSelectCategories,
+  makeSelectSelectedCategory,
+  makeSelectFilteredCategories,
   makeSelectNewSayingActions,
 } from '../App/selectors';
 import {
@@ -43,9 +43,9 @@ import {
   loadKeywords,
   loadActions,
   sendSayingToAction,
-  loadDomains,
-  selectDomain,
-  loadFilteredDomains,
+  loadCategories,
+  selectCategory,
+  loadFilteredCategories,
   trainAgent,
   addActionNewSaying,
   deleteActionNewSaying,
@@ -64,13 +64,13 @@ export class SayingsPage extends React.Component {
     this.movePageForward = this.movePageForward.bind(this);
     this.changePageSize = this.changePageSize.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
-    this.onSearchDomain = this.onSearchDomain.bind(this);
+    this.onSearchCategory = this.onSearchCategory.bind(this);
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
   }
 
   state = {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
-    domainFilter: '',
+    categoryFilter: '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
     pageSize: 5,
     numberOfPages: null,
@@ -81,7 +81,7 @@ export class SayingsPage extends React.Component {
     if(this.props.agent.id) {
       this.props.onLoadKeywords();
       this.props.onLoadActions();
-      this.props.onLoadDomains();
+      this.props.onLoadCategories();
       this.props.onLoadSayings('', this.state.currentPage, this.state.pageSize);
     }
     else {
@@ -145,11 +145,11 @@ export class SayingsPage extends React.Component {
     this.props.onLoadSayings(filter, 1, this.state.pageSize);
   }
 
-  onSearchDomain(domainFilter){
+  onSearchCategory(categoryFilter){
     this.setState({
-      domainFilter
+      categoryFilter
     });
-    this.props.onLoadFilteredDomains(domainFilter);
+    this.props.onLoadFilteredCategories(categoryFilter);
   }
 
   render() {
@@ -177,8 +177,8 @@ export class SayingsPage extends React.Component {
               sayings={this.props.sayings}
               agentKeywords={this.props.agentKeywords}
               agentActions={this.props.agentActions}
-              agentDomains={this.props.agentDomains}
-              agentFilteredDomains={this.props.agentFilteredDomains}
+              agentCategories={this.props.agentCategories}
+              agentFilteredCategories={this.props.agentFilteredCategories}
               onAddSaying={this.props.onAddSaying.bind(null, this.state.pageSize)}
               onDeleteSaying={this.props.onDeleteSaying.bind(null, this.state.pageSize)}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
@@ -188,7 +188,7 @@ export class SayingsPage extends React.Component {
               onAddNewSayingAction={this.props.onAddNewSayingAction}
               onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
-              onSearchDomain={this.onSearchDomain}
+              onSearchCategory={this.onSearchCategory}
               onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentPage={this.state.currentPage}
@@ -198,8 +198,8 @@ export class SayingsPage extends React.Component {
               movePageBack={this.movePageBack}
               movePageForward={this.movePageForward}
               changePageSize={this.changePageSize}
-              onSelectDomain={this.props.onSelectDomain}
-              domain={this.props.domain}
+              onSelectCategory={this.props.onSelectCategory}
+              category={this.props.category}
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
             />
@@ -230,12 +230,12 @@ SayingsPage.propTypes = {
   onClearSayingToAction: PropTypes.func,
   sayings: PropTypes.array,
   totalSayings: PropTypes.number,
-  agentDomains: PropTypes.array,
-  agentFilteredDomains: PropTypes.array,
+  agentCategories: PropTypes.array,
+  agentFilteredCategories: PropTypes.array,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
-  onSelectDomain: PropTypes.func,
-  domain: PropTypes.string,
+  onSelectCategory: PropTypes.func,
+  category: PropTypes.string,
   onTrain: PropTypes.func,
   newSayingActions: PropTypes.array,
 };
@@ -244,11 +244,11 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   sayings: makeSelectSayings(),
   totalSayings: makeSelectTotalSayings(),
-  agentDomains: makeSelectDomains(),
-  agentFilteredDomains: makeSelectFilteredDomains(),
+  agentCategories: makeSelectCategories(),
+  agentFilteredCategories: makeSelectFilteredCategories(),
   agentKeywords: makeSelectKeywords(),
   agentActions: makeSelectActions(),
-  domain: makeSelectSelectedDomain(),
+  category: makeSelectSelectedCategory(),
   newSayingActions: makeSelectNewSayingActions(),
 });
 
@@ -257,11 +257,11 @@ function mapDispatchToProps(dispatch) {
     onLoadSayings: (filter, page, pageSize) => {
       dispatch(loadSayings(filter, page, pageSize));
     },
-    onLoadFilteredDomains: (filter) => {
-      dispatch(loadFilteredDomains(filter));
+    onLoadFilteredCategories: (filter) => {
+      dispatch(loadFilteredCategories(filter));
     },
-    onLoadDomains: () => {
-      dispatch(loadDomains());
+    onLoadCategories: () => {
+      dispatch(loadCategories());
     },
     onLoadKeywords: () => {
       dispatch(loadKeywords());
@@ -272,8 +272,8 @@ function mapDispatchToProps(dispatch) {
     onAddSaying: (pageSize, value) => {
       dispatch(addSaying(pageSize, value));
     },
-    onDeleteSaying: (pageSize, sayingId, domainId) => {
-      dispatch(deleteSaying(pageSize, sayingId, domainId));
+    onDeleteSaying: (pageSize, sayingId, categoryId) => {
+      dispatch(deleteSaying(pageSize, sayingId, categoryId));
     },
     onTagKeyword: (filter, page, pageSize, saying, value, start, end, keywordId, keywordName) => {
       dispatch(tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName));
@@ -302,8 +302,8 @@ function mapDispatchToProps(dispatch) {
     onClearSayingToAction: () => {
       dispatch(clearSayingToAction());
     },
-    onSelectDomain: (domainName) => {
-      dispatch(selectDomain(domainName));
+    onSelectCategory: (categoryName) => {
+      dispatch(selectCategory(categoryName));
     },
     onTrain: () => {
       dispatch(trainAgent());

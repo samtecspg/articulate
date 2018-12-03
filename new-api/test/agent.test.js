@@ -39,10 +39,10 @@ describe('Agent', () => {
         expect(response).to.have.length(3);
     });
 
-    it('FindAll Domain Route', async () => {
+    it('FindAll Category Route', async () => {
 
         const server = await Server.deployment();
-        const response = await server.inject(`/${ROUTE_AGENT}/57f0a070-bcff-11e8-bd42-f7ad09e07ef5/domain`);
+        const response = await server.inject(`/${ROUTE_AGENT}/57f0a070-bcff-11e8-bd42-f7ad09e07ef5/category`);
 
         expect(response.statusCode).to.equal(200);
         expect(response.result).to.have.length(2);

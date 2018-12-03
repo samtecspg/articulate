@@ -79,13 +79,13 @@ export const ADD_ACTION_NEW_SAYING = 'app/SayingsPage/ADD_ACTION_NEW_SAYING';
 export const DELETE_ACTION_NEW_SAYING = 'app/SayingsPage/DELETE_ACTION_NEW_SAYING';
 export const SEND_SAYING_TO_ACTION = 'app/SayingsPage/SEND_SAYING_TO_ACTION';
 export const CLEAR_SAYING_TO_ACTION = 'app/SayingsPage/CLEAR_SAYING_TO_ACTION';
-export const LOAD_DOMAINS = 'app/SayingsPage/LOAD_DOMAINS';
-export const LOAD_DOMAINS_ERROR = 'app/SayingsPage/LOAD_DOMAINS_ERROR';
-export const LOAD_DOMAINS_SUCCESS = 'app/SayingsPage/LOAD_DOMAINS_SUCCESS';
-export const LOAD_FILTERED_DOMAINS = 'app/SayingsPage/LOAD_FILTERED_DOMAINS';
-export const LOAD_FILTERED_DOMAINS_ERROR = 'app/SayingsPage/LOAD_FILTERED_DOMAINS_ERROR';
-export const LOAD_FILTERED_DOMAINS_SUCCESS = 'app/SayingsPage/LOAD_FILTERED_DOMAINS_SUCCESS';
-export const SELECT_DOMAIN = 'app/SayingsPage/SELECT_DOMAIN';
+export const LOAD_CATEGORIES = 'app/SayingsPage/LOAD_CATEGORIES';
+export const LOAD_CATEGORIES_ERROR = 'app/SayingsPage/LOAD_CATEGORIES_ERROR';
+export const LOAD_CATEGORIES_SUCCESS = 'app/SayingsPage/LOAD_CATEGORIES_SUCCESS';
+export const LOAD_FILTERED_CATEGORIES = 'app/SayingsPage/LOAD_FILTERED_CATEGORIES';
+export const LOAD_FILTERED_CATEGORIES_ERROR = 'app/SayingsPage/LOAD_FILTERED_CATEGORIES_ERROR';
+export const LOAD_FILTERED_CATEGORIES_SUCCESS = 'app/SayingsPage/LOAD_FILTERED_CATEGORIES_SUCCESS';
+export const SELECT_CATEGORY = 'app/SayingsPage/SELECT_CATEGORY';
 
 /*
  * Keywords
@@ -161,16 +161,16 @@ export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNO
 export const CHANGE_EXAMPLE_NAME = 'app/KeywordsEditPage/CHANGE_EXAMPLE_NAME';
 
 /*
- * Domain
+ * Category
  */
-export const RESET_DOMAIN_DATA = 'app/DomainPage/RESET_DOMAIN_DATA';
-export const LOAD_DOMAIN = 'app/DomainPage/LOAD_DOMAIN';
-export const LOAD_DOMAIN_ERROR = 'app/DomainPage/LOAD_DOMAIN_ERROR';
-export const LOAD_DOMAIN_SUCCESS = 'app/DomainPage/LOAD_DOMAIN_SUCCESS';
-export const CREATE_DOMAIN = 'app/DomainPage/CREATE_DOMAIN';
-export const CREATE_DOMAIN_ERROR = 'app/DomainPage/CREATE_DOMAIN_ERROR';
-export const CREATE_DOMAIN_SUCCESS = 'app/DomainPage/CREATE_DOMAIN_SUCCESS';
-export const UPDATE_DOMAIN = 'app/DomainPage/UPDATE_DOMAIN';
-export const UPDATE_DOMAIN_ERROR = 'app/DomainPage/UPDATE_DOMAIN_ERROR';
-export const UPDATE_DOMAIN_SUCCESS = 'app/DomainPage/UPDATE_DOMAIN_SUCCESS';
-export const CHANGE_DOMAIN_DATA = 'app/DomainPage/CHANGE_DOMAIN_DATA'
+export const RESET_CATEGORY_DATA = 'app/CategoryPage/RESET_CATEGORY_DATA';
+export const LOAD_CATEGORY = 'app/CategoryPage/LOAD_CATEGORY';
+export const LOAD_CATEGORY_ERROR = 'app/CategoryPage/LOAD_CATEGORY_ERROR';
+export const LOAD_CATEGORY_SUCCESS = 'app/CategoryPage/LOAD_CATEGORY_SUCCESS';
+export const CREATE_CATEGORY = 'app/CategoryPage/CREATE_CATEGORY';
+export const CREATE_CATEGORY_ERROR = 'app/CategoryPage/CREATE_CATEGORY_ERROR';
+export const CREATE_CATEGORY_SUCCESS = 'app/CategoryPage/CREATE_CATEGORY_SUCCESS';
+export const UPDATE_CATEGORY = 'app/CategoryPage/UPDATE_CATEGORY';
+export const UPDATE_CATEGORY_ERROR = 'app/CategoryPage/UPDATE_CATEGORY_ERROR';
+export const UPDATE_CATEGORY_SUCCESS = 'app/CategoryPage/UPDATE_CATEGORY_SUCCESS';
+export const CHANGE_CATEGORY_DATA = 'app/CategoryPage/CHANGE_CATEGORY_DATA'

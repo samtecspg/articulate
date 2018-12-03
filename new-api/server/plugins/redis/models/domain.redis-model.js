@@ -1,8 +1,8 @@
-import { MODEL_DOMAIN } from '../../../../util/constants';
+import { MODEL_CATEGORY } from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {
-    domainName: {
+    categoryName: {
         type: 'string',
         index: true,
         defaultSort: true
@@ -27,7 +27,7 @@ const schema = {
     }
 };
 
-class DomainRedisModel extends BaseModel {
+class CategoryRedisModel extends BaseModel {
     constructor() {
 
         super({ schema });
@@ -35,7 +35,7 @@ class DomainRedisModel extends BaseModel {
 
     static get modelName() {
 
-        return MODEL_DOMAIN;
+        return MODEL_CATEGORY;
     }
 
     static get idGenerator() {
@@ -50,4 +50,4 @@ class DomainRedisModel extends BaseModel {
 
 }
 
-module.exports = DomainRedisModel;
+module.exports = CategoryRedisModel;

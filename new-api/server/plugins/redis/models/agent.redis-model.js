@@ -24,10 +24,10 @@ const schema = {
     usePostFormat: {
         type: 'boolean'
     },
-    multiDomain: {
+    multiCategory: {
         type: 'boolean'
     },
-    domainClassifierThreshold: {
+    categoryClassifierThreshold: {
         type: 'float'
     },
     fallbackResponses: {
@@ -42,7 +42,7 @@ const schema = {
     extraTrainingData: {
         type: 'boolean'
     },
-    enableModelsPerDomain: {
+    enableModelsPerCategory: {
         type: 'boolean'
     },
     model: {
@@ -51,7 +51,7 @@ const schema = {
     settings: {
         type: 'json'
     },
-    domainRecognizer: {
+    categoryRecognizer: {
         type: 'boolean',
         defaultValue: false
     }

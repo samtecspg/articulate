@@ -153,8 +153,8 @@ class Form extends React.Component {
             sayings={this.props.sayings}
             agentKeywords={this.props.agentKeywords}
             agentActions={this.props.agentActions}
-            agentDomains={this.props.agentDomains}
-            agentFilteredDomains={this.props.agentFilteredDomains}
+            agentCategories={this.props.agentCategories}
+            agentFilteredCategories={this.props.agentFilteredCategories}
             onAddSaying={this.props.onAddSaying}
             onDeleteSaying={this.props.onDeleteSaying}
             onTagKeyword={this.props.onTagKeyword}
@@ -172,9 +172,9 @@ class Form extends React.Component {
             movePageBack={this.props.movePageBack}
             movePageForward={this.props.movePageForward}
             changePageSize={this.props.changePageSize}
-            onSelectDomain={this.props.onSelectDomain}
-            domain={this.props.domain}
-            onSearchDomain={this.props.onSearchDomain}
+            onSelectCategory={this.props.onSelectCategory}
+            category={this.props.category}
+            onSearchCategory={this.props.onSearchCategory}
             newSayingActions={this.props.newSayingActions}
             onClearSayingToAction={this.props.onClearSayingToAction}
           />}
@@ -191,15 +191,15 @@ Form.propTypes = {
   agentId: PropTypes.string,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
-  agentDomains: PropTypes.array,
-  agentFilteredDomains: PropTypes.array,
+  agentCategories: PropTypes.array,
+  agentFilteredCategories: PropTypes.array,
   onAddSaying: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
   onTagKeyword: PropTypes.func,
   onUntagKeyword: PropTypes.func,
   onSearchSaying: PropTypes.func,
-  onSearchDomain: PropTypes.func,
+  onSearchCategory: PropTypes.func,
   onAddAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
@@ -210,8 +210,8 @@ Form.propTypes = {
   movePageBack: PropTypes.func,
   movePageForward: PropTypes.func,
   changePageSize: PropTypes.func,
-  onSelectDomain: PropTypes.func,
-  domain: PropTypes.string,
+  onSelectCategory: PropTypes.func,
+  category: PropTypes.string,
   newSayingActions: PropTypes.array,
   onAddNewSayingAction: PropTypes.func,
   onDeleteNewSayingAction: PropTypes.func,

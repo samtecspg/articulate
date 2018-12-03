@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {
     MODEL_AGENT,
-    MODEL_DOMAIN,
+    MODEL_CATEGORY,
     MODEL_KEYWORD,
     STATUS_OUT_OF_DATE
 } from '../../../util/constants';
@@ -36,24 +36,24 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
         await KeywordModel.updateInstance({ data: keywordData });
 
         if (requiresRetrain) {
-            // Update Agent and related domains status
+            // Update Agent and related categories status
             // TODO: Publish Agent update
             AgentModel.property('status', STATUS_OUT_OF_DATE);
             await AgentModel.save();
 
-            const keywordDomainIds = await KeywordModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN);
-            const KeywordDomainModels = await globalService.loadAllByIds({
-                ids: keywordDomainIds, //Only load the keywords we are going to use
-                model: MODEL_DOMAIN,
+            const keywordCategoryIds = await KeywordModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
+            const KeywordCategoryModels = await globalService.loadAllByIds({
+                ids: keywordCategoryIds, //Only load the keywords we are going to use
+                model: MODEL_CATEGORY,
                 returnModel: true
             });
 
-            const domainStatusUpdatePromise = KeywordDomainModels.map(async (DomainModel) => {
+            const categoryStatusUpdatePromise = KeywordCategoryModels.map(async (CategoryModel) => {
 
-                DomainModel.property('status', STATUS_OUT_OF_DATE);
-                return await DomainModel.save();
+                CategoryModel.property('status', STATUS_OUT_OF_DATE);
+                return await CategoryModel.save();
             });
-            await Promise.all(domainStatusUpdatePromise);
+            await Promise.all(categoryStatusUpdatePromise);
         }
         return returnModel ? KeywordModel : KeywordModel.allProperties();
 

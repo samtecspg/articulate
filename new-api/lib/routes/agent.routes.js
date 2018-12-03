@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
     MODEL_ACTION,
     MODEL_AGENT,
-    MODEL_DOMAIN,
+    MODEL_CATEGORY,
     MODEL_KEYWORD,
     MODEL_POST_FORMAT,
     MODEL_SAYING,
@@ -25,10 +25,10 @@ module.exports = [
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_ACTION], isFindById: true }), //agent/{agentId}/action/{actionId}
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_ACTION, MODEL_POST_FORMAT], isSingleResult: true }), //agent/{agentId}/action/{actionId}/postFormat
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK], isSingleResult: true }), //agent/{agentId}/action/{actionId}/webhook
-    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_DOMAIN] }), //agent/{agentId}/domain
-    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_DOMAIN], isFindById: true }), //agent/{agentId}/domain/{domainId}
-    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_DOMAIN, MODEL_SAYING] }), //agent/{agentId}/domain/{domainId}/saying
-    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_DOMAIN, MODEL_SAYING], isFindById: true }), //agent/{agentId}/domain/{domainId}/saying/{sayingId}
+    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_CATEGORY] }), //agent/{agentId}/category
+    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_CATEGORY], isFindById: true }), //agent/{agentId}/category/{categoryId}
+    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_CATEGORY, MODEL_SAYING] }), //agent/{agentId}/category/{categoryId}/saying
+    GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_CATEGORY, MODEL_SAYING], isFindById: true }), //agent/{agentId}/category/{categoryId}/saying/{sayingId}
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_KEYWORD] }), //agent/{agentId}/keyword
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_KEYWORD], isFindById: true }), //agent/{agentId}/keyword/{keywordId}
     GlobalFindInModelPath({ models: [MODEL_AGENT, MODEL_KEYWORD, MODEL_ACTION] }),//agent/{agentId}/keyword/{keywordId}/action

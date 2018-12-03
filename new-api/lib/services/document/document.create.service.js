@@ -1,6 +1,6 @@
 import {
     MODEL_DOCUMENT,
-    PARAM_DOCUMENT_MAXIMUM_DOMAIN_SCORE,
+    PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE,
     PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE,
     PARAM_DOCUMENT_RASA_RESULTS,
     PARAM_DOCUMENT_TIME_STAMP,
@@ -13,7 +13,7 @@ module.exports = async function (
         document,
         timeStamp,
         maximumSayingScore,
-        maximumDomainScore,
+        maximumCategoryScore,
         totalElapsedTimeMS,
         rasaResults,
         returnModel = false
@@ -27,7 +27,7 @@ module.exports = async function (
                 document,
                 [PARAM_DOCUMENT_TIME_STAMP]: timeStamp,
                 [PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE]: maximumSayingScore,
-                [PARAM_DOCUMENT_MAXIMUM_DOMAIN_SCORE]: maximumDomainScore,
+                [PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE]: maximumCategoryScore,
                 [PARAM_DOCUMENT_TOTAL_ELAPSED_TIME]: totalElapsedTimeMS,
                 [PARAM_DOCUMENT_RASA_RESULTS]: rasaResults
             }

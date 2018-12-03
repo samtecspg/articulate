@@ -13,16 +13,16 @@ import {
     addSayingError,
     deleteSayingError,
     updateSayingError,
-    loadDomainsSuccess,
-    loadDomainsError,
-    loadFilteredDomainsSuccess,
-    loadFilteredDomainsError,
+    loadCategoriesSuccess,
+    loadCategoriesError,
+    loadFilteredCategoriesSuccess,
+    loadFilteredCategoriesError,
 } from '../App/actions';
 
 import {
     LOAD_SAYINGS,
-    LOAD_DOMAINS,
-    LOAD_FILTERED_DOMAINS,
+    LOAD_CATEGORIES,
+    LOAD_FILTERED_CATEGORIES,
     LOAD_KEYWORDS,
     ADD_SAYING,
     DELETE_SAYING,
@@ -34,7 +34,7 @@ import {
 } from '../App/constants';
 
 import {
-    makeSelectAgent, makeSelectSelectedDomain, makeSelectNewSayingActions,
+    makeSelectAgent, makeSelectSelectedCategory, makeSelectNewSayingActions,
 } from '../App/selectors';
 
 import { getKeywords } from '../KeywordsPage/saga';
@@ -58,7 +58,7 @@ export function* getSayings(payload) {
             limit,
             field: 'id',
             direction: 'DESC',
-            loadDomainId: true,
+            loadCategoryId: true,
         });
         yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));
     } catch (err) {
@@ -68,7 +68,7 @@ export function* getSayings(payload) {
 
 export function* postSaying(payload) {
     const agent = yield select(makeSelectAgent());
-    const domain = yield select(makeSelectSelectedDomain());
+    const category = yield select(makeSelectSelectedCategory());
     const actions = yield select(makeSelectNewSayingActions());
     const { api, value, pageSize } = payload;
     try {
@@ -77,9 +77,9 @@ export function* postSaying(payload) {
             keywords: [],
             actions,
         }
-        yield call(api.agent.postAgentAgentidDomainDomainidSaying, {
+        yield call(api.agent.postAgentAgentidCategoryCategoryidSaying, {
             agentId: agent.id,
-            domainId: domain, 
+            categoryId: category, 
             body: newSayingData 
         });
         yield call(getSayings, {
@@ -95,11 +95,11 @@ export function* postSaying(payload) {
 
 export function* deleteSaying(payload) {
     const agent = yield select(makeSelectAgent());
-    const { api, sayingId, domainId, pageSize } = payload;
+    const { api, sayingId, categoryId, pageSize } = payload;
     try {
-        yield call(api.agent.deleteAgentAgentidDomainDomainidSayingSayingid, { 
+        yield call(api.agent.deleteAgentAgentidCategoryCategoryidSayingSayingid, { 
             agentId: agent.id,
-            domainId,
+            categoryId,
             sayingId
         });
         yield call(getSayings, {
@@ -116,14 +116,14 @@ export function* deleteSaying(payload) {
 export function* putSaying(payload) {
     const agent = yield select(makeSelectAgent());
     const { api, sayingId, saying, filter, page, pageSize } = payload;
-    const domainId = saying.domain;
+    const categoryId = saying.category;
     delete saying.id;
     delete saying.agent;
-    delete saying.domain;
+    delete saying.category;
     try {
-        yield call(api.agent.putAgentAgentidDomainDomainidSayingSayingid, {
+        yield call(api.agent.putAgentAgentidCategoryCategoryidSayingSayingid, {
             agentId: agent.id,
-            domainId, 
+            categoryId, 
             sayingId, 
             body: saying });
         yield call(getSayings, {
@@ -197,31 +197,31 @@ export function* deleteAction(payload) {
     }
 }
 
-export function* getDomains(payload) {
+export function* getCategories(payload) {
     const agent = yield select(makeSelectAgent());
     const { api, filter } = payload;
     const skip = 0;
     const limit = -1;
     try {
-        const response = yield call(api.agent.getAgentAgentidDomain, {
+        const response = yield call(api.agent.getAgentAgentidCategory, {
             agentId: agent.id,
             filter,
             skip,
             limit,
         });
         if (filter !== undefined){
-            yield put(loadFilteredDomainsSuccess({ domains: response.obj.data }));
+            yield put(loadFilteredCategoriesSuccess({ categories: response.obj.data }));
         }
         else {
-            yield put(loadDomainsSuccess({domains: response.obj.data }));
-            yield put(loadFilteredDomainsSuccess({domains: response.obj.data }));
+            yield put(loadCategoriesSuccess({categories: response.obj.data }));
+            yield put(loadFilteredCategoriesSuccess({categories: response.obj.data }));
         }
     } catch (err) {
         if (filter !== undefined){
-            yield put(loadFilteredDomainsError(response.obj));
+            yield put(loadFilteredCategoriesError(response.obj));
         }
         else {
-            yield put(loadDomainsError(err));
+            yield put(loadCategoriesError(err));
         }
     }
 }
@@ -236,6 +236,6 @@ export default function* rootSaga() {
     yield takeLatest(DELETE_ACTION_SAYING, deleteAction);
     yield takeLatest(LOAD_KEYWORDS, getKeywords);
     yield takeLatest(LOAD_ACTIONS, getActions);
-    yield takeLatest(LOAD_DOMAINS, getDomains);
-    yield takeLatest(LOAD_FILTERED_DOMAINS, getDomains);
+    yield takeLatest(LOAD_CATEGORIES, getCategories);
+    yield takeLatest(LOAD_FILTERED_CATEGORIES, getCategories);
 };

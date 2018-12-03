@@ -16,9 +16,9 @@ module.exports = {
 
             const { agentService } = await request.services();
             const { [PARAM_AGENT_ID]: id } = request.params;
-            const { skip, limit, direction, field, loadDomainId } = request.query;
+            const { skip, limit, direction, field, loadCategoryId } = request.query;
             try {
-                return await agentService.findAllSayings({ id, loadDomainId, skip, limit, direction, field });
+                return await agentService.findAllSayings({ id, loadCategoryId, skip, limit, direction, field });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

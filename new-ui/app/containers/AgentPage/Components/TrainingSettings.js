@@ -56,20 +56,20 @@ export class TrainingSettings extends React.Component {
           <FormControlLabel
             control={
               <Switch
-                checked={!agent.multiDomain}
+                checked={!agent.multiCategory}
                 onChange={() => {
-                  if (agent.multiDomain){
+                  if (agent.multiCategory){
                     this.props.onChangeAgentData(
-                      "enableModelsPerDomain",
+                      "enableModelsPerCategory",
                       false
                     );
                   }
                   this.props.onChangeAgentData(
-                    "multiDomain",
-                    !agent.multiDomain
+                    "multiCategory",
+                    !agent.multiCategory
                   );
                 }}
-                value="multiDomain"
+                value="multiCategory"
                 color="primary"
               />
             }
@@ -80,36 +80,36 @@ export class TrainingSettings extends React.Component {
           <FormControlLabel
             control={
               <Switch
-                checked={agent.multiDomain}
+                checked={agent.multiCategory}
                 onChange={() => {
                   this.props.onChangeAgentData(
-                    "multiDomain",
-                    !agent.multiDomain
+                    "multiCategory",
+                    !agent.multiCategory
                   );
                 }}
-                value="multiDomain"
+                value="multiCategory"
                 color="primary"
               />
             }
-            label={intl.formatMessage(messages.multiDomain)}
+            label={intl.formatMessage(messages.multiCategory)}
           />
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
             control={
               <Switch
-                checked={agent.enableModelsPerDomain}
+                checked={agent.enableModelsPerCategory}
                 onChange={() => {
                   this.props.onChangeAgentData(
-                    "enableModelsPerDomain",
-                    !agent.enableModelsPerDomain
+                    "enableModelsPerCategory",
+                    !agent.enableModelsPerCategory
                   );
                 }}
-                value="enableModelsPerDomain"
+                value="enableModelsPerCategory"
                 color="primary"
               />
             }
-            label={intl.formatMessage(messages.enableModelsPerDomain)}
+            label={intl.formatMessage(messages.enableModelsPerCategory)}
           />
         </Grid>
       </Grid>

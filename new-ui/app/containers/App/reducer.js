@@ -57,13 +57,13 @@ import {
   DELETE_ACTION_NEW_SAYING,
   SEND_SAYING_TO_ACTION,
   CLEAR_SAYING_TO_ACTION,
-  LOAD_DOMAINS,
-  LOAD_DOMAINS_ERROR,
-  LOAD_DOMAINS_SUCCESS,
-  LOAD_FILTERED_DOMAINS,
-  LOAD_FILTERED_DOMAINS_ERROR,
-  LOAD_FILTERED_DOMAINS_SUCCESS,
-  SELECT_DOMAIN,
+  LOAD_CATEGORIES,
+  LOAD_CATEGORIES_ERROR,
+  LOAD_CATEGORIES_SUCCESS,
+  LOAD_FILTERED_CATEGORIES,
+  LOAD_FILTERED_CATEGORIES_ERROR,
+  LOAD_FILTERED_CATEGORIES_SUCCESS,
+  SELECT_CATEGORY,
 
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
@@ -126,17 +126,17 @@ import {
   CHANGE_EXAMPLE_SYNONYMS,
   CHANGE_EXAMPLE_NAME,
 
-  LOAD_DOMAIN,
-  LOAD_DOMAIN_ERROR,
-  LOAD_DOMAIN_SUCCESS,
-  CHANGE_DOMAIN_DATA,
-  CREATE_DOMAIN,
-  CREATE_DOMAIN_ERROR,
-  CREATE_DOMAIN_SUCCESS,
-  RESET_DOMAIN_DATA,
-  UPDATE_DOMAIN,
-  UPDATE_DOMAIN_ERROR,
-  UPDATE_DOMAIN_SUCCESS,
+  LOAD_CATEGORY,
+  LOAD_CATEGORY_ERROR,
+  LOAD_CATEGORY_SUCCESS,
+  CHANGE_CATEGORY_DATA,
+  CREATE_CATEGORY,
+  CREATE_CATEGORY_ERROR,
+  CREATE_CATEGORY_SUCCESS,
+  RESET_CATEGORY_DATA,
+  UPDATE_CATEGORY,
+  UPDATE_CATEGORY_ERROR,
+  UPDATE_CATEGORY_SUCCESS,
 } from './constants';
 
 // The initial state of the App
@@ -148,15 +148,15 @@ const initialState = Immutable({
     'Notification: Congrats on your very first Agent Samson! 🤗 🥇',
   ],
   messages: [],
-  domain: {
-    domainName: '',
+  category: {
+    categoryName: '',
     enabled: true,
     actionThreshold: 50,
     extraTrainingData: false,
   },
   doc: {},
-  domains: [],
-  filteredDomains: [],
+  categories: [],
+  filteredCategories: [],
   agents: false,
   currentAgent: {
       agentName: '',
@@ -166,10 +166,10 @@ const initialState = Immutable({
       useWebhook: false,
       usePostFormat: false,
       extraTrainingData: false,
-      enableModelsPerDomain: true,
-      multiDomain: true,
+      enableModelsPerCategory: true,
+      multiCategory: true,
       fallbackResponses: [],
-      domainClassifierThreshold: 50,
+      categoryClassifierThreshold: 50,
   },
   agent: {
       agentName: '',
@@ -179,10 +179,10 @@ const initialState = Immutable({
       useWebhook: false,
       usePostFormat: false,
       extraTrainingData: false,
-      enableModelsPerDomain: true,
-      multiDomain: true,
+      enableModelsPerCategory: true,
+      multiCategory: true,
       fallbackResponses: [],
-      domainClassifierThreshold: 50,
+      categoryClassifierThreshold: 50,
   },
   agentWebhook: {
     agent: '',
@@ -200,7 +200,7 @@ const initialState = Immutable({
     ducklingURL: '',
     ducklingDimension: '[]',
     spacyPretrainedEntities: '[]',
-    domainClassifierPipeline: '[]',
+    categoryClassifierPipeline: '[]',
     sayingClassifierPipeline: '[]',
     keywordClassifierPipeline: '[]',
   },
@@ -214,7 +214,7 @@ const initialState = Immutable({
   },
   keywords: [],
   totalKeywords: 0,
-  selectedDomain: '',
+  selectedCategory: '',
   sayings: [],
   totalSayings: 0,
   agentOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
@@ -223,7 +223,7 @@ const initialState = Immutable({
   missingAPI: false,
   sayingForAction: {
     agent: '',
-    domain: '',
+    category: '',
     userSays: '',
     keywords: [],
     actions: []
@@ -264,7 +264,7 @@ const initialState = Immutable({
   totalActions: 0,
   currentAction: {
     agent: '',
-    domain: '',
+    category: '',
     actionName: '',
     useWebhook: false,
     usePostFormat: false,
@@ -282,7 +282,7 @@ const initialState = Immutable({
     agentLanguages: [],
     ducklingDimension: [],
     spacyPretrainedEntities: [],
-    domainClassifierPipeline: [],
+    categoryClassifierPipeline: [],
     sayingClassifierPipeline: [],
     keywordClassifierPipeline: [],
     defaultAgentFallbackResponses: []
@@ -545,32 +545,32 @@ function appReducer(state = initialState, action) {
       return state.set('sayingForAction', action.saying);
     case CLEAR_SAYING_TO_ACTION:
       return state.set('sayingForAction', initialState.sayingForAction);
-    case LOAD_DOMAINS:
-      return state.set('domains', [])
+    case LOAD_CATEGORIES:
+      return state.set('categories', [])
         .set('loading', true)
         .set('error', false);
-    case LOAD_DOMAINS_ERROR:
-      return state.set('domains', [])
+    case LOAD_CATEGORIES_ERROR:
+      return state.set('categories', [])
         .set('loading', false)
         .set('error', action.error);
-    case LOAD_DOMAINS_SUCCESS:
-      return state.set('domains', action.domains.domains)
+    case LOAD_CATEGORIES_SUCCESS:
+      return state.set('categories', action.categories.categories)
         .set('loading', false)
         .set('error', false);
-    case LOAD_FILTERED_DOMAINS:
-      return state.set('filteredDomains', [])
+    case LOAD_FILTERED_CATEGORIES:
+      return state.set('filteredCategories', [])
         .set('loading', true)
         .set('error', false);
-    case LOAD_FILTERED_DOMAINS_ERROR:
-      return state.set('filteredDomains', [])
+    case LOAD_FILTERED_CATEGORIES_ERROR:
+      return state.set('filteredCategories', [])
         .set('loading', false)
         .set('error', action.error);
-    case LOAD_FILTERED_DOMAINS_SUCCESS:
-      return state.set('filteredDomains', action.domains.domains)
+    case LOAD_FILTERED_CATEGORIES_SUCCESS:
+      return state.set('filteredCategories', action.categories.categories)
         .set('loading', false)
         .set('error', false);
-    case SELECT_DOMAIN:
-      return state.set('selectedDomain', action.domainName);
+    case SELECT_CATEGORY:
+      return state.set('selectedCategory', action.categoryName);
 
     /* Keywords */
     case LOAD_KEYWORDS:
@@ -899,47 +899,47 @@ function appReducer(state = initialState, action) {
       .set('loading', false)
       .set('error', false);
 
-    /* Domain */
-    case LOAD_DOMAIN:
-      return state.set('domain', initialState.domain)
+    /* Category */
+    case LOAD_CATEGORY:
+      return state.set('category', initialState.category)
       .set('loading', true)
       .set('error', false);
-    case LOAD_DOMAIN_ERROR:
-      return state.set('domain', initialState.domain)
+    case LOAD_CATEGORY_ERROR:
+      return state.set('category', initialState.category)
       .set('loading', false)
       .set('error', action.error);
-    case LOAD_DOMAIN_SUCCESS:
-      return state.set('domain', action.domain)
+    case LOAD_CATEGORY_SUCCESS:
+      return state.set('category', action.category)
       .set('loading', false)
       .set('error', false);
-    case CHANGE_DOMAIN_DATA:
-      return state.setIn(['domain', action.payload.field], action.payload.value);
-    case CREATE_DOMAIN:
+    case CHANGE_CATEGORY_DATA:
+      return state.setIn(['category', action.payload.field], action.payload.value);
+    case CREATE_CATEGORY:
       return state.set('loading', true)
         .set('success', false)
         .set('error', false);
-    case CREATE_DOMAIN_ERROR:
+    case CREATE_CATEGORY_ERROR:
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
-    case CREATE_DOMAIN_SUCCESS:
-      return state.set('domain', action.domain)
-        .set('selectedDomain', action.domain.id)
+    case CREATE_CATEGORY_SUCCESS:
+      return state.set('category', action.category)
+        .set('selectedCategory', action.category.id)
         .set('loading', false)
         .set('success', true)
         .set('error', false);
-    case RESET_DOMAIN_DATA:
-        return state.set('domain', initialState.domain)
-    case UPDATE_DOMAIN:
+    case RESET_CATEGORY_DATA:
+        return state.set('category', initialState.category)
+    case UPDATE_CATEGORY:
       return state.set('loading', true)
         .set('success', false)
         .set('error', false);
-    case UPDATE_DOMAIN_ERROR:
+    case UPDATE_CATEGORY_ERROR:
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
-    case UPDATE_DOMAIN_SUCCESS:
-      return state.set('domain', action.domain)
+    case UPDATE_CATEGORY_SUCCESS:
+      return state.set('category', action.category)
         .set('loading', false)
         .set('success', true)
         .set('error', false);

@@ -6,9 +6,9 @@ module.exports = async function ({ id }) {
     const { redis } = this.server.app;
     const Agent = await redis.factory(MODEL_AGENT);
     try {
-        //TODO: Delete Domains
+        //TODO: Delete Categories
         //TODO: Delete Keyword
-        //TODO: Delete agentDomainRecognizer
+        //TODO: Delete agentCategoryRecognizer
 
         await Agent.findById({ id });
         return Agent.removeInstance({ id });

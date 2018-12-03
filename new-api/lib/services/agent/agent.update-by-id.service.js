@@ -18,8 +18,8 @@ module.exports = async function ({ id, data, returnModel = false }) {
             data.extraTrainingData !== undefined &&
             data.extraTrainingData !== AgentModel.property('extraTrainingData')) ||
             (
-                data.enableModelsPerDomain !== undefined &&
-                data.enableModelsPerDomain !== AgentModel.property('enableModelsPerDomain')
+                data.enableModelsPerCategory !== undefined &&
+                data.enableModelsPerCategory !== AgentModel.property('enableModelsPerCategory')
             );
         data.status = requiresRetrain ? STATUS_OUT_OF_DATE : data.status;
         // TODO: Publish Agent update

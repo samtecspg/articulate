@@ -17,7 +17,7 @@ The plugins are available to any piece of code that have access to the hapijs `s
 
 So in other words, even if a route have access to a model it should do so using the service and not directly. Or even if a model have access to the server object and the rest of the services it should not do it since is in the wrong direction.
 
-## Models and Domain Models
+## Models and Category Models
 
 Not all models are the same and not all of them are going to be related to the database or to the models that hapijs will use.
 
@@ -25,11 +25,11 @@ For example we have a model that defines how and object will look in redis and e
 
 There will be another model for a rasa endpoint that will encapsulate the call to an endpoint and manage the response
 
-And then there will be the domain models, even if in our case there will be a 1:1 match with the rasa models this are going to be kept separate because their function will be different. 
+And then there will be the category models, even if in our case there will be a 1:1 match with the rasa models this are going to be kept separate because their function will be different. 
 
-The domain models will be part of the route an provide validation (using Joi library) and also serves as documentation to build the swagger json.
+The category models will be part of the route an provide validation (using Joi library) and also serves as documentation to build the swagger json.
 
-In some cases we will need a `mapper` that will convert from one model to a domain model or vise versa, this is because we will need to massage some properties before saving it to redis or when we read them and before sending it to eh UI.
+In some cases we will need a `mapper` that will convert from one model to a category model or vise versa, this is because we will need to massage some properties before saving it to redis or when we read them and before sending it to eh UI.
 
 # Plugins
 

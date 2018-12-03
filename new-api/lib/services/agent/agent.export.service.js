@@ -1,7 +1,7 @@
 import {
     MODEL_ACTION,
     MODEL_AGENT,
-    MODEL_DOMAIN,
+    MODEL_CATEGORY,
     MODEL_KEYWORD,
     MODEL_POST_FORMAT,
     MODEL_SAYING,
@@ -60,14 +60,14 @@ module.exports = async function ({ id }) {
             }
         };
 
-        // [Agent] [Domain]
-        const DomainModels = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_DOMAIN, returnModel });
+        // [Agent] [Category]
+        const CategoryModels = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel });
         exported = {
             ...exported, ...{
-                domains: await Promise.all(DomainModels.map(async (DomainModel) => {
-                    // [Agent] [Domain] [Saying]
-                    const DomainSayingModels = await globalService.loadAllLinked({ parentModel: DomainModel, model: MODEL_SAYING, returnModel });
-                    return { ...DomainModel.export(), ...{ sayings: DomainSayingModels.map(exportMap) } };
+                categories: await Promise.all(CategoryModels.map(async (CategoryModel) => {
+                    // [Agent] [Category] [Saying]
+                    const CategorySayingModels = await globalService.loadAllLinked({ parentModel: CategoryModel, model: MODEL_SAYING, returnModel });
+                    return { ...CategoryModel.export(), ...{ sayings: CategorySayingModels.map(exportMap) } };
                 }))
             }
         };

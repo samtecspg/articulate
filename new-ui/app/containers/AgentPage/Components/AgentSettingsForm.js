@@ -156,7 +156,7 @@ class AgentSettingsForm extends React.Component {
                 expandIcon={this.getExpandIcon(
                   true,
                   expanded === "panelTraining",
-                  agent.enableModelsPerDomain || agent.extraTrainingData
+                  agent.enableModelsPerCategory || agent.extraTrainingData
                 )}
               >
                 <Typography className={classes.panelHeading}>

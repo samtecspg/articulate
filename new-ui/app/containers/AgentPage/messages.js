@@ -55,9 +55,9 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentDataForm.timezoneSelect',
     defaultMessage: 'Timezone:'
   },
-  sliderDomainRecognitionThresholdLabel: {
+  sliderCategoryRecognitionThresholdLabel: {
     id: 'app.containers.AgentPage.component.AgentDataForm.sliderLabel',
-    defaultMessage: 'Domain Recognition Threshold:'
+    defaultMessage: 'Category Recognition Threshold:'
   },
   fallbackTextField: {
     id: 'app.containers.AgentPage.component.AgentDataForm.fallbackTextField',
@@ -123,9 +123,9 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingData',
     defaultMessage: 'Generate extra training examples'
   },
-  enableModelsPerDomain: {
-    id: 'app.containers.AgentPage.component.AgentSettingsForm.enableModelsPerDomain',
-    defaultMessage: 'Generate separate models for each domain'
+  enableModelsPerCategory: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.enableModelsPerCategory',
+    defaultMessage: 'Generate separate models for each category'
   },
   webhookSettingDescription: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.webhookSettingDescription',
@@ -133,11 +133,11 @@ export default defineMessages({
   },
   multipleIntentRecognition: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.multipleIntentRecognition',
-    defaultMessage: 'Multiple action recognition using Tensorflow pipeline (This will disable domains)'
+    defaultMessage: 'Multiple action recognition using Tensorflow pipeline (This will disable categories)'
   },
-  multiDomain: {
-    id: 'app.containers.AgentPage.component.AgentSettingsForm.multiDomain',
-    defaultMessage: 'Use domains for the agent (This will disable multiple action recognition)'
+  multiCategory: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.multiCategory',
+    defaultMessage: 'Use categories for the agent (This will disable multiple action recognition)'
   },
   statusOutOfDate: {
     id: 'app.containers.AgentPage.component.ActionButtons.statusOutOfDate',

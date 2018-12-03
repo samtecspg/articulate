@@ -224,15 +224,15 @@ export class RasaSettings extends React.Component {
           <Grid item xs={12} className={classes.labelContainer}>
             <Typography
               className={classes.settingEditorLabel}
-              id='domainClassifierPipeline'
+              id='categoryClassifierPipeline'
             >
-              <FormattedMessage {...messages.domainClassifierPipeline} />
+              <FormattedMessage {...messages.categoryClassifierPipeline} />
             </Typography>
             <img onClick={(evt) => {
               this.setState({
                 openPipelineMenu: true,
                 anchorEl: evt.currentTarget,
-                pipeline: 'domainClassifierPipeline',
+                pipeline: 'categoryClassifierPipeline',
               });}
             } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
           </Grid>
@@ -241,16 +241,16 @@ export class RasaSettings extends React.Component {
             height='300px'
             mode='json'
             theme='terminal'
-            name='domainClassifierPipeline'
+            name='categoryClassifierPipeline'
             readOnly={false}
             onChange={value =>
-              this.onChangeEditorValue('domainClassifierPipeline', value)
+              this.onChangeEditorValue('categoryClassifierPipeline', value)
             }
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={getStringSetting(settings.domainClassifierPipeline)}
+            value={getStringSetting(settings.categoryClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
@@ -261,7 +261,7 @@ export class RasaSettings extends React.Component {
             }}
           />
           {
-            this.props.errorState.domainClassifierPipeline ?
+            this.props.errorState.categoryClassifierPipeline ?
             <Typography
               variant='caption'
               className={classes.errorLabel}

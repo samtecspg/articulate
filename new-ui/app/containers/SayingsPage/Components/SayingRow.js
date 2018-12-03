@@ -51,7 +51,7 @@ const styles = {
         fontWeight: 300,
         cursor: 'pointer'
     },
-    domainBackgroundContainer: {
+    categoryBackgroundContainer: {
         margin: '0px 5px 0px 0px',
         fontSize: '12px',
         padding: '4px 8px 4px 10px',
@@ -61,7 +61,7 @@ const styles = {
         borderRadius: '5px',
         marginTop: '2px',
     },
-    domainLabel: {
+    categoryLabel: {
         textDecoration: 'none',
         color: 'inherit'
     },
@@ -188,8 +188,8 @@ class SayingRow extends React.Component {
                                 className={classes.categorySelectContainer}
                                 select
                                 id='category'
-                                value={saying.domain}
-                                onChange={() => { console.error('Updating the domain of a saying is still not implemented. Sorry') }}
+                                value={saying.category}
+                                onChange={() => { console.error('Updating the category of a saying is still not implemented. Sorry') }}
                                 margin='normal'
                                 fullWidth
                                 InputProps={{
@@ -199,11 +199,11 @@ class SayingRow extends React.Component {
                                     className: classes.categorySelect,
                                 }}
                             >
-                                {this.props.agentDomains.map((domain, index) => {
-                                    //TODO: return the domain id in the API to be able to select the domain id of the saying in
+                                {this.props.agentCategories.map((category, index) => {
+                                    //TODO: return the category id in the API to be able to select the category id of the saying in
                                     return (
-                                        <MenuItem key={`domain_${index}`} style={{minWidth: '150px'}} value={domain.id}>
-                                            <span className={classes.categoryLabel}>{domain.domainName}</span>
+                                        <MenuItem key={`category_${index}`} style={{minWidth: '150px'}} value={category.id}>
+                                            <span className={classes.categoryLabel}>{category.categoryName}</span>
                                         </MenuItem>
                                     )
                                 })}
@@ -312,7 +312,7 @@ SayingRow.propTypes = {
     agentId: PropTypes.string,
     agentKeywords: PropTypes.array,
     agentActions: PropTypes.array,
-    agentDomains: PropTypes.array,
+    agentCategories: PropTypes.array,
     onDeleteAction: PropTypes.func,
     onUntagKeyword: PropTypes.func,
     onTagKeyword: PropTypes.func,

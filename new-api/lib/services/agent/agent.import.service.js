@@ -7,7 +7,7 @@ module.exports = async function ({ payload }) {
     const { agentService } = await this.server.services();
     const {
         actions,
-        domains,
+        categories,
         keywords,
         settings,
         postFormat: agentPostFormat,
@@ -21,8 +21,8 @@ module.exports = async function ({ payload }) {
                 ...agent,
                 ...{
                     status: STATUS_OUT_OF_DATE,
-                    enableModelsPerDomain: _.defaultTo(agent.enableModelsPerDomain, true),
-                    multiDomain: _.defaultTo(agent.multiDomain, true),
+                    enableModelsPerCategory: _.defaultTo(agent.enableModelsPerCategory, true),
+                    multiCategory: _.defaultTo(agent.multiCategory, true),
                     extraTrainingData: _.defaultTo(agent.extraTrainingData, true)
                 }
             },
@@ -56,12 +56,12 @@ module.exports = async function ({ payload }) {
             keywordsDir[newKeyword.keywordName] = parseInt(newKeyword.id);
         }));
 
-        await Promise.all(domains.map(async (domain) => {
+        await Promise.all(categories.map(async (category) => {
 
-            const { sayings, ...domainData } = domain;
-            const DomainModel = await agentService.createDomain({
+            const { sayings, ...categoryData } = category;
+            const CategoryModel = await agentService.createCategory({
                 AgentModel,
-                domainData,
+                categoryData,
                 returnModel: true
             });
             return await Promise.all(sayings.map(async (saying) => {
@@ -70,9 +70,9 @@ module.exports = async function ({ payload }) {
 
                     tempKeyword.keywordId = keywordsDir[tempKeyword.keyword];
                 });
-                return await agentService.upsertSayingInDomain({
+                return await agentService.upsertSayingInCategory({
                     id: AgentModel.id,
-                    domainId: DomainModel.id,
+                    categoryId: CategoryModel.id,
                     sayingData: saying
                 });
             }));

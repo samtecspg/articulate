@@ -5,7 +5,7 @@ import {
     CSO_TIMEZONE_DEFAULT,
     MODEL_ACTION,
     MODEL_AGENT,
-    MODEL_DOMAIN,
+    MODEL_CATEGORY,
     PARAM_DOCUMENT_RASA_RESULTS
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
@@ -16,36 +16,36 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
     const { redis, handlebars } = this.server.app;
     const { agentService, contextService, globalService } = await this.server.services();
 
-    //MARK: get all the keywords for all the domains
+    //MARK: get all the keywords for all the categories
     const getKeywordsFromRasaResults = ({ rasaResults }) => {
 
-        return _.flatMap(rasaResults, (domain) => {
+        return _.flatMap(rasaResults, (category) => {
 
-            domain.keywords = _.map(domain.keywords, (keyword) => {
+            category.keywords = _.map(category.keywords, (keyword) => {
 
-                //MARK: assigns domain name to keyword
-                keyword.domain = domain.domain;
+                //MARK: assigns category name to keyword
+                keyword.category = category.category;
                 return keyword;
             });
-            return domain.keywords;
+            return category.keywords;
         });
     };
 
-    //MARK: returns the domain recognizer, or the only domain or just list of keywords
-    const getBestRasaResult = ({ rasaResults, domainClassifierThreshold }) => {
+    //MARK: returns the category recognizer, or the only category or just list of keywords
+    const getBestRasaResult = ({ rasaResults, categoryClassifierThreshold }) => {
 
         let rasaResult = {};
 
-        const recognizedDomain = rasaResults[0];
+        const recognizedCategory = rasaResults[0];
 
-        //MARK: if there is more than one domain and this exceeds the agent.domainClassifierThreshold then return it
-        if (rasaResults.length > 0 && recognizedDomain.domainScore > domainClassifierThreshold) {
-            rasaResult = recognizedDomain;
+        //MARK: if there is more than one category and this exceeds the agent.categoryClassifierThreshold then return it
+        if (rasaResults.length > 0 && recognizedCategory.categoryScore > categoryClassifierThreshold) {
+            rasaResult = recognizedCategory;
         }
         else {
             //MARK: if there is only one then return it
             if (rasaResults.length === 1) {
-                rasaResult = recognizedDomain;
+                rasaResult = recognizedCategory;
             }
             //MARK: if there is more than one then collect all keywords
             //MARK: but this will have a different structure?
@@ -80,12 +80,12 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
         })[0];
     };
 
-    //MARK: find domain from agent.domains by name
-    const getDomainByName = ({ agentDomains, domainName }) => {
+    //MARK: find category from agent.categories by name
+    const getCategoryByName = ({ agentCategories, categoryName }) => {
 
-        return _.filter(agentDomains, (agentDomain) => {
+        return _.filter(agentCategories, (agentCategory) => {
 
-            return agentDomain.domainName === domainName;
+            return agentCategory.categoryName === categoryName;
         })[0];
     };
 
@@ -125,8 +125,8 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
         conversationStateObject.currentContext = _.last(conversationStateObject.context.frames);
         //MARK: CSO.parse ===true
         if (conversationStateObject.parse) {
-            //MARK: get domain recognizer, 1 domain or list of keywords from all domains
-            conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, domainClassifierThreshold: conversationStateObject.agent.domainClassifierThreshold });
+            //MARK: get category recognizer, 1 category or list of keywords from all categories
+            conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, categoryClassifierThreshold: conversationStateObject.agent.categoryClassifierThreshold });
             //MARK: if there is an action, look for it in the agent actions
             conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult, agentActions: conversationStateObject.agent.actions });
             //MARK: if there is an action but no responses call RespondFallback and persist context
@@ -144,10 +144,10 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
                 return actionResponse;
             }
             //MARK: CSO.parse ===false
-            //MARK: get domain using rasaResult domain name
-            conversationStateObject.domain = getDomainByName({ agentDomains: conversationStateObject.agent.domains, domainName: conversationStateObject.rasaResult.domain });
-            //MARK: if there is an action and a domain, check if the action confidence y bigger than the domain threshold === true
-            if (conversationStateObject.action && conversationStateObject.domain && conversationStateObject.rasaResult.action.confidence > conversationStateObject.domain.actionThreshold) {
+            //MARK: get category using rasaResult category name
+            conversationStateObject.category = getCategoryByName({ agentCategories: conversationStateObject.agent.categories, categoryName: conversationStateObject.rasaResult.category });
+            //MARK: if there is an action and a category, check if the action confidence y bigger than the category threshold === true
+            if (conversationStateObject.action && conversationStateObject.category && conversationStateObject.rasaResult.action.confidence > conversationStateObject.category.actionThreshold) {
                 //MARK: if the current context is empty or the current OR if the action name is the same as the current context action add a new frame with empty slots
                 if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.action.name !== conversationStateObject.currentContext.action)) {
                     const frame = {
@@ -170,7 +170,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
                 await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                 return actionResponse;
             }
-            //MARK: if there is an action and a domain, check if the action confidence y bigger than the domain threshold === false
+            //MARK: if there is an action and a category, check if the action confidence y bigger than the category threshold === false
             //MARK: if there is NO action then use the rasaResult.keywords else get them from getKeywordsFromRasaResults
             //MARK: I think this line doesn't do much since we already called getKeywordsFromRasaResults before to get rasaResult, the only difference is that we are saving the entire rasaResult instead of just the keywords
             const recognizedKeywords = conversationStateObject.rasaResult.action ? getKeywordsFromRasaResults(conversationStateObject) : conversationStateObject.rasaResult.keywords;
@@ -245,7 +245,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
         conversationStateObject[CSO_CONTEXT] = context;
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
         conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false });
-        conversationStateObject[CSO_AGENT].domains = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_DOMAIN, returnModel: false });
+        conversationStateObject[CSO_AGENT].categories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });
         conversationStateObject.docId = ParsedDocument.id;
         conversationStateObject.parse = ParsedDocument.property(PARAM_DOCUMENT_RASA_RESULTS);
         conversationStateObject.text = text;

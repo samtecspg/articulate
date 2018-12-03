@@ -35,7 +35,7 @@ export function* getAgent(payload) {
   try {
     let response = yield call(api.agent.getAgentAgentid, { agentId });
     const agent = response.obj;
-    agent.domainClassifierThreshold = agent.domainClassifierThreshold * 100;
+    agent.categoryClassifierThreshold = agent.categoryClassifierThreshold * 100;
     let webhook, postFormat;
     if (agent.useWebhook){
       response = yield call(api.agent.getAgentIdWebhook, { agentId: agentId });
@@ -135,7 +135,7 @@ function* putAgentSettings(payload) {
 
 export function* postAgent(payload) {
   let agent = yield select(makeSelectAgent());
-  agent = agent.set('domainClassifierThreshold', agent.domainClassifierThreshold / 100);
+  agent = agent.set('categoryClassifierThreshold', agent.categoryClassifierThreshold / 100);
   const { api } = payload;
   try {
       const response = yield call(api.agent.postAgent, { body: agent });
@@ -156,7 +156,7 @@ export function* putAgent(payload) {
   const agent = yield select(makeSelectAgent());
   const currentAgent = yield select(makeSelectCurrentAgent());
   const mutableAgent = Immutable.asMutable(agent, { deep: true });
-  mutableAgent.domainClassifierThreshold = agent.domainClassifierThreshold / 100;
+  mutableAgent.categoryClassifierThreshold = agent.categoryClassifierThreshold / 100;
   const { api } = payload;
   delete mutableAgent.id;
   delete mutableAgent.settings;

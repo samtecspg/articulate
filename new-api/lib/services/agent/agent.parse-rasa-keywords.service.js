@@ -2,59 +2,59 @@ import _ from 'lodash';
 import Moment from 'moment';
 import {
     RASA_ACTION_RANKING,
-    RASA_MODEL_DOMAIN_RECOGNIZER
+    RASA_MODEL_CATEGORY_RECOGNIZER
 } from '../../../util/constants';
 
 module.exports = async function (
     {
         AgentModel,
         text,
-        trainedDomains,
+        trainedCategories,
         rasaURL = null
     }) {
 
     const { rasaNLUService } = await this.server.services();
     const agent = AgentModel.allProperties();
 
-    let domainRecognizerTrainedDomain = _.filter(trainedDomains, (trainedDomain) => {
+    let categoryRecognizerTrainedCategory = _.filter(trainedCategories, (trainedCategory) => {
 
-        return trainedDomain.model.indexOf(RASA_MODEL_DOMAIN_RECOGNIZER) > -1;
+        return trainedCategory.model.indexOf(RASA_MODEL_CATEGORY_RECOGNIZER) > -1;
     });
 
-    domainRecognizerTrainedDomain = domainRecognizerTrainedDomain.length > 0 ? domainRecognizerTrainedDomain[0] : null;
-    let domainRecognitionResults;
-    if (domainRecognizerTrainedDomain) {
+    categoryRecognizerTrainedCategory = categoryRecognizerTrainedCategory.length > 0 ? categoryRecognizerTrainedCategory[0] : null;
+    let categoryRecognitionResults;
+    if (categoryRecognizerTrainedCategory) {
 
-        domainRecognitionResults = await rasaNLUService.parse({
+        categoryRecognitionResults = await rasaNLUService.parse({
             text,
             project: agent.agentName,
-            trainedDomain: domainRecognizerTrainedDomain,
+            trainedCategory: categoryRecognizerTrainedCategory,
             baseURL: rasaURL
         });
     }
-    return Promise.all(trainedDomains.map(async (trainedDomain) => {
+    return Promise.all(trainedCategories.map(async (trainedCategory) => {
 
-        if (!domainRecognitionResults || trainedDomain.name !== domainRecognitionResults.domain) {
+        if (!categoryRecognitionResults || trainedCategory.name !== categoryRecognitionResults.category) {
 
             const startTime = new Moment();
-            let domainRasaResults = await rasaNLUService.parse({
+            let categoryRasaResults = await rasaNLUService.parse({
                 text,
                 project: agent.agentName,
-                trainedDomain,
+                trainedCategory,
                 baseURL: rasaURL
             });
             const endTime = new Moment();
             const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
-            domainRasaResults = { ...domainRasaResults, ...{ elapsed_time_ms: duration } };
-            if (domainRecognitionResults) {
-                let domainScore = _.filter(domainRecognitionResults[RASA_ACTION_RANKING], (recognizedDomain) => {
+            categoryRasaResults = { ...categoryRasaResults, ...{ elapsed_time_ms: duration } };
+            if (categoryRecognitionResults) {
+                let categoryScore = _.filter(categoryRecognitionResults[RASA_ACTION_RANKING], (recognizedCategory) => {
 
-                    return recognizedDomain.name === domainRasaResults.domain;
+                    return recognizedCategory.name === categoryRasaResults.category;
                 });
-                domainScore = domainScore.length > 0 ? domainScore[0].confidence : 0;
-                domainRasaResults = { ...domainRasaResults, ... { domainScore } };
+                categoryScore = categoryScore.length > 0 ? categoryScore[0].confidence : 0;
+                categoryRasaResults = { ...categoryRasaResults, ... { categoryScore } };
             }
-            return domainRasaResults;
+            return categoryRasaResults;
         }
     }));
 };

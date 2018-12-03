@@ -199,15 +199,15 @@ class SayingsDataForm extends React.Component {
 
     state = {
         filterInput: '',
-        filteringDomains: false,
+        filteringCategories: false,
         categoriesDropdownOpen: false,
-        errorDomain: false,
+        errorCategory: false,
         openActions: false,
         anchorEl: null,
     }
 
     render(){
-        const { classes, intl, sayings, domain } = this.props;
+        const { classes, intl, sayings, category } = this.props;
         return (
             <Grid className={classes.formContainer} container item xs={12}>
                 <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
@@ -216,7 +216,7 @@ class SayingsDataForm extends React.Component {
                             <TextField
                                 select
                                 id='category'
-                                value={domain}
+                                value={category}
                                 label={intl.formatMessage(messages.categorySelect)}
                                 onClick={
                                     () => {
@@ -227,7 +227,7 @@ class SayingsDataForm extends React.Component {
                                 }
                                 onChange={(evt) => {
                                     if (['filter', 'create', 'no results'].indexOf(evt.target.value) === -1) {
-                                        this.props.onSelectDomain(evt.target.value);
+                                        this.props.onSelectCategory(evt.target.value);
                                     }
                                     this.setState({
                                         categoriesDropdownOpen: false,
@@ -241,8 +241,8 @@ class SayingsDataForm extends React.Component {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                helperText={this.state.errorDomain ? intl.formatMessage(messages.requiredField) : ''}
-                                error={this.state.errorDomain}
+                                helperText={this.state.errorCategory ? intl.formatMessage(messages.requiredField) : ''}
+                                error={this.state.errorCategory}
                             >
                                 <MenuItem className={classes.searchCategoryContainer} value={'filter'}>
                                     <Grid container justify='flex-end'>
@@ -259,46 +259,46 @@ class SayingsDataForm extends React.Component {
                                             className={classes.searchCategoryField}
                                             onChange={(evt) => {
                                                 this.setState({
-                                                    filteringDomains: evt.target.value.length > 0,
+                                                    filteringCategories: evt.target.value.length > 0,
                                                     filterInput: evt.target.value,
                                                 });
-                                                this.props.onSearchDomain(evt.target.value);
+                                                this.props.onSearchCategory(evt.target.value);
                                             }}
                                         />
                                         {
-                                            this.state.filteringDomains ?
+                                            this.state.filteringCategories ?
                                                 <div className={classes.clearIconContainer}>
                                                     <img onClick={(evt) => {
                                                         evt.stopPropagation();
-                                                        this.props.onSearchDomain('');
+                                                        this.props.onSearchCategory('');
                                                         this.setState({
-                                                            filteringDomains: false,
+                                                            filteringCategories: false,
                                                             filterInput: '',
                                                         });
                                                         return 0;
                                                     }} className={classes.clearIcon} src={clearIcon} />
                                                 </div>
                                             :
-                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/create`); }} className={classes.addCategoryButton} variant='raised'>+ Add</Button>
+                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`); }} className={classes.addCategoryButton} variant='raised'>+ Add</Button>
                                         }
                                     </Grid>
                                 </MenuItem>
                                 {
-                                    this.state.filteringDomains ?
-                                        this.props.agentFilteredDomains.length > 0 ?
-                                            this.props.agentFilteredDomains.map((filteredDomain, index) => {
+                                    this.state.filteringCategories ?
+                                        this.props.agentFilteredCategories.length > 0 ?
+                                            this.props.agentFilteredCategories.map((filteredCategory, index) => {
                                                 return (
-                                                    <MenuItem key={`domain_${index}`} value={filteredDomain.id}>
+                                                    <MenuItem key={`category_${index}`} value={filteredCategory.id}>
                                                         <Grid container justify='space-between'>
                                                             <div className={classes.categoryDataContainer}>
-                                                                <span>{filteredDomain.domainName}</span>
+                                                                <span>{filteredCategory.categoryName}</span>
                                                             </div>
                                                             {
-                                                                filteredDomain.id === domain && !this.state.categoriesDropdownOpen ?
+                                                                filteredCategory.id === category && !this.state.categoriesDropdownOpen ?
                                                                 null :
                                                                 <div className={classes.categoryDataContainer}>
-                                                                    <span>{filteredDomain.actionThreshold * 100}%</span>
-                                                                    <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/${filteredDomain.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
+                                                                    <span>{filteredCategory.actionThreshold * 100}%</span>
+                                                                    <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/${filteredCategory.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
                                                                 </div>
                                                             }
                                                         </Grid>
@@ -310,22 +310,22 @@ class SayingsDataForm extends React.Component {
                                                 <span>No results</span>
                                             </MenuItem>,
                                             <MenuItem key='create' value='create'>
-                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/create`); }} className={classes.addCategoryButton} variant='raised'>+ Add</Button>
+                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`); }} className={classes.addCategoryButton} variant='raised'>+ Add</Button>
                                             </MenuItem>]
                                     :
-                                        this.props.agentDomains.map((agentDomain, index) => {
+                                        this.props.agentCategories.map((agentCategory, index) => {
                                             return (
-                                                <MenuItem key={`domain_${index}`} value={agentDomain.id}>
+                                                <MenuItem key={`category_${index}`} value={agentCategory.id}>
                                                     <Grid container justify='space-between'>
                                                         <div className={classes.categoryDataContainer}>
-                                                            <span>{agentDomain.domainName}</span>
+                                                            <span>{agentCategory.categoryName}</span>
                                                         </div>
                                                         {
-                                                            agentDomain.id === domain && !this.state.categoriesDropdownOpen ?
+                                                            agentCategory.id === category && !this.state.categoriesDropdownOpen ?
                                                             null :
                                                             <div className={classes.categoryDataContainer}>
-                                                                <span>{agentDomain.actionThreshold * 100}%</span>
-                                                                <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/domain/${agentDomain.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
+                                                                <span>{agentCategory.actionThreshold * 100}%</span>
+                                                                <img onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/${agentCategory.id}`); }} className={classes.editCategoryIcon} src={pencilIcon} />
                                                             </div>
                                                         }
                                                     </Grid>
@@ -342,14 +342,14 @@ class SayingsDataForm extends React.Component {
                                 placeholder={intl.formatMessage(messages.sayingTextFieldPlaceholder)}
                                 onKeyPress={(ev) => {
                                     if (ev.key === 'Enter') {
-                                        if (!domain || domain === ''){
+                                        if (!category || category === ''){
                                             this.setState({
-                                                errorDomain: true,
+                                                errorCategory: true,
                                             });
                                         }
                                         else {
                                             this.setState({
-                                                errorDomain: false,
+                                                errorCategory: false,
                                             });
                                             ev.preventDefault();
                                             this.props.onAddSaying(ev.target.value)
@@ -474,7 +474,7 @@ class SayingsDataForm extends React.Component {
                                                     onDeleteAction={this.props.onDeleteAction}
                                                     agentKeywords={this.props.agentKeywords}
                                                     agentActions={this.props.agentActions}
-                                                    agentDomains={this.props.agentDomains}
+                                                    agentCategories={this.props.agentCategories}
                                                     onTagKeyword={this.props.onTagKeyword}
                                                     onUntagKeyword={this.props.onUntagKeyword}
                                                     onAddAction={this.props.onAddAction}
@@ -483,7 +483,7 @@ class SayingsDataForm extends React.Component {
                                                 />
                                             </TableCell>
                                             <TableCell className={classes.deleteCell}>
-                                                <img onClick={() => { this.props.onDeleteSaying(saying.id, saying.domain) }} className={classes.deleteIcon} src={trashIcon} />
+                                                <img onClick={() => { this.props.onDeleteSaying(saying.id, saying.category) }} className={classes.deleteIcon} src={trashIcon} />
                                             </TableCell>
                                         </TableRow>
                                         );
@@ -577,8 +577,8 @@ SayingsDataForm.propTypes = {
     agentId: PropTypes.string,
     agentKeywords: PropTypes.array,
     agentActions: PropTypes.array,
-    agentDomains: PropTypes.array,
-    agentFilteredDomains: PropTypes.array,
+    agentCategories: PropTypes.array,
+    agentFilteredCategories: PropTypes.array,
     onAddSaying: PropTypes.func.isRequired,
     onDeleteSaying: PropTypes.func.isRequired,
     onDeleteAction: PropTypes.func.isRequired,
@@ -594,9 +594,9 @@ SayingsDataForm.propTypes = {
     movePageBack: PropTypes.func,
     movePageForward: PropTypes.func,
     changePageSize: PropTypes.func,
-    onSelectDomain: PropTypes.func,
-    domain: PropTypes.string,
-    onSearchDomain: PropTypes.func,
+    onSelectCategory: PropTypes.func,
+    category: PropTypes.string,
+    onSearchCategory: PropTypes.func,
     newSayingActions: PropTypes.array,
     onAddNewSayingAction: PropTypes.func,
     onDeleteNewSayingAction: PropTypes.func,

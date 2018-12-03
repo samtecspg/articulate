@@ -11,15 +11,15 @@ class AgentModel {
             timezone: Joi.string().trim(),
             useWebhook: Joi.boolean(),
             usePostFormat: Joi.boolean(),
-            multiDomain: Joi.boolean(),
-            domainClassifierThreshold: Joi.number(),
+            multiCategory: Joi.boolean(),
+            categoryClassifierThreshold: Joi.number(),
             fallbackResponses: Joi.array().items(Joi.string().trim()),
             status: Joi.string().trim(),
             lastTraining: Joi.date(),
             extraTrainingData: Joi.boolean(),
-            enableModelsPerDomain: Joi.boolean(),
+            enableModelsPerCategory: Joi.boolean(),
             model: Joi.string().allow(''),
-            domainRecognizer: Joi.boolean()
+            categoryRecognizer: Joi.boolean()
         };
     };
 }

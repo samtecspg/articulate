@@ -6,7 +6,7 @@
       "text": "English"
     }
   ],
-  "domainClassifierPipeline": [
+  "categoryClassifierPipeline": [
     {
       "name": "nlp_spacy"
     },

@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 
 /**
- * Direct selector to the languageToggle state domain
+ * Direct selector to the languageToggle state category
  */
 const selectLanguage = state => state.language;
 

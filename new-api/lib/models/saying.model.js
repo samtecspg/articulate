@@ -7,7 +7,7 @@ class SayingModel {
         return {
             id: Joi.number(),
             agent: Joi.string().trim(),
-            domain: Joi.string().trim(),
+            category: Joi.string().trim(),
             userSays: Joi.string().trim(),
             keywords: Joi.array().items(SayingKeywordModel.schema),
             actions: Joi.array().items(Joi.string().trim())

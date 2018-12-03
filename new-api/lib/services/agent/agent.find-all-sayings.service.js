@@ -1,11 +1,11 @@
 import {
     MODEL_AGENT,
-    MODEL_DOMAIN,
+    MODEL_CATEGORY,
     MODEL_SAYING
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, loadDomainId, skip, limit, direction, field }) {
+module.exports = async function ({ id, loadCategoryId, skip, limit, direction, field }) {
 
     const { globalService } = await this.server.services();
     const { redis } = this.server.app;
@@ -20,9 +20,9 @@ module.exports = async function ({ id, loadDomainId, skip, limit, direction, fie
         const data = await Promise.all(SayingModels.map(async (sayingModel) => {
 
             const saying = await sayingModel.allProperties();
-            if (loadDomainId) {
-                const domainsId = await sayingModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN);
-                return { ...saying, ...{ domain: domainsId[0] } };
+            if (loadCategoryId) {
+                const categoriesId = await sayingModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
+                return { ...saying, ...{ category: categoriesId[0] } };
             }
             return saying;
         }));

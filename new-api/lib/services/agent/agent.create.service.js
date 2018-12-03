@@ -13,8 +13,8 @@ module.exports = async function ({ data, returnModel = false }) {
 
     data.status = data.status || STATUS_OUT_OF_DATE;
     data.settings = {};
-    if (data.enableModelsPerDomain === undefined) {
-        data.enableModelsPerDomain = true;
+    if (data.enableModelsPerCategory === undefined) {
+        data.enableModelsPerCategory = true;
     }
 
     const AgentModel = await redis.factory(MODEL_AGENT);

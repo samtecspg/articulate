@@ -48,7 +48,7 @@ module.exports = ({ keyword, text }) => {
         case `${KEYWORD_PREFIX_SYS}${DUCKLING_URL}`:
             value = {
                 value: keyword.value.value,
-                domain: keyword.value.domain
+                category: keyword.value.category
             };
             break;
         default:

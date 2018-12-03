@@ -16,7 +16,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
     try {
         AgentModel = AgentModel || await redis.factory(MODEL_AGENT, id);
         const agent = AgentModel.allProperties();
-        const trainedDomains = await agentService.getTrainedDomains({ AgentModel });
+        const trainedCategories = await agentService.getTrainedCategories({ AgentModel });
         const {
             ducklingURL,
             rasaURL,
@@ -24,7 +24,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
             ducklingDimension
         } = agent.settings;
 
-        const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedDomains, rasaURL }));
+        const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedCategories, rasaURL }));
         const ducklingKeywords = _.compact(await agentService.parseDucklingKeywords({ AgentModel, text, timezone, ducklingURL }));
         const regexKeywords = await agentService.parseRegexKeywords({ AgentModel, text });
 
@@ -40,14 +40,14 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
         const endTime = new Moment();
         const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         const maximumSayingScore = _.max(_.compact(_.map(_.map(parsedSystemKeywords, 'action'), 'confidence')));
-        const maximumDomainScore = _.max(_.compact(_.map(parsedSystemKeywords, 'domainScore')));
+        const maximumCategoryScore = _.max(_.compact(_.map(parsedSystemKeywords, 'categoryScore')));
         return await documentService.create({
             document: text,
             timeStamp: new Date().toISOString(),
-            rasaResults: _.orderBy(parsedSystemKeywords, 'domainScore', 'desc'),
+            rasaResults: _.orderBy(parsedSystemKeywords, 'categoryScore', 'desc'),
             maximumSayingScore,
             totalElapsedTimeMS: duration,
-            maximumDomainScore: maximumDomainScore || null,
+            maximumCategoryScore: maximumCategoryScore || null,
             returnModel
         });
     }

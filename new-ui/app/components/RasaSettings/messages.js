@@ -18,9 +18,9 @@ export default defineMessages({
     id: 'app.components.RasaSettings.rasaURLPlaceholder',
     defaultMessage: 'Enter the URL of your rasa server',
   },
-  domainClassifierPipeline: {
-    id: 'app.components.RasaSettings.domainClassifierPipeline',
-    defaultMessage: 'Domain Classifier Pipeline:',
+  categoryClassifierPipeline: {
+    id: 'app.components.RasaSettings.categoryClassifierPipeline',
+    defaultMessage: 'Category Classifier Pipeline:',
   },
   sayingClassifierPipeline: {
     id: 'app.components.RasaSettings.sayingClassifierPipeline',

@@ -1,74 +1,74 @@
 import { createSelector } from 'reselect';
 
-const selectGlobalDomain = state => state.global;
-const selectRouteDomain = state => state.route;
+const selectGlobalCategory = state => state.global;
+const selectRouteCategory = state => state.route;
 
 /* Global */
 const makeSelectLocation = () => createSelector(
-  selectRouteDomain,
+  selectRouteCategory,
   (routeState) => {
     return routeState.location;
   }
 );
 
 const makeSelectMissingAPI = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.missingAPI;
   }
 );
 
 const makeSelectLoading = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.loading;
   }
 );
 
 const makeSelectError = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.error;
   }
 );
 
 const makeSelectSuccess = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.success;
   }
 );
 
 const makeSelectConversationBarOpen = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.conversationBarOpen;
   }
 );
 
 const makeSelectNotifications = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.notifications;
   }
 );
 
 const makeSelectMessages = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.messages;
   }
 );
 
 const makeSelectWaitingResponse = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.waitingResponse;
   }
 );
 
 const makeSelectDoc = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.doc;
   }
@@ -76,7 +76,7 @@ const makeSelectDoc = () => createSelector(
 
 /* Agents */
 const makeSelectAgents = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.agents;
   }
@@ -84,35 +84,35 @@ const makeSelectAgents = () => createSelector(
 
 /* Agent */
 const makeSelectAgent = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.agent;
   }
 );
 
 const makeSelectCurrentAgent = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.currentAgent;
   }
 );
 
 const makeSelectAgentWebhook = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.agentWebhook;
   }
 );
 
 const makeSelectAgentPostFormat = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.agentPostFormat;
   }
 );
 
 const makeSelectAgentSettings = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.agentSettings;
   }
@@ -120,14 +120,14 @@ const makeSelectAgentSettings = () => createSelector(
 
 /* Keywords */
 const makeSelectKeywords = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.keywords;
   }
 );
 
 const makeSelectTotalKeywords = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.totalKeywords;
   }
@@ -135,42 +135,42 @@ const makeSelectTotalKeywords = () => createSelector(
 
 /* Sayings */
 const makeSelectSayings = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.sayings;
   }
 );
 
 const makeSelectTotalSayings = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.totalSayings;
   }
 );
 
-const makeSelectDomains = () => createSelector(
-  selectGlobalDomain,
+const makeSelectCategories = () => createSelector(
+  selectGlobalCategory,
   (globalState) => {
-    return globalState.domains;
+    return globalState.categories;
   }
 );
 
-const makeSelectFilteredDomains = () => createSelector(
-  selectGlobalDomain,
+const makeSelectFilteredCategories = () => createSelector(
+  selectGlobalCategory,
   (globalState) => {
-    return globalState.filteredDomains;
+    return globalState.filteredCategories;
   }
 );
 
-const makeSelectSelectedDomain = () => createSelector(
-  selectGlobalDomain,
+const makeSelectSelectedCategory = () => createSelector(
+  selectGlobalCategory,
   (globalState) => {
-    return globalState.selectedDomain;
+    return globalState.selectedCategory;
   }
 );
 
 const makeSelectNewSayingActions = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.newSayingActions;
   }
@@ -178,49 +178,49 @@ const makeSelectNewSayingActions = () => createSelector(
 
 /* Actions */
 const makeSelectActions = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.actions;
   }
 );
 
 const makeSelectCurrentAction = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.currentAction;
   }
 );
 
 const makeSelectTotalActions = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.totalActions;
   }
 );
 
 const makeSelectAction = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.action;
   }
 );
 
 const makeSelectActionWebhook = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.actionWebhook;
   }
 );
 
 const makeSelectActionPostFormat = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.actionPostFormat;
   }
 );
 
 const makeSelectSayingForAction = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.sayingForAction;
   }
@@ -228,7 +228,7 @@ const makeSelectSayingForAction = () => createSelector(
 
 /* Settings */
 const makeSelectSettings = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
       return globalState.settings;
   }
@@ -236,17 +236,17 @@ const makeSelectSettings = () => createSelector(
 
 /* Keyword */
 const makeSelectKeyword = () => createSelector(
-  selectGlobalDomain,
+  selectGlobalCategory,
   (globalState) => {
     return globalState.keyword;
   }
 );
 
-/* Domain */
-const makeSelectDomain = () => createSelector(
-  selectGlobalDomain,
+/* Category */
+const makeSelectCategory = () => createSelector(
+  selectGlobalCategory,
   (globalState) => {
-    return globalState.domain;
+    return globalState.category;
   }
 );
 
@@ -275,9 +275,9 @@ export {
 
   makeSelectSayings,
   makeSelectTotalSayings,
-  makeSelectDomains,
-  makeSelectFilteredDomains,
-  makeSelectSelectedDomain,
+  makeSelectCategories,
+  makeSelectFilteredCategories,
+  makeSelectSelectedCategory,
   makeSelectNewSayingActions,
 
   makeSelectActions,
@@ -292,5 +292,5 @@ export {
 
   makeSelectKeyword,
 
-  makeSelectDomain,
+  makeSelectCategory,
 };

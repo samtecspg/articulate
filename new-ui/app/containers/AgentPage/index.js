@@ -35,7 +35,7 @@ import {
   loadAgent,
   changeAgentData,
   changeAgentName,
-  changeDomainClassifierThreshold,
+  changeCategoryClassifierThreshold,
   addAgentFallbackResponse,
   deleteAgentFallbackResponse,
   changeWebhookData,
@@ -68,7 +68,7 @@ export class AgentPage extends React.PureComponent {
       this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
       this.props.onChangeAgentData('fallbackResponses', this.props.settings.defaultAgentFallbackResponses);
       this.props.onChangeAgentSettingsData('rasaURL', this.props.settings.rasaURL);
-      this.props.onChangeAgentSettingsData('domainClassifierPipeline', this.props.settings.domainClassifierPipeline);
+      this.props.onChangeAgentSettingsData('categoryClassifierPipeline', this.props.settings.categoryClassifierPipeline);
       this.props.onChangeAgentSettingsData('sayingClassifierPipeline', this.props.settings.sayingClassifierPipeline);
       this.props.onChangeAgentSettingsData('keywordClassifierPipeline', this.props.settings.keywordClassifierPipeline);
       this.props.onChangeAgentSettingsData('spacyPretrainedEntities', this.props.settings.spacyPretrainedEntities);
@@ -100,7 +100,7 @@ export class AgentPage extends React.PureComponent {
       rasaURL: false,
       ducklingURL: false,
       ducklingDimension: false,
-      domainClassifierPipeline: false,
+      categoryClassifierPipeline: false,
       sayingClassifierPipeline: false,
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
@@ -119,7 +119,7 @@ export class AgentPage extends React.PureComponent {
       rasaURL: false,
       ducklingURL: false,
       ducklingDimension: false,
-      domainClassifierPipeline: false,
+      categoryClassifierPipeline: false,
       sayingClassifierPipeline: false,
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
@@ -178,13 +178,13 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (!Array.isArray(this.props.agentSettings.domainClassifierPipeline)){
-        throw 'Domain classifier pipeline is not an array';
+      if (!Array.isArray(this.props.agentSettings.categoryClassifierPipeline)){
+        throw 'Category classifier pipeline is not an array';
       }
-      newErrorState.domainClassifierPipeline = false;
+      newErrorState.categoryClassifierPipeline = false;
     } catch(e) {
       errors = true;
-      newErrorState.domainClassifierPipeline = true;
+      newErrorState.categoryClassifierPipeline = true;
     }
 
     try {
@@ -290,7 +290,7 @@ export class AgentPage extends React.PureComponent {
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
-              onChangeDomainClassifierThreshold={this.props.onChangeDomainClassifierThreshold}
+              onChangeCategoryClassifierThreshold={this.props.onChangeCategoryClassifierThreshold}
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
             />
@@ -317,7 +317,7 @@ AgentPage.propTypes = {
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
-  onChangeDomainClassifierThreshold: PropTypes.func,
+  onChangeCategoryClassifierThreshold: PropTypes.func,
   onChangeAgentSettingsData: PropTypes.func,
   onAddFallbackResponse: PropTypes.func,
   onDeleteFallbackResponse: PropTypes.func,
@@ -363,8 +363,8 @@ function mapDispatchToProps(dispatch) {
     onChangeAgentSettingsData: (field, value) => {
       dispatch(changeAgentSettingsData({ field, value }));
     },
-    onChangeDomainClassifierThreshold: (value) => {
-      dispatch(changeDomainClassifierThreshold(value));
+    onChangeCategoryClassifierThreshold: (value) => {
+      dispatch(changeCategoryClassifierThreshold(value));
     },
     onAddFallbackResponse: (newFallback) => {
       dispatch(addAgentFallbackResponse(newFallback));

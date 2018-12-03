@@ -48,7 +48,7 @@ export class SettingsPage extends React.PureComponent {
       rasaURL: false,
       ducklingURL: false,
       ducklingDimension: false,
-      domainClassifierPipeline: false,
+      categoryClassifierPipeline: false,
       sayingClassifierPipeline: false,
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
@@ -66,7 +66,7 @@ export class SettingsPage extends React.PureComponent {
       rasaURL: false,
       ducklingURL: false,
       ducklingDimension: false,
-      domainClassifierPipeline: false,
+      categoryClassifierPipeline: false,
       sayingClassifierPipeline: false,
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
@@ -147,13 +147,13 @@ export class SettingsPage extends React.PureComponent {
     }
 
     try {
-      if (!Array.isArray(this.props.settings.domainClassifierPipeline)){
-        throw 'Domain classifier pipeline is not an array';
+      if (!Array.isArray(this.props.settings.categoryClassifierPipeline)){
+        throw 'Category classifier pipeline is not an array';
       }
-      newErrorState.domainClassifierPipeline = false;
+      newErrorState.categoryClassifierPipeline = false;
     } catch(e) {
       errors = true;
-      newErrorState.domainClassifierPipeline = true;
+      newErrorState.categoryClassifierPipeline = true;
     }
 
     try {

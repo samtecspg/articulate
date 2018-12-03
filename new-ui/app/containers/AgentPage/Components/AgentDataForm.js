@@ -138,30 +138,30 @@ class AgentDataForm extends React.Component {
                         </Grid>
                     </Grid>
                     {
-                        this.props.agent.multiDomain ?
+                        this.props.agent.multiCategory ?
                         <Grid container spacing={24} item xs={12}>
                             <Grid item lg={4} md={10} sm={9} xs={8}>
-                                <Typography className={classes.sliderLabel} id='domainClassifierThreshold'>
-                                    <FormattedMessage {...messages.sliderDomainRecognitionThresholdLabel} />
+                                <Typography className={classes.sliderLabel} id='categoryClassifierThreshold'>
+                                    <FormattedMessage {...messages.sliderCategoryRecognitionThresholdLabel} />
                                 </Typography>
                                 <Slider
-                                    value={agent.domainClassifierThreshold}
+                                    value={agent.categoryClassifierThreshold}
                                     min={0}
                                     max={100}
                                     step={1}
-                                    aria-labelledby='domainClassifierThreshold'
-                                    onChange={(evt, value) => { this.props.onChangeDomainClassifierThreshold(value) }} />
+                                    aria-labelledby='categoryClassifierThreshold'
+                                    onChange={(evt, value) => { this.props.onChangeCategoryClassifierThreshold(value) }} />
                             </Grid>
                             <Grid item lg={2} md={2} sm={3} xs={4}>
                             <TextField
-                                id='domainClassifierThreshold'
+                                id='categoryClassifierThreshold'
                                 margin='normal'
-                                value={agent.domainClassifierThreshold}
+                                value={agent.categoryClassifierThreshold}
                                 onChange={(evt) => {
                                     evt.target.value === '' ?
-                                    this.props.onChangeDomainClassifierThreshold(0) :
+                                    this.props.onChangeCategoryClassifierThreshold(0) :
                                     (evt.target.value <= 100 && evt.target.value >= 0 ?
-                                        this.props.onChangeDomainClassifierThreshold(evt.target.value) :
+                                        this.props.onChangeCategoryClassifierThreshold(evt.target.value) :
                                         false) }}
                                 fullWidth
                                 InputLabelProps={{
@@ -237,7 +237,7 @@ AgentDataForm.propTypes = {
     errorState: PropTypes.object,
     onChangeAgentData: PropTypes.func.isRequired,
     onChangeAgentName: PropTypes.func.isRequired,
-    onChangeDomainClassifierThreshold: PropTypes.func.isRequired,
+    onChangeCategoryClassifierThreshold: PropTypes.func.isRequired,
     onAddFallbackResponse: PropTypes.func.isRequired,
     onDeleteFallbackResponse: PropTypes.func.isRequired,
     agent: PropTypes.object,

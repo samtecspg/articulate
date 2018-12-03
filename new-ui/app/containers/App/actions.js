@@ -62,13 +62,13 @@ import {
   DELETE_ACTION_NEW_SAYING,
   SEND_SAYING_TO_ACTION,
   CLEAR_SAYING_TO_ACTION,
-  LOAD_DOMAINS,
-  LOAD_DOMAINS_ERROR,
-  LOAD_DOMAINS_SUCCESS,
-  LOAD_FILTERED_DOMAINS,
-  LOAD_FILTERED_DOMAINS_ERROR,
-  LOAD_FILTERED_DOMAINS_SUCCESS,
-  SELECT_DOMAIN,
+  LOAD_CATEGORIES,
+  LOAD_CATEGORIES_ERROR,
+  LOAD_CATEGORIES_SUCCESS,
+  LOAD_FILTERED_CATEGORIES,
+  LOAD_FILTERED_CATEGORIES_ERROR,
+  LOAD_FILTERED_CATEGORIES_SUCCESS,
+  SELECT_CATEGORY,
 
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
@@ -131,17 +131,17 @@ import {
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
 
-  RESET_DOMAIN_DATA,
-  LOAD_DOMAIN,
-  LOAD_DOMAIN_ERROR,
-  LOAD_DOMAIN_SUCCESS,
-  CREATE_DOMAIN,
-  UPDATE_DOMAIN,
-  CHANGE_DOMAIN_DATA,
-  CREATE_DOMAIN_ERROR,
-  CREATE_DOMAIN_SUCCESS,
-  UPDATE_DOMAIN_ERROR,
-  UPDATE_DOMAIN_SUCCESS,
+  RESET_CATEGORY_DATA,
+  LOAD_CATEGORY,
+  LOAD_CATEGORY_ERROR,
+  LOAD_CATEGORY_SUCCESS,
+  CREATE_CATEGORY,
+  UPDATE_CATEGORY,
+  CHANGE_CATEGORY_DATA,
+  CREATE_CATEGORY_ERROR,
+  CREATE_CATEGORY_SUCCESS,
+  UPDATE_CATEGORY_ERROR,
+  UPDATE_CATEGORY_SUCCESS,
 } from './constants';
 
 /*
@@ -302,11 +302,11 @@ export function changeAgentName(payload) {
   }
 }
 
-export function changeDomainClassifierThreshold(value) {
+export function changeCategoryClassifierThreshold(value) {
   return {
     type: CHANGE_AGENT_DATA,
     payload: {
-      field: 'domainClassifierThreshold',
+      field: 'categoryClassifierThreshold',
       value: parseInt(value)
     },
   };
@@ -472,12 +472,12 @@ export function addSayingError(error) {
   };
 }
 
-export function deleteSaying(pageSize, sayingId, domainId) {
+export function deleteSaying(pageSize, sayingId, categoryId) {
   return {
     type: DELETE_SAYING,
     apiCall: true,
     sayingId,
-    domainId,
+    categoryId,
     pageSize,
   }
 }
@@ -576,53 +576,53 @@ export function sendSayingToAction(saying){
   }
 }
 
-export function loadDomains(){
+export function loadCategories(){
   return {
-    type: LOAD_DOMAINS,
+    type: LOAD_CATEGORIES,
     apiCall: true,
   }
 }
 
-export function loadDomainsError(error){
+export function loadCategoriesError(error){
   return {
-    type: LOAD_DOMAINS_ERROR,
+    type: LOAD_CATEGORIES_ERROR,
     error,
   }
 }
 
-export function loadDomainsSuccess(domains){
+export function loadCategoriesSuccess(categories){
   return {
-    type: LOAD_DOMAINS_SUCCESS,
-    domains,
+    type: LOAD_CATEGORIES_SUCCESS,
+    categories,
   }
 }
 
-export function loadFilteredDomains(filter){
+export function loadFilteredCategories(filter){
   return {
-    type: LOAD_FILTERED_DOMAINS,
+    type: LOAD_FILTERED_CATEGORIES,
     filter,
     apiCall: true,
   }
 }
 
-export function loadFilteredDomainsError(error){
+export function loadFilteredCategoriesError(error){
   return {
-    type: LOAD_FILTERED_DOMAINS_ERROR,
+    type: LOAD_FILTERED_CATEGORIES_ERROR,
     error,
   }
 }
 
-export function loadFilteredDomainsSuccess(domains){
+export function loadFilteredCategoriesSuccess(categories){
   return {
-    type: LOAD_FILTERED_DOMAINS_SUCCESS,
-    domains,
+    type: LOAD_FILTERED_CATEGORIES_SUCCESS,
+    categories,
   }
 }
 
-export function selectDomain(domainName){
+export function selectCategory(categoryName){
   return {
-    type: SELECT_DOMAIN,
-    domainName,
+    type: SELECT_CATEGORY,
+    categoryName,
   }
 }
 
@@ -1036,87 +1036,87 @@ export function changeExampleSynonyms(exampleIndex, synonyms) {
   }
 }
 
-/* Domain */
-export function resetDomainData(){
+/* Category */
+export function resetCategoryData(){
   return {
-    type: RESET_DOMAIN_DATA,
+    type: RESET_CATEGORY_DATA,
   }
 }
 
-export function loadDomain(id){
+export function loadCategory(id){
   return {
-    type: LOAD_DOMAIN,
+    type: LOAD_CATEGORY,
     apiCall: true,
     id,
   }
 }
 
-export function loadDomainError(error){
+export function loadCategoryError(error){
   return {
-    type: LOAD_DOMAIN_ERROR,
+    type: LOAD_CATEGORY_ERROR,
     error
   }
 }
 
-export function loadDomainSuccess(domain){
+export function loadCategorySuccess(category){
   return {
-    type: LOAD_DOMAIN_SUCCESS,
-    domain
+    type: LOAD_CATEGORY_SUCCESS,
+    category
   }
 }
 
-export function createDomain(){
+export function createCategory(){
   return {
-    type: CREATE_DOMAIN,
+    type: CREATE_CATEGORY,
     apiCall: true,
   }
 }
 
-export function createDomainError(error){
+export function createCategoryError(error){
   return {
-    type: CREATE_DOMAIN_ERROR,
+    type: CREATE_CATEGORY_ERROR,
     error
   }
 }
 
-export function createDomainSuccess(domain){
+export function createCategorySuccess(category){
   return {
-    type: CREATE_DOMAIN_SUCCESS,
-    domain,
+    type: CREATE_CATEGORY_SUCCESS,
+    category,
   }
 }
 
-export function updateDomain(){
+export function updateCategory(){
   return {
-    type: UPDATE_DOMAIN,
+    type: UPDATE_CATEGORY,
     apiCall: true,
   }
 }
 
-export function updateDomainError(error){
+export function updateCategoryError(error){
   return {
-    type: UPDATE_DOMAIN_ERROR,
+    type: UPDATE_CATEGORY_ERROR,
     error
   }
 }
 
-export function updateDomainSuccess(domain){
+export function updateCategorySuccess(category){
   return {
-    type: UPDATE_DOMAIN_SUCCESS,
-    domain
+    type: UPDATE_CATEGORY_SUCCESS,
+    category
   }
 }
 
-export function changeDomainData(payload){
+export function changeCategoryData(payload){
   return {
-    type: CHANGE_DOMAIN_DATA,
+    type: CHANGE_CATEGORY_DATA,
     payload,
   }
 }
 
 export function changeActionThreshold(value) {
   return {
-    type: CHANGE_DOMAIN_DATA,
+    type: CHANGE_CATEGORY_DATA,
     payload: {
       field: 'actionThreshold',
       value: parseInt(value)

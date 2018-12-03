@@ -2,18 +2,18 @@ import Guid from 'guid';
 import _ from 'lodash';
 import Moment from 'moment';
 import {
-    CONFIG_SETTINGS_DOMAIN_PIPELINE,
+    CONFIG_SETTINGS_CATEGORY_PIPELINE,
     CONFIG_SETTINGS_KEYWORD_PIPELINE,
     CONFIG_SETTINGS_RASA_URL,
     CONFIG_SETTINGS_SAYING_PIPELINE,
     MODEL_AGENT,
-    MODEL_DOMAIN,
+    MODEL_CATEGORY,
     MODEL_KEYWORD,
     MODEL_SAYING,
     RASA_COMMON_EXAMPLES,
     RASA_KEYWORD_SYNONYMS,
     RASA_MODEL_DEFAULT,
-    RASA_MODEL_DOMAIN_RECOGNIZER,
+    RASA_MODEL_CATEGORY_RECOGNIZER,
     RASA_MODEL_JUST_ER,
     RASA_NLU_DATA,
     RASA_REGEX_FEATURES,
@@ -28,7 +28,7 @@ module.exports = async function ({ id, returnModel = false }) {
 
     const { redis/*, [`rasa-nlu`]: rasaNLU*/ } = this.server.app;
 
-    const { globalService, domainService, rasaNLUService } = await this.server.services();
+    const { globalService, categoryService, rasaNLUService } = await this.server.services();
     let model = Guid.create().toString();
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
@@ -36,50 +36,50 @@ module.exports = async function ({ id, returnModel = false }) {
         //const rasaStatus = await rasaNLU.Status();
         AgentModel.property('status', STATUS_TRAINING);
         await AgentModel.save();
-        if (agent.enableModelsPerDomain) {
-            const DomainModels = await globalService.loadAllByIds({
-                ids: await AgentModel.getAll(MODEL_DOMAIN, MODEL_DOMAIN),
-                model: MODEL_DOMAIN,
+        if (agent.enableModelsPerCategory) {
+            const CategoryModels = await globalService.loadAllByIds({
+                ids: await AgentModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY),
+                model: MODEL_CATEGORY,
                 returnModel: true
             });
             //const trainingLimit = rasaStatus[RASA_MAX_TRAINING_PROCESSES] - rasaStatus[RASA_CURRENT_TRAINING_PROCESSES];
-            const DomainModelsToTrain = DomainModels.filter((DomainModel) => {
+            const CategoryModelsToTrain = CategoryModels.filter((CategoryModel) => {
 
-                const status = DomainModel.property('status');
+                const status = CategoryModel.property('status');
                 return status === STATUS_OUT_OF_DATE || status === STATUS_ERROR;
             });
 
-            //Train domain identifier
-            if (DomainModels.length > 1) {
-                let countOfDomainsWithData = 0;
+            //Train category identifier
+            if (CategoryModels.length > 1) {
+                let countOfCategoriesWithData = 0;
                 const rasaNLUData = {
                     [RASA_COMMON_EXAMPLES]: [],
                     [RASA_REGEX_FEATURES]: [],
                     [RASA_KEYWORD_SYNONYMS]: []
                 };
 
-                for (const DomainModel of DomainModels) {
+                for (const CategoryModel of CategoryModels) {
 
-                    const sayingIds = await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING);
-                    if (sayingIds.length > 1) { // If the domain only have 1 saying then RASA will fail during training
-                        countOfDomainsWithData++;
-                        const domainName = DomainModel.property('domainName');
-                        const extraTrainingData = DomainModel.property('extraTrainingData');
-                        const keywords = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
-                        const sayings = await globalService.loadAllByIds({ ids: await DomainModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
-                        const domainTrainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData, domainName });
-                        rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], domainTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
-                        rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], domainTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
-                        rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], domainTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
+                    const sayingIds = await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING);
+                    if (sayingIds.length > 1) { // If the category only have 1 saying then RASA will fail during training
+                        countOfCategoriesWithData++;
+                        const categoryName = CategoryModel.property('categoryName');
+                        const extraTrainingData = CategoryModel.property('extraTrainingData');
+                        const keywords = await globalService.loadAllByIds({ ids: await CategoryModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
+                        const sayings = await globalService.loadAllByIds({ ids: await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
+                        const categoryTrainingData = await categoryService.generateTrainingData({ keywords, sayings, extraTrainingData, categoryName });
+                        rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], categoryTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
+                        rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], categoryTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
+                        rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], categoryTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
                     }
                 }
-                if (countOfDomainsWithData > 1) {
-                    const pipeline = agent.settings[CONFIG_SETTINGS_DOMAIN_PIPELINE];
-                    const domainRecognizerModel = `${agent.agentName}${RASA_MODEL_DOMAIN_RECOGNIZER}`;
+                if (countOfCategoriesWithData > 1) {
+                    const pipeline = agent.settings[CONFIG_SETTINGS_CATEGORY_PIPELINE];
+                    const categoryRecognizerModel = `${agent.agentName}${RASA_MODEL_CATEGORY_RECOGNIZER}`;
                     await rasaNLUService.train({
                         project: agent.agentName,
-                        model: domainRecognizerModel,
-                        oldModel: domainRecognizerModel,
+                        model: categoryRecognizerModel,
+                        oldModel: categoryRecognizerModel,
                         trainingSet: {
                             [RASA_NLU_DATA]: rasaNLUData
                         },
@@ -87,20 +87,20 @@ module.exports = async function ({ id, returnModel = false }) {
                         language: agent.language,
                         baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
                     });
-                    AgentModel.property('domainRecognizer', true);
+                    AgentModel.property('categoryRecognizer', true);
                 }
             }
 
-            //Train each domain that need it
-            if (!(!DomainModelsToTrain.length > 0 && DomainModels.length < 2)) {
+            //Train each category that need it
+            if (!(!CategoryModelsToTrain.length > 0 && CategoryModels.length < 2)) {
                 //TODO: Do in parallel
-                await Promise.all(DomainModels.map(async (DomainModel) => {
+                await Promise.all(CategoryModels.map(async (CategoryModel) => {
 
-                    const status = DomainModel.property('status');
+                    const status = CategoryModel.property('status');
                     if (status === STATUS_TRAINING || status === STATUS_READY) {
                         return;
                     }
-                    await domainService.train({ AgentModel, DomainModel });
+                    await categoryService.train({ AgentModel, CategoryModel });
                 }));
             }
 
@@ -109,7 +109,7 @@ module.exports = async function ({ id, returnModel = false }) {
             //Train default model
             const keywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
             const sayings = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
-            const trainingData = await domainService.generateTrainingData({ keywords, sayings, extraTrainingData: agent.extraTrainingData, isKeyword: false });
+            const trainingData = await categoryService.generateTrainingData({ keywords, sayings, extraTrainingData: agent.extraTrainingData, isKeyword: false });
             if (trainingData.numberOfSayings === 0) {
                 return;
             }
@@ -129,7 +129,7 @@ module.exports = async function ({ id, returnModel = false }) {
             });
         }
 
-        AgentModel.property('domainRecognizer', true);
+        AgentModel.property('categoryRecognizer', true);
         AgentModel.property('lastTraining', Moment().utc().format());
         AgentModel.property('model', model);
         AgentModel.property('status', STATUS_READY);

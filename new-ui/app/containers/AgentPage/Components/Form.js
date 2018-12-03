@@ -160,8 +160,8 @@ class Form extends React.Component {
               settings={this.props.settings}
               onChangeAgentData={this.props.onChangeAgentData}
               onChangeAgentName={this.props.onChangeAgentName}
-              onChangeDomainClassifierThreshold={
-                this.props.onChangeDomainClassifierThreshold
+              onChangeCategoryClassifierThreshold={
+                this.props.onChangeCategoryClassifierThreshold
               }
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
@@ -203,7 +203,7 @@ Form.propTypes = {
   onChangeWebhookPayloadType: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
   onChangeAgentSettingsData: PropTypes.func,
-  onChangeDomainClassifierThreshold: PropTypes.func,
+  onChangeCategoryClassifierThreshold: PropTypes.func,
   onAddFallbackResponse: PropTypes.func,
   onDeleteFallbackResponse: PropTypes.func
 };

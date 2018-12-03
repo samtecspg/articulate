@@ -6,7 +6,7 @@ import {
     PARAM_ACTION_ID,
     PARAM_AGENT_ID,
     PARAM_DIRECTION,
-    PARAM_DOMAIN_ID,
+    PARAM_CATEGORY_ID,
     PARAM_FIELD,
     PARAM_KEYWORD_ID,
     PARAM_LIMIT,
@@ -19,7 +19,7 @@ import {
 } from '../../util/constants';
 
 const AgentSchema = require('../models/agent.model').schema;
-const DomainSchema = require('../models/domain.model').schema;
+const CategorySchema = require('../models/category.model').schema;
 const ActionSchema = require('../models/action.model').schema;
 const SlotSchema = require('../models/slot.model').schema;
 const KeywordSchema = require('../models/keyword.model').schema;
@@ -34,7 +34,7 @@ const ParseSchema = require('../models/parse.model').schema;
 class AgentValidate {
     constructor() {
 
-        this.findAllDomain = {
+        this.findAllCategory = {
             params: (() => {
 
                 return {
@@ -53,12 +53,12 @@ class AgentValidate {
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
-                    multiDomain: AgentSchema.multiDomain.required(),
-                    domainRecognizer: AgentSchema.domainRecognizer,
-                    domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
+                    multiCategory: AgentSchema.multiCategory.required(),
+                    categoryRecognizer: AgentSchema.categoryRecognizer,
+                    categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
                     extraTrainingData: AgentSchema.extraTrainingData,
-                    enableModelsPerDomain: AgentSchema.enableModelsPerDomain
+                    enableModelsPerCategory: AgentSchema.enableModelsPerCategory
                 };
             })()
         };
@@ -72,7 +72,7 @@ class AgentValidate {
             })()
         };
 
-        this.createDomain = {
+        this.createCategory = {
             params: (() => {
 
                 return {
@@ -82,12 +82,12 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    domainName: DomainSchema.domainName.required(),
-                    enabled: DomainSchema.enabled.required(),
-                    actionThreshold: DomainSchema.actionThreshold.required(),
-                    lastTraining: DomainSchema.lastTraining,
-                    model: DomainSchema.model,
-                    extraTrainingData: DomainSchema.extraTrainingData
+                    categoryName: CategorySchema.categoryName.required(),
+                    enabled: CategorySchema.enabled.required(),
+                    actionThreshold: CategorySchema.actionThreshold.required(),
+                    lastTraining: CategorySchema.lastTraining,
+                    model: CategorySchema.model,
+                    extraTrainingData: CategorySchema.extraTrainingData
                 };
             })()
         };
@@ -184,15 +184,15 @@ class AgentValidate {
                     timezone: AgentSchema.timezone,
                     useWebhook: AgentSchema.useWebhook,
                     usePostFormat: AgentSchema.usePostFormat,
-                    multiDomain: AgentSchema.multiDomain,
-                    domainClassifierThreshold: AgentSchema.domainClassifierThreshold,
+                    multiCategory: AgentSchema.multiCategory,
+                    categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold,
                     fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining.allow(''),
                     extraTrainingData: AgentSchema.extraTrainingData,
-                    enableModelsPerDomain: AgentSchema.enableModelsPerDomain,
+                    enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model.allow(''),
-                    domainRecognizer: AgentSchema.domainRecognizer
+                    categoryRecognizer: AgentSchema.categoryRecognizer
                 };
             })()
         };
@@ -311,7 +311,7 @@ class AgentValidate {
             query: (() => {
 
                 return {
-                    loadDomainId: Joi.boolean().default(false),
+                    loadCategoryId: Joi.boolean().default(false),
                     [PARAM_SKIP]: Joi
                         .number()
                         .integer()
@@ -378,12 +378,12 @@ class AgentValidate {
             })()
         };
 
-        this.updateSayingInDomain = {
+        this.updateSayingInCategory = {
             params: (() => {
 
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
-                    [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain'),
+                    [PARAM_CATEGORY_ID]: CategorySchema.id.required().description('Id of the category'),
                     [PARAM_SAYING_ID]: SayingSchema.id.required().description('Id of the saying')
                 };
             })(),
@@ -403,12 +403,12 @@ class AgentValidate {
                 };
             })()
         };
-        this.createSayingInDomain = {
+        this.createSayingInCategory = {
             params: (() => {
 
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
-                    [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain')
+                    [PARAM_CATEGORY_ID]: CategorySchema.id.required().description('Id of the category')
                 };
             })(),
             payload: (() => {
@@ -457,34 +457,34 @@ class AgentValidate {
             })()
         };
 
-        this.updateDomain = {
+        this.updateCategory = {
             params: (() => {
 
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
-                    [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain')
+                    [PARAM_CATEGORY_ID]: CategorySchema.id.required().description('Id of the category')
                 };
             })(),
             payload: (() => {
 
                 return {
-                    actionThreshold: DomainSchema.actionThreshold,
-                    domainName: DomainSchema.domainName,
-                    enabled: DomainSchema.enabled,
-                    extraTrainingData: DomainSchema.extraTrainingData,
-                    lastTraining: DomainSchema.lastTraining,
-                    model: DomainSchema.model,
-                    status: DomainSchema.status
+                    actionThreshold: CategorySchema.actionThreshold,
+                    categoryName: CategorySchema.categoryName,
+                    enabled: CategorySchema.enabled,
+                    extraTrainingData: CategorySchema.extraTrainingData,
+                    lastTraining: CategorySchema.lastTraining,
+                    model: CategorySchema.model,
+                    status: CategorySchema.status
                 };
             })()
         };
 
-        this.trainDomain = {
+        this.trainCategory = {
             params: (() => {
 
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
-                    [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain')
+                    [PARAM_CATEGORY_ID]: CategorySchema.id.required().description('Id of the category')
                 };
             })()
         };
@@ -527,23 +527,23 @@ class AgentValidate {
             })()
         };
 
-        this.removeSayingInDomain = {
+        this.removeSayingInCategory = {
             params: (() => {
 
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
-                    [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain'),
+                    [PARAM_CATEGORY_ID]: CategorySchema.id.required().description('Id of the category'),
                     [PARAM_SAYING_ID]: SayingSchema.id.description('Id of the saying')
                 };
             })()
         };
 
-        this.removeDomain = {
+        this.removeCategory = {
             params: (() => {
 
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
-                    [PARAM_DOMAIN_ID]: DomainSchema.id.required().description('Id of the domain')
+                    [PARAM_CATEGORY_ID]: CategorySchema.id.required().description('Id of the category')
                 };
             })()
         };
@@ -575,11 +575,11 @@ class AgentValidate {
                     description: AgentSchema.description,
                     language: AgentSchema.language.required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
                     timezone: AgentSchema.timezone.required(),
-                    domainClassifierThreshold: AgentSchema.domainClassifierThreshold.required(),
-                    domainRecognizer: AgentSchema.domainRecognizer,
+                    categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
+                    categoryRecognizer: AgentSchema.categoryRecognizer,
                     fallbackResponses: AgentSchema.fallbackResponses.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
-                    multiDomain: AgentSchema.multiDomain.required(),
+                    multiCategory: AgentSchema.multiCategory.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     postFormat: {
                         postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
@@ -587,7 +587,7 @@ class AgentValidate {
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining,
                     extraTrainingData: AgentSchema.extraTrainingData,
-                    enableModelsPerDomain: AgentSchema.enableModelsPerDomain,
+                    enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model,
                     webhook: {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
@@ -606,14 +606,14 @@ class AgentValidate {
                             synonyms: KeywordExampledSchema.synonyms
                         }).required()
                     }),
-                    domains: Joi.array().items({
-                        domainName: DomainSchema.domainName.required(),
-                        enabled: DomainSchema.enabled.required(),
-                        actionThreshold: DomainSchema.actionThreshold.required(),
-                        model: DomainSchema.model,
-                        status: DomainSchema.status,
-                        lastTraining: DomainSchema.lastTraining,
-                        extraTrainingData: DomainSchema.extraTrainingData,
+                    categories: Joi.array().items({
+                        categoryName: CategorySchema.categoryName.required(),
+                        enabled: CategorySchema.enabled.required(),
+                        actionThreshold: CategorySchema.actionThreshold.required(),
+                        model: CategorySchema.model,
+                        status: CategorySchema.status,
+                        lastTraining: CategorySchema.lastTraining,
+                        extraTrainingData: CategorySchema.extraTrainingData,
                         sayings: Joi.array().items({
                             userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
                             actions: SayingSchema.actions.allow([]),

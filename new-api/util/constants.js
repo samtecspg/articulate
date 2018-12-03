@@ -16,7 +16,7 @@ export const MODEL_ACTION = 'Action';
 export const MODEL_AGENT = 'Agent';
 export const MODEL_CONTEXT = 'Context';
 export const MODEL_FRAME = 'Frame';
-export const MODEL_DOMAIN = 'Domain';
+export const MODEL_CATEGORY = 'Category';
 export const MODEL_DOCUMENT = 'Document';
 export const MODEL_KEYWORD = 'Keyword';
 export const MODEL_POST_FORMAT = 'PostFormat';
@@ -28,7 +28,7 @@ export const MODEL_ALL = [
     MODEL_AGENT,
     MODEL_CONTEXT,
     MODEL_DOCUMENT,
-    MODEL_DOMAIN,
+    MODEL_CATEGORY,
     MODEL_KEYWORD,
     MODEL_SAYING,
     MODEL_SETTINGS,
@@ -41,7 +41,7 @@ export const ROUTE_ACTION = 'action';
 export const ROUTE_AGENT = 'agent';
 export const ROUTE_CONTEXT = 'context';
 export const ROUTE_DOCUMENT = 'doc';
-export const ROUTE_DOMAIN = 'domain';
+export const ROUTE_CATEGORY = 'category';
 export const ROUTE_POST_FORMAT = 'postFormat';
 export const ROUTE_KEYWORD = 'keyword';
 export const ROUTE_SAYING = 'saying';
@@ -74,12 +74,12 @@ export const PARAM_BULK = 'bulk';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
-export const PARAM_DOMAIN_ID = ROUTE_DOMAIN + PARAMS_POSTFIX_ID;
+export const PARAM_CATEGORY_ID = ROUTE_CATEGORY + PARAMS_POSTFIX_ID;
 export const PARAM_KEYWORD_ID = ROUTE_KEYWORD + PARAMS_POSTFIX_ID;
 export const PARAM_SAYING_ID = ROUTE_SAYING + PARAMS_POSTFIX_ID;
 export const PARAM_DOCUMENT_TIME_STAMP = 'time_stamp';
 export const PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE = 'maximum_saying_score';
-export const PARAM_DOCUMENT_MAXIMUM_DOMAIN_SCORE = 'maximum_domain_score';
+export const PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE = 'maximum_category_score';
 export const PARAM_DOCUMENT_TOTAL_ELAPSED_TIME = 'total_elapsed_time_ms';
 export const PARAM_DOCUMENT_ELAPSED_TIME = 'elapsed_time_ms';
 export const PARAM_DOCUMENT_RASA_RESULTS = 'rasa_results';
@@ -90,7 +90,7 @@ export const ROUTE_TO_MODEL = {
     [ROUTE_AGENT]: MODEL_AGENT,
     [ROUTE_CONTEXT]: MODEL_CONTEXT,
     [ROUTE_DOCUMENT]: MODEL_DOCUMENT,
-    [ROUTE_DOMAIN]: MODEL_DOMAIN,
+    [ROUTE_CATEGORY]: MODEL_CATEGORY,
     [ROUTE_KEYWORD]: MODEL_KEYWORD,
     [ROUTE_SAYING]: MODEL_SAYING,
     [ROUTE_SETTINGS]: MODEL_SETTINGS,
@@ -104,7 +104,7 @@ export const CONFIG_SETTINGS_RASA_URL = 'rasaURL';
 export const CONFIG_SETTINGS_DUCKLING_URL = 'ducklingURL';
 export const CONFIG_SETTINGS_DUCKLING_DIMENSION = 'ducklingDimension';
 export const CONFIG_SETTINGS_SPACY_ENTITIES = 'spacyPretrainedEntities';
-export const CONFIG_SETTINGS_DOMAIN_PIPELINE = 'domainClassifierPipeline';
+export const CONFIG_SETTINGS_CATEGORY_PIPELINE = 'categoryClassifierPipeline';
 export const CONFIG_SETTINGS_SAYING_PIPELINE = 'sayingClassifierPipeline';
 export const CONFIG_SETTINGS_KEYWORD_PIPELINE = 'keywordClassifierPipeline';
 export const CONFIG_SETTINGS_LANGUAGES = 'uiLanguages';
@@ -123,7 +123,7 @@ export const CONFIG_SETTINGS_DEFAULT_AGENT = [
     CONFIG_SETTINGS_DUCKLING_URL,
     CONFIG_SETTINGS_DUCKLING_DIMENSION,
     CONFIG_SETTINGS_SPACY_ENTITIES,
-    CONFIG_SETTINGS_DOMAIN_PIPELINE,
+    CONFIG_SETTINGS_CATEGORY_PIPELINE,
     CONFIG_SETTINGS_SAYING_PIPELINE,
     CONFIG_SETTINGS_KEYWORD_PIPELINE
 ];
@@ -133,7 +133,7 @@ export const CONFIG_SETTINGS_ALL = [
     CONFIG_SETTINGS_DUCKLING_URL,
     CONFIG_SETTINGS_DUCKLING_DIMENSION,
     CONFIG_SETTINGS_SPACY_ENTITIES,
-    CONFIG_SETTINGS_DOMAIN_PIPELINE,
+    CONFIG_SETTINGS_CATEGORY_PIPELINE,
     CONFIG_SETTINGS_SAYING_PIPELINE,
     CONFIG_SETTINGS_KEYWORD_PIPELINE,
     CONFIG_SETTINGS_LANGUAGES,
@@ -160,7 +160,7 @@ export const RASA_REGEX_FEATURES = 'regex_features';
 export const RASA_INTENT_RANKING = 'intent_ranking';
 export const RASA_ACTION_RANKING = 'action_ranking';
 
-export const RASA_MODEL_DOMAIN_RECOGNIZER = '_domain_recognizer';
+export const RASA_MODEL_CATEGORY_RECOGNIZER = '_category_recognizer';
 export const RASA_MODEL_DEFAULT = 'default_';
 export const RASA_MODEL_JUST_ER = 'just_er_';
 
