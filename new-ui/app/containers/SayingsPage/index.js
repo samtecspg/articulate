@@ -66,6 +66,7 @@ export class SayingsPage extends React.Component {
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.onSearchCategory = this.onSearchCategory.bind(this);
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
+    this.addSaying = this.addSaying.bind(this);
   }
 
   state = {
@@ -152,6 +153,13 @@ export class SayingsPage extends React.Component {
     this.props.onLoadFilteredCategories(categoryFilter);
   }
 
+  addSaying(saying){
+    this.setState({
+      currentPage: 1
+    });
+    this.props.onAddSaying(this.state.pageSize, saying);
+  }
+
   render() {
     return (
       <Grid container>
@@ -179,7 +187,7 @@ export class SayingsPage extends React.Component {
               agentActions={this.props.agentActions}
               agentCategories={this.props.agentCategories}
               agentFilteredCategories={this.props.agentFilteredCategories}
-              onAddSaying={this.props.onAddSaying.bind(null, this.state.pageSize)}
+              onAddSaying={this.addSaying}
               onDeleteSaying={this.props.onDeleteSaying.bind(null, this.state.pageSize)}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
