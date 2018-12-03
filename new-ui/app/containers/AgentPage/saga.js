@@ -161,6 +161,7 @@ export function* putAgent(payload) {
   delete mutableAgent.id;
   delete mutableAgent.settings;
   try {
+      yield call(putAgentSettings, { id: currentAgent.id, api });
       const response = yield call(api.agent.putAgentAgentid, { agentId: currentAgent.id, body: mutableAgent });
       if (!currentAgent.useWebhook){
         if (agent.useWebhook) {
@@ -192,7 +193,6 @@ export function* putAgent(payload) {
           }
         }
       }
-      yield call(putAgentSettings, { id: currentAgent.id, api });
       yield put(updateAgentSuccess(response.obj));
   } catch (err) {
       yield put(updateAgentError(err));
