@@ -1,7 +1,7 @@
-import { ROUTE_DOCUMENT } from '../../util/constants';
-import GlobalFindById from './global/global.find-by-id.route';
+import _ from 'lodash';
 
+const Routes = require('require-dir')('./document');
 
 module.exports = [
-    GlobalFindById({ ROUTE: ROUTE_DOCUMENT })
+    ..._.values(Routes)
 ];

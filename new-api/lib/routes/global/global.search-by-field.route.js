@@ -1,6 +1,7 @@
 import Boom from 'boom';
 import {
     PARAM_FIELD,
+    PARAM_SEARCH,
     PARAM_VALUE,
     ROUTE_TO_MODEL
 } from '../../../util/constants';
@@ -12,7 +13,7 @@ module.exports = ({ ROUTE }) => {
 
     return {
         method: 'get',
-        path: `/${ROUTE}/search/{${PARAM_FIELD}}/{${PARAM_VALUE}}`,
+        path: `/${ROUTE}/${PARAM_SEARCH}/{${PARAM_FIELD}}/{${PARAM_VALUE}}`,
         options: {
             tags: ['api'],
             validate: GlobalValidator.searchByfield,

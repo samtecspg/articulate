@@ -1,16 +1,12 @@
 import { MODEL_DOCUMENT } from '../../../util/constants';
 import ESErrorHandler from '../../errors/es.error-handler';
 
-module.exports = async function ({ data }) {
+module.exports = async function ({ id }) {
 
     const { es } = this.server.app;
-
     const DocumentModel = es[MODEL_DOCUMENT];
     try {
-
-        const result = await DocumentModel.createInstance({ data });
-        data.id = result._id;
-        return data;
+        await DocumentModel.removeInstance({ id });
     }
     catch (error) {
         throw ESErrorHandler({ error });

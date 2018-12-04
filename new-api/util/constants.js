@@ -71,12 +71,14 @@ export const PARAM_LOAD_FRAMES = 'loadFrames';
 export const PARAM_TEXT = 'text';
 export const PARAM_TIMEZONE = 'timezone';
 export const PARAM_BULK = 'bulk';
+export const PARAM_SEARCH = 'search';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
 export const PARAM_CATEGORY_ID = ROUTE_CATEGORY + PARAMS_POSTFIX_ID;
 export const PARAM_KEYWORD_ID = ROUTE_KEYWORD + PARAMS_POSTFIX_ID;
 export const PARAM_SAYING_ID = ROUTE_SAYING + PARAMS_POSTFIX_ID;
+export const PARAM_DOCUMENT_ID = ROUTE_DOCUMENT + PARAMS_POSTFIX_ID;
 export const PARAM_DOCUMENT_TIME_STAMP = 'time_stamp';
 export const PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE = 'maximum_saying_score';
 export const PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE = 'maximum_category_score';

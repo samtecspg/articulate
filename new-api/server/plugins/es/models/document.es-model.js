@@ -19,6 +19,9 @@ const properties = {
     },
     rasa_results: {
         type: 'object'
+    },
+    session: {
+        type: 'text'
     }
 };
 

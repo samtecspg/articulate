@@ -20,28 +20,26 @@ module.exports = class BaseModel {
         return count;
     }
 
-    async createInstance({ document, refresh = true, source = true }) {
+    async createInstance({ data, refresh = true }) {
 
         const { index } = this;
-        return await this.client.create({
+        return await this.client.index({
             index,
             type: index,
-            body: document,
-            refresh,
-            _source: source
+            body: data,
+            refresh
         });
     }
 
-    async updateInstance({ id, document, refresh = true, source = true }) {
+    async updateInstance({ id, data, refresh = true }) {
 
         const { index } = this;
-        return await this.client.update({
+        return await this.client.index({
             index,
             type: index,
             id,
-            body: document,
-            refresh,
-            _source: source
+            body: data,
+            refresh
         });
     }
 
