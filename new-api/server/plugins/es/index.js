@@ -1,6 +1,6 @@
 import elasticsearch from 'elasticsearch';
 import Package from '../../../package.json';
-import InitializeModels from '../es/lib/initialize-models';
+import InitializeModels from './lib/initialize-models';
 
 const name = 'es';
 const logger = require('../../../util/logger')({ name: `plugin:${name}` });
@@ -15,8 +15,10 @@ module.exports = {
             await client.ping({
                 requestTimeout: 1000
             });
-            server.app[name].client = client;
-            server.app[name].models = await InitializeModels({ client, path: `${__dirname}/models` });
+            server.app[name] = {
+                client,
+                models: await InitializeModels({ client, path: `${__dirname}/models` })
+            };
             logger.info('registered');
         }
         catch (e) {
