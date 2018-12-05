@@ -6,6 +6,8 @@ import { Grid, Typography, TextField, MenuItem, Table, TableBody, TableRow, Tabl
 import Slider from '@material-ui/lab/Slider'
 import { withStyles } from '@material-ui/core/styles';
 
+import AutoComplete from 'components/Autocomplete';
+
 import messages from '../messages';
 
 import trashIcon from '../../../images/trash-icon.svg';
@@ -37,7 +39,7 @@ const styles = {
     deleteIcon: {
         cursor: 'pointer'
     },
-}
+} 
 
 /* eslint-disable react/prefer-stateless-function */
 class AgentDataForm extends React.Component {
@@ -112,29 +114,14 @@ class AgentDataForm extends React.Component {
                             </TextField>
                         </Grid>
                         <Grid item lg={6} md={12} sm={12} xs={12}>
-                        <TextField
-                            select
-                            id='timezone'
-                            value={agent.timezone}
-                            label={intl.formatMessage(messages.timezoneSelect)}
-                            onChange={(evt) => { this.props.onChangeAgentData('timezone', evt.target.value) }}
-                            margin='normal'
-                            fullWidth
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            helperText={intl.formatMessage(messages.requiredField)}
-                        >
-                            {
-                                this.props.settings.timezones.map((timezone) => {
-                                    return (
-                                        <MenuItem key={timezone} value={timezone}>
-                                            {timezone}
-                                        </MenuItem>
-                                    )
-                                })
-                            }
-                        </TextField>
+                            <AutoComplete
+                                label={intl.formatMessage(messages.timezoneSelect)}
+                                suggestions={this.props.settings.timezones}
+                                value={agent.timezone}
+                                onChange={(timezone) => { this.props.onChangeAgentData('timezone', timezone) }}
+                                placeholder={'Search for a timezone'}
+                                helperText={intl.formatMessage(messages.requiredField)}
+                            />
                         </Grid>
                     </Grid>
                     {
