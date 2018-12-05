@@ -80,7 +80,7 @@ module.exports = async function ({ payload }) {
         await Promise.all(actions.map(async (action) => {
 
             const { postFormat, webhook, ...actionData } = action;
-            const ActionModel = await agentService.upsertAction({
+            const ActionModel = await agentService.createAction({
                 AgentModel,
                 actionData
             });

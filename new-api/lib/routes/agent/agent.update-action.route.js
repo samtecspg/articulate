@@ -22,7 +22,7 @@ module.exports = {
                 [PARAM_ACTION_ID]: actionId
             } = request.params;
             try {
-                return await agentService.upsertAction({ id, actionId, actionData: request.payload });
+                return await agentService.updateAction({ id, actionId, actionData: request.payload });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

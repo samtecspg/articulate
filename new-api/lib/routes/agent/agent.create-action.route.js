@@ -20,7 +20,7 @@ module.exports = {
                 [PARAM_AGENT_ID]: id
             } = request.params;
             try {
-                return await agentService.upsertAction({ id, actionId: null, actionData: request.payload });
+                return await agentService.createAction({ id, actionId: null, actionData: request.payload });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

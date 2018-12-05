@@ -5,6 +5,7 @@ import ConverseGenerateResponseFallback from './agent/agent.converse-generate-re
 import ConverseGenerateResponse from './agent/agent.converse-generate-response.service';
 import ConverseUpdateContextFrames from './agent/agent.converse-update-context-frames.service';
 import Converse from './agent/agent.converse.service';
+import CreateAction from './agent/agent.create-action.service';
 import CreateCategory from './agent/agent.create-category.service';
 import CreateKeyword from './agent/agent.create-keyword.service';
 import CreatePostFormat from './agent/agent.create-post-format.service';
@@ -38,7 +39,7 @@ import UpdateCategory from './agent/agent.update-category.service';
 import UpdateKeyword from './agent/agent.update-keyword.service';
 import UpdatePostFormat from './agent/agent.update-post-format.service';
 import UpdateWebhook from './agent/agent.update-webhook.service';
-import UpsertAction from './agent/agent.upsert-action.service';
+import UpdateAction from './agent/agent.update-action.service';
 import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action.service';
 import UpsertSayingInCategory from './agent/agent.upsert-saying-in-category.service';
 import UpsertWebhookInAction from './agent/agent.upsert-webhook-in-action.service';
@@ -60,9 +61,14 @@ module.exports = class AgentService extends Schmervice.Service {
         return await CreateCategory.apply(this, arguments);
     }
 
-    async upsertAction() {
+    async createAction() {
 
-        return await UpsertAction.apply(this, arguments);
+        return await CreateAction.apply(this, arguments);
+    }
+
+    async updateAction() {
+
+        return await UpdateAction.apply(this, arguments);
     }
 
     async createKeyword() {

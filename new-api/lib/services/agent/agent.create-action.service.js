@@ -27,7 +27,6 @@ module.exports = async function (
         });
         if (isUnique) {
             return await actionService.upsert({ data: actionData, actionId, AgentModel, returnModel });
-
         }
         return Promise.reject(GlobalDefaultError({
             message: `The ${MODEL_AGENT} already has a ${MODEL_ACTION} with the name= "${actionData.actionName}".`

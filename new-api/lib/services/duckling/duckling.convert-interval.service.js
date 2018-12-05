@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Moment from 'moment';
+import MomentTimezone from 'moment-timezone'; //required for tz functions
 
 module.exports = function ({ ducklingOutput, timezone }) {
 
