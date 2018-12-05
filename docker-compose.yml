@@ -50,8 +50,4 @@ services:
     volumes:
       - ${ES_CONFIG:-./local-storage/elasticsearch/config/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
       - ${ES_DATA:-./local-storage/elasticsearch/data}:/usr/share/elasticsearch/data
-  kibana:
-    ports: ['5601:5601']
-    image: docker.elastic.co/kibana/kibana:6.5.1
-    networks: ['alpha-nlu-network']
 networks: {alpha-nlu-network: {}}
