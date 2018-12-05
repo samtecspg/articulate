@@ -1,5 +1,6 @@
 import React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
+import systemKeywords from 'systemKeywords';
 
 import PropTypes from 'prop-types';
 import {
@@ -119,6 +120,13 @@ class SlotForm extends React.Component {
                                 error={this.props.errorState ? this.props.errorState.keyword : false}
                             >
                                 {agentKeywords.map((keyword, index) => {
+                                    return (
+                                        <MenuItem key={`keyword_${index}`} value={`${keyword.uiColor}~${keyword.keywordName}`}>
+                                            <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>
+                                        </MenuItem>
+                                    );
+                                })}
+                                {systemKeywords.map((keyword, index) => {
                                     return (
                                         <MenuItem key={`keyword_${index}`} value={`${keyword.uiColor}~${keyword.keywordName}`}>
                                             <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>

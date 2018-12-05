@@ -2,6 +2,7 @@
  * COMMON WEBPACK CONFIGURATION
  */
 
+const material = require('material-colors');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -138,4 +139,124 @@ module.exports = options => ({
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window
   performance: options.performance || {},
+  externals: {
+    systemKeywords: JSON.stringify([
+      {
+        "keywordName": "sys.spacy_person",
+        "uiColor": material.red['500']
+      },
+      {
+        "keywordName": "sys.spacy_norp",
+        "uiColor": material.pink['500']
+      },
+      {
+        "keywordName": "sys.spacy_org",
+        "uiColor": material.purple['500']
+      },
+      {
+        "keywordName": "sys.spacy_gpe",
+        "uiColor": material.deepPurple['500']
+      },
+      {
+        "keywordName": "sys.spacy_loc",
+        "uiColor": material.indigo['500']
+      },
+      {
+        "keywordName": "sys.spacy_product",
+        "uiColor": material.blue['500']
+      },
+      {
+        "keywordName": "sys.spacy_event",
+        "uiColor": material.lightBlue['500']
+      },
+      {
+        "keywordName": "sys.spacy_work_of_art",
+        "uiColor": material.cyan['500']
+      },
+      {
+        "keywordName": "sys.spacy_law",
+        "uiColor": material.teal['500']
+      },
+      {
+        "keywordName": "sys.spacy_language",
+        "uiColor": material.green['500']
+      },
+      {
+        "keywordName": "sys.spacy_money",
+        "uiColor": material.lightGreen['500']
+      },
+      {
+        "keywordName": "sys.spacy_quantity",
+        "uiColor": material.lime['500']
+      },
+      {
+        "keywordName": "sys.spacy_cardinal",
+        "uiColor": material.yellow['500']
+      },
+      {
+        "keywordName": "sys.spacy_ordinal",
+        "uiColor": material.amber['500']
+      },
+      {
+        "keywordName": "sys.spacy_date",
+        "uiColor": material.orange['500']
+      },
+      {
+        "keywordName": "sys.spacy_time",
+        "uiColor": material.deepOrange['500']
+      },
+      {
+        "keywordName": "sys.spacy_percent",
+        "uiColor": material.brown['500']
+      },
+      {
+        "keywordName": "sys.duckling_amount-of-money",
+        "uiColor": material.blueGrey['500']
+      },
+      {
+        "keywordName": "sys.duckling_distance",
+        "uiColor": material.red['500']
+      },
+      {
+        "keywordName": "sys.duckling_duration",
+        "uiColor": material.pink['500']
+      },
+      {
+        "keywordName": "sys.duckling_email",
+        "uiColor": material.purple['500']
+      },
+      {
+        "keywordName": "sys.duckling_number",
+        "uiColor": material.deepPurple['500']
+      },
+      {
+        "keywordName": "sys.duckling_ordinal",
+        "uiColor": material.indigo['500']
+      },
+      {
+        "keywordName": "sys.duckling_phone-number",
+        "uiColor": material.blue['500']
+      },
+      {
+        "keywordName": "sys.duckling_quantity",
+        "uiColor": material.lightBlue['500']
+      },
+      {
+        "keywordName": "sys.duckling_temperature",
+        "uiColor": material.cyan['500']
+      },
+      {
+        "keywordName": "sys.duckling_time",
+        "uiColor": material.teal['500']
+      },
+      {
+        "keywordName": "sys.duckling_url",
+        "uiColor": material.green['500']
+      },
+      {
+        "keywordName": "sys.duckling_volume",
+        "uiColor": material.lightGreen['500']
+      }
+    ])
+  }
 });

@@ -160,6 +160,7 @@
     "invariant": "2.2.4",
     "ip": "1.1.5",
     "lodash": "4.17.10",
+    "material-colors": "^1.2.6",
     "material-ui": "^1.0.0-beta.47",
     "material-ui-chip-input": "^1.0.0-beta.6",
     "minimist": "1.2.0",
