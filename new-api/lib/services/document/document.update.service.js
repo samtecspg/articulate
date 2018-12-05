@@ -6,7 +6,7 @@ module.exports = async function ({ id, data }) {
     const { es } = this.server.app;
     const { documentService } = await this.server.services();
 
-    const DocumentModel = es[MODEL_DOCUMENT];
+    const DocumentModel = es.models[MODEL_DOCUMENT];
     try {
 
         const original = await documentService.findById({ id });

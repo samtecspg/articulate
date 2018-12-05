@@ -4,7 +4,7 @@ import ESErrorHandler from '../../errors/es.error-handler';
 module.exports = async function ({ body }) {
 
     const { es } = this.server.app;
-    const DocumentModel = es[MODEL_DOCUMENT];
+    const DocumentModel = es.models[MODEL_DOCUMENT];
     try {
         return await DocumentModel.search({ body });
     }

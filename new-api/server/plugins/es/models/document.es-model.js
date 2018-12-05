@@ -11,7 +11,7 @@ const properties = {
     maximum_saying_score: {
         type: 'float'
     },
-    maximum_domain_score: {
+    maximum_category_score: {
         type: 'float'
     },
     total_elapsed_time_ms: {

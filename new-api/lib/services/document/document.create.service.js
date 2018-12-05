@@ -5,7 +5,7 @@ module.exports = async function ({ data }) {
 
     const { es } = this.server.app;
 
-    const DocumentModel = es[MODEL_DOCUMENT];
+    const DocumentModel = es.models[MODEL_DOCUMENT];
     try {
 
         const result = await DocumentModel.createInstance({ data });

@@ -15,7 +15,8 @@ module.exports = {
             await client.ping({
                 requestTimeout: 1000
             });
-            server.app[name] = await InitializeModels({ client, path: `${__dirname}/models` });
+            server.app[name].client = client;
+            server.app[name].models = await InitializeModels({ client, path: `${__dirname}/models` });
             logger.info('registered');
         }
         catch (e) {
