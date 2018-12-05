@@ -9,13 +9,16 @@ module.exports = {
     method: 'post',
     path: `/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`,
     options: {
+        description : 'Search',
         tags: ['api'],
+        notes: ['Search query over the Document index using full request definition in the Elasticsearch’s Query DSL'],
+
         validate: Validator.search,
         handler: async (request) => {
 
             const { documentService } = await request.services();
             try {
-                return await documentService.search({ query: request.payload });
+                return await documentService.search({ body: request.payload });
             }
             catch ({ message, statusCode }) {
 

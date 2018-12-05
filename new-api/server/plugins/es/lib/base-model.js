@@ -66,7 +66,12 @@ module.exports = class BaseModel {
         });
     }
 
-    //MARK: findAll
-    //MARK: search
-    //MARK: count
+    async search({ body }) {
+
+        const { index } = this;
+        return await this.client.search({
+            index,
+            body
+        });
+    }
 };

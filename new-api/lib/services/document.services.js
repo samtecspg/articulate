@@ -2,6 +2,7 @@ import Schmervice from 'schmervice';
 import Create from './document/document.create.service';
 import FindById from './document/document.find-by-id.service.js';
 import Remove from './document/document.remove.service';
+import Search from './document/document.search.service';
 import Update from './document/document.update.service';
 
 module.exports = class DocumentService extends Schmervice.Service {
@@ -24,6 +25,11 @@ module.exports = class DocumentService extends Schmervice.Service {
     async findById() {
 
         return await FindById.apply(this, arguments);
+    }
+
+    async search() {
+
+        return await Search.apply(this, arguments);
     }
 
 };
