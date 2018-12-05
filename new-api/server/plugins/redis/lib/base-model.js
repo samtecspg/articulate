@@ -1,21 +1,25 @@
 import _ from 'lodash';
 import { NohmModel } from 'nohm';
 import * as Constants from '../../../../util/constants';
+import {
+    SORT_ASC,
+    SORT_DESC
+} from '../../../../util/constants';
 
 //const logger = require('../../../../util/logger')({ name: `plugin:redis:base-model` });
 const defaults = {
     SKIP: 0,
     LIMIT: 50,
-    DIRECTION: 'ASC'
+    DIRECTION: SORT_ASC
 };
-const getLimit = ({ skip, limit }) => {
+const getLimit = ({ skip, limit, length = undefined }) => {
 
     let parsedLimit = null;
     if (!limit) {
         parsedLimit = null;
     }
     else if (skip === undefined) {
-        parsedLimit = [limit];
+        parsedLimit = [limit, length];
     }
     else {
         parsedLimit = [skip, limit];
@@ -67,36 +71,8 @@ module.exports = class BaseModel extends NohmModel {
 
     async findAll({ skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field }) {
 
-        let ids = [];
-        field = field ? field : this.defaultSortField();
-        if (field) {
-            if (field === 'id') {
-                if (direction === 'DESC') {
-                    ids = ids.reverse();
-                }
-                if (limit === -1) {
-                    ids = ids.slice(skip, ids.length);
-                }
-                else {
-                    ids = ids.slice(skip, skip + limit);
-                }
-            }
-            else {
-                limit = getLimit({ skip, limit });
-                ids = await this.sort({ field, direction, limit });
-            }
-        }
-        else {
-            ids = await this.find();
-            //nohm doesn't have a limit on a find() search, so we do it manually
-            ids = ids.slice(skip, skip + limit);
-        }
-
-        if (ids.length === 0) {
-            return [];
-        }
-
-        return await this.loadAllByIds({ ids });
+        const ids = await this.find();
+        return await this.findAllByIds({ ids, skip, limit, direction, field });
     }
 
     async count() {
@@ -110,37 +86,36 @@ module.exports = class BaseModel extends NohmModel {
         if (!_.isArray(ids) || ids.leading === 0) {
             return [];
         }
-        let sortedIds = [];
         field = field ? field : this.defaultSortField();
         if (field) {
             if (field === 'id') {
-                if (direction === 'DESC') {
-                    sortedIds = ids.reverse();
+                if (direction === SORT_DESC) {
+                    ids = ids.reverse();
                 }
                 if (limit === -1) {
-                    sortedIds = sortedIds.slice(skip, sortedIds.length);
+                    ids = ids.slice(skip);
                 }
                 else {
-                    sortedIds = sortedIds.slice(skip, skip + limit);
+                    ids = ids.slice(skip, skip + limit);
                 }
             }
             else {
-                limit = getLimit({ skip, limit });
-                sortedIds = await this.sort({ field, direction, limit }, ids);
+                limit = getLimit({ skip, limit, length: ids.length });
+                ids = await this.sort({ field, direction, limit }, ids);
             }
         }
         else {
             if (limit === -1) {
-                sortedIds = ids.slice(skip, ids.length);
+                ids = ids.slice(skip, ids.length);
             }
             else {
-                sortedIds = ids.slice(skip, skip + limit);
+                ids = ids.slice(skip, skip + limit);
             }
         }
-        if (sortedIds.length === 0) {
+        if (ids.length === 0) {
             return [];
         }
-        return await this.loadAllByIds({ ids: sortedIds });
+        return await this.loadAllByIds({ ids });
     }
 
     async loadAllByIds({ ids }) {
