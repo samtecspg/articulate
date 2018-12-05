@@ -35,6 +35,10 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.component.GeneralSettings.timezoneSelect',
     defaultMessage: 'Default Agent Timezone:'
   },
+  timezoneSelectPlaceholder: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.timezoneSelectPlaceholder',
+    defaultMessage: 'Search for a timezone'
+  },
   fallbackTextField: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.fallbackTextField',
     defaultMessage: 'Fallback Agent Responses:'

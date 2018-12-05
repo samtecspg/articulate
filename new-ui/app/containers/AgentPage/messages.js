@@ -55,6 +55,10 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentDataForm.timezoneSelect',
     defaultMessage: 'Timezone:'
   },
+  timezoneSelectPlaceholder: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.timezoneSelectPlaceholder',
+    defaultMessage: 'Search for a timezone'
+  },
   sliderCategoryRecognitionThresholdLabel: {
     id: 'app.containers.AgentPage.component.AgentDataForm.sliderLabel',
     defaultMessage: 'Category Recognition Threshold:'

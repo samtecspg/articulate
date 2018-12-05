@@ -63,7 +63,7 @@ export class AppHeader extends React.Component {
           <Grid item xl={2} lg={2} md={2}/>
           <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
             <Link to='/' className={classes.link}>
-              <Button variant='raised'>
+              <Button variant='contained'>
                 <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                 <FormattedMessage {...messages.agentsButton} />
               </Button>
@@ -76,14 +76,14 @@ export class AppHeader extends React.Component {
           />
           <Grid item sm={6} xs={6}>
             <Link to='/' className={classes.link}>
-              <Button variant='raised'>
+              <Button variant='contained'>
                 <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                 <FormattedMessage {...messages.agentsButton} />
               </Button>
             </Link>
           </Grid>
           <Grid item sm={6} xs={6}>
-            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='raised' className={classes.openChat}>
+            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
               <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               <FormattedMessage {...messages.openChatButton} />
             </Button>
@@ -101,7 +101,7 @@ export class AppHeader extends React.Component {
           <Grid item xl={3} lg={3} md={3}/>
           <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
             <Link to='/' className={classes.link}>
-              <Button variant='raised'>
+              <Button variant='contained'>
                 <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                 <FormattedMessage {...messages.agentsButton} />
               </Button>
@@ -109,7 +109,7 @@ export class AppHeader extends React.Component {
           </Grid>
           <Grid item xl={3} lg={3} md={3}/>
           <Grid item xl={2} lg={2} md={2}>
-            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='raised' className={classes.openChat}>
+            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
               <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               <FormattedMessage {...messages.openChatButton} />
             </Button>
@@ -118,14 +118,14 @@ export class AppHeader extends React.Component {
         <Hidden only={['md', 'lg', 'xl']}>
           <Grid item sm={6} xs={6}>
             <Link to='/' className={classes.link}>
-              <Button variant='raised'>
+              <Button variant='contained'>
                 <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                 <FormattedMessage {...messages.agentsButton} />
               </Button>
             </Link>
           </Grid>
           <Grid item sm={6} xs={6}>
-            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='raised' className={classes.openChat}>
+            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
               <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               <FormattedMessage {...messages.openChatButton} />
             </Button>

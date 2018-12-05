@@ -119,7 +119,7 @@ class AgentDataForm extends React.Component {
                                 suggestions={this.props.settings.timezones}
                                 value={agent.timezone}
                                 onChange={(timezone) => { this.props.onChangeAgentData('timezone', timezone) }}
-                                placeholder={'Search for a timezone'}
+                                placeholder={intl.formatMessage(messages.timezoneSelectPlaceholder)}
                                 helperText={intl.formatMessage(messages.requiredField)}
                             />
                         </Grid>

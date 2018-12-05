@@ -101,7 +101,7 @@ class Form extends React.Component {
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
           <Grid className={classes.titleTextHelpContainer} container>
-            <Typography className={classes.title} variant='display3'>
+            <Typography className={classes.title} variant='h2'>
               <FormattedMessage {...messages.formTitle} />
             </Typography>
             <Button

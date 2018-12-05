@@ -60,21 +60,21 @@ class ActionButtons extends React.Component {
                     <Grid className={classes.buttonContainer}>
                         {this.props.hideFinishButton ?
                             (
-                                <Button onClick={this.props.onNextAction} key='btnNext' variant='raised'>
+                                <Button onClick={this.props.onNextAction} key='btnNext' variant='contained'>
                                     <FormattedMessage {...messages.nextButton} />
                                 </Button>
                             )
                         :
                             (
                                 this.props.isLastTab ?
-                                    <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
+                                    <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
                                         <FormattedMessage {...messages.finishButton} />
                                     </Button>
                                 :
                                     [<Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish'>
                                         <FormattedMessage {...messages.finishButton} />
                                     </Button>,
-                                    <Button onClick={this.props.onNextAction} key='btnNext' variant='raised'>
+                                    <Button onClick={this.props.onNextAction} key='btnNext' variant='contained'>
                                         <FormattedMessage {...messages.nextButton} />
                                     </Button>]
                             )

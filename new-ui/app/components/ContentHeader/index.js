@@ -52,10 +52,10 @@ export class ContentHeader extends React.Component {
             <FormattedMessage {...this.props.backButton} />
         </a>] :
         null}
-        <Typography variant='display4'>
+        <Typography variant='h1'>
           <FormattedMessage {...this.props.title} />:&nbsp;
         </Typography>
-        <Typography className={classes.subtitle} variant='display4'>
+        <Typography className={classes.subtitle} variant='h1'>
           {
             typeof this.props.subtitle === 'string' ?
             this.props.subtitle :

@@ -79,7 +79,8 @@ export default createMuiTheme({
           "bottom": "5px"
         },
         "labelIcon": {
-          "minHeight": "45px"
+          "minHeight": "45px",
+          "padding-top": "0px",
         },
         "labelContainer": {
           "paddingRight": "0px",
@@ -127,6 +128,7 @@ export default createMuiTheme({
       },
       "MuiSelect": {
         "select": {
+          "borderRadius": "5px",
           "&:focus": {
             "borderRadius": "5px"
           }
@@ -318,12 +320,13 @@ export default createMuiTheme({
       "0px 11px 15px -7px rgba(0, 0, 0, 0.2),0px 24px 38px 3px rgba(0, 0, 0, 0.14),0px 9px 46px 8px rgba(0, 0, 0, 0.12)"
     ],
     "typography": {
+      "useNextVariants": true,
       "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
       "fontSize": 14,
       "fontWeightLight": 300,
       "fontWeightRegular": 400,
       "fontWeightMedium": 500,
-      "display4": {
+      "h1": {
         "fontSize": "22px",
         "fontWeight": "bold",
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
@@ -333,14 +336,14 @@ export default createMuiTheme({
         "color": "#a4a5a5",
         "display": "inline"
       },
-      "display3": {
+      "h2": {
         "fontSize": "18px",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
         "letterSpacing": "-.02em",
         "color": "#4e4e4e"
       },
-      "display2": {
+      "h3": {
         "fontSize": "2.8125rem",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
@@ -348,42 +351,42 @@ export default createMuiTheme({
         "marginLeft": "-.02em",
         "color": "rgba(0, 0, 0, 0.54)"
       },
-      "display1": {
+      "h4": {
         "fontSize": "2.125rem",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
         "lineHeight": "1.20588em",
         "color": "rgba(0, 0, 0, 0.54)"
       },
-      "headline": {
+      "h5": {
         "fontSize": "22px",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
         "lineHeight": "1.35417em",
         "color": "#4e4e4e"
       },
-      "title": {
+      "h6": {
         "fontSize": "1.3125rem",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
         "lineHeight": "1.16667em",
         "color": "rgba(0, 0, 0, 0.87)"
       },
-      "subheading": {
+      "subtitle1": {
         "fontSize": "1rem",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
         "lineHeight": "1.5em",
         "color": "rgba(0, 0, 0, 0.87)"
       },
-      "body2": {
+      "body1": {
         "fontSize": "0.875rem",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",
         "lineHeight": "1.71429em",
         "color": "rgba(0, 0, 0, 0.87)"
       },
-      "body1": {
+      "body2": {
         "fontSize": "0.875rem",
         "fontWeight": 400,
         "fontFamily": "\"Montserrat\", \"Helvetica\", \"Arial\", sans-serif",

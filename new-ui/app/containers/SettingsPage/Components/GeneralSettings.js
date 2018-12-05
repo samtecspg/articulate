@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { Grid, Typography, TextField, MenuItem, Table, TableBody, TableRow, TableCell } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
+import AutoComplete from 'components/Autocomplete';
+
 import brace from 'brace';
 import AceEditor from 'react-ace';
 
@@ -130,29 +132,14 @@ export class GeneralSettings extends React.Component {
             </TextField>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <TextField
-              select
-              id='defaultTimezone'
-              value={settings.defaultTimezone}
-              label={intl.formatMessage(messages.timezoneSelect)}
-              onChange={(evt) => { this.props.onChangeSettingsData('defaultTimezone', evt.target.value) }}
-              margin='normal'
-              fullWidth
-              InputLabelProps={{
-                  shrink: true,
-              }}
-              helperText={intl.formatMessage(messages.requiredField)}
-              error={this.props.errorState.defaultTimezone}
-            >
-              {Array.isArray(settings.timezones) ?
-                settings.timezones.map((timezone) => {
-                  return (
-                    <MenuItem key={timezone} value={timezone}>
-                      {timezone}
-                    </MenuItem>
-                  )
-              }) : null}
-            </TextField>
+            <AutoComplete
+                label={intl.formatMessage(messages.timezoneSelect)}
+                suggestions={settings.timezones}
+                value={settings.defaultTimezone}
+                onChange={(timezone) => { this.props.onChangeSettingsData('defaultTimezone', timezone) }}
+                placeholder={intl.formatMessage(messages.timezoneSelectPlaceholder)}
+                helperText={intl.formatMessage(messages.requiredField)}
+            />
           </Grid>
           <Grid item xs={12}>
             <Typography

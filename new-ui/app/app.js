@@ -14,7 +14,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
-import CssBaseline from 'material-ui/CssBaseline';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 // Import root app
 import App from 'containers/App';
@@ -38,7 +38,7 @@ import './global-styles';
 
 // Import Theme
 import theme from 'utils/theme';
-import { MuiThemeProvider } from 'material-ui/styles';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 // Create redux store with history
 const initialState = {};

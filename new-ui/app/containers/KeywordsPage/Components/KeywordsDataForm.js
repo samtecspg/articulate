@@ -39,7 +39,9 @@ const styles = {
     pagesLabel: {
         color: '#a2a7b1',
         display: 'inline',
-        padding: '5px'
+        padding: '5px',
+        top: '39px',
+        position: 'relative'
     },
     pageControl: {
         webkitTouchCallout: 'none',
@@ -66,16 +68,22 @@ const styles = {
     pageCursors: {
         cursor: 'pointer',
         display: 'inline',
-        padding: '5px'
+        padding: '5px',
+        top: '39px',
+        position: 'relative'
     },
     pageCursorsDisabled: {
         display: 'inline',
         padding: '5px',
-        color: '#a2a7b1'
+        color: '#a2a7b1',
+        top: '39px',
+        position: 'relative'
     },
     pageSizeLabels: {
         display: 'inline',
-        margin: '0px 5px'
+        margin: '0px 5px',
+        top: '39px',
+        position: 'relative'
     },
     keywordLink: {
         textDecoration: 'none',
@@ -109,7 +117,7 @@ class KeywordsDataForm extends React.Component {
                     <Grid container spacing={24} item xs={12}>
                         <Grid item lg={12} md={12} sm={12} xs={12}>
                             <Button
-                                variant='raised'
+                                variant='contained'
                                 onClick={() => {this.props.onCreateKeyword(`/agent/${this.props.agentId}/keyword/create`)}}
                             >
                                 <FormattedMessage {...messages.create} />

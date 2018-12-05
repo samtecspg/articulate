@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
-import match from 'autosuggest-highlight/match';
-import parse from 'autosuggest-highlight/parse';
+
 import { TextField, InputAdornment, IconButton, Paper, MenuItem } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 function renderInputComponent(inputProps) {
-  const { classes, onChange, inputRef = () => {}, ref, ...other } = inputProps;
+  const { value, classes, onChange, inputRef = () => {}, ref, ...other } = inputProps;
 
   return (
     <TextField
@@ -36,13 +35,18 @@ function renderInputComponent(inputProps) {
             position="end"
           >
             <IconButton
+              style={{
+                bottom: '12px',
+                padding: '0px'
+              }}
               onClick={(evt) => { evt.target.value = ''; onChange(evt, '') }}
             >
-              <Cancel />
+              {value ? <Cancel /> : null}
             </IconButton>
           </InputAdornment>
         )   
       }}
+      value={value}
       onChange={onChange}
       {...other}
       margin='normal'
@@ -50,24 +54,11 @@ function renderInputComponent(inputProps) {
   );
 }
 
-function renderSuggestion(suggestion, { query, isHighlighted }) {
-  const matches = match(suggestion.label, query);
-  const parts = parse(suggestion.label, matches);
-
+function renderSuggestion(suggestion, { isHighlighted }) {
   return (
     <MenuItem selected={isHighlighted} component="div">
       <div>
-        {parts.map((part, index) => {
-          return part.highlight ? (
-            <span key={String(index)} style={{ fontWeight: 500 }}>
-              {part.text}
-            </span>
-          ) : (
-            <strong key={String(index)} style={{ fontWeight: 300 }}>
-              {part.text}
-            </strong>
-          );
-        })}
+        {suggestion.label}
       </div>
     </MenuItem>
   );

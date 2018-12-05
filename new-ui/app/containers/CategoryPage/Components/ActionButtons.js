@@ -49,7 +49,7 @@ class ActionButtons extends React.Component {
                                 <FormattedMessage {...messages.cancelButton} />
                             </Link>
                         </Button>
-                        <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='raised'>
+                        <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
                             <FormattedMessage {...messages.finishButton} />
                         </Button>
                     </Grid>

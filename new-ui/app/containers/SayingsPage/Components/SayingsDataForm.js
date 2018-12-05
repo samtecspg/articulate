@@ -59,7 +59,9 @@ const styles = {
     pagesLabel: {
         color: '#a2a7b1',
         display: 'inline',
-        padding: '5px'
+        padding: '5px',
+        top: '39px',
+        position: 'relative'
     },
     pageControl: {
         marginTop: '5px',
@@ -86,16 +88,22 @@ const styles = {
     pageCursors: {
         cursor: 'pointer',
         display: 'inline',
-        padding: '5px'
+        padding: '5px',
+        top: '39px',
+        position: 'relative'
     },
     pageCursorsDisabled: {
         display: 'inline',
         padding: '5px',
-        color: '#a2a7b1'
+        color: '#a2a7b1',
+        top: '39px',
+        position: 'relative'
     },
     pageSizeLabels: {
         display: 'inline',
-        margin: '0px 5px'
+        margin: '0px 5px',
+        top: '39px',
+        position: 'relative'
     },
     categorySelect: {
         '&:hover': {
@@ -158,7 +166,6 @@ const styles = {
     },
     addActionIcon: {
         cursor: 'pointer',
-        marginTop: '15px',
         marginRight: '10px',
     },
     actionBackgroundContainer: {
@@ -279,7 +286,7 @@ class SayingsDataForm extends React.Component {
                                                     }} className={classes.clearIcon} src={clearIcon} />
                                                 </div>
                                             :
-                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`); }} className={classes.addCategoryButton} variant='raised'>+ Add</Button>
+                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`); }} className={classes.addCategoryButton} variant='contained'>+ Add</Button>
                                         }
                                     </Grid>
                                 </MenuItem>
@@ -310,7 +317,7 @@ class SayingsDataForm extends React.Component {
                                                 <span>No results</span>
                                             </MenuItem>,
                                             <MenuItem key='create' value='create'>
-                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`); }} className={classes.addCategoryButton} variant='raised'>+ Add</Button>
+                                                <Button onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`); }} className={classes.addCategoryButton} variant='contained'>+ Add</Button>
                                             </MenuItem>]
                                     :
                                         this.props.agentCategories.map((agentCategory, index) => {

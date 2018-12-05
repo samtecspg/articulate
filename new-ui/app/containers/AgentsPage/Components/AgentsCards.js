@@ -173,7 +173,7 @@ class AgentsCards extends React.Component {
                         <DialogActions className={classes.dialogActions}>
                             <Grid container justify='center' spacing={24}>
                                 <Grid item>
-                                    <Button variant='raised' onClick={() => {
+                                    <Button variant='contained' onClick={() => {
                                         this.setState({
                                             openDeleteDialog: false,
                                             selectedAgent: null,

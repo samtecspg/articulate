@@ -105,7 +105,7 @@ class Form extends React.Component {
         <Grid className={classes.titleContainer} item xs={12}>
           <img className={classes.agentIcon} src={agentIcon} />
           <Grid className={classes.titleTextHelpContainer} container>
-            <Typography className={classes.title} variant="display3">
+            <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />
             </Typography>
             <Button
@@ -148,7 +148,8 @@ class Form extends React.Component {
               this.handleChange(evt, value);
             }}
           >
-            <Tab label={intl.formatMessage(messages.main)} />
+            <Tab 
+              label={intl.formatMessage(messages.main)} />
             <Tab
               icon={<img className={classes.settingsIcon} src={settingsIcon} />}
               label={intl.formatMessage(messages.settings)}

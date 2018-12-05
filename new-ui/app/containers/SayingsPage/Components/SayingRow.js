@@ -97,7 +97,10 @@ class SayingRow extends React.Component {
         highlightedValue: null,
         start: null,
         end: null,
-        menuLocation: {}
+        menuLocation: {
+            left: 0,
+            top: 0
+        }
     };
 
     handleClose = (selectName) => {

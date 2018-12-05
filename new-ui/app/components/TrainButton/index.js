@@ -60,7 +60,7 @@ export class TrainButton extends React.Component {
     const { classes, agentStatus, lastTraining, onTrain } = this.props;
     return (
       <Grid item className={classes.trainContainer}>
-        <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='raised'>
+        <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
           <FormattedMessage {...messages.trainButton} />
         </Button>
         <Typography className={classes.trainingStatusLabel}>
