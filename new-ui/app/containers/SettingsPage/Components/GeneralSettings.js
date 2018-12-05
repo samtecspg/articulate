@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Grid, Typography, TextField, MenuItem, Table, TableBody, TableRow, TableCell } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import AutoComplete from 'components/Autocomplete';
+import AutoComplete from '../../../components/AutoComplete';
 
 import brace from 'brace';
 import AceEditor from 'react-ace';

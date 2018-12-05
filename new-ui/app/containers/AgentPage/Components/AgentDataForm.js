@@ -6,7 +6,7 @@ import { Grid, Typography, TextField, MenuItem, Table, TableBody, TableRow, Tabl
 import Slider from '@material-ui/lab/Slider'
 import { withStyles } from '@material-ui/core/styles';
 
-import AutoComplete from 'components/Autocomplete';
+import AutoComplete from '../../../components/AutoComplete';
 
 import messages from '../messages';
 
