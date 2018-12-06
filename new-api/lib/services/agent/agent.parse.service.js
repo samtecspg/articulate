@@ -53,10 +53,9 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
                 document: text,
                 [PARAM_DOCUMENT_TIME_STAMP]: new Date().toISOString(),
                 [PARAM_DOCUMENT_RASA_RESULTS]: _.orderBy(parsedSystemKeywords, 'categoryScore', 'desc'),
-                [PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE]:maximumSayingScore,
+                [PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE]: maximumSayingScore,
                 [PARAM_DOCUMENT_TOTAL_ELAPSED_TIME]: duration,
-                [PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE]: maximumCategoryScore || null,
-                returnModel
+                [PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE]: maximumCategoryScore || null
             }
         });
     }
