@@ -1,8 +1,4 @@
-import {
-    MODEL_ACTION,
-    MODEL_AGENT
-} from '../../../util/constants';
-import GlobalDefaultError from '../../errors/global.default-error';
+import { MODEL_AGENT } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function (

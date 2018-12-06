@@ -83,7 +83,6 @@ export const PARAM_DOCUMENT_TIME_STAMP = 'time_stamp';
 export const PARAM_DOCUMENT_MAXIMUM_SAYING_SCORE = 'maximum_saying_score';
 export const PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE = 'maximum_category_score';
 export const PARAM_DOCUMENT_TOTAL_ELAPSED_TIME = 'total_elapsed_time_ms';
-export const PARAM_DOCUMENT_ELAPSED_TIME = 'elapsed_time_ms';
 export const PARAM_DOCUMENT_RASA_RESULTS = 'rasa_results';
 export const PARAM_DOCUMENT_ACTION_RANKING = 'action_ranking';
 
