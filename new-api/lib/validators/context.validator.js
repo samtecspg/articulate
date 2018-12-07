@@ -1,7 +1,12 @@
 import Joi from 'joi';
 import {
     PARAM_LOAD_FRAMES,
-    PARAM_SESSION
+    PARAM_SESSION,
+    PARAM_FRAME,
+    PARAM_SKIP,
+    PARAM_LIMIT,
+    PARAM_DIRECTION,
+    PARAM_FIELD
 } from '../../util/constants';
 
 const ContextModel = require('../models/context.model').schema;
@@ -32,11 +37,54 @@ class ContextValidate {
             })()
         };
 
+        this.findFramesBySession = {
+            params: (() => {
+
+                return {
+                    [PARAM_SESSION]: ContextModel.session.required()
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    [PARAM_SKIP]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to skip. Default=0'),
+                    [PARAM_LIMIT]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to return. Default=50'),
+                    [PARAM_DIRECTION]: Joi
+                        .string()
+                        .optional()
+                        .allow('ASC', 'DESC')
+                        .description('Sort direction. Default= ASC'),
+                    [PARAM_FIELD]: Joi
+                        .string()
+                        .optional()
+                        .description('Field used to do the sorting')
+                };
+            })()
+        };
+
         this.removeBySession = {
             params: (() => {
 
                 return {
                     [PARAM_SESSION]: ContextModel.session.required()
+                };
+            })()
+        };
+
+        this.removeBySessionAndFrame = {
+            params: (() => {
+
+                return {
+                    [PARAM_SESSION]: ContextModel.session.required(),
+                    [PARAM_FRAME]: Joi.number().required() //Not certain why there is no frames model
                 };
             })()
         };
