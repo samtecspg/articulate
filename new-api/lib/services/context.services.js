@@ -3,6 +3,7 @@ import CreateFrame from './context/context.create-frame.service';
 import Create from './context/context.create.service';
 import FindBySession from './context/context.find-by-session.service';
 import FindFramesBySession from './context/context.find-frames-by-session.service';
+import FindFrameBySessionIdAndFrameId from './context/context.find-frame-by-session-and-frame.service';
 import RemoveBySession from './context/context.remove-by-session.service';
 import RemoveFramesBySessionId from './context/context.remove-frames-by-session.service';
 import RemoveFramesBySessionIdAndFrameId from './context/context.remove-frames-by-session-and-frame.service';
@@ -10,6 +11,11 @@ import RemoveFramesBySessionIdAndFrameId from './context/context.remove-frames-b
 module.exports = class ContextService extends Schmervice.Service {
 
     async create() {
+
+        return await Create.apply(this, arguments);
+    }
+
+    async createFrame() {
 
         return await Create.apply(this, arguments);
     }
@@ -22,6 +28,11 @@ module.exports = class ContextService extends Schmervice.Service {
     async findFramesBySession() {
 
         return await FindFramesBySession.apply(this, arguments);
+    }
+
+    async findFrameBySessionAndFrame() {
+
+        return await FindFrameBySessionIdAndFrameId.apply(this, arguments);
     }
 
     async createFrame() {

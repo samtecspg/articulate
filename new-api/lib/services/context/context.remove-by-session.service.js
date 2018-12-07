@@ -1,4 +1,5 @@
 import { MODEL_CONTEXT } from '../../../util/constants';
+import NotFoundErrorHandler from '../../errors/global.not-found-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ sessionId }) {
@@ -7,7 +8,11 @@ module.exports = async function ({ sessionId }) {
     try {
         const Model = await redis.factory(MODEL_CONTEXT);
         await Model.findBySessionId({ sessionId });
-        return await Model.removeInstance();
+        if (Model.inDb) {
+            return await Model.removeInstance();
+        } else {
+            return Promise.reject(NotFoundErrorHandler({ model: MODEL_CONTEXT, id: sessionId }));
+        }
     }
     catch (error) {
         throw RedisErrorHandler({ error });

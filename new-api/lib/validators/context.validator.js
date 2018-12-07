@@ -22,6 +22,21 @@ class ContextValidate {
                 };
             })()
         };
+        this.createFrameBySession = {
+            params: (() => {
+
+                return {
+                    [PARAM_SESSION]: ContextModel.session.required()
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    action: Joi.string().required(),
+                    slots: Joi.object().required()
+                };
+            })()
+        };
         this.findBySession = {
             params: (() => {
 
@@ -69,6 +84,16 @@ class ContextValidate {
                 };
             })()
         };
+
+        this.findFrameBySessionAndFrame= {
+            params: (() => {
+
+                return {
+                    [PARAM_SESSION]: ContextModel.session.required(),
+                    [PARAM_FRAME]: Joi.number().required() //Not certain why there is no frames model
+                };
+            })()
+        }
 
         this.removeBySession = {
             params: (() => {
