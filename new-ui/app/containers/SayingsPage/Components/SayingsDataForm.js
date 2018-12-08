@@ -138,6 +138,7 @@ const styles = {
     addCategoryButton: {
         width: '62px',
         height: '26px',
+        marginTop: '6px'
     },
     categoryDataContainer: {
         display: 'inline',
@@ -180,8 +181,7 @@ const styles = {
         backgroundColor: '#e2e5e7',
         display: 'inline-block',
         position: 'relative',
-        borderRadius: '5px',
-        marginTop: '15px',
+        borderRadius: '5px'
     },
     actionLabel: {
         textDecoration: 'none',
