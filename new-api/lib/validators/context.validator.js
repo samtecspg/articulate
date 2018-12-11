@@ -27,7 +27,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required()
+                    [PARAM_SESSION]: ContextModel.sessionId.required()
                 };
             })(),
             payload: (() => {
@@ -43,7 +43,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required(),
+                    [PARAM_SESSION]: ContextModel.sessionId.required(),
                     [PARAM_FRAME]: Joi.number().required() //Not certain why there is no frames model
                 };
             })(),
@@ -90,7 +90,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required()
+                    [PARAM_SESSION]: ContextModel.sessionId.required()
                 };
             })(),
             query: (() => {
@@ -123,7 +123,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required(),
+                    [PARAM_SESSION]: ContextModel.sessionId.required(),
                     [PARAM_FRAME]: Joi.number().required() //Not certain why there is no frames model
                 };
             })()
@@ -142,7 +142,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required(),
+                    [PARAM_SESSION]: ContextModel.sessionId.required(),
                     [PARAM_FRAME]: Joi.number().required() //Not certain why there is no frames model
                 };
             })()
