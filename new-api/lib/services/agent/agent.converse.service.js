@@ -402,6 +402,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             return data;
         }, Promise.resolve([]));
         let textResponses = _.map(responses, 'textResponse');
+        //extract responses from previous answers
         const responsesFromQueue = await getResponsesFromQueue({
             context: conversationStateObject.context
         });
