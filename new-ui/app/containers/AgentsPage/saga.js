@@ -3,12 +3,12 @@ import {
   loadAgentsError,
   loadAgentsSuccess,
   deleteAgentError,
-  deleteAgentSuccess
+  deleteAgentSuccess,
 } from '../App/actions';
 
 import {
   LOAD_AGENTS,
-  DELETE_AGENT
+  DELETE_AGENT,
 } from '../App/constants';
 
 export function* getAgents(payload) {
@@ -30,11 +30,11 @@ export function* deleteAgent(payload) {
     const response = yield call(api.agent.getAgent, {});
     yield put(loadAgentsSuccess(response.obj.data));
   } catch (err) {
-      yield put(deleteAgentError(err));
+    yield put(deleteAgentError(err));
   }
 }
 
 export default function* loadAgents() {
-    yield takeLatest(LOAD_AGENTS, getAgents);
-    yield takeLatest(DELETE_AGENT, deleteAgent);
+  yield takeLatest(LOAD_AGENTS, getAgents);
+  yield takeLatest(DELETE_AGENT, deleteAgent);
 }

@@ -34,7 +34,7 @@ import {
   makeSelectKeywords,
   makeSelectSuccess,
   makeSelectAgent,
-  makeSelectSayingForAction
+  makeSelectSayingForAction,
 } from '../App/selectors';
 
 import {
@@ -68,9 +68,9 @@ const styles = {
     position: 'fixed',
     left: 0,
     top: '30vh',
-    cursor: 'pointer'
-  }
-}
+    cursor: 'pointer',
+  },
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class ActionPage extends React.Component {
@@ -116,20 +116,20 @@ export class ActionPage extends React.Component {
   };
 
   moveNextTab(){
-    //If isn't currently on the last tab
+    // If isn't currently on the last tab
     if (this.state.currentTab !== 'response'){
       const tabs = ['action', 'slots', 'webhook', 'response'];
       const currentTab = tabs.indexOf(this.state.currentTab);
-      const nextTab = currentTab + 1
+      const nextTab = currentTab + 1;
       this.setState({
-        currentTab: tabs[nextTab]
+        currentTab: tabs[nextTab],
       })
     }
   }
 
   onChangeTab(tab){
     this.setState({
-      currentTab: tab
+      currentTab: tab,
     });
   }
 
@@ -142,7 +142,7 @@ export class ActionPage extends React.Component {
       webhookPayload: false,
       responses: false,
       slots: [],
-    }
+    };
 
     if (!this.props.action.actionName || this.props.action.actionName === ''){
       errors = true;
@@ -225,12 +225,12 @@ export class ActionPage extends React.Component {
         formError: false,
       });
       if (this.state.isNewAction){
-        //If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
+        // If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
         this.props.onAddNewAction(this.props.saying.agent === '');
       }
       else {
         this.props.onEditAction();
-      };
+      }
     }
     else {
       this.setState({
@@ -354,7 +354,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-    return {
+  return {
     onResetData: () => {
       dispatch(resetActionData());
     },

@@ -10,50 +10,50 @@ import ta from 'time-ago'
 
 const styles = {
   button: {
-      display: 'inline'
+    display: 'inline',
   },
   trainContainer: {
-      display: 'inline',
-      marginLeft: '15px',
-      position: 'relative',
-      bottom: '5px'
+    display: 'inline',
+    marginLeft: '15px',
+    position: 'relative',
+    bottom: '5px',
   },
   trainingStatusLabel: {
-      fontSize: '12px',
-      marginLeft: '15px',
-      display: 'inline'
+    fontSize: '12px',
+    marginLeft: '15px',
+    display: 'inline',
   },
   trainingLabel: {
-      color: '#4e4e4e',
-      fontWeight: 'bold'
+    color: '#4e4e4e',
+    fontWeight: 'bold',
   },
   errorLabel: {
-      color: '#de5e56',
-      fontWeight: 'bold'
+    color: '#de5e56',
+    fontWeight: 'bold',
   },
   readyLabel: {
-      color: '#00ca9f',
-      fontWeight: 'bold'
-  }
-}
+    color: '#00ca9f',
+    fontWeight: 'bold',
+  },
+};
 
 const getLastTrainingTime = (lastTraining) => {
 
   if (lastTraining){
-      const timeAgo = ta.ago(lastTraining);
-      if (timeAgo.indexOf('second') !== -1 || timeAgo.indexOf(' ms ') !== -1){
-          return 'just now';
-      }
-      return timeAgo;
+    const timeAgo = ta.ago(lastTraining);
+    if (timeAgo.indexOf('second') !== -1 || timeAgo.indexOf(' ms ') !== -1){
+      return 'just now';
+    }
+    return timeAgo;
   }
   return 'never trained';
-}
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class TrainButton extends React.Component {
 
   componentDidMount() {
-    this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 10000); //update the component every 10 seconds
+    this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 10000); // update the component every 10 seconds
   }
 
   render() {
@@ -71,8 +71,8 @@ export class TrainButton extends React.Component {
               agentStatus === 'Out of Date' ?
                 <span className={classes.errorLabel}><FormattedMessage {...messages.statusOutOfDate} /></span> :
                 agentStatus === 'Ready' ?
-                <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{getLastTrainingTime(lastTraining)}</span> :
-                null)}
+                  <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{getLastTrainingTime(lastTraining)}</span> :
+                  null)}
         </Typography>
       </Grid>
     );

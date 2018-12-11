@@ -17,23 +17,23 @@ export default function swaggerMiddleware(opts) {
     }
     return new Swagger({ ...opts })
       .then(result => {
-          const { apiCall, ...rest } = action;
-          api = result.apis;
-          if (getState().global.missingAPI){
-            dispatch(resetMissingAPI());
-            dispatch(loadAgents());
-            dispatch(push(action.refURL));
-          }
-          else {
-            return next({ ...rest, api });
-          }
-        },
-        err => {
-          if (action.type === CHECK_API){
-            return next({ type: MISSING_API });
-          }
-          opts.error && opts.error(err)
+        const { apiCall, ...rest } = action;
+        api = result.apis;
+        if (getState().global.missingAPI){
+          dispatch(resetMissingAPI());
+          dispatch(loadAgents());
+          dispatch(push(action.refURL));
         }
+        else {
+          return next({ ...rest, api });
+        }
+      },
+      err => {
+        if (action.type === CHECK_API){
+          return next({ type: MISSING_API });
+        }
+        opts.error && opts.error(err)
+      }
       ).catch(err => {
         console.error(err);
         opts.error && opts.error(err);

@@ -8,12 +8,12 @@ const styles = {
   '@global': {
     '@keyframes wave': {
       '0%, 60%, 100%': {
-        transform: 'initial'
+        transform: 'initial',
       },
       '30%':{
-        opacity: 0.15
-      }
-    }
+        opacity: 0.15,
+      },
+    },
   },
   dot: {
     display: 'inline-block',
@@ -21,13 +21,13 @@ const styles = {
     height: '8px',
     borderRadius: '50%',
     background: '#4e4e4e',
-    animation: 'wave 1.3s linear infinite'
+    animation: 'wave 1.3s linear infinite',
   },
   dot1: {
-    animationDelay: '-1.1s'
+    animationDelay: '-1.1s',
   },
   dot2: {
-    animationDelay: '-0.9s'
+    animationDelay: '-0.9s',
   },
   agentName: {
     display: 'block',
@@ -35,7 +35,7 @@ const styles = {
     fontWeight: '300',
     fontSize: '10px',
     color: '#a2a7b1',
-    marginBottom: '3px'
+    marginBottom: '3px',
   },
   agentMessage: {
     width: '50px',
@@ -55,9 +55,9 @@ export function LoadingWave(props) {
         {props.agentName}
       </Typography>
       <Typography className={classes.agentMessage}>
-          <span className={classes.dot}></span>&nbsp;
-          <span className={`${classes.dot} ${classes.dot1}`}></span>&nbsp;
-          <span className={`${classes.dot} ${classes.dot2}`}></span>
+        <span className={classes.dot}></span>&nbsp;
+        <span className={`${classes.dot} ${classes.dot1}`}></span>&nbsp;
+        <span className={`${classes.dot} ${classes.dot2}`}></span>
       </Typography>
     </Grid>
   );

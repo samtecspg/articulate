@@ -26,7 +26,7 @@ import {
 } from './actions';
 
 import {
-  makeSelectAgent
+  makeSelectAgent,
 } from './selectors';
 
 export function* postConverse(payload) {
@@ -34,24 +34,24 @@ export function* postConverse(payload) {
   if (agent.id){
     const { api, message } = payload;
     try {
-        const response = yield call(api.agent.postAgentAgentidConverse, {
-          agentId: agent.id,
-          body: {
-            sessionId: 'articulateUI',
-            text: message.message,
-          }
-        });
-        yield put(respondMessage({
-          author: agent.agentName,
-          docId: response.obj.docId,
-          message: response.obj.textResponse,
-        }));
+      const response = yield call(api.agent.postAgentAgentidConverse, {
+        agentId: agent.id,
+        body: {
+          sessionId: 'articulateUI',
+          text: message.message,
+        },
+      });
+      yield put(respondMessage({
+        author: agent.agentName,
+        docId: response.obj.docId,
+        message: response.obj.textResponse,
+      }));
     } catch (err) {
-        yield put(respondMessage({
-          author: 'Error',
-          docId: null,
-          message: 'I\'m sorry. An error ocurred calling Articulate\'s converse service. This is not an issue with your agent.',
-        }));
+      yield put(respondMessage({
+        author: 'Error',
+        docId: null,
+        message: 'I\'m sorry. An error ocurred calling Articulate\'s converse service. This is not an issue with your agent.',
+      }));
     }
   }
   else {
@@ -66,7 +66,7 @@ export function* postConverse(payload) {
 export function* deleteSession(payload) {
   try {
     const { api } = payload;
-    yield call(api.context.deleteContextSessionidFrame, { sessionId: 'articulateUI', });
+    yield call(api.context.deleteContextSessionidFrame, { sessionId: 'articulateUI' });
     yield put(resetSessionSuccess());
   } catch ({ response }) {
     if (response.status && response.status === 404){
@@ -98,7 +98,7 @@ export function* postTrainAgent(payload) {
   try {
     yield call(api.agent.postAgentAgentidTrain, { agentId: agent.id });
   } catch (err) {
-      yield put(trainAgentError(err));
+    yield put(trainAgentError(err));
   }
 }
 

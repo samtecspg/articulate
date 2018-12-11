@@ -8,7 +8,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   rasaSettingDescription: {
     id: 'app.components.RasaSettings.rasaSettingDescription',
-    defaultMessage: 'You can configure the address of your rasa instance and the desired pipelines you would like for your models. This values are overwritable at agent level.'
+    defaultMessage: 'You can configure the address of your rasa instance and the desired pipelines you would like for your models. This values are overwritable at agent level.',
   },
   rasaURL: {
     id: 'app.components.RasaSettings.rasaURL',
@@ -36,7 +36,7 @@ export default defineMessages({
   },
   requiredField: {
     id: 'app.components.RasaSettings.requiredField',
-    defaultMessage: '*Required'
+    defaultMessage: '*Required',
   },
   pipelineError: {
     id: 'app.components.RasaSettings.pipelineError',
@@ -44,11 +44,11 @@ export default defineMessages({
   },
   spacyPretrainedEntitiesError: {
     id: 'app.components.RasaSettings.spacyPretrainedEntitiesError',
-    defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].'
+    defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].',
   },
   keywords: {
     id: 'app.components.RasaSettings.keywords',
-    defaultMessage: 'Keywords'
+    defaultMessage: 'Keywords',
   },
   tensorflow: {
     id: 'app.components.RasaSettings.tensorflow',
@@ -56,6 +56,6 @@ export default defineMessages({
   },
   spacy: {
     id: 'app.components.RasaSettings.spacy',
-    defaultMessage: 'Spacy'
+    defaultMessage: 'Spacy',
   },
 });

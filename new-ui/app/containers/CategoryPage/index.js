@@ -35,7 +35,7 @@ import {
   createCategory,
   updateCategory,
   resetStatusFlag,
-  changeActionThreshold
+  changeActionThreshold,
 } from '../App/actions';
 
 import ActionButtons from './Components/ActionButtons';
@@ -77,7 +77,7 @@ export class CategoriesEditPage extends React.Component {
     let errors = false;
     const newErrorState = {
       categoryName: false,
-    }
+    };
 
     if (!this.props.category.categoryName || this.props.category.categoryName === ''){
       errors = true;
@@ -96,7 +96,7 @@ export class CategoriesEditPage extends React.Component {
       }
       else {
         this.props.onUpdateCategory();
-      };
+      }
     }
     else {
       this.setState({
@@ -153,7 +153,7 @@ CategoriesEditPage.propTypes = {
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   category: makeSelectCategory(),
-  success: makeSelectSuccess()
+  success: makeSelectSuccess(),
 });
 
 function mapDispatchToProps(dispatch) {

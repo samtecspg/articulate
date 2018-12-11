@@ -76,7 +76,7 @@ export class SayingsPage extends React.Component {
     pageSize: 5,
     numberOfPages: null,
     totalSayings: null,
-  }
+  };
 
   componentWillMount() {
     if(this.props.agent.id) {
@@ -86,7 +86,7 @@ export class SayingsPage extends React.Component {
       this.props.onLoadSayings('', this.state.currentPage, this.state.pageSize);
     }
     else {
-      //TODO: An action when there isn't an agent
+      // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
     }
   }
@@ -94,7 +94,7 @@ export class SayingsPage extends React.Component {
   componentDidUpdate(){
     if (this.props.totalSayings !== this.state.totalSayings){
       this.setState({
-        totalSayings: this.props.totalSayings
+        totalSayings: this.props.totalSayings,
       });
       this.setNumberOfPages(this.state.pageSize);
     }
@@ -103,13 +103,13 @@ export class SayingsPage extends React.Component {
   setNumberOfPages(pageSize){
     const numberOfPages = Math.ceil(this.props.totalSayings / pageSize);
     this.setState({
-      numberOfPages
+      numberOfPages,
     });
   }
 
   changePage(pageNumber){
     this.setState({
-        currentPage: pageNumber
+      currentPage: pageNumber,
     });
     this.props.onLoadSayings(this.state.filter, pageNumber, this.state.pageSize);
   }
@@ -117,7 +117,7 @@ export class SayingsPage extends React.Component {
   movePageBack(){
     let newPage = this.state.currentPage;
     if (this.state.currentPage > 1){
-        newPage = this.state.currentPage - 1;
+      newPage = this.state.currentPage - 1;
     }
     this.changePage(newPage);
   }
@@ -125,7 +125,7 @@ export class SayingsPage extends React.Component {
   movePageForward(){
     let newPage = this.state.currentPage;
     if (this.state.currentPage < this.state.numberOfPages){
-        newPage = this.state.currentPage + 1;
+      newPage = this.state.currentPage + 1;
     }
     this.changePage(newPage);
   }
@@ -133,7 +133,7 @@ export class SayingsPage extends React.Component {
   changePageSize(pageSize){
     this.setState({
       currentPage: 1,
-      pageSize
+      pageSize,
     });
     this.props.onLoadSayings(this.state.filter, 1, pageSize);
   }
@@ -148,14 +148,14 @@ export class SayingsPage extends React.Component {
 
   onSearchCategory(categoryFilter){
     this.setState({
-      categoryFilter
+      categoryFilter,
     });
     this.props.onLoadFilteredCategories(categoryFilter);
   }
 
   addSaying(saying){
     this.setState({
-      currentPage: 1
+      currentPage: 1,
     });
     this.props.onAddSaying(this.state.pageSize, saying);
   }
@@ -175,8 +175,8 @@ export class SayingsPage extends React.Component {
           }
         />
         <MainTab
-          enableTabs={true}
-          selectedTab={'sayings'}
+          enableTabs
+          selectedTab="sayings"
           agentForm={Link}
           agentURL={`/agent/${this.props.agent.id}`}
           sayingsForm={

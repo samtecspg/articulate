@@ -16,7 +16,7 @@ const styles = {
     position: 'fixed',
     bottom: 0,
     left: 0,
-  }
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */

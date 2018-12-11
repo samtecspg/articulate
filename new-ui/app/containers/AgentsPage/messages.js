@@ -12,34 +12,34 @@ export default defineMessages({
   },
   subtitle: {
     id: 'app.containers.AgentsPage.subtitle',
-    defaultMessage: 'All Agents'
+    defaultMessage: 'All Agents',
   },
   createAgent: {
     id: 'app.containers.AgentsPage.createAgent',
-    defaultMessage: '+ Create Agent'
+    defaultMessage: '+ Create Agent',
   },
   searchAgentPlaceholder: {
     id: 'app.containers.AgentsPage.searchAgentPlaceholder',
-    defaultMessage: 'Search Agents'
+    defaultMessage: 'Search Agents',
   },
   searchAgentsAlt: {
     id: 'app.containers.AgentsPage.searchAgentsAlt',
-    defaultMessage: 'Search Agents'
+    defaultMessage: 'Search Agents',
   },
   delete: {
     id: 'app.containers.AgentsPage.components.AgentsCards.delete',
-    defaultMessage: 'Delete'
+    defaultMessage: 'Delete',
   },
   deleteMessage: {
     id: 'app.containers.AgentsPage.components.AgentsCards.deleteMessage',
-    defaultMessage: 'You are going to permanently delete this agent.'
+    defaultMessage: 'You are going to permanently delete this agent.',
   },
   deleteQuestion: {
     id: 'app.containers.AgentsPage.components.AgentsCards.deleteMessage',
-    defaultMessage: 'Are you sure?'
+    defaultMessage: 'Are you sure?',
   },
   no: {
     id: 'app.containers.AgentsPage.components.AgentsCards.no',
-    defaultMessage: 'No'
-  }
+    defaultMessage: 'No',
+  },
 });

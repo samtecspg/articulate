@@ -54,7 +54,7 @@ class App extends React.Component {
     agent: null,
     client: null,
     socketClientConnected: false,
-  }
+  };
 
   componentWillMount(){
     this.props.onLoadSettings();
@@ -88,13 +88,13 @@ class App extends React.Component {
     if (this.props.missingAPI){
       this.props.onMissingAPI(this.props.location.pathname);
     }
-    //If an agent is loaded
+    // If an agent is loaded
     if (this.props.agent.id){
-      //If is different than the current agent
+      // If is different than the current agent
       if (this.props.agent.id !== this.state.agent){
-        //If the socket was already subscribed to an agent
+        // If the socket was already subscribed to an agent
         if (this.state.agent){
-          //Unscribe from the agent
+          // Unscribe from the agent
           this.state.client.unsubscribe(`/agent/${this.state.agent}`);
         }
         const handler = (agent) => {
@@ -109,7 +109,7 @@ class App extends React.Component {
           }
         });
         this.setState({
-          agent: this.props.agent.id
+          agent: this.props.agent.id,
         });
       }
     }
@@ -171,7 +171,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onRefreshAgent: (agent) => {
       dispatch(loadAgentSuccess({agent}))
-    }
+    },
   };
 }
 

@@ -18,29 +18,29 @@ import { compose } from 'redux';
 const styles = {
   root: {
     flexGrow: 1,
-    backgroundColor: '#fbfcfd'
+    backgroundColor: '#fbfcfd',
   },
   header: {
-    padding: 17
+    padding: 17,
   },
   logo: {
-    height: 45
+    height: 45,
   },
   flex: {
     flex: 1,
   },
   agentsButtonContainer: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   openChat: {
-    float: 'right'
+    float: 'right',
   },
   icon: {
-    paddingRight: '5px'
+    paddingRight: '5px',
   },
   link:{
-    textDecoration: 'none'
-  }
+    textDecoration: 'none',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -50,88 +50,88 @@ export class AppHeader extends React.Component {
     const { classes, intl, conversationBarOpen } = this.props;
     return (
       conversationBarOpen ?
-      <Grid container className={classes.header} item xs={12}>
-        <Hidden only={['xs', 'sm']}>
-          <ConversationBar
-            onToggleConversationBar={this.props.onToggleConversationBar}
-          />
-          <Grid item xl={2} lg={2} md={2}>
-            <Link to='/'>
-              <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-            </Link>
-          </Grid>
-          <Grid item xl={2} lg={2} md={2}/>
-          <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
-            <Link to='/' className={classes.link}>
-              <Button variant='contained'>
-                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                <FormattedMessage {...messages.agentsButton} />
+        <Grid container className={classes.header} item xs={12}>
+          <Hidden only={['xs', 'sm']}>
+            <ConversationBar
+              onToggleConversationBar={this.props.onToggleConversationBar}
+            />
+            <Grid item xl={2} lg={2} md={2}>
+              <Link to='/'>
+                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+              </Link>
+            </Grid>
+            <Grid item xl={2} lg={2} md={2}/>
+            <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
+              <Link to='/' className={classes.link}>
+                <Button variant='contained'>
+                  <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                  <FormattedMessage {...messages.agentsButton} />
+                </Button>
+              </Link>
+            </Grid>
+          </Hidden>
+          <Hidden only={['md', 'lg', 'xl']}>
+            <ConversationBar
+              onToggleConversationBar={this.props.onToggleConversationBar}
+            />
+            <Grid item sm={6} xs={6}>
+              <Link to='/' className={classes.link}>
+                <Button variant='contained'>
+                  <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                  <FormattedMessage {...messages.agentsButton} />
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item sm={6} xs={6}>
+              <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
+                <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                <FormattedMessage {...messages.openChatButton} />
               </Button>
-            </Link>
-          </Grid>
-        </Hidden>
-        <Hidden only={['md', 'lg', 'xl']}>
-          <ConversationBar
-            onToggleConversationBar={this.props.onToggleConversationBar}
-          />
-          <Grid item sm={6} xs={6}>
-            <Link to='/' className={classes.link}>
-              <Button variant='contained'>
-                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                <FormattedMessage {...messages.agentsButton} />
+            </Grid>
+          </Hidden>
+        </Grid>
+        :
+        <Grid container className={classes.header} item xs={12}>
+          <Hidden only={['xs', 'sm']}>
+            <Grid item xl={2} lg={2} md={2}>
+              <Link to='/'>
+                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+              </Link>
+            </Grid>
+            <Grid item xl={3} lg={3} md={3}/>
+            <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
+              <Link to='/' className={classes.link}>
+                <Button variant='contained'>
+                  <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                  <FormattedMessage {...messages.agentsButton} />
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item xl={3} lg={3} md={3}/>
+            <Grid item xl={2} lg={2} md={2}>
+              <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
+                <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                <FormattedMessage {...messages.openChatButton} />
               </Button>
-            </Link>
-          </Grid>
-          <Grid item sm={6} xs={6}>
-            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
-              <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              <FormattedMessage {...messages.openChatButton} />
-            </Button>
-          </Grid>
-        </Hidden>
-      </Grid>
-      :
-      <Grid container className={classes.header} item xs={12}>
-        <Hidden only={['xs', 'sm']}>
-          <Grid item xl={2} lg={2} md={2}>
-            <Link to='/'>
-              <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-            </Link>
-          </Grid>
-          <Grid item xl={3} lg={3} md={3}/>
-          <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
-            <Link to='/' className={classes.link}>
-              <Button variant='contained'>
-                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                <FormattedMessage {...messages.agentsButton} />
+            </Grid>
+          </Hidden>
+          <Hidden only={['md', 'lg', 'xl']}>
+            <Grid item sm={6} xs={6}>
+              <Link to='/' className={classes.link}>
+                <Button variant='contained'>
+                  <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                  <FormattedMessage {...messages.agentsButton} />
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item sm={6} xs={6}>
+              <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
+                <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                <FormattedMessage {...messages.openChatButton} />
               </Button>
-            </Link>
-          </Grid>
-          <Grid item xl={3} lg={3} md={3}/>
-          <Grid item xl={2} lg={2} md={2}>
-            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
-              <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              <FormattedMessage {...messages.openChatButton} />
-            </Button>
-          </Grid>
-        </Hidden>
-        <Hidden only={['md', 'lg', 'xl']}>
-          <Grid item sm={6} xs={6}>
-            <Link to='/' className={classes.link}>
-              <Button variant='contained'>
-                <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                <FormattedMessage {...messages.agentsButton} />
-              </Button>
-            </Link>
-          </Grid>
-          <Grid item sm={6} xs={6}>
-            <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
-              <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              <FormattedMessage {...messages.openChatButton} />
-            </Button>
-          </Grid>
-        </Hidden>
-      </Grid>
+            </Grid>
+          </Hidden>
+        </Grid>
     );
   }
 }

@@ -22,7 +22,7 @@ export default function configureStore(initialState = {}, history) {
   const middlewares = [
     swaggerMiddleware({ url: `${apiURL}/swagger.json` }),
     sagaMiddleware,
-    routerMiddleware(history)
+    routerMiddleware(history),
   ];
 
   const enhancers = [applyMiddleware(...middlewares)];

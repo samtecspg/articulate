@@ -14,7 +14,7 @@ function renderInputComponent(inputProps) {
     <TextField
       fullWidth
       InputLabelProps={{
-          shrink: true,
+        shrink: true,
       }}
       InputProps={{
         inputRef: node => {
@@ -30,21 +30,21 @@ function renderInputComponent(inputProps) {
               display: 'inline',
               position: 'absolute',
               left: '90%',
-              marginLeft: '0px'
+              marginLeft: '0px',
             }}
             position="end"
           >
             <IconButton
               style={{
                 bottom: '12px',
-                padding: '0px'
+                padding: '0px',
               }}
               onClick={(evt) => { evt.target.value = ''; onChange(evt, '') }}
             >
               {value ? <Cancel /> : null}
             </IconButton>
           </InputAdornment>
-        )   
+        ),   
       }}
       value={value}
       onChange={onChange}
@@ -83,7 +83,7 @@ const styles = theme => ({
     right: 0,
     borderRadius: '5px',
     border: '1px solid #4e4e4e',
-    backgroundColor: '#fafafa'
+    backgroundColor: '#fafafa',
   },
   suggestion: {
     display: 'block',
@@ -111,24 +111,22 @@ class Autocomplete extends React.Component {
     const inputLength = inputValue.length;
     let count = 0;
 
-    const transformedSuggestions = this.props.suggestions.map((suggestion) => {
-      return {
-        label: suggestion
-      }
-    });
+    const transformedSuggestions = this.props.suggestions.map((suggestion) => ({
+      label: suggestion,
+    }));
 
     return inputLength === 0
       ? []
       : transformedSuggestions.filter(suggestion => {
-          const keep =
+        const keep =
             count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
 
-          if (keep) {
-            count += 1;
-          }
+        if (keep) {
+          count += 1;
+        }
 
-          return keep;
-        });
+        return keep;
+      });
   }
 
 
@@ -172,7 +170,7 @@ class Autocomplete extends React.Component {
             value,
             onChange: this.handleChange,
             label,
-            helperText
+            helperText,
           }}
           theme={{
             container: classes.container,
@@ -198,7 +196,7 @@ Autocomplete.propTypes = {
   label: PropTypes.any,
   helperText: PropTypes.any,
   onChange: PropTypes.func,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
 };
 
 export default withStyles(styles)(Autocomplete);

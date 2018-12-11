@@ -52,14 +52,14 @@ export class KeywordsPage extends React.Component {
     pageSize: 5,
     numberOfPages: null,
     totalKeywords: null,
-  }
+  };
 
   componentWillMount() {
     if(this.props.agent.id) {
       this.props.onLoadKeywords('', this.state.currentPage, this.state.pageSize);
     }
     else {
-      //TODO: An action when there isn't an agent
+      // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
     }
   }
@@ -67,7 +67,7 @@ export class KeywordsPage extends React.Component {
   componentDidUpdate(){
     if (this.props.totalKeywords !== this.state.totalKeywords){
       this.setState({
-        totalKeywords: this.props.totalKeywords
+        totalKeywords: this.props.totalKeywords,
       });
       this.setNumberOfPages(this.state.pageSize);
     }
@@ -76,13 +76,13 @@ export class KeywordsPage extends React.Component {
   setNumberOfPages(pageSize){
     const numberOfPages = Math.ceil(this.props.totalKeywords / pageSize);
     this.setState({
-      numberOfPages
+      numberOfPages,
     });
   }
 
   changePage(pageNumber){
     this.setState({
-        currentPage: pageNumber
+      currentPage: pageNumber,
     });
     this.props.onLoadKeywords(this.state.filter, pageNumber, this.state.pageSize);
   }
@@ -90,7 +90,7 @@ export class KeywordsPage extends React.Component {
   movePageBack(){
     let newPage = this.state.currentPage;
     if (this.state.currentPage > 1){
-        newPage = this.state.currentPage - 1;
+      newPage = this.state.currentPage - 1;
     }
     this.changePage(newPage);
   }
@@ -98,7 +98,7 @@ export class KeywordsPage extends React.Component {
   movePageForward(){
     let newPage = this.state.currentPage;
     if (this.state.currentPage < this.getTotalPages()){
-        newPage = this.state.currentPage + 1;
+      newPage = this.state.currentPage + 1;
     }
     this.changePage(newPage);
   }
@@ -106,14 +106,14 @@ export class KeywordsPage extends React.Component {
   changePageSize(pageSize){
     this.setState({
       currentPage: 1,
-      pageSize
+      pageSize,
     });
     this.props.onLoadKeywords(this.state.filter, 1, pageSize);
   }
 
   onSearchKeyword(filter){
     this.setState({
-      filter
+      filter,
     });
     this.props.onLoadKeywords(filter, this.state.currentPage, this.state.pageSize);
   }
@@ -133,8 +133,8 @@ export class KeywordsPage extends React.Component {
           }
         />
         <MainTab
-          enableTabs={true}
-          selectedTab={'keywords'}
+          enableTabs
+          selectedTab="keywords"
           agentForm={Link}
           agentURL={`/agent/${this.props.agent.id}`}
           sayingsForm={Link}
@@ -188,7 +188,7 @@ function mapDispatchToProps(dispatch) {
     },
     onTrain: () => {
       dispatch(trainAgent());
-    }
+    },
   };
 }
 

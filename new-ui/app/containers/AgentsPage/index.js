@@ -36,20 +36,20 @@ export class AgentsPage extends React.PureComponent {
   render() {
     const { agents } = this.props;
     return (
-        agents ? 
-          <Grid container>
-              <ContentHeader
-              title={messages.title}
-              subtitle={messages.subtitle}
-              inlineElement={
-                <SearchAgent/>
-              }
-              sizesForHideInlineElement={['sm', 'xs']}
-            />
-            <AgentsCards onGoToUrl={this.props.onGoToUrl} onDeleteAgent={this.props.onDeleteAgent} agents={agents} />
-          </Grid>
+      agents ? 
+        <Grid container>
+          <ContentHeader
+            title={messages.title}
+            subtitle={messages.subtitle}
+            inlineElement={
+              <SearchAgent/>
+            }
+            sizesForHideInlineElement={['sm', 'xs']}
+          />
+          <AgentsCards onGoToUrl={this.props.onGoToUrl} onDeleteAgent={this.props.onDeleteAgent} agents={agents} />
+        </Grid>
         :
-          <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+        <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }
@@ -68,7 +68,7 @@ AgentsPage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  agents: makeSelectAgents()
+  agents: makeSelectAgents(),
 });
 
 function mapDispatchToProps(dispatch) {

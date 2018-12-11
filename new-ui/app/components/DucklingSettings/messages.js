@@ -8,7 +8,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   ducklingSettingDescription: {
     id: 'app.components.DucklingSettings.ducklingSettingDescription',
-    defaultMessage: 'You can specify the address to your duckling server and also the dimensiones you want to use from the duckling service.'
+    defaultMessage: 'You can specify the address to your duckling server and also the dimensiones you want to use from the duckling service.',
   },
   ducklingURL: {
     id: 'app.components.DucklingSettings.ducklingURL',
@@ -24,10 +24,10 @@ export default defineMessages({
   },
   requiredField: {
     id: 'app.components.DucklingSettings.requiredField',
-    defaultMessage: '*Required'
+    defaultMessage: '*Required',
   },
   ducklingDimensionError: {
     id: 'app.components.DucklingSettings.ducklingDimensionError',
-    defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].'
+    defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].',
   },
 });

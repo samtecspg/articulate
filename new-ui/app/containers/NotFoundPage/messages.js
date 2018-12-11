@@ -17,5 +17,5 @@ export default defineMessages({
   needHelp: {
     id: 'app.components.MissingAPIPage.needHelp',
     defaultMessage: 'Need Help?',
-  }
+  },
 });

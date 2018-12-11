@@ -270,7 +270,7 @@ export function loadAgent(agentId) {
   return {
     type: LOAD_AGENT,
     agentId,
-    apiCall: true
+    apiCall: true,
   }
 }
 
@@ -307,7 +307,7 @@ export function changeCategoryClassifierThreshold(value) {
     type: CHANGE_AGENT_DATA,
     payload: {
       field: 'categoryClassifierThreshold',
-      value: parseInt(value)
+      value: parseInt(value),
     },
   };
 }
@@ -329,14 +329,14 @@ export function deleteAgentFallbackResponse(fallbackIndex) {
 export function changeWebhookData(payload) {
   return {
     type: CHANGE_WEBHOOK_DATA,
-    payload
+    payload,
   };
 }
 
 export function changeWebhookPayloadType(payload) {
   return {
     type: CHANGE_WEBHOOK_PAYLOAD_TYPE,
-    payload
+    payload,
   };
 }
 
@@ -357,7 +357,7 @@ export function changeAgentSettingsData(payload) {
 export function addAgent(){
   return {
     type: ADD_AGENT,
-    apiCall: true
+    apiCall: true,
   }
 }
 
@@ -370,14 +370,14 @@ export function addAgentError(){
 export function addAgentSuccess(agent){
   return {
     type: ADD_AGENT_SUCCESS,
-    agent
+    agent,
   }
 }
 
 export function updateAgent(){
   return {
     type: UPDATE_AGENT,
-    apiCall: true
+    apiCall: true,
   }
 }
 
@@ -390,7 +390,7 @@ export function updateAgentError(){
 export function updateAgentSuccess(agent){
   return {
     type: UPDATE_AGENT_SUCCESS,
-    agent
+    agent,
   }
 }
 
@@ -398,7 +398,7 @@ export function deleteAgent(id){
   return {
     type: DELETE_AGENT,
     id,
-    apiCall: true
+    apiCall: true,
   }
 }
 
@@ -425,7 +425,7 @@ export function trainAgent(){
 export function trainAgentError(error){
   return {
     type: TRAIN_AGENT_ERROR,
-    error
+    error,
   }
 }
 
@@ -767,7 +767,7 @@ export function loadAction(actionId) {
   return {
     type: LOAD_ACTION,
     actionId,
-    apiCall: true
+    apiCall: true,
   }
 }
 
@@ -850,14 +850,14 @@ export function deleteSlotTextPrompt(payload) {
 export function changeActionWebhookData(payload) {
   return {
     type: CHANGE_ACTION_WEBHOOK_DATA,
-    payload
+    payload,
   };
 }
 
 export function changeActionWebhookPayloadType(payload) {
   return {
     type: CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE,
-    payload
+    payload,
   };
 }
 
@@ -872,7 +872,7 @@ export function addAction(addToNewSayingActions){
   return {
     type: ADD_ACTION,
     apiCall: true,
-    addToNewSayingActions
+    addToNewSayingActions,
   }
 }
 
@@ -885,14 +885,14 @@ export function addActionError(){
 export function addActionSuccess(payload){
   return {
     type: ADD_ACTION_SUCCESS,
-    payload
+    payload,
   }
 }
 
 export function updateAction(){
   return {
     type: UPDATE_ACTION,
-    apiCall: true
+    apiCall: true,
   }
 }
 
@@ -905,14 +905,14 @@ export function updateActionError(){
 export function updateActionSuccess(action){
   return {
     type: UPDATE_ACTION_SUCCESS,
-    action
+    action,
   }
 }
 
 export function deleteAction(){
   return {
     type: DELETE_ACTION,
-    apiCall: true
+    apiCall: true,
   }
 }
 
@@ -946,14 +946,14 @@ export function loadKeyword(id){
 export function loadKeywordError(error){
   return {
     type: LOAD_KEYWORD_ERROR,
-    error
+    error,
   }
 }
 
 export function loadKeywordSuccess(keyword){
   return {
     type: LOAD_KEYWORD_SUCCESS,
-    keyword
+    keyword,
   }
 }
 
@@ -967,7 +967,7 @@ export function createKeyword(){
 export function createKeywordError(error){
   return {
     type: CREATE_KEYWORD_ERROR,
-    error
+    error,
   }
 }
 
@@ -988,14 +988,14 @@ export function updateKeyword(){
 export function updateKeywordError(error){
   return {
     type: UPDATE_KEYWORD_ERROR,
-    error
+    error,
   }
 }
 
 export function updateKeywordSuccess(keyword){
   return {
     type: UPDATE_KEYWORD_SUCCESS,
-    keyword
+    keyword,
   }
 }
 
@@ -1054,14 +1054,14 @@ export function loadCategory(id){
 export function loadCategoryError(error){
   return {
     type: LOAD_CATEGORY_ERROR,
-    error
+    error,
   }
 }
 
 export function loadCategorySuccess(category){
   return {
     type: LOAD_CATEGORY_SUCCESS,
-    category
+    category,
   }
 }
 
@@ -1075,7 +1075,7 @@ export function createCategory(){
 export function createCategoryError(error){
   return {
     type: CREATE_CATEGORY_ERROR,
-    error
+    error,
   }
 }
 
@@ -1096,14 +1096,14 @@ export function updateCategory(){
 export function updateCategoryError(error){
   return {
     type: UPDATE_CATEGORY_ERROR,
-    error
+    error,
   }
 }
 
 export function updateCategorySuccess(category){
   return {
     type: UPDATE_CATEGORY_SUCCESS,
-    category
+    category,
   }
 }
 
@@ -1119,7 +1119,7 @@ export function changeActionThreshold(value) {
     type: CHANGE_CATEGORY_DATA,
     payload: {
       field: 'actionThreshold',
-      value: parseInt(value)
+      value: parseInt(value),
     },
   };
 }

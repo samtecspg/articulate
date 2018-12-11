@@ -17,39 +17,39 @@ const styles = {
     backgroundColor: "#f6f7f8",
     border: "1px solid #c5cbd8",
     borderRadius: "5px",
-    marginBottom: "60px"
+    marginBottom: "60px",
   },
   titleContainer: {
-    padding: "25px"
+    padding: "25px",
   },
   titleTextHelpContainer: {
     display: "inline",
     position: "relative",
-    bottom: "6px"
+    bottom: "6px",
   },
   settingsIcon: {
     display: "inline",
     paddingRight: "10px",
-    height: "30px"
+    height: "30px",
   },
   title: {
     display: "inline",
-    paddingRight: "25px"
+    paddingRight: "25px",
   },
   helpButton: {
     display: "inline",
     width: "50px",
-    height: "20px"
+    height: "20px",
   },
   playIcon: {
-    height: "10px"
+    height: "10px",
   },
   helpText: {
     fontSize: "9px",
     fontWeight: 300,
     position: "relative",
     bottom: "2px",
-    paddingLeft: "2px"
+    paddingLeft: "2px",
   },
   modalContent: {
     top: "50%",
@@ -60,7 +60,7 @@ const styles = {
     height: window.window.innerWidth < 675 ? 215 : 375,
     backgroundColor: "#fff",
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)"
+      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
   },
 };
 
@@ -68,24 +68,24 @@ const styles = {
 class Form extends React.Component {
   state = {
     selectedTab: 0,
-    openModal: false
+    openModal: false,
   };
 
   handleChange = (event, value) => {
     this.setState({
-      selectedTab: value
+      selectedTab: value,
     });
   };
 
   handleOpen = () => {
     this.setState({
-      openModal: true
+      openModal: true,
     });
   };
 
   handleClose = () => {
     this.setState({
-      openModal: false
+      openModal: false,
     });
   };
 

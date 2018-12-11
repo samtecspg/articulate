@@ -20,10 +20,10 @@ export const TOGGLE_CONVERSATION_BAR = 'app/App/TOGGLE_CONVERSATION_BAR';
 export const CLOSE_NOTIFICATION = 'app/App/CLOSE_NOTIFICATION';
 export const SEND_MESSAGE = 'app/App/SEND_MESSAGE';
 export const RESPOND_MESSAGE = 'app/App/RESPOND_MESSAGE';
-export const RESET_SESSION = 'app/App/RESET_SESSION'
+export const RESET_SESSION = 'app/App/RESET_SESSION';
 export const RESET_SESSION_SUCCESS = 'app/App/RESET_SESSION_SUCCESS';
 export const LOAD_DOC = 'app/App/LOAD_DOC';
-export const LOAD_DOC_ERROR = 'app/App/LOAD_DOC_ERROR'
+export const LOAD_DOC_ERROR = 'app/App/LOAD_DOC_ERROR';
 export const LOAD_DOC_SUCCESS = 'app/App/LOAD_DOC_SUCCESS';
 
 /*
@@ -154,7 +154,7 @@ export const CREATE_KEYWORD_SUCCESS = 'app/KeywordsEditPage/CREATE_KEYWORD_SUCCE
 export const UPDATE_KEYWORD = 'app/KeywordsEditPage/UPDATE_KEYWORD';
 export const UPDATE_KEYWORD_ERROR = 'app/KeywordsEditPage/UPDATE_KEYWORD_ERROR';
 export const UPDATE_KEYWORD_SUCCESS = 'app/KeywordsEditPage/UPDATE_KEYWORD_SUCCESS';
-export const CHANGE_KEYWORD_DATA = 'app/KeywordsEditPage/CHANGE_KEYWORD_DATA'
+export const CHANGE_KEYWORD_DATA = 'app/KeywordsEditPage/CHANGE_KEYWORD_DATA';
 export const ADD_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/ADD_KEYWORD_EXAMPLE';
 export const DELETE_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/DELETE_KEYWORD_EXAMPLE';
 export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNONYMS';
@@ -173,4 +173,4 @@ export const CREATE_CATEGORY_SUCCESS = 'app/CategoryPage/CREATE_CATEGORY_SUCCESS
 export const UPDATE_CATEGORY = 'app/CategoryPage/UPDATE_CATEGORY';
 export const UPDATE_CATEGORY_ERROR = 'app/CategoryPage/UPDATE_CATEGORY_ERROR';
 export const UPDATE_CATEGORY_SUCCESS = 'app/CategoryPage/UPDATE_CATEGORY_SUCCESS';
-export const CHANGE_CATEGORY_DATA = 'app/CategoryPage/CHANGE_CATEGORY_DATA'
+export const CHANGE_CATEGORY_DATA = 'app/CategoryPage/CHANGE_CATEGORY_DATA';

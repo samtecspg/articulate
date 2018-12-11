@@ -77,7 +77,7 @@ export class SettingsPage extends React.PureComponent {
       defaultAgentLanguage: false,
       uiLanguage: false,
       defaultAgentFallbackResponses: false,
-    }
+    };
 
     if (!this.props.settings.rasaURL || this.props.settings.rasaURL === ''){
       errors = true;
@@ -105,7 +105,7 @@ export class SettingsPage extends React.PureComponent {
 
     if (!Array.isArray(this.props.settings.agentLanguages) ||
     (Array.isArray(this.props.settings.agentLanguages) &&
-    this.props.settings.agentLanguages.filter((agentLanguage) => { return agentLanguage.value === this.props.settings.defaultAgentLanguage }).length === 0)  ||
+    this.props.settings.agentLanguages.filter((agentLanguage) => agentLanguage.value === this.props.settings.defaultAgentLanguage).length === 0)  ||
       !this.props.settings.defaultAgentLanguage || this.props.settings.defaultAgentLanguage === ''){
       errors = true;
       newErrorState.defaultAgentLanguage = true;
@@ -116,7 +116,7 @@ export class SettingsPage extends React.PureComponent {
 
     if (!Array.isArray(this.props.settings.uiLanguages) ||
       (Array.isArray(this.props.settings.uiLanguages) &&
-        this.props.settings.uiLanguages.filter((uiLanguage) => { return uiLanguage.value === this.props.settings.uiLanguage }).length === 0) ||
+        this.props.settings.uiLanguages.filter((uiLanguage) => uiLanguage.value === this.props.settings.uiLanguage).length === 0) ||
       !this.props.settings.uiLanguage || this.props.settings.uiLanguage === ''){
       errors = true;
       newErrorState.uiLanguage = true;
@@ -264,7 +264,7 @@ SettingsPage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  settings: makeSelectSettings()
+  settings: makeSelectSettings(),
 });
 
 function mapDispatchToProps(dispatch) {

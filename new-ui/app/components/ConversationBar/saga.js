@@ -14,5 +14,5 @@ export function* getAgents(payload) {
 }
 
 export default function* loadAgents() {
-    yield takeLatest(LOAD_AGENTS, getAgents);
+  yield takeLatest(LOAD_AGENTS, getAgents);
 }

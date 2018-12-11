@@ -9,14 +9,14 @@ import messages from './messages';
 
 const styles = {
   mainContainer: {
-    marginTop: '60px'
+    marginTop: '60px',
   },
   image: {
     width: '300px',
     height: '300px',
     display: 'block',
     margin: 'auto',
-    width: '50%'
+    width: '50%',
   },
   needHelpLink: {
     cursor: 'pointer',
@@ -25,8 +25,8 @@ const styles = {
     fontFamily: 'Montserrat',
     fontWeight: 400,
     position: 'relative',
-  }
-}
+  },
+};
 
 class NotFoundPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -50,11 +50,11 @@ class NotFoundPage extends React.Component { // eslint-disable-line react/prefer
         <Grid item xs={12}>
         </Grid>
         <Grid item xs={12}>
-            <a className={classes.needHelpLink} target="_blank" href='https://samtecspg.github.io/articulate/'>
-              <Typography align='center'>
-                <FormattedMessage {...messages.needHelp} />
-              </Typography>
-            </a>
+          <a className={classes.needHelpLink} target="_blank" href='https://samtecspg.github.io/articulate/'>
+            <Typography align='center'>
+              <FormattedMessage {...messages.needHelp} />
+            </Typography>
+          </a>
         </Grid>
       </Grid>
     );

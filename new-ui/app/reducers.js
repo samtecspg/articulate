@@ -19,7 +19,7 @@ import appReducer from 'containers/App/reducer';
 
 // Initial routing state
 const routeInitialState = Immutable({
-  location: null
+  location: null,
 });
 
 /**

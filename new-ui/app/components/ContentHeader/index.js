@@ -12,14 +12,14 @@ const styles = {
     paddingTop: 40,
     paddingBottom: 30,
     paddingLeft: 25,
-    height: '115px'
+    height: '115px',
   },
   containerElement: {
-    display: 'inline'
+    display: 'inline',
   },
   subtitle: {
     paddingLeft: '5px',
-    color: '#4e4e4e'
+    color: '#4e4e4e',
   },
   backArrow: {
     cursor: 'pointer',
@@ -36,9 +36,9 @@ const styles = {
     fontFamily: 'Montserrat',
     fontWeight: 400,
     position: 'relative',
-    textDecoration: 'underline'
-  }
-}
+    textDecoration: 'underline',
+  },
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class ContentHeader extends React.Component {
@@ -47,19 +47,19 @@ export class ContentHeader extends React.Component {
     return (
       <Grid className={classes.container} item xs={12}>
         {this.props.backButton ?
-        [<span className={classes.backArrow} key='backArrow'>{'< '}</span>,
-        <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
-            <FormattedMessage {...this.props.backButton} />
-        </a>] :
-        null}
+          [<span className={classes.backArrow} key='backArrow'>{'< '}</span>,
+            <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
+              <FormattedMessage {...this.props.backButton} />
+            </a>] :
+          null}
         <Typography variant='h1'>
           <FormattedMessage {...this.props.title} />:&nbsp;
         </Typography>
         <Typography className={classes.subtitle} variant='h1'>
           {
             typeof this.props.subtitle === 'string' ?
-            this.props.subtitle :
-            <FormattedMessage {...this.props.subtitle} />
+              this.props.subtitle :
+              <FormattedMessage {...this.props.subtitle} />
           }
         </Typography>
         <Hidden only={this.props.sizesForHideInlineElement}>
@@ -74,7 +74,7 @@ ContentHeader.propTypes = {
   title: PropTypes.object.isRequired,
   subtitle: PropTypes.oneOfType([
     PropTypes.object,
-    PropTypes.string
+    PropTypes.string,
   ]).isRequired,
   inlineElement: PropTypes.node,
   classes: PropTypes.object.isRequired,
@@ -83,7 +83,7 @@ ContentHeader.propTypes = {
 };
 
 ContentHeader.defaultProps = {
-  sizesForHideInlineElement: []
-}
+  sizesForHideInlineElement: [],
+};
 
 export default withRouter(withStyles(styles)(ContentHeader));

@@ -31,29 +31,29 @@ const styles = {
     backgroundColor: "#ffffff",
     borderTop: "1px solid #c5cbd8",
     borderBottomLeftRadius: "5px",
-    borderBottomRightRadius: "5px"
+    borderBottomRightRadius: "5px",
   },
   formSubContainer: {
-    padding: "40px 25px"
+    padding: "40px 25px",
   },
   root: {
-    width: "100%"
+    width: "100%",
   },
   panelHeading: {
     fontSize: "15px",
-    color: "#4e4e4e"
+    color: "#4e4e4e",
   },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class AgentSettingsForm extends React.Component {
   state = {
-    expanded: null
+    expanded: null,
   };
 
   handleChange = (field, value) => {
     this.setState({
-      [field]: this.state.expanded === value ? null : value
+      [field]: this.state.expanded === value ? null : value,
     });
   };
 
@@ -165,8 +165,8 @@ class AgentSettingsForm extends React.Component {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <TrainingSettings
-                    agent={agent}
-                    onChangeAgentData={this.props.onChangeAgentData}
+                  agent={agent}
+                  onChangeAgentData={this.props.onChangeAgentData}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>

@@ -35,7 +35,7 @@ import {
   updateKeyword,
   changeExampleSynonyms,
   resetStatusFlag,
-  changeExampleName
+  changeExampleName,
 } from '../App/actions';
 import ActionButtons from './Components/ActionButtons';
 import { push } from 'react-router-redux';
@@ -78,7 +78,7 @@ export class KeywordsEditPage extends React.Component {
     const newErrorState = {
       keywordName: false,
       examples: false,
-    }
+    };
 
     if (!this.props.keyword.keywordName || this.props.keyword.keywordName === ''){
       errors = true;
@@ -105,7 +105,7 @@ export class KeywordsEditPage extends React.Component {
       }
       else {
         this.props.onUpdateKeyword();
-      };
+      }
     }
     else {
       this.setState({
@@ -131,8 +131,8 @@ export class KeywordsEditPage extends React.Component {
           backButton={messages.backButton}
         />
         <MainTab
-          enableTabs={true}
-          selectedTab={'keywords'}
+          enableTabs
+          selectedTab="keywords"
           agentForm={Link}
           agentURL={`/agent/${this.props.agent.id}`}
           sayingsForm={Link}
@@ -170,7 +170,7 @@ KeywordsEditPage.propTypes = {
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   keyword: makeSelectKeyword(),
-  success: makeSelectSuccess()
+  success: makeSelectSuccess(),
 });
 
 function mapDispatchToProps(dispatch) {

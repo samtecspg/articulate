@@ -159,30 +159,30 @@ const initialState = Immutable({
   filteredCategories: [],
   agents: false,
   currentAgent: {
-      agentName: '',
-      description: '',
-      language: 'en',
-      timezone: 'UTC',
-      useWebhook: false,
-      usePostFormat: false,
-      extraTrainingData: false,
-      enableModelsPerCategory: true,
-      multiCategory: true,
-      fallbackResponses: [],
-      categoryClassifierThreshold: 50,
+    agentName: '',
+    description: '',
+    language: 'en',
+    timezone: 'UTC',
+    useWebhook: false,
+    usePostFormat: false,
+    extraTrainingData: false,
+    enableModelsPerCategory: true,
+    multiCategory: true,
+    fallbackResponses: [],
+    categoryClassifierThreshold: 50,
   },
   agent: {
-      agentName: '',
-      description: '',
-      language: 'en',
-      timezone: 'UTC',
-      useWebhook: false,
-      usePostFormat: false,
-      extraTrainingData: false,
-      enableModelsPerCategory: true,
-      multiCategory: true,
-      fallbackResponses: [],
-      categoryClassifierThreshold: 50,
+    agentName: '',
+    description: '',
+    language: 'en',
+    timezone: 'UTC',
+    useWebhook: false,
+    usePostFormat: false,
+    extraTrainingData: false,
+    enableModelsPerCategory: true,
+    multiCategory: true,
+    fallbackResponses: [],
+    categoryClassifierThreshold: 50,
   },
   agentWebhook: {
     agent: '',
@@ -193,7 +193,7 @@ const initialState = Immutable({
   },
   agentPostFormat: {
     agent: '',
-    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}'
+    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}',
   },
   agentSettings: {
     rasaURL: '',
@@ -205,12 +205,12 @@ const initialState = Immutable({
     keywordClassifierPipeline: '[]',
   },
   keyword: {
-      type: 'learned',
-      regex: '',
-      agent: '',
-      uiColor: '#e91e63',
-      keywordName: '',
-      examples: []
+    type: 'learned',
+    regex: '',
+    agent: '',
+    uiColor: '#e91e63',
+    keywordName: '',
+    examples: [],
   },
   keywords: [],
   totalKeywords: 0,
@@ -226,7 +226,7 @@ const initialState = Immutable({
     category: '',
     userSays: '',
     keywords: [],
-    actions: []
+    actions: [],
   },
   action: {
     agent: '',
@@ -234,18 +234,18 @@ const initialState = Immutable({
     useWebhook: false,
     usePostFormat: false,
     slots: [],
-    responses: []
+    responses: [],
   },
   actionWebhook: {
     agent: '',
     webhookUrl: '',
     webhookVerb: 'GET',
     webhookPayloadType: 'None',
-    webhookPayload: ''
+    webhookPayload: '',
   },
   actionPostFormat: {
     agent: '',
-    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}'
+    postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}',
   },
   actionOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   actionOldPayloadXML: "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
@@ -259,7 +259,7 @@ const initialState = Immutable({
     keywordId: '0',
     isList: false,
     isRequired: false,
-    textPrompts: []
+    textPrompts: [],
   },
   totalActions: 0,
   currentAction: {
@@ -269,7 +269,7 @@ const initialState = Immutable({
     useWebhook: false,
     usePostFormat: false,
     slots: [],
-    responses: []
+    responses: [],
   },
   settings: {
     rasaURL: '',
@@ -285,7 +285,7 @@ const initialState = Immutable({
     categoryClassifierPipeline: [],
     sayingClassifierPipeline: [],
     keywordClassifierPipeline: [],
-    defaultAgentFallbackResponses: []
+    defaultAgentFallbackResponses: [],
   },
   settingsTouched: false,
   loading: false,
@@ -367,11 +367,11 @@ function appReducer(state = initialState, action) {
 
     /* Agent */
     case RESET_AGENT_DATA:
-        return state.set('agent', initialState.agent)
-          .set('currentAgent', initialState.currentAgent)
-          .set('agentWebhook', initialState.agentWebhook)
-          .set('agentPostFormat', initialState.agentPostFormat)
-          .set('agentSettings', initialState.agentSettings);
+      return state.set('agent', initialState.agent)
+        .set('currentAgent', initialState.currentAgent)
+        .set('agentWebhook', initialState.agentWebhook)
+        .set('agentPostFormat', initialState.agentPostFormat)
+        .set('agentSettings', initialState.agentSettings);
     case LOAD_AGENT:
       return state
         .set('loading', true)
@@ -429,23 +429,23 @@ function appReducer(state = initialState, action) {
           .setIn(['agentWebhook', action.payload.field], action.payload.value)
           .set('agentTouched', true);
       }
-      else {
-        if (action.payload.value === 'JSON' && state.agentWebhook.webhookPayloadType !== 'JSON') {
-          if (state.agentWebhook.webhookPayloadType === 'XML') {
-            state = state.set('agentOldPayloadXML', state.agentWebhook.webhookPayload);
-          }
-          state = state.setIn(['agentWebhook', 'webhookPayload'], state.agentOldPayloadJSON);
+
+      if (action.payload.value === 'JSON' && state.agentWebhook.webhookPayloadType !== 'JSON') {
+        if (state.agentWebhook.webhookPayloadType === 'XML') {
+          state = state.set('agentOldPayloadXML', state.agentWebhook.webhookPayload);
         }
-        if (action.payload.value === 'XML' && state.agentWebhook.webhookPayloadType !== 'XML') {
-          if (state.agentWebhook.webhookPayloadType === 'JSON') {
-            state = state.set('agentOldPayloadJSON', state.agentWebhook.webhookPayload);
-          }
-          state = state.setIn(['agentWebhook', 'webhookPayload'], state.agentOldPayloadXML);
-        }
-        return state
-          .setIn(['agentWebhook', action.payload.field], action.payload.value)
-          .set('agentTouched', true);
+        state = state.setIn(['agentWebhook', 'webhookPayload'], state.agentOldPayloadJSON);
       }
+      if (action.payload.value === 'XML' && state.agentWebhook.webhookPayloadType !== 'XML') {
+        if (state.agentWebhook.webhookPayloadType === 'JSON') {
+          state = state.set('agentOldPayloadJSON', state.agentWebhook.webhookPayload);
+        }
+        state = state.setIn(['agentWebhook', 'webhookPayload'], state.agentOldPayloadXML);
+      }
+      return state
+        .setIn(['agentWebhook', action.payload.field], action.payload.value)
+        .set('agentTouched', true);
+
     case CHANGE_POST_FORMAT_DATA:
       return state
         .setIn(['agentPostFormat', action.payload.field], action.payload.value)
@@ -488,7 +488,7 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case TRAIN_AGENT:
       return state.setIn(['agent', 'status'], 'Training')
-        .set('error', false)
+        .set('error', false);
     case TRAIN_AGENT_ERROR:
       return state.setIn(['agent', 'status'], 'Error')
         .set('error', action.error);
@@ -575,25 +575,25 @@ function appReducer(state = initialState, action) {
     /* Keywords */
     case LOAD_KEYWORDS:
       return state.set('keywords', [])
-      .set('totalKeywords', 0)
-      .set('loading', true)
-      .set('error', false);
+        .set('totalKeywords', 0)
+        .set('loading', true)
+        .set('error', false);
     case LOAD_KEYWORDS_ERROR:
       return state.set('keywords', [])
-      .set('totalKeywords', 0)
-      .set('loading', false)
-      .set('error', action.error);
+        .set('totalKeywords', 0)
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_KEYWORDS_SUCCESS:
       return state.set('keywords', action.keywords.keywords)
-      .set('totalKeywords', action.keywords.total)
-      .set('loading', false)
-      .set('error', false);
+        .set('totalKeywords', action.keywords.total)
+        .set('loading', false)
+        .set('error', false);
     case DELETE_KEYWORD:
       return state.set('loading', true)
-      .set('error', false);
+        .set('error', false);
     case DELETE_KEYWORD_ERROR:
       return state.set('loading', false)
-      .set('error', action.error);
+        .set('error', action.error);
 
     /* Settings */
     case LOAD_SETTINGS:
@@ -635,19 +635,19 @@ function appReducer(state = initialState, action) {
         .set('actionPostFormat', initialState.actionPostFormat);
     case LOAD_ACTIONS:
       return state.set('actions', [])
-      .set('totalActions', 0)
-      .set('loading', true)
-      .set('error', false);
+        .set('totalActions', 0)
+        .set('loading', true)
+        .set('error', false);
     case LOAD_ACTIONS_ERROR:
       return state.set('actions', [])
-      .set('totalActions', 0)
-      .set('loading', false)
-      .set('error', action.error);
+        .set('totalActions', 0)
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_ACTIONS_SUCCESS:
       return state.set('actions', action.actions.actions)
-      .set('totalActions', action.actions.total)
-      .set('loading', false)
-      .set('error', false);
+        .set('totalActions', action.actions.total)
+        .set('loading', false)
+        .set('error', false);
     case LOAD_ACTION:
       return state
         .set('loading', true)
@@ -705,9 +705,9 @@ function appReducer(state = initialState, action) {
               return slot
                 .set('slotName', slotName);
             }
-            else {
-              return slot;
-            }
+
+            return slot;
+
           })
         )
         .set('actionTouched', true);
@@ -719,9 +719,9 @@ function appReducer(state = initialState, action) {
               return slot
                 .set(action.payload.field, action.payload.value);
             }
-            else {
-              return slot;
-            }
+
+            return slot;
+
           })
         )
         .set('actionTouched', true);
@@ -733,9 +733,9 @@ function appReducer(state = initialState, action) {
               return slot
                 .update('textPrompts', textPrompts => textPrompts.concat(action.payload.newTextPrompt));
             }
-            else {
-              return slot;
-            }
+
+            return slot;
+
           })
         )
         .set('actionTouched', true);
@@ -747,9 +747,9 @@ function appReducer(state = initialState, action) {
               return slot
                 .update('textPrompts', textPrompts => textPrompts.filter((item, index) => index !== action.payload.textPromptIndex));
             }
-            else {
-              return slot;
-            }
+
+            return slot;
+
           })
         )
         .set('actionTouched', true);
@@ -768,23 +768,23 @@ function appReducer(state = initialState, action) {
           .setIn(['actionWebhook', action.payload.field], action.payload.value)
           .set('actionTouched', true);
       }
-      else {
-        if (action.payload.value === 'JSON' && state.actionWebhook.webhookPayloadType !== 'JSON') {
-          if (state.actionWebhook.webhookPayloadType === 'XML') {
-            state = state.set('actionOldPayloadXML', state.actionWebhook.webhookPayload);
-          }
-          state = state.setIn(['actionWebhook', 'webhookPayload'], state.actionOldPayloadJSON);
+
+      if (action.payload.value === 'JSON' && state.actionWebhook.webhookPayloadType !== 'JSON') {
+        if (state.actionWebhook.webhookPayloadType === 'XML') {
+          state = state.set('actionOldPayloadXML', state.actionWebhook.webhookPayload);
         }
-        if (action.payload.value === 'XML' && state.actionWebhook.webhookPayloadType !== 'XML') {
-          if (state.actionWebhook.webhookPayloadType === 'JSON') {
-            state = state.set('actionOldPayloadJSON', state.actionWebhook.webhookPayload);
-          }
-          state = state.setIn(['actionWebhook', 'webhookPayload'], state.actionOldPayloadXML);
-        }
-        return state
-          .setIn(['actionWebhook', action.payload.field], action.payload.value)
-          .set('actionTouched', true);
+        state = state.setIn(['actionWebhook', 'webhookPayload'], state.actionOldPayloadJSON);
       }
+      if (action.payload.value === 'XML' && state.actionWebhook.webhookPayloadType !== 'XML') {
+        if (state.actionWebhook.webhookPayloadType === 'JSON') {
+          state = state.set('actionOldPayloadJSON', state.actionWebhook.webhookPayload);
+        }
+        state = state.setIn(['actionWebhook', 'webhookPayload'], state.actionOldPayloadXML);
+      }
+      return state
+        .setIn(['actionWebhook', action.payload.field], action.payload.value)
+        .set('actionTouched', true);
+
     case CHANGE_ACTION_POST_FORMAT_DATA:
       return state
         .setIn(['actionPostFormat', action.payload.field], action.payload.value)
@@ -854,7 +854,7 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false);
     case RESET_KEYWORD_DATA:
-        return state.set('keyword', initialState.keyword)
+      return state.set('keyword', initialState.keyword);
     case UPDATE_KEYWORD:
       return state.set('loading', true)
         .set('success', false)
@@ -888,30 +888,30 @@ function appReducer(state = initialState, action) {
       }));
     case LOAD_KEYWORD:
       return state.set('keyword', initialState.keyword)
-      .set('loading', true)
-      .set('error', false);
+        .set('loading', true)
+        .set('error', false);
     case LOAD_KEYWORD_ERROR:
       return state.set('keyword', initialState.keyword)
-      .set('loading', false)
-      .set('error', action.error);
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_KEYWORD_SUCCESS:
       return state.set('keyword', action.keyword)
-      .set('loading', false)
-      .set('error', false);
+        .set('loading', false)
+        .set('error', false);
 
     /* Category */
     case LOAD_CATEGORY:
       return state.set('category', initialState.category)
-      .set('loading', true)
-      .set('error', false);
+        .set('loading', true)
+        .set('error', false);
     case LOAD_CATEGORY_ERROR:
       return state.set('category', initialState.category)
-      .set('loading', false)
-      .set('error', action.error);
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_CATEGORY_SUCCESS:
       return state.set('category', action.category)
-      .set('loading', false)
-      .set('error', false);
+        .set('loading', false)
+        .set('error', false);
     case CHANGE_CATEGORY_DATA:
       return state.setIn(['category', action.payload.field], action.payload.value);
     case CREATE_CATEGORY:
@@ -929,7 +929,7 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false);
     case RESET_CATEGORY_DATA:
-        return state.set('category', initialState.category)
+      return state.set('category', initialState.category);
     case UPDATE_CATEGORY:
       return state.set('loading', true)
         .set('success', false)

@@ -25,160 +25,160 @@ import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
 
 const styles = {
-    container: {
-      height: '100%',
-      width: '300px',
-      position: 'fixed',
-      zIndex: 1,
-      top: 0,
-      right: 0,
-      backgroundColor: '#fff',
-      borderLeft: '1px solid #c5cbd8'
+  container: {
+    height: '100%',
+    width: '300px',
+    position: 'fixed',
+    zIndex: 1,
+    top: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderLeft: '1px solid #c5cbd8',
+  },
+  clearAll: {
+    borderBottom: '1px solid #979797',
+    borderLeft: '1px solid #979797',
+    borderRight: '1px solid #979797',
+    borderRadius: '0px 0px 3px 3px',
+    height: '30px',
+    width: '85px',
+    position: 'fixed',
+    top: '0px',
+    right: '107px',
+    backgroundColor: '#f6f7f8',
+  },
+  clearAllLabel: {
+    paddingTop: '5px',
+    paddingLeft: '16px',
+    fontSize: '12px',
+    fontWeight: 300,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  toggle: {
+    cursor: 'pointer',
+    height: '35px',
+    width: '25px',
+    borderRadius: '3px 0px 0px 3px',
+    position: 'fixed',
+    right: '300px',
+    top: '20px',
+    zIndex: 2,
+    backgroundColor: '#00c582',
+    boxShadow: '0 1px 4px 1px #00bd6f',
+  },
+  arrow: {
+    paddingTop: '10px',
+    paddingLeft: '8px',
+    height:'25px',
+  },
+  notificationsContainer: {
+    marginTop: '0px',
+  },
+  notificationContainer: {
+    backgroundColor: '#f6f7f8',
+    border: '1px solid #4e4e4e',
+    margin: '10px 20px 0px 20px',
+    borderRadius: '3px',
+    position: 'relative',
+  },
+  notification: {
+    paddingLeft: '5px',
+    fontSize: '12px',
+    fontWeight: 300,
+    width: '95%',
+  },
+  notificationDot: {
+    backgroundColor: '#Cb2121',
+    height: '12px',
+    width: '12px',
+    borderRadius: '50%',
+    position: 'absolute',
+    top: -5,
+    left: -5,
+  },
+  closeNotification: {
+    position: 'absolute',
+    top: 5,
+    right: 10,
+    cursor: 'pointer',
+    webkitTouchCallout: 'none',
+    webkitUserSelect: 'none',
+    khtmlUserSelect: 'none',
+    mozUserSelect: 'none',
+    msUserSelect: 'none',
+    userSelect: 'none',
+  },
+  inputContainer: {
+    padding: '10px',
+    position: 'fixed',
+    bottom: 0,
+    right: 0,
+    width: 298,
+  },
+  messagesContainer: {
+    marginRight: '20px',
+    marginTop: '20px',
+  },
+  userMessage: {
+    '&:hover': {
+      boxShadow: '0 2px 10px 0px #000000',
     },
-    clearAll: {
-      borderBottom: '1px solid #979797',
-      borderLeft: '1px solid #979797',
-      borderRight: '1px solid #979797',
-      borderRadius: '0px 0px 3px 3px',
-      height: '30px',
-      width: '85px',
-      position: 'fixed',
-      top: '0px',
-      right: '107px',
-      backgroundColor: '#f6f7f8',
+    color: '#fff',
+    backgroundColor: '#00bd6f',
+    borderRadius: '3px',
+    padding: '8px',
+  },
+  userMessageContainer: {
+    position: 'relative',
+    display: '-webkit-box',
+    display: '-moz-box',
+    display: '-ms-flexbox',
+    display: '-webkit-flex',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: '16px',
+    marginRight: '12px',
+    marginLeft: '60px',
+  },
+  agentMessage: {
+    '&:hover': {
+      boxShadow: '0 2px 10px 0px #000000',
     },
-    clearAllLabel: {
-      paddingTop: '5px',
-      paddingLeft: '16px',
-      fontSize: '12px',
-      fontWeight: 300,
+    color: '#4e4e4e',
+    backgroundColor: '#dbe0e9',
+    borderRadius: '3px',
+    padding: '8px',
+    marginRight: '60px',
+    marginLeft: '15px',
+    marginBottom: '16px',
+  },
+  agentName: {
+    display: 'block',
+    marginLeft: '15px',
+    fontWeight: '300',
+    fontSize: '10px',
+    color: '#a2a7b1',
+    marginBottom: '3px',
+  },
+  messageSource: {
+    '&:hover': {
       textDecoration: 'underline',
-      cursor: 'pointer',
     },
-    toggle: {
-      cursor: 'pointer',
-      height: '35px',
-      width: '25px',
-      borderRadius: '3px 0px 0px 3px',
-      position: 'fixed',
-      right: '300px',
-      top: '20px',
-      zIndex: 2,
-      backgroundColor: '#00c582',
-      boxShadow: '0 1px 4px 1px #00bd6f'
-    },
-    arrow: {
-      paddingTop: '10px',
-      paddingLeft: '8px',
-      height:'25px'
-    },
-    notificationsContainer: {
-      marginTop: '0px',
-    },
-    notificationContainer: {
-      backgroundColor: '#f6f7f8',
-      border: '1px solid #4e4e4e',
-      margin: '10px 20px 0px 20px',
-      borderRadius: '3px',
-      position: 'relative',
-    },
-    notification: {
-      paddingLeft: '5px',
-      fontSize: '12px',
-      fontWeight: 300,
-      width: '95%'
-    },
-    notificationDot: {
-      backgroundColor: '#Cb2121',
-      height: '12px',
-      width: '12px',
-      borderRadius: '50%',
-      position: 'absolute',
-      top: -5,
-      left: -5,
-    },
-    closeNotification: {
-      position: 'absolute',
-      top: 5,
-      right: 10,
-      cursor: 'pointer',
-      webkitTouchCallout: 'none',
-      webkitUserSelect: 'none',
-      khtmlUserSelect: 'none',
-      mozUserSelect: 'none',
-      msUserSelect: 'none',
-      userSelect: 'none',
-    },
-    inputContainer: {
-      padding: '10px',
-      position: 'fixed',
-      bottom: 0,
-      right: 0,
-      width: 298
-    },
-    messagesContainer: {
-      marginRight: '20px',
-      marginTop: '20px',
-    },
-    userMessage: {
-      '&:hover': {
-        boxShadow: '0 2px 10px 0px #000000',
-      },
-      color: '#fff',
-      backgroundColor: '#00bd6f',
-      borderRadius: '3px',
-      padding: '8px',
-    },
-    userMessageContainer: {
-      position: 'relative',
-      display: '-webkit-box',
-      display: '-moz-box',
-      display: '-ms-flexbox',
-      display: '-webkit-flex',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginBottom: '16px',
-      marginRight: '12px',
-      marginLeft: '60px'
-    },
-    agentMessage: {
-      '&:hover': {
-        boxShadow: '0 2px 10px 0px #000000',
-      },
-      color: '#4e4e4e',
-      backgroundColor: '#dbe0e9',
-      borderRadius: '3px',
-      padding: '8px',
-      marginRight: '60px',
-      marginLeft: '15px',
-      marginBottom: '16px',
-    },
-    agentName: {
-      display: 'block',
-      marginLeft: '15px',
-      fontWeight: '300',
-      fontSize: '10px',
-      color: '#a2a7b1',
-      marginBottom: '3px'
-    },
-    messageSource: {
-      '&:hover': {
-        textDecoration: 'underline'
-      },
-      cursor: 'pointer',
-      fontSize: '10px',
-      display: 'block',
-      marginTop: '10px',
-    },
-    contentContainer: {
-      width: '317px',
-      position: 'fixed',
-      top: '50px',
-      bottom: '95px',
-      overflowY: 'scroll',
-      overflowX: 'hidden',
-    }
-}
+    cursor: 'pointer',
+    fontSize: '10px',
+    display: 'block',
+    marginTop: '10px',
+  },
+  contentContainer: {
+    width: '317px',
+    position: 'fixed',
+    top: '50px',
+    bottom: '95px',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
+  },
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class ConversationBar extends React.PureComponent {
@@ -187,7 +187,7 @@ export class ConversationBar extends React.PureComponent {
     userMessage: '',
     repeatPreviousMessage: null,
     openCodeModal: false,
-  }
+  };
 
   componentDidMount() {
     this.scrollToBottom();
@@ -216,21 +216,19 @@ export class ConversationBar extends React.PureComponent {
         <Grid className={classes.contentContainer}>
           <Grid className={classes.notificationsContainer} container spacing={16}>
             {
-              this.props.notifications.map((notification, index) => {
-                return (
-                  <Grid item xs={12} key={`notification_${index}`} className={classes.notificationContainer}>
-                    <div className={classes.notificationDot}></div>
-                    <Typography className={classes.notification}>
-                      {notification}
-                    </Typography>
-                    <div onClick={() => { this.props.onCloseNotification(index) }} className={classes.closeNotification}>
-                      <Typography>
+              this.props.notifications.map((notification, index) => (
+                <Grid item xs={12} key={`notification_${index}`} className={classes.notificationContainer}>
+                  <div className={classes.notificationDot}></div>
+                  <Typography className={classes.notification}>
+                    {notification}
+                  </Typography>
+                  <div onClick={() => { this.props.onCloseNotification(index) }} className={classes.closeNotification}>
+                    <Typography>
                         x
-                      </Typography>
-                    </div>
-                  </Grid>
-                );
-              })
+                    </Typography>
+                  </div>
+                </Grid>
+              ))
             }
           </Grid>
           <Grid className={classes.messagesContainer}>
@@ -240,33 +238,33 @@ export class ConversationBar extends React.PureComponent {
                   return (
                     <Grid key={`message_${index}`} item className={classes.userMessageContainer}>
                       <Typography className={classes.userMessage}>
-                          {message.message}
+                        {message.message}
                       </Typography>
                     </Grid>
                   );
                 }
-                else{
-                  return (
-                    <Grid key={`message_${index}`}>
-                      <Typography className={classes.agentName}>
-                        {message.author}
-                      </Typography>
-                      <Typography className={classes.agentMessage}>
-                        {message.message}
-                        {message.docId !== null ?
+
+                return (
+                  <Grid key={`message_${index}`}>
+                    <Typography className={classes.agentName}>
+                      {message.author}
+                    </Typography>
+                    <Typography className={classes.agentMessage}>
+                      {message.message}
+                      {message.docId !== null ?
                         <span onClick={() => { this.props.onLoadDoc(message.docId); this.setState({openCodeModal: true})}} className={classes.messageSource}>
                           {'</> '}<span className={classes.messageSourceLink}>See Source</span>
                         </span>
                         : null}
-                      </Typography>
-                    </Grid>
-                  );
-                }
+                    </Typography>
+                  </Grid>
+                );
+
               })
             }
             {
               this.props.waitingResponse ?
-              <LoadingWave agentName={this.props.agent.agentName} /> :
+                <LoadingWave agentName={this.props.agent.agentName} /> :
                 null
             }
             <div
@@ -290,18 +288,18 @@ export class ConversationBar extends React.PureComponent {
                   evt.preventDefault();
                   this.props.onSendMessage(evt.target.value);
                   this.setState({
-                      userMessage: '',
+                    userMessage: '',
                   })
                 }
                 if (evt.key === 'ArrowUp') {
                   if (this.props.messages.length > 0) {
-                    let messages = this.props.messages;
+                    const messages = this.props.messages;
                     let len = this.state.repeatPreviousMessage || messages.length;
                     let message = null;
 
                     while (len-- && !message) {
                       if (messages[len].author === "User") {
-                        this.state.repeatPreviousMessage = len
+                        this.state.repeatPreviousMessage = len;
                         message = messages[len].message;
                       }
                     }
@@ -337,7 +335,7 @@ const mapStateToProps = createStructuredSelector({
   notifications: makeSelectNotifications(),
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
-  doc: makeSelectDoc()
+  doc: makeSelectDoc(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -356,7 +354,7 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadDoc: (docId) => {
       dispatch(loadDoc(docId));
-    }
+    },
   };
 }
 
@@ -365,7 +363,7 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-//const withSaga = injectSaga({ key: 'keywordsEdit', saga });
+// const withSaga = injectSaga({ key: 'keywordsEdit', saga });
 
 const withDefinedStyles = withStyles(styles);
 

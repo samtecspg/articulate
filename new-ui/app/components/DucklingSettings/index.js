@@ -16,22 +16,22 @@ import messages from './messages';
 
 const styles = {
   panelContent: {
-      display: 'inline',
-      fontSize: '14px',
-      fontWeight: 300,
-      color: '#4e4e4e',
-      width: '95%'
+    display: 'inline',
+    fontSize: '14px',
+    fontWeight: 300,
+    color: '#4e4e4e',
+    width: '95%',
   },
   settingEditorLabel: {
-      paddingBottom: '20px',
-      fontSize: '12px',
-      color: '#a2a7b1',
+    paddingBottom: '20px',
+    fontSize: '12px',
+    color: '#a2a7b1',
   },
   errorLabel: {
     color: '#f44336',
     marginTop: '8px',
-  }
-}
+  },
+};
 
 const getStringSetting = (setting) => {
 
@@ -39,17 +39,17 @@ const getStringSetting = (setting) => {
     return setting;
   }
   return JSON.stringify(setting, null, 2);
-}
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class DucklingSettings extends React.Component {
 
   onChangeEditorValue(field, editorValue) {
     try {
-      const value = JSON.parse(editorValue); //Ace editor send the value directly to the method as an string
+      const value = JSON.parse(editorValue); // Ace editor send the value directly to the method as an string
       this.props.onChangeSettingsData(field, value);
     } catch(e) {
-      const value = editorValue; //Given the parse of the json failed store the value in the state as a string
+      const value = editorValue; // Given the parse of the json failed store the value in the state as a string
       this.props.onChangeSettingsData(field, value);
     }
   }
@@ -87,7 +87,7 @@ export class DucklingSettings extends React.Component {
               margin="normal"
               fullWidth
               InputLabelProps={{
-                shrink: true
+                shrink: true,
               }}
               helperText={intl.formatMessage(messages.requiredField)}
               error={this.props.errorState.ducklingURL}
@@ -112,28 +112,28 @@ export class DucklingSettings extends React.Component {
               this.onChangeEditorValue('ducklingDimension', value)
             }
             fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
             value={getStringSetting(settings.ducklingDimension)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
-              tabSize: 2
+              tabSize: 2,
             }}
             editorProps={{
-              $blockScrolling: Infinity
+              $blockScrolling: Infinity,
             }}
           />
           {
             this.props.errorState.ducklingDimension ?
-            <Typography
-              variant='caption'
-              className={classes.errorLabel}
-            >
-              <FormattedMessage {...messages.ducklingDimensionError} />
-            </Typography> :
-            null
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.ducklingDimensionError} />
+              </Typography> :
+              null
           }
         </Grid>
       </Grid>

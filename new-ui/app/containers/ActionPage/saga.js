@@ -45,12 +45,12 @@ export function* getActions(payload) {
   const agent = yield select(makeSelectAgent());
   const { api } = payload;
   try {
-      const response = yield call(api.agent.getAgentAgentidAction, {
-          agentId: agent.id,
-      });
-      yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
+    const response = yield call(api.agent.getAgentAgentidAction, {
+      agentId: agent.id,
+    });
+    yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
   } catch (err) {
-      yield put(loadActionsError(err));
+    yield put(loadActionsError(err));
   }
 }
 
@@ -80,9 +80,9 @@ function* postActionWebhook(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-      yield call(api.agent.postAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id, body: actionWebhook });
+    yield call(api.agent.postAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id, body: actionWebhook });
   } catch (err) {
-      yield put(addActionError(err));
+    yield put(addActionError(err));
   }
 }
 
@@ -91,9 +91,9 @@ function* postActionPostFormat(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-      yield call(api.agent.postAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id, body: actionPostFormat });
+    yield call(api.agent.postAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id, body: actionPostFormat });
   } catch (err) {
-      yield put(addActionError(err));
+    yield put(addActionError(err));
   }
 }
 
@@ -101,13 +101,13 @@ function* putActionWebhook(payload) {
   const actionWebhook = yield select(makeSelectActionWebhook());
   const mutableActionWebhook = Immutable.asMutable(actionWebhook);
   const { api, id } = payload;
-  if (mutableActionWebhook.id){ //TODO: Check why webhook have an id
+  if (mutableActionWebhook.id){ // TODO: Check why webhook have an id
     delete mutableActionWebhook.id;
   }
   try {
-      yield call(api.agent.putAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id, body: mutableActionWebhook });
+    yield call(api.agent.putAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id, body: mutableActionWebhook });
   } catch (err) {
-      yield put(addActionError(err));
+    yield put(addActionError(err));
   }
 }
 
@@ -115,31 +115,31 @@ function* putActionPostFormat(payload) {
   const actionPostFormat = yield select(makeSelectActionPostFormat());
   const mutablePostFormat = Immutable.asMutable(actionPostFormat);
   const { api, id } = payload;
-  if (mutablePostFormat.id){ //TODO: Check why post format have an id
+  if (mutablePostFormat.id){ // TODO: Check why post format have an id
     delete mutablePostFormat.id;
   }
   try {
-      yield call(api.agent.putAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id, body: mutablePostFormat });
+    yield call(api.agent.putAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id, body: mutablePostFormat });
   } catch (err) {
-      yield put(addActionError(err));
+    yield put(addActionError(err));
   }
 }
 
 function* deleteActionWebhook(payload) {
   const { api, id } = payload;
   try {
-      yield call(api.agent.deleteAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id });
+    yield call(api.agent.deleteAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id });
   } catch (err) {
-      yield put(addActionError(err));
+    yield put(addActionError(err));
   }
 }
 
 function* deleteActionPostFormat(payload) {
   const { api, id } = payload;
   try {
-      yield call(api.agent.deleteAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id });
+    yield call(api.agent.deleteAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id });
   } catch (err) {
-      yield put(addActionError(err));
+    yield put(addActionError(err));
   }
 }
 
@@ -177,40 +177,36 @@ export function* putAction(payload) {
   delete mutableAction.id;
   delete mutableAction.agent;
   try {
-      const response = yield call(api.agent.putAgentAgentidActionActionid, { agentId: agent.id, actionId: currentAction.id, body: mutableAction });
-      if (!currentAction.useWebhook){
-        if (action.useWebhook) {
-          yield call(postActionWebhook, { id: currentAction.id, api });
-        }
+    const response = yield call(api.agent.putAgentAgentidActionActionid, { agentId: agent.id, actionId: currentAction.id, body: mutableAction });
+    if (!currentAction.useWebhook){
+      if (action.useWebhook) {
+        yield call(postActionWebhook, { id: currentAction.id, api });
+      }
+    }
+    else if (currentAction.useWebhook){
+      if (!action.useWebhook){
+        yield call(deleteActionWebhook, { id: currentAction.id, api });
       }
       else {
-        if (currentAction.useWebhook){
-          if (!action.useWebhook){
-            yield call(deleteActionWebhook, { id: currentAction.id, api });
-          }
-          else {
-            yield call(putActionWebhook, { id: currentAction.id, api });
-          }
-        }
+        yield call(putActionWebhook, { id: currentAction.id, api });
       }
-      if (!currentAction.usePostFormat){
-        if (action.usePostFormat) {
-          yield call(postActionPostFormat, { id: currentAction.id, api });
-        }
+    }
+    if (!currentAction.usePostFormat){
+      if (action.usePostFormat) {
+        yield call(postActionPostFormat, { id: currentAction.id, api });
+      }
+    }
+    else if (currentAction.usePostFormat){
+      if (!action.usePostFormat){
+        yield call(deleteActionPostFormat, { id: currentAction.id, api });
       }
       else {
-        if (currentAction.usePostFormat){
-          if (!action.usePostFormat){
-            yield call(deleteActionPostFormat, { id: currentAction.id, api });
-          }
-          else {
-            yield call(putActionPostFormat, { id: currentAction.id, api });
-          }
-        }
+        yield call(putActionPostFormat, { id: currentAction.id, api });
       }
-      yield put(updateActionSuccess(response.obj));
+    }
+    yield put(updateActionSuccess(response.obj));
   } catch (err) {
-      yield put(updateActionError(err));
+    yield put(updateActionError(err));
   }
 }
 
@@ -222,7 +218,7 @@ export function* deleteAction(payload) {
     yield call(api.agent.deleteAgentAgentidActionActionid, { agentId: agent.id, actionId: action.id });
     yield put(deleteActionSuccess());
   } catch (err) {
-      yield put(deleteActionError(err));
+    yield put(deleteActionError(err));
   }
 }
 

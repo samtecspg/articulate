@@ -123,7 +123,7 @@ export class AgentPage extends React.PureComponent {
       sayingClassifierPipeline: false,
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
-    }
+    };
     if (!this.props.agent.agentName || this.props.agent.agentName === ''){
       errors = true;
       newErrorState.agentName = true;
@@ -246,7 +246,7 @@ export class AgentPage extends React.PureComponent {
       }
       else {
         this.props.onEditAgent();
-      };
+      }
     }
     else {
       this.setState({
@@ -275,7 +275,7 @@ export class AgentPage extends React.PureComponent {
         />
         <MainTab
           enableTabs={!this.state.isNewAgent}
-          selectedTab={'agents'}
+          selectedTab="agents"
           agentForm={
             <Form
               agentNameErrorState={this.state.errorState.agentName}
@@ -385,7 +385,7 @@ function mapDispatchToProps(dispatch) {
     },
     onTrain: () => {
       dispatch(trainAgent());
-    }
+    },
   };
 }
 

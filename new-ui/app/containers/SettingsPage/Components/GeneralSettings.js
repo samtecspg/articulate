@@ -20,31 +20,31 @@ import trashIcon from '../../../images/trash-icon.svg';
 
 const styles = {
   panelContent: {
-      display: 'inline',
-      fontSize: '14px',
-      fontWeight: 300,
-      color: '#4e4e4e',
-      width: '95%'
+    display: 'inline',
+    fontSize: '14px',
+    fontWeight: 300,
+    color: '#4e4e4e',
+    width: '95%',
   },
   settingEditorLabel: {
-      paddingBottom: '20px',
-      fontSize: '12px',
-      color: '#a2a7b1',
+    paddingBottom: '20px',
+    fontSize: '12px',
+    color: '#a2a7b1',
   },
   table: {
-      marginTop: '20px'
+    marginTop: '20px',
   },
   deleteCell: {
-      width: '20px'
+    width: '20px',
   },
   deleteIcon: {
-      cursor: 'pointer'
+    cursor: 'pointer',
   },
   errorLabel: {
     color: '#f44336',
     marginTop: '8px',
-  }
-}
+  },
+};
 
 const getStringSetting = (setting) => {
 
@@ -52,17 +52,17 @@ const getStringSetting = (setting) => {
     return setting;
   }
   return JSON.stringify(setting, null, 2);
-}
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class GeneralSettings extends React.Component {
 
   onChangeEditorValue(field, editorValue) {
     try {
-      const value = JSON.parse(editorValue); //Ace editor send the value directly to the method as an string
+      const value = JSON.parse(editorValue); // Ace editor send the value directly to the method as an string
       this.props.onChangeSettingsData(field, value);
     } catch(e) {
-      const value = editorValue; //Given the parse of the json failed store the value in the state as a string
+      const value = editorValue; // Given the parse of the json failed store the value in the state as a string
       this.props.onChangeSettingsData(field, value);
     }
   }
@@ -89,19 +89,17 @@ export class GeneralSettings extends React.Component {
               margin='normal'
               fullWidth
               InputLabelProps={{
-                  shrink: true,
+                shrink: true,
               }}
               helperText={intl.formatMessage(messages.requiredField)}
               error={this.props.errorState.uiLanguage}
             >
               {Array.isArray(settings.uiLanguages) ?
-                settings.uiLanguages.map((language) => {
-                  return (
-                    <MenuItem key={language.text} value={language.value}>
-                      {language.text}
-                    </MenuItem>
-                  )
-              }) : null}
+                settings.uiLanguages.map((language) => (
+                  <MenuItem key={language.text} value={language.value}>
+                    {language.text}
+                  </MenuItem>
+                )) : null}
             </TextField>
           </Grid>
         </Grid>
@@ -116,29 +114,27 @@ export class GeneralSettings extends React.Component {
               margin='normal'
               fullWidth
               InputLabelProps={{
-                  shrink: true,
+                shrink: true,
               }}
               helperText={intl.formatMessage(messages.requiredField)}
               error={this.props.errorState.defaultAgentLanguage}
             >
               {Array.isArray(settings.agentLanguages) ?
-                settings.agentLanguages.map((agentLanguage) => {
-                  return (
-                    <MenuItem key={agentLanguage.text} value={agentLanguage.value}>
-                      {agentLanguage.text}
-                    </MenuItem>
-                  )
-              }) : null}
+                settings.agentLanguages.map((agentLanguage) => (
+                  <MenuItem key={agentLanguage.text} value={agentLanguage.value}>
+                    {agentLanguage.text}
+                  </MenuItem>
+                )) : null}
             </TextField>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <AutoComplete
-                label={intl.formatMessage(messages.timezoneSelect)}
-                suggestions={settings.timezones}
-                value={settings.defaultTimezone}
-                onChange={(timezone) => { this.props.onChangeSettingsData('defaultTimezone', timezone) }}
-                placeholder={intl.formatMessage(messages.timezoneSelectPlaceholder)}
-                helperText={intl.formatMessage(messages.requiredField)}
+              label={intl.formatMessage(messages.timezoneSelect)}
+              suggestions={settings.timezones}
+              value={settings.defaultTimezone}
+              onChange={(timezone) => { this.props.onChangeSettingsData('defaultTimezone', timezone) }}
+              placeholder={intl.formatMessage(messages.timezoneSelectPlaceholder)}
+              helperText={intl.formatMessage(messages.requiredField)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -159,9 +155,9 @@ export class GeneralSettings extends React.Component {
                 this.onChangeEditorValue('timezones', value)
               }
               fontSize={14}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
+              showPrintMargin
+              showGutter
+              highlightActiveLine
               value={getStringSetting(settings.timezones)}
               setOptions={{
                 useWorker: false,
@@ -169,18 +165,18 @@ export class GeneralSettings extends React.Component {
                 tabSize: 2,
               }}
               editorProps={{
-                $blockScrolling: Infinity
+                $blockScrolling: Infinity,
               }}
             />
             {
               this.props.errorState.timezones ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.timezonesError} />
-              </Typography> :
-              null
+                <Typography
+                  variant='caption'
+                  className={classes.errorLabel}
+                >
+                  <FormattedMessage {...messages.timezonesError} />
+                </Typography> :
+                null
             }
           </Grid>
           <Grid item xs={12}>
@@ -201,9 +197,9 @@ export class GeneralSettings extends React.Component {
                 this.onChangeEditorValue('agentLanguages', value)
               }
               fontSize={14}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
+              showPrintMargin
+              showGutter
+              highlightActiveLine
               value={getStringSetting(settings.agentLanguages)}
               setOptions={{
                 useWorker: false,
@@ -211,18 +207,18 @@ export class GeneralSettings extends React.Component {
                 tabSize: 2,
               }}
               editorProps={{
-                $blockScrolling: Infinity
+                $blockScrolling: Infinity,
               }}
             />
             {
               this.props.errorState.agentLanguages ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.agentLanguagesError} />
-              </Typography> :
-              null
+                <Typography
+                  variant='caption'
+                  className={classes.errorLabel}
+                >
+                  <FormattedMessage {...messages.agentLanguagesError} />
+                </Typography> :
+                null
             }
           </Grid>
           <Grid item xs={12}>
@@ -243,9 +239,9 @@ export class GeneralSettings extends React.Component {
                 this.onChangeEditorValue('uiLanguages', value)
               }
               fontSize={14}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
+              showPrintMargin
+              showGutter
+              highlightActiveLine
               value={getStringSetting(settings.uiLanguages)}
               setOptions={{
                 useWorker: false,
@@ -253,18 +249,18 @@ export class GeneralSettings extends React.Component {
                 tabSize: 2,
               }}
               editorProps={{
-                $blockScrolling: Infinity
+                $blockScrolling: Infinity,
               }}
             />
             {
               this.props.errorState.uiLanguages ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.uiLanguagesError} />
-              </Typography> :
-              null
+                <Typography
+                  variant='caption'
+                  className={classes.errorLabel}
+                >
+                  <FormattedMessage {...messages.uiLanguagesError} />
+                </Typography> :
+                null
             }
           </Grid>
           <Grid container spacing={24} item xs={12}>
@@ -274,39 +270,37 @@ export class GeneralSettings extends React.Component {
                 label={intl.formatMessage(messages.fallbackTextField)}
                 placeholder={intl.formatMessage(messages.fallbackTextFieldPlaceholder)}
                 onKeyPress={(ev) => {
-                    if (ev.key === 'Enter') {
-                        ev.preventDefault();
-                        this.props.onAddFallbackResponse(ev.target.value)
-                        ev.target.value = '';
-                    }
+                  if (ev.key === 'Enter') {
+                    ev.preventDefault();
+                    this.props.onAddFallbackResponse(ev.target.value);
+                    ev.target.value = '';
+                  }
                 }}
                 margin='normal'
                 fullWidth
                 InputLabelProps={{
-                    shrink: true,
+                  shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.fallbackHelperText)}
                 error={this.props.errorState.defaultAgentFallbackResponses}
               />
-                {settings.defaultAgentFallbackResponses.length > 0 ?
-                    <Table className={classes.table}>
-                      <TableBody>
-                        {settings.defaultAgentFallbackResponses.map((fallbackResponse, index) => {
-                          return (
-                          <TableRow key={`${fallbackResponse}_${index}`}>
-                            <TableCell>
-                              {fallbackResponse}
-                            </TableCell>
-                            <TableCell className={classes.deleteCell}>
-                              <img onClick={() => { this.props.onDeleteFallbackResponse(index) }} className={classes.deleteIcon} src={trashIcon} />
-                            </TableCell>
-                          </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table> :
-                    null
-                  }
+              {settings.defaultAgentFallbackResponses.length > 0 ?
+                <Table className={classes.table}>
+                  <TableBody>
+                    {settings.defaultAgentFallbackResponses.map((fallbackResponse, index) => (
+                      <TableRow key={`${fallbackResponse}_${index}`}>
+                        <TableCell>
+                          {fallbackResponse}
+                        </TableCell>
+                        <TableCell className={classes.deleteCell}>
+                          <img onClick={() => { this.props.onDeleteFallbackResponse(index) }} className={classes.deleteIcon} src={trashIcon} />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table> :
+                null
+              }
             </Grid>
           </Grid>
         </Grid>

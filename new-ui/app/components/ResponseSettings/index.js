@@ -16,24 +16,24 @@ import messages from './messages';
 
 const styles = {
   toggleContainer: {
-    display: "inline"
+    display: "inline",
   },
   toggle: {
     display: "inline",
-    float: "right"
+    float: "right",
   },
   panelContent: {
-      display: 'inline',
-      fontSize: '14px',
-      fontWeight: 300,
-      color: '#4e4e4e',
-      width: '95%'
+    display: 'inline',
+    fontSize: '14px',
+    fontWeight: 300,
+    color: '#4e4e4e',
+    width: '95%',
   },
   errorLabel: {
     color: '#f44336',
     marginTop: '8px',
-  }
-}
+  },
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class ResponseSettings extends React.Component {
@@ -48,12 +48,12 @@ export class ResponseSettings extends React.Component {
           item
           xs={12}
         >
-          {this.props.responseSettingDescription ? 
-          <Typography className={classes.panelContent}>
-            <FormattedMessage
-              {...this.props.responseSettingDescription}
-            />
-          </Typography> : null}
+          {this.props.responseSettingDescription ?
+            <Typography className={classes.panelContent}>
+              <FormattedMessage
+                {...this.props.responseSettingDescription}
+              />
+            </Typography> : null}
           <Switch
             className={classes.toggle}
             checked={usePostFormat}
@@ -73,7 +73,7 @@ export class ResponseSettings extends React.Component {
               key='postFormatEditor'
               width="100%"
               height="300px"
-              mode={"json"}
+              mode="json"
               theme="terminal"
               name="webhookPayload"
               readOnly={false}
@@ -83,20 +83,20 @@ export class ResponseSettings extends React.Component {
                 "postFormatPayload"
               )}
               fontSize={14}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
+              showPrintMargin
+              showGutter
+              highlightActiveLine
               value={postFormat.postFormatPayload}
               editorProps={{
-                $blockScrolling: Infinity
+                $blockScrolling: Infinity,
               }}
               setOptions={{
                 useWorker: false,
                 showLineNumbers: true,
-                tabSize: 2
+                tabSize: 2,
               }}
             />,
-              this.props.errorState.postFormatPayload ?
+            this.props.errorState.postFormatPayload ?
               <Typography
                 key='postFormatPayloadError'
                 variant='caption'
@@ -104,7 +104,7 @@ export class ResponseSettings extends React.Component {
               >
                 <FormattedMessage {...messages.payloadError} />
               </Typography> :
-              null
+              null,
             ]
           ) : null}
         </Grid>

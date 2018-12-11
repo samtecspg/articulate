@@ -17,41 +17,41 @@ const styles = {
     backgroundColor: "#f6f7f8",
     border: "1px solid #c5cbd8",
     borderRadius: "5px",
-    marginBottom: "60px"
+    marginBottom: "60px",
   },
   titleContainer: {
-    padding: "25px"
+    padding: "25px",
   },
   titleTextHelpContainer: {
     display: "inline",
     position: "relative",
-    bottom: "6px"
+    bottom: "6px",
   },
   title: {
     display: "inline",
     paddingRight: "25px",
   },
   formDescriptionContainer: {
-    margin: '15px 0px'
+    margin: '15px 0px',
   },
   formDescription: {
     fontSize: '14px',
-    fontWeight: 300
+    fontWeight: 300,
   },
   helpButton: {
     display: "inline",
     width: "50px",
-    height: "20px"
+    height: "20px",
   },
   playIcon: {
-    height: "10px"
+    height: "10px",
   },
   helpText: {
     fontSize: "9px",
     fontWeight: 300,
     position: "relative",
     bottom: "2px",
-    paddingLeft: "2px"
+    paddingLeft: "2px",
   },
   modalContent: {
     top: "50%",
@@ -62,23 +62,23 @@ const styles = {
     height: window.window.innerWidth < 675 ? 215 : 375,
     backgroundColor: "#fff",
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)"
+      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
   },
   formContainer: {
-      backgroundColor: '#ffffff',
-      borderTop: '1px solid #c5cbd8',
-      borderBottomLeftRadius: '5px',
-      borderBottomRightRadius: '5px'
+    backgroundColor: '#ffffff',
+    borderTop: '1px solid #c5cbd8',
+    borderBottomLeftRadius: '5px',
+    borderBottomRightRadius: '5px',
   },
   formSubContainer: {
-      padding: '40px 25px'
+    padding: '40px 25px',
   },
   panelContent: {
-      display: 'inline',
-      fontSize: '14px',
-      fontWeight: 300,
-      color: '#4e4e4e',
-      width: '95%'
+    display: 'inline',
+    fontSize: '14px',
+    fontWeight: 300,
+    color: '#4e4e4e',
+    width: '95%',
   },
 };
 
@@ -86,18 +86,18 @@ const styles = {
 class WebhookForm extends React.Component {
   state = {
     actionNameError: false,
-    openModal: false
+    openModal: false,
   };
 
   handleOpen = () => {
     this.setState({
-      openModal: true
+      openModal: true,
     });
   };
 
   handleClose = () => {
     this.setState({
-      openModal: false
+      openModal: false,
     });
   };
 

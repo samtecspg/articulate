@@ -11,40 +11,40 @@ import searchIcon from '../../../images/search-icon.svg';
 const styles = {
   searchForm: {
     display: 'inline',
-    paddingLeft: '25px'
+    paddingLeft: '25px',
   },
   searchInputField: {
     width: '250px',
     paddingLeft: '5px',
-    fontSize: '14px'
-  }
-}
+    fontSize: '14px',
+  },
+};
 
 /* eslint-disable react/prefer-stateless-function */
 function SearchAgent(props) {
   const { classes, intl } = props;
   return (
     <form className={classes.searchForm}>
-        <img src={searchIcon} alt={intl.formatMessage(messages.searchAgentsAlt)} />
-        <Input
-            inputProps={{
-              style: {
-                border: 'none'
-              }
-            }}
-            disableUnderline
-            className={classes.searchInputField}
-            id="name"
-            placeholder={intl.formatMessage(messages.searchAgentPlaceholder)}
-            onChange={() => {}}
-        />
+      <img src={searchIcon} alt={intl.formatMessage(messages.searchAgentsAlt)} />
+      <Input
+        inputProps={{
+          style: {
+            border: 'none',
+          },
+        }}
+        disableUnderline
+        className={classes.searchInputField}
+        id="name"
+        placeholder={intl.formatMessage(messages.searchAgentPlaceholder)}
+        onChange={() => {}}
+      />
     </form>
   )
 }
 
 SearchAgent.propTypes = {
-    classes: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+  classes: PropTypes.object.isRequired,
+  intl: intlShape.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(SearchAgent));

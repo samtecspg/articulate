@@ -18,11 +18,11 @@ import messages from './messages';
 
 const styles = {
   panelContent: {
-      display: 'inline',
-      fontSize: '14px',
-      fontWeight: 300,
-      color: '#4e4e4e',
-      width: '95%'
+    display: 'inline',
+    fontSize: '14px',
+    fontWeight: 300,
+    color: '#4e4e4e',
+    width: '95%',
   },
   labelContainer: {
     paddingBottom: '20px',
@@ -30,7 +30,7 @@ const styles = {
   settingEditorLabel: {
     fontSize: '12px',
     color: '#a2a7b1',
-    display: 'inline'
+    display: 'inline',
   },
   errorLabel: {
     color: '#f44336',
@@ -38,81 +38,81 @@ const styles = {
   },
   addPipelineIcon: {
     '&:hover': {
-      filter: 'invert(1)'
+      filter: 'invert(1)',
     },
     cursor: 'pointer',
     height: '17px',
     display: 'inline',
-    float: 'right'
-  }
-}
+    float: 'right',
+  },
+};
 
 const spacyPipeline = [
   {
-    name: 'nlp_spacy'
+    name: 'nlp_spacy',
   },
   {
-    name: 'tokenizer_spacy'
+    name: 'tokenizer_spacy',
   },
   {
-    name: 'intent_featurizer_spacy'
+    name: 'intent_featurizer_spacy',
   },
   {
-    name: 'ner_crf'
+    name: 'ner_crf',
   },
   {
-    name: 'ner_synonyms'
+    name: 'ner_synonyms',
   },
   {
-    name: 'intent_classifier_sklearn'
+    name: 'intent_classifier_sklearn',
   },
   {
-    name: 'ner_spacy'
-  }
+    name: 'ner_spacy',
+  },
 ];
 
 const keywordsPipeline = [
   {
-    name: 'nlp_spacy'
+    name: 'nlp_spacy',
   },
   {
-    name: 'tokenizer_spacy'
+    name: 'tokenizer_spacy',
   },
   {
-    name: 'ner_crf'
+    name: 'ner_crf',
   },
   {
-    name: 'ner_synonyms'
+    name: 'ner_synonyms',
   },
   {
-    name: 'ner_spacy'
-  }
+    name: 'ner_spacy',
+  },
 ];
 
 const tensorflowPipeline = [
   {
-    name: 'intent_featurizer_count_vectors'
+    name: 'intent_featurizer_count_vectors',
   },
   {
     name: 'intent_classifier_tensorflow_embedding',
     intent_tokenization_flag: true,
-    intent_split_symbol: '+'
+    intent_split_symbol: '+',
   },
   {
-    name: 'nlp_spacy'
+    name: 'nlp_spacy',
   },
   {
-    name: 'tokenizer_spacy'
+    name: 'tokenizer_spacy',
   },
   {
-    name: 'ner_crf'
+    name: 'ner_crf',
   },
   {
-    name: 'ner_synonyms'
+    name: 'ner_synonyms',
   },
   {
-    name: 'ner_spacy'
-  }
+    name: 'ner_spacy',
+  },
 ];
 
 const getStringSetting = (setting) => {
@@ -121,7 +121,7 @@ const getStringSetting = (setting) => {
     return setting;
   }
   return JSON.stringify(setting, null, 2);
-}
+};
 
 /* eslint-disable react/prefer-stateless-function */
 export class RasaSettings extends React.Component {
@@ -130,14 +130,14 @@ export class RasaSettings extends React.Component {
     pipeline: null,
     openPipelineMenu: false,
     anchorEl: null,
-  }
+  };
 
   onChangeEditorValue(field, editorValue) {
     try {
-      const value = JSON.parse(editorValue); //Ace editor send the value directly to the method as an string
+      const value = JSON.parse(editorValue); // Ace editor send the value directly to the method as an string
       this.props.onChangeSettingsData(field, value);
     } catch(e) {
-      const value = editorValue; //Given the parse of the json failed store the value in the state as a string
+      const value = editorValue; // Given the parse of the json failed store the value in the state as a string
       this.props.onChangeSettingsData(field, value);
     }
   }
@@ -152,44 +152,47 @@ export class RasaSettings extends React.Component {
           anchorEl={anchorEl}
           open={this.state.openPipelineMenu}
           onClose={() => {
-              this.setState({
-                  openPipelineMenu: false,
-                  anchorEl: null,
-              });
-          }}
-        >
-          <MenuItem onClick={() => {
-            this.onChangeEditorValue(this.state.pipeline, keywordsPipeline);
             this.setState({
               openPipelineMenu: false,
               anchorEl: null,
-              pipeline: null,
             });
-          }}>
+          }}
+        >
+          <MenuItem
+            onClick={() => {
+              this.onChangeEditorValue(this.state.pipeline, keywordsPipeline);
+              this.setState({
+                openPipelineMenu: false,
+                anchorEl: null,
+                pipeline: null,
+              });
+            }}>
             <Typography className={classes.panelContent}>
               <FormattedMessage {...messages.keywords} />
             </Typography>
           </MenuItem>
-          <MenuItem onClick={() => {
-            this.onChangeEditorValue(this.state.pipeline, tensorflowPipeline);
-            this.setState({
-              openPipelineMenu: false,
-              anchorEl: null,
-              pipeline: null,
-            });
-          }}>
+          <MenuItem
+            onClick={() => {
+              this.onChangeEditorValue(this.state.pipeline, tensorflowPipeline);
+              this.setState({
+                openPipelineMenu: false,
+                anchorEl: null,
+                pipeline: null,
+              });
+            }}>
             <Typography className={classes.panelContent}>
               <FormattedMessage {...messages.tensorflow} />
             </Typography>
           </MenuItem>
-          <MenuItem onClick={() => {
-            this.onChangeEditorValue(this.state.pipeline, spacyPipeline);
-            this.setState({
-              openPipelineMenu: false,
-              anchorEl: null,
-              pipeline: null,
-            });
-          }}>
+          <MenuItem
+            onClick={() => {
+              this.onChangeEditorValue(this.state.pipeline, spacyPipeline);
+              this.setState({
+                openPipelineMenu: false,
+                anchorEl: null,
+                pipeline: null,
+              });
+            }}>
             <Typography className={classes.panelContent}>
               <FormattedMessage {...messages.spacy} />
             </Typography>
@@ -213,7 +216,7 @@ export class RasaSettings extends React.Component {
               margin='normal'
               fullWidth
               InputLabelProps={{
-                shrink: true
+                shrink: true,
               }}
               helperText={intl.formatMessage(messages.requiredField)}
               error={this.props.errorState.rasaURL}
@@ -228,13 +231,14 @@ export class RasaSettings extends React.Component {
             >
               <FormattedMessage {...messages.categoryClassifierPipeline} />
             </Typography>
-            <img onClick={(evt) => {
-              this.setState({
-                openPipelineMenu: true,
-                anchorEl: evt.currentTarget,
-                pipeline: 'categoryClassifierPipeline',
-              });}
-            } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+            <img
+              onClick={(evt) => {
+                this.setState({
+                  openPipelineMenu: true,
+                  anchorEl: evt.currentTarget,
+                  pipeline: 'categoryClassifierPipeline',
+                });}
+              } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
           </Grid>
           <AceEditor
             width='100%'
@@ -247,9 +251,9 @@ export class RasaSettings extends React.Component {
               this.onChangeEditorValue('categoryClassifierPipeline', value)
             }
             fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
             value={getStringSetting(settings.categoryClassifierPipeline)}
             setOptions={{
               useWorker: false,
@@ -257,18 +261,18 @@ export class RasaSettings extends React.Component {
               tabSize: 2,
             }}
             editorProps={{
-              $blockScrolling: Infinity
+              $blockScrolling: Infinity,
             }}
           />
           {
             this.props.errorState.categoryClassifierPipeline ?
-            <Typography
-              variant='caption'
-              className={classes.errorLabel}
-            >
-              <FormattedMessage {...messages.pipelineError} />
-            </Typography> :
-            null
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.pipelineError} />
+              </Typography> :
+              null
           }
         </Grid>
         <Grid item xs={12}>
@@ -279,13 +283,14 @@ export class RasaSettings extends React.Component {
             >
               <FormattedMessage {...messages.sayingClassifierPipeline} />
             </Typography>
-            <img onClick={(evt) => {
-              this.setState({
-                openPipelineMenu: true,
-                anchorEl: evt.currentTarget,
-                pipeline: 'sayingClassifierPipeline',
-              });}
-            } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+            <img
+              onClick={(evt) => {
+                this.setState({
+                  openPipelineMenu: true,
+                  anchorEl: evt.currentTarget,
+                  pipeline: 'sayingClassifierPipeline',
+                });}
+              } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
           </Grid>
           <AceEditor
             width='100%'
@@ -295,31 +300,31 @@ export class RasaSettings extends React.Component {
             name='sayingClassifierPipeline'
             readOnly={false}
             onChange={value =>
-                this.onChangeEditorValue('sayingClassifierPipeline', value)
+              this.onChangeEditorValue('sayingClassifierPipeline', value)
             }
             fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
             value={getStringSetting(settings.sayingClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
-              tabSize: 2
+              tabSize: 2,
             }}
             editorProps={{
-              $blockScrolling: Infinity
+              $blockScrolling: Infinity,
             }}
           />
           {
             this.props.errorState.sayingClassifierPipeline ?
-            <Typography
-              variant='caption'
-              className={classes.errorLabel}
-            >
-              <FormattedMessage {...messages.pipelineError} />
-            </Typography> :
-            null
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.pipelineError} />
+              </Typography> :
+              null
           }
         </Grid>
         <Grid item xs={12}>
@@ -330,13 +335,14 @@ export class RasaSettings extends React.Component {
             >
               <FormattedMessage {...messages.keywordClassifierPipeline} />
             </Typography>
-            <img onClick={(evt) => {
-              this.setState({
-                openPipelineMenu: true,
-                anchorEl: evt.currentTarget,
-                pipeline: 'keywordClassifierPipeline',
-              });}
-            } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+            <img
+              onClick={(evt) => {
+                this.setState({
+                  openPipelineMenu: true,
+                  anchorEl: evt.currentTarget,
+                  pipeline: 'keywordClassifierPipeline',
+                });}
+              } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
           </Grid>
           <AceEditor
             width='100%'
@@ -349,28 +355,28 @@ export class RasaSettings extends React.Component {
               this.onChangeEditorValue('keywordClassifierPipeline', value)
             }
             fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
             value={getStringSetting(settings.keywordClassifierPipeline)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
-              tabSize: 2
+              tabSize: 2,
             }}
             editorProps={{
-              $blockScrolling: Infinity
+              $blockScrolling: Infinity,
             }}
           />
           {
             this.props.errorState.keywordClassifierPipeline ?
-            <Typography
-              variant='caption'
-              className={classes.errorLabel}
-            >
-              <FormattedMessage {...messages.pipelineError} />
-            </Typography> :
-            null
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.pipelineError} />
+              </Typography> :
+              null
           }
         </Grid>
         <Grid item xs={12}>
@@ -393,28 +399,28 @@ export class RasaSettings extends React.Component {
               this.onChangeEditorValue('spacyPretrainedEntities', value)
             }
             fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
             value={getStringSetting(settings.spacyPretrainedEntities)}
             setOptions={{
               useWorker: false,
               showLineNumbers: true,
-              tabSize: 2
+              tabSize: 2,
             }}
             editorProps={{
-              $blockScrolling: Infinity
+              $blockScrolling: Infinity,
             }}
           />
           {
             this.props.errorState.spacyPretrainedEntities ?
-            <Typography
-              variant='caption'
-              className={classes.errorLabel}
-            >
-              <FormattedMessage {...messages.spacyPretrainedEntitiesError} />
-            </Typography> :
-            null
+              <Typography
+                variant='caption'
+                className={classes.errorLabel}
+              >
+                <FormattedMessage {...messages.spacyPretrainedEntitiesError} />
+              </Typography> :
+              null
           }
         </Grid>
       </Grid>
