@@ -10,7 +10,7 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, AgentModel, text, timezone, returnModel = false }) {
+module.exports = async function ({ id, AgentModel, text, timezone }) {
 
     const startTime = new Moment();
     const { redis } = this.server.app;
@@ -48,7 +48,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
         const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         const maximumSayingScore = _.max(_.compact(_.map(_.map(parsedSystemKeywords, 'action'), 'confidence')));
         const maximumCategoryScore = _.max(_.compact(_.map(parsedSystemKeywords, 'categoryScore')));
-        return await documentService.create({
+        const newDocument = await documentService.create({
             data: {
                 document: text,
                 [PARAM_DOCUMENT_TIME_STAMP]: new Date().toISOString(),
@@ -58,6 +58,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, returnModel =
                 [PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE]: maximumCategoryScore || null
             }
         });
+        return newDocument;
     }
     catch (error) {
         throw RedisErrorHandler({ error });

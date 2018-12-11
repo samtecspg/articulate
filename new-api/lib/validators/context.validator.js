@@ -18,10 +18,11 @@ class ContextValidate {
             payload: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required()
+                    [PARAM_SESSION]: ContextModel.sessionId.required()
                 };
             })()
         };
+
         this.createFrameBySession = {
             params: (() => {
 
@@ -37,6 +38,7 @@ class ContextValidate {
                 };
             })()
         };
+
         this.updateFrameBySessionAndFrame = {
             params: (() => {
 
@@ -53,11 +55,27 @@ class ContextValidate {
                 };
             })()
         };
+
+        this.update = {
+            params: (() => {
+
+                return {
+                    [PARAM_SESSION]: ContextModel.sessionId.required()};
+            })(),
+            payload: (() => {
+
+                return {
+                    actionQueue: ContextModel.actionQueue,
+                    responseQueue: ContextModel.responseQueue
+                };
+            })()
+        };
+
         this.findBySession = {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required()
+                    [PARAM_SESSION]: ContextModel.sessionId.required()
                 };
             })(),
             query: (() => {
@@ -115,7 +133,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.session.required()
+                    [PARAM_SESSION]: ContextModel.sessionId.required()
                 };
             })()
         };

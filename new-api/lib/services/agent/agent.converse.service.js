@@ -131,17 +131,8 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult, agentActions: conversationStateObject.agent.actions });
             //MARK: if there is an action but no responses call RespondFallback and persist context
             if (conversationStateObject.action && (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0)) {
-                const actionResponse = agentService.converseGenerateResponse({
-                    agent: conversationStateObject.agent,
-                    action: conversationStateObject.action,
-                    context: conversationStateObject.context,
-                    currentContext: conversationStateObject.currentContext,
-                    rasaResult: conversationStateObject.rasaResult,
-                    text: conversationStateObject.text
-                });
-                //TODO: agentService.converseGenerateResponse, this needs to be removed from there
                 await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
-                return actionResponse;
+                return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent });
             }
             //MARK: CSO.parse ===false
             //MARK: get category using rasaResult category name
@@ -187,7 +178,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
                             context: conversationStateObject.context,
                             currentContext: conversationStateObject.currentContext,
                             rasaResult: conversationStateObject.rasaResult,
-                            text: conversationStateObject.text
+                            text: conversationStateObject.text,
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
                         await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
@@ -219,7 +210,87 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             message: `Sorry, the engine wasn't able to parse your text`
         }));
     };
+
+    const storeDataInQueue = ({ conversationStateObject, action, response }) => {
+        
+        conversationStateObject.context.actionQueue.push({
+            action, 
+            slots: conversationStateObject.currentContext.slots
+        });
+        conversationStateObject.context.responseQueue.push({ ...response });
+    };
+
+    const saveContextQueues = async ({ context }) => {
+        await contextService.update({ 
+            sessionId: context.sessionId, 
+            data: {
+                actionQueue: context.actionQueue,
+                responseQueue: context.responseQueue
+            }
+        });
+    }
+
+    const removeFromQueue = async ({ conversationStateObject, action }) => {
+        const index = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action });
+        conversationStateObject.context.actionQueue.splice(index, 1);
+        conversationStateObject.context.responseQueue.splice(index, 1);
+        await contextService.update({ 
+            sessionId: conversationStateObject.context.sessionId,
+            data: {
+                actionQueue: conversationStateObject.context.actionQueue,
+                responseQueue: conversationStateObject.context.responseQueue
+            }
+        })
+    }
+
+    const moveOnQueue = ({ context, oldIndex, newIndex }) => {
+        context.actionQueue.splice(newIndex, 0, context.actionQueue.splice(oldIndex, 1)[0]);
+        context.responseQueue.splice(newIndex, 0, context.responseQueue.splice(oldIndex, 1)[0]);
+    };
+
+    const indexOnQueue = ({ actionQueue, action }) => {
+
+        let actionIndex = -1;
+        actionQueue.forEach((tempAction, tempIndex) => {
+
+            if (tempAction.action === action){
+                actionIndex = tempIndex;
+            }
+            return null;
+        });
+
+        return actionIndex;
+    };
+
+    const getResponsesFromQueue = async ({ context }) => {
+
+        const responses = [];
+        const actionsToRemove = [];
+        context.responseQueue.every((response, index) => {
+
+            if (response.actionWasFulfilled){
+                responses.push(context.responseQueue[index].textResponse);
+                actionsToRemove.push(index);
+                return true;
+            }
+            else {
+                if (index === 0){
+                    responses.push(context.responseQueue[index].textResponse);
+                }
+                return false;
+            }
+        });
+        context.actionQueue = _.filter(context.actionQueue, (action, index) => {
+            return actionsToRemove.indexOf(index) === -1;
+        });
+        context.responseQueue = _.filter(context.responseQueue, (response, index) => {
+            return actionsToRemove.indexOf(index) === -1;
+        });
+        return responses;
+    };
+
     const conversationStateObject = {};
+
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
 
@@ -242,57 +313,104 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
         }
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true });
 
+        const recognizedActionNames = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name.split('+');
+
         conversationStateObject[CSO_CONTEXT] = context;
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
         conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false });
         conversationStateObject[CSO_AGENT].categories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });
-        conversationStateObject.docId = ParsedDocument.id;
-        conversationStateObject.parse = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS];
-        conversationStateObject.text = text;
-        conversationStateObject.sessionId = sessionId;
-        conversationStateObject.timezone = timezone || conversationStateObject[CSO_AGENT].timezone || CSO_TIMEZONE_DEFAULT;
-        if (!_.isEmpty(additionalKeys)) {
-            _.mapKeys(additionalKeys, (value, key) => {
 
-                if (!conversationStateObject[key]) {
-                    conversationStateObject[key] = value;
-                }
-            });
-        }
+        let storeInQueue = false;
+        let firstUnfulfilledAction = true;
+        let currentQueueIndex = 0
 
-        const agentToolResponse = await response({ conversationStateObject }); // comes from AgentTools.respond
-
-        agentToolResponse.docId = conversationStateObject.docId;
-        let postFormatPayloadToUse;
-        let usedPostFormatAction;
-        if (conversationStateObject.action && conversationStateObject.action.usePostFormat) {
-            postFormatPayloadToUse = conversationStateObject.action.postFormat.postFormatPayload;
-            usedPostFormatAction = true;
-        }
-        else if (conversationStateObject.agent.usePostFormat) {
-            usedPostFormatAction = false;
-            postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
-        }
-        if (postFormatPayloadToUse) {
-            try {
-                const compiledPostFormat = handlebars.compile(postFormatPayloadToUse);
-                const processedPostFormat = compiledPostFormat({ ...conversationStateObject, ...{ textResponse: agentToolResponse.textResponse } });
-                const processedPostFormatJson = JSON.parse(processedPostFormat);
-                processedPostFormatJson.docId = agentToolResponse.docId;
-                if (!processedPostFormatJson.textResponse) {
-                    processedPostFormatJson.textResponse = agentToolResponse.textResponse;
-                }
-                return processedPostFormatJson;
+        const responses = await recognizedActionNames.reduce(async (previousPromise, recognizedActionName) => {
+            let finalResponse = null;
+            const data = await previousPromise;
+            const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: recognizedActionName });
+            if (indexOfActionInQueue !== -1){
+                moveOnQueue({
+                    context: conversationStateObject.context,
+                    oldIndex: indexOfActionInQueue,
+                    newIndex: currentQueueIndex
+                });
+                currentQueueIndex++;
             }
-            catch (error) {
-                const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
-                console.log(errorMessage, error);
-                return { ...{ postFormatting: errorMessage + error }, agentToolResponse };
+            ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name = recognizedActionName;
+            conversationStateObject.docId = ParsedDocument.id;
+            conversationStateObject.parse = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS];
+            conversationStateObject.text = text;
+            conversationStateObject.sessionId = sessionId;
+            conversationStateObject.timezone = timezone || conversationStateObject[CSO_AGENT].timezone || CSO_TIMEZONE_DEFAULT;
+            if (!_.isEmpty(additionalKeys)) {
+                _.mapKeys(additionalKeys, (value, key) => {
+    
+                    if (!conversationStateObject[key]) {
+                        conversationStateObject[key] = value;
+                    }
+                });
             }
-
-        }
-        else {
-            return agentToolResponse;
+    
+            const agentToolResponse = await response({ conversationStateObject });
+            storeInQueue = storeInQueue || !agentToolResponse.actionWasFulfilled;
+                
+            agentToolResponse.docId = conversationStateObject.docId;
+            let postFormatPayloadToUse;
+            let usedPostFormatAction;
+            if (conversationStateObject.action && conversationStateObject.action.usePostFormat) {
+                postFormatPayloadToUse = conversationStateObject.action.postFormat.postFormatPayload;
+                usedPostFormatAction = true;
+            }
+            else if (conversationStateObject.agent.usePostFormat) {
+                usedPostFormatAction = false;
+                postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
+            }
+            if (postFormatPayloadToUse) {
+                try {
+                    const compiledPostFormat = handlebars.compile(postFormatPayloadToUse);
+                    const processedPostFormat = compiledPostFormat({ ...conversationStateObject, ...{ textResponse: agentToolResponse.textResponse } });
+                    const processedPostFormatJson = JSON.parse(processedPostFormat);
+                    processedPostFormatJson.docId = agentToolResponse.docId;
+                    if (!processedPostFormatJson.textResponse) {
+                        processedPostFormatJson.textResponse = agentToolResponse.textResponse;
+                    }
+                    finalResponse = processedPostFormatJson;
+                }
+                catch (error) {
+                    const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
+                    console.log(errorMessage, error);
+                    const responseWithError = { ...{ postFormatting: errorMessage + error }, agentToolResponse };
+                    finalResponse = responseWithError;
+                }    
+            }
+            else {
+                finalResponse = agentToolResponse;
+            }
+            if (storeInQueue){
+                await storeDataInQueue({ conversationStateObject, action: recognizedActionName, response: finalResponse });
+                if (firstUnfulfilledAction){
+                    data.push(finalResponse);
+                    firstUnfulfilledAction = false;
+                }
+            }
+            else {
+                if (indexOfActionInQueue !== -1){
+                    await removeFromQueue({ conversationStateObject, action: recognizedActionName  });
+                }
+                data.push(finalResponse);
+            }
+            return data;
+        }, Promise.resolve([]));
+        let textResponses = _.map(responses, 'textResponse');
+        const responsesFromQueue = await getResponsesFromQueue({
+            context: conversationStateObject.context
+        });
+        textResponses = textResponses.concat(responsesFromQueue);
+        const textResponse = textResponses.join('. ');
+        await saveContextQueues({ context: conversationStateObject.context });
+        return {
+            textResponse,
+            responses
         }
     }
     catch (error) {

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { CONFIG_KEYWORD_TYPE_REGEX } from '../../../util/constants';
 
-module.exports = async function ({ agent, action, context, currentContext, rasaResult, text }) {
+module.exports = async function ({ agent, action, context, currentContext, rasaResult, text, actionWasFulfilled }) {
 
     const { agentService, keywordService } = await this.server.services();
     //TODO: need to refactor the CSO creation since is no longer passed to other functions
@@ -151,8 +151,8 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
             return webhookResponse.textResponse;
         }
         const textResponse = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-        return { ...webhookResponse, ...{ textResponse } };
+        return { ...webhookResponse, ...{ textResponse }, actionWasFulfilled: true };
     }
     const textResponse = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-    return { textResponse };
+    return { textResponse, actionWasFulfilled: true };
 };

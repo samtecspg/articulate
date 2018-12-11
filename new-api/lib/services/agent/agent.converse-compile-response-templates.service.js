@@ -28,7 +28,11 @@ module.exports = function ({ responses, templateContext }) {
                 return parsedResponse.response !== '' && parsedResponse.numberOfExpressions === maxNumberOfExpressions;
             });
         }
-        return parsedResponses.length > 0 ? parsedResponses[Math.floor(Math.random() * parsedResponses.length)].response : 'Sorry we’re not sure how to respond.';
+        
+        if (parsedResponses.length > 0 ){
+            return parsedResponses[Math.floor(Math.random() * parsedResponses.length)].response;
+        }
+        return 'Sorry we’re not sure how to respond.';
     }
     catch (error) {
         return { textResponse: 'We\'re having trouble fulfilling that request' };

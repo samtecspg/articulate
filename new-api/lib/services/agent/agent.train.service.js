@@ -127,9 +127,9 @@ module.exports = async function ({ id, returnModel = false }) {
                 language: agent.language,
                 baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
             });
+            AgentModel.property('categoryRecognizer', false);
         }
-
-        AgentModel.property('categoryRecognizer', true);
+        
         AgentModel.property('lastTraining', Moment().utc().format());
         AgentModel.property('model', model);
         AgentModel.property('status', STATUS_READY);

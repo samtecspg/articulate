@@ -5,10 +5,14 @@ class ScenarioModel {
 
         return {
             id: Joi.number(),
-            session: Joi
+            sessionId: Joi
                 .string()
                 .description('Session')
-                .trim()
+                .trim(),
+            actionQueue: Joi
+                .array(),
+            responseQueue: Joi
+                .array()
         };
     };
 }

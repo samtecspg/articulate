@@ -8,6 +8,7 @@ import FindFrameBySessionIdAndFrameId from './context/context.find-frame-by-sess
 import RemoveBySession from './context/context.remove-by-session.service';
 import RemoveFramesBySessionId from './context/context.remove-frames-by-session.service';
 import RemoveFramesBySessionIdAndFrameId from './context/context.remove-frames-by-session-and-frame.service';
+import Update from './context/context.update.service';
 
 module.exports = class ContextService extends Schmervice.Service {
 
@@ -24,6 +25,11 @@ module.exports = class ContextService extends Schmervice.Service {
     async updateFrameBySessionAndFrame() {
 
         return await UpdateFrameBySessionIdAndFrameId.apply(this, arguments);
+    }
+    
+    async update() {
+
+        return await Update.apply(this, arguments);
     }
 
     async findBySession() {

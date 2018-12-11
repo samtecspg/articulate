@@ -7,6 +7,12 @@ const schema = {
         unique: true,
         index: true,
         defaultSort: true
+    },
+    actionQueue: {
+        type: 'json'
+    },
+    responseQueue: {
+        type: 'json'
     }
 };
 
