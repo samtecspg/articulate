@@ -4,49 +4,46 @@
  *
  */
 
-import React from 'react';
-import { push } from 'react-router-redux';
-import { Link } from 'react-router-dom'
+import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { Link } from 'react-router-dom';
+import { push } from 'react-router-redux';
 import { compose } from 'redux';
-
-import injectSaga from 'utils/injectSaga';
+import { createStructuredSelector } from 'reselect';
+import ContentHeader from '../../components/ContentHeader';
+import MainTab from '../../components/MainTab';
+import injectSaga from '../../utils/injectSaga';
+import {
+  addAgent,
+  addAgentFallbackResponse,
+  changeAgentData,
+  changeAgentName,
+  changeAgentSettingsData,
+  changeCategoryClassifierThreshold,
+  changePostFormatData,
+  changeWebhookData,
+  changeWebhookPayloadType,
+  deleteAgentFallbackResponse,
+  loadAgent,
+  resetAgentData,
+  resetStatusFlag,
+  trainAgent,
+  updateAgent,
+} from '../App/actions';
 import {
   makeSelectAgent,
-  makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
+  makeSelectAgentWebhook,
   makeSelectSettings,
   makeSelectSuccess,
 } from '../App/selectors';
-import saga from './saga';
-import messages from './messages';
-
-import { Grid } from '@material-ui/core';
-import ContentHeader from 'components/ContentHeader';
-import MainTab from 'components/MainTab';
-import Form from './Components/Form';
 import ActionButtons from './Components/ActionButtons';
-
-import {
-  resetAgentData,
-  loadAgent,
-  changeAgentData,
-  changeAgentName,
-  changeCategoryClassifierThreshold,
-  addAgentFallbackResponse,
-  deleteAgentFallbackResponse,
-  changeWebhookData,
-  changeWebhookPayloadType,
-  changePostFormatData,
-  changeAgentSettingsData,
-  addAgent,
-  resetStatusFlag,
-  updateAgent,
-  trainAgent,
-} from '../App/actions';
+import Form from './Components/Form';
+import messages from './messages';
+import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
@@ -63,7 +60,7 @@ export class AgentPage extends React.PureComponent {
   }
 
   componentWillUpdate() {
-    if (this.state.isNewAgent && !this.state.settingsLoaded){
+    if (this.state.isNewAgent && !this.state.settingsLoaded) {
       this.props.onChangeAgentData('language', this.props.settings.defaultAgentLanguage);
       this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
       this.props.onChangeAgentData('fallbackResponses', this.props.settings.defaultAgentFallbackResponses);
@@ -81,10 +78,9 @@ export class AgentPage extends React.PureComponent {
   }
 
   componentWillMount() {
-    if(this.state.isNewAgent) {
+    if (this.state.isNewAgent) {
       this.props.onResetData();
-    }
-    else {
+    } else {
       this.props.onLoadAgent(this.props.match.params.id);
     }
   }
@@ -109,7 +105,7 @@ export class AgentPage extends React.PureComponent {
     },
   };
 
-  submit(){
+  submit() {
     let errors = false;
     const newErrorState = {
       agentName: false,
@@ -124,134 +120,126 @@ export class AgentPage extends React.PureComponent {
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
     };
-    if (!this.props.agent.agentName || this.props.agent.agentName === ''){
+    if (!this.props.agent.agentName || this.props.agent.agentName === '') {
       errors = true;
       newErrorState.agentName = true;
-    }
-    else {
+    } else {
       newErrorState.agentName = false;
     }
-    if (!this.props.agent.description || this.props.agent.description === ''){
+    if (!this.props.agent.description || this.props.agent.description === '') {
       errors = true;
       newErrorState.agentDescription = true;
-    }
-    else {
+    } else {
       newErrorState.agentDescription = false;
     }
-    if (!this.props.agent.fallbackResponses || this.props.agent.fallbackResponses.length === 0){
+    if (!this.props.agent.fallbackResponses || this.props.agent.fallbackResponses.length === 0) {
       errors = true;
       newErrorState.fallbackResponses = true;
-    }
-    else {
+    } else {
       newErrorState.fallbackResponses = false;
     }
-    if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')){
+    if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')) {
       errors = true;
       newErrorState.webhookUrl = true;
-    }
-    else {
+    } else {
       newErrorState.webhookUrl = false;
     }
-    if (!this.props.agentSettings.rasaURL || this.props.agentSettings.rasaURL === ''){
+    if (!this.props.agentSettings.rasaURL || this.props.agentSettings.rasaURL === '') {
       errors = true;
       newErrorState.rasaURL = true;
-    }
-    else {
+    } else {
       newErrorState.rasaURL = false;
     }
-    if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === ''){
+    if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === '') {
       errors = true;
       newErrorState.ducklingURL = true;
-    }
-    else {
+    } else {
       newErrorState.ducklingURL = false;
     }
 
     try {
-      if (!Array.isArray(this.props.agentSettings.ducklingDimension)){
-        throw 'Duckling dimensiones is not an array';
+      if (!Array.isArray(this.props.agentSettings.ducklingDimension)) {
+        throw 'Duckling dimensions is not an array';
       }
       newErrorState.ducklingDimension = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.ducklingDimension = true;
     }
 
     try {
-      if (!Array.isArray(this.props.agentSettings.categoryClassifierPipeline)){
+      if (!Array.isArray(this.props.agentSettings.categoryClassifierPipeline)) {
         throw 'Category classifier pipeline is not an array';
       }
       newErrorState.categoryClassifierPipeline = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.categoryClassifierPipeline = true;
     }
 
     try {
-      if (!Array.isArray(this.props.agentSettings.sayingClassifierPipeline)){
+      if (!Array.isArray(this.props.agentSettings.sayingClassifierPipeline)) {
         throw 'Saying classifier pipeline is not an array';
       }
       newErrorState.sayingClassifierPipeline = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.sayingClassifierPipeline = true;
     }
 
     try {
-      if (!Array.isArray(this.props.agentSettings.keywordClassifierPipeline)){
+      if (!Array.isArray(this.props.agentSettings.keywordClassifierPipeline)) {
         throw 'Keyword classifier pipeline is not an array';
       }
       newErrorState.keywordClassifierPipeline = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.keywordClassifierPipeline = true;
     }
 
     try {
-      if (!Array.isArray(this.props.agentSettings.spacyPretrainedEntities)){
+      if (!Array.isArray(this.props.agentSettings.spacyPretrainedEntities)) {
         throw 'Spacy pretrained entities is not an array';
       }
       newErrorState.spacyPretrainedEntities = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.spacyPretrainedEntities = true;
     }
 
     try {
-      if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === ''){
+      if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.postFormatPayload = true;
     }
 
     try {
-      if (this.props.agent.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === ''){
+      if (this.props.agent.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === '') {
         throw 'Webhook payload is not an object';
       }
       newErrorState.webhookPayload = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.webhookPayload = true;
     }
 
-    if (!errors){
+    if (!errors) {
       this.setState({
         formError: false,
       });
-      if (this.state.isNewAgent){
+      if (this.state.isNewAgent) {
         this.props.onAddNewAgent();
-      }
-      else {
+      } else {
         this.props.onEditAgent();
       }
-    }
-    else {
+    } else {
       this.setState({
         formError: true,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
     }
   }
@@ -397,5 +385,5 @@ const withSaga = injectSaga({ key: 'agent', saga });
 
 export default compose(
   withSaga,
-  withConnect
+  withConnect,
 )(AgentPage);

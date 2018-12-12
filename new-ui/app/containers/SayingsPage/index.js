@@ -4,60 +4,57 @@
  *
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
-import { compose } from 'redux';
-
-import { Link } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
-import ContentHeader from 'components/ContentHeader';
-import MainTab from 'components/MainTab';
-import TrainButton from 'components/TrainButton';
-import Form from './Components/Form';
-
-import injectSaga from 'utils/injectSaga';
-import saga from './saga';
-import messages from './messages';
-import {
-  makeSelectAgent,
-  makeSelectSayings,
-  makeSelectTotalSayings,
-  makeSelectKeywords,
-  makeSelectActions,
-  makeSelectCategories,
-  makeSelectSelectedCategory,
-  makeSelectFilteredCategories,
-  makeSelectNewSayingActions,
-} from '../App/selectors';
-import {
-  loadSayings,
-  addSaying,
-  deleteSaying,
-  tagKeyword,
-  untagKeyword,
-  addActionSaying,
-  deleteActionSaying,
-  loadKeywords,
-  loadActions,
-  sendSayingToAction,
-  loadCategories,
-  selectCategory,
-  loadFilteredCategories,
-  trainAgent,
-  addActionNewSaying,
-  deleteActionNewSaying,
-  clearSayingToAction,
-} from '../App/actions';
-
+import PropTypes from 'prop-types';
 import qs from 'query-string';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { push } from 'react-router-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import ContentHeader from '../../components/ContentHeader';
+import MainTab from '../../components/MainTab';
+import TrainButton from '../../components/TrainButton';
+import injectSaga from '../../utils/injectSaga';
+import {
+  addActionNewSaying,
+  addActionSaying,
+  addSaying,
+  clearSayingToAction,
+  deleteActionNewSaying,
+  deleteActionSaying,
+  deleteSaying,
+  loadActions,
+  loadCategories,
+  loadFilteredCategories,
+  loadKeywords,
+  loadSayings,
+  selectCategory,
+  sendSayingToAction,
+  tagKeyword,
+  trainAgent,
+  untagKeyword,
+} from '../App/actions';
+import {
+  makeSelectActions,
+  makeSelectAgent,
+  makeSelectCategories,
+  makeSelectFilteredCategories,
+  makeSelectKeywords,
+  makeSelectNewSayingActions,
+  makeSelectSayings,
+  makeSelectSelectedCategory,
+  makeSelectTotalSayings,
+} from '../App/selectors';
+import Form from './Components/Form';
+import messages from './messages';
+import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
 export class SayingsPage extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.changePage = this.changePage.bind(this);
     this.movePageBack = this.movePageBack.bind(this);
@@ -79,20 +76,19 @@ export class SayingsPage extends React.Component {
   };
 
   componentWillMount() {
-    if(this.props.agent.id) {
+    if (this.props.agent.id) {
       this.props.onLoadKeywords();
       this.props.onLoadActions();
       this.props.onLoadCategories();
       this.props.onLoadSayings('', this.state.currentPage, this.state.pageSize);
-    }
-    else {
+    } else {
       // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
     }
   }
 
-  componentDidUpdate(){
-    if (this.props.totalSayings !== this.state.totalSayings){
+  componentDidUpdate() {
+    if (this.props.totalSayings !== this.state.totalSayings) {
       this.setState({
         totalSayings: this.props.totalSayings,
       });
@@ -100,37 +96,37 @@ export class SayingsPage extends React.Component {
     }
   }
 
-  setNumberOfPages(pageSize){
+  setNumberOfPages(pageSize) {
     const numberOfPages = Math.ceil(this.props.totalSayings / pageSize);
     this.setState({
       numberOfPages,
     });
   }
 
-  changePage(pageNumber){
+  changePage(pageNumber) {
     this.setState({
       currentPage: pageNumber,
     });
     this.props.onLoadSayings(this.state.filter, pageNumber, this.state.pageSize);
   }
 
-  movePageBack(){
+  movePageBack() {
     let newPage = this.state.currentPage;
-    if (this.state.currentPage > 1){
+    if (this.state.currentPage > 1) {
       newPage = this.state.currentPage - 1;
     }
     this.changePage(newPage);
   }
 
-  movePageForward(){
+  movePageForward() {
     let newPage = this.state.currentPage;
-    if (this.state.currentPage < this.state.numberOfPages){
+    if (this.state.currentPage < this.state.numberOfPages) {
       newPage = this.state.currentPage + 1;
     }
     this.changePage(newPage);
   }
 
-  changePageSize(pageSize){
+  changePageSize(pageSize) {
     this.setState({
       currentPage: 1,
       pageSize,
@@ -138,7 +134,7 @@ export class SayingsPage extends React.Component {
     this.props.onLoadSayings(this.state.filter, 1, pageSize);
   }
 
-  onSearchSaying(filter){
+  onSearchSaying(filter) {
     this.setState({
       filter,
       currentPage: 1,
@@ -146,14 +142,14 @@ export class SayingsPage extends React.Component {
     this.props.onLoadSayings(filter, 1, this.state.pageSize);
   }
 
-  onSearchCategory(categoryFilter){
+  onSearchCategory(categoryFilter) {
     this.setState({
       categoryFilter,
     });
     this.props.onLoadFilteredCategories(categoryFilter);
   }
 
-  addSaying(saying){
+  addSaying(saying) {
     this.setState({
       currentPage: 1,
     });
@@ -328,5 +324,5 @@ const withSaga = injectSaga({ key: 'sayings', saga });
 
 export default compose(
   withSaga,
-  withConnect
+  withConnect,
 )(SayingsPage);

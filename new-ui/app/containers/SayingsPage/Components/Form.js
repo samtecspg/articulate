@@ -1,15 +1,25 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, Input } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Input,
+  Modal,
+  Typography,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import messages from '../messages';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
+import playHelpIcon from '../../../images/play-help-icon.svg';
 
 import sayingsIcon from '../../../images/sayings-icon.svg';
-import playHelpIcon from '../../../images/play-help-icon.svg';
 import searchIcon from '../../../images/search-icon.svg';
+
+import messages from '../messages';
 
 import SayingsDataForm from './SayingsDataForm';
 
@@ -97,90 +107,89 @@ class Form extends React.Component {
 
   render() {
     const { classes, intl } = this.props;
-    return (
-      <Grid className={classes.headerContainer} container item xs={12}>
-        <Grid className={classes.titleContainer} item xs={12}>
-          <img className={classes.sayingsIcon} src={sayingsIcon} />
-          <Grid className={classes.titleTextHelpContainer} container>
-            <Typography className={classes.title} variant='h2'>
-              <FormattedMessage {...messages.formTitle} />
-            </Typography>
-            <Button
-              className={classes.helpButton}
-              variant='outlined'
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
+    return <Grid className={classes.headerContainer} container item xs={12}>
+      <Grid className={classes.titleContainer} item xs={12}>
+        <img alt="" className={classes.sayingsIcon} src={sayingsIcon} />
+        <Grid className={classes.titleTextHelpContainer} container>
+          <Typography className={classes.title} variant='h2'>
+            <FormattedMessage {...messages.formTitle} />
+          </Typography>
+          <Button
+            className={classes.helpButton}
+            variant='outlined'
+            onClick={this.handleOpen}
+          >
+            <img
+              className={classes.playIcon}
+              src={playHelpIcon}
+              alt={intl.formatMessage(messages.playHelpAlt)}
+            />
+            <span className={classes.helpText}><FormattedMessage {...messages.help} /></span>
+          </Button>
+          <form className={classes.searchForm}>
+            <img src={searchIcon} alt={intl.formatMessage(messages.searchSayingsAlt)} />
+            <Input
+              inputProps={{
+                style: {
+                  border: 'none',
+                },
+              }}
+              disableUnderline
+              className={classes.searchInputField}
+              placeholder={intl.formatMessage(messages.searchSayingPlaceholder)}
+              onChange={(evt) => {
+                this.props.onSearchSaying(evt.target.value);
+              }}
+            />
+          </form>
+          <Modal open={this.state.openModal} onClose={this.handleClose}>
+            <Grid className={classes.modalContent} container>
+              <iframe
+                title="SPG Intro"
+                width={styles.modalContent.width}
+                height={styles.modalContent.height}
+                src='https://www.youtube.com/embed/o807YDeK6Vg'
+                frameBorder='0'
+                allow='autoplay; encrypted-media'
+                allowFullScreen
               />
-              <span className={classes.helpText}>
-                <FormattedMessage {...messages.help} />
-              </span>
-            </Button>
-            <form className={classes.searchForm}>
-              <img src={searchIcon} alt={intl.formatMessage(messages.searchSayingsAlt)} />
-              <Input
-                inputProps={{
-                  style: {
-                    border: 'none',
-                  },
-                }}
-                disableUnderline
-                className={classes.searchInputField}
-                placeholder={intl.formatMessage(messages.searchSayingPlaceholder)}
-                onChange={(evt) => { this.props.onSearchSaying(evt.target.value) }}
-              />
-            </form>
-            <Modal open={this.state.openModal} onClose={this.handleClose}>
-              <Grid className={classes.modalContent} container>
-                <iframe
-                  width={styles.modalContent.width}
-                  height={styles.modalContent.height}
-                  src='https://www.youtube.com/embed/o807YDeK6Vg'
-                  frameBorder='0'
-                  allow='autoplay; encrypted-media'
-                  allowFullScreen
-                />
-              </Grid>
-            </Modal>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          {<SayingsDataForm
-            agentId={this.props.agentId}
-            sayings={this.props.sayings}
-            agentKeywords={this.props.agentKeywords}
-            agentActions={this.props.agentActions}
-            agentCategories={this.props.agentCategories}
-            agentFilteredCategories={this.props.agentFilteredCategories}
-            onAddSaying={this.props.onAddSaying}
-            onDeleteSaying={this.props.onDeleteSaying}
-            onTagKeyword={this.props.onTagKeyword}
-            onUntagKeyword={this.props.onUntagKeyword}
-            onAddAction={this.props.onAddAction}
-            onDeleteAction={this.props.onDeleteAction}
-            onAddNewSayingAction={this.props.onAddNewSayingAction}
-            onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
-            onGoToUrl={this.props.onGoToUrl}
-            onSendSayingToAction={this.props.onSendSayingToAction}
-            currentPage={this.props.currentPage}
-            pageSize={this.props.pageSize}
-            numberOfPages={this.props.numberOfPages}
-            changePage={this.props.changePage}
-            movePageBack={this.props.movePageBack}
-            movePageForward={this.props.movePageForward}
-            changePageSize={this.props.changePageSize}
-            onSelectCategory={this.props.onSelectCategory}
-            category={this.props.category}
-            onSearchCategory={this.props.onSearchCategory}
-            newSayingActions={this.props.newSayingActions}
-            onClearSayingToAction={this.props.onClearSayingToAction}
-          />}
+            </Grid>
+          </Modal>
         </Grid>
       </Grid>
-    );
+      <Grid item xs={12}>
+        {<SayingsDataForm
+          agentId={this.props.agentId}
+          sayings={this.props.sayings}
+          agentKeywords={this.props.agentKeywords}
+          agentActions={this.props.agentActions}
+          agentCategories={this.props.agentCategories}
+          agentFilteredCategories={this.props.agentFilteredCategories}
+          onAddSaying={this.props.onAddSaying}
+          onDeleteSaying={this.props.onDeleteSaying}
+          onTagKeyword={this.props.onTagKeyword}
+          onUntagKeyword={this.props.onUntagKeyword}
+          onAddAction={this.props.onAddAction}
+          onDeleteAction={this.props.onDeleteAction}
+          onAddNewSayingAction={this.props.onAddNewSayingAction}
+          onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
+          onGoToUrl={this.props.onGoToUrl}
+          onSendSayingToAction={this.props.onSendSayingToAction}
+          currentPage={this.props.currentPage}
+          pageSize={this.props.pageSize}
+          numberOfPages={this.props.numberOfPages}
+          changePage={this.props.changePage}
+          movePageBack={this.props.movePageBack}
+          movePageForward={this.props.movePageForward}
+          changePageSize={this.props.changePageSize}
+          onSelectCategory={this.props.onSelectCategory}
+          category={this.props.category}
+          onSearchCategory={this.props.onSearchCategory}
+          newSayingActions={this.props.newSayingActions}
+          onClearSayingToAction={this.props.onClearSayingToAction}
+        />}
+      </Grid>
+    </Grid>;
   }
 }
 

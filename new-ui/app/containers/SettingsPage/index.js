@@ -4,31 +4,26 @@
  *
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { compose } from 'redux';
-
-import injectSaga from 'utils/injectSaga';
-
-import saga from './saga';
-import messages from './messages';
-
 import { Grid } from '@material-ui/core';
-import ContentHeader from 'components/ContentHeader';
-import Form from './Components/Form';
-import ActionButtons from './Components/ActionButtons';
-
-import { makeSelectSettings } from '../App/selectors';
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import ContentHeader from '../../components/ContentHeader';
+import injectSaga from '../../utils/injectSaga';
 import {
+  addFallbackResponse,
+  changeSettingsData,
+  deleteFallbackResponse,
   loadSettings,
   updateSettings,
-  changeSettingsData,
-  addFallbackResponse,
-  deleteFallbackResponse,
 } from '../App/actions';
+import { makeSelectSettings } from '../App/selectors';
+import ActionButtons from './Components/ActionButtons';
+import Form from './Components/Form';
+import messages from './messages';
+import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
 export class SettingsPage extends React.PureComponent {
@@ -60,7 +55,7 @@ export class SettingsPage extends React.PureComponent {
     },
   };
 
-  submit(){
+  submit() {
     let errors = false;
     const newErrorState = {
       rasaURL: false,
@@ -79,153 +74,146 @@ export class SettingsPage extends React.PureComponent {
       defaultAgentFallbackResponses: false,
     };
 
-    if (!this.props.settings.rasaURL || this.props.settings.rasaURL === ''){
+    if (!this.props.settings.rasaURL || this.props.settings.rasaURL === '') {
       errors = true;
       newErrorState.rasaURL = true;
-    }
-    else {
+    } else {
       newErrorState.rasaURL = false;
     }
 
-    if (!this.props.settings.ducklingURL || this.props.settings.ducklingURL === ''){
+    if (!this.props.settings.ducklingURL || this.props.settings.ducklingURL === '') {
       errors = true;
       newErrorState.ducklingURL = true;
-    }
-    else {
+    } else {
       newErrorState.ducklingURL = false;
     }
 
-    if (!this.props.settings.defaultAgentFallbackResponses || this.props.settings.defaultAgentFallbackResponses.length === 0){
+    if (!this.props.settings.defaultAgentFallbackResponses || this.props.settings.defaultAgentFallbackResponses.length === 0) {
       errors = true;
       newErrorState.defaultAgentFallbackResponses = true;
-    }
-    else {
+    } else {
       newErrorState.defaultAgentFallbackResponses = false;
     }
 
     if (!Array.isArray(this.props.settings.agentLanguages) ||
-    (Array.isArray(this.props.settings.agentLanguages) &&
-    this.props.settings.agentLanguages.filter((agentLanguage) => agentLanguage.value === this.props.settings.defaultAgentLanguage).length === 0)  ||
-      !this.props.settings.defaultAgentLanguage || this.props.settings.defaultAgentLanguage === ''){
+      (Array.isArray(this.props.settings.agentLanguages) &&
+        this.props.settings.agentLanguages.filter((agentLanguage) => agentLanguage.value === this.props.settings.defaultAgentLanguage).length === 0) ||
+      !this.props.settings.defaultAgentLanguage || this.props.settings.defaultAgentLanguage === '') {
       errors = true;
       newErrorState.defaultAgentLanguage = true;
-    }
-    else {
+    } else {
       newErrorState.defaultAgentLanguage = false;
     }
 
     if (!Array.isArray(this.props.settings.uiLanguages) ||
       (Array.isArray(this.props.settings.uiLanguages) &&
         this.props.settings.uiLanguages.filter((uiLanguage) => uiLanguage.value === this.props.settings.uiLanguage).length === 0) ||
-      !this.props.settings.uiLanguage || this.props.settings.uiLanguage === ''){
+      !this.props.settings.uiLanguage || this.props.settings.uiLanguage === '') {
       errors = true;
       newErrorState.uiLanguage = true;
-    }
-    else {
+    } else {
       newErrorState.uiLanguage = false;
     }
 
     if (!Array.isArray(this.props.settings.timezones) ||
       (Array.isArray(this.props.settings.timezones) &&
         this.props.settings.timezones.indexOf(this.props.settings.defaultTimezone) === -1) ||
-      !this.props.settings.defaultTimezone || this.props.settings.defaultTimezone === ''){
+      !this.props.settings.defaultTimezone || this.props.settings.defaultTimezone === '') {
       errors = true;
       newErrorState.defaultTimezone = true;
-    }
-    else {
+    } else {
       newErrorState.defaultTimezone = false;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.ducklingDimension)){
-        throw 'Duckling dimensiones is not an array';
+      if (!Array.isArray(this.props.settings.ducklingDimension)) {
+        throw 'Duckling dimensions is not an array';
       }
       newErrorState.ducklingDimension = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.ducklingDimension = true;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.categoryClassifierPipeline)){
+      if (!Array.isArray(this.props.settings.categoryClassifierPipeline)) {
         throw 'Category classifier pipeline is not an array';
       }
       newErrorState.categoryClassifierPipeline = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.categoryClassifierPipeline = true;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.sayingClassifierPipeline)){
+      if (!Array.isArray(this.props.settings.sayingClassifierPipeline)) {
         throw 'Saying classifier pipeline is not an array';
       }
       newErrorState.sayingClassifierPipeline = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.sayingClassifierPipeline = true;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.keywordClassifierPipeline)){
+      if (!Array.isArray(this.props.settings.keywordClassifierPipeline)) {
         throw 'Keyword classifier pipeline is not an array';
       }
       newErrorState.keywordClassifierPipeline = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.keywordClassifierPipeline = true;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.spacyPretrainedEntities)){
+      if (!Array.isArray(this.props.settings.spacyPretrainedEntities)) {
         throw 'Spacy pretrained entities is not an array';
       }
       newErrorState.spacyPretrainedEntities = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.spacyPretrainedEntities = true;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.timezones)){
+      if (!Array.isArray(this.props.settings.timezones)) {
         throw 'Timezones is not an array';
       }
       newErrorState.timezones = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.timezones = true;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.agentLanguages)){
+      if (!Array.isArray(this.props.settings.agentLanguages)) {
         throw 'Agent languages is not an array of object';
       }
       newErrorState.agentLanguages = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.agentLanguages = true;
     }
 
     try {
-      if (!Array.isArray(this.props.settings.uiLanguages)){
+      if (!Array.isArray(this.props.settings.uiLanguages)) {
         throw 'UI languages is not an array of object';
       }
       newErrorState.uiLanguages = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.uiLanguages = true;
     }
 
-    if (!errors){
+    if (!errors) {
       this.setState({
         formError: false,
       });
       this.props.onSaveChanges();
-    }
-    else {
+    } else {
       this.setState({
         formError: true,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
     }
   }
@@ -273,7 +261,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(loadSettings());
     },
     onChangeSettingsData: (field, value) => {
-      dispatch(changeSettingsData({ field, value }))
+      dispatch(changeSettingsData({ field, value }));
     },
     onSaveChanges: () => {
       dispatch(updateSettings());
@@ -296,5 +284,5 @@ const withSaga = injectSaga({ key: 'settings', saga });
 
 export default compose(
   withSaga,
-  withConnect
+  withConnect,
 )(SettingsPage);

@@ -1,55 +1,30 @@
-import Immutable from 'seamless-immutable';
-
 import {
-  takeLatest,
   call,
   put,
   select,
+  takeLatest,
 } from 'redux-saga/effects';
+import Immutable from 'seamless-immutable';
 
 import {
-  loadAgentError,
-  loadAgentSuccess,
-  addAgentSuccess,
   addAgentError,
-  updateAgentSuccess,
+  addAgentSuccess,
   updateAgentError,
+  updateAgentSuccess,
 } from '../App/actions';
 
 import {
-  LOAD_AGENT,
   ADD_AGENT,
   UPDATE_AGENT,
 } from '../App/constants';
 
 import {
   makeSelectAgent,
-  makeSelectCurrentAgent,
-  makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
+  makeSelectAgentWebhook,
+  makeSelectCurrentAgent,
 } from '../App/selectors';
-
-export function* getAgent(payload) {
-  const { api, agentId } = payload;
-  try {
-    let response = yield call(api.agent.getAgentAgentid, { agentId });
-    const agent = response.obj;
-    agent.categoryClassifierThreshold *= 100;
-    let webhook, postFormat;
-    if (agent.useWebhook){
-      response = yield call(api.agent.getAgentIdWebhook, { agentId });
-      webhook = response.obj;
-    }
-    if (agent.usePostFormat){
-      response = yield call(api.agent.getAgentIdPostformat, { agentId });
-      postFormat = response.obj;
-    }
-    yield put(loadAgentSuccess({ agent, webhook, postFormat }));
-  } catch (err) {
-    yield put(loadAgentError(err));
-  }
-}
 
 function* postAgentWebhook(payload) {
   const agent = yield select(makeSelectAgent());
@@ -79,7 +54,7 @@ function* putAgentWebhook(payload) {
   const mutableAgentWebhook = Immutable.asMutable(agentWebhook);
   const { api } = payload;
   delete mutableAgentWebhook.agent;
-  if (mutableAgentWebhook.id){ // TODO: Check why webhook have an id
+  if (mutableAgentWebhook.id) { // TODO: Check why webhook have an id
     delete mutableAgentWebhook.id;
   }
   try {
@@ -95,7 +70,7 @@ function* putAgentPostFormat(payload) {
   const mutablePostFormat = Immutable.asMutable(agentPostFormat);
   const { api } = payload;
   delete mutablePostFormat.agent;
-  if (mutablePostFormat.id){ // TODO: Check why post format have an id
+  if (mutablePostFormat.id) { // TODO: Check why post format have an id
     delete mutablePostFormat.id;
   }
   try {
@@ -139,10 +114,10 @@ export function* postAgent(payload) {
   const { api } = payload;
   try {
     const response = yield call(api.agent.postAgent, { body: agent });
-    if (agent.useWebhook){
+    if (agent.useWebhook) {
       yield call(postAgentWebhook, { id: response.obj.id, api });
     }
-    if (agent.usePostFormat){
+    if (agent.usePostFormat) {
       yield call(postAgentPostFormat, { id: response.obj.id, api });
     }
     yield call(putAgentSettings, { id: response.obj.id, api });
@@ -163,29 +138,25 @@ export function* putAgent(payload) {
   try {
     yield call(putAgentSettings, { id: currentAgent.id, api });
     const response = yield call(api.agent.putAgentAgentid, { agentId: currentAgent.id, body: mutableAgent });
-    if (!currentAgent.useWebhook){
+    if (!currentAgent.useWebhook) {
       if (agent.useWebhook) {
         yield call(postAgentWebhook, { id: currentAgent.id, api });
       }
-    }
-    else if (currentAgent.useWebhook){
-      if (!agent.useWebhook){
+    } else if (currentAgent.useWebhook) {
+      if (!agent.useWebhook) {
         yield call(deleteAgentWebhook, { id: currentAgent.id, api });
-      }
-      else {
+      } else {
         yield call(putAgentWebhook, { id: currentAgent.id, api });
       }
     }
-    if (!currentAgent.usePostFormat){
+    if (!currentAgent.usePostFormat) {
       if (agent.usePostFormat) {
         yield call(postAgentPostFormat, { id: currentAgent.id, api });
       }
-    }
-    else if (currentAgent.usePostFormat){
-      if (!agent.usePostFormat){
+    } else if (currentAgent.usePostFormat) {
+      if (!agent.usePostFormat) {
         yield call(deleteAgentPostFormat, { id: currentAgent.id, api });
-      }
-      else {
+      } else {
         yield call(putAgentPostFormat, { id: currentAgent.id, api });
       }
     }
@@ -196,7 +167,6 @@ export function* putAgent(payload) {
 }
 
 export default function* rootSaga() {
-  yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(ADD_AGENT, postAgent);
   yield takeLatest(UPDATE_AGENT, putAgent);
 };

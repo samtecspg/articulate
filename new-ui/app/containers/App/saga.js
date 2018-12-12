@@ -1,37 +1,36 @@
 import {
-  takeLatest,
-  select,
-  put,
   call,
+  put,
+  select,
+  takeLatest,
 } from 'redux-saga/effects';
 
 import {
+  LOAD_AGENT,
   LOAD_DOC,
   LOAD_SETTINGS,
-  SEND_MESSAGE,
   RESET_SESSION,
+  SEND_MESSAGE,
   TRAIN_AGENT,
 } from '../App/constants';
 
-import {
-  getSettings,
-} from '../SettingsPage/saga';
+import { getSettings } from '../SettingsPage/saga';
 
 import {
-  respondMessage,
-  resetSessionSuccess,
-  loadDocSuccess,
+  loadAgentError,
+  loadAgentSuccess,
   loadDocError,
+  loadDocSuccess,
+  resetSessionSuccess,
+  respondMessage,
   trainAgentError,
 } from './actions';
 
-import {
-  makeSelectAgent,
-} from './selectors';
+import { makeSelectAgent } from './selectors';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
-  if (agent.id){
+  if (agent.id) {
     const { api, message } = payload;
     try {
       const response = yield call(api.agent.postAgentAgentidConverse, {
@@ -50,11 +49,10 @@ export function* postConverse(payload) {
       yield put(respondMessage({
         author: 'Error',
         docId: null,
-        message: 'I\'m sorry. An error ocurred calling Articulate\'s converse service. This is not an issue with your agent.',
+        message: 'I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.',
       }));
     }
-  }
-  else {
+  } else {
     yield put(respondMessage({
       author: 'Warning',
       docId: null,
@@ -69,14 +67,13 @@ export function* deleteSession(payload) {
     yield call(api.context.deleteContextSessionidFrame, { sessionId: 'articulateUI' });
     yield put(resetSessionSuccess());
   } catch ({ response }) {
-    if (response.status && response.status === 404){
+    if (response.status && response.status === 404) {
       yield put(resetSessionSuccess());
-    }
-    else {
+    } else {
       yield put(respondMessage({
         author: 'Error',
         docId: null,
-        message: 'I\'m sorry. An error ocurred cleaning your session data.',
+        message: 'I\'m sorry. An error occurred cleaning your session data.',
       }));
     }
   }
@@ -102,7 +99,29 @@ export function* postTrainAgent(payload) {
   }
 }
 
+export function* getAgent(payload) {
+  const { api, agentId } = payload;
+  try {
+    let response = yield call(api.agent.getAgentAgentid, { agentId });
+    const agent = response.obj;
+    agent.categoryClassifierThreshold *= 100;
+    let webhook, postFormat;
+    if (agent.useWebhook) {
+      response = yield call(api.agent.getAgentIdWebhook, { agentId });
+      webhook = response.obj;
+    }
+    if (agent.usePostFormat) {
+      response = yield call(api.agent.getAgentIdPostformat, { agentId });
+      postFormat = response.obj;
+    }
+    yield put(loadAgentSuccess({ agent, webhook, postFormat }));
+  } catch (err) {
+    yield put(loadAgentError(err));
+  }
+}
+
 export default function* rootSaga() {
+  yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(SEND_MESSAGE, postConverse);
   yield takeLatest(RESET_SESSION, deleteSession);

@@ -7,45 +7,43 @@
  *
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { Switch, Route } from 'react-router-dom';
-import { createStructuredSelector } from 'reselect';
 import Nes from 'nes';
-
-import injectSaga from 'utils/injectSaga';
-
-import saga from './saga';
-
-import AppHeader from 'components/AppHeader';
-import AppContent from 'components/AppContent';
-
-import AgentsPage from 'containers/AgentsPage/Loadable';
-import AgentPage from 'containers/AgentPage/Loadable';
-import SayingsPage from 'containers/SayingsPage/Loadable';
-import KeywordsPage from 'containers/KeywordsPage/Loadable';
-import KeywordsEditPage from 'containers/KeywordsEditPage/Loadable';
-import CategoryPage from 'containers/CategoryPage/Loadable';
-import ActionPage from 'containers/ActionPage/Loadable';
-import SettingsPage from 'containers/SettingsPage/Loadable';
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import MissingAPIPage from 'containers/MissingAPIPage/Loadable';
-
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import {
+  Route,
+  Switch,
+} from 'react-router-dom';
+import { push } from 'react-router-redux';
+import { createStructuredSelector } from 'reselect';
+import AppContent from '../../components/AppContent';
+import AppHeader from '../../components/AppHeader';
+import injectSaga from '../../utils/injectSaga';
+import ActionPage from '../ActionPage/Loadable';
+import AgentPage from '../AgentPage/Loadable';
+import AgentsPage from '../AgentsPage/Loadable';
+import CategoryPage from '../CategoryPage/Loadable';
+import KeywordsEditPage from '../KeywordsEditPage/Loadable';
+import KeywordsPage from '../KeywordsPage/Loadable';
+import MissingAPIPage from '../MissingAPIPage/Loadable';
+import NotFoundPage from '../NotFoundPage/Loadable';
+import ReviewPage from '../ReviewPage/Loadable';
+import SayingsPage from '../SayingsPage/Loadable';
+import SettingsPage from '../SettingsPage/Loadable';
 import {
   checkAPI,
+  loadAgent,
+  loadAgentSuccess,
   loadSettings,
   toggleConversationBar,
-  loadAgentSuccess,
 } from './actions';
-
+import saga from './saga';
 import {
   makeSelectAgent,
-  makeSelectMissingAPI,
-  makeSelectLocation,
   makeSelectConversationBarOpen,
+  makeSelectLocation,
+  makeSelectMissingAPI,
 } from './selectors';
 
 class App extends React.Component {
@@ -56,15 +54,15 @@ class App extends React.Component {
     socketClientConnected: false,
   };
 
-  componentWillMount(){
+  componentWillMount() {
     this.props.onLoadSettings();
     this.props.onCheckAPI();
-    if (!this.state.socketClientConnected){
+    if (!this.state.socketClientConnected) {
       const client = new Nes.Client(process.env.WS_URL);
       client.connect((err) => {
 
-        if (err){
-          console.error('An error ocurred connecting to the socket: ', err);
+        if (err) {
+          console.error('An error occurred connecting to the socket: ', err);
         }
         this.setState({
           client,
@@ -74,38 +72,38 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount(){
-    if (this.props.missingAPI){
+  componentDidMount() {
+    if (this.props.missingAPI) {
       this.props.onMissingAPI(this.props.location.pathname);
     }
   }
 
-  componentWillUpdate(){
+  componentWillUpdate() {
     this.props.onCheckAPI(this.props.location.pathname);
   }
 
-  componentDidUpdate(){
-    if (this.props.missingAPI){
+  componentDidUpdate() {
+    if (this.props.missingAPI) {
       this.props.onMissingAPI(this.props.location.pathname);
     }
     // If an agent is loaded
-    if (this.props.agent.id){
+    if (this.props.agent.id) {
       // If is different than the current agent
-      if (this.props.agent.id !== this.state.agent){
+      if (this.props.agent.id !== this.state.agent) {
         // If the socket was already subscribed to an agent
-        if (this.state.agent){
+        if (this.state.agent) {
           // Unscribe from the agent
           this.state.client.unsubscribe(`/agent/${this.state.agent}`);
         }
         const handler = (agent) => {
 
-          if (agent){
+          if (agent) {
             this.props.onRefreshAgent(agent);
           }
         };
         this.state.client.subscribe(`/agent/${this.props.agent.id}`, handler, (errSubscription) => {
-          if (errSubscription){
-            console.error(`An error ocurred subscribing to the agent ${this.props.agent.agentName}: ${errSubscription}`);
+          if (errSubscription) {
+            console.error(`An error occurred subscribing to the agent ${this.props.agent.agentName}: ${errSubscription}`);
           }
         });
         this.setState({
@@ -115,20 +113,38 @@ class App extends React.Component {
     }
   }
 
-  render (){
-    const { conversationBarOpen, onToggleConversationBar } = this.props;
+  render() {
+    const { conversationBarOpen, onToggleConversationBar, onLoadAgent, agent } = this.props;
     return (
       <div>
-        <AppHeader onToggleConversationBar={onToggleConversationBar} conversationBarOpen={conversationBarOpen}/>
+        <AppHeader onToggleConversationBar={onToggleConversationBar} conversationBarOpen={conversationBarOpen} />
         <AppContent conversationBarOpen={conversationBarOpen}>
           <Switch>
             <Route exact path='/' component={AgentsPage} />
-            <Route exact path='/agent/:id' component={AgentPage} />
-            <Route exact path='/agent/:id/sayings' component={SayingsPage} />
-            <Route exact path='/agent/:id/keywords' component={KeywordsPage} />
-            <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
-            <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
-            <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
+            <Route
+              path='/agent/:id'
+              render={(props) => {
+                const { match } = props;
+                const { id } = match.params;
+                if (agent.id && (agent.id === id)) {
+                  return (
+                    <Switch>
+                      <Route exact path='/agent/:id' component={AgentPage} />
+                      <Route exact path='/agent/:id/sayings' component={SayingsPage} />
+                      <Route exact path='/agent/:id/review' component={ReviewPage} />
+                      <Route exact path='/agent/:id/keywords' component={KeywordsPage} />
+                      <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
+                      <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
+                      <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
+                    </Switch>
+                  );
+                }
+                onLoadAgent(id);
+                return null;
+
+              }}
+            />
+
             <Route exact path='/settings' component={SettingsPage} />
             <Route exact path='/missing-api' component={MissingAPIPage} />
             <Route component={NotFoundPage} />
@@ -153,12 +169,12 @@ App.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     onMissingAPI: (refURL) => {
-      if (refURL !== '/missing-api'){
+      if (refURL !== '/missing-api') {
         dispatch(push('/missing-api'));
       }
     },
     onCheckAPI: (refURL) => {
-      if (refURL && refURL !== '/missing-api'){
+      if (refURL && refURL !== '/missing-api') {
         dispatch(checkAPI(refURL));
       }
       dispatch(checkAPI());
@@ -170,7 +186,10 @@ export function mapDispatchToProps(dispatch) {
       dispatch(toggleConversationBar(value));
     },
     onRefreshAgent: (agent) => {
-      dispatch(loadAgentSuccess({agent}))
+      dispatch(loadAgentSuccess({ agent }));
+    },
+    onLoadAgent: (agentId) => {
+      dispatch(loadAgent(agentId));
     },
   };
 }

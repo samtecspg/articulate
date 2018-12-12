@@ -8,7 +8,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   ducklingSettingDescription: {
     id: 'app.components.DucklingSettings.ducklingSettingDescription',
-    defaultMessage: 'You can specify the address to your duckling server and also the dimensiones you want to use from the duckling service.',
+    defaultMessage: 'You can specify the address to your duckling server and also the dimensions you want to use from the duckling service.',
   },
   ducklingURL: {
     id: 'app.components.DucklingSettings.ducklingURL',
