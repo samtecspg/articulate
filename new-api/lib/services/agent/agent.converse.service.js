@@ -388,10 +388,10 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             }
             if (storeInQueue){
                 await storeDataInQueue({ conversationStateObject, action: recognizedActionName, response: finalResponse });
-                if (firstUnfulfilledAction){
+                /*if (firstUnfulfilledAction){
                     data.push(finalResponse);
                     firstUnfulfilledAction = false;
-                }
+                }*/
             }
             else {
                 if (indexOfActionInQueue !== -1){
