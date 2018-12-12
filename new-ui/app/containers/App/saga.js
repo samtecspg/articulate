@@ -65,7 +65,7 @@ export function* deleteSession(payload) {
   try {
     const { api } = payload;
     yield call(api.context.deleteContextSessionidFrame, { sessionId: 'articulateUI' });
-    yield call(api.context.patchContextSessionid, { sessionId: 'articulateUI', data: {
+    yield call(api.context.patchContextSessionid, { sessionId: 'articulateUI', body: {
       actionQueue: [],
       responseQueue: []
     }});
