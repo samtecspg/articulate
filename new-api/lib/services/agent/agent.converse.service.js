@@ -403,7 +403,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             context: conversationStateObject.context
         });
         textResponses = textResponses.concat(responsesFromQueue);
-        const textResponse = textResponses.length === 1 ? textResponses : textResponses.join('. ');
+        const textResponse = textResponses.length === 1 ? textResponses : textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
         return {
             textResponse,
