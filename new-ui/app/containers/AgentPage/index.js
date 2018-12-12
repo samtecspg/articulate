@@ -332,7 +332,6 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   webhook: makeSelectAgentWebhook(),
   postFormat: makeSelectAgentPostFormat(),
-  settings: makeSelectSettings(),
   agentSettings: makeSelectAgentSettings(),
   settings: makeSelectSettings(),
   success: makeSelectSuccess(),

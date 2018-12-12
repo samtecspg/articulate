@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import xIcon from '../../../images/x-icon.svg';

@@ -12,7 +12,6 @@ const styles = {
     marginTop: '60px',
   },
   image: {
-    width: '300px',
     height: '300px',
     display: 'block',
     margin: 'auto',

@@ -237,7 +237,6 @@ KeywordDataForm.propTypes = {
   intl: intlShape.isRequired,
   keyword: PropTypes.object,
   onChangeKeywordData: PropTypes.func.isRequired,
-  onChangeKeywordData: PropTypes.func,
   onAddKeywordExample: PropTypes.func,
   onDeleteKeywordExample: PropTypes.func,
   onChangeExampleSynonyms: PropTypes.func,

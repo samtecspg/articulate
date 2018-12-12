@@ -54,7 +54,7 @@ export function* getAgent(payload) {
 function* postAgentWebhook(payload) {
   const agent = yield select(makeSelectAgent());
   const agentWebhook = yield select(makeSelectAgentWebhook());
-  const { api, id } = payload;
+  const { api } = payload;
   try {
     yield call(api.agent.postAgentAgentidWebhook, { agentId: agent.id, body: agentWebhook });
   } catch (err) {
@@ -65,7 +65,7 @@ function* postAgentWebhook(payload) {
 function* postAgentPostFormat(payload) {
   const agent = yield select(makeSelectAgent());
   const agentPostFormat = yield select(makeSelectAgentPostFormat());
-  const { api, id } = payload;
+  const { api } = payload;
   try {
     yield call(api.agent.postAgentAgentidPostformat, { agentId: agent.id, body: agentPostFormat });
   } catch (err) {
@@ -77,7 +77,7 @@ function* putAgentWebhook(payload) {
   const agent = yield select(makeSelectAgent());
   const agentWebhook = yield select(makeSelectAgentWebhook());
   const mutableAgentWebhook = Immutable.asMutable(agentWebhook);
-  const { api, id } = payload;
+  const { api } = payload;
   delete mutableAgentWebhook.agent;
   if (mutableAgentWebhook.id){ // TODO: Check why webhook have an id
     delete mutableAgentWebhook.id;
@@ -93,7 +93,7 @@ function* putAgentPostFormat(payload) {
   const agent = yield select(makeSelectAgent());
   const agentPostFormat = yield select(makeSelectAgentPostFormat());
   const mutablePostFormat = Immutable.asMutable(agentPostFormat);
-  const { api, id } = payload;
+  const { api } = payload;
   delete mutablePostFormat.agent;
   if (mutablePostFormat.id){ // TODO: Check why post format have an id
     delete mutablePostFormat.id;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { Grid, FormControl, MenuItem, Select, TextField } from '@material-ui/core';
@@ -64,6 +63,7 @@ const styles = {
   categoryLabel: {
     textDecoration: 'none',
     color: 'inherit',
+    fontSize: '12px',
   },
   categorySelectContainer: {
     margin: '0px',
@@ -75,9 +75,6 @@ const styles = {
     padding: '5px',
     backgroundColor: '#f6f7f8',
     border: 'none',
-  },
-  categoryLabel: {
-    fontSize: '12px',
   },
 };
 

@@ -1,22 +1,33 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import {
+  Grid,
+  MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import 'brace/mode/json';
+
+import 'brace/mode/xml';
+import 'brace/theme/terminal';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, TextField, MenuItem, Table, TableBody, TableRow, TableCell } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import AceEditor from 'react-ace';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
 
 import AutoComplete from '../../../components/AutoComplete';
 
-import brace from 'brace';
-import AceEditor from 'react-ace';
-
-import 'brace/mode/xml';
-import 'brace/mode/json';
-import 'brace/theme/terminal';
+import trashIcon from '../../../images/trash-icon.svg';
 
 import messages from '../messages';
-
-import trashIcon from '../../../images/trash-icon.svg';
 
 const styles = {
   panelContent: {
@@ -62,8 +73,8 @@ export class GeneralSettings extends React.Component {
       const value = JSON.parse(editorValue); // Ace editor send the value directly to the method as an string
       this.props.onChangeSettingsData(field, value);
     } catch(e) {
-      const value = editorValue; // Given the parse of the json failed store the value in the state as a string
-      this.props.onChangeSettingsData(field, value);
+      // Given the parse of the json failed store the value in the state as a string
+      this.props.onChangeSettingsData(field, editorValue);
     }
   }
 

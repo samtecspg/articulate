@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, TextField } from "@material-ui/core";
+import { Grid, Typography, Button, Modal} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 

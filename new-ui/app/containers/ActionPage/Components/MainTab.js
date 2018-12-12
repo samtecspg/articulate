@@ -30,7 +30,7 @@ export class MainTab extends React.Component {
   };
 
   render() {
-    const { classes, intl, selectedTab } = this.props;
+    const { classes, intl } = this.props;
     return (
       <Grid container>
         <Hidden only={['sm', 'xs']}>
