@@ -411,6 +411,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
         await saveContextQueues({ context: conversationStateObject.context });
         return {
             textResponse,
+            docId: conversationStateObject.docId,
             responses
         }
     }
