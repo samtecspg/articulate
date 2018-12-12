@@ -294,39 +294,39 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
 
-        //This block will handle sessionIds that doesn't exists
-        //If the sessionId doesn't exists it creates one context for that session
-        //And adds a frames attribute which is an empty array
-        //The frames will be updated once converse resolve the value
-        let context;
-        try {
-            context = await contextService.findBySession({ sessionId, loadFrames: true });
-        }
-        catch (error) {
-            if (error.statusCode && error.statusCode === 404) {
-                context = await contextService.create({ data: { sessionId } });
-                context.frames = [];
-            }
-            else {
-                return Promise.reject(error);
-            }
-        }
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true });
-
         const recognizedActionNames = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name.split('+');
 
-        conversationStateObject[CSO_CONTEXT] = context;
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
         conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false });
         conversationStateObject[CSO_AGENT].categories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });
 
         let storeInQueue = false;
-        let firstUnfulfilledAction = true;
         let currentQueueIndex = 0
 
         const responses = await recognizedActionNames.reduce(async (previousPromise, recognizedActionName) => {
             let finalResponse = null;
             const data = await previousPromise;
+
+            //This block will handle sessionIds that doesn't exists
+            //If the sessionId doesn't exists it creates one context for that session
+            //And adds a frames attribute which is an empty array
+            //The frames will be updated once converse resolve the value
+            let context;
+            try {
+                context = await contextService.findBySession({ sessionId, loadFrames: true });
+            }
+            catch (error) {
+                if (error.statusCode && error.statusCode === 404) {
+                    context = await contextService.create({ data: { sessionId } });
+                    context.frames = [];
+                }
+                else {
+                    return Promise.reject(error);
+                }
+            }
+            conversationStateObject[CSO_CONTEXT] = context;
+
             const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: recognizedActionName });
             if (indexOfActionInQueue !== -1){
                 moveOnQueue({
@@ -388,10 +388,6 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             }
             if (storeInQueue){
                 await storeDataInQueue({ conversationStateObject, action: recognizedActionName, response: finalResponse });
-                /*if (firstUnfulfilledAction){
-                    data.push(finalResponse);
-                    firstUnfulfilledAction = false;
-                }*/
             }
             else {
                 if (indexOfActionInQueue !== -1){
