@@ -47,7 +47,6 @@ const styles = {
     marginTop: '25px !important',
   },
   inputRoot: {
-    display: 'block',
     marginTop: '0px !important',
   },
   chip: {
@@ -166,7 +165,7 @@ class KeywordDataForm extends React.Component {
                     className={exampleIndex !== 0 ? classes.keywordValueInput : ''}
                     value={example.value}
                     label={exampleIndex === 0 ? intl.formatMessage(messages.newKeywordValueTextField) : null}
-                    placeholder={intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder)}
+                    placeholder={keyword.type === 'learned' ? intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder) : intl.formatMessage(messages.newKeywordRegexTextFieldPlaceholder)}
                     onChange={(evt) => { this.props.onChangeExampleName(exampleIndex, evt.target.value) }}
                     margin='normal'
                     fullWidth
@@ -201,7 +200,7 @@ class KeywordDataForm extends React.Component {
                   id='newExampleValue'
                   value={this.state.newKeyword}
                   className={classes.keywordValueInput}
-                  placeholder={intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder)}
+                  placeholder={keyword.type === 'learned' ? intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder) : intl.formatMessage(messages.newKeywordRegexTextFieldPlaceholder)}
                   onKeyPress={(evt) => {
                     if(evt.key === 'Enter'){
                       evt.preventDefault();

@@ -215,7 +215,7 @@ export default createMuiTheme({
         "color": "#4e4e4e",
       },
     },
-    "MuiTabScrollButton": {
+    "MuiPrivateTabScrollButton": {
       "root": {
         "flex": "0 0 30px",
       },

@@ -44,6 +44,7 @@ const styles = {
     position: 'relative',
   },
   pageControl: {
+    marginTop: '5px',
     webkitTouchCallout: 'none',
     webkitUserSelect: 'none',
     khtmlUserSelect: 'none',
@@ -61,7 +62,6 @@ const styles = {
   pageTextfield: {
     width: '75px',
     margin: '5px',
-    height: 0,
     marginTop: '0px !important',
     direction: 'ltr',
   },

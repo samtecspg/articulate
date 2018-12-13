@@ -87,6 +87,10 @@ export default defineMessages({
     id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.newKeywordValueTextFieldPlaceholder',
     defaultMessage: 'Type keyword value',
   },
+  newKeywordRegexTextFieldPlaceholder: {
+    id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.newKeywordValueTextFieldPlaceholder',
+    defaultMessage: 'Type regex value',
+  },
   newKeywordValueSynonymTextField: {
     id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.newKeywordValueSynonymTextFieldPlaceholder',
     defaultMessage: 'Synonym Values:',
