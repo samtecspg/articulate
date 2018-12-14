@@ -121,30 +121,13 @@ class App extends React.Component {
         <AppContent conversationBarOpen={conversationBarOpen}>
           <Switch>
             <Route exact path='/' component={AgentsPage} />
-            <Route
-              path='/agent/:id'
-              render={(props) => {
-                const { match } = props;
-                const { id } = match.params;
-                if (agent.id && (agent.id === id)) {
-                  return (
-                    <Switch>
-                      <Route exact path='/agent/:id' component={AgentPage} />
-                      <Route exact path='/agent/:id/sayings' component={SayingsPage} />
+            <Route exact path='/agent/:id' component={AgentPage} />
+            <Route exact path='/agent/:id/sayings' component={SayingsPage} />
                       {/*<Route exact path='/agent/:id/review' component={ReviewPage} />*/}
-                      <Route exact path='/agent/:id/keywords' component={KeywordsPage} />
-                      <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
-                      <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
-                      <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
-                    </Switch>
-                  );
-                }
-                onLoadAgent(id);
-                return null;
-
-              }}
-            />
-
+            <Route exact path='/agent/:id/keywords' component={KeywordsPage} />
+            <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
+            <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
+            <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
             <Route exact path='/settings' component={SettingsPage} />
             <Route exact path='/missing-api' component={MissingAPIPage} />
             <Route component={NotFoundPage} />
