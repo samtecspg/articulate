@@ -129,10 +129,10 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
-                    useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fulfilment.')),
-                    usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fulfilment.')),
-                    responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
+                    actionName: ActionSchema.actionName,
+                    useWebhook: ActionSchema.useWebhook,
+                    usePostFormat: ActionSchema.usePostFormat,
+                    responses: ActionSchema.responses.min(1).error(new Error('Please specify at least one response.')),
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),

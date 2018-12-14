@@ -15,7 +15,8 @@ module.exports = async function ({ id, actionId }) {
             { model: MODEL_AGENT, id },
             { model: MODEL_ACTION, id: actionId }
         ];
-        const actionModel = await globalService.findInModelPath({ modelPath, returnModel: true });
+        let actionModel = await globalService.findInModelPath({ modelPath, returnModel: true });
+        actionModel = actionModel.data;
         const children = await actionModel.getAll(MODEL_POST_FORMAT, MODEL_POST_FORMAT);
         if (children.length > 0) {
             return await postFormatService.remove({

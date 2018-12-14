@@ -237,14 +237,12 @@ const initialState = Immutable({
     responses: [],
   },
   actionWebhook: {
-    agent: '',
     webhookUrl: '',
     webhookVerb: 'GET',
     webhookPayloadType: 'None',
     webhookPayload: '',
   },
   actionPostFormat: {
-    agent: '',
     postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}',
   },
   actionOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
@@ -662,14 +660,12 @@ function appReducer(state = initialState, action) {
       let actionWebhook, actionPostFormat;
       if (!action.payload.action.useWebhook){
         actionWebhook = initialState.actionWebhook;
-        actionWebhook = actionWebhook.set('action', action.payload.action.actionName);
       }
       else {
         actionWebhook = action.payload.webhook;
       }
       if (!action.payload.action.usePostFormat){
         actionPostFormat = initialState.actionPostFormat;
-        actionPostFormat = actionPostFormat.set('action', action.payload.action.actionName);
       }
       else {
         actionPostFormat = action.payload.postFormat;
@@ -685,8 +681,6 @@ function appReducer(state = initialState, action) {
     case CHANGE_ACTION_NAME:
       return state
         .setIn(['action', action.payload.field], action.payload.value)
-        .setIn(['actionWebhook', 'action'], action.payload.value)
-        .setIn(['actionPostFormat', 'action'], action.payload.value)
         .set('actionTouched', true);
     case CHANGE_ACTION_DATA:
       return state.setIn(['action', action.payload.field], action.payload.value);
