@@ -1,11 +1,12 @@
 import _ from 'lodash';
 
-module.exports = function ({ responses, templateContext }) {
+module.exports = function ({ responses, templateContext, isTextPrompt = false }) {
 
     const { handlebars } = this.server.app;
 
     let parsedResponses = _.map(responses, (response) => {
 
+        response = isTextPrompt ? { textResponse: response, actions: [] } : response;
         const match = response.textResponse.match(/{{/g);
         const numberOfSlots = match ? match.length : 0;
         const compiledResponse = handlebars.compile(response.textResponse, { strict: true });

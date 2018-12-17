@@ -121,7 +121,7 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         });
         conversationStateObject.slots = currentContext.slots;
         if (missingKeywords.length > 0) {
-            const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject });
+            const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
             return response;
         }
     }
