@@ -137,6 +137,8 @@ import {
   UPDATE_CATEGORY,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
+  CHAIN_ACTION_TO_RESPONSE,
+  UNCHAIN_ACTION_FROM_RESPONSE,
 } from './constants';
 
 // The initial state of the App
@@ -687,9 +689,23 @@ function appReducer(state = initialState, action) {
     case ADD_NEW_SLOT:
       return state.updateIn(['action', 'slots'], slots => slots.concat(state.newSlot));
     case ADD_ACTION_RESPONSE:
-      return state.updateIn(['action', 'responses'], responses => responses.concat(action.newResponse));
+      return state.updateIn(['action', 'responses'], responses => responses.concat({ textResponse: action.newResponse, actions: [] }));
     case DELETE_ACTION_RESPONSE:
       return state.updateIn(['action', 'responses'], responses => responses.filter((item, index) => index !== action.responseIndex));
+    case CHAIN_ACTION_TO_RESPONSE:
+      return state.updateIn(['action', 'responses'], responses => responses.map((tempResponse, index) => {
+        if (index === action.responseIndex){
+          return tempResponse.update('actions', actions => actions.concat(action.actionName));
+        }
+        return tempResponse;
+      }));
+    case UNCHAIN_ACTION_FROM_RESPONSE:
+      return state.updateIn(['action', 'responses'], responses => responses.map((tempResponse, index) => {
+        if (index === action.responseIndex){
+          return tempResponse.update('actions', actions => actions.filter((item, index) => index !== action.actionIndex));
+        }
+        return tempResponse;
+      }));
     case CHANGE_SLOT_NAME:
       return state
         .updateIn(['action', 'slots'], slots =>

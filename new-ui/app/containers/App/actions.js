@@ -97,6 +97,8 @@ import {
   ADD_NEW_SLOT,
   ADD_ACTION_RESPONSE,
   DELETE_ACTION_RESPONSE,
+  CHAIN_ACTION_TO_RESPONSE,
+  UNCHAIN_ACTION_FROM_RESPONSE,
   CHANGE_SLOT_NAME,
   CHANGE_SLOT_DATA,
   ADD_SLOT_TEXT_PROMPT_SLOT,
@@ -816,6 +818,22 @@ export function deleteActionResponse(responseIndex) {
   return {
     type: DELETE_ACTION_RESPONSE,
     responseIndex,
+  }
+}
+
+export function chainActionToResponse(responseIndex, actionName) {
+  return {
+    type: CHAIN_ACTION_TO_RESPONSE,
+    responseIndex,
+    actionName
+  }
+}
+
+export function unchainActionFromResponse(responseIndex, actionIndex) {
+  return {
+    type: UNCHAIN_ACTION_FROM_RESPONSE,
+    responseIndex,
+    actionIndex
   }
 }
 

@@ -262,7 +262,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
         return actionIndex;
     };
 
-    const getResponsesFromQueue = async ({ context }) => {
+    const getResponsesFromQueue = ({ context }) => {
 
         const responses = [];
         const actionsToRemove = [];
@@ -287,6 +287,58 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             return actionsToRemove.indexOf(index) === -1;
         });
         return responses;
+    };
+
+    const getResponseOfChainedAction = ({ action }) => {
+
+        const response = {
+            actionWasFulfilled: true
+        };
+        //If the chained action have slots, then it wasn't fulfilled, therefore we prompt a random text prompt for the first slot
+        if (action.slots.length > 0){
+            response.actionWasFulfilled = false;
+            response.textResponse = action.slots[0].textPrompts[Math.floor(Math.random() * action.slots[0].textPrompts.length)];
+        }
+        else {
+            //If there aren't slots, then the action is fulfilled and we pull a random textResponse from the action responses
+            const textResponses = _.map(action.responses, 'textResponse');
+            response.textResponse = textResponses[Math.floor(Math.random() * textResponses.length)];
+        }
+        return response;
+    };
+
+    const chainResponseActions = ({ conversationStateObject, responseActions }) => {
+
+        const agentActions = conversationStateObject[CSO_AGENT].actions;
+        let currentQueueIndex = 0
+
+        responseActions.forEach((responseAction) => {
+            
+            let agentAction = _.filter(agentActions, (tempAction) => {
+
+                return tempAction.actionName === responseAction;
+            });
+            if (agentAction.length > 0){
+                agentAction = agentAction[0];
+                const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: agentAction.actionName });
+                if (indexOfActionInQueue !== -1){
+                    moveOnQueue({
+                        context: conversationStateObject.context,
+                        oldIndex: indexOfActionInQueue,
+                        newIndex: currentQueueIndex
+                    });
+                    currentQueueIndex++;
+                }
+                else {
+                    conversationStateObject.context.actionQueue.push({
+                        action: agentAction.actionName, 
+                        slots: {}
+                    });
+                    const response = getResponseOfChainedAction({ action: agentAction });
+                    conversationStateObject.context.responseQueue.push({ ...response });
+                }
+            }
+        });
     };
 
     const conversationStateObject = {};
@@ -395,11 +447,14 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
                 }
                 data.push(finalResponse);
             }
+            if (agentToolResponse.actionWasFulfilled && agentToolResponse.actions && agentToolResponse.actions.length > 0){
+                chainResponseActions({ conversationStateObject, responseActions: agentToolResponse.actions });
+            }
             return data;
         }, Promise.resolve([]));
         let textResponses = _.map(responses, 'textResponse');
         //extract responses from previous answers
-        const responsesFromQueue = await getResponsesFromQueue({
+        const responsesFromQueue = getResponsesFromQueue({
             context: conversationStateObject.context
         });
         textResponses = textResponses.concat(responsesFromQueue);

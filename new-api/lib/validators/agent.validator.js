@@ -21,6 +21,7 @@ import {
 const AgentSchema = require('../models/agent.model').schema;
 const CategorySchema = require('../models/category.model').schema;
 const ActionSchema = require('../models/action.model').schema;
+const ActionResponseSchema = require('../models/action.response.model').schema;
 const SlotSchema = require('../models/slot.model').schema;
 const KeywordSchema = require('../models/keyword.model').schema;
 const PostFormatSchema = require('../models/postFormat.model').schema;
@@ -49,7 +50,7 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
+                    language: AgentSchema.language.required(),
                     timezone: AgentSchema.timezone.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
@@ -104,7 +105,10 @@ class AgentValidate {
                     actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
                     useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fulfilment.')),
                     usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fulfilment.')),
-                    responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
+                    responses: Joi.array().items({
+                        textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
+                        actions: ActionResponseSchema.actions
+                    }).required().min(1).error(new Error('Please specify at least one response.')),
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -132,7 +136,10 @@ class AgentValidate {
                     actionName: ActionSchema.actionName,
                     useWebhook: ActionSchema.useWebhook,
                     usePostFormat: ActionSchema.usePostFormat,
-                    responses: ActionSchema.responses.min(1).error(new Error('Please specify at least one response.')),
+                    responses: Joi.array().items({
+                        textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
+                        actions: ActionResponseSchema.actions
+                    }).min(1).error(new Error('Please specify at least one response.')),
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -180,7 +187,7 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName,
                     description: AgentSchema.description,
-                    language: AgentSchema.language.error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
+                    language: AgentSchema.language,
                     timezone: AgentSchema.timezone,
                     useWebhook: AgentSchema.useWebhook,
                     usePostFormat: AgentSchema.usePostFormat,
@@ -573,7 +580,7 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.required().error(new Error('Please provide a valid language for the agent. Supported languages are: en, es, de, fr')),
+                    language: AgentSchema.language.required(),
                     timezone: AgentSchema.timezone.required(),
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
@@ -640,7 +647,10 @@ class AgentValidate {
                             webhookPayloadType: WebhookSchema.webhookPayloadType.required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
                             webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
                         },
-                        responses: ActionSchema.responses.required().min(1).error(new Error('Please specify at least one response.')),
+                        responses: Joi.array().items({
+                            textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
+                            actions: ActionResponseSchema.actions
+                        }).required().min(1).error(new Error('Please specify at least one response.')),
                         slots: Joi.array().items({
                             slotName: SlotSchema.slotName.required(),
                             uiColor: SlotSchema.uiColor.required(),

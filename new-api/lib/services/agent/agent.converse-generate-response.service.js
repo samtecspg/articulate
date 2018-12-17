@@ -121,8 +121,8 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         });
         conversationStateObject.slots = currentContext.slots;
         if (missingKeywords.length > 0) {
-            const textResponse = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject });
-            return { textResponse };
+            const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject });
+            return response;
         }
     }
     else {
@@ -148,11 +148,11 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return webhookResponse.textResponse;
+            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions: [] };
         }
-        const textResponse = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-        return { ...webhookResponse, ...{ textResponse }, actionWasFulfilled: true };
+        const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
+        return { webhookResponse, ...response, actionWasFulfilled: true };
     }
-    const textResponse = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-    return { textResponse, actionWasFulfilled: true };
+    const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
+    return { ...response, actionWasFulfilled: true };
 };

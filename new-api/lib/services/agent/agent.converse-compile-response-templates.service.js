@@ -6,35 +6,29 @@ module.exports = function ({ responses, templateContext }) {
 
     let parsedResponses = _.map(responses, (response) => {
 
-        const match = response.match(/{{/g);
-        const numberOfExpressions = match ? match.length : 0;
-        const compiledResponse = handlebars.compile(response, { strict: true });
+        const match = response.textResponse.match(/{{/g);
+        const numberOfSlots = match ? match.length : 0;
+        const compiledResponse = handlebars.compile(response.textResponse, { strict: true });
         try {
-            return { response: compiledResponse(templateContext), numberOfExpressions };
+            return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions };
         }
         catch (error) {
             return null;
         }
     });
 
-    try {
+    parsedResponses = _.compact(parsedResponses);
+    if (parsedResponses.length > 0) {
 
-        parsedResponses = _.compact(parsedResponses);
-        if (parsedResponses.length > 0) {
+        const maxNumberOfExpressions = _.max(_.map(parsedResponses, 'numberOfSlots'));
+        parsedResponses = _.filter(parsedResponses, (parsedResponse) => {
 
-            const maxNumberOfExpressions = _.max(_.map(parsedResponses, 'numberOfExpressions'));
-            parsedResponses = _.filter(parsedResponses, (parsedResponse) => {
-
-                return parsedResponse.response !== '' && parsedResponse.numberOfExpressions === maxNumberOfExpressions;
-            });
-        }
-        
-        if (parsedResponses.length > 0 ){
-            return parsedResponses[Math.floor(Math.random() * parsedResponses.length)].response;
-        }
-        return 'Sorry we’re not sure how to respond.';
+            return parsedResponse.textResponse !== '' && parsedResponse.numberOfSlots === maxNumberOfExpressions;
+        });
     }
-    catch (error) {
-        return { textResponse: 'We\'re having trouble fulfilling that request' };
+    
+    if (parsedResponses.length > 0 ){
+        return parsedResponses[Math.floor(Math.random() * parsedResponses.length)];
     }
+    return { textResponse: 'Sorry we’re not sure how to respond.', actions: [] };
 };

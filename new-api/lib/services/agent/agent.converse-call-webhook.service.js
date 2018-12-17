@@ -39,6 +39,6 @@ module.exports = async ({ url, templatePayload, payloadType, method, templateCon
         return response.data;
     }
     catch (error) {
-        return { textResponse: 'We\'re having trouble fulfilling that request' };
+        return { textResponse: 'We\'re having trouble fulfilling that request', actions: [] };
     }
 };

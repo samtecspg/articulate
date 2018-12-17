@@ -241,7 +241,7 @@ class SayingRow extends React.Component {
                   onClick={(evt) => this.handleOpen('actions', evt.target)}
                   className={classes.addActionIcon} src={addActionIcon}
                 />
-                <FormControl className={classes.formControl}>
+                <FormControl>
                   <Select
                     style={{
                       display:'none',
@@ -259,7 +259,7 @@ class SayingRow extends React.Component {
                       anchorEl: this.state.anchorEl,
                     }}
                   >
-                    <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction}/></MenuItem>
+                    <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
                     {
                       this.props.agentActions.map((action) => (
                         saying.actions.indexOf(action.actionName) === -1 ?
@@ -284,7 +284,7 @@ class SayingRow extends React.Component {
                       anchorReference: 'anchorPosition',
                     }}
                   >
-                    <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newKeyword}/></MenuItem>
+                    <MenuItem value='create'><FormattedMessage {...messages.newKeyword}/></MenuItem>
                     {agentKeywords.map((keyword, index) => (
                       <MenuItem key={`keyword_${index}`} value={`${keyword.id},${keyword.keywordName}`}>
                         <span style={{color: keyword.uiColor}} >{keyword.keywordName}</span>

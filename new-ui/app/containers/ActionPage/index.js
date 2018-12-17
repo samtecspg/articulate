@@ -35,6 +35,7 @@ import {
   makeSelectSuccess,
   makeSelectAgent,
   makeSelectSayingForAction,
+  makeSelectActions,
 } from '../App/selectors';
 
 import {
@@ -56,6 +57,8 @@ import {
   updateAction,
   resetStatusFlag,
   resetActionData,
+  chainActionToResponse,
+  unchainActionFromResponse,
 } from '../App/actions';
 
 const styles = {
@@ -305,7 +308,10 @@ export class ActionPage extends React.Component {
               agentKeywords={this.props.agentKeywords}
               onAddResponse={this.props.onAddResponse}
               onDeleteResponse={this.props.onDeleteResponse}
+              onChainActionToResponse={this.props.onChainActionToResponse}
+              onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
               errorState={this.state.errorState}
+              agentActions={this.props.agentActions}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -340,12 +346,16 @@ ActionPage.propTypes = {
   onChangePostFormatData: PropTypes.func,
   onAddResponse: PropTypes.func,
   onDeleteResponse: PropTypes.func,
+  onChainActionToResponse: PropTypes.func,
+  onUnchainActionFromResponse: PropTypes.func,
   onSuccess: PropTypes.func,
+  agentActions: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   action: makeSelectAction(),
+  agentActions: makeSelectActions(),
   webhook: makeSelectActionWebhook(),
   postFormat: makeSelectActionPostFormat(),
   agentKeywords: makeSelectKeywords(),
@@ -378,6 +388,12 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteResponse: (responseIndex) => {
       dispatch(deleteActionResponse(responseIndex));
+    },
+    onChainActionToResponse: (responseIndex, actionName) => {
+      dispatch(chainActionToResponse(responseIndex, actionName));
+    },
+    onUnchainActionFromResponse: (responseIndex, actionIndex) => {
+      dispatch(unchainActionFromResponse(responseIndex, actionIndex));
     },
     onChangeSlotName: (slotIndex, slotName) => {
       dispatch(changeSlotName({slotIndex, slotName}));
