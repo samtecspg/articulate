@@ -78,7 +78,7 @@ const styles = {
   notificationContainer: {
     backgroundColor: '#f6f7f8',
     border: '1px solid #4e4e4e',
-    margin: '10px 20px 0px 20px',
+    margin: '10px 35px 0px 20px',
     borderRadius: '3px',
     position: 'relative',
   },

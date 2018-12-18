@@ -44,6 +44,7 @@ import {
   makeSelectConversationBarOpen,
   makeSelectLocation,
   makeSelectMissingAPI,
+  makeSelectNotifications,
 } from './selectors';
 
 class App extends React.Component {
@@ -114,10 +115,10 @@ class App extends React.Component {
   }
 
   render() {
-    const { conversationBarOpen, onToggleConversationBar, onLoadAgent, agent } = this.props;
+    const { conversationBarOpen, onToggleConversationBar, onLoadAgent, agent, notifications } = this.props;
     return (
       <div>
-        <AppHeader onToggleConversationBar={onToggleConversationBar} conversationBarOpen={conversationBarOpen} />
+        <AppHeader onToggleConversationBar={onToggleConversationBar} conversationBarOpen={conversationBarOpen} notifications={notifications} />
         <AppContent conversationBarOpen={conversationBarOpen}>
           <Switch>
             <Route exact path='/' component={AgentsPage} />
@@ -147,6 +148,7 @@ App.propTypes = {
   onLoadSettings: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
   onRefreshAgent: PropTypes.func,
+  notifications: PropTypes.array,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -182,6 +184,7 @@ const mapStateToProps = createStructuredSelector({
   missingAPI: makeSelectMissingAPI(),
   location: makeSelectLocation(),
   conversationBarOpen: makeSelectConversationBarOpen(),
+  notifications: makeSelectNotifications(),
 });
 
 const withConnect = connect(

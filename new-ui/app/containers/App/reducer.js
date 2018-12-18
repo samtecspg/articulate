@@ -146,7 +146,6 @@ const initialState = Immutable({
   conversationBarOpen: false,
   waitingResponse: false,
   notifications: [
-    'Notification: Action onTimeDeliver created successfully🎉',
     'Notification: Congrats on your very first Agent Samson! 🤗 🥇',
   ],
   messages: [],
@@ -811,6 +810,7 @@ function appReducer(state = initialState, action) {
       if (action.payload.addToNewSayingActions){
         state = state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.payload.action.actionName));
       }
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Action ${action.payload.action.actionName} created successfully🎉`));
       return state.set('action', action.payload.action)
         .set('currentAction', action.payload.action)
         .set('loading', false)

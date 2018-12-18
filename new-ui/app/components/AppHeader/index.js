@@ -41,13 +41,23 @@ const styles = {
   link:{
     textDecoration: 'none',
   },
+  notificationDot: {
+    backgroundColor: '#Cb2121',
+    height: '12px',
+    width: '12px',
+    borderRadius: '50%',
+    position: 'absolute',
+    right: '138px',
+    top: '13px',
+    zIndex: 999,
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 export class AppHeader extends React.Component {
 
   render(){
-    const { classes, intl, conversationBarOpen } = this.props;
+    const { classes, intl, conversationBarOpen, notifications } = this.props;
     return (
       conversationBarOpen ?
         <Grid container className={classes.header} item xs={12}>
@@ -109,6 +119,7 @@ export class AppHeader extends React.Component {
             </Grid>
             <Grid item xl={3} lg={3} md={3}/>
             <Grid item xl={2} lg={2} md={2}>
+              {notifications.length > 0 ? <div className={classes.notificationDot}></div> : null }
               <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
                 <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                 <FormattedMessage {...messages.openChatButton} />
@@ -125,6 +136,7 @@ export class AppHeader extends React.Component {
               </Link>
             </Grid>
             <Grid item sm={6} xs={6}>
+              {notifications.length > 0 ? <div className={classes.notificationDot}></div> : null }
               <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
                 <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                 <FormattedMessage {...messages.openChatButton} />
@@ -141,6 +153,7 @@ AppHeader.propTypes = {
   intl: intlShape.isRequired,
   conversationBarOpen: PropTypes.bool,
   onToggleConversationBar: PropTypes.func,
+  notifications: PropTypes.array,
 };
 
 const withDefinedStyles = withStyles(styles);
