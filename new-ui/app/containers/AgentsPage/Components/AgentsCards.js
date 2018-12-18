@@ -110,11 +110,26 @@ function Transition(props) {
 /* eslint-disable react/prefer-stateless-function */
 class AgentsCards extends React.Component {
 
+    constructor(props){
+      super(props)
+      this.addEmptyCards = this.addEmptyCards.bind(this);
+    }
+
     state = {
       selectedAgent: null,
       openDeleteMenu: false,
       openDeleteDialog: false,
       anchorEl: null,
+    };
+
+    addEmptyCards(numOfCards){
+      const emptyCards = [];
+      //the ui show 3 cards as max per row
+      for (let index = 0; index < numOfCards % 3; index++) {
+        emptyCards.push(<Grid key={`emptyCard_${index}`} className={this.props.classes.emptyCard} />)
+        
+      }
+      return emptyCards;
     };
 
     render(){
@@ -235,11 +250,9 @@ class AgentsCards extends React.Component {
               </Card>
             </Grid>
           ))}
-          {[
-            <Grid key="emptyCard_1" className={classes.emptyCard} />,
-            <Grid key="emptyCard_2" className={classes.emptyCard} />,
-            <Grid key="emptyCard_3" className={classes.emptyCard} />,
-          ]}
+          {
+            this.addEmptyCards(agents.length)
+          }
         </Grid>
       )
     }
