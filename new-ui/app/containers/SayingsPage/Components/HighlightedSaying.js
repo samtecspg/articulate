@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import systemKeywords from 'systemKeywords';
 
 import xIcon from '../../../images/x-icon.svg';
 
@@ -11,29 +12,6 @@ const compareKeywords = (a, b) => {
     return 1;
   return 0;
 };
-
-const systemKeywords = [
-  {
-    keywordName: 'sys.spacy_person',
-    uiColor: '#f44336',
-  },
-  {
-    keywordName: 'sys.spacy_norp',
-    uiColor: '#e91e63',
-  },
-  {
-    keywordName: 'sys.spacy_org',
-    uiColor: '#e91e63',
-  },
-  {
-    keywordName: 'sys.spacy_date',
-    uiColor: '#e91e63',
-  },
-  {
-    keywordName: 'sys.duckling_time',
-    uiColor: '#e91e63',
-  },
-];
 
 const styles = {
   highlightedText: {
@@ -79,7 +57,7 @@ const HighlightedSaying = withStyles(styles)((props) => {
     if (!filteredKeyword){
       filteredKeyword = systemKeywords.filter((sysKeyword) => sysKeyword.keywordName === keyword.keyword)[0];
     }
-    const highlightColor = filteredKeyword.uiColor;
+    const highlightColor = filteredKeyword ? filteredKeyword.uiColor :  'transparent';
     formattedElement = (
       <span key={`keywordTag_${props.keywordIndex}`}>
         <span key={`beforeKeywordTagText_${props.keywordIndex}`}>{beforeTaggedText}</span>
