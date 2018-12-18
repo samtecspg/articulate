@@ -65,6 +65,7 @@ class KeywordDataForm extends React.Component {
       newSyonynm: '',
       keywordNameError: false,
       displayColorPicker: false,
+      lastExampleEdited: false,
     };
 
     handleOpen = () => {
@@ -77,6 +78,17 @@ class KeywordDataForm extends React.Component {
       this.setState({
         displayColorPicker: false,
       });
+    };
+
+    componentDidUpdate() {
+      if (this.state.lastExampleEdited) {
+        this.state.lastExampleEdited = false;
+        this.scrollToBottom();
+      }
+    }
+
+    scrollToBottom = () => {
+      this.lastExample.scrollIntoView({ block: 'end', behavior: 'smooth' });
     };
 
     render(){
@@ -204,10 +216,11 @@ class KeywordDataForm extends React.Component {
                   onKeyPress={(evt) => {
                     if(evt.key === 'Enter'){
                       evt.preventDefault();
-                      this.props.onAddKeywordExample({ value: evt.target.value, synonyms: [evt.target.value] });
                       this.setState({
                         newKeyword: '',
-                      })
+                        lastExampleEdited: true
+                      });
+                      this.props.onAddKeywordExample({ value: evt.target.value, synonyms: [evt.target.value] });
                     }
                   }}
                   onChange={(evt) => {
@@ -224,6 +237,12 @@ class KeywordDataForm extends React.Component {
                   error={this.props.errorState.examples}
                 />
               </Grid>
+              <div
+                ref={(el) => {
+                  this.lastExample = el;
+                }}
+              >
+              </div>
             </Grid>
           </Grid>
         </Grid>

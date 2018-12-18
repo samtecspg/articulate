@@ -79,4 +79,16 @@ export default defineMessages({
     id: 'app.containers.SayingsPage.component.SayingDataForm.entries',
     defaultMessage: 'entries',
   },
+  categorySelect: {
+    id: 'app.containers.SayingsPage.component.SayingDataForm.categorySelect',
+    defaultMessage: 'Select',
+  },
+  categoryNoResults: {
+    id: 'app.containers.SayingsPage.component.SayingDataForm.categoryNoResults',
+    defaultMessage: 'No Results',
+  },
+  categoryAdd: {
+    id: 'app.containers.SayingsPage.component.SayingDataForm.categoryAdd',
+    defaultMessage: '+ Add',
+  },
 });

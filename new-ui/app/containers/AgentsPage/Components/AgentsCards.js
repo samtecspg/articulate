@@ -82,6 +82,11 @@ const styles = {
     color: '#4e4e4e',
     fontSize: '14px',
   },
+  deleteButton: {
+    color: '#f44336',
+    fontWeight: 'bold',
+    textDecoration: 'underline'
+  },
   dialog: {
     border: '1px solid #4e4e4e',
   },
@@ -186,6 +191,7 @@ class AgentsCards extends React.Component {
                 </Grid>
                 <Grid item>
                   <Button
+                    className={classes.deleteButton}
                     onClick={() => {
                       this.props.onDeleteAgent(this.state.selectedAgent);
                       this.setState({

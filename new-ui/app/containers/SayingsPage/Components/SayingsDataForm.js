@@ -142,7 +142,6 @@ const styles = {
   addCategoryButton: {
     width: '62px',
     height: '26px',
-    marginTop: '6px',
   },
   categoryDataContainer: {
     display: 'inline',
@@ -223,7 +222,7 @@ class SayingsDataForm extends React.Component {
               <TextField
                 select
                 id='category'
-                value={category}
+                value={category ? category : 'select'}
                 label={intl.formatMessage(messages.categorySelect)}
                 onClick={
                   () => {
@@ -251,6 +250,10 @@ class SayingsDataForm extends React.Component {
                 helperText={this.state.errorCategory ? intl.formatMessage(messages.requiredField) : ''}
                 error={this.state.errorCategory}
               >
+                {category || this.state.categoriesDropdownOpen ? null :
+                <MenuItem key='select' value=''>
+                  <FormattedMessage {...messages.categorySelect} />
+                </MenuItem> }
                 <MenuItem className={classes.searchCategoryContainer} value="filter">
                   <Grid container justify='flex-end'>
                     <img src={searchIcon} />
@@ -295,7 +298,7 @@ class SayingsDataForm extends React.Component {
                           onClick={() => {
                             this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`);
                           }} className={classes.addCategoryButton} variant='contained'
-                        >+ Add</Button>
+                        ><FormattedMessage {...messages.categoryAdd} /></Button>
                     }
                   </Grid>
                 </MenuItem>
@@ -325,14 +328,14 @@ class SayingsDataForm extends React.Component {
                       ))
                       :
                       [<MenuItem key='no results' value='no results'>
-                        <span>No results</span>
+                        <FormattedMessage {...messages.categoryNoResults} />
                       </MenuItem>,
                       <MenuItem key='create' value='create'>
                         <Button
                           onClick={() => {
                             this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`);
                           }} className={classes.addCategoryButton} variant='contained'
-                        >+ Add</Button>
+                        ><FormattedMessage {...messages.categoryAdd} /></Button>
                       </MenuItem>]
                     :
                     this.props.agentCategories.map((agentCategory, index) => (
