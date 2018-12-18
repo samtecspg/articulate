@@ -142,6 +142,7 @@ const styles = {
   addCategoryButton: {
     width: '62px',
     height: '26px',
+    top: '3px'
   },
   categoryDataContainer: {
     display: 'inline',
@@ -251,7 +252,7 @@ class SayingsDataForm extends React.Component {
                 error={this.state.errorCategory}
               >
                 {category || this.state.categoriesDropdownOpen ? null :
-                <MenuItem key='select' value=''>
+                <MenuItem key='select' value='select'>
                   <FormattedMessage {...messages.categorySelect} />
                 </MenuItem> }
                 <MenuItem className={classes.searchCategoryContainer} value="filter">
@@ -369,7 +370,7 @@ class SayingsDataForm extends React.Component {
                 placeholder={intl.formatMessage(messages.sayingTextFieldPlaceholder)}
                 onKeyPress={(ev) => {
                   if (ev.key === 'Enter') {
-                    if (!category || category === '') {
+                    if (!category || category === '' || category === 'select') {
                       this.setState({
                         errorCategory: true,
                       });
