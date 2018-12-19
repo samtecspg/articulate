@@ -386,13 +386,13 @@ function appReducer(state = initialState, action) {
       const isATrainingUpdate = state.agent.agentName === action.payload.agent.agentName && state.agent.status !== action.payload.agent.status;
       if (isATrainingUpdate){
         if (action.payload.agent.status === 'Ready'){
-          state = state.update('notifications', notifications => notifications.concat({ message: `The agent <b>${action.payload.agent.agentName}</b> has finished training. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
+          state = state.update('notifications', notifications => notifications.concat({ message: `Notification: The agent <b>${action.payload.agent.agentName}</b> has finished training. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
         }
         if (action.payload.agent.status === 'Error'){
           state = state.update('notifications', notifications => notifications.concat({ message: `Error: An error ocurred training <b>${action.payload.agent.agentName}</b>. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
         }
         if (action.payload.agent.status === 'Out of Date'){
-          state = state.update('notifications', notifications => notifications.concat({ message: `Notification: <b>${action.payload.agent.agentName}</b> is out of date. It's time to train. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
+          state = state.update('notifications', notifications => notifications.concat({ message: `Notification: <b>${action.payload.agent.agentName}</b> is out of date. It's time to train.`, type: 'success'}));
         }
       }
       let agentWebhook, agentPostFormat;

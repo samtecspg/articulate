@@ -1,4 +1,4 @@
-import { MODEL_AGENT } from '../../../util/constants';
+import { MODEL_AGENT, STATUS_OUT_OF_DATE } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ id, settingsData, AgentModel = null, returnModel = false }) {
@@ -11,6 +11,7 @@ module.exports = async function ({ id, settingsData, AgentModel = null, returnMo
         const oldSettings = AgentModel.property('settings');
         const newSettings = { ...oldSettings, ...settingsData };
 
+        await AgentModel.property('status', STATUS_OUT_OF_DATE);
         await AgentModel.property('settings', newSettings);
         await AgentModel.save();
         return returnModel ? AgentModel : AgentModel.allProperties();

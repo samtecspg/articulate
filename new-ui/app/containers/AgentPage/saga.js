@@ -104,7 +104,7 @@ function* putAgentSettings(payload) {
   try {
     yield call(api.agent.putAgentAgentidSettings, { agentId: id, body: agentSettings });
   } catch (err) {
-    yield put(addAgentError(err));
+    throw err;
   }
 }
 
@@ -135,6 +135,8 @@ export function* putAgent(payload) {
   const { api } = payload;
   delete mutableAgent.id;
   delete mutableAgent.settings;
+  delete mutableAgent.status;
+  delete mutableAgent.lastTraining;
   try {
     yield call(putAgentSettings, { id: currentAgent.id, api });
     const response = yield call(api.agent.putAgentAgentid, { agentId: currentAgent.id, body: mutableAgent });
