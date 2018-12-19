@@ -141,6 +141,8 @@ import {
   UNCHAIN_ACTION_FROM_RESPONSE,
 } from './constants';
 
+const happyEmojies = ['😀','😁','😃','😄','😉','😎','🙂','🤩','😛','😜','🙃','😬','🤓','😺','😸','💪','🤙','👌','👍','🤚','👏','🙌','🎖','🏆','🏅','🥇','🎉','🎊'];
+
 // The initial state of the App
 const initialState = Immutable({
   conversationBarOpen: false,
@@ -810,7 +812,7 @@ function appReducer(state = initialState, action) {
       if (action.payload.addToNewSayingActions){
         state = state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.payload.action.actionName));
       }
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Action ${action.payload.action.actionName} created successfully🎉`));
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Action ${action.payload.action.actionName} created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('action', action.payload.action)
         .set('currentAction', action.payload.action)
         .set('loading', false)
@@ -933,6 +935,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case CREATE_CATEGORY_SUCCESS:
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Category ${action.category.categoryName} created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('category', action.category)
         .set('selectedCategory', action.category.id)
         .set('loading', false)
