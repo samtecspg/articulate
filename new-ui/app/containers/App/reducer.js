@@ -466,7 +466,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case ADD_AGENT_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Congrats you are agent <b>${action.agent.agentName}</b> was created! ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Congrats your agent <b>${action.agent.agentName}</b> was created! ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('agent', action.agent)
         .set('currentAgent', action.agent)
         .set('loading', false)
