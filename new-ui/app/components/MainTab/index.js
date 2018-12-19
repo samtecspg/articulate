@@ -96,8 +96,8 @@ export class MainTab extends React.Component {
                 onChange={(evt, value) => { this.handleChange(evt, value)}}
               >
                 {this.props.agentURL ?
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><Typography className={classes.subtitle} variant='h1'>{newAgent ? messages.createSubtitle : this.props.agentName}</Typography></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><Typography className={classes.subtitle} variant='h1'>{newAgent ? messages.createSubtitle : this.props.agentName}</Typography></span>} />}
+                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><Typography className={classes.subtitle} variant='h1'>{newAgent ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.agentName}</Typography></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
+                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><Typography className={classes.subtitle} variant='h1'>{newAgent ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.agentName}</Typography></span>} />}
                 <Tab className={classes.vDividerIconTab} icon={<img className={classes.vDividerIcon} src={vDivider} />} disabled />
                 {this.props.sayingsURL ?
                   <Tab value="sayings" className={classes.tab} icon={<img className={classes.icon} src={sayingsIcon} />} label={intl.formatMessage(messages.sayings)} component={this.props.sayingsForm} to={this.props.sayingsURL} disabled={!enableTabs} /> :
