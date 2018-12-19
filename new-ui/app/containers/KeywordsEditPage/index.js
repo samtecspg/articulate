@@ -8,6 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { injectIntl, intlShape } from 'react-intl';
 import { compose } from 'redux';
 
 import { Link } from 'react-router-dom';
@@ -116,11 +117,12 @@ export class KeywordsEditPage extends React.Component {
   }
 
   render() {
+    const { intl } = this.props;
     return (
       <Grid container>
         <ContentHeader
           title={messages.title}
-          subtitle={this.props.agent.agentName}
+          subtitle={this.state.isNewKeyword ? intl.formatMessage(messages.newKeyword) : this.props.keyword.keywordName}
           inlineElement={
             <ActionButtons
               formError={this.state.formError}
@@ -129,25 +131,16 @@ export class KeywordsEditPage extends React.Component {
             />
           }
           backButton={messages.backButton}
+          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/keywords`)}}
         />
-        <MainTab
-          enableTabs
-          selectedTab="keywords"
-          agentForm={Link}
-          agentURL={`/agent/${this.props.agent.id}`}
-          sayingsForm={Link}
-          sayingsURL={`/agent/${this.props.agent.id}/sayings`}
-          keywordsForm={
-            <Form
-              keyword={this.props.keyword}
-              onChangeKeywordData={this.props.onChangeKeywordData}
-              onAddKeywordExample={this.props.onAddKeywordExample}
-              onDeleteKeywordExample={this.props.onDeleteKeywordExample}
-              onChangeExampleName={this.props.onChangeExampleName}
-              onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
-              errorState={this.state.errorState}
-            />
-          }
+        <Form
+          keyword={this.props.keyword}
+          onChangeKeywordData={this.props.onChangeKeywordData}
+          onAddKeywordExample={this.props.onAddKeywordExample}
+          onDeleteKeywordExample={this.props.onDeleteKeywordExample}
+          onChangeExampleName={this.props.onChangeExampleName}
+          onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
+          errorState={this.state.errorState}
         />
       </Grid>
     );
@@ -155,6 +148,7 @@ export class KeywordsEditPage extends React.Component {
 }
 
 KeywordsEditPage.propTypes = {
+  intl: intlShape,
   agent: PropTypes.object,
   keywords: PropTypes.object,
   onResetData: PropTypes.func,
@@ -206,6 +200,9 @@ function mapDispatchToProps(dispatch) {
       dispatch(resetStatusFlag());
       dispatch(push(url));
     },
+    onGoToUrl: (url) => {
+      dispatch(push(url));
+    },
   };
 }
 
@@ -217,6 +214,7 @@ const withConnect = connect(
 const withSaga = injectSaga({ key: 'keywordsEdit', saga });
 
 export default compose(
+  injectIntl,
   withSaga,
   withConnect
 )(KeywordsEditPage);

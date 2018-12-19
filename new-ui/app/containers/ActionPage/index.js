@@ -13,8 +13,6 @@ import { compose } from 'redux';
 import { withStyles } from "@material-ui/core/styles";
 
 import { Grid } from '@material-ui/core';
-import ContentHeader from 'components/ContentHeader';
-import ActionButtons from './Components/ActionButtons';
 import MainTab from './Components/MainTab';
 import ActionForm from './Components/ActionForm';
 import SlotsForm from './Components/SlotsForm';
@@ -23,7 +21,6 @@ import ResponseForm from './Components/ResponseForm';
 
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
-import messages from './messages';
 
 import qs from 'query-string';
 
@@ -250,22 +247,15 @@ export class ActionPage extends React.Component {
         <Grid container>
           <Grid className={classes.goBackCard} onClick={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}} />
         </Grid>
-        <ContentHeader
-          title={messages.title}
-          subtitle={this.state.isNewAction ? messages.createSubtitle : this.props.action.actionName}
-          inlineElement={
-            <ActionButtons
-              formError={this.state.formError}
-              hideFinishButton={this.state.currentTab === 'action' && !this.state.userCompletedAllRequiredFields}
-              isLastTab={this.state.currentTab === 'response'}
-              onFinishAction={this.submit}
-              onNextAction={this.moveNextTab}
-            />
-          }
-          backButton={messages.backButton}
-          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
-        />
         <MainTab
+          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
+          newAction={this.state.isNewAction}
+          actionName={this.props.action.actionName}
+          formError={this.state.formError}
+          hideFinishButton={this.state.currentTab === 'action' && !this.state.userCompletedAllRequiredFields}
+          isLastTab={this.state.currentTab === 'response'}
+          onFinishAction={this.submit}
+          onNextAction={this.moveNextTab}
           selectedTab={this.state.currentTab}
           actionForm={
             <ActionForm

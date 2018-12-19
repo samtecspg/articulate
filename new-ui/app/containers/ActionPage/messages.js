@@ -45,7 +45,7 @@ export default defineMessages({
   },
   action: {
     id: 'app.containers.ActionPage.component.MainTab.action',
-    defaultMessage: 'Action',
+    defaultMessage: 'Action: ',
   },
   slots: {
     id: 'app.containers.ActionPage.component.MainTab.slots',

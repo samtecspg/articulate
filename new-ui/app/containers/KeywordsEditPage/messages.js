@@ -9,7 +9,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   title: {
     id: 'app.containers.KeywordsEditPage.title',
-    defaultMessage: 'Agent',
+    defaultMessage: 'Keyword',
   },
   formTitle: {
     id: 'app.containers.KeywordsEditPage.formTitle',
@@ -106,5 +106,13 @@ export default defineMessages({
   cancelButton: {
     id: 'app.containers.KeywordsEditPage.component.ActionButtons.cancelButton',
     defaultMessage: 'Cancel',
+  },
+  backButton: {
+    id: 'app.containers.KeywordsEditPage.backButton',
+    defaultMessage: 'Back',
+  },
+  newKeyword: {
+    id: 'app.containers.KeywordsEditPage.newKeyword',
+    defaultMessage: 'New Keyword',
   },
 });
