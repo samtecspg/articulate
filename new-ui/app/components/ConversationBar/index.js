@@ -220,7 +220,7 @@ export class ConversationBar extends React.PureComponent {
                 <Grid item xs={12} key={`notification_${index}`} className={classes.notificationContainer}>
                   <div className={classes.notificationDot}></div>
                   <Typography className={classes.notification}>
-                    {notification}
+                    <span dangerouslySetInnerHTML={{__html: notification}}></span>
                   </Typography>
                   <div onClick={() => { this.props.onCloseNotification(index) }} className={classes.closeNotification}>
                     <Typography>

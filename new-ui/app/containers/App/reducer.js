@@ -147,9 +147,7 @@ const happyEmojies = ['😀','😁','😃','😄','😉','😎','🙂','🤩','�
 const initialState = Immutable({
   conversationBarOpen: false,
   waitingResponse: false,
-  notifications: [
-    'Notification: Congrats on your very first Agent Samson! 🤗 🥇',
-  ],
+  notifications: [],
   messages: [],
   category: {
     categoryName: '',
@@ -468,6 +466,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case ADD_AGENT_SUCCESS:
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Congrats you are agent <b>${action.agent.agentName}</b> was created! ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('agent', action.agent)
         .set('currentAgent', action.agent)
         .set('loading', false)
@@ -812,7 +811,7 @@ function appReducer(state = initialState, action) {
       if (action.payload.addToNewSayingActions){
         state = state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.payload.action.actionName));
       }
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Action ${action.payload.action.actionName} created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Action <b>${action.payload.action.actionName}</b> created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('action', action.payload.action)
         .set('currentAction', action.payload.action)
         .set('loading', false)
@@ -935,7 +934,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case CREATE_CATEGORY_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Category ${action.category.categoryName} created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Category <b>${action.category.categoryName}<b> created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('category', action.category)
         .set('selectedCategory', action.category.id)
         .set('loading', false)
