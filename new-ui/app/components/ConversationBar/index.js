@@ -82,6 +82,13 @@ const styles = {
     borderRadius: '3px',
     position: 'relative',
   },
+  notificationContainerError: {
+    backgroundColor: '#ffebee',
+    border: '1px solid #4e4e4e',
+    margin: '10px 35px 0px 20px',
+    borderRadius: '3px',
+    position: 'relative',
+  },
   notification: {
     paddingLeft: '5px',
     fontSize: '12px',
@@ -217,10 +224,10 @@ export class ConversationBar extends React.PureComponent {
           <Grid className={classes.notificationsContainer} container spacing={16}>
             {
               this.props.notifications.map((notification, index) => (
-                <Grid item xs={12} key={`notification_${index}`} className={classes.notificationContainer}>
+                <Grid item xs={12} key={`notification_${index}`} className={notification.type === 'error' ? classes.notificationContainerError : classes.notificationContainer}>
                   <div className={classes.notificationDot}></div>
                   <Typography className={classes.notification}>
-                    <span dangerouslySetInnerHTML={{__html: notification}}></span>
+                    <span dangerouslySetInnerHTML={{__html: notification.message}}></span>
                   </Typography>
                   <div onClick={() => { this.props.onCloseNotification(index) }} className={classes.closeNotification}>
                     <Typography>

@@ -142,6 +142,7 @@ import {
 } from './constants';
 
 const happyEmojies = ['😀','😁','😃','😄','😉','😎','🙂','🤩','😛','😜','🙃','😬','🤓','😺','😸','💪','🤙','👌','👍','🤚','👏','🙌','🎖','🏆','🏅','🥇','🎉','🎊'];
+const errorEmojies = ['😣','😥','😮','😯','😫','😓','😕','😖','😦','😧','😨','😩','🤯','😱','😵','🤕','💀','🙀','😿','🚫','❌','💣','🚑','🚒','🚨']
 
 // The initial state of the App
 const initialState = Immutable({
@@ -462,11 +463,12 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case ADD_AGENT_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error creating your agent. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
     case ADD_AGENT_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Congrats your agent <b>${action.agent.agentName}</b> was created! ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Congrats your agent <b>${action.agent.agentName}</b> was created! ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
       return state.set('agent', action.agent)
         .set('currentAgent', action.agent)
         .set('loading', false)
@@ -477,6 +479,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case UPDATE_AGENT_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error updating your agent. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
@@ -592,6 +595,7 @@ function appReducer(state = initialState, action) {
       return state.set('loading', true)
         .set('error', false);
     case DELETE_KEYWORD_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('error', action.error);
 
@@ -804,6 +808,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case ADD_ACTION_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error creating your action. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
@@ -811,7 +816,7 @@ function appReducer(state = initialState, action) {
       if (action.payload.addToNewSayingActions){
         state = state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.payload.action.actionName));
       }
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Action <b>${action.payload.action.actionName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Action <b>${action.payload.action.actionName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
       return state.set('action', action.payload.action)
         .set('currentAction', action.payload.action)
         .set('loading', false)
@@ -822,6 +827,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case UPDATE_ACTION_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error updating your action. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
@@ -836,6 +842,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case DELETE_ACTION_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error deleting your action. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
@@ -856,6 +863,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case CREATE_KEYWORD_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error creating your keyword. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
@@ -871,6 +879,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case UPDATE_KEYWORD_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error updating your keyword. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
@@ -930,11 +939,12 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case CREATE_CATEGORY_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error creating your category. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
     case CREATE_CATEGORY_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Category <b>${action.category.categoryName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Category <b>${action.category.categoryName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
       return state.set('category', action.category)
         .set('selectedCategory', action.category.id)
         .set('loading', false)
@@ -947,6 +957,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case UPDATE_CATEGORY_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error updating your category. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);

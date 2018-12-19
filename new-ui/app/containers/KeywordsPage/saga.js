@@ -55,7 +55,8 @@ export function* deleteKeyword(payload) {
       page: 1,
     });
   } catch (err) {
-    yield put(deleteKeywordError(err));
+    const error = { ...err };
+    yield put(deleteKeywordError(error.response.body.message));
   }
 }
 
