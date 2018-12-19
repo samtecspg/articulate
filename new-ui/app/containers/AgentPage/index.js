@@ -12,7 +12,6 @@ import { Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import ContentHeader from '../../components/ContentHeader';
 import MainTab from '../../components/MainTab';
 import injectSaga from '../../utils/injectSaga';
 import {
@@ -40,9 +39,8 @@ import {
   makeSelectSettings,
   makeSelectSuccess,
 } from '../App/selectors';
-import ActionButtons from './Components/ActionButtons';
+
 import Form from './Components/Form';
-import messages from './messages';
 import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -247,21 +245,14 @@ export class AgentPage extends React.PureComponent {
   render() {
     return (
       <Grid container>
-        <ContentHeader
-          title={messages.title}
-          subtitle={this.state.isNewAgent ? messages.createSubtitle : this.props.agent.agentName}
-          inlineElement={
-            <ActionButtons
-              newAgent={this.state.isNewAgent}
-              formError={this.state.formError}
-              onFinishAction={this.submit}
-              onTrain={this.props.onTrain}
-              agentStatus={this.props.agent.status}
-              lastTraining={this.props.agent.lastTraining}
-            />
-          }
-        />
         <MainTab
+          agentName={this.props.agent.agentName}
+          newAgent={this.state.isNewAgent}
+          formError={this.state.formError}
+          onFinishAction={this.submit}
+          onTrain={this.props.onTrain}
+          agentStatus={this.props.agent.status}
+          lastTraining={this.props.agent.lastTraining}
           enableTabs={!this.state.isNewAgent}
           selectedTab="agents"
           agentForm={

@@ -6,9 +6,9 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  agents: {
-    id: 'app.components.MainTab.agents',
-    defaultMessage: 'Agents',
+  agent: {
+    id: 'app.components.MainTab.agent',
+    defaultMessage: 'Agent: ',
   },
   sayings: {
     id: 'app.components.MainTab.sayings',
@@ -17,5 +17,13 @@ export default defineMessages({
   keywords: {
     id: 'app.components.MainTab.keywords',
     defaultMessage: 'Keywords',
+  },
+  createSubtitle: {
+    id: 'app.components.MainTab.createSubtitle',
+    defaultMessage: 'Create',
+  },
+  finishButton: {
+    id: 'app.components.MainTab.finishButton',
+    defaultMessage: 'Save',
   },
 });

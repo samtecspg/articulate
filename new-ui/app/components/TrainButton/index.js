@@ -20,7 +20,7 @@ const styles = {
   },
   trainingStatusLabel: {
     fontSize: '12px',
-    marginLeft: '15px',
+    marginRight: '15px',
     display: 'inline',
   },
   trainingLabel: {
@@ -60,9 +60,6 @@ export class TrainButton extends React.Component {
     const { classes, agentStatus, lastTraining, onTrain } = this.props;
     return (
       <Grid item className={classes.trainContainer}>
-        <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
-          <FormattedMessage {...messages.trainButton} />
-        </Button>
         <Typography className={classes.trainingStatusLabel}>
           {agentStatus === 'Training' ?
             <span className={classes.trainingLabel}><FormattedMessage {...messages.statusTraining} /></span> :
@@ -74,6 +71,9 @@ export class TrainButton extends React.Component {
                   <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{getLastTrainingTime(lastTraining)}</span> :
                   null)}
         </Typography>
+        <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
+          <FormattedMessage {...messages.trainButton} />
+        </Button>
       </Grid>
     );
   }

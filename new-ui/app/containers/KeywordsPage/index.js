@@ -13,14 +13,11 @@ import { compose } from 'redux';
 
 import { Link } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
-import ContentHeader from 'components/ContentHeader';
 import MainTab from 'components/MainTab';
-import TrainButton from 'components/TrainButton';
 import Form from './Components/Form';
 
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
-import messages from './messages';
 import {
   makeSelectAgent,
   makeSelectKeywords,
@@ -123,18 +120,12 @@ export class KeywordsPage extends React.Component {
   render() {
     return (
       <Grid container>
-        <ContentHeader
-          title={messages.title}
-          subtitle={this.props.agent.agentName}
-          inlineElement={
-            <TrainButton
-              onTrain={this.props.onTrain}
-              agentStatus={this.props.agent.status}
-              lastTraining={this.props.agent.lastTraining}
-            />
-          }
-        />
         <MainTab
+          disableSave
+          agentName={this.props.agent.agentName}
+          onTrain={this.props.onTrain}
+          agentStatus={this.props.agent.status}
+          lastTraining={this.props.agent.lastTraining}
           enableTabs
           selectedTab="keywords"
           agentForm={Link}

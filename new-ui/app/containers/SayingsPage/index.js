@@ -13,9 +13,7 @@ import { Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import ContentHeader from '../../components/ContentHeader';
 import MainTab from '../../components/MainTab';
-import TrainButton from '../../components/TrainButton';
 import injectSaga from '../../utils/injectSaga';
 import {
   addActionNewSaying,
@@ -49,7 +47,6 @@ import {
   makeSelectTotalSayings,
 } from '../App/selectors';
 import Form from './Components/Form';
-import messages from './messages';
 import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -161,18 +158,12 @@ export class SayingsPage extends React.Component {
   render() {
     return (
       <Grid container>
-        <ContentHeader
-          title={messages.title}
-          subtitle={this.props.agent.agentName}
-          inlineElement={
-            <TrainButton
-              onTrain={this.props.onTrain}
-              agentStatus={this.props.agent.status}
-              lastTraining={this.props.agent.lastTraining}
-            />
-          }
-        />
         <MainTab
+          disableSave
+          agentName={this.props.agent.agentName}
+          onTrain={this.props.onTrain}
+          agentStatus={this.props.agent.status}
+          lastTraining={this.props.agent.lastTraining}
           enableTabs
           selectedTab="sayings"
           agentForm={Link}
