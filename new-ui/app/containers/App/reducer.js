@@ -811,7 +811,7 @@ function appReducer(state = initialState, action) {
       if (action.payload.addToNewSayingActions){
         state = state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.payload.action.actionName));
       }
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Action <b>${action.payload.action.actionName}</b> created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Action <b>${action.payload.action.actionName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('action', action.payload.action)
         .set('currentAction', action.payload.action)
         .set('loading', false)
@@ -934,7 +934,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case CREATE_CATEGORY_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat(`Notification: Category <b>${action.category.categoryName}<b> created successfully${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
+      state = state.update('notifications', notifications => notifications.concat(`Notification: Category <b>${action.category.categoryName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`));
       return state.set('category', action.category)
         .set('selectedCategory', action.category.id)
         .set('loading', false)
