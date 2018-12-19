@@ -527,7 +527,7 @@ class SayingsDataForm extends React.Component {
                       select
                       className={classes.pageTextfield}
                       id='pageSize'
-                      value={this.props.pageSize}
+                      value={this.props.sayingsPageSize}
                       onChange={(evt) => {
                         this.props.changePageSize(evt.target.value);
                       }}
@@ -606,6 +606,7 @@ SayingsDataForm.propTypes = {
   intl: intlShape.isRequired,
   sayings: PropTypes.array,
   agentId: PropTypes.string,
+  sayingsPageSize: PropTypes.number,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
@@ -619,7 +620,6 @@ SayingsDataForm.propTypes = {
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
-  pageSize: PropTypes.number,
   numberOfPages: PropTypes.number,
   changePage: PropTypes.func,
   movePageBack: PropTypes.func,

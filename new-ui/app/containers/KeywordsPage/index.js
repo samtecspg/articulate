@@ -31,13 +31,14 @@ import {
   loadKeywords,
   deleteKeyword,
   trainAgent,
+  changeKeywordsPageSize,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsPage extends React.Component {
 
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.changePage = this.changePage.bind(this);
     this.movePageBack = this.movePageBack.bind(this);
     this.movePageForward = this.movePageForward.bind(this);
@@ -49,7 +50,7 @@ export class KeywordsPage extends React.Component {
   state = {
     filter: '',
     currentPage: 1,
-    pageSize: 5,
+    pageSize: this.props.agent.settings.keywordsPageSize,
     numberOfPages: null,
     totalKeywords: null,
   };
@@ -108,6 +109,7 @@ export class KeywordsPage extends React.Component {
       currentPage: 1,
       pageSize,
     });
+    this.props.onChangeKeywordsPageSize(this.props.agent.id, pageSize);
     this.props.onLoadKeywords(this.state.filter, 1, pageSize);
   }
 
@@ -189,6 +191,9 @@ function mapDispatchToProps(dispatch) {
     onTrain: () => {
       dispatch(trainAgent());
     },
+    onChangeKeywordsPageSize: (agentId, pageSize) => {
+      dispatch(changeKeywordsPageSize(agentId, pageSize));
+    }
   };
 }
 

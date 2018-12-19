@@ -707,5 +707,7 @@
   "defaultAgentFallbackResponses": [
     "Sorry can you rephrase that?",
     "I'm still learning to speak with humans. What you mean?"
-  ]
+  ],
+  "sayingsPageSize": 5,
+  "keywordsPageSize": 5
 }

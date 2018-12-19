@@ -86,6 +86,7 @@ export const LOAD_FILTERED_CATEGORIES = 'app/SayingsPage/LOAD_FILTERED_CATEGORIE
 export const LOAD_FILTERED_CATEGORIES_ERROR = 'app/SayingsPage/LOAD_FILTERED_CATEGORIES_ERROR';
 export const LOAD_FILTERED_CATEGORIES_SUCCESS = 'app/SayingsPage/LOAD_FILTERED_CATEGORIES_SUCCESS';
 export const SELECT_CATEGORY = 'app/SayingsPage/SELECT_CATEGORY';
+export const CHANGE_SAYINGS_PAGE_SIZE = 'app/SayingsPage/CHANGE_SAYINGS_PAGE_SIZE';
 
 /*
  * Keywords
@@ -95,6 +96,7 @@ export const LOAD_KEYWORDS_ERROR = 'app/KeywordsPage/LOAD_KEYWORDS_ERROR';
 export const LOAD_KEYWORDS_SUCCESS = 'app/KeywordsPage/LOAD_KEYWORDS_SUCCESS';
 export const DELETE_KEYWORD = 'app/KeywordsPage/DELETE_KEYWORD';
 export const DELETE_KEYWORD_ERROR = 'app/KeywordsPage/DELETE_KEYWORD_ERROR';
+export const CHANGE_KEYWORDS_PAGE_SIZE = 'app/SayingsPage/CHANGE_KEYWORDS_PAGE_SIZE';
 
 /*
  * Settings

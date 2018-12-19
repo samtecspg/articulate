@@ -1,3 +1,5 @@
+import Immutable from 'seamless-immutable';
+
 import {
   takeLatest,
   call,
@@ -14,10 +16,12 @@ import {
 import {
   LOAD_KEYWORDS,
   DELETE_KEYWORD,
+  CHANGE_KEYWORDS_PAGE_SIZE,
 } from '../App/constants';
 
 import {
   makeSelectAgent,
+  makeSelectAgentSettings
 } from '../App/selectors';
 
 
@@ -60,7 +64,20 @@ export function* deleteKeyword(payload) {
   }
 }
 
+export function* putKeywordsPageSize(payload){
+  const agentSettings = yield select(makeSelectAgentSettings());
+  const { api, agentId, pageSize } = payload;
+  const mutableSettings = Immutable.asMutable(agentSettings, { deep: true} );
+  mutableSettings.keywordsPageSize = pageSize;
+  try {
+    yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
+  } catch (err) {
+    throw err;
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(DELETE_KEYWORD, deleteKeyword);
+  yield takeLatest(CHANGE_KEYWORDS_PAGE_SIZE, putKeywordsPageSize);
 };

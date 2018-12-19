@@ -35,6 +35,7 @@ import {
   tagKeyword,
   trainAgent,
   untagKeyword,
+  changeSayingsPageSize
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -70,7 +71,7 @@ export class SayingsPage extends React.Component {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
     categoryFilter: '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
-    pageSize: 5,
+    pageSize: this.props.agent.settings.sayingsPageSize,
     numberOfPages: null,
     totalSayings: null,
   };
@@ -131,6 +132,7 @@ export class SayingsPage extends React.Component {
       currentPage: 1,
       pageSize,
     });
+    this.props.onChangeSayingsPageSize(this.props.agent.id, pageSize);
     this.props.onLoadSayings(this.state.filter, 1, pageSize);
   }
 
@@ -178,6 +180,7 @@ export class SayingsPage extends React.Component {
           sayingsForm={
             <Form
               agentId={this.props.agent.id}
+              sayingsPageSize={this.props.agent.settings.sayingsPageSize}
               sayings={this.props.sayings}
               agentKeywords={this.props.agentKeywords}
               agentActions={this.props.agentActions}
@@ -312,6 +315,9 @@ function mapDispatchToProps(dispatch) {
     onTrain: () => {
       dispatch(trainAgent());
     },
+    onChangeSayingsPageSize: (agentId, pageSize) => {
+      dispatch(changeSayingsPageSize(agentId, pageSize));
+    }
   };
 }
 

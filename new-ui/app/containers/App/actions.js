@@ -69,12 +69,14 @@ import {
   LOAD_FILTERED_CATEGORIES_ERROR,
   LOAD_FILTERED_CATEGORIES_SUCCESS,
   SELECT_CATEGORY,
+  CHANGE_SAYINGS_PAGE_SIZE,
 
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
   LOAD_KEYWORDS_SUCCESS,
   DELETE_KEYWORD,
   DELETE_KEYWORD_ERROR,
+  CHANGE_KEYWORDS_PAGE_SIZE,
 
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
@@ -628,6 +630,15 @@ export function selectCategory(categoryName){
   }
 }
 
+export function changeSayingsPageSize(agentId, pageSize){
+  return {
+    apiCall: true,
+    type: CHANGE_SAYINGS_PAGE_SIZE,
+    agentId,
+    pageSize
+  }
+}
+
 /*
 * Keywords
 */
@@ -668,6 +679,15 @@ export function deleteKeywordError(error) {
     type: DELETE_KEYWORD_ERROR,
     error,
   };
+}
+
+export function changeKeywordsPageSize(agentId, pageSize){
+  return {
+    apiCall: true,
+    type: CHANGE_KEYWORDS_PAGE_SIZE,
+    agentId,
+    pageSize
+  }
 }
 
 /*

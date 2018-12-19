@@ -161,6 +161,7 @@ class Form extends React.Component {
         {<SayingsDataForm
           agentId={this.props.agentId}
           sayings={this.props.sayings}
+          sayingsPageSize={this.props.sayingsPageSize}
           agentKeywords={this.props.agentKeywords}
           agentActions={this.props.agentActions}
           agentCategories={this.props.agentCategories}
@@ -176,7 +177,6 @@ class Form extends React.Component {
           onGoToUrl={this.props.onGoToUrl}
           onSendSayingToAction={this.props.onSendSayingToAction}
           currentPage={this.props.currentPage}
-          pageSize={this.props.pageSize}
           numberOfPages={this.props.numberOfPages}
           changePage={this.props.changePage}
           movePageBack={this.props.movePageBack}
@@ -198,6 +198,7 @@ Form.propTypes = {
   intl: intlShape.isRequired,
   sayings: PropTypes.array,
   agentId: PropTypes.string,
+  sayingsPageSize: PropTypes.number,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
@@ -213,7 +214,6 @@ Form.propTypes = {
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
-  pageSize: PropTypes.number,
   numberOfPages: PropTypes.number,
   changePage: PropTypes.func,
   movePageBack: PropTypes.func,
