@@ -28,7 +28,7 @@ import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import KeywordsPage from '../KeywordsPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
-//import ReviewPage from '../ReviewPage/Loadable';
+import ReviewPage from '../ReviewPage/Loadable';
 import SayingsPage from '../SayingsPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import {
@@ -124,7 +124,7 @@ class App extends React.Component {
             <Route exact path='/' component={AgentsPage} />
             <Route exact path='/agent/:id' component={AgentPage} />
             <Route exact path='/agent/:id/sayings' component={SayingsPage} />
-                      {/*<Route exact path='/agent/:id/review' component={ReviewPage} />*/}
+            <Route exact path='/agent/:id/review' component={ReviewPage} />
             <Route exact path='/agent/:id/keywords' component={KeywordsPage} />
             <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
             <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />

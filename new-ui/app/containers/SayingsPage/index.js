@@ -168,6 +168,8 @@ export class SayingsPage extends React.Component {
           selectedTab="sayings"
           agentForm={Link}
           agentURL={`/agent/${this.props.agent.id}`}
+          reviewURL={`/agent/${this.props.agent.id}/review`}
+          reviewForm={Link}
           sayingsForm={
             <Form
               agentId={this.props.agent.id}

@@ -277,6 +277,8 @@ export class AgentPage extends React.PureComponent {
           }
           sayingsForm={Link}
           sayingsURL={`/agent/${this.props.agent.id}/sayings`}
+          reviewURL={`/agent/${this.props.agent.id}/review`}
+          reviewForm={Link}
           keywordsForm={Link}
           keywordsURL={`/agent/${this.props.agent.id}/keywords`}
         />

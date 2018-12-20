@@ -130,6 +130,8 @@ export class KeywordsPage extends React.Component {
           selectedTab="keywords"
           agentForm={Link}
           agentURL={`/agent/${this.props.agent.id}`}
+          reviewURL={`/agent/${this.props.agent.id}/review`}
+          reviewForm={Link}
           sayingsForm={Link}
           sayingsURL={`/agent/${this.props.agent.id}/sayings`}
           keywordsForm={

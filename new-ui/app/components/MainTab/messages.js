@@ -26,4 +26,8 @@ export default defineMessages({
     id: 'app.components.MainTab.finishButton',
     defaultMessage: 'Save',
   },
+  review: {
+    id: 'app.components.MainTab.review',
+    defaultMessage: 'Review',
+  },
 });

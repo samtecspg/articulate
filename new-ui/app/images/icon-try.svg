@@ -1,0 +1,15 @@
+<svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #4e4e4e;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.5px;
+      }
+    </style>
+  </defs>
+  <title>icon-try</title>
+  <path class="cls-1" d="M1.46,1.85v11.3a1.08,1.08,0,0,0,1.6.94L13.22,8.45a1.09,1.09,0,0,0,0-1.9L3.06.91A1.08,1.08,0,0,0,1.46,1.85Z"/>
+</svg>
