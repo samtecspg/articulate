@@ -9,23 +9,17 @@ import { Grid, Typography, Hidden }  from '@material-ui/core';
 const styles = {
   container: {
     display: 'inline',
-    paddingTop: 50,
+    paddingTop: 40,
+    paddingBottom: 30,
     paddingLeft: 25,
+    height: '115px',
   },
-  titleContainer: {
-    display: 'inline',
-    position: 'relative',
-    top: '5px',
-  },
-  title: {
-    color: '#4e4e4e',
+  containerElement: {
     display: 'inline',
   },
   subtitle: {
     paddingLeft: '5px',
     color: '#4e4e4e',
-    fontWeight: 'bold',
-    display: 'inline',
   },
   backArrow: {
     cursor: 'pointer',
@@ -52,18 +46,22 @@ export class ContentHeader extends React.Component {
     const { classes } = this.props;
     return (
       <Grid className={classes.container} item xs={12}>
-        <Grid className={classes.titleContainer}>
-          <Typography className={classes.title}>
-            <FormattedMessage {...this.props.title} />:&nbsp;
-          </Typography>
-          <Typography className={classes.subtitle}>
-            {
-              typeof this.props.subtitle === 'string' ?
-                this.props.subtitle :
-                <FormattedMessage {...this.props.subtitle} />
-            }
-          </Typography>
-        </Grid>
+        {this.props.backButton ?
+          [<span className={classes.backArrow} key='backArrow'>{'< '}</span>,
+            <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
+              <FormattedMessage {...this.props.backButton} />
+            </a>] :
+          null}
+        <Typography variant='h1'>
+          <FormattedMessage {...this.props.title} />:&nbsp;
+        </Typography>
+        <Typography className={classes.subtitle} variant='h1'>
+          {
+            typeof this.props.subtitle === 'string' ?
+              this.props.subtitle :
+              <FormattedMessage {...this.props.subtitle} />
+          }
+        </Typography>
         <Hidden only={this.props.sizesForHideInlineElement}>
           {this.props.inlineElement ? this.props.inlineElement : null}
         </Hidden>

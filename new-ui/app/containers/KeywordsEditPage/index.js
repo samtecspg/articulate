@@ -128,10 +128,10 @@ export class KeywordsEditPage extends React.Component {
               formError={this.state.formError}
               agentId={this.props.agent.id}
               onFinishAction={this.submit}
+              backButton={messages.backButton}
+              goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/keywords`)}}
             />
           }
-          backButton={messages.backButton}
-          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/keywords`)}}
         />
         <Form
           keyword={this.props.keyword}

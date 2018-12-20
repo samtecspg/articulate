@@ -23,7 +23,7 @@ const styles = {
   },
   link: {
     color: '#4e4e4e',
-    textDecoration: 'none',
+    textDecoration: 'underline',
   },
 };
 

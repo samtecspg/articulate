@@ -14,6 +14,7 @@ const styles = {
     float: 'right',
   },
   buttonContainer: {
+    display: 'inline',
     position: 'relative',
     bottom: '10px',
   },
@@ -25,6 +26,27 @@ const styles = {
     color: '#4e4e4e',
     textDecoration: 'none',
   },
+  backArrow: {
+    display: 'inline',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontFamily: 'Montserrat',
+    fontWeight: 400,
+  },
+  backButton: {
+    display: 'inline',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontFamily: 'Montserrat',
+    fontWeight: 400,
+    textDecoration: 'underline',
+  },
+  backButtonContainer: {
+    display: 'inline',
+    paddingRight: '10px',
+    position: 'relative',
+    bottom: '10px',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -43,6 +65,14 @@ class ActionButtons extends React.Component {
           </a>
         </Hidden>
         <Hidden only={['sm', 'xs']}>
+          {this.props.backButton ?
+            <Grid className={classes.backButtonContainer}>
+              <span className={classes.backArrow} onClick={this.props.goBack} key='backArrow'>{'< '}</span>
+              <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
+                <FormattedMessage {...this.props.backButton} />
+              </a>
+            </Grid> :
+            null}
           <Grid className={classes.buttonContainer}>
             <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
               <FormattedMessage {...messages.finishButton} />
@@ -59,6 +89,7 @@ ActionButtons.propTypes = {
   onFinishAction: PropTypes.func.isRequired,
   agentId: PropTypes.string,
   formError: PropTypes.bool,
+  goBack: PropTypes.func,
 };
 
 export default withStyles(styles)(ActionButtons);

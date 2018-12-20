@@ -120,10 +120,10 @@ export class CategoriesEditPage extends React.Component {
               filter={this.state.filter}
               agentId={this.props.agent.id}
               onFinishAction={this.submit}
+              backButton={messages.backButton}
+              goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
             />
           }
-          backButton={messages.backButton}
-          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
         />
         <Form
           category={this.props.category}

@@ -61,7 +61,7 @@ export default defineMessages({
   },
   cancelButton: {
     id: 'app.containers.SettingsPage.cancelButton',
-    defaultMessage: 'Cancel',
+    defaultMessage: '< Exit',
   },
   noFallbacks: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.noFallbacks',
