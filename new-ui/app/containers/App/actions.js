@@ -146,6 +146,8 @@ import {
   CREATE_CATEGORY_SUCCESS,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
+
+  CHANGE_REVIEW_PAGE_SIZE,
 } from './constants';
 
 /*
@@ -1160,4 +1162,15 @@ export function changeActionThreshold(value) {
       value: parseInt(value),
     },
   };
+}
+
+/* Review */
+
+export function changeReviewPageSize(agentId, pageSize){
+  return {
+    apiCall: true,
+    type: CHANGE_REVIEW_PAGE_SIZE,
+    agentId,
+    pageSize
+  }
 }

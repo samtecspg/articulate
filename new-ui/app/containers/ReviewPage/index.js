@@ -51,7 +51,7 @@ export class ReviewPage extends React.Component {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
     categoryFilter: '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
-    pageSize: this.props.agent.settings.sayingsPageSize,
+    pageSize: this.props.agent.settings.reviewPageSize,
     numberOfPages: null,
     totalSayings: null,
   };
@@ -117,13 +117,13 @@ export class ReviewPage extends React.Component {
   changePageSize(pageSize) {
     const {
       onLoadSayings,
-      onChangeSayingsPageSize,
+      onChangeReviewPageSize,
     } = this.props.actions;
     this.setState({
       currentPage: 1,
       pageSize,
     });
-    onChangeSayingsPageSize(this.props.agent.id, pageSize);
+    onChangeReviewPageSize(this.props.agent.id, pageSize);
     onLoadSayings(this.state.filter, 1, pageSize);
   }
 
@@ -256,6 +256,7 @@ ReviewPage.propTypes = {
     onTrain: PropTypes.func.isRequired,
     onToggleConversationBar: PropTypes.func.isRequired,
     onSendMessage: PropTypes.func.isRequired,
+    onChangeReviewPageSize: PropTypes.func.isRequired,
   }),
   agent: PropTypes.object.isRequired,
   sayings: PropTypes.array,
@@ -304,7 +305,7 @@ function mapDispatchToProps(dispatch) {
       onTrain: Actions.trainAgent,
       onToggleConversationBar: Actions.toggleConversationBar,
       onSendMessage: Actions.sendMessage,
-      onChangeSayingsPageSize: Actions.changeSayingsPageSize,
+      onChangeReviewPageSize: Actions.changeReviewPageSize,
     }, dispatch),
     onGoToUrl: (filter, page, pageSize, url) => {
       dispatch(push(`${url}?filter=${filter}&page=${page}&pageSize=${pageSize}`));

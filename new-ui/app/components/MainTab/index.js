@@ -5,7 +5,6 @@ import {
   Icon,
   Tab,
   Tabs,
-  Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -52,6 +51,7 @@ const styles = {
   subtitle: {
     paddingLeft: '5px',
     color: '#4e4e4e',
+    fontWeight: 'bold'
   },
   actionsContainer: {
     display: 'inline',
@@ -107,8 +107,8 @@ export class MainTab extends React.Component {
                 }}
               >
                 {this.props.agentURL ?
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><Typography className={classes.subtitle} variant='h1'>{newAgent ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName}</Typography></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><Typography className={classes.subtitle} variant='h1'>{newAgent ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName}</Typography></span>} />}
+                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName}</span></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
+                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName}</span></span>} />}
                 <Tab className={classes.vDividerIconTab} icon={<img className={classes.vDividerIcon} src={vDivider} />} disabled />
                 {this.props.sayingsURL ?
                   <Tab value="sayings" className={classes.tab} icon={<img className={classes.icon} src={sayingsIcon} />} label={intl.formatMessage(messages.sayings)} component={this.props.sayingsForm} to={this.props.sayingsURL} disabled={!enableTabs} /> :
@@ -168,7 +168,7 @@ export class MainTab extends React.Component {
           }
           {
             !this.props.reviewURL ?
-              this.state.selectedTab === 'keywords' ?
+              this.state.selectedTab === 'review' ?
                 (this.props.reviewForm) : null
               : null
           }
@@ -210,20 +210,23 @@ export class MainTab extends React.Component {
                   onTrain={onTrain}
                 />
               }
-              <Grid item className={classes.actionContainer}>
-                <Hidden only={['xl', 'lg', 'md']}>
-                  <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
-                    <Icon>save</Icon>
-                  </a>
-                </Hidden>
-                <Hidden only={['sm', 'xs']}>
-                  <Grid className={classes.buttonContainer}>
-                    <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
-                      <FormattedMessage {...messages.finishButton} />
-                    </Button>
+              {
+                disableSave ? null :
+                  <Grid item className={classes.actionContainer}>
+                    <Hidden only={['xl', 'lg', 'md']}>
+                      <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
+                        <Icon>save</Icon>
+                      </a>
+                    </Hidden>
+                    <Hidden only={['sm', 'xs']}>
+                      <Grid className={classes.buttonContainer}>
+                        <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
+                          <FormattedMessage {...messages.finishButton} />
+                        </Button>
+                      </Grid>
+                    </Hidden>
                   </Grid>
-                </Hidden>
-              </Grid>
+              }
             </Grid>
           </Grid>
           {
@@ -246,7 +249,7 @@ export class MainTab extends React.Component {
           }
           {
             !this.props.reviewURL ?
-              this.state.selectedTab === 'keywords' ?
+              this.state.selectedTab === 'review' ?
                 (this.props.reviewForm) : null
               : null
           }
@@ -282,7 +285,7 @@ MainTab.propTypes = {
   ]),
   reviewURL: PropTypes.string,
   agentName: PropTypes.string,
-  onFinishAction: PropTypes.func.isRequired,
+  onFinishAction: PropTypes.func,
   onTrain: PropTypes.func,
   agentStatus: PropTypes.string,
   lastTraining: PropTypes.string,

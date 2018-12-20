@@ -178,3 +178,8 @@ export const UPDATE_CATEGORY = 'app/CategoryPage/UPDATE_CATEGORY';
 export const UPDATE_CATEGORY_ERROR = 'app/CategoryPage/UPDATE_CATEGORY_ERROR';
 export const UPDATE_CATEGORY_SUCCESS = 'app/CategoryPage/UPDATE_CATEGORY_SUCCESS';
 export const CHANGE_CATEGORY_DATA = 'app/CategoryPage/CHANGE_CATEGORY_DATA';
+
+/* 
+ * Review 
+ */
+export const CHANGE_REVIEW_PAGE_SIZE = 'app/ReviewPage/CHANGE_REVIEW_PAGE_SIZE';

@@ -31,10 +31,11 @@ import {
   ADD_ACTION_SAYING,
   DELETE_ACTION_SAYING,
   LOAD_ACTIONS,
+  CHANGE_REVIEW_PAGE_SIZE
 } from '../App/constants';
 
 import {
-  makeSelectAgent, makeSelectSelectedCategory, makeSelectNewSayingActions,
+  makeSelectAgent, makeSelectSelectedCategory, makeSelectNewSayingActions, makeSelectAgentSettings
 } from '../App/selectors';
 
 import { getKeywords } from '../KeywordsPage/saga';
@@ -221,6 +222,18 @@ export function* getCategories(payload) {
   }
 }
 
+export function* putReviewPageSize(payload){
+  const agentSettings = yield select(makeSelectAgentSettings());
+  const { api, agentId, pageSize } = payload;
+  const mutableSettings = Immutable.asMutable(agentSettings, { deep: true} );
+  mutableSettings.reviewPageSize = pageSize;
+  try {
+    yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
+  } catch (err) {
+    throw err;
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_SAYINGS, getSayings);
   yield takeLatest(ADD_SAYING, postSaying);
@@ -233,4 +246,5 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_ACTIONS, getActions);
   yield takeLatest(LOAD_CATEGORIES, getCategories);
   yield takeLatest(LOAD_FILTERED_CATEGORIES, getCategories);
+  yield takeLatest(CHANGE_REVIEW_PAGE_SIZE, putReviewPageSize);
 };
