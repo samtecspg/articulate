@@ -88,7 +88,7 @@ export class MainTab extends React.Component {
   };
 
   render() {
-    const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave } = this.props;
+    const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave, agentTouched } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
         <Hidden only={['sm', 'xs']}>
@@ -130,7 +130,7 @@ export class MainTab extends React.Component {
                 />
               }
               {
-                disableSave ? null :
+                disableSave || !agentTouched ? null :
                   <Grid item className={classes.actionContainer}>
                     <Hidden only={['xl', 'lg', 'md']}>
                       <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
@@ -211,7 +211,7 @@ export class MainTab extends React.Component {
                 />
               }
               {
-                disableSave ? null :
+                disableSave || !agentTouched ? null :
                   <Grid item className={classes.actionContainer}>
                     <Hidden only={['xl', 'lg', 'md']}>
                       <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
@@ -292,6 +292,7 @@ MainTab.propTypes = {
   formError: PropTypes.bool,
   newAgent: PropTypes.bool,
   disableSave: PropTypes.bool,
+  agentTouched: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(MainTab));

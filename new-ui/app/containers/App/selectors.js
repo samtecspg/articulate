@@ -86,6 +86,11 @@ const makeSelectAgentSettings = () => createSelector(
   (globalState) => globalState.agentSettings
 );
 
+const makeSelectAgentTouched = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.agentTouched
+);
+
 /* Keywords */
 const makeSelectKeywords = () => createSelector(
   selectGlobalCategory,
@@ -201,6 +206,7 @@ export {
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
+  makeSelectAgentTouched,
 
   makeSelectKeywords,
   makeSelectTotalKeywords,

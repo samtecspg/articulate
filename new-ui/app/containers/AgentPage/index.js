@@ -38,6 +38,7 @@ import {
   makeSelectAgentWebhook,
   makeSelectSettings,
   makeSelectSuccess,
+  makeSelectAgentTouched,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -246,6 +247,7 @@ export class AgentPage extends React.PureComponent {
     return (
       <Grid container>
         <MainTab
+          agentTouched={this.props.agentTouched}
           agentName={this.props.agent.agentName}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
@@ -316,6 +318,7 @@ const mapStateToProps = createStructuredSelector({
   agentSettings: makeSelectAgentSettings(),
   settings: makeSelectSettings(),
   success: makeSelectSuccess(),
+  agentTouched: makeSelectAgentTouched(),
 });
 
 function mapDispatchToProps(dispatch) {

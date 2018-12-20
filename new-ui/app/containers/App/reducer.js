@@ -371,7 +371,8 @@ function appReducer(state = initialState, action) {
         .set('currentAgent', initialState.currentAgent)
         .set('agentWebhook', initialState.agentWebhook)
         .set('agentPostFormat', initialState.agentPostFormat)
-        .set('agentSettings', initialState.agentSettings);
+        .set('agentSettings', initialState.agentSettings)
+        .set('agentTouched', false);
     case LOAD_AGENT:
       return state
         .set('loading', true)
@@ -381,7 +382,8 @@ function appReducer(state = initialState, action) {
         .set('agent', initialState.agent)
         .set('currentAgent', initialState.currentAgent)
         .set('loading', false)
-        .set('error', action.error);
+        .set('error', action.error)
+        .set('agentTouched', false);
     case LOAD_AGENT_SUCCESS:
       const isATrainingUpdate = state.agent.agentName === action.payload.agent.agentName && state.agent.status !== action.payload.agent.status;
       if (isATrainingUpdate){
@@ -417,7 +419,8 @@ function appReducer(state = initialState, action) {
         .set('agentWebhook', agentWebhook)
         .set('agentPostFormat', agentPostFormat)
         .set('loading', false)
-        .set('error', false);
+        .set('error', false)
+        .set('agentTouched', false);
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)
@@ -425,9 +428,11 @@ function appReducer(state = initialState, action) {
         .setIn(['agentPostFormat', 'agent'], action.payload.value)
         .set('agentTouched', true);
     case CHANGE_AGENT_DATA:
-      return state.setIn(['agent', action.payload.field], action.payload.value);
+      return state.setIn(['agent', action.payload.field], action.payload.value)
+      .set('agentTouched', true);
     case CHANGE_WEBHOOK_DATA:
-      return state.setIn(['agentWebhook', action.payload.field], action.payload.value);
+      return state.setIn(['agentWebhook', action.payload.field], action.payload.value)
+      .set('agentTouched', true);
     case CHANGE_WEBHOOK_PAYLOAD_TYPE:
       if (action.payload.value === 'None') {
         if (state.agentWebhook.webhookPayloadType === 'JSON') {
@@ -467,9 +472,11 @@ function appReducer(state = initialState, action) {
         .setIn(['agentSettings', action.payload.field], action.payload.value)
         .set('agentTouched', true);
     case ADD_AGENT_FALLBACK:
-      return state.updateIn(['agent', 'fallbackResponses'], fallbackResponses => fallbackResponses.concat(action.newFallback));
+      return state.updateIn(['agent', 'fallbackResponses'], fallbackResponses => fallbackResponses.concat(action.newFallback))
+      .set('agentTouched', true);
     case DELETE_AGENT_FALLBACK:
-      return state.updateIn(['agent', 'fallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.fallbackIndex));
+      return state.updateIn(['agent', 'fallbackResponses'], fallbackResponses => fallbackResponses.filter((item, index) => index !== action.fallbackIndex))
+      .set('agentTouched', true);
     case ADD_AGENT:
       return state.set('loading', true)
         .set('success', false)
@@ -485,7 +492,8 @@ function appReducer(state = initialState, action) {
         .set('currentAgent', action.agent)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('agentTouched', false);
     case UPDATE_AGENT:
       return state.set('loading', true)
         .set('success', false)
@@ -500,7 +508,8 @@ function appReducer(state = initialState, action) {
         .set('currentAgent', action.agent)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('agentTouched', false);
     case TRAIN_AGENT:
       return state.setIn(['agent', 'status'], 'Training')
         .set('error', false);
@@ -552,7 +561,6 @@ function appReducer(state = initialState, action) {
       return state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.actionName));
     case DELETE_ACTION_NEW_SAYING:
       return state.update('newSayingActions', newSayingActions => newSayingActions.filter((item) => item !== action.actionName));
-
     case UPDATE_SAYING_ERROR:
       return state.set('loading', false)
         .set('error', action.error);
@@ -810,7 +818,6 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['actionWebhook', action.payload.field], action.payload.value)
         .set('actionTouched', true);
-
     case CHANGE_ACTION_POST_FORMAT_DATA:
       return state
         .setIn(['actionPostFormat', action.payload.field], action.payload.value)
