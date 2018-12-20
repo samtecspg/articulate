@@ -44,11 +44,6 @@ class ActionButtons extends React.Component {
         </Hidden>
         <Hidden only={['sm', 'xs']}>
           <Grid className={classes.buttonContainer}>
-            <Button key='btnCancel'>
-              <Link className={classes.link} to={`/agent/${this.props.agentId}/keywords`}>
-                <FormattedMessage {...messages.cancelButton} />
-              </Link>
-            </Button>
             <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
               <FormattedMessage {...messages.finishButton} />
             </Button>

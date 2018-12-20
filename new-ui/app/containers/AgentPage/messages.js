@@ -87,10 +87,6 @@ export default defineMessages({
     id: 'app.containers.AgentPage.finishButton',
     defaultMessage: 'Save',
   },
-  cancelButton: {
-    id: 'app.containers.AgentPage.cancelButton',
-    defaultMessage: 'Cancel',
-  },
   noFallbacks: {
     id: 'app.containers.AgentPage.component.AgentDataForm.noFallbacks',
     defaultMessage: 'You haven\'t specified any fallback response',

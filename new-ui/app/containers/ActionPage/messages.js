@@ -37,7 +37,7 @@ export default defineMessages({
   },
   finishButton: {
     id: 'app.containers.ActionPage.component.ActionButtons.finishButton',
-    defaultMessage: 'Finish',
+    defaultMessage: 'Save',
   },
   nextButton: {
     id: 'app.containers.ActionPage.component.ActionButtons.nextButton',
@@ -73,7 +73,7 @@ export default defineMessages({
   },
   backButton: {
     id: 'app.containers.ActionPage.backButton',
-    defaultMessage: 'Back',
+    defaultMessage: 'Exit',
   },
   textpromptTextField: {
     id: 'app.containers.ActionPage.components.SlotForm.textpromptTextField',

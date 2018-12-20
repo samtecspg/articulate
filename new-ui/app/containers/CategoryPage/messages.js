@@ -49,11 +49,7 @@ export default defineMessages({
   },
   backButton: {
     id: 'app.containers.CategoryEditPage.backButton',
-    defaultMessage: 'Back',
-  },
-  cancelButton: {
-    id: 'app.containers.CategoryEditPage.component.ActionButtons.cancelButton',
-    defaultMessage: 'Cancel',
+    defaultMessage: 'Exit',
   },
   sliderActionThresholdLabel: {
     id: 'app.containers.CategoryEditPage.component.CategoryDataForm.sliderActionThresholdLabel',

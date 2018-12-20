@@ -103,13 +103,9 @@ export default defineMessages({
     id: 'app.containers.KeywordsEditPage.component.ActionButtons.finishButton',
     defaultMessage: 'Save',
   },
-  cancelButton: {
-    id: 'app.containers.KeywordsEditPage.component.ActionButtons.cancelButton',
-    defaultMessage: 'Cancel',
-  },
   backButton: {
     id: 'app.containers.KeywordsEditPage.backButton',
-    defaultMessage: 'Back',
+    defaultMessage: 'Exit',
   },
   newKeyword: {
     id: 'app.containers.KeywordsEditPage.newKeyword',

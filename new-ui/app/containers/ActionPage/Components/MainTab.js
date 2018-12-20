@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Hidden, Tabs, Tab, Icon, Typography, Button } from "@material-ui/core";
+import { Grid, Hidden, Tabs, Tab, Icon, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import messages from "../messages";
@@ -10,9 +10,6 @@ import messages from "../messages";
 const styles = {
   mainTabContainer: {
     marginTop: '45px',
-  },
-  tabsContainer: {
-    marginLeft: '50px'
   },
   tabs: {
     paddingLeft: '15px',
@@ -24,6 +21,7 @@ const styles = {
   subtitle: {
     paddingLeft: '5px',
     color: '#4e4e4e',
+    fontWeight: 'bold',
   },
   container: {
     display: 'inline',
@@ -59,9 +57,7 @@ const styles = {
     textDecoration: 'underline',
   },
   backButtonContainer: {
-    position: 'absolute',
-    paddingLeft: '20px',
-    paddingTop: '10px'
+    display: 'inline',
   }
 };
 
@@ -93,65 +89,37 @@ export class MainTab extends React.Component {
                 scrollButtons="off"
                 onChange={(evt, value) => { this.handleChange(value)}}
               >
-                <Tab value="action" className={classes.tab} label={<span><span>{intl.formatMessage(messages.action)}</span><Typography className={classes.subtitle} variant='h1'>{newAction ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.actionName}</Typography></span>} />
+                <Tab value="action" className={classes.tab} label={<span><span>{intl.formatMessage(messages.action)}</span><span className={classes.subtitle}>{newAction ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.actionName}</span></span>} />
                 <Tab value="slots" className={classes.tab} label={intl.formatMessage(messages.slots)} />
                 <Tab value="webhook" className={classes.tab} label={intl.formatMessage(messages.webhook)} />
                 <Tab value="response" className={classes.tab} label={intl.formatMessage(messages.response)} />
               </Tabs>
             </Grid>
-            <Grid className={classes.backButtonContainer}>
-              <span className={classes.backArrow} key='backArrow'>{'< '}</span>
-              <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
-                <FormattedMessage {...messages.backButton} />
-              </a>
-            </Grid>
             <Grid className={classes.container}>
               <Hidden only={['xl', 'lg', 'md']}>
-                {this.props.hideFinishButton ?
-                  (
-                    <a key='btnNext' onClick={this.props.onNextAction} className={`${classes.icon} ${classes.link}`}>
-                      <Icon>arrow_forward</Icon>
+                <Grid className={classes.buttonContainer}>
+                  <Grid className={classes.backButtonContainer}>
+                    <span className={classes.backArrow} key='backArrow'>{'< '}</span>
+                    <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
+                      <FormattedMessage {...messages.backButton} />
                     </a>
-                  )
-                  :
-                  (
-                    this.props.isLastTab ?
-                      <a style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
-                        <Icon>save</Icon>
-                      </a>
-                      :
-                      [<a style={{color: this.props.formError ? '#f44336' : ''}} key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
-                        <Icon>save</Icon>
-                      </a>,
-                      <a key='btnNext' onClick={this.props.onNextAction} className={`${classes.icon} ${classes.link}`}>
-                        <Icon>arrow_forward</Icon>
-                      </a>]
-                  )
-                }
+                  </Grid>
+                  <a style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
+                    <Icon>save</Icon>
+                  </a>
+                </Grid>
               </Hidden>
               <Hidden only={['sm', 'xs']}>
                 <Grid className={classes.buttonContainer}>
-                  {this.props.hideFinishButton ?
-                    (
-                      <Button onClick={this.props.onNextAction} key='btnNext' variant='contained'>
-                        <FormattedMessage {...messages.nextButton} />
-                      </Button>
-                    )
-                    :
-                    (
-                      this.props.isLastTab ?
-                        <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
-                          <FormattedMessage {...messages.finishButton} />
-                        </Button>
-                        :
-                        [<Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish'>
-                          <FormattedMessage {...messages.finishButton} />
-                        </Button>,
-                        <Button onClick={this.props.onNextAction} key='btnNext' variant='contained'>
-                          <FormattedMessage {...messages.nextButton} />
-                        </Button>]
-                    )
-                  }
+                  <Grid className={classes.backButtonContainer}>
+                    <span className={classes.backArrow} key='backArrow'>{'< '}</span>
+                    <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
+                      <FormattedMessage {...messages.backButton} />
+                    </a>
+                  </Grid>
+                  <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
+                    <FormattedMessage {...messages.finishButton} />
+                  </Button>
                 </Grid>
               </Hidden>
             </Grid>
