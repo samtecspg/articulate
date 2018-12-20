@@ -41,6 +41,9 @@ const styles = {
     fontFamily: 'Montserrat',
     textAlign: 'left',
   },
+  agentNameCard: {
+    fontSize: '18px',
+  },
   agentCardContent: {
     color: '#979797',
     fontSize: '14px',
@@ -125,7 +128,7 @@ class AgentsCards extends React.Component {
     addEmptyCards(numOfCards){
       const emptyCards = [];
       //the ui show 3 cards as max per row
-      for (let index = 0; index < numOfCards % 3; index++) {
+      for (let index = 0; index < numOfCards % 4; index++) {
         emptyCards.push(<Grid key={`emptyCard_${index}`} className={this.props.classes.emptyCard} />)
         
       }
@@ -136,7 +139,7 @@ class AgentsCards extends React.Component {
       const { anchorEl } = this.state;
       const { classes, agents } = this.props;
       return (
-        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={40}>
+        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>
           <Menu
             id="long-menu"
             anchorEl={anchorEl}
@@ -245,7 +248,7 @@ class AgentsCards extends React.Component {
               >
               </img>
               <Card onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCard}>
-                <CardHeader className={classes.agentCardHeader} title={agent.agentName}/>
+                <CardHeader className={classes.agentCardHeader} titleTypographyProps={{ className: classes.agentNameCard }} title={agent.agentName}/>
                 <CardContent className={classes.agentCardContent}>{agent.description}</CardContent>
               </Card>
             </Grid>
