@@ -44,6 +44,15 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class AgentDataForm extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.getThresholdLabel = this.getThresholdLabel.bind(this);
+  }
+
+  getThresholdLabel(){
+    return this.props.agent.multiCategory ? messages.sliderCategoryRecognitionThresholdLabel : messages.sliderActionRecognitionThresholdLabel;
+  }
+
   render(){
     const { classes, intl, agent, settings } = this.props;
     return (
@@ -122,52 +131,48 @@ class AgentDataForm extends React.Component {
               />
             </Grid>
           </Grid>
-          {
-            this.props.agent.multiCategory ?
-              <Grid container spacing={24} item xs={12}>
-                <Grid item lg={4} md={10} sm={9} xs={8}>
-                  <Typography className={classes.sliderLabel} id='categoryClassifierThreshold'>
-                    <FormattedMessage {...messages.sliderCategoryRecognitionThresholdLabel} />
-                  </Typography>
-                  <Slider
-                    value={agent.categoryClassifierThreshold}
-                    min={0}
-                    max={100}
-                    step={1}
-                    aria-labelledby='categoryClassifierThreshold'
-                    onChange={(evt, value) => { this.props.onChangeCategoryClassifierThreshold(value) }} />
-                </Grid>
-                <Grid item lg={2} md={2} sm={3} xs={4}>
-                  <TextField
-                    id='categoryClassifierThreshold'
-                    margin='normal'
-                    value={agent.categoryClassifierThreshold}
-                    onChange={(evt) => {
-                      evt.target.value === '' ?
-                        this.props.onChangeCategoryClassifierThreshold(0) :
-                        (evt.target.value <= 100 && evt.target.value >= 0 ?
-                          this.props.onChangeCategoryClassifierThreshold(evt.target.value) :
-                          false) }}
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      style: {
-                        textAlign: 'center',
-                      },
-                      min: 0,
-                      max: 100,
-                      step: 1,
-                    }}
-                    className={classes.sliderTextField}
-                    helperText={intl.formatMessage(messages.requiredField)}
-                    type='number'
-                  />
-                </Grid>
-              </Grid> :
-              null
-          }
+          <Grid container spacing={24} item xs={12}>
+            <Grid item lg={4} md={10} sm={9} xs={8}>
+              <Typography className={classes.sliderLabel} id='categoryClassifierThreshold'>
+                <FormattedMessage {...this.getThresholdLabel()} />
+              </Typography>
+              <Slider
+                value={agent.categoryClassifierThreshold}
+                min={0}
+                max={100}
+                step={1}
+                aria-labelledby='categoryClassifierThreshold'
+                onChange={(evt, value) => { this.props.onChangeCategoryClassifierThreshold(value) }} />
+            </Grid>
+            <Grid item lg={2} md={2} sm={3} xs={4}>
+              <TextField
+                id='categoryClassifierThreshold'
+                margin='normal'
+                value={agent.categoryClassifierThreshold}
+                onChange={(evt) => {
+                  evt.target.value === '' ?
+                    this.props.onChangeCategoryClassifierThreshold(0) :
+                    (evt.target.value <= 100 && evt.target.value >= 0 ?
+                      this.props.onChangeCategoryClassifierThreshold(evt.target.value) :
+                      false) }}
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  style: {
+                    textAlign: 'center',
+                  },
+                  min: 0,
+                  max: 100,
+                  step: 1,
+                }}
+                className={classes.sliderTextField}
+                helperText={intl.formatMessage(messages.requiredField)}
+                type='number'
+              />
+            </Grid>
+          </Grid>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <TextField

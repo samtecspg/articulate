@@ -60,8 +60,12 @@ export default defineMessages({
     defaultMessage: 'Search for a timezone',
   },
   sliderCategoryRecognitionThresholdLabel: {
-    id: 'app.containers.AgentPage.component.AgentDataForm.sliderLabel',
+    id: 'app.containers.AgentPage.component.AgentDataForm.sliderCategoryRecognitionThresholdLabel',
     defaultMessage: 'Category Recognition Threshold:',
+  },
+  sliderActionRecognitionThresholdLabel: {
+    id: 'app.containers.AgentPage.component.AgentDataForm.sliderActionRecognitionThresholdLabel',
+    defaultMessage: 'Action Recognition Threshold:',
   },
   fallbackTextField: {
     id: 'app.containers.AgentPage.component.AgentDataForm.fallbackTextField',
