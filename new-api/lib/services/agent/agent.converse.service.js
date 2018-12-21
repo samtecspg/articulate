@@ -138,7 +138,7 @@ module.exports = async function ({ id, sessionId, text, timezone, additionalKeys
             //MARK: get category using rasaResult category name
             conversationStateObject.category = getCategoryByName({ agentCategories: conversationStateObject.agent.categories, categoryName: conversationStateObject.rasaResult.category });
             //MARK: if there is an action and a category, check if the action confidence y bigger than the category threshold === true
-            if (conversationStateObject.action && conversationStateObject.category && conversationStateObject.rasaResult.action.confidence > conversationStateObject.category.actionThreshold) {
+            if (conversationStateObject.action && ((!conversationStateObject.agent.multiCategory && conversationStateObject.rasaResult.action.confidence > conversationStateObject.agent.categoryClassifierThreshold ) || (conversationStateObject.agent.multiCategory && conversationStateObject.category && conversationStateObject.rasaResult.action.confidence > conversationStateObject.category.actionThreshold))) {
                 //MARK: if the current context is empty or the current OR if the action name is the same as the current context action add a new frame with empty slots
                 if (!conversationStateObject.currentContext || (conversationStateObject.rasaResult.action.name !== conversationStateObject.currentContext.action)) {
                     const frame = {
