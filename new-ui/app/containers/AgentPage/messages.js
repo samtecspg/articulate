@@ -137,7 +137,7 @@ export default defineMessages({
   },
   multipleIntentRecognition: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.multipleIntentRecognition',
-    defaultMessage: 'Multiple action recognition using Tensorflow pipeline (This will disable categories)',
+    defaultMessage: 'Multiple action recognition using Tensorflow pipeline (This will disable models per categories)',
   },
   multiCategory: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.multiCategory',

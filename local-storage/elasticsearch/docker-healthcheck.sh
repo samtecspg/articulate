@@ -3,7 +3,7 @@
 # Usage: docker-healthcheck  # by default, waits for "green"
 #        docker-healthcheck yellow # to wait for "yellow" instead
 
-target='green'
+target='yellow'
 if [ ! -z "$1" ]; then
   target="$1"
 fi

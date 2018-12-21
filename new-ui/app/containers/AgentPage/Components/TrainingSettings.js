@@ -80,26 +80,14 @@ export class TrainingSettings extends React.Component {
         <FormControlLabel
           control={
             <Switch
-              checked={agent.multiCategory}
-              onChange={() => {
-                this.props.onChangeAgentData(
-                  "multiCategory",
-                  !agent.multiCategory
-                );
-              }}
-              value="multiCategory"
-              color="primary"
-            />
-          }
-          label={intl.formatMessage(messages.multiCategory)}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <FormControlLabel
-          control={
-            <Switch
               checked={agent.enableModelsPerCategory}
               onChange={() => {
+                if (!agent.multiCategory){
+                  this.props.onChangeAgentData(
+                    "multiCategory",
+                    true
+                  );
+                }
                 this.props.onChangeAgentData(
                   "enableModelsPerCategory",
                   !agent.enableModelsPerCategory
