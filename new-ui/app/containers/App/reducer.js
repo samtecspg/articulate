@@ -887,6 +887,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case CREATE_KEYWORD_SUCCESS:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Keyword <b>${action.keyword.keywordName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
       return state.set('keyword', action.keyword)
         .set('loading', false)
         .set('success', true)
@@ -963,7 +964,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case CREATE_CATEGORY_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Category <b>${action.category.categoryName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Category <b>${action.category.categoryName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
       return state.set('category', action.category)
         .set('selectedCategory', action.category.id)
         .set('loading', false)
