@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import { CONFIG_KEYWORD_TYPE_REGEX } from '../../../util/constants';
+import { CONFIG_KEYWORD_TYPE_REGEX, MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
 
 module.exports = async function ({ agent, action, context, currentContext, rasaResult, text, actionWasFulfilled }) {
 
-    const { agentService, keywordService } = await this.server.services();
+    const { agentService, keywordService, globalService } = await this.server.services();
     //TODO: need to refactor the CSO creation since is no longer passed to other functions
     const conversationStateObject = { agent, action, context, currentContext, rasaResult, text };
     //TODO: remove context update, and move it somewhere else
@@ -139,7 +139,35 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         });*/
     }
     if (action.useWebhook || agent.useWebhook) {
-        const webhook = action.useWebhook ? action.webhook : agent.webhook;
+        let webhook, modelPath;
+        if (action.useWebhook){
+            modelPath = [
+                {
+                    model: MODEL_AGENT,
+                    id: agent.id
+                },
+                {
+                    model: MODEL_ACTION,
+                    id: action.id
+                },
+                {
+                    model: MODEL_WEBHOOK,
+                }
+            ]
+            webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
+        }
+        else {
+            modelPath = [
+                {
+                    model: MODEL_AGENT,
+                    id: agent.id
+                },
+                {
+                    model: MODEL_WEBHOOK,
+                }
+            ]
+            webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+        }
         const webhookResponse = await agentService.converseCallWebhook({
             url: webhook.webhookUrl,
             templatePayload: webhook.webhookPayload,

@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import QueryString from 'querystring';
 
-module.exports = async ({ url, templatePayload, payloadType, method, templateContext }) => {
+module.exports = async function ({ url, templatePayload, payloadType, method, templateContext }) {
 
     const { handlebars } = this.server.app;
 
