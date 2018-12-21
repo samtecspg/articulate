@@ -1,4 +1,4 @@
-version: '3.0'
+version: '2.2'
 
 services:
   api:
@@ -7,7 +7,10 @@ services:
     networks: ['alpha-nlu-network']
     entrypoint: ['node', 'start.js']
     environment:
-     - SWAGGER_BASE_PATH
+      - SWAGGER_BASE_PATH
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
   ui:
     image: samtecspg/articulate-ui:repo-head
     ports: ['0.0.0.0:3000:3000']
@@ -50,4 +53,9 @@ services:
     volumes:
       - ${ES_CONFIG:-./local-storage/elasticsearch/config/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
       - ${ES_DATA:-./local-storage/elasticsearch/data}:/usr/share/elasticsearch/data
+      - ${ES_DATA:-./local-storage/elasticsearch/docker-healthcheck.sh}:/usr/share/docker-healthcheck.sh
+    healthcheck:
+      test: ["CMD", "/bin/bash", "/usr/share/docker-healthcheck.sh"]
+      timeout: 10s
+      retries: 10
 networks: {alpha-nlu-network: {}}
