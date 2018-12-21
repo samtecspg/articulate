@@ -851,6 +851,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case UPDATE_ACTION_SUCCESS:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Action <b>${action.action.actionName}</b> updated successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success'}));
       return state.set('action', action.action)
         .set('currentAction', action.action)
         .set('loading', false)
