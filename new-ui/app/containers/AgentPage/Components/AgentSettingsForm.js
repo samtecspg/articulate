@@ -114,6 +114,10 @@ class AgentSettingsForm extends React.Component {
                   onChangeWebhookData={this.props.onChangeWebhookData}
                   onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
                   webhookSettingDescription={messages.webhookSettingDescription}
+                  onAddNewHeader={this.props.onAddNewHeader}
+                  onDeleteHeader={this.props.onDeleteHeader}
+                  onChangeHeaderName={this.props.onChangeHeaderName}
+                  onChangeHeaderValue={this.props.onChangeHeaderValue}
                   errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
@@ -231,6 +235,10 @@ AgentSettingsForm.propTypes = {
   onChangeAgentData: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
+  onAddNewHeader: PropTypes.func,
+  onDeleteHeader: PropTypes.func,
+  onChangeHeaderName: PropTypes.func,
+  onChangeHeaderValue: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
   onChangeAgentSettingsData: PropTypes.func,
   errorState: PropTypes.object,

@@ -178,6 +178,10 @@ class Form extends React.Component {
               onChangeAgentData={this.props.onChangeAgentData}
               onChangeWebhookData={this.props.onChangeWebhookData}
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+              onAddNewHeader={this.props.onAddNewHeader}
+              onDeleteHeader={this.props.onDeleteHeader}
+              onChangeHeaderName={this.props.onChangeHeaderName}
+              onChangeHeaderValue={this.props.onChangeHeaderValue}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
               errorState={this.props.errorState}
@@ -202,6 +206,10 @@ Form.propTypes = {
   onChangeAgentName: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
+  onAddNewHeader: PropTypes.func,
+  onDeleteHeader: PropTypes.func,
+  onChangeHeaderName: PropTypes.func,
+  onChangeHeaderValue: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
   onChangeAgentSettingsData: PropTypes.func,
   onChangeCategoryClassifierThreshold: PropTypes.func,

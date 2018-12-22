@@ -56,6 +56,10 @@ import {
   resetActionData,
   chainActionToResponse,
   unchainActionFromResponse,
+  addNewHeaderActionWebhook,
+  deleteHeaderActionWebhook,
+  changeHeaderNameActionWebhook,
+  changeHeaderValueActionWebhook
 } from '../App/actions';
 
 const styles = {
@@ -285,6 +289,10 @@ export class ActionPage extends React.Component {
               onChangeActionData={this.props.onChangeActionData}
               onChangeWebhookData={this.props.onChangeWebhookData}
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+              onAddNewHeader={this.props.onAddNewHeader}
+              onDeleteHeader={this.props.onDeleteHeader}
+              onChangeHeaderName={this.props.onChangeHeaderName}
+              onChangeHeaderValue={this.props.onChangeHeaderValue}
               errorState={this.state.errorState}
             />
           }
@@ -334,6 +342,10 @@ ActionPage.propTypes = {
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
+  onAddNewHeader: PropTypes.func,
+  onDeleteHeader: PropTypes.func,
+  onChangeHeaderName: PropTypes.func,
+  onChangeHeaderValue: PropTypes.func,
   onAddResponse: PropTypes.func,
   onDeleteResponse: PropTypes.func,
   onChainActionToResponse: PropTypes.func,
@@ -402,6 +414,18 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeWebhookPayloadType: (field, value) => {
       dispatch(changeActionWebhookPayloadType({field, value}));
+    },
+    onAddNewHeader: (payload) => {
+      dispatch(addNewHeaderActionWebhook(payload));
+    },
+    onDeleteHeader: (headerIndex) => {
+      dispatch(deleteHeaderActionWebhook(headerIndex));
+    },
+    onChangeHeaderName: (headerIndex, value) => {
+      dispatch(changeHeaderNameActionWebhook(headerIndex, value));
+    },
+    onChangeHeaderValue: (headerIndex, value) => {
+      dispatch(changeHeaderValueActionWebhook(headerIndex, value));
     },
     onChangePostFormatData: (field, value) => {
       dispatch(changeActionPostFormatData({field, value}));

@@ -40,6 +40,10 @@ import {
   DELETE_AGENT_FALLBACK,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
+  ADD_HEADER_AGENT_WEBHOOK,
+  DELETE_HEADER_AGENT_WEBHOOK,
+  CHANGE_HEADER_KEY_AGENT_WEBHOOK,
+  CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
 
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
@@ -109,6 +113,10 @@ import {
   DELETE_ACTION,
   DELETE_ACTION_ERROR,
   DELETE_ACTION_SUCCESS,
+  ADD_HEADER_ACTION_WEBHOOK,
+  DELETE_HEADER_ACTION_WEBHOOK,
+  CHANGE_HEADER_KEY_ACTION_WEBHOOK,
+  CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
 
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
@@ -192,6 +200,9 @@ const initialState = Immutable({
     webhookVerb: 'GET',
     webhookPayloadType: 'None',
     webhookPayload: '',
+    webhookHeaders: [],
+    webhookUser: '',
+    webhookPassword: ''
   },
   agentPostFormat: {
     agent: '',
@@ -243,6 +254,9 @@ const initialState = Immutable({
     webhookVerb: 'GET',
     webhookPayloadType: 'None',
     webhookPayload: '',
+    webhookHeaders: [],
+    webhookUser: '',
+    webhookPassword: ''
   },
   actionPostFormat: {
     postFormatPayload: '{\n\t"textResponse" : "{{ textResponse }}",\n\t"docId" : "{{ docId }}"\n}',
@@ -516,6 +530,24 @@ function appReducer(state = initialState, action) {
     case TRAIN_AGENT_ERROR:
       return state.setIn(['agent', 'status'], 'Error')
         .set('error', action.error);
+    case ADD_HEADER_AGENT_WEBHOOK:
+      return state.updateIn(['agentWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.concat(action.payload));
+    case DELETE_HEADER_AGENT_WEBHOOK:
+      return state.updateIn(['agentWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.filter((item, index) => index !== action.headerIndex));
+    case CHANGE_HEADER_KEY_AGENT_WEBHOOK:
+      return state.updateIn(['agentWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.map((header, index) => {
+        if(index === action.headerIndex){
+          return header.set('key', action.value);
+        }
+        return header;
+      }));
+    case CHANGE_HEADER_VALUE_AGENT_WEBHOOK:
+      return state.updateIn(['agentWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.map((header, index) => {
+        if(index === action.headerIndex){
+          return header.set('value', action.value);
+        }
+        return header;
+      }));
 
     /* Sayings */
     case LOAD_SAYINGS:
@@ -874,6 +906,24 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false);
+    case ADD_HEADER_ACTION_WEBHOOK:
+      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.concat(action.payload));
+    case DELETE_HEADER_ACTION_WEBHOOK:
+      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.filter((item, index) => index !== action.headerIndex));
+    case CHANGE_HEADER_KEY_ACTION_WEBHOOK:
+      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.map((header, index) => {
+        if(index === action.headerIndex){
+          return header.set('key', action.value);
+        }
+        return header;
+      }));
+    case CHANGE_HEADER_VALUE_ACTION_WEBHOOK:
+      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.map((header, index) => {
+        if(index === action.headerIndex){
+          return header.set('value', action.value);
+        }
+        return header;
+      }));
 
     /* Keyword */
     case CHANGE_KEYWORD_DATA:

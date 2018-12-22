@@ -13,7 +13,7 @@ module.exports = {
     path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_WEBHOOK}`,
     options: {
         tags: ['api'],
-        validate: AgentValidator.addWebhook,
+        validate: AgentValidator.updateWebhook,
         handler: async (request) => {
 
             const { agentService } = await request.services();

@@ -45,6 +45,10 @@ import {
   DELETE_AGENT_FALLBACK,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
+  ADD_HEADER_AGENT_WEBHOOK,
+  DELETE_HEADER_AGENT_WEBHOOK,
+  CHANGE_HEADER_KEY_AGENT_WEBHOOK,
+  CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
 
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
@@ -118,6 +122,11 @@ import {
   DELETE_ACTION_ERROR,
   DELETE_ACTION_SUCCESS,
   RESET_ACTION_DATA,
+  ADD_HEADER_ACTION_WEBHOOK,
+  DELETE_HEADER_ACTION_WEBHOOK,
+  CHANGE_HEADER_KEY_ACTION_WEBHOOK,
+  CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
+
 
   RESET_KEYWORD_DATA,
   LOAD_KEYWORD,
@@ -432,6 +441,37 @@ export function trainAgentError(error){
   return {
     type: TRAIN_AGENT_ERROR,
     error,
+  }
+}
+
+export function addNewHeaderAgentWebhook(payload){
+  return {
+    type: ADD_HEADER_AGENT_WEBHOOK,
+    payload
+  }
+}
+
+export function deleteHeaderAgentWebhook(headerIndex) {
+  return {
+    type: DELETE_HEADER_AGENT_WEBHOOK,
+    headerIndex,
+  }
+}
+
+
+export function changeHeaderNameAgentWebhook(headerIndex, value){
+  return {
+    type: CHANGE_HEADER_KEY_AGENT_WEBHOOK,
+    headerIndex,
+    value
+  }
+}
+
+export function changeHeaderValueAgentWebhook(headerIndex, value){
+  return {
+    type: CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
+    headerIndex,
+    value
   }
 }
 
@@ -965,6 +1005,36 @@ export function deleteActionError(){
 export function deleteActionSuccess(){
   return {
     type: DELETE_ACTION_SUCCESS,
+  }
+}
+
+export function addNewHeaderActionWebhook(payload){
+  return {
+    type: ADD_HEADER_ACTION_WEBHOOK,
+    payload
+  }
+}
+
+export function deleteHeaderActionWebhook(headerIndex) {
+  return {
+    type: DELETE_HEADER_ACTION_WEBHOOK,
+    headerIndex,
+  }
+}
+
+export function changeHeaderNameActionWebhook(headerIndex, value){
+  return {
+    type: CHANGE_HEADER_KEY_ACTION_WEBHOOK,
+    headerIndex,
+    value
+  }
+}
+
+export function changeHeaderValueActionWebhook(headerIndex, value){
+  return {
+    type: CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
+    headerIndex,
+    value
   }
 }
 

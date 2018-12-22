@@ -30,6 +30,10 @@ import {
   resetStatusFlag,
   trainAgent,
   updateAgent,
+  addNewHeaderAgentWebhook,
+  deleteHeaderAgentWebhook,
+  changeHeaderNameAgentWebhook,
+  changeHeaderValueAgentWebhook
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -270,6 +274,10 @@ export class AgentPage extends React.PureComponent {
               onChangeAgentName={this.props.onChangeAgentName}
               onChangeWebhookData={this.props.onChangeWebhookData}
               onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+              onAddNewHeader={this.props.onAddNewHeader}
+              onDeleteHeader={this.props.onDeleteHeader}
+              onChangeHeaderName={this.props.onChangeHeaderName}
+              onChangeHeaderValue={this.props.onChangeHeaderValue}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
               onChangeCategoryClassifierThreshold={this.props.onChangeCategoryClassifierThreshold}
@@ -300,6 +308,10 @@ AgentPage.propTypes = {
   onChangeAgentName: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
+  onAddNewHeader: PropTypes.func,
+  onDeleteHeader: PropTypes.func,
+  onChangeHeaderName: PropTypes.func,
+  onChangeHeaderValue: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
   onChangeCategoryClassifierThreshold: PropTypes.func,
   onChangeAgentSettingsData: PropTypes.func,
@@ -340,6 +352,18 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeWebhookPayloadType: (field, value) => {
       dispatch(changeWebhookPayloadType({ field, value }));
+    },
+    onAddNewHeader: (payload) => {
+      dispatch(addNewHeaderAgentWebhook(payload));
+    },
+    onDeleteHeader: (headerIndex) => {
+      dispatch(deleteHeaderAgentWebhook(headerIndex));
+    },
+    onChangeHeaderName: (headerIndex, value) => {
+      dispatch(changeHeaderNameAgentWebhook(headerIndex, value));
+    },
+    onChangeHeaderValue: (headerIndex, value) => {
+      dispatch(changeHeaderValueAgentWebhook(headerIndex, value));
     },
     onChangePostFormatData: (field, value) => {
       dispatch(changePostFormatData({ field, value }));

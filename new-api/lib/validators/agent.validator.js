@@ -232,10 +232,41 @@ class AgentValidate {
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                    webhookHeaders: Joi.array().items({
+                        key: Joi.string(),
+                        value: Joi.string(),
+                    }),
+                    webhookUser: WebhookSchema.webhookUser,
+                    webhookPassword: WebhookSchema.webhookPassword
                 };
             })()
         };
+
+        this.updateWebhook = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    webhookUrl: WebhookSchema.webhookUrl,
+                    webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                    webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                    webhookHeaders: Joi.array().items({
+                        key: Joi.string(),
+                        value: Joi.string(),
+                    }),
+                    webhookUser: WebhookSchema.webhookUser,
+                    webhookPassword: WebhookSchema.webhookPassword
+                };
+            })()
+        };
+        
         this.addWebhookInAction = {
             params: (() => {
 
@@ -250,7 +281,38 @@ class AgentValidate {
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                    webhookHeaders: Joi.array().items({
+                        key: Joi.string(),
+                        value: Joi.string(),
+                    }),
+                    webhookUser: WebhookSchema.webhookUser,
+                    webhookPassword: WebhookSchema.webhookPassword
+                };
+            })()
+        };
+        
+        this.updateWebhookInAction = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
+                    [PARAM_ACTION_ID]: ActionSchema.id.required().description('Id of the action')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    webhookUrl: WebhookSchema.webhookUrl,
+                    webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                    webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                    webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                    webhookHeaders: Joi.array().items({
+                        key: Joi.string(),
+                        value: Joi.string(),
+                    }),
+                    webhookUser: WebhookSchema.webhookUser,
+                    webhookPassword: WebhookSchema.webhookPassword
                 };
             })()
         };
@@ -600,7 +662,13 @@ class AgentValidate {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                         webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                        webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                        webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                        webhookHeaders: Joi.array().items({
+                            key: Joi.string(),
+                            value: Joi.string(),
+                        }),
+                        webhookUser: WebhookSchema.webhookUser,
+                        webhookPassword: WebhookSchema.webhookPassword
                     },
                     settings: Joi.object(),
                     keywords: Joi.array().items({
@@ -645,7 +713,13 @@ class AgentValidate {
                             webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                             webhookVerb: WebhookSchema.webhookVerb.required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                             webhookPayloadType: WebhookSchema.webhookPayloadType.required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                            webhookPayload: WebhookSchema.webhookPayload.allow('').optional()
+                            webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                            webhookHeaders: Joi.array().items({
+                                key: Joi.string(),
+                                value: Joi.string(),
+                            }),
+                            webhookUser: WebhookSchema.webhookUser,
+                            webhookPassword: WebhookSchema.webhookPassword
                         },
                         responses: Joi.array().items({
                             textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),

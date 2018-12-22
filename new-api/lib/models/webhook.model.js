@@ -14,7 +14,13 @@ class WebhookModel {
                 .string()
                 .valid('None', 'JSON', 'XML')
                 .trim(),
-            webhookPayload: Joi.string().trim()
+            webhookPayload: Joi.string().trim(),
+            webhookHeaders: Joi.array().items({
+                key: Joi.string(),
+                value: Joi.string(),
+            }),
+            webhookUser: Joi.string().allow(''),
+            webhookPassword: Joi.string().allow('')
         };
     };
 }

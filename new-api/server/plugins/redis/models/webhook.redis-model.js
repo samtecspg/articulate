@@ -13,6 +13,15 @@ const schema = {
     },
     webhookPayload: {
         type: 'string'
+    },
+    webhookHeaders: {
+        type: 'json'
+    },
+    webhookUser: {
+        type: 'string'
+    },
+    webhookPassword: {
+        type: 'string'
     }
 };
 

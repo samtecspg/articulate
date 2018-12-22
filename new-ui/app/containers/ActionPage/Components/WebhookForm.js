@@ -152,6 +152,10 @@ class WebhookForm extends React.Component {
                 onChangeUseWebhook={this.props.onChangeActionData}
                 onChangeWebhookData={this.props.onChangeWebhookData}
                 onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+                onAddNewHeader={this.props.onAddNewHeader}
+                onDeleteHeader={this.props.onDeleteHeader}
+                onChangeHeaderName={this.props.onChangeHeaderName}
+                onChangeHeaderValue={this.props.onChangeHeaderValue}
                 errorState={this.props.errorState}
               />
             </Grid>
@@ -170,6 +174,10 @@ WebhookForm.propTypes = {
   onChangeActionData: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
+  onAddNewHeader: PropTypes.func,
+  onDeleteHeader: PropTypes.func,
+  onChangeHeaderName: PropTypes.func,
+  onChangeHeaderValue: PropTypes.func,
   errorState: PropTypes.object,
 };
 

@@ -33,10 +33,26 @@ const styles = {
     color: '#f44336',
     marginTop: '8px',
   },
+  headerValueInput: {
+    marginTop: '-25px',
+  },
+  newHeaderValueInput: {
+    marginTop: '-15px !important',
+  },
+  bodyTitleContainer: {
+    marginBottom: '40px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
 export class WebhookSettings extends React.Component {
+
+
+  state = {
+    newHeaderKey: '',
+    newHeaderKeyValue: '',
+    lastHeaderEdited: false,
+  };
 
   render() {
     const { classes, intl, useWebhook, webhook } = this.props;
@@ -70,6 +86,9 @@ export class WebhookSettings extends React.Component {
         {
           useWebhook ? [
             <Grid key='grid-webhook-config' container spacing={16} item xs={12}>
+              <Grid item xs={12}>
+                <Typography variant='h2'><FormattedMessage {...messages.webhookTitle} /></Typography>
+              </Grid>
               <Grid item lg={2} md={2} sm={12} xs={12}>
                 <TextField
                   select
@@ -162,9 +181,135 @@ export class WebhookSettings extends React.Component {
                 </TextField>
               </Grid>
             </Grid>,
+            <Grid key='grid-webhook-basic-auth' container spacing={16} item xs={12}>
+              <Grid item xs={12}>
+                <Typography variant='h2'><FormattedMessage {...messages.basicAuthTitle} /></Typography>
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  id="webhookUser"
+                  label={intl.formatMessage(messages.webhookUser)}
+                  value={webhook.webhookUser}
+                  placeholder={intl.formatMessage(
+                    messages.webhookUserPlaceholder
+                  )}
+                  onChange={evt => {
+                    this.props.onChangeWebhookData(
+                      "webhookUser",
+                      evt.target.value
+                    );
+                  }}
+                  margin="normal"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  error={this.props.errorState.webhookUser}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  id="webhookPassword"
+                  label={intl.formatMessage(messages.webhookPassword)}
+                  value={webhook.webhookPassword}
+                  placeholder={intl.formatMessage(
+                    messages.webhookPasswordPlaceholder
+                  )}
+                  onChange={evt => {
+                    this.props.onChangeWebhookData(
+                      "webhookPassword",
+                      evt.target.value
+                    );
+                  }}
+                  margin="normal"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  error={this.props.errorState.webhookPassword}
+                />
+              </Grid>
+            </Grid>,
+            <Grid key='grid-webhook-headers' container spacing={16} item xs={12}>
+              <Grid item xs={12}>
+                <Typography variant='h2'><FormattedMessage {...messages.headersTitle} /></Typography>
+              </Grid>
+              {webhook.webhookHeaders.map((header, headerIndex) => (
+                [<Grid key={`headerKey_${headerIndex}`} className={classes.headerValueInputContainer} item xs={6}>
+                  <TextField
+                    id='headerKey'
+                    className={headerIndex !== 0 ? classes.headerValueInput : ''}
+                    value={header.key}
+                    label={headerIndex === 0 ? intl.formatMessage(messages.headerKey) : null}
+                    placeholder={intl.formatMessage(messages.headerKeyPlaceholder)}
+                    onChange={(evt) => { this.props.onChangeHeaderName(headerIndex, evt.target.value) }}
+                    margin='normal'
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </Grid>,
+                <Grid key={`headerValue_${headerIndex}`} className={classes.headerValueInputContainer} item xs={6}>
+                  <TextField
+                    id='headerValue'
+                    className={headerIndex !== 0 ? classes.headerValueInput : ''}
+                    value={header.value}
+                    label={headerIndex === 0 ? intl.formatMessage(messages.headerValue) : null}
+                    placeholder={intl.formatMessage(messages.headerValuePlaceholder)}
+                    onChange={(evt) => { this.props.onChangeHeaderValue(headerIndex, evt.target.value) }}
+                    margin='normal'
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </Grid>]
+              ))} 
+              <Grid key={`newHeaderKeyGrid`} className={classes.keywordValueInputContainer} item xs={6}>
+                <TextField
+                  id='newHeaderKey'
+                  value={this.state.newHeaderKey}
+                  placeholder={intl.formatMessage(messages.newHeaderKeyPlaceholder)}
+                  onKeyPress={(evt) => {
+                    if(evt.key === 'Enter'){
+                      evt.preventDefault();
+                      this.setState({
+                        newHeaderKey: '',
+                        lastHeaderEdited: true
+                      });
+                      this.props.onAddNewHeader({ key: evt.target.value, value: '' });
+                    }
+                  }}
+                  onChange={(evt) => {
+                    this.setState({
+                      newHeaderKey: evt.target.value,
+                    });
+                  }}
+                  margin='normal'
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  InputProps={{
+                    className : classes.newHeaderValueInput
+                  }}
+                />
+              </Grid>
+              <div
+                ref={(el) => {
+                  this.lastExample = el;
+                }}
+              >
+              </div>
+            </Grid>,
             <Grid key='grid-editor' item xs={12}>
               {webhook.webhookPayloadType !== "None" ? (
-                [<AceEditor
+                [
+                  <Grid className={classes.bodyTitleContainer} item xs={12}>
+                    <Typography variant='h2'><FormattedMessage {...messages.bodyTitle} /></Typography>
+                  </Grid>,
+                  <AceEditor
                   key='webhookPayload'
                   width='100%'
                   height='300px'
@@ -204,7 +349,7 @@ export class WebhookSettings extends React.Component {
                   null,
                 ]
               ) : null}
-            </Grid>,
+            </Grid>
           ] : null
         }
       </Grid>
@@ -220,6 +365,9 @@ WebhookSettings.propTypes = {
   onChangeUseWebhook: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
+  onAddNewHeader: PropTypes.func,
+  onChangeHeaderName: PropTypes.func,
+  onChangeHeaderValue: PropTypes.func,
   webhookSettingDescription: PropTypes.object,
   errorState: PropTypes.object,
 };

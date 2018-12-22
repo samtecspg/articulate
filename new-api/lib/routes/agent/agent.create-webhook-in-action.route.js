@@ -10,7 +10,7 @@ import AgentValidator from '../../validators/agent.validator';
 //const logger = require('../../../util/logger')({ name: `route:agent:create-webhook` });
 
 module.exports = {
-    method: ['put', 'post'],
+    method: 'post',
     path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_ACTION}/{${PARAM_ACTION_ID}}/${ROUTE_WEBHOOK}`,
     options: {
         tags: ['api'],
