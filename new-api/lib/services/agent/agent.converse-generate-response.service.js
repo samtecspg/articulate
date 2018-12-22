@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { CONFIG_KEYWORD_TYPE_REGEX, MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
 
-module.exports = async function ({ agent, action, context, currentContext, rasaResult, text, actionWasFulfilled }) {
+module.exports = async function ({ agent, action, context, currentContext, rasaResult, text }) {
 
     const { agentService, keywordService, globalService } = await this.server.services();
     //TODO: need to refactor the CSO creation since is no longer passed to other functions
@@ -181,8 +181,9 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         if (webhookResponse.textResponse) {
             return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions: [] };
         }
+        conversationStateObject.webhookResponse = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-        return { webhookResponse, ...response, actionWasFulfilled: true };
+        return { ...response, actionWasFulfilled: true };
     }
     const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
     return { ...response, actionWasFulfilled: true };
