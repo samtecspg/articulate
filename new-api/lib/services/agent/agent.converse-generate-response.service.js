@@ -173,6 +173,9 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
             templatePayload: webhook.webhookPayload,
             payloadType: webhook.webhookPayloadType,
             method: webhook.webhookVerb,
+            headers: webhook.webhookHeaders,
+            username: webhook.webhookUser ? webhook.webhookUser : undefined,
+            password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {

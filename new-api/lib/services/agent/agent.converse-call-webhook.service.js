@@ -1,7 +1,24 @@
 import Axios from 'axios';
 import QueryString from 'querystring';
 
-module.exports = async function ({ url, templatePayload, payloadType, method, templateContext }) {
+const getHeaders = (headers, contentType) => {
+
+    const result = {}
+    let userSpecifiedContentType = false;
+    headers.forEach((header) => {
+        
+        result[header.key] = header.value;
+        if (header.key.toUpperCase() === 'Content-Type'.toUpperCase()){
+            userSpecifiedContentType = true;
+        }
+    });
+    if (!userSpecifiedContentType && contentType){
+        result['Content-Type'] = contentType;
+    }
+    return result;
+};
+
+module.exports = async function ({ url, templatePayload, payloadType, method, templateContext, headers, username, password }) {
 
     const { handlebars } = this.server.app;
 
@@ -33,8 +50,12 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
             method,
             url: compiledUrl,
             data,
-            headers: { 'Content-Type': contentType },
-            responseType: payloadType === 'XML' ? 'text' : 'json'
+            headers: getHeaders(headers, contentType),
+            responseType: payloadType === 'XML' ? 'text' : 'json',
+            auth: username ? {
+                username,
+                password
+            } : undefined,
         });
         return response.data;
     }
