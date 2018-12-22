@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, TextField, Typography, MenuItem, Switch } from '@material-ui/core';
+import { Grid, TextField, Typography, MenuItem, Switch, InputAdornment } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import brace from 'brace';
@@ -13,6 +13,7 @@ import 'brace/mode/json';
 import 'brace/theme/terminal';
 
 import messages from './messages';
+import trashIcon from '../../images/trash-icon.svg';
 
 const styles = {
   toggleContainer: {
@@ -41,6 +42,16 @@ const styles = {
   },
   bodyTitleContainer: {
     marginBottom: '40px'
+  },
+  deleteIcon: {
+    '&:hover': {
+      filter: 'invert(0)',
+    },
+    filter: 'invert(1)',
+    cursor: 'pointer',
+    float: 'right',
+    marginRight: '24px',
+    marginTop: '17px',
   }
 };
 
@@ -210,6 +221,7 @@ export class WebhookSettings extends React.Component {
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <TextField
                   id="webhookPassword"
+                  type="password"
                   label={intl.formatMessage(messages.webhookPassword)}
                   value={webhook.webhookPassword}
                   placeholder={intl.formatMessage(
@@ -237,7 +249,7 @@ export class WebhookSettings extends React.Component {
               {webhook.webhookHeaders.map((header, headerIndex) => (
                 [<Grid key={`headerKey_${headerIndex}`} className={classes.headerValueInputContainer} item xs={6}>
                   <TextField
-                    id='headerKey'
+                    id={`headerKeyInput_${headerIndex}`}
                     className={headerIndex !== 0 ? classes.headerValueInput : ''}
                     value={header.key}
                     label={headerIndex === 0 ? intl.formatMessage(messages.headerKey) : null}
@@ -252,7 +264,7 @@ export class WebhookSettings extends React.Component {
                 </Grid>,
                 <Grid key={`headerValue_${headerIndex}`} className={classes.headerValueInputContainer} item xs={6}>
                   <TextField
-                    id='headerValue'
+                    id={`headerKeyValue_${headerIndex}`}
                     className={headerIndex !== 0 ? classes.headerValueInput : ''}
                     value={header.value}
                     label={headerIndex === 0 ? intl.formatMessage(messages.headerValue) : null}
@@ -263,6 +275,20 @@ export class WebhookSettings extends React.Component {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment
+                          style={{    
+                            position: 'absolute',
+                            left: '90%',
+                            top: '17px'
+                          }}
+                          position="end"
+                        >                
+                          <img key={`deleteHeader_${headerIndex}`} onClick={() => { this.props.onDeleteHeader(headerIndex) }} className={classes.deleteIcon} src={trashIcon} />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>]
               ))} 
@@ -271,6 +297,7 @@ export class WebhookSettings extends React.Component {
                   id='newHeaderKey'
                   value={this.state.newHeaderKey}
                   placeholder={intl.formatMessage(messages.newHeaderKeyPlaceholder)}
+                  label={webhook.webhookHeaders.length === 0 ? intl.formatMessage(messages.headerKey) : null}
                   onKeyPress={(evt) => {
                     if(evt.key === 'Enter'){
                       evt.preventDefault();
@@ -292,7 +319,7 @@ export class WebhookSettings extends React.Component {
                     shrink: true,
                   }}
                   InputProps={{
-                    className : classes.newHeaderValueInput
+                    className: webhook.webhookHeaders.length === 0 ? '' : classes.newHeaderValueInput
                   }}
                 />
               </Grid>

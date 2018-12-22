@@ -80,7 +80,7 @@ export default defineMessages({
   },
   newHeaderKeyPlaceholder: {
     id: 'app.components.WebhookSettings.newHeaderKeyPlaceholder',
-    defaultMessage: 'New key',
+    defaultMessage: 'Enter the key name and press enter',
   },
   bodyTitle: {
     id: 'app.components.WebhookSettings.bodyTitle',

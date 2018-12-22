@@ -91,25 +91,28 @@ class App extends React.Component {
     if (this.props.agent.id) {
       // If is different than the current agent
       if (this.props.agent.id !== this.state.agent) {
-        // If the socket was already subscribed to an agent
-        if (this.state.agent) {
-          // Unscribe from the agent
-          this.state.client.unsubscribe(`/agent/${this.state.agent}`);
-        }
-        const handler = (agent) => {
+        // If the client was already initialized
+        if (this.state.client){
+          // If the socket was already subscribed to an agent
+          if (this.state.agent) {
+            // Unscribe from the agent
+            this.state.client.unsubscribe(`/agent/${this.state.agent}`);
+          }
+          const handler = (agent) => {
 
-          if (agent) {
-            this.props.onRefreshAgent(agent);
-          }
-        };
-        this.state.client.subscribe(`/agent/${this.props.agent.id}`, handler, (errSubscription) => {
-          if (errSubscription) {
-            console.error(`An error occurred subscribing to the agent ${this.props.agent.agentName}: ${errSubscription}`);
-          }
-        });
-        this.setState({
-          agent: this.props.agent.id,
-        });
+            if (agent) {
+              this.props.onRefreshAgent(agent);
+            }
+          };
+          this.state.client.subscribe(`/agent/${this.props.agent.id}`, handler, (errSubscription) => {
+            if (errSubscription) {
+              console.error(`An error occurred subscribing to the agent ${this.props.agent.agentName}: ${errSubscription}`);
+            }
+          });
+          this.setState({
+            agent: this.props.agent.id,
+          });
+        }
       }
     }
   }
