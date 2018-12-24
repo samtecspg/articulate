@@ -1,7 +1,6 @@
 import {
   Grid,
   MenuItem,
-  TableCell,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -13,11 +12,7 @@ import {
   injectIntl,
   intlShape,
 } from 'react-intl';
-import StyledTable, {
-  CopyToClipboardImageCell,
-  PlayImageCell,
-  StyledRow,
-} from '../../../components/StyledTable';
+import StyledTable, { StyledRow } from '../../../components/StyledTable';
 import messages from '../messages';
 import SayingRow from './SayingRow';
 
@@ -202,43 +197,26 @@ class SayingsDataForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, sayings, category } = this.props;
+    const { classes, documents } = this.props;
+    if (_.isNil(documents)) {
+      return null;
+    }
     return (
       <div>
         <Grid className={classes.formContainer} container item xs={12}>
-          <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
+          <Grid className={classes.formSubContainer} container item xs={12}>
             <StyledTable
-              sayings={sayings}
               headerMessage={messages.highlightTooltip}
               rows={
-                sayings.map((saying) => (
-                  <StyledRow key={`saying_${saying.id}`}>
-                    <TableCell>
-                      <SayingRow
-                        agentId={this.props.agentId}
-                        saying={saying}
-                        onDeleteAction={this.props.onDeleteAction}
-                        agentKeywords={this.props.agentKeywords}
-                        agentActions={this.props.agentActions}
-                        agentCategories={this.props.agentCategories}
-                        onTagKeyword={this.props.onTagKeyword}
-                        onUntagKeyword={this.props.onUntagKeyword}
-                        onAddAction={this.props.onAddAction}
-                        onGoToUrl={this.props.onGoToUrl}
-                        onSendSayingToAction={this.props.onSendSayingToAction}
-                      />
-                    </TableCell>
-                    <CopyToClipboardImageCell
-                      text={saying.userSays}
-                    />
-                    <PlayImageCell
-                      onClick={() => {
-                        this.props.onToggleConversationBar(true);
-                        this.props.onSendMessage({
-                          author: 'User',
-                          message: saying.userSays,
-                        });
-                      }}
+                documents.map((document) => (
+                  <StyledRow key={`document_${document.id}`}>
+                    <SayingRow
+                      document={document}
+                      agentKeywords={this.props.agentKeywords}
+                      agentCategories={this.props.agentCategories}
+                      onToggleConversationBar={this.props.onToggleConversationBar}
+                      agentActions={this.props.agentActions}
+                      onSendMessage={this.props.onSendMessage}
                     />
                   </StyledRow>
                 ))}
@@ -327,7 +305,7 @@ class SayingsDataForm extends React.Component {
 SayingsDataForm.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  sayings: PropTypes.array,
+  documents: PropTypes.array,
   agentId: PropTypes.string,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,

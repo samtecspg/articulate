@@ -23,6 +23,7 @@ import {
   makeSelectActions,
   makeSelectAgent,
   makeSelectCategories,
+  makeSelectDocuments,
   makeSelectFilteredCategories,
   makeSelectKeywords,
   makeSelectNewSayingActions,
@@ -62,6 +63,7 @@ export class ReviewPage extends React.Component {
       onLoadKeywords,
       onLoadActions,
       onLoadCategories,
+      onLoadAgentDocuments,
     } = this.props.actions;
 
     if (this.props.agent.id) {
@@ -69,6 +71,7 @@ export class ReviewPage extends React.Component {
       onLoadActions();
       onLoadCategories();
       onLoadSayings('', this.state.currentPage, this.state.pageSize);
+      onLoadAgentDocuments();
     } else {
       // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
@@ -171,7 +174,7 @@ export class ReviewPage extends React.Component {
 
     const {
       agent,
-      sayings,
+      documents,
       agentCategories,
       agentFilteredCategories,
       agentKeywords,
@@ -195,7 +198,7 @@ export class ReviewPage extends React.Component {
           reviewForm={
             <Form
               agentId={agent.id}
-              sayings={sayings}
+              documents={documents}
               agentKeywords={agentKeywords}
               agentActions={agentActions}
               agentCategories={agentCategories}
@@ -238,6 +241,7 @@ export class ReviewPage extends React.Component {
 ReviewPage.propTypes = {
   actions: PropTypes.shape({
     onLoadSayings: PropTypes.func.isRequired,
+    onLoadAgentDocuments: PropTypes.func.isRequired,
     onLoadFilteredCategories: PropTypes.func.isRequired,
     onLoadCategories: PropTypes.func.isRequired,
     onLoadKeywords: PropTypes.func.isRequired,
@@ -259,7 +263,7 @@ ReviewPage.propTypes = {
     onChangeReviewPageSize: PropTypes.func.isRequired,
   }),
   agent: PropTypes.object.isRequired,
-  sayings: PropTypes.array,
+  documents: PropTypes.array,
   totalSayings: PropTypes.number,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
@@ -281,12 +285,14 @@ const mapStateToProps = createStructuredSelector({
   agentActions: makeSelectActions(),
   category: makeSelectSelectedCategory(),
   newSayingActions: makeSelectNewSayingActions(),
+  documents: makeSelectDocuments(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
       onLoadSayings: Actions.loadSayings,
+      onLoadAgentDocuments: Actions.loadAgentDocuments,
       onLoadFilteredCategories: Actions.loadFilteredCategories,
       onLoadCategories: Actions.loadCategories,
       onLoadKeywords: Actions.loadKeywords,

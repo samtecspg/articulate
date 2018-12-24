@@ -10,9 +10,7 @@ module.exports = async function ({ id, returnModel = false }) {
         if (returnModel) {
             return doc;
         }
-        const properties = doc._source;
-        properties.id = doc._id;
-        return properties;
+        return { id: doc._id, ...doc._source };
     }
     catch (error) {
         throw ESErrorHandler({ error });

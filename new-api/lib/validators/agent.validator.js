@@ -267,7 +267,7 @@ class AgentValidate {
                 };
             })()
         };
-        
+
         this.addWebhookInAction = {
             params: (() => {
 
@@ -292,7 +292,7 @@ class AgentValidate {
                 };
             })()
         };
-        
+
         this.updateWebhookInAction = {
             params: (() => {
 
@@ -401,6 +401,16 @@ class AgentValidate {
                         .string()
                         .optional()
                         .description('Field used to do the sorting')
+                };
+            })()
+        };
+
+        this.findAllDocuments = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+
                 };
             })()
         };

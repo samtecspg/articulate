@@ -20,7 +20,6 @@ function StyledRow(props) {
 }
 
 StyledRow.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element).isRequired,
   classes: PropTypes.object.isRequired,
 };
 

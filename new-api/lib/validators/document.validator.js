@@ -24,7 +24,9 @@ class ContextValidate {
                     maximum_domain_score: Model.maximum_domain_score.required(),
                     total_elapsed_time_ms: Model.total_elapsed_time_ms.required(),
                     rasa_results: Model.rasa_results.required(),
-                    session: Model.session.required()
+                    session: Model.session.required(),
+                    agent_id: Model.agent_id.required(),
+                    agent_model: Model.agent_model.required()
                 };
             })()
         };

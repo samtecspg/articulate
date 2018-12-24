@@ -127,7 +127,6 @@ import {
   CHANGE_HEADER_KEY_ACTION_WEBHOOK,
   CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
 
-
   RESET_KEYWORD_DATA,
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
@@ -157,6 +156,9 @@ import {
   UPDATE_CATEGORY_SUCCESS,
 
   CHANGE_REVIEW_PAGE_SIZE,
+  LOAD_AGENT_DOCUMENTS,
+  LOAD_AGENT_DOCUMENTS_ERROR,
+  LOAD_AGENT_DOCUMENTS_SUCCESS,
 } from './constants';
 
 /*
@@ -473,6 +475,26 @@ export function changeHeaderValueAgentWebhook(headerIndex, value){
     headerIndex,
     value
   }
+}
+
+export function loadAgentDocuments() {
+  return {
+    type: LOAD_AGENT_DOCUMENTS,
+    apiCall: true,
+  }
+}
+
+export function loadAgentDocumentsError(error) {
+  return {
+    type: LOAD_AGENT_DOCUMENTS_ERROR,
+    error,
+  };
+}
+export function loadAgentDocumentsSuccess(documents) {
+  return {
+    type: LOAD_AGENT_DOCUMENTS_SUCCESS,
+    documents,
+  };
 }
 
 /*

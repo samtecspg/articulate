@@ -22,6 +22,12 @@ const properties = {
     },
     session: {
         type: 'text'
+    },
+    agent_id: {
+        type: 'integer'
+    },
+    agent_model: {
+        type: 'text'
     }
 };
 

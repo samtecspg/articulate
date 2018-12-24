@@ -138,7 +138,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             //MARK: get category using rasaResult category name
             conversationStateObject.category = getCategoryByName({ agentCategories: conversationStateObject.agent.categories, categoryName: conversationStateObject.rasaResult.category });
             //MARK: if there is an action and a category, check if the action confidence y bigger than the category threshold === true
-            if (conversationStateObject.action && ((!conversationStateObject.agent.multiCategory && conversationStateObject.rasaResult.action.confidence > conversationStateObject.agent.categoryClassifierThreshold ) || (conversationStateObject.agent.multiCategory && conversationStateObject.category && conversationStateObject.rasaResult.action.confidence > conversationStateObject.category.actionThreshold))) {
+            if (conversationStateObject.action && ((!conversationStateObject.agent.multiCategory && conversationStateObject.rasaResult.action.confidence > conversationStateObject.agent.categoryClassifierThreshold) || (conversationStateObject.agent.multiCategory && conversationStateObject.category && conversationStateObject.rasaResult.action.confidence > conversationStateObject.category.actionThreshold))) {
                 //MARK: if the current context is empty or the current OR if the action name is the same as the current context action add a new frame with empty slots
                 if (!conversationStateObject.currentFrame || (conversationStateObject.rasaResult.action.name !== conversationStateObject.currentFrame.action)) {
                     const frame = {
@@ -178,7 +178,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                             context: conversationStateObject.context,
                             currentFrame: conversationStateObject.currentFrame,
                             rasaResult: conversationStateObject.rasaResult,
-                            text: conversationStateObject.text,
+                            text: conversationStateObject.text
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
                         await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
@@ -212,36 +212,36 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     };
 
     const storeDataInQueue = ({ conversationStateObject, action, response }) => {
-        
+
         conversationStateObject.context.actionQueue.push({
-            action, 
+            action,
             slots: conversationStateObject.currentFrame.slots
         });
         conversationStateObject.context.responseQueue.push({ ...response });
     };
 
     const saveContextQueues = async ({ context }) => {
-        await contextService.update({ 
-            sessionId: context.sessionId, 
+        await contextService.update({
+            sessionId: context.sessionId,
             data: {
                 actionQueue: context.actionQueue,
                 responseQueue: context.responseQueue
             }
         });
-    }
+    };
 
     const removeFromQueue = async ({ conversationStateObject, action }) => {
         const index = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action });
         conversationStateObject.context.actionQueue.splice(index, 1);
         conversationStateObject.context.responseQueue.splice(index, 1);
-        await contextService.update({ 
+        await contextService.update({
             sessionId: conversationStateObject.context.sessionId,
             data: {
                 actionQueue: conversationStateObject.context.actionQueue,
                 responseQueue: conversationStateObject.context.responseQueue
             }
-        })
-    }
+        });
+    };
 
     const moveOnQueue = ({ context, oldIndex, newIndex }) => {
         context.actionQueue.splice(newIndex, 0, context.actionQueue.splice(oldIndex, 1)[0]);
@@ -253,7 +253,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         let actionIndex = -1;
         actionQueue.forEach((tempAction, tempIndex) => {
 
-            if (tempAction.action === action){
+            if (tempAction.action === action) {
                 actionIndex = tempIndex;
             }
             return null;
@@ -268,13 +268,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const actionsToRemove = [];
         context.responseQueue.every((response, index) => {
 
-            if (response.actionWasFulfilled){
+            if (response.actionWasFulfilled) {
                 responses.push(context.responseQueue[index].textResponse);
                 actionsToRemove.push(index);
                 return true;
             }
             else {
-                if (index === 0){
+                if (index === 0) {
                     responses.push(context.responseQueue[index].textResponse);
                 }
                 return false;
@@ -295,7 +295,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             actionWasFulfilled: true
         };
         //If the chained action have slots, then it wasn't fulfilled, therefore we prompt a random text prompt for the first slot
-        if (action.slots.length > 0){
+        if (action.slots.length > 0) {
             response.actionWasFulfilled = false;
             response.textResponse = action.slots[0].textPrompts[Math.floor(Math.random() * action.slots[0].textPrompts.length)];
         }
@@ -310,18 +310,18 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     const chainResponseActions = ({ conversationStateObject, responseActions }) => {
 
         const agentActions = conversationStateObject[CSO_AGENT].actions;
-        let currentQueueIndex = 0
+        let currentQueueIndex = 0;
 
         responseActions.forEach((responseAction) => {
-            
+
             let agentAction = _.filter(agentActions, (tempAction) => {
 
                 return tempAction.actionName === responseAction;
             });
-            if (agentAction.length > 0){
+            if (agentAction.length > 0) {
                 agentAction = agentAction[0];
                 const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: agentAction.actionName });
-                if (indexOfActionInQueue !== -1){
+                if (indexOfActionInQueue !== -1) {
                     moveOnQueue({
                         context: conversationStateObject.context,
                         oldIndex: indexOfActionInQueue,
@@ -331,7 +331,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
                 else {
                     conversationStateObject.context.actionQueue.push({
-                        action: agentAction.actionName, 
+                        action: agentAction.actionName,
                         slots: {}
                     });
                     const response = getResponseOfChainedAction({ action: agentAction });
@@ -346,7 +346,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
 
-        const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true });
+        const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true, sessionId });
         const recognizedActionNames = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name.split('+');
 
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
@@ -354,7 +354,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         conversationStateObject[CSO_AGENT].categories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });
 
         let storeInQueue = false;
-        let currentQueueIndex = 0
+        let currentQueueIndex = 0;
         const webhookResponses = [];
 
         const responses = await recognizedActionNames.reduce(async (previousPromise, recognizedActionName) => {
@@ -381,7 +381,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             conversationStateObject[CSO_CONTEXT] = context;
 
             const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: recognizedActionName });
-            if (indexOfActionInQueue !== -1){
+            if (indexOfActionInQueue !== -1) {
                 moveOnQueue({
                     context: conversationStateObject.context,
                     oldIndex: indexOfActionInQueue,
@@ -397,15 +397,15 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             conversationStateObject.timezone = timezone || conversationStateObject[CSO_AGENT].timezone || CSO_TIMEZONE_DEFAULT;
             if (!_.isEmpty(additionalKeys)) {
                 _.mapKeys(additionalKeys, (value, key) => {
-    
+
                     if (!conversationStateObject[key]) {
                         conversationStateObject[key] = value;
                     }
                 });
             }
-    
+
             const agentToolResponse = await response({ conversationStateObject });
-            if (agentToolResponse.webhookResponse){
+            if (agentToolResponse.webhookResponse) {
                 webhookResponses.push(agentToolResponse.webhookResponse);
             }
             const cleanAgentToolResponse = {
@@ -415,7 +415,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 actions: agentToolResponse.actions
             };
             storeInQueue = storeInQueue || !cleanAgentToolResponse.actionWasFulfilled;
-                
+
             cleanAgentToolResponse.docId = conversationStateObject.docId;
             let postFormatPayloadToUse;
             let usedPostFormatAction;
@@ -443,21 +443,21 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     console.log(errorMessage, error);
                     const responseWithError = { ...{ postFormatting: errorMessage + error }, cleanAgentToolResponse };
                     finalResponse = responseWithError;
-                }    
+                }
             }
             else {
                 finalResponse = cleanAgentToolResponse;
             }
-            if (storeInQueue){
+            if (storeInQueue) {
                 await storeDataInQueue({ conversationStateObject, action: recognizedActionName, response: finalResponse });
             }
             else {
-                if (indexOfActionInQueue !== -1){
-                    await removeFromQueue({ conversationStateObject, action: recognizedActionName  });
+                if (indexOfActionInQueue !== -1) {
+                    await removeFromQueue({ conversationStateObject, action: recognizedActionName });
                 }
                 data.push(finalResponse);
             }
-            if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0){
+            if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0) {
                 chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions });
             }
             return data;
@@ -475,7 +475,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             docId: conversationStateObject.docId,
             responses
         };
-        if (debug){
+        if (debug) {
             const { context, currentFrame, parse } = conversationStateObject;
             converseResult.conversationStateObject = {
                 context,
@@ -484,7 +484,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 webhookResponses
             };
         }
-        return converseResult
+        return converseResult;
     }
     catch (error) {
 

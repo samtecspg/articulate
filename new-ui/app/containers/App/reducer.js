@@ -147,6 +147,8 @@ import {
   UPDATE_CATEGORY_SUCCESS,
   CHAIN_ACTION_TO_RESPONSE,
   UNCHAIN_ACTION_FROM_RESPONSE,
+  LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_AGENT_DOCUMENTS_ERROR,
 } from './constants';
 
 const happyEmojies = ['😀','😁','😃','😄','😉','😎','🙂','🤩','😛','😜','🙃','😬','🤓','😺','😸','💪','🤙','👌','👍','🤚','👏','🙌','🎖','🏆','🏅','🥇','🎉','🎊'];
@@ -548,7 +550,12 @@ function appReducer(state = initialState, action) {
         }
         return header;
       }));
-
+    case LOAD_AGENT_DOCUMENTS_SUCCESS:
+      return state.set('documents', action.documents);
+    case LOAD_AGENT_DOCUMENTS_ERROR:
+      return state.set('documents', [])
+        .set('loading', false)
+        .set('error', action.error);
     /* Sayings */
     case LOAD_SAYINGS:
       return state.set('sayings', [])

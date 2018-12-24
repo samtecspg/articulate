@@ -31,6 +31,13 @@ class DocumentModel {
             session: Joi
                 .string()
                 .description('Session')
+                .trim(),
+            agent_id: Joi
+                .number()
+                .description('Agent Id'),
+            agent_model: Joi
+                .string()
+                .description('Agent Model')
                 .trim()
         };
     };

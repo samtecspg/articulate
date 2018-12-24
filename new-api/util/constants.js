@@ -87,6 +87,9 @@ export const PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE = 'maximum_category_score';
 export const PARAM_DOCUMENT_TOTAL_ELAPSED_TIME = 'total_elapsed_time_ms';
 export const PARAM_DOCUMENT_RASA_RESULTS = 'rasa_results';
 export const PARAM_DOCUMENT_ACTION_RANKING = 'action_ranking';
+export const PARAM_DOCUMENT_AGENT_ID = 'agent_id';
+export const PARAM_DOCUMENT_AGENT_MODEL = 'agent_model';
+export const PARAM_DOCUMENT_SESSION = 'session';
 
 export const ROUTE_TO_MODEL = {
     [ROUTE_ACTION]: MODEL_ACTION,
@@ -216,7 +219,6 @@ export const NOHM_SUB_ALL = [
     NOHM_SUB_LINK,
     NOHM_SUB_UNLINK
 ];
-
 
 // Sort
 export const SORT_ASC = 'ASC';

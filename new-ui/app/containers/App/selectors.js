@@ -91,6 +91,11 @@ const makeSelectAgentTouched = () => createSelector(
   (globalState) => globalState.agentTouched
 );
 
+const makeSelectDocuments = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.documents
+);
+
 /* Keywords */
 const makeSelectKeywords = () => createSelector(
   selectGlobalCategory,
@@ -231,4 +236,5 @@ export {
   makeSelectKeyword,
 
   makeSelectCategory,
+  makeSelectDocuments,
 };

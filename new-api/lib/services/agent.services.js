@@ -12,6 +12,7 @@ import CreatePostFormat from './agent/agent.create-post-format.service';
 import CreateWebhook from './agent/agent.create-webhook.service';
 import Create from './agent/agent.create.service';
 import Export from './agent/agent.export.service';
+import FindAllDocuments from './agent/agent.find-all-documents.service';
 import FindAllSayings from './agent/agent.find-all-sayings.service';
 import FindAllSettings from './agent/agent.find-all-settings.service';
 import FindSettingByName from './agent/agent.find-setting-by-name.service';
@@ -33,13 +34,13 @@ import RemoveWebhook from './agent/agent.remove-webhook.service';
 import Remove from './agent/agent.remove.service';
 import TrainCategory from './agent/agent.train-category.service';
 import Train from './agent/agent.train.service';
+import UpdateAction from './agent/agent.update-action.service';
 import UpdateAllSettings from './agent/agent.update-all-settings.service';
 import UpdateById from './agent/agent.update-by-id.service';
 import UpdateCategory from './agent/agent.update-category.service';
 import UpdateKeyword from './agent/agent.update-keyword.service';
 import UpdatePostFormat from './agent/agent.update-post-format.service';
 import UpdateWebhook from './agent/agent.update-webhook.service';
-import UpdateAction from './agent/agent.update-action.service';
 import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action.service';
 import UpsertSayingInCategory from './agent/agent.upsert-saying-in-category.service';
 import UpsertWebhookInAction from './agent/agent.upsert-webhook-in-action.service';
@@ -264,6 +265,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async isModelUnique() {
 
         return await IsModelUnique.apply(this, arguments);
+    }
+
+    async findAllDocuments() {
+
+        return await FindAllDocuments.apply(this, arguments);
     }
 };
 

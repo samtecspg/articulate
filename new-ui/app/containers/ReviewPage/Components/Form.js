@@ -14,7 +14,7 @@ import {
   intlShape,
 } from 'react-intl';
 import playHelpIcon from '../../../images/play-help-icon.svg';
-import sayingsIcon from '../../../images/sayings-icon.svg';
+import reviewIcon from '../../../images/icon-review.svg';
 import searchIcon from '../../../images/search-icon.svg';
 import messages from '../messages';
 import SayingsDataForm from './SayingsDataForm';
@@ -29,7 +29,7 @@ const styles = {
   titleContainer: {
     padding: '25px',
   },
-  sayingsIcon: {
+  reviewIcon: {
     display: 'inline',
     paddingRight: '10px',
     height: '30px',
@@ -105,7 +105,7 @@ class Form extends React.Component {
     const { classes, intl } = this.props;
     return <Grid className={classes.headerContainer} container item xs={12}>
       <Grid className={classes.titleContainer} item xs={12}>
-        <img alt="" className={classes.sayingsIcon} src={sayingsIcon} />
+        <img alt="" className={classes.reviewIcon} src={reviewIcon} />
         <Grid className={classes.titleTextHelpContainer} container>
           <Typography className={classes.title} variant='h2'>
             <FormattedMessage {...messages.formTitle} />
@@ -156,7 +156,7 @@ class Form extends React.Component {
       <Grid item xs={12}>
         {<SayingsDataForm
           agentId={this.props.agentId}
-          sayings={this.props.sayings}
+          documents={this.props.documents}
           agentKeywords={this.props.agentKeywords}
           agentActions={this.props.agentActions}
           agentCategories={this.props.agentCategories}
@@ -194,7 +194,7 @@ class Form extends React.Component {
 Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  sayings: PropTypes.array,
+  documents: PropTypes.array,
   agentId: PropTypes.string,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
