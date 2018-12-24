@@ -1,8 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  injectIntl,
+  intlShape,
+} from 'react-intl';
 
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Modal, Tabs, Tab }  from '@material-ui/core';
+
+import messages from './messages';
 
 function TabContainer(props) {
   const { classes, doc } = props;
@@ -38,7 +44,8 @@ const styles = {
     padding: '10px',
   },
   tabsRoot: {
-    height: '48px',
+    height: '53px',
+    paddingTop: '5px',
     paddingLeft: '15px',
   },
   tab: {
@@ -47,7 +54,7 @@ const styles = {
   },
   codeContainer: {
     position: 'absolute',
-    top: '7%',
+    top: '8%',
     left: '15px',
   }
 };
@@ -63,7 +70,7 @@ class CodeModal extends React.Component { // eslint-disable-line react/prefer-st
   };
 
   render(){
-    const { classes } = this.props;
+    const { classes, intl } = this.props;
     const { value } = this.state;
     return (
       <Grid>
@@ -79,10 +86,10 @@ class CodeModal extends React.Component { // eslint-disable-line react/prefer-st
               scrollButtons="off"
               onChange={this.handleChange}
             >
-              <Tab className={classes.tab} label="Rasa Parse Result" />
-              <Tab className={classes.tab} label="Context" />
-              <Tab className={classes.tab} label="Current Frame" />
-              {this.props.conversationStateObject.webhookResponses ? <Tab label="Webhook Responses" /> : null}
+              <Tab className={classes.tab} label={intl.formatMessage(messages.rasaParseResults)} />
+              <Tab className={classes.tab} label={intl.formatMessage(messages.context)}/>
+              <Tab className={classes.tab} label={intl.formatMessage(messages.currentFrame)} />
+              {this.props.conversationStateObject.webhookResponses ? <Tab label={intl.formatMessage(messages.webhookResponses)} /> : null}
             </Tabs>
             {value === 0 && <TabContainer classes={classes} doc={this.props.conversationStateObject.parse}></TabContainer>}
             {value === 1 && <TabContainer classes={classes} doc={this.props.conversationStateObject.context}></TabContainer>}
@@ -97,9 +104,10 @@ class CodeModal extends React.Component { // eslint-disable-line react/prefer-st
 
 CodeModal.propTypes = {
   classes: PropTypes.object.isRequired,
+  intl: intlShape.isRequired,
   handleClose: PropTypes.func,
   open: PropTypes.bool,
   conversationStateObject: PropTypes.object,
 };
 
-export default withStyles(styles)(CodeModal);
+export default injectIntl(withStyles(styles)(CodeModal));
