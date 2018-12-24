@@ -10,20 +10,45 @@ import { Grid, Modal, Tabs, Tab }  from '@material-ui/core';
 
 import messages from './messages';
 
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/xml';
+import 'brace/mode/json';
+import 'brace/theme/terminal';
+
 function TabContainer(props) {
   const { classes, doc } = props;
   return (
       <Grid className={classes.codeContainer} item xs={12}>
-        <pre className={classes.jsonContent}>
-          {JSON.stringify(doc, null, 2)}
-        </pre>
+        <AceEditor
+            width='100%'
+            height='370px'
+            mode='json'
+            theme='terminal'
+            name='document'
+            readOnly={true}
+            fontSize={14}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
+            value={JSON.stringify(doc, null, 2)}
+            setOptions={{
+              useWorker: false,
+              showLineNumbers: true,
+              tabSize: 2,
+            }}
+            editorProps={{
+              $blockScrolling: Infinity,
+            }}
+          />
       </Grid>
   );
 }
 
 TabContainer.propTypes = {
   classes: PropTypes.object,
-  doc: PropTypes.object
+  doc: PropTypes.any
 };
 
 
@@ -31,7 +56,8 @@ const styles = {
   modalContent: {
     top: "50%",
     left: "50%",
-    overflowY: 'scroll',
+    overflowY: 'hidden',
+    overflowX: 'hidden',
     transform: `translate(-50%, -50%)`,
     position: "absolute",
     width: window.window.innerWidth < 675 ? 350 : 750,
@@ -39,9 +65,6 @@ const styles = {
     backgroundColor: "#fff",
     boxShadow:
         "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
-  },
-  jsonContent: {
-    padding: '10px',
   },
   tabsRoot: {
     height: '53px',
@@ -53,9 +76,8 @@ const styles = {
     paddingRight: '20px',
   },
   codeContainer: {
-    position: 'absolute',
-    top: '8%',
-    left: '15px',
+    paddingLeft: '15px',
+    marginBottom: '60px'
   }
 };
 
