@@ -7,19 +7,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { injectIntl, intlShape } from 'react-intl';
 import { compose } from 'redux';
 
-import { Link } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
-import ContentHeader from 'components/ContentHeader';
-import MainTab from 'components/MainTab';
-import Form from './Components/Form';
+import MainTab from './Components/MainTab';
+import KeywordForm from './Components/KeywordForm';
+import ValuesForm from './Components/ValuesForm';
 
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
-import messages from './messages';
+
 import {
   makeSelectKeyword,
   makeSelectAgent,
@@ -38,15 +37,15 @@ import {
   resetStatusFlag,
   changeExampleName,
 } from '../App/actions';
-import ActionButtons from './Components/ActionButtons';
-import { push } from 'react-router-redux';
 
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsEditPage extends React.Component {
-
+  
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+    this.moveNextTab = this.moveNextTab.bind(this);
+    this.onChangeTab = this.onChangeTab.bind(this);
   }
 
   componentDidMount() {
@@ -64,9 +63,29 @@ export class KeywordsEditPage extends React.Component {
     }
   }
 
+  moveNextTab(){
+    // If isn't currently on the last tab
+    if (this.state.currentTab !== 'modifiers'){
+      const tabs = ['keyword', 'values', 'modifiers'];
+      const currentTab = tabs.indexOf(this.state.currentTab);
+      const nextTab = currentTab + 1;
+      this.setState({
+        currentTab: tabs[nextTab],
+      })
+    }
+  }
+
+  onChangeTab(tab){
+    this.setState({
+      currentTab: tab,
+    });
+  }
+
 
   state = {
     isNewKeyword: this.props.match.params.keywordId === 'create',
+    currentTab: 'keyword',
+    userCompletedAllRequiredFields: false,
     formError: false,
     errorState: {
       keywordName: false,
@@ -117,30 +136,37 @@ export class KeywordsEditPage extends React.Component {
   }
 
   render() {
-    const { intl } = this.props;
     return (
       <Grid container>
-        <ContentHeader
-          title={messages.title}
-          subtitle={this.state.isNewKeyword ? intl.formatMessage(messages.newKeyword) : this.props.keyword.keywordName}
-          inlineElement={
-            <ActionButtons
-              formError={this.state.formError}
-              agentId={this.props.agent.id}
-              onFinishAction={this.submit}
-              backButton={messages.backButton}
-              goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/keywords`)}}
+        <MainTab
+          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/keywords`)}}
+          newKeyword={this.state.isNewKeyword}
+          keywordName={this.props.keyword.keywordName}
+          formError={this.state.formError}
+          hideFinishButton={this.state.currentTab === 'keyword' && !this.state.userCompletedAllRequiredFields}
+          isLastTab={this.state.currentTab === 'modifiers'}
+          onFinishAction={this.submit}
+          onNextAction={this.moveNextTab}
+          selectedTab={this.state.currentTab}
+          keywordForm={
+            <KeywordForm
+              keyword={this.props.keyword}
+              onChangeKeywordData={this.props.onChangeKeywordData}
+              errorState={this.state.errorState}
             />
           }
-        />
-        <Form
-          keyword={this.props.keyword}
-          onChangeKeywordData={this.props.onChangeKeywordData}
-          onAddKeywordExample={this.props.onAddKeywordExample}
-          onDeleteKeywordExample={this.props.onDeleteKeywordExample}
-          onChangeExampleName={this.props.onChangeExampleName}
-          onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
-          errorState={this.state.errorState}
+          valuesForm={
+            <ValuesForm
+              keyword={this.props.keyword}
+              onChangeKeywordData={this.props.onChangeKeywordData}
+              onAddKeywordExample={this.props.onAddKeywordExample}
+              onDeleteKeywordExample={this.props.onDeleteKeywordExample}
+              onChangeExampleName={this.props.onChangeExampleName}
+              onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
+              errorState={this.state.errorState}              
+            />
+          }
+          onChangeTab={this.onChangeTab}
         />
       </Grid>
     );
@@ -148,7 +174,6 @@ export class KeywordsEditPage extends React.Component {
 }
 
 KeywordsEditPage.propTypes = {
-  intl: intlShape,
   agent: PropTypes.object,
   keywords: PropTypes.object,
   onResetData: PropTypes.func,
@@ -214,7 +239,6 @@ const withConnect = connect(
 const withSaga = injectSaga({ key: 'keywordsEdit', saga });
 
 export default compose(
-  injectIntl,
   withSaga,
   withConnect
 )(KeywordsEditPage);
