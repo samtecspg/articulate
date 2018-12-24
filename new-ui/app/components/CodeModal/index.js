@@ -77,6 +77,7 @@ const styles = {
   },
   codeContainer: {
     paddingLeft: '15px',
+    paddingRight: '15px',
     marginBottom: '60px'
   }
 };
