@@ -5,7 +5,8 @@ import {
     PARAM_TEXT,
     PARAM_TIMEZONE,
     ROUTE_AGENT,
-    ROUTE_CONVERSE
+    ROUTE_CONVERSE,
+    PARAM_DEBUG
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';
 
@@ -31,8 +32,12 @@ module.exports = {
                 ...rest
             } = request.payload;
 
+            const {
+                [PARAM_DEBUG]: debug
+            } = request.query;
+
             try {
-                return await agentService.converse({ id: agentId, text, timezone, sessionId, additionalKeys: rest });
+                return await agentService.converse({ id: agentId, text, timezone, sessionId, debug, additionalKeys: rest });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

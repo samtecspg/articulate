@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import { CONFIG_KEYWORD_TYPE_REGEX, MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
 
-module.exports = async function ({ agent, action, context, currentContext, rasaResult, text }) {
+module.exports = async function ({ agent, action, context, currentFrame, rasaResult, text }) {
 
     const { agentService, keywordService, globalService } = await this.server.services();
     //TODO: need to refactor the CSO creation since is no longer passed to other functions
-    const conversationStateObject = { agent, action, context, currentContext, rasaResult, text };
+    const conversationStateObject = { agent, action, context, currentFrame, rasaResult, text };
     //TODO: remove context update, and move it somewhere else
     const lastFrame = context.frames[context.frames.length - 1];
     if (action.slots && action.slots.length > 0) {
@@ -13,7 +13,7 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         const actionSlotKeywordsNames = _.map(action.slots, 'keyword');
         const requiredSlots = _.filter(action.slots, (slot) => {
 
-            lastFrame.slots[slot.slotName] = currentContext.slots[slot.slotName] ? currentContext.slots[slot.slotName] : '';
+            lastFrame.slots[slot.slotName] = currentFrame.slots[slot.slotName] ? currentFrame.slots[slot.slotName] : '';
             return slot.isRequired;
         });
         const isListActionSlotName = _.map(_.filter(action.slots, (slot) => {
@@ -117,9 +117,9 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         });
         const missingKeywords = _.filter(requiredSlots, (slot) => {
 
-            return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentContext.slots[slot.slotName];
+            return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentFrame.slots[slot.slotName];
         });
-        conversationStateObject.slots = currentContext.slots;
+        conversationStateObject.slots = currentFrame.slots;
         if (missingKeywords.length > 0) {
             const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
             return response;
@@ -183,7 +183,7 @@ module.exports = async function ({ agent, action, context, currentContext, rasaR
         }
         conversationStateObject.webhookResponse = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-        return { ...response, actionWasFulfilled: true };
+        return { ...response, webhookResponse, actionWasFulfilled: true };
     }
     const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
     return { ...response, actionWasFulfilled: true };

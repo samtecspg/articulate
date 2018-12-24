@@ -69,6 +69,7 @@ export const PARAM_DIRECTION = 'direction';
 export const PARAM_SESSION = 'sessionId';
 export const PARAM_FRAME = 'frame';
 export const PARAM_LOAD_FRAMES = 'loadFrames';
+export const PARAM_DEBUG = 'debug';
 export const PARAM_TEXT = 'text';
 export const PARAM_TIMEZONE = 'timezone';
 export const PARAM_BULK = 'bulk';

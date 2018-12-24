@@ -15,7 +15,8 @@ import {
     PARAM_SESSION,
     PARAM_SKIP,
     PARAM_TEXT,
-    PARAM_TIMEZONE
+    PARAM_TIMEZONE,
+    PARAM_DEBUG
 } from '../../util/constants';
 
 const AgentSchema = require('../models/agent.model').schema;
@@ -579,6 +580,12 @@ class AgentValidate {
                     [PARAM_SESSION]: Joi.string().required().description('Id of the session'),
                     [PARAM_TEXT]: Joi.string().required().description('Text to parse'),
                     [PARAM_TIMEZONE]: Joi.string().description('Timezone for duckling parse. Default UTC')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    [PARAM_DEBUG]: Joi.boolean().optional().default(false)
                 };
             })(),
             options: {
