@@ -18,8 +18,8 @@ import rightArrowIcon from '../../images/right-arrow-icon.svg';
 import messages from './messages';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { makeSelectNotifications, makeSelectMessages, makeSelectAgent, makeSelectWaitingResponse, makeSelectDoc } from '../../containers/App/selectors';
-import { closeNotification, sendMessage, resetSession, loadDoc } from '../../containers/App/actions';
+import { makeSelectNotifications, makeSelectMessages, makeSelectAgent, makeSelectWaitingResponse, makeSelectConversationStateObject } from '../../containers/App/selectors';
+import { closeNotification, sendMessage, resetSession } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
@@ -259,7 +259,7 @@ export class ConversationBar extends React.PureComponent {
                     <Typography className={classes.agentMessage}>
                       {message.message}
                       {message.docId !== null ?
-                        <span onClick={() => { this.props.onLoadDoc(message.docId); this.setState({openCodeModal: true})}} className={classes.messageSource}>
+                        <span onClick={() => { this.setState({openCodeModal: true})}} className={classes.messageSource}>
                           {'</> '}<span className={classes.messageSourceLink}>See Source</span>
                         </span>
                         : null}
@@ -320,7 +320,7 @@ export class ConversationBar extends React.PureComponent {
             />
           </Grid>
         </Grid>
-        <CodeModal handleClose={() => { this.setState({ openCodeModal: false }) }} doc={this.props.doc} open={this.state.openCodeModal} />
+        <CodeModal handleClose={() => { this.setState({ openCodeModal: false }) }} conversationStateObject={this.props.conversationStateObject} open={this.state.openCodeModal} />
       </Grid>
     );
   }
@@ -330,11 +330,10 @@ ConversationBar.propTypes = {
   classes: PropTypes.object,
   intl: intlShape.isRequired,
   notifications: PropTypes.array,
-  doc: PropTypes.object,
+  conversationStateObject: PropTypes.object,
   onResetSession: PropTypes.func,
   onCloseNotification: PropTypes.func,
   onSendMessage: PropTypes.func,
-  onLoadDoc: PropTypes.func,
 }; 
 
 const mapStateToProps = createStructuredSelector({
@@ -342,7 +341,7 @@ const mapStateToProps = createStructuredSelector({
   notifications: makeSelectNotifications(),
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
-  doc: makeSelectDoc(),
+  conversationStateObject: makeSelectConversationStateObject(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -358,9 +357,6 @@ function mapDispatchToProps(dispatch) {
         author: 'User',
         message,
       }));
-    },
-    onLoadDoc: (docId) => {
-      dispatch(loadDoc(docId));
     },
   };
 }

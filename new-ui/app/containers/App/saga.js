@@ -7,7 +7,6 @@ import {
 
 import {
   LOAD_AGENT,
-  LOAD_DOC,
   LOAD_SETTINGS,
   RESET_SESSION,
   SEND_MESSAGE,
@@ -19,11 +18,10 @@ import { getSettings } from '../SettingsPage/saga';
 import {
   loadAgentError,
   loadAgentSuccess,
-  loadDocError,
-  loadDocSuccess,
   resetSessionSuccess,
   respondMessage,
   trainAgentError,
+  storeSourceData
 } from './actions';
 
 import { makeSelectAgent } from './selectors';
@@ -35,6 +33,7 @@ export function* postConverse(payload) {
     try {
       const response = yield call(api.agent.postAgentAgentidConverse, {
         agentId: agent.id,
+        debug: true,
         body: {
           sessionId: 'articulateUI',
           text: message.message,
@@ -45,6 +44,7 @@ export function* postConverse(payload) {
         docId: response.obj.docId,
         message: response.obj.textResponse,
       }));
+      yield put(storeSourceData({ ...response.obj.conversationStateObject }));
     } catch (err) {
       yield put(respondMessage({
         author: 'Error',
@@ -80,16 +80,6 @@ export function* deleteSession(payload) {
         message: 'I\'m sorry. An error occurred cleaning your session data.',
       }));
     }
-  }
-}
-
-export function* getDoc(payload) {
-  const { api, docId } = payload;
-  try {
-    const response = yield call(api.doc.getDocDocid, { docId });
-    yield put(loadDocSuccess({ doc: response.obj }));
-  } catch (err) {
-    yield put(loadDocError(err));
   }
 }
 
@@ -129,6 +119,5 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(SEND_MESSAGE, postConverse);
   yield takeLatest(RESET_SESSION, deleteSession);
-  yield takeLatest(LOAD_DOC, getDoc);
   yield takeLatest(TRAIN_AGENT, postTrainAgent);
 };

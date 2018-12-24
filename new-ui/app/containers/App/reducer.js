@@ -8,10 +8,8 @@ import {
   CLOSE_NOTIFICATION,
   SEND_MESSAGE,
   RESPOND_MESSAGE,
+  STORE_SOURCE_DATA,
   RESET_SESSION_SUCCESS,
-  LOAD_DOC,
-  LOAD_DOC_ERROR,
-  LOAD_DOC_SUCCESS,
 
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
@@ -166,7 +164,6 @@ const initialState = Immutable({
     actionThreshold: 50,
     extraTrainingData: false,
   },
-  doc: {},
   categories: [],
   filteredCategories: [],
   agents: false,
@@ -307,6 +304,7 @@ const initialState = Immutable({
   loading: false,
   error: false,
   success: false,
+  conversationStateObject: {},
 });
 
 function appReducer(state = initialState, action) {
@@ -334,21 +332,11 @@ function appReducer(state = initialState, action) {
     case RESPOND_MESSAGE:
       return state.update('messages', messages => messages.concat(action.message))
         .set('waitingResponse', false);
+    case STORE_SOURCE_DATA:
+      return state.set('conversationStateObject', action.conversationStateObject);
     case RESET_SESSION_SUCCESS:
       return state.set('messages', [])
         .set('notifications', []);
-    case LOAD_DOC:
-      return state.set('doc', initialState.doc)
-        .set('loading', true)
-        .set('error', false);
-    case LOAD_DOC_ERROR:
-      return state.set('doc', initialState.doc)
-        .set('loading', false)
-        .set('error', action.error);
-    case LOAD_DOC_SUCCESS:
-      return state.set('doc', action.doc)
-        .set('loading', false)
-        .set('error', false);
 
     /* Agents */
     case LOAD_AGENTS:

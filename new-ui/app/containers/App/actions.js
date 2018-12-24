@@ -12,11 +12,9 @@ import {
   CLOSE_NOTIFICATION,
   SEND_MESSAGE,
   RESPOND_MESSAGE,
+  STORE_SOURCE_DATA,
   RESET_SESSION,
   RESET_SESSION_SUCCESS,
-  LOAD_DOC,
-  LOAD_DOC_ERROR,
-  LOAD_DOC_SUCCESS,
 
   RESET_AGENT_DATA,
   LOAD_AGENTS,
@@ -213,6 +211,13 @@ export function respondMessage(message) {
   }
 }
 
+export function storeSourceData(conversationStateObject) {
+  return {
+    type: STORE_SOURCE_DATA,
+    conversationStateObject
+  }
+}
+
 export function resetSession() {
   return {
     type: RESET_SESSION,
@@ -225,29 +230,6 @@ export function resetSessionSuccess() {
     type: RESET_SESSION_SUCCESS,
   }
 }
-
-export function loadDoc(docId) {
-  return {
-    type: LOAD_DOC,
-    apiCall: true,
-    docId,
-  };
-}
-
-export function loadDocError(error) {
-  return {
-    type: LOAD_DOC_ERROR,
-    error,
-  };
-}
-
-export function loadDocSuccess(doc) {
-  return {
-    type: LOAD_DOC_SUCCESS,
-    doc,
-  };
-}
-
 
 /*
 * Agents

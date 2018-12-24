@@ -49,9 +49,9 @@ const makeSelectWaitingResponse = () => createSelector(
   (globalState) => globalState.waitingResponse
 );
 
-const makeSelectDoc = () => createSelector(
+const makeSelectConversationStateObject = () => createSelector(
   selectGlobalCategory,
-  (globalState) => globalState.doc
+  (globalState) => globalState.conversationStateObject
 );
 
 /* Agents */
@@ -202,7 +202,7 @@ export {
   makeSelectNotifications,
   makeSelectMessages,
   makeSelectWaitingResponse,
-  makeSelectDoc,
+  makeSelectConversationStateObject,
 
   makeSelectAgents,
 
