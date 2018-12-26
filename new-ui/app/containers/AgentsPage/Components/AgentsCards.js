@@ -3,12 +3,10 @@ import { FormattedMessage } from 'react-intl';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Card, CardContent, CardHeader, Menu, MenuItem, Dialog, DialogActions, DialogContent, DialogContentText, Button, Slide }  from '@material-ui/core';
+import { Grid, Card, CardContent, CardHeader, Slide }  from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import messages from '../messages';
-import menuIcon from '../../../images/menu-icon.svg';
-import trashIcon from '../../../images/trash-icon.svg';
 
 const styles = {
   cardsContainer: {
@@ -72,24 +70,6 @@ const styles = {
     top: '2px',
     marginRight: '5px',
   },
-  deleteLabel: {
-    fontSize: '12px',
-    position: 'relative',
-    bottom: '2px',
-  },
-  deleteMessage: {
-    color: '#4e4e4e',
-    fontSize: '18px',
-  },
-  deleteQuestion: {
-    color: '#4e4e4e',
-    fontSize: '14px',
-  },
-  deleteButton: {
-    color: '#f44336',
-    fontWeight: 'bold',
-    textDecoration: 'underline'
-  },
   dialog: {
     border: '1px solid #4e4e4e',
   },
@@ -120,8 +100,6 @@ class AgentsCards extends React.Component {
 
     state = {
       selectedAgent: null,
-      openDeleteMenu: false,
-      openDeleteDialog: false,
       anchorEl: null,
     };
 
@@ -140,89 +118,6 @@ class AgentsCards extends React.Component {
       const { classes, agents } = this.props;
       return (
         <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>
-          <Menu
-            id="long-menu"
-            anchorEl={anchorEl}
-            open={this.state.openDeleteMenu}
-            onClose={() => {
-              this.setState({
-                selectedAgent: null,
-                openDeleteMenu: false,
-                anchorEl: null,
-              });
-            }}
-            PaperProps={{
-              style: {
-                maxHeight: 45,
-                overflowY: 'hidden',
-              },
-            }}
-          >
-            <MenuItem
-              onClick={() => {
-                this.setState({
-                  openDeleteMenu: false,
-                  openDeleteDialog: true,
-                  anchorEl: null,
-                });
-              }}>
-              <span className={classes.deleteLabel} >
-                <img className={classes.trashIcon} src={trashIcon}></img>Delete
-              </span>
-            </MenuItem>
-          </Menu>
-          <Dialog
-            open={this.state.openDeleteDialog}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={() => {
-              this.setState({
-                openDeleteDialog: false,
-                selectedAgent: null,
-              });
-            }}
-            maxWidth='xs'
-            className={classes.dialog}
-          >
-            <DialogContent className={classes.dialogContent}>
-              <Grid className={classes.dialogContentGrid}>
-                <DialogContentText>
-                  <span className={classes.deleteMessage}><FormattedMessage {...messages.deleteMessage}/></span>
-                </DialogContentText>
-                <DialogContentText>
-                  <br/><span className={classes.deleteQuestion}><FormattedMessage {...messages.deleteQuestion}/></span>
-                </DialogContentText>
-              </Grid>
-            </DialogContent>
-            <DialogActions className={classes.dialogActions}>
-              <Grid container justify='center' spacing={24}>
-                <Grid item>
-                  <Button
-                    variant='contained' onClick={() => {
-                      this.setState({
-                        openDeleteDialog: false,
-                        selectedAgent: null,
-                      });
-                    }}>
-                    <FormattedMessage {...messages.no}/>
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    className={classes.deleteButton}
-                    onClick={() => {
-                      this.props.onDeleteAgent(this.state.selectedAgent);
-                      this.setState({
-                        selectedAgent: null,
-                        openDeleteDialog: false,
-                      });
-                    }}>
-                    <FormattedMessage {...messages.delete}/>
-                  </Button>
-                </Grid>
-              </Grid>
-            </DialogActions>
-          </Dialog>
           <Grid key='newAgentCard' item>
             <Link to='/agent/create' className={classes.link}>
               <Card className={classes.newAgentCard}>
@@ -234,19 +129,6 @@ class AgentsCards extends React.Component {
           </Grid>
           {agents.map((agent, index) => (
             <Grid key={`agentCard_${index}`} item>
-              <img
-                id={`menu_${index}`}
-                className={classes.menuIcon}
-                src={menuIcon}
-                onClick={(evt) => {
-                  this.setState({
-                    selectedAgent: agent.id,
-                    openDeleteMenu: true,
-                    anchorEl: evt.currentTarget,
-                  });
-                }}
-              >
-              </img>
               <Card onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCard}>
                 <CardHeader className={classes.agentCardHeader} titleTypographyProps={{ className: classes.agentNameCard }} title={agent.agentName}/>
                 <CardContent className={classes.agentCardContent}>{agent.description}</CardContent>
@@ -264,7 +146,6 @@ class AgentsCards extends React.Component {
 AgentsCards.propTypes = {
   classes: PropTypes.object.isRequired,
   agents: PropTypes.array.isRequired,
-  onDeleteAgent: PropTypes.func,
   onGoToUrl: PropTypes.func,
 };
 
