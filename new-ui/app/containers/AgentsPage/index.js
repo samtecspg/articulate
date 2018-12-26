@@ -23,7 +23,7 @@ import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
 import { makeSelectAgents } from '../App/selectors';
-import { loadAgents, deleteAgent } from '../App/actions';
+import { loadAgents } from '../App/actions';
 import { push } from 'react-router-redux';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -46,7 +46,7 @@ export class AgentsPage extends React.PureComponent {
             }
             sizesForHideInlineElement={['sm', 'xs']}
           />
-          <AgentsCards onGoToUrl={this.props.onGoToUrl} onDeleteAgent={this.props.onDeleteAgent} agents={agents} />
+          <AgentsCards onGoToUrl={this.props.onGoToUrl} agents={agents} />
         </Grid>
         :
         <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
@@ -75,9 +75,6 @@ function mapDispatchToProps(dispatch) {
   return {
     onComponentMounted: () => {
       dispatch(loadAgents())
-    },
-    onDeleteAgent: (id) => {
-      dispatch(deleteAgent(id));
     },
     onGoToUrl: (url) => {
       dispatch(push(url));

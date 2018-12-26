@@ -5,8 +5,6 @@ import { SwatchesPicker } from 'react-color';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid }  from '@material-ui/core';
 
-import expandSingleIcon from '../../images/expand-single-icon.svg';
-
 const styles = {
   swatchContainer: {
     height: '52px',

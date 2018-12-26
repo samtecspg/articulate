@@ -30,16 +30,4 @@ export default defineMessages({
     id: 'app.containers.AgentsPage.components.AgentsCards.delete',
     defaultMessage: 'Delete',
   },
-  deleteMessage: {
-    id: 'app.containers.AgentsPage.components.AgentsCards.deleteMessage',
-    defaultMessage: 'You are going to permanently delete this agent.',
-  },
-  deleteQuestion: {
-    id: 'app.containers.AgentsPage.components.AgentsCards.deleteMessage',
-    defaultMessage: 'Are you sure?',
-  },
-  no: {
-    id: 'app.containers.AgentsPage.components.AgentsCards.no',
-    defaultMessage: 'No',
-  },
 });

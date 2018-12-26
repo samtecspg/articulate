@@ -15,6 +15,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import AppContent from '../../components/AppContent';
@@ -118,7 +119,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { conversationBarOpen, onToggleConversationBar, onLoadAgent, agent, notifications } = this.props;
+    const { conversationBarOpen, onToggleConversationBar, notifications } = this.props;
     return (
       <div>
         <AppHeader onToggleConversationBar={onToggleConversationBar} conversationBarOpen={conversationBarOpen} notifications={notifications} />
@@ -197,4 +198,4 @@ const withConnect = connect(
 
 const withSaga = injectSaga({ key: 'app', saga });
 
-export default withSaga(withConnect(App));
+export default withRouter(withSaga(withConnect(App)));

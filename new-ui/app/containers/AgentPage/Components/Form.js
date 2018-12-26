@@ -13,6 +13,7 @@ import settingsIcon from "../../../images/settings-icon.svg";
 
 import AgentDataForm from "./AgentDataForm";
 import AgentSettingsForm from "./AgentSettingsForm";
+import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
   headerContainer: {
@@ -184,10 +185,14 @@ class Form extends React.Component {
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
-              errorState={this.props.errorState}
+              errorState={this.props.onDelete}
             />
           )}
         </Grid>
+        <DeleteFooter
+          onDelete={this.props.onDelete}
+          type={intl.formatMessage(messages.instanceName)}
+        />
       </Grid>
     );
   }
@@ -215,6 +220,7 @@ Form.propTypes = {
   onChangeCategoryClassifierThreshold: PropTypes.func,
   onAddFallbackResponse: PropTypes.func,
   onDeleteFallbackResponse: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

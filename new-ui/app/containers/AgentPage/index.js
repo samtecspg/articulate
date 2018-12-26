@@ -33,7 +33,8 @@ import {
   addNewHeaderAgentWebhook,
   deleteHeaderAgentWebhook,
   changeHeaderNameAgentWebhook,
-  changeHeaderValueAgentWebhook
+  changeHeaderValueAgentWebhook,
+  deleteAgent,
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -54,12 +55,6 @@ export class AgentPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
-  }
-
-  componentDidUpdate() {
-    if (this.props.success) {
-      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings`);
-    }
   }
 
   componentWillUpdate() {
@@ -283,6 +278,7 @@ export class AgentPage extends React.PureComponent {
               onChangeCategoryClassifierThreshold={this.props.onChangeCategoryClassifierThreshold}
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
+              onDelete={this.props.onDelete.bind(null, this.props.agent.id)}
             />
           }
           sayingsForm={Link}
@@ -321,6 +317,7 @@ AgentPage.propTypes = {
   onEditAgent: PropTypes.func,
   onSuccess: PropTypes.func,
   onTrain: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -392,6 +389,9 @@ function mapDispatchToProps(dispatch) {
     },
     onTrain: () => {
       dispatch(trainAgent());
+    },
+    onDelete: (id) => {
+      dispatch(deleteAgent(id));
     },
   };
 }

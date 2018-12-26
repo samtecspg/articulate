@@ -11,6 +11,10 @@ export default defineMessages({
     id: 'app.containers.AgentPage.title',
     defaultMessage: 'Agent',
   },
+  instanceName: {
+    id: 'app.containers.AgentPage.instanceName',
+    defaultMessage: 'agent',
+  },
   createSubtitle: {
     id: 'app.containers.AgentPage.createSubtitle',
     defaultMessage: 'Create',

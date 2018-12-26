@@ -70,25 +70,7 @@ const styles = {
     top: '2px',
     marginRight: '5px',
   },
-  dialog: {
-    border: '1px solid #4e4e4e',
-  },
-  dialogContent: {
-    backgroundColor: '#f6f7f8',
-    borderBottom: '1px solid #4e4e4e',
-  },
-  dialogContentGrid: {
-    margin: '40px 0px',
-  },
-  dialogActions: {
-    height: '105px',
-    overflowX: 'hidden',
-  },
 };
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
 
 /* eslint-disable react/prefer-stateless-function */
 class AgentsCards extends React.Component {
@@ -100,7 +82,6 @@ class AgentsCards extends React.Component {
 
     state = {
       selectedAgent: null,
-      anchorEl: null,
     };
 
     addEmptyCards(numOfCards){
@@ -114,7 +95,6 @@ class AgentsCards extends React.Component {
     };
 
     render(){
-      const { anchorEl } = this.state;
       const { classes, agents } = this.props;
       return (
         <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>

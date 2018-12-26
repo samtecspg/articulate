@@ -1,4 +1,7 @@
 import {
+  push
+} from 'react-router-redux';
+import {
   call,
   put,
   select,
@@ -11,11 +14,15 @@ import {
   addAgentSuccess,
   updateAgentError,
   updateAgentSuccess,
+  deleteAgentError,
+  deleteAgentSuccess,
+  loadAgentsSuccess,
 } from '../App/actions';
 
 import {
   ADD_AGENT,
   UPDATE_AGENT,
+  DELETE_AGENT,
 } from '../App/constants';
 
 import {
@@ -122,6 +129,7 @@ export function* postAgent(payload) {
     }
     yield call(putAgentSettings, { id: response.obj.id, api });
     yield put(addAgentSuccess(response.obj));
+    yield put(push(`/agent/${response.obj.id}/sayings`));
   } catch (err) {
     yield put(addAgentError(err));
   }
@@ -163,12 +171,27 @@ export function* putAgent(payload) {
       }
     }
     yield put(updateAgentSuccess(response.obj));
+    yield put(push(`/agent/${response.obj.id}/sayings`));
   } catch (err) {
     yield put(updateAgentError(err));
+  }
+}
+
+export function* deleteAgent(payload) {
+  const { api, id } = payload;
+  try {
+    yield call(api.agent.deleteAgentAgentid, { agentId: id });
+    yield put(deleteAgentSuccess());
+    const response = yield call(api.agent.getAgent, {});
+    yield put(loadAgentsSuccess(response.obj.data));
+    yield put(push('/'));
+  } catch (err) {
+    yield put(deleteAgentError(err));
   }
 }
 
 export default function* rootSaga() {
   yield takeLatest(ADD_AGENT, postAgent);
   yield takeLatest(UPDATE_AGENT, putAgent);
+  yield takeLatest(DELETE_AGENT, deleteAgent);
 };
