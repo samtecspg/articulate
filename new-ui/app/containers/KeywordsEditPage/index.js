@@ -36,6 +36,7 @@ import {
   changeExampleSynonyms,
   resetStatusFlag,
   changeExampleName,
+  deleteKeyword,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -153,6 +154,8 @@ export class KeywordsEditPage extends React.Component {
               keyword={this.props.keyword}
               onChangeKeywordData={this.props.onChangeKeywordData}
               errorState={this.state.errorState}
+              newKeyword={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
             />
           }
           valuesForm={
@@ -163,7 +166,9 @@ export class KeywordsEditPage extends React.Component {
               onDeleteKeywordExample={this.props.onDeleteKeywordExample}
               onChangeExampleName={this.props.onChangeExampleName}
               onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
-              errorState={this.state.errorState}              
+              errorState={this.state.errorState}
+              newKeyword={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -184,6 +189,7 @@ KeywordsEditPage.propTypes = {
   onAddKeywordExample: PropTypes.func,
   onDeleteKeywordExample: PropTypes.func,
   onChangeExampleSynonyms: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -227,6 +233,9 @@ function mapDispatchToProps(dispatch) {
     },
     onGoToUrl: (url) => {
       dispatch(push(url));
+    },
+    onDelete: (id) => {
+      dispatch(deleteKeyword(id));
     },
   };
 }

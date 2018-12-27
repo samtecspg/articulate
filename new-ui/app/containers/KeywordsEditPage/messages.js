@@ -11,6 +11,10 @@ export default defineMessages({
     id: 'app.containers.ActionPage.createSubtitle',
     defaultMessage: 'Create',
   },
+  instanceName: {
+    id: 'app.containers.ActionPage.instanceName',
+    defaultMessage: 'keyword',
+  },
   keywordFormTitle: {
     id: 'app.containers.KeywordsEditPage.component.KeywordForm.keywordFormTitle',
     defaultMessage: 'Keyword',

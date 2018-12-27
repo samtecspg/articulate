@@ -10,6 +10,7 @@ import ChipInput from 'components/ChipInput'
 import messages from "../messages";
 
 import playHelpIcon from "../../../images/play-help-icon.svg";
+import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
   headerContainer: {
@@ -261,6 +262,13 @@ class ValuesForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        {this.props.newKeyword ? 
+          null : 
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        }
       </Grid>
     );
   }
@@ -276,6 +284,8 @@ ValuesForm.propTypes = {
   onChangeExampleSynonyms: PropTypes.func,
   onChangeExampleName: PropTypes.func, 
   errorState: PropTypes.object,
+  onDelete: PropTypes.func,
+  newKeyword: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(ValuesForm));

@@ -74,6 +74,7 @@ import {
   LOAD_KEYWORDS_SUCCESS,
   DELETE_KEYWORD,
   DELETE_KEYWORD_ERROR,
+  DELETE_KEYWORD_SUCCESS,
   CHANGE_KEYWORDS_PAGE_SIZE,
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
@@ -144,6 +145,10 @@ import {
   CREATE_CATEGORY_SUCCESS,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
+  DELETE_CATEGORY,
+  DELETE_CATEGORY_ERROR,
+  DELETE_CATEGORY_SUCCESS,
+
   CHANGE_REVIEW_PAGE_SIZE,
   LOAD_AGENT_DOCUMENTS,
   LOAD_AGENT_DOCUMENTS_ERROR,
@@ -715,11 +720,17 @@ export function loadKeywordsSuccess(keywords) {
   };
 }
 
-export function deleteKeyword(keywordId) {
+export function deleteKeyword(id) {
   return {
     type: DELETE_KEYWORD,
     apiCall: true,
-    keywordId,
+    id,
+  }
+}
+
+export function deleteKeywordSuccess() {
+  return {
+    type: DELETE_KEYWORD_SUCCESS,
   }
 }
 
@@ -996,10 +1007,12 @@ export function updateActionSuccess(action){
   }
 }
 
-export function deleteAction(){
+export function deleteAction(id, actionName){
   return {
     type: DELETE_ACTION,
     apiCall: true,
+    id,
+    actionName,
   }
 }
 
@@ -1239,6 +1252,26 @@ export function changeActionThreshold(value) {
       value: parseInt(value),
     },
   };
+}
+
+export function deleteCategory(id){
+  return {
+    type: DELETE_CATEGORY,
+    id,
+    apiCall: true,
+  }
+}
+
+export function deleteCategoryError(){
+  return {
+    type: DELETE_CATEGORY_ERROR,
+  }
+}
+
+export function deleteCategorySuccess(){
+  return {
+    type: DELETE_CATEGORY_SUCCESS,
+  }
 }
 
 /* Review */

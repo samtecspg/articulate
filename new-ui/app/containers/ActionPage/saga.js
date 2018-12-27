@@ -216,11 +216,11 @@ export function* putAction(payload) {
 
 export function* deleteAction(payload) {
   const agent = yield select(makeSelectAgent());
-  const action = yield select(makeSelectAction());
-  const { api } = payload;
+  const { api, id } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidActionActionid, { agentId: agent.id, actionId: action.id });
+    yield call(api.agent.deleteAgentAgentidActionActionid, { agentId: agent.id, actionId: id });
     yield put(deleteActionSuccess());
+    yield put(push(`/agent/${agent.id}/sayings`))
   } catch (err) {
     yield put(deleteActionError(err));
   }

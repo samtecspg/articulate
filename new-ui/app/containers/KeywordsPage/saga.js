@@ -10,12 +10,10 @@ import {
 import {
   loadKeywordsError,
   loadKeywordsSuccess,
-  deleteKeywordError,
 } from '../App/actions';
 
 import {
   LOAD_KEYWORDS,
-  DELETE_KEYWORD,
   CHANGE_KEYWORDS_PAGE_SIZE,
 } from '../App/constants';
 
@@ -48,22 +46,6 @@ export function* getKeywords(payload) {
   }
 }
 
-export function* deleteKeyword(payload) {
-  const agent = yield select(makeSelectAgent());
-  const { api, keywordId } = payload;
-  try {
-    yield call(api.agent.deleteAgentAgentidKeywordKeywordid, { agentId: agent.id, keywordId });
-    yield call(getKeywords, {
-      api,
-      filter: '',
-      page: 1,
-    });
-  } catch (err) {
-    const error = { ...err };
-    yield put(deleteKeywordError(error.response.body.message));
-  }
-}
-
 export function* putKeywordsPageSize(payload){
   const agentSettings = yield select(makeSelectAgentSettings());
   const { api, agentId, pageSize } = payload;
@@ -78,6 +60,5 @@ export function* putKeywordsPageSize(payload){
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
-  yield takeLatest(DELETE_KEYWORD, deleteKeyword);
   yield takeLatest(CHANGE_KEYWORDS_PAGE_SIZE, putKeywordsPageSize);
 };

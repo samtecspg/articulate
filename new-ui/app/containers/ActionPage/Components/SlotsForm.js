@@ -12,6 +12,7 @@ import messages from "../messages";
 
 import playHelpIcon from "../../../images/play-help-icon.svg";
 import singleQuotesIcon from "../../../images/single-quotes-icon.svg";
+import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
   headerContainer: {
@@ -221,6 +222,13 @@ class SlotsForm extends React.Component {
               : null
           ))}
         </Grid>
+        {this.props.newAction ? 
+          null : 
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        }
       </Grid>
     );
   }

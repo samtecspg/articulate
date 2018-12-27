@@ -1,5 +1,7 @@
 import Immutable from 'seamless-immutable';
-
+import {
+  push
+} from 'react-router-redux';
 import {
   takeLatest,
   call,
@@ -14,17 +16,20 @@ import {
   createKeywordError,
   updateKeywordSuccess,
   updateKeywordError,
+  deleteKeywordError,
 } from '../App/actions';
 
 import {
   LOAD_KEYWORD,
   CREATE_KEYWORD,
   UPDATE_KEYWORD,
+  DELETE_KEYWORD,
 } from '../App/constants';
 
 import {
   makeSelectAgent, makeSelectKeyword,
 } from '../App/selectors';
+import { getKeywords } from '../KeywordsPage/saga';
 
 export function* getKeyword(payload) {
   const agent = yield select(makeSelectAgent());
@@ -71,8 +76,26 @@ export function* putKeyword(payload) {
   }
 }
 
+export function* deleteKeyword(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, id } = payload;
+  try {
+    yield call(api.agent.deleteAgentAgentidKeywordKeywordid, { agentId: agent.id, keywordId: id });
+    yield call(getKeywords, {
+      api,
+      filter: '',
+      page: 1,
+    });
+    yield put(push(`/agent/${agent.id}/keywords`));
+  } catch (err) {
+    const error = { ...err };
+    yield put(deleteKeywordError(error.response.body.message));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORD, getKeyword);
   yield takeLatest(CREATE_KEYWORD, postKeyword);
   yield takeLatest(UPDATE_KEYWORD, putKeyword);
+  yield takeLatest(DELETE_KEYWORD, deleteKeyword);
 };

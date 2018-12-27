@@ -89,7 +89,7 @@ export class MainTab extends React.Component {
                 scrollButtons="off"
                 onChange={(evt, value) => { this.handleChange(value)}}
               >
-                <Tab value="keyword" className={classes.tab} label={<span><span>{intl.formatMessage(messages.keyword)}</span><span className={classes.subtitle}>{newKeyword ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.keywordName}</span></span>} />
+                <Tab value="keyword" className={classes.tab} label={<span><span>{intl.formatMessage(messages.keyword)}</span><span className={classes.subtitle}>{newKeyword && this.props.keywordName === '' ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.keywordName}</span></span>} />
                 <Tab value="values" className={classes.tab} label={intl.formatMessage(messages.values)} />
                 <Tab value="modifiers" className={classes.tab} label={intl.formatMessage(messages.modifiers)} />
               </Tabs>

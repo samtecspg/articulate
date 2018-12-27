@@ -26,7 +26,6 @@ import {
 
 import {
   loadKeywords,
-  deleteKeyword,
   trainAgent,
   changeKeywordsPageSize,
 } from '../App/actions';
@@ -139,7 +138,6 @@ export class KeywordsPage extends React.Component {
               agentId={this.props.agent.id}
               onSearchKeyword={this.onSearchKeyword}
               keywords={this.props.keywords}
-              onDeleteKeyword={this.props.onDeleteKeyword}
               onCreateKeyword={this.props.onCreateKeyword}
               currentPage={this.state.currentPage}
               pageSize={this.state.pageSize}
@@ -160,7 +158,6 @@ KeywordsPage.propTypes = {
   agent: PropTypes.object,
   keywords: PropTypes.array,
   onLoadKeywords: PropTypes.func,
-  onDeleteKeyword: PropTypes.func.isRequired,
   onTrain: PropTypes.func,
 };
 
@@ -174,9 +171,6 @@ function mapDispatchToProps(dispatch) {
   return {
     onLoadKeywords: (filter, page, pageSize) => {
       dispatch(loadKeywords(filter, page, pageSize));
-    },
-    onDeleteKeyword: (keywordId) => {
-      dispatch(deleteKeyword(keywordId));
     },
     onCreateKeyword: (url) => {
       dispatch(push(url))

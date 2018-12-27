@@ -9,6 +9,7 @@ import ColorPicker from 'components/ColorPicker';
 import messages from "../messages";
 
 import playHelpIcon from "../../../images/play-help-icon.svg";
+import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
   headerContainer: {
@@ -228,6 +229,13 @@ class KeywordForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        {this.props.newKeyword ? 
+          null : 
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        }
       </Grid>
     );
   }
@@ -239,6 +247,8 @@ KeywordForm.propTypes = {
   keyword: PropTypes.object,
   onChangeKeywordData: PropTypes.func,
   errorState: PropTypes.object,
+  onDelete: PropTypes.func,
+  newKeyword: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(KeywordForm));

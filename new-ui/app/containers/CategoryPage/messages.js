@@ -11,6 +11,10 @@ export default defineMessages({
     id: 'app.containers.CategoryEditPage.title',
     defaultMessage: 'Category',
   },
+  instanceName: {
+    id: 'app.containers.CategoryEditPage.instanceName',
+    defaultMessage: 'category',
+  },
   formTitle: {
     id: 'app.containers.CategoryEditPage.formTitle',
     defaultMessage: 'Categories',

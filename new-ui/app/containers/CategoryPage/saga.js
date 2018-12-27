@@ -1,5 +1,7 @@
 import Immutable from 'seamless-immutable';
-
+import {
+  push
+} from 'react-router-redux';
 import {
   takeLatest,
   call,
@@ -14,17 +16,21 @@ import {
   createCategoryError,
   updateCategorySuccess,
   updateCategoryError,
+  deleteCategorySuccess,
+  deleteCategoryError,
 } from '../App/actions';
 
 import {
   LOAD_CATEGORY,
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
+  DELETE_CATEGORY,
 } from '../App/constants';
 
 import {
   makeSelectAgent, makeSelectCategory,
 } from '../App/selectors';
+import { getCategories } from '../SayingsPage/saga';
 
 export function* getCategory(payload) {
   const agent = yield select(makeSelectAgent());
@@ -74,8 +80,25 @@ export function* putCategory(payload) {
   }
 }
 
+export function* deleteCategory(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, id } = payload;
+  try {
+    yield call(api.agent.deleteAgentAgentidCategoryCategoryid, { agentId: agent.id, categoryId: id });
+    yield put(deleteCategorySuccess());
+    yield put(getCategories({
+      api
+    }));
+    yield put(push(`/agent/${agent.id}/sayings`));
+  } catch (err) {
+    console.log('ERROR: ', err);
+    yield put(deleteCategoryError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_CATEGORY, getCategory);
   yield takeLatest(CREATE_CATEGORY, postCategory);
   yield takeLatest(UPDATE_CATEGORY, putCategory);
+  yield takeLatest(DELETE_CATEGORY, deleteCategory);
 };

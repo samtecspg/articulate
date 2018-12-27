@@ -36,6 +36,7 @@ import {
   updateCategory,
   resetStatusFlag,
   changeActionThreshold,
+  deleteCategory,
 } from '../App/actions';
 
 import ActionButtons from './Components/ActionButtons';
@@ -112,7 +113,7 @@ export class CategoriesEditPage extends React.Component {
       <Grid container>
         <ContentHeader
           title={messages.title}
-          subtitle={this.state.isNewCategory ? intl.formatMessage(messages.newCategory) : this.props.category.categoryName}
+          subtitle={this.state.isNewCategory && this.props.category.categoryName === '' ? intl.formatMessage(messages.newCategory) : this.props.category.categoryName}
           inlineElement={
             <ActionButtons
               formError={this.state.formError}
@@ -130,6 +131,8 @@ export class CategoriesEditPage extends React.Component {
           onChangeCategoryData={this.props.onChangeCategoryData}
           onChangeActionThreshold={this.props.onChangeActionThreshold}
           errorState={this.state.errorState}
+          onDelete={this.props.onDelete.bind(null, this.props.category.id)}
+          newCategory={this.state.isNewCategory}
         />
       </Grid>
     );
@@ -183,6 +186,9 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: (url) => {
       dispatch(push(url));
     },
+    onDelete: (id) => {
+      dispatch(deleteCategory(id));
+    }
   };
 }
 

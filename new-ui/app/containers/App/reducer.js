@@ -70,8 +70,6 @@ import {
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
   LOAD_KEYWORDS_SUCCESS,
-  DELETE_KEYWORD,
-  DELETE_KEYWORD_ERROR,
 
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
@@ -115,6 +113,8 @@ import {
   DELETE_HEADER_ACTION_WEBHOOK,
   CHANGE_HEADER_KEY_ACTION_WEBHOOK,
   CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
+  CHAIN_ACTION_TO_RESPONSE,
+  UNCHAIN_ACTION_FROM_RESPONSE,
 
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
@@ -131,6 +131,9 @@ import {
   DELETE_KEYWORD_EXAMPLE,
   CHANGE_EXAMPLE_SYNONYMS,
   CHANGE_EXAMPLE_NAME,
+  DELETE_KEYWORD,
+  DELETE_KEYWORD_ERROR,
+  DELETE_KEYWORD_SUCCESS,
 
   LOAD_CATEGORY,
   LOAD_CATEGORY_ERROR,
@@ -143,8 +146,10 @@ import {
   UPDATE_CATEGORY,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
-  CHAIN_ACTION_TO_RESPONSE,
-  UNCHAIN_ACTION_FROM_RESPONSE,
+  DELETE_CATEGORY,
+  DELETE_CATEGORY_ERROR,
+  DELETE_CATEGORY_SUCCESS,
+  
   LOAD_AGENT_DOCUMENTS_SUCCESS,
   LOAD_AGENT_DOCUMENTS_ERROR,
 } from './constants';
@@ -638,13 +643,6 @@ function appReducer(state = initialState, action) {
         .set('totalKeywords', action.keywords.total)
         .set('loading', false)
         .set('error', false);
-    case DELETE_KEYWORD:
-      return state.set('loading', true)
-        .set('error', false);
-    case DELETE_KEYWORD_ERROR:
-      state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
-      return state.set('loading', false)
-        .set('error', action.error);
 
     /* Settings */
     case LOAD_SETTINGS:
@@ -885,6 +883,7 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false);
     case DELETE_ACTION:
+      state = state.update('newSayingActions', newSayingActions => newSayingActions.filter((item) => item !== action.actionName));
       return state.set('loading', true)
         .set('success', false)
         .set('error', false);
@@ -984,6 +983,18 @@ function appReducer(state = initialState, action) {
       return state.set('keyword', action.keyword)
         .set('loading', false)
         .set('error', false);
+    case DELETE_KEYWORD:
+      return state.set('loading', true)
+        .set('error', false);
+    case DELETE_KEYWORD_SUCCESS:
+      return state.set('keyword', initialState.keyword)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case DELETE_KEYWORD_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error'}));
+      return state.set('loading', false)
+        .set('error', action.error);
 
     /* Category */
     case LOAD_CATEGORY:
@@ -1029,6 +1040,22 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case UPDATE_CATEGORY_SUCCESS:
       return state.set('category', action.category)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case DELETE_CATEGORY:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case DELETE_CATEGORY_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case DELETE_CATEGORY_SUCCESS:
+      return state.set('category', initialState.category)
+        .set('categories', initialState.categories)
+        .set('filteredCategories', initialState.filteredCategories)
+        .set('selectedCategory', initialState.selectedCategory)
         .set('loading', false)
         .set('success', true)
         .set('error', false);

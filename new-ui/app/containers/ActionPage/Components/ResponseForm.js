@@ -14,6 +14,7 @@ import messages from "../messages";
 import playHelpIcon from "../../../images/play-help-icon.svg";
 import singleQuotesIcon from "../../../images/single-quotes-icon.svg";
 import trashIcon from '../../../images/trash-icon.svg';
+import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
   headerContainer: {
@@ -235,6 +236,13 @@ class ResponseForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        {this.props.newAction ? 
+          null : 
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        }
       </Grid>
     );
   }

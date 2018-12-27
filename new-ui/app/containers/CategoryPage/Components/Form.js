@@ -10,6 +10,7 @@ import messages from '../messages';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 
 import CategoryDataForm from './CategoryDataForm';
+import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
@@ -145,6 +146,11 @@ class Form extends React.Component {
             errorState={this.props.errorState}
           />}
         </Grid>
+        {this.props.newCategory ? null : 
+        <DeleteFooter
+          onDelete={this.props.onDelete}
+          type={intl.formatMessage(messages.instanceName)}
+        />}
       </Grid>
     );
   }
@@ -157,6 +163,8 @@ Form.propTypes = {
   onChangeCategoryData: PropTypes.func.isRequired,
   onChangeActionThreshold: PropTypes.func,
   errorState: PropTypes.object,
+  onDelete: PropTypes.func,
+  newCategory: PropTypes.bool
 };
 
 export default injectIntl(withStyles(styles)(Form));

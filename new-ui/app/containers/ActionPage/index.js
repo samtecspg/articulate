@@ -59,7 +59,8 @@ import {
   addNewHeaderActionWebhook,
   deleteHeaderActionWebhook,
   changeHeaderNameActionWebhook,
-  changeHeaderValueActionWebhook
+  changeHeaderValueActionWebhook,
+  deleteAction
 } from '../App/actions';
 
 const styles = {
@@ -266,6 +267,8 @@ export class ActionPage extends React.Component {
               action={this.props.action}
               onChangeActionName={this.props.onChangeActionName}
               errorState={this.state.errorState}
+              newAction={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
             />
           }
           slotsForm={
@@ -280,6 +283,8 @@ export class ActionPage extends React.Component {
               saying={this.props.saying}
               agentKeywords={this.props.agentKeywords}
               errorState={this.state.errorState}
+              newAction={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
             />
           }
           webhookForm={
@@ -294,6 +299,8 @@ export class ActionPage extends React.Component {
               onChangeHeaderName={this.props.onChangeHeaderName}
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               errorState={this.state.errorState}
+              newAction={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
             />
           }
           responseForm={
@@ -310,6 +317,8 @@ export class ActionPage extends React.Component {
               onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
               errorState={this.state.errorState}
               agentActions={this.props.agentActions}
+              newAction={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -352,6 +361,7 @@ ActionPage.propTypes = {
   onUnchainActionFromResponse: PropTypes.func,
   onSuccess: PropTypes.func,
   agentActions: PropTypes.array,
+  onDelete: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -443,6 +453,9 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: (url) => {
       dispatch(push(url));
     },
+    onDelete: (id, actionName) => {
+      dispatch(deleteAction(id, actionName));
+    }
   };
 }
 

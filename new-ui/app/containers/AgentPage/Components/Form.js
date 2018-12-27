@@ -185,14 +185,15 @@ class Form extends React.Component {
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
-              errorState={this.props.onDelete}
+              errorState={this.props.errorState}
             />
           )}
         </Grid>
+        {this.props.newAgent ? null : 
         <DeleteFooter
           onDelete={this.props.onDelete}
           type={intl.formatMessage(messages.instanceName)}
-        />
+        />}
       </Grid>
     );
   }
@@ -221,6 +222,7 @@ Form.propTypes = {
   onAddFallbackResponse: PropTypes.func,
   onDeleteFallbackResponse: PropTypes.func,
   onDelete: PropTypes.func,
+  newAgent: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(Form));

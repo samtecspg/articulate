@@ -279,6 +279,7 @@ export class AgentPage extends React.PureComponent {
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               onDelete={this.props.onDelete.bind(null, this.props.agent.id)}
+              newAgent={this.state.isNewAgent}
             />
           }
           sayingsForm={Link}

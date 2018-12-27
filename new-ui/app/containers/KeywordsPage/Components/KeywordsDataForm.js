@@ -7,7 +7,6 @@ import { Grid, TextField, Table, TableBody, TableRow, TableCell, Typography, But
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
-import trashIcon from '../../../images/trash-icon.svg';
 
 const styles = {
   formContainer: {
@@ -18,16 +17,6 @@ const styles = {
   },
   formSubContainer: {
     padding: '40px 25px',
-  },
-  deleteCell: {
-    width: '20px',
-  },
-  deleteIcon: {
-    '&:hover': {
-      filter: 'invert(0)',
-    },
-    filter: 'invert(1)',
-    cursor: 'pointer',
   },
   keywordsLabel: {
     marginTop: '20px',
@@ -139,9 +128,6 @@ class KeywordsDataForm extends React.Component {
                                 <span>{keyword.keywordName}</span>
                               </Link>
                             </TableCell>
-                            <TableCell className={classes.deleteCell}>
-                              <img onClick={() => { this.props.onDeleteKeyword(keyword.id) }} className={classes.deleteIcon} src={trashIcon} />
-                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -231,7 +217,6 @@ KeywordsDataForm.propTypes = {
   classes: PropTypes.object.isRequired,
   keywords: PropTypes.array,
   agentId: PropTypes.string,
-  onDeleteKeyword: PropTypes.func.isRequired,
   onCreateKeyword: PropTypes.func.isRequired,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,

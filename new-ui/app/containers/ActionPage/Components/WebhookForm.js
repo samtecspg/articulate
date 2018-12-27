@@ -11,6 +11,7 @@ import WebhookSettings from 'components/WebhookSettings';
 import messages from "../messages";
 
 import playHelpIcon from "../../../images/play-help-icon.svg";
+import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
   headerContainer: {
@@ -161,6 +162,13 @@ class WebhookForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        {this.props.newAction ? 
+          null : 
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        }
       </Grid>
     );
   }

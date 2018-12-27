@@ -100,9 +100,7 @@ export const COPY_SAYING = 'app/SayingsPage/COPY_SAYING';
 export const LOAD_KEYWORDS = 'app/KeywordsPage/LOAD_KEYWORDS';
 export const LOAD_KEYWORDS_ERROR = 'app/KeywordsPage/LOAD_KEYWORDS_ERROR';
 export const LOAD_KEYWORDS_SUCCESS = 'app/KeywordsPage/LOAD_KEYWORDS_SUCCESS';
-export const DELETE_KEYWORD = 'app/KeywordsPage/DELETE_KEYWORD';
-export const DELETE_KEYWORD_ERROR = 'app/KeywordsPage/DELETE_KEYWORD_ERROR';
-export const CHANGE_KEYWORDS_PAGE_SIZE = 'app/SayingsPage/CHANGE_KEYWORDS_PAGE_SIZE';
+export const CHANGE_KEYWORDS_PAGE_SIZE = 'app/KeywordsPage/CHANGE_KEYWORDS_PAGE_SIZE';
 
 /*
  * Settings
@@ -173,6 +171,9 @@ export const ADD_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/ADD_KEYWORD_EXAMPLE';
 export const DELETE_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/DELETE_KEYWORD_EXAMPLE';
 export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNONYMS';
 export const CHANGE_EXAMPLE_NAME = 'app/KeywordsEditPage/CHANGE_EXAMPLE_NAME';
+export const DELETE_KEYWORD = 'app/KeywordsPage/DELETE_KEYWORD';
+export const DELETE_KEYWORD_ERROR = 'app/KeywordsPage/DELETE_KEYWORD_ERROR';
+export const DELETE_KEYWORD_SUCCESS = 'app/KeywordsPage/DELETE_KEYWORD_SUCCESS'
 
 /*
  * Category
@@ -188,6 +189,9 @@ export const UPDATE_CATEGORY = 'app/CategoryPage/UPDATE_CATEGORY';
 export const UPDATE_CATEGORY_ERROR = 'app/CategoryPage/UPDATE_CATEGORY_ERROR';
 export const UPDATE_CATEGORY_SUCCESS = 'app/CategoryPage/UPDATE_CATEGORY_SUCCESS';
 export const CHANGE_CATEGORY_DATA = 'app/CategoryPage/CHANGE_CATEGORY_DATA';
+export const DELETE_CATEGORY = 'app/CategoryPage/DELETE_CATEGORY';
+export const DELETE_CATEGORY_ERROR = 'app/CategoryPage/DELETE_CATEGORY_ERROR';
+export const DELETE_CATEGORY_SUCCESS = 'app/CategoryPage/DELETE_CATEGORY_SUCCESS';
 
 /*
  * Review

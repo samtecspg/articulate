@@ -151,7 +151,6 @@ class Form extends React.Component {
           {<KeywordsDataForm
             agentId={this.props.agentId}
             keywords={this.props.keywords}
-            onDeleteKeyword={this.props.onDeleteKeyword}
             onCreateKeyword={this.props.onCreateKeyword}
             currentPage={this.props.currentPage}
             pageSize={this.props.pageSize}
@@ -174,7 +173,6 @@ Form.propTypes = {
   onSearchKeyword: PropTypes.func,
   onCreateKeyword: PropTypes.func,
   keywords: PropTypes.array,
-  onDeleteKeyword: PropTypes.func.isRequired,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,
   numberOfPages: PropTypes.number,

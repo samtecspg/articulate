@@ -8,6 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 import messages from "../messages";
 
 import playHelpIcon from "../../../images/play-help-icon.svg";
+import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
   headerContainer: {
@@ -157,6 +158,13 @@ class ActionForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        {this.props.newAction ? 
+          null : 
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        }
       </Grid>
     );
   }

@@ -11,6 +11,10 @@ export default defineMessages({
     id: 'app.containers.ActionPage.title',
     defaultMessage: 'Action',
   },
+  instanceName: {
+    id: 'app.containers.ActionPage.instanceName',
+    defaultMessage: 'action',
+  },
   createSubtitle: {
     id: 'app.containers.ActionPage.createSubtitle',
     defaultMessage: 'Create',

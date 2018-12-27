@@ -89,7 +89,7 @@ export class MainTab extends React.Component {
                 scrollButtons="off"
                 onChange={(evt, value) => { this.handleChange(value)}}
               >
-                <Tab value="action" className={classes.tab} label={<span><span>{intl.formatMessage(messages.action)}</span><span className={classes.subtitle}>{newAction ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.actionName}</span></span>} />
+                <Tab value="action" className={classes.tab} label={<span><span>{intl.formatMessage(messages.action)}</span><span className={classes.subtitle}>{newAction && this.props.actionName === '' ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.actionName}</span></span>} />
                 <Tab value="slots" className={classes.tab} label={intl.formatMessage(messages.slots)} />
                 <Tab value="webhook" className={classes.tab} label={intl.formatMessage(messages.webhook)} />
                 <Tab value="response" className={classes.tab} label={intl.formatMessage(messages.response)} />
