@@ -33,6 +33,12 @@ const styles = {
     width: '205px',
     cursor: 'pointer',
   },
+  emptyCard: {
+    border: 0,
+    height: 0,
+    width: 220,
+    backgroundColor: 'transparent',
+  },
   agentCardHeader: {
     color: '#4e4e4e',
     fontSize: '22px',
@@ -48,12 +54,6 @@ const styles = {
     fontFamily: 'Montserrat',
     textAlign: 'left',
     paddingTop: 0,
-  },
-  emptyCard: {
-    border: 0,
-    height: 0,
-    width: 245,
-    backgroundColor: 'transparent',
   },
   link:{
     textDecoration: 'none',
@@ -86,10 +86,10 @@ class AgentsCards extends React.Component {
 
     addEmptyCards(numOfCards){
       const emptyCards = [];
-      //the ui show 3 cards as max per row
-      for (let index = 0; index < numOfCards % 4; index++) {
+      //the ui show 4 cards as max per row
+      const numberOfRows = Math.ceil(numOfCards / 4);
+      for (let index = 0; index < (numberOfRows * 4) - (1 + numOfCards); index++) {
         emptyCards.push(<Grid key={`emptyCard_${index}`} className={this.props.classes.emptyCard} />)
-        
       }
       return emptyCards;
     };
