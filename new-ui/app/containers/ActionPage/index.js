@@ -60,7 +60,8 @@ import {
   deleteHeaderActionWebhook,
   changeHeaderNameActionWebhook,
   changeHeaderValueActionWebhook,
-  deleteAction
+  deleteAction,
+  sortSlots
 } from '../App/actions';
 
 const styles = {
@@ -285,6 +286,7 @@ export class ActionPage extends React.Component {
               errorState={this.state.errorState}
               newAction={this.state.isNewKeyword}
               onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
+              onSortSlots={this.props.onSortSlots}
             />
           }
           webhookForm={
@@ -362,6 +364,7 @@ ActionPage.propTypes = {
   onSuccess: PropTypes.func,
   agentActions: PropTypes.array,
   onDelete: PropTypes.func,
+  onSortSlots: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -455,7 +458,10 @@ function mapDispatchToProps(dispatch) {
     },
     onDelete: (id, actionName) => {
       dispatch(deleteAction(id, actionName));
-    }
+    },
+    onSortSlots: (oldIndex, newIndex) => {
+      dispatch(sortSlots(oldIndex, newIndex));
+    },
   };
 }
 

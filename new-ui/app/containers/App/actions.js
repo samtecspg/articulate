@@ -119,6 +119,7 @@ import {
   DELETE_HEADER_ACTION_WEBHOOK,
   CHANGE_HEADER_KEY_ACTION_WEBHOOK,
   CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
+  SORT_SLOTS,
   RESET_KEYWORD_DATA,
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
@@ -1056,6 +1057,14 @@ export function changeHeaderValueActionWebhook(headerIndex, value){
     headerIndex,
     value
   }
+}
+
+export function sortSlots(oldIndex, newIndex) {
+  return {
+    type: SORT_SLOTS,
+    oldIndex,
+    newIndex
+  };
 }
 
 /* Keyword */

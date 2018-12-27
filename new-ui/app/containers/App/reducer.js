@@ -115,6 +115,7 @@ import {
   CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
   CHAIN_ACTION_TO_RESPONSE,
   UNCHAIN_ACTION_FROM_RESPONSE,
+  SORT_SLOTS,
 
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
@@ -918,6 +919,11 @@ function appReducer(state = initialState, action) {
         }
         return header;
       }));
+    case SORT_SLOTS:
+      const tempSlots = Immutable.asMutable(state.action.slots, { deep: true});
+      tempSlots.splice(action.newIndex, 0, tempSlots.splice(action.oldIndex, 1)[0]);
+      return state
+        .setIn(['action', 'slots'], Immutable(tempSlots));
 
     /* Keyword */
     case CHANGE_KEYWORD_DATA:

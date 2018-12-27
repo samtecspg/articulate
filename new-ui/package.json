@@ -169,6 +169,8 @@
     "react-ace": "^6.1.4",
     "react-autosuggest": "^9.4.2",
     "react-color": "^2.14.1",
+    "react-dnd": "^7.0.2",
+    "react-dnd-html5-backend": "^7.0.2",
     "react-dom": "16.4.1",
     "react-helmet": "5.2.0",
     "react-intl": "2.4.0",

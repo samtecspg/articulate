@@ -1,11 +1,14 @@
 import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, Tabs, Tab } from "@material-ui/core";
+import { Grid, Typography, Button, Modal } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import SingleHighlightedSaying from './SingleHighlightedSaying';
+import SortableSlotsTabs from './SortableSlotsTabs';
 import SlotForm from './SlotForm';
 
 import messages from "../messages";
@@ -173,39 +176,13 @@ class SlotsForm extends React.Component {
           }
         </Grid>
         <Grid item xs={12}>
-          <Tabs
-            className={classes.actionTabs}
-            value={this.state.selectedTab}
-            indicatorColor="primary"
-            textColor="secondary"
-            scrollable
-            onChange={(evt, value) => {
-              if (value === action.slots.length) {
-                this.props.onAddNewSlot();
-              }
-              this.handleChange(value);
-            }}
-          >
-            {action.slots.map((slot, index) => (
-              <Tab
-                key={`slot_${index}`}
-                label={
-                  <span className={classes.slotTabLabel}>
-                    <span style={{backgroundColor: slot.uiColor}} className={classes.dot}>
-                    </span><span>{slot.slotName}</span>
-                  </span>
-                }
-              />
-            ))}
-            <Tab
-              key="newSlot"
-              label={
-                <span className={classes.slotTabLabel}>
-                  <FormattedMessage {...messages.newSlotTab} />
-                </span>
-              }
-            />
-          </Tabs>
+          <SortableSlotsTabs
+            action={action}
+            onAddNewSlot={this.props.onAddNewSlot}
+            onSortSlots={this.props.onSortSlots}
+            handleTabChange={this.handleChange}
+            selectedTab={this.state.selectedTab}
+          />
           {action.slots.map((slot, index) => (
             this.state.selectedTab === index ?
               <SlotForm
@@ -247,6 +224,7 @@ SlotsForm.propTypes = {
   onAddNewSlot: PropTypes.func,
   onChangeSlotName: PropTypes.func,
   errorState: PropTypes.object,
+  onSortSlots: PropTypes.func,
 };
 
-export default injectIntl(withStyles(styles)(SlotsForm));
+export default DragDropContext(HTML5Backend)(injectIntl(withStyles(styles)(SlotsForm)));
