@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import CopyImageCell from './components/CopyImageCell';
 import CopyToClipboardImageCell from './components/CopyToClipboardImageCell';
 import DeleteImageCell from './components/DeleteImageCell';
 import DropdownCell from './components/DropdownCell';
@@ -79,4 +80,5 @@ export {
   DropdownCell,
   TextCell,
   PercentCell,
+  CopyImageCell,
 };

@@ -25,6 +25,7 @@ import {
   ADD_ACTION_SAYING,
   ADD_SAYING,
   CHANGE_REVIEW_PAGE_SIZE,
+  COPY_SAYING,
   DELETE_ACTION_SAYING,
   DELETE_SAYING,
   LOAD_ACTIONS,
@@ -40,8 +41,6 @@ import {
 import {
   makeSelectAgent,
   makeSelectAgentSettings,
-  makeSelectNewSayingActions,
-  makeSelectSelectedCategory,
 } from '../App/selectors';
 
 import { getKeywords } from '../KeywordsPage/saga';
@@ -74,25 +73,17 @@ export function* getSayings(payload) {
 
 export function* postSaying(payload) {
   const agent = yield select(makeSelectAgent());
-  const category = yield select(makeSelectSelectedCategory());
-  const actions = yield select(makeSelectNewSayingActions());
-  const { api, value, pageSize } = payload;
+  const { api, userSays, keywords = [], categoryId, actions } = payload;
   try {
     const newSayingData = {
-      userSays: value,
-      keywords: [],
+      userSays,
+      keywords,
       actions,
     };
     yield call(api.agent.postAgentAgentidCategoryCategoryidSaying, {
       agentId: agent.id,
-      categoryId: category,
+      categoryId,
       body: newSayingData,
-    });
-    yield call(getSayings, {
-      api,
-      filter: '',
-      pageSize,
-      page: 1,
     });
   } catch (err) {
     yield put(addSayingError(err));
@@ -253,7 +244,7 @@ export function* getAgentDocument(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_SAYINGS, getSayings);
-  yield takeLatest(ADD_SAYING, postSaying);
+  yield takeLatest(COPY_SAYING, postSaying);
   yield takeLatest(DELETE_SAYING, deleteSaying);
   yield takeLatest(TAG_KEYWORD, tagKeyword);
   yield takeLatest(UNTAG_KEYWORD, untagKeyword);

@@ -217,6 +217,7 @@ class SayingsDataForm extends React.Component {
                       onToggleConversationBar={this.props.onToggleConversationBar}
                       agentActions={this.props.agentActions}
                       onSendMessage={this.props.onSendMessage}
+                      onCopySaying={this.props.onCopySaying}
                     />
                   </StyledRow>
                 ))}
@@ -311,7 +312,7 @@ SayingsDataForm.propTypes = {
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
-  onAddSaying: PropTypes.func.isRequired,
+  onCopySaying: PropTypes.func.isRequired,
   onDeleteSaying: PropTypes.func.isRequired,
   onDeleteAction: PropTypes.func.isRequired,
   onTagKeyword: PropTypes.func,

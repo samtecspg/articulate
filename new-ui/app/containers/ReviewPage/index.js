@@ -5,6 +5,7 @@
  */
 
 import { Grid } from '@material-ui/core';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
 import React from 'react';
@@ -45,7 +46,7 @@ export class ReviewPage extends React.Component {
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.onSearchCategory = this.onSearchCategory.bind(this);
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
-    this.addSaying = this.addSaying.bind(this);
+    this.copySayingFromDocument = this.copySayingFromDocument.bind(this);
   }
 
   state = {
@@ -147,12 +148,27 @@ export class ReviewPage extends React.Component {
     onLoadFilteredCategories(categoryFilter);
   }
 
-  addSaying(saying) {
-    const { onAddSaying } = this.props.actions;
-    this.setState({
-      currentPage: 1,
-    });
-    onAddSaying(this.state.pageSize, saying);
+  copySayingFromDocument(document) {
+    const { agentCategories, agentKeywords } = this.props;
+    const { onCopySaying } = this.props.actions;
+    const rasaResult = document.rasa_results[0];
+    const category = _.find(agentCategories, { 'categoryName': rasaResult.category });
+    const saying = {
+      userSays: document.document,
+      keywords: rasaResult.keywords.map((keyword) => {
+        const agentKeyword = _.find(agentKeywords, { 'keywordName': keyword.keyword });
+        return {
+          'value': keyword.value.value,
+          'keyword': keyword.keyword,
+          'start': keyword.start,
+          'end': keyword.end,
+          'keywordId': agentKeyword.id,
+        };
+      }),
+      actions: [rasaResult.action.name],
+      categoryId: category.id,
+    };
+    onCopySaying(saying);
   }
 
   render() {
@@ -203,7 +219,7 @@ export class ReviewPage extends React.Component {
               agentActions={agentActions}
               agentCategories={agentCategories}
               agentFilteredCategories={agentFilteredCategories}
-              onAddSaying={this.addSaying}
+              onCopySaying={this.copySayingFromDocument}
               onDeleteSaying={() => onDeleteSaying(null, this.state.pageSize)}
               onTagKeyword={() => onTagKeyword(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onUntagKeyword={() => onUntagKeyword(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
@@ -246,7 +262,7 @@ ReviewPage.propTypes = {
     onLoadCategories: PropTypes.func.isRequired,
     onLoadKeywords: PropTypes.func.isRequired,
     onLoadActions: PropTypes.func.isRequired,
-    onAddSaying: PropTypes.func.isRequired,
+    onCopySaying: PropTypes.func.isRequired,
     onDeleteSaying: PropTypes.func.isRequired,
     onTagKeyword: PropTypes.func.isRequired,
     onUntagKeyword: PropTypes.func.isRequired,
@@ -297,7 +313,7 @@ function mapDispatchToProps(dispatch) {
       onLoadCategories: Actions.loadCategories,
       onLoadKeywords: Actions.loadKeywords,
       onLoadActions: Actions.loadActions,
-      onAddSaying: Actions.addSaying,
+      onCopySaying: Actions.copySaying,
       onDeleteSaying: Actions.deleteSaying,
       onTagKeyword: Actions.tagKeyword,
       onUntagKeyword: Actions.untagKeyword,

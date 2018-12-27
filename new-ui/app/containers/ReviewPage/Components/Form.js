@@ -161,7 +161,7 @@ class Form extends React.Component {
           agentActions={this.props.agentActions}
           agentCategories={this.props.agentCategories}
           agentFilteredCategories={this.props.agentFilteredCategories}
-          onAddSaying={this.props.onAddSaying}
+          onCopySaying={this.props.onCopySaying}
           onDeleteSaying={this.props.onDeleteSaying}
           onTagKeyword={this.props.onTagKeyword}
           onUntagKeyword={this.props.onUntagKeyword}
@@ -200,7 +200,7 @@ Form.propTypes = {
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
-  onAddSaying: PropTypes.func,
+  onCopySaying: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
   onTagKeyword: PropTypes.func,

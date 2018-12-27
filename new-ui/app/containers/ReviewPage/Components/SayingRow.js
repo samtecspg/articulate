@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { PropTypes } from 'prop-types';
 import React, { Fragment } from 'react';
 import {
-  CopyToClipboardImageCell,
+  CopyImageCell,
   PercentCell,
   PlayImageCell,
 } from '../../../components/StyledTable';
@@ -134,8 +134,10 @@ class SayingRow extends React.Component {
         </TableCell>
         <PercentCell value={document.maximum_category_score} />
         <PercentCell value={document.maximum_saying_score} />
-        <CopyToClipboardImageCell
-          text={document.document}
+        <CopyImageCell
+          onClick={() => {
+            this.props.onCopySaying(document);
+          }}
         />
         <PlayImageCell
           onClick={() => {
@@ -158,6 +160,7 @@ SayingRow.propTypes = {
   agentCategories: PropTypes.array,
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func,
+  onCopySaying: PropTypes.func,
 };
 
 export default withStyles(styles)(SayingRow);
