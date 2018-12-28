@@ -58,6 +58,22 @@ const styles = {
   },
   backButtonContainer: {
     display: 'inline',
+  },
+  notificationDot: {
+    backgroundColor: '#Cb2121',
+    height: '12px',
+    width: '12px',
+    borderRadius: '50%',
+    position: 'absolute',
+    top: '10px',
+    left: '5px'
+  },
+  numOfErrorsLabel: {
+    fontSize: '10px',
+    color: 'white',
+    position: 'relative',
+    bottom: '4.5px',
+    left: '0.5px'
   }
 };
 
@@ -89,9 +105,56 @@ export class MainTab extends React.Component {
                 scrollButtons="off"
                 onChange={(evt, value) => { this.handleChange(value)}}
               >
-                <Tab value="keyword" className={classes.tab} label={<span><span>{intl.formatMessage(messages.keyword)}</span><span className={classes.subtitle}>{newKeyword && this.props.keywordName === '' ? <FormattedMessage { ...messages.createSubtitle } /> : this.props.keywordName}</span></span>} />
-                <Tab value="values" className={classes.tab} label={intl.formatMessage(messages.values)} />
-                <Tab value="modifiers" className={classes.tab} label={intl.formatMessage(messages.modifiers)} />
+                <Tab value="keyword"
+                  className={classes.tab}
+                  label={
+                    <span>
+                      <span>
+                        {intl.formatMessage(messages.keyword)}
+                      </span>
+                      <span className={classes.subtitle}>
+                        {newKeyword && this.props.keywordName === '' ? 
+                          <FormattedMessage { ...messages.createSubtitle } /> : 
+                          this.props.keywordName ? this.props.keywordName : intl.formatMessage(messages.noName)}
+                      </span>
+                    </span>
+                  }
+                  icon={
+                    this.props.errorState.tabs.indexOf(0) > -1 ? 
+                      <div id='notificationDot' className={classes.notificationDot}>
+                        <span className={classes.numOfErrorsLabel}>
+                          {(this.props.errorState.tabs.filter((element) => { return element === 0 })).length}
+                        </span>
+                      </div> : 
+                      null
+                  }
+                />
+                <Tab value="values"
+                  className={classes.tab}
+                  label={intl.formatMessage(messages.values)}
+                  icon={
+                    this.props.errorState.tabs.indexOf(1) > -1 ? 
+                      <div id='notificationDot' className={classes.notificationDot}>
+                        <span className={classes.numOfErrorsLabel}>
+                          {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
+                        </span>
+                      </div> : 
+                      null
+                  }
+                />
+                <Tab value="modifiers"
+                  className={classes.tab}
+                  label={intl.formatMessage(messages.modifiers)}
+                  icon={
+                    this.props.errorState.tabs.indexOf(2) > -1 ? 
+                      <div id='notificationDot' className={classes.notificationDot}>
+                        <span className={classes.numOfErrorsLabel}>
+                          {(this.props.errorState.tabs.filter((element) => { return element === 2 })).length}
+                        </span>
+                      </div> : 
+                      null
+                  }
+                />
               </Tabs>
             </Grid>
             <Grid className={classes.container}>
@@ -229,6 +292,7 @@ MainTab.propTypes = {
   keywordName: PropTypes.string,
   goBack: PropTypes.func,
   newKeyword: PropTypes.bool,
+  errorState: PropTypes.object
 };
 
 export default injectIntl(withStyles(styles)(MainTab));

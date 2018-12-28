@@ -39,6 +39,22 @@ const styles = {
 	mozUserSelect: 'none',
 	msUserSelect: 'none',
 	userSelect: 'none',
+  },
+  notificationDot: {
+    backgroundColor: '#Cb2121',
+    height: '12px',
+    width: '12px',
+    borderRadius: '50%',
+    position: 'absolute',
+    top: '10px',
+    left: '5px'
+  },
+  numOfErrorsLabel: {
+    fontSize: '10px',
+    color: 'white',
+    position: 'relative',
+    bottom: '4.5px',
+    left: '0.5px'
   }
 };
 
@@ -100,6 +116,15 @@ class SortableSlotsTabs extends React.Component {
 											</span><span>{slot.slotName}</span>
 										</span>
 									}	
+									icon={
+										this.props.errorState.slotsTabs.indexOf(index) > -1 ? 
+											<div id='notificationDot' className={classes.notificationDot}>
+												<span className={classes.numOfErrorsLabel}>
+													{(this.props.errorState.slotsTabs.filter((element) => { return element === index })).length}
+												</span>
+											</div> : 
+											null
+									}
 								/>
 								<img style={{display: this.state.slotHovered === index ? 'inline' : 'none' }} onClick={() => { this.props.onDeleteSlot(index) }} className={classes.deleteHighlight} src={trashIcon} />
 							</div>
@@ -127,6 +152,7 @@ SortableSlotsTabs.propTypes = {
 	handleTabChange: PropTypes.func,
 	selectedTab: PropTypes.number,
 	onDeleteSlot: PropTypes.func,
+	errorState: PropTypes.object
 };
   
 export default withStyles(styles)(SortableSlotsTabs);

@@ -100,6 +100,7 @@ export class AgentPage extends React.PureComponent {
       spacyPretrainedEntities: false,
       postFormatPayload: false,
       webhookPayload: false,
+      tabs: [],
     },
   };
 
@@ -117,40 +118,47 @@ export class AgentPage extends React.PureComponent {
       sayingClassifierPipeline: false,
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
+      tabs: [],
     };
     if (!this.props.agent.agentName || this.props.agent.agentName === '') {
       errors = true;
       newErrorState.agentName = true;
+      newErrorState.tabs.push(0);
     } else {
       newErrorState.agentName = false;
     }
     if (!this.props.agent.description || this.props.agent.description === '') {
       errors = true;
       newErrorState.agentDescription = true;
+      newErrorState.tabs.push(0);
     } else {
       newErrorState.agentDescription = false;
     }
     if (!this.props.agent.fallbackResponses || this.props.agent.fallbackResponses.length === 0) {
       errors = true;
       newErrorState.fallbackResponses = true;
+      newErrorState.tabs.push(0);
     } else {
       newErrorState.fallbackResponses = false;
     }
     if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')) {
       errors = true;
       newErrorState.webhookUrl = true;
+      newErrorState.tabs.push(1);
     } else {
       newErrorState.webhookUrl = false;
     }
     if (!this.props.agentSettings.rasaURL || this.props.agentSettings.rasaURL === '') {
       errors = true;
       newErrorState.rasaURL = true;
+      newErrorState.tabs.push(1);
     } else {
       newErrorState.rasaURL = false;
     }
     if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === '') {
       errors = true;
       newErrorState.ducklingURL = true;
+      newErrorState.tabs.push(1);
     } else {
       newErrorState.ducklingURL = false;
     }
@@ -162,6 +170,7 @@ export class AgentPage extends React.PureComponent {
       newErrorState.ducklingDimension = false;
     } catch (e) {
       errors = true;
+      newErrorState.tabs.push(1);
       newErrorState.ducklingDimension = true;
     }
 
@@ -172,6 +181,7 @@ export class AgentPage extends React.PureComponent {
       newErrorState.categoryClassifierPipeline = false;
     } catch (e) {
       errors = true;
+      newErrorState.tabs.push(1);
       newErrorState.categoryClassifierPipeline = true;
     }
 
@@ -182,6 +192,7 @@ export class AgentPage extends React.PureComponent {
       newErrorState.sayingClassifierPipeline = false;
     } catch (e) {
       errors = true;
+      newErrorState.tabs.push(1);
       newErrorState.sayingClassifierPipeline = true;
     }
 
@@ -192,6 +203,7 @@ export class AgentPage extends React.PureComponent {
       newErrorState.keywordClassifierPipeline = false;
     } catch (e) {
       errors = true;
+      newErrorState.tabs.push(1);
       newErrorState.keywordClassifierPipeline = true;
     }
 
@@ -202,6 +214,7 @@ export class AgentPage extends React.PureComponent {
       newErrorState.spacyPretrainedEntities = false;
     } catch (e) {
       errors = true;
+      newErrorState.tabs.push(1);
       newErrorState.spacyPretrainedEntities = true;
     }
 
@@ -212,6 +225,7 @@ export class AgentPage extends React.PureComponent {
       newErrorState.postFormatPayload = false;
     } catch (e) {
       errors = true;
+      newErrorState.tabs.push(1);
       newErrorState.postFormatPayload = true;
     }
 
@@ -222,6 +236,7 @@ export class AgentPage extends React.PureComponent {
       newErrorState.webhookPayload = false;
     } catch (e) {
       errors = true;
+      newErrorState.tabs.push(1);
       newErrorState.webhookPayload = true;
     }
 

@@ -91,6 +91,7 @@ export class KeywordsEditPage extends React.Component {
     errorState: {
       keywordName: false,
       examples: false,
+      tabs: [],
     },
   };
 
@@ -99,11 +100,13 @@ export class KeywordsEditPage extends React.Component {
     const newErrorState = {
       keywordName: false,
       examples: false,
+      tabs: [],
     };
 
     if (!this.props.keyword.keywordName || this.props.keyword.keywordName === ''){
       errors = true;
       newErrorState.keywordName = true;
+      newErrorState.tabs.push(0);
     }
     else {
       newErrorState.keywordName = false;
@@ -112,6 +115,7 @@ export class KeywordsEditPage extends React.Component {
     if (!this.props.keyword.examples || this.props.keyword.examples.length === 0){
       errors = true;
       newErrorState.examples = true;
+      newErrorState.tabs.push(1);
     }
     else {
       newErrorState.examples = false;
@@ -149,6 +153,7 @@ export class KeywordsEditPage extends React.Component {
           onFinishAction={this.submit}
           onNextAction={this.moveNextTab}
           selectedTab={this.state.currentTab}
+          errorState={this.state.errorState}
           keywordForm={
             <KeywordForm
               keyword={this.props.keyword}

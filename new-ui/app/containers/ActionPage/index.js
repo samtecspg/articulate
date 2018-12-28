@@ -119,6 +119,8 @@ export class ActionPage extends React.Component {
       webhookPayload: false,
       responses: false,
       slots: [],
+      tabs: [],
+      slotsTabs: [],
     },
   };
 
@@ -149,11 +151,14 @@ export class ActionPage extends React.Component {
       webhookPayload: false,
       responses: false,
       slots: [],
+      tabs: [],
+      slotsTabs: [],
     };
 
     if (!this.props.action.actionName || this.props.action.actionName === ''){
       errors = true;
       newErrorState.actionName = true;
+      newErrorState.tabs.push(0);
     }
     else {
       newErrorState.actionName = false;
@@ -162,6 +167,7 @@ export class ActionPage extends React.Component {
     if (this.props.action.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')){
       errors = true;
       newErrorState.webhookUrl = true;
+      newErrorState.tabs.push(2);
     }
     else {
       newErrorState.webhookUrl = false;
@@ -170,13 +176,14 @@ export class ActionPage extends React.Component {
     if (!this.props.action.responses || this.props.action.responses.length === 0){
       errors = true;
       newErrorState.responses = true;
+      newErrorState.tabs.push(3);
     }
     else {
       newErrorState.responses = false;
     }
 
     if (this.props.action.slots.length > 0){
-      this.props.action.slots.forEach((slot) => {
+      this.props.action.slots.forEach((slot, slotIndex) => {
         const newSlotError = {
           slotName: false,
           keyword: false,
@@ -185,6 +192,8 @@ export class ActionPage extends React.Component {
         if (!slot.slotName){
           errors = true;
           newSlotError.slotName = true;
+          newErrorState.tabs.push(1);
+          newErrorState.slotsTabs.push(slotIndex);
         }
         else{
           newSlotError.slotName = false;
@@ -192,6 +201,8 @@ export class ActionPage extends React.Component {
         if (!slot.keyword){
           errors = true;
           newSlotError.keyword = true;
+          newErrorState.tabs.push(1);
+          newErrorState.slotsTabs.push(slotIndex);
         }
         else{
           newSlotError.keyword = false;
@@ -199,6 +210,8 @@ export class ActionPage extends React.Component {
         if (slot.isRequired && slot.textPrompts.length === 0){
           errors = true;
           newSlotError.textPrompts = true;
+          newErrorState.tabs.push(1);
+          newErrorState.slotsTabs.push(slotIndex);
         }
         else{
           newSlotError.textPrompts = false;
@@ -215,6 +228,7 @@ export class ActionPage extends React.Component {
     } catch(e) {
       errors = true;
       newErrorState.postFormatPayload = true;
+      newErrorState.tabs.push(3);
     }
 
     try {
@@ -225,6 +239,7 @@ export class ActionPage extends React.Component {
     } catch(e) {
       errors = true;
       newErrorState.webhookPayload = true;
+      newErrorState.tabs.push(2);
     }
 
     if (!errors){
@@ -264,6 +279,7 @@ export class ActionPage extends React.Component {
           onFinishAction={this.submit}
           onNextAction={this.moveNextTab}
           selectedTab={this.state.currentTab}
+          errorState={this.state.errorState}
           actionForm={
             <ActionForm
               action={this.props.action}

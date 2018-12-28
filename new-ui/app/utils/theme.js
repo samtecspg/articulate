@@ -79,7 +79,7 @@ export default createMuiTheme({
         "bottom": "5px",
       },
       "labelIcon": {
-        "minHeight": "45px",
+        "minHeight": "48px",
         "padding-top": "0px",
       },
       "labelContainer": {
@@ -89,6 +89,9 @@ export default createMuiTheme({
           "paddingRight": "0px",
         },
       },
+      "textColorInherit": {
+        "opacity": 1
+      }
     },
     "MuiFormLabel": {
       "root": {

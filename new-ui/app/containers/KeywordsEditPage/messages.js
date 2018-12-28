@@ -122,5 +122,9 @@ export default defineMessages({
   keywordValuesError: {
     id: 'app.containers.KeywordsEditPage.component.ValuesForm.keywordValuesError',
     defaultMessage: '*At least one value is required',
+  },
+  noName: {
+    id: 'app.containers.KeywordsEditPage.component.MainTab.noName',
+    defaultMessage: 'No name'
   }
 });

@@ -183,6 +183,7 @@ class SlotsForm extends React.Component {
             handleTabChange={this.handleChange}
             selectedTab={this.state.selectedTab}
             onDeleteSlot={this.props.onDeleteSlot}
+            errorState={this.props.errorState}
           />
           {action.slots.map((slot, index) => (
             this.state.selectedTab === index ?

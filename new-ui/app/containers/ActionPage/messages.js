@@ -147,4 +147,8 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.ResponseForm.postFormatTitle',
     defaultMessage: 'Response Format:',
   },
+  noName: {
+    id: 'app.containers.KeywordsEditPage.component.MainTab.noName',
+    defaultMessage: 'No name'
+  }
 });

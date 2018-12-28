@@ -429,6 +429,7 @@ function appReducer(state = initialState, action) {
         .set('agentSettings', action.payload.agent.settings)
         .set('agentWebhook', agentWebhook)
         .set('agentPostFormat', agentPostFormat)
+        .set('newSayingActions', initialState.newSayingActions)
         .set('loading', false)
         .set('error', false)
         .set('agentTouched', false);

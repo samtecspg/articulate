@@ -72,6 +72,22 @@ const styles = {
     height: "18px",
     paddingRight: "5px",
   },
+  notificationDot: {
+    backgroundColor: '#Cb2121',
+    height: '12px',
+    width: '12px',
+    borderRadius: '50%',
+    position: 'absolute',
+    top: '10px',
+    left: '5px'
+  },
+  numOfErrorsLabel: {
+    fontSize: '10px',
+    color: 'white',
+    position: 'relative',
+    bottom: '4.5px',
+    left: '0.5px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -150,9 +166,28 @@ class Form extends React.Component {
             }}
           >
             <Tab 
-              label={intl.formatMessage(messages.main)} />
+              label={intl.formatMessage(messages.main)} 
+              icon={
+                this.props.errorState.tabs.indexOf(0) > -1 ? 
+                  <div id='notificationDot' className={classes.notificationDot}>
+                    <span className={classes.numOfErrorsLabel}>
+                      {(this.props.errorState.tabs.filter((element) => { return element === 0 })).length}
+                    </span>
+                  </div> : 
+                  null
+              }
+            />
             <Tab
-              icon={<img className={classes.settingsIcon} src={settingsIcon} />}
+              icon={[
+                this.props.errorState.tabs.indexOf(1) > -1 ? 
+                  <div style={{left: '0px'}} key='notification_settings' id='notificationDot' className={classes.notificationDot}>
+                    <span className={classes.numOfErrorsLabel}>
+                      {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
+                    </span>
+                  </div> : 
+                  null,
+                <img key='settings_icon' className={classes.settingsIcon} src={settingsIcon} />
+              ]}
               label={intl.formatMessage(messages.settings)}
             />
           </Tabs>
