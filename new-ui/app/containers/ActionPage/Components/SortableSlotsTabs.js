@@ -7,7 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import SortableSlotTab from './SortableSlotTab';
 
 import messages from "../messages";
-import xIcon from '../../../images/x-icon.svg';
+import trashIcon from '../../../images/trash-icon.svg';
 
 const styles = {
   actionTabs: {
@@ -28,21 +28,17 @@ const styles = {
     width: 20,
   },
   deleteHighlight: {
-    filter: 'brightness(5)',
-    cursor: 'pointer',
-    fontSize: '12px',
-    paddingLeft: '5px',
-    position: 'relative',
-    top: '-4px',
-    webkitTouchCallout: 'none',
-    webkitUserSelect: 'none',
-    khtmlUserSelect: 'none',
-    mozUserSelect: 'none',
-    msUserSelect: 'none',
-    userSelect: 'none',
-    '&:hover' : {
-      filter: 'brightness(1)',
-	},
+	cursor: 'pointer',
+	fontSize: '12px',
+	position: 'relative',
+	top: '-1px',
+	right: '8px',
+	webkitTouchCallout: 'none',
+	webkitUserSelect: 'none',
+	khtmlUserSelect: 'none',
+	mozUserSelect: 'none',
+	msUserSelect: 'none',
+	userSelect: 'none',
   }
 };
 
@@ -51,6 +47,10 @@ class SortableSlotsTabs extends React.Component {
 	constructor(props) {
 		super(props);
 		this.moveSlot = this.moveSlot.bind(this);
+	}
+	
+	state = {
+		slotHovered: null,
 	}
     
 	moveSlot(dragIndex, hoverIndex) {
@@ -87,17 +87,21 @@ class SortableSlotsTabs extends React.Component {
 						id={`slotRow_${index}`}
 						moveSlot={this.moveSlot}
 						slotRow={(
-							<div onClick={() => {this.props.handleTabChange(index);}}>
+							<div
+								onMouseLeave={() => { this.setState({ slotHovered: null })} }
+								onMouseOver={() => {this.setState({ slotHovered: index })} }
+								onClick={() => { this.props.handleTabChange(index);} }
+							>
 								<Tab
 									key={`slot_${index}`}
 									label={
 										<span className={classes.slotTabLabel}>
 											<span style={{backgroundColor: slot.uiColor}} className={classes.dot}>
 											</span><span>{slot.slotName}</span>
-          									<img onClick={() => { this.props.onDeleteSlot(index) }} className={classes.deleteHighlight} src={xIcon} />
 										</span>
 									}	
 								/>
+								<img style={{display: this.state.slotHovered === index ? 'inline' : 'none' }} onClick={() => { this.props.onDeleteSlot(index) }} className={classes.deleteHighlight} src={trashIcon} />
 							</div>
 						)}
 					/>
