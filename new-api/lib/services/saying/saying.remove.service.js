@@ -29,8 +29,8 @@ module.exports = async function ({ id = null, SayingModel = null, AgentModel, Ca
         // Update status
         AgentModel.property('status', STATUS_OUT_OF_DATE);
         CategoryModel.property('status', STATUS_OUT_OF_DATE);
-        await AgentModel.save();
-        await CategoryModel.save();
+        await AgentModel.saveInstance();
+        await CategoryModel.saveInstance();
         return await SayingModel.removeInstance();
     }
     catch (error) {

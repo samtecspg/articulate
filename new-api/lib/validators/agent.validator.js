@@ -149,7 +149,9 @@ class AgentValidate {
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         textPrompts: SlotSchema.textPrompts
-                    })
+                    }),
+                    creationDate: ActionSchema.creationDate,
+                    modificationDate: ActionSchema.modificationDate
                 };
             })()
         };
@@ -200,7 +202,9 @@ class AgentValidate {
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model.allow(''),
-                    categoryRecognizer: AgentSchema.categoryRecognizer
+                    categoryRecognizer: AgentSchema.categoryRecognizer,
+                    creationDate: AgentSchema.creationDate,
+                    modificationDate: AgentSchema.modificationDate
                 };
             })()
         };
@@ -263,7 +267,9 @@ class AgentValidate {
                         value: Joi.string(),
                     }),
                     webhookUser: WebhookSchema.webhookUser,
-                    webhookPassword: WebhookSchema.webhookPassword
+                    webhookPassword: WebhookSchema.webhookPassword,
+                    creationDate: WebhookSchema.creationDate,
+                    modificationDate: WebhookSchema.modificationDate
                 };
             })()
         };
@@ -313,7 +319,9 @@ class AgentValidate {
                         value: Joi.string(),
                     }),
                     webhookUser: WebhookSchema.webhookUser,
-                    webhookPassword: WebhookSchema.webhookPassword
+                    webhookPassword: WebhookSchema.webhookPassword,
+                    creationDate: WebhookSchema.creationDate,
+                    modificationDate: WebhookSchema.modificationDate
                 };
             })()
         };
@@ -479,7 +487,9 @@ class AgentValidate {
                         end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
                         extractor: SayingKeywordSchema.extractor
                     }).required().allow([]),
-                    actions: SayingSchema.actions.allow([])
+                    actions: SayingSchema.actions.allow([]),
+                    creationDate: SayingSchema.creationDate,
+                    modificationDate: SayingSchema.modificationDate
                 };
             })()
         };
@@ -532,7 +542,9 @@ class AgentValidate {
                     examples: Joi.array().items({
                         value: KeywordExampledSchema.value.required(),
                         synonyms: KeywordExampledSchema.synonyms.required()
-                    })
+                    }),
+                    creationDate: KeywordSchema.creationDate,
+                    modificationDate: KeywordSchema.modificationDate
                 };
             })()
         };
@@ -554,7 +566,9 @@ class AgentValidate {
                     extraTrainingData: CategorySchema.extraTrainingData,
                     lastTraining: CategorySchema.lastTraining,
                     model: CategorySchema.model,
-                    status: CategorySchema.status
+                    status: CategorySchema.status,
+                    creationDate: CategorySchema.creationDate,
+                    modificationDate: CategorySchema.modificationDate
                 };
             })()
         };

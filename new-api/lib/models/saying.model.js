@@ -10,7 +10,11 @@ class SayingModel {
             category: Joi.string().trim(),
             userSays: Joi.string().trim(),
             keywords: Joi.array().items(SayingKeywordModel.schema),
-            actions: Joi.array().items(Joi.string().trim())
+            actions: Joi.array().items(Joi.string().trim()),
+            creationDate: Joi
+                .string(),
+            modificationDate: Joi
+                .string()
         };
     };
 }

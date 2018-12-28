@@ -21,7 +21,7 @@ module.exports = async function ({ id, categoryId, categoryData, returnModel = f
         await CategoryModel.updateInstance({ data: categoryData });
         // TODO: Publish Agent update
         AgentModel.property('status', STATUS_OUT_OF_DATE);
-        await AgentModel.save();
+        await AgentModel.saveInstance();
         return returnModel ? CategoryModel : CategoryModel.allProperties();
     }
     catch (error) {

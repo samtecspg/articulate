@@ -11,7 +11,9 @@ class ActionModel {
             slots: Joi.array().items(SlotModel.schema),
             responses: Joi.array().items(ActionResponseModel.schema),
             useWebhook: Joi.boolean(),
-            usePostFormat: Joi.boolean()
+            usePostFormat: Joi.boolean(),
+            creationDate: Joi.string(),
+            modificationDate: Joi.date(),
         };
     };
 }

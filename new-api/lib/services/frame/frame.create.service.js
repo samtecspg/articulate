@@ -14,7 +14,7 @@ module.exports = async function ({ data, context = null, returnModel = false }) 
     try {
         await FrameModel.createInstance({ data });
         await context.link(FrameModel, MODEL_FRAME);
-        await context.save();
+        await context.saveInstance();
         return returnModel ? FrameModel : FrameModel.allProperties();
     }
     catch (error) {

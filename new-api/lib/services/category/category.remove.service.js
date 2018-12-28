@@ -18,7 +18,7 @@ module.exports = async function ({ id, CategoryModel, AgentModel }) {
         }));
 
         AgentModel.property('status', STATUS_OUT_OF_DATE);
-        await AgentModel.save();
+        await AgentModel.saveInstance();
         return CategoryModel.removeInstance();
     }
     catch (error) {

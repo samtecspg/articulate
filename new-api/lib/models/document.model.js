@@ -38,7 +38,11 @@ class DocumentModel {
             agent_model: Joi
                 .string()
                 .description('Agent Model')
-                .trim()
+                .trim(),
+            creationDate: Joi
+                .string(),
+            modificationDate: Joi
+                .string()
         };
     };
 }

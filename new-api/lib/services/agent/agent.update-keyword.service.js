@@ -40,7 +40,7 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
             // Update Agent and related categories status
             // TODO: Publish Agent update
             AgentModel.property('status', STATUS_OUT_OF_DATE);
-            await AgentModel.save();
+            await AgentModel.saveInstance();
 
             const keywordCategoryIds = await KeywordModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
             const KeywordCategoryModels = await globalService.loadAllByIds({
@@ -52,7 +52,7 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
             const categoryStatusUpdatePromise = KeywordCategoryModels.map(async (CategoryModel) => {
 
                 CategoryModel.property('status', STATUS_OUT_OF_DATE);
-                return await CategoryModel.save();
+                return await CategoryModel.saveInstance();
             });
             await Promise.all(categoryStatusUpdatePromise);
         }

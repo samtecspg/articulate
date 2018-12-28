@@ -5,6 +5,7 @@ import {
     SORT_ASC,
     SORT_DESC
 } from '../../../../util/constants';
+import Moment from 'moment';
 
 //const logger = require('../../../../util/logger')({ name: `plugin:redis:base-model` });
 const defaults = {
@@ -28,7 +29,16 @@ const getLimit = ({ skip, limit, length = undefined }) => {
 };
 
 module.exports = class BaseModel extends NohmModel {
+
     constructor({ schema }) {
+
+        schema.creationDate = {
+            type: 'timestamp'
+        };
+
+        schema.modificationDate = {
+            type: 'timestamp'
+        };
 
         super();
         this.schema = schema;
@@ -45,8 +55,12 @@ module.exports = class BaseModel extends NohmModel {
     };
 
     //using create() or update() conflicts with functions from NohmModel
-    async createInstance({ data, parentModels }) {
+    async createInstance({ data, parentModels, modified }) {
 
+        if (!modified){
+            data.creationDate = Moment().utc().format();
+            data.modificationDate = Moment().utc().format();
+        }
         await this.property(data);
         await this.save();
         await this.linkParents({ parentModels });
@@ -59,9 +73,16 @@ module.exports = class BaseModel extends NohmModel {
             // loads the model, if there is no id assumes that was already loaded
             await this.findById({ id });
         }
-        await this.createInstance({ data });
+        data.modificationDate = Moment().utc().format();
+        await this.createInstance({ data, modified: true });
         await this.linkParents({ parentModels });
         await this.unlinkParents({ parentModels: removedParents });
+    }
+
+    async saveInstance() {
+
+        this.property('modificationDate', Moment().utc().format());
+        await this.save();
     }
 
     async findById({ id }) {

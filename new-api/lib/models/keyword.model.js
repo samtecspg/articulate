@@ -10,7 +10,11 @@ class KeywordModel {
             uiColor: Joi.string().trim(),
             examples: Joi.array().items(KeywordExampleModel.schema),
             regex: Joi.string().trim(),
-            type: Joi.string().trim()
+            type: Joi.string().trim(),
+            creationDate: Joi
+                .string(),
+            modificationDate: Joi
+                .string()
         };
     };
 }

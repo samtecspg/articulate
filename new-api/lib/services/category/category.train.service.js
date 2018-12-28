@@ -30,7 +30,7 @@ module.exports = async function ({ AgentModel, CategoryModel, returnModel = fals
         model = category.categoryName + '_' + model;
 
         CategoryModel.property('status', STATUS_TRAINING);
-        await CategoryModel.save();
+        await CategoryModel.saveInstance();
 
         await rasaNLUService.train({
             project: agent.agentName,
@@ -47,12 +47,12 @@ module.exports = async function ({ AgentModel, CategoryModel, returnModel = fals
         CategoryModel.property('model', model);
         CategoryModel.property('status', STATUS_READY);
 
-        await CategoryModel.save();
+        await CategoryModel.saveInstance();
         return returnModel ? CategoryModel : CategoryModel.allProperties();
     }
     catch (error) {
         CategoryModel.property('status', STATUS_ERROR);
-        await CategoryModel.save();
+        await CategoryModel.saveInstance();
         throw RedisErrorHandler({ error });
     }
 };

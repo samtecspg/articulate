@@ -12,7 +12,11 @@ class ScenarioModel {
             actionQueue: Joi
                 .array(),
             responseQueue: Joi
-                .array()
+                .array(),
+            creationDate: Joi
+                .string(),
+            modificationDate: Joi
+                .string()
         };
     };
 }

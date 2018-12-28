@@ -35,7 +35,7 @@ module.exports = async function ({ id, returnModel = false }) {
         const agent = AgentModel.allProperties();
         //const rasaStatus = await rasaNLU.Status();
         AgentModel.property('status', STATUS_TRAINING);
-        await AgentModel.save();
+        await AgentModel.saveInstance();
         if (agent.enableModelsPerCategory) {
             const CategoryModels = await globalService.loadAllByIds({
                 ids: await AgentModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY),
@@ -133,13 +133,13 @@ module.exports = async function ({ id, returnModel = false }) {
         AgentModel.property('lastTraining', Moment().utc().format());
         AgentModel.property('model', model);
         AgentModel.property('status', STATUS_READY);
-        await AgentModel.save();
+        await AgentModel.saveInstance();
         return returnModel ? AgentModel : AgentModel.allProperties();
     }
     catch (error) {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
         AgentModel.property('status', STATUS_ERROR);
-        await AgentModel.save();
+        await AgentModel.saveInstance();
         throw RedisErrorHandler({ error });
     }
 };

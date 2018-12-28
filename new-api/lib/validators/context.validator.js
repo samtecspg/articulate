@@ -66,7 +66,9 @@ class ContextValidate {
 
                 return {
                     actionQueue: ContextModel.actionQueue,
-                    responseQueue: ContextModel.responseQueue
+                    responseQueue: ContextModel.responseQueue,
+                    creationDate: ContextModel.creationDate,
+                    modificationDate: ContextModel.modificationDate
                 };
             })()
         };

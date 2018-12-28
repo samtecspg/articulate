@@ -20,7 +20,11 @@ class WebhookModel {
                 value: Joi.string(),
             }),
             webhookUser: Joi.string().allow(''),
-            webhookPassword: Joi.string().allow('')
+            webhookPassword: Joi.string().allow(''),
+            creationDate: Joi
+                .string(),
+            modificationDate: Joi
+                .string()
         };
     };
 }

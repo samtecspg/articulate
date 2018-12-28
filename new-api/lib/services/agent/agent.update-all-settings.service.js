@@ -13,7 +13,7 @@ module.exports = async function ({ id, settingsData, AgentModel = null, returnMo
 
         await AgentModel.property('status', STATUS_OUT_OF_DATE);
         await AgentModel.property('settings', newSettings);
-        await AgentModel.save();
+        await AgentModel.saveInstance();
         return returnModel ? AgentModel : AgentModel.allProperties();
     }
     catch (error) {

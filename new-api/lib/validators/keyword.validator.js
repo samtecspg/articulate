@@ -36,7 +36,9 @@ class KeywordValidate {
                     examples: Joi.array().items({
                         value: ExampleSchema.value.required(),
                         synonyms: ExampleSchema.synonyms.required()
-                    })
+                    }),
+                    creationDate: KeywordSchema.creationDate,
+                    modificationDate: KeywordSchema.modificationDate
                 };
             })()
         };

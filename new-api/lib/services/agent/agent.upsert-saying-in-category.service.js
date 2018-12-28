@@ -93,8 +93,8 @@ module.exports = async function (
         // Update status
         AgentModel.property('status', STATUS_OUT_OF_DATE);
         CategoryModel.property('status', STATUS_OUT_OF_DATE);
-        await AgentModel.save();
-        await CategoryModel.save();
+        await AgentModel.saveInstance();
+        await CategoryModel.saveInstance();
 
         return returnModel ? SayingModel : SayingModel.allProperties();
     }

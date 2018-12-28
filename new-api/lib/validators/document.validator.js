@@ -26,7 +26,7 @@ class ContextValidate {
                     rasa_results: Model.rasa_results.required(),
                     session: Model.session.required(),
                     agent_id: Model.agent_id.required(),
-                    agent_model: Model.agent_model.required()
+                    agent_model: Model.agent_model.required(),
                 };
             })()
         };
@@ -55,7 +55,9 @@ class ContextValidate {
                     maximum_saying_score: Model.maximum_saying_score.required(),
                     maximum_domain_score: Model.maximum_domain_score.required(),
                     total_elapsed_time_ms: Model.total_elapsed_time_ms.required(),
-                    rasa_results: Model.rasa_results.required()
+                    rasa_results: Model.rasa_results.required(),
+                    creationDate: Model.creationDate,
+                    modificationDate: Model.modificationDate
                 };
             })()
         };

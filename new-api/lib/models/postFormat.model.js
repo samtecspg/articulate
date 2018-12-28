@@ -5,7 +5,11 @@ class PostFormat {
 
         return {
             id: Joi.number(),
-            postFormatPayload: Joi.string().trim()
+            postFormatPayload: Joi.string().trim(),
+            creationDate: Joi
+                .string(),
+            modificationDate: Joi
+                .string()
         };
     };
 }

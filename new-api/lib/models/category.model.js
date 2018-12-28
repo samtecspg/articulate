@@ -21,7 +21,9 @@ class CategoryModel {
                 .valid(STATUS_READY, STATUS_TRAINING, STATUS_ERROR, STATUS_OUT_OF_DATE),
             lastTraining: Joi.date().allow(''),
             model: Joi.string().trim().allow(''),
-            extraTrainingData: Joi.boolean()
+            extraTrainingData: Joi.boolean(),
+            creationDate: Joi.string(),
+            modificationDate: Joi.string()
         };
     };
 }
