@@ -182,6 +182,7 @@ class SlotsForm extends React.Component {
             onSortSlots={this.props.onSortSlots}
             handleTabChange={this.handleChange}
             selectedTab={this.state.selectedTab}
+            onDeleteSlot={this.props.onDeleteSlot}
           />
           {action.slots.map((slot, index) => (
             this.state.selectedTab === index ?
@@ -225,6 +226,7 @@ SlotsForm.propTypes = {
   onChangeSlotName: PropTypes.func,
   errorState: PropTypes.object,
   onSortSlots: PropTypes.func,
+	onDeleteSlot: PropTypes.func,
 };
 
 export default DragDropContext(HTML5Backend)(injectIntl(withStyles(styles)(SlotsForm)));

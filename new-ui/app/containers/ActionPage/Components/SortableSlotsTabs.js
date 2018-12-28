@@ -7,6 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import SortableSlotTab from './SortableSlotTab';
 
 import messages from "../messages";
+import xIcon from '../../../images/x-icon.svg';
 
 const styles = {
   actionTabs: {
@@ -25,6 +26,23 @@ const styles = {
   sortSlots: {
     height: 20,
     width: 20,
+  },
+  deleteHighlight: {
+    filter: 'brightness(5)',
+    cursor: 'pointer',
+    fontSize: '12px',
+    paddingLeft: '5px',
+    position: 'relative',
+    top: '-4px',
+    webkitTouchCallout: 'none',
+    webkitUserSelect: 'none',
+    khtmlUserSelect: 'none',
+    mozUserSelect: 'none',
+    msUserSelect: 'none',
+    userSelect: 'none',
+    '&:hover' : {
+      filter: 'brightness(1)',
+	},
   }
 };
 
@@ -76,6 +94,7 @@ class SortableSlotsTabs extends React.Component {
 										<span className={classes.slotTabLabel}>
 											<span style={{backgroundColor: slot.uiColor}} className={classes.dot}>
 											</span><span>{slot.slotName}</span>
+          									<img onClick={() => { this.props.onDeleteSlot(index) }} className={classes.deleteHighlight} src={xIcon} />
 										</span>
 									}	
 								/>
@@ -102,7 +121,8 @@ SortableSlotsTabs.propTypes = {
 	onAddNewSlot: PropTypes.func,
 	onSortSlots: PropTypes.func,
 	handleTabChange: PropTypes.func,
-	selectedTab: PropTypes.number
+	selectedTab: PropTypes.number,
+	onDeleteSlot: PropTypes.func,
 };
   
 export default withStyles(styles)(SortableSlotsTabs);

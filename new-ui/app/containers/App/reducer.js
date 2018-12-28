@@ -116,6 +116,7 @@ import {
   CHAIN_ACTION_TO_RESPONSE,
   UNCHAIN_ACTION_FROM_RESPONSE,
   SORT_SLOTS,
+  DELETE_SLOT,
 
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
@@ -924,6 +925,11 @@ function appReducer(state = initialState, action) {
       tempSlots.splice(action.newIndex, 0, tempSlots.splice(action.oldIndex, 1)[0]);
       return state
         .setIn(['action', 'slots'], Immutable(tempSlots));
+    case DELETE_SLOT:
+      const oldSlots = Immutable.asMutable(state.action.slots, { deep: true});
+      oldSlots.splice(action.slotIndex, 1);
+      return state
+        .setIn(['action', 'slots'], Immutable(oldSlots));
 
     /* Keyword */
     case CHANGE_KEYWORD_DATA:

@@ -153,6 +153,7 @@ export const DELETE_HEADER_ACTION_WEBHOOK = 'app/ActionPage/DELETE_HEADER_ACTION
 export const CHANGE_HEADER_KEY_ACTION_WEBHOOK = 'app/ActionPage/CHANGE_HEADER_KEY_ACTION_WEBHOOK';
 export const CHANGE_HEADER_VALUE_ACTION_WEBHOOK = 'app/ActionPage/CHANGE_HEADER_VALUE_ACTION_WEBHOOK';
 export const SORT_SLOTS = 'app/ActionPage/SORT_SLOTS';
+export const DELETE_SLOT = 'app/ActionPage/DELETE_SLOT';
 
 /*
  * Keyword
