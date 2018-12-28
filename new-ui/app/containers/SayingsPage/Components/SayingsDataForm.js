@@ -253,7 +253,7 @@ class SayingsDataForm extends React.Component {
               >
                 {category || this.state.categoriesDropdownOpen ? null :
                 <MenuItem key='select' value='select'>
-                  <FormattedMessage {...messages.categorySelect} />
+                  <FormattedMessage {...messages.categorySelectDefault} />
                 </MenuItem> }
                 <MenuItem className={classes.searchCategoryContainer} value="filter">
                   <Grid container justify='flex-end'>

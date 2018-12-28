@@ -79,7 +79,7 @@ export default defineMessages({
     id: 'app.containers.SayingsPage.component.SayingDataForm.entries',
     defaultMessage: 'entries',
   },
-  categorySelect: {
+  categorySelectDefault: {
     id: 'app.containers.SayingsPage.component.SayingDataForm.categorySelect',
     defaultMessage: 'Select',
   },
