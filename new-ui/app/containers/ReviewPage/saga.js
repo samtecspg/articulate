@@ -8,7 +8,8 @@ import Immutable from 'seamless-immutable';
 import { getActions } from '../ActionPage/saga';
 
 import {
-  addSayingError,
+  copySayingError,
+  copySayingSuccess,
   deleteSayingError,
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
@@ -79,13 +80,14 @@ export function* postSaying(payload) {
       keywords,
       actions,
     };
-    yield call(api.agent.postAgentAgentidCategoryCategoryidSaying, {
+    const response = yield call(api.agent.postAgentAgentidCategoryCategoryidSaying, {
       agentId: agent.id,
       categoryId,
       body: newSayingData,
     });
+    yield put(copySayingSuccess(response.obj));
   } catch (err) {
-    yield put(addSayingError(err));
+    yield put(copySayingError(err));
   }
 }
 

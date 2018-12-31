@@ -93,6 +93,8 @@ export const LOAD_FILTERED_CATEGORIES_SUCCESS = 'app/SayingsPage/LOAD_FILTERED_C
 export const SELECT_CATEGORY = 'app/SayingsPage/SELECT_CATEGORY';
 export const CHANGE_SAYINGS_PAGE_SIZE = 'app/SayingsPage/CHANGE_SAYINGS_PAGE_SIZE';
 export const COPY_SAYING = 'app/SayingsPage/COPY_SAYING';
+export const COPY_SAYING_ERROR = 'app/SayingsPage/COPY_SAYING_ERROR';
+export const COPY_SAYING_SUCCESS = 'app/SayingsPage/COPY_SAYING_SUCCESS';
 
 /*
  * Keywords

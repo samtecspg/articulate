@@ -206,6 +206,8 @@ class SayingsDataForm extends React.Component {
         <Grid className={classes.formContainer} container item xs={12}>
           <Grid className={classes.formSubContainer} container item xs={12}>
             <StyledTable
+              headers={['', '', 'Category', 'Action', 'Copy', 'Try']}
+              headersWidth={['30%', '70%', '', '', '', '']}
               headerMessage={messages.highlightTooltip}
               rows={
                 documents.map((document) => (
@@ -281,7 +283,7 @@ class SayingsDataForm extends React.Component {
                       textAlign: 'center',
                     },
                     min: 1,
-                    max: this.props.numberOfPages,
+                    max: this.props.numberOfPages || 1,
                     step: 1,
                   }}
                   className={classes.pageTextfield}

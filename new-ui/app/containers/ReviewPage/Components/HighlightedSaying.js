@@ -1,4 +1,5 @@
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import PropTypes from 'prop-types';
 import React from 'react';
 import systemKeywords from 'systemKeywords';
@@ -59,15 +60,16 @@ const HighlightedSaying = withStyles(styles)((props) => {
     formattedElement = (
       <span key={`keywordTag_${props.keywordIndex}`}>
         <span key={`beforeKeywordTagText_${props.keywordIndex}`}>{beforeTaggedText}</span>
-        <span
-          key={`keywordTagText_${props.keywordIndex}`}
-          className={classes.highlightedText}
-          style={{
-            backgroundColor: highlightColor,
-          }}
-        >
-          {taggedText}
-        </span>
+        <Tooltip title={keyword.keyword} placement="top-start">
+          <span
+            key={`keywordTagText_${props.keywordIndex}`}
+            className={classes.highlightedText}
+            style={{
+              backgroundColor: highlightColor,
+            }}
+          >{taggedText}</span>
+        </Tooltip>
+
         <HighlightedSaying
           agentKeywords={props.agentKeywords}
           keywords={keywords}

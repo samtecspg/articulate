@@ -29,6 +29,9 @@ const styles = {
     fontWeight: 400,
     fontSize: '12px',
   },
+  body: {
+    'border': '1px solid #a2a7b1',
+  },
 };
 
 function StyledTable(props) {
@@ -37,6 +40,7 @@ function StyledTable(props) {
     headerMessage,
     rows,
     headers,
+    headersWidth,
   } = props;
   return (<Grid container item xs={12}>
     <Grid container>
@@ -45,10 +49,12 @@ function StyledTable(props) {
       </Typography>
       <Table>
         <TableHead>
-          {headers.lenght > 0 ?
+          {headers.length > 0 ?
             <TableRow>
               {
-                headers.map((header) => <TableCell>{header}</TableCell>)
+                headers.map((header, index) => {
+                  return <TableCell style={{ width: headersWidth[index] }}>{header}</TableCell>;
+                })
               }
             </TableRow> : null}
         </TableHead>
@@ -62,12 +68,14 @@ function StyledTable(props) {
 
 StyledTable.propTypes = {
   headers: PropTypes.array,
+  headersWidth: PropTypes.array,
   headerMessage: PropTypes.object,
   rows: PropTypes.arrayOf(PropTypes.element),
   classes: PropTypes.object.isRequired,
 };
 StyledTable.defaultProps = {
   headers: [],
+  headersWidth: [],
 };
 
 export default withStyles(styles)(StyledTable);

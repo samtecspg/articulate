@@ -79,6 +79,9 @@ const styles = {
     border: 'none',
   },
   tableCellSaying: {},
+  rowCategory: {
+    color: 'red',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -93,7 +96,7 @@ class SayingRow extends React.Component {
     const saying = document.rasa_results[0];
     return (
       <Fragment>
-        <TableCell>
+        <TableCell className={classes.rowCategory} >
           <TextField
             className={classes.categorySelectContainer}
             value={saying.category}
@@ -118,7 +121,7 @@ class SayingRow extends React.Component {
             )}
           </TextField>
         </TableCell>
-        <TableCell className={classes.tableCellSaying}>
+        <TableCell  >
           <span className={classes.userSays}>
             <HighlightedSaying
               agentKeywords={agentKeywords}
@@ -132,8 +135,8 @@ class SayingRow extends React.Component {
             <span className={classes.actionLabel}>{saying.action.name}</span>
           </div>
         </TableCell>
-        <PercentCell value={document.maximum_category_score} />
-        <PercentCell value={document.maximum_saying_score} />
+        <PercentCell value={document.maximum_category_score} align="center" />
+        <PercentCell value={document.maximum_saying_score} align="center" />
         <CopyImageCell
           onClick={() => {
             this.props.onCopySaying(document);
