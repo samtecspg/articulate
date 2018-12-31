@@ -100,7 +100,6 @@ export class MainTab extends React.Component {
                 value={this.state.selectedTab}
                 indicatorColor='primary'
                 textColor='secondary'
-                scrollable
                 scrollButtons="off"
                 onChange={(evt, value) => {
                   this.handleChange(evt, value);
@@ -181,7 +180,6 @@ export class MainTab extends React.Component {
                 value={this.state.selectedTab}
                 indicatorColor='primary'
                 textColor='secondary'
-                scrollable
                 scrollButtons="off"
                 onChange={(evt, value) => {
                   this.handleChange(evt, value);

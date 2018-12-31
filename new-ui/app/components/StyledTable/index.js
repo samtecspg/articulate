@@ -53,7 +53,7 @@ function StyledTable(props) {
             <TableRow>
               {
                 headers.map((header, index) => {
-                  return <TableCell style={{ width: headersWidth[index] }}>{header}</TableCell>;
+                  return <TableCell key={`tableCell_${index}`} style={{ width: headersWidth[index] }}>{header}</TableCell>;
                 })
               }
             </TableRow> : null}

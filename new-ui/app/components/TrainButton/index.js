@@ -56,6 +56,12 @@ export class TrainButton extends React.Component {
     this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 10000); // update the component every 10 seconds
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  compon
+
   render() {
     const { classes, agentStatus, lastTraining, onTrain } = this.props;
     return (
