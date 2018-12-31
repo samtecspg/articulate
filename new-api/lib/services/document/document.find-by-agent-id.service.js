@@ -8,6 +8,13 @@ module.exports = async function ({ agentId }) {
     try {
         const results = await DocumentModel.search({
             body: {
+                'sort': [
+                    {
+                        'time_stamp': {
+                            'order': 'desc'
+                        }
+                    }
+                ],
                 'query': {
                     'match': {
                         'agent_id': agentId
