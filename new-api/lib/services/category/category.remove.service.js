@@ -4,18 +4,21 @@ import {
     STATUS_OUT_OF_DATE
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import GlobalDefaultError from '../../errors/global.default-error';
 
 module.exports = async function ({ id, CategoryModel, AgentModel }) {
 
     const { redis } = this.server.app;
     try {
-        const SayingModel = await redis.factory(MODEL_SAYING);
         CategoryModel = CategoryModel || await redis.factory(MODEL_CATEGORY, id);
         const categorySayingIds = await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING);
-        await Promise.all(categorySayingIds.map(async (currentId) => {
-
-            return await SayingModel.removeInstance({ id: currentId });
-        }));
+        if (categorySayingIds.length > 0) {
+            const categoryName = await CategoryModel.allProperties().categoryName;
+            return Promise.reject(GlobalDefaultError({
+                statusCode: 400,
+                message: `Category '${categoryName}' is been used by ${categorySayingIds.length} sayings`
+            }));
+        }
 
         AgentModel.property('status', STATUS_OUT_OF_DATE);
         await AgentModel.saveInstance();

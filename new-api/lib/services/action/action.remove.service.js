@@ -1,9 +1,11 @@
 import {
     MODEL_ACTION,
     MODEL_POST_FORMAT,
-    MODEL_WEBHOOK
+    MODEL_WEBHOOK,
+    MODEL_SAYING
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import GlobalDefaultError from '../../errors/global.default-error';
 
 module.exports = async function ({ id }) {
 
@@ -13,6 +15,14 @@ module.exports = async function ({ id }) {
     try {
 
         await ActionModel.findById({ id });
+        const actionSayingIds = await ActionModel.getAll(MODEL_SAYING, MODEL_SAYING);
+        if (actionSayingIds.length > 0) {
+            const actionName = await ActionModel.allProperties().actionName;
+            return Promise.reject(GlobalDefaultError({
+                statusCode: 400,
+                message: `Action '${actionName}' is been used by ${actionSayingIds.length} sayings`
+            }));
+        }
         const postFormatIds = await ActionModel.getAll(MODEL_POST_FORMAT, MODEL_POST_FORMAT);
         const webhookIds = await ActionModel.getAll(MODEL_WEBHOOK, MODEL_WEBHOOK);
         const removePostFormatPromises = postFormatIds.map(async (postFormatId) => {

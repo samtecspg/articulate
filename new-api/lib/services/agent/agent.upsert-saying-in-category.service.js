@@ -4,15 +4,22 @@ import {
     MODEL_CATEGORY,
     MODEL_KEYWORD,
     MODEL_SAYING,
-    STATUS_OUT_OF_DATE
+    STATUS_OUT_OF_DATE,
+    MODEL_ACTION
 } from '../../../util/constants';
 import InvalidKeywordsFromAgent from '../../errors/global.invalid-keywords-from-agent';
+import InvalidActionsFromAgent from '../../errors/global.invalid-actions-from-agent';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 //const logger = require('../../../util/logger')({ name: `service:agent:update-saying-in-category` });
 
-const filterById = ({ models, ids }) => _.filter(models, (model) => _.includes(ids, model.id));
-//TODO: Review if the actions array needs to be linked to the Actions
+const filterById = ({ models, ids }) => {
+
+    return _.filter(models, (model) => {
+        return _.includes(ids, model.id);
+    });
+};
+
 module.exports = async function (
     {
         id,
@@ -23,7 +30,7 @@ module.exports = async function (
     }) {
 
     const { redis } = this.server.app;
-    const { globalService, categoryService, keywordService } = await this.server.services();
+    const { globalService, categoryService, keywordService, actionService } = await this.server.services();
     try {
 
         const modelPath = [MODEL_AGENT, MODEL_CATEGORY];
@@ -41,13 +48,32 @@ module.exports = async function (
 
         sayingData.keywords = _.sortBy(sayingData.keywords, (keyword) => keyword.start);
 
-        // Create lists of keywords to be used later
+        // Create lists of keywords and actions to be used later
         let agentKeywordIds = await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD);
+        let agentActionIds = await AgentModel.getAll(MODEL_ACTION, MODEL_ACTION);
         agentKeywordIds = agentKeywordIds.map((agentKeywordId) => parseInt(agentKeywordId));
+        agentActionIds = agentActionIds.map((agentActionId) => agentActionId);
         const keywordIds = keywordService.splitAddedOldRemovedIds({
             oldKeywords: SayingModel.isLoaded ? _(SayingModel.property('keywords')) : [],
             newKeywords: sayingData.keywords
         });
+
+        const AgentActionsModels = await globalService.loadAllByIds({
+            ids: agentActionIds,
+            model: MODEL_ACTION,
+            returnModel: true
+        });
+
+        const actionIds = actionService.splitAddedOldRemovedIds({
+            oldActions: SayingModel.isLoaded ? SayingModel.property('actions') : [],
+            newActions: sayingData.actions,
+            AgentActionsModels
+        });
+
+        const notValidActionIds = _.difference(actionIds.added, agentActionIds);
+        if (notValidActionIds.length > 0) {
+            return Promise.reject(InvalidActionsFromAgent({ actionIds: notValidActionIds, agentId: AgentModel.id }));
+        }
 
         // Validate if the new keywords belongs to the current Agent
         const notValidIds = _.difference(keywordIds.addedNonSystem, agentKeywordIds);
@@ -65,17 +91,21 @@ module.exports = async function (
         const newKeywordModels = filterById({ models: FilteredKeywordModels, ids: keywordIds.added });
         const removedKeywordModels = filterById({ models: FilteredKeywordModels, ids: keywordIds.removed });
 
+        const newActionModels = filterById({ models: AgentActionsModels, ids: actionIds.added });
+        const removedActionModels = filterById({ models: AgentActionsModels, ids: actionIds.removed });
+
         const parentModels = [
             AgentModel,
             CategoryModel,
-            ...newKeywordModelsNonSystem
+            ...newKeywordModelsNonSystem,
+            ...newActionModels
         ];
         if (SayingModel.isLoaded) { //Update
             // ADD Parent ---> Saying
             await SayingModel.updateInstance({
                 data: sayingData,
                 parentModels,
-                removedParents: removedKeywordModels
+                removedParents: removedKeywordModels.concat(removedActionModels)
             });
             // ADD Category <---> UsedKeywords
             await categoryService.linkKeywords({ model: CategoryModel, keywordModels: newKeywordModels });
