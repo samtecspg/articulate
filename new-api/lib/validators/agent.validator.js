@@ -5,8 +5,9 @@ import {
     CONFIG_SETTINGS_DEFAULT_AGENT,
     PARAM_ACTION_ID,
     PARAM_AGENT_ID,
-    PARAM_DIRECTION,
     PARAM_CATEGORY_ID,
+    PARAM_DEBUG,
+    PARAM_DIRECTION,
     PARAM_FIELD,
     PARAM_KEYWORD_ID,
     PARAM_LIMIT,
@@ -16,7 +17,8 @@ import {
     PARAM_SKIP,
     PARAM_TEXT,
     PARAM_TIMEZONE,
-    PARAM_DEBUG
+    SORT_ASC,
+    SORT_DESC
 } from '../../util/constants';
 
 const AgentSchema = require('../models/agent.model').schema;
@@ -240,7 +242,7 @@ class AgentValidate {
                     webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
                     webhookHeaders: Joi.array().items({
                         key: Joi.string(),
-                        value: Joi.string(),
+                        value: Joi.string()
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword
@@ -264,7 +266,7 @@ class AgentValidate {
                     webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
                     webhookHeaders: Joi.array().items({
                         key: Joi.string(),
-                        value: Joi.string(),
+                        value: Joi.string()
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
@@ -291,7 +293,7 @@ class AgentValidate {
                     webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
                     webhookHeaders: Joi.array().items({
                         key: Joi.string(),
-                        value: Joi.string(),
+                        value: Joi.string()
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword
@@ -316,7 +318,7 @@ class AgentValidate {
                     webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
                     webhookHeaders: Joi.array().items({
                         key: Joi.string(),
-                        value: Joi.string(),
+                        value: Joi.string()
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
@@ -403,7 +405,7 @@ class AgentValidate {
                     [PARAM_DIRECTION]: Joi
                         .string()
                         .optional()
-                        .allow('ASC', 'DESC')
+                        .allow(SORT_ASC, SORT_DESC)
                         .description('Sort direction. Default= ASC'),
                     [PARAM_FIELD]: Joi
                         .string()
@@ -419,6 +421,26 @@ class AgentValidate {
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
 
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    [PARAM_SKIP]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to skip. Default=0'),
+                    [PARAM_LIMIT]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to return. Default=50'),
+                    [PARAM_DIRECTION]: Joi
+                        .string()
+                        .optional()
+                        .allow(SORT_ASC, SORT_DESC)
+                        .description('Sort direction. Default= ASC')
                 };
             })()
         };
@@ -696,7 +718,7 @@ class AgentValidate {
                         webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
                         webhookHeaders: Joi.array().items({
                             key: Joi.string(),
-                            value: Joi.string(),
+                            value: Joi.string()
                         }),
                         webhookUser: WebhookSchema.webhookUser,
                         webhookPassword: WebhookSchema.webhookPassword
@@ -747,7 +769,7 @@ class AgentValidate {
                             webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
                             webhookHeaders: Joi.array().items({
                                 key: Joi.string(),
-                                value: Joi.string(),
+                                value: Joi.string()
                             }),
                             webhookUser: WebhookSchema.webhookUser,
                             webhookPassword: WebhookSchema.webhookPassword

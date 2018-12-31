@@ -9,7 +9,7 @@ module.exports = class BaseModel {
         this.client = client;
     }
 
-    async count({ query = null }) {
+    async count({ query = null } = {}) {
 
         const { index } = this;
         const body = query ? { query } : undefined;

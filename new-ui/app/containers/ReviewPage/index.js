@@ -28,9 +28,8 @@ import {
   makeSelectFilteredCategories,
   makeSelectKeywords,
   makeSelectNewSayingActions,
-  makeSelectSayings,
   makeSelectSelectedCategory,
-  makeSelectTotalSayings,
+  makeSelectTotalDocuments,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -55,12 +54,12 @@ export class ReviewPage extends React.Component {
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
     pageSize: this.props.agent.settings.reviewPageSize,
     numberOfPages: null,
-    totalSayings: null,
+    totalDocuments: null,
+    documents: [],
   };
 
   componentWillMount() {
     const {
-      onLoadSayings,
       onLoadKeywords,
       onLoadActions,
       onLoadCategories,
@@ -71,8 +70,7 @@ export class ReviewPage extends React.Component {
       onLoadKeywords();
       onLoadActions();
       onLoadCategories();
-      onLoadSayings('', this.state.currentPage, this.state.pageSize);
-      onLoadAgentDocuments();
+      onLoadAgentDocuments(this.state.currentPage, this.state.pageSize);
     } else {
       // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
@@ -80,26 +78,26 @@ export class ReviewPage extends React.Component {
   }
 
   componentDidUpdate() {
-    const { totalSayings } = this.props;
-    if (totalSayings !== this.state.totalSayings) {
-      this.setState({ totalSayings });
+    const { documents } = this.props;
+    if (documents !== this.state.documents) {
+      this.setState({ documents });
       this.setNumberOfPages(this.state.pageSize);
     }
   }
 
   setNumberOfPages(pageSize) {
-    const numberOfPages = Math.ceil(this.props.totalSayings / pageSize);
+    const numberOfPages = Math.ceil(this.props.totalDocuments / pageSize);
     this.setState({
       numberOfPages,
     });
   }
 
   changePage(pageNumber) {
-    const { onLoadSayings } = this.props.actions;
+    const { onLoadAgentDocuments } = this.props.actions;
     this.setState({
       currentPage: pageNumber,
     });
-    onLoadSayings(this.state.filter, pageNumber, this.state.pageSize);
+    onLoadAgentDocuments(pageNumber, this.state.pageSize);
   }
 
   movePageBack() {
@@ -120,7 +118,7 @@ export class ReviewPage extends React.Component {
 
   changePageSize(pageSize) {
     const {
-      onLoadSayings,
+      onLoadAgentDocuments,
       onChangeReviewPageSize,
     } = this.props.actions;
     this.setState({
@@ -128,16 +126,16 @@ export class ReviewPage extends React.Component {
       pageSize,
     });
     onChangeReviewPageSize(this.props.agent.id, pageSize);
-    onLoadSayings(this.state.filter, 1, pageSize);
+    onLoadAgentDocuments(1, pageSize);
   }
 
   onSearchSaying(filter) {
-    const { onLoadSayings } = this.props.actions;
+    const { onLoadAgentDocuments } = this.props.actions;
     this.setState({
       filter,
       currentPage: 1,
     });
-    onLoadSayings(filter, 1, this.state.pageSize);
+    onLoadAgentDocuments(1, this.state.pageSize);
   }
 
   onSearchCategory(categoryFilter) {
@@ -246,6 +244,8 @@ export class ReviewPage extends React.Component {
               onSendMessage={onSendMessage}
             />
           }
+          sayingsURL={`/agent/${agent.id}/sayings`}
+          sayingsForm={Link}
           keywordsForm={Link}
           keywordsURL={`/agent/${agent.id}/keywords`}
         />
@@ -256,7 +256,6 @@ export class ReviewPage extends React.Component {
 
 ReviewPage.propTypes = {
   actions: PropTypes.shape({
-    onLoadSayings: PropTypes.func.isRequired,
     onLoadAgentDocuments: PropTypes.func.isRequired,
     onLoadFilteredCategories: PropTypes.func.isRequired,
     onLoadCategories: PropTypes.func.isRequired,
@@ -280,7 +279,7 @@ ReviewPage.propTypes = {
   }),
   agent: PropTypes.object.isRequired,
   documents: PropTypes.array,
-  totalSayings: PropTypes.number,
+  totalDocuments: PropTypes.number,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
   agentKeywords: PropTypes.array,
@@ -293,8 +292,7 @@ ReviewPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
-  sayings: makeSelectSayings(),
-  totalSayings: makeSelectTotalSayings(),
+  totalDocuments: makeSelectTotalDocuments(),
   agentCategories: makeSelectCategories(),
   agentFilteredCategories: makeSelectFilteredCategories(),
   agentKeywords: makeSelectKeywords(),
@@ -307,7 +305,6 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
-      onLoadSayings: Actions.loadSayings,
       onLoadAgentDocuments: Actions.loadAgentDocuments,
       onLoadFilteredCategories: Actions.loadFilteredCategories,
       onLoadCategories: Actions.loadCategories,

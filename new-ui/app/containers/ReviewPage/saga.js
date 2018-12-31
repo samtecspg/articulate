@@ -23,7 +23,6 @@ import {
 
 import {
   ADD_ACTION_SAYING,
-  ADD_SAYING,
   CHANGE_REVIEW_PAGE_SIZE,
   COPY_SAYING,
   DELETE_ACTION_SAYING,
@@ -231,12 +230,22 @@ export function* putReviewPageSize(payload) {
 
 export function* getAgentDocument(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api } = payload;
+  const { api, page, pageSize } = payload;
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
   try {
     const response = yield call(api.agent.getAgentAgentidDoc, {
       agentId: agent.id,
+      skip,
+      limit,
+      direction: 'ASC',
     });
-    yield put(loadAgentDocumentsSuccess(response.obj));
+    yield put(loadAgentDocumentsSuccess({ documents: response.obj.data, total: response.obj.totalCount }));
+
   } catch (err) {
     yield put(loadAgentDocumentsError(err));
   }

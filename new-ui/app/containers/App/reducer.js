@@ -151,7 +151,7 @@ import {
   DELETE_CATEGORY,
   DELETE_CATEGORY_ERROR,
   DELETE_CATEGORY_SUCCESS,
-  
+
   LOAD_AGENT_DOCUMENTS_SUCCESS,
   LOAD_AGENT_DOCUMENTS_ERROR,
 } from './constants';
@@ -546,7 +546,10 @@ function appReducer(state = initialState, action) {
         return header;
       }));
     case LOAD_AGENT_DOCUMENTS_SUCCESS:
-      return state.set('documents', action.documents);
+      return state.set('documents', action.documents.documents)
+        .set('totalDocuments', action.documents.total)
+        .set('loading', false)
+        .set('error', false);
     case LOAD_AGENT_DOCUMENTS_ERROR:
       return state.set('documents', [])
         .set('loading', false)
