@@ -91,8 +91,8 @@ export function* deleteCategory(payload) {
     }));
     yield put(push(`/agent/${agent.id}/sayings`));
   } catch (err) {
-    console.log('ERROR: ', err);
-    yield put(deleteCategoryError(err));
+    const error = { ...err };
+    yield put(deleteCategoryError(error.response.body.message));
   }
 }
 

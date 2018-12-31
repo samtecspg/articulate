@@ -1034,9 +1034,10 @@ export function deleteAction(id, actionName) {
   };
 }
 
-export function deleteActionError() {
+export function deleteActionError(error) {
   return {
     type: DELETE_ACTION_ERROR,
+    error,
   };
 }
 
@@ -1295,9 +1296,10 @@ export function deleteCategory(id) {
   };
 }
 
-export function deleteCategoryError() {
+export function deleteCategoryError(error) {
   return {
     type: DELETE_CATEGORY_ERROR,
+    error,
   };
 }
 

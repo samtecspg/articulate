@@ -882,7 +882,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case DELETE_ACTION_ERROR:
-      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error deleting your action. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
@@ -1052,6 +1052,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case DELETE_CATEGORY_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);

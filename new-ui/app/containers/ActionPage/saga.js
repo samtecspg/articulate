@@ -222,7 +222,8 @@ export function* deleteAction(payload) {
     yield put(deleteActionSuccess());
     yield put(push(`/agent/${agent.id}/sayings`))
   } catch (err) {
-    yield put(deleteActionError(err));
+    const error = { ...err };
+    yield put(deleteActionError(error.response.body.message));
   }
 }
 
