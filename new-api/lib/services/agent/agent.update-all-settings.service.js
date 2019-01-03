@@ -1,5 +1,6 @@
-import { MODEL_AGENT, STATUS_OUT_OF_DATE } from '../../../util/constants';
+import { MODEL_AGENT, STATUS_OUT_OF_DATE, CONFIG_SETTINGS_RASA_TRAINING } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import _ from 'lodash';
 
 module.exports = async function ({ id, settingsData, AgentModel = null, returnModel = false }) {
 
@@ -11,7 +12,13 @@ module.exports = async function ({ id, settingsData, AgentModel = null, returnMo
         const oldSettings = AgentModel.property('settings');
         const newSettings = { ...oldSettings, ...settingsData };
 
-        await AgentModel.property('status', STATUS_OUT_OF_DATE);
+        const trainingSettingsChanged = CONFIG_SETTINGS_RASA_TRAINING.some((setting) => {
+            
+            return !_.isEqual(oldSettings[setting], newSettings[setting]);
+        });
+        if (trainingSettingsChanged){
+            await AgentModel.property('status', STATUS_OUT_OF_DATE);
+        }
         await AgentModel.property('settings', newSettings);
         await AgentModel.saveInstance();
         return returnModel ? AgentModel : AgentModel.allProperties();

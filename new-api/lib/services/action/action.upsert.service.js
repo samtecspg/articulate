@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import {
     MODEL_ACTION,
-    MODEL_KEYWORD
+    MODEL_KEYWORD,
+    STATUS_OUT_OF_DATE
 } from '../../../util/constants';
 import InvalidKeywordsFromAgent from '../../errors/global.invalid-keywords-from-agent';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -44,12 +45,15 @@ module.exports = async function ({ data, actionId, AgentModel = null, returnMode
         ];
 
         if (ActionModel.isLoaded) { //Update
+            if ((data.actionName !== undefined && ActionModel.property('actionName') !== data.actionName)){
+                AgentModel.property('status', STATUS_OUT_OF_DATE);
+            }
+            await AgentModel.saveInstance();
             await ActionModel.updateInstance({
                 data,
                 parentModels,
                 removedParents: removedKeywordModels
             });
-
         }
         else { // Create
             await ActionModel.createInstance({ data, parentModels });

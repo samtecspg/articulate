@@ -14,12 +14,18 @@ module.exports = async function ({ id, data, returnModel = false }) {
             return Promise.reject(NotFoundError({ id, model: MODEL_AGENT }));
         }
 
-        const requiresRetrain = (
-            data.extraTrainingData !== undefined &&
-            data.extraTrainingData !== AgentModel.property('extraTrainingData')) ||
+        const requiresRetrain = 
+            (
+                data.extraTrainingData !== undefined &&
+                data.extraTrainingData !== AgentModel.property('extraTrainingData')
+            ) ||
             (
                 data.enableModelsPerCategory !== undefined &&
                 data.enableModelsPerCategory !== AgentModel.property('enableModelsPerCategory')
+            ) || 
+            (
+                data.agentName !== undefined &&
+                data.agentName !== AgentModel.property('agentName')
             );
         data.status = requiresRetrain ? STATUS_OUT_OF_DATE : data.status;
         // TODO: Publish Agent update
