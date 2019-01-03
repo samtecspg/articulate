@@ -464,10 +464,6 @@ class SayingsDataForm extends React.Component {
                   }
                 }}
                 MenuProps={{
-                  style: {
-                    minHeight: '300px',
-                    maxHeight: '300px',
-                  },
                   anchorEl: this.state.anchorEl,
                 }}
               >

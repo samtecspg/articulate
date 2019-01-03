@@ -252,10 +252,6 @@ class SayingRow extends React.Component {
                     value={10}
                     onChange={(evt) => { evt.preventDefault(); this.handleChange('actions', evt.target.value)}}
                     MenuProps={{
-                      style:{
-                        minHeight: '300px',
-                        maxHeight: '300px',
-                      },
                       anchorEl: this.state.anchorEl,
                     }}
                   >
