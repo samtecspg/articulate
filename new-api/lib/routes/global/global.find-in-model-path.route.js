@@ -90,11 +90,11 @@ module.exports = ({ models, isFindById = false, isSingleResult = false }) => {
                     const id = request.params[idName];
                     return { model, id };
                 };
-                const { skip, limit, direction, field } = request.query;
+                const { skip, limit, direction, field, filter } = request.query;
                 const modelPath = _(modelRouteMap).map(getParametersFromRequest).value();
 
                 try {
-                    return await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+                    return await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field, filter });
                 }
                 catch ({ message, statusCode }) {
 

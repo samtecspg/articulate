@@ -2,6 +2,7 @@ import Boom from 'boom';
 import {
     PARAM_DIRECTION,
     PARAM_FIELD,
+    PARAM_FILTER,
     PARAM_LIMIT,
     PARAM_SKIP,
     ROUTE_TO_MODEL
@@ -23,10 +24,11 @@ module.exports = ({ ROUTE }) => {
                     [PARAM_SKIP]: skip,
                     [PARAM_LIMIT]: limit,
                     [PARAM_DIRECTION]: direction,
-                    [PARAM_FIELD]: field
+                    [PARAM_FIELD]: field,
+                    [PARAM_FILTER]: filter
                 } = request.query;
                 try {
-                    return await globalService.findAll({ skip, limit, direction, field, model: ROUTE_TO_MODEL[ROUTE] });
+                    return await globalService.findAll({ skip, limit, direction, field, model: ROUTE_TO_MODEL[ROUTE], filter });
                 }
                 catch ({ message, statusCode }) {
 

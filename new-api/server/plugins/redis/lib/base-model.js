@@ -1,17 +1,13 @@
 import _ from 'lodash';
+import Moment from 'moment';
 import { NohmModel } from 'nohm';
 import * as Constants from '../../../../util/constants';
-import {
-    SORT_ASC,
-    SORT_DESC
-} from '../../../../util/constants';
-import Moment from 'moment';
 
 //const logger = require('../../../../util/logger')({ name: `plugin:redis:base-model` });
 const defaults = {
     SKIP: 0,
     LIMIT: 50,
-    DIRECTION: SORT_ASC
+    DIRECTION: Constants.SORT_ASC
 };
 const getLimit = ({ skip, limit, length = undefined }) => {
 
@@ -28,10 +24,58 @@ const getLimit = ({ skip, limit, length = undefined }) => {
     return parsedLimit;
 };
 
+const filterResults = ({ results, filter }) => {
+    if (_.isEmpty(filter)) {
+        return results;
+    }
+    const match = [];
+    _.each(filter, (value, attributeName) => {
+
+        _.each(results, (result) => {
+
+            if (_.includes(match, result)) { //Already matched this value
+                return;
+            }
+            const properties = result.allProperties();
+            const property = properties[attributeName];
+            if (property === null) { //valid attribute but with null value
+                return;
+            }
+            if (property === undefined) { //invalid attribute
+                return match.push(result);
+            }
+            if (_.isArray(property)) {
+                const arrayValue = _.isArray(value) ? value : [value];
+                const intersection = _.intersection(arrayValue, property);
+                if (intersection.length > 0) {
+                    return match.push(result);
+                }
+            }
+            else if (property === value) {
+                return match.push(result);
+            }
+        });
+    });
+    return match;
+};
+
+const manualPaging = ({ results, skip, limit, direction, field }) => {
+
+    let sorted = _.sortBy(results, [(o) => {
+
+        const value = field === 'id' ? _.toNumber(o.id) : _.toNumber(o.property(field));
+        return isNaN(value) ? o.property(field) : value;
+    }]);
+    sorted = direction === Constants.SORT_ASC ? sorted : sorted.reverse();
+    sorted = sorted.slice(skip, skip + limit);
+    return sorted;
+};
+
 module.exports = class BaseModel extends NohmModel {
 
     constructor({ schema }) {
 
+        super();
         schema.creationDate = {
             type: 'timestamp'
         };
@@ -40,7 +84,6 @@ module.exports = class BaseModel extends NohmModel {
             type: 'timestamp'
         };
 
-        super();
         this.schema = schema;
     }
 
@@ -51,13 +94,13 @@ module.exports = class BaseModel extends NohmModel {
 
             field = current.defaultSort ? key : field;
         });
-        return field;
+        return _.isNil(field) ? 'id' : field;
     };
 
     //using create() or update() conflicts with functions from NohmModel
     async createInstance({ data, parentModels, modified }) {
 
-        if (!modified){
+        if (!modified) {
             data.creationDate = Moment().utc().format();
             data.modificationDate = Moment().utc().format();
         }
@@ -90,9 +133,15 @@ module.exports = class BaseModel extends NohmModel {
         return await this.load(id);
     }
 
-    async findAll({ skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field }) {
+    async findAll({ skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field, filter = null }) {
 
         const ids = await this.find();
+        field = field ? field : this.defaultSortField();
+        if (filter) {
+            const results = await this.loadAllByIds({ ids });
+            const filteredResults = filterResults({ results, filter });
+            return manualPaging({ results: filteredResults, skip, limit, direction, field });
+        }
         return await this.findAllByIds({ ids, skip, limit, direction, field });
     }
 
@@ -102,15 +151,21 @@ module.exports = class BaseModel extends NohmModel {
         return ids.length;
     }
 
-    async findAllByIds({ ids, skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field }) {
+    async findAllByIds({ ids, skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field, filter }) {
 
         if (!_.isArray(ids) || ids.leading === 0) {
             return [];
         }
+
         field = field ? field : this.defaultSortField();
+        if (filter) {
+            const results = await this.loadAllByIds({ ids });
+            const filteredResults = await filterResults({ results, filter });
+            return await manualPaging({ results: filteredResults, skip, limit, direction, field });
+        }
         if (field) {
             if (field === 'id') {
-                if (direction === SORT_DESC) {
+                if (direction === Constants.SORT_DESC) {
                     ids = ids.reverse();
                 }
                 if (limit === -1) {

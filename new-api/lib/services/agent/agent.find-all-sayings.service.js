@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
     MODEL_AGENT,
     MODEL_CATEGORY,
@@ -5,7 +6,7 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, loadCategoryId, skip, limit, direction, field }) {
+module.exports = async function ({ id, loadCategoryId, skip, limit, direction, field, filter }) {
 
     const { globalService } = await this.server.services();
     const { redis } = this.server.app;
@@ -15,8 +16,11 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         const sayingsIds = await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING);
         const SayingModel = await redis.factory(MODEL_SAYING);
         const totalCount = sayingsIds.length;
-
-        const SayingModels = await SayingModel.findAllByIds({ ids: sayingsIds, skip, limit, direction, field });
+        let {
+            category: categoryFilter,
+            ...restOfFilters
+        } = filter;
+        const SayingModels = await SayingModel.findAllByIds({ ids: sayingsIds, skip, limit, direction, field, filter: restOfFilters });
         const data = await Promise.all(SayingModels.map(async (sayingModel) => {
 
             const saying = await sayingModel.allProperties();
@@ -26,7 +30,14 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
             }
             return saying;
         }));
+        if (loadCategoryId && filter.category) {
+            categoryFilter = _.isArray(filter.category) ? filter.category : [filter.category];
+            const filteredData = _.filter(data, (saying) => {
 
+                return _.includes(categoryFilter, _.toNumber(saying.category));
+            });
+            return { data: filteredData, totalCount };
+        }
         return { data, totalCount };
     }
     catch (error) {

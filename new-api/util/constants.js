@@ -74,6 +74,7 @@ export const PARAM_TEXT = 'text';
 export const PARAM_TIMEZONE = 'timezone';
 export const PARAM_BULK = 'bulk';
 export const PARAM_SEARCH = 'search';
+export const PARAM_FILTER = 'filter';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;

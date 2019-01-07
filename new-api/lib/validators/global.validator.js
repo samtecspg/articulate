@@ -2,6 +2,7 @@ import Joi from 'joi';
 import {
     PARAM_DIRECTION,
     PARAM_FIELD,
+    PARAM_FILTER,
     PARAM_LIMIT,
     PARAM_SKIP,
     PARAM_VALUE
@@ -42,7 +43,11 @@ class AgentValidate {
                     [PARAM_FIELD]: Joi
                         .string()
                         .optional()
-                        .description('Field used to do the sorting')
+                        .description('Field used to do the sorting'),
+                    [PARAM_FILTER]: Joi
+                        .object()
+                        .optional()
+                        .description('Values to filter the the results (experimental). Arrays will be treated as OR values.')
                 };
             })()
         };

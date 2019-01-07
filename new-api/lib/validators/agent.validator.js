@@ -9,6 +9,7 @@ import {
     PARAM_DEBUG,
     PARAM_DIRECTION,
     PARAM_FIELD,
+    PARAM_FILTER,
     PARAM_KEYWORD_ID,
     PARAM_LIMIT,
     PARAM_NAME,
@@ -410,7 +411,11 @@ class AgentValidate {
                     [PARAM_FIELD]: Joi
                         .string()
                         .optional()
-                        .description('Field used to do the sorting')
+                        .description('Field used to do the sorting'),
+                    [PARAM_FILTER]: Joi
+                        .object()
+                        .optional()
+                        .description('Values to filter the the results (experimental). Arrays will be treated as OR values.')
                 };
             })()
         };
