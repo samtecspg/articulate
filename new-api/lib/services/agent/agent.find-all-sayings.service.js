@@ -6,7 +6,7 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, loadCategoryId, skip, limit, direction, field, filter }) {
+module.exports = async function ({ id, loadCategoryId, skip, limit, direction, field, filter = {} }) {
 
     const { globalService } = await this.server.services();
     const { redis } = this.server.app;
