@@ -30,8 +30,8 @@ const schema = {
     categoryClassifierThreshold: {
         type: 'float'
     },
-    fallbackResponses: {
-        type: 'json'
+    fallbackAction: {
+        type: 'integer'
     },
     status: {
         type: 'string'

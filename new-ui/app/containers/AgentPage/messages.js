@@ -73,15 +73,11 @@ export default defineMessages({
   },
   fallbackTextField: {
     id: 'app.containers.AgentPage.component.AgentDataForm.fallbackTextField',
-    defaultMessage: 'Fallback Agent Responses:',
+    defaultMessage: 'Fallback Action:',
   },
   fallbackTextFieldPlaceholder: {
     id: 'app.containers.AgentPage.component.AgentDataForm.fallbackTextFieldPlaceholder',
     defaultMessage: 'What your agent should say if he weren\'t able to recognize what user said?',
-  },
-  fallbackHelperText: {
-    id: 'app.containers.AgentPage.component.AgentDataForm.fallbackHelperText',
-    defaultMessage: '*Please add at least one fallback response for your agent',
   },
   requiredField: {
     id: 'app.containers.AgentPage.component.AgentDataForm.requiredField',
@@ -162,5 +158,9 @@ export default defineMessages({
   statusReady: {
     id: 'app.containers.AgentPage.component.ActionButtons.statusReady',
     defaultMessage: 'Last Trained: ',
+  },
+  newAction: {
+    id: 'app.containers.SayingsPage.component.SayingRow.newAction',
+    defaultMessage: '+ New Action',
   },
 });

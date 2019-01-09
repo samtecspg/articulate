@@ -61,7 +61,7 @@ class AgentValidate {
                     multiCategory: AgentSchema.multiCategory.required(),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
-                    fallbackResponses: AgentSchema.fallbackResponses.required().min(1).error(new Error('please add at least one fallback response for the agent')),
+                    fallbackAction: AgentSchema.fallbackAction,
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory
                 };
@@ -199,7 +199,7 @@ class AgentValidate {
                     usePostFormat: AgentSchema.usePostFormat,
                     multiCategory: AgentSchema.multiCategory,
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold,
-                    fallbackResponses: AgentSchema.fallbackResponses.min(1).error(new Error('please add at least one fallback response for the agent')),
+                    fallbackAction: AgentSchema.fallbackAction,
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining.allow(''),
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -704,7 +704,7 @@ class AgentValidate {
                     timezone: AgentSchema.timezone.required(),
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
-                    fallbackResponses: AgentSchema.fallbackResponses.required(),
+                    fallbackAction: AgentSchema.fallbackAction.required(),
                     useWebhook: AgentSchema.useWebhook.required(),
                     multiCategory: AgentSchema.multiCategory.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),

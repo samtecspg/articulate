@@ -23,6 +23,7 @@ import {
   ADD_AGENT,
   UPDATE_AGENT,
   DELETE_AGENT,
+  LOAD_ACTIONS,
 } from '../App/constants';
 
 import {
@@ -32,6 +33,7 @@ import {
   makeSelectAgentWebhook,
   makeSelectCurrentAgent,
 } from '../App/selectors';
+import { getActions } from '../ActionPage/saga';
 
 function* postAgentWebhook(payload) {
   const agent = yield select(makeSelectAgent());
@@ -194,4 +196,5 @@ export default function* rootSaga() {
   yield takeLatest(ADD_AGENT, postAgent);
   yield takeLatest(UPDATE_AGENT, putAgent);
   yield takeLatest(DELETE_AGENT, deleteAgent);
+  yield takeLatest(LOAD_ACTIONS, getActions);
 };

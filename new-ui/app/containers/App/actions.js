@@ -842,10 +842,11 @@ export function resetActionData() {
   };
 }
 
-export function loadActions() {
+export function loadActions(agentId) {
   return {
     type: LOAD_ACTIONS,
     apiCall: true,
+    agentId,
   };
 }
 

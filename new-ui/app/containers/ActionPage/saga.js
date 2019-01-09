@@ -43,10 +43,10 @@ import { putSaying } from '../SayingsPage/saga';
 
 export function* getActions(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api } = payload;
+  const { api, agentId } = payload;
   try {
     const response = yield call(api.agent.getAgentAgentidAction, {
-      agentId: agent.id,
+      agentId: agentId ? agentId : agent.id,
     });
     yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
   } catch (err) {

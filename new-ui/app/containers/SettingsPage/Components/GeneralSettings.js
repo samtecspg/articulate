@@ -275,6 +275,24 @@ export class GeneralSettings extends React.Component {
             }
           </Grid>
           <Grid container spacing={24} item xs={12}>
+            <Grid style={{ paddingBottom: '0px' }} item lg={12} md={8} sm={12} xs={12}>
+              <TextField
+                id='defaultaFallbackActionName'
+                label={intl.formatMessage(messages.defaultaFallbackActionName)}
+                value={settings.defaultaFallbackActionName}
+                placeholder={intl.formatMessage(messages.defaultaFallbackActionNamePlaceholder)}
+                onChange={evt => {
+                  this.props.onChangeSettingsData('defaultaFallbackActionName', evt.target.value);
+                }}
+                margin='normal'
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                helperText={intl.formatMessage(messages.requiredField)}
+                error={this.props.errorState.defaultaFallbackActionName}
+              />
+            </Grid>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <TextField
                 id='newFallbackResponses'

@@ -101,7 +101,12 @@ export class ActionPage extends React.Component {
 
   componentDidUpdate() {
     if (this.props.success) {
-      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+      if (this.state.ref === 'agent'){
+        this.props.onSuccess(`/agent/${this.props.agent.id}`);
+      }
+      else{
+        this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+      }
     }
   }
 
@@ -109,6 +114,7 @@ export class ActionPage extends React.Component {
     isNewAction: this.props.match.params.actionId === 'create',
     currentTab: 'action',
     userCompletedAllRequiredFields: false,
+    ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
     page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
     formError: false,
@@ -248,7 +254,7 @@ export class ActionPage extends React.Component {
       });
       if (this.state.isNewAction){
         // If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
-        this.props.onAddNewAction(this.props.saying.agent === '');
+        this.props.onAddNewAction(this.props.saying.agent === '' && this.state.ref !== 'agent');
       }
       else {
         this.props.onEditAction();
@@ -267,10 +273,18 @@ export class ActionPage extends React.Component {
     return (
       <Grid container>
         <Grid container>
-          <Grid className={classes.goBackCard} onClick={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}} />
+          <Grid className={classes.goBackCard} onClick={() => {
+              this.state.ref === 'agent' ?
+                this.props.onGoToUrl(`/agent/${this.props.agent.id}`) :
+                this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)
+            }}
+          />
         </Grid>
         <MainTab
-          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
+          goBack={() => {this.state.ref === 'agent' ? 
+            this.props.onGoToUrl(`/agent/${this.props.agent.id}`) :
+            this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)
+          }}
           newAction={this.state.isNewAction}
           actionName={this.props.action.actionName}
           formError={this.state.formError}

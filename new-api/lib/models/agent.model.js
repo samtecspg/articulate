@@ -13,7 +13,7 @@ class AgentModel {
             usePostFormat: Joi.boolean(),
             multiCategory: Joi.boolean(),
             categoryClassifierThreshold: Joi.number(),
-            fallbackResponses: Joi.array().items(Joi.string().trim()),
+            fallbackAction: Joi.number(),
             status: Joi.string().trim(),
             lastTraining: Joi.date(),
             extraTrainingData: Joi.boolean(),

@@ -35,6 +35,8 @@ import {
   changeHeaderNameAgentWebhook,
   changeHeaderValueAgentWebhook,
   deleteAgent,
+  loadActions,
+  clearSayingToAction,
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -44,6 +46,7 @@ import {
   makeSelectSettings,
   makeSelectSuccess,
   makeSelectAgentTouched,
+  makeSelectActions,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -61,7 +64,6 @@ export class AgentPage extends React.PureComponent {
     if (this.state.isNewAgent && !this.state.settingsLoaded) {
       this.props.onChangeAgentData('language', this.props.settings.defaultAgentLanguage);
       this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
-      this.props.onChangeAgentData('fallbackResponses', this.props.settings.defaultAgentFallbackResponses);
       this.props.onChangeAgentSettingsData('rasaURL', this.props.settings.rasaURL);
       this.props.onChangeAgentSettingsData('categoryClassifierPipeline', this.props.settings.categoryClassifierPipeline);
       this.props.onChangeAgentSettingsData('sayingClassifierPipeline', this.props.settings.sayingClassifierPipeline);
@@ -79,6 +81,7 @@ export class AgentPage extends React.PureComponent {
     if (this.state.isNewAgent) {
       this.props.onResetData();
     } else {
+      this.props.onLoadActions(this.props.match.params.id);
       this.props.onLoadAgent(this.props.match.params.id);
     }
   }
@@ -89,7 +92,7 @@ export class AgentPage extends React.PureComponent {
     formError: false,
     errorState: {
       agentName: false,
-      fallbackResponses: false,
+      fallbackAction: false,
       webhookUrl: false,
       rasaURL: false,
       ducklingURL: false,
@@ -109,7 +112,7 @@ export class AgentPage extends React.PureComponent {
     const newErrorState = {
       agentName: false,
       agentDescription: false,
-      fallbackResponses: false,
+      fallbackAction: false,
       webhookUrl: false,
       rasaURL: false,
       ducklingURL: false,
@@ -134,12 +137,12 @@ export class AgentPage extends React.PureComponent {
     } else {
       newErrorState.agentDescription = false;
     }
-    if (!this.props.agent.fallbackResponses || this.props.agent.fallbackResponses.length === 0) {
+    if (!this.state.isNewAgent && !this.props.agent.fallbackAction) {
       errors = true;
-      newErrorState.fallbackResponses = true;
+      newErrorState.fallbackAction = true;
       newErrorState.tabs.push(0);
     } else {
-      newErrorState.fallbackResponses = false;
+      newErrorState.fallbackAction = false;
     }
     if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')) {
       errors = true;
@@ -295,6 +298,9 @@ export class AgentPage extends React.PureComponent {
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               onDelete={this.props.onDelete.bind(null, this.props.agent.id)}
               newAgent={this.state.isNewAgent}
+              agentActions={this.props.agentActions}
+              onGoToUrl={this.props.onGoToUrl}
+              defaultaFallbackActionName={this.props.settings.defaultaFallbackActionName}
             />
           }
           sayingsForm={Link}
@@ -316,6 +322,7 @@ AgentPage.propTypes = {
   settings: PropTypes.object,
   agentSettings: PropTypes.object,
   onLoadAgent: PropTypes.func,
+  onLoadActions: PropTypes.func,
   onChangeAgentData: PropTypes.func,
   onChangeAgentName: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
@@ -334,6 +341,8 @@ AgentPage.propTypes = {
   onSuccess: PropTypes.func,
   onTrain: PropTypes.func,
   onDelete: PropTypes.func,
+  agentActions: PropTypes.array,
+  onGoToUrl: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -344,6 +353,7 @@ const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   success: makeSelectSuccess(),
   agentTouched: makeSelectAgentTouched(),
+  agentActions: makeSelectActions(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -408,6 +418,13 @@ function mapDispatchToProps(dispatch) {
     },
     onDelete: (id) => {
       dispatch(deleteAgent(id));
+    },
+    onLoadActions: (agentId) => {
+      dispatch(loadActions(agentId));
+    },
+    onGoToUrl: (url) => {
+      dispatch(clearSayingToAction());
+      dispatch(push(`${url}?ref=agent`));
     },
   };
 }

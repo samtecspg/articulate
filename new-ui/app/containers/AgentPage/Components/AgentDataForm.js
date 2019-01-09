@@ -172,18 +172,18 @@ class AgentDataForm extends React.Component {
                 type='number'
               />
             </Grid>
-          </Grid>
-          <Grid container spacing={24} item xs={12}>
-            <Grid item lg={12} md={12} sm={12} xs={12}>
+            <Grid item lg={6} md={12} sm={12} xs={12}>
               <TextField
-                id='newFallbackResponses'
+                select
+                id='fallbackAction'
+                value={agent.fallbackAction}
                 label={intl.formatMessage(messages.fallbackTextField)}
-                placeholder={intl.formatMessage(messages.fallbackTextFieldPlaceholder)}
-                onKeyPress={(ev) => {
-                  if (ev.key === 'Enter') {
-                    ev.preventDefault();
-                    this.props.onAddFallbackResponse(ev.target.value);
-                    ev.target.value = '';
+                onChange={(evt) => { 
+                  if (evt.target.value === 'create'){
+                    this.props.onGoToUrl(`/agent/${agent.id}/action/create`);
+                  }
+                  else {
+                    this.props.onChangeAgentData('fallbackAction', evt.target.value) 
                   }
                 }}
                 margin='normal'
@@ -191,26 +191,22 @@ class AgentDataForm extends React.Component {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                helperText={intl.formatMessage(messages.fallbackHelperText)}
-                error={this.props.errorState.fallbackResponses}
-              />
-              {agent.fallbackResponses.length > 0 ?
-                <Table className={classes.table}>
-                  <TableBody>
-                    {agent.fallbackResponses.map((fallbackResponse, index) => (
-                      <TableRow key={`${fallbackResponse}_${index}`}>
-                        <TableCell>
-                          {fallbackResponse}
-                        </TableCell>
-                        <TableCell className={classes.deleteCell}>
-                          <img onClick={() => { this.props.onDeleteFallbackResponse(index) }} className={classes.deleteIcon} src={trashIcon} />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table> :
-                null
-              }
+                helperText={intl.formatMessage(messages.requiredField)}
+                error={this.props.errorState.fallbackAction}
+              >
+                {
+                  this.props.newAgent ? 
+                  <MenuItem value={0}>{this.props.defaultaFallbackActionName}</MenuItem>
+                  : <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
+                }                
+                {
+                  this.props.agentActions.map((action) => (
+                    <MenuItem key={action.id} value={action.id}>
+                      {action.actionName}
+                    </MenuItem>
+                  ))
+                }
+              </TextField>
             </Grid>
           </Grid>
         </Grid>
@@ -230,6 +226,10 @@ AgentDataForm.propTypes = {
   onDeleteFallbackResponse: PropTypes.func.isRequired,
   agent: PropTypes.object,
   settings: PropTypes.object,
+  newAgent: PropTypes.bool,
+  agentActions: PropTypes.array,
+  onGoToUrl: PropTypes.func,
+  defaultaFallbackActionName: PropTypes.string
 };
 
 export default injectIntl(withStyles(styles)(AgentDataForm));

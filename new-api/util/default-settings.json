@@ -704,6 +704,7 @@
     }
   ],
   "defaultAgentLanguage": "en",
+  "defaultaFallbackActionName": "Default Fallback Action",
   "defaultAgentFallbackResponses": [
     "Sorry can you rephrase that?",
     "I'm still learning to speak with humans. What you mean?"

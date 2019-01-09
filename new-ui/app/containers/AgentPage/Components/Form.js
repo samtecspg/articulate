@@ -203,6 +203,10 @@ class Form extends React.Component {
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               errorState={this.props.errorState}
+              agentActions={this.props.agentActions}
+              newAgent={this.props.newAgent}
+              onGoToUrl={this.props.onGoToUrl}
+              defaultaFallbackActionName={this.props.defaultaFallbackActionName}
             />
           )}
           {this.state.selectedTab === 1 && (
@@ -258,6 +262,9 @@ Form.propTypes = {
   onDeleteFallbackResponse: PropTypes.func,
   onDelete: PropTypes.func,
   newAgent: PropTypes.bool,
+  agentActions: PropTypes.array,
+  onGoToUrl: PropTypes.func,
+  defaultaFallbackActionName: PropTypes.string
 };
 
 export default injectIntl(withStyles(styles)(Form));

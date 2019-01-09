@@ -41,7 +41,7 @@ export default defineMessages({
   },
   fallbackTextField: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.fallbackTextField',
-    defaultMessage: 'Fallback Agent Responses:',
+    defaultMessage: 'Fallback Responses for Default Fallback Action:',
   },
   fallbackTextFieldPlaceholder: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.fallbackTextFieldPlaceholder',
@@ -49,7 +49,7 @@ export default defineMessages({
   },
   fallbackHelperText: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.fallbackHelperText',
-    defaultMessage: '*Please add at least one fallback response for your agent',
+    defaultMessage: '*Please add at least one response for the default fallback action',
   },
   requiredField: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.requiredField',
@@ -107,4 +107,12 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.component.GeneralSettings.uiLanguagesError',
     defaultMessage: 'Please verify this value. It should be an array of JSON objects. Example: [{"text": "English","value": "en"}].',
   },
+  defaultaFallbackActionName: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.defaultaFallbackActionName',
+    defaultMessage: 'Default Fallback Action Name:',
+  },
+  defaultaFallbackActionNamePlaceholder: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.defaultaFallbackActionNamePlaceholder',
+    defaultMessage: 'Enter the name for the default fallback action that will be created for new agents',
+  }
 });
