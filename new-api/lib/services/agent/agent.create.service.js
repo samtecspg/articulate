@@ -50,7 +50,9 @@ module.exports = async function ({ data, returnModel = false }) {
             actionData: defaultFallbackAction
         });
         await AgentModel.updateInstance({
-            fallbackAction: defaultFallbackActionCreated.id
+            data: {
+                fallbackAction: defaultFallbackActionCreated.id
+            }
         });
         return returnModel ? AgentModel : AgentModel.allProperties();
     }

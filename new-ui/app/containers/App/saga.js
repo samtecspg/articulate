@@ -89,7 +89,8 @@ export function* postTrainAgent(payload) {
   try {
     yield call(api.agent.postAgentAgentidTrain, { agentId: agent.id });
   } catch (err) {
-    yield put(trainAgentError(err));
+    const error = { ...err };
+    yield put(trainAgentError(error.response.body.message));
   }
 }
 

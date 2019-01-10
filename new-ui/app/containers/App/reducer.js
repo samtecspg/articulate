@@ -516,6 +516,7 @@ function appReducer(state = initialState, action) {
       return state.setIn(['agent', 'status'], 'Training')
         .set('error', false);
     case TRAIN_AGENT_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
       return state.setIn(['agent', 'status'], 'Error')
         .set('error', action.error);
     case ADD_HEADER_AGENT_WEBHOOK:

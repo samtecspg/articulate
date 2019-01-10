@@ -7,6 +7,7 @@ import {
     RASA_REGEX_FEATURES
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import InvalidActionSayingsCount from '../../errors/global.invalid-actions-sayings-count';
 
 module.exports = async function ({ keywords, sayings, extraTrainingData, isKeyword = true, categoryName = null }) {
 
@@ -20,6 +21,7 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
         if (extraTrainingData && keywords.length > 0) {
             keywordsCombinations = await keywordService.combinationsFromSayings({ keywords, sayings });
         }
+        const sayingsPerActions = {};
         const uniqueActionsCount = _.uniq(_.flattenDeep(_.map(sayings, 'actions'))).length;
         const commonExamples = _.uniq(_.flatten(_.map(sayings, (saying) => {
 
@@ -61,6 +63,11 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
                             shift = newEnd - keyword.end;
                         });
 
+                        if (!categoryName){
+                            saying.actions.forEach((actionName) => {
+                                sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
+                            });
+                        }
                         return {
                             text: sayingText,
                             intent: categoryName || saying.actions.join('+'),
@@ -80,7 +87,12 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
                         entity: tempKeyword.keyword
                     });
                 });
-
+                
+                if (!categoryName){
+                    saying.actions.forEach((actionName) => {
+                        sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
+                    });
+                }
                 return {
                     text: saying.userSays,
                     intent: categoryName || saying.actions.join('+'),
@@ -88,12 +100,25 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
                 };
             }
 
+            if (!categoryName){
+                saying.actions.forEach((actionName) => {
+                    sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
+                });
+            }
             return {
                 text: saying.userSays,
                 intent: categoryName || saying.actions.join('+'),
                 entities: []
             };
         })));
+
+        const actionsWithJustOneSaying = Object.keys(sayingsPerActions).filter((actionName) => {
+
+            return sayingsPerActions[actionName] === 1;
+        });
+        if (actionsWithJustOneSaying.length > 0){
+            return Promise.reject(InvalidActionSayingsCount({ actions: actionsWithJustOneSaying }));
+        }
 
         let keywordSynonyms = _.flatten(_.map(keywords, (keyword) => {
 
@@ -125,6 +150,7 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
         });
 
         return {
+            sayingsPerActions,
             numberOfSayings: uniqueActionsCount,
             [RASA_NLU_DATA]: {
                 [RASA_COMMON_EXAMPLES]: commonExamples,

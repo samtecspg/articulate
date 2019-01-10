@@ -704,7 +704,7 @@ class AgentValidate {
                     timezone: AgentSchema.timezone.required(),
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
-                    fallbackAction: AgentSchema.fallbackAction.required(),
+                    fallbackAction: AgentSchema.fallbackAction,
                     useWebhook: AgentSchema.useWebhook.required(),
                     multiCategory: AgentSchema.multiCategory.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
