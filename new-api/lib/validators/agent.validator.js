@@ -10,6 +10,7 @@ import {
     PARAM_DIRECTION,
     PARAM_FIELD,
     PARAM_FILTER,
+    PARAM_INCLUDE,
     PARAM_KEYWORD_ID,
     PARAM_LIMIT,
     PARAM_NAME,
@@ -415,7 +416,12 @@ class AgentValidate {
                     [PARAM_FILTER]: Joi
                         .object()
                         .optional()
-                        .description('Values to filter the the results (experimental). Arrays will be treated as OR values.')
+                        .description('Values to filter the the results (experimental). Arrays will be treated as OR values.'),
+                    [PARAM_INCLUDE]: Joi
+                        .array()
+                        .items(Joi.string())
+                        .optional()
+                        .description('Array of related models to be included')
                 };
             })()
         };

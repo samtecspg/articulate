@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {
+    MODEL_ACTION,
     MODEL_AGENT,
     MODEL_CATEGORY,
     MODEL_SAYING
@@ -14,30 +15,68 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
     try {
         const AgentModel = await globalService.findById({ id, model: MODEL_AGENT, returnModel: true });
         const sayingsIds = await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING);
-        const SayingModel = await redis.factory(MODEL_SAYING);
-        const totalCount = sayingsIds.length;
         let {
-            category: categoryFilter,
+            category: categoryFilter = [],
+            actions: actionFilter = [],
+            query,
             ...restOfFilters
         } = filter;
-        const SayingModels = await SayingModel.findAllByIds({ ids: sayingsIds, skip, limit, direction, field, filter: restOfFilters });
-        const data = await Promise.all(SayingModels.map(async (sayingModel) => {
-
-            const saying = await sayingModel.allProperties();
-            if (loadCategoryId) {
-                const categoriesId = await sayingModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
-                return { ...saying, ...{ category: categoriesId[0] } };
-            }
-            return saying;
-        }));
-        if (loadCategoryId && filter.category) {
-            categoryFilter = _.isArray(filter.category) ? filter.category : [filter.category];
-            const filteredData = _.filter(data, (saying) => {
-
-                return _.includes(categoryFilter, _.toNumber(saying.category));
-            });
-            return { data: filteredData, totalCount };
+        let newFilter = restOfFilters;
+        if (query) {
+            newFilter = { ...newFilter, ...{ userSays: query } };
         }
+        const allSayings = await Promise.all(sayingsIds.map(async (sayingId) => {
+
+            return await globalService.loadWithIncludes({
+                model: MODEL_SAYING,
+                id: sayingId,
+                relationNames: [MODEL_CATEGORY, MODEL_ACTION]
+            });
+        }));
+        categoryFilter = _.isArray(categoryFilter) ? categoryFilter : [categoryFilter];
+        actionFilter = _.isArray(actionFilter) ? actionFilter : [actionFilter];
+        let filteredSayings = allSayings;
+        if (categoryFilter.length > 0) {
+            filteredSayings = filteredSayings.filter((saying) => {
+                return _.includes(_(saying[MODEL_CATEGORY]).map('id').map(_.toNumber).value(), ...categoryFilter);
+            });
+        }
+
+        if (actionFilter.length > 0) {
+            filteredSayings = filteredSayings.filter((saying) => {
+                return _.includes(saying.actions, ...actionFilter);
+            });
+        }
+
+        const SayingModel = await redis.factory(MODEL_SAYING);
+        const totalCount = filteredSayings.length;
+
+        const SayingModels = await SayingModel.findAllByIds({
+            ids: _.map(filteredSayings, 'id'),
+            skip,
+            limit,
+            direction,
+            field,
+            filter: newFilter
+        });
+        const data = SayingModels.map((sayingModel) => {
+
+            const saying = _.find(filteredSayings, { id: sayingModel.id });
+            if (loadCategoryId) {
+                return {
+                    // ..._.omit(saying, [MODEL_CATEGORY, MODEL_ACTION]),
+                    ...saying,
+                    ...{
+                        category: _.get(saying, `${MODEL_CATEGORY}[0].id`, null)
+                    }
+                };
+            }
+            else {
+                //return _.omit(saying, [MODEL_CATEGORY, MODEL_ACTION]);
+                return saying;
+            }
+
+        });
         return { data, totalCount };
     }
     catch (error) {

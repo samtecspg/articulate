@@ -19,6 +19,7 @@ import {
   addActionNewSaying,
   addActionSaying,
   addSaying,
+  changeSayingsPageSize,
   clearSayingToAction,
   deleteActionNewSaying,
   deleteActionSaying,
@@ -33,7 +34,6 @@ import {
   tagKeyword,
   trainAgent,
   untagKeyword,
-  changeSayingsPageSize
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -65,7 +65,7 @@ export class SayingsPage extends React.Component {
   }
 
   state = {
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : { category: undefined, actions: undefined, query: undefined },
     categoryFilter: '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
     pageSize: this.props.agent.settings.sayingsPageSize,
@@ -134,11 +134,12 @@ export class SayingsPage extends React.Component {
   }
 
   onSearchSaying(filter) {
+    const updatedFilter = { ...this.state.filter, ...filter };
     this.setState({
-      filter,
+      filter: updatedFilter,
       currentPage: 1,
     });
-    this.props.onLoadSayings(filter, 1, this.state.pageSize);
+    this.props.onLoadSayings(updatedFilter, 1, this.state.pageSize);
   }
 
   onSearchCategory(categoryFilter) {
@@ -202,6 +203,7 @@ export class SayingsPage extends React.Component {
               category={this.props.category}
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
+              filter={this.state.filter}
             />
           }
           keywordsForm={Link}
@@ -310,7 +312,7 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeSayingsPageSize: (agentId, pageSize) => {
       dispatch(changeSayingsPageSize(agentId, pageSize));
-    }
+    },
   };
 }
 

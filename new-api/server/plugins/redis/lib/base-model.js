@@ -51,6 +51,11 @@ const filterResults = ({ results, filter }) => {
                     return match.push(result);
                 }
             }
+            if (_.isString(property)) {
+                if (property.toLowerCase().search(value.toLowerCase()) >= 0) {
+                    return match.push(result);
+                }
+            }
             else if (property === value) {
                 return match.push(result);
             }
@@ -151,18 +156,22 @@ module.exports = class BaseModel extends NohmModel {
         return ids.length;
     }
 
-    async findAllByIds({ ids, skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field, filter }) {
+    async findAllByIds({ ids, skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field, filter, include }) {
 
         if (!_.isArray(ids) || ids.leading === 0) {
             return [];
         }
-
         field = field ? field : this.defaultSortField();
-        if (filter) {
+
+        if (include || filter) {
             const results = await this.loadAllByIds({ ids });
+            /* if (include.length > 0) {
+                 await this.include({ include, results });
+             }*/
             const filteredResults = await filterResults({ results, filter });
             return await manualPaging({ results: filteredResults, skip, limit, direction, field });
         }
+
         if (field) {
             if (field === 'id') {
                 if (direction === Constants.SORT_DESC) {
@@ -276,5 +285,21 @@ module.exports = class BaseModel extends NohmModel {
         const properties = this.allProperties();
         delete properties.id;
         return properties;
+    }
+
+    async include({ include, results }) {
+
+        const resultPromises = results.map(async (result) => {
+
+            const includePromises = await include.map(async (inc) => {
+
+                const relatedModelsIds = await result.getAll(inc, inc);
+                const relatedModel = await this.nohmClass.factory(inc);
+                const relatedModels = await relatedModel.loadAllByIds({ ids: relatedModelsIds });
+                //result.property(inc, relatedModels.map((rm) => rm.allProperties()));
+            });
+            return await Promise.all(includePromises);
+        });
+        return await Promise.all(resultPromises);
     }
 };

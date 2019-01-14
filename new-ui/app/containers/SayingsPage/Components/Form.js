@@ -5,8 +5,10 @@ import {
   Modal,
   Typography,
 } from '@material-ui/core';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
-
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -15,12 +17,9 @@ import {
   intlShape,
 } from 'react-intl';
 import playHelpIcon from '../../../images/play-help-icon.svg';
-
 import sayingsIcon from '../../../images/sayings-icon.svg';
 import searchIcon from '../../../images/search-icon.svg';
-
 import messages from '../messages';
-
 import SayingsDataForm from './SayingsDataForm';
 
 const styles = {
@@ -106,7 +105,7 @@ class Form extends React.Component {
   };
 
   render() {
-    const { classes, intl } = this.props;
+    const { classes, intl, filter, agentCategories, agentActions } = this.props;
     return <Grid className={classes.headerContainer} container item xs={12}>
       <Grid className={classes.titleContainer} item xs={12}>
         <img alt="" className={classes.sayingsIcon} src={sayingsIcon} />
@@ -127,6 +126,30 @@ class Form extends React.Component {
             <span className={classes.helpText}><FormattedMessage {...messages.help} /></span>
           </Button>
           <form className={classes.searchForm}>
+            <Select
+              value={filter.category}
+              displayEmpty
+              onChange={(evt) => {
+                this.props.onSearchSaying({ category: evt.target.value });
+              }}
+            >
+              <MenuItem value={undefined}>
+                <em>Categories</em>
+              </MenuItem>
+              {agentCategories.map(({ id, categoryName }) => <MenuItem value={_.toNumber(id)}>{categoryName}</MenuItem>)}
+            </Select>
+            <Select
+              value={filter.actions}
+              displayEmpty
+              onChange={(evt) => {
+                this.props.onSearchSaying({ actions: evt.target.value });
+              }}
+            >
+              <MenuItem value={undefined}>
+                <em>Actions</em>
+              </MenuItem>
+              {agentActions.map(({ id, actionName }) => <MenuItem value={actionName}>{actionName}</MenuItem>)}
+            </Select>
             <img src={searchIcon} alt={intl.formatMessage(messages.searchSayingsAlt)} />
             <Input
               inputProps={{
@@ -134,11 +157,12 @@ class Form extends React.Component {
                   border: 'none',
                 },
               }}
+              value={filter.query}
               disableUnderline
               className={classes.searchInputField}
               placeholder={intl.formatMessage(messages.searchSayingPlaceholder)}
               onChange={(evt) => {
-                this.props.onSearchSaying(evt.target.value);
+                this.props.onSearchSaying({ query: evt.target.value });
               }}
             />
           </form>
@@ -225,6 +249,7 @@ Form.propTypes = {
   onAddNewSayingAction: PropTypes.func,
   onDeleteNewSayingAction: PropTypes.func,
   onClearSayingToAction: PropTypes.func,
+  filter: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(Form));

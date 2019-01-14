@@ -6,6 +6,7 @@ import GetAllModelsInPath from './global/global.get-all-model-in-path.service';
 import LoadAllByIds from './global/global.load-all-by-ids.service';
 import LoadAllLinked from './global/global.load-all-linked.service';
 import LoadFirstLinked from './global/global.load-first-linked.service';
+import LoadWithIncludes from './global/global.load-with-includes.service';
 import SearchByField from './global/global.search-by-field.service';
 import CartesianProduct from './global/global.tool-cartesian-product.service';
 
@@ -54,6 +55,11 @@ module.exports = class GlobalService extends Schmervice.Service {
     async cartesianProduct() {
 
         return await CartesianProduct.apply(this, arguments);
+    }
+
+    async loadWithIncludes() {
+
+        return await LoadWithIncludes.apply(this, arguments);
     }
 };
 
