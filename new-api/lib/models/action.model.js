@@ -13,7 +13,7 @@ class ActionModel {
             useWebhook: Joi.boolean(),
             usePostFormat: Joi.boolean(),
             creationDate: Joi.string(),
-            modificationDate: Joi.date(),
+            modificationDate: Joi.date()
         };
     };
 }

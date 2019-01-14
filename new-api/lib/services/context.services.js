@@ -26,7 +26,7 @@ module.exports = class ContextService extends Schmervice.Service {
 
         return await UpdateFrameBySessionIdAndFrameId.apply(this, arguments);
     }
-    
+
     async update() {
 
         return await Update.apply(this, arguments);

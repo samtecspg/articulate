@@ -71,10 +71,10 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
                     }
                 };
             }
-            else {
-                //return _.omit(saying, [MODEL_CATEGORY, MODEL_ACTION]);
-                return saying;
-            }
+
+            //return _.omit(saying, [MODEL_CATEGORY, MODEL_ACTION]);
+            return saying;
+
 
         });
         return { data, totalCount };

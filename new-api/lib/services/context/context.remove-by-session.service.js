@@ -10,9 +10,9 @@ module.exports = async function ({ sessionId }) {
         await Model.findBySessionId({ sessionId });
         if (Model.inDb) {
             return await Model.removeInstance();
-        } else {
-            return Promise.reject(NotFoundErrorHandler({ model: MODEL_CONTEXT, id: sessionId }));
         }
+        return Promise.reject(NotFoundErrorHandler({ model: MODEL_CONTEXT, id: sessionId }));
+
     }
     catch (error) {
         throw RedisErrorHandler({ error });

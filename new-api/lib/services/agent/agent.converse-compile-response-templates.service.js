@@ -27,7 +27,7 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false })
             return parsedResponse.textResponse !== '' && parsedResponse.numberOfSlots === maxNumberOfExpressions;
         });
     }
-    
+
     if (parsedResponses.length > 0 ){
         return parsedResponses[Math.floor(Math.random() * parsedResponses.length)];
     }

@@ -17,7 +17,7 @@ class WebhookModel {
             webhookPayload: Joi.string().trim(),
             webhookHeaders: Joi.array().items({
                 key: Joi.string(),
-                value: Joi.string(),
+                value: Joi.string()
             }),
             webhookUser: Joi.string().allow(''),
             webhookPassword: Joi.string().allow(''),

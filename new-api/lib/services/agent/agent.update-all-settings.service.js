@@ -13,7 +13,7 @@ module.exports = async function ({ id, settingsData, AgentModel = null, returnMo
         const newSettings = { ...oldSettings, ...settingsData };
 
         const trainingSettingsChanged = CONFIG_SETTINGS_RASA_TRAINING.some((setting) => {
-            
+
             return !_.isEqual(oldSettings[setting], newSettings[setting]);
         });
         if (trainingSettingsChanged){

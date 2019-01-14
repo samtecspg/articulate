@@ -15,7 +15,7 @@ module.exports = async function ({ data, returnModel = false }) {
         usePostFormat: false,
         responses: [],
         slots: []
-    }
+    };
 
     const { redis } = this.server.app;
     const { settingsService, agentService } = await this.server.services();
@@ -32,7 +32,7 @@ module.exports = async function ({ data, returnModel = false }) {
 
         defaultFallbackAction.actionName = allSettings[CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME];
         _.each(allSettings[CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT], (fallbackResponse) => {
-            
+
             defaultFallbackAction.responses.push({
                 textResponse: fallbackResponse,
                 actions: []

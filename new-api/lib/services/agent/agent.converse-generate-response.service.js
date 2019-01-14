@@ -139,7 +139,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
         });*/
     }
     if (action.useWebhook || agent.useWebhook) {
-        let webhook, modelPath;
+        let modelPath, webhook;
         if (action.useWebhook){
             modelPath = [
                 {
@@ -151,9 +151,9 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                     id: action.id
                 },
                 {
-                    model: MODEL_WEBHOOK,
+                    model: MODEL_WEBHOOK
                 }
-            ]
+            ];
             webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
         }
         else {
@@ -163,9 +163,9 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                     id: agent.id
                 },
                 {
-                    model: MODEL_WEBHOOK,
+                    model: MODEL_WEBHOOK
                 }
-            ]
+            ];
             webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
         }
         const webhookResponse = await agentService.converseCallWebhook({
@@ -179,7 +179,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions: [] };
+            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [] };
         }
         conversationStateObject.webhookResponse = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });

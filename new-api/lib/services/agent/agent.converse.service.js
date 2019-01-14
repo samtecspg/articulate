@@ -273,12 +273,12 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 actionsToRemove.push(index);
                 return true;
             }
-            else {
-                if (index === 0) {
-                    responses.push(context.responseQueue[index].textResponse);
-                }
-                return false;
+
+            if (index === 0) {
+                responses.push(context.responseQueue[index].textResponse);
             }
+            return false;
+
         });
         context.actionQueue = _.filter(context.actionQueue, (action, index) => {
             return actionsToRemove.indexOf(index) === -1;

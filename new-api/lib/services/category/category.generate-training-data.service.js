@@ -87,7 +87,7 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
                         entity: tempKeyword.keyword
                     });
                 });
-                
+
                 if (!categoryName){
                     saying.actions.forEach((actionName) => {
                         sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;

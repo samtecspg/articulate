@@ -14,7 +14,7 @@ module.exports = async function ({ id, data, returnModel = false }) {
             return Promise.reject(NotFoundError({ id, model: MODEL_AGENT }));
         }
 
-        const requiresRetrain = 
+        const requiresRetrain =
             (
                 data.extraTrainingData !== undefined &&
                 data.extraTrainingData !== AgentModel.property('extraTrainingData')
@@ -22,7 +22,7 @@ module.exports = async function ({ id, data, returnModel = false }) {
             (
                 data.enableModelsPerCategory !== undefined &&
                 data.enableModelsPerCategory !== AgentModel.property('enableModelsPerCategory')
-            ) || 
+            ) ||
             (
                 data.agentName !== undefined &&
                 data.agentName !== AgentModel.property('agentName')

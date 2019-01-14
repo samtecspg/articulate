@@ -3,10 +3,10 @@ import QueryString from 'querystring';
 
 const getHeaders = (headers, contentType) => {
 
-    const result = {}
+    const result = {};
     let userSpecifiedContentType = false;
     headers.forEach((header) => {
-        
+
         result[header.key] = header.value;
         if (header.key.toUpperCase() === 'Content-Type'.toUpperCase()){
             userSpecifiedContentType = true;
@@ -55,7 +55,7 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
             auth: username ? {
                 username,
                 password
-            } : undefined,
+            } : undefined
         });
         return response.data;
     }

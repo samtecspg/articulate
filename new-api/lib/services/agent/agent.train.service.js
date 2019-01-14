@@ -129,7 +129,7 @@ module.exports = async function ({ id, returnModel = false }) {
             });
             AgentModel.property('categoryRecognizer', false);
         }
-        
+
         AgentModel.property('lastTraining', Moment().utc().format());
         AgentModel.property('model', model);
         AgentModel.property('status', STATUS_READY);

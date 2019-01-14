@@ -60,7 +60,7 @@ class ContextValidate {
             params: (() => {
 
                 return {
-                    [PARAM_SESSION]: ContextModel.sessionId.required()};
+                    [PARAM_SESSION]: ContextModel.sessionId.required() };
             })(),
             payload: (() => {
 
@@ -121,7 +121,7 @@ class ContextValidate {
             })()
         };
 
-        this.findFrameBySessionAndFrame= {
+        this.findFrameBySessionAndFrame = {
             params: (() => {
 
                 return {
@@ -129,7 +129,7 @@ class ContextValidate {
                     [PARAM_FRAME]: Joi.number().required() //Not certain why there is no frames model
                 };
             })()
-        }
+        };
 
         this.removeBySession = {
             params: (() => {

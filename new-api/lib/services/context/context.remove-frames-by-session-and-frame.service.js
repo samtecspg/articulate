@@ -3,15 +3,16 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ sessionId, frameId,  }) {
+module.exports = async function ({ sessionId, frameId  }) {
 
     const { contextService } = await this.server.services();
 
     try {
-        const Frame = await contextService.findFrameBySessionAndFrame({sessionId, frameId, returnModel: true})
+        const Frame = await contextService.findFrameBySessionAndFrame({ sessionId, frameId, returnModel: true });
         if (Frame.inDb) {
             await Frame.removeInstance();
-        } else {
+        }
+        else {
             return Promise.reject(NotFoundErrorHandler({ model: MODEL_FRAME, id: frameId }));
         }
     }

@@ -13,7 +13,7 @@ module.exports = async function ({ sessionId, frameId, returnModel = false }) {
     try {
         const Session = await redis.factory(MODEL_CONTEXT);
         await Session.findBySessionId({ sessionId });
-        const Frame = await globalService.findById({id: frameId, model: MODEL_FRAME, returnModel: true});
+        const Frame = await globalService.findById({ id: frameId, model: MODEL_FRAME, returnModel: true });
 
         if (Session.inDb) {
             if (Frame.inDb) {
@@ -22,10 +22,12 @@ module.exports = async function ({ sessionId, frameId, returnModel = false }) {
                 if (belongs) {
                     return returnModel ? Frame : Frame.allProperties();
                 }
-            } else {
+            }
+            else {
                 return Promise.reject(NotFoundErrorHandler({ model: MODEL_FRAME, id: frameId }));
             }
-        } else {
+        }
+        else {
             return Promise.reject(NotFoundErrorHandler({ model: MODEL_CONTEXT, id: sessionId }));
         }
     }

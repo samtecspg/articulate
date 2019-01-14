@@ -26,7 +26,7 @@ class ContextValidate {
                     rasa_results: Model.rasa_results.required(),
                     session: Model.session.required(),
                     agent_id: Model.agent_id.required(),
-                    agent_model: Model.agent_model.required(),
+                    agent_model: Model.agent_model.required()
                 };
             })()
         };
