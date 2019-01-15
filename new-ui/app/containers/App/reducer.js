@@ -14,10 +14,8 @@ import {
   ADD_HEADER_ACTION_WEBHOOK,
   ADD_HEADER_AGENT_WEBHOOK,
   ADD_KEYWORD_EXAMPLE,
-  ADD_NEW_SLOT,
   ADD_SAYING,
   ADD_SAYING_ERROR,
-  ADD_SLOT_TEXT_PROMPT_SLOT,
   CHAIN_ACTION_TO_RESPONSE,
   CHANGE_ACTION_DATA,
   CHANGE_ACTION_NAME,
@@ -37,8 +35,6 @@ import {
   CHANGE_KEYWORD_DATA,
   CHANGE_POST_FORMAT_DATA,
   CHANGE_SETTINGS_DATA,
-  CHANGE_SLOT_DATA,
-  CHANGE_SLOT_NAME,
   CHANGE_WEBHOOK_DATA,
   CHANGE_WEBHOOK_PAYLOAD_TYPE,
   CHECK_API,
@@ -74,8 +70,6 @@ import {
   DELETE_KEYWORD_SUCCESS,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
-  DELETE_SLOT,
-  DELETE_SLOT_TEXT_PROMPT_SLOT,
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
@@ -123,7 +117,20 @@ import {
   SELECT_CATEGORY,
   SEND_MESSAGE,
   SEND_SAYING_TO_ACTION,
+  ADD_NEW_SLOT,
+  ADD_SLOT_TEXT_PROMPT_SLOT,
+  CHANGE_SLOT_DATA,
+  CHANGE_SLOT_NAME,
+  DELETE_SLOT,
+  DELETE_SLOT_TEXT_PROMPT_SLOT,
   SORT_SLOTS,
+  ADD_NEW_MODIFIER,
+  ADD_MODIFIER_SAYING,
+  CHANGE_MODIFIER_DATA,
+  CHANGE_MODIFIER_NAME,
+  DELETE_MODIFIER,
+  DELETE_MODIFIER_SAYING,
+  SORT_MODIFIERS,
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
@@ -147,6 +154,8 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  UNTAG_MODIFIER_KEYWORD,
+  TAG_MODIFIER_KEYWORD,
 } from './constants';
 
 const happyEmojies = ['😀', '😁', '😃', '😄', '😉', '😎', '🙂', '🤩', '😛', '😜', '🙃', '😬', '🤓', '😺', '😸', '💪', '🤙', '👌', '👍', '🤚', '👏', '🙌', '🎖', '🏆', '🏅', '🥇', '🎉', '🎊'];
@@ -223,6 +232,7 @@ const initialState = Immutable({
     uiColor: '#e91e63',
     keywordName: '',
     examples: [],
+    modifiers: [],
   },
   keywords: [],
   totalKeywords: 0,
@@ -265,6 +275,7 @@ const initialState = Immutable({
   actions: [],
   newSayingActions: [],
   actionTouched: false,
+  keywordTouched: false,
   newSlot: {
     slotName: 'New Slot',
     uiColor: '#4e4e4e',
@@ -272,6 +283,14 @@ const initialState = Immutable({
     keywordId: '0',
     isList: false,
     isRequired: false,
+    textPrompts: [],
+  },
+  newModifier: {
+    modifierName: 'New Modifier',
+    action: 'SET',
+    valueSource: 'keyword',
+    staticValue: '',
+    sayings: [],
     textPrompts: [],
   },
   totalActions: 0,
@@ -730,8 +749,6 @@ function appReducer(state = initialState, action) {
         .set('actionTouched', true);
     case CHANGE_ACTION_DATA:
       return state.setIn(['action', action.payload.field], action.payload.value);
-    case ADD_NEW_SLOT:
-      return state.updateIn(['action', 'slots'], slots => slots.concat(state.newSlot));
     case ADD_ACTION_RESPONSE:
       return state.updateIn(['action', 'responses'], responses => responses.concat({ textResponse: action.newResponse, actions: [] }));
     case DELETE_ACTION_RESPONSE:
@@ -750,63 +767,6 @@ function appReducer(state = initialState, action) {
         }
         return tempResponse;
       }));
-    case CHANGE_SLOT_NAME:
-      return state
-        .updateIn(['action', 'slots'], slots =>
-          slots.map((slot, index) => {
-            if (index === action.payload.slotIndex) {
-              const slotName = action.payload.slotName;
-              return slot
-                .set('slotName', slotName);
-            }
-
-            return slot;
-
-          }),
-        )
-        .set('actionTouched', true);
-    case CHANGE_SLOT_DATA:
-      return state
-        .updateIn(['action', 'slots'], slots =>
-          slots.map((slot, index) => {
-            if (index === action.payload.slotIndex) {
-              return slot
-                .set(action.payload.field, action.payload.value);
-            }
-
-            return slot;
-
-          }),
-        )
-        .set('actionTouched', true);
-    case ADD_SLOT_TEXT_PROMPT_SLOT:
-      return state
-        .updateIn(['action', 'slots'], slots =>
-          slots.map((slot, index) => {
-            if (index === action.payload.slotIndex) {
-              return slot
-                .update('textPrompts', textPrompts => textPrompts.concat(action.payload.newTextPrompt));
-            }
-
-            return slot;
-
-          }),
-        )
-        .set('actionTouched', true);
-    case DELETE_SLOT_TEXT_PROMPT_SLOT:
-      return state
-        .updateIn(['action', 'slots'], slots =>
-          slots.map((slot, index) => {
-            if (index === action.payload.slotIndex) {
-              return slot
-                .update('textPrompts', textPrompts => textPrompts.filter((item, index) => index !== action.payload.textPromptIndex));
-            }
-
-            return slot;
-
-          }),
-        )
-        .set('actionTouched', true);
     case CHANGE_ACTION_WEBHOOK_DATA:
       return state.setIn(['actionWebhook', action.payload.field], action.payload.value);
     case CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE:
@@ -913,6 +873,65 @@ function appReducer(state = initialState, action) {
         }
         return header;
       }));
+    case ADD_NEW_SLOT:
+      return state.updateIn(['action', 'slots'], slots => slots.concat(state.newSlot));
+    case CHANGE_SLOT_NAME:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex) {
+              const slotName = action.payload.slotName;
+              return slot
+                .set('slotName', slotName);
+            }
+
+            return slot;
+
+          }),
+        )
+        .set('actionTouched', true);
+    case CHANGE_SLOT_DATA:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex) {
+              return slot
+                .set(action.payload.field, action.payload.value);
+            }
+
+            return slot;
+
+          }),
+        )
+        .set('actionTouched', true);
+    case ADD_SLOT_TEXT_PROMPT_SLOT:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex) {
+              return slot
+                .update('textPrompts', textPrompts => textPrompts.concat(action.payload.newTextPrompt));
+            }
+
+            return slot;
+
+          }),
+        )
+        .set('actionTouched', true);
+    case DELETE_SLOT_TEXT_PROMPT_SLOT:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.payload.slotIndex) {
+              return slot
+                .update('textPrompts', textPrompts => textPrompts.filter((item, index) => index !== action.payload.textPromptIndex));
+            }
+
+            return slot;
+
+          }),
+        )
+        .set('actionTouched', true);
     case SORT_SLOTS:
       const tempSlots = Immutable.asMutable(state.action.slots, { deep: true });
       tempSlots.splice(action.newIndex, 0, tempSlots.splice(action.oldIndex, 1)[0]);
@@ -923,6 +942,123 @@ function appReducer(state = initialState, action) {
       oldSlots.splice(action.slotIndex, 1);
       return state
         .setIn(['action', 'slots'], Immutable(oldSlots));
+
+    case ADD_NEW_MODIFIER:
+      return state.updateIn(['keyword', 'modifiers'], modifiers => modifiers.concat(state.newModifier));
+    case CHANGE_MODIFIER_NAME:
+      return state
+        .updateIn(['keyword', 'modifiers'], modifiers =>
+          modifiers.map((modifier, index) => {
+            if (index === action.payload.modifierIndex) {
+              const modifierName = action.payload.modifierName;
+              return modifier
+                .set('modifierName', modifierName);
+            }
+
+            return modifier;
+
+          }),
+        )
+        .set('keywordTouched', true);
+    case CHANGE_MODIFIER_DATA:
+      return state
+        .updateIn(['keyword', 'modifiers'], modifiers =>
+          modifiers.map((modifier, index) => {
+            if (index === action.payload.modifierIndex) {
+              return modifier
+                .set(action.payload.field, action.payload.value);
+            }
+
+            return modifier;
+
+          }),
+        )
+        .set('keywordTouched', true);
+    case ADD_MODIFIER_SAYING:
+      return state
+        .updateIn(['keyword', 'modifiers'], modifiers =>
+          modifiers.map((modifier, index) => {
+            if (index === action.payload.modifierIndex) {
+              return modifier
+                .update('sayings', sayings => sayings.concat({
+                  userSays: action.payload.newSaying,
+                  keywords: [],
+                }));
+            }
+
+            return modifier;
+
+          }),
+        )
+        .set('keywordTouched', true);
+    case DELETE_MODIFIER_SAYING:
+      return state
+        .updateIn(['keyword', 'modifiers'], modifiers =>
+          modifiers.map((modifier, index) => {
+            if (index === action.payload.modifierIndex) {
+              return modifier
+                .update('sayings', sayings => sayings.filter((item, index) => index !== action.payload.sayingIndex));
+            }
+
+            return modifier;
+
+          }),
+        )
+        .set('keywordTouched', true);
+    case SORT_MODIFIERS:
+      const tempModifiers = Immutable.asMutable(state.action.modifiers, { deep: true });
+      tempModifiers.splice(action.newIndex, 0, tempModifiers.splice(action.oldIndex, 1)[0]);
+      return state
+        .setIn(['keyword', 'modifiers'], Immutable(tempModifiers));
+    case DELETE_MODIFIER:
+      const oldModifiers = Immutable.asMutable(state.action.modifiers, { deep: true });
+      oldModifiers.splice(action.modifierIndex, 1);
+      return state
+        .setIn(['keyword', 'modifiers'], Immutable(oldModifiers));
+    case TAG_MODIFIER_KEYWORD:
+      const keywordToAdd = {
+        value: action.value,
+        keyword: action.keywordName,
+        start: action.start,
+        end: action.end,
+        keywordId: action.keywordId,
+      }
+      return state
+        .updateIn(['keyword', 'modifiers'], modifiers =>
+          modifiers.map((modifier, index) => {
+            if (index === action.modifierIndex) {
+              return modifier
+                .update('sayings', sayings => sayings.map((saying, index) => {
+                  if (index === action.sayingIndex){
+                    return saying.update('keywords', keywords => keywords.concat(keywordToAdd));
+                  }
+                  return saying;
+                }));
+            }
+            return modifier;
+
+          }),
+        )
+        .set('keywordTouched', true);
+    case UNTAG_MODIFIER_KEYWORD:
+      return state
+        .updateIn(['keyword', 'modifiers'], modifiers =>
+          modifiers.map((modifier, modifierIndex) => {
+            if (modifierIndex === action.modifierIndex) {
+              return modifier
+                .update('sayings', sayings => sayings.map((saying, sayingIndex) => {
+                  if (sayingIndex === action.sayingIndex){
+                    return saying.update('keywords', keywords => keywords.filter((keyword) => {
+                      return keyword.start !== action.start || keyword.end !== action.end
+                    }));
+                  }
+                  return saying;
+                }));
+            }
+            return modifier;
+          }),
+        )
+        .set('keywordTouched', true);
 
     /* Keyword */
     case CHANGE_KEYWORD_DATA:

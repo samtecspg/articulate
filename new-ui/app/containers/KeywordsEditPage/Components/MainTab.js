@@ -194,6 +194,10 @@ export class MainTab extends React.Component {
             this.props.selectedTab === 'values' ?
               (this.props.valuesForm) : null
           }
+          {
+            this.props.selectedTab === 'modifiers' ?
+              (this.props.modifiersForm) : null
+          }
         </Hidden>
         <Hidden only={['xl', 'lg', 'md']}>
           <Grid container justify='space-between'>
@@ -271,6 +275,10 @@ export class MainTab extends React.Component {
             this.props.selectedTab === 'values' ?
               (this.props.valuesForm) : null
           }
+          {
+            this.props.selectedTab === 'modifiers' ?
+              (this.props.modifiersForm) : null
+          }
         </Hidden>
       </Grid>
     );
@@ -283,6 +291,7 @@ MainTab.propTypes = {
   selectedTab: PropTypes.string,
   keywordForm: PropTypes.node,
   valuesForm: PropTypes.node,
+  modifiersForm: PropTypes.node,
   onChangeTab: PropTypes.func,
   onFinishAction: PropTypes.func.isRequired,
   onNextAction: PropTypes.func.isRequired,

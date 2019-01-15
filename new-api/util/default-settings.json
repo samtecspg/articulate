@@ -703,6 +703,34 @@
       "text": "Spanish"
     }
   ],
+  "modifierActions": [
+    {
+      "value": "SET",
+      "text": "SET"
+    },
+    {
+      "value": "UNSET",
+      "text": "UNSET"
+    },
+    {
+      "value": "ADD",
+      "text": "ADD"
+    },
+    {
+      "value": "REMOVE",
+      "text": "REMOVE"
+    }
+  ],
+  "modifierValueSources": [
+    {
+      "value": "keyword",
+      "text": "Keyword Values"
+    },
+    {
+      "value": "static",
+      "text": "Static Value"
+    }
+  ],
   "defaultAgentLanguage": "en",
   "defaultaFallbackActionName": "Default Fallback Action",
   "defaultAgentFallbackResponses": [
@@ -710,6 +738,7 @@
     "I'm still learning to speak with humans. What you mean?"
   ],
   "sayingsPageSize": 5,
+  "modifierSayingsPageSize": 5,
   "keywordsPageSize": 5,
   "reviewPageSize": 5
 }

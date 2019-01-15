@@ -27,10 +27,6 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.ActionForm.actionFormDescription',
     defaultMessage: 'Actions are in charge of helping your agent with the conversation management. You can link user sayings to actions, therefore, your agent will learn from this and will be able to talk back with your users.',
   },
-  slotsFormTitle: {
-    id: 'app.containers.ActionPage.component.ActionForm.slotsFormTitle',
-    defaultMessage: 'Slots',
-  },
   help: {
     id: 'app.containers.ActionPage..help',
     defaultMessage: 'Help?',
@@ -50,10 +46,6 @@ export default defineMessages({
   action: {
     id: 'app.containers.ActionPage.component.MainTab.action',
     defaultMessage: 'Action: ',
-  },
-  slots: {
-    id: 'app.containers.ActionPage.component.MainTab.slots',
-    defaultMessage: 'Slots',
   },
   webhook: {
     id: 'app.containers.ActionPage.component.MainTab.webhook',
@@ -82,30 +74,6 @@ export default defineMessages({
   textpromptTextField: {
     id: 'app.containers.ActionPage.components.SlotForm.textpromptTextField',
     defaultMessage: 'Agent Prompts:',
-  },
-  textpromptTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.components.SlotForm.textpromptTextFieldPlaceholder',
-    defaultMessage: 'Write bot\'s response when this slot is required and it is missing',
-  },
-  textpromptHelperText: {
-    id: 'app.containers.ActionPage.component.SlotForm.textpromptHelperText',
-    defaultMessage: '*Please add at least one text prompt if the slot is required',
-  },
-  slotNameTextField: {
-    id: 'app.containers.ActionPage.component.SlotForm.slotNameTextField',
-    defaultMessage: 'Slot Name',
-  },
-  slotNameTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.component.SlotForm.slotNameTextFieldPlaceholder',
-    defaultMessage: 'Set a name to reference the slot in your responses',
-  },
-  slotIsRequired: {
-    id: 'app.containers.ActionPage.component.SlotForm.slotIsRequired',
-    defaultMessage: 'Is Required?',
-  },
-  slotIsList: {
-    id: 'app.containers.ActionPage.component.SlotForm.slotIsList',
-    defaultMessage: 'Is List?',
   },
   newSlotTab: {
     id: 'app.containers.ActionPage.component.SlotsForm.newSlotTab',
@@ -150,5 +118,37 @@ export default defineMessages({
   noName: {
     id: 'app.containers.KeywordsEditPage.component.MainTab.noName',
     defaultMessage: 'No name'
-  }
+  },
+  slotsFormTitle: {
+    id: 'app.containers.ActionPage.component.ActionForm.slotsFormTitle',
+    defaultMessage: 'Slots',
+  },
+  slots: {
+    id: 'app.containers.ActionPage.component.MainTab.slots',
+    defaultMessage: 'Slots',
+  },
+  textpromptTextFieldPlaceholder: {
+    id: 'app.containers.ActionPage.components.SlotForm.textpromptTextFieldPlaceholder',
+    defaultMessage: 'Write bot\'s response when this slot is required and it is missing',
+  },
+  textpromptHelperText: {
+    id: 'app.containers.ActionPage.component.SlotForm.textpromptHelperText',
+    defaultMessage: '*Please add at least one text prompt if the slot is required',
+  },
+  slotNameTextField: {
+    id: 'app.containers.ActionPage.component.SlotForm.slotNameTextField',
+    defaultMessage: 'Slot Name',
+  },
+  slotNameTextFieldPlaceholder: {
+    id: 'app.containers.ActionPage.component.SlotForm.slotNameTextFieldPlaceholder',
+    defaultMessage: 'Set a name to reference the slot in your responses',
+  },
+  slotIsRequired: {
+    id: 'app.containers.ActionPage.component.SlotForm.slotIsRequired',
+    defaultMessage: 'Is Required?',
+  },
+  slotIsList: {
+    id: 'app.containers.ActionPage.component.SlotForm.slotIsList',
+    defaultMessage: 'Is List?',
+  },
 });

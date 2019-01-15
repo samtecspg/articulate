@@ -129,15 +129,10 @@ export const LOAD_ACTION_ERROR = 'app/ActionPage/LOAD_ACTION_ERROR';
 export const LOAD_ACTION_SUCCESS = 'app/ActionPage/LOAD_ACTION_SUCCESS';
 export const CHANGE_ACTION_NAME = 'app/ActionPage/CHANGE_ACTION_NAME';
 export const CHANGE_ACTION_DATA = 'app/ActionPage/CHANGE_ACTION_DATA';
-export const ADD_NEW_SLOT = 'app/ActionPage/ADD_NEW_SLOT';
 export const ADD_ACTION_RESPONSE = 'app/ActionPage/ADD_ACTION_RESPONSE';
 export const CHAIN_ACTION_TO_RESPONSE = 'app/ActionPage/CHAIN_ACTION_TO_RESPONSE';
 export const UNCHAIN_ACTION_FROM_RESPONSE = 'app/ActionPage/UNCHAIN_ACTION_FROM_RESPONSE';
 export const DELETE_ACTION_RESPONSE = 'app/ActionPage/DELETE_ACTION_RESPONSE';
-export const CHANGE_SLOT_NAME = 'app/ActionPage/CHANGE_SLOT_NAME';
-export const CHANGE_SLOT_DATA = 'app/ActionPage/CHANGE_SLOT_DATA';
-export const ADD_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/ADD_SLOT_TEXT_PROMPT_SLOT';
-export const DELETE_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/DELETE_SLOT_TEXT_PROMPT_SLOT';
 export const CHANGE_ACTION_WEBHOOK_DATA = 'app/ActionPage/CHANGE_ACTION_WEBHOOK_DATA';
 export const CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE = 'app/ActionPage/CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE';
 export const CHANGE_ACTION_POST_FORMAT_DATA = 'app/ActionPage/CHANGE_ACTION_POST_FORMAT_DATA';
@@ -154,6 +149,11 @@ export const ADD_HEADER_ACTION_WEBHOOK = 'app/ActionPage/ADD_HEADER_ACTION_WEBHO
 export const DELETE_HEADER_ACTION_WEBHOOK = 'app/ActionPage/DELETE_HEADER_ACTION_WEBHOOK';
 export const CHANGE_HEADER_KEY_ACTION_WEBHOOK = 'app/ActionPage/CHANGE_HEADER_KEY_ACTION_WEBHOOK';
 export const CHANGE_HEADER_VALUE_ACTION_WEBHOOK = 'app/ActionPage/CHANGE_HEADER_VALUE_ACTION_WEBHOOK';
+export const ADD_NEW_SLOT = 'app/ActionPage/ADD_NEW_SLOT';
+export const CHANGE_SLOT_NAME = 'app/ActionPage/CHANGE_SLOT_NAME';
+export const CHANGE_SLOT_DATA = 'app/ActionPage/CHANGE_SLOT_DATA';
+export const ADD_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/ADD_SLOT_TEXT_PROMPT_SLOT';
+export const DELETE_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/DELETE_SLOT_TEXT_PROMPT_SLOT';
 export const SORT_SLOTS = 'app/ActionPage/SORT_SLOTS';
 export const DELETE_SLOT = 'app/ActionPage/DELETE_SLOT';
 
@@ -178,6 +178,15 @@ export const CHANGE_EXAMPLE_NAME = 'app/KeywordsEditPage/CHANGE_EXAMPLE_NAME';
 export const DELETE_KEYWORD = 'app/KeywordsPage/DELETE_KEYWORD';
 export const DELETE_KEYWORD_ERROR = 'app/KeywordsPage/DELETE_KEYWORD_ERROR';
 export const DELETE_KEYWORD_SUCCESS = 'app/KeywordsPage/DELETE_KEYWORD_SUCCESS'
+export const ADD_NEW_MODIFIER = 'app/KeywordsPage/ADD_NEW_MODIFIER';
+export const CHANGE_MODIFIER_NAME = 'app/ActKeywordsPageionPage/CHANGE_MODIFIER_NAME';
+export const CHANGE_MODIFIER_DATA = 'app/KeywordsPage/CHANGE_MODIFIER_DATA';
+export const ADD_MODIFIER_SAYING = 'app/KeywordsPage/ADD_MODIFIER_SAYING';
+export const DELETE_MODIFIER_SAYING = 'app/KeywordsPage/DELETE_MODIFIER_SAYING';
+export const SORT_MODIFIERS = 'app/KeywordsPage/SORT_MODIFIERS';
+export const DELETE_MODIFIER = 'app/KeywordsPage/DELETE_MODIFIER';
+export const TAG_MODIFIER_KEYWORD = 'app/KeywordsPage/TAG_MODIFIER_KEYWORD';
+export const UNTAG_MODIFIER_KEYWORD = 'app/KeywordsPage/UNTAG_MODIFIER_KEYWORD';
 
 /*
  * Category

@@ -40,13 +40,8 @@ import {
   loadKeywords,
   changeActionName,
   changeActionData,
-  addNewSlot,
   addActionResponse,
   deleteActionResponse,
-  changeSlotName,
-  changeSlotData,
-  addSlotTextPrompt,
-  deleteSlotTextPrompt,
   changeActionWebhookData,
   changeActionWebhookPayloadType,
   changeActionPostFormatData,
@@ -61,6 +56,11 @@ import {
   changeHeaderNameActionWebhook,
   changeHeaderValueActionWebhook,
   deleteAction,
+  addNewSlot,
+  changeSlotName,
+  changeSlotData,
+  addSlotTextPrompt,
+  deleteSlotTextPrompt,
   sortSlots,
   deleteSlot
 } from '../App/actions';
@@ -299,7 +299,7 @@ export class ActionPage extends React.Component {
               action={this.props.action}
               onChangeActionName={this.props.onChangeActionName}
               errorState={this.state.errorState}
-              newAction={this.state.isNewKeyword}
+              newAction={this.state.isNewAction}
               onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
             />
           }
@@ -315,7 +315,7 @@ export class ActionPage extends React.Component {
               saying={this.props.saying}
               agentKeywords={this.props.agentKeywords}
               errorState={this.state.errorState}
-              newAction={this.state.isNewKeyword}
+              newAction={this.state.isNewAction}
               onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
               onSortSlots={this.props.onSortSlots}
               onDeleteSlot={this.props.onDeleteSlot}
@@ -333,7 +333,7 @@ export class ActionPage extends React.Component {
               onChangeHeaderName={this.props.onChangeHeaderName}
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               errorState={this.state.errorState}
-              newAction={this.state.isNewKeyword}
+              newAction={this.state.isNewAction}
               onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
             />
           }
@@ -351,7 +351,7 @@ export class ActionPage extends React.Component {
               onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
               errorState={this.state.errorState}
               agentActions={this.props.agentActions}
-              newAction={this.state.isNewKeyword}
+              newAction={this.state.isNewAction}
               onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
             />
           }
@@ -365,7 +365,6 @@ export class ActionPage extends React.Component {
 ActionPage.propTypes = {
   classes: PropTypes.object.isRequired,
   action: PropTypes.object,
-  newSlot: PropTypes.object,
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
   success: PropTypes.bool,
@@ -377,11 +376,14 @@ ActionPage.propTypes = {
   onEditAction: PropTypes.func,
   onChangeActionName: PropTypes.func,
   onChangeActionData: PropTypes.func,
+  newSlot: PropTypes.object,
   onChangeSlotData: PropTypes.func,
-  onAddTextPrompt: PropTypes.func,
-  onDeleteTextPrompt: PropTypes.func,
   onAddNewSlot: PropTypes.func,
   onChangeSlotName: PropTypes.func,
+  onSortSlots: PropTypes.func,
+  onDeleteSlot: PropTypes.func,
+  onAddTextPrompt: PropTypes.func,
+  onDeleteTextPrompt: PropTypes.func,
   onChangeWebhookData: PropTypes.func,
   onChangeWebhookPayloadType: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
@@ -396,8 +398,6 @@ ActionPage.propTypes = {
   onSuccess: PropTypes.func,
   agentActions: PropTypes.array,
   onDelete: PropTypes.func,
-  onSortSlots: PropTypes.func,
-  onDeleteSlot: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -428,9 +428,6 @@ function mapDispatchToProps(dispatch) {
     onChangeActionData: (field, value) => {
       dispatch(changeActionData({ field, value }));
     },
-    onAddNewSlot: () => {
-      dispatch(addNewSlot());
-    },
     onAddResponse: (response) => {
       dispatch(addActionResponse(response));
     },
@@ -442,18 +439,6 @@ function mapDispatchToProps(dispatch) {
     },
     onUnchainActionFromResponse: (responseIndex, actionIndex) => {
       dispatch(unchainActionFromResponse(responseIndex, actionIndex));
-    },
-    onChangeSlotName: (slotIndex, slotName) => {
-      dispatch(changeSlotName({slotIndex, slotName}));
-    },
-    onChangeSlotData: (slotIndex, field, value) => {
-      dispatch(changeSlotData({slotIndex, field, value}))
-    },
-    onAddTextPrompt: (slotIndex, newTextPrompt) => {
-      dispatch(addSlotTextPrompt({slotIndex, newTextPrompt}))
-    },
-    onDeleteTextPrompt: (slotIndex, textPromptIndex) => {
-      dispatch(deleteSlotTextPrompt({slotIndex, textPromptIndex}));
     },
     onChangeWebhookData: (field, value) => {
       dispatch(changeActionWebhookData({field, value}));
@@ -491,6 +476,21 @@ function mapDispatchToProps(dispatch) {
     },
     onDelete: (id, actionName) => {
       dispatch(deleteAction(id, actionName));
+    },
+    onAddNewSlot: () => {
+      dispatch(addNewSlot());
+    },
+    onChangeSlotName: (slotIndex, slotName) => {
+      dispatch(changeSlotName({slotIndex, slotName}));
+    },
+    onChangeSlotData: (slotIndex, field, value) => {
+      dispatch(changeSlotData({slotIndex, field, value}))
+    },
+    onAddTextPrompt: (slotIndex, newTextPrompt) => {
+      dispatch(addSlotTextPrompt({slotIndex, newTextPrompt}))
+    },
+    onDeleteTextPrompt: (slotIndex, textPromptIndex) => {
+      dispatch(deleteSlotTextPrompt({slotIndex, textPromptIndex}));
     },
     onSortSlots: (oldIndex, newIndex) => {
       dispatch(sortSlots(oldIndex, newIndex));

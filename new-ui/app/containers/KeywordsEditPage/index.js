@@ -23,6 +23,8 @@ import {
   makeSelectKeyword,
   makeSelectAgent,
   makeSelectSuccess,
+  makeSelectSettings,
+  makeSelectKeywords,
 } from '../App/selectors';
 
 import {
@@ -37,7 +39,17 @@ import {
   resetStatusFlag,
   changeExampleName,
   deleteKeyword,
+  addNewModifier,
+  changeModifierName,
+  changeModifierData,
+  addModifierSaying,
+  deleteModifierSaying,
+  sortModifiers,
+  deleteModifier,
+  untagModifierKeyword,
+  tagModifierKeyword
 } from '../App/actions';
+import ModifiersForm from './Components/ModifiersForm';
 
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsEditPage extends React.Component {
@@ -85,13 +97,15 @@ export class KeywordsEditPage extends React.Component {
 
   state = {
     isNewKeyword: this.props.match.params.keywordId === 'create',
-    currentTab: 'keyword',
+    currentTab: 'modifiers',
     userCompletedAllRequiredFields: false,
     formError: false,
     errorState: {
       keywordName: false,
       examples: false,
+      modifiers: [],
       tabs: [],
+      modifiersTabs: [],
     },
   };
 
@@ -100,7 +114,9 @@ export class KeywordsEditPage extends React.Component {
     const newErrorState = {
       keywordName: false,
       examples: false,
+      modifiers: [],
       tabs: [],
+      modifiersTabs: [],
     };
 
     if (!this.props.keyword.keywordName || this.props.keyword.keywordName === ''){
@@ -119,6 +135,44 @@ export class KeywordsEditPage extends React.Component {
     }
     else {
       newErrorState.examples = false;
+    }
+
+    if (this.props.action.modifiers.length > 0){
+      this.props.action.modifiers.forEach((modifier, modifierIndex) => {
+        const newModifierError = {
+          modifierName: false,
+          keyword: false,
+          textPrompts: false,
+        };
+        if (!modifier.modifierName){
+          errors = true;
+          newModifierError.modifierName = true;
+          newErrorState.tabs.push(1);
+          newErrorState.modifiersTabs.push(modifierIndex);
+        }
+        else{
+          newModifierError.modifierName = false;
+        }
+        if (!modifier.keyword){
+          errors = true;
+          newModifierError.keyword = true;
+          newErrorState.tabs.push(1);
+          newErrorState.modifiersTabs.push(modifierIndex);
+        }
+        else{
+          newModifierError.keyword = false;
+        }
+        if (modifier.isRequired && modifier.textPrompts.length === 0){
+          errors = true;
+          newModifierError.textPrompts = true;
+          newErrorState.tabs.push(1);
+          newErrorState.modifiersTabs.push(modifierIndex);
+        }
+        else{
+          newModifierError.textPrompts = false;
+        }
+        newErrorState.modifiers.push(newModifierError);
+      });
     }
 
     if (!errors){
@@ -176,6 +230,26 @@ export class KeywordsEditPage extends React.Component {
               onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
             />
           }
+          modifiersForm={
+            <ModifiersForm
+              keyword={this.props.keyword}
+              settings={this.props.settings}
+              onChangeModifierData={this.props.onChangeModifierData}
+              onAddModifierSaying={this.props.onAddModifierSaying}
+              onDeleteModifierSaying={this.props.onDeleteModifierSaying}
+              onAddNewModifier={this.props.onAddNewModifier}
+              onChangeModifierName={this.props.onChangeModifierName}
+              errorState={this.state.errorState}
+              newKeyword={this.state.isNewKeyword}
+              onSortModifiers={this.props.onSortModifiers}
+              onDeleteModifier={this.props.onDeleteModifier}
+              onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
+              agentKeywords={this.props.agentKeywords}
+              onUntagModifierKeyword={this.props.onUntagModifierKeyword}
+              onTagModifierKeyword={this.props.onTagModifierKeyword}
+              modifierSayingsPageSize={this.props.settings.modifierSayingsPageSize}
+            />
+          }
           onChangeTab={this.onChangeTab}
         />
       </Grid>
@@ -186,6 +260,7 @@ export class KeywordsEditPage extends React.Component {
 KeywordsEditPage.propTypes = {
   agent: PropTypes.object,
   keywords: PropTypes.object,
+  settings: PropTypes.object,
   onResetData: PropTypes.func,
   onLoadKeyword: PropTypes.func,
   onCreateKeyword: PropTypes.func,
@@ -195,12 +270,22 @@ KeywordsEditPage.propTypes = {
   onDeleteKeywordExample: PropTypes.func,
   onChangeExampleSynonyms: PropTypes.func,
   onDelete: PropTypes.func,
+  newModifier: PropTypes.object,
+  onChangeModifierData: PropTypes.func,
+  onAddNewModifier: PropTypes.func,
+  onChangeModifierName: PropTypes.func,
+  onSortModifiers: PropTypes.func,
+  onDeleteModifier: PropTypes.func,
+  onUntagModifierKeyword: PropTypes.func,
+  agentKeywords: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   keyword: makeSelectKeyword(),
   success: makeSelectSuccess(),
+  settings: makeSelectSettings(),
+  agentKeywords: makeSelectKeywords(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -241,6 +326,33 @@ function mapDispatchToProps(dispatch) {
     },
     onDelete: (id) => {
       dispatch(deleteKeyword(id));
+    },
+    onAddNewModifier: () => {
+      dispatch(addNewModifier());
+    },
+    onChangeModifierName: (modifierIndex, modifierName) => {
+      dispatch(changeModifierName({modifierIndex, modifierName}));
+    },
+    onChangeModifierData: (modifierIndex, field, value) => {
+      dispatch(changeModifierData({modifierIndex, field, value}))
+    },
+    onAddModifierSaying: (modifierIndex, newSaying) => {
+      dispatch(addModifierSaying({modifierIndex, newSaying}))
+    },
+    onDeleteModifierSaying: (modifierIndex, sayingIndex) => {
+      dispatch(deleteModifierSaying({modifierIndex, sayingIndex}));
+    },
+    onSortModifiers: (oldIndex, newIndex) => {
+      dispatch(sortModifiers(oldIndex, newIndex));
+    },
+    onDeleteModifier: (modifierIndex) => {
+      dispatch(deleteModifier(modifierIndex));
+    },
+    onTagModifierKeyword: (modifierIndex, sayingIndex, value, start, end, keywordId, keywordName) => {
+      dispatch(tagModifierKeyword(modifierIndex, sayingIndex, value, start, end, keywordId, keywordName));
+    },
+    onUntagModifierKeyword: (modifierIndex, sayingIndex, start, end) => {
+      dispatch(untagModifierKeyword(modifierIndex, sayingIndex, start, end));
     },
   };
 }

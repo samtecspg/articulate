@@ -19,10 +19,8 @@ import {
   ADD_HEADER_ACTION_WEBHOOK,
   ADD_HEADER_AGENT_WEBHOOK,
   ADD_KEYWORD_EXAMPLE,
-  ADD_NEW_SLOT,
   ADD_SAYING,
   ADD_SAYING_ERROR,
-  ADD_SLOT_TEXT_PROMPT_SLOT,
   CHAIN_ACTION_TO_RESPONSE,
   CHANGE_ACTION_DATA,
   CHANGE_ACTION_NAME,
@@ -45,8 +43,6 @@ import {
   CHANGE_REVIEW_PAGE_SIZE,
   CHANGE_SAYINGS_PAGE_SIZE,
   CHANGE_SETTINGS_DATA,
-  CHANGE_SLOT_DATA,
-  CHANGE_SLOT_NAME,
   CHANGE_WEBHOOK_DATA,
   CHANGE_WEBHOOK_PAYLOAD_TYPE,
   CHECK_API,
@@ -83,8 +79,6 @@ import {
   DELETE_KEYWORD_SUCCESS,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
-  DELETE_SLOT,
-  DELETE_SLOT_TEXT_PROMPT_SLOT,
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
@@ -133,7 +127,20 @@ import {
   SELECT_CATEGORY,
   SEND_MESSAGE,
   SEND_SAYING_TO_ACTION,
+  ADD_NEW_SLOT,
+  ADD_SLOT_TEXT_PROMPT_SLOT,
+  CHANGE_SLOT_DATA,
+  CHANGE_SLOT_NAME,
+  DELETE_SLOT,
+  DELETE_SLOT_TEXT_PROMPT_SLOT,
   SORT_SLOTS,
+  ADD_NEW_MODIFIER,
+  ADD_MODIFIER_SAYING,
+  CHANGE_MODIFIER_DATA,
+  CHANGE_MODIFIER_NAME,
+  DELETE_MODIFIER,
+  DELETE_MODIFIER_SAYING,
+  SORT_MODIFIERS,
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
@@ -157,6 +164,8 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  TAG_MODIFIER_KEYWORD,
+  UNTAG_MODIFIER_KEYWORD,
 } from './constants';
 
 /*
@@ -899,13 +908,6 @@ export function changeActionData(payload) {
     payload,
   };
 }
-
-export function addNewSlot() {
-  return {
-    type: ADD_NEW_SLOT,
-  };
-}
-
 export function addActionResponse(newResponse) {
   return {
     type: ADD_ACTION_RESPONSE,
@@ -933,34 +935,6 @@ export function unchainActionFromResponse(responseIndex, actionIndex) {
     type: UNCHAIN_ACTION_FROM_RESPONSE,
     responseIndex,
     actionIndex,
-  };
-}
-
-export function changeSlotName(payload) {
-  return {
-    type: CHANGE_SLOT_NAME,
-    payload,
-  };
-}
-
-export function changeSlotData(payload) {
-  return {
-    type: CHANGE_SLOT_DATA,
-    payload,
-  };
-}
-
-export function addSlotTextPrompt(payload) {
-  return {
-    type: ADD_SLOT_TEXT_PROMPT_SLOT,
-    payload,
-  };
-}
-
-export function deleteSlotTextPrompt(payload) {
-  return {
-    type: DELETE_SLOT_TEXT_PROMPT_SLOT,
-    payload,
   };
 }
 
@@ -1075,6 +1049,40 @@ export function changeHeaderValueActionWebhook(headerIndex, value) {
     type: CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
     headerIndex,
     value,
+  };
+}
+
+export function addNewSlot() {
+  return {
+    type: ADD_NEW_SLOT,
+  };
+}
+
+export function changeSlotName(payload) {
+  return {
+    type: CHANGE_SLOT_NAME,
+    payload,
+  };
+}
+
+export function changeSlotData(payload) {
+  return {
+    type: CHANGE_SLOT_DATA,
+    payload,
+  };
+}
+
+export function addSlotTextPrompt(payload) {
+  return {
+    type: ADD_SLOT_TEXT_PROMPT_SLOT,
+    payload,
+  };
+}
+
+export function deleteSlotTextPrompt(payload) {
+  return {
+    type: DELETE_SLOT_TEXT_PROMPT_SLOT,
+    payload,
   };
 }
 
@@ -1198,6 +1206,78 @@ export function changeExampleSynonyms(exampleIndex, synonyms) {
     type: CHANGE_EXAMPLE_SYNONYMS,
     exampleIndex,
     synonyms,
+  };
+}
+
+export function addNewModifier() {
+  return {
+    type: ADD_NEW_MODIFIER,
+  };
+}
+
+export function changeModifierName(payload) {
+  return {
+    type: CHANGE_MODIFIER_NAME,
+    payload,
+  };
+}
+
+export function changeModifierData(payload) {
+  return {
+    type: CHANGE_MODIFIER_DATA,
+    payload,
+  };
+}
+
+export function addModifierSaying(payload) {
+  return {
+    type: ADD_MODIFIER_SAYING,
+    payload,
+  };
+}
+
+export function deleteModifierSaying(payload) {
+  return {
+    type: DELETE_MODIFIER_SAYING,
+    payload,
+  };
+}
+
+export function sortModifiers(oldIndex, newIndex) {
+  return {
+    type: SORT_MODIFIERS,
+    oldIndex,
+    newIndex,
+  };
+}
+
+export function deleteModifier(modifierIndex) {
+  return {
+    type: DELETE_MODIFIER,
+    modifierIndex,
+  };
+}
+
+export function tagModifierKeyword(modifierIndex, sayingIndex, value, start, end, keywordId, keywordName) {
+  return {
+    type: TAG_MODIFIER_KEYWORD,
+    modifierIndex,
+    sayingIndex,
+    value,
+    start,
+    end,
+    keywordId,
+    keywordName,
+  };
+}
+
+export function untagModifierKeyword(modifierIndex, sayingIndex, start, end) {
+  return {
+    type: UNTAG_MODIFIER_KEYWORD,
+    modifierIndex,
+    sayingIndex,
+    start,
+    end,
   };
 }
 

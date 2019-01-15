@@ -559,7 +559,7 @@ class SayingsDataForm extends React.Component {
                       value={this.props.currentPage}
                       onChange={(evt) => {
                         evt.target.value === '' ?
-                          this.props.changePage(0) :
+                          this.props.changePage(1) :
                           (evt.target.value <= this.props.numberOfPages && evt.target.value >= 0 ?
                             this.props.changePage(evt.target.value) :
                             false);
