@@ -36,6 +36,8 @@ const SettingsSchema = require('../models/settings.model').schema;
 const SayingSchema = require('../models/saying.model').schema;
 const SayingKeywordSchema = require('../models/saying.keyword.model').schema;
 const ParseSchema = require('../models/parse.model').schema;
+const ModifierSchema = require('../models/modifier.model').schema;
+const ModifierSayingSchema = require('../models/modifier.saying.model').schema;
 
 class AgentValidate {
     constructor() {
@@ -177,7 +179,24 @@ class AgentValidate {
                     examples: Joi.array().items({
                         value: KeywordExampledSchema.value.required(),
                         synonyms: KeywordExampledSchema.synonyms.required()
-                    }).min(1).required()
+                    }).min(1).required(),
+                    modifiers: Joi.array().items({
+                        modifierName: ModifierSchema.modifierName.required(),
+                        action: ModifierSchema.action.required(),
+                        valueSource: ModifierSchema.valueSource.required(),
+                        staticValue: ModifierSchema.staticValue,
+                        sayings: Joi.array().items({
+                            userSays: ModifierSayingSchema.userSays.required(),
+                            keywords: Joi.array().items({
+                                start: SayingKeywordSchema.start.required(),
+                                end: SayingKeywordSchema.end.required(),
+                                value: SayingKeywordSchema.value.required(),
+                                keyword: SayingKeywordSchema.keyword.required(),
+                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                extractor: SayingKeywordSchema.extractor
+                            })
+                        })
+                    })
                 };
             })()
         };
@@ -576,6 +595,23 @@ class AgentValidate {
                         value: KeywordExampledSchema.value.required(),
                         synonyms: KeywordExampledSchema.synonyms.required()
                     }),
+                    modifiers: Joi.array().items({
+                        modifierName: ModifierSchema.modifierName.required(),
+                        action: ModifierSchema.action.required(),
+                        valueSource: ModifierSchema.valueSource.required(),
+                        staticValue: ModifierSchema.staticValue,
+                        sayings: Joi.array().items({
+                            userSays: ModifierSayingSchema.userSays.required(),
+                            keywords: Joi.array().items({
+                                start: SayingKeywordSchema.start.required(),
+                                end: SayingKeywordSchema.end.required(),
+                                value: SayingKeywordSchema.value.required(),
+                                keyword: SayingKeywordSchema.keyword.required(),
+                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                extractor: SayingKeywordSchema.extractor
+                            })
+                        })
+                    }),
                     creationDate: KeywordSchema.creationDate,
                     modificationDate: KeywordSchema.modificationDate
                 };
@@ -743,7 +779,24 @@ class AgentValidate {
                         examples: Joi.array().items({
                             value: KeywordExampledSchema.value.required(),
                             synonyms: KeywordExampledSchema.synonyms
-                        }).required()
+                        }).required(),
+                        modifiers: Joi.array().items({
+                            modifierName: ModifierSchema.modifierName.required(),
+                            action: ModifierSchema.action.required(),
+                            valueSource: ModifierSchema.valueSource.required(),
+                            staticValue: ModifierSchema.staticValue,
+                            sayings: Joi.array().items({
+                                userSays: ModifierSayingSchema.userSays.required(),
+                                keywords: Joi.array().items({
+                                    start: SayingKeywordSchema.start.required(),
+                                    end: SayingKeywordSchema.end.required(),
+                                    value: SayingKeywordSchema.value.required(),
+                                    keyword: SayingKeywordSchema.keyword.required(),
+                                    keywordId: SayingKeywordSchema.keywordId.required(),
+                                    extractor: SayingKeywordSchema.extractor
+                                })
+                            })
+                        })
                     }),
                     categories: Joi.array().items({
                         categoryName: CategorySchema.categoryName.required(),

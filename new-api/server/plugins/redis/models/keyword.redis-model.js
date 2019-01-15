@@ -18,7 +18,10 @@ const schema = {
     },
     type: {
         type: 'string'
-    }
+    },
+    modifiers: {
+        type: 'json'
+    },
 };
 
 class KeywordRedisModel extends BaseModel {

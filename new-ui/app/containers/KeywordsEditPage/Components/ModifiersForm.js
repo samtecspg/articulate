@@ -158,6 +158,11 @@ class ModifiersForm extends React.Component {
               </Grid>
             </Modal>
           </Grid>
+          <Grid className={classes.formDescriptionContainer} container>
+            <Typography className={classes.formDescription}>
+              <FormattedMessage {...messages.modifierFormDescription} />
+            </Typography>
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <SortableModifiersTabs

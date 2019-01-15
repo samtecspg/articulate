@@ -291,7 +291,6 @@ const initialState = Immutable({
     valueSource: 'keyword',
     staticValue: '',
     sayings: [],
-    textPrompts: [],
   },
   totalActions: 0,
   currentAction: {

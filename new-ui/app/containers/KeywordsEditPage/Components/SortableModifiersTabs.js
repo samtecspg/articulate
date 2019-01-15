@@ -40,7 +40,7 @@ const styles = {
     borderRadius: '50%',
     position: 'absolute',
     top: '10px',
-    left: '5px'
+    left: '0px'
   },
   numOfErrorsLabel: {
     fontSize: '10px',

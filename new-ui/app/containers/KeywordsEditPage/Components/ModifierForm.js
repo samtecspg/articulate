@@ -198,6 +198,7 @@ class ModifierForm extends React.Component {
                     shrink: true,
                   }}
                   helperText={intl.formatMessage(messages.requiredField)}
+                  error={this.props.errorState ? this.props.errorState.action : false}
                 >
                   {
                     settings.modifierActions.map((action) => (
@@ -226,6 +227,7 @@ class ModifierForm extends React.Component {
                     shrink: true,
                   }}
                   helperText={intl.formatMessage(messages.requiredField)}
+                  error={this.props.errorState ? this.props.errorState.valueSource : false}
                 >
                   {
                     settings.modifierValueSources.map((valueSource) => (

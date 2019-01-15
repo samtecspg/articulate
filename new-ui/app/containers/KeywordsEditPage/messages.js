@@ -7,6 +7,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  modifierFormDescription: {
+    id: 'app.containers.KeywordsEditPage.modifierFormDescription',
+    defaultMessage: 'Keyword modifiers are special kind of user saying that take a keyword and turn it into an action. These saying can modify the slot values by setting, adding, and removing values from slots.',
+  },
   createSubtitle: {
     id: 'app.containers.KeywordsEditPage.createSubtitle',
     defaultMessage: 'Create',

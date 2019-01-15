@@ -97,7 +97,7 @@ export class KeywordsEditPage extends React.Component {
 
   state = {
     isNewKeyword: this.props.match.params.keywordId === 'create',
-    currentTab: 'modifiers',
+    currentTab: 'keyword',
     userCompletedAllRequiredFields: false,
     formError: false,
     errorState: {
@@ -137,39 +137,49 @@ export class KeywordsEditPage extends React.Component {
       newErrorState.examples = false;
     }
 
-    if (this.props.action.modifiers.length > 0){
-      this.props.action.modifiers.forEach((modifier, modifierIndex) => {
+    if (this.props.keyword.modifiers.length > 0){
+      this.props.keyword.modifiers.forEach((modifier, modifierIndex) => {
         const newModifierError = {
           modifierName: false,
-          keyword: false,
-          textPrompts: false,
+          action: false,
+          sourceValue: false,
+          staticValue: false,
         };
         if (!modifier.modifierName){
           errors = true;
           newModifierError.modifierName = true;
-          newErrorState.tabs.push(1);
+          newErrorState.tabs.push(2);
           newErrorState.modifiersTabs.push(modifierIndex);
         }
         else{
           newModifierError.modifierName = false;
         }
-        if (!modifier.keyword){
+        if (!modifier.action){
           errors = true;
-          newModifierError.keyword = true;
-          newErrorState.tabs.push(1);
+          newModifierError.action = true;
+          newErrorState.tabs.push(2);
           newErrorState.modifiersTabs.push(modifierIndex);
         }
         else{
-          newModifierError.keyword = false;
+          newModifierError.action = false;
         }
-        if (modifier.isRequired && modifier.textPrompts.length === 0){
+        if (!modifier.valueSource){
           errors = true;
-          newModifierError.textPrompts = true;
-          newErrorState.tabs.push(1);
+          newModifierError.valueSource = true;
+          newErrorState.tabs.push(2);
           newErrorState.modifiersTabs.push(modifierIndex);
         }
         else{
-          newModifierError.textPrompts = false;
+          newModifierError.valueSource = false;
+        }
+        if (modifier.valueSource && modifier.valueSource === 'static' && !modifier.staticValue){
+          errors = true;
+          newModifierError.staticValue = true;
+          newErrorState.tabs.push(2);
+          newErrorState.modifiersTabs.push(modifierIndex);
+        }
+        else{
+          newModifierError.staticValue = false;
         }
         newErrorState.modifiers.push(newModifierError);
       });
