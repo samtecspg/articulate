@@ -202,6 +202,7 @@ class ValuesForm extends React.Component {
                   <Grid className={classes.keywordValueInputContainer} item xs={9}>
                     <ChipInput
                       defaultValue={Immutable.asMutable(example.synonyms, {deep:true})}
+                      label={exampleIndex === 0 ? intl.formatMessage(messages.newKeywordSynonymTextField) : null}
                       onChange={(synonyms) => { this.props.onChangeExampleSynonyms(exampleIndex, synonyms) } }
                       fullWidth
                       disableUnderline

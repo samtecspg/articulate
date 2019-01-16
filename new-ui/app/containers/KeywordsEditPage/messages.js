@@ -107,6 +107,10 @@ export default defineMessages({
     id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextField',
     defaultMessage: 'Value:',
   },
+  newKeywordSynonymTextField: {
+    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextField',
+    defaultMessage: 'Synonyms:',
+  },
   newKeywordValueTextFieldPlaceholder: {
     id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextFieldPlaceholder',
     defaultMessage: 'Type keyword value',
