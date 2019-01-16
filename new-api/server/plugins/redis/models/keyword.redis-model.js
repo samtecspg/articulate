@@ -22,6 +22,12 @@ const schema = {
     modifiers: {
         type: 'json'
     },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
+    }
 };
 
 class KeywordRedisModel extends BaseModel {

@@ -17,6 +17,12 @@ const schema = {
     },
     usePostFormat: {
         type: 'boolean'
+    },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
     }
 };
 

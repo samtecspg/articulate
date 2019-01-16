@@ -81,14 +81,6 @@ module.exports = class BaseModel extends NohmModel {
     constructor({ schema }) {
 
         super();
-        schema.creationDate = {
-            type: 'timestamp'
-        };
-
-        schema.modificationDate = {
-            type: 'timestamp'
-        };
-
         this.schema = schema;
     }
 

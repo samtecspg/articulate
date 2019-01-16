@@ -13,6 +13,12 @@ const schema = {
     },
     responseQueue: {
         type: 'json'
+    },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
     }
 };
 

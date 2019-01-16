@@ -10,6 +10,12 @@ const schema = {
     },
     actions: {
         type: 'json'
+    },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
     }
 };
 

@@ -4,6 +4,12 @@ import BaseModel from '../lib/base-model';
 const schema = {
     postFormatPayload: {
         type: 'string'
+    },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
     }
 };
 

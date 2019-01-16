@@ -22,6 +22,12 @@ const schema = {
     },
     webhookPassword: {
         type: 'string'
+    },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
     }
 };
 

@@ -24,6 +24,12 @@ const schema = {
     },
     extraTrainingData: {
         type: 'boolean'
+    },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
     }
 };
 

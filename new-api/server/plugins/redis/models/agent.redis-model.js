@@ -54,6 +54,12 @@ const schema = {
     categoryRecognizer: {
         type: 'boolean',
         defaultValue: false
+    },
+    creationDate: {
+        type: 'timestamp'
+    },
+    modificationDate: {
+        type: 'timestamp'
     }
 };
 

@@ -7,20 +7,6 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-const validateExamplesAreEqual = ({ prevExamples, newExamples }) => {
-
-    const prevExampleValues = _.map(prevExamples, 'value').sort();
-    const newExampleValues = _.map(newExamples, 'value').sort();
-    if (!_.isEqual(prevExampleValues, newExampleValues)) {
-        return true;
-    }
-    return newExamples.some((newExample) => {
-
-        const currentExistingExample = prevExamples.find((prevExample) => newExample.value === prevExample.value);
-        return !_.isEqual(newExample.synonyms.sort(), currentExistingExample.synonyms.sort());
-    });
-
-};
 module.exports = async function ({ id, keywordId, keywordData, returnModel = false }) {
 
     const { globalService } = await this.server.services();
@@ -32,30 +18,27 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
         const models = await globalService.getAllModelsInPath({ modelPath, ids: modelPathIds, returnModel: true });
         const AgentModel = models[MODEL_AGENT];
         const KeywordModel = models[MODEL_KEYWORD];
-        let requiresRetrain = keywordData.examples && validateExamplesAreEqual({ prevExamples: KeywordModel.property('examples'), newExamples: keywordData.examples });
-        requiresRetrain = requiresRetrain || (keywordData.regex && keywordData.regex !== KeywordModel.property('regex'));
         await KeywordModel.updateInstance({ data: keywordData });
 
-        if (requiresRetrain) {
-            // Update Agent and related categories status
-            // TODO: Publish Agent update
-            AgentModel.property('status', STATUS_OUT_OF_DATE);
-            await AgentModel.saveInstance();
+        // Update Agent and related categories status
+        // TODO: Publish Agent update
+        AgentModel.property('status', STATUS_OUT_OF_DATE);
+        await AgentModel.saveInstance();
 
-            const keywordCategoryIds = await KeywordModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
-            const KeywordCategoryModels = await globalService.loadAllByIds({
-                ids: keywordCategoryIds, //Only load the keywords we are going to use
-                model: MODEL_CATEGORY,
-                returnModel: true
-            });
+        const keywordCategoryIds = await KeywordModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
+        const KeywordCategoryModels = await globalService.loadAllByIds({
+            ids: keywordCategoryIds, //Only load the keywords we are going to use
+            model: MODEL_CATEGORY,
+            returnModel: true
+        });
 
-            const categoryStatusUpdatePromise = KeywordCategoryModels.map(async (CategoryModel) => {
+        const categoryStatusUpdatePromise = KeywordCategoryModels.map(async (CategoryModel) => {
 
-                CategoryModel.property('status', STATUS_OUT_OF_DATE);
-                return await CategoryModel.saveInstance();
-            });
-            await Promise.all(categoryStatusUpdatePromise);
-        }
+            CategoryModel.property('status', STATUS_OUT_OF_DATE);
+            return await CategoryModel.saveInstance();
+        });
+        await Promise.all(categoryStatusUpdatePromise);
+
         return returnModel ? KeywordModel : KeywordModel.allProperties();
 
     }
