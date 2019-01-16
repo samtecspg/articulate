@@ -21,7 +21,7 @@ module.exports = async function ({ keywords, sayings }) {
 
     const {  globalService  } = await this.server.services();
 
-    const usedKeywords = _.compact(_.uniq(_.map(_.map(sayings, (saying) => {
+    const usedKeywordsBySayings = _.compact(_.uniq(_.map(_.map(sayings, (saying) => {
 
         if (saying.keywords) {
             return _.compact(_.map(saying.keywords, (keyword) => {
@@ -34,6 +34,23 @@ module.exports = async function ({ keywords, sayings }) {
 
         return tuple.join('-');
     })));
+
+    const modifiersSayings = _.flatten(_.map(_.flatten(_.map(keywords, 'modifiers')), 'sayings'));
+    const usedKeywordsByModifiers = _.compact(_.uniq(_.map(_.map(modifiersSayings, (saying) => {
+
+        if (saying.keywords) {
+            return _.compact(_.map(saying.keywords, (keyword) => {
+
+                return keyword.extractor ? null : keyword.keyword;
+            }));
+        }
+        return null;
+    }), (tuple) => {
+
+        return tuple.join('-');
+    })));
+
+    const usedKeywords = _.uniq(usedKeywordsBySayings.concat(usedKeywordsByModifiers));
 
     const combinations = {};
     await Promise.all(_.map(usedKeywords, async (key) => {

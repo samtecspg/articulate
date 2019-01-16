@@ -9,6 +9,99 @@ import {
 import RedisErrorHandler from '../../errors/redis.error-handler';
 import InvalidActionSayingsCount from '../../errors/global.invalid-actions-sayings-count';
 
+const getCommonExamples = (sayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions) => {
+
+    const commonExamples = _.uniq(_.flatten(_.map(sayings, (saying) => {
+
+        const keywordsList = _.compact(_.map(saying.keywords, (keyword) => {
+
+            return keyword.extractor ? null : keyword;
+        }));
+
+        if (keywordsList && keywordsList.length > 0) {
+            if (extraTrainingData) {
+                const keywordsOfSaying = _.map(keywordsList, 'keyword');
+                const keyOfKeywords = keywordsOfSaying.join('-');
+                let combinationsForThisSaying = keywordsCombinations[keyOfKeywords];
+                combinationsForThisSaying = combinationsForThisSaying.length === 1 ? _.flatten(combinationsForThisSaying) : combinationsForThisSaying;
+
+                return _.map(combinationsForThisSaying, (combination) => {
+
+                    let sayingText = saying.userSays;
+                    const lowestStart = keywordsList[0].start;
+                    const newKeywordsList = [];
+                    let shift = 0;
+                    const combinationValues = Array.isArray(combination) ? combination : [combination];
+
+                    keywordsList.forEach((keyword, i) => {
+
+                        const textValue = combinationValues[i].keywordText;
+                        const keywordValue = combinationValues[i].keywordValue;
+                        const newStart = lowestStart === keyword.start ? keyword.start : keyword.start + shift;
+                        const newEnd = newStart + textValue.length;
+                        const replacementStart = i === 0 ? keyword.start : newStart;
+                        const replacementFinish = i === 0 ? keyword.end : keyword.end + shift;
+                        sayingText = sayingText.substring(0, replacementStart) + textValue + sayingText.substring(replacementFinish);
+                        newKeywordsList.push({
+                            start: newStart,
+                            end: newEnd,
+                            value: keywordValue,
+                            entity: keyword.keyword
+                        });
+                        shift = newEnd - keyword.end;
+                    });
+
+                    if (!categoryName){
+                        saying.actions.forEach((actionName) => {
+                            sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
+                        });
+                    }
+                    return {
+                        text: sayingText,
+                        intent: categoryName || saying.actions.join('+'),
+                        entities: newKeywordsList
+                    };
+                });
+            }
+
+            const newKeywordsList = [];
+
+            keywordsList.forEach((tempKeyword) => {
+
+                newKeywordsList.push({
+                    start: tempKeyword.start,
+                    end: tempKeyword.end,
+                    value: tempKeyword.value,
+                    entity: tempKeyword.keyword
+                });
+            });
+            
+            if (!categoryName){
+                saying.actions.forEach((actionName) => {
+                    sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
+                });
+            }
+            return {
+                text: saying.userSays,
+                intent: categoryName || saying.actions.join('+'),
+                entities: newKeywordsList
+            };
+        }
+
+        if (!categoryName){
+            saying.actions.forEach((actionName) => {
+                sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
+            });
+        }
+        return {
+            text: saying.userSays,
+            intent: categoryName || saying.actions.join('+'),
+            entities: []
+        };
+    })));
+    return commonExamples;
+};
+
 module.exports = async function ({ keywords, sayings, extraTrainingData, isKeyword = true, categoryName = null }) {
 
     const {
@@ -22,96 +115,17 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
             keywordsCombinations = await keywordService.combinationsFromSayings({ keywords, sayings });
         }
         const sayingsPerActions = {};
-        const uniqueActionsCount = _.uniq(_.flattenDeep(_.map(sayings, 'actions'))).length;
-        const commonExamples = _.uniq(_.flatten(_.map(sayings, (saying) => {
 
-            const keywordsList = _.compact(_.map(saying.keywords, (keyword) => {
+        const commonExamplesUserSayings = getCommonExamples(sayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
 
-                return keyword.extractor ? null : keyword;
-            }));
-
-            if (keywordsList && keywordsList.length > 0) {
-                if (extraTrainingData) {
-                    const keywordsOfSaying = _.map(keywordsList, 'keyword');
-                    const keyOfKeywords = keywordsOfSaying.join('-');
-                    let combinationsForThisSaying = keywordsCombinations[keyOfKeywords];
-                    combinationsForThisSaying = combinationsForThisSaying.length === 1 ? _.flatten(combinationsForThisSaying) : combinationsForThisSaying;
-
-                    return _.map(combinationsForThisSaying, (combination) => {
-
-                        let sayingText = saying.userSays;
-                        const lowestStart = keywordsList[0].start;
-                        const newKeywordsList = [];
-                        let shift = 0;
-                        const combinationValues = Array.isArray(combination) ? combination : [combination];
-
-                        keywordsList.forEach((keyword, i) => {
-
-                            const textValue = combinationValues[i].keywordText;
-                            const keywordValue = combinationValues[i].keywordValue;
-                            const newStart = lowestStart === keyword.start ? keyword.start : keyword.start + shift;
-                            const newEnd = newStart + textValue.length;
-                            const replacementStart = i === 0 ? keyword.start : newStart;
-                            const replacementFinish = i === 0 ? keyword.end : keyword.end + shift;
-                            sayingText = sayingText.substring(0, replacementStart) + textValue + sayingText.substring(replacementFinish);
-                            newKeywordsList.push({
-                                start: newStart,
-                                end: newEnd,
-                                value: keywordValue,
-                                entity: keyword.keyword
-                            });
-                            shift = newEnd - keyword.end;
-                        });
-
-                        if (!categoryName){
-                            saying.actions.forEach((actionName) => {
-                                sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
-                            });
-                        }
-                        return {
-                            text: sayingText,
-                            intent: categoryName || saying.actions.join('+'),
-                            entities: newKeywordsList
-                        };
-                    });
-                }
-
-                const newKeywordsList = [];
-
-                keywordsList.forEach((tempKeyword) => {
-
-                    newKeywordsList.push({
-                        start: tempKeyword.start,
-                        end: tempKeyword.end,
-                        value: tempKeyword.value,
-                        entity: tempKeyword.keyword
-                    });
-                });
-
-                if (!categoryName){
-                    saying.actions.forEach((actionName) => {
-                        sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
-                    });
-                }
-                return {
-                    text: saying.userSays,
-                    intent: categoryName || saying.actions.join('+'),
-                    entities: newKeywordsList
-                };
-            }
-
-            if (!categoryName){
-                saying.actions.forEach((actionName) => {
-                    sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
-                });
-            }
-            return {
-                text: saying.userSays,
-                intent: categoryName || saying.actions.join('+'),
-                entities: []
-            };
-        })));
-
+        const modifiersSayings = _.flatten(_.map(_.flatten(_.map(keywords, 'modifiers')), (modifier) => {
+            return _.map(modifier.sayings, (saying) => {
+                saying.actions = [modifier.modifierName];
+                return saying;
+            });
+        }));
+        const commonExamplesModifiersSayings = getCommonExamples(modifiersSayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
+        
         const actionsWithJustOneSaying = Object.keys(sayingsPerActions).filter((actionName) => {
 
             return sayingsPerActions[actionName] === 1;
@@ -151,9 +165,9 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
 
         return {
             sayingsPerActions,
-            numberOfSayings: uniqueActionsCount,
+            numberOfSayings: Object.keys(sayingsPerActions).length,
             [RASA_NLU_DATA]: {
-                [RASA_COMMON_EXAMPLES]: commonExamples,
+                [RASA_COMMON_EXAMPLES]: commonExamplesUserSayings.concat(commonExamplesModifiersSayings),
                 [RASA_REGEX_FEATURES]: regexs,
                 [`${isKeyword ? RASA_KEYWORD_SYNONYMS : RASA_ENTITY_SYNONYMS}`]: keywordSynonyms
             }
