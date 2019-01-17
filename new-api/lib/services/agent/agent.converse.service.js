@@ -147,7 +147,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         //MARK: CSO.parse ===true
         if (conversationStateObject.parse) {
             //MARK: if the model recognized an action
-            if (conversationStateObject.action){
+            if (conversationStateObject.action && !conversationStateObject.modifier){
                 //MARK: if there is an action but no responses call RespondFallback and persist context
                 if (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0) {
                     await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
@@ -184,7 +184,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
 
             //MARK: if the model recognized a modifier
-            if (conversationStateObject.modifier){
+            if (conversationStateObject.modifier && conversationStateObject.action){
                 //MARK: get the slots of the current context action
                 const currentFrameSlotsKeywords = _.map(conversationStateObject.action.slots, 'keyword');
                 //MARK: if the modifier applies to the current context
