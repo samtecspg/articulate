@@ -94,7 +94,7 @@ export class KeywordsPage extends React.Component {
 
   movePageForward(){
     let newPage = this.state.currentPage;
-    if (this.state.currentPage < this.getTotalPages()){
+    if (this.state.currentPage < this.state.numberOfPages){
       newPage = this.state.currentPage + 1;
     }
     this.changePage(newPage);
