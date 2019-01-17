@@ -91,7 +91,7 @@ export class MainTab extends React.Component {
     const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave, agentTouched } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
-        <Hidden only={['sm', 'xs']}>
+        <Hidden only={['sm', 'xs', 'md']}>
           <Grid container justify='space-between'>
             <Grid>
               <Tabs
@@ -131,12 +131,12 @@ export class MainTab extends React.Component {
               {
                 disableSave || !agentTouched ? null :
                   <Grid item className={classes.actionContainer}>
-                    <Hidden only={['xl', 'lg', 'md']}>
+                    <Hidden only={['xl', 'lg']}>
                       <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
                         <Icon>save</Icon>
                       </a>
                     </Hidden>
-                    <Hidden only={['sm', 'xs']}>
+                    <Hidden only={['sm', 'xs', 'md']}>
                       <Grid className={classes.buttonContainer}>
                         <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
                           <FormattedMessage {...messages.finishButton} />
@@ -172,7 +172,7 @@ export class MainTab extends React.Component {
               : null
           }
         </Hidden>
-        <Hidden only={['xl', 'lg', 'md']}>
+        <Hidden only={['xl', 'lg']}>
           <Grid container justify='space-between'>
             <Grid>
               <Tabs
@@ -211,12 +211,12 @@ export class MainTab extends React.Component {
               {
                 disableSave || !agentTouched ? null :
                   <Grid item className={classes.actionContainer}>
-                    <Hidden only={['xl', 'lg', 'md']}>
+                    <Hidden only={['xl', 'lg']}>
                       <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
                         <Icon>save</Icon>
                       </a>
                     </Hidden>
-                    <Hidden only={['sm', 'xs']}>
+                    <Hidden only={['sm', 'xs', 'md']}>
                       <Grid className={classes.buttonContainer}>
                         <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
                           <FormattedMessage {...messages.finishButton} />
