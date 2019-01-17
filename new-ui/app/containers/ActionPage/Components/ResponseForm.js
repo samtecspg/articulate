@@ -180,7 +180,7 @@ class ResponseForm extends React.Component {
                     label={intl.formatMessage(messages.responseTextField)}
                     placeholder={intl.formatMessage(messages.responseTextFieldPlaceholder)}
                     onKeyPress={(ev) => {
-                      if (ev.key === 'Enter') {
+                      if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
                         ev.preventDefault();
                         this.props.onAddResponse(ev.target.value);
                         ev.target.value = '';
