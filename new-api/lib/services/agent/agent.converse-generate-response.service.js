@@ -24,10 +24,11 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
         const recognizedKeywords = rasaResult.keywords;
         const overridedSlots = [];
         if (modifier){
-            const slotToModify = _.filter(Object.keys(lastFrame.slots), (slot) => {
+            const actionSlot = _.filter(action.slots, (slot) => {
 
-                return lastFrame.slots[slot].keyword === modifier.keyword;
+                return slot.keyword === modifier.keyword;
             })[0];
+            const slotToModify = actionSlot.slotName;
             if (modifier.valueSource === 'keyword'){
                 const recognizedKeywordsOfSameTypeThanModifierKeyword = _.filter(recognizedKeywords, (recognizedKeyword) => {
     
@@ -48,7 +49,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                         }
                         else {
                             lastFrame.slots[slotToModify] = {
-                                keyword: lastFrame.slots[slotToModify].keyword,
+                                keyword: modifier.keyword,
                                 value: lastFrame.slots[slotToModify].value ? [lastFrame.slots[slotToModify].value] : [],
                                 original: lastFrame.slots[slotToModify].original ? [lastFrame.slots[slotToModify].original] : []
                             };
@@ -85,7 +86,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                     case 'SET':
                         if (Array.isArray(lastFrame.slots[slotToModify].value) || recognizedModifierKeywordsValues.length > 1){
                             lastFrame.slots[slotToModify] = {
-                                keyword: lastFrame.slots[slotToModify].keyword,
+                                keyword: modifier.keyword,
                                 value: [],
                                 original: []
                             };
@@ -97,7 +98,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                         }
                         else {
                             lastFrame.slots[slotToModify] = {
-                                keyword: lastFrame.slots[slotToModify].keyword,
+                                keyword: modifier.keyword,
                                 value: recognizedModifierKeywordsValues[0].value,
                                 original: recognizedModifierKeywordsValues[0].original
                             };
@@ -119,7 +120,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                         }
                         else {
                             lastFrame.slots[slotToModify] = {
-                                keyword: lastFrame.slots[slotToModify].keyword,
+                                keyword: modifier.keyword,
                                 value: lastFrame.slots[slotToModify].value ? [lastFrame.slots[slotToModify].value] : [],
                                 original: lastFrame.slots[slotToModify].original ? [lastFrame.slots[slotToModify].original] : []
                             };
@@ -151,7 +152,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                     case 'SET':
                         if (Array.isArray(lastFrame.slots[slotToModify].value)){
                             lastFrame.slots[slotToModify] = {
-                                keyword: lastFrame.slots[slotToModify].keyword,
+                                keyword: modifier.keyword,
                                 value: [],
                                 original: []
                             };
@@ -160,7 +161,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                         }
                         else {
                             lastFrame.slots[slotToModify] = {
-                                keyword: lastFrame.slots[slotToModify].keyword,
+                                keyword: modifier.keyword,
                                 value: modifier.staticValue,
                                 original: modifier.staticValue
                             };

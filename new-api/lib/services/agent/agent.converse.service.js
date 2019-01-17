@@ -144,15 +144,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
     const response = async ({ conversationStateObject }) => {
 
-        //MARK: Get the last frame context from the context array
-        conversationStateObject.currentFrame = _.last(conversationStateObject.context.frames);
         //MARK: CSO.parse ===true
         if (conversationStateObject.parse) {
-            //MARK: get category recognizer, 1 category or list of keywords from all categories
-            conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, categoryClassifierThreshold: conversationStateObject.agent.categoryClassifierThreshold });
-            //MARK: if there is an action, look for it in the agent actions
-            conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult, agentActions: conversationStateObject.agent.actions });
-            //MAKR: if the model recognized an action
+            //MARK: if the model recognized an action
             if (conversationStateObject.action){
                 //MARK: if there is an action but no responses call RespondFallback and persist context
                 if (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0) {
@@ -188,17 +182,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     return actionResponse;
                 }
             }
-            //MARK: look if the model recognized a modifier
-            conversationStateObject.modifier = getModifierData({ rasaResult: conversationStateObject.rasaResult, agentKeywords: conversationStateObject.agent.keywords });
-            if (conversationStateObject.modifier){
-                const currentFrameSlotsKeywords = _.map(Object.keys(conversationStateObject.currentFrame.slots), (slot) => {
 
-                    return conversationStateObject.currentFrame.slots[slot].keyword;
-                });
+            //MARK: if the model recognized a modifier
+            if (conversationStateObject.modifier){
+                //MARK: get the slots of the current context action
+                const currentFrameSlotsKeywords = _.map(conversationStateObject.action.slots, 'keyword');
                 //MARK: if the modifier applies to the current context
                 if (currentFrameSlotsKeywords.indexOf(conversationStateObject.modifier.keyword) !== -1){
-                    //MARK: get data of the action to modify 
-                    conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
                     //MARK: generate response using the modifier
                     const actionResponse = await agentService.converseGenerateResponse({
                         agent: conversationStateObject.agent,
@@ -432,16 +422,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
             }
             conversationStateObject[CSO_CONTEXT] = context;
+            //MARK: Get the last frame context from the context array
+            conversationStateObject.currentFrame = _.last(conversationStateObject.context.frames);
 
-            const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: recognizedActionName });
-            if (indexOfActionInQueue !== -1) {
-                moveOnQueue({
-                    context: conversationStateObject.context,
-                    oldIndex: indexOfActionInQueue,
-                    newIndex: currentQueueIndex
-                });
-                currentQueueIndex++;
-            }
             ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name = recognizedActionName;
             conversationStateObject.docId = ParsedDocument.id;
             conversationStateObject.parse = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS];
@@ -455,6 +438,28 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject[key] = value;
                     }
                 });
+            }
+
+            //MARK: get category recognizer, 1 category or list of keywords from all categories
+            conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, categoryClassifierThreshold: conversationStateObject.agent.categoryClassifierThreshold });
+            //MARK: if there is an action, look for it in the agent actions
+            conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult, agentActions: conversationStateObject.agent.actions });
+            if (!conversationStateObject.action){
+                //MARK: look if the model recognized a modifier
+                conversationStateObject.modifier = getModifierData({ rasaResult: conversationStateObject.rasaResult, agentKeywords: conversationStateObject.agent.keywords });
+                if (conversationStateObject.modifier) {
+                    conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
+                }
+            }
+
+            const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action ? conversationStateObject.action.actionName : recognizedActionName });
+            if (indexOfActionInQueue !== -1) {
+                moveOnQueue({
+                    context: conversationStateObject.context,
+                    oldIndex: indexOfActionInQueue,
+                    newIndex: currentQueueIndex
+                });
+                currentQueueIndex++;
             }
 
             const agentToolResponse = await response({ conversationStateObject });
