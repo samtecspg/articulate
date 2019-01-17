@@ -31,7 +31,7 @@ const schema = {
         type: 'float'
     },
     fallbackAction: {
-        type: 'integer'
+        type: 'string'
     },
     status: {
         type: 'string'

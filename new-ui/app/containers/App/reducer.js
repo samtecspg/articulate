@@ -199,7 +199,7 @@ const initialState = Immutable({
     extraTrainingData: false,
     enableModelsPerCategory: true,
     multiCategory: true,
-    fallbackAction: 0,
+    fallbackAction: '',
     categoryClassifierThreshold: 50,
   },
   agentWebhook: {

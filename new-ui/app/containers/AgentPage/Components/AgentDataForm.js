@@ -201,7 +201,7 @@ class AgentDataForm extends React.Component {
                 }                
                 {
                   this.props.agentActions.map((action) => (
-                    <MenuItem key={action.id} value={action.id}>
+                    <MenuItem key={action.id} value={action.actionName}>
                       {action.actionName}
                     </MenuItem>
                   ))

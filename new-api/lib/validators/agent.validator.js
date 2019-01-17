@@ -796,7 +796,9 @@ class AgentValidate {
                                     extractor: SayingKeywordSchema.extractor
                                 })
                             })
-                        })
+                        }),
+                        creationDate: KeywordSchema.creationDate,
+                        modificationDate: KeywordSchema.modificationDate
                     }),
                     categories: Joi.array().items({
                         categoryName: CategorySchema.categoryName.required(),
@@ -816,8 +818,12 @@ class AgentValidate {
                                 start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
                                 end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
                                 extractor: SayingKeywordSchema.extractor
-                            }).required().allow([])
-                        })
+                            }).required().allow([]),
+                            creationDate: KeywordSchema.creationDate,
+                            modificationDate: KeywordSchema.modificationDate
+                        }),
+                        creationDate: KeywordSchema.creationDate,
+                        modificationDate: KeywordSchema.modificationDate
                     }),
                     actions: Joi.array().items({
                         actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
@@ -850,8 +856,12 @@ class AgentValidate {
                             isList: SlotSchema.isList.required(),
                             isRequired: SlotSchema.isRequired.required(),
                             textPrompts: SlotSchema.textPrompts
-                        })
-                    })
+                        }),
+                        creationDate: KeywordSchema.creationDate,
+                        modificationDate: KeywordSchema.modificationDate
+                    }),
+                    creationDate: KeywordSchema.creationDate,
+                    modificationDate: KeywordSchema.modificationDate
                 };
             })()
         };

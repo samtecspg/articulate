@@ -26,6 +26,7 @@ module.exports = async function ({ payload }) {
                     extraTrainingData: _.defaultTo(agent.extraTrainingData, true)
                 }
             },
+            isImport: true,
             returnModel: true
         });
 

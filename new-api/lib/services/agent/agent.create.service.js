@@ -8,7 +8,7 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ data, returnModel = false }) {
+module.exports = async function ({ data, isImport = false, returnModel = false }) {
 
     const defaultFallbackAction = {
         useWebhook: false,
@@ -44,16 +44,15 @@ module.exports = async function ({ data, returnModel = false }) {
             data.settings[value] = allSettings[value];
         });
 
+        data.fallbackAction = isImport ? data.fallbackAction : allSettings[CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME];
+
         await AgentModel.createInstance({ data });
-        const defaultFallbackActionCreated = await agentService.createAction({
-            AgentModel,
-            actionData: defaultFallbackAction
-        });
-        await AgentModel.updateInstance({
-            data: {
-                fallbackAction: defaultFallbackActionCreated.id
-            }
-        });
+        if (!isImport){
+            await agentService.createAction({
+                AgentModel,
+                actionData: defaultFallbackAction
+            });
+        }
         return returnModel ? AgentModel : AgentModel.allProperties();
     }
     catch (error) {
