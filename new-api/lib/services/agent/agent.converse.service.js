@@ -253,13 +253,22 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         }));
     };
 
-    const storeDataInQueue = ({ conversationStateObject, action, response }) => {
+    const storeDataInQueue = ({ conversationStateObject, action, response, indexOfActionInQueue }) => {
 
-        conversationStateObject.context.actionQueue.push({
-            action,
-            slots: conversationStateObject.currentFrame.slots
-        });
-        conversationStateObject.context.responseQueue.push({ ...response });
+        if (indexOfActionInQueue === -1){
+            conversationStateObject.context.actionQueue.push({
+                action,
+                slots: conversationStateObject.currentFrame.slots
+            });
+            conversationStateObject.context.responseQueue.push({ ...response });
+        }
+        else {
+            conversationStateObject.context.actionQueue[indexOfActionInQueue] = { 
+                action,
+                slots: conversationStateObject.currentFrame.slots
+             };
+            conversationStateObject.context.responseQueue[indexOfActionInQueue] = { ...response };
+        }
     };
 
     const saveContextQueues = async ({ context }) => {
@@ -507,7 +516,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 finalResponse = cleanAgentToolResponse;
             }
             if (storeInQueue) {
-                await storeDataInQueue({ conversationStateObject, action: recognizedActionName, response: finalResponse });
+                await storeDataInQueue({ conversationStateObject, action: conversationStateObject.action ? conversationStateObject.action.actionName : recognizedActionName, response: finalResponse, indexOfActionInQueue });
             }
             else {
                 if (indexOfActionInQueue !== -1) {
