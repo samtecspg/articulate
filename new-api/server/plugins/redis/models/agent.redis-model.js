@@ -55,6 +55,10 @@ const schema = {
         type: 'boolean',
         defaultValue: false
     },
+    modifiersRecognizer: {
+        type: 'boolean',
+        defaultValue: false
+    },
     creationDate: {
         type: 'timestamp'
     },

@@ -116,15 +116,21 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
         }
         const sayingsPerActions = {};
 
-        const commonExamplesUserSayings = getCommonExamples(sayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
+        let commonExamplesUserSayings = [];
+        if (sayings){
+            commonExamplesUserSayings = getCommonExamples(sayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
+        }
 
-        const modifiersSayings = _.flatten(_.map(_.flatten(_.map(keywords, 'modifiers')), (modifier) => {
-            return _.map(modifier.sayings, (saying) => {
-                saying.actions = [modifier.modifierName];
-                return saying;
-            });
-        }));
-        const commonExamplesModifiersSayings = getCommonExamples(modifiersSayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
+        let commonExamplesModifiersSayings = [];
+        if (!sayings){
+            const modifiersSayings = _.flatten(_.map(_.flatten(_.map(keywords, 'modifiers')), (modifier) => {
+                return _.map(modifier.sayings, (saying) => {
+                    saying.actions = [modifier.modifierName];
+                    return saying;
+                });
+            }));
+            commonExamplesModifiersSayings = getCommonExamples(modifiersSayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
+        }
         
         const actionsWithJustOneSaying = Object.keys(sayingsPerActions).filter((actionName) => {
 

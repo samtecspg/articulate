@@ -4,7 +4,8 @@ import {
     MODEL_CATEGORY,
     MODEL_SAYING,
     RASA_MODEL_CATEGORY_RECOGNIZER,
-    RASA_MODEL_JUST_ER
+    RASA_MODEL_JUST_ER,
+    RASA_MODEL_MODIFIERS
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -74,6 +75,11 @@ module.exports = async function ({ id = null, AgentModel = null }) {
 
         if (agent.categoryRecognizer) {
             const name = agent.agentName + RASA_MODEL_CATEGORY_RECOGNIZER;
+            formattedCategories.push({ name, model: name });
+        }
+
+        if (agent.modifiersRecognizer) {
+            const name = agent.agentName + RASA_MODEL_MODIFIERS;
             formattedCategories.push({ name, model: name });
         }
         return formattedCategories;

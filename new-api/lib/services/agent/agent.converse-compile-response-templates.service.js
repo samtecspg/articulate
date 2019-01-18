@@ -14,6 +14,7 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false })
             return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions };
         }
         catch (error) {
+            console.error(error);
             return null;
         }
     });

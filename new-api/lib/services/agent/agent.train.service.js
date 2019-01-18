@@ -15,6 +15,7 @@ import {
     RASA_MODEL_DEFAULT,
     RASA_MODEL_CATEGORY_RECOGNIZER,
     RASA_MODEL_JUST_ER,
+    RASA_MODEL_MODIFIERS,
     RASA_NLU_DATA,
     RASA_REGEX_FEATURES,
     STATUS_ERROR,
@@ -36,6 +37,7 @@ module.exports = async function ({ id, returnModel = false }) {
         //const rasaStatus = await rasaNLU.Status();
         AgentModel.property('status', STATUS_TRAINING);
         await AgentModel.saveInstance();
+        let modifiersTrainingData;
         if (agent.enableModelsPerCategory) {
             const CategoryModels = await globalService.loadAllByIds({
                 ids: await AgentModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY),
@@ -73,6 +75,15 @@ module.exports = async function ({ id, returnModel = false }) {
                         rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], categoryTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
                     }
                 }
+
+                const allAgentKeywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
+                modifiersTrainingData = await categoryService.generateTrainingData({ keywords: allAgentKeywords, extraTrainingData: agent.extraTrainingData, categoryName: `${agent.agentName}${RASA_MODEL_MODIFIERS}` });
+                if (modifiersTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES].length > 1) {
+                    rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], modifiersTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
+                    rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], modifiersTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
+                    rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], modifiersTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
+                }
+        
                 if (countOfCategoriesWithData > 1) {
                     const pipeline = agent.settings[CONFIG_SETTINGS_CATEGORY_PIPELINE];
                     const categoryRecognizerModel = `${agent.agentName}${RASA_MODEL_CATEGORY_RECOGNIZER}`;
@@ -128,6 +139,38 @@ module.exports = async function ({ id, returnModel = false }) {
                 baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
             });
             AgentModel.property('categoryRecognizer', false);
+        }
+
+        //train modifiers model
+        const rasaNLUData = {
+            [RASA_COMMON_EXAMPLES]: [],
+            [RASA_REGEX_FEATURES]: [],
+            [RASA_KEYWORD_SYNONYMS]: []
+        };
+
+        const keywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
+        modifiersTrainingData = await categoryService.generateTrainingData({ keywords, extraTrainingData: agent.extraTrainingData });
+        rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], modifiersTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
+        rasaNLUData[RASA_REGEX_FEATURES] = _.flatten([rasaNLUData[RASA_REGEX_FEATURES], modifiersTrainingData[RASA_NLU_DATA][RASA_REGEX_FEATURES]]);
+        rasaNLUData[RASA_KEYWORD_SYNONYMS] = _.flatten([rasaNLUData[RASA_KEYWORD_SYNONYMS], modifiersTrainingData[RASA_NLU_DATA][RASA_KEYWORD_SYNONYMS]]);
+
+        if (modifiersTrainingData.numberOfSayings > 0) {
+            const pipeline = modifiersTrainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
+            const modifiersRecognizerModel = `${agent.agentName}${RASA_MODEL_MODIFIERS}`;
+            await rasaNLUService.train({
+                project: agent.agentName,
+                model: modifiersRecognizerModel,
+                oldModel: modifiersRecognizerModel,
+                trainingSet: {
+                    [RASA_NLU_DATA]: rasaNLUData
+                },
+                pipeline,
+                language: agent.language,
+                baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
+            });
+            AgentModel.property('modifiersRecognizer', true);
+        } else {
+            AgentModel.property('modifiersRecognizer', false);
         }
 
         AgentModel.property('lastTraining', Moment().utc().format());

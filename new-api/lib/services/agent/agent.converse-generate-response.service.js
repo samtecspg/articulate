@@ -97,11 +97,13 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                             });
                         }
                         else {
-                            lastFrame.slots[slotToModify] = {
-                                keyword: modifier.keyword,
-                                value: recognizedModifierKeywordsValues[0].value,
-                                original: recognizedModifierKeywordsValues[0].original
-                            };
+                            if (recognizedModifierKeywordsValues.length > 0){
+                                lastFrame.slots[slotToModify] = {
+                                    keyword: modifier.keyword,
+                                    value: recognizedModifierKeywordsValues[0].value,
+                                    original: recognizedModifierKeywordsValues[0].original
+                                };
+                            }
                         }
                         break;
                     case 'UNSET':

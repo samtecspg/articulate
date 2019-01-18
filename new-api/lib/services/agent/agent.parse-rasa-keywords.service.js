@@ -2,7 +2,8 @@ import _ from 'lodash';
 import Moment from 'moment';
 import {
     RASA_ACTION_RANKING,
-    RASA_MODEL_CATEGORY_RECOGNIZER
+    RASA_MODEL_CATEGORY_RECOGNIZER,
+    RASA_MODEL_MODIFIERS
 } from '../../../util/constants';
 
 module.exports = async function (
@@ -32,7 +33,8 @@ module.exports = async function (
             baseURL: rasaURL
         });
     }
-    return Promise.all(trainedCategories.map(async (trainedCategory) => {
+
+    const rasaResults = await Promise.all(trainedCategories.map(async (trainedCategory) => {
 
         if (!categoryRecognitionResults || trainedCategory.name !== categoryRecognitionResults.category) {
 
@@ -57,4 +59,6 @@ module.exports = async function (
             return categoryRasaResults;
         }
     }));
+
+    return rasaResults;
 };

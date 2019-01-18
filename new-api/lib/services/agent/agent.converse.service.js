@@ -299,16 +299,32 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         context.responseQueue.splice(newIndex, 0, context.responseQueue.splice(oldIndex, 1)[0]);
     };
 
-    const indexOnQueue = ({ actionQueue, action }) => {
+    const indexOnQueue = ({ actionQueue, action, modifier, agentActions }) => {
 
         let actionIndex = -1;
-        actionQueue.forEach((tempAction, tempIndex) => {
+        if (modifier){
+            actionQueue.some((tempAction, tempIndex) => {
 
-            if (tempAction.action === action) {
-                actionIndex = tempIndex;
-            }
-            return null;
-        });
+                const tempActionData = getActionByName({ actionName: tempAction.action, agentActions });
+                tempActionData.slots.some((tempSlot) => {
+
+                    if (tempSlot.keyword === modifier.keyword){
+                        actionIndex = tempIndex;
+                    }
+                    return actionIndex !== -1;
+                });
+                return actionIndex !== -1;
+            });
+        }
+        else {
+            actionQueue.some((tempAction, tempIndex) => {
+    
+                if (tempAction.action === action) {
+                    actionIndex = tempIndex;
+                }
+                return actionIndex !== -1;
+            });
+        }
 
         return actionIndex;
     };
@@ -448,7 +464,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     }
                 });
             }
-
+            let indexOfActionInQueue = -1;
             //MARK: get category recognizer, 1 category or list of keywords from all categories
             conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, categoryClassifierThreshold: conversationStateObject.agent.categoryClassifierThreshold });
             //MARK: if there is an action, look for it in the agent actions
@@ -457,11 +473,23 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 //MARK: look if the model recognized a modifier
                 conversationStateObject.modifier = getModifierData({ rasaResult: conversationStateObject.rasaResult, agentKeywords: conversationStateObject.agent.keywords });
                 if (conversationStateObject.modifier) {
-                    conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
+                    //MARK: search if there is an action in the queue that can be modified by the modifier
+                    indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, modifier: conversationStateObject.modifier, agentActions: conversationStateObject.agent.actions });
+                    if (indexOfActionInQueue !== -1){
+                        //MARK: if there is an action that can be modified by the modifier, then get its data
+                        conversationStateObject.action = getActionByName({ actionName: conversationStateObject.context.actionQueue[0].action, agentActions: conversationStateObject.agent.actions });
+                    }
+                    else {
+                        //MARK: if the modifier doesn't modifies any action in the action queue, get latest action in context
+                        conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
+                    }
                 }
             }
+            else {
+                indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName });                
+            }
 
-            const indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action ? conversationStateObject.action.actionName : recognizedActionName });
+
             if (indexOfActionInQueue !== -1) {
                 moveOnQueue({
                     context: conversationStateObject.context,

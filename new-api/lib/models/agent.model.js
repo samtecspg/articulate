@@ -21,6 +21,7 @@ class AgentModel {
             enableModelsPerCategory: Joi.boolean(),
             model: Joi.string().allow(''),
             categoryRecognizer: Joi.boolean(),
+            modifiersRecognizer: Joi.boolean(),
             creationDate: Joi.string(),
             modificationDate: Joi.string()
         };

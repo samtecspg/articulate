@@ -197,6 +197,7 @@ export const RASA_INTENT_RANKING = 'intent_ranking';
 export const RASA_ACTION_RANKING = 'action_ranking';
 
 export const RASA_MODEL_CATEGORY_RECOGNIZER = '_category_recognizer';
+export const RASA_MODEL_MODIFIERS = '_modifiers';
 export const RASA_MODEL_DEFAULT = 'default_';
 export const RASA_MODEL_JUST_ER = 'just_er_';
 

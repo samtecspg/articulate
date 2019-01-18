@@ -63,6 +63,7 @@ class AgentValidate {
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     multiCategory: AgentSchema.multiCategory.required(),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
+                    modifiersRecognizer: AgentSchema.modifiersRecognizer,
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     fallbackAction: AgentSchema.fallbackAction,
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -226,6 +227,7 @@ class AgentValidate {
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model.allow(''),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
+                    modifiersRecognizer: AgentSchema.modifiersRecognizer,
                     creationDate: AgentSchema.creationDate,
                     modificationDate: AgentSchema.modificationDate
                 };
@@ -746,6 +748,7 @@ class AgentValidate {
                     timezone: AgentSchema.timezone.required(),
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
+                    modifiersRecognizer: AgentSchema.modifiersRecognizer,
                     fallbackAction: AgentSchema.fallbackAction,
                     useWebhook: AgentSchema.useWebhook.required(),
                     multiCategory: AgentSchema.multiCategory.required(),
