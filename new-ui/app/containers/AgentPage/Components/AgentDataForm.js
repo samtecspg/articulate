@@ -197,7 +197,7 @@ class AgentDataForm extends React.Component {
                 {
                   this.props.newAgent ? 
                   <MenuItem value={this.props.defaultaFallbackActionName}>{this.props.defaultaFallbackActionName}</MenuItem>
-                  : <MenuItem value='create'>{this.props.defaultaFallbackActionName}}</MenuItem>
+                  : <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
                 }                
                 {
                   this.props.agentActions.map((action) => (

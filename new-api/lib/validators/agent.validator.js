@@ -768,7 +768,9 @@ class AgentValidate {
                             value: Joi.string()
                         }),
                         webhookUser: WebhookSchema.webhookUser,
-                        webhookPassword: WebhookSchema.webhookPassword
+                        webhookPassword: WebhookSchema.webhookPassword,
+                        creationDate: ActionSchema.creationDate,
+                        modificationDate: ActionSchema.modificationDate
                     },
                     settings: Joi.object(),
                     keywords: Joi.array().items({
@@ -842,7 +844,9 @@ class AgentValidate {
                                 value: Joi.string()
                             }),
                             webhookUser: WebhookSchema.webhookUser,
-                            webhookPassword: WebhookSchema.webhookPassword
+                            webhookPassword: WebhookSchema.webhookPassword,
+                            creationDate: ActionSchema.creationDate,
+                            modificationDate: ActionSchema.modificationDate
                         },
                         responses: Joi.array().items({
                             textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
