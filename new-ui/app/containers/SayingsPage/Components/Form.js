@@ -133,10 +133,10 @@ class Form extends React.Component {
                 this.props.onSearchSaying({ category: evt.target.value });
               }}
             >
-              <MenuItem value={undefined}>
-                <em>Categories</em>
+              <MenuItem value={''}>
+                Categories
               </MenuItem>
-              {agentCategories.map(({ id, categoryName }) => <MenuItem value={_.toNumber(id)}>{categoryName}</MenuItem>)}
+              {agentCategories.map(({ id, categoryName }) => <MenuItem key={id} value={_.toNumber(id)}>{categoryName}</MenuItem>)}
             </Select>
             <Select
               value={filter.actions}
@@ -145,10 +145,10 @@ class Form extends React.Component {
                 this.props.onSearchSaying({ actions: evt.target.value });
               }}
             >
-              <MenuItem value={undefined}>
-                <em>Actions</em>
+              <MenuItem value={''}>
+                Actions
               </MenuItem>
-              {agentActions.map(({ id, actionName }) => <MenuItem value={actionName}>{actionName}</MenuItem>)}
+              {agentActions.map(({ id, actionName }) => <MenuItem key={id} value={actionName}>{actionName}</MenuItem>)}
             </Select>
             <img src={searchIcon} alt={intl.formatMessage(messages.searchSayingsAlt)} />
             <Input
