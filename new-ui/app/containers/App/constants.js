@@ -175,18 +175,19 @@ export const ADD_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/ADD_KEYWORD_EXAMPLE';
 export const DELETE_KEYWORD_EXAMPLE = 'app/KeywordsEditPage/DELETE_KEYWORD_EXAMPLE';
 export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNONYMS';
 export const CHANGE_EXAMPLE_NAME = 'app/KeywordsEditPage/CHANGE_EXAMPLE_NAME';
-export const DELETE_KEYWORD = 'app/KeywordsPage/DELETE_KEYWORD';
-export const DELETE_KEYWORD_ERROR = 'app/KeywordsPage/DELETE_KEYWORD_ERROR';
-export const DELETE_KEYWORD_SUCCESS = 'app/KeywordsPage/DELETE_KEYWORD_SUCCESS'
-export const ADD_NEW_MODIFIER = 'app/KeywordsPage/ADD_NEW_MODIFIER';
-export const CHANGE_MODIFIER_NAME = 'app/ActKeywordsPageionPage/CHANGE_MODIFIER_NAME';
-export const CHANGE_MODIFIER_DATA = 'app/KeywordsPage/CHANGE_MODIFIER_DATA';
-export const ADD_MODIFIER_SAYING = 'app/KeywordsPage/ADD_MODIFIER_SAYING';
-export const DELETE_MODIFIER_SAYING = 'app/KeywordsPage/DELETE_MODIFIER_SAYING';
-export const SORT_MODIFIERS = 'app/KeywordsPage/SORT_MODIFIERS';
-export const DELETE_MODIFIER = 'app/KeywordsPage/DELETE_MODIFIER';
-export const TAG_MODIFIER_KEYWORD = 'app/KeywordsPage/TAG_MODIFIER_KEYWORD';
-export const UNTAG_MODIFIER_KEYWORD = 'app/KeywordsPage/UNTAG_MODIFIER_KEYWORD';
+export const DELETE_KEYWORD = 'app/KeywordsEditPage/DELETE_KEYWORD';
+export const DELETE_KEYWORD_ERROR = 'app/KeywordsEditPage/DELETE_KEYWORD_ERROR';
+export const DELETE_KEYWORD_SUCCESS = 'app/KeywordsEditPage/DELETE_KEYWORD_SUCCESS'
+export const ADD_NEW_MODIFIER = 'app/KeywordsEditPage/ADD_NEW_MODIFIER';
+export const CHANGE_MODIFIER_NAME = 'app/KeywordsEditPage/CHANGE_MODIFIER_NAME';
+export const CHANGE_MODIFIER_DATA = 'app/KeywordsEditPage/CHANGE_MODIFIER_DATA';
+export const ADD_MODIFIER_SAYING = 'app/KeywordsEditPage/ADD_MODIFIER_SAYING';
+export const DELETE_MODIFIER_SAYING = 'app/KeywordsEditPage/DELETE_MODIFIER_SAYING';
+export const SORT_MODIFIERS = 'app/KeywordsEditPage/SORT_MODIFIERS';
+export const DELETE_MODIFIER = 'app/KeywordsEditPage/DELETE_MODIFIER';
+export const TAG_MODIFIER_KEYWORD = 'app/KeywordsEditPage/TAG_MODIFIER_KEYWORD';
+export const UNTAG_MODIFIER_KEYWORD = 'app/KeywordsEditPage/UNTAG_MODIFIER_KEYWORD';
+export const CHANGE_MODIFIER_SAYINGS_PAGE_SIZE = 'app/KeywordsEditPage/CHANGE_MODIFIER_SAYINGS_PAGE_SIZE';
 
 /*
  * Category

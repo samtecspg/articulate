@@ -47,7 +47,8 @@ import {
   sortModifiers,
   deleteModifier,
   untagModifierKeyword,
-  tagModifierKeyword
+  tagModifierKeyword,
+  onChangeModifiersSayingsPageSize
 } from '../App/actions';
 import ModifiersForm from './Components/ModifiersForm';
 
@@ -257,7 +258,8 @@ export class KeywordsEditPage extends React.Component {
               agentKeywords={this.props.agentKeywords}
               onUntagModifierKeyword={this.props.onUntagModifierKeyword}
               onTagModifierKeyword={this.props.onTagModifierKeyword}
-              modifierSayingsPageSize={this.props.settings.modifierSayingsPageSize}
+              modifierSayingsPageSize={this.props.agent.settings.modifierSayingsPageSize}
+              onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize.bind(null, this.props.agent.id)}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -364,6 +366,9 @@ function mapDispatchToProps(dispatch) {
     onUntagModifierKeyword: (modifierIndex, sayingIndex, start, end) => {
       dispatch(untagModifierKeyword(modifierIndex, sayingIndex, start, end));
     },
+    onChangeModifiersSayingsPageSize: (agentId, pageSize) => {
+      dispatch(onChangeModifiersSayingsPageSize(agentId, pageSize));
+    }
   };
 }
 

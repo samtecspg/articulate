@@ -341,6 +341,7 @@ class ModifierForm extends React.Component {
                           this.setState({
                             pageSize: evt.target.value
                           });
+                          this.props.onChangeModifiersSayingsPageSize(evt.target.value);
                         }}
                         margin='normal'
                         InputLabelProps={{
@@ -428,6 +429,7 @@ ModifierForm.propTypes = {
   onUntagModifierKeyword: PropTypes.func,
   onTagModifierKeyword: PropTypes.func,
   modifierSayingsPageSize: PropTypes.number,
+  onChangeModifiersSayingsPageSize: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(ModifierForm));

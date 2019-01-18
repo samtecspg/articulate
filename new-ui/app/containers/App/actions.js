@@ -141,6 +141,7 @@ import {
   DELETE_MODIFIER,
   DELETE_MODIFIER_SAYING,
   SORT_MODIFIERS,
+  CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
@@ -1278,6 +1279,15 @@ export function untagModifierKeyword(modifierIndex, sayingIndex, start, end) {
     sayingIndex,
     start,
     end,
+  };
+}
+
+export function onChangeModifiersSayingsPageSize(agentId, pageSize) {
+  return {
+    apiCall: true,
+    type: CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
+    agentId,
+    pageSize,
   };
 }
 

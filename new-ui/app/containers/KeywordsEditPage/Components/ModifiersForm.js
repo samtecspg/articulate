@@ -190,6 +190,7 @@ class ModifiersForm extends React.Component {
                 onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(null, index)}
                 onTagModifierKeyword={this.props.onTagModifierKeyword.bind(null, index)}
                 modifierSayingsPageSize={this.props.modifierSayingsPageSize}
+                onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize}
               />
               : null
           ))}
@@ -226,6 +227,7 @@ ModifiersForm.propTypes = {
   onUntagModifierKeyword: PropTypes.func,
   onTagModifierKeyword: PropTypes.func,
   modifierSayingsPageSize: PropTypes.number,
+  onChangeModifiersSayingsPageSize: PropTypes.func,
 };
 
 export default DragDropContext(HTML5Backend)(injectIntl(withStyles(styles)(ModifiersForm)));

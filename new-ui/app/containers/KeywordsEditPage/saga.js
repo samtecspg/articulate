@@ -24,10 +24,11 @@ import {
   CREATE_KEYWORD,
   UPDATE_KEYWORD,
   DELETE_KEYWORD,
+  CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
 } from '../App/constants';
 
 import {
-  makeSelectAgent, makeSelectKeyword,
+  makeSelectAgent, makeSelectKeyword, makeSelectAgentSettings
 } from '../App/selectors';
 import { getKeywords } from '../KeywordsPage/saga';
 
@@ -93,9 +94,22 @@ export function* deleteKeyword(payload) {
   }
 }
 
+export function* putModifierSayingsPageSize(payload) {
+  const agentSettings = yield select(makeSelectAgentSettings());
+  const { api, agentId, pageSize } = payload;
+  const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
+  mutableSettings.modifierSayingsPageSize = pageSize;
+  try {
+    yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
+  } catch (err) {
+    throw err;
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORD, getKeyword);
   yield takeLatest(CREATE_KEYWORD, postKeyword);
   yield takeLatest(UPDATE_KEYWORD, putKeyword);
   yield takeLatest(DELETE_KEYWORD, deleteKeyword);
+  yield takeLatest(CHANGE_MODIFIER_SAYINGS_PAGE_SIZE, putModifierSayingsPageSize);
 };
