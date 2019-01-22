@@ -481,7 +481,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     }
                     else {
                         //MARK: if the modifier doesn't modifies any action in the action queue, get latest action in context
-                        conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
+                        if (conversationStateObject.currentFrame){
+                            conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
+                        }
                     }
                 }
             }
