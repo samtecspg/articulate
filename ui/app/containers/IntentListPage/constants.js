@@ -1,1 +1,0 @@
-export const CHANGE_CURRENT_AGENT = 'IntentListPage/CHANGE_CURRENT_AGENT';

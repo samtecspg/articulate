@@ -1,1 +1,0 @@
-export const CHANGE_CURRENT_AGENT = 'DomainListPage/CHANGE_CURRENT_AGENT';
