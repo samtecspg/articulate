@@ -50,7 +50,7 @@ class ContextValidate {
             payload: (() => {
 
                 return {
-                    action: Joi.string().required(),
+                    action: Joi.string(),
                     slots: Joi.object().required()
                 };
             })()
