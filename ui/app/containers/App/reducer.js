@@ -1005,12 +1005,12 @@ function appReducer(state = initialState, action) {
         )
         .set('keywordTouched', true);
     case SORT_MODIFIERS:
-      const tempModifiers = Immutable.asMutable(state.action.modifiers, { deep: true });
+      const tempModifiers = Immutable.asMutable(state.keyword.modifiers, { deep: true });
       tempModifiers.splice(action.newIndex, 0, tempModifiers.splice(action.oldIndex, 1)[0]);
       return state
         .setIn(['keyword', 'modifiers'], Immutable(tempModifiers));
     case DELETE_MODIFIER:
-      const oldModifiers = Immutable.asMutable(state.action.modifiers, { deep: true });
+      const oldModifiers = Immutable.asMutable(state.keyword.modifiers, { deep: true });
       oldModifiers.splice(action.modifierIndex, 1);
       return state
         .setIn(['keyword', 'modifiers'], Immutable(oldModifiers));
