@@ -80,7 +80,7 @@ const styles = {
     paddingLeft: '25px',
   },
   searchInputField: {
-    width: '250px',
+    width: '400px',
     paddingLeft: '5px',
     fontSize: '14px',
   },
@@ -105,11 +105,11 @@ class Form extends React.Component {
   };
 
   render() {
-    const { classes, intl, filter, agentCategories, agentActions } = this.props;
+    const { classes, intl, filter} = this.props;
     return <Grid className={classes.headerContainer} container item xs={12}>
       <Grid className={classes.titleContainer} item xs={12}>
         <img alt="" className={classes.sayingsIcon} src={sayingsIcon} />
-        <Grid className={classes.titleTextHelpContainer} container>
+        <Grid className={classes.titleTextHelpContainer} container item xs={8}>
           <Typography className={classes.title} variant='h2'>
             <FormattedMessage {...messages.formTitle} />
           </Typography>
@@ -125,31 +125,7 @@ class Form extends React.Component {
             />
             <span className={classes.helpText}><FormattedMessage {...messages.help} /></span>
           </Button>
-          <form className={classes.searchForm}>
-            <Select
-              value={filter.category}
-              displayEmpty
-              onChange={(evt) => {
-                this.props.onSearchSaying({ category: evt.target.value });
-              }}
-            >
-              <MenuItem value={''}>
-                Categories
-              </MenuItem>
-              {agentCategories.map(({ id, categoryName }) => <MenuItem key={id} value={_.toNumber(id)}>{categoryName}</MenuItem>)}
-            </Select>
-            <Select
-              value={filter.actions}
-              displayEmpty
-              onChange={(evt) => {
-                this.props.onSearchSaying({ actions: evt.target.value });
-              }}
-            >
-              <MenuItem value={''}>
-                Actions
-              </MenuItem>
-              {agentActions.map(({ id, actionName }) => <MenuItem key={id} value={actionName}>{actionName}</MenuItem>)}
-            </Select>
+          <div className={classes.searchForm}>
             <img src={searchIcon} alt={intl.formatMessage(messages.searchSayingsAlt)} />
             <Input
               inputProps={{
@@ -165,7 +141,7 @@ class Form extends React.Component {
                 this.props.onSearchSaying({ query: evt.target.value });
               }}
             />
-          </form>
+          </div>
           <Modal open={this.state.openModal} onClose={this.handleClose}>
             <Grid className={classes.modalContent} container>
               <iframe

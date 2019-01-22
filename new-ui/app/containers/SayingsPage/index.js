@@ -3,8 +3,8 @@
  * SayingsPage
  *
  */
-
 import { Grid } from '@material-ui/core';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
 import React from 'react';
@@ -14,6 +14,7 @@ import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import MainTab from '../../components/MainTab';
+import ExtractTokensFromString from '../../utils/extractTokensFromString';
 import injectSaga from '../../utils/injectSaga';
 import {
   addActionNewSaying,
@@ -65,7 +66,7 @@ export class SayingsPage extends React.Component {
   }
 
   state = {
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : { category: '', actions: '', query: '' },
+    filter: { category: '', actions: '', query: '' },
     categoryFilter: '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
     pageSize: this.props.agent.settings.sayingsPageSize,
@@ -83,6 +84,14 @@ export class SayingsPage extends React.Component {
       // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
     }
+
+    this.callFilter = _.throttle((filter) => {
+      this.props.onLoadSayings(filter, 1, this.state.pageSize);
+    }, 2000, { 'trailing': true });
+  }
+
+  componentWillUnmount() {
+    this.callFilter = null;
   }
 
   componentDidUpdate() {
@@ -135,11 +144,22 @@ export class SayingsPage extends React.Component {
 
   onSearchSaying(filter) {
     const updatedFilter = { ...this.state.filter, ...filter };
+    const { remainingText, found } = ExtractTokensFromString({ text: updatedFilter.query, tokens: ['category', 'actions'] });
+    updatedFilter.category = found.category;
+    updatedFilter.actions = found.actions;
     this.setState({
-      filter: updatedFilter,
+      filter: {
+        category: found.category,
+        actions: found.actions,
+        query: updatedFilter.query,
+      },
       currentPage: 1,
     });
-    this.props.onLoadSayings(updatedFilter, 1, this.state.pageSize);
+    this.callFilter({
+      category: updatedFilter.category,
+      actions: updatedFilter.actions,
+      query: remainingText,
+    });
   }
 
   onSearchCategory(categoryFilter) {

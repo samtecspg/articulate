@@ -43,7 +43,11 @@ import { getKeywords } from '../KeywordsPage/saga';
 export function* getSayings(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, filter, page, pageSize } = payload;
-  const tempFilter = filter === '' ? undefined : JSON.stringify(filter);
+  const tempFilter = filter === '' ? undefined : JSON.stringify({
+    category: filter.category === '' ? undefined : filter.category,
+    actions: filter.actions === '' ? undefined : filter.actions,
+    query: filter.query,
+  });
   let skip = 0;
   let limit = -1;
   if (page) {

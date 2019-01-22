@@ -38,7 +38,8 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         let filteredSayings = allSayings;
         if (categoryFilter.length > 0) {
             filteredSayings = filteredSayings.filter((saying) => {
-                return _.includes(_(saying[MODEL_CATEGORY]).map('id').map(_.toNumber).value(), ...categoryFilter);
+                const categories = _.map(saying[MODEL_CATEGORY], 'categoryName');
+                return _.includes(categories, ...categoryFilter);
             });
         }
 
@@ -50,7 +51,6 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
 
         const SayingModel = await redis.factory(MODEL_SAYING);
         const totalCount = filteredSayings.length;
-
         const SayingModels = await SayingModel.findAllByIds({
             ids: _.map(filteredSayings, 'id'),
             skip,
@@ -74,7 +74,6 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
 
             //return _.omit(saying, [MODEL_CATEGORY, MODEL_ACTION]);
             return saying;
-
 
         });
         return { data, totalCount };

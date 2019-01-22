@@ -12,8 +12,9 @@ module.exports = async function ({ model, id, relationNames = [] }) {
         });
         await Promise.all(relationNames.map(async (relationName) => {
 
+            const RelationModel = await redis.factory(relationName);
             const ids = await Model.getAll(relationName, relationName);
-            const results = await Model.loadAllByIds({ ids });
+            const results = await RelationModel.loadAllByIds({ ids });
             props[relationName].push(...results.map((r) => r.allProperties()));
         }));
 
