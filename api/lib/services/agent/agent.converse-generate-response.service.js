@@ -178,6 +178,9 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
             }
             const missingKeywords = _.filter(requiredSlots, (slot) => {
     
+                if (currentFrame.slots[slot.slotName] && Array.isArray(currentFrame.slots[slot.slotName])){
+                    return currentFrame.slots[slot.slotName].length === 0;
+                }
                 return !currentFrame.slots[slot.slotName];
             });
             conversationStateObject.slots = currentFrame.slots;
@@ -334,7 +337,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [] };
+            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true };
         }
         conversationStateObject.webhookResponse = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
