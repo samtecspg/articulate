@@ -154,6 +154,7 @@ export class MainTab extends React.Component {
                       </div> : 
                       null
                   }
+                  disabled={!newKeyword}
                 />
               </Tabs>
             </Grid>
@@ -213,7 +214,7 @@ export class MainTab extends React.Component {
               >
                 <Tab value="keyword" icon={<Icon>play_arrow</Icon>} className={classes.tab} />
                 <Tab value="values" icon={<Icon>list</Icon>} className={classes.tab} />
-                <Tab value="modifiers" icon={<Icon>comment</Icon>} className={classes.tab} />
+                <Tab value="modifiers" icon={<Icon>comment</Icon>} className={classes.tab} disabled={!newKeyword} />
               </Tabs>
             </Grid>
             <Grid className={classes.container}>
