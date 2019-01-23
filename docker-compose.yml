@@ -5,7 +5,7 @@ services:
     image: samtecspg/articulate-api:repo-head
     ports: ['0.0.0.0:7500:7500']
     networks: ['alpha-nlu-network']
-    entrypoint: ['node', 'start.js']
+    entrypoint: ['yarn', 'start']
     environment:
       - SWAGGER_BASE_PATH
     depends_on:
