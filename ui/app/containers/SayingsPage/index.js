@@ -80,7 +80,8 @@ export class SayingsPage extends React.Component {
       this.props.onLoadActions();
       this.props.onLoadCategories();
       this.props.onLoadSayings('', this.state.currentPage, this.state.pageSize);
-    } else {
+    }
+    else {
       // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
     }
@@ -173,7 +174,7 @@ export class SayingsPage extends React.Component {
     this.setState({
       currentPage: 1,
     });
-    this.props.onAddSaying(this.state.pageSize, saying);
+    this.props.onAddSaying(this.state.filter, 1, this.state.pageSize, saying);
   }
 
   render() {
@@ -291,8 +292,8 @@ function mapDispatchToProps(dispatch) {
     onLoadActions: () => {
       dispatch(loadActions());
     },
-    onAddSaying: (pageSize, value) => {
-      dispatch(addSaying(pageSize, value));
+    onAddSaying: (filter, page, pageSize, value) => {
+      dispatch(addSaying(filter, page, pageSize, value));
     },
     onDeleteSaying: (pageSize, sayingId, categoryId) => {
       dispatch(deleteSaying(pageSize, sayingId, categoryId));

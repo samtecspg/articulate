@@ -517,12 +517,14 @@ export function loadSayingsSuccess(sayings) {
   };
 }
 
-export function addSaying(pageSize, value) {
+export function addSaying(filter, page, pageSize, value) {
   return {
     type: ADD_SAYING,
     apiCall: true,
     value,
     pageSize,
+    filter,
+    page,
   };
 }
 
