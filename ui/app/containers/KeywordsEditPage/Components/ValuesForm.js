@@ -216,6 +216,9 @@ class ValuesForm extends React.Component {
                       onDeleteAll={() => {
                         this.props.onDeleteKeywordExample(exampleIndex);
                       }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
                 </Grid>
