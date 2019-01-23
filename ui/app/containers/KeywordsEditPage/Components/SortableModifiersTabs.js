@@ -80,6 +80,7 @@ class SortableModifiersTabs extends React.Component {
 				onChange={(evt, value) => {
 					evt.preventDefault();
 					if (value === keyword.modifiers.length) {
+						this.props.handleTabChange(keyword.modifiers.length);
 						this.props.onAddNewModifier();
 					}
 					else {
@@ -99,7 +100,7 @@ class SortableModifiersTabs extends React.Component {
 							<div
 								onMouseLeave={() => { this.setState({ modifierHovered: null })} }
 								onMouseOver={() => {this.setState({ modifierHovered: index })} }
-								onClick={() => { this.props.handleTabChange(index);} }
+								onClick={(evt) => { evt.target.id.indexOf('deleteModifier') === -1 ? this.props.handleTabChange(index) : null } }
 							>
 								<Tab
 									key={`modifier_${index}`}
@@ -118,7 +119,7 @@ class SortableModifiersTabs extends React.Component {
 											null
 									}
 								/>
-								<img style={{display: this.state.modifierHovered === index ? 'inline' : 'none' }} onClick={() => { this.props.onDeleteModifier(index) }} className={classes.deleteHighlight} src={trashIcon} />
+								<img id={`deleteModifier_${index}`} style={{display: this.state.modifierHovered === index ? 'inline' : 'none' }} onClick={() => { this.props.onDeleteModifier(index) }} className={classes.deleteHighlight} src={trashIcon} />
 							</div>
 						)}
 					/>
