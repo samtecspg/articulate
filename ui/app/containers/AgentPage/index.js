@@ -37,6 +37,10 @@ import {
   deleteAgent,
   loadActions,
   clearSayingToAction,
+  addNewAgentParameter,
+  deleteAgentParameter,
+  changeAgentParameterName,
+  changeAgentParameterValue,
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -302,6 +306,10 @@ export class AgentPage extends React.PureComponent {
               agentActions={this.props.agentActions}
               onGoToUrl={this.props.onGoToUrl}
               defaultaFallbackActionName={this.props.settings.defaultaFallbackActionName}
+              onAddNewParameter={this.props.onAddNewParameter}
+              onDeleteParameter={this.props.onDeleteParameter}
+              onChangeParameterName={this.props.onChangeParameterName}
+              onChangeParameterValue={this.props.onChangeParameterValue}
             />
           }
           sayingsForm={Link}
@@ -344,6 +352,10 @@ AgentPage.propTypes = {
   onDelete: PropTypes.func,
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
+  onAddNewParameter: PropTypes.func,
+  onDeleteParameter: PropTypes.func,
+  onChangeParameterName: PropTypes.func,
+  onChangeParameterValue: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -426,6 +438,18 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: (url) => {
       dispatch(clearSayingToAction());
       dispatch(push(`${url}?ref=agent`));
+    },
+    onAddNewParameter: (payload) => {
+      dispatch(addNewAgentParameter(payload));
+    },
+    onDeleteParameter: (headerIndex) => {
+      dispatch(deleteAgentParameter(headerIndex));
+    },
+    onChangeParameterName: (headerIndex, value) => {
+      dispatch(changeAgentParameterName(headerIndex, value));
+    },
+    onChangeParameterValue: (headerIndex, value) => {
+      dispatch(changeAgentParameterValue(headerIndex, value));
     },
   };
 }

@@ -84,9 +84,6 @@ const styles = {
   actionTabs: {
     paddingLeft: '0px',
   },
-  slotTabLabel: {
-    padding: '0px 10px',
-  },
   dot: {
     marginRight: 5,
     height: 10,

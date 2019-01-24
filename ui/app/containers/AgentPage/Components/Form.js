@@ -12,6 +12,7 @@ import playHelpIcon from "../../../images/play-help-icon.svg";
 import settingsIcon from "../../../images/settings-icon.svg";
 
 import AgentDataForm from "./AgentDataForm";
+import AgentParametersForm from './AgentParametersForm';
 import AgentSettingsForm from "./AgentSettingsForm";
 import DeleteFooter from "../../../components/DeleteFooter";
 
@@ -71,6 +72,7 @@ const styles = {
   settingsIcon: {
     height: "18px",
     paddingRight: "5px",
+    position: 'absolute'
   },
   notificationDot: {
     backgroundColor: '#Cb2121',
@@ -87,7 +89,13 @@ const styles = {
     position: 'relative',
     bottom: '4.5px',
     left: '0.5px'
-  }
+  },
+  tabLabel: {
+    padding: '0px 10px',
+  },
+  settingsTabLabel: {
+    padding: '0px 20px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -166,7 +174,11 @@ class Form extends React.Component {
             }}
           >
             <Tab 
-              label={intl.formatMessage(messages.main)} 
+              label={
+                <span className={classes.tabLabel}>
+                  <span>{intl.formatMessage(messages.main)}</span>
+                </span>
+              }	
               icon={
                 this.props.errorState.tabs.indexOf(0) > -1 ? 
                   <div id='notificationDot' className={classes.notificationDot}>
@@ -177,18 +189,38 @@ class Form extends React.Component {
                   null
               }
             />
+            <Tab 
+              label={
+                <span className={classes.tabLabel}>
+                  <span>{intl.formatMessage(messages.parameters)}</span>
+                </span>
+              }
+              icon={
+                this.props.errorState.tabs.indexOf(0) > -1 ? 
+                  <div id='notificationDot' className={classes.notificationDot}>
+                    <span className={classes.numOfErrorsLabel}>
+                      {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
+                    </span>
+                  </div> : 
+                  null
+              }
+            />
             <Tab
               icon={[
                 this.props.errorState.tabs.indexOf(1) > -1 ? 
                   <div style={{left: '0px'}} key='notification_settings' id='notificationDot' className={classes.notificationDot}>
                     <span className={classes.numOfErrorsLabel}>
-                      {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
+                      {(this.props.errorState.tabs.filter((element) => { return element === 2 })).length}
                     </span>
                   </div> : 
-                  null,
-                <img key='settings_icon' className={classes.settingsIcon} src={settingsIcon} />
+                  null
               ]}
-              label={intl.formatMessage(messages.settings)}
+              label={
+                <span className={classes.tabLabel}>
+                  <img key='settings_icon' className={classes.settingsIcon} src={settingsIcon} />
+                  <span className={classes.settingsTabLabel}>{intl.formatMessage(messages.settings)}</span>
+                </span>
+              }
             />
           </Tabs>
           {this.state.selectedTab === 0 && (
@@ -210,6 +242,28 @@ class Form extends React.Component {
             />
           )}
           {this.state.selectedTab === 1 && (
+            <AgentParametersForm
+              agent={this.props.agent}
+              settings={this.props.settings}
+              onChangeAgentData={this.props.onChangeAgentData}
+              onChangeAgentName={this.props.onChangeAgentName}
+              onChangeCategoryClassifierThreshold={
+                this.props.onChangeCategoryClassifierThreshold
+              }
+              onAddFallbackResponse={this.props.onAddFallbackResponse}
+              onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
+              errorState={this.props.errorState}
+              agentActions={this.props.agentActions}
+              newAgent={this.props.newAgent}
+              onGoToUrl={this.props.onGoToUrl}
+              defaultaFallbackActionName={this.props.defaultaFallbackActionName}
+              onAddNewParameter={this.props.onAddNewParameter}
+              onDeleteParameter={this.props.onDeleteParameter}
+              onChangeParameterName={this.props.onChangeParameterName}
+              onChangeParameterValue={this.props.onChangeParameterValue}
+            />
+          )}
+          {this.state.selectedTab === 2 && (
             <AgentSettingsForm
               agent={this.props.agent}
               webhook={this.props.webhook}
@@ -264,7 +318,11 @@ Form.propTypes = {
   newAgent: PropTypes.bool,
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
-  defaultaFallbackActionName: PropTypes.string
+  defaultaFallbackActionName: PropTypes.string,
+  onAddNewParameter: PropTypes.func,
+  onDeleteParameter: PropTypes.func,
+  onChangeParameterName: PropTypes.func,
+  onChangeParameterValue: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

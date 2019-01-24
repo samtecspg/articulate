@@ -48,6 +48,9 @@ const schema = {
     model: {
         type: 'string'
     },
+    parameters: {
+        type: 'json'
+    },
     settings: {
         type: 'json'
     },

@@ -167,6 +167,14 @@ import {
   UPDATE_SETTINGS_SUCCESS,
   TAG_MODIFIER_KEYWORD,
   UNTAG_MODIFIER_KEYWORD,
+  ADD_AGENT_PARAMETER,
+  DELETE_AGENT_PARAMETER,
+  CHANGE_AGENT_PARAMETER_NAME,
+  CHANGE_AGENT_PARAMETER_VALUE,
+  ADD_CATEGORY_PARAMETER,
+  DELETE_CATEGORY_PARAMETER,
+  CHANGE_CATEGORY_PARAMETER_NAME,
+  CHANGE_CATEGORY_PARAMETER_VALUE,
 } from './constants';
 
 /*
@@ -463,6 +471,36 @@ export function changeHeaderValueAgentWebhook(headerIndex, value) {
   return {
     type: CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
     headerIndex,
+    value,
+  };
+}
+
+export function addNewAgentParameter(payload) {
+  return {
+    type: ADD_AGENT_PARAMETER,
+    payload,
+  };
+}
+
+export function deleteAgentParameter(parameterIndex) {
+  return {
+    type: DELETE_AGENT_PARAMETER,
+    parameterIndex,
+  };
+}
+
+export function changeAgentParameterName(parameterIndex, value) {
+  return {
+    type: CHANGE_AGENT_PARAMETER_NAME,
+    parameterIndex,
+    value,
+  };
+}
+
+export function changeAgentParameterValue(parameterIndex, value) {
+  return {
+    type: CHANGE_AGENT_PARAMETER_VALUE,
+    parameterIndex,
     value,
   };
 }
@@ -1399,6 +1437,36 @@ export function deleteCategoryError(error) {
 export function deleteCategorySuccess() {
   return {
     type: DELETE_CATEGORY_SUCCESS,
+  };
+}
+
+export function addNewCategoryParameter(payload) {
+  return {
+    type: ADD_CATEGORY_PARAMETER,
+    payload,
+  };
+}
+
+export function deleteCategoryParameter(parameterIndex) {
+  return {
+    type: DELETE_CATEGORY_PARAMETER,
+    parameterIndex,
+  };
+}
+
+export function changeCategoryParameterName(parameterIndex, value) {
+  return {
+    type: CHANGE_CATEGORY_PARAMETER_NAME,
+    parameterIndex,
+    value,
+  };
+}
+
+export function changeCategoryParameterValue(parameterIndex, value) {
+  return {
+    type: CHANGE_CATEGORY_PARAMETER_VALUE,
+    parameterIndex,
+    value,
   };
 }
 

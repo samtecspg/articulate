@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import AgentParameterSchema from './agent.parameter.model';
 
 class AgentModel {
     static get schema() {
@@ -7,7 +8,7 @@ class AgentModel {
             id: Joi.number(),
             agentName: Joi.string().trim(),
             description: Joi.string().trim(),
-            language: Joi.string().trim().valid('en', 'es', 'de', 'fr', 'pt'),
+            language: Joi.string().trim(),
             timezone: Joi.string().trim(),
             useWebhook: Joi.boolean(),
             usePostFormat: Joi.boolean(),
@@ -23,7 +24,8 @@ class AgentModel {
             categoryRecognizer: Joi.boolean(),
             modifiersRecognizer: Joi.boolean(),
             creationDate: Joi.string(),
-            modificationDate: Joi.string()
+            modificationDate: Joi.string(),
+            parameters: Joi.array().items(AgentParameterSchema.schema)
         };
     };
 }

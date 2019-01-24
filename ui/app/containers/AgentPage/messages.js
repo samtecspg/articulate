@@ -31,6 +31,10 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.Form.main',
     defaultMessage: 'Main',
   },
+  parameters: {
+    id: 'app.containers.AgentPage.component.Form.parameters',
+    defaultMessage: 'Parameters',
+  },
   settings: {
     id: 'app.containers.AgentPage.component.Form.settings',
     defaultMessage: 'Settings',
@@ -83,9 +87,9 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentDataForm.requiredField',
     defaultMessage: '*Required',
   },
-  trainButton: {
-    id: 'app.containers.AgentPage.trainButton',
-    defaultMessage: 'Train',
+  addParameter: {
+    id: 'app.containers.AgentPage.component.AgentParametersForm.addParameter',
+    defaultMessage: '+ Add',
   },
   finishButton: {
     id: 'app.containers.AgentPage.finishButton',
@@ -160,7 +164,23 @@ export default defineMessages({
     defaultMessage: 'Last Trained: ',
   },
   newAction: {
-    id: 'app.containers.SayingsPage.component.SayingRow.newAction',
+    id: 'app.containers.AgentPage.component.AgentDataForm.newAction',
     defaultMessage: '+ New Action',
+  },
+  newAgentParameterNameTextField: {
+    id: 'app.containers.AgentPage.component.AgentParametersForm.newAgentParameterNameTextField',
+    defaultMessage: 'Parameter Name:',
+  },
+  newAgentParameterValueTextField: {
+    id: 'app.containers.AgentPage.component.AgentParametersForm.newAgentParameterValueTextField',
+    defaultMessage: 'Parameter Value:',
+  },
+  newAgentParameterNameTextFieldPlaceholder: {
+    id: 'app.containers.AgentPage.component.AgentParametersForm.newAgentParameterNameTextFieldPlaceholder',
+    defaultMessage: 'Type your parameter name',
+  },
+  newAgentParameterValueTextFieldPlaceholder: {
+    id: 'app.containers.AgentPage.component.AgentParametersForm.newAgentParameterValueTextFieldPlaceholder',
+    defaultMessage: 'Type your parameter value',
   },
 });

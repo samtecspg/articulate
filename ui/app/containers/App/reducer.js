@@ -25,6 +25,10 @@ import {
   CHANGE_AGENT_DATA,
   CHANGE_AGENT_NAME,
   CHANGE_AGENT_SETTINGS_DATA,
+  ADD_AGENT_PARAMETER,
+  DELETE_AGENT_PARAMETER,
+  CHANGE_AGENT_PARAMETER_NAME,
+  CHANGE_AGENT_PARAMETER_VALUE,
   CHANGE_CATEGORY_DATA,
   CHANGE_EXAMPLE_NAME,
   CHANGE_EXAMPLE_SYNONYMS,
@@ -147,6 +151,10 @@ import {
   UPDATE_CATEGORY,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
+  ADD_CATEGORY_PARAMETER,
+  DELETE_CATEGORY_PARAMETER,
+  CHANGE_CATEGORY_PARAMETER_NAME,
+  CHANGE_CATEGORY_PARAMETER_VALUE,
   UPDATE_KEYWORD,
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
@@ -186,8 +194,9 @@ const initialState = Immutable({
     extraTrainingData: false,
     enableModelsPerCategory: true,
     multiCategory: true,
-    fallbackResponses: [],
+    fallbackAction: '',
     categoryClassifierThreshold: 50,
+    parameters: [],
   },
   agent: {
     agentName: '',
@@ -201,6 +210,20 @@ const initialState = Immutable({
     multiCategory: true,
     fallbackAction: '',
     categoryClassifierThreshold: 50,
+    parameters: [
+      {
+        name: 'one',
+        value: '1'
+      },
+      {
+        name: 'two',
+        value: '2'
+      },
+      {
+        name: 'three',
+        value: '3'
+      },
+    ],
   },
   agentWebhook: {
     agent: '',
@@ -555,6 +578,24 @@ function appReducer(state = initialState, action) {
         }
         return header;
       }));
+    case ADD_AGENT_PARAMETER:
+      return state.updateIn(['agent', 'parameters'], parameters => parameters.concat(action.payload)).set('agentTouched', true);
+    case DELETE_AGENT_PARAMETER:
+      return state.updateIn(['agent', 'parameters'], parameters => parameters.filter((item, index) => index !== action.parameterIndex)).set('agentTouched', true);
+    case CHANGE_AGENT_PARAMETER_NAME:
+      return state.updateIn(['agent', 'parameters'], parameters => parameters.map((header, index) => {
+        if (index === action.parameterIndex) {
+          return header.set('name', action.value);
+        }
+        return header;
+      })).set('agentTouched', true);
+    case CHANGE_AGENT_PARAMETER_VALUE:
+      return state.updateIn(['agent', 'parameters'], parameters => parameters.map((header, index) => {
+        if (index === action.parameterIndex) {
+          return header.set('value', action.value);
+        }
+        return header;
+      })).set('agentTouched', true);
     case LOAD_AGENT_DOCUMENTS_SUCCESS:
       return state.set('documents', action.documents.documents)
         .set('totalDocuments', action.documents.total)
@@ -1200,6 +1241,25 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false);
+    case ADD_CATEGORY_PARAMETER:
+      return state.updateIn(['category', 'parameters'], parameters => parameters.concat(action.payload));
+    case DELETE_CATEGORY_PARAMETER:
+      return state.updateIn(['category', 'parameters'], parameters => parameters.filter((item, index) => index !== action.parameterIndex));
+    case CHANGE_CATEGORY_PARAMETER_NAME:
+      return state.updateIn(['category', 'parameters'], parameters => parameters.map((header, index) => {
+        if (index === action.parameterIndex) {
+          return header.set('name', action.value);
+        }
+        return header;
+      }));
+    case CHANGE_CATEGORY_PARAMETER_VALUE:
+      return state.updateIn(['category', 'parameters'], parameters => parameters.map((header, index) => {
+        if (index === action.parameterIndex) {
+          return header.set('value', action.value);
+        }
+        return header;
+      }));
+
     case COPY_SAYING_ERROR:
       return state
         .update('notifications', notifications => notifications.concat({ message: `Error: There was an error copying the utterance into your sayings. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }))
