@@ -337,7 +337,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true };
+            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
         }
         conversationStateObject.webhookResponse = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });

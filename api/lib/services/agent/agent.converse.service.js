@@ -527,7 +527,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             if (postFormatPayloadToUse) {
                 try {
                     const compiledPostFormat = handlebars.compile(postFormatPayloadToUse);
-                    const processedPostFormat = compiledPostFormat({ ...conversationStateObject, ...{ textResponse: agentToolResponse.textResponse } });
+                    const processedPostFormat = compiledPostFormat({ ...conversationStateObject, ...{ textResponse: cleanAgentToolResponse.textResponse } });
                     const processedPostFormatJson = JSON.parse(processedPostFormat);
                     processedPostFormatJson.docId = cleanAgentToolResponse.docId;
                     if (!processedPostFormatJson.textResponse) {
