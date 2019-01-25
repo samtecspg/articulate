@@ -210,20 +210,7 @@ const initialState = Immutable({
     multiCategory: true,
     fallbackAction: '',
     categoryClassifierThreshold: 50,
-    parameters: [
-      {
-        name: 'one',
-        value: '1'
-      },
-      {
-        name: 'two',
-        value: '2'
-      },
-      {
-        name: 'three',
-        value: '3'
-      },
-    ],
+    parameters: [],
   },
   agentWebhook: {
     agent: '',
