@@ -154,7 +154,7 @@ export class MainTab extends React.Component {
                       </div> : 
                       null
                   }
-                  disabled={!newKeyword}
+                  disabled={newKeyword}
                 />
               </Tabs>
             </Grid>
