@@ -24,7 +24,6 @@ import {
 } from '../../util/constants';
 
 const AgentSchema = require('../models/agent.model').schema;
-const AgentParameterSchema = require('../models/agent.parameter.model').schema;
 const CategorySchema = require('../models/category.model').schema;
 const ActionSchema = require('../models/action.model').schema;
 const ActionResponseSchema = require('../models/action.response.model').schema;
@@ -69,10 +68,7 @@ class AgentValidate {
                     fallbackAction: AgentSchema.fallbackAction,
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
-                    parameters: Joi.array().items({
-                        name: AgentParameterSchema.name.required(),
-                        value: AgentParameterSchema.value.required()
-                    })
+                    parameters: Joi.object()
                 };
             })()
         };
@@ -235,10 +231,7 @@ class AgentValidate {
                     modifiersRecognizer: AgentSchema.modifiersRecognizer,
                     creationDate: AgentSchema.creationDate,
                     modificationDate: AgentSchema.modificationDate,
-                    parameters: Joi.array().items({
-                        name: AgentParameterSchema.name.required(),
-                        value: AgentParameterSchema.value.required()
-                    })
+                    parameters: Joi.object()
                 };
             })()
         };
@@ -770,10 +763,7 @@ class AgentValidate {
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model,
-                    parameters: Joi.array().items({
-                        name: AgentParameterSchema.name.required(),
-                        value: AgentParameterSchema.value.required()
-                    }),
+                    parameters: Joi.object(),
                     webhook: {
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),

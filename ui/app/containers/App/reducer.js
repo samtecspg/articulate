@@ -196,7 +196,7 @@ const initialState = Immutable({
     multiCategory: true,
     fallbackAction: '',
     categoryClassifierThreshold: 50,
-    parameters: [],
+    parameters: {},
   },
   agent: {
     agentName: '',
@@ -210,7 +210,7 @@ const initialState = Immutable({
     multiCategory: true,
     fallbackAction: '',
     categoryClassifierThreshold: 50,
-    parameters: [],
+    parameters: {},
   },
   agentWebhook: {
     agent: '',
@@ -566,23 +566,17 @@ function appReducer(state = initialState, action) {
         return header;
       }));
     case ADD_AGENT_PARAMETER:
-      return state.updateIn(['agent', 'parameters'], parameters => parameters.concat(action.payload)).set('agentTouched', true);
+      return state.setIn(['agent', 'parameters', action.payload.name], action.payload.value).set('agentTouched', true);
     case DELETE_AGENT_PARAMETER:
-      return state.updateIn(['agent', 'parameters'], parameters => parameters.filter((item, index) => index !== action.parameterIndex)).set('agentTouched', true);
+      return state.setIn(['agent', 'parameters'], state.agent.parameters.without(action.parameterName)).set('agentTouched', true);
     case CHANGE_AGENT_PARAMETER_NAME:
-      return state.updateIn(['agent', 'parameters'], parameters => parameters.map((header, index) => {
-        if (index === action.parameterIndex) {
-          return header.set('name', action.value);
-        }
-        return header;
-      })).set('agentTouched', true);
+      const mutableAgentParameters = Immutable.asMutable(state.agent.parameters, { deep: true });
+      const agentParameterValue = mutableAgentParameters[action.oldParameterName];
+      delete mutableAgentParameters[action.oldParameterName];
+      mutableAgentParameters[action.newParameterName] = agentParameterValue;
+      return state.setIn(['agent', 'parameters'], mutableAgentParameters).set('agentTouched', true);
     case CHANGE_AGENT_PARAMETER_VALUE:
-      return state.updateIn(['agent', 'parameters'], parameters => parameters.map((header, index) => {
-        if (index === action.parameterIndex) {
-          return header.set('value', action.value);
-        }
-        return header;
-      })).set('agentTouched', true);
+      return state.setIn(['agent', 'parameters', action.parameterName], action.value).set('agentTouched', true);
     case LOAD_AGENT_DOCUMENTS_SUCCESS:
       return state.set('documents', action.documents.documents)
         .set('totalDocuments', action.documents.total)
@@ -1229,24 +1223,17 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false);
     case ADD_CATEGORY_PARAMETER:
-      return state.updateIn(['category', 'parameters'], parameters => parameters.concat(action.payload));
+      return state.setIn(['category', 'parameters', action.payload.name], action.payload.value);
     case DELETE_CATEGORY_PARAMETER:
-      return state.updateIn(['category', 'parameters'], parameters => parameters.filter((item, index) => index !== action.parameterIndex));
+      return state.setIn(['category', 'parameters'], state.category.parameters.without(action.parameterName));
     case CHANGE_CATEGORY_PARAMETER_NAME:
-      return state.updateIn(['category', 'parameters'], parameters => parameters.map((header, index) => {
-        if (index === action.parameterIndex) {
-          return header.set('name', action.value);
-        }
-        return header;
-      }));
+      const mutableCategoryParameters = Immutable.asMutable(state.category.parameters, { deep: true });
+      const categoryParameterValue = mutableCategoryParameters[action.oldParameterName];
+      delete mutableCategoryParameters[action.oldParameterName];
+      mutableCategoryParameters[action.newParameterName] = categoryParameterValue;
+      return state.setIn(['category', 'parameters'], mutableCategoryParameters);
     case CHANGE_CATEGORY_PARAMETER_VALUE:
-      return state.updateIn(['category', 'parameters'], parameters => parameters.map((header, index) => {
-        if (index === action.parameterIndex) {
-          return header.set('value', action.value);
-        }
-        return header;
-      }));
-
+      return state.setIn(['category', 'parameters', action.parameterName], action.value);
     case COPY_SAYING_ERROR:
       return state
         .update('notifications', notifications => notifications.concat({ message: `Error: There was an error copying the utterance into your sayings. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }))

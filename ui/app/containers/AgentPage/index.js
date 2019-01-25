@@ -442,14 +442,14 @@ function mapDispatchToProps(dispatch) {
     onAddNewParameter: (payload) => {
       dispatch(addNewAgentParameter(payload));
     },
-    onDeleteParameter: (headerIndex) => {
-      dispatch(deleteAgentParameter(headerIndex));
+    onDeleteParameter: (parameterName) => {
+      dispatch(deleteAgentParameter(parameterName));
     },
-    onChangeParameterName: (headerIndex, value) => {
-      dispatch(changeAgentParameterName(headerIndex, value));
+    onChangeParameterName: (oldParameterName, newParameterName) => {
+      dispatch(changeAgentParameterName(oldParameterName, newParameterName));
     },
-    onChangeParameterValue: (headerIndex, value) => {
-      dispatch(changeAgentParameterValue(headerIndex, value));
+    onChangeParameterValue: (parameterName, value) => {
+      dispatch(changeAgentParameterValue(parameterName, value));
     },
   };
 }

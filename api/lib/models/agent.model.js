@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import AgentParameterSchema from './agent.parameter.model';
 
 class AgentModel {
     static get schema() {
@@ -25,7 +24,7 @@ class AgentModel {
             modifiersRecognizer: Joi.boolean(),
             creationDate: Joi.string(),
             modificationDate: Joi.string(),
-            parameters: Joi.array().items(AgentParameterSchema.schema)
+            parameters: Joi.object()
         };
     };
 }

@@ -482,25 +482,25 @@ export function addNewAgentParameter(payload) {
   };
 }
 
-export function deleteAgentParameter(parameterIndex) {
+export function deleteAgentParameter(parameterName) {
   return {
     type: DELETE_AGENT_PARAMETER,
-    parameterIndex,
+    parameterName,
   };
 }
 
-export function changeAgentParameterName(parameterIndex, value) {
+export function changeAgentParameterName(oldParameterName, newParameterName) {
   return {
     type: CHANGE_AGENT_PARAMETER_NAME,
-    parameterIndex,
-    value,
+    oldParameterName,
+    newParameterName,
   };
 }
 
-export function changeAgentParameterValue(parameterIndex, value) {
+export function changeAgentParameterValue(parameterName, value) {
   return {
     type: CHANGE_AGENT_PARAMETER_VALUE,
-    parameterIndex,
+    parameterName,
     value,
   };
 }
@@ -1447,25 +1447,25 @@ export function addNewCategoryParameter(payload) {
   };
 }
 
-export function deleteCategoryParameter(parameterIndex) {
+export function deleteCategoryParameter(parameterName) {
   return {
     type: DELETE_CATEGORY_PARAMETER,
-    parameterIndex,
+    parameterName,
   };
 }
 
-export function changeCategoryParameterName(parameterIndex, value) {
+export function changeCategoryParameterName(oldParameterName, newParameterName) {
   return {
     type: CHANGE_CATEGORY_PARAMETER_NAME,
-    parameterIndex,
-    value,
+    oldParameterName,
+    newParameterName,
   };
 }
 
-export function changeCategoryParameterValue(parameterIndex, value) {
+export function changeCategoryParameterValue(parameterName, value) {
   return {
     type: CHANGE_CATEGORY_PARAMETER_VALUE,
-    parameterIndex,
+    parameterName,
     value,
   };
 }

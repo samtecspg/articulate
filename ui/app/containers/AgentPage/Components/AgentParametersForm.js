@@ -49,16 +49,16 @@ class AgentParametersForm extends React.Component {
       <Grid item xs={12}>
         <Grid className={classes.formContainer} container item xs={12}>
           <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
-            {agent.parameters.map((parameter, parameterIndex) => (
+            {Object.keys(agent.parameters).map((parameter, parameterIndex) => (
               <Grid key={`value_${parameterIndex}`} container justify='space-between' spacing={24} item xs={12}>
                 <Grid className={classes.agentParameterInputContainer} item xs={6}>
                   <TextField
                     id='parameterName'
                     className={parameterIndex !== 0 ? classes.agentParameterInput : ''}
-                    value={parameter.name}
+                    value={parameter}
                     label={parameterIndex === 0 ? intl.formatMessage(messages.newAgentParameterNameTextField) : null}
                     placeholder={intl.formatMessage(messages.newAgentParameterNameTextFieldPlaceholder)}
-                    onChange={(evt) => { this.props.onChangeParameterName(parameterIndex, evt.target.value) }}
+                    onChange={(evt) => { this.props.onChangeParameterName(parameter, evt.target.value) }}
                     margin='normal'
                     fullWidth
                     InputLabelProps={{
@@ -70,10 +70,10 @@ class AgentParametersForm extends React.Component {
                   <TextField
                     id='parameterValue'
                     className={parameterIndex !== 0 ? classes.agentParameterInput : ''}
-                    value={parameter.value}
+                    defaultValue={agent.parameters[parameter]}
                     label={parameterIndex === 0 ? intl.formatMessage(messages.newAgentParameterValueTextField) : null}
                     placeholder={intl.formatMessage(messages.newAgentParameterValueTextFieldPlaceholder)}
-                    onChange={(evt) => { this.props.onChangeParameterValue(parameterIndex, evt.target.value) }}
+                    onChange={(evt) => { this.props.onChangeParameterValue(parameter, evt.target.value) }}
                     margin='normal'
                     fullWidth
                     InputLabelProps={{
@@ -89,7 +89,7 @@ class AgentParametersForm extends React.Component {
                           }}
                           position="end"
                         >                
-                          <img key={`deleteHeader_${parameterIndex}`} onClick={() => { this.props.onDeleteParameter(parameterIndex) }} className={classes.deleteIcon} src={trashIcon} />
+                          <img key={`deleteHeader_${parameterIndex}`} onClick={() => { this.props.onDeleteParameter(parameter) }} className={classes.deleteIcon} src={trashIcon} />
                         </InputAdornment>
                       )
                     }}
