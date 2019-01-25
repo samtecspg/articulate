@@ -23,7 +23,8 @@ class CategoryModel {
             model: Joi.string().trim().allow(''),
             extraTrainingData: Joi.boolean(),
             creationDate: Joi.string(),
-            modificationDate: Joi.string()
+            modificationDate: Joi.string(),
+            parameters: Joi.object()
         };
     };
 }

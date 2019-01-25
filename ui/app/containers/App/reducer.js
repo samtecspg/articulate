@@ -180,6 +180,7 @@ const initialState = Immutable({
     enabled: true,
     actionThreshold: 50,
     extraTrainingData: false,
+    parameters: {},
   },
   categories: [],
   filteredCategories: [],

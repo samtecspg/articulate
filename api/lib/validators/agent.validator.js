@@ -97,7 +97,8 @@ class AgentValidate {
                     actionThreshold: CategorySchema.actionThreshold.required(),
                     lastTraining: CategorySchema.lastTraining,
                     model: CategorySchema.model,
-                    extraTrainingData: CategorySchema.extraTrainingData
+                    extraTrainingData: CategorySchema.extraTrainingData,
+                    parameters: Joi.object()
                 };
             })()
         };
@@ -641,7 +642,8 @@ class AgentValidate {
                     model: CategorySchema.model,
                     status: CategorySchema.status,
                     creationDate: CategorySchema.creationDate,
-                    modificationDate: CategorySchema.modificationDate
+                    modificationDate: CategorySchema.modificationDate,
+                    parameters: Joi.object()
                 };
             })()
         };
@@ -816,6 +818,7 @@ class AgentValidate {
                         status: CategorySchema.status,
                         lastTraining: CategorySchema.lastTraining,
                         extraTrainingData: CategorySchema.extraTrainingData,
+                        parameters: Joi.object(),
                         sayings: Joi.array().items({
                             userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
                             actions: SayingSchema.actions.allow([]),

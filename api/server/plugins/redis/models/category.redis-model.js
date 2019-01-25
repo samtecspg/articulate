@@ -25,6 +25,9 @@ const schema = {
     extraTrainingData: {
         type: 'boolean'
     },
+    parameters: {
+        type: 'json'
+    },
     creationDate: {
         type: 'timestamp'
     },
