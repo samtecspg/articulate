@@ -2,7 +2,6 @@ import _ from 'lodash';
 import {
     RASA_COMMON_EXAMPLES,
     RASA_ENTITY_SYNONYMS,
-    RASA_KEYWORD_SYNONYMS,
     RASA_NLU_DATA,
     RASA_REGEX_FEATURES
 } from '../../../util/constants';
@@ -102,7 +101,7 @@ const getCommonExamples = (sayings, extraTrainingData, keywordsCombinations, cat
     return commonExamples;
 };
 
-module.exports = async function ({ keywords, sayings, extraTrainingData, isKeyword = true, categoryName = null }) {
+module.exports = async function ({ keywords, sayings, extraTrainingData, categoryName = null }) {
 
     const {
         keywordService
@@ -175,7 +174,7 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, isKeywo
             [RASA_NLU_DATA]: {
                 [RASA_COMMON_EXAMPLES]: commonExamplesUserSayings.concat(commonExamplesModifiersSayings),
                 [RASA_REGEX_FEATURES]: regexs,
-                [`${isKeyword ? RASA_KEYWORD_SYNONYMS : RASA_ENTITY_SYNONYMS}`]: keywordSynonyms
+                [RASA_ENTITY_SYNONYMS]: keywordSynonyms
             }
         };
     }

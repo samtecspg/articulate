@@ -33,26 +33,31 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     };
 
     //MARK: returns the category recognizer, or the only category or just list of keywords
-    const getBestRasaResult = ({ rasaResults, categoryClassifierThreshold }) => {
+    const getBestRasaResult = ({ rasaResults, categoryClassifierThreshold, multiCategory }) => {
 
         let rasaResult = {};
 
         const recognizedCategory = rasaResults[0];
 
-        //MARK: if there is more than one category and this exceeds the agent.categoryClassifierThreshold then return it
-        if (rasaResults.length > 0 && recognizedCategory.categoryScore > categoryClassifierThreshold) {
-            rasaResult = recognizedCategory;
-        }
-        else {
-            //MARK: if there is only one then return it
-            if (rasaResults.length === 1) {
+        if (multiCategory){
+            //MARK: if there is more than one category and this exceeds the agent.categoryClassifierThreshold then return it
+            if (rasaResults.length > 0 && recognizedCategory.categoryScore > categoryClassifierThreshold) {
                 rasaResult = recognizedCategory;
             }
-            //MARK: if there is more than one then collect all keywords
-            //MARK: but this will have a different structure?
             else {
-                rasaResult.keywords = getKeywordsFromRasaResults({ rasaResults });
+                //MARK: if there is only one then return it
+                if (rasaResults.length === 1) {
+                    rasaResult = recognizedCategory;
+                }
+                //MARK: if there is more than one then collect all keywords
+                //MARK: but this will have a different structure?
+                else {
+                    rasaResult.keywords = getKeywordsFromRasaResults({ rasaResults });
+                }
             }
+        }
+        else {
+            rasaResult = recognizedCategory;
         }
 
         return rasaResult;
@@ -466,7 +471,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
             let indexOfActionInQueue = -1;
             //MARK: get category recognizer, 1 category or list of keywords from all categories
-            conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, categoryClassifierThreshold: conversationStateObject.agent.categoryClassifierThreshold });
+            conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, categoryClassifierThreshold: conversationStateObject.agent.categoryClassifierThreshold, multiCategory: conversationStateObject.agent.multiCategory });
             //MARK: if there is an action, look for it in the agent actions
             conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult, agentActions: conversationStateObject.agent.actions });
             if (!conversationStateObject.action){
