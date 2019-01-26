@@ -22,10 +22,18 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false })
     parsedResponses = _.compact(parsedResponses);
     if (parsedResponses.length > 0) {
 
+        parsedResponses = _.filter(parsedResponses, (parsedResponse) => {
+
+            return parsedResponse.textResponse !== '';
+        });
+    }
+    
+    if (parsedResponses.length > 0) {
+
         const maxNumberOfExpressions = _.max(_.map(parsedResponses, 'numberOfSlots'));
         parsedResponses = _.filter(parsedResponses, (parsedResponse) => {
 
-            return parsedResponse.textResponse !== '' && parsedResponse.numberOfSlots === maxNumberOfExpressions;
+            return parsedResponse.numberOfSlots === maxNumberOfExpressions;
         });
     }
 
