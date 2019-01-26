@@ -37,6 +37,10 @@ import {
   resetStatusFlag,
   changeActionThreshold,
   deleteCategory,
+  addNewCategoryParameter,
+  deleteCategoryParameter,
+  changeCategoryParameterName,
+  changeCategoryParameterValue,
 } from '../App/actions';
 
 import ActionButtons from './Components/ActionButtons';
@@ -71,6 +75,7 @@ export class CategoriesEditPage extends React.Component {
     formError: false,
     errorState: {
       categoryName: false,
+      tabs: [],
     },
   };
 
@@ -78,11 +83,13 @@ export class CategoriesEditPage extends React.Component {
     let errors = false;
     const newErrorState = {
       categoryName: false,
+      tabs: []
     };
 
     if (!this.props.category.categoryName || this.props.category.categoryName === ''){
       errors = true;
       newErrorState.categoryName = true;
+      newErrorState.tabs.push(0);
     }
     else {
       newErrorState.categoryName = false;
@@ -133,6 +140,10 @@ export class CategoriesEditPage extends React.Component {
           errorState={this.state.errorState}
           onDelete={this.props.onDelete.bind(null, this.props.category.id)}
           newCategory={this.state.isNewCategory}
+          onAddNewParameter={this.props.onAddNewParameter}
+          onDeleteParameter={this.props.onDeleteParameter}
+          onChangeParameterName={this.props.onChangeParameterName}
+          onChangeParameterValue={this.props.onChangeParameterValue}
         />
       </Grid>
     );
@@ -188,7 +199,19 @@ function mapDispatchToProps(dispatch) {
     },
     onDelete: (id) => {
       dispatch(deleteCategory(id));
-    }
+    },
+    onAddNewParameter: (payload) => {
+      dispatch(addNewCategoryParameter(payload));
+    },
+    onDeleteParameter: (parameterName) => {
+      dispatch(deleteCategoryParameter(parameterName));
+    },
+    onChangeParameterName: (oldParameterName, newParameterName) => {
+      dispatch(changeCategoryParameterName(oldParameterName, newParameterName));
+    },
+    onChangeParameterValue: (parameterName, value) => {
+      dispatch(changeCategoryParameterValue(parameterName, value));
+    },
   };
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal } from '@material-ui/core';
+import { Grid, Typography, Button, Modal, Tabs, Tab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
@@ -10,6 +10,7 @@ import messages from '../messages';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 
 import CategoryDataForm from './CategoryDataForm';
+import CategoryParametersForm from './CategoryParametersForm';
 import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
@@ -76,12 +77,42 @@ const styles = {
     fontSize: '14px',
     fontWeight: 300,
   },
+  categoryTabs: {
+    paddingLeft: "5px",
+  },
+  tabLabel: {
+    padding: '0px 10px',
+  },
+  notificationDot: {
+    backgroundColor: '#Cb2121',
+    height: '12px',
+    width: '12px',
+    borderRadius: '50%',
+    position: 'absolute',
+    top: '10px',
+    left: '5px'
+  },
+  numOfErrorsLabel: {
+    fontSize: '10px',
+    color: 'white',
+    position: 'relative',
+    bottom: '4.5px',
+    left: '0.5px'
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
+
   state = {
+    selectedTab: 0,
     openModal: false,
+  };
+
+  handleChange = (event, value) => {
+    this.setState({
+      selectedTab: value,
+    });
   };
 
   handleOpen = () => {
@@ -99,6 +130,7 @@ class Form extends React.Component {
   render() {
     const { classes, intl } = this.props;
     return (
+
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
           <Grid className={classes.titleTextHelpContainer} container>
@@ -139,18 +171,75 @@ class Form extends React.Component {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {<CategoryDataForm
-            category={this.props.category}
-            onChangeCategoryData={this.props.onChangeCategoryData}
-            onChangeActionThreshold={this.props.onChangeActionThreshold}
-            errorState={this.props.errorState}
-          />}
+          <Tabs
+            className={classes.categoryTabs}
+            value={this.state.selectedTab}
+            indicatorColor="primary"
+            textColor="secondary"
+            scrollable
+            scrollButtons="off"
+            onChange={(evt, value) => {
+              this.handleChange(evt, value);
+            }}
+          >
+            <Tab 
+              label={
+                <span className={classes.tabLabel}>
+                  <span>{intl.formatMessage(messages.main)}</span>
+                </span>
+              }	
+              icon={
+                this.props.errorState.tabs.indexOf(0) > -1 ? 
+                  <div id='notificationDot' className={classes.notificationDot}>
+                    <span className={classes.numOfErrorsLabel}>
+                      {(this.props.errorState.tabs.filter((element) => { return element === 0 })).length}
+                    </span>
+                  </div> : 
+                  null
+              }
+            />
+            <Tab 
+              label={
+                <span className={classes.tabLabel}>
+                  <span>{intl.formatMessage(messages.parameters)}</span>
+                </span>
+              }
+              icon={
+                this.props.errorState.tabs.indexOf(1) > -1 ? 
+                  <div id='notificationDot' className={classes.notificationDot}>
+                    <span className={classes.numOfErrorsLabel}>
+                      {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
+                    </span>
+                  </div> : 
+                  null
+              }
+            />
+          </Tabs>
+          {this.state.selectedTab === 0 && (
+            <CategoryDataForm
+              category={this.props.category}
+              onChangeCategoryData={this.props.onChangeCategoryData}
+              onChangeActionThreshold={this.props.onChangeActionThreshold}
+              errorState={this.props.errorState}
+            />
+          )}
+          {this.state.selectedTab === 1 && (
+            <CategoryParametersForm
+              category={this.props.category}
+              errorState={this.props.errorState}
+              onAddNewParameter={this.props.onAddNewParameter}
+              onDeleteParameter={this.props.onDeleteParameter}
+              onChangeParameterName={this.props.onChangeParameterName}
+              onChangeParameterValue={this.props.onChangeParameterValue}
+            />
+          )}
         </Grid>
         {this.props.newCategory ? null : 
-        <DeleteFooter
-          onDelete={this.props.onDelete}
-          type={intl.formatMessage(messages.instanceName)}
-        />}
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        }
       </Grid>
     );
   }
@@ -164,7 +253,11 @@ Form.propTypes = {
   onChangeActionThreshold: PropTypes.func,
   errorState: PropTypes.object,
   onDelete: PropTypes.func,
-  newCategory: PropTypes.bool
+  newCategory: PropTypes.bool,
+  onAddNewParameter: PropTypes.func,
+  onDeleteParameter: PropTypes.func,
+  onChangeParameterName: PropTypes.func,
+  onChangeParameterValue: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

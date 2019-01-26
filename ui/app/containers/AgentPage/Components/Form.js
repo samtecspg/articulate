@@ -196,7 +196,7 @@ class Form extends React.Component {
                 </span>
               }
               icon={
-                this.props.errorState.tabs.indexOf(0) > -1 ? 
+                this.props.errorState.tabs.indexOf(1) > -1 ? 
                   <div id='notificationDot' className={classes.notificationDot}>
                     <span className={classes.numOfErrorsLabel}>
                       {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
@@ -207,7 +207,7 @@ class Form extends React.Component {
             />
             <Tab
               icon={[
-                this.props.errorState.tabs.indexOf(1) > -1 ? 
+                this.props.errorState.tabs.indexOf(2) > -1 ? 
                   <div style={{left: '0px'}} key='notification_settings' id='notificationDot' className={classes.notificationDot}>
                     <span className={classes.numOfErrorsLabel}>
                       {(this.props.errorState.tabs.filter((element) => { return element === 2 })).length}
@@ -244,19 +244,7 @@ class Form extends React.Component {
           {this.state.selectedTab === 1 && (
             <AgentParametersForm
               agent={this.props.agent}
-              settings={this.props.settings}
-              onChangeAgentData={this.props.onChangeAgentData}
-              onChangeAgentName={this.props.onChangeAgentName}
-              onChangeCategoryClassifierThreshold={
-                this.props.onChangeCategoryClassifierThreshold
-              }
-              onAddFallbackResponse={this.props.onAddFallbackResponse}
-              onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               errorState={this.props.errorState}
-              agentActions={this.props.agentActions}
-              newAgent={this.props.newAgent}
-              onGoToUrl={this.props.onGoToUrl}
-              defaultaFallbackActionName={this.props.defaultaFallbackActionName}
               onAddNewParameter={this.props.onAddNewParameter}
               onDeleteParameter={this.props.onDeleteParameter}
               onChangeParameterName={this.props.onChangeParameterName}

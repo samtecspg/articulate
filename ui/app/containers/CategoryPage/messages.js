@@ -63,4 +63,32 @@ export default defineMessages({
     id: 'app.containers.CategoryEditPage.component.CategoryDataForm.extraTrainingData',
     defaultMessage: 'Generate extra training examples',
   },
+  main: {
+    id: 'app.containers.AgentPage.component.Form.main',
+    defaultMessage: 'Main',
+  },
+  parameters: {
+    id: 'app.containers.AgentPage.component.Form.parameters',
+    defaultMessage: 'Parameters',
+  },
+  newCategoryParameterNameTextField: {
+    id: 'app.containers.CategoryPage.component.CategoryParametersForm.newCategoryParameterNameTextField',
+    defaultMessage: 'Parameter Name:',
+  },
+  newCategoryParameterValueTextField: {
+    id: 'app.containers.CategoryPage.component.CategoryParametersForm.newCategoryParameterValueTextField',
+    defaultMessage: 'Parameter Value:',
+  },
+  newCategoryParameterNameTextFieldPlaceholder: {
+    id: 'app.containers.CategoryPage.component.CategoryParametersForm.newCategoryParameterNameTextFieldPlaceholder',
+    defaultMessage: 'Type your parameter name',
+  },
+  newCategoryParameterValueTextFieldPlaceholder: {
+    id: 'app.containers.CategoryPage.component.CategoryParametersForm.newCategoryParameterValueTextFieldPlaceholder',
+    defaultMessage: 'Type your parameter value',
+  },
+  addParameter: {
+    id: 'app.containers.CategoryPage.component.CategoryParametersForm.addParameter',
+    defaultMessage: '+ Add',
+  },
 });
