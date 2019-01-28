@@ -63,7 +63,6 @@ export class SayingsPage extends React.Component {
     this.onSearchCategory = this.onSearchCategory.bind(this);
     this.addSaying = this.addSaying.bind(this);
     this.deleteSaying = this.deleteSaying.bind(this);
-    this.updateStateFromURL = this.updateStateFromURL.bind(this);
   }
 
   state = {
