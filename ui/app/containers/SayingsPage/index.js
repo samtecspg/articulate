@@ -63,6 +63,7 @@ export class SayingsPage extends React.Component {
     this.onSearchCategory = this.onSearchCategory.bind(this);
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
     this.addSaying = this.addSaying.bind(this);
+    this.deleteSaying = this.deleteSaying.bind(this);
   }
 
   state = {
@@ -177,6 +178,10 @@ export class SayingsPage extends React.Component {
     this.props.onAddSaying(this.state.filter, 1, this.state.pageSize, saying);
   }
 
+  deleteSaying(sayingId, categoryId) {
+    this.props.onDeleteSaying(this.state.filter, this.state.currentPage, this.state.pageSize, sayingId, categoryId);
+  }
+
   render() {
     return (
       <Grid container>
@@ -202,7 +207,7 @@ export class SayingsPage extends React.Component {
               agentCategories={this.props.agentCategories}
               agentFilteredCategories={this.props.agentFilteredCategories}
               onAddSaying={this.addSaying}
-              onDeleteSaying={this.props.onDeleteSaying.bind(null, this.state.pageSize)}
+              onDeleteSaying={this.deleteSaying}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
@@ -295,8 +300,8 @@ function mapDispatchToProps(dispatch) {
     onAddSaying: (filter, page, pageSize, value) => {
       dispatch(addSaying(filter, page, pageSize, value));
     },
-    onDeleteSaying: (pageSize, sayingId, categoryId) => {
-      dispatch(deleteSaying(pageSize, sayingId, categoryId));
+    onDeleteSaying: (filter, page, pageSize, sayingId, categoryId) => {
+      dispatch(deleteSaying(filter, page, pageSize, sayingId, categoryId));
     },
     onTagKeyword: (filter, page, pageSize, saying, value, start, end, keywordId, keywordName) => {
       dispatch(tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName));
