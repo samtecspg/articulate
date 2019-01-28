@@ -133,12 +133,12 @@ class Form extends React.Component {
                   border: 'none',
                 },
               }}
-              value={filter.query}
+              value={filter}
               disableUnderline
               className={classes.searchInputField}
               placeholder={intl.formatMessage(messages.searchSayingPlaceholder)}
               onChange={(evt) => {
-                this.props.onSearchSaying({ query: evt.target.value });
+                this.props.onSearchSaying(evt.target.value);
               }}
             />
           </div>
@@ -225,7 +225,7 @@ Form.propTypes = {
   onAddNewSayingAction: PropTypes.func,
   onDeleteNewSayingAction: PropTypes.func,
   onClearSayingToAction: PropTypes.func,
-  filter: PropTypes.object,
+  filter: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(Form));

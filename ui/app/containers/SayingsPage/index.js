@@ -61,55 +61,53 @@ export class SayingsPage extends React.Component {
     this.changePageSize = this.changePageSize.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.onSearchCategory = this.onSearchCategory.bind(this);
-    this.setNumberOfPages = this.setNumberOfPages.bind(this);
     this.addSaying = this.addSaying.bind(this);
     this.deleteSaying = this.deleteSaying.bind(this);
+    this.updateStateFromURL = this.updateStateFromURL.bind(this);
   }
 
   state = {
-    filter: { category: '', actions: '', query: '' },
+    filter: '',
     categoryFilter: '',
-    currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
+    currentPage: 1,
     pageSize: this.props.agent.settings.sayingsPageSize,
     numberOfPages: null,
-    totalSayings: null,
   };
 
   componentWillMount() {
+
     if (this.props.agent.id) {
+      this.throttledOnLoadSayings = _.throttle((filter, currentPage = this.state.currentPage, pageSize = this.state.pageSize) => {
+        this.props.onLoadSayings(filter, currentPage, pageSize);
+      }, 2000, { 'trailing': true });
+
+      const locationSearchParams = qs.parse(this.props.location.search);
+      const filter = locationSearchParams.filter || this.state.filter;
+      const currentPage = locationSearchParams.page ? _.toNumber(locationSearchParams.page) : this.state.currentPage;
+      this.setState({ filter, currentPage });
+
       this.props.onLoadKeywords();
       this.props.onLoadActions();
       this.props.onLoadCategories();
-      this.props.onLoadSayings('', this.state.currentPage, this.state.pageSize);
+      this.props.onLoadSayings(filter, currentPage, this.state.pageSize);
     }
     else {
       // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
     }
 
-    this.callFilter = _.throttle((filter) => {
-      this.props.onLoadSayings(filter, 1, this.state.pageSize);
-    }, 2000, { 'trailing': true });
   }
 
   componentWillUnmount() {
-    this.callFilter = null;
+    this.throttledOnLoadSayings = null;
   }
 
-  componentDidUpdate() {
-    if (this.props.totalSayings !== this.state.totalSayings) {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.totalSayings !== prevProps.totalSayings) {
       this.setState({
-        totalSayings: this.props.totalSayings,
+        numberOfPages: Math.ceil(this.props.totalSayings / this.state.pageSize),
       });
-      this.setNumberOfPages(this.state.pageSize);
     }
-  }
-
-  setNumberOfPages(pageSize) {
-    const numberOfPages = Math.ceil(this.props.totalSayings / pageSize);
-    this.setState({
-      numberOfPages,
-    });
   }
 
   changePage(pageNumber) {
@@ -120,19 +118,13 @@ export class SayingsPage extends React.Component {
   }
 
   movePageBack() {
-    let newPage = this.state.currentPage;
-    if (this.state.currentPage > 1) {
-      newPage = this.state.currentPage - 1;
-    }
-    this.changePage(newPage);
+    const { currentPage } = this.state;
+    this.changePage(currentPage > 1 ? currentPage - 1 : currentPage);
   }
 
   movePageForward() {
-    let newPage = this.state.currentPage;
-    if (this.state.currentPage < this.state.numberOfPages) {
-      newPage = this.state.currentPage + 1;
-    }
-    this.changePage(newPage);
+    const { currentPage, numberOfPages } = this.state;
+    this.changePage(currentPage < numberOfPages ? currentPage + 1 : currentPage);
   }
 
   changePageSize(pageSize) {
@@ -145,23 +137,11 @@ export class SayingsPage extends React.Component {
   }
 
   onSearchSaying(filter) {
-    const updatedFilter = { ...this.state.filter, ...filter };
-    const { remainingText, found } = ExtractTokensFromString({ text: updatedFilter.query, tokens: ['category', 'actions'] });
-    updatedFilter.category = found.category;
-    updatedFilter.actions = found.actions;
     this.setState({
-      filter: {
-        category: found.category,
-        actions: found.actions,
-        query: updatedFilter.query,
-      },
+      filter,
       currentPage: 1,
     });
-    this.callFilter({
-      category: updatedFilter.category,
-      actions: updatedFilter.actions,
-      query: remainingText,
-    });
+    this.throttledOnLoadSayings(filter, 1);
   }
 
   onSearchCategory(categoryFilter) {
@@ -266,6 +246,7 @@ SayingsPage.propTypes = {
   category: PropTypes.string,
   onTrain: PropTypes.func,
   newSayingActions: PropTypes.array,
+  location: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -283,7 +264,13 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     onLoadSayings: (filter, page, pageSize) => {
-      dispatch(loadSayings(filter, page, pageSize));
+      const { remainingText, found } = ExtractTokensFromString({ text: filter, tokens: ['category', 'actions'] });
+      const parsedFilter = {
+        category: found.category,
+        actions: found.actions,
+        query: remainingText,
+      };
+      dispatch(loadSayings(parsedFilter, page, pageSize));
     },
     onLoadFilteredCategories: (filter) => {
       dispatch(loadFilteredCategories(filter));
