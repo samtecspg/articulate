@@ -571,10 +571,10 @@ function appReducer(state = initialState, action) {
     case DELETE_AGENT_PARAMETER:
       return state.setIn(['agent', 'parameters'], state.agent.parameters.without(action.parameterName)).set('agentTouched', true);
     case CHANGE_AGENT_PARAMETER_NAME:
-      const mutableAgentParameters = Immutable.asMutable(state.agent.parameters, { deep: true });
-      const agentParameterValue = mutableAgentParameters[action.oldParameterName];
-      delete mutableAgentParameters[action.oldParameterName];
-      mutableAgentParameters[action.newParameterName] = agentParameterValue;
+      let mutableAgentParameters = Immutable.asMutable(state.agent.parameters, { deep: true });
+      let jsonMutableAgentParameters = JSON.stringify(mutableAgentParameters);
+      jsonMutableAgentParameters = jsonMutableAgentParameters.replace(`"${action.oldParameterName}":`, `"${action.newParameterName}":`);
+      mutableAgentParameters = JSON.parse(jsonMutableAgentParameters);
       return state.setIn(['agent', 'parameters'], mutableAgentParameters).set('agentTouched', true);
     case CHANGE_AGENT_PARAMETER_VALUE:
       return state.setIn(['agent', 'parameters', action.parameterName], action.value).set('agentTouched', true);
@@ -1228,10 +1228,10 @@ function appReducer(state = initialState, action) {
     case DELETE_CATEGORY_PARAMETER:
       return state.setIn(['category', 'parameters'], state.category.parameters.without(action.parameterName));
     case CHANGE_CATEGORY_PARAMETER_NAME:
-      const mutableCategoryParameters = Immutable.asMutable(state.category.parameters, { deep: true });
-      const categoryParameterValue = mutableCategoryParameters[action.oldParameterName];
-      delete mutableCategoryParameters[action.oldParameterName];
-      mutableCategoryParameters[action.newParameterName] = categoryParameterValue;
+      let mutableCategoryParameters = Immutable.asMutable(state.category.parameters, { deep: true });
+      let jsonMutableCategoryParameters = JSON.stringify(mutableCategoryParameters);
+      jsonMutableCategoryParameters = jsonMutableCategoryParameters.replace(`"${action.oldParameterName}":`, `"${action.newParameterName}":`);
+      mutableCategoryParameters = JSON.parse(jsonMutableCategoryParameters);
       return state.setIn(['category', 'parameters'], mutableCategoryParameters);
     case CHANGE_CATEGORY_PARAMETER_VALUE:
       return state.setIn(['category', 'parameters', action.parameterName], action.value);
