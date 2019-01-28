@@ -361,31 +361,43 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         return responses;
     };
 
-    const getResponseOfChainedAction = ({ action }) => {
+    const getResponseOfChainedAction = async ({ action, conversationStateObject }) => {
 
         const response = {
             actionWasFulfilled: true
         };
-        //If the chained action have slots, then it wasn't fulfilled, therefore we prompt a random text prompt for the first slot
-        if (action.slots.length > 0) {
-            response.actionWasFulfilled = false;
-            response.textResponse = action.slots[0].textPrompts[Math.floor(Math.random() * action.slots[0].textPrompts.length)];
+        //If the chained action have required slots, check if those can be pulled from the current context
+        const requiredSlotNames = _.compact(_.map(action.slots, (slot) => {
+                
+            return slot.isRequired ? slot : null;
+        }));
+        if (requiredSlotNames.length > 0) {
+            const missingSlots = _.filter(requiredSlotNames, (slot) => {
+    
+                if (conversationStateObject.slots){
+                    const currentSlotValue = conversationStateObject.slots[slot.slotName];
+                    return (currentSlotValue === undefined) || (currentSlotValue === '') || (currentSlotValue === null) || (Array.isArray(currentSlotValue) && currentSlotValue.length === 0);
+                }
+                return true;
+            });
+            if (missingSlots.length > 0){
+                response.actionWasFulfilled = false;
+                const textResponse = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });        
+                Object.assign(response, { ...textResponse });
+                return response;
+            }
         }
-        else {
-            //If there aren't slots, then the action is fulfilled and we pull a random textResponse from the action responses
-            const textResponses = _.map(action.responses, 'textResponse');
-            response.textResponse = textResponses[Math.floor(Math.random() * textResponses.length)];
-        }
+        const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject });
+        Object.assign(response, { ...textResponse });
         return response;
     };
 
-    const chainResponseActions = ({ conversationStateObject, responseActions }) => {
+    const chainResponseActions = async ({ conversationStateObject, responseActions }) => {
 
         const agentActions = conversationStateObject[CSO_AGENT].actions;
         let currentQueueIndex = 0;
 
-        responseActions.forEach((responseAction) => {
-
+        for(let responseAction of responseActions){
             let agentAction = _.filter(agentActions, (tempAction) => {
 
                 return tempAction.actionName === responseAction;
@@ -406,11 +418,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         action: agentAction.actionName,
                         slots: {}
                     });
-                    const response = getResponseOfChainedAction({ action: agentAction });
+                    const response = await getResponseOfChainedAction({ action: agentAction, conversationStateObject });
                     conversationStateObject.context.responseQueue.push({ ...response });
                 }
             }
-        });
+        }
     };
 
     const conversationStateObject = {};
@@ -560,7 +572,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 data.push(finalResponse);
             }
             if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0) {
-                chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions });
+                await chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions });
             }
             return data;
         }, Promise.resolve([]));
