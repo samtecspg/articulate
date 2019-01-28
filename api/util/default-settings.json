@@ -8,56 +8,77 @@
   ],
   "categoryClassifierPipeline": [
     {
-      "name": "nlp_spacy"
+        "name": "intent_featurizer_count_vectors"
     },
     {
-      "name": "tokenizer_spacy"
+        "name": "intent_classifier_tensorflow_embedding",
+        "intent_tokenization_flag": true,
+        "intent_split_symbol": "+"
     },
     {
-      "name": "intent_featurizer_spacy"
+        "name": "nlp_spacy"
     },
     {
-      "name": "intent_classifier_sklearn"
+        "name": "tokenizer_spacy"
+    },
+    {
+        "name": "ner_crf"
+    },
+    {
+        "name": "ner_synonyms"
+    },
+    {
+        "name": "ner_spacy"
     }
   ],
   "sayingClassifierPipeline": [
     {
-      "name": "nlp_spacy"
+        "name": "intent_featurizer_count_vectors"
     },
     {
-      "name": "tokenizer_spacy"
+        "name": "intent_classifier_tensorflow_embedding",
+        "intent_tokenization_flag": true,
+        "intent_split_symbol": "+"
     },
     {
-      "name": "intent_featurizer_spacy"
+        "name": "nlp_spacy"
     },
     {
-      "name": "ner_crf"
+        "name": "tokenizer_spacy"
     },
     {
-      "name": "ner_synonyms"
+        "name": "ner_crf"
     },
     {
-      "name": "intent_classifier_sklearn"
+        "name": "ner_synonyms"
     },
     {
-      "name": "ner_spacy"
+        "name": "ner_spacy"
     }
   ],
   "keywordClassifierPipeline": [
     {
-      "name": "nlp_spacy"
+        "name": "intent_featurizer_count_vectors"
     },
     {
-      "name": "tokenizer_spacy"
+        "name": "intent_classifier_tensorflow_embedding",
+        "intent_tokenization_flag": true,
+        "intent_split_symbol": "+"
     },
     {
-      "name": "ner_crf"
+        "name": "nlp_spacy"
     },
     {
-      "name": "ner_synonyms"
+        "name": "tokenizer_spacy"
     },
     {
-      "name": "ner_spacy"
+        "name": "ner_crf"
+    },
+    {
+        "name": "ner_synonyms"
+    },
+    {
+        "name": "ner_spacy"
     }
   ],
   "rasaURL": "http://rasa:5000",
