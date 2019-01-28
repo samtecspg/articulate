@@ -22,11 +22,6 @@ services:
     ports: ['0.0.0.0:5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
     networks: ['alpha-nlu-network']
-  rasa-tf:
-    image: samtecspg/articulate-rasa:daniel-test-may25-2018-try03
-    ports: ['0.0.0.0:9000:5000']
-    volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config-tf.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
-    networks: ['alpha-nlu-network']
   duckling:
     image: samtecspg/duckling:0.1.6.0
     ports: ['0.0.0.0:8000:8000']
