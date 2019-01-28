@@ -146,6 +146,7 @@ export class KeywordsPage extends React.Component {
               changePageSize={this.changePageSize}
               movePageBack={this.movePageBack}
               movePageForward={this.movePageForward}
+              onGoToUrl={this.props.onGoToUrl}
             />
           }
         />
@@ -159,6 +160,7 @@ KeywordsPage.propTypes = {
   keywords: PropTypes.array,
   onLoadKeywords: PropTypes.func,
   onTrain: PropTypes.func,
+  onGoToUrl: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -180,7 +182,10 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeKeywordsPageSize: (agentId, pageSize) => {
       dispatch(changeKeywordsPageSize(agentId, pageSize));
-    }
+    },
+    onGoToUrl: (url) => {
+      dispatch(push(url));
+    },
   };
 }
 

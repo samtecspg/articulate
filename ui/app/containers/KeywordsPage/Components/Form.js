@@ -159,6 +159,7 @@ class Form extends React.Component {
             changePageSize={this.props.changePageSize}
             movePageBack={this.props.movePageBack}
             movePageForward={this.props.movePageForward}
+            onGoToUrl={this.props.onGoToUrl}
           />}
         </Grid>
       </Grid>
@@ -180,6 +181,7 @@ Form.propTypes = {
   changePageSize: PropTypes.func,
   movePageBack: PropTypes.func,
   movePageForward: PropTypes.func,
+  onGoToUrl: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

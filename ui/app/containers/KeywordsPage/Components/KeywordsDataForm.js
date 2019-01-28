@@ -74,9 +74,8 @@ const styles = {
     top: '39px',
     position: 'relative',
   },
-  keywordLink: {
-    textDecoration: 'none',
-    color: '#4e4e4e',
+  keywordRow: {
+    cursor: 'pointer',
   },
   dot: {
     marginRight: 5,
@@ -121,12 +120,10 @@ class KeywordsDataForm extends React.Component {
                     <Table>
                       <TableBody>
                         {keywords.map((keyword, index) => (
-                          <TableRow key={`${keyword}_${index}`}>
+                          <TableRow className={classes.keywordRow} onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/keyword/${keyword.id}`) }} key={`${keyword}_${index}`}>
                             <TableCell>
-                              <Link className={classes.keywordLink} to={`/agent/${this.props.agentId}/keyword/${keyword.id}`}>
-                                <span style={{backgroundColor: keyword.uiColor}} className={classes.dot}></span>
-                                <span>{keyword.keywordName}</span>
-                              </Link>
+                              <span style={{backgroundColor: keyword.uiColor}} className={classes.dot}></span>
+                              <span>{keyword.keywordName}</span>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -225,6 +222,7 @@ KeywordsDataForm.propTypes = {
   changePageSize: PropTypes.func,
   movePageBack: PropTypes.func,
   movePageForward: PropTypes.func,
+  onGoToUrl: PropTypes.func,
 };
 
 export default withStyles(styles)(KeywordsDataForm);
