@@ -397,7 +397,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const agentActions = conversationStateObject[CSO_AGENT].actions;
         let currentQueueIndex = 0;
 
-        for(let responseAction of responseActions){
+        for (let responseAction of responseActions){
             let agentAction = _.filter(agentActions, (tempAction) => {
 
                 return tempAction.actionName === responseAction;

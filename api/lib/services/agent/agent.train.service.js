@@ -37,7 +37,7 @@ const generateTrainingDataForCategoriesRecognizer = async ({ AgentModel, Categor
     };
 
     if (enableModelsPerCategory){
-        for (const CategoryModel of CategoryModels) {
+        for (let CategoryModel of CategoryModels) {
     
             const sayingIds = await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING);
             if (sayingIds.length > 1) { // If the category only have 1 saying then RASA will fail during training
@@ -130,16 +130,15 @@ module.exports = async function ({ id, returnModel = false }) {
             });
 
             //Train each category that need it
-            if (!(!CategoryModelsToTrain.length > 0 && CategoryModels.length < 2)) {
-                //TODO: Do in parallel
-                await Promise.all(CategoryModels.map(async (CategoryModel) => {
-
+            if (CategoryModelsToTrain.length > 0) {
+                //TODO: Do it in Parallel
+                for (let CategoryModel of CategoryModels){
                     const status = CategoryModel.property('status');
                     if (status === STATUS_TRAINING || status === STATUS_READY) {
                         return;
                     }
                     await categoryService.train({ AgentModel, CategoryModel });
-                }));
+                }
             }
         } 
         else {
