@@ -134,10 +134,9 @@ module.exports = async function ({ id, returnModel = false }) {
                 //TODO: Do it in Parallel
                 for (let CategoryModel of CategoryModels){
                     const status = CategoryModel.property('status');
-                    if (status === STATUS_TRAINING || status === STATUS_READY) {
-                        return;
-                    }
+                    if (status === STATUS_ERROR || status === STATUS_OUT_OF_DATE) {                        
                     await categoryService.train({ AgentModel, CategoryModel });
+                    }
                 }
             }
         } 
