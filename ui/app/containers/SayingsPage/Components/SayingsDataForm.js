@@ -22,6 +22,10 @@ import {
   injectIntl,
   intlShape,
 } from 'react-intl';
+
+import _ from 'lodash';
+import Immutable from 'seamless-immutable';
+
 import addActionIcon from '../../../images/add-action-icon.svg';
 import clearIcon from '../../../images/clear-icon.svg';
 import pencilIcon from '../../../images/pencil-icon.svg';
@@ -211,7 +215,36 @@ class SayingsDataForm extends React.Component {
     errorCategory: false,
     openActions: false,
     anchorEl: null,
+    changedPage: false
   };
+
+  scrollToNextPageCursor(){
+    const pageControl = document.querySelector('#pageControl');
+    if (pageControl){
+      pageControl.scrollIntoView(true);
+    }
+  }
+
+  componentWillUpdate(nextProps){
+    if (this.props.currentPage !== nextProps.currentPage || this.props.sayingsPageSize !== nextProps.sayingsPageSize){
+      this.setState({
+        changedPage: true,
+      });
+    }
+    else {
+      if (!_.isEqual(Immutable.asMutable(this.props.sayings, {deep: true}), Immutable.asMutable(nextProps.sayings, {deep: true}))){
+        this.setState({
+          changedPage: false,
+        });
+      }
+    }
+  }
+
+  componentDidUpdate(){
+    if (this.state.changedPage){
+      this.scrollToNextPageCursor();
+    }
+  }
 
   render() {
     const { classes, intl, sayings, category } = this.props;
@@ -228,6 +261,7 @@ class SayingsDataForm extends React.Component {
                 onClick={
                   () => {
                     this.setState({
+                      changedPage: false,
                       categoriesDropdownOpen: !this.state.categoriesDropdownOpen,
                     });
                   }
@@ -237,6 +271,7 @@ class SayingsDataForm extends React.Component {
                     this.props.onSelectCategory(evt.target.value);
                   }
                   this.setState({
+                    changedPage: false,
                     categoriesDropdownOpen: false,
                   });
                 }}
@@ -420,10 +455,12 @@ class SayingsDataForm extends React.Component {
                         );
                       })}
                       <img
+                        id='addActions'
                         className={classes.addActionIcon}
                         src={addActionIcon}
                         onClick={(evt) => {
                           this.setState({
+                            changedPage: false,
                             openActions: true,
                             anchorEl: evt.currentTarget,
                           });
@@ -441,18 +478,21 @@ class SayingsDataForm extends React.Component {
                 open={this.state.openActions}
                 onClose={() => {
                   this.setState({
+                    changedPage: false,
                     openActions: false,
                     anchorEl: null,
                   });
                 }}
                 onOpen={() => {
                   this.setState({
+                    changedPage: false,
                     openActions: true,
                   });
                 }}
                 value={1}
                 onChange={(evt) => {
                   this.setState({
+                    changedPage: false,
                     openActions: false,
                     anchorEl: null,
                   });
@@ -514,7 +554,7 @@ class SayingsDataForm extends React.Component {
                     ))}
                   </TableBody>
                 </Table>
-                <Grid className={classes.pageControl} item xs={12}>
+                <Grid id='pageControl' className={classes.pageControl} item xs={12}>
                   <Grid className={classes.pageSubControl}>
                     <Typography className={classes.pageSizeLabels}>
                       <FormattedMessage {...messages.show} />
