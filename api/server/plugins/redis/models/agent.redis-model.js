@@ -62,6 +62,10 @@ const schema = {
         type: 'boolean',
         defaultValue: false
     },
+    modifiersRecognizerJustER: {
+        type: 'string',
+        defaultValue: ''        
+    },
     creationDate: {
         type: 'timestamp'
     },

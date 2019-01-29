@@ -62,7 +62,7 @@ const generateTrainingDataForCategoriesRecognizer = async ({ AgentModel, Categor
     }
 
     const allAgentKeywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
-    const modifiersTrainingData = await categoryService.generateTrainingData({ keywords: allAgentKeywords, extraTrainingData: AgentModel.property('extraTrainingData'), categoryName: `${AgentModel.property('agentName')}${RASA_MODEL_MODIFIERS}` });
+    const modifiersTrainingData = await categoryService.generateTrainingData({ keywords: allAgentKeywords, extraTrainingData: AgentModel.property('extraTrainingData'), categoryName: `${AgentModel.property('agentName')}_${RASA_MODEL_MODIFIERS}` });
     if (modifiersTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES].length > 1) {
         countOfCategoriesWithData++;
         rasaNLUData[RASA_COMMON_EXAMPLES] = _.flatten([rasaNLUData[RASA_COMMON_EXAMPLES], modifiersTrainingData[RASA_NLU_DATA][RASA_COMMON_EXAMPLES]]);
@@ -135,7 +135,7 @@ module.exports = async function ({ id, returnModel = false }) {
                 for (let CategoryModel of CategoryModels){
                     const status = CategoryModel.property('status');
                     if (status === STATUS_ERROR || status === STATUS_OUT_OF_DATE) {                        
-                    await categoryService.train({ AgentModel, CategoryModel });
+                        await categoryService.train({ AgentModel, CategoryModel });
                     }
                 }
             }
@@ -179,7 +179,7 @@ module.exports = async function ({ id, returnModel = false }) {
 
         if (modifiersTrainingData.numberOfSayings > 0) {
             const pipeline = modifiersTrainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
-            const modifiersRecognizerModel = `${agent.agentName}${RASA_MODEL_MODIFIERS}`;
+            const modifiersRecognizerModel = `${agent.agentName}_${modifiersTrainingData.numberOfSayings === 1 ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`;
             await rasaNLUService.train({
                 project: agent.agentName,
                 model: modifiersRecognizerModel,
@@ -195,6 +195,8 @@ module.exports = async function ({ id, returnModel = false }) {
         } else {
             AgentModel.property('modifiersRecognizer', false);
         }
+        //If there is just one modifier set the modifiersRecognizerJustER attribute of the agent with the name of that modifier
+        AgentModel.property('modifiersRecognizerJustER', modifiersTrainingData.numberOfSayings === 1 ? rasaNLUData[RASA_COMMON_EXAMPLES][0].intent : '');
 
         AgentModel.property('lastTraining', Moment().utc().format());
         AgentModel.property('model', model);

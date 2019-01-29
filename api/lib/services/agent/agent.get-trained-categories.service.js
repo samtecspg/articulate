@@ -5,7 +5,8 @@ import {
     MODEL_SAYING,
     RASA_MODEL_CATEGORY_RECOGNIZER,
     RASA_MODEL_JUST_ER,
-    RASA_MODEL_MODIFIERS
+    RASA_MODEL_MODIFIERS,
+    MODEL_KEYWORD
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -14,6 +15,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
 
     const { redis } = this.server.app;
     const { globalService } = await this.server.services();
+
     const getFirstSayingName = async ({ CategoryModel }) => {
 
         const categorySayingsIds = await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING);
@@ -21,6 +23,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
         const firstCategorySaying = await globalService.findById({ id: firstCategorySayingId, model: MODEL_SAYING });
         return firstCategorySaying.actions.join('+');
     };
+
     let formattedCategories = [];
     try {
         AgentModel = AgentModel || await redis.factory(MODEL_AGENT, id);
@@ -79,8 +82,20 @@ module.exports = async function ({ id = null, AgentModel = null }) {
         }
 
         if (agent.modifiersRecognizer) {
-            const name = agent.agentName + RASA_MODEL_MODIFIERS;
-            formattedCategories.push({ name, model: name });
+            if (agent.modifiersRecognizerJustER){
+                formattedCategories.push({ 
+                    name: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`, 
+                    model: `${agent.agentName}_${agent.modifiersRecognizerJustER ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`,
+                    justER: true,
+                    saying: agent.modifiersRecognizerJustER
+                });
+            }
+            else {
+                formattedCategories.push({ 
+                    name: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`, 
+                    model: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`
+                });
+            }
         }
         return formattedCategories;
     }

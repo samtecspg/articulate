@@ -22,6 +22,7 @@ class AgentModel {
             model: Joi.string().allow(''),
             categoryRecognizer: Joi.boolean(),
             modifiersRecognizer: Joi.boolean(),
+            modifiersRecognizerJustER: Joi.string(),
             creationDate: Joi.string(),
             modificationDate: Joi.string(),
             parameters: Joi.object()
