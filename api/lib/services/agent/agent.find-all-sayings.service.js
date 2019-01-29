@@ -50,7 +50,12 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         }
 
         const SayingModel = await redis.factory(MODEL_SAYING);
-        const totalCount = filteredSayings.length;
+        // Can't perform a count with a filter, so we need to query all the sayings and then apply the filter
+        const SayingModelsCount = await SayingModel.findAllByIds({
+            ids: _.map(filteredSayings, 'id'),
+            limit: -1,
+            filter: newFilter
+        });
         const SayingModels = await SayingModel.findAllByIds({
             ids: _.map(filteredSayings, 'id'),
             skip,
@@ -59,6 +64,8 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
             field,
             filter: newFilter
         });
+
+        const totalCount = SayingModelsCount.length;
         const data = SayingModels.map((sayingModel) => {
 
             const saying = _.find(filteredSayings, { id: sayingModel.id });

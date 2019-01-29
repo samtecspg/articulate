@@ -72,7 +72,7 @@ const manualPaging = ({ results, skip, limit, direction, field }) => {
         return isNaN(value) ? o.property(field) : value;
     }]);
     sorted = direction === Constants.SORT_ASC ? sorted : sorted.reverse();
-    sorted = sorted.slice(skip, skip + limit);
+    sorted = sorted.slice(skip, limit === -1 ? sorted.length : skip + limit);
     return sorted;
 };
 
