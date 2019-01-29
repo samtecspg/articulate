@@ -2,8 +2,7 @@ import _ from 'lodash';
 import Moment from 'moment';
 import {
     RASA_ACTION_RANKING,
-    RASA_MODEL_CATEGORY_RECOGNIZER,
-    RASA_MODEL_MODIFIERS
+    RASA_MODEL_CATEGORY_RECOGNIZER
 } from '../../../util/constants';
 
 module.exports = async function (

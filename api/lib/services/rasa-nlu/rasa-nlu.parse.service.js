@@ -38,7 +38,10 @@ module.exports = async function (
         };
     }
     else {
-        result.action = result.intent;
+        result.action = result.intent.name ? result.intent : {
+            name: '',
+            confidence: result.intent.confidence
+        };
         delete result.intent;
     }
     if (result[RASA_INTENT_RANKING]) {
