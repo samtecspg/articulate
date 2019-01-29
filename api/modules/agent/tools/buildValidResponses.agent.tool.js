@@ -20,10 +20,17 @@ module.exports = (conversationStateObject, responses) => {
     });
     let parsedResponses = _.compact(buildedResponses);
     if (parsedResponses.length > 0){
+        const selectedResponses = _.filter(parsedResponses, (response) => {
+
+            return response.response !== '';
+        });
+        parsedResponses = selectedResponses;
+    }
+    if (parsedResponses.length > 0){
         const maxNumberOfReplacements = _.max(_.map(parsedResponses, 'numOfReplacements'));
         const selectedResponses = _.filter(parsedResponses, (response) => {
 
-            return response.response !== '' && response.numOfReplacements === maxNumberOfReplacements;
+            return response.numOfReplacements === maxNumberOfReplacements;
         });
         parsedResponses = selectedResponses;
     }
