@@ -78,13 +78,15 @@ class CategoryDataForm extends React.Component {
                   error={this.props.errorState.categoryName}
                 />
               </Grid>
-            </Grid>
-            <Grid container spacing={24} item xs={12}>
               <Grid item lg={4} md={10} sm={9} xs={8}>
                 <Typography className={classes.sliderLabel} id='actionThreshold'>
                   <FormattedMessage {...messages.sliderActionThresholdLabel} />
                 </Typography>
                 <Slider
+                  style={{
+                    position: 'relative',
+                    top: '10px'
+                  }}
                   value={category.actionThreshold}
                   min={0}
                   max={100}

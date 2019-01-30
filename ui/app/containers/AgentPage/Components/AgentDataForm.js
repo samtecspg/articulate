@@ -59,7 +59,7 @@ class AgentDataForm extends React.Component {
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
           <Grid container spacing={24} item xs={12}>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
+            <Grid item lg={4} md={12} sm={12} xs={12}>
               <TextField
                 id='agentName'
                 label={intl.formatMessage(messages.agentTextField)}
@@ -75,29 +75,7 @@ class AgentDataForm extends React.Component {
                 error={this.props.errorState.agentName}
               />
             </Grid>
-          </Grid>
-          <Grid container spacing={24} item xs={12}>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
-              <TextField
-                id='description'
-                label={intl.formatMessage(messages.descriptionTextField)}
-                value={agent.description}
-                placeholder={intl.formatMessage(messages.descriptionTextFieldPlaceholder)}
-                onChange={(evt) => { this.props.onChangeAgentData('description', evt.target.value) }}
-                margin='normal'
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                multiline
-                rows={4}
-                helperText={intl.formatMessage(messages.requiredField)}
-                error={this.props.errorState.agentDescription}
-              />
-            </Grid>
-          </Grid>
-          <Grid container justify='space-between' spacing={24} item xs={12}>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
+            <Grid item lg={4} md={12} sm={12} xs={12}>
               <TextField
                 select
                 id='language'
@@ -120,7 +98,7 @@ class AgentDataForm extends React.Component {
                 }
               </TextField>
             </Grid>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
+            <Grid item lg={4} md={12} sm={12} xs={12}>
               <AutoComplete
                 label={intl.formatMessage(messages.timezoneSelect)}
                 suggestions={this.props.settings.timezones}
@@ -132,11 +110,35 @@ class AgentDataForm extends React.Component {
             </Grid>
           </Grid>
           <Grid container spacing={24} item xs={12}>
+            <Grid item lg={12} md={12} sm={12} xs={12}>
+              <TextField
+                id='description'
+                label={intl.formatMessage(messages.descriptionTextField)}
+                value={agent.description}
+                placeholder={intl.formatMessage(messages.descriptionTextFieldPlaceholder)}
+                onChange={(evt) => { this.props.onChangeAgentData('description', evt.target.value) }}
+                margin='normal'
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                multiline
+                rows={4}
+                helperText={intl.formatMessage(messages.requiredField)}
+                error={this.props.errorState.agentDescription}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={24} item xs={12}>
             <Grid item lg={4} md={10} sm={9} xs={8}>
               <Typography className={classes.sliderLabel} id='categoryClassifierThreshold'>
                 <FormattedMessage {...this.getThresholdLabel()} />
               </Typography>
               <Slider
+                style={{
+                  position: 'relative',
+                  top: '10px'
+                }}
                 value={agent.categoryClassifierThreshold}
                 min={0}
                 max={100}
