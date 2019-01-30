@@ -197,7 +197,7 @@ export class MainTab extends React.Component {
                       <FormattedMessage {...messages.backButton} />
                     </a>
                   </Grid>
-                  <SaveButton formError={this.props.formError} success={this.props.success} loading={this.props.loading} label={messages.finishButton} onClick={this.props.onFinishAction} />
+                  <SaveButton touched={this.props.touched} formError={this.props.formError} success={this.props.success} loading={this.props.loading} label={messages.finishButton} onClick={this.props.onFinishAction} />
                 </Grid>
               </Hidden>
             </Grid>

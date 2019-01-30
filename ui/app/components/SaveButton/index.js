@@ -84,9 +84,9 @@ const styles = {
 
 export function SaveButton(props) {
 
-  const { classes, label, loading, onClick, success, formError } = props;
+  const { classes, label, loading, onClick, success, formError, touched } = props;
   return (
-    <Button style={{color: formError ? '#f44336' : success ? '#00bd6f' : '' }} onClick={() => { onClick() }} key='btnJustSave' variant='contained'>
+    <Button style={{color: formError ? '#f44336' : success && !touched ? '#00bd6f' : '' }} onClick={() => { onClick() }} key='btnJustSave' variant='contained'>
         { loading ?             
             <div className={classes.profileMainLoader}>
                 <div className={classes.loader}>
@@ -96,7 +96,7 @@ export function SaveButton(props) {
                 </div>
             </div>
             : 
-            success ? 
+            success && !formError && !touched ? 
                 <img src={checkIcon}></img> :
                 <FormattedMessage {...label} /> 
         }
