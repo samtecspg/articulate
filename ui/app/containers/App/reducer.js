@@ -333,6 +333,7 @@ const initialState = Immutable({
   loading: false,
   error: false,
   success: false,
+  successKeyword: false,
   conversationStateObject: {},
 });
 
@@ -1084,7 +1085,8 @@ function appReducer(state = initialState, action) {
 
     /* Keyword */
     case CHANGE_KEYWORD_DATA:
-      return state.setIn(['keyword', action.payload.field], action.payload.value);
+      return state.setIn(['keyword', action.payload.field], action.payload.value)
+      .set('keywordTouched', true);
     case CREATE_KEYWORD:
       return state.set('loading', true)
         .set('success', false)
@@ -1109,35 +1111,41 @@ function appReducer(state = initialState, action) {
     case UPDATE_KEYWORD_ERROR:
       state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error updating your keyword. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
       return state.set('loading', false)
-        .set('success', false)
+        .set('successKeyword', false)
         .set('error', action.error);
     case UPDATE_KEYWORD_SUCCESS:
       return state.set('keyword', action.keyword)
         .set('loading', false)
-        .set('success', true)
+        .set('successKeyword', true)
         .set('error', false);
     case ADD_KEYWORD_EXAMPLE:
-      return state.updateIn(['keyword', 'examples'], examples => examples.concat(action.newExample));
+      return state.updateIn(['keyword', 'examples'], examples => examples.concat(action.newExample))
+      .set('keywordTouched', true);
     case DELETE_KEYWORD_EXAMPLE:
-      return state.updateIn(['keyword', 'examples'], examples => examples.filter((item, index) => index !== action.exampleIndex));
+      return state.updateIn(['keyword', 'examples'], examples => examples.filter((item, index) => index !== action.exampleIndex))
+      .set('keywordTouched', true);
     case CHANGE_EXAMPLE_SYNONYMS:
       return state.updateIn(['keyword', 'examples'], examples => examples.map((example, index) => {
         if (index === action.exampleIndex) {
           return example.set('synonyms', action.synonyms);
         }
         return example;
-      }));
+      }))
+      .set('keywordTouched', true);
     case CHANGE_EXAMPLE_NAME:
       return state.updateIn(['keyword', 'examples'], examples => examples.map((example, index) => {
         if (index === action.exampleIndex) {
           return example.set('value', action.name);
         }
         return example;
-      }));
+      }))
+      .set('keywordTouched', true);
     case LOAD_KEYWORD:
       return state.set('keyword', initialState.keyword)
         .set('loading', true)
-        .set('error', false);
+        .set('error', false)
+        .set('keywordTouched', false)
+        .set('successKeyword', false);
     case LOAD_KEYWORD_ERROR:
       return state.set('keyword', initialState.keyword)
         .set('loading', false)
@@ -1145,7 +1153,7 @@ function appReducer(state = initialState, action) {
     case LOAD_KEYWORD_SUCCESS:
       return state.set('keyword', action.keyword)
         .set('loading', false)
-        .set('error', false);
+        .set('error', false)
     case DELETE_KEYWORD:
       return state.set('loading', true)
         .set('error', false);
@@ -1153,7 +1161,8 @@ function appReducer(state = initialState, action) {
       return state.set('keyword', initialState.keyword)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('keywordTouched', false);;
     case DELETE_KEYWORD_ERROR:
       state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
       return state.set('loading', false)

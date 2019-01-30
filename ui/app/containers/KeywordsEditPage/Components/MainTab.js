@@ -2,10 +2,12 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Hidden, Tabs, Tab, Icon, Button, Tooltip } from "@material-ui/core";
+import { Grid, Hidden, Tabs, Tab, Icon, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import messages from "../messages";
+import SaveButton from "../../../components/SaveButton";
+import ExitModal from "../../../components/ExitModal";
 
 const styles = {
   mainTabContainer: {
@@ -88,6 +90,10 @@ export class MainTab extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  state = {
+    openExitModal: false,
+  }
+
   handleChange = (value) => {
     this.props.onChangeTab(value);
   };
@@ -96,6 +102,13 @@ export class MainTab extends React.Component {
     const { classes, intl, newKeyword } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
+        <ExitModal
+          open={this.state.openExitModal}
+          onExit={() => {this.props.goBack()}}
+          onSaveAndExit={() => { this.props.onSaveAndExit() }}
+          onClose={() => {this.setState({ openExitModal: false })}}
+          type={intl.formatMessage(messages.instanceName)}
+        />
         <Hidden only={['sm', 'xs']}>
           <Grid container justify='space-between'>
             <Grid className={classes.tabsContainer}>
@@ -168,14 +181,23 @@ export class MainTab extends React.Component {
               <Hidden only={['sm', 'xs']}>
                 <Grid className={classes.buttonContainer}>
                   <Grid className={classes.backButtonContainer}>
-                    <span className={classes.backArrow} onClick={this.props.goBack} key='backArrow'>{'< '}</span>
-                    <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
+                    <span 
+                      className={classes.backArrow}
+                      onClick={() => {
+                        this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
+                      }}
+                      key='backArrow'
+                    >
+                      {'< '}
+                    </span>
+                    <a key='backLink' className={classes.backButton} 
+                      onClick={() => {
+                        this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
+                      }}>
                       <FormattedMessage {...messages.backButton} />
                     </a>
                   </Grid>
-                  <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
-                    <FormattedMessage {...messages.finishButton} />
-                  </Button>
+                  <SaveButton formError={this.props.formError} success={this.props.success} loading={this.props.loading} label={messages.finishButton} onClick={this.props.onFinishAction} />
                 </Grid>
               </Hidden>
             </Grid>
@@ -258,6 +280,7 @@ MainTab.propTypes = {
   modifiersForm: PropTypes.node,
   onChangeTab: PropTypes.func,
   onFinishAction: PropTypes.func.isRequired,
+  onSaveAndExit: PropTypes.func.isRequired,
   onNextAction: PropTypes.func.isRequired,
   hideFinishButton: PropTypes.bool,
   isLastTab: PropTypes.bool,
@@ -265,7 +288,10 @@ MainTab.propTypes = {
   keywordName: PropTypes.string,
   goBack: PropTypes.func,
   newKeyword: PropTypes.bool,
-  errorState: PropTypes.object
+  errorState: PropTypes.object,
+  loading: PropTypes.bool,
+  success: PropTypes.bool,
+  touched: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(MainTab));

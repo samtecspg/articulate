@@ -22,9 +22,11 @@ import saga from './saga';
 import {
   makeSelectKeyword,
   makeSelectAgent,
-  makeSelectSuccess,
+  makeSelectSuccessKeyword,
   makeSelectSettings,
   makeSelectKeywords,
+  makeSelectLoading,
+  makeSelectKeywordTouched,
 } from '../App/selectors';
 
 import {
@@ -62,6 +64,21 @@ export class KeywordsEditPage extends React.Component {
     this.onChangeTab = this.onChangeTab.bind(this);
   }
 
+  state = {
+    isNewKeyword: this.props.match.params.keywordId === 'create',
+    currentTab: 'keyword',
+    userCompletedAllRequiredFields: false,
+    formError: false,
+    exitAfterSubmit: false,
+    errorState: {
+      keywordName: false,
+      examples: false,
+      modifiers: [],
+      tabs: [],
+      modifiersTabs: [],
+    },
+  };
+
   componentDidMount() {
     if(this.state.isNewKeyword) {
       this.props.onResetData();
@@ -72,7 +89,7 @@ export class KeywordsEditPage extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.success) {
+    if (this.props.success && this.state.exitAfterSubmit) {
       this.props.onSuccess(`/agent/${this.props.agent.id}/keywords`);
     }
   }
@@ -95,22 +112,7 @@ export class KeywordsEditPage extends React.Component {
     });
   }
 
-
-  state = {
-    isNewKeyword: this.props.match.params.keywordId === 'create',
-    currentTab: 'keyword',
-    userCompletedAllRequiredFields: false,
-    formError: false,
-    errorState: {
-      keywordName: false,
-      examples: false,
-      modifiers: [],
-      tabs: [],
-      modifiersTabs: [],
-    },
-  };
-
-  submit(){
+  submit(exit){
     let errors = false;
     const newErrorState = {
       keywordName: false,
@@ -189,6 +191,7 @@ export class KeywordsEditPage extends React.Component {
     if (!errors){
       this.setState({
         formError: false,
+        exitAfterSubmit: exit,
       });
       if (this.state.isNewKeyword){
         this.props.onCreateKeyword();
@@ -209,13 +212,17 @@ export class KeywordsEditPage extends React.Component {
     return (
       <Grid container>
         <MainTab
+          touched={this.props.touched}
+          loading={this.props.loading}
+          success={this.props.success}
           goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/keywords`)}}
+          onSaveAndExit={() => { this.submit(true) }}
           newKeyword={this.state.isNewKeyword}
           keywordName={this.props.keyword.keywordName}
           formError={this.state.formError}
           hideFinishButton={this.state.currentTab === 'keyword' && !this.state.userCompletedAllRequiredFields}
           isLastTab={this.state.currentTab === 'modifiers'}
-          onFinishAction={this.submit}
+          onFinishAction={() => { this.submit(false) }}
           onNextAction={this.moveNextTab}
           selectedTab={this.state.currentTab}
           errorState={this.state.errorState}
@@ -290,14 +297,20 @@ KeywordsEditPage.propTypes = {
   onDeleteModifier: PropTypes.func,
   onUntagModifierKeyword: PropTypes.func,
   agentKeywords: PropTypes.array,
+  loading: PropTypes.bool,
+  success: PropTypes.bool,
+  touched: PropTypes.bool,
+  onSaveAndExit: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   keyword: makeSelectKeyword(),
-  success: makeSelectSuccess(),
+  success: makeSelectSuccessKeyword(),
   settings: makeSelectSettings(),
   agentKeywords: makeSelectKeywords(),
+  loading: makeSelectLoading(),
+  touched: makeSelectKeywordTouched(),
 });
 
 function mapDispatchToProps(dispatch) {

@@ -191,6 +191,16 @@ const makeSelectKeyword = () => createSelector(
   (globalState) => globalState.keyword,
 );
 
+const makeSelectKeywordTouched = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.keywordTouched,
+);
+
+const makeSelectSuccessKeyword = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.successKeyword,
+);
+
 /* Category */
 const makeSelectCategory = () => createSelector(
   selectGlobalCategory,
@@ -232,6 +242,8 @@ export {
   makeSelectSayingForAction,
   makeSelectSettings,
   makeSelectKeyword,
+  makeSelectKeywordTouched,
+  makeSelectSuccessKeyword,
   makeSelectCategory,
   makeSelectDocuments,
   makeSelectTotalDocuments,
