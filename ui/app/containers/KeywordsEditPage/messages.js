@@ -219,4 +219,8 @@ export default defineMessages({
     id: 'app.containers.KeywordsEditPage.component.ModifierForm.entries',
     defaultMessage: 'entries',
   },
+  modifiersTooltip: {
+    id: 'app.containers.KeywordsEditPage.component.MainTab.modifiersTooltip',
+    defaultMessage: 'You must save the keyword before creating modifiers.',
+  },
 });

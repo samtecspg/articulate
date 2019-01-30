@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Hidden, Tabs, Tab, Icon, Button } from "@material-ui/core";
+import { Grid, Hidden, Tabs, Tab, Icon, Button, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import messages from "../messages";
@@ -143,8 +143,11 @@ export class MainTab extends React.Component {
                   }
                 />
                 <Tab value="modifiers"
+                  style= {{
+                      pointerEvents: 'all'
+                  }}
                   className={classes.tab}
-                  label={intl.formatMessage(messages.modifiers)}
+                  label={newKeyword ? <Tooltip title={intl.formatMessage(messages.modifiersTooltip)} placement='top'><span>{intl.formatMessage(messages.modifiers)}</span></Tooltip> : intl.formatMessage(messages.modifiers)}
                   icon={
                     this.props.errorState.tabs.indexOf(2) > -1 ? 
                       <div id='notificationDot' className={classes.notificationDot}>
