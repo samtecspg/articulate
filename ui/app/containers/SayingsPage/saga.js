@@ -6,6 +6,7 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 import Immutable from 'seamless-immutable';
+import ExtractTokensFromString from '../../utils/extractTokensFromString';
 import { getActions } from '../ActionPage/saga';
 import {
   addSayingError,
@@ -43,10 +44,11 @@ import { getKeywords } from '../KeywordsPage/saga';
 export function* getSayings(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, filter, page, pageSize } = payload;
+  const { remainingText, found } = ExtractTokensFromString({ text: filter, tokens: ['category', 'actions'] });
   const tempFilter = filter === '' ? undefined : JSON.stringify({
-    category: filter.category === '' ? undefined : filter.category,
-    actions: filter.actions === '' ? undefined : filter.actions,
-    query: filter.query,
+    category: found.category,
+    actions: found.actions,
+    query: remainingText,
   });
   let skip = 0;
   let limit = -1;
@@ -55,6 +57,8 @@ export function* getSayings(payload) {
     limit = pageSize;
   }
   try {
+    console.log(`saga::getSayings{filter, page, pageSize}`); // TODO: REMOVE!!!!
+    console.log({ tempFilter, page, pageSize }); // TODO: REMOVE!!!!
     const response = yield call(api.agent.getAgentAgentidSaying, {
       agentId: agent.id,
       filter: tempFilter,
@@ -65,7 +69,8 @@ export function* getSayings(payload) {
       loadCategoryId: true,
     });
     yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));
-  } catch (err) {
+  }
+  catch (err) {
     yield put(loadSayingsError(err));
   }
 }
@@ -92,7 +97,8 @@ export function* postSaying(payload) {
       pageSize,
       page,
     });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(addSayingError(err));
   }
 }
@@ -112,7 +118,8 @@ export function* deleteSaying(payload) {
       page,
       pageSize,
     });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(deleteSayingError(err));
   }
 }
@@ -133,7 +140,8 @@ export function* putSaying(payload) {
       page,
       pageSize,
     });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -155,7 +163,8 @@ export function* tagKeyword(payload) {
   mutableSaying.keywords.push(keywordToAdd);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -166,7 +175,8 @@ export function* untagKeyword(payload) {
   mutableSaying.keywords = mutableSaying.keywords.filter((keyword) => keyword.start !== start || keyword.end !== end);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -177,7 +187,8 @@ export function* addAction(payload) {
   mutableSaying.actions.push(actionName);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -188,7 +199,8 @@ export function* deleteAction(payload) {
   mutableSaying.actions = mutableSaying.actions.filter((action) => action !== actionName);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -207,14 +219,17 @@ export function* getCategories(payload) {
     });
     if (filter !== undefined) {
       yield put(loadFilteredCategoriesSuccess({ categories: response.obj.data }));
-    } else {
+    }
+    else {
       yield put(loadCategoriesSuccess({ categories: response.obj.data }));
       yield put(loadFilteredCategoriesSuccess({ categories: response.obj.data }));
     }
-  } catch (err) {
+  }
+  catch (err) {
     if (filter !== undefined) {
       yield put(loadFilteredCategoriesError(response.obj));
-    } else {
+    }
+    else {
       yield put(loadCategoriesError(err));
     }
   }
@@ -227,7 +242,8 @@ export function* putSayingsPageSize(payload) {
   mutableSettings.sayingsPageSize = pageSize;
   try {
     yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
-  } catch (err) {
+  }
+  catch (err) {
     throw err;
   }
 }

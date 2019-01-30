@@ -14,7 +14,6 @@ import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import MainTab from '../../components/MainTab';
-import ExtractTokensFromString from '../../utils/extractTokensFromString';
 import injectSaga from '../../utils/injectSaga';
 import {
   addActionNewSaying,
@@ -263,13 +262,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     onLoadSayings: (filter, page, pageSize) => {
-      const { remainingText, found } = ExtractTokensFromString({ text: filter, tokens: ['category', 'actions'] });
-      const parsedFilter = {
-        category: found.category,
-        actions: found.actions,
-        query: remainingText,
-      };
-      dispatch(loadSayings(parsedFilter, page, pageSize));
+      dispatch(loadSayings(filter, page, pageSize));
     },
     onLoadFilteredCategories: (filter) => {
       dispatch(loadFilteredCategories(filter));
