@@ -41,7 +41,7 @@ export default defineMessages({
   },
   highlightTooltip: {
     id: 'app.containers.ReviewPage.component.ReviewDataForm.highlightTooltip',
-    defaultMessage: 'Highlight a word to make it a keyword',
+    defaultMessage: 'Use this table to review interactions with you agent',
   },
   backPage: {
     id: 'app.containers.ReviewPage.component.ReviewDataForm.backPage',
