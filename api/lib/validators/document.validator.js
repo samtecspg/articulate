@@ -50,14 +50,15 @@ class ContextValidate {
             payload: (() => {
 
                 return {
-                    document: Model.document.required(),
-                    time_stamp: Model.time_stamp.required(),
-                    maximum_saying_score: Model.maximum_saying_score.required(),
-                    maximum_domain_score: Model.maximum_domain_score.required(),
-                    total_elapsed_time_ms: Model.total_elapsed_time_ms.required(),
-                    rasa_results: Model.rasa_results.required(),
+                    document: Model.document,
+                    time_stamp: Model.time_stamp,
+                    maximum_saying_score: Model.maximum_saying_score,
+                    maximum_domain_score: Model.maximum_domain_score,
+                    total_elapsed_time_ms: Model.total_elapsed_time_ms,
+                    rasa_results: Model.rasa_results,
                     creationDate: Model.creationDate,
-                    modificationDate: Model.modificationDate
+                    modificationDate: Model.modificationDate,
+                    webhookResponses: Model.webhookResponses
                 };
             })()
         };

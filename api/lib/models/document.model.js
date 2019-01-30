@@ -42,7 +42,9 @@ class DocumentModel {
             creationDate: Joi
                 .string(),
             modificationDate: Joi
-                .string()
+                .string(),
+            webhookResponses: Joi
+                .array().items(Joi.any())
         };
     };
 }

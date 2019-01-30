@@ -82,6 +82,17 @@ const styles = {
   }
 };
 
+const appendDocIdToParseResults = (conversationStateObject) => {
+
+  if (conversationStateObject && conversationStateObject.parse){
+    return conversationStateObject.parse.map((result) => {
+
+      return { docId: conversationStateObject.docId, ...result };
+    });
+  }
+  return [];
+}
+
 class CodeModal extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   state = {
@@ -114,7 +125,7 @@ class CodeModal extends React.Component { // eslint-disable-line react/prefer-st
               <Tab className={classes.tab} label={intl.formatMessage(messages.currentFrame)} />
               {this.props.conversationStateObject.webhookResponses ? <Tab label={intl.formatMessage(messages.webhookResponses)} /> : null}
             </Tabs>
-            {value === 0 && <TabContainer classes={classes} doc={this.props.conversationStateObject.parse}></TabContainer>}
+            {value === 0 && <TabContainer classes={classes} doc={appendDocIdToParseResults(this.props.conversationStateObject)}></TabContainer>}
             {value === 1 && <TabContainer classes={classes} doc={this.props.conversationStateObject.context}></TabContainer>}
             {value === 2 && <TabContainer classes={classes} doc={this.props.conversationStateObject.currentFrame}></TabContainer>}
             {value === 3 && (this.props.conversationStateObject.webhookResponses ? <TabContainer classes={classes} doc={this.props.conversationStateObject.webhookResponses}></TabContainer> : null)}

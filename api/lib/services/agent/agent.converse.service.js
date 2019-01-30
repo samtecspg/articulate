@@ -7,7 +7,8 @@ import {
     MODEL_AGENT,
     MODEL_CATEGORY,
     PARAM_DOCUMENT_RASA_RESULTS,
-    MODEL_KEYWORD
+    MODEL_KEYWORD,
+    MODEL_WEBHOOK
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -15,7 +16,8 @@ import RedisErrorHandler from '../../errors/redis.error-handler';
 module.exports = async function ({ id, sessionId, text, timezone, debug = false, additionalKeys = null }) {
 
     const { redis, handlebars } = this.server.app;
-    const { agentService, contextService, globalService } = await this.server.services();
+    const { agentService, contextService, globalService, documentService } = await this.server.services();
+    const webhookResponses = [];
 
     //MARK: get all the keywords for all the categories
     const getKeywordsFromRasaResults = ({ rasaResults }) => {
@@ -387,6 +389,53 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 return response;
             }
         }
+        if (action.useWebhook || conversationStateObject.agent.useWebhook) {
+            let modelPath, webhook;
+            if (action.useWebhook){
+                modelPath = [
+                    {
+                        model: MODEL_AGENT,
+                        id: conversationStateObject.agent.id
+                    },
+                    {
+                        model: MODEL_ACTION,
+                        id: action.id
+                    },
+                    {
+                        model: MODEL_WEBHOOK
+                    }
+                ];
+                webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
+            }
+            else {
+                modelPath = [
+                    {
+                        model: MODEL_AGENT,
+                        id: conversationStateObject.agent.id
+                    },
+                    {
+                        model: MODEL_WEBHOOK
+                    }
+                ];
+                webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+            }
+            const webhookResponse = await agentService.converseCallWebhook({
+                url: webhook.webhookUrl,
+                templatePayload: webhook.webhookPayload,
+                payloadType: webhook.webhookPayloadType,
+                method: webhook.webhookVerb,
+                headers: webhook.webhookHeaders,
+                username: webhook.webhookUser ? webhook.webhookUser : undefined,
+                password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
+                templateContext: conversationStateObject
+            });
+            if (webhookResponse.textResponse) {
+                return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
+            }
+            conversationStateObject.webhookResponse = { ...webhookResponse };
+            const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject });
+            return { ...textResponse, webhookResponse, actionWasFulfilled: true };
+        }
         const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject });
         Object.assign(response, { ...textResponse });
         return response;
@@ -419,6 +468,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         slots: {}
                     });
                     const response = await getResponseOfChainedAction({ action: agentAction, conversationStateObject });
+                    if (response.webhookResponse){
+                        webhookResponses.push(response.webhookResponse);
+                    }
                     conversationStateObject.context.responseQueue.push({ ...response });
                 }
             }
@@ -440,7 +492,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
         let storeInQueue = false;
         let currentQueueIndex = 0;
-        const webhookResponses = [];
 
         const responses = await recognizedActionNames.reduce(async (previousPromise, recognizedActionName) => {
             let finalResponse = null;
@@ -584,14 +635,17 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         textResponses = textResponses.concat(responsesFromQueue);
         const textResponse = textResponses.length === 1 ? textResponses : textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
+        await documentService.update({ id: conversationStateObject.docId, data: { webhookResponses } });
+        
         const converseResult = {
             textResponse,
             docId: conversationStateObject.docId,
             responses
         };
         if (debug) {
-            const { context, currentFrame, parse } = conversationStateObject;
+            const { context, currentFrame, parse, docId } = conversationStateObject;
             converseResult.conversationStateObject = {
+                docId,
                 context,
                 currentFrame,
                 parse,

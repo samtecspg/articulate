@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import QueryString from 'querystring';
+import Moment from 'moment';
 
 const getHeaders = (headers, contentType) => {
 
@@ -46,6 +47,7 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
                 contentType = 'text/xml';
             }
         }
+        const startTime = new Moment();
         const response = await Axios({
             method,
             url: compiledUrl,
@@ -57,7 +59,14 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
                 password
             } : undefined
         });
-        return response.data;
+        const endTime = new Moment();
+        const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
+        elapsed_time_ms
+        const webhookResponse = {
+            ...response.data,
+            elapsed_time_ms
+        }
+        return webhookResponse;
     }
     catch (error) {
         return { textResponse: 'We\'re having trouble fulfilling that request', actions: [] };
