@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 
 import messages from './messages';
@@ -119,11 +119,16 @@ export class AppHeader extends React.Component {
             </Grid>
             <Grid item xl={3} lg={3} md={3}/>
             <Grid item xl={2} lg={2} md={2}>
-              {notifications.length > 0 ? <div className={classes.notificationDot}></div> : null }
-              <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
-                <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                <FormattedMessage {...messages.openChatButton} />
-              </Button>
+              { this.props.location.pathname !== '/' ? 
+                [
+                  notifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
+                  <Button key='conversat_button' onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
+                    <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                    <FormattedMessage {...messages.openChatButton} />
+                  </Button>
+                ] : 
+                null
+              }
             </Grid>
           </Hidden>
           <Hidden only={['md', 'lg', 'xl']}>
@@ -136,11 +141,16 @@ export class AppHeader extends React.Component {
               </Link>
             </Grid>
             <Grid item sm={6} xs={6}>
-              {notifications.length > 0 ? <div className={classes.notificationDot}></div> : null }
-              <Button onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
-                <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                <FormattedMessage {...messages.openChatButton} />
-              </Button>
+              { this.props.location.pathname !== '/' ? 
+                [
+                  notifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
+                  <Button key='conversat_button' onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
+                    <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                    <FormattedMessage {...messages.openChatButton} />
+                  </Button>
+                ] : 
+                null
+              }
             </Grid>
           </Hidden>
         </Grid>
@@ -159,6 +169,7 @@ AppHeader.propTypes = {
 const withDefinedStyles = withStyles(styles);
 
 export default compose(
+  withRouter,
   withDefinedStyles,
   injectIntl
 )(AppHeader);

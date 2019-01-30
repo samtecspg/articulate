@@ -15,7 +15,6 @@ import { createStructuredSelector } from 'reselect';
 import { Grid, CircularProgress } from '@material-ui/core';
 
 import MainContentHeader from './Components/MainContentHeader';
-import SearchAgent from './Components/SearchAgent';
 import AgentsCards from './Components/AgentsCards';
 
 import injectSaga from 'utils/injectSaga';
@@ -40,10 +39,6 @@ export class AgentsPage extends React.PureComponent {
         <Grid container>
           <MainContentHeader
             title={messages.title}
-            subtitle={messages.subtitle}
-            inlineElement={
-              <SearchAgent/>
-            }
             sizesForHideInlineElement={['sm', 'xs']}
           />
           <AgentsCards onGoToUrl={this.props.onGoToUrl} agents={agents} />

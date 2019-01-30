@@ -8,7 +8,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   title: {
     id: 'app.containers.AgentsPage.title',
-    defaultMessage: 'Agent',
+    defaultMessage: 'Agents',
   },
   subtitle: {
     id: 'app.containers.AgentsPage.subtitle',
@@ -29,5 +29,13 @@ export default defineMessages({
   delete: {
     id: 'app.containers.AgentsPage.components.AgentsCards.delete',
     defaultMessage: 'Delete',
+  },
+  help: {
+    id: 'app.containers.AgentsPage.components.MainContentHeader.help',
+    defaultMessage: 'Help?',
+  },
+  playHelpAlt : {
+    id: 'app.containers.AgentsPage.components.MainContentHeader.playHelpAlt',
+    defaultMessage: 'Play video off how to add/edit the keywords',
   },
 });
