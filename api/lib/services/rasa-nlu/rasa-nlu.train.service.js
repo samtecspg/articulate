@@ -28,13 +28,17 @@ module.exports = async function (
             payload,
             baseURL
         });
-        /*if (oldModel) {
-            await rasaNLU.Models({
-                project,
-                model: oldModel,
-                baseURL
-            });
-        }*/
+        if (oldModel) {
+            try { 
+                await rasaNLU.Models({
+                    project,
+                    model: oldModel,
+                    baseURL
+                });   
+            } catch (error) {
+                console.warn(`Unable to unload model ${oldModel}. Error data: ${error}`);
+            }
+        }
     }
     catch (error) {
         throw RedisErrorHandler({ error });

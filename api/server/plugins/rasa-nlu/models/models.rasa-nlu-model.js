@@ -11,7 +11,19 @@ export default ({ http }) => {
 
     return async ({ project, model, baseURL = null }) => {
 
-        const response = await http.delete(path, { project, model }, { ...config, ...{ baseURL } });
+        const response = await http.delete(path, 
+            {
+                ...config, 
+                ...{ 
+                    baseURL,
+                    params: { 
+                        project,
+                        model
+                    }
+                }
+            }
+        );
+        
         return response.data;
     };
 };

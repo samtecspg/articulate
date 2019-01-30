@@ -183,7 +183,7 @@ module.exports = async function ({ id, returnModel = false }) {
             await rasaNLUService.train({
                 project: agent.agentName,
                 model: modifiersRecognizerModel,
-                oldModel: modifiersRecognizerModel,
+                oldModel: `${agent.agentName}_${agent.modifiersRecognizerJustER ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`,
                 trainingSet: {
                     [RASA_NLU_DATA]: rasaNLUData
                 },
