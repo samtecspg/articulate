@@ -66,7 +66,8 @@ export function* getSayings(payload) {
       loadCategoryId: true,
     });
     yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));
-  } catch (err) {
+  }
+  catch (err) {
     yield put(loadSayingsError(err));
   }
 }
@@ -86,7 +87,8 @@ export function* postSaying(payload) {
       body: newSayingData,
     });
     yield put(copySayingSuccess(response.obj));
-  } catch (err) {
+  }
+  catch (err) {
     yield put(copySayingError(err));
   }
 }
@@ -106,7 +108,8 @@ export function* deleteSaying(payload) {
       page: 1,
       pageSize,
     });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(deleteSayingError(err));
   }
 }
@@ -131,7 +134,8 @@ export function* putSaying(payload) {
       page,
       pageSize,
     });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -153,7 +157,8 @@ export function* tagKeyword(payload) {
   mutableSaying.keywords.push(keywordToAdd);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -164,7 +169,8 @@ export function* untagKeyword(payload) {
   mutableSaying.keywords = mutableSaying.keywords.filter((keyword) => keyword.start !== start || keyword.end !== end);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -175,7 +181,8 @@ export function* addAction(payload) {
   mutableSaying.actions.push(actionName);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -186,7 +193,8 @@ export function* deleteAction(payload) {
   mutableSaying.actions = mutableSaying.actions.filter((action) => action !== actionName);
   try {
     yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -205,14 +213,17 @@ export function* getCategories(payload) {
     });
     if (filter !== undefined) {
       yield put(loadFilteredCategoriesSuccess({ categories: response.obj.data }));
-    } else {
+    }
+    else {
       yield put(loadCategoriesSuccess({ categories: response.obj.data }));
       yield put(loadFilteredCategoriesSuccess({ categories: response.obj.data }));
     }
-  } catch (err) {
+  }
+  catch (err) {
     if (filter !== undefined) {
       yield put(loadFilteredCategoriesError(response.obj));
-    } else {
+    }
+    else {
       yield put(loadCategoriesError(err));
     }
   }
@@ -225,7 +236,8 @@ export function* putReviewPageSize(payload) {
   mutableSettings.reviewPageSize = pageSize;
   try {
     yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
-  } catch (err) {
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -244,11 +256,12 @@ export function* getAgentDocument(payload) {
       agentId: agent.id,
       skip,
       limit,
-      direction: 'ASC',
+      direction: 'DESC',
     });
     yield put(loadAgentDocumentsSuccess({ documents: response.obj.data, total: response.obj.totalCount }));
 
-  } catch (err) {
+  }
+  catch (err) {
     yield put(loadAgentDocumentsError(err));
   }
 }
