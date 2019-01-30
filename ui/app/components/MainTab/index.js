@@ -5,6 +5,7 @@ import {
   Icon,
   Tab,
   Tabs,
+  Tooltip
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -106,8 +107,8 @@ export class MainTab extends React.Component {
                 }}
               >
                 {this.props.agentURL ?
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === '' ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName}</span></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === ''? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName}</span></span>} />}
+                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === '' ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
+                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === ''? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} />}
                 <Tab className={classes.vDividerIconTab} icon={<img className={classes.vDividerIcon} src={vDivider} />} disabled />
                 {this.props.sayingsURL ?
                   <Tab value="sayings" className={classes.tab} icon={<img className={classes.icon} src={sayingsIcon} />} label={intl.formatMessage(messages.sayings)} component={this.props.sayingsForm} to={this.props.sayingsURL} disabled={!enableTabs} /> :

@@ -217,8 +217,7 @@ class Form extends React.Component {
               ]}
               label={
                 <span className={classes.tabLabel}>
-                  <img key='settings_icon' className={classes.settingsIcon} src={settingsIcon} />
-                  <span className={classes.settingsTabLabel}>{intl.formatMessage(messages.settings)}</span>
+                  <span>{intl.formatMessage(messages.settings)}</span>
                 </span>
               }
             />
