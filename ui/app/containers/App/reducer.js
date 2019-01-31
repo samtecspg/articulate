@@ -1116,8 +1116,9 @@ function appReducer(state = initialState, action) {
     case UPDATE_KEYWORD_SUCCESS:
       return state.set('keyword', action.keyword)
         .set('loading', false)
+        .set('error', false)
         .set('successKeyword', true)
-        .set('error', false);
+        .set('keywordTouched', false);
     case ADD_KEYWORD_EXAMPLE:
       return state.updateIn(['keyword', 'examples'], examples => examples.concat(action.newExample))
       .set('keywordTouched', true);
