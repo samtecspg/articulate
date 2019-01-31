@@ -505,12 +505,14 @@ export function changeAgentParameterValue(parameterName, value) {
   };
 }
 
-export function loadAgentDocuments(page, pageSize) {
+export function loadAgentDocuments(page, pageSize, field, direction) {
   return {
     type: LOAD_AGENT_DOCUMENTS,
     apiCall: true,
     page,
     pageSize,
+    field,
+    direction,
   };
 }
 

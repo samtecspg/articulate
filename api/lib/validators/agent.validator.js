@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import _ from 'lodash';
 import {
     CONFIG_KEYWORD_TYPE_LEARNED,
     CONFIG_KEYWORD_TYPE_REGEX,
@@ -38,6 +39,7 @@ const SayingKeywordSchema = require('../models/saying.keyword.model').schema;
 const ParseSchema = require('../models/parse.model').schema;
 const ModifierSchema = require('../models/modifier.model').schema;
 const ModifierSayingSchema = require('../models/modifier.saying.model').schema;
+const DocumentSchema = require('../models/document.model').schema;
 
 class AgentValidate {
     constructor() {
@@ -477,7 +479,13 @@ class AgentValidate {
                         .string()
                         .optional()
                         .allow(SORT_ASC, SORT_DESC)
-                        .description('Sort direction. Default= ASC')
+
+                        .description('Sort direction. Default= ASC'),
+                    [PARAM_FIELD]: Joi
+                        .string()
+                        .allow(_(DocumentSchema).keys().sort().value())
+                        .optional()
+                        .description('Field to sort with. Default= "time_stamp"')
                 };
             })()
         };

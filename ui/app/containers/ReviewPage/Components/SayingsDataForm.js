@@ -5,6 +5,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -184,125 +185,126 @@ const styles = {
   },
 };
 
-/* eslint-disable react/prefer-stateless-function */
-class SayingsDataForm extends React.Component {
+const tableHeaders = [
+  { id: 'category', disablePadding: true, label: '', width: '30%' },
+  { id: 'document', disablePadding: true, label: '', width: '70%' },
+  { id: 'maximum_category_score', disablePadding: true, label: 'Category', width: '', sort: true },
+  { id: 'maximum_saying_score', disablePadding: true, label: 'Action', width: '', sort: true },
+  { id: 'copy', disablePadding: true, label: 'Copy', width: '' },
+  { id: 'try', disablePadding: true, label: 'Try', width: '' },
+];
 
-  state = {
-    filterInput: '',
-    filteringCategories: false,
-    categoriesDropdownOpen: false,
-    errorCategory: false,
-    openActions: false,
-    anchorEl: null,
-  };
+/**
+ * @return {null}
+ */
+function SayingsDataForm(props) {
+  const { classes, documents } = props;
+  if (_.isNil(documents)) {
+    return null;
+  }
+  return (
+    <div>
+      <Grid className={classes.formContainer} container item xs={12}>
+        <Grid className={classes.formSubContainer} container item xs={12}>
+          <StyledTable
+            headers={tableHeaders}
+            rows={
+              documents.map((document) => (
+                <StyledRow key={`document_${document.id}`}>
+                  <SayingRow
+                    document={document}
+                    agentKeywords={props.agentKeywords}
+                    agentCategories={props.agentCategories}
+                    onToggleConversationBar={props.onToggleConversationBar}
+                    agentActions={props.agentActions}
+                    onSendMessage={props.onSendMessage}
+                    onCopySaying={props.onCopySaying}
+                  />
+                </StyledRow>
+              ))}
+            onRequestSort={props.onRequestSort}
+            sortField={props.sortField}
+            sortDirection={props.sortDirection}
 
-  render() {
-    const { classes, documents } = this.props;
-    if (_.isNil(documents)) {
-      return null;
-    }
-    return (
-      <div>
-        <Grid className={classes.formContainer} container item xs={12}>
-          <Grid className={classes.formSubContainer} container item xs={12}>
-            <StyledTable
-              headers={['', '', 'Category', 'Action', 'Copy', 'Try']}
-              headersWidth={['30%', '70%', '', '', '', '']}
-              headerMessage={messages.highlightTooltip}
-              rows={
-                documents.map((document) => (
-                  <StyledRow key={`document_${document.id}`}>
-                    <SayingRow
-                      document={document}
-                      agentKeywords={this.props.agentKeywords}
-                      agentCategories={this.props.agentCategories}
-                      onToggleConversationBar={this.props.onToggleConversationBar}
-                      agentActions={this.props.agentActions}
-                      onSendMessage={this.props.onSendMessage}
-                      onCopySaying={this.props.onCopySaying}
-                    />
-                  </StyledRow>
-                ))}
-            />
-            <Grid className={classes.pageControl} item xs={12}>
-              <Grid className={classes.pageSubControl}>
-                <Typography className={classes.pageSizeLabels}>
-                  <FormattedMessage {...messages.show} />
-                </Typography>
-                <TextField
-                  select
-                  className={classes.pageTextfield}
-                  id='pageSize'
-                  value={this.props.pageSize}
-                  onChange={(evt) => {
-                    this.props.changePageSize(evt.target.value);
-                  }}
-                  margin='normal'
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                >
-                  <MenuItem key={5} value={5}>
-                    5
-                  </MenuItem>
-                  <MenuItem key={10} value={10}>
-                    10
-                  </MenuItem>
-                  <MenuItem key={25} value={25}>
-                    25
-                  </MenuItem>
-                  <MenuItem key={50} value={50}>
-                    50
-                  </MenuItem>
-                </TextField>
-                <Typography className={classes.pageSizeLabels}>
-                  <FormattedMessage {...messages.entries} />
-                </Typography>
-              </Grid>
-              <Grid className={classes.pageNumberSubControl}>
-                <Typography onClick={this.props.currentPage > 1 ? this.props.movePageBack : null} className={this.props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
-                  <FormattedMessage {...messages.backPage} />
-                </Typography>
-                <TextField
-                  id='page'
-                  margin='normal'
-                  value={this.props.currentPage}
-                  onChange={(evt) => {
-                    evt.target.value === '' ?
-                      this.props.changePage(0) :
-                      (evt.target.value <= this.props.numberOfPages && evt.target.value >= 0 ?
-                        this.props.changePage(evt.target.value) :
-                        false);
-                  }}
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    style: {
-                      textAlign: 'center',
-                    },
-                    min: 1,
-                    max: this.props.numberOfPages || 1,
-                    step: 1,
-                  }}
-                  className={classes.pageTextfield}
-                  type='number'
-                />
-                <Typography className={classes.pagesLabel}>
-                  / {this.props.numberOfPages}
-                </Typography>
-                <Typography onClick={this.props.currentPage < this.props.numberOfPages ? this.props.movePageForward : null} className={this.props.currentPage < this.props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
-                  <FormattedMessage {...messages.nextPage} />
-                </Typography>
-              </Grid>
+          />
+          <Grid className={classes.pageControl} item xs={12}>
+            <Grid className={classes.pageSubControl}>
+              <Typography className={classes.pageSizeLabels}>
+                <FormattedMessage {...messages.show} />
+              </Typography>
+              <TextField
+                select
+                className={classes.pageTextfield}
+                id='pageSize'
+                value={props.pageSize}
+                onChange={(evt) => {
+                  props.changePageSize(evt.target.value);
+                }}
+                margin='normal'
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              >
+                <MenuItem key={5} value={5}>
+                  5
+                </MenuItem>
+                <MenuItem key={10} value={10}>
+                  10
+                </MenuItem>
+                <MenuItem key={25} value={25}>
+                  25
+                </MenuItem>
+                <MenuItem key={50} value={50}>
+                  50
+                </MenuItem>
+              </TextField>
+              <Typography className={classes.pageSizeLabels}>
+                <FormattedMessage {...messages.entries} />
+              </Typography>
+            </Grid>
+            <Grid className={classes.pageNumberSubControl}>
+              <Typography onClick={props.currentPage > 1 ? props.movePageBack : null} className={props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
+                <FormattedMessage {...messages.backPage} />
+              </Typography>
+              <TextField
+                id='page'
+                margin='normal'
+                value={props.currentPage}
+                onChange={(evt) => {
+                  evt.target.value === '' ?
+                    props.changePage(0) :
+                    (evt.target.value <= props.numberOfPages && evt.target.value >= 0 ?
+                      props.changePage(evt.target.value) :
+                      false);
+                }}
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  style: {
+                    textAlign: 'center',
+                  },
+                  min: 1,
+                  max: props.numberOfPages || 1,
+                  step: 1,
+                }}
+                className={classes.pageTextfield}
+                type='number'
+              />
+              <Typography className={classes.pagesLabel}>
+                / {props.numberOfPages}
+              </Typography>
+              <Typography onClick={props.currentPage < props.numberOfPages ? props.movePageForward : null} className={props.currentPage < props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
+                <FormattedMessage {...messages.nextPage} />
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
+      </Grid>
 
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 SayingsDataForm.propTypes = {
@@ -338,6 +340,9 @@ SayingsDataForm.propTypes = {
   onClearSayingToAction: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func.isRequired,
+  onRequestSort: PropTypes.func,
+  sortField: PropTypes.string,
+  sortDirection: PropTypes.string,
 
 };
 

@@ -244,7 +244,7 @@ export function* putReviewPageSize(payload) {
 
 export function* getAgentDocument(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, page, pageSize } = payload;
+  const { api, page, pageSize, field, direction } = payload;
   let skip = 0;
   let limit = -1;
   if (page) {
@@ -256,7 +256,8 @@ export function* getAgentDocument(payload) {
       agentId: agent.id,
       skip,
       limit,
-      direction: 'DESC',
+      field,
+      direction,
     });
     yield put(loadAgentDocumentsSuccess({ documents: response.obj.data, total: response.obj.totalCount }));
 

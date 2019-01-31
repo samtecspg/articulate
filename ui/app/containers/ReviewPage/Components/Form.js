@@ -185,6 +185,9 @@ class Form extends React.Component {
           onClearSayingToAction={this.props.onClearSayingToAction}
           onToggleConversationBar={this.props.onToggleConversationBar}
           onSendMessage={this.props.onSendMessage}
+          onRequestSort={this.props.onRequestSort}
+          sortField={this.props.sortField}
+          sortDirection={this.props.sortDirection}
         />}
       </Grid>
     </Grid>;
@@ -225,6 +228,9 @@ Form.propTypes = {
   onClearSayingToAction: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func.isRequired,
+  onRequestSort: PropTypes.func,
+  sortField: PropTypes.string,
+  sortDirection: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(Form));

@@ -5,12 +5,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
+  TableSortLabel,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import CopyImageCell from './components/CopyImageCell';
 import CopyToClipboardImageCell from './components/CopyToClipboardImageCell';
 import DeleteImageCell from './components/DeleteImageCell';
@@ -22,13 +22,6 @@ import StyledRow from './components/StyledRow';
 import TextCell from './components/TextCell';
 // import PropTypes from 'prop-types';
 const styles = {
-  highlightLabel: {
-    marginTop: '20px',
-    marginBottom: '10px',
-    color: '#a2a7b1',
-    fontWeight: 400,
-    fontSize: '12px',
-  },
   body: {
     'border': '1px solid #a2a7b1',
   },
@@ -36,24 +29,35 @@ const styles = {
 
 function StyledTable(props) {
   const {
-    classes,
-    headerMessage,
+    sortField,
+    sortDirection,
     rows,
     headers,
-    headersWidth,
+    onRequestSort,
   } = props;
-  return (<Grid container item xs={12}>
+  return <Grid container item xs={12}>
     <Grid container>
-      <Typography className={classes.highlightLabel}>
-        <FormattedMessage {...headerMessage} />
-      </Typography>
       <Table>
         <TableHead>
           {headers.length > 0 ?
             <TableRow>
               {
-                headers.map((header, index) => {
-                  return <TableCell key={`tableCell_${index}`} style={{ width: headersWidth[index] }}>{header}</TableCell>;
+                headers.map(({ id, width, label, sort }) => {
+                  return (
+                    <TableCell key={`tableCell_${id}`} style={{ width }}>
+                      {
+                        sort ?
+                          <TableSortLabel
+                            active={sortField === id}
+                            direction={sortDirection.toLowerCase()}
+                            onClick={() => onRequestSort(id)}
+                          >{label}</TableSortLabel>
+                          :
+                          <div>{label}</div>
+                      }
+
+                    </TableCell>
+                  );
                 })
               }
             </TableRow> : null}
@@ -63,19 +67,19 @@ function StyledTable(props) {
         </TableBody>
       </Table>
     </Grid>
-  </Grid>);
+  </Grid>;
 }
 
 StyledTable.propTypes = {
   headers: PropTypes.array,
-  headersWidth: PropTypes.array,
-  headerMessage: PropTypes.object,
+  sortField: PropTypes.string,
+  sortDirection: PropTypes.string,
   rows: PropTypes.arrayOf(PropTypes.element),
-  classes: PropTypes.object.isRequired,
+  onRequestSort: PropTypes.func,
 };
 StyledTable.defaultProps = {
   headers: [],
-  headersWidth: [],
+  onRequestSort: _.noop,
 };
 
 export default withStyles(styles)(StyledTable);

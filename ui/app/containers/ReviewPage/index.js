@@ -43,19 +43,20 @@ export class ReviewPage extends React.Component {
     this.movePageForward = this.movePageForward.bind(this);
     this.changePageSize = this.changePageSize.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
-    this.onSearchCategory = this.onSearchCategory.bind(this);
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
     this.copySayingFromDocument = this.copySayingFromDocument.bind(this);
+    this.handleOnRequestSort = this.handleOnRequestSort.bind(this);
   }
 
   state = {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
-    categoryFilter: '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
     pageSize: this.props.agent.settings.reviewPageSize,
     numberOfPages: null,
     totalDocuments: null,
     documents: [],
+    sortField: 'time_stamp',
+    sortDirection: 'DESC',
   };
 
   componentWillMount() {
@@ -70,8 +71,9 @@ export class ReviewPage extends React.Component {
       onLoadKeywords();
       onLoadActions();
       onLoadCategories();
-      onLoadAgentDocuments(this.state.currentPage, this.state.pageSize);
-    } else {
+      onLoadAgentDocuments(this.state.currentPage, this.state.pageSize, this.state.sortField, this.state.sortDirection);
+    }
+    else {
       // TODO: An action when there isn't an agent
       console.log('YOU HAVEN\'T SELECTED AN AGENT');
     }
@@ -97,7 +99,7 @@ export class ReviewPage extends React.Component {
     this.setState({
       currentPage: pageNumber,
     });
-    onLoadAgentDocuments(pageNumber, this.state.pageSize);
+    onLoadAgentDocuments(pageNumber, this.state.pageSize, this.state.sortField, this.state.sortDirection);
   }
 
   movePageBack() {
@@ -126,7 +128,7 @@ export class ReviewPage extends React.Component {
       pageSize,
     });
     onChangeReviewPageSize(this.props.agent.id, pageSize);
-    onLoadAgentDocuments(1, pageSize);
+    onLoadAgentDocuments(1, pageSize, this.state.sortField, this.state.sortDirection);
   }
 
   onSearchSaying(filter) {
@@ -135,15 +137,8 @@ export class ReviewPage extends React.Component {
       filter,
       currentPage: 1,
     });
-    onLoadAgentDocuments(1, this.state.pageSize);
-  }
+    onLoadAgentDocuments(1, this.state.pageSize, this.state.sortField, this.state.sortDirection);
 
-  onSearchCategory(categoryFilter) {
-    const { onLoadFilteredCategories } = this.props.actions;
-    this.setState({
-      categoryFilter,
-    });
-    onLoadFilteredCategories(categoryFilter);
   }
 
   copySayingFromDocument(document) {
@@ -167,6 +162,18 @@ export class ReviewPage extends React.Component {
       categoryId: category.id,
     };
     onCopySaying(saying);
+  }
+
+  handleOnRequestSort(id) {
+    const { onLoadAgentDocuments } = this.props.actions;
+    const sortField = id;
+    let sortDirection = 'DESC';
+
+    if (this.state.sortField === id && this.state.sortDirection === 'DESC') {
+      sortDirection = 'ASC';
+    }
+    this.setState({ sortDirection, sortField });
+    onLoadAgentDocuments(this.state.currentPage, this.state.pageSize, sortField, sortDirection);
   }
 
   render() {
@@ -242,6 +249,9 @@ export class ReviewPage extends React.Component {
               onClearSayingToAction={onClearSayingToAction}
               onToggleConversationBar={onToggleConversationBar}
               onSendMessage={onSendMessage}
+              onRequestSort={this.handleOnRequestSort}
+              sortField={this.state.sortField}
+              sortDirection={this.state.sortDirection}
             />
           }
           sayingsURL={`/agent/${agent.id}/sayings`}
