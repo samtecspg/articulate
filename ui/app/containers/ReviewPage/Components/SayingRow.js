@@ -93,10 +93,11 @@ class SayingRow extends React.Component {
       agentKeywords,
       agentCategories,
     } = this.props;
-    const saying = document.rasa_results[0];
+    const saying = _.maxBy(document.rasa_results, 'categoryScore');
     return (
       <Fragment>
-        <TableCell className={classes.rowCategory} >
+        <TableCell className={classes.rowCategory}>
+          {saying.categoryScore !== 0 &&
           <TextField
             className={classes.categorySelectContainer}
             value={saying.category}
@@ -120,8 +121,9 @@ class SayingRow extends React.Component {
               ),
             )}
           </TextField>
+          }
         </TableCell>
-        <TableCell  >
+        <TableCell>
           <span className={classes.userSays}>
             <HighlightedSaying
               agentKeywords={agentKeywords}
@@ -131,9 +133,12 @@ class SayingRow extends React.Component {
               lastStart={0}
             />
           </span>
+          {saying.action.name !== '' &&
           <div className={classes.actionBackgroundContainer}>
             <span className={classes.actionLabel}>{saying.action.name}</span>
           </div>
+          }
+
         </TableCell>
         <PercentCell value={document.maximum_category_score} align="center" />
         <PercentCell value={document.maximum_saying_score} align="center" />
