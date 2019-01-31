@@ -77,18 +77,21 @@ module.exports = {
               text: payload.Body,
               sessionId: sessionId,
               ubiquity: {
-                sessionId,
                 twilio: payload
               }
             }
           }
-    
-          server.inject(options, (res) => {
-    
-            var twiml = new Twilio.twiml.MessagingResponse();
-            twiml.message(JSON.parse(res.payload).textResponse);
-    
-            reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
+
+            const requestStart = new Date();
+            server.inject(options, (res) => {
+
+                const requestTime = new Date() - requestStart;
+                const twiml = new Twilio.twiml.MessagingResponse();
+                twiml.message(JSON.parse(res.payload).textResponse);
+
+                Logger.log(options.payload, JSON.parse(res.payload), requestTime);
+
+                reply(twiml.toString()).header('Content-Type', 'text/xml').code(200);
           })
         }
       } else {
