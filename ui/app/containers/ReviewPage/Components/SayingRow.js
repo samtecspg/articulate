@@ -135,7 +135,7 @@ class SayingRow extends React.Component {
               // TODO: return the category id in the API to be able to select the category id of the saying in
               (
                 <MenuItem key={`category_${index}`} value={category.id}>
-                  <span className={classes.categoryLabel}>{category.categoryName}</span>
+                  <span className={classes.categoryLabel}>{category.categoryName.indexOf('modifiers') ? 'Modifier' : category.categoryName}</span>
                 </MenuItem>
               ),
             )}
