@@ -91,7 +91,7 @@ export class MainTab extends React.Component {
   };
 
   render() {
-    const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave, touched } = this.props;
+    const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
         <Hidden only={['sm', 'xs', 'md']}>
@@ -203,7 +203,7 @@ export class MainTab extends React.Component {
                 />
               }
               {
-                disableSave || !touched ? null :
+                disableSave || (!this.props.success && !this.props.touched) ? null :
                   <Grid item className={classes.actionContainer}>
                     <Hidden only={['xl', 'lg']}>
                       <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>

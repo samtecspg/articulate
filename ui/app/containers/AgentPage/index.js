@@ -371,7 +371,6 @@ const mapStateToProps = createStructuredSelector({
   postFormat: makeSelectAgentPostFormat(),
   agentSettings: makeSelectAgentSettings(),
   settings: makeSelectSettings(),
-  success: makeSelectSuccess(),
   agentActions: makeSelectActions(),
   loading: makeSelectLoading(),
   success: makeSelectSuccessAgent(),

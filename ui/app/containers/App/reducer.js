@@ -284,6 +284,7 @@ const initialState = Immutable({
   actionOldPayloadXML: '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
   actions: [],
   newSayingActions: [],
+  agentJustEdited: false,
   agentTouched: false,
   actionTouched: false,
   keywordTouched: false,
@@ -459,7 +460,7 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('agentTouched', false)
-        .set('successAgent', false);
+        .set('successAgent', action.payload.socket ? state.successAgent : false);
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)

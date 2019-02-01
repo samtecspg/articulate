@@ -175,7 +175,8 @@ export function mapDispatchToProps(dispatch) {
       dispatch(toggleConversationBar(value));
     },
     onRefreshAgent: (agent) => {
-      dispatch(loadAgentSuccess({ agent }));
+      agent.categoryClassifierThreshold *= 100;
+      dispatch(loadAgentSuccess({ agent, socket: true }));
     },
     onLoadAgent: (agentId) => {
       dispatch(loadAgent(agentId));
