@@ -7,7 +7,9 @@ services:
     networks: ['alpha-nlu-network']
     entrypoint: ['yarn', 'start']
     environment:
+      - SWAGGER_HOST
       - SWAGGER_BASE_PATH
+      - SWAGGER_SCHEMES
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -17,6 +19,7 @@ services:
     networks: ['alpha-nlu-network']
     environment:
      - API_URL
+     - WS_URL
   rasa:
     image: samtecspg/articulate-rasa:repo-head
     ports: ['0.0.0.0:5000:5000']
