@@ -57,8 +57,6 @@ export function* getSayings(payload) {
     limit = pageSize;
   }
   try {
-    console.log(`saga::getSayings{filter, page, pageSize}`); // TODO: REMOVE!!!!
-    console.log({ tempFilter, page, pageSize }); // TODO: REMOVE!!!!
     const response = yield call(api.agent.getAgentAgentidSaying, {
       agentId: agent.id,
       filter: tempFilter,
