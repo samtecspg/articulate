@@ -12,8 +12,6 @@ const webpack = require('webpack');
 // in the next major version of loader-utils.'
 process.noDeprecation = true;
 
-console.log(process.env);
-
 let processEnv = {
   NODE_ENV: JSON.stringify(process.env.NODE_ENV)
 };
