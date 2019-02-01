@@ -200,7 +200,13 @@ module.exports = async function ({ id, returnModel = false }) {
 
         AgentModel.property('lastTraining', Moment().utc().format());
         AgentModel.property('model', model);
-        AgentModel.property('status', STATUS_READY);
+        /*
+            Only change the status to ready if the status is still training, because if not we are going to mark
+            an agent as ready when actually it could be out of date because user edited while it was being trained
+        */
+        if (agent.status === STATUS_TRAINING){
+            AgentModel.property('status', STATUS_READY);
+        }
         await AgentModel.saveInstance();
         return returnModel ? AgentModel : AgentModel.allProperties();
     }
