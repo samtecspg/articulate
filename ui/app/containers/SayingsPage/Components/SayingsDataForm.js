@@ -501,7 +501,11 @@ class SayingsDataForm extends React.Component {
                     this.props.onClearSayingToAction();
                     this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
                   } else {
-                    this.props.onAddNewSayingAction(evt.target.value);
+                    //If the user didn't click the edit icon
+                    if (!evt._targetInst || (evt._targetInst && evt._targetInst.type !== 'img')){
+                      //Then add the saying for the new action
+                      this.props.onAddNewSayingAction(evt.target.value);
+                    }
                   }
                 }}
                 MenuProps={{
@@ -512,7 +516,24 @@ class SayingsDataForm extends React.Component {
                 {
                   this.props.agentActions.map((action) => (
                     this.props.newSayingActions.indexOf(action.actionName) === -1 ?
-                      <MenuItem style={{ width: '200px' }} key={`action_${action.id}`} value={action.actionName}>{action.actionName}</MenuItem> :
+                      <MenuItem
+                        style={{ width: '200px' }}
+                        key={`action_${action.id}`}
+                        value={action.actionName}
+                      >
+                        <Grid container justify='space-between'>
+                          <div className={classes.categoryDataContainer}>
+                            <span>{action.actionName.length > 15 ? `${action.actionName.substring(0,15)}...` : action.actionName}</span>
+                          </div>
+                          <div className={classes.categoryDataContainer}>
+                            <img id={`edit_action_${action.id}`}
+                              onClick={() => {
+                                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
+                              }} className={classes.editCategoryIcon} src={pencilIcon}
+                            />
+                          </div>
+                        </Grid>
+                      </MenuItem> :
                       null
                   ))
                 }

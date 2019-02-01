@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, TextField, MenuItem, Table, TableBody, TableRow, TableCell  } from '@material-ui/core';
+import { Grid, Typography, TextField, MenuItem, Select, InputLabel, FormControl, FormHelperText } from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -10,7 +10,7 @@ import AutoComplete from '../../../components/AutoComplete';
 
 import messages from '../messages';
 
-import trashIcon from '../../../images/trash-icon.svg';
+import pencilIcon from '../../../images/pencil-icon.svg';
 
 const styles = {
   formContainer: {
@@ -39,6 +39,17 @@ const styles = {
   deleteIcon: {
     cursor: 'pointer',
   },
+  categoryDataContainer: {
+    display: 'inline',
+  },
+  editCategoryIcon: {
+    '&:hover': {
+      filter: 'invert(1)',
+    },
+    position: 'relative',
+    top: '2px',
+    marginLeft: '10px',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -48,7 +59,11 @@ class AgentDataForm extends React.Component {
     super(props);
     this.getThresholdLabel = this.getThresholdLabel.bind(this);
   }
-
+  
+  state = {
+    openActions: false
+  }
+  
   getThresholdLabel(){
     return this.props.agent.multiCategory ? messages.sliderCategoryRecognitionThresholdLabel : messages.sliderActionRecognitionThresholdLabel;
   }
@@ -175,40 +190,64 @@ class AgentDataForm extends React.Component {
               />
             </Grid>
             <Grid item lg={6} md={12} sm={12} xs={12}>
-              <TextField
-                select
-                id='fallbackAction'
-                value={agent.fallbackAction}
-                label={intl.formatMessage(messages.fallbackTextField)}
-                onChange={(evt) => { 
-                  if (evt.target.value === 'create'){
-                    this.props.onGoToUrl(`/agent/${agent.id}/action/create`);
-                  }
-                  else {
-                    this.props.onChangeAgentData('fallbackAction', evt.target.value) 
-                  }
-                }}
+              <FormControl 
                 margin='normal'
                 fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                helperText={intl.formatMessage(messages.requiredField)}
-                error={this.props.errorState.fallbackAction}
               >
-                {
-                  this.props.newAgent ? 
-                  <MenuItem value={this.props.defaultaFallbackActionName}>{this.props.defaultaFallbackActionName}</MenuItem>
-                  : <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
-                }                
-                {
-                  this.props.agentActions.map((action) => (
-                    <MenuItem key={action.id} value={action.actionName}>
-                      {action.actionName}
-                    </MenuItem>
-                  ))
-                }
-              </TextField>
+                <InputLabel
+                  focused={this.state.openActions}
+                >
+                  {intl.formatMessage(messages.fallbackTextField)}
+                </InputLabel>
+                <Select
+                  id='fallbackAction'
+                  value={agent.fallbackAction}
+                  label={intl.formatMessage(messages.fallbackTextField)}
+                  onChange={(evt) => { 
+                    if (evt.target.value === 'create'){
+                      this.props.onGoToUrl(`/agent/${agent.id}/action/create`);
+                    }
+                    else {
+                      this.props.onChangeAgentData('fallbackAction', evt.target.value) 
+                    }
+                  }}
+                  open={this.state.openActions}
+                  onOpen={() => { this.setState({ openActions: true })}}
+                  onClose={() => { this.setState({ openActions: false })}}
+                >
+                  {
+                    this.props.newAgent ? 
+                    <MenuItem value={this.props.defaultaFallbackActionName}>{this.props.defaultaFallbackActionName}</MenuItem>
+                    : <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
+                  }                
+                  {
+                    this.props.agentActions.map((action) => (
+                      <MenuItem key={action.id} value={action.actionName}>
+                        <Grid container justify='space-between'>
+                          <div className={classes.categoryDataContainer}>
+                            <span>{action.actionName}</span>
+                          </div>
+                          { this.state.openActions ? 
+                            <div className={classes.categoryDataContainer}>
+                              <img id={`edit_action_${action.id}`}
+                                onClick={() => {
+                                  this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
+                                }} className={classes.editCategoryIcon} src={pencilIcon}
+                              />
+                            </div>
+                            : null
+                          }
+                        </Grid>
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+                <FormHelperText
+                  error={this.props.errorState.fallbackAction}
+                >                
+                  {intl.formatMessage(messages.requiredField)}
+                </FormHelperText>
+              </FormControl>
             </Grid>
           </Grid>
         </Grid>
