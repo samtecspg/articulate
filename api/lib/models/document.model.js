@@ -18,7 +18,7 @@ class DocumentModel {
             maximum_saying_score: Joi
                 .number()
                 .description('Maximum Saying Score'),
-            maximum_domain_score: Joi
+            maximum_category_score: Joi
                 .number()
                 .description('Maximum Domain Score'),
             total_elapsed_time_ms: Joi

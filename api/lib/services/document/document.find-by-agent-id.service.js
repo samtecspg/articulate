@@ -17,7 +17,8 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
             'sort': [
                 {
                     [field]: {
-                        'order': direction.toLowerCase()
+                        'order': direction.toLowerCase(),
+                        'missing': 0
                     }
                 }
             ],
