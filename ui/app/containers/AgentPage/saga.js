@@ -130,6 +130,7 @@ export function* postAgent(payload) {
       yield call(postAgentPostFormat, { id: response.obj.id, api });
     }
     yield call(putAgentSettings, { id: response.obj.id, api });
+    response.obj.categoryClassifierThreshold = parseInt(response.obj.categoryClassifierThreshold * 100);
     yield put(addAgentSuccess(response.obj));
     yield put(push(`/agent/${response.obj.id}/sayings`));
   } catch (err) {
@@ -172,8 +173,8 @@ export function* putAgent(payload) {
         yield call(putAgentPostFormat, { id: currentAgent.id, api });
       }
     }
+    response.obj.categoryClassifierThreshold = parseInt(response.obj.categoryClassifierThreshold * 100);
     yield put(updateAgentSuccess(response.obj));
-    yield put(push(`/agent/${response.obj.id}/sayings`));
   } catch (err) {
     yield put(updateAgentError(err));
   }

@@ -300,15 +300,14 @@ KeywordsEditPage.propTypes = {
   loading: PropTypes.bool,
   success: PropTypes.bool,
   touched: PropTypes.bool,
-  onSaveAndExit: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   keyword: makeSelectKeyword(),
-  success: makeSelectSuccessKeyword(),
   settings: makeSelectSettings(),
   agentKeywords: makeSelectKeywords(),
+  success: makeSelectSuccessKeyword(),
   loading: makeSelectLoading(),
   touched: makeSelectKeywordTouched(),
 });

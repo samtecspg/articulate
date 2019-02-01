@@ -252,7 +252,6 @@ const initialState = Immutable({
   totalSayings: 0,
   agentOldPayloadJSON: '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   agentOldPayloadXML: '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
-  agentTouched: false,
   missingAPI: false,
   sayingForAction: {
     agent: '',
@@ -285,8 +284,11 @@ const initialState = Immutable({
   actionOldPayloadXML: '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
   actions: [],
   newSayingActions: [],
+  agentTouched: false,
   actionTouched: false,
   keywordTouched: false,
+  categoryTouched: false,
+  actionTouched: false,
   newSlot: {
     slotName: 'New Slot',
     uiColor: '#4e4e4e',
@@ -334,6 +336,9 @@ const initialState = Immutable({
   error: false,
   success: false,
   successKeyword: false,
+  successCategory: false,
+  successAction: false,
+  successAgent: false,
   conversationStateObject: {},
 });
 
@@ -406,7 +411,8 @@ function appReducer(state = initialState, action) {
         .set('agentWebhook', initialState.agentWebhook)
         .set('agentPostFormat', initialState.agentPostFormat)
         .set('agentSettings', initialState.agentSettings)
-        .set('agentTouched', false);
+        .set('agentTouched', false)
+        .set('successAgent', false);
     case LOAD_AGENT:
       return state
         .set('loading', true)
@@ -452,7 +458,8 @@ function appReducer(state = initialState, action) {
         .set('agentPostFormat', agentPostFormat)
         .set('loading', false)
         .set('error', false)
-        .set('agentTouched', false);
+        .set('agentTouched', false)
+        .set('successAgent', false);
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)
@@ -525,7 +532,8 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false)
-        .set('agentTouched', false);
+        .set('agentTouched', false)
+        .set('successAgent', true);
     case UPDATE_AGENT:
       return state.set('loading', true)
         .set('success', false)
@@ -541,7 +549,8 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false)
-        .set('agentTouched', false);
+        .set('agentTouched', false)
+        .set('successAgent', true);
     case TRAIN_AGENT:
       return state.setIn(['agent', 'status'], 'Training')
         .set('error', false);
@@ -765,33 +774,41 @@ function appReducer(state = initialState, action) {
         .set('actionWebhook', actionWebhook)
         .set('actionPostFormat', actionPostFormat)
         .set('loading', false)
-        .set('error', false);
+        .set('error', false)
+        .set('actionTouched', false)
+        .set('successAction', false);
     case CHANGE_ACTION_NAME:
       return state
         .setIn(['action', action.payload.field], action.payload.value)
         .set('actionTouched', true);
     case CHANGE_ACTION_DATA:
-      return state.setIn(['action', action.payload.field], action.payload.value);
+      return state.setIn(['action', action.payload.field], action.payload.value)
+      .set('actionTouched', true);
     case ADD_ACTION_RESPONSE:
-      return state.updateIn(['action', 'responses'], responses => responses.concat({ textResponse: action.newResponse, actions: [] }));
+      return state.updateIn(['action', 'responses'], responses => responses.concat({ textResponse: action.newResponse, actions: [] }))
+      .set('actionTouched', true);
     case DELETE_ACTION_RESPONSE:
-      return state.updateIn(['action', 'responses'], responses => responses.filter((item, index) => index !== action.responseIndex));
+      return state.updateIn(['action', 'responses'], responses => responses.filter((item, index) => index !== action.responseIndex))
+      .set('actionTouched', true);
     case CHAIN_ACTION_TO_RESPONSE:
       return state.updateIn(['action', 'responses'], responses => responses.map((tempResponse, index) => {
         if (index === action.responseIndex) {
           return tempResponse.update('actions', actions => actions.concat(action.actionName));
         }
         return tempResponse;
-      }));
+      }))
+      .set('actionTouched', true);
     case UNCHAIN_ACTION_FROM_RESPONSE:
       return state.updateIn(['action', 'responses'], responses => responses.map((tempResponse, index) => {
         if (index === action.responseIndex) {
           return tempResponse.update('actions', actions => actions.filter((item, index) => index !== action.actionIndex));
         }
         return tempResponse;
-      }));
+      }))
+      .set('actionTouched', true);
     case CHANGE_ACTION_WEBHOOK_DATA:
-      return state.setIn(['actionWebhook', action.payload.field], action.payload.value);
+      return state.setIn(['actionWebhook', action.payload.field], action.payload.value)
+      .set('actionTouched', true);
     case CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE:
       if (action.payload.value === 'None') {
         if (state.actionWebhook.webhookPayloadType === 'JSON') {
@@ -843,7 +860,9 @@ function appReducer(state = initialState, action) {
         .set('currentAction', action.payload.action)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('actionTouched', false)
+        .set('successAction', true);
     case UPDATE_ACTION:
       return state.set('loading', true)
         .set('success', false)
@@ -859,7 +878,9 @@ function appReducer(state = initialState, action) {
         .set('currentAction', action.action)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('actionTouched', false)
+        .set('successAction', true);
     case DELETE_ACTION:
       state = state.update('newSayingActions', newSayingActions => newSayingActions.filter((item) => item !== action.actionName));
       return state.set('loading', true)
@@ -879,25 +900,30 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false);
     case ADD_HEADER_ACTION_WEBHOOK:
-      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.concat(action.payload));
+      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.concat(action.payload))
+      .set('actionTouched', true);
     case DELETE_HEADER_ACTION_WEBHOOK:
-      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.filter((item, index) => index !== action.headerIndex));
+      return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.filter((item, index) => index !== action.headerIndex))
+      .set('actionTouched', true);
     case CHANGE_HEADER_KEY_ACTION_WEBHOOK:
       return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.map((header, index) => {
         if (index === action.headerIndex) {
           return header.set('key', action.value);
         }
         return header;
-      }));
+      }))
+      .set('actionTouched', true);
     case CHANGE_HEADER_VALUE_ACTION_WEBHOOK:
       return state.updateIn(['actionWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.map((header, index) => {
         if (index === action.headerIndex) {
           return header.set('value', action.value);
         }
         return header;
-      }));
+      }))
+      .set('actionTouched', true);
     case ADD_NEW_SLOT:
-      return state.updateIn(['action', 'slots'], slots => slots.concat(state.newSlot));
+      return state.updateIn(['action', 'slots'], slots => slots.concat(state.newSlot))
+      .set('actionTouched', true);
     case CHANGE_SLOT_NAME:
       return state
         .updateIn(['action', 'slots'], slots =>
@@ -959,12 +985,14 @@ function appReducer(state = initialState, action) {
       const tempSlots = Immutable.asMutable(state.action.slots, { deep: true });
       tempSlots.splice(action.newIndex, 0, tempSlots.splice(action.oldIndex, 1)[0]);
       return state
-        .setIn(['action', 'slots'], Immutable(tempSlots));
+        .setIn(['action', 'slots'], Immutable(tempSlots))
+        .set('actionTouched', true);
     case DELETE_SLOT:
       const oldSlots = Immutable.asMutable(state.action.slots, { deep: true });
       oldSlots.splice(action.slotIndex, 1);
       return state
-        .setIn(['action', 'slots'], Immutable(oldSlots));
+        .setIn(['action', 'slots'], Immutable(oldSlots))
+        .set('actionTouched', true);
 
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers => modifiers.concat(state.newModifier));
@@ -1101,7 +1129,9 @@ function appReducer(state = initialState, action) {
       return state.set('keyword', action.keyword)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('successKeyword', true)
+        .set('keywordTouched', false);
     case RESET_KEYWORD_DATA:
       return state.set('keyword', initialState.keyword);
     case UPDATE_KEYWORD:
@@ -1173,7 +1203,9 @@ function appReducer(state = initialState, action) {
     case LOAD_CATEGORY:
       return state.set('category', initialState.category)
         .set('loading', true)
-        .set('error', false);
+        .set('error', false)
+        .set('successCategory', false)
+        .set('categoryTouched', false);
     case LOAD_CATEGORY_ERROR:
       return state.set('category', initialState.category)
         .set('loading', false)
@@ -1183,7 +1215,8 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false);
     case CHANGE_CATEGORY_DATA:
-      return state.setIn(['category', action.payload.field], action.payload.value);
+      return state.setIn(['category', action.payload.field], action.payload.value)
+      .set('categoryTouched', true);
     case CREATE_CATEGORY:
       return state.set('loading', true)
         .set('success', false)
@@ -1199,7 +1232,9 @@ function appReducer(state = initialState, action) {
         .set('selectedCategory', action.category.id)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('successCategory', true)
+        .set('categoryTouched', false);
     case RESET_CATEGORY_DATA:
       return state.set('category', initialState.category);
     case UPDATE_CATEGORY:
@@ -1210,12 +1245,15 @@ function appReducer(state = initialState, action) {
       state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error updating your category. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
       return state.set('loading', false)
         .set('success', false)
-        .set('error', action.error);
+        .set('error', action.error)
+        .set('successCategory', false);
     case UPDATE_CATEGORY_SUCCESS:
       return state.set('category', action.category)
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('successCategory', true)
+        .set('categoryTouched', false);
     case DELETE_CATEGORY:
       return state.set('loading', true)
         .set('success', false)
@@ -1234,17 +1272,23 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false);
     case ADD_CATEGORY_PARAMETER:
-      return state.setIn(['category', 'parameters', action.payload.name], action.payload.value);
+      return state.setIn(['category', 'parameters', action.payload.name], action.payload.value)
+      .set('categoryTouched', true);
     case DELETE_CATEGORY_PARAMETER:
-      return state.setIn(['category', 'parameters'], state.category.parameters.without(action.parameterName));
+      return state.setIn(['category', 'parameters'], state.category.parameters.without(action.parameterName))
+      .set('categoryTouched', true);
     case CHANGE_CATEGORY_PARAMETER_NAME:
       let mutableCategoryParameters = Immutable.asMutable(state.category.parameters, { deep: true });
       let jsonMutableCategoryParameters = JSON.stringify(mutableCategoryParameters);
       jsonMutableCategoryParameters = jsonMutableCategoryParameters.replace(`"${action.oldParameterName}":`, `"${action.newParameterName}":`);
       mutableCategoryParameters = JSON.parse(jsonMutableCategoryParameters);
-      return state.setIn(['category', 'parameters'], mutableCategoryParameters);
+      return state.setIn(['category', 'parameters'], mutableCategoryParameters)
+      .set('categoryTouched', true);
     case CHANGE_CATEGORY_PARAMETER_VALUE:
-      return state.setIn(['category', 'parameters', action.parameterName], action.value);
+      return state.setIn(['category', 'parameters', action.parameterName], action.value)
+      .set('categoryTouched', true);
+
+    /* Review */
     case COPY_SAYING_ERROR:
       return state
         .update('notifications', notifications => notifications.concat({ message: `Error: There was an error copying the utterance into your sayings. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }))

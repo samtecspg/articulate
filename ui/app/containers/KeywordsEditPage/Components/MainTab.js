@@ -241,8 +241,19 @@ export class MainTab extends React.Component {
               <Hidden only={['xl', 'lg', 'md']}>
                   <Grid className={classes.buttonContainerSmall}>
                     <Grid className={classes.backButtonContainer}>
-                      <span className={classes.backArrow} onClick={this.props.goBack} key='backArrow'>{'< '}</span>
-                      <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
+                      <span 
+                        className={classes.backArrow}
+                        onClick={() => {
+                          this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
+                        }}
+                        key='backArrow'
+                      >
+                        {'< '}
+                      </span>
+                      <a key='backLink' className={classes.backButton} 
+                        onClick={() => {
+                          this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
+                        }}>
                         <FormattedMessage {...messages.backButton} />
                       </a>
                     </Grid>

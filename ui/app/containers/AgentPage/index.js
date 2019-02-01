@@ -51,6 +51,8 @@ import {
   makeSelectSuccess,
   makeSelectAgentTouched,
   makeSelectActions,
+  makeSelectLoading,
+  makeSelectSuccessAgent,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -63,6 +65,28 @@ export class AgentPage extends React.PureComponent {
     super(props);
     this.submit = this.submit.bind(this);
   }
+
+  state = {
+    isNewAgent: this.props.match.params.id === 'create',
+    settingsLoaded: false,
+    formError: false,
+    exitAfterSubmit: false,
+    errorState: {
+      agentName: false,
+      fallbackAction: false,
+      webhookUrl: false,
+      rasaURL: false,
+      ducklingURL: false,
+      ducklingDimension: false,
+      categoryClassifierPipeline: false,
+      sayingClassifierPipeline: false,
+      keywordClassifierPipeline: false,
+      spacyPretrainedEntities: false,
+      postFormatPayload: false,
+      webhookPayload: false,
+      tabs: [],
+    },
+  };
 
   componentWillUpdate() {
     if (this.state.isNewAgent && !this.state.settingsLoaded) {
@@ -91,28 +115,7 @@ export class AgentPage extends React.PureComponent {
     }
   }
 
-  state = {
-    isNewAgent: this.props.match.params.id === 'create',
-    settingsLoaded: false,
-    formError: false,
-    errorState: {
-      agentName: false,
-      fallbackAction: false,
-      webhookUrl: false,
-      rasaURL: false,
-      ducklingURL: false,
-      ducklingDimension: false,
-      categoryClassifierPipeline: false,
-      sayingClassifierPipeline: false,
-      keywordClassifierPipeline: false,
-      spacyPretrainedEntities: false,
-      postFormatPayload: false,
-      webhookPayload: false,
-      tabs: [],
-    },
-  };
-
-  submit() {
+  submit(exit) {
     let errors = false;
     const newErrorState = {
       agentName: false,
@@ -251,6 +254,7 @@ export class AgentPage extends React.PureComponent {
     if (!errors) {
       this.setState({
         formError: false,
+        exitAfterSubmit: exit
       });
       if (this.state.isNewAgent) {
         this.props.onAddNewAgent();
@@ -269,7 +273,10 @@ export class AgentPage extends React.PureComponent {
     return (
       <Grid container>
         <MainTab
-          agentTouched={this.props.agentTouched}
+          touched={this.props.touched}
+          loading={this.props.loading}
+          success={this.props.success}
+          onSaveAndExit={() => { this.submit(true) }}
           agentName={this.props.agent.agentName}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
@@ -365,8 +372,10 @@ const mapStateToProps = createStructuredSelector({
   agentSettings: makeSelectAgentSettings(),
   settings: makeSelectSettings(),
   success: makeSelectSuccess(),
-  agentTouched: makeSelectAgentTouched(),
   agentActions: makeSelectActions(),
+  loading: makeSelectLoading(),
+  success: makeSelectSuccessAgent(),
+  touched: makeSelectAgentTouched(),
 });
 
 function mapDispatchToProps(dispatch) {

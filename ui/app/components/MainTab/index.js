@@ -23,6 +23,8 @@ import sayingsIcon from '../../images/sayings-icon.svg';
 import vDivider from '../../images/v-divider.svg';
 import messages from './messages';
 
+import SaveButton from "../SaveButton";
+
 const styles = {
   mainTabContainer: {
     marginTop: '45px',
@@ -89,7 +91,7 @@ export class MainTab extends React.Component {
   };
 
   render() {
-    const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave, agentTouched } = this.props;
+    const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave, touched } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
         <Hidden only={['sm', 'xs', 'md']}>
@@ -130,20 +132,11 @@ export class MainTab extends React.Component {
                 />
               }
               {
-                disableSave || !agentTouched ? null :
+                disableSave || (!this.props.success && !this.props.touched) ? null :
                   <Grid item className={classes.actionContainer}>
-                    <Hidden only={['xl', 'lg']}>
-                      <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
-                        <Icon>save</Icon>
-                      </a>
-                    </Hidden>
-                    <Hidden only={['sm', 'xs', 'md']}>
-                      <Grid className={classes.buttonContainer}>
-                        <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
-                          <FormattedMessage {...messages.finishButton} />
-                        </Button>
-                      </Grid>
-                    </Hidden>
+                    <Grid className={classes.buttonContainer}>
+                      <SaveButton touched={this.props.touched} formError={this.props.formError} success={this.props.success} loading={this.props.loading} label={messages.finishButton} onClick={this.props.onFinishAction} />
+                    </Grid>
                   </Grid>
               }
             </Grid>
@@ -210,7 +203,7 @@ export class MainTab extends React.Component {
                 />
               }
               {
-                disableSave || !agentTouched ? null :
+                disableSave || !touched ? null :
                   <Grid item className={classes.actionContainer}>
                     <Hidden only={['xl', 'lg']}>
                       <a onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
@@ -219,9 +212,7 @@ export class MainTab extends React.Component {
                     </Hidden>
                     <Hidden only={['sm', 'xs', 'md']}>
                       <Grid className={classes.buttonContainer}>
-                        <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
-                          <FormattedMessage {...messages.finishButton} />
-                        </Button>
+                        <SaveButton touched={this.props.touched} formError={this.props.formError} success={this.props.success} loading={this.props.loading} label={messages.finishButton} onClick={this.props.onFinishAction} />
                       </Grid>
                     </Hidden>
                   </Grid>
@@ -291,7 +282,7 @@ MainTab.propTypes = {
   formError: PropTypes.bool,
   newAgent: PropTypes.bool,
   disableSave: PropTypes.bool,
-  agentTouched: PropTypes.bool,
+  touched: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(MainTab));

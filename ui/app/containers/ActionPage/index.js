@@ -33,6 +33,9 @@ import {
   makeSelectAgent,
   makeSelectSayingForAction,
   makeSelectActions,
+  makeSelectSuccessAction,
+  makeSelectLoading,
+  makeSelectActionTouched,
 } from '../App/selectors';
 
 import {
@@ -100,7 +103,7 @@ export class ActionPage extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.success) {
+    if (this.props.success && this.state.exitAfterSubmit) {
       if (this.state.ref === 'agent'){
         this.props.onSuccess(`/agent/${this.props.agent.id}`);
       }
@@ -118,6 +121,7 @@ export class ActionPage extends React.Component {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
     page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
     formError: false,
+    exitAfterSubmit: false,
     errorState: {
       actionName: false,
       postFormatPayload: false,
@@ -148,7 +152,7 @@ export class ActionPage extends React.Component {
     });
   }
 
-  submit(){
+  submit(exit){
     let errors = false;
     const newErrorState = {
       actionName: false,
@@ -251,6 +255,7 @@ export class ActionPage extends React.Component {
     if (!errors){
       this.setState({
         formError: false,
+        exitAfterSubmit: exit
       });
       if (this.state.isNewAction){
         // If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
@@ -281,6 +286,10 @@ export class ActionPage extends React.Component {
           />
         </Grid>
         <MainTab
+          touched={this.props.touched}
+          loading={this.props.loading}
+          success={this.props.success}
+          onSaveAndExit={() => { this.submit(true) }}
           goBack={() => {this.state.ref === 'agent' ? 
             this.props.onGoToUrl(`/agent/${this.props.agent.id}`) :
             this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)
@@ -367,7 +376,6 @@ ActionPage.propTypes = {
   action: PropTypes.object,
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
-  success: PropTypes.bool,
   agentKeywords: PropTypes.array,
   onResetData: PropTypes.func,
   onLoadAction: PropTypes.func,
@@ -398,6 +406,9 @@ ActionPage.propTypes = {
   onSuccess: PropTypes.func,
   agentActions: PropTypes.array,
   onDelete: PropTypes.func,
+  loading: PropTypes.bool,
+  success: PropTypes.bool,
+  touched: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -409,6 +420,9 @@ const mapStateToProps = createStructuredSelector({
   agentKeywords: makeSelectKeywords(),
   success: makeSelectSuccess(),
   saying: makeSelectSayingForAction(),
+  success: makeSelectSuccessAction(),
+  loading: makeSelectLoading(),
+  touched: makeSelectActionTouched(),
 });
 
 function mapDispatchToProps(dispatch) {

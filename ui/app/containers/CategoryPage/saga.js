@@ -74,6 +74,7 @@ export function* putCategory(payload) {
   mutableCategory.actionThreshold /= 100;
   try {
     const response = yield call(api.agent.putAgentAgentidCategoryCategoryid, { agentId: agent.id, categoryId, body: mutableCategory });
+    response.obj.actionThreshold = parseInt(response.obj.actionThreshold * 100);
     yield put(updateCategorySuccess(response.obj));
   } catch (err) {
     yield put(updateCategoryError(err));

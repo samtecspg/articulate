@@ -25,7 +25,9 @@ import qs from 'query-string';
 import {
   makeSelectCategory,
   makeSelectAgent,
-  makeSelectSuccess,
+  makeSelectLoading,
+  makeSelectSuccessCategory,
+  makeSelectCategoryTouched
 } from '../App/selectors';
 
 import {
@@ -53,6 +55,18 @@ export class CategoriesEditPage extends React.Component {
     this.submit = this.submit.bind(this);
   }
 
+  state = {
+    isNewCategory: this.props.match.params.categoryId === 'create',
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
+    formError: false,
+    exitAfterSubmit: false,
+    errorState: {
+      categoryName: false,
+      tabs: [],
+    },
+  };
+
   componentDidMount() {
     if(this.state.isNewCategory) {
       this.props.onResetData();
@@ -63,23 +77,12 @@ export class CategoriesEditPage extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.success) {
+    if (this.props.success && this.state.exitAfterSubmit) {
       this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
     }
   }
 
-  state = {
-    isNewCategory: this.props.match.params.categoryId === 'create',
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
-    formError: false,
-    errorState: {
-      categoryName: false,
-      tabs: [],
-    },
-  };
-
-  submit(){
+  submit(exit){
     let errors = false;
     const newErrorState = {
       categoryName: false,
@@ -98,6 +101,7 @@ export class CategoriesEditPage extends React.Component {
     if (!errors){
       this.setState({
         formError: false,
+        exitAfterSubmit: exit,
       });
       if (this.state.isNewCategory){
         this.props.onCreateCategory();
@@ -123,6 +127,9 @@ export class CategoriesEditPage extends React.Component {
           subtitle={this.state.isNewCategory && this.props.category.categoryName === '' ? intl.formatMessage(messages.newCategory) : this.props.category.categoryName}
           inlineElement={
             <ActionButtons
+              touched={this.props.touched}
+              loading={this.props.loading}
+              success={this.props.success}
               formError={this.state.formError}
               page={this.state.page}
               filter={this.state.filter}
@@ -130,6 +137,7 @@ export class CategoriesEditPage extends React.Component {
               onFinishAction={this.submit}
               backButton={messages.backButton}
               goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
+              onSaveAndExit={() => { this.submit(true) }}
             />
           }
         />
@@ -162,12 +170,17 @@ CategoriesEditPage.propTypes = {
   onChangeActionThreshold: PropTypes.func,
   onDeleteCategoryExample: PropTypes.func,
   onChangeExampleSynonyms: PropTypes.func,
+  loading: PropTypes.bool,
+  success: PropTypes.bool,
+  touched: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   category: makeSelectCategory(),
-  success: makeSelectSuccess(),
+  loading: makeSelectLoading(),
+  touched: makeSelectCategoryTouched(),
+  success: makeSelectSuccessCategory(),
 });
 
 function mapDispatchToProps(dispatch) {

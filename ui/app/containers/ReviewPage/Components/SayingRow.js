@@ -93,7 +93,6 @@ class SayingRow extends React.Component {
       agentKeywords,
       agentCategories,
     } = this.props;
-    console.log(document);
     const saying = _.maxBy(document.rasa_results, 'categoryScore');
     return (
       <Fragment>

@@ -1,12 +1,14 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Button, Hidden, Icon } from '@material-ui/core';
+import { Grid, Hidden, Icon } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
 import { Link } from 'react-router-dom';
+import SaveButton from "../../../components/SaveButton";
+import ExitModal from "../../../components/ExitModal";
 
 const styles = {
   container: {
@@ -52,10 +54,21 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class ActionButtons extends React.Component {
 
+  state = {
+    openExitModal: false,
+  }
+
   render(){
-    const { classes } = this.props;
+    const { classes, intl } = this.props;
     return (
       <Grid className={classes.container}>
+        <ExitModal
+          open={this.state.openExitModal}
+          onExit={() => {this.props.goBack()}}
+          onSaveAndExit={() => { this.props.onSaveAndExit() }}
+          onClose={() => {this.setState({ openExitModal: false })}}
+          type={intl.formatMessage(messages.instanceName)}
+        />
         <Hidden only={['xl', 'lg', 'md']}>
           <Link className={`${classes.icon} ${classes.link}`} to={`/agent/${this.props.agentId}/sayings?filter=${this.props.filter}&page=${this.props.page}`}>
             <Icon>arrow_back</Icon>
@@ -67,16 +80,25 @@ class ActionButtons extends React.Component {
         <Hidden only={['sm', 'xs']}>
           {this.props.backButton ?
             <Grid className={classes.backButtonContainer}>
-              <span className={classes.backArrow} onClick={this.props.goBack} key='backArrow'>{'< '}</span>
-              <a key='backLink' className={classes.backButton} onClick={this.props.goBack}>
-                <FormattedMessage {...this.props.backButton} />
+              <span 
+                className={classes.backArrow}
+                onClick={() => {
+                  this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
+                }}
+                key='backArrow'
+              >
+                {'< '}
+              </span>
+              <a key='backLink' className={classes.backButton} 
+                onClick={() => {
+                  this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
+                }}>
+                <FormattedMessage {...messages.backButton} />
               </a>
             </Grid> :
             null}
           <Grid className={classes.buttonContainer}>
-            <Button style={{color: this.props.formError ? '#f44336' : ''}} onClick={this.props.onFinishAction} key='btnFinish' variant='contained'>
-              <FormattedMessage {...messages.finishButton} />
-            </Button>
+            <SaveButton touched={this.props.touched} formError={this.props.formError} success={this.props.success} loading={this.props.loading} label={messages.finishButton} onClick={this.props.onFinishAction} />
           </Grid>
         </Hidden>
       </Grid>
@@ -85,11 +107,15 @@ class ActionButtons extends React.Component {
 }
 
 ActionButtons.propTypes = {
+  intl: intlShape,
   classes: PropTypes.object.isRequired,
   onFinishAction: PropTypes.func.isRequired,
   agentId: PropTypes.string,
   formError: PropTypes.bool,
   goBack: PropTypes.func,
+  loading: PropTypes.bool,
+  success: PropTypes.bool,
+  touched: PropTypes.bool,
 };
 
-export default withStyles(styles)(ActionButtons);
+export default injectIntl(withStyles(styles)(ActionButtons));

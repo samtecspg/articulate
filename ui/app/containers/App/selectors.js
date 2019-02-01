@@ -91,6 +91,11 @@ const makeSelectAgentTouched = () => createSelector(
   (globalState) => globalState.agentTouched,
 );
 
+const makeSelectSuccessAgent = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.successAgent,
+);
+
 const makeSelectDocuments = () => createSelector(
   selectGlobalCategory,
   (globalState) => globalState.documents,
@@ -179,6 +184,16 @@ const makeSelectSayingForAction = () => createSelector(
   (globalState) => globalState.sayingForAction,
 );
 
+const makeSelectActionTouched = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.actionTouched,
+);
+
+const makeSelectSuccessAction = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.successAction,
+);
+
 /* Settings */
 const makeSelectSettings = () => createSelector(
   selectGlobalCategory,
@@ -207,6 +222,16 @@ const makeSelectCategory = () => createSelector(
   (globalState) => globalState.category,
 );
 
+const makeSelectCategoryTouched = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.categoryTouched,
+);
+
+const makeSelectSuccessCategory = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.successCategory,
+);
+
 export {
   makeSelectLocation,
   makeSelectMissingAPI,
@@ -225,6 +250,7 @@ export {
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
   makeSelectAgentTouched,
+  makeSelectSuccessAgent,
   makeSelectKeywords,
   makeSelectTotalKeywords,
   makeSelectSayings,
@@ -237,6 +263,8 @@ export {
   makeSelectTotalActions,
   makeSelectAction,
   makeSelectCurrentAction,
+  makeSelectActionTouched,
+  makeSelectSuccessAction,
   makeSelectActionWebhook,
   makeSelectActionPostFormat,
   makeSelectSayingForAction,
@@ -245,6 +273,8 @@ export {
   makeSelectKeywordTouched,
   makeSelectSuccessKeyword,
   makeSelectCategory,
+  makeSelectCategoryTouched,
+  makeSelectSuccessCategory,
   makeSelectDocuments,
   makeSelectTotalDocuments,
 };

@@ -30,4 +30,8 @@ export default defineMessages({
     id: 'app.components.MainTab.review',
     defaultMessage: 'Review',
   },
+  instanceName: {
+    id: 'app.containers.CategoryEditPage.instanceName',
+    defaultMessage: 'agent',
+  },
 });
