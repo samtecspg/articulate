@@ -34,7 +34,6 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
             return { data: [], totalCount: count };
         }
         const data = results.hits.hits.map((result) => ({ id: result._id, ...result._source }));
-        console.log(util.inspect(_.map(data, field), { showHidden: false, depth: null })); // TODO: REMOVE!!!!
 
         return { data, totalCount: count };
     }

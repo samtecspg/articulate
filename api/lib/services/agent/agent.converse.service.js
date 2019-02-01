@@ -605,7 +605,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
                 catch (error) {
                     const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
-                    console.log(errorMessage, error);
+                    console.error(errorMessage, error);
                     const responseWithError = { ...{ postFormatting: errorMessage + error }, cleanAgentToolResponse };
                     finalResponse = responseWithError;
                 }

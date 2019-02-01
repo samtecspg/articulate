@@ -55,6 +55,9 @@ module.exports = async function (
                 categoryScore = categoryScore.length > 0 ? categoryScore[0].confidence : 0;
                 categoryRasaResults = { ...categoryRasaResults, ... { categoryScore } };
             }
+            else {
+                categoryRasaResults = { ...categoryRasaResults, ... { categoryScore: 1 } };
+            }
             return categoryRasaResults;
         }
     }));
