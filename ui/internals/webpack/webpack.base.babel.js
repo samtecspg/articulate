@@ -12,6 +12,20 @@ const webpack = require('webpack');
 // in the next major version of loader-utils.'
 process.noDeprecation = true;
 
+console.log(process.env);
+
+let processEnv = {
+  NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+};
+
+if (process.env.API_URL) {
+  processEnv.API_URL = JSON.stringify(process.env.API_URL);
+}
+
+if (process.env.WS_URL) {
+  processEnv.WS_URL = JSON.stringify(process.env.WS_URL);
+}
+
 module.exports = options => ({
   mode: options.mode,
   entry: options.entry,
@@ -124,11 +138,7 @@ module.exports = options => ({
     // inside your code for any environment checks; UglifyJS will automatically
     // drop any unreachable code.
     new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        API_URL: JSON.stringify(process.env.API_URL),
-        WS_URL: JSON.stringify(process.env.WS_URL),
-      },
+      'process.env': processEnv,
     }),
   ]),
   resolve: {
