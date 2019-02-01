@@ -158,7 +158,7 @@ export class ReviewPage extends React.Component {
           'keywordId': agentKeyword.id,
         };
       }),
-      actions: [rasaResult.action.name],
+      actions: rasaResult.action.name === '' ? [] : [rasaResult.action.name],
       categoryId: category.id,
     };
     onCopySaying(saying);

@@ -11,6 +11,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  Tooltip,
 } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -445,7 +446,7 @@ class SayingsDataForm extends React.Component {
                                 this.props.onClearSayingToAction();
                                 this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`);
                               }}
-                            >{action}</span>
+                            >{action.length > 5 ? <Tooltip title={action} placement='top'><span>{`${action.substring(0,5)}...`}</span></Tooltip> : action }</span>
                             <a
                               onClick={() => {
                                 this.props.onDeleteNewSayingAction(action);

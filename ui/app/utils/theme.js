@@ -165,7 +165,7 @@ export default createMuiTheme({
     "MuiTableCell": {
       "root": {
         "borderBottom": "none",
-        "padding": "10px 56px 10px 24px",
+        "padding": "10px 10px 10px 15px",
       },
       "body": {
         "color": "#4e4e4e",

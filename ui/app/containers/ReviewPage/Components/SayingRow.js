@@ -33,7 +33,7 @@ const styles = {
     cursor: 'pointer',
     margin: '0px 5px 0px 5px',
     fontSize: '12px',
-    padding: '4px 8px 4px 10px',
+    padding: '4px 8px 4px 8px',
     backgroundColor: '#e2e5e7',
     display: 'inline-block',
     position: 'relative',
@@ -43,6 +43,8 @@ const styles = {
   actionLabel: {
     textDecoration: 'none',
     color: 'inherit',
+    position: 'relative',
+    bottom: '1px'
   },
   deleteActionX: {
     '&:hover': {
@@ -77,11 +79,12 @@ const styles = {
     padding: '5px',
     backgroundColor: '#f6f7f8',
     border: 'none',
+    fontSize: '12px',
+    textAlign: 'center'
   },
-  tableCellSaying: {},
   rowCategory: {
     color: 'red',
-  },
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -92,16 +95,32 @@ class SayingRow extends React.Component {
       document,
       agentKeywords,
       agentCategories,
+      index,
+      totalDocuments
     } = this.props;
     const saying = _.maxBy(document.rasa_results, 'categoryScore');
     return (
       <Fragment>
-        <TableCell className={classes.rowCategory}>
+        <TableCell style={index === 0 ? 
+            { 
+              borderTop: '1px solid #a2a7b1',
+              borderLeft: '1px solid #a2a7b1',
+              borderTopLeftRadius: '5px',
+            } : 
+              index === (totalDocuments - 1) ?
+              { 
+                borderLeft: '1px solid #a2a7b1',
+                borderBottomLeftRadius: '5px',
+                borderBottom: '1px solid #a2a7b1', 
+              } :
+              { 
+                borderLeft: '1px solid #a2a7b1' 
+              }
+          } className={classes.rowCategory}>
           {saying.categoryScore !== 0 &&
           <TextField
             className={classes.categorySelectContainer}
             value={saying.category}
-
             margin='normal'
             fullWidth
             InputProps={{
@@ -115,7 +134,7 @@ class SayingRow extends React.Component {
             {agentCategories.map((category, index) =>
               // TODO: return the category id in the API to be able to select the category id of the saying in
               (
-                <MenuItem key={`category_${index}`} style={{ minWidth: '150px' }} value={category.id}>
+                <MenuItem key={`category_${index}`} value={category.id}>
                   <span className={classes.categoryLabel}>{category.categoryName}</span>
                 </MenuItem>
               ),
@@ -123,7 +142,17 @@ class SayingRow extends React.Component {
           </TextField>
           }
         </TableCell>
-        <TableCell>
+        <TableCell 
+          style={
+            index === 0 ? 
+              { 
+                borderTop: '1px solid #a2a7b1' 
+              } : index === (totalDocuments - 1) ?
+              { 
+                borderBottom: '1px solid #a2a7b1', 
+              } : null
+          }
+        >
           <span className={classes.userSays}>
             <HighlightedSaying
               agentKeywords={agentKeywords}
@@ -140,14 +169,59 @@ class SayingRow extends React.Component {
           }
 
         </TableCell>
-        <PercentCell value={document.maximum_category_score} align="center" />
-        <PercentCell value={document.maximum_saying_score} align="center" />
-        <CopyImageCell
+        <PercentCell style={
+            index === 0 ? 
+              { 
+                borderTop: '1px solid #a2a7b1',
+                borderLeft: '1px solid #a2a7b1' 
+              } : index === (totalDocuments - 1) ?
+              { 
+                borderBottom: '1px solid #a2a7b1',
+                borderLeft: '1px solid #a2a7b1' 
+              } : 
+              { 
+                borderLeft: '1px solid #a2a7b1' 
+              }
+          } value={document.maximum_category_score} align="center" />
+        <PercentCell style={
+            index === 0 ? 
+              { 
+                borderTop: '1px solid #a2a7b1' 
+              } : index === (totalDocuments - 1) ?
+              { 
+                borderBottom: '1px solid #a2a7b1', 
+              } : null
+          } value={document.maximum_saying_score} align="center" />
+        <CopyImageCell style={
+            index === 0 ? 
+              { 
+                borderTop: '1px solid #a2a7b1' 
+              } : index === (totalDocuments - 1) ?
+              { 
+                borderBottom: '1px solid #a2a7b1', 
+              } : null
+          }
           onClick={() => {
             this.props.onCopySaying(document);
           }}
         />
-        <PlayImageCell
+        <PlayImageCell 
+          style={index === 0 ? 
+            { 
+              borderTop: '1px solid #a2a7b1',
+              borderRight: '1px solid #a2a7b1',
+              borderTopRightRadius: '5px' 
+            } : 
+              index === (totalDocuments - 1) ?
+              { 
+                borderRight: '1px solid #a2a7b1',
+                borderBottomRightRadius: '5px',
+                borderBottom: '1px solid #a2a7b1', 
+              } :
+              { 
+                borderRight: '1px solid #a2a7b1' 
+              }
+          }
           onClick={() => {
             this.props.onToggleConversationBar(true);
             this.props.onSendMessage({
@@ -169,6 +243,8 @@ SayingRow.propTypes = {
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func,
   onCopySaying: PropTypes.func,
+  index: PropTypes.number,
+  totalDocuments: PropTypes.number
 };
 
 export default withStyles(styles)(SayingRow);

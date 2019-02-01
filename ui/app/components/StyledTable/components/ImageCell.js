@@ -11,6 +11,8 @@ const styles = {
     },
     filter: 'invert(1)',
     cursor: 'pointer',
+    position: 'relative',
+    top: '4px'
   },
 };
 

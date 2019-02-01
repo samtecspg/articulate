@@ -186,12 +186,12 @@ const styles = {
 };
 
 const tableHeaders = [
-  { id: 'category', disablePadding: true, label: '', width: '30%' },
-  { id: 'document', disablePadding: true, label: '', width: '70%' },
-  { id: 'maximum_category_score', disablePadding: true, label: 'Category', width: '', sort: true },
-  { id: 'maximum_saying_score', disablePadding: true, label: 'Action', width: '', sort: true },
-  { id: 'copy', disablePadding: true, label: 'Copy', width: '' },
-  { id: 'try', disablePadding: true, label: 'Try', width: '' },
+  { id: 'category', disablePadding: true, label: '', width: '15%' },
+  { id: 'document', disablePadding: true, label: '', width: '65%' },
+  { id: 'maximum_category_score', disablePadding: true, label: 'Category', width: '5%', sort: true },
+  { id: 'maximum_saying_score', disablePadding: true, label: 'Action', width: '5%', sort: true },
+  { id: 'copy', disablePadding: true, label: 'Copy', width: '5%' },
+  { id: 'try', disablePadding: true, label: 'Try', width: '5%' },
 ];
 
 /**
@@ -207,11 +207,14 @@ function SayingsDataForm(props) {
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} container item xs={12}>
           <StyledTable
+            noBorder
             headers={tableHeaders}
             rows={
-              documents.map((document) => (
+              documents.map((document, index) => (
                 <StyledRow key={`document_${document.id}`}>
                   <SayingRow
+                    index={index}
+                    totalDocuments={documents.length}
                     document={document}
                     agentKeywords={props.agentKeywords}
                     agentCategories={props.agentCategories}

@@ -25,26 +25,33 @@ const styles = {
   body: {
     'border': '1px solid #a2a7b1',
   },
+  tr: {
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
+  }
 };
 
 function StyledTable(props) {
   const {
+    classes,
     sortField,
     sortDirection,
     rows,
     headers,
     onRequestSort,
+    noBorder
   } = props;
   return <Grid container item xs={12}>
     <Grid container>
-      <Table>
+      <Table style={{border: noBorder ? 'none' : '1px solid #a2a7b1'}}>
         <TableHead>
           {headers.length > 0 ?
-            <TableRow>
+            <TableRow className={classes.tr}>
               {
                 headers.map(({ id, width, label, sort }) => {
                   return (
-                    <TableCell key={`tableCell_${id}`} style={{ width }}>
+                    <TableCell key={`tableCell_${id}`} style={{ width, color: '#A2A7B1' }}>
                       {
                         sort ?
                           <TableSortLabel
@@ -71,15 +78,18 @@ function StyledTable(props) {
 }
 
 StyledTable.propTypes = {
+  classes: PropTypes.object,
   headers: PropTypes.array,
   sortField: PropTypes.string,
   sortDirection: PropTypes.string,
   rows: PropTypes.arrayOf(PropTypes.element),
   onRequestSort: PropTypes.func,
+  noBorder: PropTypes.bool,
 };
 StyledTable.defaultProps = {
   headers: [],
   onRequestSort: _.noop,
+  noBorder: false
 };
 
 export default withStyles(styles)(StyledTable);
