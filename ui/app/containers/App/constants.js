@@ -30,6 +30,9 @@ export const RESET_SESSION_SUCCESS = 'app/App/RESET_SESSION_SUCCESS';
 export const LOAD_AGENTS = 'app/AgentsPage/LOAD_AGENTS';
 export const LOAD_AGENTS_SUCCESS = 'app/AgentsPage/LOAD_AGENTS_SUCCESS';
 export const LOAD_AGENTS_ERROR = 'app/AgentsPage/LOAD_AGENTS_ERROR';
+export const EXPORT_AGENT = 'app/AgentsPage/EXPORT_AGENT';
+export const EXPORT_AGENT_SUCCESS = 'app/AgentsPage/EXPORT_AGENT_SUCCESS';
+export const EXPORT_AGENT_ERROR = 'app/AgentsPage/EXPORT_AGENT_ERROR';
 
 /*
  * Agent

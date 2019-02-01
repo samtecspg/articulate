@@ -3,10 +3,12 @@ import { FormattedMessage } from 'react-intl';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Card, CardContent, CardHeader, Slide }  from '@material-ui/core';
+import { Grid, Card, CardContent, CardHeader, Slide, Typography }  from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import messages from '../messages';
+import exportIcon from '../../../images/export-icon.svg';
+import importIcon from '../../../images/import-icon.svg';
 
 const styles = {
   cardsContainer: {
@@ -16,6 +18,7 @@ const styles = {
     border: '1px solid #00bd6f',
     height: '205px',
     width: '205px',
+    position: 'relative'
   },
   newAgentCardContent: {
     color: '#00bd6f',
@@ -26,12 +29,14 @@ const styles = {
     alignItems: 'center',
     display: 'grid',
     textAlign: 'center',
+    paddingTop: '0px'
   },
   agentCard: {
     border: '1px solid #a2a7b1',
     height: '205px',
     width: '205px',
     cursor: 'pointer',
+    position: 'relative'
   },
   emptyCard: {
     border: 0,
@@ -54,6 +59,7 @@ const styles = {
     fontFamily: 'Montserrat',
     textAlign: 'left',
     paddingTop: 0,
+    height: '95px',
   },
   link:{
     textDecoration: 'none',
@@ -70,6 +76,37 @@ const styles = {
     top: '2px',
     marginRight: '5px',
   },
+  exportFooter: {
+    borderTop: '1px solid #979797',
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    minHeight: '30px'
+  },
+  exportLabel: {
+    '&:hover': {
+      color: '#4a4a4a'
+    },
+    color: '#919192',
+    position: 'relative',
+    top: '3px',
+    marginLeft: '5px',
+    cursor: 'pointer'
+  },
+  exportLabelReady: {
+    color: '#00bd6f',
+    position: 'relative',
+    top: '3px',
+    marginLeft: '5px',
+    cursor: 'pointer'
+  },
+  importLabel: {
+    color: '#00bd6f',
+    position: 'relative',
+    top: '3px',
+    marginLeft: '5px',
+    cursor: 'pointer'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -81,7 +118,7 @@ class AgentsCards extends React.Component {
     }
 
     state = {
-      selectedAgent: null,
+      selectedAgent: null
     };
 
     addEmptyCards(numOfCards){
@@ -104,14 +141,42 @@ class AgentsCards extends React.Component {
                 <CardContent className={classes.newAgentCardContent}>
                   <FormattedMessage {...messages.createAgent}/>
                 </CardContent>
+                {/*<Grid container justify='center' style={{ borderTop: '1px solid #979797', position: 'absolute', width: '100%', bottom: 0, minHeight: '30px'}}>
+                    <img src={importIcon} />
+                    <Typography className={classes.importLabel} variant='body1'>
+                      <FormattedMessage {...messages.import} />
+                    </Typography>
+                  </Grid>*/}
               </Card>
             </Link>
           </Grid>
           {agents.map((agent, index) => (
             <Grid key={`agentCard_${index}`} item>
-              <Card onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCard}>
-                <CardHeader className={classes.agentCardHeader} titleTypographyProps={{ className: classes.agentNameCard }} title={agent.agentName}/>
-                <CardContent className={classes.agentCardContent}>{agent.description}</CardContent>
+              <Card className={classes.agentCard}>
+                <CardHeader onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardHeader} titleTypographyProps={{ className: classes.agentNameCard }} title={agent.agentName}/>
+                <CardContent onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardContent}>
+                  <Grid>
+                    {agent.description}
+                  </Grid>
+                </CardContent>
+                <Grid container justify='center' className={classes.exportFooter}>
+                    {
+                      this.props.agentExport && this.props.agentExport.agentName === agent.agentName ? 
+                      <a onClick={() => {this.props.onExportAgent(0);}} style={{textDecoration: 'none'}} href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.props.agentExport, null, 2))}`} download={`${agent.agentName}.json`}>
+                        <Grid container justify='center'>
+                          <Typography className={classes.exportLabelReady} variant='body1'>
+                            <FormattedMessage {...messages.download} />
+                          </Typography>
+                        </Grid>
+                      </a> :
+                      <Grid onClick={() => {this.props.onExportAgent(agent.id)}} container justify='center'>
+                        <img src={exportIcon} />
+                        <Typography className={classes.exportLabel} variant='body1'>
+                          <FormattedMessage {...messages.export} />
+                        </Typography>
+                      </Grid>
+                    }
+                </Grid>
               </Card>
             </Grid>
           ))}
@@ -127,6 +192,8 @@ AgentsCards.propTypes = {
   classes: PropTypes.object.isRequired,
   agents: PropTypes.array.isRequired,
   onGoToUrl: PropTypes.func,
+  onExportAgent: PropTypes.func,
+  agentExport: PropTypes.object
 };
 
 export default withStyles(styles)(AgentsCards);

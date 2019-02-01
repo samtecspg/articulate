@@ -38,4 +38,16 @@ export default defineMessages({
     id: 'app.containers.AgentsPage.components.MainContentHeader.playHelpAlt',
     defaultMessage: 'Play video off how to add/edit the keywords',
   },
+  export : {
+    id: 'app.containers.AgentsPage.components.AgentsCards.export',
+    defaultMessage: 'Export',
+  },
+  download : {
+    id: 'app.containers.AgentsPage.components.AgentsCards.download',
+    defaultMessage: 'Download',
+  },
+  import : {
+    id: 'app.containers.AgentsPage.components.AgentsCards.import',
+    defaultMessage: 'Import',
+  },
 });

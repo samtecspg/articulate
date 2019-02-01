@@ -21,8 +21,8 @@ import injectSaga from 'utils/injectSaga';
 
 import saga from './saga';
 import messages from './messages';
-import { makeSelectAgents } from '../App/selectors';
-import { loadAgents } from '../App/actions';
+import { makeSelectAgents, makeSelectAgentExport } from '../App/selectors';
+import { loadAgents, exportAgent } from '../App/actions';
 import { push } from 'react-router-redux';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -41,7 +41,7 @@ export class AgentsPage extends React.PureComponent {
             title={messages.title}
             sizesForHideInlineElement={['sm', 'xs']}
           />
-          <AgentsCards onGoToUrl={this.props.onGoToUrl} agents={agents} />
+          <AgentsCards agentExport={this.props.agentExport} onExportAgent={this.props.onExportAgent} onGoToUrl={this.props.onGoToUrl} agents={agents} />
         </Grid>
         :
         <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
@@ -60,10 +60,12 @@ AgentsPage.propTypes = {
     PropTypes.array,
     PropTypes.bool,
   ]),
+  agentExport: PropTypes.object
 };
 
 const mapStateToProps = createStructuredSelector({
   agents: makeSelectAgents(),
+  agentExport: makeSelectAgentExport(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -74,6 +76,9 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: (url) => {
       dispatch(push(url));
     },
+    onExportAgent: (id) => {
+      dispatch(exportAgent(id));
+    }
   };
 }
 

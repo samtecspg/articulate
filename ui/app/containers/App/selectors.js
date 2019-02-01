@@ -60,6 +60,11 @@ const makeSelectAgents = () => createSelector(
   (globalState) => globalState.agents,
 );
 
+const makeSelectAgentExport = () => createSelector(
+  selectGlobalCategory,
+  (globalState) => globalState.agentExport,
+);
+
 /* Agent */
 const makeSelectAgent = () => createSelector(
   selectGlobalCategory,
@@ -244,6 +249,7 @@ export {
   makeSelectWaitingResponse,
   makeSelectConversationStateObject,
   makeSelectAgents,
+  makeSelectAgentExport,
   makeSelectAgent,
   makeSelectCurrentAgent,
   makeSelectAgentWebhook,

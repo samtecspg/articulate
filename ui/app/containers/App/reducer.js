@@ -88,6 +88,9 @@ import {
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
+  EXPORT_AGENT,
+  EXPORT_AGENT_ERROR,
+  EXPORT_AGENT_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
   LOAD_CATEGORIES_SUCCESS,
@@ -199,6 +202,7 @@ const initialState = Immutable({
     categoryClassifierThreshold: 50,
     parameters: {},
   },
+  agentExport: null,
   agent: {
     agentName: '',
     description: '',
@@ -385,6 +389,18 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case LOAD_AGENTS_SUCCESS:
       return state.set('agents', action.agents)
+        .set('loading', false)
+        .set('error', false);
+    case EXPORT_AGENT:
+      return state.set('agentExport', null)
+        .set('loading', true)
+        .set('error', false);
+    case EXPORT_AGENT_ERROR:
+      return state.set('agentExport', null)
+        .set('loading', false)
+        .set('error', action.error);
+    case EXPORT_AGENT_SUCCESS:
+      return state.set('agentExport', action.agent)
         .set('loading', false)
         .set('error', false);
     case DELETE_AGENT:

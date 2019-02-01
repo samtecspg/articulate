@@ -2,10 +2,13 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import {
   loadAgentsError,
   loadAgentsSuccess,
+  exportAgentError,
+  exportAgentSuccess
 } from '../App/actions';
 
 import {
   LOAD_AGENTS,
+  EXPORT_AGENT
 } from '../App/constants';
 
 export function* getAgents(payload) {
@@ -19,6 +22,25 @@ export function* getAgents(payload) {
   }
 }
 
+export function* getAgentExport(payload) {
+  const { api, id } = payload;
+
+  try {
+    if (id !== 0){
+      const response = yield call(api.agent.getAgentAgentidExport, {
+        agentId: id
+      });
+      yield put(exportAgentSuccess(response.obj));
+    }
+    else {
+      yield put(exportAgentSuccess(null));
+    }
+  } catch (err) {
+    yield put(exportAgentError(err));
+  }
+}
+
 export default function* loadAgents() {
   yield takeLatest(LOAD_AGENTS, getAgents);
+  yield takeLatest(EXPORT_AGENT, getAgentExport);
 }
