@@ -183,6 +183,39 @@ const styles = {
     fontWeight: 300,
     cursor: 'pointer',
   },
+  '@global': {
+    '#reviewsTable > tbody > tr > td:first-child': {
+      borderLeft: '1px solid #a2a7b1'
+    },
+    '#reviewsTable > tbody > tr > td:last-child': {
+      borderRight: '1px solid #a2a7b1'
+    },
+    '#reviewsTable > tbody > tr:first-child > td:first-child': {
+      borderTop: '1px solid #a2a7b1',
+      borderTopLeftRadius: '5px'
+    },
+    '#reviewsTable > tbody > tr:first-child > td': {
+      borderTop: '1px solid #a2a7b1',
+    },
+    '#reviewsTable > tbody > tr:first-child > td:last-child': {
+      borderTop: '1px solid #a2a7b1',
+      borderTopRightRadius: '5px'
+    },
+    '#reviewsTable > tbody > tr:last-child > td:first-child': {
+      borderBottom: '1px solid #a2a7b1',
+      borderBottomLeftRadius: '5px'
+    },
+    '#reviewsTable > tbody > tr:last-child > td': {
+      borderBottom: '1px solid #a2a7b1',
+    },
+    '#reviewsTable > tbody > tr:last-child > td:last-child': {
+      borderBottom: '1px solid #a2a7b1',
+      borderBottomRightRadius: '5px'
+    },
+    '#reviewsTable > tbody > tr > td:nth-child(3)': {
+      borderLeft: '1px solid #a2a7b1'
+    }
+  }
 };
 
 const tableHeaders = [
@@ -198,7 +231,7 @@ const tableHeaders = [
  * @return {null}
  */
 function SayingsDataForm(props) {
-  const { classes, documents } = props;
+  const { classes, documents, intl } = props;
   if (_.isNil(documents)) {
     return null;
   }
@@ -207,14 +240,40 @@ function SayingsDataForm(props) {
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} container item xs={12}>
           <StyledTable
+            id='reviewsTable'
             noBorder
             headers={tableHeaders}
             rows={
-              documents.map((document, index) => (
+              documents.length === 0 ?
+                [<StyledRow key={'document_0'}>
+                  <SayingRow
+                    document={{
+                      id: 'noData',
+                      document: intl.formatMessage(messages.noData),
+                      rasa_results: [
+                        {
+                          keywords: [],
+                          action: {
+                            name: "",
+                          },
+                          categoryScore: 0
+                        }
+                      ],
+                      maximum_saying_score: null,
+                      maximum_category_score: null,
+                    }}
+                    agentKeywords={props.agentKeywords}
+                    agentCategories={props.agentCategories}
+                    onToggleConversationBar={props.onToggleConversationBar}
+                    agentActions={props.agentActions}
+                    onSendMessage={props.onSendMessage}
+                    onCopySaying={props.onCopySaying}
+                  />
+                </StyledRow>]
+              :
+              documents.map((document) => (
                 <StyledRow key={`document_${document.id}`}>
                   <SayingRow
-                    index={index}
-                    totalDocuments={documents.length}
                     document={document}
                     agentKeywords={props.agentKeywords}
                     agentCategories={props.agentCategories}

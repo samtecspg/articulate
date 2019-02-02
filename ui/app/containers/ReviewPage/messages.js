@@ -79,4 +79,8 @@ export default defineMessages({
     id: 'app.containers.ReviewPage.component.ReviewDataForm.entries',
     defaultMessage: 'entries',
   },
+  noData: {
+    id: 'app.containers.ReviewPage.component.SayingsDataForm.noData',
+    defaultMessage: 'No data',
+  }
 });

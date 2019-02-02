@@ -21,10 +21,11 @@ function ImageCell(props) {
     classes,
     image,
     onClick,
+    disabled,
     ...rest
   } = props;
   return <TableCell {...rest}>
-    <img alt="" onClick={onClick || _.noop} className={classes.icon} src={image} />
+    <img alt="" onClick={() => { onClick && !disabled ? onClick() : _.noop }} className={classes.icon} src={image} />
   </TableCell>;
 }
 

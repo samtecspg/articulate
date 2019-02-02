@@ -40,11 +40,12 @@ function StyledTable(props) {
     rows,
     headers,
     onRequestSort,
-    noBorder
+    noBorder,
+    id
   } = props;
   return <Grid container item xs={12}>
     <Grid container>
-      <Table style={{border: noBorder ? 'none' : '1px solid #a2a7b1'}}>
+      <Table id={id} style={{border: noBorder ? 'none' : '1px solid #a2a7b1'}}>
         <TableHead>
           {headers.length > 0 ?
             <TableRow className={classes.tr}>
@@ -85,6 +86,7 @@ StyledTable.propTypes = {
   rows: PropTypes.arrayOf(PropTypes.element),
   onRequestSort: PropTypes.func,
   noBorder: PropTypes.bool,
+  id: PropTypes.string
 };
 StyledTable.defaultProps = {
   headers: [],

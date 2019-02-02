@@ -95,28 +95,11 @@ class SayingRow extends React.Component {
       document,
       agentKeywords,
       agentCategories,
-      index,
-      totalDocuments
     } = this.props;
     const saying = _.maxBy(document.rasa_results, 'categoryScore');
     return (
       <Fragment>
-        <TableCell style={index === 0 ? 
-            { 
-              borderTop: '1px solid #a2a7b1',
-              borderLeft: '1px solid #a2a7b1',
-              borderTopLeftRadius: '5px',
-            } : 
-              index === (totalDocuments - 1) ?
-              { 
-                borderLeft: '1px solid #a2a7b1',
-                borderBottomLeftRadius: '5px',
-                borderBottom: '1px solid #a2a7b1', 
-              } :
-              { 
-                borderLeft: '1px solid #a2a7b1' 
-              }
-          } className={classes.rowCategory}>
+        <TableCell className={classes.rowCategory}>
           {saying.categoryScore !== 0 &&
           <TextField
             className={classes.categorySelectContainer}
@@ -142,17 +125,7 @@ class SayingRow extends React.Component {
           </TextField>
           }
         </TableCell>
-        <TableCell 
-          style={
-            index === 0 ? 
-              { 
-                borderTop: '1px solid #a2a7b1' 
-              } : index === (totalDocuments - 1) ?
-              { 
-                borderBottom: '1px solid #a2a7b1', 
-              } : null
-          }
-        >
+        <TableCell>
           <span className={classes.userSays}>
             <HighlightedSaying
               agentKeywords={agentKeywords}
@@ -169,59 +142,16 @@ class SayingRow extends React.Component {
           }
 
         </TableCell>
-        <PercentCell style={
-            index === 0 ? 
-              { 
-                borderTop: '1px solid #a2a7b1',
-                borderLeft: '1px solid #a2a7b1' 
-              } : index === (totalDocuments - 1) ?
-              { 
-                borderBottom: '1px solid #a2a7b1',
-                borderLeft: '1px solid #a2a7b1' 
-              } : 
-              { 
-                borderLeft: '1px solid #a2a7b1' 
-              }
-          } value={document.maximum_category_score} align="center" />
-        <PercentCell style={
-            index === 0 ? 
-              { 
-                borderTop: '1px solid #a2a7b1' 
-              } : index === (totalDocuments - 1) ?
-              { 
-                borderBottom: '1px solid #a2a7b1', 
-              } : null
-          } value={document.maximum_saying_score} align="center" />
-        <CopyImageCell style={
-            index === 0 ? 
-              { 
-                borderTop: '1px solid #a2a7b1' 
-              } : index === (totalDocuments - 1) ?
-              { 
-                borderBottom: '1px solid #a2a7b1', 
-              } : null
-          }
+        <PercentCell value={document.maximum_category_score} align="center" />
+        <PercentCell value={document.maximum_saying_score} align="center" />
+        <CopyImageCell
+          disabled={document.id === 'noData'} 
           onClick={() => {
             this.props.onCopySaying(document);
           }}
         />
         <PlayImageCell 
-          style={index === 0 ? 
-            { 
-              borderTop: '1px solid #a2a7b1',
-              borderRight: '1px solid #a2a7b1',
-              borderTopRightRadius: '5px' 
-            } : 
-              index === (totalDocuments - 1) ?
-              { 
-                borderRight: '1px solid #a2a7b1',
-                borderBottomRightRadius: '5px',
-                borderBottom: '1px solid #a2a7b1', 
-              } :
-              { 
-                borderRight: '1px solid #a2a7b1' 
-              }
-          }
+          disabled={document.id === 'noData'}
           onClick={() => {
             this.props.onToggleConversationBar(true);
             this.props.onSendMessage({
@@ -243,8 +173,6 @@ SayingRow.propTypes = {
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func,
   onCopySaying: PropTypes.func,
-  index: PropTypes.number,
-  totalDocuments: PropTypes.number
 };
 
 export default withStyles(styles)(SayingRow);
