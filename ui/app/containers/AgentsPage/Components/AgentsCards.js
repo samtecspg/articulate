@@ -29,7 +29,8 @@ const styles = {
     alignItems: 'center',
     display: 'grid',
     textAlign: 'center',
-    paddingTop: '0px'
+    cursor: 'pointer',
+    height: '160px'
   },
   agentCard: {
     border: '1px solid #a2a7b1',
@@ -136,19 +137,29 @@ class AgentsCards extends React.Component {
       return (
         <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>
           <Grid key='newAgentCard' item>
-            <Link to='/agent/create' className={classes.link}>
-              <Card className={classes.newAgentCard}>
-                <CardContent className={classes.newAgentCardContent}>
-                  <FormattedMessage {...messages.createAgent}/>
-                </CardContent>
-                {/*<Grid container justify='center' style={{ borderTop: '1px solid #979797', position: 'absolute', width: '100%', bottom: 0, minHeight: '30px'}}>
-                    <img src={importIcon} />
-                    <Typography className={classes.importLabel} variant='body1'>
-                      <FormattedMessage {...messages.import} />
-                    </Typography>
-                  </Grid>*/}
-              </Card>
-            </Link>
+            <Card className={classes.newAgentCard}>
+              <CardContent  onClick={() => {this.props.onGoToUrl('/agent/create')}} className={classes.newAgentCardContent}>
+                <FormattedMessage {...messages.createAgent}/>
+              </CardContent>
+              {/*<Grid container justify='center' style={{ borderTop: '1px solid #979797', position: 'absolute', width: '100%', bottom: 0, minHeight: '30px'}}>
+                  <label htmlFor='import_agent'>
+                    <Grid container justify='center'>
+                      <img src={importIcon} />
+                      <Typography className={classes.importLabel} variant='body1'>
+                        <FormattedMessage {...messages.import} />
+                      </Typography>
+                    </Grid>
+                  </label>
+                  <input onChange={(evt) => { 
+                    var fReader = new FileReader();
+                    fReader.readAsDataURL(evt.target.files[0]);
+                    fReader.onloadend = function(event){
+                      console.log(event.target.result);
+                    }
+                  }} 
+                    accept="application/JSON" hidden id='import_agent' type='file'></input>
+                </Grid>*/}
+            </Card>
           </Grid>
           {agents.map((agent, index) => (
             <Grid key={`agentCard_${index}`} item>
