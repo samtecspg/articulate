@@ -429,7 +429,8 @@ function appReducer(state = initialState, action) {
         .set('agentPostFormat', initialState.agentPostFormat)
         .set('agentSettings', initialState.agentSettings)
         .set('agentTouched', false)
-        .set('successAgent', false);
+        .set('successAgent', false)
+        .set('actions', []);
     case LOAD_AGENT:
       return state
         .set('loading', true)

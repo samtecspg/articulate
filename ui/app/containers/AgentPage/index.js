@@ -88,27 +88,24 @@ export class AgentPage extends React.PureComponent {
     },
   };
 
-  componentWillUpdate() {
-    if (this.state.isNewAgent && !this.state.settingsLoaded) {
-      this.props.onChangeAgentData('language', this.props.settings.defaultAgentLanguage);
-      this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
-      this.props.onChangeAgentData('fallbackAction', this.props.settings.defaultaFallbackActionName);
-      this.props.onChangeAgentSettingsData('rasaURL', this.props.settings.rasaURL);
-      this.props.onChangeAgentSettingsData('categoryClassifierPipeline', this.props.settings.categoryClassifierPipeline);
-      this.props.onChangeAgentSettingsData('sayingClassifierPipeline', this.props.settings.sayingClassifierPipeline);
-      this.props.onChangeAgentSettingsData('keywordClassifierPipeline', this.props.settings.keywordClassifierPipeline);
-      this.props.onChangeAgentSettingsData('spacyPretrainedEntities', this.props.settings.spacyPretrainedEntities);
-      this.props.onChangeAgentSettingsData('ducklingURL', this.props.settings.ducklingURL);
-      this.props.onChangeAgentSettingsData('ducklingDimension', this.props.settings.ducklingDimension);
-      this.setState({
-        settingsLoaded: true,
-      });
-    }
-  }
-
   componentWillMount() {
     if (this.state.isNewAgent) {
       this.props.onResetData();
+      if (this.state.isNewAgent && !this.state.settingsLoaded) {
+        this.props.onChangeAgentData('language', this.props.settings.defaultAgentLanguage);
+        this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
+        this.props.onChangeAgentData('fallbackAction', this.props.settings.defaultaFallbackActionName);
+        this.props.onChangeAgentSettingsData('rasaURL', this.props.settings.rasaURL);
+        this.props.onChangeAgentSettingsData('categoryClassifierPipeline', this.props.settings.categoryClassifierPipeline);
+        this.props.onChangeAgentSettingsData('sayingClassifierPipeline', this.props.settings.sayingClassifierPipeline);
+        this.props.onChangeAgentSettingsData('keywordClassifierPipeline', this.props.settings.keywordClassifierPipeline);
+        this.props.onChangeAgentSettingsData('spacyPretrainedEntities', this.props.settings.spacyPretrainedEntities);
+        this.props.onChangeAgentSettingsData('ducklingURL', this.props.settings.ducklingURL);
+        this.props.onChangeAgentSettingsData('ducklingDimension', this.props.settings.ducklingDimension);
+        this.setState({
+          settingsLoaded: true,
+        });
+      }
     } else {
       this.props.onLoadActions(this.props.match.params.id);
       this.props.onLoadAgent(this.props.match.params.id);
