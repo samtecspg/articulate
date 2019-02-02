@@ -86,7 +86,7 @@ export function SaveButton(props) {
 
   const { classes, label, loading, onClick, success, formError, touched } = props;
   return (
-    <Button style={{color: formError ? '#f44336' : success && !touched ? '#00bd6f' : '' }} onClick={() => { onClick() }} key='btnJustSave' variant='contained'>
+    <Button style={{minWidth: '67px', color: formError ? '#f44336' : success && !touched ? '#00bd6f' : '' }} onClick={() => { onClick() }} key='btnJustSave' variant='contained'>
         { loading ?             
             <div className={classes.profileMainLoader}>
                 <div className={classes.loader}>

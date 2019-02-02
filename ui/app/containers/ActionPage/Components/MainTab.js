@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Hidden, Tabs, Tab, Icon, Button } from "@material-ui/core";
+import { Grid, Hidden, Tabs, Tab, Icon, Button, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import messages from "../messages";
@@ -32,6 +32,7 @@ const styles = {
   buttonContainer: {
     position: 'relative',
     bottom: '10px',
+    width: '100%'
   },
   icon: {
     padding: '0px 10px',
@@ -127,7 +128,7 @@ export class MainTab extends React.Component {
                       <span className={classes.subtitle}>
                         {newAction && this.props.actionName === '' ? 
                           <FormattedMessage { ...messages.createSubtitle } /> : 
-                          (this.props.actionName ? this.props.actionName : intl.formatMessage(messages.noName))
+                          (this.props.actionName ? (this.props.actionName.length > 15 ? <Tooltip title={this.props.actionName} placement='top'><span>{`${this.props.actionName.substring(0,15)}...`}</span></Tooltip> : this.props.actionName) : intl.formatMessage(messages.noName))
                         }
                       </span>
                     </span>
