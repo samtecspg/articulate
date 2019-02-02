@@ -3,12 +3,15 @@ import {
   loadAgentsError,
   loadAgentsSuccess,
   exportAgentError,
-  exportAgentSuccess
+  exportAgentSuccess,
+  importAgentSuccess,
+  importAgentError
 } from '../App/actions';
 
 import {
   LOAD_AGENTS,
-  EXPORT_AGENT
+  EXPORT_AGENT,
+  IMPORT_AGENT
 } from '../App/constants';
 
 export function* getAgents(payload) {
@@ -40,7 +43,19 @@ export function* getAgentExport(payload) {
   }
 }
 
+export function* postAgentImport(payload) {
+  const { api, agent } = payload;
+  try {
+    const response = yield call(api.agent.postAgentImport, { body: agent });
+    yield put(importAgentSuccess(response.obj));
+    yield call(getAgents, { api });
+  } catch (err) {
+    yield put(importAgentError(err));
+  }
+}
+
 export default function* loadAgents() {
   yield takeLatest(LOAD_AGENTS, getAgents);
   yield takeLatest(EXPORT_AGENT, getAgentExport);
+  yield takeLatest(IMPORT_AGENT, postAgentImport);
 }

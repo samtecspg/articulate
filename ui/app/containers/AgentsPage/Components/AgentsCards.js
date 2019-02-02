@@ -133,7 +133,7 @@ class AgentsCards extends React.Component {
     };
 
     render(){
-      const { classes, agents } = this.props;
+      const { classes, agents, onImportAgent } = this.props;
       return (
         <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>
           <Grid key='newAgentCard' item>
@@ -141,7 +141,7 @@ class AgentsCards extends React.Component {
               <CardContent  onClick={() => {this.props.onGoToUrl('/agent/create')}} className={classes.newAgentCardContent}>
                 <FormattedMessage {...messages.createAgent}/>
               </CardContent>
-              {/*<Grid container justify='center' style={{ borderTop: '1px solid #979797', position: 'absolute', width: '100%', bottom: 0, minHeight: '30px'}}>
+              <Grid container justify='center' style={{ borderTop: '1px solid #979797', position: 'absolute', width: '100%', bottom: 0, minHeight: '30px'}}>
                   <label htmlFor='import_agent'>
                     <Grid container justify='center'>
                       <img src={importIcon} />
@@ -151,14 +151,26 @@ class AgentsCards extends React.Component {
                     </Grid>
                   </label>
                   <input onChange={(evt) => { 
-                    var fReader = new FileReader();
-                    fReader.readAsDataURL(evt.target.files[0]);
-                    fReader.onloadend = function(event){
-                      console.log(event.target.result);
-                    }
-                  }} 
+                    const files = evt.target.files; // FileList object
+
+                    for (let i = 0, f; f = files[i]; i++) {
+                      const reader = new FileReader();
+                  
+                      // Closure to capture the file information.
+                      reader.onload = (function (theFile) {
+                        return function (e) {
+                          try {
+                            const agent = JSON.parse(e.target.result);
+                            onImportAgent(agent);
+                          } catch (ex) {
+                            console.error('ex when trying to parse json = ' + ex);
+                          }
+                        }
+                      })(f);
+                      reader.readAsText(f);
+                    }}} 
                     accept="application/JSON" hidden id='import_agent' type='file'></input>
-                </Grid>*/}
+                </Grid>
             </Card>
           </Grid>
           {agents.map((agent, index) => (
@@ -204,6 +216,7 @@ AgentsCards.propTypes = {
   agents: PropTypes.array.isRequired,
   onGoToUrl: PropTypes.func,
   onExportAgent: PropTypes.func,
+  onImportAgent: PropTypes.func,
   agentExport: PropTypes.object
 };
 

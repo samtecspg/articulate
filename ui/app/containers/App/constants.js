@@ -33,6 +33,9 @@ export const LOAD_AGENTS_ERROR = 'app/AgentsPage/LOAD_AGENTS_ERROR';
 export const EXPORT_AGENT = 'app/AgentsPage/EXPORT_AGENT';
 export const EXPORT_AGENT_SUCCESS = 'app/AgentsPage/EXPORT_AGENT_SUCCESS';
 export const EXPORT_AGENT_ERROR = 'app/AgentsPage/EXPORT_AGENT_ERROR';
+export const IMPORT_AGENT = 'app/AgentsPage/IMPORT_AGENT';
+export const IMPORT_AGENT_SUCCESS = 'app/AgentsPage/IMPORT_AGENT_SUCCESS';
+export const IMPORT_AGENT_ERROR = 'app/AgentsPage/IMPORT_AGENT_ERROR';
 
 /*
  * Agent

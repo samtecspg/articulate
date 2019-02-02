@@ -118,6 +118,9 @@ import {
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
+  IMPORT_AGENT,
+  IMPORT_AGENT_ERROR,
+  IMPORT_AGENT_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
   LOAD_CATEGORIES_SUCCESS,
@@ -294,6 +297,28 @@ export function exportAgentError(error) {
 export function exportAgentSuccess(agent) {
   return {
     type: EXPORT_AGENT_SUCCESS,
+    agent,
+  };
+}
+
+export function importAgent(agent) {
+  return {
+    type: IMPORT_AGENT,
+    apiCall: true,
+    agent
+  }
+}
+
+export function importAgentError(error) {
+  return {
+    type: IMPORT_AGENT_ERROR,
+    error,
+  };
+}
+
+export function importAgentSuccess(agent) {
+  return {
+    type: IMPORT_AGENT_SUCCESS,
     agent,
   };
 }

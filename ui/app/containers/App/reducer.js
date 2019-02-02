@@ -91,6 +91,9 @@ import {
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
+  IMPORT_AGENT,
+  IMPORT_AGENT_ERROR,
+  IMPORT_AGENT_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
   LOAD_CATEGORIES_SUCCESS,
@@ -402,6 +405,17 @@ function appReducer(state = initialState, action) {
     case EXPORT_AGENT_SUCCESS:
       return state.set('agentExport', action.agent)
         .set('loading', false)
+        .set('error', false);
+    case IMPORT_AGENT:
+      return state.set('loading', true)
+        .set('error', false);
+    case IMPORT_AGENT_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case IMPORT_AGENT_SUCCESS:
+      return state.set('loading', false)
+        .set('success', true)
         .set('error', false);
     case DELETE_AGENT:
       return state.set('loading', true)

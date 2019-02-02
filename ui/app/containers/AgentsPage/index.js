@@ -22,7 +22,7 @@ import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
 import { makeSelectAgents, makeSelectAgentExport } from '../App/selectors';
-import { loadAgents, exportAgent } from '../App/actions';
+import { loadAgents, exportAgent, importAgent } from '../App/actions';
 import { push } from 'react-router-redux';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -41,7 +41,13 @@ export class AgentsPage extends React.PureComponent {
             title={messages.title}
             sizesForHideInlineElement={['sm', 'xs']}
           />
-          <AgentsCards agentExport={this.props.agentExport} onExportAgent={this.props.onExportAgent} onGoToUrl={this.props.onGoToUrl} agents={agents} />
+          <AgentsCards
+            agents={agents}
+            onImportAgent={this.props.onImportAgent}
+            onExportAgent={this.props.onExportAgent}
+            agentExport={this.props.agentExport}
+            onGoToUrl={this.props.onGoToUrl}
+          />
         </Grid>
         :
         <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
@@ -78,6 +84,9 @@ function mapDispatchToProps(dispatch) {
     },
     onExportAgent: (id) => {
       dispatch(exportAgent(id));
+    },
+    onImportAgent: (agent) => {
+      dispatch(importAgent(agent));
     }
   };
 }
