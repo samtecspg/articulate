@@ -199,6 +199,7 @@ export const RASA_MODEL_CATEGORY_RECOGNIZER = '_category_recognizer';
 export const RASA_MODEL_MODIFIERS = 'modifiers';
 export const RASA_MODEL_DEFAULT = 'default_';
 export const RASA_MODEL_JUST_ER = 'just_er_';
+export const RASA_INTENT_SPLIT_SYMBOL = '+__+';
 
 // Conversation State Object properties
 

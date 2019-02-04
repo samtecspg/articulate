@@ -12,8 +12,8 @@ import {
     MODEL_SAYING,
     RASA_COMMON_EXAMPLES,
     RASA_ENTITY_SYNONYMS,
-    RASA_MODEL_DEFAULT,
     RASA_MODEL_CATEGORY_RECOGNIZER,
+    RASA_MODEL_DEFAULT,
     RASA_MODEL_JUST_ER,
     RASA_MODEL_MODIFIERS,
     RASA_NLU_DATA,
@@ -25,8 +25,6 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-
-
 const generateTrainingDataForCategoriesRecognizer = async ({ AgentModel, CategoryModels, globalService, categoryService, enableModelsPerCategory }) => {
 
     let countOfCategoriesWithData = 0;
@@ -36,9 +34,9 @@ const generateTrainingDataForCategoriesRecognizer = async ({ AgentModel, Categor
         [RASA_ENTITY_SYNONYMS]: []
     };
 
-    if (enableModelsPerCategory){
+    if (enableModelsPerCategory) {
         for (let CategoryModel of CategoryModels) {
-    
+
             const sayingIds = await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING);
             if (sayingIds.length > 1) { // If the category only have 1 saying then RASA will fail during training
                 countOfCategoriesWithData++;
@@ -74,7 +72,7 @@ const generateTrainingDataForCategoriesRecognizer = async ({ AgentModel, Categor
         rasaNLUData,
         countOfCategoriesWithData
     };
-}
+};
 
 module.exports = async function ({ id, returnModel = false }) {
 
@@ -99,7 +97,7 @@ module.exports = async function ({ id, returnModel = false }) {
         //Train category identifier (If enableModelsPerCategory is false will train a category recognizer between default model and modifiers)
         if ((agent.enableModelsPerCategory && CategoryModels.length > 1) || (!agent.enableModelsPerCategory && CategoryModels.length > 0)) {
             const categoriesTrainingData = await generateTrainingDataForCategoriesRecognizer({ AgentModel, CategoryModels, globalService, categoryService, enableModelsPerCategory: agent.enableModelsPerCategory });
-    
+
             if (categoriesTrainingData.countOfCategoriesWithData > 1) {
                 const pipeline = agent.settings[CONFIG_SETTINGS_CATEGORY_PIPELINE];
                 const categoryRecognizerModel = `${agent.agentName}${RASA_MODEL_CATEGORY_RECOGNIZER}`;
@@ -115,7 +113,8 @@ module.exports = async function ({ id, returnModel = false }) {
                     baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
                 });
                 AgentModel.property('categoryRecognizer', true);
-            } else {
+            }
+            else {
                 AgentModel.property('categoryRecognizer', false);
             }
         }
@@ -132,14 +131,14 @@ module.exports = async function ({ id, returnModel = false }) {
             //Train each category that need it
             if (CategoryModelsToTrain.length > 0) {
                 //TODO: Do it in Parallel
-                for (let CategoryModel of CategoryModels){
+                for (let CategoryModel of CategoryModels) {
                     const status = CategoryModel.property('status');
-                    if (status === STATUS_ERROR || status === STATUS_OUT_OF_DATE) {                        
+                    if (status === STATUS_ERROR || status === STATUS_OUT_OF_DATE) {
                         await categoryService.train({ AgentModel, CategoryModel });
                     }
                 }
             }
-        } 
+        }
         else {
             //Train default model
             const keywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
@@ -192,7 +191,8 @@ module.exports = async function ({ id, returnModel = false }) {
                 baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
             });
             AgentModel.property('modifiersRecognizer', true);
-        } else {
+        }
+        else {
             AgentModel.property('modifiersRecognizer', false);
         }
         //If there is just one modifier set the modifiersRecognizerJustER attribute of the agent with the name of that modifier

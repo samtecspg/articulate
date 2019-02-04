@@ -2,15 +2,16 @@ import _ from 'lodash';
 import {
     RASA_COMMON_EXAMPLES,
     RASA_ENTITY_SYNONYMS,
+    RASA_INTENT_SPLIT_SYMBOL,
     RASA_NLU_DATA,
     RASA_REGEX_FEATURES
 } from '../../../util/constants';
-import RedisErrorHandler from '../../errors/redis.error-handler';
 import InvalidActionSayingsCount from '../../errors/global.invalid-actions-sayings-count';
+import RedisErrorHandler from '../../errors/redis.error-handler';
 
 const getCommonExamples = (sayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions) => {
 
-    const commonExamples = _.uniq(_.flatten(_.map(sayings, (saying) => {
+    return _.uniq(_.flatten(_.map(sayings, (saying) => {
 
         const keywordsList = _.compact(_.map(saying.keywords, (keyword) => {
 
@@ -50,14 +51,14 @@ const getCommonExamples = (sayings, extraTrainingData, keywordsCombinations, cat
                         shift = newEnd - keyword.end;
                     });
 
-                    if (!categoryName){
+                    if (!categoryName) {
                         saying.actions.forEach((actionName) => {
                             sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
                         });
                     }
                     return {
                         text: sayingText,
-                        intent: categoryName || saying.actions.join('+'),
+                        intent: categoryName || saying.actions.join(RASA_INTENT_SPLIT_SYMBOL),
                         entities: newKeywordsList
                     };
                 });
@@ -74,31 +75,30 @@ const getCommonExamples = (sayings, extraTrainingData, keywordsCombinations, cat
                     entity: tempKeyword.keyword
                 });
             });
-            
-            if (!categoryName){
+
+            if (!categoryName) {
                 saying.actions.forEach((actionName) => {
                     sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
                 });
             }
             return {
                 text: saying.userSays,
-                intent: categoryName || saying.actions.join('+'),
+                intent: categoryName || saying.actions.join(RASA_INTENT_SPLIT_SYMBOL),
                 entities: newKeywordsList
             };
         }
 
-        if (!categoryName){
+        if (!categoryName) {
             saying.actions.forEach((actionName) => {
                 sayingsPerActions[actionName] = sayingsPerActions[actionName] === undefined ? 1 : sayingsPerActions[actionName] + 1;
             });
         }
         return {
             text: saying.userSays,
-            intent: categoryName || saying.actions.join('+'),
+            intent: categoryName || saying.actions.join(RASA_INTENT_SPLIT_SYMBOL),
             entities: []
         };
     })));
-    return commonExamples;
 };
 
 module.exports = async function ({ keywords, sayings, extraTrainingData, categoryName = null }) {
@@ -116,12 +116,12 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, categor
         const sayingsPerActions = {};
 
         let commonExamplesUserSayings = [];
-        if (sayings){
+        if (sayings) {
             commonExamplesUserSayings = getCommonExamples(sayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
         }
 
         let commonExamplesModifiersSayings = [];
-        if (!sayings){
+        if (!sayings) {
             const modifiersSayings = _.flatten(_.map(_.flatten(_.map(keywords, 'modifiers')), (modifier) => {
                 return _.map(modifier.sayings, (saying) => {
                     saying.actions = [modifier.modifierName];
@@ -130,12 +130,12 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, categor
             }));
             commonExamplesModifiersSayings = getCommonExamples(modifiersSayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
         }
-        
+
         const actionsWithJustOneSaying = Object.keys(sayingsPerActions).filter((actionName) => {
 
             return sayingsPerActions[actionName] === 1;
         });
-        if (actionsWithJustOneSaying.length > 0){
+        if (actionsWithJustOneSaying.length > 0) {
             return Promise.reject(InvalidActionSayingsCount({ actions: actionsWithJustOneSaying }));
         }
 

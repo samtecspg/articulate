@@ -3,10 +3,10 @@ import {
     MODEL_AGENT,
     MODEL_CATEGORY,
     MODEL_SAYING,
+    RASA_INTENT_SPLIT_SYMBOL,
     RASA_MODEL_CATEGORY_RECOGNIZER,
     RASA_MODEL_JUST_ER,
-    RASA_MODEL_MODIFIERS,
-    MODEL_KEYWORD
+    RASA_MODEL_MODIFIERS
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -21,7 +21,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
         const categorySayingsIds = await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING);
         const firstCategorySayingId = categorySayingsIds[0];
         const firstCategorySaying = await globalService.findById({ id: firstCategorySayingId, model: MODEL_SAYING });
-        return firstCategorySaying.actions.join('+');
+        return firstCategorySaying.actions.join(RASA_INTENT_SPLIT_SYMBOL);
     };
 
     let formattedCategories = [];
@@ -82,17 +82,17 @@ module.exports = async function ({ id = null, AgentModel = null }) {
         }
 
         if (agent.modifiersRecognizer) {
-            if (agent.modifiersRecognizerJustER){
-                formattedCategories.push({ 
-                    name: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`, 
+            if (agent.modifiersRecognizerJustER) {
+                formattedCategories.push({
+                    name: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`,
                     model: `${agent.agentName}_${agent.modifiersRecognizerJustER ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`,
                     justER: true,
                     saying: agent.modifiersRecognizerJustER
                 });
             }
             else {
-                formattedCategories.push({ 
-                    name: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`, 
+                formattedCategories.push({
+                    name: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`,
                     model: `${agent.agentName}_${RASA_MODEL_MODIFIERS}`
                 });
             }

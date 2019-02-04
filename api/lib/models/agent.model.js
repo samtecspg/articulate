@@ -15,7 +15,6 @@ class AgentModel {
             categoryClassifierThreshold: Joi.number(),
             fallbackAction: Joi.string().trim(),
             status: Joi.string().trim(),
-            lastTraining: Joi.date(),
             lastTraining: Joi.alternatives().try(Joi.date(), Joi.string().trim().allow('')),
             extraTrainingData: Joi.boolean(),
             enableModelsPerCategory: Joi.boolean(),

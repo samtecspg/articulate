@@ -18,6 +18,7 @@ import {
 } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import MainTab from '../../components/MainTab';
+import { ACTION_INTENT_SPLIT_SYMBOL } from '../../utils/constants';
 import injectSaga from '../../utils/injectSaga';
 import * as Actions from '../App/actions';
 import {
@@ -158,7 +159,7 @@ export class ReviewPage extends React.Component {
           'keywordId': agentKeyword.id,
         };
       }),
-      actions: rasaResult.action.name === '' ? [] : [rasaResult.action.name],
+      actions: rasaResult.action.name === '' ? [] : rasaResult.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
       categoryId: category.id,
     };
     onCopySaying(saying);

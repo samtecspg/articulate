@@ -29,13 +29,14 @@ module.exports = async function (
             baseURL
         });
         if (oldModel) {
-            try { 
+            try {
                 await rasaNLU.Models({
                     project,
                     model: oldModel,
                     baseURL
-                });   
-            } catch (error) {
+                });
+            }
+            catch (error) {
                 console.warn(`Unable to unload model ${oldModel}. Error data: ${error}`);
             }
         }

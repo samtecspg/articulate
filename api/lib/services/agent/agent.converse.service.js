@@ -6,9 +6,9 @@ import {
     MODEL_ACTION,
     MODEL_AGENT,
     MODEL_CATEGORY,
-    PARAM_DOCUMENT_RASA_RESULTS,
     MODEL_KEYWORD,
-    MODEL_WEBHOOK
+    MODEL_WEBHOOK,
+    PARAM_DOCUMENT_RASA_RESULTS
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -41,7 +41,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
         const recognizedCategory = rasaResults[0];
 
-        if (multiCategory){
+        if (multiCategory) {
             //MARK: if there is more than one category and this exceeds the agent.categoryClassifierThreshold then return it
             if (rasaResults.length > 0 && recognizedCategory.categoryScore > categoryClassifierThreshold) {
                 rasaResult = recognizedCategory;
@@ -154,7 +154,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         //MARK: CSO.parse ===true
         if (conversationStateObject.parse) {
             //MARK: if the model recognized an action
-            if (conversationStateObject.action && !conversationStateObject.modifier){
+            if (conversationStateObject.action && !conversationStateObject.modifier) {
                 //MARK: if there is an action but no responses call RespondFallback and persist context
                 if (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0) {
                     await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
@@ -164,7 +164,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 //MARK: get category using rasaResult category name
                 conversationStateObject.category = getCategoryByName({ agentCategories: conversationStateObject.agent.categories, categoryName: conversationStateObject.rasaResult.category });
                 //MARK: if there is an action and a category, check if the action confidence ia bigger than the category threshold === true
-                if ((!conversationStateObject.agent.multiCategory && conversationStateObject.rasaResult.action.confidence > conversationStateObject.agent.categoryClassifierThreshold) || 
+                if ((!conversationStateObject.agent.multiCategory && conversationStateObject.rasaResult.action.confidence > conversationStateObject.agent.categoryClassifierThreshold) ||
                     (conversationStateObject.agent.multiCategory && conversationStateObject.category && conversationStateObject.rasaResult.action.confidence > conversationStateObject.category.actionThreshold)) {
                     //MARK: if the current context is empty or the current OR if the action name is the same as the current context action add a new frame with empty slots
                     if (!conversationStateObject.currentFrame || (conversationStateObject.rasaResult.action.name !== conversationStateObject.currentFrame.action)) {
@@ -191,11 +191,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
 
             //MARK: if the model recognized a modifier
-            if (conversationStateObject.modifier && conversationStateObject.action){
+            if (conversationStateObject.modifier && conversationStateObject.action) {
                 //MARK: get the slots of the current context action
                 const currentFrameSlotsKeywords = _.map(conversationStateObject.action.slots, 'keyword');
                 //MARK: if the modifier applies to the current context
-                if (currentFrameSlotsKeywords.indexOf(conversationStateObject.modifier.keyword) !== -1){
+                if (currentFrameSlotsKeywords.indexOf(conversationStateObject.modifier.keyword) !== -1) {
                     //MARK: generate response using the modifier
                     const actionResponse = await agentService.converseGenerateResponse({
                         agent: conversationStateObject.agent,
@@ -262,7 +262,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
     const storeDataInQueue = ({ conversationStateObject, action, response, indexOfActionInQueue }) => {
 
-        if (indexOfActionInQueue === -1){
+        if (indexOfActionInQueue === -1) {
             conversationStateObject.context.actionQueue.push({
                 action,
                 slots: conversationStateObject.currentFrame.slots
@@ -270,10 +270,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             conversationStateObject.context.responseQueue.push({ ...response });
         }
         else {
-            conversationStateObject.context.actionQueue[indexOfActionInQueue] = { 
+            conversationStateObject.context.actionQueue[indexOfActionInQueue] = {
                 action,
                 slots: conversationStateObject.currentFrame.slots
-             };
+            };
             conversationStateObject.context.responseQueue[indexOfActionInQueue] = { ...response };
         }
     };
@@ -309,13 +309,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     const indexOnQueue = ({ actionQueue, action, modifier, agentActions }) => {
 
         let actionIndex = -1;
-        if (modifier){
+        if (modifier) {
             actionQueue.some((tempAction, tempIndex) => {
 
                 const tempActionData = getActionByName({ actionName: tempAction.action, agentActions });
                 tempActionData.slots.some((tempSlot) => {
 
-                    if (tempSlot.keyword === modifier.keyword){
+                    if (tempSlot.keyword === modifier.keyword) {
                         actionIndex = tempIndex;
                     }
                     return actionIndex !== -1;
@@ -325,7 +325,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         }
         else {
             actionQueue.some((tempAction, tempIndex) => {
-    
+
                 if (tempAction.action === action) {
                     actionIndex = tempIndex;
                 }
@@ -370,28 +370,28 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         };
         //If the chained action have required slots, check if those can be pulled from the current context
         const requiredSlotNames = _.compact(_.map(action.slots, (slot) => {
-                
+
             return slot.isRequired ? slot : null;
         }));
         if (requiredSlotNames.length > 0) {
             const missingSlots = _.filter(requiredSlotNames, (slot) => {
-    
-                if (conversationStateObject.slots){
+
+                if (conversationStateObject.slots) {
                     const currentSlotValue = conversationStateObject.slots[slot.slotName];
                     return (currentSlotValue === undefined) || (currentSlotValue === '') || (currentSlotValue === null) || (Array.isArray(currentSlotValue) && currentSlotValue.length === 0);
                 }
                 return true;
             });
-            if (missingSlots.length > 0){
+            if (missingSlots.length > 0) {
                 response.actionWasFulfilled = false;
-                const textResponse = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });        
+                const textResponse = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
                 Object.assign(response, { ...textResponse });
                 return response;
             }
         }
         if (action.useWebhook || conversationStateObject.agent.useWebhook) {
             let modelPath, webhook;
-            if (action.useWebhook){
+            if (action.useWebhook) {
                 modelPath = [
                     {
                         model: MODEL_AGENT,
@@ -446,7 +446,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const agentActions = conversationStateObject[CSO_AGENT].actions;
         let currentQueueIndex = 0;
 
-        for (let responseAction of responseActions){
+        for (let responseAction of responseActions) {
             let agentAction = _.filter(agentActions, (tempAction) => {
 
                 return tempAction.actionName === responseAction;
@@ -468,7 +468,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         slots: {}
                     });
                     const response = await getResponseOfChainedAction({ action: agentAction, conversationStateObject });
-                    if (response.webhookResponse){
+                    if (response.webhookResponse) {
                         webhookResponses.push(response.webhookResponse);
                     }
                     conversationStateObject.context.responseQueue.push({ ...response });
@@ -537,28 +537,27 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             conversationStateObject.rasaResult = getBestRasaResult({ rasaResults: conversationStateObject.parse, categoryClassifierThreshold: conversationStateObject.agent.categoryClassifierThreshold, multiCategory: conversationStateObject.agent.multiCategory });
             //MARK: if there is an action, look for it in the agent actions
             conversationStateObject.action = getActionData({ rasaResult: conversationStateObject.rasaResult, agentActions: conversationStateObject.agent.actions });
-            if (!conversationStateObject.action){
+            if (!conversationStateObject.action) {
                 //MARK: look if the model recognized a modifier
                 conversationStateObject.modifier = getModifierData({ rasaResult: conversationStateObject.rasaResult, agentKeywords: conversationStateObject.agent.keywords });
                 if (conversationStateObject.modifier) {
                     //MARK: search if there is an action in the queue that can be modified by the modifier
                     indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, modifier: conversationStateObject.modifier, agentActions: conversationStateObject.agent.actions });
-                    if (indexOfActionInQueue !== -1){
+                    if (indexOfActionInQueue !== -1) {
                         //MARK: if there is an action that can be modified by the modifier, then get its data
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.context.actionQueue[0].action, agentActions: conversationStateObject.agent.actions });
                     }
                     else {
                         //MARK: if the modifier doesn't modifies any action in the action queue, get latest action in context
-                        if (conversationStateObject.currentFrame){
+                        if (conversationStateObject.currentFrame) {
                             conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
                         }
                     }
                 }
             }
             else {
-                indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName });                
+                indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName });
             }
-
 
             if (indexOfActionInQueue !== -1) {
                 moveOnQueue({
@@ -636,7 +635,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const textResponse = textResponses.length === 1 ? textResponses : textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
         await documentService.update({ id: conversationStateObject.docId, data: { webhookResponses } });
-        
+
         const converseResult = {
             textResponse,
             docId: conversationStateObject.docId,

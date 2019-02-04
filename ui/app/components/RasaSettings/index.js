@@ -96,7 +96,7 @@ const tensorflowPipeline = [
   {
     name: 'intent_classifier_tensorflow_embedding',
     intent_tokenization_flag: true,
-    intent_split_symbol: '+',
+    intent_split_symbol: '+__+',
   },
   {
     name: 'nlp_spacy',

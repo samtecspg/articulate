@@ -20,6 +20,7 @@ import {
     PARAM_SKIP,
     PARAM_TEXT,
     PARAM_TIMEZONE,
+    RASA_INTENT_SPLIT_SYMBOL,
     SORT_ASC,
     SORT_DESC
 } from '../../util/constants';
@@ -115,7 +116,10 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
+                    actionName: ActionSchema.actionName
+                        .required()
+                        .regex(/\+__\+/, { invert: true })
+                        .error(new Error(`The action name is required or it contains the text "${RASA_INTENT_SPLIT_SYMBOL}" which restricted.`)),
                     useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fulfilment.')),
                     usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fulfilment.')),
                     responses: Joi.array().items({

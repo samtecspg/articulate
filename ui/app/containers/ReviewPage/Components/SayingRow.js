@@ -11,6 +11,7 @@ import {
   PercentCell,
   PlayImageCell,
 } from '../../../components/StyledTable';
+import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../utils/constants';
 import HighlightedSaying from './HighlightedSaying';
 
 const styles = {
@@ -30,7 +31,6 @@ const styles = {
       backgroundColor: '#4e4e4e',
       color: '#fff',
     },
-    cursor: 'pointer',
     margin: '0px 5px 0px 5px',
     fontSize: '12px',
     padding: '4px 8px 4px 8px',
@@ -44,7 +44,7 @@ const styles = {
     textDecoration: 'none',
     color: 'inherit',
     position: 'relative',
-    bottom: '1px'
+    bottom: '1px',
   },
   deleteActionX: {
     '&:hover': {
@@ -80,11 +80,11 @@ const styles = {
     backgroundColor: '#f6f7f8',
     border: 'none',
     fontSize: '12px',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   rowCategory: {
     color: 'red',
-  }
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -135,22 +135,25 @@ class SayingRow extends React.Component {
               lastStart={0}
             />
           </span>
-          {saying.action.name !== '' &&
-          <div className={classes.actionBackgroundContainer}>
-            <span className={classes.actionLabel}>{saying.action.name}</span>
-          </div>
+          {
+            saying.action.name !== '' &&
+            saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL).map((action) => {
+              return <div className={classes.actionBackgroundContainer}>
+                <span className={classes.actionLabel}>{action}</span>
+              </div>;
+            })
           }
 
         </TableCell>
         <PercentCell value={document.maximum_category_score} align="center" />
         <PercentCell value={document.maximum_saying_score} align="center" />
         <CopyImageCell
-          disabled={document.id === 'noData'} 
+          disabled={document.id === 'noData'}
           onClick={() => {
             this.props.onCopySaying(document);
           }}
         />
-        <PlayImageCell 
+        <PlayImageCell
           disabled={document.id === 'noData'}
           onClick={() => {
             this.props.onToggleConversationBar(true);
