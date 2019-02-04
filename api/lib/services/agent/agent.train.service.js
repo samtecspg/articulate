@@ -198,7 +198,6 @@ module.exports = async function ({ id, returnModel = false }) {
         //If there is just one modifier set the modifiersRecognizerJustER attribute of the agent with the name of that modifier
         AgentModel.property('modifiersRecognizerJustER', modifiersTrainingData.numberOfSayings === 1 ? rasaNLUData[RASA_COMMON_EXAMPLES][0].intent : '');
 
-        AgentModel.property('lastTraining', Moment().utc().format());
         AgentModel.property('model', model);
         /*
             Only change the status to ready if the status is still training, because if not we are going to mark
@@ -207,6 +206,7 @@ module.exports = async function ({ id, returnModel = false }) {
         AgentModel = await redis.factory(MODEL_AGENT, id);
         agent = AgentModel.allProperties();
         if (agent.status === STATUS_TRAINING){
+            AgentModel.property('lastTraining', Moment().utc().format());
             AgentModel.property('status', STATUS_READY);
         }
         await AgentModel.saveInstance();
