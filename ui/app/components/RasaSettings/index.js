@@ -13,6 +13,7 @@ import 'brace/mode/json';
 import 'brace/theme/terminal';
 
 import addPipelineIcon from '../../images/add-pipeline-icon.svg';
+import { ACTION_INTENT_SPLIT_SYMBOL } from '../../utils/constants';
 
 import messages from './messages';
 
@@ -96,7 +97,7 @@ const tensorflowPipeline = [
   {
     name: 'intent_classifier_tensorflow_embedding',
     intent_tokenization_flag: true,
-    intent_split_symbol: '+__+',
+    intent_split_symbol: ACTION_INTENT_SPLIT_SYMBOL,
   },
   {
     name: 'nlp_spacy',
