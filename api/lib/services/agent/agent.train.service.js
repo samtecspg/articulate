@@ -82,8 +82,8 @@ module.exports = async function ({ id, returnModel = false }) {
 
     let model = Guid.create().toString();
     try {
-        const AgentModel = await redis.factory(MODEL_AGENT, id);
-        const agent = AgentModel.allProperties();
+        let AgentModel = await redis.factory(MODEL_AGENT, id);
+        let agent = AgentModel.allProperties();
         //const rasaStatus = await rasaNLU.Status();
         AgentModel.property('status', STATUS_TRAINING);
         await AgentModel.saveInstance();
@@ -204,6 +204,8 @@ module.exports = async function ({ id, returnModel = false }) {
             Only change the status to ready if the status is still training, because if not we are going to mark
             an agent as ready when actually it could be out of date because user edited while it was being trained
         */
+        AgentModel = await redis.factory(MODEL_AGENT, id);
+        agent = AgentModel.allProperties();
         if (agent.status === STATUS_TRAINING){
             AgentModel.property('status', STATUS_READY);
         }
