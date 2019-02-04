@@ -43,7 +43,7 @@ ImageCell.propTypes = {
   image: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
   tooltip: PropTypes.string,
-  disabled: PropTypes.boolean,
+  disabled: PropTypes.bool,
 };
 
 export default withStyles(styles)(ImageCell);
