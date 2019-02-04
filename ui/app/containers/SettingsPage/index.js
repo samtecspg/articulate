@@ -42,6 +42,7 @@ export class SettingsPage extends React.PureComponent {
     errorState: {
       rasaURL: false,
       ducklingURL: false,
+      defaultUISessionId: false,
       ducklingDimension: false,
       categoryClassifierPipeline: false,
       sayingClassifierPipeline: false,
@@ -60,6 +61,7 @@ export class SettingsPage extends React.PureComponent {
     const newErrorState = {
       rasaURL: false,
       ducklingURL: false,
+      defaultUISessionId: false,
       ducklingDimension: false,
       categoryClassifierPipeline: false,
       sayingClassifierPipeline: false,
@@ -73,6 +75,13 @@ export class SettingsPage extends React.PureComponent {
       uiLanguage: false,
       defaultAgentFallbackResponses: false,
     };
+    
+    if (!this.props.settings.defaultUISessionId || this.props.settings.defaultUISessionId === '') {
+      errors = true;
+      newErrorState.defaultUISessionId = true;
+    } else {
+      newErrorState.defaultUISessionId = false;
+    }
 
     if (!this.props.settings.rasaURL || this.props.settings.rasaURL === '') {
       errors = true;

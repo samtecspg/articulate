@@ -24,10 +24,11 @@ import {
   storeSourceData
 } from './actions';
 
-import { makeSelectAgent } from './selectors';
+import { makeSelectAgent, makeSelectSettings } from './selectors';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
+  const settings = yield select(makeSelectSettings());
   if (agent.id) {
     const { api, message } = payload;
     try {
@@ -35,7 +36,7 @@ export function* postConverse(payload) {
         agentId: agent.id,
         debug: true,
         body: {
-          sessionId: 'articulateUI',
+          sessionId: settings.defaultUISessionId,
           text: message.message,
         },
       });
@@ -62,10 +63,12 @@ export function* postConverse(payload) {
 }
 
 export function* deleteSession(payload) {
+  const settings = yield select(makeSelectSettings());
+  const sessionId = settings.defaultUISessionId;
   try {
     const { api } = payload;
-    yield call(api.context.deleteContextSessionidFrame, { sessionId: 'articulateUI' });
-    yield call(api.context.patchContextSessionid, { sessionId: 'articulateUI', body: {
+    yield call(api.context.deleteContextSessionidFrame, { sessionId });
+    yield call(api.context.patchContextSessionid, { sessionId, body: {
       actionQueue: [],
       responseQueue: []
     }});

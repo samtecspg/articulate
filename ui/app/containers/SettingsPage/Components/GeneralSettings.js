@@ -92,6 +92,21 @@ export class GeneralSettings extends React.Component {
         <Grid container justify='space-between' spacing={24} item xs={12}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
+              id='defaultUISessionId'
+              value={settings.defaultUISessionId}
+              label={intl.formatMessage(messages.defaultUISessionId)}
+              onChange={(evt) => { this.props.onChangeSettingsData('defaultUISessionId', evt.target.value) }}
+              margin='normal'
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.defaultUISessionId}
+            />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <TextField
               select
               id='uiLanguage'
               value={settings.uiLanguage}

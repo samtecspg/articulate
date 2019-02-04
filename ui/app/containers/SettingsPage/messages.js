@@ -23,6 +23,10 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.playHelpAlt',
     defaultMessage: 'Play video off how to add/edit an Agent',
   },
+  defaultUISessionId: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.defaultUISessionId',
+    defaultMessage: 'UI session id for chat:',
+  },
   uiLanguageSelect: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.uiLanguageSelect',
     defaultMessage: 'UI Language:',
