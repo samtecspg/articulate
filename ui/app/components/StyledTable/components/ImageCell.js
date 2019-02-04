@@ -1,5 +1,6 @@
 import { TableCell } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -12,7 +13,7 @@ const styles = {
     filter: 'invert(1)',
     cursor: 'pointer',
     position: 'relative',
-    top: '4px'
+    top: '4px',
   },
 };
 
@@ -22,17 +23,27 @@ function ImageCell(props) {
     image,
     onClick,
     disabled,
+    tooltip,
     ...rest
   } = props;
-  return <TableCell {...rest}>
-    <img alt="" onClick={() => { onClick && !disabled ? onClick() : _.noop }} className={classes.icon} src={image} />
-  </TableCell>;
+  return (
+    <TableCell {...rest}>
+      <Tooltip title={tooltip} placement="top-start">
+        <img
+          alt="" onClick={() => {
+          onClick && !disabled ? onClick() : _.noop;
+        }} className={classes.icon} src={image}
+        />
+      </Tooltip>
+    </TableCell>);
 }
 
 ImageCell.propTypes = {
   onClick: PropTypes.func,
   image: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
+  tooltip: PropTypes.string,
+  disabled: PropTypes.boolean,
 };
 
 export default withStyles(styles)(ImageCell);

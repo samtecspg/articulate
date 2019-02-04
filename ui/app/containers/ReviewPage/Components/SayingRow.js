@@ -148,12 +148,14 @@ class SayingRow extends React.Component {
         <PercentCell value={document.maximum_category_score} align="center" />
         <PercentCell value={document.maximum_saying_score} align="center" />
         <CopyImageCell
+          tooltip={'Copy to your list of Sayings'}
           disabled={document.id === 'noData'}
           onClick={() => {
             this.props.onCopySaying(document);
           }}
         />
         <PlayImageCell
+          tooltip={'Test on chat window'}
           disabled={document.id === 'noData'}
           onClick={() => {
             this.props.onToggleConversationBar(true);
