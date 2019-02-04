@@ -169,7 +169,6 @@ class Form extends React.Component {
           onDeleteAction={this.props.onDeleteAction}
           onAddNewSayingAction={this.props.onAddNewSayingAction}
           onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
-          onGoToUrl={this.props.onGoToUrl}
           onSendSayingToAction={this.props.onSendSayingToAction}
           currentPage={this.props.currentPage}
           pageSize={this.props.pageSize}
@@ -211,7 +210,6 @@ Form.propTypes = {
   onSearchSaying: PropTypes.func,
   onSearchCategory: PropTypes.func,
   onAddAction: PropTypes.func,
-  onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,

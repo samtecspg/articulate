@@ -70,6 +70,8 @@ export class SayingsPage extends React.Component {
     currentPage: 1,
     pageSize: this.props.agent.settings.sayingsPageSize,
     numberOfPages: null,
+    userSays: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).userSays,
+
   };
 
   componentWillMount() {
@@ -205,6 +207,7 @@ export class SayingsPage extends React.Component {
               changePageSize={this.changePageSize}
               onSelectCategory={this.props.onSelectCategory}
               category={this.props.category}
+              userSays={this.state.userSays}
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
               filter={this.state.filter}

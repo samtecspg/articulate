@@ -142,27 +142,31 @@ export class ReviewPage extends React.Component {
 
   }
 
-  copySayingFromDocument(document) {
-    const { agentCategories, agentKeywords } = this.props;
-    const { onCopySaying } = this.props.actions;
-    const rasaResult = document.rasa_results[0];
-    const category = _.find(agentCategories, { 'categoryName': rasaResult.category });
-    const saying = {
-      userSays: document.document,
-      keywords: rasaResult.keywords.map((keyword) => {
-        const agentKeyword = _.find(agentKeywords, { 'keywordName': keyword.keyword });
-        return {
-          'value': keyword.value.value,
-          'keyword': keyword.keyword,
-          'start': keyword.start,
-          'end': keyword.end,
-          'keywordId': agentKeyword.id,
-        };
-      }),
-      actions: rasaResult.action.name === '' ? [] : rasaResult.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
-      categoryId: category.id,
-    };
-    onCopySaying(saying);
+  copySayingFromDocument(userSays, saying) {
+    const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
+    if (saying.categoryScore === 0) {
+      onGoToUrl(`/agent/${agent.id}/sayings?userSays=${userSays}`);
+    }
+    else {
+      const { onCopySaying } = this.props.actions;
+      const category = _.find(agentCategories, { 'categoryName': saying.category });
+      const sayingToCopy = {
+        userSays,
+        keywords: saying.keywords.map((keyword) => {
+          const agentKeyword = _.find(agentKeywords, { 'keywordName': keyword.keyword });
+          return {
+            'value': keyword.value.value,
+            'keyword': keyword.keyword,
+            'start': keyword.start,
+            'end': keyword.end,
+            'keywordId': agentKeyword.id,
+          };
+        }),
+        actions: saying.action.name === '' ? [] : saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
+        categoryId: category.id,
+      };
+      onCopySaying(sayingToCopy);
+    }
   }
 
   handleOnRequestSort(id) {
@@ -203,7 +207,6 @@ export class ReviewPage extends React.Component {
       agentActions,
       category,
       newSayingActions,
-      onGoToUrl,
     } = this.props;
     return (
       <Grid container>
@@ -235,7 +238,6 @@ export class ReviewPage extends React.Component {
               onDeleteNewSayingAction={onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
               onSearchCategory={this.onSearchCategory}
-              onGoToUrl={() => onGoToUrl(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
               onSendSayingToAction={onSendSayingToAction}
               currentPage={this.state.currentPage}
               pageSize={this.state.pageSize}
@@ -337,8 +339,8 @@ function mapDispatchToProps(dispatch) {
       onSendMessage: Actions.sendMessage,
       onChangeReviewPageSize: Actions.changeReviewPageSize,
     }, dispatch),
-    onGoToUrl: (filter, page, pageSize, url) => {
-      dispatch(push(`${url}?filter=${filter}&page=${page}&pageSize=${pageSize}`));
+    onGoToUrl: (url) => {
+      dispatch(push(url));
     },
   };
 }

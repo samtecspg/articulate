@@ -114,10 +114,10 @@ class SayingRow extends React.Component {
             }}
             disabled
           >
-            {agentCategories.map((category, index) =>
+            {agentCategories.map((category) =>
               // TODO: return the category id in the API to be able to select the category id of the saying in
               (
-                <MenuItem key={`category_${index}`} value={category.id}>
+                <MenuItem key={`${document.id}_category_${category.id}`} value={category.id}>
                   <span className={classes.categoryLabel}>{category.categoryName.indexOf('modifiers') ? 'Modifier' : category.categoryName}</span>
                 </MenuItem>
               ),
@@ -138,7 +138,7 @@ class SayingRow extends React.Component {
           {
             saying.action.name !== '' &&
             saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL).map((action) => {
-              return <div className={classes.actionBackgroundContainer}>
+              return <div key={`${document.id}_action_${action}`} className={classes.actionBackgroundContainer}>
                 <span className={classes.actionLabel}>{action}</span>
               </div>;
             })
@@ -151,7 +151,7 @@ class SayingRow extends React.Component {
           tooltip={'Copy to your list of Sayings'}
           disabled={document.id === 'noData'}
           onClick={() => {
-            this.props.onCopySaying(document);
+            this.props.onCopySaying(document.document, saying);
           }}
         />
         <PlayImageCell

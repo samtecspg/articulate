@@ -10,11 +10,13 @@ import {
   TableCell,
   TableRow,
   TextField,
-  Typography,
   Tooltip,
+  Typography,
 } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
+
+import _ from 'lodash';
 
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -23,8 +25,6 @@ import {
   injectIntl,
   intlShape,
 } from 'react-intl';
-
-import _ from 'lodash';
 import Immutable from 'seamless-immutable';
 
 import addActionIcon from '../../../images/add-action-icon.svg';
@@ -147,7 +147,7 @@ const styles = {
   addCategoryButton: {
     width: '62px',
     height: '26px',
-    top: '3px'
+    top: '3px',
   },
   categoryDataContainer: {
     display: 'inline',
@@ -216,24 +216,24 @@ class SayingsDataForm extends React.Component {
     errorCategory: false,
     openActions: false,
     anchorEl: null,
-    changedPage: false
+    changedPage: false,
   };
 
-  scrollToNextPageCursor(){
+  scrollToNextPageCursor() {
     const pageControl = document.querySelector('#pageControl');
-    if (pageControl){
+    if (pageControl) {
       pageControl.scrollIntoView(true);
     }
   }
 
-  componentWillUpdate(nextProps){
-    if (this.props.currentPage !== nextProps.currentPage || this.props.sayingsPageSize !== nextProps.sayingsPageSize){
+  componentWillUpdate(nextProps) {
+    if (this.props.currentPage !== nextProps.currentPage || this.props.sayingsPageSize !== nextProps.sayingsPageSize) {
       this.setState({
         changedPage: true,
       });
     }
     else {
-      if (!_.isEqual(Immutable.asMutable(this.props.sayings, {deep: true}), Immutable.asMutable(nextProps.sayings, {deep: true}))){
+      if (!_.isEqual(Immutable.asMutable(this.props.sayings, { deep: true }), Immutable.asMutable(nextProps.sayings, { deep: true }))) {
         this.setState({
           changedPage: false,
         });
@@ -241,14 +241,14 @@ class SayingsDataForm extends React.Component {
     }
   }
 
-  componentDidUpdate(){
-    if (this.state.changedPage){
+  componentDidUpdate() {
+    if (this.state.changedPage) {
       this.scrollToNextPageCursor();
     }
   }
 
   render() {
-    const { classes, intl, sayings, category } = this.props;
+    const { classes, intl, sayings, category, userSays } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
@@ -257,7 +257,7 @@ class SayingsDataForm extends React.Component {
               <TextField
                 select
                 id='category'
-                value={category ? category : 'select'}
+                value={category || 'select'}
                 label={intl.formatMessage(messages.categorySelect)}
                 onClick={
                   () => {
@@ -288,9 +288,9 @@ class SayingsDataForm extends React.Component {
                 error={this.state.errorCategory}
               >
                 {category || this.state.categoriesDropdownOpen ? null :
-                <MenuItem key='select' value='select'>
-                  <FormattedMessage {...messages.categorySelectDefault} />
-                </MenuItem> }
+                  <MenuItem key='select' value='select'>
+                    <FormattedMessage {...messages.categorySelectDefault} />
+                  </MenuItem>}
                 <MenuItem className={classes.searchCategoryContainer} value="filter">
                   <Grid container justify='flex-end'>
                     <img src={searchIcon} />
@@ -367,13 +367,13 @@ class SayingsDataForm extends React.Component {
                       [<MenuItem key='no results' value='no results'>
                         <FormattedMessage {...messages.categoryNoResults} />
                       </MenuItem>,
-                      <MenuItem key='create' value='create'>
-                        <Button
-                          onClick={() => {
-                            this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`);
-                          }} className={classes.addCategoryButton} variant='contained'
-                        ><FormattedMessage {...messages.categoryAdd} /></Button>
-                      </MenuItem>]
+                        <MenuItem key='create' value='create'>
+                          <Button
+                            onClick={() => {
+                              this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`);
+                            }} className={classes.addCategoryButton} variant='contained'
+                          ><FormattedMessage {...messages.categoryAdd} /></Button>
+                        </MenuItem>]
                     :
                     this.props.agentCategories.map((agentCategory, index) => (
                       <MenuItem key={`category_${index}`} value={agentCategory.id}>
@@ -402,6 +402,7 @@ class SayingsDataForm extends React.Component {
             <Grid item lg={10} md={10} sm={8} xs={8}>
               <TextField
                 id='newSaying'
+                defaultValue={userSays || undefined}
                 label={intl.formatMessage(messages.sayingTextField)}
                 placeholder={intl.formatMessage(messages.sayingTextFieldPlaceholder)}
                 onKeyPress={(ev) => {
@@ -410,7 +411,8 @@ class SayingsDataForm extends React.Component {
                       this.setState({
                         errorCategory: true,
                       });
-                    } else {
+                    }
+                    else {
                       this.setState({
                         errorCategory: false,
                       });
@@ -446,7 +448,7 @@ class SayingsDataForm extends React.Component {
                                 this.props.onClearSayingToAction();
                                 this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`);
                               }}
-                            >{action.length > 5 ? <Tooltip title={action} placement='top'><span>{`${action.substring(0,5)}...`}</span></Tooltip> : action }</span>
+                            >{action.length > 5 ? <Tooltip title={action} placement='top'><span>{`${action.substring(0, 5)}...`}</span></Tooltip> : action}</span>
                             <a
                               onClick={() => {
                                 this.props.onDeleteNewSayingAction(action);
@@ -500,9 +502,10 @@ class SayingsDataForm extends React.Component {
                   if (evt.target.value === 'create') {
                     this.props.onClearSayingToAction();
                     this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
-                  } else {
+                  }
+                  else {
                     //If the user didn't click the edit icon
-                    if (!evt._targetInst || (evt._targetInst && evt._targetInst.type !== 'img')){
+                    if (!evt._targetInst || (evt._targetInst && evt._targetInst.type !== 'img')) {
                       //Then add the saying for the new action
                       this.props.onAddNewSayingAction(evt.target.value);
                     }
@@ -523,10 +526,11 @@ class SayingsDataForm extends React.Component {
                       >
                         <Grid container justify='space-between'>
                           <div className={classes.categoryDataContainer}>
-                            <span>{action.actionName.length > 15 ? `${action.actionName.substring(0,15)}...` : action.actionName}</span>
+                            <span>{action.actionName.length > 15 ? `${action.actionName.substring(0, 15)}...` : action.actionName}</span>
                           </div>
                           <div className={classes.categoryDataContainer}>
-                            <img id={`edit_action_${action.id}`}
+                            <img
+                              id={`edit_action_${action.id}`}
                               onClick={() => {
                                 this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
                               }} className={classes.editCategoryIcon} src={pencilIcon}
@@ -685,6 +689,7 @@ SayingsDataForm.propTypes = {
   changePageSize: PropTypes.func,
   onSelectCategory: PropTypes.func,
   category: PropTypes.string,
+  userSays: PropTypes.string,
   onSearchCategory: PropTypes.func,
   newSayingActions: PropTypes.array,
   onAddNewSayingAction: PropTypes.func,

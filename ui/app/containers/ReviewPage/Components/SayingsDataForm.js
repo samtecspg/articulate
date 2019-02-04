@@ -185,37 +185,37 @@ const styles = {
   },
   '@global': {
     '#reviewsTable > tbody > tr > td:first-child': {
-      borderLeft: '1px solid #a2a7b1'
+      borderLeft: '1px solid #a2a7b1',
     },
     '#reviewsTable > tbody > tr > td:last-child': {
-      borderRight: '1px solid #a2a7b1'
+      borderRight: '1px solid #a2a7b1',
     },
     '#reviewsTable > tbody > tr:first-child > td:first-child': {
       borderTop: '1px solid #a2a7b1',
-      borderTopLeftRadius: '5px'
+      borderTopLeftRadius: '5px',
     },
     '#reviewsTable > tbody > tr:first-child > td': {
       borderTop: '1px solid #a2a7b1',
     },
     '#reviewsTable > tbody > tr:first-child > td:last-child': {
       borderTop: '1px solid #a2a7b1',
-      borderTopRightRadius: '5px'
+      borderTopRightRadius: '5px',
     },
     '#reviewsTable > tbody > tr:last-child > td:first-child': {
       borderBottom: '1px solid #a2a7b1',
-      borderBottomLeftRadius: '5px'
+      borderBottomLeftRadius: '5px',
     },
     '#reviewsTable > tbody > tr:last-child > td': {
       borderBottom: '1px solid #a2a7b1',
     },
     '#reviewsTable > tbody > tr:last-child > td:last-child': {
       borderBottom: '1px solid #a2a7b1',
-      borderBottomRightRadius: '5px'
+      borderBottomRightRadius: '5px',
     },
     '#reviewsTable > tbody > tr > td:nth-child(3)': {
-      borderLeft: '1px solid #a2a7b1'
-    }
-  }
+      borderLeft: '1px solid #a2a7b1',
+    },
+  },
 };
 
 const tableHeaders = [
@@ -254,10 +254,10 @@ function SayingsDataForm(props) {
                         {
                           keywords: [],
                           action: {
-                            name: "",
+                            name: '',
                           },
-                          categoryScore: 0
-                        }
+                          categoryScore: 0,
+                        },
                       ],
                       maximum_saying_score: null,
                       maximum_category_score: null,
@@ -270,20 +270,20 @@ function SayingsDataForm(props) {
                     onCopySaying={props.onCopySaying}
                   />
                 </StyledRow>]
-              :
-              documents.map((document) => (
-                <StyledRow key={`document_${document.id}`}>
-                  <SayingRow
-                    document={document}
-                    agentKeywords={props.agentKeywords}
-                    agentCategories={props.agentCategories}
-                    onToggleConversationBar={props.onToggleConversationBar}
-                    agentActions={props.agentActions}
-                    onSendMessage={props.onSendMessage}
-                    onCopySaying={props.onCopySaying}
-                  />
-                </StyledRow>
-              ))}
+                :
+                documents.map((document) => (
+                  <StyledRow key={`document_${document.id}`}>
+                    <SayingRow
+                      document={document}
+                      agentKeywords={props.agentKeywords}
+                      agentCategories={props.agentCategories}
+                      onToggleConversationBar={props.onToggleConversationBar}
+                      agentActions={props.agentActions}
+                      onSendMessage={props.onSendMessage}
+                      onCopySaying={props.onCopySaying}
+                    />
+                  </StyledRow>
+                ))}
             onRequestSort={props.onRequestSort}
             sortField={props.sortField}
             sortDirection={props.sortDirection}
@@ -384,7 +384,6 @@ SayingsDataForm.propTypes = {
   onTagKeyword: PropTypes.func,
   onUntagKeyword: PropTypes.func,
   onAddAction: PropTypes.func,
-  onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,

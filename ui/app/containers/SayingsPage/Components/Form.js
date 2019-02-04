@@ -184,6 +184,7 @@ class Form extends React.Component {
           changePageSize={this.props.changePageSize}
           onSelectCategory={this.props.onSelectCategory}
           category={this.props.category}
+          userSays={this.props.userSays}
           onSearchCategory={this.props.onSearchCategory}
           newSayingActions={this.props.newSayingActions}
           onClearSayingToAction={this.props.onClearSayingToAction}
@@ -221,6 +222,7 @@ Form.propTypes = {
   changePageSize: PropTypes.func,
   onSelectCategory: PropTypes.func,
   category: PropTypes.string,
+  userSays: PropTypes.string,
   newSayingActions: PropTypes.array,
   onAddNewSayingAction: PropTypes.func,
   onDeleteNewSayingAction: PropTypes.func,
