@@ -8,7 +8,7 @@ import {
     RASA_MODEL_JUST_ER,
     RASA_MODEL_MODIFIERS
 } from '../../../util/constants';
-import GlobalDefaultError from '../../errors/global.default-error';
+import GlobalParseError from '../../errors/global.parse-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ id = null, AgentModel = null }) {
@@ -31,7 +31,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
 
         if (!agent.enableModelsPerCategory) {
             if (!agent.lastTraining) {
-                return Promise.reject(GlobalDefaultError({
+                return Promise.reject(GlobalParseError({
                     message: `The Agent id=[${agent.id}] is not trained`
                 }));
             }
@@ -51,15 +51,17 @@ module.exports = async function ({ id = null, AgentModel = null }) {
         else {
             const CategoryModels = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: true });
             if (CategoryModels.length === 0) {
-                return Promise.reject(GlobalDefaultError({
-                    message: `The Agent id=[${agent.id}] doesn't have any categories.`
+                return Promise.reject(GlobalParseError({
+                    message: `The Agent id=[${agent.id}] doesn't have any categories.`,
+                    missingCategories: true
                 }));
             }
             const TrainedCategoryModels = CategoryModels.filter((CategoryModel) => CategoryModel.property('model'));
 
             if (TrainedCategoryModels.length === 0) {
-                return Promise.reject(GlobalDefaultError({
-                    message: `The Agent id=[${agent.id}] doesn't have any trained categories.`
+                return Promise.reject(GlobalParseError({
+                    message: `The Agent id=[${agent.id}] doesn't have any trained categories.`,
+                    missingTrainedCategories: true
                 }));
             }
 

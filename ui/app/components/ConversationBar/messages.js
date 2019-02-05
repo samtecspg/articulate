@@ -10,4 +10,8 @@ export default defineMessages({
     id: 'app.components.ConversationBar.userMessagePlaceholder',
     defaultMessage: 'Chat with Agent',
   },
+  seeSource: {
+    id: 'app.components.ConversationBar.seeSource',
+    defaultMessage: 'See Source'
+  }
 });
