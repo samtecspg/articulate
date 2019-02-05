@@ -1,17 +1,17 @@
 {
   "name": "articulate",
-  "version": "1.5.0",
+  "version": "0.0.0",
   "description": "Smart conversational interfaces",
   "repository": {
     "type": "git",
-    "url": "git://github.com/samtecsgp/articulate.git"
+    "url": "git://github.com/samtecspg/articulate.git"
   },
   "engines": {
     "npm": ">=5",
     "node": ">=10.5.0"
   },
-  "author": "SPG",
-  "license": "MIT",
+  "author": "Samtec Smart Platform Group",
+  "license": "Apache-2.0",
   "scripts": {
     "analyze:clean": "rimraf stats.json",
     "preanalyze": "npm run analyze:clean",
