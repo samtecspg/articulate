@@ -223,6 +223,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         //MARK: update action object from the action of the context
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
                         const actionResponse = agentService.converseGenerateResponse({
+                            agent: conversationStateObject.agent,
                             action: conversationStateObject.action,
                             context: conversationStateObject.context,
                             currentFrame: conversationStateObject.currentFrame,
@@ -241,6 +242,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject.currentFrame = lastValidContext;
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.name, agentActions: conversationStateObject.agent.actions });
                         const actionResponse = agentService.converseGenerateResponse({
+                            agent: conversationStateObject.agent,
                             action: conversationStateObject.action,
                             context: conversationStateObject.context,
                             currentFrame: conversationStateObject.currentFrame,
@@ -363,11 +365,12 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         return responses;
     };
 
-    const getResponseOfChainedAction = async ({ action, conversationStateObject }) => {
+    const getResponseOfChainedAction = async ({ slots, action, conversationStateObject }) => {
 
         const response = {
             actionWasFulfilled: true
         };
+        conversationStateObject.slots = slots;
         //If the chained action have required slots, check if those can be pulled from the current context
         const requiredSlotNames = _.compact(_.map(action.slots, (slot) => {
 
@@ -441,7 +444,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         return response;
     };
 
-    const chainResponseActions = async ({ conversationStateObject, responseActions }) => {
+    const chainResponseActions = async ({ slots, conversationStateObject, responseActions }) => {
 
         const agentActions = conversationStateObject[CSO_AGENT].actions;
         let currentQueueIndex = 0;
@@ -467,7 +470,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         action: agentAction.actionName,
                         slots: {}
                     });
-                    const response = await getResponseOfChainedAction({ action: agentAction, conversationStateObject });
+                    const response = await getResponseOfChainedAction({ slots, action: agentAction, conversationStateObject });
                     if (response.webhookResponse) {
                         webhookResponses.push(response.webhookResponse);
                     }
@@ -622,7 +625,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 data.push(finalResponse);
             }
             if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0) {
-                await chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions });
+                await chainResponseActions({ slots: agentToolResponse.slots, conversationStateObject, responseActions: cleanAgentToolResponse.actions });
             }
             return data;
         }, Promise.resolve([]));

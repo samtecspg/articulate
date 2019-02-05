@@ -337,12 +337,12 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
+            return { slots: conversationStateObject.slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
         }
         conversationStateObject.webhookResponse = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-        return { ...response, webhookResponse, actionWasFulfilled: true };
+        return { slots: conversationStateObject.slots, ...response, webhookResponse, actionWasFulfilled: true };
     }
     const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-    return { ...response, actionWasFulfilled: true };
+    return { slots: conversationStateObject.slots, ...response, actionWasFulfilled: true };
 };
