@@ -24,6 +24,7 @@ import {
     STATUS_TRAINING
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import InvalidAgentTrain from '../../errors/global.invalid-agent-train';
 
 const generateTrainingDataForCategoriesRecognizer = async ({ AgentModel, CategoryModels, globalService, categoryService, enableModelsPerCategory }) => {
 
@@ -84,9 +85,8 @@ module.exports = async function ({ id, returnModel = false }) {
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
         const agent = AgentModel.allProperties();
+        let markedAsTraining = false;
         //const rasaStatus = await rasaNLU.Status();
-        AgentModel.property('status', STATUS_TRAINING);
-        await AgentModel.saveInstance();
 
         const CategoryModels = await globalService.loadAllByIds({
             ids: await AgentModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY),
@@ -101,6 +101,9 @@ module.exports = async function ({ id, returnModel = false }) {
             if (categoriesTrainingData.countOfCategoriesWithData > 1) {
                 const pipeline = agent.settings[CONFIG_SETTINGS_CATEGORY_PIPELINE];
                 const categoryRecognizerModel = `${agent.agentName}${RASA_MODEL_CATEGORY_RECOGNIZER}`;
+                AgentModel.property('status', STATUS_TRAINING);
+                await AgentModel.saveInstance();
+                markedAsTraining = true;
                 await rasaNLUService.train({
                     project: agent.agentName,
                     model: categoryRecognizerModel,
@@ -134,6 +137,11 @@ module.exports = async function ({ id, returnModel = false }) {
                 for (let CategoryModel of CategoryModels) {
                     const status = CategoryModel.property('status');
                     if (status === STATUS_ERROR || status === STATUS_OUT_OF_DATE) {
+                        if (!markedAsTraining){
+                            AgentModel.property('status', STATUS_TRAINING);
+                            await AgentModel.saveInstance();
+                            markedAsTraining = true;
+                        }
                         await categoryService.train({ AgentModel, CategoryModel });
                     }
                 }
@@ -179,6 +187,11 @@ module.exports = async function ({ id, returnModel = false }) {
         if (modifiersTrainingData.numberOfSayings > 0) {
             const pipeline = modifiersTrainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
             const modifiersRecognizerModel = `${agent.agentName}_${modifiersTrainingData.numberOfSayings === 1 ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`;
+            if (!markedAsTraining){
+                AgentModel.property('status', STATUS_TRAINING);
+                await AgentModel.saveInstance();
+                markedAsTraining = true;
+            }
             await rasaNLUService.train({
                 project: agent.agentName,
                 model: modifiersRecognizerModel,
@@ -203,14 +216,18 @@ module.exports = async function ({ id, returnModel = false }) {
             Only change the status to ready if the status is still training, because if not we are going to mark
             an agent as ready when actually it could be out of date because user edited while it was being trained
         */
-        const CurrentAgentModel = await redis.factory(MODEL_AGENT, id);
-        const currentAgent = CurrentAgentModel.allProperties();
-        if (currentAgent.status === STATUS_TRAINING){
-            AgentModel.property('lastTraining', Moment().utc().format());
-            AgentModel.property('status', STATUS_READY);
+
+        if (markedAsTraining){
+            const CurrentAgentModel = await redis.factory(MODEL_AGENT, id);
+            const currentAgent = CurrentAgentModel.allProperties();
+            if (currentAgent.status === STATUS_TRAINING){
+                AgentModel.property('lastTraining', Moment().utc().format());
+                AgentModel.property('status', STATUS_READY);
+            }
+            await AgentModel.saveInstance();
+            return returnModel ? AgentModel : AgentModel.allProperties();
         }
-        await AgentModel.saveInstance();
-        return returnModel ? AgentModel : AgentModel.allProperties();
+        return Promise.reject(InvalidAgentTrain({ agent: agent.agentName }));
     }
     catch (error) {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
