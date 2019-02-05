@@ -30,7 +30,7 @@ const styles = {
     display: 'grid',
     textAlign: 'center',
     cursor: 'pointer',
-    height: '160px'
+    height: '150px'
   },
   agentCard: {
     border: '1px solid #a2a7b1',
@@ -89,22 +89,16 @@ const styles = {
       color: '#4a4a4a'
     },
     color: '#919192',
-    position: 'relative',
-    top: '3px',
     marginLeft: '5px',
     cursor: 'pointer'
   },
   exportLabelReady: {
     color: '#00bd6f',
-    position: 'relative',
-    top: '3px',
     marginLeft: '5px',
     cursor: 'pointer'
   },
   importLabel: {
     color: '#00bd6f',
-    position: 'relative',
-    top: '3px',
     marginLeft: '5px',
     cursor: 'pointer'
   }
@@ -141,8 +135,8 @@ class AgentsCards extends React.Component {
               <CardContent  onClick={() => {this.props.onGoToUrl('/agent/create')}} className={classes.newAgentCardContent}>
                 <FormattedMessage {...messages.createAgent}/>
               </CardContent>
-              <Grid container justify='center' style={{ borderTop: '1px solid #979797', position: 'absolute', width: '100%', bottom: 0, minHeight: '30px'}}>
-                  <label htmlFor='import_agent'>
+              <Grid container justify='center' style={{ borderTop: '1px solid #00bd6f', position: 'absolute', width: '100%', bottom: 0, minHeight: '30px'}}>
+                  <label style={{padding: '15px'}} htmlFor='import_agent'>
                     <Grid container justify='center'>
                       <img src={importIcon} />
                       <Typography className={classes.importLabel} variant='body1'>
@@ -185,14 +179,14 @@ class AgentsCards extends React.Component {
                 <Grid container justify='center' className={classes.exportFooter}>
                     {
                       this.props.agentExport && this.props.agentExport.agentName === agent.agentName ? 
-                      <a onClick={() => {this.props.onExportAgent(0);}} style={{textDecoration: 'none'}} href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.props.agentExport, null, 2))}`} download={`${agent.agentName}.json`}>
+                      <a onClick={() => {this.props.onExportAgent(0);}} style={{textDecoration: 'none', padding: '15px'}} href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.props.agentExport, null, 2))}`} download={`${agent.agentName}.json`}>
                         <Grid container justify='center'>
                           <Typography className={classes.exportLabelReady} variant='body1'>
                             <FormattedMessage {...messages.download} />
                           </Typography>
                         </Grid>
                       </a> :
-                      <Grid onClick={() => {this.props.onExportAgent(agent.id)}} container justify='center'>
+                      <Grid style={{padding: '15px'}} onClick={() => {this.props.onExportAgent(agent.id)}} container justify='center'>
                         <img src={exportIcon} />
                         <Typography className={classes.exportLabel} variant='body1'>
                           <FormattedMessage {...messages.export} />
