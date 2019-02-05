@@ -584,12 +584,10 @@ function appReducer(state = initialState, action) {
         .set('agentTouched', false)
         .set('successAgent', true);
     case TRAIN_AGENT:
-      return state.setIn(['agent', 'status'], 'Training')
-        .set('error', false);
+      return state.set('error', false);
     case TRAIN_AGENT_ERROR:
       state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
-      return state.setIn(['agent', 'status'], 'Error')
-        .set('error', action.error);
+      return state.set('error', action.error);
     case ADD_HEADER_AGENT_WEBHOOK:
       return state.updateIn(['agentWebhook', 'webhookHeaders'], webhookHeaders => webhookHeaders.concat(action.payload));
     case DELETE_HEADER_AGENT_WEBHOOK:
