@@ -659,6 +659,18 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     }
     catch (error) {
 
+        if (error.isParseError){
+            if (error.missingCategories){
+                return {
+                    textResponse: 'I don\'t have any knowledge in my brain yet. Please teach me something.'
+                }
+            }
+            if (error.missingTrainedCategories){
+                return {
+                    textResponse: 'Ok I know you have teach me a couple of things, but first you have to train me.'
+                }
+            }
+        }
         throw RedisErrorHandler({ error });
     }
 };

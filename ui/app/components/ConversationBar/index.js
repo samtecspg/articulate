@@ -258,9 +258,9 @@ export class ConversationBar extends React.PureComponent {
                     </Typography>
                     <Typography className={classes.agentMessage}>
                       {message.message}
-                      {message.docId !== null ?
+                      {message.docId ?
                         <span onClick={() => { this.setState({openCodeModal: true})}} className={classes.messageSource}>
-                          {'</> '}<span className={classes.messageSourceLink}>See Source</span>
+                          {'</> '}<span className={classes.messageSourceLink}>{intl.formatMessage(messages.seeSource)}</span>
                         </span>
                         : null}
                     </Typography>
