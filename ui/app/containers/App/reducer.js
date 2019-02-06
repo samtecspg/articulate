@@ -85,6 +85,7 @@ import {
   LOAD_AGENT_DOCUMENTS_SUCCESS,
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
+  SET_AGENT_DEFAULTS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
@@ -492,6 +493,18 @@ function appReducer(state = initialState, action) {
         .set('error', false)
         .set('agentTouched', false)
         .set('successAgent', action.payload.socket ? state.successAgent : false);
+    case SET_AGENT_DEFAULTS:
+      return state.setIn(['agent', 'language'], state.settings.defaultAgentLanguage)
+        .setIn(['agent', 'timezone'], state.settings.defaultTimezone)
+        .setIn(['agent', 'fallbackAction'], state.settings.defaultaFallbackActionName)
+        .setIn(['agentSettings', 'rasaURL'], state.settings.rasaURL)
+        .setIn(['agentSettings', 'categoryClassifierPipeline'], state.settings.categoryClassifierPipeline)
+        .setIn(['agentSettings', 'sayingClassifierPipeline'], state.settings.sayingClassifierPipeline)
+        .setIn(['agentSettings', 'keywordClassifierPipeline'], state.settings.keywordClassifierPipeline)
+        .setIn(['agentSettings', 'spacyPretrainedEntities'], state.settings.spacyPretrainedEntities)
+        .setIn(['agentSettings', 'ducklingURL'], state.settings.ducklingURL)
+        .setIn(['agentSettings', 'ducklingDimension'], state.settings.ducklingDimension)
+        .set('agentTouched', true);      
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)

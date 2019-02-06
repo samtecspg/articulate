@@ -11,7 +11,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import MainTab from './Components/MainTab';
 import KeywordForm from './Components/KeywordForm';
 import ValuesForm from './Components/ValuesForm';
@@ -50,7 +50,8 @@ import {
   deleteModifier,
   untagModifierKeyword,
   tagModifierKeyword,
-  onChangeModifiersSayingsPageSize
+  onChangeModifiersSayingsPageSize,
+  loadSettings
 } from '../App/actions';
 import ModifiersForm from './Components/ModifiersForm';
 
@@ -62,6 +63,7 @@ export class KeywordsEditPage extends React.Component {
     this.submit = this.submit.bind(this);
     this.moveNextTab = this.moveNextTab.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
+    this.initForm = this.initForm.bind(this);
   }
 
   state = {
@@ -79,16 +81,26 @@ export class KeywordsEditPage extends React.Component {
     },
   };
 
-  componentDidMount() {
+  initForm(){
     if(this.state.isNewKeyword) {
       this.props.onResetData();
     }
     else {
       this.props.onLoadKeyword(this.props.match.params.keywordId);
     }
+    this.props.onLoadSettings();
   }
 
-  componentDidUpdate() {
+  componentWillMount() {
+    if(this.props.agent.id) {
+      this.initForm();
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if (!prevProps.agent.id && this.props.agent.id){
+      this.initForm();
+    }
     if (this.props.success && this.state.exitAfterSubmit) {
       this.props.onSuccess(`/agent/${this.props.agent.id}/keywords`);
     }
@@ -210,6 +222,7 @@ export class KeywordsEditPage extends React.Component {
 
   render() {
     return (
+      this.props.settings && this.props.agent.id ?
       <Grid container>
         <MainTab
           touched={this.props.touched}
@@ -271,7 +284,8 @@ export class KeywordsEditPage extends React.Component {
           }
           onChangeTab={this.onChangeTab}
         />
-      </Grid>
+      </Grid> : 
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }
@@ -380,6 +394,9 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeModifiersSayingsPageSize: (agentId, pageSize) => {
       dispatch(onChangeModifiersSayingsPageSize(agentId, pageSize));
+    },
+    onLoadSettings: () => {
+      dispatch(loadSettings())
     }
   };
 }

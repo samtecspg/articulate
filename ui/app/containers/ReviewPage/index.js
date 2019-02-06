@@ -4,7 +4,7 @@
  *
  */
 
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
@@ -47,12 +47,13 @@ export class ReviewPage extends React.Component {
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
     this.copySayingFromDocument = this.copySayingFromDocument.bind(this);
     this.handleOnRequestSort = this.handleOnRequestSort.bind(this);
+    this.initForm = this.initForm.bind(this);
   }
 
   state = {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
-    pageSize: this.props.agent.settings.reviewPageSize,
+    pageSize: this.props.agent.id ? this.props.agent.settings.reviewPageSize :  5,
     numberOfPages: null,
     totalDocuments: null,
     documents: [],
@@ -60,7 +61,7 @@ export class ReviewPage extends React.Component {
     sortDirection: 'DESC',
   };
 
-  componentWillMount() {
+  initForm(){
     const {
       onLoadKeywords,
       onLoadActions,
@@ -68,19 +69,25 @@ export class ReviewPage extends React.Component {
       onLoadAgentDocuments,
     } = this.props.actions;
 
+    this.setState({
+      pageSize: this.props.agent.settings.reviewPageSize
+    });
+    onLoadKeywords();
+    onLoadActions();
+    onLoadCategories();
+    onLoadAgentDocuments(this.state.currentPage, this.state.pageSize, this.state.sortField, this.state.sortDirection);
+  }
+
+  componentWillMount() {
     if (this.props.agent.id) {
-      onLoadKeywords();
-      onLoadActions();
-      onLoadCategories();
-      onLoadAgentDocuments(this.state.currentPage, this.state.pageSize, this.state.sortField, this.state.sortDirection);
-    }
-    else {
-      // TODO: An action when there isn't an agent
-      console.log('YOU HAVEN\'T SELECTED AN AGENT');
+      this.initForm();
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.agent.id && this.props.agent.id){
+      this.initForm();
+    }
     const { documents } = this.props;
     if (documents !== this.state.documents) {
       this.setState({ documents });
@@ -209,6 +216,7 @@ export class ReviewPage extends React.Component {
       newSayingActions,
     } = this.props;
     return (
+      this.props.agent.id ?
       <Grid container>
         <MainTab
           disableSave
@@ -262,7 +270,8 @@ export class ReviewPage extends React.Component {
           keywordsForm={Link}
           keywordsURL={`/agent/${agent.id}/keywords`}
         />
-      </Grid>
+      </Grid> :
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }

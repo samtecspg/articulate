@@ -18,8 +18,22 @@ import rightArrowIcon from '../../images/right-arrow-icon.svg';
 import messages from './messages';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { makeSelectNotifications, makeSelectMessages, makeSelectAgent, makeSelectWaitingResponse, makeSelectConversationStateObject } from '../../containers/App/selectors';
-import { closeNotification, sendMessage, resetSession } from '../../containers/App/actions';
+
+import { 
+  makeSelectNotifications,
+  makeSelectMessages,
+  makeSelectAgent,
+  makeSelectWaitingResponse,
+  makeSelectConversationStateObject,
+  makeSelectSettings 
+} from '../../containers/App/selectors';
+
+import {
+  closeNotification,
+  sendMessage,
+  resetSession,
+  loadSettings
+} from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
@@ -196,6 +210,12 @@ export class ConversationBar extends React.PureComponent {
     openCodeModal: false,
   };
 
+  componentWillMount() {
+    if (!this.props.settings.defaultAgentLanguage){
+      this.props.onLoadSettings();
+    }
+  }
+
   componentDidMount() {
     this.scrollToBottom();
   }
@@ -342,6 +362,7 @@ const mapStateToProps = createStructuredSelector({
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
   conversationStateObject: makeSelectConversationStateObject(),
+  settings: makeSelectSettings(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -358,6 +379,9 @@ function mapDispatchToProps(dispatch) {
         message,
       }));
     },
+    onLoadSettings: () => {
+      dispatch(loadSettings())
+    }
   };
 }
 

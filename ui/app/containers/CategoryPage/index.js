@@ -12,7 +12,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import ContentHeader from 'components/ContentHeader';
 import Form from './Components/Form';
 
@@ -53,6 +53,7 @@ export class CategoriesEditPage extends React.Component {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+    this.initForm = this.initForm.bind(this);
   }
 
   state = {
@@ -67,7 +68,7 @@ export class CategoriesEditPage extends React.Component {
     },
   };
 
-  componentDidMount() {
+  initForm(){
     if(this.state.isNewCategory) {
       this.props.onResetData();
     }
@@ -76,7 +77,16 @@ export class CategoriesEditPage extends React.Component {
     }
   }
 
-  componentDidUpdate() {
+  componentWillMount() {
+    if(this.props.agent.id) {
+      this.initForm();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.agent.id && this.props.agent.id){
+      this.initForm();
+    }
     if (this.props.success && this.state.exitAfterSubmit) {
       this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
     }
@@ -121,6 +131,7 @@ export class CategoriesEditPage extends React.Component {
   render() {
     const { intl } = this.props;
     return (
+      this.props.agent.id ?
       <Grid container>
         <ContentHeader
           title={messages.title}
@@ -153,7 +164,8 @@ export class CategoriesEditPage extends React.Component {
           onChangeParameterName={this.props.onChangeParameterName}
           onChangeParameterValue={this.props.onChangeParameterValue}
         />
-      </Grid>
+      </Grid> : 
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }

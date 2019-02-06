@@ -12,7 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { withStyles } from "@material-ui/core/styles";
 
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import MainTab from './Components/MainTab';
 import ActionForm from './Components/ActionForm';
 import SlotsForm from './Components/SlotsForm';
@@ -90,9 +90,10 @@ export class ActionPage extends React.Component {
     this.moveNextTab = this.moveNextTab.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
     this.submit = this.submit.bind(this);
+    this.initForm = this.initForm.bind(this);
   }
 
-  componentDidMount() {
+  initForm(){
     this.props.onLoadKeywords();
     if(this.state.isNewAction) {
       this.props.onResetData();
@@ -102,7 +103,16 @@ export class ActionPage extends React.Component {
     }
   }
 
-  componentDidUpdate() {
+  componentWillMount() {
+    if(this.props.agent.id) {
+      this.initForm();
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if (!prevProps.agent.id && this.props.agent.id){
+      this.initForm();
+    }
     if (this.props.success && this.state.exitAfterSubmit) {
       if (this.state.ref === 'agent'){
         this.props.onSuccess(`/agent/${this.props.agent.id}`);
@@ -276,6 +286,7 @@ export class ActionPage extends React.Component {
   render() {
     const { classes } = this.props;
     return (
+      this.props.agent.id ?
       <Grid container>
         <Grid container>
           <Grid className={classes.goBackCard} onClick={() => {
@@ -366,7 +377,8 @@ export class ActionPage extends React.Component {
           }
           onChangeTab={this.onChangeTab}
         />
-      </Grid>
+      </Grid> : 
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }

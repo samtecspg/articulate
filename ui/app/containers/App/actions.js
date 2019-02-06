@@ -112,6 +112,7 @@ import {
   LOAD_AGENT_DOCUMENTS_SUCCESS,
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
+  SET_AGENT_DEFAULTS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
@@ -353,6 +354,12 @@ export function loadAgentSuccess(payload) {
     type: LOAD_AGENT_SUCCESS,
     payload,
   };
+}
+
+export function setAgentDefaults() {
+  return {
+    type: SET_AGENT_DEFAULTS,
+  }
 }
 
 export function changeAgentData(payload) {

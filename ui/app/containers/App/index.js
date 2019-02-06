@@ -56,11 +56,24 @@ class App extends React.Component {
     socketClientConnected: false,
   };
 
+  getAgentIdFromPath() {
+    const regex = /\/agent\/([0-9]+)(\/.+)?/;
+    const matches = this.props.location.pathname.match(regex);
+    let agentId = null;
+    if (matches){
+      agentId = matches[1];
+    }
+    return agentId;
+  }
+
   componentWillMount() {
-    this.props.onLoadSettings();
     this.props.onCheckAPI();
+    const agentId = this.getAgentIdFromPath();
+    if (agentId && !this.props.agent.id){
+      this.props.onLoadAgent(agentId);
+    }
     if (!this.state.socketClientConnected) {
-      const client = new Nes.Client(process.env.WS_URL || 'ws://localhost:7500');
+      const client = new Nes.Client(process.env.WS_URL || 'ws://api:7500');
       client.connect((err) => {
 
         if (err) {

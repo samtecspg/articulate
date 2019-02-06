@@ -12,7 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 import { Link } from 'react-router-dom';
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import MainTab from 'components/MainTab';
 import Form from './Components/Form';
 
@@ -41,27 +41,32 @@ export class KeywordsPage extends React.Component {
     this.onSearchKeyword = this.onSearchKeyword.bind(this);
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
     this.changePageSize = this.changePageSize.bind(this);
+    this.initForm = this.initForm.bind(this);
   }
 
   state = {
     filter: '',
     currentPage: 1,
-    pageSize: this.props.agent.settings.keywordsPageSize,
+    pageSize: this.props.agent.id ? this.props.agent.settings.keywordsPageSize : 5,
     numberOfPages: null,
     totalKeywords: null,
   };
 
+  initForm(){
+    this.setState({ pageSize: this.props.agent.settings.keywordsPageSize });
+    this.props.onLoadKeywords('', this.state.currentPage, this.state.pageSize);
+  }
+
   componentWillMount() {
     if(this.props.agent.id) {
-      this.props.onLoadKeywords('', this.state.currentPage, this.state.pageSize);
-    }
-    else {
-      // TODO: An action when there isn't an agent
-      console.log('YOU HAVEN\'T SELECTED AN AGENT');
+      this.initForm();
     }
   }
 
-  componentDidUpdate(){
+  componentDidUpdate(prevProps){
+    if (!prevProps.agent.id && this.props.agent.id){
+      this.initForm();
+    }
     if (this.props.totalKeywords !== this.state.totalKeywords){
       this.setState({
         totalKeywords: this.props.totalKeywords,
@@ -118,6 +123,7 @@ export class KeywordsPage extends React.Component {
 
   render() {
     return (
+      this.props.agent.id ?
       <Grid container>
         <MainTab
           disableSave
@@ -150,7 +156,8 @@ export class KeywordsPage extends React.Component {
             />
           }
         />
-      </Grid>
+      </Grid> : 
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }

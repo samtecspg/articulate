@@ -97,16 +97,13 @@ export class SayingsPage extends React.Component {
     if (this.props.agent.id) {
       this.initForm();
     }
-    else {
-      this.props.onLoadAgent(this.props.match.params.id);
-    }
   }
 
   componentWillUnmount() {
     this.throttledOnLoadSayings = null;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (!prevProps.agent.id && this.props.agent.id){
       this.initForm();
     }

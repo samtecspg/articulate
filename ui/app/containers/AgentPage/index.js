@@ -4,7 +4,7 @@
  *
  */
 
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -41,6 +41,8 @@ import {
   deleteAgentParameter,
   changeAgentParameterName,
   changeAgentParameterValue,
+  loadSettings,
+  setAgentDefaults,
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -48,7 +50,6 @@ import {
   makeSelectAgentSettings,
   makeSelectAgentWebhook,
   makeSelectSettings,
-  makeSelectSuccess,
   makeSelectAgentTouched,
   makeSelectActions,
   makeSelectLoading,
@@ -64,6 +65,7 @@ export class AgentPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+    this.initForm = this.initForm.bind(this);
   }
 
   state = {
@@ -88,20 +90,11 @@ export class AgentPage extends React.PureComponent {
     },
   };
 
-  componentWillMount() {
+  initForm(){
     if (this.state.isNewAgent) {
       this.props.onResetData();
-      if (this.state.isNewAgent && !this.state.settingsLoaded) {
-        this.props.onChangeAgentData('language', this.props.settings.defaultAgentLanguage);
-        this.props.onChangeAgentData('timezone', this.props.settings.defaultTimezone);
-        this.props.onChangeAgentData('fallbackAction', this.props.settings.defaultaFallbackActionName);
-        this.props.onChangeAgentSettingsData('rasaURL', this.props.settings.rasaURL);
-        this.props.onChangeAgentSettingsData('categoryClassifierPipeline', this.props.settings.categoryClassifierPipeline);
-        this.props.onChangeAgentSettingsData('sayingClassifierPipeline', this.props.settings.sayingClassifierPipeline);
-        this.props.onChangeAgentSettingsData('keywordClassifierPipeline', this.props.settings.keywordClassifierPipeline);
-        this.props.onChangeAgentSettingsData('spacyPretrainedEntities', this.props.settings.spacyPretrainedEntities);
-        this.props.onChangeAgentSettingsData('ducklingURL', this.props.settings.ducklingURL);
-        this.props.onChangeAgentSettingsData('ducklingDimension', this.props.settings.ducklingDimension);
+      if (!this.state.settingsLoaded) {
+        this.props.onSetAgentDefaults();
         this.setState({
           settingsLoaded: true,
         });
@@ -109,6 +102,21 @@ export class AgentPage extends React.PureComponent {
     } else {
       this.props.onLoadActions(this.props.match.params.id);
       this.props.onLoadAgent(this.props.match.params.id);
+    }
+  }
+
+  componentWillMount() {
+    if (this.props.settings.defaultAgentLanguage){
+      this.initForm();
+    }
+    else {
+      this.props.onLoadSettings();
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if (!prevProps.settings.defaultAgentLanguage && this.props.settings.defaultAgentLanguage){
+      this.initForm();
     }
   }
 
@@ -268,6 +276,7 @@ export class AgentPage extends React.PureComponent {
 
   render() {
     return (
+      this.props.settings.defaultAgentLanguage ?
       <Grid container>
         <MainTab
           touched={this.props.touched}
@@ -323,7 +332,8 @@ export class AgentPage extends React.PureComponent {
           keywordsForm={Link}
           keywordsURL={`/agent/${this.props.agent.id}/keywords`}
         />
-      </Grid>
+      </Grid> : 
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }
@@ -456,6 +466,12 @@ function mapDispatchToProps(dispatch) {
     onChangeParameterValue: (parameterName, value) => {
       dispatch(changeAgentParameterValue(parameterName, value));
     },
+    onLoadSettings: () => {
+      dispatch(loadSettings());
+    },
+    onSetAgentDefaults: () => {
+      dispatch(setAgentDefaults());
+    }
   };
 }
 
