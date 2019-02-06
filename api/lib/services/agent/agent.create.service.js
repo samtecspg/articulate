@@ -3,6 +3,7 @@ import {
     CONFIG_SETTINGS_DEFAULT_AGENT,
     MODEL_AGENT,
     STATUS_OUT_OF_DATE,
+    STATUS_READY,
     CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME,
     CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT
 } from '../../../util/constants';
@@ -20,7 +21,7 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
     const { redis } = this.server.app;
     const { settingsService, agentService } = await this.server.services();
 
-    data.status = data.status || STATUS_OUT_OF_DATE;
+    data.status = isImport ? STATUS_OUT_OF_DATE : (data.status || STATUS_READY);
     data.settings = {};
     if (data.enableModelsPerCategory === undefined) {
         data.enableModelsPerCategory = true;

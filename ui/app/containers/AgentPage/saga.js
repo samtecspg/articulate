@@ -132,7 +132,7 @@ export function* postAgent(payload) {
     yield call(putAgentSettings, { id: response.obj.id, api });
     response.obj.categoryClassifierThreshold = parseInt(response.obj.categoryClassifierThreshold * 100);
     yield put(addAgentSuccess(response.obj));
-    yield put(push(`/agent/${response.obj.id}/sayings`));
+    //yield put(push(`/agent/${response.obj.id}/sayings`));
   } catch (err) {
     yield put(addAgentError(err));
   }
