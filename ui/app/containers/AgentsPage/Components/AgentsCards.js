@@ -12,7 +12,7 @@ import importIcon from '../../../images/import-icon.svg';
 
 const styles = {
   cardsContainer: {
-    maxWidth: '990px',
+    marginBottom: '80px',
   },
   newAgentCard: {
     border: '1px solid #00bd6f',
