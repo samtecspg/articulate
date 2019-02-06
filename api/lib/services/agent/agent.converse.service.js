@@ -8,7 +8,8 @@ import {
     MODEL_CATEGORY,
     MODEL_KEYWORD,
     MODEL_WEBHOOK,
-    PARAM_DOCUMENT_RASA_RESULTS
+    PARAM_DOCUMENT_RASA_RESULTS,
+    RASA_INTENT_SPLIT_SYMBOL
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -486,7 +487,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const AgentModel = await redis.factory(MODEL_AGENT, id);
 
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true, sessionId });
-        const recognizedActionNames = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name.split('+');
+        const recognizedActionNames = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name.split(RASA_INTENT_SPLIT_SYMBOL);
 
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
         conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false });
