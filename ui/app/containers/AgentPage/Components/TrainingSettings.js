@@ -56,9 +56,9 @@ export class TrainingSettings extends React.Component {
         <FormControlLabel
           control={
             <Switch
-              checked={agent.multiCategory}
-              onChange={() => {
-                if (agent.multiCategory){
+              checked={!agent.multiCategory} //if the agent is not multicategory it's multiaction
+              onChange={(evt, value) => {
+                if (value){
                   this.props.onChangeAgentData(
                     "enableModelsPerCategory",
                     false
@@ -66,7 +66,7 @@ export class TrainingSettings extends React.Component {
                 }
                 this.props.onChangeAgentData(
                   "multiCategory",
-                  !agent.multiCategory
+                  !value
                 );
               }}
               value="multiCategory"
@@ -80,9 +80,9 @@ export class TrainingSettings extends React.Component {
         <FormControlLabel
           control={
             <Switch
-              checked={!agent.enableModelsPerCategory}
-              onChange={() => {
-                if (!agent.multiCategory){
+              checked={agent.enableModelsPerCategory}
+              onChange={(evt, value) => {
+                if (value){
                   this.props.onChangeAgentData(
                     "multiCategory",
                     true
@@ -90,7 +90,7 @@ export class TrainingSettings extends React.Component {
                 }
                 this.props.onChangeAgentData(
                   "enableModelsPerCategory",
-                  !agent.enableModelsPerCategory
+                  value
                 );
               }}
               value="enableModelsPerCategory"
