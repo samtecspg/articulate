@@ -1,74 +1,74 @@
 /*
- * CategoryEditPage Messages
+ * CategoryPage Messages
  *
- * This contains all the text for the CategoryEditPage component.
+ * This contains all the text for the CategoryPage component.
  */
 
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   title: {
-    id: 'app.containers.CategoryEditPage.title',
+    id: 'app.containers.CategoryPage.title',
     defaultMessage: 'Category',
   },
   instanceName: {
-    id: 'app.containers.CategoryEditPage.instanceName',
+    id: 'app.containers.CategoryPage.instanceName',
     defaultMessage: 'category',
   },
   formTitle: {
-    id: 'app.containers.CategoryEditPage.formTitle',
+    id: 'app.containers.CategoryPage.formTitle',
     defaultMessage: 'Categories',
   },
   newCategory: {
-    id: 'app.containers.CategoryEditPage.newCategory',
+    id: 'app.containers.CategoryPage.newCategory',
     defaultMessage: 'New Category',
   },
   help: {
-    id: 'app.containers.CategoryEditPage.help',
+    id: 'app.containers.CategoryPage.help',
     defaultMessage: 'Help?',
   },
   playHelpAlt : {
-    id: 'app.containers.CategoryEditPage.playHelpAlt',
+    id: 'app.containers.CategoryPage.playHelpAlt',
     defaultMessage: 'Play video off how to add/edit a category',
   },
   categoryEditDescription: {
-    id: 'app.containers.CategoryEditPage.component.Form.categoryEditDescription',
+    id: 'app.containers.CategoryPage.component.Form.categoryEditDescription',
     defaultMessage: 'A category is a unit that forms part of an agent. With a Category you can represent a set of expressions that belongs to an specific context in your agent. Good examples of categories are: Sales, Order Tracking, Customer Service.',
   },
   categoryNameTextField: {
-    id: 'app.containers.CategoryEditPage.component.CategoryDataForm.categoryNameTextField',
+    id: 'app.containers.CategoryPage.component.CategoryDataForm.categoryNameTextField',
     defaultMessage: 'Category Name:',
   },
   categoryNameTextFieldPlaceholder: {
-    id: 'app.containers.CategoryEditPage.component.CategoryDataForm.categoryNameTextFieldPlaceholder',
+    id: 'app.containers.CategoryPage.component.CategoryDataForm.categoryNameTextFieldPlaceholder',
     defaultMessage: 'Your Category',
   },
   requiredField: {
-    id: 'app.containers.CategoryEditPage.component.CategoryDataForm.requiredField',
+    id: 'app.containers.CategoryPage.component.CategoryDataForm.requiredField',
     defaultMessage: '*Required',
   },
   finishButton: {
-    id: 'app.containers.CategoryEditPage.component.ActionButtons.finishButton',
+    id: 'app.containers.CategoryPage.component.ActionButtons.finishButton',
     defaultMessage: 'Save',
   },
   backButton: {
-    id: 'app.containers.CategoryEditPage.backButton',
+    id: 'app.containers.CategoryPage.backButton',
     defaultMessage: 'Exit',
   },
   sliderActionThresholdLabel: {
-    id: 'app.containers.CategoryEditPage.component.CategoryDataForm.sliderActionThresholdLabel',
+    id: 'app.containers.CategoryPage.component.CategoryDataForm.sliderActionThresholdLabel',
     defaultMessage: 'Action Threshold',
   },
   extraTrainingData: {
-    id: 'app.containers.CategoryEditPage.component.CategoryDataForm.extraTrainingData',
+    id: 'app.containers.CategoryPage.component.CategoryDataForm.extraTrainingData',
     defaultMessage: 'Generate extra training examples',
   },
   main: {
-    id: 'app.containers.AgentPage.component.Form.main',
+    id: 'app.containers.CategoryPage.component.Form.main',
     defaultMessage: 'Main',
   },
   parameters: {
-    id: 'app.containers.AgentPage.component.Form.parameters',
+    id: 'app.containers.CategoryPage.component.Form.parameters',
     defaultMessage: 'Parameters',
   },
   newCategoryParameterNameTextField: {

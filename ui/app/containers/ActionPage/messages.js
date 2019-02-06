@@ -116,7 +116,7 @@ export default defineMessages({
     defaultMessage: 'Response Format:',
   },
   noName: {
-    id: 'app.containers.KeywordsEditPage.component.MainTab.noName',
+    id: 'app.containers.ActionPage.component.MainTab.noName',
     defaultMessage: 'No name'
   },
   slotsFormTitle: {
@@ -128,7 +128,7 @@ export default defineMessages({
     defaultMessage: 'Slots',
   },
   textpromptTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.components.SlotForm.textpromptTextFieldPlaceholder',
+    id: 'app.containers.ActionPage.component.SlotForm.textpromptTextFieldPlaceholder',
     defaultMessage: 'Write bot\'s response when this slot is required and it is missing',
   },
   textpromptHelperText: {

@@ -144,7 +144,7 @@ export default defineMessages({
     defaultMessage: 'Modifiers',
   },
   textpromptTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.components.ModifierForm.textpromptTextFieldPlaceholder',
+    id: 'app.containers.KeywordsEditPage.component.ModifierForm.textpromptTextFieldPlaceholder',
     defaultMessage: 'Write bot\'s response when this modifier is required and it is missing',
   },
   textpromptHelperText: {

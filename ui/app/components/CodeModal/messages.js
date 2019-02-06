@@ -11,15 +11,15 @@ export default defineMessages({
     defaultMessage: 'Rasa Parse Results',
   },
   context: {
-    id: 'app.components.CodeModal.rasaParseResults',
+    id: 'app.components.CodeModal.context',
     defaultMessage: 'Context',
   },
   currentFrame: {
-    id: 'app.components.CodeModal.rasaParseResults',
+    id: 'app.components.CodeModal.currentFrame',
     defaultMessage: 'Current Frame',
   },
   webhookResponses: {
-    id: 'app.components.CodeModal.rasaParseResults',
+    id: 'app.components.CodeModal.webhookResponses',
     defaultMessage: 'Webhook Responses',
   },
 });

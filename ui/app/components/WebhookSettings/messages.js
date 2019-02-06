@@ -71,11 +71,11 @@ export default defineMessages({
     defaultMessage: 'Value',
   },
   headerKeyPlaceholder: {
-    id: 'app.components.WebhookSettings.headerKey',
+    id: 'app.components.WebhookSettings.headerKeyPlaceholder',
     defaultMessage: 'key',
   },
   headerValuePlaceholder: {
-    id: 'app.components.WebhookSettings.headerValue',
+    id: 'app.components.WebhookSettings.headerValuePlaceholder',
     defaultMessage: 'value',
   },
   newHeaderKeyPlaceholder: {
