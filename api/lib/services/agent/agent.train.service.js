@@ -158,6 +158,11 @@ module.exports = async function ({ id, returnModel = false }) {
             const pipeline = trainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
             model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
             model = `${RASA_MODEL_DEFAULT}${model}`;
+            if (!markedAsTraining){
+                AgentModel.property('status', STATUS_TRAINING);
+                await AgentModel.saveInstance();
+                markedAsTraining = true;
+            }
             await rasaNLUService.train({
                 project: agent.agentName,
                 model,
