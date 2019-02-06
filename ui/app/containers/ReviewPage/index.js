@@ -72,6 +72,7 @@ export class ReviewPage extends React.Component {
     this.setState({
       pageSize: this.props.agent.settings.reviewPageSize
     });
+    this.setNumberOfPages(this.props.agent.settings.reviewPageSize);
     onLoadKeywords();
     onLoadActions();
     onLoadCategories();
@@ -170,7 +171,7 @@ export class ReviewPage extends React.Component {
           };
         }),
         actions: saying.action.name === '' ? [] : saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
-        categoryId: category.id,
+        categoryId: category ? category.id : null,
       };
       onCopySaying(sayingToCopy);
     }

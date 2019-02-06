@@ -1334,7 +1334,7 @@ function appReducer(state = initialState, action) {
     /* Review */
     case COPY_SAYING_ERROR:
       return state
-        .update('notifications', notifications => notifications.concat({ message: `Error: There was an error copying the utterance into your sayings. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }))
+        .update('notifications', notifications => notifications.concat({ message: `Error: There was an error copying the utterance into your sayings. Please add it manually. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }))
         .set('loading', false)
         .set('success', false)
         .set('error', action.error);

@@ -103,7 +103,7 @@ class SayingRow extends React.Component {
           {saying.categoryScore !== 0 &&
           <TextField
             className={classes.categorySelectContainer}
-            value={saying.category}
+            value={saying.category.indexOf('modifiers') > -1 ? 'Modifier' : saying.category}
             margin='normal'
             fullWidth
             InputProps={{
