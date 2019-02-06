@@ -3,7 +3,7 @@
  * SayingsPage
  *
  */
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
@@ -34,6 +34,7 @@ import {
   tagKeyword,
   trainAgent,
   untagKeyword,
+  loadAgent,
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -62,40 +63,43 @@ export class SayingsPage extends React.Component {
     this.onSearchCategory = this.onSearchCategory.bind(this);
     this.addSaying = this.addSaying.bind(this);
     this.deleteSaying = this.deleteSaying.bind(this);
+    this.initForm = this.initForm.bind(this);
   }
 
   state = {
     filter: '',
     categoryFilter: '',
     currentPage: 1,
-    pageSize: this.props.agent.settings.sayingsPageSize,
+    pageSize: this.props.agent.id ? this.props.agent.settings.sayingsPageSize : 5,
     numberOfPages: null,
     userSays: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).userSays,
 
   };
 
+  initForm() {
+    const agentSayingsPageSize = this.props.agent.settings.sayingsPageSize;
+    this.throttledOnLoadSayings = _.throttle((filter, currentPage = this.state.currentPage, pageSize = agentSayingsPageSize) => {
+      this.props.onLoadSayings(filter, currentPage, pageSize);
+    }, 2000, { 'trailing': true });
+
+    const locationSearchParams = qs.parse(this.props.location.search);
+    const filter = locationSearchParams.filter || this.state.filter;
+    const currentPage = locationSearchParams.page ? _.toNumber(locationSearchParams.page) : this.state.currentPage;
+    this.setState({ filter, currentPage, pageSize: agentSayingsPageSize });
+
+    this.props.onLoadKeywords();
+    this.props.onLoadActions();
+    this.props.onLoadCategories();
+    this.props.onLoadSayings(filter, currentPage, agentSayingsPageSize);
+  }
+
   componentWillMount() {
-
     if (this.props.agent.id) {
-      this.throttledOnLoadSayings = _.throttle((filter, currentPage = this.state.currentPage, pageSize = this.state.pageSize) => {
-        this.props.onLoadSayings(filter, currentPage, pageSize);
-      }, 2000, { 'trailing': true });
-
-      const locationSearchParams = qs.parse(this.props.location.search);
-      const filter = locationSearchParams.filter || this.state.filter;
-      const currentPage = locationSearchParams.page ? _.toNumber(locationSearchParams.page) : this.state.currentPage;
-      this.setState({ filter, currentPage });
-
-      this.props.onLoadKeywords();
-      this.props.onLoadActions();
-      this.props.onLoadCategories();
-      this.props.onLoadSayings(filter, currentPage, this.state.pageSize);
+      this.initForm();
     }
     else {
-      // TODO: An action when there isn't an agent
-      console.log('YOU HAVEN\'T SELECTED AN AGENT');
+      this.props.onLoadAgent(this.props.match.params.id);
     }
-
   }
 
   componentWillUnmount() {
@@ -103,6 +107,9 @@ export class SayingsPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.agent.id && this.props.agent.id){
+      this.initForm();
+    }
     if (this.props.totalSayings !== prevProps.totalSayings) {
       this.setState({
         numberOfPages: Math.ceil(this.props.totalSayings / this.state.pageSize),
@@ -164,6 +171,7 @@ export class SayingsPage extends React.Component {
 
   render() {
     return (
+      this.props.agent.id ?
       <Grid container>
         <MainTab
           disableSave
@@ -216,7 +224,8 @@ export class SayingsPage extends React.Component {
           keywordsForm={Link}
           keywordsURL={`/agent/${this.props.agent.id}/keywords`}
         />
-      </Grid>
+      </Grid> :
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }
@@ -264,6 +273,9 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
+    onLoadAgent: (id) => {
+      dispatch(loadAgent(id));
+    },
     onLoadSayings: (filter, page, pageSize) => {
       dispatch(loadSayings(filter, page, pageSize));
     },
