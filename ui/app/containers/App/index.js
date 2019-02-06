@@ -73,7 +73,7 @@ class App extends React.Component {
       this.props.onLoadAgent(agentId);
     }
     if (!this.state.socketClientConnected) {
-      const client = new Nes.Client(process.env.WS_URL || 'ws://api:7500');
+      const client = new Nes.Client(process.env.WS_URL || 'ws://localhost:7500');
       client.connect((err) => {
 
         if (err) {
