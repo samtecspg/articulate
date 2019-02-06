@@ -147,22 +147,6 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentSettingsForm.multiCategory',
     defaultMessage: 'Use categories for the agent (This will disable multiple action recognition)',
   },
-  statusOutOfDate: {
-    id: 'app.containers.AgentPage.component.ActionButtons.statusOutOfDate',
-    defaultMessage: 'Status: out of date',
-  },
-  statusError: {
-    id: 'app.containers.AgentPage.component.ActionButtons.statusError',
-    defaultMessage: 'Status: error on training',
-  },
-  statusTraining: {
-    id: 'app.containers.AgentPage.component.ActionButtons.statusTraining',
-    defaultMessage: 'Status: updating agent…',
-  },
-  statusReady: {
-    id: 'app.containers.AgentPage.component.ActionButtons.statusReady',
-    defaultMessage: 'Last Trained: ',
-  },
   newAction: {
     id: 'app.containers.AgentPage.component.AgentDataForm.newAction',
     defaultMessage: '+ New Action',

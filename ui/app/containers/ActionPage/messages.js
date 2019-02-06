@@ -73,7 +73,7 @@ export default defineMessages({
   },
   textpromptTextField: {
     id: 'app.containers.ActionPage.components.SlotForm.textpromptTextField',
-    defaultMessage: 'Agent Prompts:',
+    defaultMessage: 'Slot Prompts:',
   },
   newSlotTab: {
     id: 'app.containers.ActionPage.component.SlotsForm.newSlotTab',

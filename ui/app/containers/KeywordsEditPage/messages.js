@@ -108,7 +108,7 @@ export default defineMessages({
     defaultMessage: 'Value:',
   },
   newKeywordSynonymTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextField',
+    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordSynonymTextField',
     defaultMessage: 'Synonyms:',
   },
   newKeywordValueTextFieldPlaceholder: {
@@ -120,7 +120,7 @@ export default defineMessages({
     defaultMessage: 'Type regex value',
   },
   newKeywordValueSynonymTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueSynonymTextFieldPlaceholder',
+    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueSynonymTextField',
     defaultMessage: 'Synonym Values:',
   },
   newKeywordValueSynonymTextFieldPlaceholder: {
@@ -143,14 +143,6 @@ export default defineMessages({
     id: 'app.containers.KeywordsEditPage.component.MainTab.modifiers',
     defaultMessage: 'Modifiers',
   },
-  textpromptTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.textpromptTextFieldPlaceholder',
-    defaultMessage: 'Write bot\'s response when this modifier is required and it is missing',
-  },
-  textpromptHelperText: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.textpromptHelperText',
-    defaultMessage: '*Please add at least one text prompt if the modifier is required',
-  },
   modifierNameTextField: {
     id: 'app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextField',
     defaultMessage: 'Modifier Name',
@@ -158,14 +150,6 @@ export default defineMessages({
   modifierNameTextFieldPlaceholder: {
     id: 'app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextFieldPlaceholder',
     defaultMessage: 'Set a name to reference the modifier in your responses',
-  },
-  modifierIsRequired: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.modifierIsRequired',
-    defaultMessage: 'Is Required?',
-  },
-  modifierIsList: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.modifierIsList',
-    defaultMessage: 'Is List?',
   },
   newModifierTab: {
     id: 'app.containers.KeywordsEditPage.component.ModifiersForm.newModifierTab',

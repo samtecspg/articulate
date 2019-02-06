@@ -40,7 +40,7 @@ export default defineMessages({
   },
   pipelineError: {
     id: 'app.components.RasaSettings.pipelineError',
-    defaultMessage: 'This value is not valid for a rasa pipeline. Please specify an array of objects like the following: [{ "name": "nlp_spacy" }]',
+    defaultMessage: 'This value is not valid for a rasa pipeline. Please specify an array of objects, you can select a default pipeline in the top right.',
   },
   spacyPretrainedEntitiesError: {
     id: 'app.components.RasaSettings.spacyPretrainedEntitiesError',

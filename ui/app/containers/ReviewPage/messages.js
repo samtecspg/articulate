@@ -56,7 +56,7 @@ export default defineMessages({
     defaultMessage: '+ New Action',
   },
   noActionsFound: {
-    id: 'app.containers.ReviewPage.component.ReviewDataForm.newActinoActionsFoundon',
+    id: 'app.containers.ReviewPage.component.ReviewDataForm.noActionsFound',
     defaultMessage: 'No actions found',
   },
   newKeyword: {

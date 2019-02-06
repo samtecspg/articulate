@@ -59,20 +59,4 @@ export default defineMessages({
     id: 'app.containers.KeywordsPage.component.SayingDataForm.entries',
     defaultMessage: 'entries',
   },
-  statusOutOfDate: {
-    id: 'app.containers.KeywordsPage.component.ActionButtons.statusOutOfDate',
-    defaultMessage: 'Status: out of date',
-  },
-  statusError: {
-    id: 'app.containers.KeywordsPage.component.ActionButtons.statusError',
-    defaultMessage: 'Status: error on training',
-  },
-  statusTraining: {
-    id: 'app.containers.KeywordsPage.component.ActionButtons.statusTraining',
-    defaultMessage: 'Status: updating agent…',
-  },
-  statusReady: {
-    id: 'app.containers.KeywordsPage.component.ActionButtons.statusReady',
-    defaultMessage: 'Last Trained: ',
-  },
 });

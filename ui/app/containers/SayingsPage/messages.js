@@ -56,7 +56,7 @@ export default defineMessages({
     defaultMessage: '+ New Action',
   },
   noActionsFound: {
-    id: 'app.containers.SayingsPage.component.SayingDataForm.newActinoActionsFoundon',
+    id: 'app.containers.SayingsPage.component.SayingDataForm.noActionsFound',
     defaultMessage: 'No actions found',
   },
   newKeyword: {
@@ -80,7 +80,7 @@ export default defineMessages({
     defaultMessage: 'entries',
   },
   categorySelectDefault: {
-    id: 'app.containers.SayingsPage.component.SayingDataForm.categorySelect',
+    id: 'app.containers.SayingsPage.component.SayingDataForm.categorySelectDefault',
     defaultMessage: 'Select',
   },
   categoryNoResults: {

@@ -74,7 +74,7 @@ export class TrainButton extends React.Component {
               agentStatus === 'Out of Date' ?
                 <span className={classes.errorLabel}><FormattedMessage {...messages.statusOutOfDate} /></span> :
                 agentStatus === 'Ready' ?
-                  <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{getLastTrainingTime(lastTraining)}</span> :
+                  <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{` ${getLastTrainingTime(lastTraining)}`}</span> :
                   null)}
         </Typography>
         <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>

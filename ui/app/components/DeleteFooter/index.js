@@ -105,7 +105,7 @@ class DeleteFooter extends React.PureComponent {
                 <DialogContent className={classes.dialogContent}>
                 <Grid className={classes.dialogContentGrid}>
                     <DialogContentText>
-                    <span className={classes.deleteMessage}><FormattedMessage {...messages.deleteMessageDialog}/>{this.props.type}.</span>
+                    <span className={classes.deleteMessage}><FormattedMessage {...messages.deleteMessageDialog}/>{` ${this.props.type}`}.</span>
                     </DialogContentText>
                     <DialogContentText>
                     <br/><span className={classes.deleteQuestion}><FormattedMessage {...messages.deleteQuestion}/></span>
