@@ -162,7 +162,6 @@ App.propTypes = {
   location: PropTypes.object,
   onMissingAPI: PropTypes.func,
   onCheckAPI: PropTypes.func,
-  onLoadSettings: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
   onRefreshAgent: PropTypes.func,
   notifications: PropTypes.array,
@@ -180,9 +179,6 @@ export function mapDispatchToProps(dispatch) {
         dispatch(checkAPI(refURL));
       }
       dispatch(checkAPI());
-    },
-    onLoadSettings: () => {
-      dispatch(loadSettings());
     },
     onToggleConversationBar: (value) => {
       dispatch(toggleConversationBar(value));

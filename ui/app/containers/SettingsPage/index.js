@@ -4,7 +4,7 @@
  *
  */
 
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -229,6 +229,7 @@ export class SettingsPage extends React.PureComponent {
 
   render() {
     return (
+      this.props.settings.defaultUISessionId ?
       <Grid container>
         <ContentHeader
           title={messages.title}
@@ -247,7 +248,8 @@ export class SettingsPage extends React.PureComponent {
           onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
           errorState={this.state.errorState}
         />
-      </Grid>
+      </Grid> : 
+      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
     );
   }
 }
