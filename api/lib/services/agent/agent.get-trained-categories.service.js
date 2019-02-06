@@ -39,7 +39,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
 
             if (justER) {
                 //Given that the agent only have one saying and is the model is just an ER, then we need the saying name
-                const firstAgentCategoryId = AgentModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY)[0];
+                const firstAgentCategoryId = await AgentModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
                 const FirstAgentCategoryModel = await globalService.findById({ id: firstAgentCategoryId, model: MODEL_CATEGORY, returnModel: true });
                 formattedCategories.push({ name: 'default', model: agent.model, justER, saying: await getFirstSayingName({ CategoryModel: FirstAgentCategoryModel }) });
             }
