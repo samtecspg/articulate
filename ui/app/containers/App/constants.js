@@ -226,3 +226,8 @@ export const CHANGE_CATEGORY_PARAMETER_VALUE = 'app/AgentPage/CHANGE_CATEGORY_PA
  * Review
  */
 export const CHANGE_REVIEW_PAGE_SIZE = 'app/ReviewPage/CHANGE_REVIEW_PAGE_SIZE';
+
+/*
+ * Locale
+ */
+export const CHANGE_LOCALE = 'app/LanguageToggle/CHANGE_LOCALE';

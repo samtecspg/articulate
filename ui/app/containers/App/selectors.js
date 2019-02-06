@@ -1,240 +1,246 @@
 import { createSelector } from 'reselect';
 
-const selectGlobalCategory = state => state.global;
-const selectRouteCategory = state => state.route;
+const selectGlobal = state => state.global;
+const selectRoute = state => state.route;
 
 /* Global */
 const makeSelectLocation = () => createSelector(
-  selectRouteCategory,
+  selectRoute,
   (routeState) => routeState.location,
 );
 
 const makeSelectMissingAPI = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.missingAPI,
 );
 
 const makeSelectLoading = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.loading,
 );
 
 const makeSelectError = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.error,
 );
 
 const makeSelectSuccess = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.success,
 );
 
 const makeSelectConversationBarOpen = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.conversationBarOpen,
 );
 
 const makeSelectNotifications = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.notifications,
 );
 
 const makeSelectMessages = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.messages,
 );
 
 const makeSelectWaitingResponse = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.waitingResponse,
 );
 
 const makeSelectConversationStateObject = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.conversationStateObject,
 );
 
 /* Agents */
 const makeSelectAgents = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.agents,
 );
 
 const makeSelectAgentExport = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.agentExport,
 );
 
 /* Agent */
 const makeSelectAgent = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.agent,
 );
 
 const makeSelectCurrentAgent = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.currentAgent,
 );
 
 const makeSelectAgentWebhook = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.agentWebhook,
 );
 
 const makeSelectAgentPostFormat = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.agentPostFormat,
 );
 
 const makeSelectAgentSettings = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.agentSettings,
 );
 
 const makeSelectAgentTouched = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.agentTouched,
 );
 
 const makeSelectSuccessAgent = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.successAgent,
 );
 
 const makeSelectDocuments = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.documents,
 );
 
 const makeSelectTotalDocuments = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.totalDocuments,
 );
 
 /* Keywords */
 const makeSelectKeywords = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.keywords,
 );
 
 const makeSelectTotalKeywords = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.totalKeywords,
 );
 
 /* Sayings */
 const makeSelectSayings = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.sayings,
 );
 
 const makeSelectTotalSayings = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.totalSayings,
 );
 
 const makeSelectCategories = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.categories,
 );
 
 const makeSelectFilteredCategories = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.filteredCategories,
 );
 
 const makeSelectSelectedCategory = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.selectedCategory,
 );
 
 const makeSelectNewSayingActions = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.newSayingActions,
 );
 
 /* Actions */
 const makeSelectActions = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.actions,
 );
 
 const makeSelectCurrentAction = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.currentAction,
 );
 
 const makeSelectTotalActions = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.totalActions,
 );
 
 const makeSelectAction = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.action,
 );
 
 const makeSelectActionWebhook = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.actionWebhook,
 );
 
 const makeSelectActionPostFormat = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.actionPostFormat,
 );
 
 const makeSelectSayingForAction = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.sayingForAction,
 );
 
 const makeSelectActionTouched = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.actionTouched,
 );
 
 const makeSelectSuccessAction = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.successAction,
 );
 
 /* Settings */
 const makeSelectSettings = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.settings,
 );
 
 /* Keyword */
 const makeSelectKeyword = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.keyword,
 );
 
 const makeSelectKeywordTouched = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.keywordTouched,
 );
 
 const makeSelectSuccessKeyword = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.successKeyword,
 );
 
 /* Category */
 const makeSelectCategory = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.category,
 );
 
 const makeSelectCategoryTouched = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.categoryTouched,
 );
 
 const makeSelectSuccessCategory = () => createSelector(
-  selectGlobalCategory,
+  selectGlobal,
   (globalState) => globalState.successCategory,
+);
+
+/* Locale */
+const makeSelectLocale = () =>createSelector(
+  selectGlobal,
+  (globalState) => globalState.locale
 );
 
 export {
@@ -283,4 +289,5 @@ export {
   makeSelectSuccessCategory,
   makeSelectDocuments,
   makeSelectTotalDocuments,
+  makeSelectLocale
 };

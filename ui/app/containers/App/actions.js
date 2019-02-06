@@ -182,6 +182,7 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  CHANGE_LOCALE,
 } from './constants';
 
 /*
@@ -1540,5 +1541,13 @@ export function changeReviewPageSize(agentId, pageSize) {
     type: CHANGE_REVIEW_PAGE_SIZE,
     agentId,
     pageSize,
+  };
+}
+
+/* Locale */
+export function changeLocale(languageLocale) {
+  return {
+    type: CHANGE_LOCALE,
+    locale: languageLocale,
   };
 }

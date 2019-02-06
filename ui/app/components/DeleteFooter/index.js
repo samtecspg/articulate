@@ -141,7 +141,7 @@ class DeleteFooter extends React.PureComponent {
             </Dialog>
                 <Grid className={classes.subContainer} item xs={12}>
                     <Typography className={classes.textContainer}>
-                        <span style={{display: this.state.hoverOnDelete ? 'inline' : 'none'}} className={classes.message}><FormattedMessage {...messages.deleteMessage} />{this.props.type}</span>
+                        <span style={{display: this.state.hoverOnDelete ? 'inline' : 'none'}} className={classes.message}><FormattedMessage {...messages.deleteMessage} />{` ${this.props.type}`}</span>
                         <span
                             onMouseLeave={() => this.setState({ hoverOnDelete: false })}
                             onMouseOver={() => this.setState({ hoverOnDelete: true })}

@@ -54,6 +54,7 @@ import {
   makeSelectActions,
   makeSelectLoading,
   makeSelectSuccessAgent,
+  makeSelectLocale,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -286,6 +287,7 @@ export class AgentPage extends React.PureComponent {
       this.props.settings.defaultAgentLanguage ?
       <Grid container>
         <MainTab
+          locale={this.props.locale}
           touched={this.props.touched}
           loading={this.props.loading}
           success={this.props.success}
@@ -389,6 +391,7 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   success: makeSelectSuccessAgent(),
   touched: makeSelectAgentTouched(),
+  locale: makeSelectLocale(),
 });
 
 function mapDispatchToProps(dispatch) {

@@ -10,6 +10,7 @@ import {
   loadSettingsSuccess,
   updateSettingsError,
   updateSettingsSuccess,
+  changeLocale,
 } from '../App/actions';
 
 import {
@@ -34,6 +35,7 @@ export function* putSettings(payload) {
   try {
     const response = yield call(api.settings.putSettingsBulk, { body: settings });
     yield put(updateSettingsSuccess(response.obj));
+    yield put(changeLocale(settings.uiLanguage));
   } catch (err) {
     yield put(updateSettingsError(err));
   }

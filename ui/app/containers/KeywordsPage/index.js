@@ -22,6 +22,7 @@ import {
   makeSelectAgent,
   makeSelectKeywords,
   makeSelectTotalKeywords,
+  makeSelectLocale,
 } from '../App/selectors';
 
 import {
@@ -126,6 +127,7 @@ export class KeywordsPage extends React.Component {
       this.props.agent.id ?
       <Grid container>
         <MainTab
+          locale={this.props.locale}
           disableSave
           agentName={this.props.agent.agentName}
           onTrain={this.props.onTrain}
@@ -174,6 +176,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   keywords: makeSelectKeywords(),
   totalKeywords: makeSelectTotalKeywords(),
+  locale: makeSelectLocale(),
 });
 
 function mapDispatchToProps(dispatch) {

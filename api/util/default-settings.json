@@ -5,6 +5,10 @@
     {
       "value": "en",
       "text": "English"
+    },
+    {
+      "value": "es",
+      "text": "Español"
     }
   ],
   "categoryClassifierPipeline": [
@@ -697,24 +701,24 @@
   "defaultTimezone": "UTC",
   "agentLanguages": [
     {
+      "value": "de",
+      "text": "Deutsch"
+    },
+    {
       "value": "en",
       "text": "English"
     },
     {
-      "value": "fr",
-      "text": "French"
+      "value": "es",
+      "text": "Español"
     },
     {
-      "value": "de",
-      "text": "German"
+      "value": "fr",
+      "text": "Française"
     },
     {
       "value": "pt",
-      "text": "Portuguese"
-    },
-    {
-      "value": "es",
-      "text": "Spanish"
+      "text": "Portugues"
     }
   ],
   "modifierActions": [

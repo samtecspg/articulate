@@ -6,7 +6,6 @@ import { combineReducers } from 'redux-seamless-immutable';
 import Immutable from 'seamless-immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import appReducer from 'containers/App/reducer';
 
 /*
@@ -44,6 +43,5 @@ export default function createReducer() {
   return combineReducers({
     route: routeReducer,
     global: appReducer,
-    language: languageProviderReducer,
   });
 }

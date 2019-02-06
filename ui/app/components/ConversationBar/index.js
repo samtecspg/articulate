@@ -234,7 +234,7 @@ export class ConversationBar extends React.PureComponent {
       <Grid className={classes.container}>
         <Grid onClick={() => this.props.onResetSession()} container className={classes.clearAll}>
           <Typography className={classes.clearAllLabel}>
-            Clear All
+            {intl.formatMessage(messages.clearAll)}
           </Typography>
         </Grid>
         <Grid container onClick={() => { this.props.onToggleConversationBar(false) }} className={classes.toggle}>

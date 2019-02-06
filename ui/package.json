@@ -158,6 +158,7 @@
     "intl": "1.2.5",
     "invariant": "2.2.4",
     "ip": "1.1.5",
+    "javascript-time-ago": "^2.0.1",
     "lodash": "4.17.10",
     "material-colors": "^1.2.6",
     "material-ui-chip-input": "^1.0.0-beta.6",
@@ -185,7 +186,6 @@
     "reselect": "3.0.1",
     "seamless-immutable": "^7.1.3",
     "swagger-client": "3.4.4",
-    "time-ago": "^0.2.1",
     "typeface-roboto": "0.0.54",
     "warning": "4.0.1",
     "whatwg-fetch": "2.0.4"

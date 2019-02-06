@@ -6775,6 +6775,13 @@ items@2.x.x, items@^2.1.x:
   resolved "https://registry.yarnpkg.com/items/-/items-2.1.2.tgz#0849354595805d586dac98e7e6e85556ea838558"
   integrity sha512-kezcEqgB97BGeZZYtX/MA8AG410ptURstvnz5RAgyFZ8wQFPMxHY8GpTq+/ZHKT3frSlIthUq7EvLt9xn3TvXg==
 
+javascript-time-ago@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.0.1.tgz#11c85cac73f68eebf0256c9b1610e2ce2f429972"
+  integrity sha512-ec5m6x3eh2MloVvSd6Yy9ShqeQmWHl4GaKSZNF4UlRhqGMdxPtsAAjkhUmO/PHk7c13R8yfkSygNZkdi4QpBww==
+  dependencies:
+    relative-time-format "^0.1.3"
+
 jest-changed-files@^23.0.1:
   version "23.0.1"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-23.0.1.tgz#f79572d0720844ea5df84c2a448e862c2254f60c"
@@ -10509,6 +10516,11 @@ relateurl@0.2.x:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
+relative-time-format@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/relative-time-format/-/relative-time-format-0.1.3.tgz#d50f49d13f97c7f801afba600b1a4a0890755df2"
+  integrity sha512-0O6i4fKjsx8qhz57zorG+LrIDnF9pSvP5s7H9R1Nb5nSqih5dvRyKzNKs6MxhL3bv4iwsz4DuDwAyw+c47QFIA==
+
 remark-parse@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/remark-parse/-/remark-parse-5.0.0.tgz#4c077f9e499044d1d5c13f80d7a98cf7b9285d95"
@@ -11851,11 +11863,6 @@ through@^2.3.6, through@~2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
-
-time-ago@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/time-ago/-/time-ago-0.2.1.tgz#4abcb7fb8c8cbb1efd9575ab8b30ec699e8e05a9"
-  integrity sha512-fQ3WQ5yPBoNefBgITR+kMnd5aWiKYhBNSgQH3FwpJgDCaVEmju7rWyP+Rk52KyQbRwQEnw3ox2yxcS4yMxgP+g==
 
 time-stamp@^1.0.0:
   version "1.1.0"

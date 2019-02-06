@@ -171,13 +171,16 @@ import {
   UPDATE_SETTINGS_SUCCESS,
   UNTAG_MODIFIER_KEYWORD,
   TAG_MODIFIER_KEYWORD,
+  CHANGE_LOCALE,
 } from './constants';
 
+import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = ['😀', '😁', '😃', '😄', '😉', '😎', '🙂', '🤩', '😛', '😜', '🙃', '😬', '🤓', '😺', '😸', '💪', '🤙', '👌', '👍', '🤚', '👏', '🙌', '🎖', '🏆', '🏅', '🥇', '🎉', '🎊'];
 const errorEmojies = ['😣', '😥', '😮', '😯', '😫', '😓', '😕', '😖', '😦', '😧', '😨', '😩', '🤯', '😱', '😵', '🤕', '💀', '🙀', '😿', '🚫', '❌', '💣', '🚑', '🚒', '🚨'];
 
 // The initial state of the App
 const initialState = Immutable({
+  locale: DEFAULT_LOCALE,
   conversationBarOpen: false,
   waitingResponse: false,
   notifications: [],
@@ -299,7 +302,7 @@ const initialState = Immutable({
   categoryTouched: false,
   actionTouched: false,
   newSlot: {
-    slotName: 'New Slot',
+    slotName: 'Slot',
     uiColor: '#4e4e4e',
     keyword: '',
     keywordId: '0',
@@ -308,7 +311,7 @@ const initialState = Immutable({
     textPrompts: [],
   },
   newModifier: {
-    modifierName: 'New Modifier',
+    modifierName: 'Modifier',
     action: 'SET',
     valueSource: 'keyword',
     staticValue: '',
@@ -1343,6 +1346,10 @@ function appReducer(state = initialState, action) {
         .update('notifications', notifications => notifications.concat({ message: `Notification: The saying <b>${action.saying.userSays}</b> was created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }))
         .set('loading', false)
         .set('success', false);
+    
+    /* Locale */
+    case CHANGE_LOCALE:
+        return state.set('locale', action.locale);
     default:
       return state;
   }

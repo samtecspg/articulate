@@ -6,7 +6,13 @@ import { Grid, Typography, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import messages from './messages';
 
-import ta from 'time-ago'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en';
+import es from 'javascript-time-ago/locale/es';
+import pt from 'javascript-time-ago/locale/pt';
+TimeAgo.addLocale(en);
+TimeAgo.addLocale(es);
+TimeAgo.addLocale(pt);
 
 const styles = {
   button: {
@@ -37,18 +43,6 @@ const styles = {
   },
 };
 
-const getLastTrainingTime = (lastTraining) => {
-
-  if (lastTraining){
-    const timeAgo = ta.ago(lastTraining);
-    if (timeAgo.indexOf('second') !== -1 || timeAgo.indexOf(' ms ') !== -1){
-      return 'just now';
-    }
-    return timeAgo;
-  }
-  return 'never trained';
-};
-
 /* eslint-disable react/prefer-stateless-function */
 export class TrainButton extends React.Component {
 
@@ -60,10 +54,17 @@ export class TrainButton extends React.Component {
     clearInterval(this.interval);
   }
 
-  compon
+  getLastTrainingTime(lastTraining) {
+
+    if (lastTraining){
+      const timeAgo = new TimeAgo(this.props.locale).format(new Date(lastTraining));
+      return timeAgo;
+    }
+    return this.props.intl.formatMessage(messages.neverTrained);
+  };
 
   render() {
-    const { classes, agentStatus, lastTraining, onTrain } = this.props;
+    const { classes, agentStatus, lastTraining, onTrain, locale } = this.props;
     return (
       <Grid item className={classes.trainContainer}>
         <Typography className={classes.trainingStatusLabel}>
@@ -74,7 +75,7 @@ export class TrainButton extends React.Component {
               agentStatus === 'Out of Date' ?
                 <span className={classes.errorLabel}><FormattedMessage {...messages.statusOutOfDate} /></span> :
                 agentStatus === 'Ready' ?
-                  <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{` ${getLastTrainingTime(lastTraining)}`}</span> :
+                  <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{` ${this.getLastTrainingTime(lastTraining)}`}</span> :
                   null)}
         </Typography>
         <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
@@ -91,6 +92,7 @@ TrainButton.propTypes = {
   onTrain: PropTypes.func,
   agentStatus: PropTypes.string,
   lastTraining: PropTypes.string,
+  locale: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(TrainButton));

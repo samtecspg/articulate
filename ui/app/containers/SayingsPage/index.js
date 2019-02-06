@@ -46,6 +46,7 @@ import {
   makeSelectSayings,
   makeSelectSelectedCategory,
   makeSelectTotalSayings,
+  makeSelectLocale,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -171,6 +172,7 @@ export class SayingsPage extends React.Component {
       this.props.agent.id ?
       <Grid container>
         <MainTab
+          locale={this.props.locale}
           disableSave
           agentName={this.props.agent.agentName}
           onTrain={this.props.onTrain}
@@ -266,6 +268,7 @@ const mapStateToProps = createStructuredSelector({
   agentActions: makeSelectActions(),
   category: makeSelectSelectedCategory(),
   newSayingActions: makeSelectNewSayingActions(),
+  locale: makeSelectLocale(),
 });
 
 function mapDispatchToProps(dispatch) {

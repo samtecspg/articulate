@@ -26,4 +26,12 @@ export default defineMessages({
     id: 'app.components.TrainButton.statusReady',
     defaultMessage: 'Last Trained: ',
   },
+  neverTrained: {
+    id: 'app.components.TrainButton.neverTrained',
+    defaultMessage: 'never trained',
+  },
+  justNow: {
+    id: 'app.components.TrainButton.justNow',
+    defaultMessage: 'just now',
+  },
 });

@@ -13,5 +13,9 @@ export default defineMessages({
   seeSource: {
     id: 'app.components.ConversationBar.seeSource',
     defaultMessage: 'See Source'
+  },
+  clearAll: {
+    id: 'app.components.ConversationBar.clearAll',
+    defaultMessage: 'Clear All'
   }
 });
