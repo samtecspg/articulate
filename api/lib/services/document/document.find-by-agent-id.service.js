@@ -30,13 +30,12 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
         };
 
         const results = await DocumentModel.search({ body });
-        const count = await DocumentModel.count();
         if (results.hits.total === 0) {
-            return { data: [], totalCount: count };
+            return { data: [], totalCount: 0 };
         }
         const data = results.hits.hits.map((result) => ({ id: result._id, ...result._source }));
 
-        return { data, totalCount: count };
+        return { data, totalCount: results.hits.total };
     }
     catch (error) {
         throw ESErrorHandler({ error });
