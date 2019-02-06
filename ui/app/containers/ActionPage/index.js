@@ -113,12 +113,19 @@ export class ActionPage extends React.Component {
     if (!prevProps.agent.id && this.props.agent.id){
       this.initForm();
     }
-    if (this.props.success && this.state.exitAfterSubmit) {
-      if (this.state.ref === 'agent'){
-        this.props.onSuccess(`/agent/${this.props.agent.id}`);
+    if (this.props.success) {
+      if (this.state.exitAfterSubmit){
+        if (this.state.ref === 'agent'){
+          this.props.onSuccess(`/agent/${this.props.agent.id}`);
+        }
+        else{
+          this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+        }
       }
-      else{
-        this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+      if (this.state.isNewAction) {
+        this.setState({
+          isNewAction: false,
+        });
       }
     }
   }

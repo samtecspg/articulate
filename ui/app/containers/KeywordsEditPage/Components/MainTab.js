@@ -32,6 +32,7 @@ const styles = {
   buttonContainer: {
     position: 'relative',
     bottom: '10px',
+    width: '100%'
   },
   buttonContainerSmall: {
     position: 'relative',

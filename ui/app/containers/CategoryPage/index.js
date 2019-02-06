@@ -87,8 +87,15 @@ export class CategoriesEditPage extends React.Component {
     if (!prevProps.agent.id && this.props.agent.id){
       this.initForm();
     }
-    if (this.props.success && this.state.exitAfterSubmit) {
-      this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+    if (this.props.success) {
+      if (this.state.exitAfterSubmit){
+        this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+      }
+      if (this.state.isNewCategory) {
+        this.setState({
+          isNewCategory: false,
+        });
+      }
     }
   }
 

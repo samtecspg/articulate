@@ -118,6 +118,13 @@ export class AgentPage extends React.PureComponent {
     if (!prevProps.settings.defaultAgentLanguage && this.props.settings.defaultAgentLanguage){
       this.initForm();
     }
+    if (this.props.success) {
+      if (this.state.isNewAgent) {
+        this.setState({
+          isNewAgent: false,
+        });
+      }
+    }
   }
 
   submit(exit) {

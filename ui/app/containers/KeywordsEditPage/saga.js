@@ -25,6 +25,7 @@ import {
   UPDATE_KEYWORD,
   DELETE_KEYWORD,
   CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
+  LOAD_KEYWORDS,
 } from '../App/constants';
 
 import {
@@ -112,4 +113,5 @@ export default function* rootSaga() {
   yield takeLatest(UPDATE_KEYWORD, putKeyword);
   yield takeLatest(DELETE_KEYWORD, deleteKeyword);
   yield takeLatest(CHANGE_MODIFIER_SAYINGS_PAGE_SIZE, putModifierSayingsPageSize);
+  yield takeLatest(LOAD_KEYWORDS, getKeywords);
 };

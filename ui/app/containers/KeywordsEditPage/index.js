@@ -51,7 +51,8 @@ import {
   untagModifierKeyword,
   tagModifierKeyword,
   onChangeModifiersSayingsPageSize,
-  loadSettings
+  loadSettings,
+  loadKeywords
 } from '../App/actions';
 import ModifiersForm from './Components/ModifiersForm';
 
@@ -101,8 +102,16 @@ export class KeywordsEditPage extends React.Component {
     if (!prevProps.agent.id && this.props.agent.id){
       this.initForm();
     }
-    if (this.props.success && this.state.exitAfterSubmit) {
-      this.props.onSuccess(`/agent/${this.props.agent.id}/keywords`);
+    if (this.props.success){ 
+      if (this.state.exitAfterSubmit) {
+        this.props.onSuccess(`/agent/${this.props.agent.id}/keywords`);
+      }
+      if (this.state.isNewKeyword) {
+        this.setState({
+          isNewKeyword: false,
+        });
+        this.props.onLoadKeywords();
+      }
     }
   }
 
@@ -333,6 +342,9 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadKeyword: (id) => {
       dispatch(loadKeyword(id));
+    },
+    onLoadKeywords: () => {
+      dispatch(loadKeywords());
     },
     onCreateKeyword: () => {
       dispatch(createKeyword());
