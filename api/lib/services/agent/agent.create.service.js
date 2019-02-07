@@ -47,6 +47,10 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
 
         data.fallbackAction = isImport ? data.fallbackAction : allSettings[CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME];
 
+        if (isImport && data.model){
+            delete data.model;
+        }
+
         await AgentModel.createInstance({ data });
         if (!isImport){
             await agentService.createAction({

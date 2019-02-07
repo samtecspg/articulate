@@ -60,6 +60,9 @@ module.exports = async function ({ payload }) {
         await Promise.all(categories.map(async (category) => {
 
             const { sayings, ...categoryData } = category;
+            if (categoryData.model){
+                delete categoryData.model;
+            }
             const CategoryModel = await agentService.createCategory({
                 AgentModel,
                 categoryData,
