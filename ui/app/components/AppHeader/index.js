@@ -14,6 +14,7 @@ import { Grid, Hidden, Button }  from '@material-ui/core';
 
 import ConversationBar from '../ConversationBar';
 import { compose } from 'redux';
+import LanguageSelect from '../LanguageSelect';
 
 const styles = {
   root: {
@@ -34,6 +35,7 @@ const styles = {
   },
   openChat: {
     float: 'right',
+    marginLeft: '15px'
   },
   icon: {
     paddingRight: '5px',
@@ -63,6 +65,9 @@ export class AppHeader extends React.Component {
         <Grid container className={classes.header} item xs={12}>
           <Hidden only={['xs', 'sm']}>
             <ConversationBar
+              uiLanguage={this.props.uiLanguage} 
+              uiLanguages={this.props.uiLanguages} 
+              onChangeLanguage={this.props.onChangeLanguage}
               onToggleConversationBar={this.props.onToggleConversationBar}
             />
             <Grid item xl={2} lg={2} md={2}>
@@ -82,6 +87,9 @@ export class AppHeader extends React.Component {
           </Hidden>
           <Hidden only={['md', 'lg', 'xl']}>
             <ConversationBar
+              uiLanguage={this.props.uiLanguage} 
+              uiLanguages={this.props.uiLanguages} 
+              onChangeLanguage={this.props.onChangeLanguage}
               onToggleConversationBar={this.props.onToggleConversationBar}
             />
             <Grid item sm={6} xs={6}>
@@ -125,9 +133,18 @@ export class AppHeader extends React.Component {
                   <Button key='conversat_button' onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
                     <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.openChatButton} />
-                  </Button>
+                  </Button>,
+                  <LanguageSelect 
+                    key='selectLanguage'
+                    uiLanguage={this.props.uiLanguage} 
+                    uiLanguages={this.props.uiLanguages} 
+                    onChangeLanguage={this.props.onChangeLanguage} />
                 ] : 
-                null
+                <LanguageSelect 
+                  key='selectLanguage'
+                  uiLanguage={this.props.uiLanguage} 
+                  uiLanguages={this.props.uiLanguages} 
+                  onChangeLanguage={this.props.onChangeLanguage} />
               }
             </Grid>
           </Hidden>
@@ -144,12 +161,27 @@ export class AppHeader extends React.Component {
               { this.props.location.pathname !== '/' ? 
                 [
                   notifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
-                  <Button key='conversat_button' onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
+                  <Button
+                    key='conversat_button'
+                    onClick={() => {this.props.onToggleConversationBar(true)}}
+                    color='primary'
+                    variant='contained'
+                    className={classes.openChat}
+                  >
                     <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.openChatButton} />
-                  </Button>
+                  </Button>,
+                  <LanguageSelect 
+                    key='selectLanguage'
+                    uiLanguage={this.props.uiLanguage} 
+                    uiLanguages={this.props.uiLanguages} 
+                    onChangeLanguage={this.props.onChangeLanguage} />
                 ] : 
-                null
+                <LanguageSelect 
+                  key='selectLanguage'
+                  uiLanguage={this.props.uiLanguage} 
+                  uiLanguages={this.props.uiLanguages} 
+                  onChangeLanguage={this.props.onChangeLanguage} />
               }
             </Grid>
           </Hidden>
@@ -164,6 +196,9 @@ AppHeader.propTypes = {
   conversationBarOpen: PropTypes.bool,
   onToggleConversationBar: PropTypes.func,
   notifications: PropTypes.array,
+  uiLanguages: PropTypes.array,
+  uiLanguage: PropTypes.string,
+  onChangeLanguage: PropTypes.func,
 };
 
 const withDefinedStyles = withStyles(styles);

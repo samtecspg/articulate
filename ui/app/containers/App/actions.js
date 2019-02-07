@@ -182,6 +182,9 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  UPDATE_SETTING,
+  UPDATE_SETTING_ERROR,
+  UPDATE_SETTING_SUCCESS,
   CHANGE_LOCALE,
 } from './constants';
 
@@ -921,6 +924,29 @@ export function updateSettingsError(error) {
 export function updateSettingsSuccess() {
   return {
     type: UPDATE_SETTINGS_SUCCESS,
+  };
+}
+
+export function updateSetting(setting, value) {
+  return {
+    type: UPDATE_SETTING,
+    apiCall: true,
+    setting,
+    value
+  };
+}
+
+export function updateSettingError(error) {
+  return {
+    type: UPDATE_SETTING_ERROR,
+    error,
+  };
+}
+
+export function updateSettingSuccess(payload) {
+  return {
+    type: UPDATE_SETTING_SUCCESS,
+    payload
   };
 }
 

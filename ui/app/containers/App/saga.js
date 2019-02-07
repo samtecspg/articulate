@@ -11,6 +11,7 @@ import {
   RESET_SESSION,
   SEND_MESSAGE,
   TRAIN_AGENT,
+  UPDATE_SETTING,
 } from '../App/constants';
 
 import { getSettings } from '../SettingsPage/saga';
@@ -21,10 +22,12 @@ import {
   resetSessionSuccess,
   respondMessage,
   trainAgentError,
-  storeSourceData
+  storeSourceData,
 } from './actions';
 
 import { makeSelectAgent, makeSelectSettings } from './selectors';
+
+import { putSetting } from '../SettingsPage/saga';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
@@ -124,4 +127,5 @@ export default function* rootSaga() {
   yield takeLatest(SEND_MESSAGE, postConverse);
   yield takeLatest(RESET_SESSION, deleteSession);
   yield takeLatest(TRAIN_AGENT, postTrainAgent);
+  yield takeLatest(UPDATE_SETTING, putSetting);
 };

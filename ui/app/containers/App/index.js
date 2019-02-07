@@ -37,6 +37,8 @@ import {
   loadAgent,
   loadAgentSuccess,
   toggleConversationBar,
+  loadSettings,
+  updateSetting
 } from './actions';
 import saga from './saga';
 import {
@@ -45,6 +47,7 @@ import {
   makeSelectLocation,
   makeSelectMissingAPI,
   makeSelectNotifications,
+  makeSelectSettings
 } from './selectors';
 
 class App extends React.Component {
@@ -66,6 +69,7 @@ class App extends React.Component {
   }
 
   componentWillMount() {
+    this.props.onLoadSettings();
     this.props.onCheckAPI();
     const agentId = this.getAgentIdFromPath();
     if (agentId && !this.props.agent.id){
@@ -134,7 +138,13 @@ class App extends React.Component {
     const { conversationBarOpen, onToggleConversationBar, notifications } = this.props;
     return (
       <div>
-        <AppHeader onToggleConversationBar={onToggleConversationBar} conversationBarOpen={conversationBarOpen} notifications={notifications} />
+        <AppHeader
+          uiLanguages={this.props.settings.uiLanguages}
+          uiLanguage={this.props.settings.uiLanguage}
+          onChangeLanguage={this.props.onChangeLanguage}
+          onToggleConversationBar={onToggleConversationBar}
+          conversationBarOpen={conversationBarOpen}
+          notifications={notifications} />
         <AppContent conversationBarOpen={conversationBarOpen}>
           <Switch>
             <Route exact path='/' component={AgentsPage} />
@@ -163,7 +173,9 @@ App.propTypes = {
   onCheckAPI: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
   onRefreshAgent: PropTypes.func,
+  onChangeLanguage: PropTypes.func,
   notifications: PropTypes.array,
+  settings: PropTypes.object
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -189,6 +201,12 @@ export function mapDispatchToProps(dispatch) {
     onLoadAgent: (agentId) => {
       dispatch(loadAgent(agentId));
     },
+    onLoadSettings: () => {
+      dispatch(loadSettings());
+    },
+    onChangeLanguage: (language) => {
+      dispatch(updateSetting('uiLanguage', language));
+    }
   };
 }
 
@@ -198,6 +216,7 @@ const mapStateToProps = createStructuredSelector({
   location: makeSelectLocation(),
   conversationBarOpen: makeSelectConversationBarOpen(),
   notifications: makeSelectNotifications(),
+  settings: makeSelectSettings(),
 });
 
 const withConnect = connect(

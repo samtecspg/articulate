@@ -35,6 +35,7 @@ import {
   loadSettings
 } from '../../containers/App/actions';
 
+import LanguageSelect from '../LanguageSelect';
 import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
 
@@ -68,6 +69,11 @@ const styles = {
     fontWeight: 300,
     textDecoration: 'underline',
     cursor: 'pointer',
+  },
+  languageDropdownContainer: {
+    position: 'fixed',
+    right: '350px',
+    top: '20px',
   },
   toggle: {
     cursor: 'pointer',
@@ -232,6 +238,13 @@ export class ConversationBar extends React.PureComponent {
     const { classes, intl } = this.props;
     return (
       <Grid className={classes.container}>
+        <Grid className={classes.languageDropdownContainer}>
+          <LanguageSelect
+            key='selectLanguage'
+            uiLanguage={this.props.uiLanguage} 
+            uiLanguages={this.props.uiLanguages} 
+            onChangeLanguage={this.props.onChangeLanguage} />
+        </Grid>
         <Grid onClick={() => this.props.onResetSession()} container className={classes.clearAll}>
           <Typography className={classes.clearAllLabel}>
             {intl.formatMessage(messages.clearAll)}

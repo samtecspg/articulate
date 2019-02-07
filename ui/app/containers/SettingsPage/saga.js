@@ -10,11 +10,13 @@ import {
   loadSettingsSuccess,
   updateSettingsError,
   updateSettingsSuccess,
+  updateSettingSuccess,
+  updateSettingError,
   changeLocale,
 } from '../App/actions';
 
 import {
-  LOAD_SETTINGS, UPDATE_SETTINGS,
+  LOAD_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTING
 } from '../App/constants';
 import { makeSelectSettings } from '../App/selectors';
 
@@ -41,8 +43,22 @@ export function* putSettings(payload) {
   }
 }
 
+export function* putSetting(payload) {
+  const { api, setting, value } = payload;
+  try {
+    const response = yield call(api.settings.putSettingsName, { name: setting, body: value });
+    yield put(updateSettingSuccess(response.obj));
+    if (setting === 'uiLanguage'){
+      yield put(changeLocale(value));
+    }
+  } catch (err) {
+    yield put(updateSettingError(err));
+  }
+}
+
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(UPDATE_SETTINGS, putSettings);
+  yield takeLatest(UPDATE_SETTING, putSetting);
 };

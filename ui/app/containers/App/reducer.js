@@ -169,6 +169,9 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  UPDATE_SETTING,
+  UPDATE_SETTING_ERROR,
+  UPDATE_SETTING_SUCCESS,
   UNTAG_MODIFIER_KEYWORD,
   TAG_MODIFIER_KEYWORD,
   CHANGE_LOCALE,
@@ -762,6 +765,19 @@ function appReducer(state = initialState, action) {
       return state.set('loading', false)
         .set('success', true)
         .set('error', false);
+    case UPDATE_SETTING:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_SETTING_ERROR:
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case UPDATE_SETTING_SUCCESS:
+      return state.set('loading', false)
+        .set('success', true)
+        .set('error', false)
+        .setIn(['settings', action.payload.name], action.payload.value);
     case CHANGE_SETTINGS_DATA:
       return state
         .setIn(['settings', action.payload.field], action.payload.value)
