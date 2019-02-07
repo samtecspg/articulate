@@ -106,12 +106,16 @@ module.exports = new Confidence.Store({
             {
                 plugin: './plugins/swagger',
                 options: {
-                    title: 'Articulate API Documentation',
-                    path: '/documentation',
-                    swaggerOptions: {
-                        validatorUrl: false
+                    info: {
+                        title: 'Articulate API Documentation',
+                        version: Package.version,
+                        contact: {
+                            name: 'Smart Platform Group'
+                        }
                     },
-                    authorization: false
+                    schemes: process.env.SWAGGER_SCHEMES || null,
+                    host: process.env.SWAGGER_HOST || null,
+                    basePath: process.env.SWAGGER_BASE_PATH || null
                 }
             }
         ]
