@@ -775,7 +775,8 @@ function appReducer(state = initialState, action) {
     case RESET_ACTION_DATA:
       return state.set('action', initialState.action)
         .set('actionWebhook', initialState.actionWebhook)
-        .set('actionPostFormat', initialState.actionPostFormat);
+        .set('actionPostFormat', initialState.actionPostFormat)
+        .set('successAction', false);
     case LOAD_ACTIONS:
       return state.set('actions', [])
         .set('totalActions', 0)
@@ -1179,7 +1180,8 @@ function appReducer(state = initialState, action) {
         .set('successKeyword', true)
         .set('keywordTouched', false);
     case RESET_KEYWORD_DATA:
-      return state.set('keyword', initialState.keyword);
+      return state.set('keyword', initialState.keyword)
+      .set('successKeyword', false);
     case UPDATE_KEYWORD:
       return state.set('loading', true)
         .set('success', false)
@@ -1282,7 +1284,8 @@ function appReducer(state = initialState, action) {
         .set('successCategory', true)
         .set('categoryTouched', false);
     case RESET_CATEGORY_DATA:
-      return state.set('category', initialState.category);
+      return state.set('category', initialState.category)
+      .set('successCategory', false);
     case UPDATE_CATEGORY:
       return state.set('loading', true)
         .set('success', false)

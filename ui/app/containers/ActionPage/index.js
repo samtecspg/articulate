@@ -292,6 +292,7 @@ export class ActionPage extends React.Component {
 
   render() {
     const { classes } = this.props;
+    console.log(this.state.isNewAction);
     return (
       this.props.agent.id ?
       <Grid container>
@@ -437,7 +438,6 @@ const mapStateToProps = createStructuredSelector({
   webhook: makeSelectActionWebhook(),
   postFormat: makeSelectActionPostFormat(),
   agentKeywords: makeSelectKeywords(),
-  success: makeSelectSuccess(),
   saying: makeSelectSayingForAction(),
   success: makeSelectSuccessAction(),
   loading: makeSelectLoading(),
