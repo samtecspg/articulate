@@ -36,7 +36,6 @@ import {
   checkAPI,
   loadAgent,
   loadAgentSuccess,
-  loadSettings,
   toggleConversationBar,
 } from './actions';
 import saga from './saga';

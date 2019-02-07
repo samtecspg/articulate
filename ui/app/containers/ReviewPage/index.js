@@ -4,6 +4,7 @@
  *
  */
 
+import Nes from 'nes';
 import { Grid, CircularProgress } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -59,14 +60,17 @@ export class ReviewPage extends React.Component {
     documents: [],
     sortField: 'time_stamp',
     sortDirection: 'DESC',
+    client: null,
+    socketClientConnected: false,
   };
 
-  initForm(){
+  async initForm(){
     const {
       onLoadKeywords,
       onLoadActions,
       onLoadCategories,
       onLoadAgentDocuments,
+      onRefreshDocuments,
     } = this.props.actions;
 
     this.setState({
@@ -77,6 +81,34 @@ export class ReviewPage extends React.Component {
     onLoadActions();
     onLoadCategories();
     onLoadAgentDocuments(this.state.currentPage, this.state.pageSize, this.state.sortField, this.state.sortDirection);
+
+
+    if (!this.state.socketClientConnected) {
+      const client = new Nes.Client(process.env.WS_URL || 'ws://localhost:7500');
+      client.connect((err) => {
+
+        if (err) {
+          console.error('An error occurred connecting to the socket: ', err);
+        }
+        this.setState({
+          client,
+          socketClientConnected: true,
+        });
+
+        const handler = (documents) => {
+    
+          if (documents) {
+            const payload = { documents: documents.data, total: documents.totalCount };
+            onRefreshDocuments(payload);
+          }
+        };
+        this.state.client.subscribe(`/agent/${this.props.agent.id}/doc`, handler, (errSubscription) => {
+          if (errSubscription) {
+            console.error(`An error occurred subscribing to the agent ${this.props.agent.agentName} to get documents: ${errSubscription}`);
+          }
+        });
+      });
+    }
   }
 
   componentWillMount() {
@@ -93,6 +125,14 @@ export class ReviewPage extends React.Component {
     if (documents !== this.state.documents) {
       this.setState({ documents });
       this.setNumberOfPages(this.state.pageSize);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.client){
+      if (this.props.agent.id) {
+        this.state.client.unsubscribe(`/agent/${this.state.agent}/doc`);
+      }
     }
   }
 
@@ -299,6 +339,7 @@ ReviewPage.propTypes = {
     onToggleConversationBar: PropTypes.func.isRequired,
     onSendMessage: PropTypes.func.isRequired,
     onChangeReviewPageSize: PropTypes.func.isRequired,
+    onRefreshDocuments: PropTypes.func.isRequired,
   }),
   agent: PropTypes.object.isRequired,
   documents: PropTypes.array,
@@ -348,6 +389,7 @@ function mapDispatchToProps(dispatch) {
       onToggleConversationBar: Actions.toggleConversationBar,
       onSendMessage: Actions.sendMessage,
       onChangeReviewPageSize: Actions.changeReviewPageSize,
+      onRefreshDocuments: Actions.loadAgentDocumentsSuccess
     }, dispatch),
     onGoToUrl: (url) => {
       dispatch(push(url));
