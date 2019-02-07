@@ -292,7 +292,6 @@ export class ActionPage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.state.isNewAction);
     return (
       this.props.agent.id ?
       <Grid container>
