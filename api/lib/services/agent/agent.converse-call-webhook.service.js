@@ -61,12 +61,16 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
         });
         const endTime = new Moment();
         const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
-        elapsed_time_ms
-        const webhookResponse = {
+        if (typeof response.data === 'string'){
+            return {
+                text: response.data,
+                elapsed_time_ms
+            }
+        }
+        return {
             ...response.data,
             elapsed_time_ms
-        }
-        return webhookResponse;
+        };
     }
     catch (error) {
         return { textResponse: 'We\'re having trouble fulfilling that request', actions: [] };
