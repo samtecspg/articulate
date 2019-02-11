@@ -113,6 +113,7 @@ module.exports = new Confidence.Store({
                             name: 'Smart Platform Group'
                         }
                     },
+                    documentationPage: false,
                     schemes: process.env.SWAGGER_SCHEMES || null,
                     host: process.env.SWAGGER_HOST || null,
                     basePath: process.env.SWAGGER_BASE_PATH || null

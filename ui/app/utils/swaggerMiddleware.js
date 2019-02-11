@@ -1,9 +1,14 @@
 // Based on https://github.com/noh4ck/redux-swagger-client/blob/master/src/index.js
-import Swagger from 'swagger-client';
-import { MISSING_API, CHECK_API } from '../containers/App/constants';
-import { resetMissingAPI } from '../containers/App/actions';
-import { loadAgents } from '../containers/App/actions';
 import { push } from 'react-router-redux';
+import Swagger from 'swagger-client';
+import {
+  loadAgents,
+  resetMissingAPI,
+} from '../containers/App/actions';
+import {
+  CHECK_API,
+  MISSING_API,
+} from '../containers/App/constants';
 
 export default function swaggerMiddleware(opts) {
   let api;

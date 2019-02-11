@@ -14,13 +14,14 @@ import { connect } from 'react-redux';
 import {
   Route,
   Switch,
+  withRouter,
 } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
 import injectSaga from '../../utils/injectSaga';
+import { getWS } from '../../utils/locationResolver';
 import ActionPage from '../ActionPage/Loadable';
 import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
@@ -36,9 +37,9 @@ import {
   checkAPI,
   loadAgent,
   loadAgentSuccess,
-  toggleConversationBar,
   loadSettings,
-  updateSetting
+  toggleConversationBar,
+  updateSetting,
 } from './actions';
 import saga from './saga';
 import {
@@ -47,7 +48,7 @@ import {
   makeSelectLocation,
   makeSelectMissingAPI,
   makeSelectNotifications,
-  makeSelectSettings
+  makeSelectSettings,
 } from './selectors';
 
 class App extends React.Component {
@@ -62,7 +63,7 @@ class App extends React.Component {
     const regex = /\/agent\/([0-9]+)(\/.+)?/;
     const matches = this.props.location.pathname.match(regex);
     let agentId = null;
-    if (matches){
+    if (matches) {
       agentId = matches[1];
     }
     return agentId;
@@ -72,11 +73,11 @@ class App extends React.Component {
     this.props.onLoadSettings();
     this.props.onCheckAPI();
     const agentId = this.getAgentIdFromPath();
-    if (agentId && !this.props.agent.id){
+    if (agentId && !this.props.agent.id) {
       this.props.onLoadAgent(agentId);
     }
     if (!this.state.socketClientConnected) {
-      const client = new Nes.Client(process.env.WS_URL || 'ws://localhost:7500');
+      const client = new Nes.Client(getWS());
       client.connect((err) => {
 
         if (err) {
@@ -109,7 +110,7 @@ class App extends React.Component {
       // If is different than the current agent
       if (this.props.agent.id !== this.state.agent) {
         // If the client was already initialized
-        if (this.state.client){
+        if (this.state.client) {
           // If the socket was already subscribed to an agent
           if (this.state.agent) {
             // Unscribe from the agent
@@ -144,7 +145,8 @@ class App extends React.Component {
           onChangeLanguage={this.props.onChangeLanguage}
           onToggleConversationBar={onToggleConversationBar}
           conversationBarOpen={conversationBarOpen}
-          notifications={notifications} />
+          notifications={notifications}
+        />
         <AppContent conversationBarOpen={conversationBarOpen}>
           <Switch>
             <Route exact path='/' component={AgentsPage} />
@@ -175,7 +177,7 @@ App.propTypes = {
   onRefreshAgent: PropTypes.func,
   onChangeLanguage: PropTypes.func,
   notifications: PropTypes.array,
-  settings: PropTypes.object
+  settings: PropTypes.object,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -206,7 +208,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onChangeLanguage: (language) => {
       dispatch(updateSetting('uiLanguage', language));
-    }
+    },
   };
 }
 

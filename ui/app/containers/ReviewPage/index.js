@@ -4,9 +4,12 @@
  *
  */
 
-import Nes from 'nes';
-import { Grid, CircularProgress } from '@material-ui/core';
+import {
+  CircularProgress,
+  Grid,
+} from '@material-ui/core';
 import _ from 'lodash';
+import Nes from 'nes';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
 import React from 'react';
@@ -21,6 +24,7 @@ import { createStructuredSelector } from 'reselect';
 import MainTab from '../../components/MainTab';
 import { ACTION_INTENT_SPLIT_SYMBOL } from '../../utils/constants';
 import injectSaga from '../../utils/injectSaga';
+import { getWS } from '../../utils/locationResolver';
 import * as Actions from '../App/actions';
 import {
   makeSelectActions,
@@ -54,7 +58,7 @@ export class ReviewPage extends React.Component {
   state = {
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
     currentPage: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? parseInt(qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page) : 1,
-    pageSize: this.props.agent.id ? this.props.agent.settings.reviewPageSize :  5,
+    pageSize: this.props.agent.id ? this.props.agent.settings.reviewPageSize : 5,
     numberOfPages: null,
     totalDocuments: null,
     documents: [],
@@ -64,7 +68,7 @@ export class ReviewPage extends React.Component {
     socketClientConnected: false,
   };
 
-  async initForm(){
+  async initForm() {
     const {
       onLoadKeywords,
       onLoadActions,
@@ -74,7 +78,7 @@ export class ReviewPage extends React.Component {
     } = this.props.actions;
 
     this.setState({
-      pageSize: this.props.agent.settings.reviewPageSize
+      pageSize: this.props.agent.settings.reviewPageSize,
     });
     this.setNumberOfPages(this.props.agent.settings.reviewPageSize);
     onLoadKeywords();
@@ -82,9 +86,8 @@ export class ReviewPage extends React.Component {
     onLoadCategories();
     onLoadAgentDocuments(this.state.currentPage, this.state.pageSize, this.state.sortField, this.state.sortDirection);
 
-
     if (!this.state.socketClientConnected) {
-      const client = new Nes.Client(process.env.WS_URL || 'ws://localhost:7500');
+      const client = new Nes.Client(getWS());
       client.connect((err) => {
 
         if (err) {
@@ -96,7 +99,7 @@ export class ReviewPage extends React.Component {
         });
 
         const handler = (documents) => {
-    
+
           if (documents) {
             const payload = { documents: documents.data, total: documents.totalCount };
             onRefreshDocuments(payload);
@@ -118,7 +121,7 @@ export class ReviewPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.agent.id && this.props.agent.id){
+    if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
     const { documents } = this.props;
@@ -129,7 +132,7 @@ export class ReviewPage extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.state.client){
+    if (this.state.client) {
       if (this.props.agent.id) {
         this.state.client.unsubscribe(`/agent/${this.state.agent}/doc`);
       }
@@ -258,61 +261,61 @@ export class ReviewPage extends React.Component {
     } = this.props;
     return (
       this.props.agent.id ?
-      <Grid container>
-        <MainTab
-          disableSave
-          agentName={agent.agentName}
-          onTrain={onTrain}
-          agentStatus={agent.status}
-          lastTraining={agent.lastTraining}
-          enableTabs
-          selectedTab="review"
-          agentForm={Link}
-          agentURL={`/agent/${agent.id}`}
-          reviewForm={
-            <Form
-              agentId={agent.id}
-              documents={documents}
-              agentKeywords={agentKeywords}
-              agentActions={agentActions}
-              agentCategories={agentCategories}
-              agentFilteredCategories={agentFilteredCategories}
-              onCopySaying={this.copySayingFromDocument}
-              onDeleteSaying={() => onDeleteSaying(null, this.state.pageSize)}
-              onTagKeyword={() => onTagKeyword(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
-              onUntagKeyword={() => onUntagKeyword(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
-              onAddAction={() => onAddAction(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
-              onDeleteAction={() => onDeleteAction(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
-              onAddNewSayingAction={onAddNewSayingAction}
-              onDeleteNewSayingAction={onDeleteNewSayingAction}
-              onSearchSaying={this.onSearchSaying}
-              onSearchCategory={this.onSearchCategory}
-              onSendSayingToAction={onSendSayingToAction}
-              currentPage={this.state.currentPage}
-              pageSize={this.state.pageSize}
-              numberOfPages={this.state.numberOfPages}
-              changePage={this.changePage}
-              movePageBack={this.movePageBack}
-              movePageForward={this.movePageForward}
-              changePageSize={this.changePageSize}
-              onSelectCategory={onSelectCategory}
-              category={category}
-              newSayingActions={newSayingActions}
-              onClearSayingToAction={onClearSayingToAction}
-              onToggleConversationBar={onToggleConversationBar}
-              onSendMessage={onSendMessage}
-              onRequestSort={this.handleOnRequestSort}
-              sortField={this.state.sortField}
-              sortDirection={this.state.sortDirection}
-            />
-          }
-          sayingsURL={`/agent/${agent.id}/sayings`}
-          sayingsForm={Link}
-          keywordsForm={Link}
-          keywordsURL={`/agent/${agent.id}/keywords`}
-        />
-      </Grid> :
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+        <Grid container>
+          <MainTab
+            disableSave
+            agentName={agent.agentName}
+            onTrain={onTrain}
+            agentStatus={agent.status}
+            lastTraining={agent.lastTraining}
+            enableTabs
+            selectedTab="review"
+            agentForm={Link}
+            agentURL={`/agent/${agent.id}`}
+            reviewForm={
+              <Form
+                agentId={agent.id}
+                documents={documents}
+                agentKeywords={agentKeywords}
+                agentActions={agentActions}
+                agentCategories={agentCategories}
+                agentFilteredCategories={agentFilteredCategories}
+                onCopySaying={this.copySayingFromDocument}
+                onDeleteSaying={() => onDeleteSaying(null, this.state.pageSize)}
+                onTagKeyword={() => onTagKeyword(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+                onUntagKeyword={() => onUntagKeyword(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+                onAddAction={() => onAddAction(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+                onDeleteAction={() => onDeleteAction(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+                onAddNewSayingAction={onAddNewSayingAction}
+                onDeleteNewSayingAction={onDeleteNewSayingAction}
+                onSearchSaying={this.onSearchSaying}
+                onSearchCategory={this.onSearchCategory}
+                onSendSayingToAction={onSendSayingToAction}
+                currentPage={this.state.currentPage}
+                pageSize={this.state.pageSize}
+                numberOfPages={this.state.numberOfPages}
+                changePage={this.changePage}
+                movePageBack={this.movePageBack}
+                movePageForward={this.movePageForward}
+                changePageSize={this.changePageSize}
+                onSelectCategory={onSelectCategory}
+                category={category}
+                newSayingActions={newSayingActions}
+                onClearSayingToAction={onClearSayingToAction}
+                onToggleConversationBar={onToggleConversationBar}
+                onSendMessage={onSendMessage}
+                onRequestSort={this.handleOnRequestSort}
+                sortField={this.state.sortField}
+                sortDirection={this.state.sortDirection}
+              />
+            }
+            sayingsURL={`/agent/${agent.id}/sayings`}
+            sayingsForm={Link}
+            keywordsForm={Link}
+            keywordsURL={`/agent/${agent.id}/keywords`}
+          />
+        </Grid> :
+        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
     );
   }
 }
@@ -389,7 +392,7 @@ function mapDispatchToProps(dispatch) {
       onToggleConversationBar: Actions.toggleConversationBar,
       onSendMessage: Actions.sendMessage,
       onChangeReviewPageSize: Actions.changeReviewPageSize,
-      onRefreshDocuments: Actions.loadAgentDocumentsSuccess
+      onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
     }, dispatch),
     onGoToUrl: (url) => {
       dispatch(push(url));

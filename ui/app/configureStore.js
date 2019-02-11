@@ -2,18 +2,23 @@
  * Create the store with dynamic reducers
  */
 
-import { createStore, applyMiddleware, compose } from 'redux';
-import Immutable from 'seamless-immutable';
 import { routerMiddleware } from 'react-router-redux';
+import {
+  applyMiddleware,
+  compose,
+  createStore,
+} from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import Immutable from 'seamless-immutable';
 import createReducer from './reducers';
+import { getAPI } from './utils/locationResolver';
 import swaggerMiddleware from './utils/swaggerMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState = {}, history) {
 
-  const apiURL = process.env.API_URL || 'http://localhost:7500'
+  const apiURL = getAPI();
 
   // Create the store with three middlewares
   // 1. swaggerMiddleware: adds generated API object from swagger.json
@@ -34,10 +39,10 @@ export default function configureStore(initialState = {}, history) {
     typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-          // TODO Try to remove when `react-router-redux` is out of beta, LOCATION_CHANGE should not be fired more than once after hot reloading
-          // Prevent recomputing reducers for `replaceReducer`
-          shouldHotReload: false,
-        })
+        // TODO Try to remove when `react-router-redux` is out of beta, LOCATION_CHANGE should not be fired more than once after hot reloading
+        // Prevent recomputing reducers for `replaceReducer`
+        shouldHotReload: false,
+      })
       : compose;
   /* eslint-enable */
 
