@@ -1,16 +1,15 @@
 import _ from 'lodash';
 import { CONFIG_KEYWORD_TYPE_REGEX, MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
 
-module.exports = async function ({ agent, action, context, currentFrame, rasaResult, text, modifier }) {
+module.exports = async function ({ conversationStateObject }) {
 
     const { agentService, keywordService, globalService } = await this.server.services();
     //TODO: need to refactor the CSO creation since is no longer passed to other functions
-    const conversationStateObject = { agent, action, context, currentFrame, rasaResult, text };
+    //const conversationStateObject = { agent, action, context, currentFrame, rasaResult, text };
+    const { agent, action, context, currentFrame, rasaResult, text, modifier } = conversationStateObject;
     //TODO: remove context update, and move it somewhere else
     const lastFrame = context.frames[context.frames.length - 1];
     if (action.slots && action.slots.length > 0) {
-        const actionSlotNames = _.map(action.slots, 'slotName');
-        const actionSlotKeywordsNames = _.map(action.slots, 'keyword');
         const requiredSlots = _.filter(action.slots, (slot) => {
 
             lastFrame.slots[slot.slotName] = currentFrame.slots[slot.slotName] ? currentFrame.slots[slot.slotName] : '';
@@ -45,19 +44,22 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
 
                                 lastFrame.slots[slotToModify].value.push(keywordValue.value);
                                 lastFrame.slots[slotToModify].original.push(keywordValue.original);
+                                lastFrame.slots[slotToModify].remainingLife = actionSlot.remainingLife;
                             });
                         }
                         else {
                             lastFrame.slots[slotToModify] = {
                                 keyword: modifier.keyword,
                                 value: lastFrame.slots[slotToModify].value ? [lastFrame.slots[slotToModify].value] : [],
-                                original: lastFrame.slots[slotToModify].original ? [lastFrame.slots[slotToModify].original] : []
+                                original: lastFrame.slots[slotToModify].original ? [lastFrame.slots[slotToModify].original] : [],
+                                remainingLife: actionSlot.remainingLife
                             };
                             //Push the new recognized values to the list
                             recognizedModifierKeywordsValues.forEach((keywordValue) => {
 
                                 lastFrame.slots[slotToModify].value.push(keywordValue.value);
                                 lastFrame.slots[slotToModify].original.push(keywordValue.original);
+                                lastFrame.slots[slotToModify].remainingLife = actionSlot.remainingLife;
                             });
                         }
                         break;
@@ -76,6 +78,7 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                             if (lastFrame.slots[slotToModify].value.length === 0){
                                 lastFrame.slots[slotToModify] = ''
                             }
+                            lastFrame.slots[slotToModify].remainingLife = actionSlot.remainingLife;
                         }
                         else {
                             if (keywordsRasaValues.indexOf(lastFrame.slots[slotToModify].value) || keywordsOriginalValues.indexOf(lastFrame.slots[slotToModify].original)){
@@ -88,7 +91,8 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                             lastFrame.slots[slotToModify] = {
                                 keyword: modifier.keyword,
                                 value: [],
-                                original: []
+                                original: [],
+                                remainingLife: actionSlot.remainingLife
                             };
                             recognizedModifierKeywordsValues.forEach((keywordValue) => {
 
@@ -101,7 +105,8 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                                 lastFrame.slots[slotToModify] = {
                                     keyword: modifier.keyword,
                                     value: recognizedModifierKeywordsValues[0].value,
-                                    original: recognizedModifierKeywordsValues[0].original
+                                    original: recognizedModifierKeywordsValues[0].original,
+                                    remainingLife: actionSlot.remainingLife
                                 };
                             }
                         }
@@ -176,6 +181,10 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                         break;
                 }
             }
+            if (lastFrame.slots[slotToModify].remainingLife > -1){
+                conversationStateObject.context.savedSlots[slotToModify] = lastFrame.slots[slotToModify];
+            }
+            agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject });
             const missingKeywords = _.filter(requiredSlots, (slot) => {
     
                 if (currentFrame.slots[slot.slotName] && Array.isArray(currentFrame.slots[slot.slotName])){
@@ -192,9 +201,11 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
         else {
             const recognizedKeywordsNames = _.map(recognizedKeywords, (recognizedKeyword) => {
                 //If the name of the recognized keyword match with an keyword name of an slot
-                if (actionSlotKeywordsNames.indexOf(recognizedKeyword.keyword) > -1) {
+                const slotToFill = _.filter(action.slots, (slot) => { return slot.keyword === recognizedKeyword.keyword })[0];
+                if (slotToFill) {
+                    //Get the slot object
                     //Get the slot name of the keyword that was recognized using the index of the array of keywords names
-                    const slotName = actionSlotNames[actionSlotKeywordsNames.indexOf(recognizedKeyword.keyword)];
+                    const slotName = slotToFill.slotName;
                     //If the slot is a list of elemnts
                     if (isListActionSlotName.indexOf(slotName) > -1) {
                         //If there isn't a value for this slot name in the context
@@ -205,7 +216,8 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                             lastFrame.slots[slotName] = {
                                 keyword: recognizedKeyword.keyword,
                                 value: keywordValue.value,
-                                original: keywordValue.original
+                                original: keywordValue.original,
+                                remainingLife: slotToFill.remainingLife
                             };
                         }
                         //If an slot in the context already exists for the recognized slot
@@ -220,7 +232,8 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                                     lastFrame.slots[slotName] = {
                                         keyword: recognizedKeyword.keyword,
                                         value: [],
-                                        original: []
+                                        original: [],
+                                        remainingLife: slotToFill.remainingLife
                                     };
                                 }
                                 //Get the original and parsed value of the keyword
@@ -237,7 +250,8 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                                 lastFrame.slots[slotName] = {
                                     keyword: recognizedKeyword.keyword,
                                     value: [lastFrame.slots[slotName].value],
-                                    original: [lastFrame.slots[slotName].original]
+                                    original: [lastFrame.slots[slotName].original],
+                                    remainingLife: slotToFill.remainingLife
                                 };
                                 //Push the new recognized values to the list
                                 lastFrame.slots[slotName].value.push(keywordValue.value);
@@ -261,30 +275,23 @@ module.exports = async function ({ agent, action, context, currentFrame, rasaRes
                             });
     
                             lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text });
+                            lastFrame.slots[slotName].remainingLife = slotToFill.remainingLife;
                         }
                         else {
                             lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                            lastFrame.slots[slotName].remainingLife = slotToFill.remainingLife;
     
                         }
     
                     }
-                }
-                //If the slot wasn't part of the scenario slots array. This means that the slot is a system keyword
-                //This block is commented to remove sys entities to be by default on slots
-                /*else {
-                    //Check if it is a spacy or duckling system keyword
-                    if (recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_SPACY) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_DUCKLING) !== -1 || recognizedKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS_REGEX) !== -1) {
-                        //If there is a dictionary of slots in the current context, use this dictionary, if not, create an empty dictionary of slots
-                        lastFrame.slots = lastFrame.slots ? lastFrame.slots : {};
-                        //If in the current dictionary of slots exists a dictionary for system keywords, use it, else create an empty dir for sys keywords
-                        lastFrame.slots.sys = lastFrame.slots.sys ? lastFrame.slots.sys : {};
-                        //Add the recognized system keywords to the dir of system keywords in the slots dir of the current context
-                        lastFrame.slots.sys[recognizedKeyword.keyword.replace(KEYWORD_PREFIX_SYS, '')] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                    if (lastFrame.slots[slotName].remainingLife > -1){
+                        conversationStateObject.context.savedSlots[slotName] = lastFrame.slots[slotName];
                     }
-                }*/
+                }
                 //Finally return the name of the recognized keyword for further checks
                 return recognizedKeyword.keyword;
             });
+            agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject });
             const missingKeywords = _.filter(requiredSlots, (slot) => {
     
                 return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentFrame.slots[slot.slotName];

@@ -107,6 +107,7 @@ class CodeModal extends React.Component { // eslint-disable-line react/prefer-st
     const { classes, intl } = this.props;
     const { value } = this.state;
     return (
+      this.props.conversationStateObject ?
       <Grid>
         <Modal open={this.props.open} onClose={this.props.handleClose}>
           <Grid className={classes.modalContent} container>
@@ -131,7 +132,8 @@ class CodeModal extends React.Component { // eslint-disable-line react/prefer-st
             {value === 3 && (this.props.conversationStateObject.webhookResponses ? <TabContainer classes={classes} doc={this.props.conversationStateObject.webhookResponses}></TabContainer> : null)}
           </Grid>
         </Modal>
-      </Grid>
+      </Grid> :
+      null
     );
   }
 }

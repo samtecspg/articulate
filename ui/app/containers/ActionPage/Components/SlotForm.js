@@ -138,7 +138,26 @@ class SlotForm extends React.Component {
             </Grid>
           </Grid>
           <Grid container spacing={24} item xs={12}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
+              <TextField
+                id='remainingLife'
+                label={intl.formatMessage(messages.remainingLifeTextField)}
+                value={slot.remainingLife}
+                placeholder={intl.formatMessage(messages.remainingLifeTextFieldPlaceholder)}
+                onChange={(evt) => {
+                  this.props.onChangeSlotData('remainingLife', evt.target.value);
+                }}
+                margin='normal'
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                helperText={intl.formatMessage(messages.slotNameTextFieldHelp)}
+              />
+            </Grid>
+          </Grid>
+          <Grid style={{marginTop: 0}} container spacing={24} item xs={12}>
+            <Grid item xs={6}>
               <FormControlLabel
                 control={
                   <Checkbox

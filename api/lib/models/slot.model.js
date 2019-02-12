@@ -11,7 +11,8 @@ class SlotModel {
             keywordId: KeywordSchema.id,
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
-            textPrompts: Joi.array().items(Joi.string().trim())
+            textPrompts: Joi.array().items(Joi.string().trim()),
+            remainingLife: Joi.number().allow(null),
         };
     };
 }

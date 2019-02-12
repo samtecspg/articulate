@@ -65,6 +65,7 @@ class ContextValidate {
             payload: (() => {
 
                 return {
+                    savedSlots: ContextModel.savedSlots,
                     actionQueue: ContextModel.actionQueue,
                     responseQueue: ContextModel.responseQueue,
                     creationDate: ContextModel.creationDate,

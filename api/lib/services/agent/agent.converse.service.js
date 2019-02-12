@@ -20,6 +20,31 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     const { agentService, contextService, globalService, documentService } = await this.server.services();
     const webhookResponses = [];
 
+    //MARK: reduce the remaining life of the saved slots
+    const updateLifespanOfSlots = (conversationStateObject) => {
+
+        Object.keys(conversationStateObject.context.savedSlots).forEach(slot => {
+            const savedSlot = conversationStateObject.context.savedSlots[slot];
+            if (savedSlot.remainingLife > -1){
+                if (savedSlot.remainingLife > 0){
+                    //1 is the shortest value of life, after that it is set to null as 0 is infinity
+                    if (savedSlot.remainingLife === 1){
+                        savedSlot.remainingLife = null;
+                    }
+                    else {
+                        savedSlot.remainingLife--;
+                    }
+                }
+            }
+        });
+        //Removes all the slots that doesn't have a remaining life
+        Object.keys(conversationStateObject.context.savedSlots).forEach((slot) => {
+            if (!conversationStateObject.context.savedSlots[slot].remainingLife){
+                delete conversationStateObject.context.savedSlots[slot];
+            };
+        });
+    };
+
     //MARK: get all the keywords for all the categories
     const getKeywordsFromRasaResults = ({ rasaResults }) => {
 
@@ -152,6 +177,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
     const response = async ({ conversationStateObject }) => {
 
+        updateLifespanOfSlots(conversationStateObject);
         //MARK: CSO.parse ===true
         if (conversationStateObject.parse) {
             //MARK: if the model recognized an action
@@ -178,12 +204,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject.currentFrame = frame;
                     }
                     const actionResponse = await agentService.converseGenerateResponse({
-                        agent: conversationStateObject.agent,
-                        action: conversationStateObject.action,
-                        context: conversationStateObject.context,
-                        currentFrame: conversationStateObject.currentFrame,
-                        rasaResult: conversationStateObject.rasaResult,
-                        text: conversationStateObject.text
+                        conversationStateObject
                     });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
                     await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
@@ -199,13 +220,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 if (currentFrameSlotsKeywords.indexOf(conversationStateObject.modifier.keyword) !== -1) {
                     //MARK: generate response using the modifier
                     const actionResponse = await agentService.converseGenerateResponse({
-                        agent: conversationStateObject.agent,
-                        action: conversationStateObject.action,
-                        context: conversationStateObject.context,
-                        currentFrame: conversationStateObject.currentFrame,
-                        rasaResult: conversationStateObject.rasaResult,
-                        text: conversationStateObject.text,
-                        modifier: conversationStateObject.modifier
+                        conversationStateObject
                     });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
                     await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
@@ -224,12 +239,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         //MARK: update action object from the action of the context
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
                         const actionResponse = agentService.converseGenerateResponse({
-                            agent: conversationStateObject.agent,
-                            action: conversationStateObject.action,
-                            context: conversationStateObject.context,
-                            currentFrame: conversationStateObject.currentFrame,
-                            rasaResult: conversationStateObject.rasaResult,
-                            text: conversationStateObject.text
+                            conversationStateObject
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
                         await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
@@ -243,12 +253,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject.currentFrame = lastValidContext;
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.name, agentActions: conversationStateObject.agent.actions });
                         const actionResponse = agentService.converseGenerateResponse({
-                            agent: conversationStateObject.agent,
-                            action: conversationStateObject.action,
-                            context: conversationStateObject.context,
-                            currentFrame: conversationStateObject.currentFrame,
-                            rasaResult: conversationStateObject.rasaResult,
-                            text: conversationStateObject.text
+                            conversationStateObject
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
                         await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
@@ -366,12 +371,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         return responses;
     };
 
-    const getResponseOfChainedAction = async ({ slots, action, conversationStateObject }) => {
+    const getResponseOfChainedAction = async ({ action, conversationStateObject }) => {
 
         const response = {
             actionWasFulfilled: true
         };
-        conversationStateObject.slots = slots;
         //If the chained action have required slots, check if those can be pulled from the current context
         const requiredSlotNames = _.compact(_.map(action.slots, (slot) => {
 
@@ -445,7 +449,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         return response;
     };
 
-    const chainResponseActions = async ({ slots, conversationStateObject, responseActions }) => {
+    const chainResponseActions = async ({ conversationStateObject, responseActions }) => {
 
         const agentActions = conversationStateObject[CSO_AGENT].actions;
         let currentQueueIndex = 0;
@@ -471,7 +475,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         action: agentAction.actionName,
                         slots: {}
                     });
-                    const response = await getResponseOfChainedAction({ slots, action: agentAction, conversationStateObject });
+                    const response = await getResponseOfChainedAction({ action: agentAction, conversationStateObject });
                     if (response.webhookResponse) {
                         webhookResponses.push(response.webhookResponse);
                     }
@@ -626,7 +630,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 data.push(finalResponse);
             }
             if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0) {
-                await chainResponseActions({ slots: agentToolResponse.slots, conversationStateObject, responseActions: cleanAgentToolResponse.actions });
+                await chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions });
             }
             return data;
         }, Promise.resolve([]));
@@ -639,6 +643,12 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const textResponse = textResponses.length === 1 ? textResponses : textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
         await documentService.update({ id: conversationStateObject.docId, data: { webhookResponses } });
+        await contextService.update({
+            sessionId: conversationStateObject.context.sessionId,
+            data: {
+                savedSlots: conversationStateObject.context.savedSlots
+            }
+        });
 
         const converseResult = {
             textResponse,

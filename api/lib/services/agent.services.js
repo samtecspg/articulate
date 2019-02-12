@@ -1,4 +1,5 @@
 import Schmervice from 'schmervice';
+import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent-converse-fulfill-empty-slots-with-saved-values.service';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
 import ConverseGenerateResponseFallback from './agent/agent.converse-generate-response-fallback.service';
@@ -260,6 +261,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async converseCallWebhook() {
 
         return await ConverseCallWebhook.apply(this, arguments);
+    }
+
+    async converseFulfillEmptySlotsWithSavedValues() {
+
+        return await ConverseFulfillEmptySlotsWithSavedValues.apply(this, arguments);
     }
 
     async isModelUnique() {

@@ -47,6 +47,7 @@ export function* postConverse(payload) {
         author: agent.agentName,
         docId: response.obj.docId,
         message: response.obj.textResponse,
+        conversationStateObject: response.obj.conversationStateObject
       }));
       yield put(storeSourceData({ ...response.obj.conversationStateObject }));
     } catch (err) {
@@ -73,7 +74,8 @@ export function* deleteSession(payload) {
     yield call(api.context.deleteContextSessionidFrame, { sessionId });
     yield call(api.context.patchContextSessionid, { sessionId, body: {
       actionQueue: [],
-      responseQueue: []
+      responseQueue: [],
+      savedSlots: {},
     }});
     yield put(resetSessionSuccess());
   } catch ({ response }) {

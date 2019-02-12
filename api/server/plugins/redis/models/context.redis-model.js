@@ -8,6 +8,9 @@ const schema = {
         index: true,
         defaultSort: true
     },
+    savedSlots: {
+        type: 'json'
+    },
     actionQueue: {
         type: 'json'
     },

@@ -9,6 +9,8 @@ class ScenarioModel {
                 .string()
                 .description('Session')
                 .trim(),
+            savedSlots: Joi
+                .object(),
             actionQueue: Joi
                 .array(),
             responseQueue: Joi

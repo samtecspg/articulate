@@ -143,6 +143,18 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.SlotForm.slotNameTextFieldPlaceholder',
     defaultMessage: 'Set a name to reference the slot in your responses',
   },
+  slotNameTextFieldHelp: {
+    id: 'app.containers.ActionPage.component.SlotForm.slotNameTextFieldHelp',
+    defaultMessage: '0 for Infinity. Empty to avoid being remembered.',
+  },
+  remainingLifeTextField: {
+    id: 'app.containers.ActionPage.component.SlotForm.remainingLifeTextField',
+    defaultMessage: 'Remaining Life:',
+  },
+  remainingLifeTextFieldPlaceholder: {
+    id: 'app.containers.ActionPage.component.SlotForm.remainingLifeTextFieldPlaceholder',
+    defaultMessage: 'Set the number of messages that the agent will remember the assigned value',
+  },
   slotIsRequired: {
     id: 'app.containers.ActionPage.component.SlotForm.slotIsRequired',
     defaultMessage: 'Is Required?',

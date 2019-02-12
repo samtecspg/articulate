@@ -292,7 +292,7 @@ export class ConversationBar extends React.PureComponent {
                     <Typography className={classes.agentMessage}>
                       {message.message}
                       {message.docId ?
-                        <span onClick={() => { this.setState({openCodeModal: true})}} className={classes.messageSource}>
+                        <span onClick={() => { this.setState({openCodeModal: true, conversationStateObject: message.conversationStateObject })}} className={classes.messageSource}>
                           {'</> '}<span className={classes.messageSourceLink}>{intl.formatMessage(messages.seeSource)}</span>
                         </span>
                         : null}
@@ -353,7 +353,7 @@ export class ConversationBar extends React.PureComponent {
             />
           </Grid>
         </Grid>
-        <CodeModal handleClose={() => { this.setState({ openCodeModal: false }) }} conversationStateObject={this.props.conversationStateObject} open={this.state.openCodeModal} />
+        <CodeModal handleClose={() => { this.setState({ openCodeModal: false }) }} conversationStateObject={this.state.conversationStateObject} open={this.state.openCodeModal} />
       </Grid>
     );
   }

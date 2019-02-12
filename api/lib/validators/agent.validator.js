@@ -133,7 +133,8 @@ class AgentValidate {
                         keyword: SlotSchema.keyword,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
-                        textPrompts: SlotSchema.textPrompts
+                        textPrompts: SlotSchema.textPrompts,
+                        remainingLife: SlotSchema.remainingLife
                     })
                 };
             })()
@@ -164,7 +165,8 @@ class AgentValidate {
                         keyword: SlotSchema.keyword,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
-                        textPrompts: SlotSchema.textPrompts
+                        textPrompts: SlotSchema.textPrompts,
+                        remainingLife: SlotSchema.remainingLife
                     }),
                     creationDate: ActionSchema.creationDate,
                     modificationDate: ActionSchema.modificationDate
@@ -883,7 +885,8 @@ class AgentValidate {
                             keyword: SlotSchema.keyword,
                             isList: SlotSchema.isList.required(),
                             isRequired: SlotSchema.isRequired.required(),
-                            textPrompts: SlotSchema.textPrompts
+                            textPrompts: SlotSchema.textPrompts,
+                            remainingLife: SlotSchema.remainingLife
                         }),
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
