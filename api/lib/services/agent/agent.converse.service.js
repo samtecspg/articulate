@@ -356,9 +356,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 return true;
             }
 
-            if (index === 0) {
-                responses.push(context.responseQueue[index].textResponse);
-            }
+            responses.push(context.responseQueue[index].textResponse);
             return false;
 
         });
@@ -480,6 +478,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         webhookResponses.push(response.webhookResponse);
                     }
                     conversationStateObject.context.responseQueue.push({ ...response });
+                    await chainResponseActions({ conversationStateObject, responseActions: response.actions } )
                 }
             }
         }
