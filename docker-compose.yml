@@ -3,32 +3,20 @@ version: '3.0'
 services:
   api:
     image: samtecspg/articulate-api:repo-head
-    ports: ['0.0.0.0:7500:7500']
-    networks: ['alpha-nlu-network']
-    environment:
-      - SWAGGER_HOST
-      - SWAGGER_BASE_PATH
-      - SWAGGER_SCHEMES
+    ports: ['7500:7500']
   ui:
     image: samtecspg/articulate-ui:repo-head
-    ports: ['0.0.0.0:3000:3000']
-    networks: ['alpha-nlu-network']
-    environment:
-     - API_URL
-     - WS_URL
+    ports: ['3000:3000']
   rasa:
     image: samtecspg/articulate-rasa:repo-head
-    ports: ['0.0.0.0:5000:5000']
+    ports: ['5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
-    networks: ['alpha-nlu-network']
   duckling:
     image: samtecspg/duckling:0.1.6.0
-    ports: ['0.0.0.0:8000:8000']
-    networks: ['alpha-nlu-network']
+    ports: ['8000:8000']
   redis:
     image: redis:4.0.6-alpine
-    ports: ['0.0.0.0:6379:6379']
-    networks: ['alpha-nlu-network']
+    ports: ['6379:6379']
     command: redis-server --appendonly yes
     volumes:
       - ${REDIS_DATA:-./local-storage/redis-data}:/data
@@ -43,9 +31,7 @@ services:
         soft: -1
         hard: -1
     ports: ['9200:9200']
-    networks: ['alpha-nlu-network']
     volumes:
       - ${ES_CONFIG:-./local-storage/elasticsearch/config/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
       - ${ES_DATA:-./local-storage/elasticsearch/data}:/usr/share/elasticsearch/data
       - ${ES_DATA:-./local-storage/elasticsearch/docker-healthcheck.sh}:/usr/share/docker-healthcheck.sh
-networks: {alpha-nlu-network: {}}
