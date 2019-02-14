@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import systemKeywords from 'systemKeywords';
 
 import xIcon from '../../../images/x-icon.svg';
+import { Tooltip } from '@material-ui/core';
 
 const compareKeywords = (a, b) => {
   if (a.start < b.start)
@@ -61,15 +62,17 @@ const HighlightedSaying = withStyles(styles)((props) => {
     formattedElement = (
       <span key={`keywordTag_${props.keywordIndex}`}>
         <span key={`beforeKeywordTagText_${props.keywordIndex}`}>{beforeTaggedText}</span>
-        <span
-          key={`keywordTagText_${props.keywordIndex}`}
-          className={classes.highlightedText}
-          style={{
-            backgroundColor: highlightColor,
-          }}>
-          {taggedText}
-          <img onClick={() => {props.onUntagKeyword(keyword.start, keyword.end)}} className={classes.deleteHighlight} src={xIcon} />
-        </span>
+        <Tooltip title={filteredKeyword.keywordName} placement='top'>
+          <span
+            key={`keywordTagText_${props.keywordIndex}`}
+            className={classes.highlightedText}
+            style={{
+              backgroundColor: highlightColor,
+            }}>
+            {taggedText}
+            <img onClick={() => {props.onUntagKeyword(keyword.start, keyword.end)}} className={classes.deleteHighlight} src={xIcon} />
+          </span>
+        </Tooltip>
         <HighlightedSaying
           agentKeywords={props.agentKeywords}
           keywords={keywords}

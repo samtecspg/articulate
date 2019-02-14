@@ -1093,11 +1093,13 @@ function appReducer(state = initialState, action) {
         .updateIn(['keyword', 'modifiers'], modifiers =>
           modifiers.map((modifier, index) => {
             if (index === action.payload.modifierIndex) {
+              const oldModifierSayings = Immutable.asMutable(modifier.sayings, { deep: true });
+              oldModifierSayings.unshift({
+                userSays: action.payload.newSaying,
+                keywords: [],
+              });
               return modifier
-                .update('sayings', sayings => sayings.concat({
-                  userSays: action.payload.newSaying,
-                  keywords: [],
-                }));
+                .set('sayings', oldModifierSayings);
             }
 
             return modifier;

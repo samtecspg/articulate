@@ -28,6 +28,7 @@
     "debug": "^4.0.1",
     "dotenv": "^6.0.0",
     "elasticsearch": "^15.2.0",
+    "fast-string-search": "^1.4.1",
     "glue": "5.x.x",
     "guid": "^0.0.12",
     "handlebars": "^4.0.12",
