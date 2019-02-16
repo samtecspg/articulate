@@ -137,6 +137,7 @@ import {
   SORT_SLOTS,
   ADD_NEW_MODIFIER,
   ADD_MODIFIER_SAYING,
+  ADD_MODIFIER_SAYING_SUCCESS,
   CHANGE_MODIFIER_DATA,
   CHANGE_MODIFIER_NAME,
   DELETE_MODIFIER,
@@ -1089,14 +1090,16 @@ function appReducer(state = initialState, action) {
         )
         .set('keywordTouched', true);
     case ADD_MODIFIER_SAYING:
+      return state.set('loading', true);
+    case ADD_MODIFIER_SAYING_SUCCESS:
       return state
         .updateIn(['keyword', 'modifiers'], modifiers =>
           modifiers.map((modifier, index) => {
-            if (index === action.payload.modifierIndex) {
+            if (index === action.modifierIndex) {
               const oldModifierSayings = Immutable.asMutable(modifier.sayings, { deep: true });
               oldModifierSayings.unshift({
-                userSays: action.payload.newSaying,
-                keywords: [],
+                userSays: action.newSaying,
+                keywords: action.keywords,
               });
               return modifier
                 .set('sayings', oldModifierSayings);
@@ -1106,7 +1109,8 @@ function appReducer(state = initialState, action) {
 
           }),
         )
-        .set('keywordTouched', true);
+        .set('keywordTouched', true)
+        .set('loading', false);
     case DELETE_MODIFIER_SAYING:
       return state
         .updateIn(['keyword', 'modifiers'], modifiers =>

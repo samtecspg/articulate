@@ -22,6 +22,7 @@ import {
   ADD_HEADER_AGENT_WEBHOOK,
   ADD_KEYWORD_EXAMPLE,
   ADD_MODIFIER_SAYING,
+  ADD_MODIFIER_SAYING_SUCCESS,
   ADD_NEW_MODIFIER,
   ADD_NEW_SLOT,
   ADD_SAYING,
@@ -1359,10 +1360,21 @@ export function changeModifierData(payload) {
   };
 }
 
-export function addModifierSaying(payload) {
+export function addModifierSaying(modifierIndex, newSaying) {
   return {
     type: ADD_MODIFIER_SAYING,
-    payload,
+    modifierIndex,
+    newSaying,
+    apiCall: true
+  };
+}
+
+export function addModifierSayingSuccess(modifierIndex, newSaying, keywords) {
+  return {
+    type: ADD_MODIFIER_SAYING_SUCCESS,
+    modifierIndex,
+    newSaying,
+    keywords,
   };
 }
 

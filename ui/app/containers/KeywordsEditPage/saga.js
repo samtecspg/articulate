@@ -17,6 +17,7 @@ import {
   updateKeywordSuccess,
   updateKeywordError,
   deleteKeywordError,
+  addModifierSayingSuccess,
 } from '../App/actions';
 
 import {
@@ -26,6 +27,7 @@ import {
   DELETE_KEYWORD,
   CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
   LOAD_KEYWORDS,
+  ADD_MODIFIER_SAYING,
 } from '../App/constants';
 
 import {
@@ -107,6 +109,17 @@ export function* putModifierSayingsPageSize(payload) {
   }
 }
 
+export function* getIdentifyKeywords(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, modifierIndex, newSaying } = payload;
+  try {
+    const response = yield call(api.agent.getAgentAgentidIdentifykeywords, { agentId: agent.id, text: newSaying });
+    yield put(addModifierSayingSuccess(modifierIndex, newSaying, response.obj));
+  } catch (err) {
+    yield put(addModifierSayingSuccess(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORD, getKeyword);
   yield takeLatest(CREATE_KEYWORD, postKeyword);
@@ -114,4 +127,5 @@ export default function* rootSaga() {
   yield takeLatest(DELETE_KEYWORD, deleteKeyword);
   yield takeLatest(CHANGE_MODIFIER_SAYINGS_PAGE_SIZE, putModifierSayingsPageSize);
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
+  yield takeLatest(ADD_MODIFIER_SAYING, getIdentifyKeywords);
 };

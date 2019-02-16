@@ -88,6 +88,7 @@ export class KeywordsEditPage extends React.Component {
     }
     else {
       this.props.onLoadKeyword(this.props.match.params.keywordId);
+      this.props.onLoadKeywords();
     }
     this.props.onLoadSettings();
   }
@@ -387,7 +388,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(changeModifierData({modifierIndex, field, value}))
     },
     onAddModifierSaying: (modifierIndex, newSaying) => {
-      dispatch(addModifierSaying({modifierIndex, newSaying}))
+      dispatch(addModifierSaying(modifierIndex, newSaying))
     },
     onDeleteModifierSaying: (modifierIndex, sayingIndex) => {
       dispatch(deleteModifierSaying({modifierIndex, sayingIndex}));

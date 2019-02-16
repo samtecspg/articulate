@@ -24,6 +24,7 @@ import ParseDucklingKeywords from './agent/agent.parse-duckling-keywords.service
 import ParseRasaKeywords from './agent/agent.parse-rasa-keywords.service';
 import ParseRegexKeywords from './agent/agent.parse-regex-keywords.service';
 import Parse from './agent/agent.parse.service';
+import IdentifyKeywords from './agent/agent.identify-keywords.service';
 import RemoveAction from './agent/agent.remove-action.service';
 import RemoveCategory from './agent/agent.remove-category.service';
 import RemoveKeyword from './agent/agent.remove-keyword.service';
@@ -221,6 +222,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async parseRasaKeywords() {
 
         return await ParseRasaKeywords.apply(this, arguments);
+    }
+
+    async identifyKeywords() {
+        
+        return await IdentifyKeywords.apply(this, arguments);
     }
 
     async getTrainedCategories() {

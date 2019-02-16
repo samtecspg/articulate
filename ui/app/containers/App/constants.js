@@ -196,6 +196,7 @@ export const ADD_NEW_MODIFIER = 'app/KeywordsEditPage/ADD_NEW_MODIFIER';
 export const CHANGE_MODIFIER_NAME = 'app/KeywordsEditPage/CHANGE_MODIFIER_NAME';
 export const CHANGE_MODIFIER_DATA = 'app/KeywordsEditPage/CHANGE_MODIFIER_DATA';
 export const ADD_MODIFIER_SAYING = 'app/KeywordsEditPage/ADD_MODIFIER_SAYING';
+export const ADD_MODIFIER_SAYING_SUCCESS = 'app/KeywordsEditPage/ADD_MODIFIER_SAYING_SUCCESS'
 export const DELETE_MODIFIER_SAYING = 'app/KeywordsEditPage/DELETE_MODIFIER_SAYING';
 export const SORT_MODIFIERS = 'app/KeywordsEditPage/SORT_MODIFIERS';
 export const DELETE_MODIFIER = 'app/KeywordsEditPage/DELETE_MODIFIER';

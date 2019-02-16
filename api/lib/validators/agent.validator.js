@@ -913,6 +913,21 @@ class AgentValidate {
             })()
         };
 
+        this.identifyKeywords = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    text: ParseSchema.text.required()
+                };
+            })()
+        };
+
         this.parsePost = {
             params: (() => {
 
