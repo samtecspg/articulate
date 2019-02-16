@@ -9,7 +9,8 @@ import {
     MODEL_KEYWORD,
     MODEL_WEBHOOK,
     PARAM_DOCUMENT_RASA_RESULTS,
-    RASA_INTENT_SPLIT_SYMBOL
+    RASA_INTENT_SPLIT_SYMBOL,
+    CSO_CATEGORIES
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -136,15 +137,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         })[0];
     };
 
-    //MARK: find category from agent.categories by name
-    const getCategoryByName = ({ agentCategories, categoryName }) => {
-
-        return _.filter(agentCategories, (agentCategory) => {
-
-            return agentCategory.categoryName === categoryName;
-        })[0];
-    };
-
     //MARK: look into all the context until you get one with slots
     const getLastContextWithValidSlots = ({ context, recognizedKeywords }) => {
 
@@ -197,7 +189,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
                 //MARK: CSO.parse ===false
                 //MARK: get category using rasaResult category name
-                conversationStateObject.category = getCategoryByName({ agentCategories: conversationStateObject.agent.categories, categoryName: conversationStateObject.rasaResult.category });
+                conversationStateObject.category = conversationStateObject.categories[conversationStateObject.rasaResult.category];
                 //MARK: if there is an action and a category, check if the action confidence ia bigger than the category threshold === true
                 if ((!conversationStateObject.agent.multiCategory && conversationStateObject.rasaResult.action.confidence > conversationStateObject.agent.categoryClassifierThreshold) ||
                     (conversationStateObject.agent.multiCategory && conversationStateObject.category && conversationStateObject.rasaResult.action.confidence > conversationStateObject.category.actionThreshold)) {
@@ -521,7 +513,12 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
         conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false });
-        conversationStateObject[CSO_AGENT].categories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });
+        const agentCategories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });
+        conversationStateObject[CSO_CATEGORIES] = {}
+        agentCategories.forEach((agentCategory) => {
+
+            conversationStateObject[CSO_CATEGORIES][agentCategory.categoryName] = agentCategory;
+        });
         conversationStateObject[CSO_AGENT].keywords = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD, returnModel: false });
 
         let storeInQueue = false;

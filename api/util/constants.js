@@ -207,6 +207,7 @@ export const RASA_INTENT_SPLIT_SYMBOL = '+__+';
 // Conversation State Object properties
 
 export const CSO_AGENT = 'agent';
+export const CSO_CATEGORIES = 'categories';
 export const CSO_CONTEXT = 'context';
 export const CSO_TIMEZONE_DEFAULT = 'UTL';
 
