@@ -30,15 +30,15 @@ const styles = {
     marginTop: '45px',
   },
   tabs: {
-    paddingLeft: '15px',
+    paddingLeft: '5px',
   },
   tab: {
-    paddingLeft: '20px',
-    paddingRight: '20px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
   },
   agentTab: {
-    paddingLeft: '20px',
-    paddingRight: '20px',
+    paddingLeft: '0px',
+    paddingRight: '10px',
     minWidth: 'fit-content',
   },
   icon: {
