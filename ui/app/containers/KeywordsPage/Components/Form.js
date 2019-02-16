@@ -119,7 +119,7 @@ class Form extends React.Component {
                 <FormattedMessage {...messages.help} />
               </span>
             </Button>
-            <form className={classes.searchForm}>
+            {/*<form className={classes.searchForm}>
               <img src={searchIcon} alt={intl.formatMessage(messages.searchKeywordsAlt)} />
               <Input
                 inputProps={{
@@ -132,7 +132,7 @@ class Form extends React.Component {
                 placeholder={intl.formatMessage(messages.searchKeywordPlaceholder)}
                 onChange={(evt) => { this.props.onSearchKeyword(evt.target.value) }}
               />
-            </form>
+            </form>*/}
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
