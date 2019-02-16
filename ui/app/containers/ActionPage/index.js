@@ -272,7 +272,8 @@ export class ActionPage extends React.Component {
     if (!errors){
       this.setState({
         formError: false,
-        exitAfterSubmit: exit
+        exitAfterSubmit: exit,
+        errorState: {...newErrorState},
       });
       if (this.state.isNewAction){
         // If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array

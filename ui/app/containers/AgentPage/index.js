@@ -267,7 +267,8 @@ export class AgentPage extends React.PureComponent {
     if (!errors) {
       this.setState({
         formError: false,
-        exitAfterSubmit: exit
+        exitAfterSubmit: exit,
+        errorState: {...newErrorState},
       });
       if (this.state.isNewAgent) {
         this.props.onAddNewAgent();

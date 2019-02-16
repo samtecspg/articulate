@@ -119,6 +119,7 @@ export class CategoriesEditPage extends React.Component {
       this.setState({
         formError: false,
         exitAfterSubmit: exit,
+        errorState: {...newErrorState},
       });
       if (this.state.isNewCategory){
         this.props.onCreateCategory();

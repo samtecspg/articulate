@@ -214,6 +214,7 @@ export class KeywordsEditPage extends React.Component {
       this.setState({
         formError: false,
         exitAfterSubmit: exit,
+        errorState: {...newErrorState},
       });
       if (this.state.isNewKeyword){
         this.props.onCreateKeyword();

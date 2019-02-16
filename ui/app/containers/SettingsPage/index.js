@@ -217,6 +217,7 @@ export class SettingsPage extends React.PureComponent {
     if (!errors) {
       this.setState({
         formError: false,
+        errorState: {...newErrorState},
       });
       this.props.onSaveChanges();
     } else {
