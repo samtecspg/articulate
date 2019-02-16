@@ -29,7 +29,6 @@ import {
   makeSelectActionWebhook,
   makeSelectActionPostFormat,
   makeSelectKeywords,
-  makeSelectSuccess,
   makeSelectAgent,
   makeSelectSayingForAction,
   makeSelectActions,

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import systemKeywords from 'systemKeywords';
+
 
 const compareKeywords = (a, b) => {
   if (a.start < b.start)
@@ -9,29 +11,6 @@ const compareKeywords = (a, b) => {
     return 1;
   return 0;
 };
-
-const systemKeywords = [
-  {
-    keywordName: 'sys.spacy_person',
-    uiColor: '#f44336',
-  },
-  {
-    keywordName: 'sys.spacy_norp',
-    uiColor: '#e91e63',
-  },
-  {
-    keywordName: 'sys.spacy_org',
-    uiColor: '#e91e63',
-  },
-  {
-    keywordName: 'sys.spacy_date',
-    uiColor: '#e91e63',
-  },
-  {
-    keywordName: 'sys.duckling_time',
-    uiColor: '#e91e63',
-  },
-];
 
 const styles = {
   highlightedText: {
