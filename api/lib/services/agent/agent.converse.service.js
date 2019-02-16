@@ -165,14 +165,22 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         return lastValidContext;
     };
 
-    const recognizedKeywordsArePartOfTheContext = ({ slots, recognizedKeywords }) => {
+    const recognizedKeywordsArePartOfTheContext = ({ conversationStateObject, recognizedKeywords }) => {
 
-        let results = _.map(recognizedKeywords, (recognizedKeyword) => {
+        const agentActionData = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
+        if (agentActionData){
+            const agentActionSlotsKeywords = _.map(agentActionData.slots, 'keyword');
+            
+            const isPartOfActionSlots = recognizedKeywords.some((recognizedKeyword) => {
 
-            return Object.keys(slots).indexOf(recognizedKeyword.keyword) > -1;
-        });
-        results = _.compact(results);
-        return results.length > 0;
+                if (agentActionSlotsKeywords.indexOf(recognizedKeyword.keyword) > -1){
+                    return true;
+                }
+                return false;
+            });
+            return isPartOfActionSlots;
+        }
+        return false;
     };
 
     const response = async ({ conversationStateObject }) => {
@@ -184,7 +192,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             if (conversationStateObject.action && !conversationStateObject.modifier) {
                 //MARK: if there is an action but no responses call RespondFallback and persist context
                 if (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0) {
-                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                     return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent });
                 }
                 //MARK: CSO.parse ===false
@@ -207,7 +215,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject
                     });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                     return actionResponse;
                 }
             }
@@ -223,41 +231,41 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject
                     });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                     return actionResponse;
                 }
             }
             //MARK: if there is NO action then use the rasaResult.keywords else get them from getKeywordsFromRasaResults
             //MARK: I think this line doesn't do much since we already called getKeywordsFromRasaResults before to get rasaResult, the only difference is that we are saving the entire rasaResult instead of just the keywords
-            const recognizedKeywords = conversationStateObject.rasaResult.action ? getKeywordsFromRasaResults(conversationStateObject) : conversationStateObject.rasaResult.keywords;
+            const recognizedKeywords = conversationStateObject.rasaResult.action ? getKeywordsFromRasaResults({ rasaResults: conversationStateObject.parse }) : conversationStateObject.rasaResult.keywords;
             //MARK: conversationStateObject.currentFrame === true
             if (conversationStateObject.currentFrame) {
                 //MARK: recognizedKeywords>0
                 if (recognizedKeywords.length > 0) {
                     //MARK: if there are slots and the recognizedKeywords are part of the context == true
-                    if (conversationStateObject.currentFrame.slots && Object.keys(conversationStateObject.currentFrame.slots).length > 0 && recognizedKeywordsArePartOfTheContext({ slots: conversationStateObject.currentFrame.slots, recognizedKeywords })) {
+                    if (conversationStateObject.currentFrame.slots && Object.keys(conversationStateObject.currentFrame.slots).length > 0 && recognizedKeywordsArePartOfTheContext({ conversationStateObject, recognizedKeywords })) {
                         //MARK: update action object from the action of the context
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
-                        const actionResponse = agentService.converseGenerateResponse({
+                        const actionResponse = await agentService.converseGenerateResponse({
                             conversationStateObject
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                        await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
-                        return actionResponse;
+                        //await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
+                        return Object.assign(actionResponse, { followedKeywordPath: true });
                     }
-                    //MARK: recognizedKeywords <= 0
-                    //MARK: if there are no slots then we get the last one with valid slots, update teh context list and set the last context, then get the action used by that context
+                    //MARK: the recognized keyword aren't part of the latest frame
+                    //MARK: if there are no slots then we get the last one with valid slots, update the context list and set the last context, then get the action used by that context
                     const lastValidContext = getLastContextWithValidSlots({ context: conversationStateObject.context, recognizedKeywords });
                     if (lastValidContext) {
                         conversationStateObject.context.push(lastValidContext);
                         conversationStateObject.currentFrame = lastValidContext;
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.name, agentActions: conversationStateObject.agent.actions });
-                        const actionResponse = agentService.converseGenerateResponse({
+                        const actionResponse = await agentService.converseGenerateResponse({
                             conversationStateObject
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                        await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
-                        return actionResponse;
+                        //await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
+                        return Object.assign(actionResponse, { followedKeywordPath: true });
                     }
                 }
             }
@@ -469,6 +477,25 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     currentQueueIndex++;
                 }
                 else {
+                    const chainedActionSlotNames = _.map(agentAction.slots, 'slotName');
+                    const slotsOfChainedAction = {};
+                    if (conversationStateObject.slots){
+                        chainedActionSlotNames.forEach((actionSlot) => {
+
+                            if (conversationStateObject.slots[actionSlot]){
+                                slotsOfChainedAction[actionSlot] = conversationStateObject.slots[actionSlot];
+                            }
+                            else{
+                                slotsOfChainedAction[actionSlot] = '';
+                            }
+                        });
+                    }
+                    conversationStateObject.context.frames.push(
+                    {
+                        action: agentAction.actionName,
+                        slots: slotsOfChainedAction
+                    });
+
                     conversationStateObject.context.actionQueue.push({
                         action: agentAction.actionName,
                         slots: {}
@@ -576,6 +603,15 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
 
             const agentToolResponse = await response({ conversationStateObject });
+            if (agentToolResponse.followedKeywordPath && indexOfActionInQueue === -1){
+                indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName });
+                moveOnQueue({
+                    context: conversationStateObject.context,
+                    oldIndex: indexOfActionInQueue,
+                    newIndex: currentQueueIndex
+                });
+                currentQueueIndex++;
+            }
             if (agentToolResponse.webhookResponse) {
                 webhookResponses.push(agentToolResponse.webhookResponse);
             }
@@ -648,6 +684,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 savedSlots: conversationStateObject.context.savedSlots
             }
         });
+        await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
 
         const converseResult = {
             textResponse,
