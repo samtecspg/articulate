@@ -26,7 +26,8 @@ module.exports = async function (
         categoryId,
         sayingId = null,
         sayingData,
-        returnModel = false
+        returnModel = false,
+        isImport = false,
     }) {
 
     const { redis } = this.server.app;
@@ -46,7 +47,7 @@ module.exports = async function (
         const CategoryModel = models[MODEL_CATEGORY];
         const SayingModel = models[MODEL_SAYING] || await redis.factory(MODEL_SAYING); //Empty model if we are going to do a create
 
-        if (!SayingModel.isLoaded){
+        if (!SayingModel.isLoaded && !isImport){
             sayingData.keywords = await agentService.identifyKeywords({ AgentModel, text: sayingData.userSays });
         }
 

@@ -77,7 +77,8 @@ module.exports = async function ({ payload }) {
                 return await agentService.upsertSayingInCategory({
                     id: AgentModel.id,
                     categoryId: CategoryModel.id,
-                    sayingData: saying
+                    sayingData: saying,
+                    isImport: true
                 });
             }));
         }));
