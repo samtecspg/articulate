@@ -12,23 +12,23 @@ export default defineMessages({
   },
   statusOutOfDate: {
     id: 'app.components.TrainButton.statusOutOfDate',
-    defaultMessage: 'Status: out of date',
+    defaultMessage: 'Needs Training',
   },
   statusError: {
     id: 'app.components.TrainButton.statusError',
-    defaultMessage: 'Status: error on training',
+    defaultMessage: 'Training Error',
   },
   statusTraining: {
     id: 'app.components.TrainButton.statusTraining',
-    defaultMessage: 'Status: updating agent…',
+    defaultMessage: 'Training',
   },
   statusReady: {
     id: 'app.components.TrainButton.statusReady',
-    defaultMessage: 'Last Trained: ',
+    defaultMessage: 'Trained ',
   },
   neverTrained: {
     id: 'app.components.TrainButton.neverTrained',
-    defaultMessage: 'never trained',
+    defaultMessage: 'never',
   },
   justNow: {
     id: 'app.components.TrainButton.justNow',
