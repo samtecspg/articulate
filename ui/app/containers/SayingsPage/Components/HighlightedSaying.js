@@ -62,7 +62,7 @@ const HighlightedSaying = withStyles(styles)((props) => {
     formattedElement = (
       <span key={`keywordTag_${props.keywordIndex}`}>
         <span key={`beforeKeywordTagText_${props.keywordIndex}`}>{beforeTaggedText}</span>
-        <Tooltip title={filteredKeyword.keywordName} placement='top'>
+        <Tooltip title={filteredKeyword.keywordName ? filteredKeyword.keywordName : ''} placement='top'>
           <span
             key={`keywordTagText_${props.keywordIndex}`}
             className={classes.highlightedText}

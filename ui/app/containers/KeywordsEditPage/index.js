@@ -233,7 +233,7 @@ export class KeywordsEditPage extends React.Component {
 
   render() {
     return (
-      this.props.settings && this.props.agent.id ?
+      this.props.settings && this.props.agent.id && this.props.agentKeywords ?
       <Grid container>
         <MainTab
           touched={this.props.touched}

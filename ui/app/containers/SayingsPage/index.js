@@ -169,7 +169,7 @@ export class SayingsPage extends React.Component {
 
   render() {
     return (
-      this.props.agent.id ?
+      this.props.agent.id && this.props.agentKeywords ?
       <Grid container>
         <MainTab
           locale={this.props.locale}

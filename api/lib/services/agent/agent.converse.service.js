@@ -142,15 +142,15 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
         const recognizedKeywordsNames = _.map(recognizedKeywords, 'keyword');
         let keepGoing = true;
-        let contextIndex = context.length - 1;
+        let contextIndex = context.frames.length - 1;
         let lastValidContext = null;
         while (keepGoing && contextIndex !== -1) {
 
-            const contextSlots = context[contextIndex].slots ? Object.keys(context[contextIndex].slots) : [];
+            const contextSlots = context.frames[contextIndex].slots ? Object.keys(context.frames[contextIndex].slots) : [];
             const intersection = _.intersection(recognizedKeywordsNames, contextSlots);
             if (intersection.length > 0) {
                 keepGoing = false;
-                lastValidContext = _.cloneDeep(context[contextIndex]);
+                lastValidContext = _.cloneDeep(context.frames[contextIndex]);
             }
             contextIndex--;
         }

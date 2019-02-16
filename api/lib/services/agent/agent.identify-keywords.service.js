@@ -23,21 +23,24 @@ module.exports = async function ({ id, AgentModel, text }) {
             const values = _.sortBy(_.flattenDeep(_.map(keyword.examples, ('synonyms'))), (value) => -value.length);
             //Identify if the value is in the user saying
             const recognizedKeywords  = _.flatten(_.compact(_.map(values,(value) => {
-                const startIndexes = FastStringSearch.indexOf(text, value);
+                const startIndexes = FastStringSearch.indexOf(text.toLowerCase(), value.toLowerCase());
                 return _.compact(_.map(startIndexes, (start) => { 
                     //If the value is in the user saying and also that start haven't been assigned
                     if (assignedStartIndex.indexOf(start) === -1){
-                        //Mark the start index as assigned and create the new keyword, and also, add every index between start and end
                         const end = start + value.length;
-                        for (let i = start; i <= end; i++) {
-                            assignedStartIndex.push(i);
-                        }
-                        return {
-                            start,
-                            end,
-                            value,
-                            keyword: keyword.keywordName,
-                            keywordId: parseInt(keyword.id)
+                        if (start === 0 && (!text[end] || text[end] === ' ') || ((!text[start - 1] || text[start - 1] === ' ') && (!text[end] || text[end] === ' '))) {
+                            //Mark the start index as assigned and create the new keyword, and also, add every index between start and end
+                            for (let i = start; i <= end; i++) {
+                                assignedStartIndex.push(i);
+                            }
+                            return {
+                                start,
+                                end,
+                                value,
+                                keyword: keyword.keywordName,
+                                keywordId: parseInt(keyword.id)
+                            }
+                            return null;
                         }
                     }
                     return null;
