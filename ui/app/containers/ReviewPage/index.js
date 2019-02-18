@@ -101,7 +101,8 @@ export class ReviewPage extends React.Component {
         const handler = (documents) => {
 
           if (documents) {
-            const payload = { documents: documents.data, total: documents.totalCount };
+            const paginatedDocuments = documents.data.slice(0, this.state.pageSize);
+            const payload = { documents: paginatedDocuments, total: documents.totalCount };
             onRefreshDocuments(payload);
           }
         };
