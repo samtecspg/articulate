@@ -29,7 +29,6 @@ const styles = {
       width: '95%',
     },
     notificationDot: {
-      backgroundColor: '#Cb2121',
       height: '12px',
       width: '12px',
       borderRadius: '50%',
@@ -55,7 +54,7 @@ const styles = {
 export class Notifications extends React.Component {
 
   componentDidMount() {
-    this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 10000); // update the component every 10 seconds
+    this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 5000); // update the component every 10 seconds
   }
 
   componentWillUnmount() {
@@ -70,7 +69,7 @@ export class Notifications extends React.Component {
             this.props.notifications.map((notification, index) => (
               notification.type === 'error' || ((new Date() - notification.datetime) / 1000) < 10 ?
               <Grid item xs={12} key={`notification_${index}`} className={notification.type === 'error' ? classes.notificationContainerError : classes.notificationContainer}>
-                <div className={classes.notificationDot}></div>
+                <div className={classes.notificationDot} style={{ backgroundColor: notification.type === 'error' ? '#cb2121' : '#358fec' }}></div>
                 <Typography className={classes.notification}>
                   <span dangerouslySetInnerHTML={{__html: notification.message}}></span>
                 </Typography>

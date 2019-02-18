@@ -59,7 +59,7 @@ const styles = {
 export class AppHeader extends React.Component {
 
   componentDidMount() {
-    this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 10000); // update the component every 10 seconds
+    this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 5000); // update the component every 10 seconds
   }
 
   componentWillUnmount() {
@@ -69,8 +69,13 @@ export class AppHeader extends React.Component {
   render(){
     const { classes, intl, conversationBarOpen, notifications } = this.props;
 
+    let notificationDotColor = '#358fec';
     const validNotifications = notifications.filter((notification) => {
-      return notification.type === 'error' || ((new Date() - notification.datetime) / 1000) < 10 
+      if (notification.type === 'error'){
+        notificationDotColor = '#cb2121';
+        return true;
+      }
+      return ((new Date() - notification.datetime) / 1000) < 10 
     });
 
     return (
@@ -142,7 +147,7 @@ export class AppHeader extends React.Component {
             <Grid item xl={2} lg={2} md={2}>
               { this.props.location.pathname !== '/' ? 
                 [
-                  validNotifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
+                  validNotifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }}></div> : null,
                   <Button key='conversat_button' onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
                     <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.openChatButton} />
@@ -173,7 +178,7 @@ export class AppHeader extends React.Component {
             <Grid item sm={6} xs={6}>
               { this.props.location.pathname !== '/' ? 
                 [
-                  validNotifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
+                  validNotifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }}></div> : null,
                   <Button
                     key='conversat_button'
                     onClick={() => {this.props.onToggleConversationBar(true)}}
