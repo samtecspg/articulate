@@ -22,6 +22,7 @@ const getHeaders = (headers, contentType) => {
 module.exports = async function ({ url, templatePayload, payloadType, method, templateContext, headers, username, password }) {
 
     const { handlebars } = this.server.app;
+    let startTime, endTime;
 
     try {
         const compiledUrl = handlebars.compile(url)(templateContext);
@@ -47,7 +48,7 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
                 contentType = 'text/xml';
             }
         }
-        const startTime = new Moment();
+        startTime = new Moment();
         const response = await Axios({
             method,
             url: compiledUrl,
@@ -59,20 +60,36 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
                 password
             } : undefined
         });
-        const endTime = new Moment();
+        endTime = new Moment();
         const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         if (typeof response.data === 'string'){
             return {
                 text: response.data,
-                elapsed_time_ms
+                elapsed_time_ms,
+                statusCode: response.status
             }
         }
         return {
             ...response.data,
-            elapsed_time_ms
+            elapsed_time_ms,
+            statusCode: response.status
         };
     }
     catch (error) {
+        endTime = new Moment();
+        const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
+        if (error.response && error.response.data){
+            if (typeof error.response.data === 'string'){
+                return {
+                    text: error.response.data,
+                    elapsed_time_ms
+                }
+            }
+            return {
+                ...error.response.data,
+                elapsed_time_ms
+            };
+        }
         return { textResponse: 'We\'re having trouble fulfilling that request', actions: [] };
     }
 };
