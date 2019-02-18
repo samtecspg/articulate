@@ -32,12 +32,13 @@ import {
   closeNotification,
   sendMessage,
   resetSession,
-  loadSettings
+  loadSettings,
 } from '../../containers/App/actions';
 
 import LanguageSelect from '../LanguageSelect';
 import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
+import Notifications from './components/Notifications';
 
 const styles = {
   container: {
@@ -91,50 +92,6 @@ const styles = {
     paddingTop: '10px',
     paddingLeft: '8px',
     height:'25px',
-  },
-  notificationsContainer: {
-    marginTop: '0px',
-  },
-  notificationContainer: {
-    backgroundColor: '#f6f7f8',
-    border: '1px solid #4e4e4e',
-    margin: '10px 35px 0px 20px',
-    borderRadius: '3px',
-    position: 'relative',
-  },
-  notificationContainerError: {
-    backgroundColor: '#ffebee',
-    border: '1px solid #4e4e4e',
-    margin: '10px 35px 0px 20px',
-    borderRadius: '3px',
-    position: 'relative',
-  },
-  notification: {
-    paddingLeft: '5px',
-    fontSize: '12px',
-    fontWeight: 300,
-    width: '95%',
-  },
-  notificationDot: {
-    backgroundColor: '#Cb2121',
-    height: '12px',
-    width: '12px',
-    borderRadius: '50%',
-    position: 'absolute',
-    top: -5,
-    left: -5,
-  },
-  closeNotification: {
-    position: 'absolute',
-    top: 5,
-    right: 10,
-    cursor: 'pointer',
-    webkitTouchCallout: 'none',
-    webkitUserSelect: 'none',
-    khtmlUserSelect: 'none',
-    mozUserSelect: 'none',
-    msUserSelect: 'none',
-    userSelect: 'none',
   },
   inputContainer: {
     padding: '10px',
@@ -254,23 +211,7 @@ export class ConversationBar extends React.PureComponent {
           <img className={classes.arrow} src={rightArrowIcon}></img>
         </Grid>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.notificationsContainer} container spacing={16}>
-            {
-              this.props.notifications.map((notification, index) => (
-                <Grid item xs={12} key={`notification_${index}`} className={notification.type === 'error' ? classes.notificationContainerError : classes.notificationContainer}>
-                  <div className={classes.notificationDot}></div>
-                  <Typography className={classes.notification}>
-                    <span dangerouslySetInnerHTML={{__html: notification.message}}></span>
-                  </Typography>
-                  <div onClick={() => { this.props.onCloseNotification(index) }} className={classes.closeNotification}>
-                    <Typography>
-                        x
-                    </Typography>
-                  </div>
-                </Grid>
-              ))
-            }
-          </Grid>
+          <Notifications notifications={this.props.notifications} onCloseNotification={this.props.onCloseNotification} />
           <Grid className={classes.messagesContainer}>
             {
               this.props.messages.map((message, index) => {

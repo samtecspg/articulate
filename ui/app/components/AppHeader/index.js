@@ -58,8 +58,21 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 export class AppHeader extends React.Component {
 
+  componentDidMount() {
+    this.interval = setInterval(() => {this.setState({ time: Date.now() })}, 10000); // update the component every 10 seconds
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   render(){
     const { classes, intl, conversationBarOpen, notifications } = this.props;
+
+    const validNotifications = notifications.filter((notification) => {
+      return notification.type === 'error' || ((new Date() - notification.datetime) / 1000) < 10 
+    });
+
     return (
       conversationBarOpen ?
         <Grid container className={classes.header} item xs={12}>
@@ -129,7 +142,7 @@ export class AppHeader extends React.Component {
             <Grid item xl={2} lg={2} md={2}>
               { this.props.location.pathname !== '/' ? 
                 [
-                  notifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
+                  validNotifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
                   <Button key='conversat_button' onClick={() => {this.props.onToggleConversationBar(true)}} color='primary' variant='contained' className={classes.openChat}>
                     <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.openChatButton} />
@@ -160,7 +173,7 @@ export class AppHeader extends React.Component {
             <Grid item sm={6} xs={6}>
               { this.props.location.pathname !== '/' ? 
                 [
-                  notifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
+                  validNotifications.length > 0 ? <div key='conversationNotificationDot' className={classes.notificationDot}></div> : null,
                   <Button
                     key='conversat_button'
                     onClick={() => {this.props.onToggleConversationBar(true)}}

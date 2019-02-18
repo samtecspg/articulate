@@ -470,13 +470,13 @@ function appReducer(state = initialState, action) {
       const isATrainingUpdate = state.agent.agentName === action.payload.agent.agentName && state.agent.status !== action.payload.agent.status;
       if (isATrainingUpdate) {
         if (action.payload.agent.status === 'Ready') {
-          state = state.update('notifications', notifications => notifications.concat({ message: `Notification: The agent <b>${action.payload.agent.agentName}</b> has finished training. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }));
+          state = state.update('notifications', notifications => notifications.concat({ message: `Notification: The agent <b>${action.payload.agent.agentName}</b> has finished training. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }));
         }
         if (action.payload.agent.status === 'Error') {
           state = state.update('notifications', notifications => notifications.concat({ message: `Error: An error ocurred training <b>${action.payload.agent.agentName}</b>. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
         }
         if (action.payload.agent.status === 'Out of Date') {
-          state = state.update('notifications', notifications => notifications.concat({ message: `Notification: <b>${action.payload.agent.agentName}</b> is out of date. It's time to train.`, type: 'success' }));
+          state = state.update('notifications', notifications => notifications.concat({ message: `Notification: <b>${action.payload.agent.agentName}</b> is out of date. It's time to train.`, type: 'success', datetime: new Date() }));
         }
       }
       let agentWebhook, agentPostFormat;
@@ -580,7 +580,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case ADD_AGENT_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Congrats your agent <b>${action.agent.agentName}</b> was created! ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Congrats your agent <b>${action.agent.agentName}</b> was created! ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }));
       return state.set('agent', action.agent)
         .set('currentAgent', action.agent)
         .set('loading', false)
@@ -921,7 +921,7 @@ function appReducer(state = initialState, action) {
       if (action.payload.addToNewSayingActions) {
         state = state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.payload.action.actionName));
       }
-      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Action <b>${action.payload.action.actionName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Action <b>${action.payload.action.actionName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }));
       return state.set('action', action.payload.action)
         .set('currentAction', action.payload.action)
         .set('loading', false)
@@ -939,7 +939,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case UPDATE_ACTION_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Action <b>${action.action.actionName}</b> updated successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Action <b>${action.action.actionName}</b> updated successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }));
       return state.set('action', action.action)
         .set('currentAction', action.action)
         .set('loading', false)
@@ -1196,7 +1196,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case CREATE_KEYWORD_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Keyword <b>${action.keyword.keywordName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Keyword <b>${action.keyword.keywordName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }));
       return state.set('keyword', action.keyword)
         .set('loading', false)
         .set('success', true)
@@ -1299,7 +1299,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', action.error);
     case CREATE_CATEGORY_SUCCESS:
-      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Category <b>${action.category.categoryName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }));
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Category <b>${action.category.categoryName}</b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }));
       return state.set('category', action.category)
         .set('selectedCategory', action.category.id)
         .set('loading', false)
@@ -1370,7 +1370,7 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case COPY_SAYING_SUCCESS:
       return state
-        .update('notifications', notifications => notifications.concat({ message: `Notification: The saying <b>${action.saying.userSays}</b> was created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success' }))
+        .update('notifications', notifications => notifications.concat({ message: `Notification: The saying <b>${action.saying.userSays}</b> was created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }))
         .set('loading', false)
         .set('success', false);
     
