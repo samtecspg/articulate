@@ -504,7 +504,8 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('agentTouched', false)
-        .set('successAgent', action.payload.socket ? state.successAgent : false);
+        .set('successAgent', action.payload.socket ? state.successAgent : false)
+        .set('newSayingActions', []);
     case SET_AGENT_DEFAULTS:
       return state.setIn(['agent', 'language'], state.settings.defaultAgentLanguage)
         .setIn(['agent', 'timezone'], state.settings.defaultTimezone)
