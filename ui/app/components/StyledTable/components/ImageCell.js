@@ -14,6 +14,7 @@ const styles = {
     cursor: 'pointer',
     position: 'relative',
     top: '4px',
+    height: '15px'
   },
 };
 

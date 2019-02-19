@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, TextField, Table, TableBody, TableRow, TableCell, FormControl, Select, MenuItem } from "@material-ui/core";
+import { Grid, Typography, Button, Modal, TextField, Table, TableBody, TableRow, TableCell, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import SingleHighlightedSaying from './SingleHighlightedSaying';
@@ -14,6 +14,7 @@ import messages from "../messages";
 import playHelpIcon from "../../../images/play-help-icon.svg";
 import singleQuotesIcon from "../../../images/single-quotes-icon.svg";
 import trashIcon from '../../../images/trash-icon.svg';
+import copyIcon from '../../../images/icon-copy.svg';
 import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
@@ -84,10 +85,13 @@ const styles = {
     marginTop: '10px',
   },
   deleteCell: {
-    width: '20px',
+    width: '80px',
   },
-  deleteIcon: {
+  icon: {
+    display: 'inline',
     cursor: 'pointer',
+    height: '15px',
+    paddingLeft: '5px'
   },
   postFormatLabel: {
     color: '#a2a7b1',
@@ -100,6 +104,11 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class ResponseForm extends React.Component {
+
+  componentWillMount(){
+    this.props.onUpdateNewResponse('');
+  }
+
   state = {
     actionNameError: false,
     openModal: false,
@@ -177,14 +186,17 @@ class ResponseForm extends React.Component {
                 <Grid item xs={12}>
                   <TextField
                     id='newResponse'
+                    value={this.props.newResponse}
                     label={intl.formatMessage(messages.responseTextField)}
                     placeholder={intl.formatMessage(messages.responseTextFieldPlaceholder)}
                     onKeyPress={(ev) => {
                       if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
                         ev.preventDefault();
                         this.props.onAddResponse(ev.target.value);
-                        ev.target.value = '';
                       }
+                    }}
+                    onChange={(evt) => {
+                      this.props.onUpdateNewResponse(evt.target.value);
                     }}
                     margin='normal'
                     fullWidth
@@ -210,7 +222,10 @@ class ResponseForm extends React.Component {
                               />
                             </TableCell>
                             <TableCell className={classes.deleteCell}>
-                              <img onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.deleteIcon} src={trashIcon} />
+                              <Grid>
+                                <Tooltip title='Copy response in the response input' placement='top'><img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} /></Tooltip>
+                                <img onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />                                
+                              </Grid>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -261,8 +276,11 @@ ResponseForm.propTypes = {
   onDeleteResponse: PropTypes.func,
   onChainActionToResponse: PropTypes.func,
   onUnchainActionFromResponse: PropTypes.func,
+  onUpdateNewResponse: PropTypes.func,
+  onCopyResponse: PropTypes.func,
   errorState: PropTypes.object,
   agentActions: PropTypes.array,
+  newResponse: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

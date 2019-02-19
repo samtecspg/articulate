@@ -17,6 +17,8 @@ import {
   ADD_KEYWORD_EXAMPLE,
   ADD_SAYING,
   ADD_SAYING_ERROR,
+  UPDATE_NEW_RESPONSE,
+  COPY_RESPONSE,
   CHAIN_ACTION_TO_RESPONSE,
   CHANGE_ACTION_DATA,
   CHANGE_ACTION_NAME,
@@ -358,6 +360,7 @@ const initialState = Immutable({
   successAction: false,
   successAgent: false,
   conversationStateObject: {},
+  newActionResponse: 'hello',
 });
 
 function appReducer(state = initialState, action) {
@@ -852,6 +855,7 @@ function appReducer(state = initialState, action) {
       .set('actionTouched', true);
     case ADD_ACTION_RESPONSE:
       return state.updateIn(['action', 'responses'], responses => responses.concat({ textResponse: action.newResponse, actions: [] }))
+      .set('newActionResponse', '')
       .set('actionTouched', true);
     case DELETE_ACTION_RESPONSE:
       return state.updateIn(['action', 'responses'], responses => responses.filter((item, index) => index !== action.responseIndex))
@@ -872,6 +876,10 @@ function appReducer(state = initialState, action) {
         return tempResponse;
       }))
       .set('actionTouched', true);
+    case UPDATE_NEW_RESPONSE:
+      return state.set('newActionResponse', action.response);
+    case COPY_RESPONSE:
+      return state.set('newActionResponse', action.response);
     case CHANGE_ACTION_WEBHOOK_DATA:
       return state.setIn(['actionWebhook', action.payload.field], action.payload.value)
       .set('actionTouched', true);
