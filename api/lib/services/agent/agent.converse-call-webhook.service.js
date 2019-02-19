@@ -65,14 +65,12 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
         if (typeof response.data === 'string'){
             return {
                 text: response.data,
-                elapsed_time_ms,
-                statusCode: response.status
+                elapsed_time_ms
             }
         }
         return {
             ...response.data,
-            elapsed_time_ms,
-            statusCode: response.status
+            elapsed_time_ms
         };
     }
     catch (error) {
