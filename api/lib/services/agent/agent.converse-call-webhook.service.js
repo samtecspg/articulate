@@ -82,12 +82,15 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
             if (typeof error.response.data === 'string'){
                 return {
                     text: error.response.data,
-                    elapsed_time_ms
+                    elapsed_time_ms,
+                    statusCode: response.status
                 }
             }
+            delete error.response.data.statusCode;
             return {
                 ...error.response.data,
-                elapsed_time_ms
+                elapsed_time_ms,
+                statusCode: response.status
             };
         }
         return { textResponse: 'We\'re having trouble fulfilling that request', actions: [] };
