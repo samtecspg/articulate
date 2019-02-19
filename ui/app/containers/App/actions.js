@@ -29,6 +29,8 @@ import {
   ADD_SAYING_ERROR,
   ADD_SLOT_TEXT_PROMPT_SLOT,
   CHAIN_ACTION_TO_RESPONSE,
+  COPY_RESPONSE,
+  UPDATE_NEW_RESPONSE,
   CHANGE_ACTION_DATA,
   CHANGE_ACTION_NAME,
   CHANGE_ACTION_POST_FORMAT_DATA,
@@ -1067,6 +1069,20 @@ export function unchainActionFromResponse(responseIndex, actionIndex) {
     responseIndex,
     actionIndex,
   };
+}
+
+export function copyResponse(response) {
+  return {
+    type: COPY_RESPONSE,
+    response
+  }
+}
+
+export function updateNewResponse(response) {
+  return {
+    type: UPDATE_NEW_RESPONSE,
+    response
+  }
 }
 
 export function changeActionWebhookData(payload) {

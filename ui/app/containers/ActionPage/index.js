@@ -35,6 +35,7 @@ import {
   makeSelectSuccessAction,
   makeSelectLoading,
   makeSelectActionTouched,
+  makeSelectNewActionResponse
 } from '../App/selectors';
 
 import {
@@ -64,7 +65,9 @@ import {
   addSlotTextPrompt,
   deleteSlotTextPrompt,
   sortSlots,
-  deleteSlot
+  deleteSlot,
+  copyResponse,
+  updateNewResponse,
 } from '../App/actions';
 
 const styles = {
@@ -380,6 +383,9 @@ export class ActionPage extends React.Component {
               agentActions={this.props.agentActions}
               newAction={this.state.isNewAction}
               onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
+              newResponse={this.props.newResponse}
+              onUpdateNewResponse={this.props.onUpdateNewResponse}
+              onCopyResponse={this.props.onCopyResponse}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -428,6 +434,8 @@ ActionPage.propTypes = {
   loading: PropTypes.bool,
   success: PropTypes.bool,
   touched: PropTypes.bool,
+  onCopyResponse: PropTypes.func,
+  newResponse: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -441,6 +449,7 @@ const mapStateToProps = createStructuredSelector({
   success: makeSelectSuccessAction(),
   loading: makeSelectLoading(),
   touched: makeSelectActionTouched(),
+  newResponse: makeSelectNewActionResponse(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -529,6 +538,12 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteSlot: (slotIndex) => {
       dispatch(deleteSlot(slotIndex));
+    },
+    onUpdateNewResponse: (response) => {
+      dispatch(updateNewResponse(response));
+    },
+    onCopyResponse: (response) => {
+      dispatch(copyResponse(response));
     }
   };
 }

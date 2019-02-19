@@ -199,6 +199,11 @@ const makeSelectSuccessAction = () => createSelector(
   (globalState) => globalState.successAction,
 );
 
+const makeSelectNewActionResponse = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.newActionResponse
+)
+
 /* Settings */
 const makeSelectSettings = () => createSelector(
   selectGlobal,
@@ -277,6 +282,7 @@ export {
   makeSelectCurrentAction,
   makeSelectActionTouched,
   makeSelectSuccessAction,
+  makeSelectNewActionResponse,
   makeSelectActionWebhook,
   makeSelectActionPostFormat,
   makeSelectSayingForAction,
