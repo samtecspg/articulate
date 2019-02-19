@@ -40,7 +40,6 @@ module.exports = async function ({ id, AgentModel, text }) {
                                 keyword: keyword.keywordName,
                                 keywordId: parseInt(keyword.id)
                             }
-                            return null;
                         }
                     }
                     return null;

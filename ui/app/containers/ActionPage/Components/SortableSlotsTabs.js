@@ -88,6 +88,7 @@ class SortableSlotsTabs extends React.Component {
 					evt.preventDefault();
 					if (value === action.slots.length) {
 						this.props.onAddNewSlot();
+						this.props.handleTabChange(value);
 					}
 					else {
 						if (value < action.slots.length) {
