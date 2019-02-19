@@ -8,7 +8,7 @@ const properties = {
     time_stamp: {
         type: 'date'
     },
-    maximum_saying_score: {
+    maximum_action_score: {
         type: 'float'
     },
     maximum_category_score: {

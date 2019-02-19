@@ -15,7 +15,7 @@ class DocumentModel {
             time_stamp: Joi
                 .date()
                 .description('Timestamp'),
-            maximum_saying_score: Joi
+            maximum_action_score: Joi
                 .number()
                 .description('Maximum Saying Score'),
             maximum_category_score: Joi

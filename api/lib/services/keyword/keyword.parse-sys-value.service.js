@@ -57,6 +57,11 @@ module.exports = ({ keyword, text }) => {
             };
             break;
     }
-    value.original = text.substring(keyword.start, keyword.end);
+    if (keyword.extractor === 'structured_text'){
+        value.original = keyword.value.value;
+    }
+    else {
+        value.original = text.substring(keyword.start, keyword.end);
+    }
     return value;
 };

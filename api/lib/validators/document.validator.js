@@ -20,7 +20,7 @@ class ContextValidate {
                 return {
                     document: Model.document.required(),
                     time_stamp: Model.time_stamp.required(),
-                    maximum_saying_score: Model.maximum_saying_score.required(),
+                    maximum_action_score: Model.maximum_action_score.required(),
                     maximum_category_score: Model.maximum_category_score.required(),
                     total_elapsed_time_ms: Model.total_elapsed_time_ms.required(),
                     rasa_results: Model.rasa_results.required(),
@@ -52,7 +52,7 @@ class ContextValidate {
                 return {
                     document: Model.document,
                     time_stamp: Model.time_stamp,
-                    maximum_saying_score: Model.maximum_saying_score,
+                    maximum_action_score: Model.maximum_action_score,
                     maximum_category_score: Model.maximum_category_score,
                     total_elapsed_time_ms: Model.total_elapsed_time_ms,
                     rasa_results: Model.rasa_results,
