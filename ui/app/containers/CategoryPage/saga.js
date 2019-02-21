@@ -88,9 +88,7 @@ export function* deleteCategory(payload) {
   try {
     yield call(api.agent.deleteAgentAgentidCategoryCategoryid, { agentId: agent.id, categoryId: id });
     yield put(deleteCategorySuccess());
-    yield put(getCategories({
-      api
-    }));
+    yield call(getCategories, { api });
     yield put(push(`/agent/${agent.id}/sayings`));
   } catch (err) {
     const error = { ...err };
