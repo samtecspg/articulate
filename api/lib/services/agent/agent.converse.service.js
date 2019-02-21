@@ -185,7 +185,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 //MARK: if there is an action but no responses call RespondFallback and persist context
                 if (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0) {
                     //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
-                    return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent });
+                    return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent, conversationStateObject });
                 }
                 //MARK: CSO.parse ===false
                 //MARK: get category using rasaResult category name
@@ -261,7 +261,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     }
                 }
             }
-            return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent });
+            return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent, conversationStateObject });
         }
         return Promise.reject(GlobalDefaultError({
             message: `Sorry, the engine wasn't able to parse your text`
