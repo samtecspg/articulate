@@ -38,8 +38,7 @@ import {
   makeSelectSayingForAction,
 } from '../App/selectors';
 
-import { getKeywords } from '../KeywordsPage/saga';
-import { putSaying } from '../SayingsPage/saga';
+import { getKeywords, putSaying } from '../DialoguePage/saga';
 
 export function* getActions(payload) {
   const agent = yield select(makeSelectAgent());

@@ -36,6 +36,7 @@ import {
   makeSelectNewSayingActions,
   makeSelectSelectedCategory,
   makeSelectTotalDocuments,
+  makeSelectLocale,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -66,6 +67,7 @@ export class ReviewPage extends React.Component {
     sortDirection: 'DESC',
     client: null,
     socketClientConnected: false,
+    timeSort: 'DESC',
   };
 
   async initForm() {
@@ -229,7 +231,8 @@ export class ReviewPage extends React.Component {
     if (this.state.sortField === id && this.state.sortDirection === 'DESC') {
       sortDirection = 'ASC';
     }
-    this.setState({ sortDirection, sortField });
+    const timeSort = id === 'time_stamp' ? sortDirection : this.state.timeSort;
+    this.setState({ sortDirection, sortField, timeSort });
     onLoadAgentDocuments(this.state.currentPage, this.state.pageSize, sortField, sortDirection);
   }
 
@@ -308,6 +311,8 @@ export class ReviewPage extends React.Component {
                 onRequestSort={this.handleOnRequestSort}
                 sortField={this.state.sortField}
                 sortDirection={this.state.sortDirection}
+                locale={this.props.locale}
+                timeSort={this.state.timeSort}
               />
             }
             dialogueURL={`/agent/${agent.id}/dialogue`}
@@ -354,6 +359,7 @@ ReviewPage.propTypes = {
   newSayingActions: PropTypes.array,
   onGoToUrl: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
+  locale: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -366,6 +372,7 @@ const mapStateToProps = createStructuredSelector({
   category: makeSelectSelectedCategory(),
   newSayingActions: makeSelectNewSayingActions(),
   documents: makeSelectDocuments(),
+  locale: makeSelectLocale(),
 });
 
 function mapDispatchToProps(dispatch) {

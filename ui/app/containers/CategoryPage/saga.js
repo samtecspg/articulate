@@ -30,7 +30,7 @@ import {
 import {
   makeSelectAgent, makeSelectCategory,
 } from '../App/selectors';
-import { getCategories } from '../SayingsPage/saga';
+import { getCategories } from '../DialoguePage/saga';
 
 export function* getCategory(payload) {
   const agent = yield select(makeSelectAgent());

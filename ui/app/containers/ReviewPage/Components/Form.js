@@ -187,6 +187,8 @@ class Form extends React.Component {
           onRequestSort={this.props.onRequestSort}
           sortField={this.props.sortField}
           sortDirection={this.props.sortDirection}
+          locale={this.props.locale}
+          timeSort={this.props.timeSort}
         />}
       </Grid>
     </Grid>;
@@ -229,6 +231,8 @@ Form.propTypes = {
   onRequestSort: PropTypes.func,
   sortField: PropTypes.string,
   sortDirection: PropTypes.string,
+  locale: PropTypes.string,
+  timeSort: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(Form));

@@ -82,5 +82,13 @@ export default defineMessages({
   noData: {
     id: 'app.containers.ReviewPage.component.SayingsDataForm.noData',
     defaultMessage: 'No data',
+  },
+  oldest: {
+    id: 'app.containers.ReviewPage.component.SayingsDataForm.oldest',
+    defaultMessage: 'Oldest',
+  },
+  newest: {
+    id: 'app.containers.ReviewPage.component.SayingsDataForm.newest',
+    defaultMessage: 'Newest',
   }
 });

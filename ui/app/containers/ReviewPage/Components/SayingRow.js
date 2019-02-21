@@ -2,6 +2,7 @@ import {
   MenuItem,
   TableCell,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { PropTypes } from 'prop-types';
@@ -13,6 +14,14 @@ import {
 } from '../../../components/StyledTable';
 import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../utils/constants';
 import HighlightedSaying from './HighlightedSaying';
+
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en';
+import es from 'javascript-time-ago/locale/es';
+import pt from 'javascript-time-ago/locale/pt';
+TimeAgo.addLocale(en);
+TimeAgo.addLocale(es);
+TimeAgo.addLocale(pt);
 
 const styles = {
   userSays: {
@@ -89,6 +98,15 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class SayingRow extends React.Component {
+
+  constgetDocTime(timestamp) {
+    if (timestamp){
+      const timeAgo = new TimeAgo(this.props.locale).format(new Date(timestamp), 'twitter');
+      return timeAgo ? timeAgo : '< 1m';
+    }
+    return '';
+  };
+
   render() {
     const {
       classes,
@@ -124,6 +142,11 @@ class SayingRow extends React.Component {
             )}
           </TextField>
           }
+        </TableCell>
+        <TableCell>
+          <Typography variant='body1' style={{fontSize: '10px', color: '#4e4e4e'}}>
+            {this.constgetDocTime(document.time_stamp)}
+          </Typography>
         </TableCell>
         <TableCell>
           <span className={classes.userSays}>
@@ -178,6 +201,7 @@ SayingRow.propTypes = {
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func,
   onCopySaying: PropTypes.func,
+  locale: PropTypes.string,
 };
 
 export default withStyles(styles)(SayingRow);

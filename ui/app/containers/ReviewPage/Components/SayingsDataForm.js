@@ -25,7 +25,7 @@ const styles = {
     borderBottomRightRadius: '5px',
   },
   formSubContainer: {
-    padding: '40px 25px',
+    padding: '0px 25px 40px 25px',
   },
   deleteCell: {
     width: '20px',
@@ -216,11 +216,30 @@ const styles = {
       borderLeft: '1px solid #a2a7b1',
     },
   },
+  dateSelectContainer: {
+    position: 'relative',
+    top: '41px',
+    left: '10px',
+    marginTop: '0px',
+    height: '20px'
+  },
+  dateSelectLabel: {
+    '&:hover': {
+      color: '#000000de',
+    },
+    color: '#a2a7b1',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.75rem',
+    fontWeight: '500',
+    paddingRight: '20px'
+  },
 };
 
 const tableHeaders = [
   { id: 'category', disablePadding: true, label: '', width: '15%' },
-  { id: 'document', disablePadding: true, label: '', width: '65%' },
+  { id: 'time_stamp', disablePadding: true, label: '', width: '5%' },
+  { id: 'document', disablePadding: true, label: '', width: '60%' },
   { id: 'maximum_category_score', disablePadding: true, label: 'Category', width: '5%', sort: true },
   { id: 'maximum_saying_score', disablePadding: true, label: 'Action', width: '5%', sort: true },
   { id: 'copy', disablePadding: true, label: 'Copy', width: '5%' },
@@ -231,7 +250,7 @@ const tableHeaders = [
  * @return {null}
  */
 function SayingsDataForm(props) {
-  const { classes, documents, intl } = props;
+  const { classes, documents, intl, locale, timeSort } = props;
   if (_.isNil(documents)) {
     return null;
   }
@@ -239,6 +258,21 @@ function SayingsDataForm(props) {
     <div>
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} container item xs={12}>
+          {documents.length > 0 ?
+              <a
+                className={classes.dateSelectContainer}
+                onClick={
+                  (evt) => {
+                    props.onRequestSort('time_stamp');
+                  }
+                }
+              >
+                <Typography className={classes.dateSelectLabel}>
+                  {timeSort === 'DESC' ? intl.formatMessage(messages.newest) : intl.formatMessage(messages.oldest)}
+                </Typography>
+              </a>
+            : null
+          }
           <StyledTable
             id='reviewsTable'
             noBorder
@@ -247,6 +281,7 @@ function SayingsDataForm(props) {
               documents.length === 0 ?
                 [<StyledRow key={'document_0'}>
                   <SayingRow
+                    locale={locale}
                     document={{
                       id: 'noData',
                       document: intl.formatMessage(messages.noData),
@@ -404,7 +439,8 @@ SayingsDataForm.propTypes = {
   onRequestSort: PropTypes.func,
   sortField: PropTypes.string,
   sortDirection: PropTypes.string,
-
+  locale: PropTypes.string,
+  timeSort: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(SayingsDataForm));

@@ -33,7 +33,7 @@ import {
 import {
   makeSelectAgent, makeSelectKeyword, makeSelectAgentSettings
 } from '../App/selectors';
-import { getKeywords } from '../KeywordsPage/saga';
+import { getKeywords } from '../DialoguePage/saga';
 
 export function* getKeyword(payload) {
   const agent = yield select(makeSelectAgent());
