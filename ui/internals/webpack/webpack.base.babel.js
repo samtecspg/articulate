@@ -13,9 +13,10 @@ const webpack = require('webpack');
 process.noDeprecation = true;
 
 const processEnv = {
-  NODE_ENV: JSON.stringify(process.env.NODE_ENV) || JSON.stringify('production'),
+  NODE_ENV: JSON.stringify(process.env.NODE_ENV) ,
   API_HOST: JSON.stringify(process.env.API_HOST),
 };
+console.log(processEnv)
 
 module.exports = options => ({
   mode: options.mode,
