@@ -53,6 +53,11 @@ const styles = {
     top: '13px',
     zIndex: 999,
   },
+  languageSelectContainer: {
+    position: 'absolute',
+    right: '350px',
+    top: '20px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -82,6 +87,13 @@ export class AppHeader extends React.Component {
       conversationBarOpen ?
         <Grid container className={classes.header} item xs={12}>
           <Hidden only={['xs', 'sm']}>
+            <Grid className={classes.languageSelectContainer}> 
+              <LanguageSelect 
+                key='selectLanguage'
+                uiLanguage={this.props.uiLanguage} 
+                uiLanguages={this.props.uiLanguages} 
+                onChangeLanguage={this.props.onChangeLanguage} />
+            </Grid>
             <ConversationBar
               uiLanguage={this.props.uiLanguage} 
               uiLanguages={this.props.uiLanguages} 
@@ -104,6 +116,13 @@ export class AppHeader extends React.Component {
             </Grid>
           </Hidden>
           <Hidden only={['md', 'lg', 'xl']}>
+            <Grid className={classes.languageSelectContainer}>  
+              <LanguageSelect 
+                key='selectLanguage'
+                uiLanguage={this.props.uiLanguage} 
+                uiLanguages={this.props.uiLanguages} 
+                onChangeLanguage={this.props.onChangeLanguage} />
+            </Grid>
             <ConversationBar
               uiLanguage={this.props.uiLanguage} 
               uiLanguages={this.props.uiLanguages} 
