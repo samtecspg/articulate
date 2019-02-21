@@ -550,7 +550,7 @@ class SayingsDataForm extends React.Component {
                 <Typography className={classes.highlightLabel}>
                   <FormattedMessage {...messages.highlightTooltip} />
                 </Typography>
-                <Table>
+                <Table style={{ border: 'none' }}>
                   <TableBody>
                     {sayings.map((saying, index) => (
                       <TableRow key={`${saying}_${index}`}>

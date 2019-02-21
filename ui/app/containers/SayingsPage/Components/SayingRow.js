@@ -33,11 +33,12 @@ const styles = {
     margin: '0px 5px 0px 5px',
     fontSize: '12px',
     padding: '4px 8px 4px 10px',
-    backgroundColor: '#e2e5e7',
+    backgroundColor: 'none',
     display: 'inline-block',
     position: 'relative',
     borderRadius: '5px',
     marginTop: '2px',
+    border: '1px solid #4e4e4e'
   },
   actionLabel: {
     textDecoration: 'none',
@@ -75,7 +76,6 @@ const styles = {
   categorySelect: {
     padding: '5px',
     backgroundColor: '#f6f7f8',
-    border: 'none',
   },
 };
 
@@ -184,7 +184,7 @@ class SayingRow extends React.Component {
         <Grid container>
           <Grid item xs={12}>
             <Grid container spacing={16}>
-              <div style={{ width: '100px', marginTop: '5px'}}>
+              <Grid container item md={2} xs={4} style={{ width: '100px' }}>
                 <TextField
                   className={classes.categorySelectContainer}
                   select
@@ -209,40 +209,43 @@ class SayingRow extends React.Component {
                     )
                   )}
                 </TextField>
-              </div>
-              <Grid item md={10} xs={8}>
-                <span className={classes.userSays} onMouseUp={(evt) => { this.onHighlight(evt) }}>
-                  <HighlightedSaying
-                    agentKeywords={agentKeywords}
-                    keywords={saying.keywords}
-                    text={saying.userSays}
-                    keywordIndex={0}
-                    lastStart={0}
-                    onUntagKeyword={this.props.onUntagKeyword.bind(null, saying)}
+              </Grid>
+              <Grid container item md={10} xs={8}>
+                <Grid item md={8} xs={6}>
+                  <span className={classes.userSays} onMouseUp={(evt) => { this.onHighlight(evt) }}>
+                    <HighlightedSaying
+                      agentKeywords={agentKeywords}
+                      keywords={saying.keywords}
+                      text={saying.userSays}
+                      keywordIndex={0}
+                      lastStart={0}
+                      onUntagKeyword={this.props.onUntagKeyword.bind(null, saying)}
+                    />
+                  </span>
+                </Grid>
+                <Grid item md={4} xs={6}>
+                  {saying.actions.map((action, index) => {
+                    let actionId = this.props.agentActions.filter((agentAction) => agentAction.actionName === action);
+                    actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
+                    return (
+                      <div key={`sayingAction_${index}`} className={classes.actionBackgroundContainer}>
+                        <span
+                          className={classes.actionLabel}
+                          onClick={() => {
+                            this.props.onSendSayingToAction(saying);
+                            this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`)
+                          }
+                          }
+                        >{action}</span>
+                        <a onClick={() => { this.props.onDeleteAction(saying, action) }} className={classes.deleteActionX}>x</a>
+                      </div>
+                    )
+                  })}
+                  <img
+                    onClick={(evt) => this.handleOpen('actions', evt.target)}
+                    className={classes.addActionIcon} src={addActionIcon}
                   />
-                </span>
-                {saying.actions.map((action, index) => {
-                  let actionId = this.props.agentActions.filter((agentAction) => agentAction.actionName === action);
-                  actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
-                  return (
-                    <div key={`sayingAction_${index}`} className={classes.actionBackgroundContainer}>
-                      <span
-                        className={classes.actionLabel}
-                        onClick={() => {
-                          this.props.onSendSayingToAction(saying);
-                          this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`)
-                        }
-                        }
-                      >{action}</span>
-                      <a onClick={() => { this.props.onDeleteAction(saying, action) }} className={classes.deleteActionX}>x</a>
-                    </div>
-                  )
-                })}
-                <img
-                  onClick={(evt) => this.handleOpen('actions', evt.target)}
-                  className={classes.addActionIcon} src={addActionIcon}
-                />
-                <FormControl>
+                  <FormControl>
                   <Select
                     style={{
                       display:'none',
@@ -313,6 +316,7 @@ class SayingRow extends React.Component {
                     ))}
                   </Select>
                 </FormControl>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
