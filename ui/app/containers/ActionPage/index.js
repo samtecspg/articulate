@@ -121,7 +121,7 @@ export class ActionPage extends React.Component {
           this.props.onSuccess(`/agent/${this.props.agent.id}`);
         }
         else{
-          this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+          this.props.onSuccess(`/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`);
         }
       }
       if (this.state.isNewAction) {
@@ -302,7 +302,7 @@ export class ActionPage extends React.Component {
           <Grid className={classes.goBackCard} onClick={() => {
               this.state.ref === 'agent' ?
                 this.props.onGoToUrl(`/agent/${this.props.agent.id}`) :
-                this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)
+                this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`)
             }}
           />
         </Grid>
@@ -313,7 +313,7 @@ export class ActionPage extends React.Component {
           onSaveAndExit={() => { this.submit(true) }}
           goBack={() => {this.state.ref === 'agent' ? 
             this.props.onGoToUrl(`/agent/${this.props.agent.id}`) :
-            this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)
+            this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`)
           }}
           newAction={this.state.isNewAction}
           actionName={this.props.action.actionName}

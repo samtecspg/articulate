@@ -220,7 +220,7 @@ export function* deleteAction(payload) {
   try {
     yield call(api.agent.deleteAgentAgentidActionActionid, { agentId: agent.id, actionId: id });
     yield put(deleteActionSuccess());
-    yield put(push(`/agent/${agent.id}/sayings`))
+    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`))
   } catch (err) {
     const error = { ...err };
     yield put(deleteActionError(error.response.body.message));

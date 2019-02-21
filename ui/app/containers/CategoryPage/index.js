@@ -89,7 +89,7 @@ export class CategoriesEditPage extends React.Component {
     }
     if (this.props.success) {
       if (this.state.exitAfterSubmit){
-        this.props.onSuccess(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`);
+        this.props.onSuccess(`/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${this.state.filter}&page=${this.state.page}`);
       }
       if (this.state.isNewCategory) {
         this.setState({
@@ -155,7 +155,7 @@ export class CategoriesEditPage extends React.Component {
               agentId={this.props.agent.id}
               onFinishAction={this.submit}
               backButton={messages.backButton}
-              goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/sayings?filter=${this.state.filter}&page=${this.state.page}`)}}
+              goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${this.state.filter}&page=${this.state.page}`)}}
               onSaveAndExit={() => { this.submit(true) }}
             />
           }

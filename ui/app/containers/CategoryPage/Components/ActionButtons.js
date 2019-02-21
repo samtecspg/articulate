@@ -70,7 +70,7 @@ class ActionButtons extends React.Component {
           type={intl.formatMessage(messages.instanceName)}
         />
         <Hidden only={['xl', 'lg', 'md']}>
-          <Link className={`${classes.icon} ${classes.link}`} to={`/agent/${this.props.agentId}/sayings?filter=${this.props.filter}&page=${this.props.page}`}>
+          <Link className={`${classes.icon} ${classes.link}`} to={`/agent/${this.props.agentId}/dialogue?filter=${this.props.filter}&page=${this.props.page}&tab=sayings`}>
             <Icon>arrow_back</Icon>
           </Link>
           <a style={{color: this.props.formError ? '#f44336' : ''}} key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>

@@ -197,7 +197,7 @@ export class ReviewPage extends React.Component {
   copySayingFromDocument(userSays, saying) {
     const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
     if (saying.categoryScore === 0) {
-      onGoToUrl(`/agent/${agent.id}/sayings?userSays=${userSays}`);
+      onGoToUrl(`/agent/${agent.id}/dialogue?tab=sayings&userSays=${userSays}`);
     }
     else {
       const { onCopySaying } = this.props.actions;
@@ -310,10 +310,8 @@ export class ReviewPage extends React.Component {
                 sortDirection={this.state.sortDirection}
               />
             }
-            sayingsURL={`/agent/${agent.id}/sayings`}
-            sayingsForm={Link}
-            keywordsForm={Link}
-            keywordsURL={`/agent/${agent.id}/keywords`}
+            dialogueURL={`/agent/${agent.id}/dialogue`}
+            dialogueForm={Link}
           />
         </Grid> :
         <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />

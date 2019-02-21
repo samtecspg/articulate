@@ -27,11 +27,10 @@ import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
 import CategoryPage from '../CategoryPage/Loadable';
 import KeywordsEditPage from '../KeywordsEditPage/Loadable';
-import KeywordsPage from '../KeywordsPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
-import SayingsPage from '../SayingsPage/Loadable';
+import DialoguePage from '../DialoguePage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import {
   checkAPI,
@@ -151,9 +150,8 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={AgentsPage} />
             <Route exact path='/agent/:id' component={AgentPage} />
-            <Route exact path='/agent/:id/sayings' component={SayingsPage} />
+            <Route exact path='/agent/:id/dialogue' component={DialoguePage} />
             <Route exact path='/agent/:id/review' component={ReviewPage} />
-            <Route exact path='/agent/:id/keywords' component={KeywordsPage} />
             <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
             <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
             <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />

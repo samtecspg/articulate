@@ -10,9 +10,9 @@ export default defineMessages({
     id: 'app.components.MainTab.agent',
     defaultMessage: 'Agent: ',
   },
-  sayings: {
-    id: 'app.components.MainTab.sayings',
-    defaultMessage: 'Sayings',
+  dialogue: {
+    id: 'app.components.MainTab.dialogue',
+    defaultMessage: 'Dialogue',
   },
   keywords: {
     id: 'app.components.MainTab.keywords',

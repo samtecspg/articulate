@@ -89,7 +89,7 @@ export function* deleteCategory(payload) {
     yield call(api.agent.deleteAgentAgentidCategoryCategoryid, { agentId: agent.id, categoryId: id });
     yield put(deleteCategorySuccess());
     yield call(getCategories, { api });
-    yield put(push(`/agent/${agent.id}/sayings`));
+    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
   } catch (err) {
     const error = { ...err };
     yield put(deleteCategoryError(error.response.body.message));

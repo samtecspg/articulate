@@ -239,7 +239,7 @@ export class KeywordsEditPage extends React.Component {
           touched={this.props.touched}
           loading={this.props.loading}
           success={this.props.success}
-          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/keywords`)}}
+          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?tab=keywords`)}}
           onSaveAndExit={() => { this.submit(true) }}
           newKeyword={this.state.isNewKeyword}
           keywordName={this.props.keyword.keywordName}

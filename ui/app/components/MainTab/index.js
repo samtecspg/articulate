@@ -1,5 +1,4 @@
 import {
-  Button,
   Grid,
   Hidden,
   Icon,
@@ -18,8 +17,7 @@ import {
 import TrainButton from '../../components/TrainButton';
 import agentIcon from '../../images/agents-icon.svg';
 import reviewIcon from '../../images/icon-review.svg';
-import keywordsIcon from '../../images/keywords-icon.svg';
-import sayingsIcon from '../../images/sayings-icon.svg';
+import dialogueIcon from '../../images/sayings-icon.svg';
 import vDivider from '../../images/v-divider.svg';
 import messages from './messages';
 
@@ -112,12 +110,9 @@ export class MainTab extends React.Component {
                   <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === '' ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
                   <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === ''? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} />}
                 <Tab className={classes.vDividerIconTab} icon={<img className={classes.vDividerIcon} src={vDivider} />} disabled />
-                {this.props.sayingsURL ?
-                  <Tab value="sayings" className={classes.tab} icon={<img className={classes.icon} src={sayingsIcon} />} label={intl.formatMessage(messages.sayings)} component={this.props.sayingsForm} to={this.props.sayingsURL} disabled={!enableTabs} /> :
-                  <Tab value="sayings" className={classes.tab} icon={<img className={classes.icon} src={sayingsIcon} />} label={intl.formatMessage(messages.sayings)} disabled={!enableTabs} />}
-                {this.props.keywordsURL ?
-                  <Tab value="keywords" className={classes.tab} icon={<img className={classes.icon} src={keywordsIcon} />} label={intl.formatMessage(messages.keywords)} component={this.props.keywordsForm} to={this.props.keywordsURL} disabled={!enableTabs} /> :
-                  <Tab value="keywords" className={classes.tab} icon={<img className={classes.icon} src={keywordsIcon} />} label={intl.formatMessage(messages.keywords)} disabled={!enableTabs} />}
+                {this.props.dialogueURL ?
+                  <Tab value="dialogue" className={classes.tab} icon={<img className={classes.icon} src={dialogueIcon} />} label={intl.formatMessage(messages.dialogue)} component={this.props.dialogueForm} to={this.props.dialogueURL} disabled={!enableTabs} /> :
+                  <Tab value="dialogue" className={classes.tab} icon={<img className={classes.icon} src={dialogueIcon} />} label={intl.formatMessage(messages.dialogue)} disabled={!enableTabs} />}
                 {this.props.reviewURL ?
                   <Tab value="review" className={classes.tab} icon={<img className={classes.icon} src={reviewIcon} />} label={intl.formatMessage(messages.review)} component={this.props.reviewForm} to={this.props.reviewURL} disabled={!enableTabs} /> :
                   <Tab value="review" className={classes.tab} icon={<img className={classes.icon} src={reviewIcon} />} label={intl.formatMessage(messages.review)} disabled={!enableTabs} />}
@@ -149,15 +144,9 @@ export class MainTab extends React.Component {
               : null
           }
           {
-            !this.props.sayingsURL ?
-              this.state.selectedTab === 'sayings' ?
-                (this.props.sayingsForm) : null
-              : null
-          }
-          {
-            !this.props.keywordsURL ?
-              this.state.selectedTab === 'keywords' ?
-                (this.props.keywordsForm) : null
+            !this.props.dialogueURL ?
+              this.state.selectedTab === 'dialogue' ?
+                (this.props.dialogueForm) : null
               : null
           }
           {
@@ -184,12 +173,9 @@ export class MainTab extends React.Component {
                   <Tab value="agents" className={classes.tab} icon={<img className={classes.icon} src={agentIcon} />} component={this.props.agentForm} to={this.props.agentURL} /> :
                   <Tab value="agents" className={classes.tab} icon={<img className={classes.icon} src={agentIcon} />} />}
                 <Tab className={classes.vDividerIconTab} icon={<img className={classes.vDividerIcon} src={vDivider} />} disabled />
-                {this.props.sayingsURL ?
-                  <Tab value="sayings" className={classes.tab} icon={<img className={classes.icon} src={sayingsIcon} />} component={this.props.sayingsForm} to={this.props.sayingsURL} disabled={!enableTabs} /> :
-                  <Tab value="sayings" className={classes.tab} icon={<img className={classes.icon} src={sayingsIcon} />} disabled={!enableTabs} />}
-                {this.props.keywordsURL ?
-                  <Tab value="keywords" className={classes.tab} icon={<img className={classes.icon} src={keywordsIcon} />} component={this.props.keywordsForm} to={this.props.keywordsURL} disabled={!enableTabs} /> :
-                  <Tab value="keywords" className={classes.tab} icon={<img className={classes.icon} src={keywordsIcon} />} disabled={!enableTabs} />}
+                {this.props.dialogueURL ?
+                  <Tab value="dialogue" className={classes.tab} icon={<img className={classes.icon} src={dialogueIcon} />} component={this.props.dialogueForm} to={this.props.dialogueURL} disabled={!enableTabs} /> :
+                  <Tab value="dialogue" className={classes.tab} icon={<img className={classes.icon} src={dialogueIcon} />} disabled={!enableTabs} />}
                 {this.props.reviewURL ?
                   <Tab value="review" className={classes.tab} icon={<img className={classes.icon} src={reviewIcon} />} label={intl.formatMessage(messages.review)} component={this.props.reviewForm} to={this.props.reviewURL} disabled={!enableTabs} /> :
                   <Tab value="review" className={classes.tab} icon={<img className={classes.icon} src={reviewIcon} />} label={intl.formatMessage(messages.review)} disabled={!enableTabs} />}
@@ -228,15 +214,9 @@ export class MainTab extends React.Component {
               : null
           }
           {
-            !this.props.sayingsURL ?
-              this.state.selectedTab === 'sayings' ?
-                (this.props.sayingsForm) : null
-              : null
-          }
-          {
-            !this.props.keywordsURL ?
-              this.state.selectedTab === 'keywords' ?
-                (this.props.keywordsForm) : null
+            !this.props.dialogueURL ?
+              this.state.selectedTab === 'dialogue' ?
+                (this.props.dialogueForm) : null
               : null
           }
           {
@@ -261,15 +241,11 @@ MainTab.propTypes = {
     PropTypes.node,
   ]),
   agentURL: PropTypes.string,
-  sayingsForm: PropTypes.oneOfType([
+  dialogueForm: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.node,
   ]),
-  sayingsURL: PropTypes.string,
-  keywordsForm: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.node,
-  ]),
+  dialogueURL: PropTypes.string,
   keywordsURL: PropTypes.string,
   reviewForm: PropTypes.oneOfType([
     PropTypes.func,

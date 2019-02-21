@@ -335,12 +335,10 @@ export class AgentPage extends React.PureComponent {
               onChangeParameterValue={this.props.onChangeParameterValue}
             />
           }
-          sayingsForm={Link}
-          sayingsURL={`/agent/${this.props.agent.id}/sayings`}
+          dialogueForm={Link}
+          dialogueURL={`/agent/${this.props.agent.id}/dialogue`}
           reviewURL={`/agent/${this.props.agent.id}/review`}
           reviewForm={Link}
-          keywordsForm={Link}
-          keywordsURL={`/agent/${this.props.agent.id}/keywords`}
         />
       </Grid> : 
       <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
