@@ -9,7 +9,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   title: {
     id: 'app.containers.DialoguePage.title',
-    defaultMessage: 'Agent',
+    defaultMessage: 'Dialogue',
   },
   sayingsFormTitle: {
     id: 'app.containers.DialoguePage.sayingsFormTitle',
@@ -18,6 +18,10 @@ export default defineMessages({
   help: {
     id: 'app.containers.DialoguePage.help',
     defaultMessage: 'Help?',
+  },
+  playHelpAlt : {
+    id: 'app.containers.DialoguePage.playHelpAlt',
+    defaultMessage: 'Play video off how to use dialog features',
   },
   sayingsPlayHelpAlt : {
     id: 'app.containers.DialoguePage.sayingsPlayHelpAlt',

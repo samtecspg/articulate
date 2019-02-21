@@ -227,7 +227,7 @@ class SayingsDataForm extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.currentPage !== nextProps.currentPage || this.props.sayingsPageSize !== nextProps.sayingsPageSize) {
+    if (this.props.currentSayingsPage !== nextProps.currentSayingsPage || this.props.sayingsPageSize !== nextProps.sayingsPageSize) {
       this.setState({
         changedPage: true,
       });
@@ -591,7 +591,7 @@ class SayingsDataForm extends React.Component {
                       id='pageSize'
                       value={this.props.sayingsPageSize}
                       onChange={(evt) => {
-                        this.props.changePageSize(evt.target.value);
+                        this.props.changeSayingsPageSize(evt.target.value);
                       }}
                       margin='normal'
                       InputLabelProps={{
@@ -616,18 +616,18 @@ class SayingsDataForm extends React.Component {
                     </Typography>
                   </Grid>
                   <Grid className={classes.pageNumberSubControl}>
-                    <Typography onClick={this.props.currentPage > 1 ? this.props.movePageBack : null} className={this.props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
+                    <Typography onClick={this.props.currentSayingsPage > 1 ? this.props.moveSayingsPageBack : null} className={this.props.currentSayingsPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
                       <FormattedMessage {...messages.backPage} />
                     </Typography>
                     <TextField
                       id='page'
                       margin='normal'
-                      value={this.props.currentPage}
+                      value={this.props.currentSayingsPage}
                       onChange={(evt) => {
                         evt.target.value === '' ?
-                          this.props.changePage(1) :
-                          (evt.target.value <= this.props.numberOfPages && evt.target.value >= 0 ?
-                            this.props.changePage(evt.target.value) :
+                          this.props.changeSayingsPage(1) :
+                          (evt.target.value <= this.props.numberOfSayingsPages && evt.target.value >= 0 ?
+                            this.props.changeSayingsPage(evt.target.value) :
                             false);
                       }}
                       fullWidth
@@ -639,16 +639,16 @@ class SayingsDataForm extends React.Component {
                           textAlign: 'center',
                         },
                         min: 1,
-                        max: this.props.numberOfPages,
+                        max: this.props.numberOfSayingsPages,
                         step: 1,
                       }}
                       className={classes.pageTextfield}
                       type='number'
                     />
                     <Typography className={classes.pagesLabel}>
-                      / {this.props.numberOfPages}
+                      / {this.props.numberOfSayingsPages}
                     </Typography>
-                    <Typography onClick={this.props.currentPage < this.props.numberOfPages ? this.props.movePageForward : null} className={this.props.currentPage < this.props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
+                    <Typography onClick={this.props.currentSayingsPage < this.props.numberOfSayingsPages ? this.props.moveSayingsPageForward : null} className={this.props.currentSayingsPage < this.props.numberOfSayingsPages ? classes.pageCursors : classes.pageCursorsDisabled}>
                       <FormattedMessage {...messages.nextPage} />
                     </Typography>
                   </Grid>
@@ -681,12 +681,12 @@ SayingsDataForm.propTypes = {
   onAddAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
-  currentPage: PropTypes.number,
-  numberOfPages: PropTypes.number,
-  changePage: PropTypes.func,
-  movePageBack: PropTypes.func,
-  movePageForward: PropTypes.func,
-  changePageSize: PropTypes.func,
+  currentSayingsPage: PropTypes.number,
+  numberOfSayingsPages: PropTypes.number,
+  changeSayingsPage: PropTypes.func,
+  moveSayingsPageBack: PropTypes.func,
+  moveSayingsPageForward: PropTypes.func,
+  changeSayingsPageSize: PropTypes.func,
   onSelectCategory: PropTypes.func,
   category: PropTypes.string,
   userSays: PropTypes.string,

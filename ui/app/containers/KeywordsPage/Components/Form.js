@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, Input } from '@material-ui/core';
+import { Grid, Typography, Button, Modal } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import KeywordsDataForm from './KeywordsDataForm';
@@ -11,7 +11,6 @@ import messages from '../messages';
 
 import keywordsIcon from '../../../images/keywords-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';
-import searchIcon from '../../../images/search-icon.svg';
 
 const styles = {
   headerContainer: {

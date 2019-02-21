@@ -9,6 +9,8 @@ import messages from "../messages";
 
 import agentIcon from "../../../images/agents-icon.svg";
 import playHelpIcon from "../../../images/play-help-icon.svg";
+import SayingsDataForm from './SayingsDataForm';
+import KeywordsDataForm from './KeywordsDataForm';
 
 const styles = {
   headerContainer: {
@@ -95,14 +97,7 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
   state = {
-    selectedTab: 0,
     openModal: false,
-  };
-
-  handleChange = (event, value) => {
-    this.setState({
-      selectedTab: value,
-    });
   };
 
   handleOpen = () => {
@@ -158,65 +153,33 @@ class Form extends React.Component {
         <Grid item xs={12}>
           <Tabs
             className={classes.agentTabs}
-            value={this.state.selectedTab}
+            value={this.props.selectedTab}
             indicatorColor="primary"
             textColor="secondary"
             scrollable
             scrollButtons="off"
             onChange={(evt, value) => {
-              this.handleChange(evt, value);
+              this.props.handleTabChange(evt, value);
             }}
           >
-            <Tab 
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.main)}</span>
-                </span>
-              }	
-              icon={
-                this.props.errorState.tabs.indexOf(0) > -1 ? 
-                  <div id='notificationDot' className={classes.notificationDot}>
-                    <span className={classes.numOfErrorsLabel}>
-                      {(this.props.errorState.tabs.filter((element) => { return element === 0 })).length}
-                    </span>
-                  </div> : 
-                  null
-              }
-            />
-            <Tab 
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.parameters)}</span>
-                </span>
-              }
-              icon={
-                this.props.errorState.tabs.indexOf(1) > -1 ? 
-                  <div id='notificationDot' className={classes.notificationDot}>
-                    <span className={classes.numOfErrorsLabel}>
-                      {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
-                    </span>
-                  </div> : 
-                  null
-              }
-            />
             <Tab
-              icon={[
-                this.props.errorState.tabs.indexOf(2) > -1 ? 
-                  <div style={{left: '0px'}} key='notification_settings' id='notificationDot' className={classes.notificationDot}>
-                    <span className={classes.numOfErrorsLabel}>
-                      {(this.props.errorState.tabs.filter((element) => { return element === 2 })).length}
-                    </span>
-                  </div> : 
-                  null
-              ]}
+              value='sayings' 
               label={
                 <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.settings)}</span>
+                  <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
+                </span>
+              }
+            />
+            <Tab 
+              value='keywords'
+              label={
+                <span className={classes.tabLabel}>
+                  <span>{intl.formatMessage(messages.keywordsFormTitle)}</span>
                 </span>
               }
             />
           </Tabs>
-          {this.state.selectedTab === 0 && (
+          {this.props.selectedTab === 'sayings' && (
             <SayingsDataForm
               agentId={this.props.agentId}
               sayings={this.props.sayings}
@@ -233,7 +196,7 @@ class Form extends React.Component {
               onDeleteAction={this.props.onDeleteAction}
               onAddNewSayingAction={this.props.onAddNewSayingAction}
               onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
-              onGoToUrl={this.props.onGoToUrl}
+              onGoToUrl={this.props.onGoToUrl.bind(null, this.props.selectedTab)}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentSayingsPage={this.props.currentSayingsPage}
               numberOfSayingsPages={this.props.numberOfSayingsPages}
@@ -249,10 +212,10 @@ class Form extends React.Component {
               onClearSayingToAction={this.props.onClearSayingToAction}
             />
           )}
-          {this.state.selectedTab === 1 && (
+          {this.props.selectedTab === 'keywords' && (
             <KeywordsDataForm
               agentId={this.props.agentId}
-              keywords={this.props.keywords}
+              keywords={this.props.agentKeywords}
               onCreateKeyword={this.props.onCreateKeyword}
               currentKeywordsPage={this.props.currentKeywordsPage}
               keywordsPageSize={this.props.keywordsPageSize}
@@ -261,7 +224,7 @@ class Form extends React.Component {
               changeKeywordsPageSize={this.props.changeKeywordsPageSize}
               moveKeywordsPageBack={this.props.moveKeywordsPageBack}
               moveKeywordsPageForward={this.props.moveKeywordsPageForward}
-              onGoToUrl={this.props.onGoToUrl}
+              onGoToUrl={this.props.onGoToUrl.bind(null, this.props.selectedTab)}
             />
           )}
         </Grid>
@@ -314,6 +277,8 @@ Form.propTypes = {
   changeKeywordsPageSize: PropTypes.func,
   moveKeywordsPageBack: PropTypes.func,
   moveKeywordsPageForward: PropTypes.func,
+  selectedTab: PropTypes.string,
+  handleTabChange: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

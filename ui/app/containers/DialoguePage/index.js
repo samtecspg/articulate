@@ -64,9 +64,9 @@ export class DialoguePage extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.changePage = this.changePage.bind(this);
     this.moveSayingsPageBack = this.moveSayingsPageBack.bind(this);
     this.moveSayingsPageForward = this.moveSayingsPageForward.bind(this);
+    this.changeSayingsPage = this.changeSayingsPage.bind(this);
     this.changeSayingsPageSize = this.changeSayingsPageSize.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.onSearchCategory = this.onSearchCategory.bind(this);
@@ -80,9 +80,11 @@ export class DialoguePage extends React.PureComponent {
     this.setNumberOfKeywordsPages = this.setNumberOfKeywordsPages.bind(this);
     this.changeKeywordsPageSize = this.changeKeywordsPageSize.bind(this);
     this.initForm = this.initForm.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   state = {
+    selectedTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab : 'sayings',
     filter: '',
     categoryFilter: '',
     currentSayingsPage: 1,
@@ -107,13 +109,16 @@ export class DialoguePage extends React.PureComponent {
     const currentSayingsPage = locationSearchParams.page ? _.toNumber(locationSearchParams.page) : this.state.currentSayingsPage;
     this.setState({ filter, currentSayingsPage, pageSize: agentSayingsPageSize });
 
-    this.props.onLoadKeywords();
-    this.props.onLoadActions();
-    this.props.onLoadCategories();
-    this.props.onLoadSayings(filter, currentSayingsPage, agentSayingsPageSize);
-    
-    this.setState({ keywordsPageSize: this.props.agent.settings.keywordsPageSize });
-    this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
+    if (this.state.selectedTab === 'sayings'){
+      this.props.onLoadActions();
+      this.props.onLoadCategories();
+      this.props.onLoadSayings(filter, currentSayingsPage, agentSayingsPageSize);
+    }
+
+    if (this.state.selectedTab === 'keywords'){
+      this.setState({ keywordsPageSize: this.props.agent.settings.keywordsPageSize });
+      this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
+    }    
   }
 
   componentWillMount() {
@@ -143,7 +148,7 @@ export class DialoguePage extends React.PureComponent {
     }
   }
 
-  changePage(pageNumber) {
+  changeSayingsPage(pageNumber) {
     this.setState({
       currentSayingsPage: pageNumber,
     });
@@ -152,27 +157,27 @@ export class DialoguePage extends React.PureComponent {
 
   moveSayingsPageBack() {
     const { currentSayingsPage } = this.state;
-    this.changePage(currentSayingsPage > 1 ? currentSayingsPage - 1 : currentSayingsPage);
+    this.changeSayingsPage(currentSayingsPage > 1 ? currentSayingsPage - 1 : currentSayingsPage);
   }
 
   moveSayingsPageForward() {
     const { currentSayingsPage, numberOfSayingsPages } = this.state;
-    this.changePage(currentSayingsPage < numberOfSayingsPages ? currentSayingsPage + 1 : currentSayingsPage);
+    this.changeSayingsPage(currentSayingsPage < numberOfSayingsPages ? currentSayingsPage + 1 : currentSayingsPage);
   }
 
-  changeSayingsPageSize(pageSize) {
+  changeSayingsPageSize(sayingsPageSize) {
     this.setState({
       currentSayingsPage: 1,
       sayingsPageSize,
     });
-    this.props.onChangeSayingsPageSize(this.props.agent.id, pageSize);
-    this.props.onLoadSayings(this.state.filter, 1, pageSize);
+    this.props.onChangeSayingsPageSize(this.props.agent.id, sayingsPageSize);
+    this.props.onLoadSayings(this.state.filter, 1, sayingsPageSize);
   }
 
   onSearchSaying(filter) {
     this.setState({
       filter,
-      currentPage: 1,
+      currentSayingsPage: 1,
     });
     this.throttledOnLoadSayings(filter, 1);
   }
@@ -186,9 +191,9 @@ export class DialoguePage extends React.PureComponent {
 
   addSaying(saying) {
     this.setState({
-      currentPage: 1,
+      currentSayingsPage: 1,
     });
-    this.props.onAddSaying(this.state.filter, 1, this.state.pageSize, saying);
+    this.props.onAddSaying(this.state.filter, 1, this.state.sayingsPageSize, saying);
   }
 
   deleteSaying(sayingId, categoryId) {
@@ -214,7 +219,7 @@ export class DialoguePage extends React.PureComponent {
     if (this.state.currentKeywordsPage > 1){
       newPage = this.state.currentKeywordsPage - 1;
     }
-    this.changePage(newPage);
+    this.changeKeywordsPage(newPage);
   }
 
   moveKeywordsPageForward(){
@@ -222,7 +227,7 @@ export class DialoguePage extends React.PureComponent {
     if (this.state.currentKeywordsPage < this.state.numberOfKeywordsPages){
       newPage = this.state.currentKeywordsPage + 1;
     }
-    this.changePage(newPage);
+    this.changeKeywordsPage(newPage);
   }
 
   changeKeywordsPageSize(keywordsPageSize){
@@ -240,6 +245,18 @@ export class DialoguePage extends React.PureComponent {
     });
     this.props.onLoadKeywords(filter, this.state.currentKeywordsPage, this.state.keywordsPageSize);
   }
+
+  handleTabChange = (event, value) => {
+    this.setState({
+      selectedTab: value,
+    });
+    if (value === 'sayings'){
+      this.props.onLoadSayings(this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize);
+    }
+    if (value === 'keywords'){
+      this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
+    }
+  };
 
   render() {
     return (
@@ -264,6 +281,8 @@ export class DialoguePage extends React.PureComponent {
           agentURL={`/agent/${this.props.agent.id}`}
           dialogueForm={
             <Form
+              handleTabChange={this.handleTabChange}
+              selectedTab={this.state.selectedTab}
               onSearchKeyword={this.onSearchKeyword}
               keywords={this.props.keywords}
               onCreateKeyword={this.props.onCreateKeyword}
@@ -283,17 +302,17 @@ export class DialoguePage extends React.PureComponent {
               agentFilteredCategories={this.props.agentFilteredCategories}
               onAddSaying={this.addSaying}
               onDeleteSaying={this.deleteSaying}
-              onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
-              onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
-              onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
-              onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+              onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+              onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+              onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+              onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
               onAddNewSayingAction={this.props.onAddNewSayingAction}
               onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
               onSearchCategory={this.onSearchCategory}
-              onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentPage, this.state.pageSize)}
+              onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
               onSendSayingToAction={this.props.onSendSayingToAction}
-              currentSayingsPage={this.state.currentSayingsPage}
+              currentSayingsPage={parseInt(this.state.currentSayingsPage)}
               sayingsPageSize={this.state.sayingsPageSize}
               numberOfSayingsPages={this.state.numberOfSayingsPages}
               changeSayingsPage={this.changeSayingsPage}
@@ -308,7 +327,6 @@ export class DialoguePage extends React.PureComponent {
               filter={this.state.filter}
             />
           }
-          dialogueURL={`/agent/${this.props.agent.id}/dialogue`}
           reviewURL={`/agent/${this.props.agent.id}/review`}
           reviewForm={Link}
         />
@@ -438,7 +456,7 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withSaga = injectSaga({ key: 'agent', saga });
+const withSaga = injectSaga({ key: 'dialogue', saga });
 
 export default compose(
   withSaga,

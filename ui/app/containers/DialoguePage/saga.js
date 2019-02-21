@@ -103,6 +103,7 @@ export function* getSayings(payload) {
       direction: 'DESC',
       loadCategoryId: true,
     });
+    yield call(getKeywords, { api });
     yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));
   }
   catch (err) {
