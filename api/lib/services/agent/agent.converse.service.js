@@ -666,13 +666,14 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
             return data;
         }, Promise.resolve([]));
+        
         let textResponses = _.map(responses, 'textResponse');
         //extract responses from previous answers
         const responsesFromQueue = getResponsesFromQueue({
             context: conversationStateObject.context
         });
         textResponses = textResponses.concat(responsesFromQueue);
-        const textResponse = textResponses.length === 1 ? textResponses : textResponses.join(' ');
+        const textResponse = textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
         await documentService.update({ id: conversationStateObject.docId, data: { webhookResponses } });
         await contextService.update({
