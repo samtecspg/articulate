@@ -1,0 +1,22 @@
+config:
+  target: 'http://0.0.0.0:7500'
+  phases:
+    - duration: 5
+      arrivalRate: 25
+  payload:
+    # path is relative to the location of the test script
+    path: "converse.data.csv"
+    fields:
+      - "id"
+      - "debug"
+      - "sessionId"
+      - "text"
+scenarios:
+  - name: "converse.data.csv"
+    flow:
+      - post:
+          url: "/agent/{{ id }}/converse?debug={{ debug }}"
+          body: "{\"sessionId\":\"{{ sessionId }}\",\"text\":\"{{  text }}\"}"
+          capture:
+            json: "$.textResponse"
+            as: "textResponse"

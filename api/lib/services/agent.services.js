@@ -1,3 +1,5 @@
+/* eslint-disable prefer-arrow-callback */
+import { performance } from 'perf_hooks';
 import Schmervice from 'schmervice';
 import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent-converse-fulfill-empty-slots-with-saved-values.service';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
@@ -46,6 +48,14 @@ import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action
 import UpsertSayingInCategory from './agent/agent.upsert-saying-in-category.service';
 import UpsertWebhookInAction from './agent/agent.upsert-webhook-in-action.service';
 
+const perfWrapper = async ({ fn, context, args }) => {
+
+    const wrapped = performance.timerify(async function () {
+
+        return await fn.apply(this, arguments);
+    });
+    return await wrapped.apply(context, arguments);
+};
 module.exports = class AgentService extends Schmervice.Service {
 
     async create() {
@@ -205,7 +215,10 @@ module.exports = class AgentService extends Schmervice.Service {
 
     async parse() {
 
-        return await Parse.apply(this, arguments);
+        return await performance.timerify(async function parse() {
+
+            return await Parse.apply(this, arguments);
+        }).apply(this, arguments);
     }
 
     async parseRegexKeywords() {
@@ -240,27 +253,42 @@ module.exports = class AgentService extends Schmervice.Service {
 
     async converseGenerateResponseFallback() {
 
-        return await ConverseGenerateResponseFallback.apply(this, arguments);
+        return await perfWrapper({ fn: ConverseGenerateResponseFallback, context: this, args: arguments });
     }
 
     async converseGenerateResponse() {
+        const context = this;
+        const args = arguments;
+        const wrapped = performance.timerify(async function () {
 
-        return await ConverseGenerateResponse.apply(this, arguments);
+            return await ConverseGenerateResponse.apply(this, arguments);
+        });
+        return await wrapped.apply(context, args);
+
+        /*return await performance.timerify(async function converseGenerateResponse() {
+
+            return await ConverseGenerateResponse.apply(this, arguments);
+        }).apply(this, arguments);*/
+        //return await perfWrapper({ fn: ConverseGenerateResponse, context: this, args: arguments });
     }
 
     async converseUpdateContextFrames() {
 
-        return await ConverseUpdateContextFrames.apply(this, arguments);
+        return await perfWrapper({ fn: ConverseUpdateContextFrames, context: this, args: arguments });
     }
 
     async converseCompileResponseTemplates() {
+        return await performance.timerify(async function converseCompileResponseTemplates() {
 
-        return await ConverseCompileResponseTemplates.apply(this, arguments);
+            return await ConverseCompileResponseTemplates.apply(this, arguments);
+        }).apply(this, arguments);
     }
 
     async converseCallWebhook() {
+        return await performance.timerify(async function converseCallWebhook() {
 
-        return await ConverseCallWebhook.apply(this, arguments);
+            return await ConverseCallWebhook.apply(this, arguments);
+        }).apply(this, arguments);
     }
 
     async converseFulfillEmptySlotsWithSavedValues() {

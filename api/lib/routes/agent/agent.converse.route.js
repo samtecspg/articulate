@@ -1,12 +1,12 @@
 import Boom from 'boom';
 import {
     PARAM_AGENT_ID,
+    PARAM_DEBUG,
     PARAM_SESSION,
     PARAM_TEXT,
     PARAM_TIMEZONE,
     ROUTE_AGENT,
-    ROUTE_CONVERSE,
-    PARAM_DEBUG
+    ROUTE_CONVERSE
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';
 
@@ -37,7 +37,7 @@ module.exports = {
             } = request.query;
 
             try {
-                return await agentService.converse({ id: agentId, text, timezone, sessionId, debug, additionalKeys: rest });
+                return await agentService.converse({ id: agentId, text, timezone, sessionId, debug, additionalKeys: rest, requestId: Date.now() });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

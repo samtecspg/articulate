@@ -1,4 +1,9 @@
+/* eslint-disable prefer-arrow-callback */
 import _ from 'lodash';
+import {
+    performance,
+    PerformanceObserver
+} from 'perf_hooks';
 import {
     CSO_AGENT,
     CSO_CONTEXT,
@@ -11,24 +16,34 @@ import {
     PARAM_DOCUMENT_RASA_RESULTS,
     RASA_INTENT_SPLIT_SYMBOL
 } from '../../../util/constants';
+import log from '../../../util/log';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, sessionId, text, timezone, debug = false, additionalKeys = null }) {
+module.exports = async function ({ id, sessionId, text, timezone, debug = false, additionalKeys = null, requestId = null }) {
+    const obs = new PerformanceObserver((list) => {
 
+        const entries = list.getEntries();
+        const { name, duration } = entries[0];
+        //metrics.concat();
+        //obs.disconnect();
+        log({ name, duration }); // TODO: REMOVE!!!!
+    });
+
+    obs.observe({ entryTypes: ['function'], buffered: false });
     const { redis, handlebars } = this.server.app;
     const { agentService, contextService, globalService, documentService } = await this.server.services();
     const webhookResponses = [];
 
     //MARK: reduce the remaining life of the saved slots
-    const updateLifespanOfSlots = (conversationStateObject) => {
+    const updateLifespanOfSlots = performance.timerify(function updateLifespanOfSlots(conversationStateObject) {
 
         Object.keys(conversationStateObject.context.savedSlots).forEach(slot => {
             const savedSlot = conversationStateObject.context.savedSlots[slot];
-            if (savedSlot.remainingLife > -1){
-                if (savedSlot.remainingLife > 0){
+            if (savedSlot.remainingLife > -1) {
+                if (savedSlot.remainingLife > 0) {
                     //1 is the shortest value of life, after that it is set to null as 0 is infinity
-                    if (savedSlot.remainingLife === 1){
+                    if (savedSlot.remainingLife === 1) {
                         savedSlot.remainingLife = null;
                     }
                     else {
@@ -39,17 +54,16 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         });
         //Removes all the slots that doesn't have a remaining life
         Object.keys(conversationStateObject.context.savedSlots).forEach((slot) => {
-            if (!conversationStateObject.context.savedSlots[slot].remainingLife){
+            if (!conversationStateObject.context.savedSlots[slot].remainingLife) {
                 delete conversationStateObject.context.savedSlots[slot];
-            };
+            }
         });
-    };
+    });
 
     //MARK: get all the keywords for all the categories
-    const getKeywordsFromRasaResults = ({ rasaResults }) => {
+    const getKeywordsFromRasaResults = performance.timerify(function getKeywordsFromRasaResults({ rasaResults }) {
 
         return _.flatMap(rasaResults, (category) => {
-
             category.keywords = _.map(category.keywords, (keyword) => {
 
                 //MARK: assigns category name to keyword
@@ -58,11 +72,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             });
             return category.keywords;
         });
-    };
+    });
 
     //MARK: returns the category recognizer, or the only category or just list of keywords
-    const getBestRasaResult = ({ rasaResults, categoryClassifierThreshold, multiCategory }) => {
-
+    const getBestRasaResult = performance.timerify(function getBestRasaResult({ rasaResults, categoryClassifierThreshold, multiCategory }) {
         let rasaResult = {};
 
         const recognizedCategory = rasaResults[0];
@@ -89,10 +102,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         }
 
         return rasaResult;
-    };
+    });
 
     //MARK: if there is an action, look for it in the agent actions, return the first one
-    const getActionData = ({ rasaResult, agentActions }) => {
+    const getActionData = performance.timerify(function getActionData({ rasaResult, agentActions }) {
 
         //MARK: rasaResult comes from getBestRasaResult
         if (rasaResult.action) {
@@ -103,10 +116,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             })[0];
         }
         return null;
-    };
+    });
 
     //MARK: if there is a modifier, look for it in the agent keywords, return the first one
-    const getModifierData = ({ rasaResult, agentKeywords }) => {
+    const getModifierData = performance.timerify(function getModifierData({ rasaResult, agentKeywords }) {
 
         //MARK: rasaResult comes from getBestRasaResult
         if (rasaResult.action) {
@@ -125,28 +138,28 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             })[0];
         }
         return null;
-    };
+    });
 
     //MARK: find and action from the agent object by name
-    const getActionByName = ({ actionName, agentActions }) => {
+    const getActionByName = performance.timerify(function getActionByName({ actionName, agentActions }) {
 
         return _.filter(agentActions, (agentAction) => {
 
             return agentAction.actionName === actionName;
         })[0];
-    };
+    });
 
     //MARK: find category from agent.categories by name
-    const getCategoryByName = ({ agentCategories, categoryName }) => {
+    const getCategoryByName = performance.timerify(function getCategoryByName({ agentCategories, categoryName }) {
 
         return _.filter(agentCategories, (agentCategory) => {
 
             return agentCategory.categoryName === categoryName;
         })[0];
-    };
+    });
 
     //MARK: look into all the context until you get one with slots
-    const getLastContextWithValidSlots = ({ context, recognizedKeywords }) => {
+    const getLastContextWithValidSlots = performance.timerify(function getLastContextWithValidSlots({ context, recognizedKeywords }) {
 
         const recognizedKeywordsNames = _.map(recognizedKeywords, 'keyword');
         let keepGoing = true;
@@ -163,9 +176,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             contextIndex--;
         }
         return lastValidContext;
-    };
+    });
 
-    const recognizedKeywordsArePartOfTheContext = ({ slots, recognizedKeywords }) => {
+    const recognizedKeywordsArePartOfTheContext = performance.timerify(function recognizedKeywordsArePartOfTheContext({ slots, recognizedKeywords }) {
 
         let results = _.map(recognizedKeywords, (recognizedKeyword) => {
 
@@ -173,7 +186,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         });
         results = _.compact(results);
         return results.length > 0;
-    };
+    });
 
     const response = async ({ conversationStateObject }) => {
 
@@ -669,16 +682,16 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     }
     catch (error) {
 
-        if (error.isParseError){
-            if (error.missingCategories){
+        if (error.isParseError) {
+            if (error.missingCategories) {
                 return {
                     textResponse: 'I don\'t have any knowledge in my brain yet. Please teach me something.'
-                }
+                };
             }
-            if (error.missingTrainedCategories){
+            if (error.missingTrainedCategories) {
                 return {
                     textResponse: 'Ok I know you have teach me a couple of things, but first you have to train me.'
-                }
+                };
             }
         }
         throw RedisErrorHandler({ error });
