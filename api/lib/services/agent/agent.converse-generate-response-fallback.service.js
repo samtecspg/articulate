@@ -1,4 +1,4 @@
-module.exports = function ({ agent, conversationStateObject }) {
+module.exports = async function ({ agent, conversationStateObject }) {
 
     const fallbackAction = agent.actions.filter((action) => {
         return action.actionName === agent.fallbackAction;
