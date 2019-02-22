@@ -141,7 +141,7 @@ class Form extends React.Component {
                 <iframe
                   width={styles.modalContent.width}
                   height={styles.modalContent.height}
-                  src="https://www.youtube.com/embed/o807YDeK6Vg"
+                  src={this.props.selectedTab === 'sayings' ? 'https://www.youtube.com/watch?v=opL04qS6S5U' : 'https://www.youtube.com/watch?v=-Agogt68gSg'}
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen

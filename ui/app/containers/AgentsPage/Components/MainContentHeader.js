@@ -123,7 +123,7 @@ export class ContentHeader extends React.Component {
             <iframe
               width={styles.modalContent.width}
               height={styles.modalContent.height}
-              src="https://www.youtube.com/embed/o807YDeK6Vg"
+              src="https://www.youtube.com/watch?v=pWjaslx94J0"
               frameBorder="0"
               allow="autoplay; encrypted-media"
               allowFullScreen

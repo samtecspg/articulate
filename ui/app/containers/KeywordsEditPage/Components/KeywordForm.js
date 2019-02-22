@@ -128,7 +128,7 @@ class KeywordForm extends React.Component {
                 <iframe
                   width={styles.modalContent.width}
                   height={styles.modalContent.height}
-                  src="https://www.youtube.com/embed/o807YDeK6Vg"
+                  src="https://www.youtube.com/watch?v=Gus06Z1-cNw"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen

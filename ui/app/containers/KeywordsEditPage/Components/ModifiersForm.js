@@ -150,7 +150,7 @@ class ModifiersForm extends React.Component {
                 <iframe
                   width={styles.modalContent.width}
                   height={styles.modalContent.height}
-                  src="https://www.youtube.com/embed/o807YDeK6Vg"
+                  src="https://www.youtube.com/watch?v=hrIiD_U2wg4"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen
