@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Card, CardContent, CardHeader, Slide, Typography }  from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
 import messages from '../messages';
 import exportIcon from '../../../images/export-icon.svg';
@@ -173,7 +172,7 @@ class AgentsCards extends React.Component {
                 <CardHeader onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardHeader} titleTypographyProps={{ className: classes.agentNameCard }} title={agent.agentName}/>
                 <CardContent onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardContent}>
                   <Grid>
-                    {agent.description}
+                    {`${agent.description.substring(0,64)}...`}
                   </Grid>
                 </CardContent>
                 <Grid container justify='center' className={classes.exportFooter}>
