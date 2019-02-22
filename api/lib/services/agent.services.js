@@ -1,6 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
-import { performance } from 'perf_hooks';
 import Schmervice from 'schmervice';
+import PerformanceWrapper from '../../util/service-performance-wrapper';
 import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent-converse-fulfill-empty-slots-with-saved-values.service';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
@@ -48,263 +48,239 @@ import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action
 import UpsertSayingInCategory from './agent/agent.upsert-saying-in-category.service';
 import UpsertWebhookInAction from './agent/agent.upsert-webhook-in-action.service';
 
-const perfWrapper = async ({ fn, context, args }) => {
-
-    const wrapped = performance.timerify(async function () {
-
-        return await fn.apply(this, arguments);
-    });
-    return await wrapped.apply(context, arguments);
-};
 module.exports = class AgentService extends Schmervice.Service {
 
     async create() {
 
-        return await Create.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Create, name: 'AgentService.create' }).apply(this, arguments);
     }
 
     async remove() {
 
-        return await Remove.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Remove, name: 'AgentService.remove' }).apply(this, arguments);
     }
 
     async createCategory() {
 
-        return await CreateCategory.apply(this, arguments);
+        return await PerformanceWrapper({ fn: CreateCategory, name: 'AgentService.createCategory' }).apply(this, arguments);
     }
 
     async createAction() {
 
-        return await CreateAction.apply(this, arguments);
+        return await PerformanceWrapper({ fn: CreateAction, name: 'AgentService.createAction' }).apply(this, arguments);
     }
 
     async updateAction() {
 
-        return await UpdateAction.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpdateAction, name: 'AgentService.updateAction' }).apply(this, arguments);
     }
 
     async createKeyword() {
 
-        return await CreateKeyword.apply(this, arguments);
+        return await PerformanceWrapper({ fn: CreateKeyword, name: 'AgentService.createKeyword' }).apply(this, arguments);
     }
 
     async createPostFormat() {
 
-        return await CreatePostFormat.apply(this, arguments);
+        return await PerformanceWrapper({ fn: CreatePostFormat, name: 'AgentService.createPostFormat' }).apply(this, arguments);
     }
 
     async upsertPostFormatInAction() {
 
-        return await UpsertPostFormatInAction.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpsertPostFormatInAction, name: 'AgentService.upsertPostFormatInAction' }).apply(this, arguments);
     }
 
     async updateById() {
 
-        return await UpdateById.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpdateById, name: 'AgentService.updateById' }).apply(this, arguments);
     }
 
     async removePostFormat() {
 
-        return await RemovePostFormat.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemovePostFormat, name: 'AgentService.removePostFormat' }).apply(this, arguments);
     }
 
     async removeWebhook() {
 
-        return await RemoveWebhook.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemoveWebhook, name: 'AgentService.removeWebhook' }).apply(this, arguments);
     }
 
     async updatePostFormat() {
 
-        return await UpdatePostFormat.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpdatePostFormat, name: 'AgentService.updatePostFormat' }).apply(this, arguments);
     }
 
     async createWebhook() {
 
-        return await CreateWebhook.apply(this, arguments);
+        return await PerformanceWrapper({ fn: CreateWebhook, name: 'AgentService.createWebhook' }).apply(this, arguments);
     }
 
     async findAllSayings() {
 
-        return await FindAllSayings.apply(this, arguments);
+        return await PerformanceWrapper({ fn: FindAllSayings, name: 'AgentService.findAllSayings' }).apply(this, arguments);
     }
 
     async findAllSettings() {
 
-        return await FindAllSettings.apply(this, arguments);
+        return await PerformanceWrapper({ fn: FindAllSettings, name: 'AgentService.findAllSettings' }).apply(this, arguments);
     }
 
     async findSettingByName() {
 
-        return await FindSettingByName.apply(this, arguments);
+        return await PerformanceWrapper({ fn: FindSettingByName, name: 'AgentService.findSettingByName' }).apply(this, arguments);
     }
 
     async updateAllSettings() {
 
-        return await UpdateAllSettings.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpdateAllSettings, name: 'AgentService.updateAllSettings' }).apply(this, arguments);
     }
 
     async upsertSayingInCategory() {
 
-        return await UpsertSayingInCategory.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpsertSayingInCategory, name: 'AgentService.upsertSayingInCategory' }).apply(this, arguments);
     }
 
     async updateKeyword() {
 
-        return await UpdateKeyword.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpdateKeyword, name: 'AgentService.updateKeyword' }).apply(this, arguments);
     }
 
     async updateCategory() {
 
-        return await UpdateCategory.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpdateCategory, name: 'AgentService.updateCategory' }).apply(this, arguments);
     }
 
     async upsertWebhookInAction() {
 
-        return await UpsertWebhookInAction.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpsertWebhookInAction, name: 'AgentService.upsertWebhookInAction' }).apply(this, arguments);
     }
 
     async removeWebhookInAction() {
 
-        return await RemoveWebhookInAction.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemoveWebhookInAction, name: 'AgentService.removeWebhookInAction' }).apply(this, arguments);
     }
 
     async removePostFormatInAction() {
 
-        return await RemovePostFormatInAction.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemovePostFormatInAction, name: 'AgentService.removePostFormatInAction' }).apply(this, arguments);
     }
 
     async removeAction() {
 
-        return await RemoveAction.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemoveAction, name: 'AgentService.removeAction' }).apply(this, arguments);
+
     }
 
     async removeSayingInCategory() {
 
-        return await RemoveSayingInCategory.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemoveSayingInCategory, name: 'AgentService.removeSayingInCategory' }).apply(this, arguments);
+
     }
 
     async removeCategory() {
 
-        return await RemoveCategory.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemoveCategory, name: 'AgentService.removeCategory' }).apply(this, arguments);
     }
 
     async removeKeyword() {
 
-        return await RemoveKeyword.apply(this, arguments);
+        return await PerformanceWrapper({ fn: RemoveKeyword, name: 'AgentService.removeKeyword' }).apply(this, arguments);
     }
 
     async export() {
 
-        return await Export.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Export, name: 'AgentService.export' }).apply(this, arguments);
+
     }
 
     async import() {
 
-        return await Import.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Import, name: 'AgentService.import' }).apply(this, arguments);
     }
 
     async trainCategory() {
 
-        return await TrainCategory.apply(this, arguments);
+        return await PerformanceWrapper({ fn: TrainCategory, name: 'AgentService.trainCategory' }).apply(this, arguments);
     }
 
     async train() {
 
-        return await Train.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Train, name: 'AgentService.train' }).apply(this, arguments);
     }
 
     async parse() {
 
-        return await performance.timerify(async function parse() {
-
-            return await Parse.apply(this, arguments);
-        }).apply(this, arguments);
+        return await PerformanceWrapper({ fn: Parse, name: 'AgentService.parse' }).apply(this, arguments);
     }
 
     async parseRegexKeywords() {
 
-        return await ParseRegexKeywords.apply(this, arguments);
+        return await PerformanceWrapper({ fn: ParseRegexKeywords, name: 'AgentService.parseRegexKeywords' }).apply(this, arguments);
     }
 
     async parseDucklingKeywords() {
 
-        return await ParseDucklingKeywords.apply(this, arguments);
+        return await PerformanceWrapper({ fn: ParseDucklingKeywords, name: 'AgentService.parseDucklingKeywords' }).apply(this, arguments);
     }
 
     async parseRasaKeywords() {
 
-        return await ParseRasaKeywords.apply(this, arguments);
+        return await PerformanceWrapper({ fn: ParseRasaKeywords, name: 'AgentService.parseRasaKeywords' }).apply(this, arguments);
     }
 
     async getTrainedCategories() {
 
-        return await GetTrainedCategories.apply(this, arguments);
+        return await PerformanceWrapper({ fn: GetTrainedCategories, name: 'AgentService.getTrainedCategories' }).apply(this, arguments);
     }
 
     async updateWebhook() {
 
-        return await UpdateWebhook.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UpdateWebhook, name: 'AgentService.updateWebhook' }).apply(this, arguments);
     }
 
     async converse() {
 
-        return await Converse.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Converse, name: 'AgentService.converse' }).apply(this, arguments);
     }
 
     async converseGenerateResponseFallback() {
 
-        return await perfWrapper({ fn: ConverseGenerateResponseFallback, context: this, args: arguments });
+        return await PerformanceWrapper({ fn: ConverseGenerateResponseFallback, name: 'AgentService.converseGenerateResponseFallback' }).apply(this, arguments);
     }
 
     async converseGenerateResponse() {
-        const context = this;
-        const args = arguments;
-        const wrapped = performance.timerify(async function () {
 
-            return await ConverseGenerateResponse.apply(this, arguments);
-        });
-        return await wrapped.apply(context, args);
-
-        /*return await performance.timerify(async function converseGenerateResponse() {
-
-            return await ConverseGenerateResponse.apply(this, arguments);
-        }).apply(this, arguments);*/
-        //return await perfWrapper({ fn: ConverseGenerateResponse, context: this, args: arguments });
+        return await PerformanceWrapper({ fn: ConverseGenerateResponse, name: 'AgentService.converseGenerateResponse' }).apply(this, arguments);
     }
 
     async converseUpdateContextFrames() {
 
-        return await perfWrapper({ fn: ConverseUpdateContextFrames, context: this, args: arguments });
+        return await PerformanceWrapper({ fn: ConverseUpdateContextFrames, name: 'AgentService.converseUpdateContextFrames' }).apply(this, arguments);
     }
 
     async converseCompileResponseTemplates() {
-        return await performance.timerify(async function converseCompileResponseTemplates() {
 
-            return await ConverseCompileResponseTemplates.apply(this, arguments);
-        }).apply(this, arguments);
+        return await PerformanceWrapper({ fn: ConverseCompileResponseTemplates, name: 'AgentService.converseCompileResponseTemplates' }).apply(this, arguments);
     }
 
     async converseCallWebhook() {
-        return await performance.timerify(async function converseCallWebhook() {
 
-            return await ConverseCallWebhook.apply(this, arguments);
-        }).apply(this, arguments);
+        return await PerformanceWrapper({ fn: ConverseCallWebhook, name: 'AgentService.converseCallWebhook' }).apply(this, arguments);
     }
 
     async converseFulfillEmptySlotsWithSavedValues() {
 
-        return await ConverseFulfillEmptySlotsWithSavedValues.apply(this, arguments);
+        return await PerformanceWrapper({ fn: ConverseFulfillEmptySlotsWithSavedValues, name: 'AgentService.converseFulfillEmptySlotsWithSavedValues' }).apply(this, arguments);
+
     }
 
     async isModelUnique() {
 
-        return await IsModelUnique.apply(this, arguments);
+        return await PerformanceWrapper({ fn: IsModelUnique, name: 'AgentService.isModelUnique' }).apply(this, arguments);
     }
 
     async findAllDocuments() {
 
-        return await FindAllDocuments.apply(this, arguments);
+        return await PerformanceWrapper({ fn: FindAllDocuments, name: 'AgentService.findAllDocuments' }).apply(this, arguments);
     }
 };
-
-

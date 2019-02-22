@@ -1,4 +1,5 @@
 import Schmervice from 'schmervice';
+import PerformanceWrapper from '../../util/service-performance-wrapper';
 import Create from './document/document.create.service';
 import FindByAgentId from './document/document.find-by-agent-id.service';
 import FindById from './document/document.find-by-id.service.js';
@@ -15,7 +16,7 @@ module.exports = class DocumentService extends Schmervice.Service {
 
     async update() {
 
-        return await Update.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Update, name: 'DocumentService.update' }).apply(this, arguments);
     }
 
     async remove() {

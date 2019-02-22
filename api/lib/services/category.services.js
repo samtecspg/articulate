@@ -1,4 +1,5 @@
 import Schmervice from 'schmervice';
+import PerformanceWrapper from '../../util/service-performance-wrapper';
 import Create from './category/category.create.service';
 import FindAllByIds from './category/category.find-all-by-ids.service';
 import FindById from './category/category.find-by-id.service';
@@ -12,42 +13,42 @@ module.exports = class CategoryService extends Schmervice.Service {
 
     async create() {
 
-        return await Create.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Create, name: 'CategoryService.create' }).apply(this, arguments);
     }
 
     async findAllByIds() {
 
-        return await FindAllByIds.apply(this, arguments);
+        return await PerformanceWrapper({ fn: FindAllByIds, name: 'CategoryService.findAllByIds' }).apply(this, arguments);
     }
 
     async findById() {
 
-        return await FindById.apply(this, arguments);
+        return await PerformanceWrapper({ fn: FindById, name: 'CategoryService.findById' }).apply(this, arguments);
     }
 
     async remove() {
 
-        return await Remove.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Remove, name: 'CategoryService.remove' }).apply(this, arguments);
     }
 
     async linkKeywords() {
 
-        return await LinkKeywords.apply(this, arguments);
+        return await PerformanceWrapper({ fn: LinkKeywords, name: 'CategoryService.linkKeywords' }).apply(this, arguments);
     }
 
     async unlinkKeywords() {
 
-        return await UnlinkKeywords.apply(this, arguments);
+        return await PerformanceWrapper({ fn: UnlinkKeywords, name: 'CategoryService.unlinkKeywords' }).apply(this, arguments);
     }
 
     async train() {
 
-        return await Train.apply(this, arguments);
+        return await PerformanceWrapper({ fn: Train, name: 'CategoryService.train' }).apply(this, arguments);
     }
 
     async generateTrainingData() {
 
-        return await GenerateTrainingData.apply(this, arguments);
+        return await PerformanceWrapper({ fn: GenerateTrainingData, name: 'CategoryService.generateTrainingData' }).apply(this, arguments);
     }
 };
 

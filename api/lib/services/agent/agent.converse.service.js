@@ -21,16 +21,19 @@ import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ id, sessionId, text, timezone, debug = false, additionalKeys = null, requestId = null }) {
+
     const obs = new PerformanceObserver((list) => {
 
         const entries = list.getEntries();
-        const { name, duration } = entries[0];
+        //const { name, duration } = entries[0];
         //metrics.concat();
         //obs.disconnect();
-        log({ name, duration }); // TODO: REMOVE!!!!
+        //log({ requestId, name, duration }); // TODO: REMOVE!!!!
+        log({ requestId, metrics: entries.map(({ name, duration }) => ({ name, duration })) }); // TODO: REMOVE!!!!
+
     });
 
-    obs.observe({ entryTypes: ['function'], buffered: false });
+    obs.observe({ entryTypes: ['function'], buffered: true });
     const { redis, handlebars } = this.server.app;
     const { agentService, contextService, globalService, documentService } = await this.server.services();
     const webhookResponses = [];
