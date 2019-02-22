@@ -237,11 +237,12 @@ const styles = {
 };
 
 const tableHeaders = [
-  { id: 'category', disablePadding: true, label: '', width: '15%' },
+  { id: 'category', disablePadding: true, label: '', width: '10%' },
+  { id: 'newCategory', disablePadding: true, label: '', width: '15%' },
   { id: 'time_stamp', disablePadding: true, label: '', width: '5%' },
-  { id: 'document', disablePadding: true, label: '', width: '60%' },
+  { id: 'document', disablePadding: true, label: '', width: '50%' },
   { id: 'maximum_category_score', disablePadding: true, label: 'Category', width: '5%', sort: true },
-  { id: 'maximum_saying_score', disablePadding: true, label: 'Action', width: '5%', sort: true },
+  { id: 'maximum_action_score', disablePadding: true, label: 'Action', width: '5%', sort: true },
   { id: 'copy', disablePadding: true, label: 'Copy', width: '5%' },
   { id: 'try', disablePadding: true, label: 'Try', width: '5%' },
 ];
@@ -294,7 +295,7 @@ function SayingsDataForm(props) {
                           categoryScore: 0,
                         },
                       ],
-                      maximum_saying_score: null,
+                      maximum_action_score: null,
                       maximum_category_score: null,
                     }}
                     agentKeywords={props.agentKeywords}

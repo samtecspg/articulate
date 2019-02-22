@@ -1,3 +1,5 @@
+import Immutable from 'seamless-immutable';
+
 import {
   MenuItem,
   TableCell,
@@ -19,6 +21,9 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en';
 import es from 'javascript-time-ago/locale/es';
 import pt from 'javascript-time-ago/locale/pt';
+import { intlShape, injectIntl } from 'react-intl';
+import messages from '../messages';
+
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
 TimeAgo.addLocale(pt);
@@ -99,6 +104,11 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class SayingRow extends React.Component {
 
+  state = {
+    selectedCategory: '-1',
+    categoryError: false,
+  }
+
   constgetDocTime(timestamp) {
     if (timestamp){
       const timeAgo = new TimeAgo(this.props.locale).format(new Date(timestamp), 'twitter');
@@ -113,6 +123,7 @@ class SayingRow extends React.Component {
       document,
       agentKeywords,
       agentCategories,
+      intl
     } = this.props;
     const saying = _.maxBy(document.rasa_results, 'categoryScore');
     return (
@@ -137,6 +148,46 @@ class SayingRow extends React.Component {
               (
                 <MenuItem key={`${document.id}_category_${category.id}`} value={category.id}>
                   <span className={classes.categoryLabel}>{category.categoryName.indexOf('modifiers') ? 'Modifier' : category.categoryName}</span>
+                </MenuItem>
+              ),
+            )}
+          </TextField>
+          }
+        </TableCell>
+        <TableCell className={classes.rowCategory}>
+          {saying.categoryScore !== 0 &&
+          <TextField
+            select
+            className={classes.categorySelectContainer}
+            value={this.state.selectedCategory}
+            margin='normal'
+            fullWidth
+            InputProps={{
+              className: classes.categorySelectInputContainer,
+            }}
+            inputProps={{
+              className: classes.categorySelect,
+            }}
+            onChange={(evt) => {
+              evt.target.value !== '-1' ? 
+              this.setState({
+                selectedCategory: evt.target.value,
+                categoryError: false
+              }) : null;
+            }}
+            error={this.state.categoryError}
+            helperText={this.state.categoryError ? intl.formatMessage(messages.required) : null}
+          >
+            {this.state.selectedCategory === '-1' ? 
+            <MenuItem key={`newSayingCategory`} value={'-1'}>
+              <span className={classes.categoryLabel}>{intl.formatMessage(messages.selectNewCategory)}</span>
+            </MenuItem>
+             : null}
+            {agentCategories.map((category) =>
+              // TODO: return the category id in the API to be able to select the category id of the saying in
+              (
+                <MenuItem key={`${document.id}_category_${category.id}`} value={category.categoryName}>
+                  <span className={classes.categoryLabel}>{category.categoryName}</span>
                 </MenuItem>
               ),
             )}
@@ -169,12 +220,21 @@ class SayingRow extends React.Component {
 
         </TableCell>
         <PercentCell value={document.maximum_category_score} align="center" />
-        <PercentCell value={document.maximum_saying_score} align="center" />
+        <PercentCell value={document.maximum_action_score} align="center" />
         <CopyImageCell
           tooltip={'Copy to your list of Sayings'}
           disabled={document.id === 'noData'}
           onClick={() => {
-            this.props.onCopySaying(document.document, saying);
+            if (this.state.selectedCategory === '-1'){
+              this.setState({
+                categoryError: true
+              });
+            }
+            else {
+              const sayingCopy = Immutable.asMutable(saying, { deep: true });
+              sayingCopy.category = this.state.selectedCategory;
+              this.props.onCopySaying(document.document, sayingCopy);
+            }
           }}
         />
         <PlayImageCell
@@ -194,6 +254,7 @@ class SayingRow extends React.Component {
 }
 
 SayingRow.propTypes = {
+  intl: intlShape,
   classes: PropTypes.object,
   document: PropTypes.object,
   agentKeywords: PropTypes.array,
@@ -204,4 +265,4 @@ SayingRow.propTypes = {
   locale: PropTypes.string,
 };
 
-export default withStyles(styles)(SayingRow);
+export default injectIntl(withStyles(styles)(SayingRow));

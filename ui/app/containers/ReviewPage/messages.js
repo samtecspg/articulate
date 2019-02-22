@@ -90,5 +90,13 @@ export default defineMessages({
   newest: {
     id: 'app.containers.ReviewPage.component.SayingsDataForm.newest',
     defaultMessage: 'Newest',
+  },
+  selectNewCategory: {
+    id: 'app.containers.ReviewPage.component.SayingsDataForm.selectNewCategory',
+    defaultMessage: 'Select new cat...',
+  },
+  required: {
+    id: 'app.containers.ReviewPage.component.SayingsDataForm.required',
+    defaultMessage: '*Required',
   }
 });
