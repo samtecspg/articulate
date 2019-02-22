@@ -27,13 +27,12 @@ module.exports = function ({ ducklingOutput, timezone }) {
                 case 'hour':
                 case 'day':
                 case 'week':
+                case 'month':
                 case 'year':
                     newOutput.value.to = {
                         value: isAnIntervalWithoutFinish ? time.add((todayTime[grain]() - time[grain]()), grain + 's').format() : time.add(1, grain + 's').format(),
                         grain
                     };
-                    break;
-                case 'month':
                     break;
                 case 'quarter':
                     newOutput.value.to = {
