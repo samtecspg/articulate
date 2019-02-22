@@ -44,7 +44,13 @@ module.exports = async function (
         // Load Used Models
         const models = await globalService.getAllModelsInPath({ modelPath, ids: modelPathIds, returnModel: true });
         const AgentModel = models[MODEL_AGENT];
-        const CategoryModel = models[MODEL_CATEGORY];
+        let OldCategoryModel = null;
+        let CategoryModel = models[MODEL_CATEGORY];
+        if (sayingData.category && categoryId !== sayingData.category) {
+            OldCategoryModel = CategoryModel;
+            CategoryModel = await redis.factory(MODEL_CATEGORY, sayingData.category);
+            delete sayingData.category;
+        }
         const SayingModel = models[MODEL_SAYING] || await redis.factory(MODEL_SAYING); //Empty model if we are going to do a create
 
         if (!SayingModel.isLoaded && !isImport){
@@ -105,17 +111,29 @@ module.exports = async function (
             ...newKeywordModelsNonSystem,
             ...newActionModels
         ];
+
+        let removedParents = removedKeywordModels.concat(removedActionModels);
+        if (OldCategoryModel) {
+            removedParents = removedParents.concat([OldCategoryModel]);
+        }
+
         if (SayingModel.isLoaded) { //Update
             // ADD Parent ---> Saying
             await SayingModel.updateInstance({
                 data: sayingData,
                 parentModels,
-                removedParents: removedKeywordModels.concat(removedActionModels)
+                removedParents
             });
             // ADD Category <---> UsedKeywords
             await categoryService.linkKeywords({ model: CategoryModel, keywordModels: newKeywordModels });
-            // REMOVE Category <-/-> UnusedKeyword
-            await categoryService.unlinkKeywords({ model: CategoryModel, keywordModels: removedKeywordModels });
+            // IF it is not a Category Update REMOVE Category <-/-> UnusedKeyword
+            if (!OldCategoryModel){
+                await categoryService.unlinkKeywords({ model: CategoryModel, keywordModels: removedKeywordModels });
+            } else{
+                SayingModel.unlink(OldCategoryModel, MODEL_CATEGORY);
+                SayingModel.link(CategoryModel, MODEL_CATEGORY);
+                await SayingModel.saveInstance();
+            }
         }
         else { // Create
             SayingModel.link(CategoryModel, MODEL_CATEGORY);

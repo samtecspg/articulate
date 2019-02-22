@@ -35,6 +35,7 @@ import {
   UNTAG_KEYWORD,
   LOAD_KEYWORDS,
   CHANGE_KEYWORDS_PAGE_SIZE,
+  CHANGE_SAYING_CATEGORY,
 } from '../App/constants';
 import {
   makeSelectAgent,
@@ -162,13 +163,17 @@ export function* deleteSaying(payload) {
 
 export function* putSaying(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, sayingId, saying, filter, page, pageSize } = payload;
+  const { api, sayingId, saying, filter, page, pageSize, oldCategoryId } = payload;
+  const valuesToOmit = ['id', 'agent', 'Action', 'Category'];
+  if (!oldCategoryId){
+    valuesToOmit.push('category');
+  }
   try {
     yield call(api.agent.putAgentAgentidCategoryCategoryidSayingSayingid, {
       agentId: agent.id,
-      categoryId: saying.category,
+      categoryId: oldCategoryId ? oldCategoryId : saying.category,
       sayingId,
-      body: _.omit(saying, ['id', 'agent', 'category', 'Action', 'Category']),
+      body: _.omit(saying, valuesToOmit),
     });
     yield call(getSayings, {
       api,
@@ -176,6 +181,19 @@ export function* putSaying(payload) {
       page,
       pageSize,
     });
+  }
+  catch (err) {
+    yield put(updateSayingError(err));
+  }
+}
+
+export function* changeSayingCategory(payload){
+  const { api, saying, categoryId, filter, page, pageSize } = payload;
+  const oldCategoryId = saying.category;
+  const mutableSaying = Immutable.asMutable(saying, { deep: true });
+  mutableSaying.category = categoryId;
+  try {
+    yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize, oldCategoryId });
   }
   catch (err) {
     yield put(updateSayingError(err));
@@ -298,4 +316,5 @@ export default function* rootSaga() {
   yield takeLatest(CHANGE_SAYINGS_PAGE_SIZE, putSayingsPageSize);
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(CHANGE_KEYWORDS_PAGE_SIZE, putKeywordsPageSize);
+  yield takeLatest(CHANGE_SAYING_CATEGORY, changeSayingCategory);
 };

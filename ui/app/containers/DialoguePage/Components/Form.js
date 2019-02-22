@@ -190,6 +190,7 @@ class Form extends React.Component {
               agentFilteredCategories={this.props.agentFilteredCategories}
               onAddSaying={this.props.onAddSaying}
               onDeleteSaying={this.props.onDeleteSaying}
+              onChangeSayingCategory={this.props.onChangeSayingCategory}
               onTagKeyword={this.props.onTagKeyword}
               onUntagKeyword={this.props.onUntagKeyword}
               onAddAction={this.props.onAddAction}
@@ -279,6 +280,7 @@ Form.propTypes = {
   moveKeywordsPageForward: PropTypes.func,
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
+  onChangeSayingCategory: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

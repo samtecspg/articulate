@@ -562,6 +562,7 @@ class SayingsDataForm extends React.Component {
                             agentKeywords={this.props.agentKeywords}
                             agentActions={this.props.agentActions}
                             agentCategories={this.props.agentCategories}
+                            onChangeSayingCategory={this.props.onChangeSayingCategory}
                             onTagKeyword={this.props.onTagKeyword}
                             onUntagKeyword={this.props.onUntagKeyword}
                             onAddAction={this.props.onAddAction}
@@ -695,6 +696,7 @@ SayingsDataForm.propTypes = {
   onAddNewSayingAction: PropTypes.func,
   onDeleteNewSayingAction: PropTypes.func,
   onClearSayingToAction: PropTypes.func,
+  onChangeSayingCategory: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(SayingsDataForm));

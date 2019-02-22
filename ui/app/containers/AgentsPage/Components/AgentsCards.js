@@ -172,7 +172,7 @@ class AgentsCards extends React.Component {
                 <CardHeader onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardHeader} titleTypographyProps={{ className: classes.agentNameCard }} title={agent.agentName}/>
                 <CardContent onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardContent}>
                   <Grid>
-                    {`${agent.description.substring(0,64)}...`}
+                    {agent.description > 65 ? `${agent.description.substring(0,64)}...` : agent.description}
                   </Grid>
                 </CardContent>
                 <Grid container justify='center' className={classes.exportFooter}>

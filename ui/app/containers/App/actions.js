@@ -161,6 +161,7 @@ import {
   SORT_MODIFIERS,
   SORT_SLOTS,
   STORE_SOURCE_DATA,
+  CHANGE_SAYING_CATEGORY,
   TAG_KEYWORD,
   TAG_MODIFIER_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
@@ -680,6 +681,18 @@ export function deleteSayingError(error) {
   return {
     type: DELETE_SAYING_ERROR,
     error,
+  };
+}
+
+export function changeSayingCategory(filter, page, pageSize, saying, categoryId) {
+  return {
+    type: CHANGE_SAYING_CATEGORY,
+    apiCall: true,
+    saying,
+    categoryId,
+    filter,
+    page,
+    pageSize,
   };
 }
 

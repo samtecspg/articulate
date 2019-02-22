@@ -190,7 +190,7 @@ class SayingRow extends React.Component {
                   select
                   id='category'
                   value={saying.category}
-                  onChange={() => { console.error('Updating the category of a saying is still not implemented. Sorry') }}
+                  onChange={(evt) => { this.props.onChangeSayingCategory(saying, evt.target.value) }}
                   margin='normal'
                   fullWidth
                   InputProps={{
@@ -338,6 +338,7 @@ SayingRow.propTypes = {
   onAddAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
+  onChangeSayingCategory: PropTypes.func,
 };
 
 export default withStyles(styles)(SayingRow);

@@ -56,6 +56,7 @@ import {
   trainAgent,
   untagKeyword,
   changeKeywordsPageSize,
+  changeSayingCategory,
 } from '../App/actions';
 
 
@@ -302,6 +303,7 @@ export class DialoguePage extends React.PureComponent {
               agentFilteredCategories={this.props.agentFilteredCategories}
               onAddSaying={this.addSaying}
               onDeleteSaying={this.deleteSaying}
+              onChangeSayingCategory={this.props.onChangeSayingCategory.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
               onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
               onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
               onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
@@ -364,6 +366,7 @@ DialoguePage.propTypes = {
   newSayingActions: PropTypes.array,
   location: PropTypes.object,
   keywords: PropTypes.array,
+  onChangeSayingCategory: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -448,6 +451,9 @@ function mapDispatchToProps(dispatch) {
     onChangeSayingsPageSize: (agentId, pageSize) => {
       dispatch(changeSayingsPageSize(agentId, pageSize));
     },
+    onChangeSayingCategory: (filter, page, pageSize, saying, categoryId) => {
+      dispatch(changeSayingCategory(filter, page, pageSize, saying, categoryId));
+    }
   };
 }
 

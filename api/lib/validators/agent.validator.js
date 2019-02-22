@@ -551,6 +551,7 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    category: SayingSchema.category,
                     userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
                     keywords: Joi.array().items({
                         value: SayingKeywordSchema.value.required().error(new Error('You must specify the value that this keyword represents in the user saying')),
