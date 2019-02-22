@@ -165,7 +165,7 @@ class ValuesForm extends React.Component {
                 <iframe
                   width={styles.modalContent.width}
                   height={styles.modalContent.height}
-                  src="https://www.youtube.com/watch?v=O6EnZ9cjLOI"
+                  src="https://www.youtube.com/embed/O6EnZ9cjLOI"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen

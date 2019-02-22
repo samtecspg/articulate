@@ -152,7 +152,7 @@ class Form extends React.Component {
                 <iframe
                   width={styles.modalContent.width}
                   height={styles.modalContent.height}
-                  src="https://www.youtube.com/watch?v=Xc1j2F1Em9M"
+                  src="https://www.youtube.com/embed/Xc1j2F1Em9M"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen

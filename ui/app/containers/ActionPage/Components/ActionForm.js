@@ -120,7 +120,7 @@ class ActionForm extends React.Component {
                 <iframe
                   width={styles.modalContent.width}
                   height={styles.modalContent.height}
-                  src="https://www.youtube.com/watch?v=gZE9P1RrSAE"
+                  src="https://www.youtube.com/embed/gZE9P1RrSAE"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen
