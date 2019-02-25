@@ -1,6 +1,17 @@
-import log from 'log-to-file';
+import fs from 'fs';
 import moment from 'moment';
 
+const log = (text) => {
+
+    const filename = 'performance-timing.csv';
+    const logText = text + '\r\n';
+    fs.appendFile(filename, logText, 'utf8', (err) => {
+
+        if (err) {
+            console.log(err);
+        }
+    });
+};
 export default function ({ fn, name }) {
 
     name = name || fn.name || 'tmp';

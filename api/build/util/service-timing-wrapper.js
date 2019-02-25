@@ -5,11 +5,22 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = _default;
 
-var _logToFile = _interopRequireDefault(require("log-to-file"));
+var _fs = _interopRequireDefault(require("fs"));
 
 var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const log = text => {
+  const filename = 'performance-timing.csv';
+  const logText = text + '\r\n';
+
+  _fs.default.appendFile(filename, logText, 'utf8', err => {
+    if (err) {
+      console.log(err);
+    }
+  });
+};
 
 function _default({
   fn,
@@ -26,7 +37,7 @@ function _default({
 
         const duration = _moment.default.duration(end.diff(start)).asMilliseconds();
 
-        (0, _logToFile.default)(`${name},${duration}`);
+        log(`${name},${duration}`);
         return result;
       }
     };
