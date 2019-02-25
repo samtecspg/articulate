@@ -1,7 +1,7 @@
 import Glue from 'glue';
 import Manifest from './manifest';
 
-const logger = require('../util/logger')({ name: `server` });
+const logger = require('./util/logger')({ name: `server` });
 
 exports.deployment = async (start) => {
 

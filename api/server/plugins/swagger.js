@@ -4,7 +4,7 @@ import Inert from 'inert';
 import Vision from 'vision';
 
 const name = 'swagger';
-const logger = require('../../util/logger')({ name: `plugin:${name}` });
+const logger = require('../util/logger')({ name: `plugin:${name}` });
 
 module.exports = {
     name,

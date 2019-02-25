@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const logger = require('../../../../util/logger')({ name: `plugin:duckling:initialize-model` });
+const logger = require('../../../util/logger')({ name: `plugin:duckling:initialize-model` });
 
 module.exports = async ({ http, path }) => {
 

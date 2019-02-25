@@ -5,3 +5,4 @@ server/.env
 .compiled
 /dist/
 /.vscode/
+default.csv

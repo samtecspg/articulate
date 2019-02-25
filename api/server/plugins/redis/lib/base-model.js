@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import Moment from 'moment';
 import { NohmModel } from 'nohm';
-import * as Constants from '../../../../util/constants';
+import * as Constants from '../../../util/constants';
 
-//const logger = require('../../../../util/logger')({ name: `plugin:redis:base-model` });
+//const logger = require('../../../util/logger')({ name: `plugin:redis:base-model` });
 const defaults = {
     SKIP: 0,
     LIMIT: 50,

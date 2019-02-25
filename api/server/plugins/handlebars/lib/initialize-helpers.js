@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const logger = require('../../../../util/logger')({ name: `plugin:handlebars:initialize-helpers` });
+const logger = require('../../../util/logger')({ name: `plugin:handlebars:initialize-helpers` });
 
 module.exports = async ({ Handlebars, path }) => {
 

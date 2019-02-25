@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Nohm from 'nohm';
 
-const logger = require('../../../../util/logger')({ name: `plugin:redis:initialize-model` });
+const logger = require('../../../util/logger')({ name: `plugin:redis:initialize-model` });
 
 module.exports = async ({ redis, path, prefix }) => {
 

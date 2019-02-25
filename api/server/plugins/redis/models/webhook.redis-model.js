@@ -1,4 +1,4 @@
-import { MODEL_WEBHOOK } from '../../../../util/constants';
+import { MODEL_WEBHOOK } from '../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {

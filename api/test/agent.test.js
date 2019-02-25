@@ -4,7 +4,7 @@ import * as Server from '../server';
 import {
     MODEL_WEBHOOK,
     ROUTE_AGENT
-} from '../util/constants';
+} from '../server/util/constants';
 
 // Test shortcuts
 const { describe, it } = exports.lab = Lab.script();

@@ -3,7 +3,7 @@ import Package from '../../../package.json';
 import InitializeHelpers from './lib/initialize-helpers';
 
 const name = 'handlebars';
-const logger = require('../../../util/logger')({ name: `plugin:${name}` });
+const logger = require('../../util/logger')({ name: `plugin:${name}` });
 
 module.exports = {
     name,

@@ -1,4 +1,4 @@
-import { MODEL_DOCUMENT } from '../../../../util/constants';
+import { MODEL_DOCUMENT } from '../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const properties = {

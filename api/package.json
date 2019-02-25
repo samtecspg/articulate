@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "main": "server/index.js",
   "directories": {
-    "lib": "lib",
+    "server/lib": "server/lib",
     "test": "test"
   },
   "scripts": {
@@ -15,7 +15,10 @@
     "test": "DEBUG=-articulate:* lab -v -a code -T node_modules/lab-transform-preset-env -S $NODE_DEBUG_OPTION",
     "coverage:html": "DEBUG=-articulate:* lab -a code -T node_modules/lab-transform-preset-env -S -c -r html -o coverage.html",
     "lint": "lab -dL -T node_modules/lab-transform-preset-env -S",
-    "lint:fix": "lab -dL --lint-fix -T node_modules/lab-transform-preset-env -S"
+    "lint:fix": "lab -dL --lint-fix -T node_modules/lab-transform-preset-env -S",
+    "clean": "rm -rf build && mkdir build",
+    "build-server": "babel -d ./build ./server -s --copy-files",
+    "build": "npm run clean && npm run build-server"
   },
   "dependencies": {
     "@babel/cli": "^7.0.0",
@@ -43,6 +46,7 @@
     "json2xml": "^0.1.3",
     "json2yaml": "^1.1.0",
     "lodash": "^4.17.10",
+    "log-to-file": "^1.3.0",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "nes": "^9.0.1",
@@ -66,7 +70,8 @@
   "nodemonConfig": {
     "verbose": true,
     "ignore": [
-      "node_modules"
+      "node_modules",
+      "**.log"
     ],
     "delay": "2500"
   }

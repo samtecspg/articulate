@@ -55,6 +55,10 @@ module.exports = new Confidence.Store({
                 options: {}
             },
             {
+                plugin: Nes,
+                options: {}
+            },
+            {
 
                 plugin: './plugins/rasa-nlu',
                 options: { //options passed to axios
@@ -89,14 +93,6 @@ module.exports = new Confidence.Store({
                 options: {}
             },
             {
-                plugin: Nes,
-                options: {}
-            },
-            {
-                plugin: '../lib', // Main plugin
-                options: {}
-            },
-            {
                 plugin: {
                     $filter: 'NODE_ENV',
                     $default: 'hpal-debug',
@@ -118,6 +114,10 @@ module.exports = new Confidence.Store({
                     host: process.env.SWAGGER_HOST || null,
                     basePath: process.env.SWAGGER_BASE_PATH || null
                 }
+            },
+            {
+                plugin: './lib', // Main plugin
+                options: {}
             }
         ]
     }

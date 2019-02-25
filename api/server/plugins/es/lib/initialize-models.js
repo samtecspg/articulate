@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const logger = require('../../../../util/logger')({ name: `plugin:es:initialize-model` });
+const logger = require('../../../util/logger')({ name: `plugin:es:initialize-model` });
 
 module.exports = async ({ client, path }) => {
 

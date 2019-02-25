@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const logger = require('../../../../util/logger')({ name: `plugin:rasa-nlu:initialize-model` });
+const logger = require('../../../util/logger')({ name: `plugin:rasa-nlu:initialize-model` });
 
 module.exports = async ({ http, path }) => {
 

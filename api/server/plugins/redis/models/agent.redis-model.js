@@ -1,4 +1,4 @@
-import { MODEL_AGENT } from '../../../../util/constants';
+import { MODEL_AGENT } from '../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {
@@ -64,7 +64,7 @@ const schema = {
     },
     modifiersRecognizerJustER: {
         type: 'string',
-        defaultValue: ''        
+        defaultValue: ''
     },
     creationDate: {
         type: 'timestamp'

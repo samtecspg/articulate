@@ -3,7 +3,7 @@ import Package from '../../../package.json';
 import InitializeModels from './lib/initialize-models';
 
 const name = 'rasa-nlu';
-const logger = require('../../../util/logger')({ name: `plugin:${name}` });
+const logger = require('../../util/logger')({ name: `plugin:${name}` });
 
 module.exports = {
     name,

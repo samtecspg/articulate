@@ -3,7 +3,7 @@ import Redis from 'redis';
 import Package from '../../../package.json';
 
 const name = 'redis-messaging';
-const logger = require('../../../util/logger')({ name: `plugin:${name}` });
+const logger = require('../../util/logger')({ name: `plugin:${name}` });
 
 module.exports = {
     name,
