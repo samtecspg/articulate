@@ -602,7 +602,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
 
             const agentToolResponse = await response({ conversationStateObject });
-            indexOfActionInQueue = indexOfActionInQueue !== -1 ? indexOfActionInQueue : indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName });
+            indexOfActionInQueue = indexOfActionInQueue !== -1 ? indexOfActionInQueue : (conversationStateObject.action ? indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName }) : -1);
             if (agentToolResponse.followedKeywordPath && indexOfActionInQueue === -1){
                 moveOnQueue({
                     context: conversationStateObject.context,
