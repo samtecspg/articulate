@@ -12,7 +12,12 @@ module.exports = async function ({ conversationStateObject }) {
     if (action.slots && action.slots.length > 0) {
         const requiredSlots = _.filter(action.slots, (slot) => {
 
-            lastFrame.slots[slot.slotName] = currentFrame.slots[slot.slotName] ? currentFrame.slots[slot.slotName] : '';
+            lastFrame.slots[slot.slotName] = currentFrame.slots[slot.slotName] ? currentFrame.slots[slot.slotName] : {
+                keyword: slot.keyword,
+                value: '',
+                original: '',
+                remainingLife: slot.remainingLife
+            };
             return slot.isRequired;
         });
         const isListActionSlotName = _.map(_.filter(action.slots, (slot) => {
@@ -190,12 +195,12 @@ module.exports = async function ({ conversationStateObject }) {
                 if (currentFrame.slots[slot.slotName] && Array.isArray(currentFrame.slots[slot.slotName])){
                     return currentFrame.slots[slot.slotName].length === 0;
                 }
-                return !currentFrame.slots[slot.slotName];
+                return !currentFrame.slots[slot.slotName].value;
             });
             conversationStateObject.slots = currentFrame.slots;
             if (missingKeywords.length > 0) {
                 const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
-                return response;
+                return { ...response, actionWasFulfilled: false };
             }
         }
         else {
@@ -294,12 +299,12 @@ module.exports = async function ({ conversationStateObject }) {
             agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject });
             const missingKeywords = _.filter(requiredSlots, (slot) => {
     
-                return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentFrame.slots[slot.slotName];
+                return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentFrame.slots[slot.slotName].value;
             });
             conversationStateObject.slots = currentFrame.slots;
             if (missingKeywords.length > 0) {
                 const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
-                return response;
+                return { ...response, actionWasFulfilled: false };
             }
         }
     }
