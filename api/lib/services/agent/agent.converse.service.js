@@ -146,14 +146,15 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         let lastValidContext = null;
         while (keepGoing && contextIndex !== -1) {
 
-            const contextSlots = context.frames[contextIndex].slots ? Object.keys(context.frames[contextIndex].slots) : [];
-            const intersection = _.intersection(recognizedKeywordsNames, contextSlots);
+            const contextSlotsKeywords = context.frames[contextIndex].slots ? _.map(context.frames[contextIndex].slots, 'keyword') : [];
+            const intersection = _.intersection(recognizedKeywordsNames, contextSlotsKeywords);
             if (intersection.length > 0) {
                 keepGoing = false;
                 lastValidContext = _.cloneDeep(context.frames[contextIndex]);
             }
             contextIndex--;
         }
+        delete lastValidContext.id;
         return lastValidContext;
     };
 
@@ -207,7 +208,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject
                     });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                    //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                     return actionResponse;
                 }
             }
@@ -223,7 +224,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject
                     });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                    //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                     return actionResponse;
                 }
             }
@@ -242,21 +243,21 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                             conversationStateObject
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                        //await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
+                        await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                         return Object.assign(actionResponse, { followedKeywordPath: true });
                     }
                     //MARK: the recognized keyword aren't part of the latest frame
                     //MARK: if there are no slots then we get the last one with valid slots, update the context list and set the last context, then get the action used by that context
                     const lastValidContext = getLastContextWithValidSlots({ context: conversationStateObject.context, recognizedKeywords });
                     if (lastValidContext) {
-                        conversationStateObject.context.push(lastValidContext);
+                        conversationStateObject.context.frames.push(lastValidContext);
                         conversationStateObject.currentFrame = lastValidContext;
-                        conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.name, agentActions: conversationStateObject.agent.actions });
+                        conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
                         const actionResponse = await agentService.converseGenerateResponse({
                             conversationStateObject
                         });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                        //await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
+                        await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
                         return Object.assign(actionResponse, { followedKeywordPath: true });
                     }
                 }
@@ -268,7 +269,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         }));
     };
 
-    const storeDataInQueue = ({ conversationStateObject, action, response, indexOfActionInQueue }) => {
+    const storeDataInQueue = async ({ conversationStateObject, action, response, indexOfActionInQueue }) => {
 
         if (indexOfActionInQueue === -1) {
             conversationStateObject.context.actionQueue.push({
@@ -284,6 +285,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             };
             conversationStateObject.context.responseQueue[indexOfActionInQueue] = { ...response };
         }
+        await saveContextQueues({ context: conversationStateObject.context });
     };
 
     const saveContextQueues = async ({ context }) => {
@@ -600,8 +602,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
 
             const agentToolResponse = await response({ conversationStateObject });
+            indexOfActionInQueue = indexOfActionInQueue !== -1 ? indexOfActionInQueue : indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName });
             if (agentToolResponse.followedKeywordPath && indexOfActionInQueue === -1){
-                indexOfActionInQueue = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action: conversationStateObject.action.actionName });
                 moveOnQueue({
                     context: conversationStateObject.context,
                     oldIndex: indexOfActionInQueue,
@@ -657,7 +659,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
             else {
                 if (indexOfActionInQueue !== -1) {
-                    await removeFromQueue({ conversationStateObject, action: recognizedActionName });
+                    await removeFromQueue({ conversationStateObject, action: conversationStateObject.action.actionName });
                 }
                 data.push(finalResponse);
             }
@@ -681,7 +683,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 savedSlots: conversationStateObject.context.savedSlots
             }
         });
-        await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+        //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
 
         const converseResult = {
             textResponse,
