@@ -10,7 +10,8 @@ module.exports = async function (
         AgentModel,
         text,
         trainedCategories,
-        rasaURL = null
+        rasaURL = null,
+        requestId = null
     }) {
 
     const { rasaNLUService } = await this.server.services();
@@ -29,7 +30,8 @@ module.exports = async function (
             text,
             project: agent.agentName,
             trainedCategory: categoryRecognizerTrainedCategory,
-            baseURL: rasaURL
+            baseURL: rasaURL,
+            requestId
         });
     }
 
@@ -42,7 +44,8 @@ module.exports = async function (
                 text,
                 project: agent.agentName,
                 trainedCategory,
-                baseURL: rasaURL
+                baseURL: rasaURL,
+                requestId
             });
             const endTime = new Moment();
             const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
@@ -53,10 +56,10 @@ module.exports = async function (
                     return recognizedCategory.name === categoryRasaResults.category;
                 });
                 categoryScore = categoryScore.length > 0 ? categoryScore[0].confidence : 0;
-                categoryRasaResults = { ...categoryRasaResults, ... { categoryScore } };
+                categoryRasaResults = { ...categoryRasaResults, ...{ categoryScore } };
             }
             else {
-                categoryRasaResults = { ...categoryRasaResults, ... { categoryScore: 1 } };
+                categoryRasaResults = { ...categoryRasaResults, ...{ categoryScore: 1 } };
             }
             return categoryRasaResults;
         }

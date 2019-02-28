@@ -184,8 +184,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             if (conversationStateObject.action && !conversationStateObject.modifier) {
                 //MARK: if there is an action but no responses call RespondFallback and persist context
                 if (!conversationStateObject.action.responses || conversationStateObject.action.responses.length === 0) {
-                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
-                    return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent });
+                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames, requestId });
+                    return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent, requestId });
                 }
                 //MARK: CSO.parse ===false
                 //MARK: get category using rasaResult category name
@@ -204,10 +204,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject.currentFrame = frame;
                     }
                     const actionResponse = await agentService.converseGenerateResponse({
-                        conversationStateObject
+                        conversationStateObject,
+                        requestId
                     });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames, requestId });
                     return actionResponse;
                 }
             }
@@ -219,11 +220,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 //MARK: if the modifier applies to the current context
                 if (currentFrameSlotsKeywords.indexOf(conversationStateObject.modifier.keyword) !== -1) {
                     //MARK: generate response using the modifier
-                    const actionResponse = await agentService.converseGenerateResponse({
-                        conversationStateObject
-                    });
+                    const actionResponse = await agentService.converseGenerateResponse({ conversationStateObject, requestId });
                     //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames, requestId });
                     return actionResponse;
                 }
             }
@@ -238,11 +237,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     if (conversationStateObject.currentFrame.slots && Object.keys(conversationStateObject.currentFrame.slots).length > 0 && recognizedKeywordsArePartOfTheContext({ slots: conversationStateObject.currentFrame.slots, recognizedKeywords })) {
                         //MARK: update action object from the action of the context
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.action, agentActions: conversationStateObject.agent.actions });
-                        const actionResponse = agentService.converseGenerateResponse({
-                            conversationStateObject
-                        });
+                        const actionResponse = agentService.converseGenerateResponse({ conversationStateObject, requestId });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                        await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
+                        await agentService.converseUpdateContextFrames({ context: conversationStateObject.context, requestId });
                         return actionResponse;
                     }
                     //MARK: recognizedKeywords <= 0
@@ -252,16 +249,14 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         conversationStateObject.context.push(lastValidContext);
                         conversationStateObject.currentFrame = lastValidContext;
                         conversationStateObject.action = getActionByName({ actionName: conversationStateObject.currentFrame.name, agentActions: conversationStateObject.agent.actions });
-                        const actionResponse = agentService.converseGenerateResponse({
-                            conversationStateObject
-                        });
+                        const actionResponse = agentService.converseGenerateResponse({ conversationStateObject, requestId });
                         //TODO: agentService.converseGenerateResponse, this needs to be removed from there
-                        await agentService.converseUpdateContextFrames({ context: conversationStateObject.context });
+                        await agentService.converseUpdateContextFrames({ context: conversationStateObject.context, requestId });
                         return actionResponse;
                     }
                 }
             }
-            return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent });
+            return agentService.converseGenerateResponseFallback({ agent: conversationStateObject.agent, requestId });
         }
         return Promise.reject(GlobalDefaultError({
             message: `Sorry, the engine wasn't able to parse your text`
@@ -287,16 +282,18 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     };
 
     const saveContextQueues = async ({ context }) => {
+
         await contextService.update({
             sessionId: context.sessionId,
             data: {
                 actionQueue: context.actionQueue,
                 responseQueue: context.responseQueue
-            }
+            }, requestId
         });
     };
 
     const removeFromQueue = async ({ conversationStateObject, action }) => {
+
         const index = indexOnQueue({ actionQueue: conversationStateObject.context.actionQueue, action });
         conversationStateObject.context.actionQueue.splice(index, 1);
         conversationStateObject.context.responseQueue.splice(index, 1);
@@ -305,7 +302,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             data: {
                 actionQueue: conversationStateObject.context.actionQueue,
                 responseQueue: conversationStateObject.context.responseQueue
-            }
+            }, requestId
         });
     };
 
@@ -392,7 +389,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             });
             if (missingSlots.length > 0) {
                 response.actionWasFulfilled = false;
-                const textResponse = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
+                const textResponse = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true, requestId });
                 Object.assign(response, { ...textResponse });
                 return response;
             }
@@ -413,7 +410,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         model: MODEL_WEBHOOK
                     }
                 ];
-                webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
+                webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true, requestId });
             }
             else {
                 modelPath = [
@@ -425,7 +422,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         model: MODEL_WEBHOOK
                     }
                 ];
-                webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+                webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field, requestId });
             }
             const webhookResponse = await agentService.converseCallWebhook({
                 url: webhook.webhookUrl,
@@ -435,16 +432,17 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 headers: webhook.webhookHeaders,
                 username: webhook.webhookUser ? webhook.webhookUser : undefined,
                 password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
-                templateContext: conversationStateObject
+                templateContext: conversationStateObject,
+                requestId
             });
             if (webhookResponse.textResponse) {
                 return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
             }
             conversationStateObject.webhookResponse = { ...webhookResponse };
-            const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject });
+            const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject, requestId });
             return { ...textResponse, webhookResponse, actionWasFulfilled: true };
         }
-        const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject });
+        const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject, requestId });
         Object.assign(response, { ...textResponse });
         return response;
     };
@@ -490,13 +488,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     try {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
 
-        const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true, sessionId });
+        const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true, sessionId, requestId });
         const recognizedActionNames = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS][0].action.name.split(RASA_INTENT_SPLIT_SYMBOL);
 
         conversationStateObject[CSO_AGENT] = AgentModel.allProperties();
-        conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false });
-        conversationStateObject[CSO_AGENT].categories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });
-        conversationStateObject[CSO_AGENT].keywords = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD, returnModel: false });
+        conversationStateObject[CSO_AGENT].actions = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: false, requestId });
+        conversationStateObject[CSO_AGENT].categories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false, requestId });
+        conversationStateObject[CSO_AGENT].keywords = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD, returnModel: false, requestId });
 
         let storeInQueue = false;
         let currentQueueIndex = 0;
@@ -511,11 +509,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             //The frames will be updated once converse resolve the value
             let context;
             try {
-                context = await contextService.findBySession({ sessionId, loadFrames: true });
+                context = await contextService.findBySession({ sessionId, loadFrames: true, requestId });
             }
             catch (error) {
                 if (error.statusCode && error.statusCode === 404) {
-                    context = await contextService.create({ data: { sessionId } });
+                    context = await contextService.create({ data: { sessionId }, requestId });
                     context.frames = [];
                 }
                 else {
@@ -642,12 +640,12 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         textResponses = textResponses.concat(responsesFromQueue);
         const textResponse = textResponses.length === 1 ? textResponses : textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
-        await documentService.update({ id: conversationStateObject.docId, data: { webhookResponses } });
+        await documentService.update({ id: conversationStateObject.docId, data: { webhookResponses }, requestId });
         await contextService.update({
             sessionId: conversationStateObject.context.sessionId,
             data: {
                 savedSlots: conversationStateObject.context.savedSlots
-            }
+            }, requestId
         });
 
         const converseResult = {

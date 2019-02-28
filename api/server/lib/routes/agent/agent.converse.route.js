@@ -1,4 +1,5 @@
 import Boom from 'boom';
+import _ from 'lodash';
 import {
     PARAM_AGENT_ID,
     PARAM_DEBUG,
@@ -9,7 +10,6 @@ import {
     ROUTE_CONVERSE
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';
-
 //const logger = require('../../../server/util/logger')({ name: `route:agent:create` });
 
 module.exports = {
@@ -37,7 +37,7 @@ module.exports = {
             } = request.query;
 
             try {
-                return await agentService.converse({ id: agentId, text, timezone, sessionId, debug, additionalKeys: rest, requestId: Date.now() });
+                return await agentService.converse({ id: agentId, text, timezone, sessionId, debug, additionalKeys: rest, requestId: `${Date.now()}${_.uniq()}` });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

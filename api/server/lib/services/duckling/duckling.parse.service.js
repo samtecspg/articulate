@@ -3,7 +3,8 @@ module.exports = async function (
         text,
         timezone,
         language,
-        baseURL = null
+        baseURL = null,
+        requestId = null
     }) {
 
     const { duckling } = this.server.app;
@@ -15,7 +16,8 @@ module.exports = async function (
             lang: language,
             tz: timezone
         },
-        baseURL
+        baseURL,
+        requestId
     });
-    return ducklingService.convertToInterval({ ducklingOutput: result, timezone });
+    return ducklingService.convertToInterval({ ducklingOutput: result, timezone, requestId });
 };

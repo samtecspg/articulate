@@ -1,5 +1,6 @@
 import fs from 'fs';
 import moment from 'moment';
+import _ from 'lodash';
 
 const log = (text) => {
 
@@ -20,11 +21,12 @@ export default function ({ fn, name }) {
         const tmp = {
             [name]: async function () {
 
+                const requestId = _.get(arguments, '[0].requestId', null);;
                 const start = new moment();
                 const result = await fn.apply(this, arguments);
                 const end = new moment();
                 const duration = moment.duration(end.diff(start)).asMilliseconds();
-                log(`${name},${duration}`);
+                log(`${requestId},${name},${duration}`);
                 return result;
             }
         };

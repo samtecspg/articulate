@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import { MODEL_KEYWORD } from '../../../util/constants';
 
-module.exports = async function ({ AgentModel, text }) {
+module.exports = async function ({ AgentModel, text, requestId = null }) {
 
     const { globalService } = await this.server.services();
-    const keywords = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD });
+    const keywords = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD, requestId });
     const regexs = [];
     keywords.forEach((keyword) => {
 

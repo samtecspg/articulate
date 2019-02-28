@@ -13,7 +13,7 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, AgentModel, text, timezone, sessionId = null }) {
+module.exports = async function ({ id, AgentModel, text, timezone, sessionId = null, requestId = null }) {
 
     const startTime = new Moment();
     const { redis } = this.server.app;
@@ -26,7 +26,7 @@ module.exports = async function ({ id, AgentModel, text, timezone, sessionId = n
     try {
         AgentModel = AgentModel || await redis.factory(MODEL_AGENT, id);
         const agent = AgentModel.allProperties();
-        const trainedCategories = await agentService.getTrainedCategories({ AgentModel });
+        const trainedCategories = await agentService.getTrainedCategories({ AgentModel, requestId });
         const {
             ducklingURL,
             rasaURL,
@@ -34,9 +34,9 @@ module.exports = async function ({ id, AgentModel, text, timezone, sessionId = n
             ducklingDimension
         } = agent.settings;
 
-        const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedCategories, rasaURL }));
-        const ducklingKeywords = _.compact(await agentService.parseDucklingKeywords({ AgentModel, text, timezone, ducklingURL }));
-        const regexKeywords = await agentService.parseRegexKeywords({ AgentModel, text });
+        const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedCategories, rasaURL, requestId }));
+        const ducklingKeywords = _.compact(await agentService.parseDucklingKeywords({ AgentModel, text, timezone, ducklingURL, requestId }));
+        const regexKeywords = await agentService.parseRegexKeywords({ AgentModel, text, requestId });
 
         const parsedSystemKeywords = await keywordService.parseSystemKeywords({
             parseResult: {
@@ -45,7 +45,8 @@ module.exports = async function ({ id, AgentModel, text, timezone, sessionId = n
                 regex: regexKeywords
             },
             spacyPretrainedEntities,
-            ducklingDimension
+            ducklingDimension,
+            requestId
         });
         const endTime = new Moment();
         const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
@@ -62,7 +63,8 @@ module.exports = async function ({ id, AgentModel, text, timezone, sessionId = n
                 [PARAM_DOCUMENT_AGENT_ID]: agent.id,
                 [PARAM_DOCUMENT_AGENT_MODEL]: agent.model,
                 [PARAM_DOCUMENT_SESSION]: sessionId
-            }
+            },
+            requestId
         });
     }
     catch (error) {

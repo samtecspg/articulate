@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-module.exports = async function ({ parseResult, spacyPretrainedEntities, ducklingDimension }) {
+module.exports = async function ({ parseResult, spacyPretrainedEntities, ducklingDimension, requestId = null }) {
 
     const { keywordService } = await this.server.services();
-    const ducklingKeywords = keywordService.parseSystemKeywordsDuckling({ ducklingData: parseResult.duckling, ducklingDimension });
-    const regexKeywords = keywordService.parseSystemKeywordsRegex({ regexData: parseResult.regex });
+    const ducklingKeywords = keywordService.parseSystemKeywordsDuckling({ ducklingData: parseResult.duckling, ducklingDimension, requestId });
+    const regexKeywords = keywordService.parseSystemKeywordsRegex({ regexData: parseResult.regex, requestId });
 
     return _.map(parseResult.rasa, (rasaResult) => {
 

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-module.exports = function ({ responses, templateContext, isTextPrompt = false }) {
+module.exports = function ({ responses, templateContext, isTextPrompt = false}) {
 
     const { handlebars } = this.server.app;
 
@@ -27,7 +27,7 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false })
             return parsedResponse.textResponse !== '';
         });
     }
-    
+
     if (parsedResponses.length > 0) {
 
         const maxNumberOfExpressions = _.max(_.map(parsedResponses, 'numberOfSlots'));

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { MODEL_CONTEXT } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, frames }) {
+module.exports = async function ({ id, frames, requestId = null }) {
 
     const { redis } = this.server.app;
     const { frameService } = await this.server.services();
@@ -18,7 +18,7 @@ module.exports = async function ({ id, frames }) {
         await Promise.all(framesToUpdate.map(async (frame) => {
 
             const { id: frameId, ...data } = frame;
-            return await frameService.update({ id: frameId, data });
+            return await frameService.update({ id: frameId, data, requestId });
         }));
 
         await Promise.all(framesToCreate.map(async (data) => {

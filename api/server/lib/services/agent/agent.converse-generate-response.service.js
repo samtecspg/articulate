@@ -1,7 +1,12 @@
 import _ from 'lodash';
-import { CONFIG_KEYWORD_TYPE_REGEX, MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
+import {
+    CONFIG_KEYWORD_TYPE_REGEX,
+    MODEL_ACTION,
+    MODEL_AGENT,
+    MODEL_WEBHOOK
+} from '../../../util/constants';
 
-module.exports = async function ({ conversationStateObject }) {
+module.exports = async function ({ conversationStateObject, requestId = null }) {
 
     const { agentService, keywordService, globalService } = await this.server.services();
     //TODO: need to refactor the CSO creation since is no longer passed to other functions
@@ -22,24 +27,24 @@ module.exports = async function ({ conversationStateObject }) {
         //Create an array of slots that existed before and are being overrided because of a new text parse
         const recognizedKeywords = rasaResult.keywords;
         const overridedSlots = [];
-        if (modifier){
+        if (modifier) {
             const actionSlot = _.filter(action.slots, (slot) => {
 
                 return slot.keyword === modifier.keyword;
             })[0];
             const slotToModify = actionSlot.slotName;
-            if (modifier.valueSource === 'keyword'){
+            if (modifier.valueSource === 'keyword') {
                 const recognizedKeywordsOfSameTypeThanModifierKeyword = _.filter(recognizedKeywords, (recognizedKeyword) => {
 
                     return recognizedKeyword.keyword === modifier.keyword;
                 });
                 const recognizedModifierKeywordsValues = _.map(recognizedKeywordsOfSameTypeThanModifierKeyword, (recognizedKeyword) => {
 
-                    return keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                    return keywordService.parseSysValue({ keyword: recognizedKeyword, text, requestId });
                 });
                 switch (modifier.action) {
                     case 'ADD':
-                        if (Array.isArray(lastFrame.slots[slotToModify].value)){
+                        if (Array.isArray(lastFrame.slots[slotToModify].value)) {
                             recognizedModifierKeywordsValues.forEach((keywordValue) => {
 
                                 lastFrame.slots[slotToModify].value.push(keywordValue.value);
@@ -66,7 +71,7 @@ module.exports = async function ({ conversationStateObject }) {
                     case 'REMOVE':
                         const keywordsRasaValues = _.map(recognizedModifierKeywordsValues, 'value');
                         const keywordsOriginalValues = _.map(recognizedModifierKeywordsValues, 'original');
-                        if (Array.isArray(lastFrame.slots[slotToModify].value)){
+                        if (Array.isArray(lastFrame.slots[slotToModify].value)) {
                             lastFrame.slots[slotToModify].value = _.filter(lastFrame.slots[slotToModify].value, (value) => {
 
                                 return keywordsRasaValues.indexOf(value) === -1;
@@ -75,19 +80,19 @@ module.exports = async function ({ conversationStateObject }) {
 
                                 return keywordsOriginalValues.indexOf(original) === -1;
                             });
-                            if (lastFrame.slots[slotToModify].value.length === 0){
-                                lastFrame.slots[slotToModify] = ''
+                            if (lastFrame.slots[slotToModify].value.length === 0) {
+                                lastFrame.slots[slotToModify] = '';
                             }
                             lastFrame.slots[slotToModify].remainingLife = actionSlot.remainingLife;
                         }
                         else {
-                            if (keywordsRasaValues.indexOf(lastFrame.slots[slotToModify].value) || keywordsOriginalValues.indexOf(lastFrame.slots[slotToModify].original)){
+                            if (keywordsRasaValues.indexOf(lastFrame.slots[slotToModify].value) || keywordsOriginalValues.indexOf(lastFrame.slots[slotToModify].original)) {
                                 lastFrame.slots[slotToModify] = '';
                             }
                         }
                         break;
                     case 'SET':
-                        if (Array.isArray(lastFrame.slots[slotToModify].value) || recognizedModifierKeywordsValues.length > 1){
+                        if (Array.isArray(lastFrame.slots[slotToModify].value) || recognizedModifierKeywordsValues.length > 1) {
                             lastFrame.slots[slotToModify] = {
                                 keyword: modifier.keyword,
                                 value: [],
@@ -101,7 +106,7 @@ module.exports = async function ({ conversationStateObject }) {
                             });
                         }
                         else {
-                            if (recognizedModifierKeywordsValues.length > 0){
+                            if (recognizedModifierKeywordsValues.length > 0) {
                                 lastFrame.slots[slotToModify] = {
                                     keyword: modifier.keyword,
                                     value: recognizedModifierKeywordsValues[0].value,
@@ -121,7 +126,7 @@ module.exports = async function ({ conversationStateObject }) {
             else {
                 switch (modifier.action) {
                     case 'ADD':
-                        if (Array.isArray(lastFrame.slots[slotToModify].value)){
+                        if (Array.isArray(lastFrame.slots[slotToModify].value)) {
                             lastFrame.slots[slotToModify].value.push(modifier.staticValue);
                             lastFrame.slots[slotToModify].original.push(modifier.staticValue);
                         }
@@ -137,7 +142,7 @@ module.exports = async function ({ conversationStateObject }) {
                         }
                         break;
                     case 'REMOVE':
-                        if (Array.isArray(lastFrame.slots[slotToModify].value)){
+                        if (Array.isArray(lastFrame.slots[slotToModify].value)) {
                             lastFrame.slots[slotToModify].value = _.filter(lastFrame.slots[slotToModify].value, (value) => {
 
                                 return value !== modifier.staticValue;
@@ -146,18 +151,18 @@ module.exports = async function ({ conversationStateObject }) {
 
                                 return original !== modifier.staticValue;
                             });
-                            if (lastFrame.slots[slotToModify].value.length === 0){
-                                lastFrame.slots[slotToModify] = ''
+                            if (lastFrame.slots[slotToModify].value.length === 0) {
+                                lastFrame.slots[slotToModify] = '';
                             }
                         }
                         else {
-                            if (lastFrame.slots[slotToModify].value === modifier.staticValue || lastFrame.slots[slotToModify].original === modifier.staticValue){
+                            if (lastFrame.slots[slotToModify].value === modifier.staticValue || lastFrame.slots[slotToModify].original === modifier.staticValue) {
                                 lastFrame.slots[slotToModify] = '';
                             }
                         }
                         break;
                     case 'SET':
-                        if (Array.isArray(lastFrame.slots[slotToModify].value)){
+                        if (Array.isArray(lastFrame.slots[slotToModify].value)) {
                             lastFrame.slots[slotToModify] = {
                                 keyword: modifier.keyword,
                                 value: [],
@@ -181,27 +186,29 @@ module.exports = async function ({ conversationStateObject }) {
                         break;
                 }
             }
-            if (lastFrame.slots[slotToModify].remainingLife > -1){
+            if (lastFrame.slots[slotToModify].remainingLife > -1) {
                 conversationStateObject.context.savedSlots[slotToModify] = lastFrame.slots[slotToModify];
             }
-            agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject });
+            agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject, requestId });
             const missingKeywords = _.filter(requiredSlots, (slot) => {
 
-                if (currentFrame.slots[slot.slotName] && Array.isArray(currentFrame.slots[slot.slotName])){
+                if (currentFrame.slots[slot.slotName] && Array.isArray(currentFrame.slots[slot.slotName])) {
                     return currentFrame.slots[slot.slotName].length === 0;
                 }
                 return !currentFrame.slots[slot.slotName];
             });
             conversationStateObject.slots = currentFrame.slots;
             if (missingKeywords.length > 0) {
-                const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
+                const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true, requestId });
                 return response;
             }
         }
         else {
             const recognizedKeywordsNames = _.map(recognizedKeywords, (recognizedKeyword) => {
                 //If the name of the recognized keyword match with an keyword name of an slot
-                const slotToFill = _.filter(action.slots, (slot) => { return slot.keyword === recognizedKeyword.keyword })[0];
+                const slotToFill = _.filter(action.slots, (slot) => {
+                    return slot.keyword === recognizedKeyword.keyword;
+                })[0];
                 if (slotToFill) {
                     //Get the slot object
                     //Get the slot name of the keyword that was recognized using the index of the array of keywords names
@@ -211,7 +218,7 @@ module.exports = async function ({ conversationStateObject }) {
                         //If there isn't a value for this slot name in the context
                         if (!lastFrame.slots[slotName] || lastFrame.slots[slotName] === '') {
                             //Get the original and parsed value of the keyword
-                            const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                            const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text, requestId });
                             //Add these values to the context as a new slot
                             lastFrame.slots[slotName] = {
                                 keyword: recognizedKeyword.keyword,
@@ -237,7 +244,7 @@ module.exports = async function ({ conversationStateObject }) {
                                     };
                                 }
                                 //Get the original and parsed value of the keyword
-                                const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                                const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text, requestId });
                                 //Push the recognized values to the current context slot value and original attribute
                                 lastFrame.slots[slotName].value.push(keywordValue.value);
                                 lastFrame.slots[slotName].original.push(keywordValue.original);
@@ -245,7 +252,7 @@ module.exports = async function ({ conversationStateObject }) {
                             //If the slot ias a list, and it exists in the context but it wasn't an array
                             else {
                                 //Get the original and parsed value of the keyword
-                                const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                                const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text, requestId });
                                 //Transform the current slot in the context to an array and insert the existent values in this array
                                 lastFrame.slots[slotName] = {
                                     keyword: recognizedKeyword.keyword,
@@ -274,38 +281,38 @@ module.exports = async function ({ conversationStateObject }) {
                                 return b.end - a.end;
                             });
 
-                            lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text });
+                            lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text, requestId });
                             lastFrame.slots[slotName].remainingLife = slotToFill.remainingLife;
                         }
                         else {
-                            lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: recognizedKeyword, text });
+                            lastFrame.slots[slotName] = keywordService.parseSysValue({ keyword: recognizedKeyword, text, requestId });
                             lastFrame.slots[slotName].remainingLife = slotToFill.remainingLife;
 
                         }
 
                     }
-                    if (lastFrame.slots[slotName].remainingLife > -1){
+                    if (lastFrame.slots[slotName].remainingLife > -1) {
                         conversationStateObject.context.savedSlots[slotName] = lastFrame.slots[slotName];
                     }
                 }
                 //Finally return the name of the recognized keyword for further checks
                 return recognizedKeyword.keyword;
             });
-            agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject });
+            agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject, requestId });
             const missingKeywords = _.filter(requiredSlots, (slot) => {
 
                 return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentFrame.slots[slot.slotName];
             });
             conversationStateObject.slots = currentFrame.slots;
             if (missingKeywords.length > 0) {
-                const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true });
+                const response = await agentService.converseCompileResponseTemplates({ responses: missingKeywords[0].textPrompts, templateContext: conversationStateObject, isTextPrompt: true, requestId });
                 return response;
             }
         }
     }
     if (action.useWebhook || agent.useWebhook) {
         let modelPath, webhook;
-        if (action.useWebhook){
+        if (action.useWebhook) {
             modelPath = [
                 {
                     model: MODEL_AGENT,
@@ -319,7 +326,7 @@ module.exports = async function ({ conversationStateObject }) {
                     model: MODEL_WEBHOOK
                 }
             ];
-            webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
+            webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true, requestId });
         }
         else {
             modelPath = [
@@ -331,7 +338,7 @@ module.exports = async function ({ conversationStateObject }) {
                     model: MODEL_WEBHOOK
                 }
             ];
-            webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+            webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field, requestId });
         }
         const webhookResponse = await agentService.converseCallWebhook({
             url: webhook.webhookUrl,
@@ -347,9 +354,9 @@ module.exports = async function ({ conversationStateObject }) {
             return { slots: conversationStateObject.slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
         }
         conversationStateObject.webhookResponse = { ...webhookResponse };
-        const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
+        const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject, requestId });
         return { slots: conversationStateObject.slots, ...response, webhookResponse, actionWasFulfilled: true };
     }
-    const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
+    const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject, requestId });
     return { slots: conversationStateObject.slots, ...response, actionWasFulfilled: true };
 };

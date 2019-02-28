@@ -1,6 +1,6 @@
 import Moment from 'moment';
 
-module.exports = async function ({ AgentModel, text, timezone, ducklingURL }) {
+module.exports = async function ({ AgentModel, text, timezone, ducklingURL, requestId = null }) {
 
     const { ducklingService } = await this.server.services();
 
@@ -10,7 +10,8 @@ module.exports = async function ({ AgentModel, text, timezone, ducklingURL }) {
         text,
         timezone,
         language: AgentModel.property('language'),
-        baseURL: ducklingURL
+        baseURL: ducklingURL,
+        requestId
     });
     const endTime = new Moment();
     const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();

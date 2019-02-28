@@ -5,7 +5,7 @@ import {
 import NotFoundErrorHandler from '../../errors/global.not-found-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ sessionId, loadFrames = false, returnModel = false }) {
+module.exports = async function ({ sessionId, loadFrames = false, returnModel = false, requestId = null }) {
 
     const { redis } = this.server.app;
     const Model = await redis.factory(MODEL_CONTEXT);
@@ -15,7 +15,7 @@ module.exports = async function ({ sessionId, loadFrames = false, returnModel = 
         if (Model.inDb) {
             //Only load frames if we are NOT returning the model, or else we can't create and object with a frames list.
             if (!returnModel && loadFrames) {
-                const frames = await globalService.loadAllLinked({ parentModel: Model, model: MODEL_FRAME, returnModel });
+                const frames = await globalService.loadAllLinked({ parentModel: Model, model: MODEL_FRAME, returnModel, requestId });
                 const context = Model.allProperties();
                 context.frames = frames;
                 return context;
