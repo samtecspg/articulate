@@ -3,6 +3,9 @@
 ## A platform for building conversational interfaces with intelligent agents
 
 [![Join the chat at https://gitter.im/samtecspg/articulate](https://badges.gitter.im/samtecspg/articulate.svg)](https://gitter.im/samtecspg/articulate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+![](https://img.shields.io/github/license/samtecspg/articulate.svg)
+![](https://img.shields.io/github/downloads/samtecspg/articulate/total.svg)
+![](https://img.shields.io/github/tag/samtecspg/articulate.svg)
 
 ![Articulate Interface](./docs/img/main-ilus.png)
 
