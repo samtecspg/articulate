@@ -664,7 +664,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 data.push(finalResponse);
             }
             if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0) {
+                context = await contextService.findBySession({ sessionId, loadFrames: true });
+                conversationStateObject[CSO_CONTEXT] = context;
                 await chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions });
+                await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
             }
             return data;
         }, Promise.resolve([]));
