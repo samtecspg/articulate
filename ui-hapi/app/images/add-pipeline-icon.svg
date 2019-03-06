@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23.97 23.64">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #babec6;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #babec6;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <title>icon-add-pipline</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <rect class="cls-1" x="10.45" y="14.21" width="10.11" height="9.43"/>
+      <rect class="cls-1" x="7.04" y="7.14" width="16.93" height="7.07"/>
+      <line class="cls-2" x1="4.27" x2="4.27" y2="8.54"/>
+      <line class="cls-2" y1="4.27" x2="8.54" y2="4.27"/>
+    </g>
+  </g>
+</svg>

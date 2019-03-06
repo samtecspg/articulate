@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.601279438">
+        <g id="v.2---Agent-main-screen-(1)" transform="translate(-442.000000, -120.000000)" fill="#A2A7B1">
+            <g id="components/input" transform="translate(441.958984, 117.882131)">
+                <g id="Page-1" transform="translate(0.638672, 2.128906)">
+                    <path d="M1.875,6.01075 C1.875,3.73075 3.73,1.8745 6.0125,1.8745 C8.2925,1.8745 10.1475,3.73075 10.1475,6.01075 C10.1475,8.29075 8.2925,10.147 6.0125,10.147 C3.73,10.147 1.875,8.29075 1.875,6.01075 M14.6475,13.32075 L10.85875,9.53325 C11.5825,8.54075 12.0225,7.33075 12.0225,6.01075 C12.0225,2.697 9.32625,-0.0005 6.0125,-0.0005 C2.69625,-0.0005 0,2.697 0,6.01075 C0,9.3245 2.69625,12.022 6.0125,12.022 C7.33,12.022 8.54125,11.582 9.53375,10.8595 L13.32125,14.64575 C13.505,14.8295 13.74375,14.92075 13.985,14.92075 C14.225,14.92075 14.46375,14.8295 14.6475,14.64575 C15.01375,14.2795 15.01375,13.687 14.6475,13.32075" id="Fill-1"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.34 20.29">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #4e4e4e;
+      }
+    </style>
+  </defs>
+  <title>icon-organize</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <path class="cls-1" d="M0,6.06l9.14,5.72a1,1,0,0,0,1.06,0l8-5,1.12-.7L15.69,3.77,9.67,0,9.11.35h0Z"/>
+      <path class="cls-1" d="M10.2,13.08a1,1,0,0,1-1.06,0L2.3,8.8,0,10.24l9.11,5.7a1.07,1.07,0,0,0,1.13,0l9.11-5.7L17,8.8Z"/>
+      <path class="cls-1" d="M10.2,17.27a1,1,0,0,1-1.06,0L2.3,13,0,14.43l9.11,5.7a1.07,1.07,0,0,0,1.13,0l9.11-5.7L17,13Z"/>
+    </g>
+  </g>
+</svg>
