@@ -47,7 +47,7 @@ module.exports = async function ({ id, AgentModel, text }) {
             })));
             return recognizedKeywords
         }));
-        return highlightedKeywords;
+        return _.orderBy(highlightedKeywords, 'start', 'asc');
     }
     catch (error) {
         throw RedisErrorHandler({ error });

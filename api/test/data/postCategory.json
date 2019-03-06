@@ -1,0 +1,10 @@
+{
+  "categoryName": "string",
+  "enabled": true,
+  "actionThreshold": 0,
+  "extraTrainingData": true,
+  "parameters": {
+    "name": "NomNom",
+    "webmaster": "webmaster@nomnom.com"
+  }
+}

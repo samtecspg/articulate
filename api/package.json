@@ -12,7 +12,7 @@
   "scripts": {
     "start": "nodemon server --exec babel-node",
     "start:debug": "nodemon server --exec 'babel-node $NODE_DEBUG_OPTION'",
-    "test": "DEBUG=-articulate:* lab -v -a code -T node_modules/lab-transform-preset-env -S $NODE_DEBUG_OPTION",
+    "test": "DEBUG=-articulate:* lab -v -a code -T node_modules/lab-transform-preset-env -S $NODE_DEBUG_OPTION -m 5000",
     "coverage:html": "DEBUG=-articulate:* lab -a code -T node_modules/lab-transform-preset-env -S -c -r html -o coverage.html",
     "lint": "lab -dL -T node_modules/lab-transform-preset-env -S",
     "lint:fix": "lab -dL --lint-fix -T node_modules/lab-transform-preset-env -S"

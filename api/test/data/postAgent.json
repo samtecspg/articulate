@@ -1,0 +1,19 @@
+{
+    "agentName": "37d0d070-bcdd-11e8-bd42-d7dd09e07ed3",
+    "description": "Test post endpoint",
+    "language": "en",
+    "timezone": "UTC",
+    "useWebhook": false,
+    "usePostFormat": false,
+    "multiCategory": false,
+    "categoryClassifierThreshold": 0.5,
+    "extraTrainingData": false,
+    "enableModelsPerCategory": false,
+    "parameters": {
+      "name": "NomNom",
+      "webmaster": "webmaster@nomnom.com"
+    },
+    "categoryRecognizer": true,
+    "modifiersRecognizer": true,
+    "modifiersRecognizerJustER": ""
+  }

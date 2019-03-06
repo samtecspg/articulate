@@ -1,0 +1,25 @@
+{
+  "actionName": "testAction",
+  "useWebhook": true,
+  "usePostFormat": true,
+  "responses": [
+    {
+      "textResponse": "Hi, I'm a test action",
+      "actions": []
+    }
+  ],
+  "slots": [
+    {
+      "slotName": "time",
+      "uiColor": "#adf123",
+      "keyword": "sys.duckling_time",
+      "isList": false,
+      "isRequired": true,
+      "keywordId": 0,
+      "textPrompts": [
+        "please specify a date for your test"
+      ],
+      "remainingLife": null
+    }
+  ]
+}
