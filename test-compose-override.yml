@@ -1,0 +1,18 @@
+version: '3.0'
+
+services:
+  api:
+    build: './api/.'
+    command: 'yarn test'
+  ui:
+    build:
+      context: './ui/.'
+      dockerfile: Dockerfile.dev.yml
+      args:
+        - API_URL=${API_URL:-http://localhost:7500} # Needed for running yarn build in Dockerfile
+  rasa:
+    build:
+      context: './rasa/.'
+  duckling:
+    build:
+      context: './duckling/.'
