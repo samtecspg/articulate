@@ -3,7 +3,6 @@ version: '3.0'
 services:
   api:
     build: './api/.'
-    entrypoint: ['yarn', 'start']
   ui:
     build:
       context: './ui/.'
