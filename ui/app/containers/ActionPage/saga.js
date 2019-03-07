@@ -1,6 +1,10 @@
 import Immutable from 'seamless-immutable';
 
 import {
+  push
+} from 'react-router-redux';
+
+import {
   takeLatest,
   call,
   put,
