@@ -101,6 +101,7 @@ export class AgentPage extends React.PureComponent {
         });
       }
     } else {
+      this.props.onResetData();
       this.props.onLoadActions(this.props.match.params.id);
       this.props.onLoadAgent(this.props.match.params.id);
     }
