@@ -3,6 +3,7 @@ version: '3.0'
 services:
   api:
     build: './api/.'
+    command: 'yarn test'
   ui:
     build:
       context: './ui/.'
