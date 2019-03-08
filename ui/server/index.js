@@ -1,22 +1,20 @@
-const Hapi = require('hapi');
-const WebpackPlugin = require('./middlewares/hapi-webpack-plugin');
-const Webpack = require('webpack');
-const argv = require('./argv');
-const port = require('./port');
+import Blipp from 'blipp';
+import h2o2 from 'h2o2';
+import Hapi from 'hapi';
+import Webpack from 'webpack';
+import argv from './argv';
+import logger from './logger';
+import * as WebpackPlugin from './middlewares/hapi-webpack-plugin';
+import * as WSProxyPlugin from './middlewares/ws-proxy-plugin';
+import port from './port';
+import Routes from './routes';
+
 const isDev = process.env.NODE_ENV !== 'production';
-const logger = require('./logger');
 const ngrok =
   (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel
     ? require('ngrok')
     : false;
-let Config = {};
-
-if (isDev) {
-  Config = require('../internals/webpack/webpack.dev.babel');
-}
-else {
-  Config = require('../internals/webpack/webpack.prod.babel');
-}
+const Config = isDev ? require('../internals/webpack/webpack.dev.babel') : require('../internals/webpack/webpack.prod.babel');
 
 // get the intended host and port number, use localhost and port 3000 if not provided
 const customHost = argv.host || process.env.HOST;
@@ -25,7 +23,7 @@ const prettyHost = customHost || 'localhost';
 
 const server = Hapi.server({
   port,
-  host
+  host,
 });
 
 const compiler = Webpack(Config);
@@ -42,10 +40,18 @@ const hot = {
 const init = async () => {
 
   try {
-    await server.register({
-      plugin: WebpackPlugin,
-      options: { compiler, assets, hot }
-    });
+    await server.register([
+      {
+        plugin: WebpackPlugin,
+        options: { compiler, assets, hot },
+      }, {
+        plugin: WSProxyPlugin,
+      }, {
+        plugin: h2o2,
+      }, {
+        plugin: Blipp,
+      },
+    ]);
   }
   catch (error) {
     return logger.error(error);
@@ -53,6 +59,7 @@ const init = async () => {
 
   try {
     await server.start();
+    await server.route(Routes);
   }
   catch (error) {
     return logger.error(error);
@@ -71,6 +78,9 @@ const init = async () => {
   else {
     logger.appStarted(port, prettyHost);
   }
+  // eslint-disable-next-line no-console
+  console.log(server.plugins.blipp.text());
+  return server;
 };
 
 process.on('unhandledRejection', (error) => {
@@ -79,4 +89,5 @@ process.on('unhandledRejection', (error) => {
   process.exit(1);
 });
 
-return init();
+// noinspection JSIgnoredPromiseFromCall
+init();

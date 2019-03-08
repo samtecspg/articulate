@@ -18,6 +18,7 @@ import {
 } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
+import { PROXY_ROUTE_PREFIX } from '../../../common/constants';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
 import injectSaga from '../../utils/injectSaga';
@@ -26,11 +27,11 @@ import ActionPage from '../ActionPage/Loadable';
 import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
 import CategoryPage from '../CategoryPage/Loadable';
+import DialoguePage from '../DialoguePage/Loadable';
 import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
-import DialoguePage from '../DialoguePage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import {
   checkAPI,
@@ -77,16 +78,14 @@ class App extends React.Component {
     }
     if (!this.state.socketClientConnected) {
       const client = new Nes.Client(getWS());
-      client.connect((err) => {
+      client.onConnect = () => {
 
-        if (err) {
-          console.error('An error occurred connecting to the socket: ', err);
-        }
         this.setState({
           client,
           socketClientConnected: true,
         });
-      });
+      };
+      client.connect();
     }
   }
 
@@ -112,8 +111,8 @@ class App extends React.Component {
         if (this.state.client) {
           // If the socket was already subscribed to an agent
           if (this.state.agent) {
-            // Unscribe from the agent
-            this.state.client.unsubscribe(`/agent/${this.state.agent}`);
+            // Unsubscribe from the agent
+            this.state.client.unsubscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.state.agent}`);
           }
           const handler = (agent) => {
 
@@ -121,11 +120,7 @@ class App extends React.Component {
               this.props.onRefreshAgent(agent);
             }
           };
-          this.state.client.subscribe(`/agent/${this.props.agent.id}`, handler, (errSubscription) => {
-            if (errSubscription) {
-              console.error(`An error occurred subscribing to the agent ${this.props.agent.agentName}: ${errSubscription}`);
-            }
-          });
+          this.state.client.subscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.props.agent.id}`, handler);
           this.setState({
             agent: this.props.agent.id,
           });

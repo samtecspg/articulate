@@ -13,7 +13,7 @@ import 'brace/mode/json';
 import 'brace/theme/terminal';
 
 import addPipelineIcon from '../../images/add-pipeline-icon.svg';
-import { ACTION_INTENT_SPLIT_SYMBOL } from '../../utils/constants';
+import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../common/constants';
 
 import messages from './messages';
 

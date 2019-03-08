@@ -22,7 +22,10 @@ import {
 } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import MainTab from '../../components/MainTab';
-import { ACTION_INTENT_SPLIT_SYMBOL } from '../../utils/constants';
+import {
+  ACTION_INTENT_SPLIT_SYMBOL,
+  PROXY_ROUTE_PREFIX,
+} from '../../../common/constants';
 import injectSaga from '../../utils/injectSaga';
 import { getWS } from '../../utils/locationResolver';
 import * as Actions from '../App/actions';
@@ -90,11 +93,8 @@ export class ReviewPage extends React.Component {
 
     if (!this.state.socketClientConnected) {
       const client = new Nes.Client(getWS());
-      client.connect((err) => {
+      client.onConnect = () => {
 
-        if (err) {
-          console.error('An error occurred connecting to the socket: ', err);
-        }
         this.setState({
           client,
           socketClientConnected: true,
@@ -108,12 +108,10 @@ export class ReviewPage extends React.Component {
             onRefreshDocuments(payload);
           }
         };
-        this.state.client.subscribe(`/agent/${this.props.agent.id}/doc`, handler, (errSubscription) => {
-          if (errSubscription) {
-            console.error(`An error occurred subscribing to the agent ${this.props.agent.agentName} to get documents: ${errSubscription}`);
-          }
-        });
-      });
+
+        client.subscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.props.agent.id}/doc`, handler);
+      };
+      client.connect();
     }
   }
 

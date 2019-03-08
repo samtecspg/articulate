@@ -1,5 +1,3 @@
-import Immutable from 'seamless-immutable';
-
 import {
   MenuItem,
   TableCell,
@@ -7,22 +5,26 @@ import {
   Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
+import es from 'javascript-time-ago/locale/es';
+import pt from 'javascript-time-ago/locale/pt';
+import _ from 'lodash';
 import { PropTypes } from 'prop-types';
 import React, { Fragment } from 'react';
+import {
+  injectIntl,
+  intlShape,
+} from 'react-intl';
+import Immutable from 'seamless-immutable';
+import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../../common/constants';
 import {
   CopyImageCell,
   PercentCell,
   PlayImageCell,
 } from '../../../components/StyledTable';
-import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../utils/constants';
-import HighlightedSaying from './HighlightedSaying';
-
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en';
-import es from 'javascript-time-ago/locale/es';
-import pt from 'javascript-time-ago/locale/pt';
-import { intlShape, injectIntl } from 'react-intl';
 import messages from '../messages';
+import HighlightedSaying from './HighlightedSaying';
 
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
@@ -107,10 +109,10 @@ class SayingRow extends React.Component {
   state = {
     selectedCategory: '-1',
     categoryError: false,
-  }
+  };
 
   constgetDocTime(timestamp) {
-    if (timestamp){
+    if (timestamp) {
       const timeAgo = new TimeAgo(this.props.locale).format(new Date(timestamp), 'twitter');
       return timeAgo ? timeAgo : '< 1m';
     }
@@ -123,7 +125,7 @@ class SayingRow extends React.Component {
       document,
       agentKeywords,
       agentCategories,
-      intl
+      intl,
     } = this.props;
     const saying = _.maxBy(document.rasa_results, 'categoryScore');
     return (
@@ -169,20 +171,20 @@ class SayingRow extends React.Component {
               className: classes.categorySelect,
             }}
             onChange={(evt) => {
-              evt.target.value !== '-1' ? 
-              this.setState({
-                selectedCategory: evt.target.value,
-                categoryError: false
-              }) : null;
+              evt.target.value !== '-1' ?
+                this.setState({
+                  selectedCategory: evt.target.value,
+                  categoryError: false,
+                }) : null;
             }}
             error={this.state.categoryError}
             helperText={this.state.categoryError ? intl.formatMessage(messages.required) : null}
           >
-            {this.state.selectedCategory === '-1' ? 
-            <MenuItem key={`newSayingCategory`} value={'-1'}>
-              <span className={classes.categoryLabel}>{intl.formatMessage(messages.selectNewCategory)}</span>
-            </MenuItem>
-             : null}
+            {this.state.selectedCategory === '-1' ?
+              <MenuItem key={`newSayingCategory`} value={'-1'}>
+                <span className={classes.categoryLabel}>{intl.formatMessage(messages.selectNewCategory)}</span>
+              </MenuItem>
+              : null}
             {agentCategories.map((category) =>
               // TODO: return the category id in the API to be able to select the category id of the saying in
               (
@@ -195,7 +197,7 @@ class SayingRow extends React.Component {
           }
         </TableCell>
         <TableCell>
-          <Typography variant='body1' style={{fontSize: '10px', color: '#4e4e4e'}}>
+          <Typography variant='body1' style={{ fontSize: '10px', color: '#4e4e4e' }}>
             {this.constgetDocTime(document.time_stamp)}
           </Typography>
         </TableCell>
@@ -225,9 +227,9 @@ class SayingRow extends React.Component {
           tooltip={'Copy to your list of Sayings'}
           disabled={document.id === 'noData'}
           onClick={() => {
-            if (this.state.selectedCategory === '-1'){
+            if (this.state.selectedCategory === '-1') {
               this.setState({
-                categoryError: true
+                categoryError: true,
               });
             }
             else {
