@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
+import { useShallowEqual } from 'shouldcomponentupdate-children';
 
 import _ from 'lodash';
 
@@ -699,4 +700,4 @@ SayingsDataForm.propTypes = {
   onChangeSayingCategory: PropTypes.func,
 };
 
-export default injectIntl(withStyles(styles)(SayingsDataForm));
+export default useShallowEqual(injectIntl(withStyles(styles)(SayingsDataForm)));

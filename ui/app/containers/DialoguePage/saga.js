@@ -20,6 +20,7 @@ import {
   updateSayingError,
   loadKeywordsError,
   loadKeywordsSuccess,
+  updateSayingSuccess,
 } from '../App/actions';
 import {
   ADD_ACTION_SAYING,
@@ -175,12 +176,14 @@ export function* putSaying(payload) {
       sayingId,
       body: _.omit(saying, valuesToOmit),
     });
+    yield put(updateSayingSuccess(saying));
+    /*
     yield call(getSayings, {
       api,
       filter,
       page,
       pageSize,
-    });
+    });*/
   }
   catch (err) {
     yield put(updateSayingError(err));

@@ -169,6 +169,7 @@ import {
   UPDATE_KEYWORD,
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
+  UPDATE_SAYING_SUCCESS,
   UPDATE_SAYING_ERROR,
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
@@ -697,6 +698,13 @@ function appReducer(state = initialState, action) {
       return state.update('newSayingActions', newSayingActions => newSayingActions.concat(action.actionName));
     case DELETE_ACTION_NEW_SAYING:
       return state.update('newSayingActions', newSayingActions => newSayingActions.filter((item) => item !== action.actionName));
+    case UPDATE_SAYING_SUCCESS:
+      return state.update('sayings', sayings => sayings.map((tempSaying) => {
+        if (tempSaying.id === action.saying.id) {
+          return action.saying;
+        }
+        return tempSaying;
+      }));
     case UPDATE_SAYING_ERROR:
       return state.set('loading', false)
         .set('error', action.error);

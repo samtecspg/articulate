@@ -190,6 +190,7 @@ import {
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
   CHANGE_LOCALE,
+  UPDATE_SAYING_SUCCESS,
 } from './constants';
 
 /*
@@ -722,6 +723,13 @@ export function untagKeyword(filter, page, pageSize, saying, start, end) {
     saying,
     start,
     end,
+  };
+}
+
+export function updateSayingSuccess(saying) {
+  return {
+    type: UPDATE_SAYING_SUCCESS,
+    saying
   };
 }
 

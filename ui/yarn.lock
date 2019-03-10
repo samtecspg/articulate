@@ -14047,6 +14047,11 @@ shot@4.x.x:
     hoek "6.x.x"
     joi "14.x.x"
 
+shouldcomponentupdate-children@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/shouldcomponentupdate-children/-/shouldcomponentupdate-children-1.1.0.tgz#cbabccc9af8bc8f6d345f0506769ff2b5fe95147"
+  integrity sha512-rPRwXfopoOAn3acucQhlcmJavLyqDqC1k6tU5Beh57FzpCy1INONPTQwEImJYQI7EEYhGOs0nljQZMsDMyvewA==
+
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
