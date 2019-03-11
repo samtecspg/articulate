@@ -231,7 +231,7 @@ class AgentDataForm extends React.Component {
                             <div className={classes.categoryDataContainer}>
                               <img id={`edit_action_${action.id}`}
                                 onClick={() => {
-                                  this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
+                                  this.props.onGoToUrl(`/agent/${this.props.agent.id}/action/${action.id}`);
                                 }} className={classes.editCategoryIcon} src={pencilIcon}
                               />
                             </div>

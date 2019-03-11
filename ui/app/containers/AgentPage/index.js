@@ -122,9 +122,7 @@ export class AgentPage extends React.PureComponent {
     }
     if (this.props.success) {
       if (this.state.isNewAgent) {
-        this.setState({
-          isNewAgent: false,
-        });
+        this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue`);
       }
     }
   }
