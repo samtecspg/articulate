@@ -1,0 +1,14 @@
+version: '3.0'
+
+services:
+  api:
+    build: './api/.'
+  ui:
+    build:
+      context: './ui/.'
+  rasa:
+    build:
+      context: './rasa/.'
+  duckling:
+    build:
+      context: './duckling/.'
