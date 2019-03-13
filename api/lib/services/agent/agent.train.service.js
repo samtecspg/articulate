@@ -88,6 +88,19 @@ module.exports = async function ({ id, returnModel = false }) {
         let markedAsTraining = false;
         //const rasaStatus = await rasaNLU.Status();
 
+        const allAgentSayings = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
+        const sayingsWithoutActions = allAgentSayings.filter((agentSaying) => {
+
+            return agentSaying.actions.length === 0;
+        });
+
+        if (sayingsWithoutActions.length > 0){
+            const AgentModel = await redis.factory(MODEL_AGENT, id);
+            AgentModel.property('status', STATUS_ERROR);
+            await AgentModel.saveInstance();
+            return Promise.reject(InvalidAgentTrain({ message: `The following user sayings doesn't have actions asigned: "${_.map(sayingsWithoutActions, 'userSays').join('", "')}"` }));
+        }
+
         const CategoryModels = await globalService.loadAllByIds({
             ids: await AgentModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY),
             model: MODEL_CATEGORY,
@@ -150,8 +163,7 @@ module.exports = async function ({ id, returnModel = false }) {
         else {
             //Train default model
             const keywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
-            const sayings = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
-            const trainingData = await categoryService.generateTrainingData({ keywords, sayings, extraTrainingData: agent.extraTrainingData });
+            const trainingData = await categoryService.generateTrainingData({ keywords, sayings: allAgentSayings, extraTrainingData: agent.extraTrainingData });
             if (trainingData.numberOfSayings === 0) {
                 return;
             }
