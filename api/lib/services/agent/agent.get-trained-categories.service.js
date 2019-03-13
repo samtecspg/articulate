@@ -32,7 +32,8 @@ module.exports = async function ({ id = null, AgentModel = null }) {
         if (!agent.enableModelsPerCategory) {
             if (!agent.lastTraining) {
                 return Promise.reject(GlobalParseError({
-                    message: `The Agent id=[${agent.id}] is not trained`
+                    message: 'Someone is trying to chat with your agent, but it hasn\'t been trained yet.',
+                    missingTrainingAtAll: true
                 }));
             }
             const justER = agent.model.indexOf(RASA_MODEL_JUST_ER) !== -1;
@@ -52,7 +53,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
             const CategoryModels = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: true });
             if (CategoryModels.length === 0) {
                 return Promise.reject(GlobalParseError({
-                    message: `The Agent id=[${agent.id}] doesn't have any categories.`,
+                    message: 'Someone is trying to chat with your agent, but you haven\'t added data to it.',
                     missingCategories: true
                 }));
             }
@@ -60,7 +61,7 @@ module.exports = async function ({ id = null, AgentModel = null }) {
 
             if (TrainedCategoryModels.length === 0) {
                 return Promise.reject(GlobalParseError({
-                    message: `The Agent id=[${agent.id}] doesn't have any trained categories.`,
+                    message: 'Someone is trying to chat with your agent, but it hasn\'t been trained yet.',
                     missingTrainedCategories: true
                 }));
             }

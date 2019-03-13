@@ -714,9 +714,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     textResponse: 'I don\'t have any knowledge in my brain yet. Please teach me something.'
                 }
             }
-            if (error.missingTrainedCategories){
+            if (error.missingTrainedCategories || error.missingTrainingAtAll){
                 return {
-                    textResponse: 'Ok I know you have teach me a couple of things, but first you have to train me.'
+                    textResponse: error.message
                 }
             }
         }
