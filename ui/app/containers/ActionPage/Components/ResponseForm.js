@@ -88,10 +88,16 @@ const styles = {
     width: '80px',
   },
   icon: {
+    '&:hover': {
+      filter: 'invert(0)'
+    },
+    filter: 'invert(1)',
     display: 'inline',
     cursor: 'pointer',
     height: '15px',
-    paddingLeft: '5px'
+    paddingLeft: '5px',
+    position: 'relative',
+    top: '3px'
   },
   postFormatLabel: {
     color: '#a2a7b1',
