@@ -10,9 +10,11 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en';
 import es from 'javascript-time-ago/locale/es';
 import pt from 'javascript-time-ago/locale/pt';
+import pl from 'javascript-time-ago/locale/pl';
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
 TimeAgo.addLocale(pt);
+TimeAgo.addLocale(pl);
 
 const styles = {
   button: {
