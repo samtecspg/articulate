@@ -47,7 +47,7 @@ class AgentValidate {
                     [PARAM_FILTER]: Joi
                         .object()
                         .optional()
-                        .description('Values to filter the the results (experimental). Arrays will be treated as OR values.')
+                        .description('Values to filter the the results (experimental). Arrays will be treated as OR values. Example: { "id": "123" }')
                 };
             })()
         };
