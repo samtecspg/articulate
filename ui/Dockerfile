@@ -10,8 +10,6 @@ COPY internals ./internals
 
 RUN yarn install
 ADD . .
-# run yarn build when running yarn start:prod
-RUN yarn build
 
 EXPOSE 3000
 
