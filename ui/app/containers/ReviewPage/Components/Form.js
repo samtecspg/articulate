@@ -66,8 +66,8 @@ const styles = {
     left: '50%',
     transform: `translate(-50%, -50%)`,
     position: 'absolute',
-    width: window.window.innerWidth < 675 ? 350 : 600,
-    height: window.window.innerWidth < 675 ? 215 : 375,
+    width: '80%',
+    height: '80%',
     backgroundColor: '#fff',
     boxShadow:
       '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
@@ -142,8 +142,8 @@ class Form extends React.Component {
             <Grid className={classes.modalContent} container>
               <iframe
                 title="SPG Intro"
-                width={styles.modalContent.width}
-                height={styles.modalContent.height}
+                width='100%'
+                height='100%'
                 src='https://www.youtube.com/embed/o807YDeK6Vg'
                 frameBorder='0'
                 allow='autoplay; encrypted-media'
