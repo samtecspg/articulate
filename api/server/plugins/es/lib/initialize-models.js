@@ -8,8 +8,9 @@ module.exports = async ({ client, path }) => {
     const models = {};
     await _.each(Mods, async (model) => {
 
+        console.log(`initialize-models::`); // TODO: REMOVE!!!!
         const instance = new model({ client });
-        const { name, properties, index } = instance;
+        const { name, mappings, index } = instance;
 
         logger.debug(name);
 
@@ -17,13 +18,15 @@ module.exports = async ({ client, path }) => {
         if (!exists) {
             await client.indices.create({ index });
         }
-        await client.indices.putMapping(
-            {
-                index,
-                type: index,
-                body: { properties }
-            }
-        );
+        const map = {
+            index,
+            type: index,
+            body: { ...mappings }
+        };
+        console.log({ map }); // TODO: REMOVE!!!!
+
+        const response = await client.indices.putMapping(map);
+        console.log(response); // TODO: REMOVE!!!!
 
         models[name] = instance;
     });
