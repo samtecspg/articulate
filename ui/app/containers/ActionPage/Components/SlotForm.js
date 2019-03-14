@@ -115,7 +115,6 @@ class SlotForm extends React.Component {
                   let selectedKeyword = agentKeywords.filter((agentKeyword) => { return agentKeyword.id === evt.target.value });
                   if (selectedKeyword.length === 0){
                     selectedKeyword = systemKeywords.filter((systemKeyword) => { return systemKeyword.keywordName === evt.target.value });
-                    console.log(selectedKeyword);
                     this.props.onChangeSlotData('uiColor', selectedKeyword[0].uiColor);
                     this.props.onChangeSlotData('keyword', selectedKeyword[0].keywordName);
                     this.props.onChangeSlotData('keywordId', 0);

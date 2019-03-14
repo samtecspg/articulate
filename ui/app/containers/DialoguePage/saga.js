@@ -177,13 +177,6 @@ export function* putSaying(payload) {
       body: _.omit(saying, valuesToOmit),
     });
     yield put(updateSayingSuccess(saying));
-    /*
-    yield call(getSayings, {
-      api,
-      filter,
-      page,
-      pageSize,
-    });*/
   }
   catch (err) {
     yield put(updateSayingError(err));
@@ -265,12 +258,18 @@ export function* deleteAction(payload) {
 export function* getCategories(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, filter } = payload;
+  let transformedFilter = filter;
+  if (filter !== undefined){
+    transformedFilter = {
+      categoryName: filter
+    };
+  }
   const skip = 0;
   const limit = -1;
   try {
     const response = yield call(api.agent.getAgentAgentidCategory, {
       agentId: agent.id,
-      filter,
+      filter: transformedFilter ? JSON.stringify(transformedFilter) : transformedFilter,
       skip,
       limit,
     });
