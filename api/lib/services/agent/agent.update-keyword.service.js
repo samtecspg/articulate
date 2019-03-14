@@ -3,7 +3,8 @@ import {
     MODEL_AGENT,
     MODEL_CATEGORY,
     MODEL_KEYWORD,
-    STATUS_OUT_OF_DATE
+    STATUS_OUT_OF_DATE,
+    MODEL_ACTION
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
@@ -38,6 +39,25 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
             return await CategoryModel.saveInstance();
         });
         await Promise.all(categoryStatusUpdatePromise);
+
+        const agentActionsModels = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel: true });
+        const actionsUpdatePromise = agentActionsModels.map(async (ActionModel) => {
+
+            let updated = false;
+            ActionModel.property('slots', ActionModel.property('slots').map((actionSlot) => {
+                if (actionSlot.keywordId === keywordId){
+                    updated = true;
+                    actionSlot.keyword = keywordData.keywordName ? keywordData.keywordName : KeywordModel.property('keywordName');
+                    actionSlot.uiColor = keywordData.uiColor ? keywordData.uiColor : KeywordModel.property('uiColor');
+                }
+                return actionSlot;
+            }));
+            if (updated){
+                return await ActionModel.saveInstance();
+            }
+            return null;
+        });
+        await Promise.all(actionsUpdatePromise);
 
         return returnModel ? KeywordModel : KeywordModel.allProperties();
 

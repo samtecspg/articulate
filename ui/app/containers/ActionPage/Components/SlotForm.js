@@ -109,12 +109,22 @@ class SlotForm extends React.Component {
               <TextField
                 select
                 id='keyword'
-                value={`${slot.uiColor}~${slot.keyword}`}
+                value={slot.keywordId ? slot.keywordId : slot.keyword}
                 label={intl.formatMessage(messages.keywordSelect)}
                 onChange={(evt) => {
-                  const keywordValue = evt.target.value.split('~');
-                  this.props.onChangeSlotData('uiColor', keywordValue[0]);
-                  this.props.onChangeSlotData('keyword', keywordValue[1]);
+                  let selectedKeyword = agentKeywords.filter((agentKeyword) => { return agentKeyword.id === evt.target.value });
+                  if (selectedKeyword.length === 0){
+                    selectedKeyword = systemKeywords.filter((systemKeyword) => { return systemKeyword.keywordName === evt.target.value });
+                    console.log(selectedKeyword);
+                    this.props.onChangeSlotData('uiColor', selectedKeyword[0].uiColor);
+                    this.props.onChangeSlotData('keyword', selectedKeyword[0].keywordName);
+                    this.props.onChangeSlotData('keywordId', 0);
+                  }
+                  else {
+                    this.props.onChangeSlotData('uiColor', selectedKeyword[0].uiColor);
+                    this.props.onChangeSlotData('keyword', selectedKeyword[0].keywordName);
+                    this.props.onChangeSlotData('keywordId', selectedKeyword[0].id);
+                  }
                 }}
                 margin='normal'
                 fullWidth
@@ -125,12 +135,12 @@ class SlotForm extends React.Component {
                 error={this.props.errorState ? this.props.errorState.keyword : false}
               >
                 {agentKeywords.map((keyword, index) => (
-                  <MenuItem key={`keyword_${index}`} value={`${keyword.uiColor}~${keyword.keywordName}`}>
+                  <MenuItem key={`keyword_${index}`} value={keyword.id}>
                     <span style={{ color: keyword.uiColor }}>{keyword.keywordName}</span>
                   </MenuItem>
                 ))}
                 {systemKeywords.map((keyword, index) => (
-                  <MenuItem key={`keyword_${index}`} value={`${keyword.uiColor}~${keyword.keywordName}`}>
+                  <MenuItem key={`keyword_${index}`} value={keyword.keywordName}>
                     <span style={{ color: keyword.uiColor }}>{keyword.keywordName}</span>
                   </MenuItem>
                 ))}
