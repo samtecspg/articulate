@@ -1,11 +1,12 @@
 import _ from 'lodash';
 
 module.exports = class BaseModel {
-    constructor({ name, mappings, client }) {
+    constructor({ name, mappings, settings, client }) {
 
         this.name = name;
         this.index = _.snakeCase(name);
         this.mappings = mappings;
+        this.settings = settings;
         this.client = client;
     }
 

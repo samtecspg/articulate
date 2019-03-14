@@ -49,12 +49,16 @@ const mappings = {
     ]
 };
 
+const settings = {
+    'index.mapping.total_fields.limit': 5000
+};
 module.exports = class DocumentEsModel extends BaseModel {
     constructor({ client }) {
 
         super({
             name: MODEL_DOCUMENT,
             mappings,
+            settings,
             client
         });
     }
