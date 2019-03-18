@@ -103,6 +103,7 @@ import {
   DELETE_SAYING_ERROR,
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
+  EDIT_ACTION_RESPONSE,
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
@@ -1267,6 +1268,14 @@ export function deleteSlot(slotIndex) {
     type: DELETE_SLOT,
     slotIndex,
   };
+}
+
+export function editActionResponse(newResponse, responseIndex){
+  return {
+    type: EDIT_ACTION_RESPONSE,
+    newResponse,
+    responseIndex,
+  }
 }
 
 /* Keyword */

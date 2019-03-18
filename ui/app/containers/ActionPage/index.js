@@ -68,6 +68,7 @@ import {
   deleteSlot,
   copyResponse,
   updateNewResponse,
+  editActionResponse,
 } from '../App/actions';
 
 const styles = {
@@ -386,6 +387,7 @@ export class ActionPage extends React.Component {
               newResponse={this.props.newResponse}
               onUpdateNewResponse={this.props.onUpdateNewResponse}
               onCopyResponse={this.props.onCopyResponse}
+              onEditActionResponse={this.props.onEditActionResponse}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -436,6 +438,7 @@ ActionPage.propTypes = {
   touched: PropTypes.bool,
   onCopyResponse: PropTypes.func,
   newResponse: PropTypes.string,
+  onEditActionResponse: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -544,6 +547,9 @@ function mapDispatchToProps(dispatch) {
     },
     onCopyResponse: (response) => {
       dispatch(copyResponse(response));
+    },
+    onEditActionResponse: (newResponse, responseIndex) => {
+      dispatch(editActionResponse(newResponse, responseIndex));
     }
   };
 }

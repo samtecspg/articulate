@@ -1,10 +1,12 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Grid, FormControl, MenuItem, Select } from '@material-ui/core';
+import { Grid, FormControl, MenuItem, Select, Input, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import addActionIcon from '../../../images/add-action-icon.svg';
+import trashIcon from '../../../images/trash-icon.svg';
+import copyIcon from '../../../images/icon-copy.svg';
 
 const styles = {
   actionBackgroundContainer: {
@@ -39,11 +41,27 @@ const styles = {
     },
     cursor: 'pointer',
     verticalAlign: 'middle',
+    paddingRight: '1px',
+    height: '15px',
+  },
+  icon: {
+    '&:hover': {
+      filter: 'invert(0)'
+    },
+    filter: 'invert(1)',
+    height: '15px',
+    cursor: 'pointer',
+    verticalAlign: 'middle',
+    paddingLeft: '5px',
   },
   response: {
     paddingRight: '5px',
     lineHeight: '1.5',
   },
+  responseInput: {
+    border: 'none',
+    padding: '0px',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -59,25 +77,43 @@ class ResponseRow extends React.Component {
     return (
       <Grid container>
         <Grid item xs={12}>
-          <span className={classes.response}>
-            {response.textResponse}
-          </span>
-          {response.actions.map((action, actionIndex) => {
-            return (
-              <div key={`responseAction_${actionIndex}`} className={classes.actionBackgroundContainer}>
-                <span
-                  className={classes.actionLabel}
-                >{action}</span>
-                <a onClick={() => { this.props.onUnchainActionFromResponse(responseIndex, actionIndex) }} className={classes.deleteActionX}>x</a>
-              </div>
-            )
-          })}
-          <img
-            onClick={(evt) => this.setState({
-              anchorEl: evt.target,
-              openActions: true,
-            })}
-            className={classes.addActionIcon} src={addActionIcon}
+          <Input
+            id={`response_${responseIndex}`}
+            value={response.textResponse}
+            onChange={(evt) => {
+              this.props.onEditActionResponse(evt.target.value, responseIndex);
+            }}
+            inputProps={{
+             className: classes.responseInput
+            }}
+            endAdornment={
+              [
+                response.actions.map((action, actionIndex) => {
+                  return (
+                    <div key={`responseAction_${actionIndex}`} className={classes.actionBackgroundContainer}>
+                      <span
+                        className={classes.actionLabel}
+                      >{action}</span>
+                      <a onClick={() => { this.props.onUnchainActionFromResponse(responseIndex, actionIndex) }} className={classes.deleteActionX}>x</a>
+                    </div>
+                  )
+                }),
+                <img
+                  key='imgAddAction'
+                  onClick={(evt) => this.setState({
+                    anchorEl: evt.target,
+                    openActions: true,
+                  })}
+                  className={classes.addActionIcon} src={addActionIcon}
+                />,
+                <Tooltip key='copyResponse' title='Copy response in the response input' placement='top'>
+                  <img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} />
+                </Tooltip>,
+                <img key='deleteResponse' onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />
+              ]
+            }
+            multiline
+            fullWidth
           />
           <FormControl>
             <Select
@@ -126,6 +162,9 @@ ResponseRow.propTypes = {
   agentActions: PropTypes.array,
   onChainActionToResponse: PropTypes.func,
   onUnchainActionFromResponse: PropTypes.func,
+  onEditActionResponse: PropTypes.func,
+  onCopyResponse: PropTypes.func,
+  onDeleteResponse: PropTypes.func,
 };
 
 export default withStyles(styles)(ResponseRow);

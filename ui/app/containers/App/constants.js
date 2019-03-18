@@ -174,6 +174,7 @@ export const ADD_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/ADD_SLOT_TEXT_PROMPT_SL
 export const DELETE_SLOT_TEXT_PROMPT_SLOT = 'app/ActionPage/DELETE_SLOT_TEXT_PROMPT_SLOT';
 export const SORT_SLOTS = 'app/ActionPage/SORT_SLOTS';
 export const DELETE_SLOT = 'app/ActionPage/DELETE_SLOT';
+export const EDIT_ACTION_RESPONSE = 'app/ActionPage/EDIT_ACTION_RESPONSE';
 
 /*
  * Keyword

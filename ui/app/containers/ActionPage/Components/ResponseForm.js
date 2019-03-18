@@ -84,9 +84,6 @@ const styles = {
   table: {
     marginTop: '10px',
   },
-  deleteCell: {
-    width: '80px',
-  },
   icon: {
     '&:hover': {
       filter: 'invert(0)'
@@ -225,13 +222,10 @@ class ResponseForm extends React.Component {
                                 agentActions={this.props.agentActions}
                                 onChainActionToResponse={this.props.onChainActionToResponse}
                                 onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
+                                onEditActionResponse={this.props.onEditActionResponse}
+                                onCopyResponse={this.props.onCopyResponse}
+                                onDeleteResponse={this.props.onDeleteResponse}
                               />
-                            </TableCell>
-                            <TableCell className={classes.deleteCell}>
-                              <Grid>
-                                <Tooltip title='Copy response in the response input' placement='top'><img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} /></Tooltip>
-                                <img onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />                                
-                              </Grid>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -279,14 +273,15 @@ ResponseForm.propTypes = {
   onChangeActionData: PropTypes.func,
   onChangePostFormatData: PropTypes.func,
   onAddResponse: PropTypes.func,
-  onDeleteResponse: PropTypes.func,
   onChainActionToResponse: PropTypes.func,
   onUnchainActionFromResponse: PropTypes.func,
   onUpdateNewResponse: PropTypes.func,
   onCopyResponse: PropTypes.func,
+  onDeleteResponse: PropTypes.func,
   errorState: PropTypes.object,
   agentActions: PropTypes.array,
   newResponse: PropTypes.string,
+  onEditActionResponse: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));
