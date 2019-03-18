@@ -42,6 +42,8 @@ const ModifierSchema = require('../models/modifier.model').schema;
 const ModifierSayingSchema = require('../models/modifier.saying.model').schema;
 const DocumentSchema = require('../models/document.model').schema;
 
+const defaultSettings = require('../../util/default-settings.json');
+
 class AgentValidate {
     constructor() {
 
@@ -60,8 +62,8 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.required(),
-                    timezone: AgentSchema.timezone.required(),
+                    language: AgentSchema.language.required().valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
+                    timezone: AgentSchema.timezone.required().valid(defaultSettings.timezones).default('UTC'),
                     useWebhook: AgentSchema.useWebhook.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
                     multiCategory: AgentSchema.multiCategory.required(),
@@ -225,8 +227,8 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName,
                     description: AgentSchema.description,
-                    language: AgentSchema.language,
-                    timezone: AgentSchema.timezone,
+                    language: AgentSchema.language.valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
+                    timezone: AgentSchema.timezone.valid(defaultSettings.timezones).default('UTC'),
                     useWebhook: AgentSchema.useWebhook,
                     usePostFormat: AgentSchema.usePostFormat,
                     multiCategory: AgentSchema.multiCategory,
@@ -765,8 +767,8 @@ class AgentValidate {
                 return {
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
-                    language: AgentSchema.language.required(),
-                    timezone: AgentSchema.timezone.required(),
+                    language: AgentSchema.language.required().valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
+                    timezone: AgentSchema.timezone.required().valid(defaultSettings.timezones).default('UTC'),
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     categoryRecognizer: AgentSchema.categoryRecognizer,
                     modifiersRecognizer: AgentSchema.modifiersRecognizer,
