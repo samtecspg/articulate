@@ -4,8 +4,8 @@ import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
 
 import { TextField, InputAdornment, IconButton, Paper, MenuItem } from '@material-ui/core';
-import { Cancel } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
+import cancelIcon from '../../images/cancel-icon.svg';
 
 function renderInputComponent(inputProps) {
   const { value, classes, onChange, inputRef = () => {}, ref, ...other } = inputProps;
@@ -41,7 +41,7 @@ function renderInputComponent(inputProps) {
               }}
               onClick={(evt) => { evt.target.value = ''; onChange(evt, '') }}
             >
-              {value ? <Cancel /> : null}
+              {value ? <img style={{ height: '20px', width: '20px', filter: 'invert(1)', '&:hover': { filter: 'invert(0) !important' } }} src={cancelIcon} /> : null}
             </IconButton>
           </InputAdornment>
         ),   
