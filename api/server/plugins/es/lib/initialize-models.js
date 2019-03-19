@@ -9,7 +9,7 @@ module.exports = async ({ client, path }) => {
     await _.each(Mods, async (model) => {
 
         const instance = new model({ client });
-        const { name, properties, index } = instance;
+        const { name, mappings, settings, index } = instance;
 
         logger.debug(name);
 
@@ -17,13 +17,17 @@ module.exports = async ({ client, path }) => {
         if (!exists) {
             await client.indices.create({ index });
         }
-        await client.indices.putMapping(
-            {
-                index,
-                type: index,
-                body: { properties }
-            }
-        );
+
+        await client.indices.putMapping({
+            index,
+            type: index,
+            body: { ...mappings }
+        });
+
+        await client.indices.putSettings({
+            index,
+            body: { ...settings }
+        });
 
         models[name] = instance;
     });
