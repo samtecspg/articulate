@@ -50,6 +50,7 @@ export function* getActions(payload) {
   try {
     const response = yield call(api.agent.getAgentAgentidAction, {
       agentId: agentId ? agentId : agent.id,
+      field: 'actionName'
     });
     yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
   } catch (err) {
