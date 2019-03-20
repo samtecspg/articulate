@@ -8,6 +8,7 @@ import {
 import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
+  ROUTE_IDENTIFY_KEYWORDS,
   ROUTE_KEYWORD,
   ROUTE_SETTINGS,
 } from '../../../common/constants';
@@ -118,7 +119,10 @@ export function* getIdentifyKeywords(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, modifierIndex, newSaying } = payload;
   try {
-    const response = yield call(api.agent.getAgentAgentidIdentifykeywords, { agentId: agent.id, text: newSaying });
+    const params = {
+      text: newSaying,
+    };
+    yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_IDENTIFY_KEYWORDS]),{params});
     yield put(addModifierSayingSuccess(modifierIndex, newSaying, response));
   }
   catch (err) {

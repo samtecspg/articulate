@@ -9,6 +9,7 @@ import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
   ROUTE_CATEGORY,
+  ROUTE_IDENTIFY_KEYWORDS,
   ROUTE_KEYWORD,
   ROUTE_SAYING,
   ROUTE_SETTINGS,
@@ -64,7 +65,7 @@ export function* getKeywords(payload) {
   }
   try {
     const params = {
-      filter,
+      filter: filter === '' ? undefined : filter,
       skip,
       limit,
     };
@@ -257,9 +258,9 @@ export function* getCategories(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, filter } = payload;
   let transformedFilter = filter;
-  if (filter !== undefined){
+  if (filter !== undefined) {
     transformedFilter = {
-      categoryName: filter
+      categoryName: filter,
     };
   }
   const skip = 0;
@@ -296,6 +297,7 @@ export function* putSayingsPageSize(payload) {
   mutableSettings.sayingsPageSize = pageSize;
   try {
     yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
+    yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_IDENTIFY_KEYWORDS]), { params });
   }
   catch (err) {
     throw err;
