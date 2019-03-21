@@ -15,6 +15,14 @@ const styles = {
     color: '#4e4e4e',
     width: '95%',
   },
+  errorMessage: {
+    color: '#f44336',
+    display: 'inline',
+    fontSize: '0.75rem',
+    minHeight: '1em',
+    fontWeight: 400,
+    width: '95%',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -100,6 +108,18 @@ export class TrainingSettings extends React.Component {
           label={intl.formatMessage(messages.enableModelsPerCategory)}
         />
       </Grid>
+      {this.props.errorState.training ?
+        <Grid
+          container
+          item
+          xs={12}
+        >
+          <Typography className={classes.errorMessage}>
+            <FormattedMessage
+              {...messages.trainingSettingMissing}
+            />
+          </Typography>
+        </Grid> : null}
     </Grid>
     );
   }
@@ -110,6 +130,7 @@ TrainingSettings.propTypes = {
   intl: intlShape.isRequired,
   agent: PropTypes.object,
   onChangeAgentData: PropTypes.func,
+  errorState: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(TrainingSettings));

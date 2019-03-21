@@ -87,6 +87,7 @@ export class AgentPage extends React.PureComponent {
       spacyPretrainedEntities: false,
       postFormatPayload: false,
       webhookPayload: false,
+      training: false,
       tabs: [],
     },
   };
@@ -141,6 +142,7 @@ export class AgentPage extends React.PureComponent {
       sayingClassifierPipeline: false,
       keywordClassifierPipeline: false,
       spacyPretrainedEntities: false,
+      training: false,
       tabs: [],
     };
     if (!this.props.agent.agentName || this.props.agent.agentName === '') {
@@ -185,6 +187,15 @@ export class AgentPage extends React.PureComponent {
     } else {
       newErrorState.ducklingURL = false;
     }
+    if (!this.props.agent.enableModelsPerCategory && this.props.agent.multiCategory) {
+      errors = true;
+      newErrorState.training = true;
+      newErrorState.tabs.push(2);
+    } else {
+      newErrorState.training = false;
+    }
+
+    
 
     try {
       if (!Array.isArray(this.props.agentSettings.ducklingDimension)) {

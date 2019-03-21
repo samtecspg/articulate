@@ -119,6 +119,10 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentSettingsForm.trainingSettingDescription',
     defaultMessage: 'These settings will modify some elements of the training. Therefore, you can enable or disable them to impact the way the models are generated.',
   },
+  trainingSettingMissing: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.trainingSettingMissing',
+    defaultMessage: 'You must select either multiple action recognition or separate models for each category.',
+  },
   rasaSetting: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.rasaSetting',
     defaultMessage: 'Rasa',

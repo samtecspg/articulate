@@ -171,6 +171,7 @@ class AgentSettingsForm extends React.Component {
                 <TrainingSettings
                   agent={agent}
                   onChangeAgentData={this.props.onChangeAgentData}
+                  errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
