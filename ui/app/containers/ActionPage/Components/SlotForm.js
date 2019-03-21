@@ -154,7 +154,7 @@ class SlotForm extends React.Component {
                 value={slot.remainingLife}
                 placeholder={intl.formatMessage(messages.remainingLifeTextFieldPlaceholder)}
                 onChange={(evt) => {
-                  this.props.onChangeSlotData('remainingLife', evt.target.value);
+                  this.props.onChangeSlotData('remainingLife', evt.target.value ? parseInt(evt.target.value) : null);
                 }}
                 margin='normal'
                 fullWidth
@@ -162,6 +162,7 @@ class SlotForm extends React.Component {
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.slotNameTextFieldHelp)}
+                type="number"
               />
             </Grid>
           </Grid>
