@@ -70,11 +70,11 @@ export function* getActions(payload) {
     };
     const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId || agent.id, ROUTE_ACTION]), { params });
     if (filter !== undefined) {
-      yield put(loadFilteredActionsuccess({ actions: response.obj.data }));
+      yield put(loadFilteredActionsuccess({ actions: response.data }));
     }
     else {
-      yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
-      yield put(loadFilteredActionsuccess({ actions: response.obj.data }));
+      yield put(loadActionsSuccess({actions: response.data, total: response.totalCount}));
+      yield put(loadFilteredActionsuccess({ actions: response.data }));
     }
   }
   catch (err) {
