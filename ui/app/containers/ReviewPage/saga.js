@@ -5,6 +5,14 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 import Immutable from 'seamless-immutable';
+import {
+  ROUTE_AGENT,
+  ROUTE_CATEGORY,
+  ROUTE_DOCUMENT,
+  ROUTE_SAYING,
+  ROUTE_SETTINGS,
+} from '../../../common/constants';
+import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
 
 import {
@@ -56,16 +64,16 @@ export function* getSayings(payload) {
     limit = pageSize;
   }
   try {
-    const response = yield call(api.agent.getAgentAgentidSaying, {
-      agentId: agent.id,
-      tempFilter,
+    const params = {
+      filter: tempFilter,
       skip,
       limit,
       field: 'id',
       direction: 'DESC',
       loadCategoryId: true,
-    });
-    yield put(loadSayingsSuccess({ sayings: response.obj.data, total: response.obj.totalCount }));
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_SAYING]), { params });
+    yield put(loadSayingsSuccess({ sayings: response.data, total: response.totalCount }));
   }
   catch (err) {
     yield put(loadSayingsError(err));
@@ -81,12 +89,8 @@ export function* postSaying(payload) {
       keywords,
       actions,
     };
-    const response = yield call(api.agent.postAgentAgentidCategoryCategoryidSaying, {
-      agentId: agent.id,
-      categoryId,
-      body: newSayingData,
-    });
-    yield put(copySayingSuccess(response.obj));
+    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, categoryId, ROUTE_SAYING]), newSayingData);
+    yield put(copySayingSuccess(response));
   }
   catch (err) {
     yield put(copySayingError(err));
@@ -97,11 +101,7 @@ export function* deleteSaying(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, sayingId, categoryId, pageSize } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidCategoryCategoryidSayingSayingid, {
-      agentId: agent.id,
-      categoryId,
-      sayingId,
-    });
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, categoryId, ROUTE_SAYING, sayingId]));
     yield call(getSayings, {
       api,
       filter: '',
@@ -122,12 +122,7 @@ export function* putSaying(payload) {
   delete saying.agent;
   delete saying.category;
   try {
-    yield call(api.agent.putAgentAgentidCategoryCategoryidSayingSayingid, {
-      agentId: agent.id,
-      categoryId,
-      sayingId,
-      body: saying,
-    });
+    yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, categoryId, ROUTE_SAYING, sayingId]), saying);
     yield call(getSayings, {
       api,
       filter,
@@ -205,23 +200,24 @@ export function* getCategories(payload) {
   const skip = 0;
   const limit = -1;
   try {
-    const response = yield call(api.agent.getAgentAgentidCategory, {
-      agentId: agent.id,
+    const params = {
       filter,
       skip,
       limit,
-    });
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY]), { params });
+
     if (filter !== undefined) {
-      yield put(loadFilteredCategoriesSuccess({ categories: response.obj.data }));
+      yield put(loadFilteredCategoriesSuccess({ categories: response.data }));
     }
     else {
-      yield put(loadCategoriesSuccess({ categories: response.obj.data }));
-      yield put(loadFilteredCategoriesSuccess({ categories: response.obj.data }));
+      yield put(loadCategoriesSuccess({ categories: response.data }));
+      yield put(loadFilteredCategoriesSuccess({ categories: response.data }));
     }
   }
   catch (err) {
     if (filter !== undefined) {
-      yield put(loadFilteredCategoriesError(response.obj));
+      yield put(loadFilteredCategoriesError(response));
     }
     else {
       yield put(loadCategoriesError(err));
@@ -236,6 +232,7 @@ export function* putReviewPageSize(payload) {
   mutableSettings.reviewPageSize = pageSize;
   try {
     yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
+    yield call(api.put, toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]), mutableSettings);
   }
   catch (err) {
     throw err;
@@ -252,14 +249,14 @@ export function* getAgentDocument(payload) {
     limit = pageSize;
   }
   try {
-    const response = yield call(api.agent.getAgentAgentidDoc, {
-      agentId: agent.id,
+    const params = {
       skip,
       limit,
       field,
       direction,
-    });
-    yield put(loadAgentDocumentsSuccess({ documents: response.obj.data, total: response.obj.totalCount }));
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_DOCUMENT]), { params });
+    yield put(loadAgentDocumentsSuccess({ documents: response.data, total: response.totalCount }));
 
   }
   catch (err) {

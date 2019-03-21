@@ -1,26 +1,36 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
 import {
-  loadAgentsError,
-  loadAgentsSuccess,
+  call,
+  put,
+  takeLatest,
+} from 'redux-saga/effects';
+import {
+  ROUTE_AGENT,
+  ROUTE_EXPORT,
+  ROUTE_IMPORT,
+} from '../../../common/constants';
+import { toAPIPath } from '../../utils/locationResolver';
+import {
   exportAgentError,
   exportAgentSuccess,
+  importAgentError,
   importAgentSuccess,
-  importAgentError
+  loadAgentsError,
+  loadAgentsSuccess,
 } from '../App/actions';
-
 import {
-  LOAD_AGENTS,
   EXPORT_AGENT,
-  IMPORT_AGENT
+  IMPORT_AGENT,
+  LOAD_AGENTS,
 } from '../App/constants';
 
 export function* getAgents(payload) {
   const { api } = payload;
 
   try {
-    const response = yield call(api.agent.getAgent, {});
-    yield put(loadAgentsSuccess(response.obj.data));
-  } catch (err) {
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT]));
+    yield put(loadAgentsSuccess(response.data));
+  }
+  catch (err) {
     yield put(loadAgentsError(err));
   }
 }
@@ -29,16 +39,15 @@ export function* getAgentExport(payload) {
   const { api, id } = payload;
 
   try {
-    if (id !== 0){
-      const response = yield call(api.agent.getAgentAgentidExport, {
-        agentId: id
-      });
-      yield put(exportAgentSuccess(response.obj));
+    if (id !== 0) {
+      const response = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
+      yield put(exportAgentSuccess(response));
     }
     else {
       yield put(exportAgentSuccess(null));
     }
-  } catch (err) {
+  }
+  catch (err) {
     yield put(exportAgentError(err));
   }
 }
@@ -46,10 +55,11 @@ export function* getAgentExport(payload) {
 export function* postAgentImport(payload) {
   const { api, agent } = payload;
   try {
-    const response = yield call(api.agent.postAgentImport, { body: agent });
+    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
     yield put(importAgentSuccess(response.obj));
     yield call(getAgents, { api });
-  } catch (err) {
+  }
+  catch (err) {
     yield put(importAgentError(err));
   }
 }

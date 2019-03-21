@@ -11,21 +11,18 @@ import {
 import createSagaMiddleware from 'redux-saga';
 import Immutable from 'seamless-immutable';
 import createReducer from './reducers';
-import { getAPI } from './utils/locationResolver';
-import swaggerMiddleware from './utils/swaggerMiddleware';
+import apiMiddleware from './utils/apiMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState = {}, history) {
 
-  const apiURL = getAPI();
-
   // Create the store with three middlewares
-  // 1. swaggerMiddleware: adds generated API object from swagger.json
+  // 1. apiMiddleware: adds generated API object
   // 2. sagaMiddleware: Makes redux-sagas work
   // 3. routerMiddleware: Syncs the location/URL path to the state
   const middlewares = [
-    swaggerMiddleware({ url: `${apiURL}/swagger.json` }),
+    apiMiddleware(),
     sagaMiddleware,
     routerMiddleware(history),
   ];

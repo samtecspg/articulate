@@ -1,37 +1,41 @@
-import Immutable from 'seamless-immutable';
+import { push } from 'react-router-redux';
 import {
-  push
-} from 'react-router-redux';
-import {
-  takeLatest,
   call,
   put,
   select,
+  takeLatest,
 } from 'redux-saga/effects';
-
+import Immutable from 'seamless-immutable';
 import {
-  loadKeywordSuccess,
-  loadKeywordError,
-  createKeywordSuccess,
-  createKeywordError,
-  updateKeywordSuccess,
-  updateKeywordError,
-  deleteKeywordError,
+  ROUTE_AGENT,
+  ROUTE_IDENTIFY_KEYWORDS,
+  ROUTE_KEYWORD,
+  ROUTE_SETTINGS,
+} from '../../../common/constants';
+import { toAPIPath } from '../../utils/locationResolver';
+import {
   addModifierSayingSuccess,
+  createKeywordError,
+  createKeywordSuccess,
+  deleteKeywordError,
+  loadKeywordError,
+  loadKeywordSuccess,
+  updateKeywordError,
+  updateKeywordSuccess,
 } from '../App/actions';
-
 import {
-  LOAD_KEYWORD,
-  CREATE_KEYWORD,
-  UPDATE_KEYWORD,
-  DELETE_KEYWORD,
-  CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
-  LOAD_KEYWORDS,
   ADD_MODIFIER_SAYING,
+  CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
+  CREATE_KEYWORD,
+  DELETE_KEYWORD,
+  LOAD_KEYWORD,
+  LOAD_KEYWORDS,
+  UPDATE_KEYWORD,
 } from '../App/constants';
-
 import {
-  makeSelectAgent, makeSelectKeyword, makeSelectAgentSettings
+  makeSelectAgent,
+  makeSelectAgentSettings,
+  makeSelectKeyword,
 } from '../App/selectors';
 import { getKeywords } from '../DialoguePage/saga';
 
@@ -39,13 +43,11 @@ export function* getKeyword(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    const response = yield call(api.agent.getAgentAgentidKeywordKeywordid, {
-      agentId: agent.id,
-      keywordId: id,
-    });
-    response.obj.regex = response.obj.regex ? response.obj.regex : '';
-    yield put(loadKeywordSuccess(response.obj));
-  } catch (err) {
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD, id]));
+    response.regex = response.regex ? response.regex : '';
+    yield put(loadKeywordSuccess(response));
+  }
+  catch (err) {
     yield put(loadKeywordError(err));
   }
 }
@@ -57,9 +59,10 @@ export function* postKeyword(payload) {
   delete newKeyword.agent;
   const { api } = payload;
   try {
-    const response = yield call(api.agent.postAgentAgentidKeyword, { agentId: agent.id, body: newKeyword });
-    yield put(createKeywordSuccess(response.obj));
-  } catch (err) {
+    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD]), newKeyword);
+    yield put(createKeywordSuccess(response));
+  }
+  catch (err) {
     yield put(createKeywordError(err));
   }
 }
@@ -73,9 +76,10 @@ export function* putKeyword(payload) {
   delete mutableKeyword.id;
   delete mutableKeyword.agent;
   try {
-    const response = yield call(api.agent.putAgentAgentidKeywordKeywordid, { agentId: agent.id, keywordId, body: mutableKeyword });
-    yield put(updateKeywordSuccess(response.obj));
-  } catch (err) {
+    const response = yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD, keywordId]), mutableKeyword);
+    yield put(updateKeywordSuccess(response));
+  }
+  catch (err) {
     yield put(updateKeywordError(err));
   }
 }
@@ -84,14 +88,15 @@ export function* deleteKeyword(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidKeywordKeywordid, { agentId: agent.id, keywordId: id });
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD, id]));
     yield call(getKeywords, {
       api,
       filter: '',
       page: 1,
     });
     yield put(push(`/agent/${agent.id}/keywords`));
-  } catch (err) {
+  }
+  catch (err) {
     const error = { ...err };
     yield put(deleteKeywordError(error.response.body.message));
   }
@@ -103,8 +108,9 @@ export function* putModifierSayingsPageSize(payload) {
   const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
   mutableSettings.modifierSayingsPageSize = pageSize;
   try {
-    yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
-  } catch (err) {
+    yield call(api.put, toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]), mutableSettings);
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -113,9 +119,13 @@ export function* getIdentifyKeywords(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, modifierIndex, newSaying } = payload;
   try {
-    const response = yield call(api.agent.getAgentAgentidIdentifykeywords, { agentId: agent.id, text: newSaying });
-    yield put(addModifierSayingSuccess(modifierIndex, newSaying, response.obj));
-  } catch (err) {
+    const params = {
+      text: newSaying,
+    };
+    yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_IDENTIFY_KEYWORDS]),{params});
+    yield put(addModifierSayingSuccess(modifierIndex, newSaying, response));
+  }
+  catch (err) {
     yield put(addModifierSayingSuccess(err));
   }
 }

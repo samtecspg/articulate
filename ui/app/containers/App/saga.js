@@ -4,7 +4,16 @@ import {
   select,
   takeLatest,
 } from 'redux-saga/effects';
-
+import {
+  ROUTE_AGENT,
+  ROUTE_CONTEXT,
+  ROUTE_CONVERSE,
+  ROUTE_FRAME,
+  ROUTE_POST_FORMAT,
+  ROUTE_TRAIN,
+  ROUTE_WEBHOOK,
+} from '../../../common/constants';
+import { toAPIPath } from '../../utils/locationResolver';
 import {
   LOAD_AGENT,
   LOAD_SETTINGS,
@@ -13,21 +22,22 @@ import {
   TRAIN_AGENT,
   UPDATE_SETTING,
 } from '../App/constants';
-
-import { getSettings } from '../SettingsPage/saga';
-
+import {
+  getSettings,
+  putSetting,
+} from '../SettingsPage/saga';
 import {
   loadAgentError,
   loadAgentSuccess,
   resetSessionSuccess,
   respondMessage,
-  trainAgentError,
   storeSourceData,
+  trainAgentError,
 } from './actions';
-
-import { makeSelectAgent, makeSelectSettings } from './selectors';
-
-import { putSetting } from '../SettingsPage/saga';
+import {
+  makeSelectAgent,
+  makeSelectSettings,
+} from './selectors';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
@@ -35,29 +45,33 @@ export function* postConverse(payload) {
   if (agent.id) {
     const { api, message } = payload;
     try {
-      const response = yield call(api.agent.postAgentAgentidConverse, {
-        agentId: agent.id,
-        debug: true,
-        body: {
+      const postPayload = {
+        params: {
+          debug: true,
+        },
+        data: {
           sessionId: settings.defaultUISessionId,
           text: message.message,
         },
-      });
+      };
+      const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]), null, postPayload);
       yield put(respondMessage({
         author: agent.agentName,
-        docId: response.obj.docId,
-        message: response.obj.textResponse,
-        conversationStateObject: response.obj.conversationStateObject
+        docId: response.docId,
+        message: response.textResponse,
+        conversationStateObject: response.conversationStateObject,
       }));
-      yield put(storeSourceData({ ...response.obj.conversationStateObject }));
-    } catch (err) {
+      yield put(storeSourceData({ ...response.conversationStateObject }));
+    }
+    catch (err) {
       yield put(respondMessage({
         author: 'Error',
         docId: null,
         message: 'I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.',
       }));
     }
-  } else {
+  }
+  else {
     yield put(respondMessage({
       author: 'Warning',
       docId: null,
@@ -71,17 +85,20 @@ export function* deleteSession(payload) {
   const sessionId = settings.defaultUISessionId;
   try {
     const { api } = payload;
-    yield call(api.context.deleteContextSessionidFrame, { sessionId });
-    yield call(api.context.patchContextSessionid, { sessionId, body: {
+    yield call(api.delete, toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_FRAME]));
+    const patchPayload = {
       actionQueue: [],
       responseQueue: [],
       savedSlots: {},
-    }});
+    };
+    yield call(api.patch, toAPIPath([ROUTE_CONTEXT, sessionId]), patchPayload);
     yield put(resetSessionSuccess());
-  } catch ({ response }) {
+  }
+  catch ({ response }) {
     if (response.status && response.status === 404) {
       yield put(resetSessionSuccess());
-    } else {
+    }
+    else {
       yield put(respondMessage({
         author: 'Error',
         docId: null,
@@ -95,8 +112,9 @@ export function* postTrainAgent(payload) {
   const agent = yield select(makeSelectAgent());
   const { api } = payload;
   try {
-    yield call(api.agent.postAgentAgentidTrain, { agentId: agent.id });
-  } catch (err) {
+    yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_TRAIN]));
+  }
+  catch (err) {
     const error = { ...err };
     yield put(trainAgentError(error.response.body.message));
   }
@@ -105,20 +123,21 @@ export function* postTrainAgent(payload) {
 export function* getAgent(payload) {
   const { api, agentId } = payload;
   try {
-    let response = yield call(api.agent.getAgentAgentid, { agentId });
-    const agent = response.obj;
+    let response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId]));
+    const agent = response;
     agent.categoryClassifierThreshold *= 100;
     let webhook, postFormat;
     if (agent.useWebhook) {
-      response = yield call(api.agent.getAgentIdWebhook, { agentId });
-      webhook = response.obj;
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]));
+      webhook = response;
     }
     if (agent.usePostFormat) {
-      response = yield call(api.agent.getAgentIdPostformat, { agentId });
-      postFormat = response.obj;
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]));
+      postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
-  } catch (err) {
+  }
+  catch (err) {
     yield put(loadAgentError(err));
   }
 }

@@ -42,19 +42,20 @@ module.exports = async (server) => {
             return Promise.reject(`The WebSocket [${key}.js] is not valid.\n${validation.error}`);
         }
         try {
-            if (ws.isESModel){
+            if (ws.isESModel) {
                 server.subscription(ws.subscribePath);
-            } else {
+            }
+            else {
                 const model = await rm.factory(ws.model);
                 if (!model.getPublish()) {
-    
+
                     return Promise.reject(`The model [${ws.model}] is not configured to publish.`);
                 }
                 server.subscription(ws.subscribePath);
                 await Promise.all(_.map(ws.actions, async (action) => {
-    
+
                     await model.subscribe(action, (event) => {
-    
+
                         const { target } = event;
                         server.publish(ws.publishPath({ properties: target.properties }), target.properties);
                     });

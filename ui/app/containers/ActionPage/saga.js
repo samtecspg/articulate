@@ -1,51 +1,54 @@
-import Immutable from 'seamless-immutable';
-
+import { push } from 'react-router-redux';
 import {
-  push
-} from 'react-router-redux';
-
-import {
-  takeLatest,
   call,
   put,
   select,
+  takeLatest,
 } from 'redux-saga/effects';
-
+import Immutable from 'seamless-immutable';
 import {
+  ROUTE_ACTION,
+  ROUTE_AGENT,
+  ROUTE_POST_FORMAT,
+  ROUTE_WEBHOOK,
+} from '../../../common/constants';
+import { toAPIPath } from '../../utils/locationResolver';
+import {
+  addActionError,
+  addActionSuccess,
+  deleteActionError,
+  deleteActionSuccess,
   loadActionError,
-  loadActionSuccess,
   loadActionsError,
   loadActionsSuccess,
-  addActionSuccess,
-  addActionError,
-  deleteActionSuccess,
-  deleteActionError,
-  updateActionSuccess,
+  loadActionSuccess,
   updateActionError,
   loadFilteredActionsuccess,
   loadFilteredActionsError,
+  updateActionSuccess,
 } from '../App/actions';
-
 import {
-  LOAD_ACTIONS,
-  LOAD_ACTION,
-  LOAD_KEYWORDS,
   ADD_ACTION,
-  UPDATE_ACTION,
   DELETE_ACTION,
+  LOAD_ACTION,
+  LOAD_ACTIONS,
+  LOAD_KEYWORDS,
+  UPDATE_ACTION,
   LOAD_FILTERED_ACTIONS
 } from '../App/constants';
-
 import {
-  makeSelectAgent,
   makeSelectAction,
-  makeSelectCurrentAction,
-  makeSelectActionWebhook,
   makeSelectActionPostFormat,
+  makeSelectActionWebhook,
+  makeSelectAgent,
+  makeSelectCurrentAction,
   makeSelectSayingForAction,
 } from '../App/selectors';
 
-import { getKeywords, putSaying } from '../DialoguePage/saga';
+import {
+  getKeywords,
+  putSaying,
+} from '../DialoguePage/saga';
 
 export function* getActions(payload) {
   const agent = yield select(makeSelectAgent());
@@ -59,13 +62,13 @@ export function* getActions(payload) {
   const skip = 0;
   const limit = -1;
   try {
-    const response = yield call(api.agent.getAgentAgentidAction, {
-      agentId: agentId ? agentId : agent.id,
+    const params = {
       field: 'actionName',
       filter: transformedFilter ? JSON.stringify(transformedFilter) : transformedFilter,
       skip,
       limit,
-    });
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId || agent.id, ROUTE_ACTION]), { params });
     if (filter !== undefined) {
       yield put(loadFilteredActionsuccess({ actions: response.obj.data }));
     }
@@ -73,7 +76,8 @@ export function* getActions(payload) {
       yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
       yield put(loadFilteredActionsuccess({ actions: response.obj.data }));
     }
-  } catch (err) {
+  }
+  catch (err) {
     if (filter !== undefined) {
       yield put(loadFilteredActionsError(err));
     }
@@ -87,19 +91,20 @@ export function* getAction(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, actionId } = payload;
   try {
-    let response = yield call(api.agent.getAgentAgentidActionActionid, { agentId: agent.id, actionId });
-    const action = response.obj;
+    let response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId]));
+    const action = response;
     let webhook, postFormat;
-    if (action.useWebhook){
-      response = yield call(api.agent.getAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId });
-      webhook = response.obj;
+    if (action.useWebhook) {
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId, ROUTE_WEBHOOK]));
+      webhook = response;
     }
-    if (action.usePostFormat){
-      response = yield call(api.agent.getAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId });
-      postFormat = response.obj;
+    if (action.usePostFormat) {
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId, ROUTE_POST_FORMAT]));
+      postFormat = response;
     }
     yield put(loadActionSuccess({ action, webhook, postFormat }));
-  } catch (err) {
+  }
+  catch (err) {
     yield put(loadActionError(err));
   }
 }
@@ -109,8 +114,9 @@ function* postActionWebhook(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.postAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id, body: actionWebhook });
-  } catch (err) {
+    yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id, ROUTE_WEBHOOK]), actionWebhook);
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -120,8 +126,9 @@ function* postActionPostFormat(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.postAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id, body: actionPostFormat });
-  } catch (err) {
+    yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id, ROUTE_POST_FORMAT]), actionPostFormat);
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -131,12 +138,13 @@ function* putActionWebhook(payload) {
   const agent = yield select(makeSelectAgent());
   const mutableActionWebhook = Immutable.asMutable(actionWebhook, { deep: true });
   const { api, id } = payload;
-  if (mutableActionWebhook.id){ // TODO: Check why webhook have an id
+  if (mutableActionWebhook.id) {
     delete mutableActionWebhook.id;
   }
   try {
-    yield call(api.agent.putAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id, body: mutableActionWebhook });
-  } catch (err) {
+    yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id, ROUTE_WEBHOOK]), mutableActionWebhook);
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -146,12 +154,13 @@ function* putActionPostFormat(payload) {
   const agent = yield select(makeSelectAgent());
   const mutablePostFormat = Immutable.asMutable(actionPostFormat);
   const { api, id } = payload;
-  if (mutablePostFormat.id){ // TODO: Check why post format have an id
+  if (mutablePostFormat.id) {
     delete mutablePostFormat.id;
   }
   try {
-    yield call(api.agent.putAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id, body: mutablePostFormat });
-  } catch (err) {
+    yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id, ROUTE_POST_FORMAT]), mutablePostFormat);
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -160,8 +169,9 @@ function* deleteActionWebhook(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidActionActionidWebhook, { agentId: agent.id, actionId: id });
-  } catch (err) {
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id, ROUTE_WEBHOOK]));
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -170,8 +180,9 @@ function* deleteActionPostFormat(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidActionActionidPostformat, { agentId: agent.id, actionId: id });
-  } catch (err) {
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id, ROUTE_POST_FORMAT]));
+  }
+  catch (err) {
     throw err;
   }
 }
@@ -179,24 +190,25 @@ function* deleteActionPostFormat(payload) {
 export function* postAction(payload) {
   const action = yield select(makeSelectAction());
   const agent = yield select(makeSelectAgent());
-  const mutableAction = Immutable.asMutable(action, {deep: true});
+  const mutableAction = Immutable.asMutable(action, { deep: true });
   delete mutableAction.agent;
   const { api, addToNewSayingActions } = payload;
   try {
-    const response = yield call(api.agent.postAgentAgentidAction, { agentId: agent.id ,body: mutableAction });
-    if (action.useWebhook){
-      yield call(postActionWebhook, { id: response.obj.id, api });
+    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION]), mutableAction);
+    if (action.useWebhook) {
+      yield call(postActionWebhook, { id: response.id, api });
     }
-    if (action.usePostFormat){
-      yield call(postActionPostFormat, { id: response.obj.id, api });
+    if (action.usePostFormat) {
+      yield call(postActionPostFormat, { id: response.id, api });
     }
     const sayingForAction = yield select(makeSelectSayingForAction());
-    const mutableSayingForAction = Immutable.asMutable(sayingForAction, {deep: true});
-    mutableSayingForAction.actions.push(response.obj.actionName);
+    const mutableSayingForAction = Immutable.asMutable(sayingForAction, { deep: true });
+    mutableSayingForAction.actions.push(response.actionName);
     const updateSayingPayload = { api, sayingId: sayingForAction.id, saying: mutableSayingForAction };
     yield call(putSaying, updateSayingPayload);
-    yield put(addActionSuccess({ action: response.obj, addToNewSayingActions }));
-  } catch (err) {
+    yield put(addActionSuccess({ action: response, addToNewSayingActions }));
+  }
+  catch (err) {
     yield put(addActionError(err));
   }
 }
@@ -210,35 +222,36 @@ export function* putAction(payload) {
   delete mutableAction.id;
   delete mutableAction.agent;
   try {
-    const response = yield call(api.agent.putAgentAgentidActionActionid, { agentId: agent.id, actionId: currentAction.id, body: mutableAction });
-    if (!currentAction.useWebhook){
+    const response = yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, currentAction.id]), mutableAction);
+    if (!currentAction.useWebhook) {
       if (action.useWebhook) {
         yield call(postActionWebhook, { id: currentAction.id, api });
       }
     }
-    else if (currentAction.useWebhook){
-      if (!action.useWebhook){
+    else if (currentAction.useWebhook) {
+      if (!action.useWebhook) {
         yield call(deleteActionWebhook, { id: currentAction.id, api });
       }
       else {
         yield call(putActionWebhook, { id: currentAction.id, api });
       }
     }
-    if (!currentAction.usePostFormat){
+    if (!currentAction.usePostFormat) {
       if (action.usePostFormat) {
         yield call(postActionPostFormat, { id: currentAction.id, api });
       }
     }
-    else if (currentAction.usePostFormat){
-      if (!action.usePostFormat){
+    else if (currentAction.usePostFormat) {
+      if (!action.usePostFormat) {
         yield call(deleteActionPostFormat, { id: currentAction.id, api });
       }
       else {
         yield call(putActionPostFormat, { id: currentAction.id, api });
       }
     }
-    yield put(updateActionSuccess(response.obj));
-  } catch (err) {
+    yield put(updateActionSuccess(response));
+  }
+  catch (err) {
     yield put(updateActionError(err));
   }
 }
@@ -247,10 +260,11 @@ export function* deleteAction(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidActionActionid, { agentId: agent.id, actionId: id });
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id]));
     yield put(deleteActionSuccess());
-    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`))
-  } catch (err) {
+    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
+  }
+  catch (err) {
     const error = { ...err };
     yield put(deleteActionError(error.response.body.message));
   }
