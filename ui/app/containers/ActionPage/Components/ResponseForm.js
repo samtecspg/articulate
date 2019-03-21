@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, TextField, Table, TableBody, TableRow, TableCell, Tooltip } from "@material-ui/core";
+import { Grid, Typography, Button, Modal, TextField, Table, TableBody, TableRow, TableCell } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import SingleHighlightedSaying from './SingleHighlightedSaying';
@@ -13,8 +13,6 @@ import messages from "../messages";
 
 import playHelpIcon from "../../../images/play-help-icon.svg";
 import singleQuotesIcon from "../../../images/single-quotes-icon.svg";
-import trashIcon from '../../../images/trash-icon.svg';
-import copyIcon from '../../../images/icon-copy.svg';
 import DeleteFooter from "../../../components/DeleteFooter";
 
 const styles = {
@@ -225,6 +223,8 @@ class ResponseForm extends React.Component {
                                 onEditActionResponse={this.props.onEditActionResponse}
                                 onCopyResponse={this.props.onCopyResponse}
                                 onDeleteResponse={this.props.onDeleteResponse}
+                                onSearchActions={this.props.onSearchActions}
+                                agentFilteredActions={this.props.agentFilteredActions}
                               />
                             </TableCell>
                           </TableRow>
@@ -282,6 +282,8 @@ ResponseForm.propTypes = {
   agentActions: PropTypes.array,
   newResponse: PropTypes.string,
   onEditActionResponse: PropTypes.func,
+  agentFilteredActions: PropTypes.array,
+  onSearchActions: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

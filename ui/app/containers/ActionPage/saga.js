@@ -22,6 +22,8 @@ import {
   deleteActionError,
   updateActionSuccess,
   updateActionError,
+  loadFilteredActionsuccess,
+  loadFilteredActionsError,
 } from '../App/actions';
 
 import {
@@ -31,6 +33,7 @@ import {
   ADD_ACTION,
   UPDATE_ACTION,
   DELETE_ACTION,
+  LOAD_FILTERED_ACTIONS
 } from '../App/constants';
 
 import {
@@ -46,15 +49,37 @@ import { getKeywords, putSaying } from '../DialoguePage/saga';
 
 export function* getActions(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, agentId } = payload;
+  const { api, agentId, filter } = payload;
+  let transformedFilter = filter;
+  if (filter !== undefined){
+    transformedFilter = {
+      actionName: filter
+    };
+  }
+  const skip = 0;
+  const limit = -1;
   try {
     const response = yield call(api.agent.getAgentAgentidAction, {
       agentId: agentId ? agentId : agent.id,
-      field: 'actionName'
+      field: 'actionName',
+      filter: transformedFilter ? JSON.stringify(transformedFilter) : transformedFilter,
+      skip,
+      limit,
     });
-    yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
+    if (filter !== undefined) {
+      yield put(loadFilteredActionsuccess({ actions: response.obj.data }));
+    }
+    else {
+      yield put(loadActionsSuccess({actions: response.obj.data, total: response.obj.totalCount}));
+      yield put(loadFilteredActionsuccess({ actions: response.obj.data }));
+    }
   } catch (err) {
-    yield put(loadActionsError(err));
+    if (filter !== undefined) {
+      yield put(loadFilteredActionsError(err));
+    }
+    else {
+      yield put(loadActionsError(err));
+    }
   }
 }
 
@@ -238,4 +263,5 @@ export default function* rootSaga() {
   yield takeLatest(ADD_ACTION, postAction);
   yield takeLatest(UPDATE_ACTION, putAction);
   yield takeLatest(DELETE_ACTION, deleteAction);
+  yield takeLatest(LOAD_FILTERED_ACTIONS, getActions);
 };

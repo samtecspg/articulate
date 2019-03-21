@@ -107,6 +107,9 @@ import {
   LOAD_FILTERED_CATEGORIES,
   LOAD_FILTERED_CATEGORIES_ERROR,
   LOAD_FILTERED_CATEGORIES_SUCCESS,
+  LOAD_FILTERED_ACTIONS,
+  LOAD_FILTERED_ACTIONS_ERROR,
+  LOAD_FILTERED_ACTIONS_SUCCESS,
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
   LOAD_KEYWORD_SUCCESS,
@@ -204,6 +207,7 @@ const initialState = Immutable({
   },
   categories: [],
   filteredCategories: [],
+  filteredActions: [],
   agents: false,
   currentAgent: {
     agentName: '',
@@ -735,6 +739,18 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case LOAD_FILTERED_CATEGORIES_SUCCESS:
       return state.set('filteredCategories', action.categories.categories)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_FILTERED_ACTIONS:
+      return state.set('filteredActions', [])
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_FILTERED_ACTIONS_ERROR:
+      return state.set('filteredActions', [])
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_FILTERED_ACTIONS_SUCCESS:
+      return state.set('filteredActions', action.actions.actions)
         .set('loading', false)
         .set('error', false);
     case SELECT_CATEGORY:

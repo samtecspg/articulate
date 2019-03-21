@@ -32,6 +32,7 @@ import {
   makeSelectAgent,
   makeSelectSayingForAction,
   makeSelectActions,
+  makeSelectFilteredActions,
   makeSelectSuccessAction,
   makeSelectLoading,
   makeSelectActionTouched,
@@ -40,6 +41,7 @@ import {
 
 import {
   loadAction,
+  loadActions,
   loadKeywords,
   changeActionName,
   changeActionData,
@@ -69,6 +71,7 @@ import {
   copyResponse,
   updateNewResponse,
   editActionResponse,
+  loadFilteredActions,
 } from '../App/actions';
 
 const styles = {
@@ -94,10 +97,12 @@ export class ActionPage extends React.Component {
     this.onChangeTab = this.onChangeTab.bind(this);
     this.submit = this.submit.bind(this);
     this.initForm = this.initForm.bind(this);
+    this.onSearchActions = this.onSearchActions.bind(this);
   }
 
   initForm(){
     this.props.onLoadKeywords();
+    this.props.onLoadActions();
     if(this.state.isNewAction) {
       this.props.onResetData();
     }
@@ -152,6 +157,7 @@ export class ActionPage extends React.Component {
       tabs: [],
       slotsTabs: [],
     },
+    actionFilter: '',
   };
 
   moveNextTab(){
@@ -170,6 +176,13 @@ export class ActionPage extends React.Component {
     this.setState({
       currentTab: tab,
     });
+  }
+  
+  onSearchActions(actionFilter) {
+    this.setState({
+      actionFilter,
+    });
+    this.props.onLoadFilteredActions(actionFilter);
   }
 
   submit(exit){
@@ -388,6 +401,8 @@ export class ActionPage extends React.Component {
               onUpdateNewResponse={this.props.onUpdateNewResponse}
               onCopyResponse={this.props.onCopyResponse}
               onEditActionResponse={this.props.onEditActionResponse}
+              onSearchActions={this.onSearchActions}
+              agentFilteredActions={this.props.agentFilteredActions}
             />
           }
           onChangeTab={this.onChangeTab}
@@ -438,7 +453,8 @@ ActionPage.propTypes = {
   touched: PropTypes.bool,
   onCopyResponse: PropTypes.func,
   newResponse: PropTypes.string,
-  onEditActionResponse: PropTypes.func
+  onEditActionResponse: PropTypes.func,
+  onLoadActions: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -453,6 +469,7 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   touched: makeSelectActionTouched(),
   newResponse: makeSelectNewActionResponse(),
+  agentFilteredActions: makeSelectFilteredActions(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -550,7 +567,13 @@ function mapDispatchToProps(dispatch) {
     },
     onEditActionResponse: (newResponse, responseIndex) => {
       dispatch(editActionResponse(newResponse, responseIndex));
-    }
+    },
+    onLoadFilteredActions: (filter) => {
+      dispatch(loadFilteredActions(filter));
+    },
+    onLoadActions: () => {
+      dispatch(loadActions());
+    },
   };
 }
 

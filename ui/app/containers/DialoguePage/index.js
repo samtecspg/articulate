@@ -26,6 +26,7 @@ import {
   makeSelectAgent,
   makeSelectCategories,
   makeSelectFilteredCategories,
+  makeSelectFilteredActions,
   makeSelectKeywords,
   makeSelectNewSayingActions,
   makeSelectSayings,
@@ -48,6 +49,7 @@ import {
   loadActions,
   loadCategories,
   loadFilteredCategories,
+  loadFilteredActions,
   loadKeywords,
   loadSayings,
   selectCategory,
@@ -71,6 +73,7 @@ export class DialoguePage extends React.PureComponent {
     this.changeSayingsPageSize = this.changeSayingsPageSize.bind(this);
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.onSearchCategory = this.onSearchCategory.bind(this);
+    this.onSearchActions = this.onSearchActions.bind(this);
     this.addSaying = this.addSaying.bind(this);
     this.deleteSaying = this.deleteSaying.bind(this);
     this.initForm = this.initForm.bind(this);
@@ -88,6 +91,7 @@ export class DialoguePage extends React.PureComponent {
     selectedTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab : 'sayings',
     filter: '',
     categoryFilter: '',
+    actionFilter: '',
     currentSayingsPage: 1,
     sayingsPageSize: this.props.agent.id ? this.props.agent.settings.sayingsPageSize : 5,
     numberOfSayingsPages: null,
@@ -188,6 +192,13 @@ export class DialoguePage extends React.PureComponent {
       categoryFilter,
     });
     this.props.onLoadFilteredCategories(categoryFilter);
+  }
+
+  onSearchActions(actionFilter) {
+    this.setState({
+      actionFilter,
+    });
+    this.props.onLoadFilteredActions(actionFilter);
   }
 
   addSaying(saying) {
@@ -301,6 +312,7 @@ export class DialoguePage extends React.PureComponent {
               agentActions={this.props.agentActions}
               agentCategories={this.props.agentCategories}
               agentFilteredCategories={this.props.agentFilteredCategories}
+              agentFilteredActions={this.props.agentFilteredActions}
               onAddSaying={this.addSaying}
               onDeleteSaying={this.deleteSaying}
               onChangeSayingCategory={this.props.onChangeSayingCategory.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
@@ -312,6 +324,7 @@ export class DialoguePage extends React.PureComponent {
               onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
               onSearchCategory={this.onSearchCategory}
+              onSearchActions={this.onSearchActions}
               onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentSayingsPage={parseInt(this.state.currentSayingsPage)}
@@ -375,6 +388,7 @@ const mapStateToProps = createStructuredSelector({
   totalSayings: makeSelectTotalSayings(),
   agentCategories: makeSelectCategories(),
   agentFilteredCategories: makeSelectFilteredCategories(),
+  agentFilteredActions: makeSelectFilteredActions(),
   agentKeywords: makeSelectKeywords(),
   agentActions: makeSelectActions(),
   category: makeSelectSelectedCategory(),
@@ -393,6 +407,9 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadFilteredCategories: (filter) => {
       dispatch(loadFilteredCategories(filter));
+    },
+    onLoadFilteredActions: (filter) => {
+      dispatch(loadFilteredActions(filter));
     },
     onLoadCategories: () => {
       dispatch(loadCategories());

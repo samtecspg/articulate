@@ -188,6 +188,7 @@ class Form extends React.Component {
               agentActions={this.props.agentActions}
               agentCategories={this.props.agentCategories}
               agentFilteredCategories={this.props.agentFilteredCategories}
+              agentFilteredActions={this.props.agentFilteredActions}
               onAddSaying={this.props.onAddSaying}
               onDeleteSaying={this.props.onDeleteSaying}
               onChangeSayingCategory={this.props.onChangeSayingCategory}
@@ -209,6 +210,7 @@ class Form extends React.Component {
               category={this.props.category}
               userSays={this.props.userSays}
               onSearchCategory={this.props.onSearchCategory}
+              onSearchActions={this.props.onSearchActions}
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
             />
@@ -244,6 +246,7 @@ Form.propTypes = {
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
+  agentFilteredActions: PropTypes.array,
   onAddSaying: PropTypes.func,
   onDeleteSaying: PropTypes.func,
   onDeleteAction: PropTypes.func,
@@ -251,6 +254,7 @@ Form.propTypes = {
   onUntagKeyword: PropTypes.func,
   onSearchSaying: PropTypes.func,
   onSearchCategory: PropTypes.func,
+  onSearchActions: PropTypes.func,
   onAddAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,

@@ -135,6 +135,9 @@ import {
   LOAD_FILTERED_CATEGORIES,
   LOAD_FILTERED_CATEGORIES_ERROR,
   LOAD_FILTERED_CATEGORIES_SUCCESS,
+  LOAD_FILTERED_ACTIONS,
+  LOAD_FILTERED_ACTIONS_ERROR,
+  LOAD_FILTERED_ACTIONS_SUCCESS,
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
   LOAD_KEYWORD_SUCCESS,
@@ -832,6 +835,28 @@ export function loadFilteredCategoriesSuccess(categories) {
   return {
     type: LOAD_FILTERED_CATEGORIES_SUCCESS,
     categories,
+  };
+}
+
+export function loadFilteredActions(filter) {
+  return {
+    type: LOAD_FILTERED_ACTIONS,
+    filter,
+    apiCall: true,
+  };
+}
+
+export function loadFilteredActionsError(error) {
+  return {
+    type: LOAD_FILTERED_ACTIONS_ERROR,
+    error,
+  };
+}
+
+export function loadFilteredActionsuccess(actions) {
+  return {
+    type: LOAD_FILTERED_ACTIONS_SUCCESS,
+    actions,
   };
 }
 

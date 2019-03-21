@@ -10,7 +10,7 @@ import messages from '../messages';
 import HighlightedSaying from './HighlightedSaying';
 
 import addActionIcon from '../../../images/add-action-icon.svg';
-import pencilIcon from '../../../images/pencil-icon.svg';
+import FilterSelect from "../../../components/FilterSelect";
 
 const styles = {
   userSays: {
@@ -242,53 +242,35 @@ class SayingRow extends React.Component {
                   onClick={(evt) => this.handleOpen('actions', evt.target)}
                   className={classes.addActionIcon} src={addActionIcon}
                 />
-                <FormControl>
-                  <Select
-                    style={{
-                      display:'none',
-                    }}
-                    open={this.state.openActions}
-                    onClose={() => this.handleClose('actions')}
-                    onOpen={(evt) => this.handleOpen('actions', evt.target)}
-                    value={10}
-                    onChange={(evt) => {
-                      evt.preventDefault();
-                      //If the user didn't click the edit icon
-                      if (!evt._targetInst || (evt._targetInst && evt._targetInst.type !== 'img')){
-                        //Then add the saying for the new action
-                        this.handleChange('actions', evt.target.value)
-                      }
-                    }}
-                    MenuProps={{
-                      anchorEl: this.state.anchorEl,
-                    }}
-                  >
-                    <MenuItem value='create'><FormattedMessage {...messages.newAction}/></MenuItem>
-                    {
-                      this.props.agentActions.map((action) => (
-                        saying.actions.indexOf(action.actionName) === -1 ?
-                          <MenuItem
-                            style={{width: '200px'}}
-                            key={`action_${action.id}`}
-                            value={action.actionName}
-                          >
-                            <Grid container justify='space-between'>
-                              <div className={classes.categoryDataContainer}>
-                                <span>{action.actionName.length > 15 ? `${action.actionName.substring(0,15)}...` : action.actionName}</span>
-                              </div>
-                              <div className={classes.categoryDataContainer}>
-                                <img id={`edit_action_${action.id}`}
-                                  onClick={() => {
-                                    this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
-                                  }} className={classes.editCategoryIcon} src={pencilIcon}
-                                />
-                              </div>
-                            </Grid>
-                          </MenuItem> :
-                          null
-                      ))
+                <FilterSelect
+                  value='select'
+                  valueDisplayField='actionName'
+                  valueField='actionName'
+                  onSelect={(value) => {
+                    if (value) {
+                      this.handleChange('actions', value);
                     }
-                  </Select>
+                  }}
+                  onSearch={this.props.onSearchActions}
+                  onGoToUrl={this.props.onGoToUrl}
+                  onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
+                  onCreateRoute={`/agent/${this.props.agentId}/action/create`}
+                  filteredValues={this.props.agentFilteredActions.filter((agentFilteredAction) => { return saying.actions.indexOf(agentFilteredAction.actionName) === -1 })}
+                  values={this.props.agentActions.filter((agentAction) => { return saying.actions.indexOf(agentAction.actionName) === -1 })}
+                  SelectProps={{
+                    open: this.state.openActions,
+                    onClose: () => this.handleClose('actions'),
+                    onOpen: (evt) => this.handleOpen('actions', evt.target),
+                    MenuProps: {
+                      anchorEl: this.state.anchorEl,
+                    }
+                  }}
+                  style={{
+                    display: 'none',
+                  }}
+                  displayEdit
+                />
+                <FormControl>
                   <Select
                     style={{
                       display:'none',
@@ -335,6 +317,8 @@ SayingRow.propTypes = {
   onGoToUrl: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
+  onSearchActions: PropTypes.func,
+  agentFilteredActions: PropTypes.array,
 };
 
 export default withStyles(styles)(SayingRow);

@@ -30,6 +30,7 @@ import {
   DELETE_SAYING,
   LOAD_ACTIONS,
   LOAD_CATEGORIES,
+  LOAD_FILTERED_ACTIONS,
   LOAD_FILTERED_CATEGORIES,
   LOAD_SAYINGS,
   TAG_KEYWORD,
@@ -283,7 +284,7 @@ export function* getCategories(payload) {
   }
   catch (err) {
     if (filter !== undefined) {
-      yield put(loadFilteredCategoriesError(response.obj));
+      yield put(loadFilteredCategoriesError(err));
     }
     else {
       yield put(loadCategoriesError(err));
@@ -315,6 +316,7 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_ACTIONS, getActions);
   yield takeLatest(LOAD_CATEGORIES, getCategories);
   yield takeLatest(LOAD_FILTERED_CATEGORIES, getCategories);
+  yield takeLatest(LOAD_FILTERED_ACTIONS, getActions);
   yield takeLatest(CHANGE_SAYINGS_PAGE_SIZE, putSayingsPageSize);
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(CHANGE_KEYWORDS_PAGE_SIZE, putKeywordsPageSize);

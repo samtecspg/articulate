@@ -143,6 +143,11 @@ const makeSelectFilteredCategories = () => createSelector(
   (globalState) => globalState.filteredCategories,
 );
 
+const makeSelectFilteredActions = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.filteredActions,
+);
+
 const makeSelectSelectedCategory = () => createSelector(
   selectGlobal,
   (globalState) => globalState.selectedCategory,
@@ -274,6 +279,7 @@ export {
   makeSelectTotalSayings,
   makeSelectCategories,
   makeSelectFilteredCategories,
+  makeSelectFilteredActions,
   makeSelectSelectedCategory,
   makeSelectNewSayingActions,
   makeSelectActions,

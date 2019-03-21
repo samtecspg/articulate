@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
+import FilterSelect from "../../../components/FilterSelect";
 
 const styles = {
   actionBackgroundContainer: {
@@ -115,39 +116,39 @@ class ResponseRow extends React.Component {
             multiline
             fullWidth
           />
-          <FormControl>
-            <Select
-              style={{
-                display:'none',
-              }}
-              open={this.state.openActions}
-              onClose={() => this.setState({
+          <FilterSelect
+            value='select'
+            valueDisplayField='actionName'
+            valueField='actionName'
+            onSelect={(value) => {
+              if (value) {
+                this.props.onChainActionToResponse(responseIndex, value)
+              }
+            }}
+            onSearch={this.props.onSearchActions}
+            onGoToUrl={this.props.onGoToUrl}
+            onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
+            onCreateRoute={`/agent/${this.props.agentId}/action/create`}
+            filteredValues={this.props.agentFilteredActions.filter((agentFilteredAction) => { return agentFilteredAction.actionName !== action.actionName && response.actions.indexOf(agentFilteredAction.actionName) === -1 })}
+            values={this.props.agentActions.filter((agentAction) => { return agentAction.actionName !== action.actionName && response.actions.indexOf(agentAction.actionName) === -1 })}
+            SelectProps={{
+              open: this.state.openActions,
+              onClose: () => this.setState({
                 openActions: false,
                 anchorEl: null,
-              })}
-              onOpen={(evt) => this.setState({
+              }),
+              onOpen: (evt) => this.setState({
                 anchorEl: evt.target,
                 openActions: true,
-              })}
-              value={10}
-              onChange={(evt) => { evt.preventDefault(); this.props.onChainActionToResponse(responseIndex, evt.target.value)}}
-              MenuProps={{
-                style:{
-                  minHeight: '300px',
-                  maxHeight: '300px',
-                },
+              }),
+              MenuProps: {
                 anchorEl: this.state.anchorEl,
-              }}
-            >
-              {
-                this.props.agentActions.map((agentAction) => (
-                  response.actions.indexOf(agentAction.actionName) === -1 && agentAction.actionName !== action.actionName ?
-                    <MenuItem style={{width: '200px'}} key={`action_${agentAction.id}`} value={agentAction.actionName}>{agentAction.actionName}</MenuItem> :
-                    null
-                ))
               }
-            </Select>
-          </FormControl>
+            }}
+            style={{
+              display: 'none',
+            }}
+          />
         </Grid>
       </Grid>
     );
@@ -165,6 +166,8 @@ ResponseRow.propTypes = {
   onEditActionResponse: PropTypes.func,
   onCopyResponse: PropTypes.func,
   onDeleteResponse: PropTypes.func,
+  agentFilteredActions: PropTypes.array,
+  onSearchActions: PropTypes.func,
 };
 
 export default withStyles(styles)(ResponseRow);

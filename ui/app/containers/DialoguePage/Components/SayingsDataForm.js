@@ -1,10 +1,7 @@
 import {
-  Button,
   Grid,
-  Input,
   InputAdornment,
   MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -29,15 +26,13 @@ import {
 import Immutable from 'seamless-immutable';
 
 import addActionIcon from '../../../images/add-action-icon.svg';
-import clearIcon from '../../../images/clear-icon.svg';
-import pencilIcon from '../../../images/pencil-icon.svg';
-import searchIcon from '../../../images/search-icon.svg';
 
 import trashIcon from '../../../images/trash-icon.svg';
 
 import messages from '../messages';
 
 import SayingRow from './SayingRow';
+import FilterSelect from "../../../components/FilterSelect";
 
 const styles = {
   formContainer: {
@@ -255,150 +250,22 @@ class SayingsDataForm extends React.Component {
         <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
           <Grid container item xs={12}>
             <Grid item lg={2} md={2} sm={4} xs={4}>
-              <TextField
-                select
-                id='category'
-                value={category || 'select'}
-                label={intl.formatMessage(messages.categorySelect)}
-                onClick={
-                  () => {
-                    this.setState({
-                      changedPage: false,
-                      categoriesDropdownOpen: !this.state.categoriesDropdownOpen,
-                    });
-                  }
-                }
-                onChange={(evt) => {
-                  if (['filter', 'create', 'no results'].indexOf(evt.target.value) === -1) {
-                    this.props.onSelectCategory(evt.target.value);
-                  }
-                  this.setState({
-                    changedPage: false,
-                    categoriesDropdownOpen: false,
-                  });
-                }}
-                margin='normal'
-                fullWidth
-                inputProps={{
-                  className: classes.categorySelect,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                helperText={this.state.errorCategory ? intl.formatMessage(messages.requiredField) : ''}
-                error={this.state.errorCategory}
-              >
-                {category || this.state.categoriesDropdownOpen ? null :
-                  <MenuItem key='select' value='select'>
-                    <FormattedMessage {...messages.categorySelectDefault} />
-                  </MenuItem>}
-                <MenuItem className={classes.searchCategoryContainer} value="filter">
-                  <Grid container justify='flex-end'>
-                    <img src={searchIcon} />
-                    <Input
-                      inputProps={{
-                        style: {
-                          border: 'none',
-                        },
-                      }}
-                      value={this.state.filterInput}
-                      onClick={(evt) => {
-                        evt.stopPropagation();
-                        return 0;
-                      }}
-                      disableUnderline
-                      className={classes.searchCategoryField}
-                      onChange={(evt) => {
-                        this.setState({
-                          filteringCategories: evt.target.value.length > 0,
-                          filterInput: evt.target.value,
-                        });
-                        this.props.onSearchCategory(evt.target.value);
-                      }}
-                    />
-                    {
-                      this.state.filteringCategories ?
-                        <div className={classes.clearIconContainer}>
-                          <img
-                            onClick={(evt) => {
-                              evt.stopPropagation();
-                              this.props.onSearchCategory('');
-                              this.setState({
-                                filteringCategories: false,
-                                filterInput: '',
-                              });
-                              return 0;
-                            }} className={classes.clearIcon} src={clearIcon}
-                          />
-                        </div>
-                        :
-                        <Button
-                          onClick={() => {
-                            this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`);
-                          }} className={classes.addCategoryButton} variant='contained'
-                        ><FormattedMessage {...messages.categoryAdd} /></Button>
-                    }
-                  </Grid>
-                </MenuItem>
-                {
-                  this.state.filteringCategories ?
-                    this.props.agentFilteredCategories.length > 0 ?
-                      this.props.agentFilteredCategories.map((filteredCategory, index) => (
-                        <MenuItem key={`category_${index}`} value={filteredCategory.id}>
-                          <Grid container justify='space-between'>
-                            <div className={classes.categoryDataContainer}>
-                              <span>{filteredCategory.categoryName}</span>
-                            </div>
-                            {
-                              filteredCategory.id === category && !this.state.categoriesDropdownOpen ?
-                                null :
-                                <div className={classes.categoryDataContainer}>
-                                  <span>{filteredCategory.actionThreshold * 100}%</span>
-                                  <img
-                                    onClick={() => {
-                                      this.props.onGoToUrl(`/agent/${this.props.agentId}/category/${filteredCategory.id}`);
-                                    }} className={classes.editCategoryIcon} src={pencilIcon}
-                                  />
-                                </div>
-                            }
-                          </Grid>
-                        </MenuItem>
-                      ))
-                      :
-                      [<MenuItem key='no results' value='no results'>
-                        <FormattedMessage {...messages.categoryNoResults} />
-                      </MenuItem>,
-                        <MenuItem key='create' value='create'>
-                          <Button
-                            onClick={() => {
-                              this.props.onGoToUrl(`/agent/${this.props.agentId}/category/create`);
-                            }} className={classes.addCategoryButton} variant='contained'
-                          ><FormattedMessage {...messages.categoryAdd} /></Button>
-                        </MenuItem>]
-                    :
-                    this.props.agentCategories.map((agentCategory, index) => (
-                      <MenuItem key={`category_${index}`} value={agentCategory.id}>
-                        <Grid container justify='space-between'>
-                          <div className={classes.categoryDataContainer}>
-                            <span>{agentCategory.categoryName}</span>
-                          </div>
-                          {
-                            agentCategory.id === category && !this.state.categoriesDropdownOpen ?
-                              null :
-                              <div className={classes.categoryDataContainer}>
-                                <span>{agentCategory.actionThreshold * 100}%</span>
-                                <img
-                                  onClick={() => {
-                                    this.props.onGoToUrl(`/agent/${this.props.agentId}/category/${agentCategory.id}`);
-                                  }} className={classes.editCategoryIcon} src={pencilIcon}
-                                />
-                              </div>
-                          }
-                        </Grid>
-                      </MenuItem>
-                    ))
-                }
-              </TextField>
+              <FilterSelect
+                value={category}
+                valueDisplayField='categoryName'
+                valueField='id'
+                thresholdField='actionThreshold'
+                onSelect={this.props.onSelectCategory}
+                onSearch={this.props.onSearchCategory}
+                onGoToUrl={this.props.onGoToUrl}
+                onEditRoutePrefix={`/agent/${this.props.agentId}/category/`}
+                onCreateRoute={`/agent/${this.props.agentId}/category/create`}
+                filteredValues={this.props.agentFilteredCategories}
+                values={this.props.agentCategories}
+                inputLabelMessage={messages.categorySelect}
+                displayThreshold
+                displayEdit
+              />
             </Grid>
             <Grid item lg={10} md={10} sm={8} xs={8}>
               <TextField
@@ -475,74 +342,51 @@ class SayingsDataForm extends React.Component {
                   ),
                 }}
               />
-              <Select
+              <FilterSelect
+                value='select'
+                valueDisplayField='actionName'
+                valueField='actionName'
+                onSelect={(value) => {
+                  if (value) {
+                    //Then add the saying for the new action
+                    this.props.onAddNewSayingAction(value);
+                  }
+                  this.setState({
+                    changedPage: false,
+                    openActions: false,
+                    anchorEl: null,
+                  });
+                }}
+                onSearch={this.props.onSearchActions}
+                onGoToUrl={this.props.onGoToUrl}
+                onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
+                onCreateRoute={`/agent/${this.props.agentId}/action/create`}
+                filteredValues={this.props.agentFilteredActions}
+                values={this.props.agentActions}
+                SelectProps={{
+                  open: this.state.openActions,
+                  onClose: () => {
+                    this.setState({
+                      changedPage: false,
+                      openActions: false,
+                      anchorEl: null,
+                    });
+                  },
+                  onOpen: () => {
+                    this.setState({
+                      changedPage: false,
+                      openActions: true,
+                    });
+                  },
+                  MenuProps: {
+                    anchorEl: this.state.anchorEl,
+                  }
+                }}
                 style={{
                   display: 'none',
                 }}
-                open={this.state.openActions}
-                onClose={() => {
-                  this.setState({
-                    changedPage: false,
-                    openActions: false,
-                    anchorEl: null,
-                  });
-                }}
-                onOpen={() => {
-                  this.setState({
-                    changedPage: false,
-                    openActions: true,
-                  });
-                }}
-                value={1}
-                onChange={(evt) => {
-                  this.setState({
-                    changedPage: false,
-                    openActions: false,
-                    anchorEl: null,
-                  });
-                  if (evt.target.value === 'create') {
-                    this.props.onClearSayingToAction();
-                    this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
-                  }
-                  else {
-                    //If the user didn't click the edit icon
-                    if (!evt._targetInst || (evt._targetInst && evt._targetInst.type !== 'img')) {
-                      //Then add the saying for the new action
-                      this.props.onAddNewSayingAction(evt.target.value);
-                    }
-                  }
-                }}
-                MenuProps={{
-                  anchorEl: this.state.anchorEl,
-                }}
-              >
-                <MenuItem value='create'><FormattedMessage className={classes.newItem} {...messages.newAction} /></MenuItem>
-                {
-                  this.props.agentActions.map((action) => (
-                    this.props.newSayingActions.indexOf(action.actionName) === -1 ?
-                      <MenuItem
-                        style={{ width: '200px' }}
-                        key={`action_${action.id}`}
-                        value={action.actionName}
-                      >
-                        <Grid container justify='space-between'>
-                          <div className={classes.categoryDataContainer}>
-                            <span>{action.actionName.length > 15 ? `${action.actionName.substring(0, 15)}...` : action.actionName}</span>
-                          </div>
-                          <div className={classes.categoryDataContainer}>
-                            <img
-                              id={`edit_action_${action.id}`}
-                              onClick={() => {
-                                this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
-                              }} className={classes.editCategoryIcon} src={pencilIcon}
-                            />
-                          </div>
-                        </Grid>
-                      </MenuItem> :
-                      null
-                  ))
-                }
-              </Select>
+                displayEdit
+              />
             </Grid>
           </Grid>
           <Grid container item xs={12}>
@@ -569,6 +413,8 @@ class SayingsDataForm extends React.Component {
                             onAddAction={this.props.onAddAction}
                             onGoToUrl={this.props.onGoToUrl}
                             onSendSayingToAction={this.props.onSendSayingToAction}
+                            agentFilteredActions={this.props.agentFilteredActions}
+                            onSearchActions={this.props.onSearchActions}
                           />
                         </TableCell>
                         <TableCell className={classes.deleteCell}>
@@ -675,6 +521,7 @@ SayingsDataForm.propTypes = {
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
+  agentFilteredActions: PropTypes.array,
   onAddSaying: PropTypes.func.isRequired,
   onDeleteSaying: PropTypes.func.isRequired,
   onDeleteAction: PropTypes.func.isRequired,
@@ -693,6 +540,7 @@ SayingsDataForm.propTypes = {
   category: PropTypes.string,
   userSays: PropTypes.string,
   onSearchCategory: PropTypes.func,
+  onSearchActions: PropTypes.func,
   newSayingActions: PropTypes.array,
   onAddNewSayingAction: PropTypes.func,
   onDeleteNewSayingAction: PropTypes.func,
