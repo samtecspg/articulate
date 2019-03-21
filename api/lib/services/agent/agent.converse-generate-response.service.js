@@ -299,7 +299,7 @@ module.exports = async function ({ conversationStateObject }) {
             agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject });
             const missingKeywords = _.filter(requiredSlots, (slot) => {
     
-                return recognizedKeywordsNames.indexOf(slot.keyword) === -1 && !currentFrame.slots[slot.slotName].value;
+                return recognizedKeywordsNames.indexOf(slot.keyword) === -1 || !currentFrame.slots[slot.slotName].value;
             });
             conversationStateObject.slots = currentFrame.slots;
             if (missingKeywords.length > 0) {

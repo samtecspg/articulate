@@ -154,7 +154,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
             contextIndex--;
         }
-        delete lastValidContext.id;
+        if (lastValidContext){
+            delete lastValidContext.id;
+        }
         return lastValidContext;
     };
 
