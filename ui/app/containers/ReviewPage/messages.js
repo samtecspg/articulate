@@ -98,5 +98,17 @@ export default defineMessages({
   required: {
     id: 'app.containers.ReviewPage.component.SayingsDataForm.required',
     defaultMessage: '*Required',
+  },
+  copyAlert: {
+    id: 'app.containers.ReviewPage.component.SayingRow.copyAlert',
+    defaultMessage: 'To copy this text as a new saying please specify the new category:'
+  },
+  copyDialogCancelButton: {
+    id: 'app.containers.ReviewPage.component.SayingRow.copyDialogCancelButton',
+    defaultMessage: 'Cancel'
+  },
+  copyDialogCopyButton: {
+    id: 'app.containers.ReviewPage.component.SayingRow.copyDialogCopyButton',
+    defaultMessage: 'Copy'
   }
 });

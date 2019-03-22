@@ -3,6 +3,13 @@ import {
   TableCell,
   TextField,
   Typography,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Grid,
+  Slide,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import TimeAgo from 'javascript-time-ago';
@@ -15,6 +22,7 @@ import React, { Fragment } from 'react';
 import {
   injectIntl,
   intlShape,
+  FormattedMessage,
 } from 'react-intl';
 import Immutable from 'seamless-immutable';
 import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../../common/constants';
@@ -29,6 +37,11 @@ import HighlightedSaying from './HighlightedSaying';
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
 TimeAgo.addLocale(pt);
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 
 const styles = {
   userSays: {
@@ -101,12 +114,32 @@ const styles = {
   rowCategory: {
     color: 'red',
   },
+  dialog: {
+    border: '1px solid #4e4e4e',
+  },
+  dialogContent: {
+    backgroundColor: '#f6f7f8',
+    borderBottom: '1px solid #4e4e4e',
+  },
+  dialogCopy: {
+    height: '105px',
+    overflowX: 'hidden',
+  },
+  dialogContentGrid: {
+    margin: '40px 0px',
+  },
+  exitButton: {
+    color: '#00bd6f',
+    fontWeight: 'bold',
+    textDecoration: 'underline'
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class SayingRow extends React.Component {
 
   state = {
+    openCategoryModal: false,
     selectedCategory: '-1',
     categoryError: false,
   };
@@ -156,46 +189,6 @@ class SayingRow extends React.Component {
           </TextField>
           }
         </TableCell>
-        <TableCell className={classes.rowCategory}>
-          {saying.categoryScore !== 0 &&
-          <TextField
-            select
-            className={classes.categorySelectContainer}
-            value={this.state.selectedCategory}
-            margin='normal'
-            fullWidth
-            InputProps={{
-              className: classes.categorySelectInputContainer,
-            }}
-            inputProps={{
-              className: classes.categorySelect,
-            }}
-            onChange={(evt) => {
-              evt.target.value !== '-1' ?
-                this.setState({
-                  selectedCategory: evt.target.value,
-                  categoryError: false,
-                }) : null;
-            }}
-            error={this.state.categoryError}
-            helperText={this.state.categoryError ? intl.formatMessage(messages.required) : null}
-          >
-            {this.state.selectedCategory === '-1' ?
-              <MenuItem key={`newSayingCategory`} value={'-1'}>
-                <span className={classes.categoryLabel}>{intl.formatMessage(messages.selectNewCategory)}</span>
-              </MenuItem>
-              : null}
-            {agentCategories.map((category) =>
-              // TODO: return the category id in the API to be able to select the category id of the saying in
-              (
-                <MenuItem key={`${document.id}_category_${category.id}`} value={category.categoryName}>
-                  <span className={classes.categoryLabel}>{category.categoryName}</span>
-                </MenuItem>
-              ),
-            )}
-          </TextField>
-          }
-        </TableCell>
         <TableCell>
           <Typography variant='body1' style={{ fontSize: '10px', color: '#4e4e4e' }}>
             {this.constgetDocTime(document.time_stamp)}
@@ -227,16 +220,9 @@ class SayingRow extends React.Component {
           tooltip={'Copy to your list of Sayings'}
           disabled={document.id === 'noData'}
           onClick={() => {
-            if (this.state.selectedCategory === '-1') {
-              this.setState({
-                categoryError: true,
-              });
-            }
-            else {
-              const sayingCopy = Immutable.asMutable(saying, { deep: true });
-              sayingCopy.category = this.state.selectedCategory;
-              this.props.onCopySaying(document.document, sayingCopy);
-            }
+            this.setState({
+              openCategoryModal: true,
+            });
           }}
         />
         <PlayImageCell
@@ -250,6 +236,92 @@ class SayingRow extends React.Component {
             });
           }}
         />
+        <Dialog
+          open={this.state.openCategoryModal}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={() => {
+              this.setState({
+                openCategoryModal: false
+              });
+          }}
+          maxWidth='xs'
+          className={classes.dialog}
+        >
+          <DialogContent className={classes.dialogContent}>
+            <Grid className={classes.dialogContentGrid}>
+              <DialogContentText>
+                <FormattedMessage {...messages.copyAlert} />
+              </DialogContentText>
+              {saying.categoryScore !== 0 &&
+                <TextField
+                  select
+                  value={this.state.selectedCategory}
+                  margin='normal'
+                  fullWidth
+                  onChange={(evt) => {
+                    evt.target.value !== '-1' ?
+                      this.setState({
+                        selectedCategory: evt.target.value,
+                        categoryError: false,
+                      }) : null;
+                  }}
+                  error={this.state.categoryError}
+                  helperText={this.state.categoryError ? intl.formatMessage(messages.required) : null}
+                >
+                  {this.state.selectedCategory === '-1' ?
+                    <MenuItem key={`newSayingCategory`} value={'-1'}>
+                      {intl.formatMessage(messages.selectNewCategory)}
+                    </MenuItem>
+                    : null}
+                  {agentCategories.map((category) =>
+                    // TODO: return the category id in the API to be able to select the category id of the saying in
+                    (
+                      <MenuItem key={`${document.id}_category_${category.id}`} value={category.categoryName}>
+                        {category.categoryName}
+                      </MenuItem>
+                    ),
+                  )}
+                </TextField>
+              }
+            </Grid>
+          </DialogContent>
+          <DialogActions className={classes.dialogCopy}>
+            <Grid container justify='center' spacing={24}>
+              <Grid item>
+                <Button
+                  variant='contained' onClick={() => {
+                    this.setState({
+                      openCategoryModal: false
+                    })
+                  }}>
+                  <FormattedMessage {...messages.copyDialogCancelButton} />
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  className={classes.exitButton}
+                  onClick={() => {
+                    if (this.state.selectedCategory === '-1') {
+                      this.setState({
+                        categoryError: true,
+                      });
+                    }
+                    else {
+                      const sayingCopy = Immutable.asMutable(saying, { deep: true });
+                      sayingCopy.category = this.state.selectedCategory;
+                      this.props.onCopySaying(document.document, sayingCopy);
+                      this.setState({
+                        openCategoryModal: false
+                      });
+                    }
+                  }}>
+                  <FormattedMessage {...messages.copyDialogCopyButton} />
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogActions>
+        </Dialog>
       </Fragment>
     );
   }
