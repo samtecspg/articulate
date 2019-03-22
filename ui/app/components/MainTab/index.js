@@ -82,10 +82,12 @@ export class MainTab extends React.Component {
     selectedTab: this.props.selectedTab,
   };
 
-  handleChange = (event, value) => {
-    this.setState({
-      selectedTab: value,
-    });
+  handleChange = (value) => {
+    if (!this.props.touched || this.props.success){ 
+      this.setState({
+        selectedTab: value,
+      });
+    }
   };
 
   render() {
@@ -103,7 +105,7 @@ export class MainTab extends React.Component {
                 textColor='secondary'
                 scrollButtons="off"
                 onChange={(evt, value) => {
-                  this.handleChange(evt, value);
+                  this.handleChange(value);
                 }}
               >
                 {this.props.agentURL ?
@@ -166,7 +168,7 @@ export class MainTab extends React.Component {
                 textColor='secondary'
                 scrollButtons="off"
                 onChange={(evt, value) => {
-                  this.handleChange(evt, value);
+                  this.handleChange(value);
                 }}
               >
                 {this.props.agentURL ?

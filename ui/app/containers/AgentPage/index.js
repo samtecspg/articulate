@@ -7,13 +7,15 @@
 import { Grid, CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { intlShape, injectIntl } from "react-intl";
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import MainTab from '../../components/MainTab';
 import injectSaga from '../../utils/injectSaga';
+import messages from './messages';
 import {
   addAgent,
   addAgentFallbackResponse,
@@ -59,6 +61,7 @@ import {
 
 import Form from './Components/Form';
 import saga from './saga';
+import ExitModal from '../../components/ExitModal';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
@@ -67,9 +70,12 @@ export class AgentPage extends React.PureComponent {
     super(props);
     this.submit = this.submit.bind(this);
     this.initForm = this.initForm.bind(this);
+    this.navigateToNextLocation = this.navigateToNextLocation.bind(this);
   }
 
   state = {
+    nextLocation: null,
+    openExitModal: false,
     isNewAgent: this.props.match.params.id === 'create',
     settingsLoaded: false,
     formError: false,
@@ -115,6 +121,16 @@ export class AgentPage extends React.PureComponent {
     else {
       this.props.onLoadSettings();
     }
+    this.unblock = this.props.history.block((nextLocation) => {
+      if (this.props.touched && !this.props.success) {
+        this.setState({
+          openExitModal: true,
+          nextLocation
+        });
+        return false;
+      }
+      return true;
+    });
   }
 
   componentDidUpdate(prevProps){
@@ -122,10 +138,22 @@ export class AgentPage extends React.PureComponent {
       this.initForm();
     }
     if (this.props.success) {
+      if (this.state.exitAfterSubmit){
+        this.navigateToNextLocation();
+      }
       if (this.state.isNewAgent) {
         this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue`);
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.unblock();
+  }
+
+  navigateToNextLocation() {
+    this.unblock();
+    this.props.history.push(this.state.nextLocation.pathname);
   }
 
   submit(exit) {
@@ -194,9 +222,7 @@ export class AgentPage extends React.PureComponent {
     } else {
       newErrorState.training = false;
     }
-
     
-
     try {
       if (!Array.isArray(this.props.agentSettings.ducklingDimension)) {
         throw 'Duckling dimensions is not an array';
@@ -294,9 +320,23 @@ export class AgentPage extends React.PureComponent {
   }
 
   render() {
+    const { intl } = this.props;
     return (
       this.props.settings.defaultAgentLanguage ?
       <Grid container>
+        <ExitModal
+          open={this.state.openExitModal}
+          onExit={() => {
+            this.navigateToNextLocation();
+          }}
+          onSaveAndExit={() => { 
+            this.submit(true) 
+          }}
+          onClose={() => {
+            this.setState({ openExitModal: false })}
+          }
+          type={intl.formatMessage(messages.instanceName)}
+        />
         <MainTab
           locale={this.props.locale}
           touched={this.props.touched}
@@ -357,6 +397,7 @@ export class AgentPage extends React.PureComponent {
 }
 
 AgentPage.propTypes = {
+  intl: intlShape.isRequired,
   agent: PropTypes.object,
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
@@ -501,7 +542,7 @@ const withConnect = connect(
 
 const withSaga = injectSaga({ key: 'agent', saga });
 
-export default compose(
+export default injectIntl(compose(
   withSaga,
   withConnect,
-)(AgentPage);
+)(withRouter(AgentPage)));
