@@ -522,8 +522,7 @@ function appReducer(state = initialState, action) {
         .setIn(['agentSettings', 'keywordClassifierPipeline'], state.settings.keywordClassifierPipeline)
         .setIn(['agentSettings', 'spacyPretrainedEntities'], state.settings.spacyPretrainedEntities)
         .setIn(['agentSettings', 'ducklingURL'], state.settings.ducklingURL)
-        .setIn(['agentSettings', 'ducklingDimension'], state.settings.ducklingDimension)
-        .set('agentTouched', true);      
+        .setIn(['agentSettings', 'ducklingDimension'], state.settings.ducklingDimension);      
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)
