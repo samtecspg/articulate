@@ -23,6 +23,7 @@ export const MODEL_POST_FORMAT = 'PostFormat';
 export const MODEL_SAYING = 'Saying';
 export const MODEL_SETTINGS = 'Settings';
 export const MODEL_WEBHOOK = 'Webhook';
+export const MODEL_CONNECTION = 'Connection';
 export const MODEL_ALL = [
     MODEL_ACTION,
     MODEL_AGENT,
@@ -52,6 +53,9 @@ export const ROUTE_PARSE = 'parse';
 export const ROUTE_IDENTIFY_KEYWORDS = 'identifyKeywords';
 export const ROUTE_CONVERSE = 'converse';
 export const ROUTE_FRAME = 'frame';
+export const ROUTE_CHANNEL = 'channel';
+export const ROUTE_CONNECTION = 'connection';
+export const ROUTE_EXTERNAL = 'external';
 
 // STATUS
 export const STATUS_READY = 'Ready';
@@ -84,6 +88,7 @@ export const PARAM_CATEGORY_ID = ROUTE_CATEGORY + PARAMS_POSTFIX_ID;
 export const PARAM_KEYWORD_ID = ROUTE_KEYWORD + PARAMS_POSTFIX_ID;
 export const PARAM_SAYING_ID = ROUTE_SAYING + PARAMS_POSTFIX_ID;
 export const PARAM_DOCUMENT_ID = ROUTE_DOCUMENT + PARAMS_POSTFIX_ID;
+export const PARAM_CONNECTION_ID = ROUTE_CONNECTION + PARAMS_POSTFIX_ID;
 export const PARAM_DOCUMENT_TIME_STAMP = 'time_stamp';
 export const PARAM_DOCUMENT_MAXIMUM_ACTION_SCORE = 'maximum_action_score';
 export const PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE = 'maximum_category_score';
@@ -104,6 +109,7 @@ export const ROUTE_TO_MODEL = {
     [ROUTE_SAYING]: MODEL_SAYING,
     [ROUTE_SETTINGS]: MODEL_SETTINGS,
     [ROUTE_WEBHOOK]: MODEL_WEBHOOK,
+    [ROUTE_CONNECTION]: MODEL_CONNECTION,
     [ROUTE_POST_FORMAT]: MODEL_POST_FORMAT
 };
 export const MODEL_TO_ROUTE = _.invert(ROUTE_TO_MODEL);

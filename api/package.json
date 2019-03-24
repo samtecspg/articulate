@@ -52,7 +52,12 @@
     "require-dir": "^1.0.0",
     "schmervice": "^1.0.0",
     "toys": "2.x.x",
-    "vision": "^5.4.0"
+    "vision": "^5.4.0",
+    "jsesc": "^2.5.0",
+    "bootbot": "^1.0.16",
+    "joi-phone-number": "^2.1.1",
+    "twilio": "^3.28.0",
+    "@slack/client": "^4.9.0"
   },
   "devDependencies": {
     "code": "5.x.x",
