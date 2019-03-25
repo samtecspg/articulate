@@ -69,7 +69,6 @@ export class FilterSelect extends React.Component {
 
     state = {
         valuesDropdownOpen: false,
-        error: false,
         filterInput: '',
         filteringValues: false,
     };
@@ -106,7 +105,8 @@ export class FilterSelect extends React.Component {
                 InputLabelProps={{
                     shrink: true,
                 }}
-                error={this.state.error}
+                helperText={this.props.helperText}
+                error={this.props.error}
                 SelectProps={this.props.SelectProps ? this.props.SelectProps : {}}
                 style={this.props.style}
             >
@@ -255,6 +255,8 @@ FilterSelect.propTypes = {
     displayEdit: PropTypes.bool,
     SelectProps: PropTypes.object,
     style: PropTypes.object,
+    error: PropTypes.bool,
+    helperText: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(FilterSelect));

@@ -265,6 +265,8 @@ class SayingsDataForm extends React.Component {
                 inputLabelMessage={messages.categorySelect}
                 displayThreshold
                 displayEdit
+                helperText={this.state.errorCategory ? intl.formatMessage(messages.requiredField) : ''}
+                error={this.state.errorCategory}
               />
             </Grid>
             <Grid item lg={10} md={10} sm={8} xs={8}>
