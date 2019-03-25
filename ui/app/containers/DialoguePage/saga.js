@@ -297,8 +297,7 @@ export function* putSayingsPageSize(payload) {
   const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
   mutableSettings.sayingsPageSize = pageSize;
   try {
-    yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
-    yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_IDENTIFY_KEYWORDS]), { params });
+    yield call(api.put, toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]), mutableSettings);
   }
   catch (err) {
     throw err;

@@ -231,7 +231,6 @@ export function* putReviewPageSize(payload) {
   const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
   mutableSettings.reviewPageSize = pageSize;
   try {
-    yield call(api.agent.putAgentAgentidSettings, { agentId, body: mutableSettings });
     yield call(api.put, toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]), mutableSettings);
   }
   catch (err) {
