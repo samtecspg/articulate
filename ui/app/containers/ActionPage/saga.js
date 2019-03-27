@@ -266,7 +266,7 @@ export function* deleteAction(payload) {
   }
   catch (err) {
     const error = { ...err };
-    yield put(deleteActionError(error.response.body.message));
+    yield put(deleteActionError(error.response.data.message));
   }
 }
 

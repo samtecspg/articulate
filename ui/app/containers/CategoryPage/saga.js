@@ -93,7 +93,7 @@ export function* deleteCategory(payload) {
   }
   catch (err) {
     const error = { ...err };
-    yield put(deleteCategoryError(error.response.body.message));
+    yield put(deleteCategoryError(error.response.data.message));
   }
 }
 

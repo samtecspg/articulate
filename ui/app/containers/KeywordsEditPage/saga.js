@@ -98,7 +98,7 @@ export function* deleteKeyword(payload) {
   }
   catch (err) {
     const error = { ...err };
-    yield put(deleteKeywordError(error.response.body.message));
+    yield put(deleteKeywordError(error.response.data.message));
   }
 }
 

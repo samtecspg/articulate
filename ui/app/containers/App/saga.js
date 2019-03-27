@@ -116,7 +116,7 @@ export function* postTrainAgent(payload) {
   }
   catch (err) {
     const error = { ...err };
-    yield put(trainAgentError(error.response.body.message));
+    yield put(trainAgentError(error.response.data.message));
   }
 }
 
