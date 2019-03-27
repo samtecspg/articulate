@@ -122,10 +122,11 @@ export function* getIdentifyKeywords(payload) {
     const params = {
       text: newSaying,
     };
-    yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_IDENTIFY_KEYWORDS]),{params});
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_IDENTIFY_KEYWORDS]),{params});
     yield put(addModifierSayingSuccess(modifierIndex, newSaying, response));
   }
   catch (err) {
+    console.log(err);
     yield put(addModifierSayingSuccess(err));
   }
 }
