@@ -2,6 +2,7 @@ import _ from 'lodash';
 import Nes from 'nes';
 import { PROXY_ROUTE_PREFIX } from '../../common/constants';
 import { API_URL } from '../../common/env';
+import logger from '../logger';
 
 const name = 'ws-proxy-plugin';
 exports.plugin = {
@@ -9,11 +10,31 @@ exports.plugin = {
   async register(server) {
     try {
       const subscriptions = [];
-
+      logger.log(`ws-proxy-plugin::register`); // TODO: REMOVE!!!!
       // Setup connection with API WS
       const apiURL = new URL('', API_URL);
+      logger.log({ API_URL, apiURL }); // TODO: REMOVE!!!!
+
       const apiClient = new Nes.Client(`ws://${apiURL.host}`);
-      await apiClient.connect();
+      apiClient.onError = (err) => {
+        logger.error(`[WS] Error ${API_URL}`);
+        logger.error(err);
+      };
+      apiClient.onConnect = () => {
+        logger.log(`[WS] Connected to ${API_URL}`);
+      };
+      apiClient.onDisconnect = (willReconnect, log) => {
+        logger.log(`[WS] Disconnect from ${API_URL}`);
+        logger.log(log);
+        logger.log(`[WS] Will Reconnect = ${willReconnect}`);
+      };
+      apiClient.onHeartbeatTimeout = (willReconnect) => {
+        logger.log(`[WS] Heartbeat Timeout from ${API_URL}`);
+        logger.log(`[WS] Will Reconnect = ${willReconnect}`);
+      };
+      await apiClient.connect({
+        delay: 1000,
+      });
 
       // Setup local WS
       await server.register({ plugin: Nes, options: {} });
@@ -41,8 +62,8 @@ exports.plugin = {
 
     }
     catch (e) {
-      console.error(name);
-      console.error(e);
+      logger.error(name);
+      logger.error(e);
     }
   },
 };

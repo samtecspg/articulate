@@ -19,6 +19,7 @@ import {
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { PROXY_ROUTE_PREFIX } from '../../../common/constants';
+import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
 import injectSaga from '../../utils/injectSaga';
@@ -79,14 +80,30 @@ class App extends React.Component {
     if (!this.state.socketClientConnected) {
       const client = new Nes.Client(getWS());
       client.onConnect = () => {
-
+        logger.log(`[WS] Connected to ${getWS()}`);
         this.setState({
           client,
           socketClientConnected: true,
         });
       };
-      client.connect();
+      client.onError = (err) => {
+        logger.error(`[WS] Error ${getWS()}`);
+        logger.error(err);
+      };
+      client.onDisconnect = (willReconnect, log) => {
+        logger.log(`[WS] Disconnect from ${getWS()}`);
+        logger.log(log);
+        logger.log(`[WS] Will Reconnect = ${willReconnect}`);
+      };
+      client.onHeartbeatTimeout = (willReconnect) => {
+        logger.log(`[WS] Heartbeat Timeout from ${getWS()}`);
+        logger.log(`[WS] Will Reconnect = ${willReconnect}`);
+      };
+      client.connect({
+        delay: 1000,
+      });
     }
+
   }
 
   componentDidMount() {
