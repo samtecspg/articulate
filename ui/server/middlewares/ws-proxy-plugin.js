@@ -10,11 +10,8 @@ exports.plugin = {
   async register(server) {
     try {
       const subscriptions = [];
-      logger.log(`ws-proxy-plugin::register`); // TODO: REMOVE!!!!
       // Setup connection with API WS
       const apiURL = new URL('', API_URL);
-      logger.log({ API_URL, apiURL }); // TODO: REMOVE!!!!
-
       const apiClient = new Nes.Client(`ws://${apiURL.host}`);
       apiClient.onError = (err) => {
         logger.error(`[WS] Error ${API_URL}`);
