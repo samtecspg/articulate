@@ -1,4 +1,4 @@
-FROM node:10.5.0
+FROM node:lts-jessie
 
 RUN apt-get update && apt-get install -y wget
 
