@@ -19,7 +19,7 @@ module.exports = async function ({ connection, request, h }) {
             event
           }
         }
-    })
+    });
 
     channelService.reply({ connection, event, response})
 

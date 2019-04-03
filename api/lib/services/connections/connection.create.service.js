@@ -23,11 +23,13 @@ module.exports = async function ({ data, returnModel = false }) {
         throw RedisErrorHandler({ error });
     }
 
-    const validation = await channelService.validate({ method: 'create', data: data });
-    if (validation.error) {
+    try {
+        await channelService.validate({ method: 'create', data: data });
+    }
+    catch (error) {
         return Promise.reject(GlobalDefaultError({
             statusCode: 400,
-            message: `Channel detail validation failed because ${JSON.stringify(validation.error.details)}.`
+            message: `Channel detail validation failed because ${JSON.stringify(error.details)}.`
         }));
     }
 
