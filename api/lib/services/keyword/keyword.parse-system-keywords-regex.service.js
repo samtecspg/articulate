@@ -10,7 +10,9 @@ module.exports = function ({ regexData }) {
                 keyword: 'sys.regex_' + keyword.name,
                 extractor: 'regex',
                 start: keyword.start,
-                value: keyword.resolvedRegex
+                value: {
+                    value: keyword.resolvedRegex
+                }
             };
         }
         else if (keyword.regexType === 'keywordRegex') {
@@ -19,7 +21,9 @@ module.exports = function ({ regexData }) {
                 keyword: keyword.name,
                 extractor: 'regex',
                 start: keyword.start,
-                value: keyword.keywordValue
+                value: {
+                    value: keyword.keywordValue
+                }
             };
         }
         return tmpKeyword;

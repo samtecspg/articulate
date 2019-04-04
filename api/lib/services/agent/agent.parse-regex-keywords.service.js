@@ -60,6 +60,6 @@ module.exports = async function ({ AgentModel, text }) {
                 });
             });
         }
-        return regexKeywords;
     });
+    return regexKeywords;
 };
