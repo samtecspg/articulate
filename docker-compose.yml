@@ -1,12 +1,18 @@
 version: '3.0'
 
 services:
+  nginx:
+    image: nginx:1.15.10-alpine
+    volumes:
+      - ./local-storage/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports: ['${PORT:-8080}:80']
+    command: [nginx-debug, '-g', 'daemon off;']
   api:
     image: samtecspg/articulate-api:repo-head
-    ports: ['7500:7500']
+    ports: ['${API_PORT:-7500}:7500']
   ui:
     image: samtecspg/articulate-ui:repo-head
-    ports: ['3000:3000']
+    ports: ['3000']
   rasa:
     image: samtecspg/articulate-rasa:repo-head
     ports: ['5000:5000']

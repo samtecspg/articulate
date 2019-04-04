@@ -13,7 +13,7 @@ export function getWS() {
   else {
     WS_URL = 'ws:';
   }
-  WS_URL += `//${loc.host}`;
+  WS_URL += `//${loc.host}/api/`;
 
   return WS_URL;
 

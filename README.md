@@ -30,7 +30,7 @@ Make sure you've got these programs installed:
 
 3. run `docker-compose up` (`sudo` might be needed)
 
-4. point your web browser at  http://localhost:3000 and enjoy Articulate
+4. point your web browser at  http://localhost:8080 and enjoy Articulate
 
 ## License
 ```

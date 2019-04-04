@@ -20,6 +20,6 @@ COPY . /usr/src/app/
 
 # Install app dependencies
 
-EXPOSE 7500
+#EXPOSE 7500
 
 CMD dockerize -wait http://elasticsearch:9200 -timeout 5m yarn start

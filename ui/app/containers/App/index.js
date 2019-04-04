@@ -131,7 +131,7 @@ class App extends React.Component {
           // If the socket was already subscribed to an agent
           if (this.state.agent) {
             // Unsubscribe from the agent
-            this.state.client.unsubscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.state.agent}`);
+            this.state.client.unsubscribe(`/agent/${this.state.agent}`);
           }
           const handler = (agent) => {
 
@@ -139,7 +139,7 @@ class App extends React.Component {
               this.props.onRefreshAgent(agent);
             }
           };
-          this.state.client.subscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.props.agent.id}`, handler);
+          this.state.client.subscribe(`/agent/${this.props.agent.id}`, handler);
           this.setState({
             agent: this.props.agent.id,
           });
