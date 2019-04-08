@@ -9,7 +9,7 @@ const inspectLog = (message) => {
   if (isString(message)) {
     return message;
   }
-  return inspect(message, false, 4, true);
+  return inspect(message, false, 5, true);
 };
 /**
  * Logger middleware, you can customize it to make messages more personal

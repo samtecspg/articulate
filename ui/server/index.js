@@ -21,7 +21,7 @@ const prettyHost = customHost || 'localhost';
 
 const server = Hapi.server({
   port,
-  host
+  host,
 });
 
 const compiler = Webpack(Config);
@@ -38,24 +38,28 @@ const hot = {
 const init = async () => {
 
   try {
+
     await server.register([
       {
         plugin: WebpackPlugin,
-        options: { compiler, assets, hot }
+        options: { compiler, assets, hot },
       }, {
-        plugin: h2o2
+        plugin: h2o2,
+        options: {
+          passThrough: true,
+          localStatePassThrough: true,
+          xforward: true,
+        },
       }, {
-        plugin: Blipp
-      }
+        plugin: Blipp,
+        options: {
+          showAuth: true,
+          showStart: false,
+        },
+      },
     ]);
-  }
-  catch (error) {
-    return logger.error(error);
-  }
-
-  try {
     await server.start();
-    //await server.route(Routes);
+    // await server.route(Routes);
   }
   catch (error) {
     return logger.error(error);
@@ -74,8 +78,10 @@ const init = async () => {
   else {
     logger.appStarted(port, prettyHost);
   }
-  // eslint-disable-next-line no-console
-  console.log(server.plugins.blipp.text());
+  if (process.env.DEBUG_ROUTES) {
+    // eslint-disable-next-line no-console
+    console.log(server.plugins.blipp.text());
+  }
   return server;
 };
 

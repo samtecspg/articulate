@@ -39,6 +39,7 @@
     "@material-ui/lab": "3.0.0-alpha.24",
     "axios": "^0.18.0",
     "guid": "^0.0.12",
+    "boom": "^7.3.0",
     "history": "4.7.2",
     "intl": "1.2.5",
     "invariant": "2.2.4",

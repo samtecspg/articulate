@@ -2,9 +2,5 @@ version: '3.0'
 
 services:
   nginx:
-    image: nginx:1.15.10-alpine
     volumes:
       - ./local-storage/nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 8080:80
-    command: [nginx-debug, '-g', 'daemon off;']
