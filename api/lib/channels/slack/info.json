@@ -1,5 +1,9 @@
 {
     "name": "Slack",
     "description": "A quick connection to Slack using the Events API.",
-    "documentation": null
+    "documentation": null,
+    "details": {
+        "signingSecret": "<SIGNING SECRET>",
+        "botAccessToken": "<BOT ACCESS TOKEN>"
+    }
 }

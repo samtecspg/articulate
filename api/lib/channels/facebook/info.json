@@ -1,5 +1,8 @@
 {
     "name": "Facebook Messenger",
     "description": "A connection for Facebook Messenger Bots.",
-    "documentation": null
+    "documentation": null,
+    "details": {
+        "appToken": "<APP TOKEN>"
+    }
 }

@@ -1,5 +1,12 @@
 {
     "name": "Twilio SMS",
     "description": "A quick connection to the webhook of Twilio SMS Numbers.",
-    "documentation": null
+    "documentation": null,
+    "details": {
+        "authToken": "<AUTH TOKEN>",
+        "accountId": "<ACCOUNT ID>",
+        "whiteList": [
+            "WHITELISTED PHONE NUMBERS in E164 FORMAT"
+        ]
+    }
 }
