@@ -206,10 +206,12 @@ module.exports = async function ({ conversationStateObject }) {
         else {
             const recognizedKeywordsNames = _.map(recognizedKeywords, (recognizedKeyword) => {
                 //If the name of the recognized keyword match with an keyword name of an slot
-                const slotToFill = _.filter(action.slots, (slot) => { 
+                const slotOfRecognizedKeywords = _.filter(action.slots, (slot) => { return slot.keyword === recognizedKeyword.keyword });
+                let slotToFill = _.filter(action.slots, (slot) => { 
                     const slotValueInFrame = lastFrame.slots[slot.slotName] ? lastFrame.slots[slot.slotName].value : null;
-                    return slot.keyword === recognizedKeyword.keyword && (!slotValueInFrame || (Array.isArray(slotValueInFrame) && slotValueInFrame.length === 0));
+                    return (!slotValueInFrame || (Array.isArray(slotValueInFrame) && slotValueInFrame.length === 0));
                 })[0];
+                slotToFill = slotToFill ? slotToFill : slotOfRecognizedKeywords[0];
                 if (slotToFill) {
                     //Get the slot object
                     //Get the slot name of the keyword that was recognized using the index of the array of keywords names
