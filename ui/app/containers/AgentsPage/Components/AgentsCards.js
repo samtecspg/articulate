@@ -3,11 +3,12 @@ import { FormattedMessage } from 'react-intl';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Card, CardContent, CardHeader, Slide, Typography }  from '@material-ui/core';
+import { Grid, Card, CardContent, CardHeader, Slide, Typography, Tooltip }  from '@material-ui/core';
 
 import messages from '../messages';
 import exportIcon from '../../../images/export-icon.svg';
 import importIcon from '../../../images/import-icon.svg';
+import gravatars from '../../../components/Gravatar/';
 
 const styles = {
   cardsContainer: {
@@ -100,6 +101,15 @@ const styles = {
     color: '#00bd6f',
     marginLeft: '5px',
     cursor: 'pointer'
+  },
+  agentIcon: {
+    marginRight: '5px',
+    height: '20px'
+  },
+  agentName: {
+    position: 'relative',
+    bottom: '3px',
+    fontWeight: '500'
   }
 };
 
@@ -169,10 +179,27 @@ class AgentsCards extends React.Component {
           {agents.map((agent, index) => (
             <Grid key={`agentCard_${index}`} item>
               <Card className={classes.agentCard}>
-                <CardHeader onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardHeader} titleTypographyProps={{ className: classes.agentNameCard }} title={agent.agentName}/>
+                <CardHeader 
+                  onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}}
+                  className={classes.agentCardHeader}
+                  titleTypographyProps={
+                    {
+                      className: classes.agentNameCard,
+                      style: {
+                        color: agent.uiColor
+                      } 
+                    }
+                  }
+                  title={
+                    <span>
+                      {gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.agentIcon })}
+                      <Tooltip title={agent.agentName} placement='top'><span className={classes.agentName}>{agent.agentName.length > 11 ? `${agent.agentName.substring(0,11).trim()}...` : agent.agentName}</span></Tooltip>
+                    </span>
+                  }
+                />
                 <CardContent onClick={() => {this.props.onGoToUrl(`/agent/${agent.id}`)}} className={classes.agentCardContent}>
                   <Grid>
-                    {agent.description.length > 65 ? `${agent.description.substring(0,64)}...` : agent.description}
+                    {agent.description.length > 65 ? `${agent.description.substring(0,64).trim()}...` : agent.description}
                   </Grid>
                 </CardContent>
                 <Grid container justify='center' className={classes.exportFooter}>

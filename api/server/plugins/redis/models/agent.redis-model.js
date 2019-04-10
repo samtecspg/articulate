@@ -2,6 +2,12 @@ import { MODEL_AGENT } from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {
+    gravatar: {
+        type: 'number'
+    },
+    uiColor: {
+        type: 'string',        
+    },
     agentName: {
         type: 'string',
         unique: true,

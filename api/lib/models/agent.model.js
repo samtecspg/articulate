@@ -5,6 +5,8 @@ class AgentModel {
 
         return {
             id: Joi.number(),
+            gravatar: Joi.number(),
+            uiColor: Joi.string().trim(),
             agentName: Joi.string().trim(),
             description: Joi.string().trim(),
             language: Joi.string().trim(),

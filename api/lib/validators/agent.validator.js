@@ -60,6 +60,8 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    gravatar: AgentSchema.gravatar.required(),
+                    uiColor: AgentSchema.uiColor.required(),
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
                     language: AgentSchema.language.required().valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
@@ -225,6 +227,8 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    gravatar: AgentSchema.gravatar,
+                    uiColor: AgentSchema.uiColor,
                     agentName: AgentSchema.agentName,
                     description: AgentSchema.description,
                     language: AgentSchema.language.valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
@@ -765,6 +769,8 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    gravatar: AgentSchema.gravatar.required(),
+                    uiColor: AgentSchema.uiColor.required(),
                     agentName: AgentSchema.agentName.required(),
                     description: AgentSchema.description,
                     language: AgentSchema.language.required().valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
