@@ -12,6 +12,15 @@ const styles = {
     border: '1px solid #a2a7b1',
     borderRadius: '5px',
   },
+  swatchContainerDot: {
+    marginRight: 5,
+    height: 10,
+    width: 10,
+    borderRadius: '50%',
+    cursor: 'pointer',
+    position: 'absolute',
+    right: '5%'
+  },
   swatch: {
     padding: '5px',
     background: '#fff',
@@ -19,6 +28,11 @@ const styles = {
     cursor: 'pointer',
     width: '100%',
     borderRadius: '10px',
+  },
+  swatchDot: {
+    padding: '5px',
+    width: '100%',
+    borderRadius: '50%',
   },
   popover: {
     background: '#FFFFFF',
@@ -46,8 +60,24 @@ const styles = {
 
 function ColorPicker(props) { // eslint-disable-line react/prefer-stateless-function
 
-  const { classes } = props;
+  const { classes, dotDisplay } = props;
   return (
+    dotDisplay ? 
+    <Grid style={{background: props.color }} className={classes.swatchContainerDot} >
+      <Grid className={ classes.swatchDot } onClick={ props.handleOpen }>
+        <div style={{background: props.color }} className={ classes.color } />
+      </Grid>
+      {
+        props.displayColorPicker ?
+          <Grid className={ classes.popover }>
+            <Grid className={ classes.cover } onClick={ props.handleClose }/>
+            <SwatchesPicker color={ props.color } onChange={ props.handleColorChange } />
+          </Grid>
+          :
+          null
+      }
+    </Grid>
+    :
     <Grid className={classes.swatchContainer}>
       <Grid className={ classes.swatch } onClick={ props.handleOpen }>
         <div style={{background: props.color }} className={ classes.color } />
@@ -72,6 +102,7 @@ ColorPicker.propTypes = {
   handleColorChange: PropTypes.func,
   color: PropTypes.string,
   displayColorPicker: PropTypes.bool,
+  dotDisplay: PropTypes.bool,
 };
 
 export default withStyles(styles)(ColorPicker);

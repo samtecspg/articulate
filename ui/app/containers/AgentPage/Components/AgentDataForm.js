@@ -12,6 +12,7 @@ import messages from '../messages';
 
 import pencilIcon from '../../../images/pencil-icon.svg';
 import gravatars from '../../../components/Gravatar/';
+import ColorPicker from 'components/ColorPicker';
 
 const styles = {
   formContainer: {
@@ -50,6 +51,12 @@ const styles = {
     position: 'relative',
     top: '2px',
     marginLeft: '10px',
+  },
+  avatar: {
+    height: '30px',
+    position: 'absolute',
+    bottom: '11px',
+    left: '17px'
   }
 };
 
@@ -62,7 +69,8 @@ class AgentDataForm extends React.Component {
   }
   
   state = {
-    openActions: false
+    openActions: false,
+    displayColorPicker: false,
   }
   
   getThresholdLabel(){
@@ -87,11 +95,21 @@ class AgentDataForm extends React.Component {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                SelectProps={{
+                  IconComponent: () => { return <span style={{display: 'none'}}></span> },
+                  MenuProps: {
+                    MenuListProps: {
+                      style: {
+                        minWidth: '63px'
+                      }
+                    }
+                  }
+                }}
               >
                 {
                   gravatars.map((gravatar, index) => (
                     <MenuItem key={`gravatar_${index}`} value={index + 1}>
-                      <span>{gravatar({color: agent.uiColor, style: { height: '15px' }})}</span>
+                      <span>{gravatar({color: agent.uiColor, className: classes.avatar })}</span>
                     </MenuItem>
                   ))
                 }
@@ -111,6 +129,35 @@ class AgentDataForm extends React.Component {
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
                 error={this.props.errorState.agentName}
+                inputProps={{
+                  style: {
+                    color: agent.uiColor
+                  }
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <ColorPicker
+                      dotDisplay
+                      handleClose={() => {
+                        this.setState({
+                          displayColorPicker: false,
+                        });
+                      }}
+                      handleOpen={() => {
+                        this.setState({
+                          displayColorPicker: true,
+                        });
+                      }}
+                      handleColorChange={
+                        (color) => {
+                          this.setState({ displayColorPicker: false });
+                          this.props.onChangeAgentData('uiColor', color.hex)
+                        }
+                      }
+                      color={agent.uiColor}
+                      displayColorPicker={this.state.displayColorPicker}
+                    />)
+                }}
               />
             </Grid>
             <Grid item lg={4} md={12} sm={12} xs={12}>
