@@ -210,6 +210,8 @@ const initialState = Immutable({
   filteredActions: [],
   agents: false,
   currentAgent: {
+    gravatar: '',
+    uiColor: '',
     agentName: '',
     description: '',
     language: 'en',
@@ -225,6 +227,8 @@ const initialState = Immutable({
   },
   agentExport: null,
   agent: {
+    gravatar: '',
+    uiColor: '',
     agentName: '',
     description: '',
     language: 'en',

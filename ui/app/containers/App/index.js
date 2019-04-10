@@ -151,6 +151,7 @@ class App extends React.Component {
     return (
       <div>
         <AppHeader
+          agent={this.props.agent}
           uiLanguages={this.props.settings.uiLanguages}
           uiLanguage={this.props.settings.uiLanguage}
           onChangeLanguage={this.props.onChangeLanguage}

@@ -10,6 +10,7 @@ import messages from "../messages";
 import agentIcon from "../../../images/agents-icon.svg";
 import playHelpIcon from "../../../images/play-help-icon.svg";
 import settingsIcon from "../../../images/settings-icon.svg";
+import gravatars from '../../../components/Gravatar/';
 
 import AgentDataForm from "./AgentDataForm";
 import AgentParametersForm from './AgentParametersForm';
@@ -128,7 +129,7 @@ class Form extends React.Component {
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
-          <img className={classes.agentIcon} src={agentIcon} />
+          {this.props.agent.gravatar === '' ? null : gravatars[this.props.agent.gravatar - 1]({ color: this.props.agent.uiColor, className: classes.agentIcon })}
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />

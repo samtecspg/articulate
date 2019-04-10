@@ -267,6 +267,8 @@ export class ReviewPage extends React.Component {
           <MainTab
             disableSave
             agentName={agent.agentName}
+            agentGravatar={agent.gravatar ? agent.gravatar : 1}
+            agentUIColor={agent.uiColor}
             onTrain={onTrain}
             agentStatus={agent.status}
             lastTraining={agent.lastTraining}

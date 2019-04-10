@@ -281,6 +281,8 @@ export class DialoguePage extends React.PureComponent {
           success={this.props.success}
           onSaveAndExit={() => { this.submit(true) }}
           agentName={this.props.agent.agentName}
+          agentGravatar={this.props.agent.gravatar ? this.props.agent.gravatar : 1}
+          agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
           onFinishAction={this.submit}

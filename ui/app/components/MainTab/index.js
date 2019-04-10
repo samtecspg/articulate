@@ -20,6 +20,7 @@ import reviewIcon from '../../images/icon-review.svg';
 import dialogueIcon from '../../images/sayings-icon.svg';
 import vDivider from '../../images/v-divider.svg';
 import messages from './messages';
+import gravatars from '../Gravatar/';
 
 import SaveButton from "../SaveButton";
 
@@ -70,6 +71,11 @@ const styles = {
     padding: '0px 10px',
     cursor: 'pointer',
   },
+  agentIcon: {
+    height: '20px',
+    padding: '0px 5px',
+    cursor: 'pointer',
+  },
   button: {
     display: 'inline',
   },
@@ -109,8 +115,8 @@ export class MainTab extends React.Component {
                 }}
               >
                 {this.props.agentURL ?
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === '' ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
-                  <Tab value="agents" className={classes.agentTab} icon={<img className={classes.icon} src={agentIcon} />} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === ''? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} />}
+                  <Tab value="agents" className={classes.agentTab} icon={gravatars[this.props.agentGravatar - 1]({ color: this.props.agentUIColor, className: classes.agentIcon })} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === '' ? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} component={this.props.agentForm} to={this.props.agentURL} /> :
+                  <Tab value="agents" className={classes.agentTab} icon={gravatars[this.props.agentGravatar - 1]({ color: this.props.agentUIColor, className: classes.agentIcon })} label={<span><span>{intl.formatMessage(messages.agent)}</span><span className={classes.subtitle}>{newAgent && this.props.agentName === ''? <FormattedMessage {...messages.createSubtitle} /> : this.props.agentName.length > 15 ? <Tooltip title={this.props.agentName} placement='top'><span>{`${this.props.agentName.substring(0, 15)}...`}</span></Tooltip> : this.props.agentName}</span></span>} />}
                 <Tab className={classes.vDividerIconTab} icon={<img className={classes.vDividerIcon} src={vDivider} />} disabled />
                 {this.props.dialogueURL ?
                   <Tab value="dialogue" className={classes.tab} icon={<img className={classes.icon} src={dialogueIcon} />} label={intl.formatMessage(messages.dialogue)} component={this.props.dialogueForm} to={this.props.dialogueURL} disabled={!enableTabs} /> :

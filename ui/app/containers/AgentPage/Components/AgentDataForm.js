@@ -11,6 +11,7 @@ import AutoComplete from '../../../components/AutoComplete';
 import messages from '../messages';
 
 import pencilIcon from '../../../images/pencil-icon.svg';
+import gravatars from '../../../components/Gravatar/';
 
 const styles = {
   formContainer: {
@@ -74,7 +75,29 @@ class AgentDataForm extends React.Component {
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
           <Grid container spacing={24} item xs={12}>
-            <Grid item lg={4} md={12} sm={12} xs={12}>
+            <Grid item lg={1} md={6} sm={12} xs={12}>
+              <TextField
+                select
+                id='gravatar'
+                value={agent.gravatar}
+                label={''}
+                onChange={(evt) => { this.props.onChangeAgentData('gravatar', evt.target.value) }}
+                margin='normal'
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              >
+                {
+                  gravatars.map((gravatar, index) => (
+                    <MenuItem key={`gravatar_${index}`} value={index + 1}>
+                      <span>{gravatar({color: agent.uiColor, style: { height: '15px' }})}</span>
+                    </MenuItem>
+                  ))
+                }
+              </TextField>
+            </Grid>
+            <Grid item lg={3} md={6} sm={12} xs={12}>
               <TextField
                 id='agentName'
                 label={intl.formatMessage(messages.agentTextField)}
