@@ -38,6 +38,7 @@ import {
 import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
 import Notifications from './components/Notifications';
+import gravatars from '../Gravatar';
 
 const styles = {
   container: {
@@ -123,8 +124,7 @@ const styles = {
     '&:hover': {
       boxShadow: '0 2px 10px 0px #000000',
     },
-    color: '#4e4e4e',
-    backgroundColor: '#dbe0e9',
+    color: '#4A4A4A',
     borderRadius: '3px',
     padding: '8px',
     marginRight: '60px',
@@ -134,9 +134,8 @@ const styles = {
   agentName: {
     display: 'block',
     marginLeft: '15px',
-    fontWeight: '300',
+    fontWeight: '500',
     fontSize: '10px',
-    color: '#a2a7b1',
     marginBottom: '3px',
   },
   messageSource: {
@@ -155,6 +154,12 @@ const styles = {
     bottom: '95px',
     overflowY: 'scroll',
     overflowX: 'hidden',
+  },
+  agentIcon: {
+    marginRight: '5px',
+    height: '20px',
+    position: 'relative',
+    top: '3px',
   },
 };
 
@@ -214,10 +219,11 @@ export class ConversationBar extends React.PureComponent {
 
                 return (
                   <Grid key={`message_${index}`}>
-                    <Typography className={classes.agentName}>
+                    <Typography style={{ color: this.props.agent.uiColor}} className={classes.agentName}>
+                      {this.props.agent.gravatar !== '' ? gravatars[this.props.agent.gravatar - 1]({ color: this.props.agent.uiColor, className: classes.agentIcon }) : null}
                       {message.author}
                     </Typography>
-                    <Typography className={classes.agentMessage}>
+                    <Typography style={{ border: `1px solid ${this.props.agent.uiColor}`}} className={classes.agentMessage}>
                       {message.message}
                       {message.docId ?
                         <span onClick={() => { this.setState({openCodeModal: true, conversationStateObject: message.conversationStateObject })}} className={classes.messageSource}>
@@ -232,7 +238,10 @@ export class ConversationBar extends React.PureComponent {
             }
             {
               this.props.waitingResponse ?
-                <LoadingWave agentName={this.props.agent.agentName} /> :
+                <LoadingWave agentName={<Typography style={{ color: this.props.agent.uiColor}} className={classes.agentName}>
+                {this.props.agent.gravatar !== '' ? gravatars[this.props.agent.gravatar - 1]({ color: this.props.agent.uiColor, className: classes.agentIcon }) : null}
+                {this.props.agent.agentName}
+              </Typography>} /> :
                 null
             }
             <div

@@ -29,14 +29,6 @@ const styles = {
   dot2: {
     animationDelay: '-0.9s',
   },
-  agentName: {
-    display: 'block',
-    marginLeft: '15px',
-    fontWeight: '300',
-    fontSize: '10px',
-    color: '#a2a7b1',
-    marginBottom: '3px',
-  },
   agentMessage: {
     width: '50px',
     paddingLeft: '8px',
@@ -51,9 +43,7 @@ export function LoadingWave(props) {
   const { classes } = props;
   return (
     <Grid>
-      <Typography className={classes.agentName}>
-        {props.agentName}
-      </Typography>
+      {props.agentName}
       <Typography className={classes.agentMessage}>
         <span className={classes.dot}></span>&nbsp;
         <span className={`${classes.dot} ${classes.dot1}`}></span>&nbsp;
@@ -64,7 +54,7 @@ export function LoadingWave(props) {
 }
 
 LoadingWave.propTypes = {
-  agentName: PropTypes.string,
+  agentName: PropTypes.object,
 };
 
 export default withStyles(styles)(LoadingWave);
