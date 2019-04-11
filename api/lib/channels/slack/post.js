@@ -4,8 +4,6 @@ module.exports = async function ({ connection, request, h }) {
 
     const event = request.payload;
 
-    console.log(event)
-
     if (event.type == 'url_verification') {
 
       return h.response(event.challenge).code(200)

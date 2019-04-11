@@ -4,7 +4,6 @@ module.exports = async function ({ connection, request }) {
 
   const data = request.query;
 
-  console.log(connection, data)
   const {
     validationToken
   } = connection.details

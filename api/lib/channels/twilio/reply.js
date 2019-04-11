@@ -3,7 +3,6 @@ module.exports = async function({ connection, event, response }) {
 
     client.messages
         .create({from: event.To, body: response.textResponse, to: event.From})
-        // .then(message => console.log(message.sid));
 
     //TODO Implement StatusCallbacks
 }
