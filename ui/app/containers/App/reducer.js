@@ -227,8 +227,8 @@ const initialState = Immutable({
   },
   agentExport: null,
   agent: {
-    gravatar: '',
-    uiColor: '',
+    gravatar: Math.floor(Math.random() * 16) + 1,
+    uiColor:  colors[Math.floor(Math.random() * (colors.length - 1))],
     agentName: '',
     description: '',
     language: 'en',
@@ -269,7 +269,7 @@ const initialState = Immutable({
     type: 'learned',
     regex: '',
     agent: '',
-    uiColor: colors[Math.floor(Math.random() * colors.length)],
+    uiColor: colors[Math.floor(Math.random() * (colors.length - 1))],
     keywordName: '',
     examples: [],
     modifiers: [],
@@ -468,7 +468,9 @@ function appReducer(state = initialState, action) {
         .set('agentTouched', false)
         .set('successAgent', false)
         .set('actions', [])
-        .set('newSayingActions', []);
+        .set('newSayingActions', [])
+        .setIn(['agent', 'gravatar'], Math.floor(Math.random() * 16) + 1)
+        .setIn(['agent', 'uiColor'], colors[Math.floor(Math.random() * (colors.length - 1))]);
     case LOAD_AGENT:
       return state
         .set('loading', true)
@@ -1250,7 +1252,8 @@ function appReducer(state = initialState, action) {
         .set('keywordTouched', false);
     case RESET_KEYWORD_DATA:
       return state.set('keyword', initialState.keyword)
-      .set('successKeyword', false);
+      .set('successKeyword', false)
+      .setIn(['keyword', 'uiColor'], colors[Math.floor(Math.random() * (colors.length - 1))]);;
     case UPDATE_KEYWORD:
       return state.set('loading', true)
         .set('success', false)
