@@ -12,7 +12,12 @@ import gravatars from '../../../components/Gravatar/';
 
 const styles = {
   cardsContainer: {
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
     marginBottom: '80px',
+    flexWrap: 'nowrap',
+    overflowX: 'scroll'
   },
   newAgentCard: {
     border: '1px solid #00bd6f',
