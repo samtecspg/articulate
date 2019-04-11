@@ -21,9 +21,10 @@ import injectSaga from 'utils/injectSaga';
 
 import saga from './saga';
 import messages from './messages';
-import { makeSelectAgents, makeSelectAgentExport } from '../App/selectors';
-import { loadAgents, exportAgent, importAgent } from '../App/actions';
+import { makeSelectAgents, makeSelectAgentExport, makeSelectConnections, makeSelectChannels } from '../App/selectors';
+import { loadAgents, exportAgent, importAgent, loadConnections, loadChannels } from '../App/actions';
 import { push } from 'react-router-redux';
+import ConnectionsCards from './Components/ConnectionsCards';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {
@@ -33,9 +34,9 @@ export class AgentsPage extends React.PureComponent {
   }
 
   render() {
-    const { agents } = this.props;
+    const { agents, connections, channels } = this.props;
     return (
-      agents ? 
+      agents && connections && channels ? 
         <Grid container>
           <MainContentHeader
             title={messages.title}
@@ -46,6 +47,16 @@ export class AgentsPage extends React.PureComponent {
             onImportAgent={this.props.onImportAgent}
             onExportAgent={this.props.onExportAgent}
             agentExport={this.props.agentExport}
+            onGoToUrl={this.props.onGoToUrl}
+          />
+          <MainContentHeader
+            title={messages.connectionsTitle}
+            sizesForHideInlineElement={['sm', 'xs']}
+          />
+          <ConnectionsCards
+            agents={agents}
+            connections={connections}
+            channels={channels}
             onGoToUrl={this.props.onGoToUrl}
           />
         </Grid>
@@ -66,18 +77,26 @@ AgentsPage.propTypes = {
     PropTypes.array,
     PropTypes.bool,
   ]),
+  connections: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.bool,
+  ]),
   agentExport: PropTypes.object
 };
 
 const mapStateToProps = createStructuredSelector({
   agents: makeSelectAgents(),
+  connections: makeSelectConnections(),
+  channels: makeSelectChannels(),
   agentExport: makeSelectAgentExport(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onComponentMounted: () => {
-      dispatch(loadAgents())
+      dispatch(loadAgents());
+      dispatch(loadConnections());
+      dispatch(loadChannels());
     },
     onGoToUrl: (url) => {
       dispatch(push(url));

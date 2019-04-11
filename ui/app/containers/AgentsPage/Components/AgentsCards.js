@@ -15,7 +15,7 @@ const styles = {
     '&::-webkit-scrollbar': {
       display: 'none',
     },
-    marginBottom: '80px',
+    marginBottom: '30px',
     flexWrap: 'nowrap',
     overflowX: 'scroll'
   },

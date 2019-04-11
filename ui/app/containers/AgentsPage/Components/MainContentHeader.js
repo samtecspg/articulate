@@ -12,10 +12,10 @@ import messages from "../messages";
 const styles = {
   container: {
     display: 'inline',
-    paddingTop: 40,
-    paddingBottom: 30,
+    paddingTop: 20,
+    paddingBottom: 10,
     paddingLeft: 25,
-    height: '115px',
+    height: '75px',
   },
   containerElement: {
     display: 'inline',

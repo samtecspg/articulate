@@ -10,6 +10,10 @@ export default defineMessages({
     id: 'app.containers.AgentsPage.title',
     defaultMessage: 'Agents',
   },
+  connectionsTitle: {
+    id: 'app.containers.AgentsPage.connectionsTitle',
+    defaultMessage: 'Connections',
+  },
   subtitle: {
     id: 'app.containers.AgentsPage.subtitle',
     defaultMessage: 'All Agents',
@@ -17,6 +21,10 @@ export default defineMessages({
   createAgent: {
     id: 'app.containers.AgentsPage.createAgent',
     defaultMessage: '+ Create Agent',
+  },
+  createConnection: {
+    id: 'app.containers.ConnectionsCards.createConnection',
+    defaultMessage: '+ Create Connection',
   },
   searchAgentPlaceholder: {
     id: 'app.containers.AgentsPage.searchAgentPlaceholder',
@@ -36,7 +44,7 @@ export default defineMessages({
   },
   playHelpAlt : {
     id: 'app.containers.AgentsPage.components.MainContentHeader.playHelpAlt',
-    defaultMessage: 'Play video off how to add/edit the keywords',
+    defaultMessage: 'Play video off how to add/edit agents and/or connections',
   },
   export : {
     id: 'app.containers.AgentsPage.components.AgentsCards.export',
@@ -49,5 +57,5 @@ export default defineMessages({
   import : {
     id: 'app.containers.AgentsPage.components.AgentsCards.import',
     defaultMessage: 'Import',
-  },
+  }
 });

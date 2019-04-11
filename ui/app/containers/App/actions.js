@@ -120,6 +120,12 @@ import {
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
+  LOAD_CONNECTIONS,
+  LOAD_CONNECTIONS_ERROR,
+  LOAD_CONNECTIONS_SUCCESS,
+  LOAD_CHANNELS,
+  LOAD_CHANNELS_ERROR,
+  LOAD_CHANNELS_SUCCESS,
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
@@ -266,6 +272,51 @@ export function resetSession() {
 export function resetSessionSuccess() {
   return {
     type: RESET_SESSION_SUCCESS,
+  };
+}
+
+/*
+* Connections
+*/
+export function loadConnections() {
+  return {
+    type: LOAD_CONNECTIONS,
+    apiCall: true,
+  };
+}
+
+export function loadConnectionsError(error) {
+  return {
+    type: LOAD_CONNECTIONS_ERROR,
+    error,
+  };
+}
+
+export function loadConnectionsSuccess(connections) {
+  return {
+    type: LOAD_CONNECTIONS_SUCCESS,
+    connections,
+  };
+}
+
+export function loadChannels() {
+  return {
+    type: LOAD_CHANNELS,
+    apiCall: true,
+  };
+}
+
+export function loadChannelsError(error) {
+  return {
+    type: LOAD_CHANNELS_ERROR,
+    error,
+  };
+}
+
+export function loadChannelsSuccess(channels) {
+  return {
+    type: LOAD_CHANNELS_SUCCESS,
+    channels,
   };
 }
 

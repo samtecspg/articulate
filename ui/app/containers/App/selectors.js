@@ -54,6 +54,17 @@ const makeSelectConversationStateObject = () => createSelector(
   (globalState) => globalState.conversationStateObject,
 );
 
+/* Connections */
+const makeSelectConnections = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.connections,
+);
+
+const makeSelectChannels = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.channels
+)
+
 /* Agents */
 const makeSelectAgents = () => createSelector(
   selectGlobal,
@@ -264,6 +275,8 @@ export {
   makeSelectMessages,
   makeSelectWaitingResponse,
   makeSelectConversationStateObject,
+  makeSelectConnections,
+  makeSelectChannels,
   makeSelectAgents,
   makeSelectAgentExport,
   makeSelectAgent,

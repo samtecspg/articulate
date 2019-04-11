@@ -92,6 +92,12 @@ import {
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
+  LOAD_CONNECTIONS,
+  LOAD_CONNECTIONS_ERROR,
+  LOAD_CONNECTIONS_SUCCESS,
+  LOAD_CHANNELS,
+  LOAD_CHANNELS_ERROR,
+  LOAD_CHANNELS_SUCCESS,
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
@@ -208,6 +214,8 @@ const initialState = Immutable({
   categories: [],
   filteredCategories: [],
   filteredActions: [],
+  channels: false,
+  connections: false,
   agents: false,
   currentAgent: {
     gravatar: '',
@@ -403,6 +411,33 @@ function appReducer(state = initialState, action) {
     case RESET_SESSION_SUCCESS:
       return state.set('messages', [])
         .set('notifications', []);
+
+
+    /* Connections */
+    case LOAD_CONNECTIONS:
+      return state.set('connections', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_CONNECTIONS_ERROR:
+      return state.set('connections', false)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_CONNECTIONS_SUCCESS:
+      return state.set('connections', action.connections)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_CHANNELS:
+      return state.set('channels', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_CHANNELS_ERROR:
+      return state.set('channels', false)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_CHANNELS_SUCCESS:
+      return state.set('channels', action.channels)
+        .set('loading', false)
+        .set('error', false);         
 
     /* Agents */
     case LOAD_AGENTS:

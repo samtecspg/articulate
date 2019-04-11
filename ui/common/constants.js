@@ -8,6 +8,8 @@ export const PROXY_ROUTE_PREFIX = '/api';
 // ROUTES
 export const ROUTE_ACTION = 'action';
 export const ROUTE_AGENT = 'agent';
+export const ROUTE_CONNECTION = 'connection';
+export const ROUTE_CHANNEL = 'channel';
 export const ROUTE_CONTEXT = 'context';
 export const ROUTE_DOCUMENT = 'doc';
 export const ROUTE_CATEGORY = 'category';

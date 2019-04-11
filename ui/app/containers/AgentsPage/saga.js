@@ -7,6 +7,8 @@ import {
   ROUTE_AGENT,
   ROUTE_EXPORT,
   ROUTE_IMPORT,
+  ROUTE_CONNECTION,
+  ROUTE_CHANNEL
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -16,11 +18,17 @@ import {
   importAgentSuccess,
   loadAgentsError,
   loadAgentsSuccess,
+  loadConnectionsError,
+  loadConnectionsSuccess,
+  loadChannelsError,
+  loadChannelsSuccess,
 } from '../App/actions';
 import {
   EXPORT_AGENT,
   IMPORT_AGENT,
   LOAD_AGENTS,
+  LOAD_CONNECTIONS,
+  LOAD_CHANNELS
 } from '../App/constants';
 
 export function* getAgents(payload) {
@@ -32,6 +40,30 @@ export function* getAgents(payload) {
   }
   catch (err) {
     yield put(loadAgentsError(err));
+  }
+}
+
+export function* getConnections(payload) {
+  const { api } = payload;
+
+  try {
+    const response = yield call(api.get, toAPIPath([ROUTE_CONNECTION]));
+    yield put(loadConnectionsSuccess(response.data));
+  }
+  catch (err) {
+    yield put(loadConnectionsError(err));
+  }
+}
+
+export function* getChannels(payload) {
+  const { api } = payload;
+
+  try {
+    const response = yield call(api.get, toAPIPath([ROUTE_CHANNEL]));
+    yield put(loadChannelsSuccess(response));
+  }
+  catch (err) {
+    yield put(loadChannelsError(err));
   }
 }
 
@@ -66,6 +98,8 @@ export function* postAgentImport(payload) {
 
 export default function* loadAgents() {
   yield takeLatest(LOAD_AGENTS, getAgents);
+  yield takeLatest(LOAD_CONNECTIONS, getConnections);
+  yield takeLatest(LOAD_CHANNELS, getChannels);
   yield takeLatest(EXPORT_AGENT, getAgentExport);
   yield takeLatest(IMPORT_AGENT, postAgentImport);
 }

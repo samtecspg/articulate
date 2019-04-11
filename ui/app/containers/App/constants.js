@@ -25,6 +25,16 @@ export const RESET_SESSION = 'app/App/RESET_SESSION';
 export const RESET_SESSION_SUCCESS = 'app/App/RESET_SESSION_SUCCESS';
 
 /*
+* Connections
+*/
+export const LOAD_CONNECTIONS = 'app/AgentsPage/LOAD_CONNECTIONS';
+export const LOAD_CONNECTIONS_ERROR = 'app/AgentsPage/LOAD_CONNECTIONS_ERROR';
+export const LOAD_CONNECTIONS_SUCCESS = 'app/AgentsPage/LOAD_CONNECTIONS_SUCCESS';
+export const LOAD_CHANNELS = 'app/AgentsPage/LOAD_CHANNELS';
+export const LOAD_CHANNELS_ERROR = 'app/AgentsPage/LOAD_CHANNELS_ERROR';
+export const LOAD_CHANNELS_SUCCESS = 'app/AgentsPage/LOAD_CHANNELS_SUCCESS';
+
+/*
  * Agents
  */
 export const LOAD_AGENTS = 'app/AgentsPage/LOAD_AGENTS';
