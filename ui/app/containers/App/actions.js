@@ -201,6 +201,21 @@ import {
   UPDATE_SETTING_SUCCESS,
   CHANGE_LOCALE,
   UPDATE_SAYING_SUCCESS,
+  CHANGE_CONNECTION_DATA,
+  LOAD_CONNECTION,
+  LOAD_CONNECTION_ERROR,
+  LOAD_CONNECTION_SUCCESS,
+  RESET_CONNECTION_DATA,
+  CREATE_CONNECTION,
+  CREATE_CONNECTION_ERROR,
+  CREATE_CONNECTION_SUCCESS,
+  UPDATE_CONNECTION,
+  UPDATE_CONNECTION_ERROR,
+  UPDATE_CONNECTION_SUCCESS,
+  CHANGE_DETAIL_VALUE,
+  DELETE_CONNECTION,
+  DELETE_CONNECTION_ERROR,
+  DELETE_CONNECTION_SUCCESS,
 } from './constants';
 
 /*
@@ -1709,5 +1724,112 @@ export function changeLocale(languageLocale) {
   return {
     type: CHANGE_LOCALE,
     locale: languageLocale,
+  };
+}
+
+/* Connection */
+export function changeConnectionData(payload) {
+	return {
+    type: CHANGE_CONNECTION_DATA,
+    payload
+  }
+}
+
+export function loadConnection(id) {
+	return {
+    type: LOAD_CONNECTION,
+    id,
+    apiCall: true
+  }
+}
+
+export function loadConnectionError(error) {
+  return {
+    type: LOAD_CONNECTION_ERROR,
+    error,
+  };
+}
+
+export function loadConnectionSuccess(connection) {
+  return {
+    type: LOAD_CONNECTION_SUCCESS,
+    connection,
+  };
+}
+
+export function resetConnectionData() {
+	return {
+    type: RESET_CONNECTION_DATA
+  }
+}
+
+export function createConnection() {
+	return {
+    type: CREATE_CONNECTION,
+    apiCall: true
+  }
+}
+
+export function createConnectionError(error) {
+  return {
+    type: CREATE_CONNECTION_ERROR,
+    error,
+  };
+}
+
+export function createConnectionSuccess(connection) {
+  return {
+    type: CREATE_CONNECTION_SUCCESS,
+    connection,
+  };
+}
+
+export function updateConnection() {
+	return {
+    type: UPDATE_CONNECTION,
+    apiCall: true,
+  };
+}
+
+export function updateConnectionError(error) {
+  return {
+    type: UPDATE_CONNECTION_ERROR,
+    error,
+  };
+}
+
+export function updateConnectionSuccess(connection) {
+  return {
+    type: UPDATE_CONNECTION_SUCCESS,
+    connection,
+  };
+}
+
+export function changeDetailValue(detail, value) {
+	return {
+    type: CHANGE_DETAIL_VALUE,
+    detail,
+    value
+  }
+}
+
+export function deleteConnection(id) {
+	return {
+    type: DELETE_CONNECTION,
+    apiCall: true,
+    id,
+  }
+}
+
+export function deleteConnectionSuccess() {
+  return {
+    type: DELETE_CONNECTION_SUCCESS,
+  };
+}
+
+export function deleteConnectionError(error) {
+  return {
+    type: DELETE_CONNECTION_ERROR,
+    error,
   };
 }

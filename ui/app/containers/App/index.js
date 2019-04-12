@@ -34,6 +34,8 @@ import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
+import ConnectionPage from '../ConnectionPage/Loadable';
+
 import {
   checkAPI,
   loadAgent,
@@ -163,6 +165,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={AgentsPage} />
             <Route exact path='/agent/:id' component={AgentPage} />
+            <Route exact path='/connection/:id' component={ConnectionPage} />
             <Route exact path='/agent/:id/dialogue' component={DialoguePage} />
             <Route exact path='/agent/:id/review' component={ReviewPage} />
             <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />

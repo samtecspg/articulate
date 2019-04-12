@@ -35,6 +35,25 @@ export const LOAD_CHANNELS_ERROR = 'app/AgentsPage/LOAD_CHANNELS_ERROR';
 export const LOAD_CHANNELS_SUCCESS = 'app/AgentsPage/LOAD_CHANNELS_SUCCESS';
 
 /*
+* Connection
+*/
+export const CHANGE_CONNECTION_DATA = 'app/ConnectionPage/CHANGE_CONNECTION_DATA';
+export const LOAD_CONNECTION = 'app/ConnectionPage/LOAD_CONNECTION';
+export const LOAD_CONNECTION_ERROR = 'app/ConnectionPage/LOAD_CONNECTION_ERROR';
+export const LOAD_CONNECTION_SUCCESS = 'app/ConnectionPage/LOAD_CONNECTION_SUCCESS';
+export const RESET_CONNECTION_DATA = 'app/ConnectionPage/RESET_CONNECTION_DATA';
+export const CREATE_CONNECTION = 'app/ConnectionPage/CREATE_CONNECTION';
+export const CREATE_CONNECTION_ERROR = 'app/ConnectionPage/CREATE_CONNECTION_ERROR';
+export const CREATE_CONNECTION_SUCCESS = 'app/ConnectionPage/CREATE_CONNECTION_SUCCESS';
+export const UPDATE_CONNECTION = 'app/ConnectionPage/UPDATE_CONNECTION';
+export const UPDATE_CONNECTION_ERROR = 'app/ConnectionPage/UPDATE_CONNECTION_ERROR';
+export const UPDATE_CONNECTION_SUCCESS = 'app/ConnectionPage/UPDATE_CONNECTION_SUCCESS';
+export const CHANGE_DETAIL_VALUE = 'app/ConnectionPage/CHANGE_DETAIL_VALUE';
+export const DELETE_CONNECTION = 'app/ConnectionPage/DELETE_CONNECTION';
+export const DELETE_CONNECTION_SUCCESS = 'app/ConnectionPage/DELETE_CONNECTION_SUCCESS';
+export const DELETE_CONNECTION_ERROR = 'app/ConnectionPage/DELETE_CONNECTION_ERROR';
+
+/*
  * Agents
  */
 export const LOAD_AGENTS = 'app/AgentsPage/LOAD_AGENTS';

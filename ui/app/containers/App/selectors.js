@@ -242,6 +242,22 @@ const makeSelectSuccessKeyword = () => createSelector(
   (globalState) => globalState.successKeyword,
 );
 
+/* Connection */
+const makeSelectConnection = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.connection,
+);
+
+const makeSelectConnectionTouched = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.connectionTouched,
+);
+
+const makeSelectSuccessConnection = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.successConnection,
+);
+
 /* Category */
 const makeSelectCategory = () => createSelector(
   selectGlobal,
@@ -309,6 +325,9 @@ export {
   makeSelectKeyword,
   makeSelectKeywordTouched,
   makeSelectSuccessKeyword,
+  makeSelectConnection,
+  makeSelectConnectionTouched,
+  makeSelectSuccessConnection,
   makeSelectCategory,
   makeSelectCategoryTouched,
   makeSelectSuccessCategory,

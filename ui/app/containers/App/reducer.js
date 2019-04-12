@@ -190,6 +190,21 @@ import {
   UNTAG_MODIFIER_KEYWORD,
   TAG_MODIFIER_KEYWORD,
   CHANGE_LOCALE,
+  CHANGE_CONNECTION_DATA,
+  LOAD_CONNECTION,
+  LOAD_CONNECTION_ERROR,
+  LOAD_CONNECTION_SUCCESS,
+  RESET_CONNECTION_DATA,
+  CREATE_CONNECTION,
+  CREATE_CONNECTION_ERROR,
+  CREATE_CONNECTION_SUCCESS,
+  UPDATE_CONNECTION,
+  UPDATE_CONNECTION_ERROR,
+  UPDATE_CONNECTION_SUCCESS,
+  CHANGE_DETAIL_VALUE,
+  DELETE_CONNECTION,
+  DELETE_CONNECTION_ERROR,
+  DELETE_CONNECTION_SUCCESS
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -281,6 +296,12 @@ const initialState = Immutable({
     keywordName: '',
     examples: [],
     modifiers: [],
+  },
+  connection: {
+    channel: '',
+    agent: '',
+    enabled: true,
+    details: {},
   },
   keywords: [],
   totalKeywords: 0,
@@ -1462,6 +1483,76 @@ function appReducer(state = initialState, action) {
         return state.set('locale', action.locale);
     default:
       return state;
+
+    /* Connection */
+    case CHANGE_CONNECTION_DATA:
+      return state.setIn(['connection', action.payload.field], action.payload.value)
+      .set('connectionTouched', true);
+    case CREATE_CONNECTION:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case CREATE_CONNECTION_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error creating your connection. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
+      return state.set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case CREATE_CONNECTION_SUCCESS:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Notification: Connection <b>${action.connection.connectionName}<b> created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }));
+      return state.set('connection', action.connection)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false)
+        .set('successConnection', true)
+        .set('connectionTouched', false);
+    case RESET_CONNECTION_DATA:
+      return state.set('connection', initialState.connection)
+      .set('successConnection', false);
+    case UPDATE_CONNECTION:
+      return state.set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_CONNECTION_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: There was an error updating your connection. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
+      return state.set('loading', false)
+        .set('successConnection', false)
+        .set('error', action.error);
+    case UPDATE_CONNECTION_SUCCESS:
+      return state.set('connection', action.connection)
+        .set('loading', false)
+        .set('error', false)
+        .set('successConnection', true)
+        .set('connectionTouched', false);
+    case CHANGE_DETAIL_VALUE:
+      return state.setIn(['connection', 'details', action.detail], action.value)
+        .set('connectionTouched', true);
+    case LOAD_CONNECTION:
+      return state.set('connection', initialState.connection)
+        .set('loading', true)
+        .set('error', false)
+        .set('connectionTouched', false)
+        .set('successConnection', false);
+    case LOAD_CONNECTION_ERROR:
+      return state.set('connection', initialState.connection)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_CONNECTION_SUCCESS:
+      return state.set('connection', action.connection)
+        .set('loading', false)
+        .set('error', false)
+    case DELETE_CONNECTION:
+      return state.set('loading', true)
+        .set('error', false);
+    case DELETE_CONNECTION_SUCCESS:
+      return state.set('connection', initialState.connection)
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false)
+        .set('connectionTouched', false);;
+    case DELETE_CONNECTION_ERROR:
+      state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
+      return state.set('loading', false)
+        .set('error', action.error);
   }
 }
 
