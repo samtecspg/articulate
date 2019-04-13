@@ -110,5 +110,9 @@ export default defineMessages({
   setupInstructions: {
     id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.setupInstructions',
     defaultMessage: 'Values for setting up your connection:',
+  },
+  documentation: {
+    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.documentation',
+    defaultMessage: 'Documentation',
   }
 });

@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, TextField, MenuItem } from "@material-ui/core";
+import { Grid, Typography, Button, Modal, TextField, MenuItem, Icon } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import messages from "../messages";
@@ -152,7 +152,7 @@ class ConnectionForm extends React.Component {
                     select
                     id='channel'
                     value={connection.channel || 'select'}
-                    label={intl.formatMessage(messages.channelSelect)}
+                    label={<span>{intl.formatMessage(messages.channelSelect)} {connection.channel && channels[connection.channel].documentation  ? <a target='_blank' href={channels[connection.channel].documentation}><Icon style={{position: 'relative', top: '5px'}}>info</Icon></a> : null}</span>}
                     onChange={(evt) => { this.props.onChangeConnectionData('channel', evt.target.value === 'select' ? '' : evt.target.value) }}
                     margin='normal'
                     fullWidth
