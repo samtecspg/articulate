@@ -89,6 +89,7 @@ export class ConnectionPage extends React.Component {
       if (this.state.isNewConnection) {
         this.setState({
           isNewConnection: false,
+          currentTab: 'connection'
         });
       }
     }
