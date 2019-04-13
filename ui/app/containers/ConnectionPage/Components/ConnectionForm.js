@@ -78,6 +78,9 @@ const styles = {
     fontWeight: 400,
     fontSize: '12px',
   },
+  disabledFields: {
+    backgroundColor: '#eaeaea'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -199,6 +202,43 @@ class ConnectionForm extends React.Component {
                   </TextField>
                 </Grid>
               </Grid>
+              {!this.props.newConnection ? 
+                <Grid container item xs={12}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id='callbackUrl'
+                      value={`<YOUR API SERVER ADDRESS>/connection/${this.props.connection.id}/external`}
+                      label={intl.formatMessage(messages.callbackUrl)}
+                      margin='normal'
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      disabled
+                      inputProps={{
+                        className: classes.disabledFields
+                      }}
+                    />
+                  </Grid>
+                  {this.props.connection.channel === 'facebook' ?
+                    <Grid item xs={12}>
+                      <TextField
+                        id='verifyToken'
+                        value={this.props.connection.details.verifyToken}
+                        label={intl.formatMessage(messages.verifyToken)}
+                        margin='normal'
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        disabled
+                        inputProps={{
+                          className: classes.disabledFields
+                        }}
+                      />
+                    </Grid> : null}
+                </Grid>
+              : null}
             </Grid>
           </Grid>
         </Grid>

@@ -98,5 +98,17 @@ export default defineMessages({
   selectAChanelFirst: {
     id: 'app.containers.ConnectionsEditPage.component.DetailsForm.selectAChanelFirst',
     defaultMessage: 'Please select a chanel first and then fill the details.',
+  },
+  callbackUrl: {
+    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.callbackUrl',
+    defaultMessage: 'Callback URL:',
+  },
+  verifyToken: {
+    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.verifyToken',
+    defaultMessage: 'Verify Token:',
+  },
+  setupInstructions: {
+    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.setupInstructions',
+    defaultMessage: 'Values for setting up your connection:',
   }
 });

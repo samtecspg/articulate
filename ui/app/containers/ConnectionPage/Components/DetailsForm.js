@@ -171,10 +171,9 @@ class DetailsForm extends React.Component {
             <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
               {this.props.connection.channel ? (Object.keys(this.props.channels[this.props.connection.channel].details).length > 0 ? Object.keys(this.props.channels[this.props.connection.channel].details).map((detail, detailIndex) => (
                 <Grid key={`value_${detailIndex}`} container item xs={12}>
-                  <Grid className={classes.keywordValueInputContainer} item xs={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id='detailValue'
-                      className={detailIndex !== 0 ? classes.keywordValueInput : ''}
                       value={this.props.connection.details[detail]}
                       label={detail}
                       placeholder={this.props.channels[this.props.connection.channel].details[detail]}

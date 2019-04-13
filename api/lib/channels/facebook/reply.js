@@ -6,8 +6,8 @@ module.exports = async function({
     response
 }) {
     const bot = new BootBot({
-        accessToken: connection.details.appToken,
-        verifyToken: connection.details.validationToken,
+        accessToken: connection.details.pageAccessToken,
+        verifyToken: connection.details.verifyToken,
         appSecret: connection.details.appSecret
     });
 

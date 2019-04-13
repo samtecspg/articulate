@@ -5,7 +5,7 @@ module.exports = async function ({ connection, request }) {
   const data = request.query;
 
   const {
-    validationToken
+    verifyToken
   } = connection.details
 
   const mode = data['hub.mode'],
@@ -16,7 +16,7 @@ module.exports = async function ({ connection, request }) {
   if (mode && token) {
   
     // Checks the mode and token sent is correct
-    if (mode === 'subscribe' && token === validationToken) {
+    if (mode === 'subscribe' && token === verifyToken) {
       
       // TODO: Update model status
       return challenge
