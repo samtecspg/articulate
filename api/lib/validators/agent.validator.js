@@ -263,7 +263,9 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    postFormatPayload: PostFormatSchema.postFormatPayload.required()
+                    postFormatPayload: PostFormatSchema.postFormatPayload.required(),
+                    creationDate: ActionSchema.creationDate,
+                    modificationDate: ActionSchema.modificationDate
                 };
             })()
         };
@@ -417,7 +419,9 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    postFormatPayload: PostFormatSchema.postFormatPayload.required()
+                    postFormatPayload: PostFormatSchema.postFormatPayload.required(),
+                    creationDate: ActionSchema.creationDate,
+                    modificationDate: ActionSchema.modificationDate
                 };
             })()
         };

@@ -9,10 +9,12 @@ module.exports = async function ({ event, response }) {
   });
 
   app.intent('actions.intent.TEXT', (conv, input) => {
-    if (response.closeConnection){
+    if (response.closeGoogleActions){
       conv.close(response.textResponse);
     }
-    conv.ask(response.textResponse);
+    else {
+      conv.ask(response.textResponse);
+    }
   });
 
   return await app.handler(event, {});

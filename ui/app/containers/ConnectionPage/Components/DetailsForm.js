@@ -136,7 +136,6 @@ class DetailsForm extends React.Component {
           }
         })
       }
-      console.log(_.times(Object.keys(channels[connection.channel].details).length, _.constant(false)));
       this.setState({ 
         openActions: _.times(Object.keys(channels[connection.channel].details).length, _.constant(false))
       });
@@ -239,6 +238,11 @@ class DetailsForm extends React.Component {
                           }}
                           InputLabelProps={{
                             shrink: true,
+                          }}
+                          InputProps={{
+                            style: {
+                              minWidth: '450px'
+                            }
                           }}
                         />
                       );

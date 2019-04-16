@@ -4,11 +4,13 @@ import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 import PropTypes from "prop-types";
 import { Grid, Typography, Button, Modal, TextField, MenuItem, Icon } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import _ from 'lodash';
 
 import messages from "../messages";
 
 import playHelpIcon from "../../../images/play-help-icon.svg";
 import DeleteFooter from "../../../components/DeleteFooter";
+import actionsJSON from './actions.json';
 
 const styles = {
   headerContainer: {
@@ -85,9 +87,41 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class ConnectionForm extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.generateActionExport = this.generateActionExport.bind(this);
+  }
+
   state = {
     openModal: false,
+    actionExport: null,
   };
+
+  generateActionExport(){
+    const { newConnection, connection } = this.props;
+    if (!newConnection && connection.channel === 'google-home') {
+      const queryPatterns = connection.details.queryPatterns;
+      const clonedAction = _.cloneDeep(actionsJSON);
+      clonedAction.actions[0].intent.trigger.queryPatterns = queryPatterns;
+      clonedAction.conversations.articulate_intent.url = `<YOUR API SERVER ADDRESS>/connection/${connection.id}/external`;
+      this.setState({
+        actionExport: clonedAction
+      });
+    }
+  }
+
+  componentWillMount(){
+    this.generateActionExport();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { newConnection } = this.props;
+    if(!newConnection && newConnection !== prevProps.newConnection){
+      console.log('HERE HE HERE HERBHERE');
+      this.generateActionExport();
+    }
+  }
 
   handleOpen = () => {
     this.setState({
@@ -103,6 +137,7 @@ class ConnectionForm extends React.Component {
 
   render() {
     const { classes, intl, connection, channels, agents } = this.props;
+
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -215,7 +250,7 @@ class ConnectionForm extends React.Component {
                   <Grid item xs={12}>
                     <TextField
                       id='callbackUrl'
-                      value={`<YOUR API SERVER ADDRESS>/connection/${this.props.connection.id}/external`}
+                      value={`<YOUR API SERVER ADDRESS>/connection/${connection.id}/external`}
                       label={intl.formatMessage(messages.callbackUrl)}
                       margin='normal'
                       fullWidth
@@ -228,11 +263,11 @@ class ConnectionForm extends React.Component {
                       }}
                     />
                   </Grid>
-                  {this.props.connection.channel === 'facebook' ?
+                  {connection.channel === 'facebook' ?
                     <Grid item xs={12}>
                       <TextField
                         id='verifyToken'
-                        value={this.props.connection.details.verifyToken}
+                        value={connection.details.verifyToken}
                         label={intl.formatMessage(messages.verifyToken)}
                         margin='normal'
                         fullWidth
@@ -244,6 +279,19 @@ class ConnectionForm extends React.Component {
                           className: classes.disabledFields
                         }}
                       />
+                    </Grid> : null}
+                  {connection.channel === 'google-home' ?
+                    <Grid item xs={12}>
+                      <Button
+                        variant='contained'
+                        href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state.actionExport, null, 2))}`}
+                        download='actions.json'
+                        style={{
+                          marginTop: '20px',
+                        }}
+                      >
+                        <FormattedMessage {...messages.download} />
+                      </Button>
                     </Grid> : null}
                 </Grid>
               : null}

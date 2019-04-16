@@ -28,7 +28,9 @@ class ActionValidate {
             payload: (() => {
 
                 return {
-                    postFormatPayload: PostFormatSchema.postFormatPayload.required()
+                    postFormatPayload: PostFormatSchema.postFormatPayload.required(),
+                    creationDate: PostFormatSchema.creationDate,
+                    modificationDate: PostFormatSchema.modificationDate
                 };
             })()
         };

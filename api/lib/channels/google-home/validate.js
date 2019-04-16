@@ -3,8 +3,7 @@ import Joi from 'joi';
 module.exports = {
     create: ( details ) => {
         const schema = {
-            actionsIntentMain: Joi.string().required(),
-            actionsIntentClose: Joi.string().required()
+            queryPatterns: Joi.array().items(Joi.string())
         };
         return Joi.validate(details, schema)
     }

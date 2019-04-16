@@ -10,7 +10,8 @@ import {
     MODEL_WEBHOOK,
     PARAM_DOCUMENT_RASA_RESULTS,
     RASA_INTENT_SPLIT_SYMBOL,
-    CSO_CATEGORIES
+    CSO_CATEGORIES,
+    MODEL_POST_FORMAT
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -510,6 +511,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
     const conversationStateObject = {};
 
     try {
+        let allProcessedPostFormat = {};
         const AgentModel = await redis.factory(MODEL_AGENT, id);
 
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true, sessionId });
@@ -627,24 +629,53 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             cleanAgentToolResponse.docId = conversationStateObject.docId;
             let postFormatPayloadToUse;
             let usedPostFormatAction;
-            if (conversationStateObject.action && conversationStateObject.action.usePostFormat) {
-                postFormatPayloadToUse = conversationStateObject.action.postFormat.postFormatPayload;
-                usedPostFormatAction = true;
-            }
-            else if (conversationStateObject.agent.usePostFormat) {
-                usedPostFormatAction = false;
-                postFormatPayloadToUse = conversationStateObject.agent.postFormat.postFormatPayload;
+
+
+            if ((conversationStateObject.action && conversationStateObject.action.usePostFormat) || conversationStateObject.agent.usePostFormat) {
+                let modelPath, postFormat;
+                if (conversationStateObject.action && conversationStateObject.action.usePostFormat){
+                    modelPath = [
+                        {
+                            model: MODEL_AGENT,
+                            id: conversationStateObject.agent.id
+                        },
+                        {
+                            model: MODEL_ACTION,
+                            id: conversationStateObject.action.id
+                        },
+                        {
+                            model: MODEL_POST_FORMAT
+                        }
+                    ];
+                    usedPostFormatAction = true;
+                    postFormat = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
+                }
+                else {
+                    modelPath = [
+                        {
+                            model: MODEL_AGENT,
+                            id: conversationStateObject.agent.id
+                        },
+                        {
+                            model: MODEL_POST_FORMAT
+                        }
+                    ];
+                    usedPostFormatAction = false;
+                    postFormat = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+                }
+                postFormatPayloadToUse = postFormat.postFormatPayload;
             }
             if (postFormatPayloadToUse) {
                 try {
                     const compiledPostFormat = handlebars.compile(postFormatPayloadToUse);
                     const processedPostFormat = compiledPostFormat({ ...conversationStateObject, ...{ textResponse: cleanAgentToolResponse.textResponse } });
                     const processedPostFormatJson = JSON.parse(processedPostFormat);
-                    processedPostFormatJson.docId = cleanAgentToolResponse.docId;
-                    if (!processedPostFormatJson.textResponse) {
+                    //processedPostFormatJson.docId = cleanAgentToolResponse.docId;
+                    /*if (!processedPostFormatJson.textResponse) {
                         processedPostFormatJson.textResponse = cleanAgentToolResponse.textResponse;
-                    }
-                    finalResponse = processedPostFormatJson;
+                    }*/
+                    allProcessedPostFormat = { ...allProcessedPostFormat, ...processedPostFormatJson };
+                    finalResponse = { ...cleanAgentToolResponse, ...processedPostFormatJson };
                 }
                 catch (error) {
                     const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
@@ -694,7 +725,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const converseResult = {
             textResponse,
             docId: conversationStateObject.docId,
-            responses
+            responses,
+            ...allProcessedPostFormat
         };
         if (debug) {
             const { context, currentFrame, parse, docId } = conversationStateObject;

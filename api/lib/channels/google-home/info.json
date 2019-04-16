@@ -1,17 +1,12 @@
 {
     "name": "Google Home",
     "description": "A connection for Google Home using the Google Actions SDK.",
-    "documentation": null,
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/README.MD",
     "details": {
-        "actionsIntentMain": {
-            "displayName": "actions.intent.MAIN",
-            "description" : "Agent's action tiggered when the conversation starts",
-            "type": "action"
-        },
-        "actionsIntentClose": {
-            "displayName": "actions.intent.CLOSE",
-            "description" : "Agent's action tiggered when the conversation finishs",
-            "type": "action"
+        "queryPatterns": {
+            "displayName": "Query Patterns for Main Action",
+            "description" : "Phrases that users will use to start your action",
+            "type": "array"
         }
     }
 }

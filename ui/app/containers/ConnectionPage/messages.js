@@ -118,5 +118,9 @@ export default defineMessages({
   documentation: {
     id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.documentation',
     defaultMessage: 'Documentation',
+  },
+  download: {
+    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.download',
+    defaultMessage: 'Download Actions Package',
   }
 });

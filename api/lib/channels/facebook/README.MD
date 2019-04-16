@@ -1,6 +1,6 @@
 # FACEBOOK CHANNEL
 
-This connector will allow sending messages from between Facebook Messenger and Articulate's agents
+This connector will allow sending messages between Facebook Messenger and Articulate's agents
 
 ## Configuration
 
@@ -46,4 +46,4 @@ This connector will allow sending messages from between Facebook Messenger and A
 
 ![Page subscribed](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/screenshots/11%20-%20Page%20subscribed.png)
 
-11. Now you are all set to test your agent by messaging with your account to the facebook page you subscribed. Please notice that your Facebook app is in development mode, test it until you are sure you are ready to submit it to review, until after Facebook approval you agent will be publicly available.
+11. Now you are all set to test your agent by messaging with your account to the facebook page you subscribed. Please notice that your Facebook app is in development mode, test it until you are sure you are ready to submit it to review. After Facebook approval you agent will be publicly available.
