@@ -107,6 +107,7 @@ import {
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
+  RESET_ACTIONS,
   LOAD_ACTIONS,
   LOAD_ACTIONS_ERROR,
   LOAD_ACTIONS_SUCCESS,
@@ -1094,6 +1095,12 @@ export function resetActionData() {
   return {
     type: RESET_ACTION_DATA,
   };
+}
+
+export function resetActions() {
+  return {
+    type: RESET_ACTIONS,
+  }
 }
 
 export function loadActions(agentId) {

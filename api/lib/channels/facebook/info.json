@@ -3,7 +3,15 @@
     "description": "A connection for Facebook Messenger Bots.",
     "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/README.MD",
     "details": {
-        "pageAccessToken": "Token provided by FB when you connected your FB app to a page",
-        "appSecret": "App secret value of your FB app"
+        "pageAccessToken": {
+            "displayName": "Page Access Token",
+            "description" : "Token provided by FB when you connected your FB app to a page",
+            "type": "string"
+        },
+        "appSecret": {
+            "displayName": "App Secret",
+            "description" : "App secret value of your FB app",
+            "type": "string"
+        }
     }
 }

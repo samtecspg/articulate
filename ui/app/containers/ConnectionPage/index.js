@@ -26,6 +26,7 @@ import {
   makeSelectChannels,
   makeSelectLoading,
   makeSelectConnectionTouched,
+  makeSelectActions,
 } from '../App/selectors';
 
 import {
@@ -39,6 +40,8 @@ import {
   changeDetailValue,
   deleteConnection,
   loadChannels,
+  resetActions,
+  loadActions,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -196,6 +199,8 @@ export class ConnectionPage extends React.Component {
             <ConnectionForm
               channels={this.props.channels}
               agents={this.props.agents}
+              onResetActions={this.props.onResetActions}
+              onLoadActions={this.props.onLoadActions}
               connection={this.props.connection}
               onChangeConnectionData={this.props.onChangeConnectionData}
               errorState={this.state.errorState}
@@ -206,7 +211,7 @@ export class ConnectionPage extends React.Component {
           detailsForm={
             <DetailsForm
               channels={this.props.channels}
-              agents={this.props.agents}
+              agentActions={this.props.agentActions}
               connection={this.props.connection}
               onChangeConnectionData={this.props.onChangeConnectionData}
               onChangeDetailValue={this.props.onChangeDetailValue}
@@ -233,7 +238,10 @@ ConnectionPage.propTypes = {
     PropTypes.object,
     PropTypes.bool,
   ]),
+  agentActions: PropTypes.array,
   onLoadAgents: PropTypes.func,
+  onResetActions: PropTypes.func,
+  onLoadActions: PropTypes.func,
   onLoadChannels: PropTypes.func,
   onResetData: PropTypes.func,
   onLoadConnection: PropTypes.func,
@@ -249,6 +257,7 @@ ConnectionPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   agents: makeSelectAgents(),
+  agentActions: makeSelectActions(),
   channels: makeSelectChannels(),
   connection: makeSelectConnection(),
   success: makeSelectSuccessConnection(),
@@ -263,6 +272,12 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadChannels: () => {
       dispatch(loadChannels());
+    },
+    onResetActions: () => {
+      dispatch(resetActions());
+    },
+    onLoadActions: (agentId) => {
+      dispatch(loadActions(agentId));
     },
     onResetData: () => {
       dispatch(resetConnectionData());

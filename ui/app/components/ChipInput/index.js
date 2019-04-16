@@ -460,6 +460,7 @@ class ChipInput extends React.Component {
     // const actualFilter = openOnFocus ? (search, key) => (search === '' || filter(search, key)) : filter
 
     const hasInput = (this.props.value || this.state.chips).length > 0 || this.state.inputValue.length > 0;
+
     // const showPlaceholder = placeholder && !hasInput
     const shrinkFloatingLabel = label != null && (hasInput || this.state.isFocused);
 
@@ -525,7 +526,7 @@ class ChipInput extends React.Component {
             disabled={disabled}
             disableUnderline
             fullWidth={fullWidthInput}
-            placeholder={!hasInput && (shrinkFloatingLabel || label == null) ? placeholder : null}
+            placeholder={!hasInput ? placeholder : null}
             {...InputProps}
           />
           <img onClick={this.handleOnDeleteAll} className={classes.deleteIcon} src={trashIcon} />

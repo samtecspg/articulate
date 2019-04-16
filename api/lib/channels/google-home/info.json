@@ -2,5 +2,16 @@
     "name": "Google Home",
     "description": "A connection for Google Home using the Google Actions SDK.",
     "documentation": null,
-    "details": {}
+    "details": {
+        "actionsIntentMain": {
+            "displayName": "actions.intent.MAIN",
+            "description" : "Agent's action tiggered when the conversation starts",
+            "type": "action"
+        },
+        "actionsIntentClose": {
+            "displayName": "actions.intent.CLOSE",
+            "description" : "Agent's action tiggered when the conversation finishs",
+            "type": "action"
+        }
+    }
 }

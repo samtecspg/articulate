@@ -3,7 +3,15 @@
     "description": "A quick connection to Slack using the Events API.",
     "documentation": null,
     "details": {
-        "signingSecret": "<SIGNING SECRET>",
-        "botAccessToken": "<BOT ACCESS TOKEN>"
+        "signingSecret": {
+            "displayName": "Signing Secret",
+            "description" : "Unique string provided by Slack to verify requests",
+            "type": "string"
+        },
+        "botAccessToken": {
+            "displayName": "Bot Access Token",
+            "description" : "Token provided by Slack when you created your bot",
+            "type": "string"
+        }
     }
 }

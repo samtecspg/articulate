@@ -99,6 +99,10 @@ export default defineMessages({
     id: 'app.containers.ConnectionsEditPage.component.DetailsForm.selectAChanelFirst',
     defaultMessage: 'Please select a chanel first and then fill the details.',
   },
+  selectAnAgentFirst: {
+    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.selectAnAgentFirst',
+    defaultMessage: 'Please select an agent for the connection',
+  },
   callbackUrl: {
     id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.callbackUrl',
     defaultMessage: 'Callback URL:',

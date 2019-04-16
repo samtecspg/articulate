@@ -3,10 +3,20 @@
     "description": "A quick connection to the webhook of Twilio SMS Numbers.",
     "documentation": null,
     "details": {
-        "authToken": "<AUTH TOKEN>",
-        "accountId": "<ACCOUNT ID>",
-        "whiteList": [
-            "WHITELISTED PHONE NUMBERS in E164 FORMAT"
-        ]
+        "authToken": {
+            "displayName": "Auth Token",
+            "description" : "Your Twilio auth token",
+            "type": "string"
+        },
+        "accountId": {
+            "displayName": "Account SID",
+            "description" : "Your Twilio account SID",
+            "type": "string"
+        },
+        "whiteList": {
+            "displayName": "Phone Numbers Whitelist",
+            "description" : "Whitelisted phone numbers in E164 format",
+            "type": "array"
+        }
     }
 }

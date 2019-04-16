@@ -1,41 +1,50 @@
 {
    "actions": [
-      {
-        "description": "Welcome Intent",
-        "name": "MAIN",
-        "fulfillment": {
-          "conversationName": "<CONVERSATION NAME>"
-        },
-        "intent": {
-          "name": "actions.intent.MAIN",
-          "trigger": {
-            "queryPatterns":["talk to <YOUR GOOGLE ACTION DISPLAY NAME>"]
-          }
-        }
+    {
+      "description": "Welcome Intent",
+      "name": "MAIN",
+      "fulfillment": {
+        "conversationName": "articulate_intent"
       },
-	  {
-        "description": "Articulate Intent",
-        "name": "TEXT",
-        "fulfillment": {
-          "conversationName": "articulate_intent"
-        },
-        "intent": {
-          "name": "actions.intent.TEXT",
-          "trigger": {
-            "queryPatterns":[]
-          }
+      "intent": {
+        "name": "actions.intent.MAIN",
+        "trigger": {
+          "queryPatterns":["talk to <YOUR GOOGLE ACTION DISPLAY NAME>"]
         }
-      }],
-    "conversations": {
-      "<CONVERSATION NAME>": {
-        "name": "<CONVERSATION NAME>",
-        "url": "<YOUR FULLFILMENT URL>",
-        "fulfillmentApiVersion": 2
+      }
     },
-      "articulate_intent": {
-        "name": "articulate_intent",
-        "url": "<YOUR FULLFILMENT URL>",
-        "fulfillmentApiVersion": 2
+    {
+      "description": "Welcome Intent",
+      "name": "CLOSE",
+      "fulfillment": {
+        "conversationName": "articulate_intent"
+      },
+      "intent": {
+        "name": "actions.intent.CLOSE",
+        "trigger": {
+          "queryPatterns":[]
+        }
+      }
+    },
+    {
+      "description": "Articulate Intent",
+      "name": "TEXT",
+      "fulfillment": {
+        "conversationName": "articulate_intent"
+      },
+      "intent": {
+        "name": "actions.intent.TEXT",
+        "trigger": {
+          "queryPatterns":[]
+        }
+      }
+    }
+  ],
+  "conversations": {
+    "articulate_intent": {
+      "name": "articulate_intent",
+      "url": "<YOUR FULLFILMENT URL>",
+      "fulfillmentApiVersion": 2
     }
   }
 }

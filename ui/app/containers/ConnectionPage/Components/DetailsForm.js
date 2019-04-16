@@ -1,8 +1,10 @@
 import React from "react";
+import Immutable from 'seamless-immutable';
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
+import _ from 'lodash';
 
 import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, TextField } from "@material-ui/core";
+import { Grid, Typography, Button, Modal, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import ChipInput from 'components/ChipInput'
 
@@ -102,15 +104,50 @@ const styles = {
   newValueInput: {
     marginTop: '-15px !important',
   },
+  categoryDataContainer: {
+    display: 'inline',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class DetailsForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.changeOpenModalIndex = this.changeOpenModalIndex.bind(this);
+  }
+
   state = {
     openModal: false,
     newConnection: '',
     newSyonynm: '',
+    openActions: [],
   };
+
+  componentWillMount(){
+    const { connection, channels } = this.props;
+    if (connection.channel){
+      if(Object.keys(channels[connection.channel].details).length > 0) {
+        Object.keys(channels[connection.channel].details).map((detail) => {
+          if (channels[connection.channel].details[detail].type === 'array'){
+            if (!connection.details[detail]){
+              this.props.onChangeDetailValue(detail, []);
+            }
+          }
+        })
+      }
+      console.log(_.times(Object.keys(channels[connection.channel].details).length, _.constant(false)));
+      this.setState({ 
+        openActions: _.times(Object.keys(channels[connection.channel].details).length, _.constant(false))
+      });
+    };
+  }
+
+  changeOpenModalIndex(value, index){
+    let booleanArray = this.state.openActions;
+    booleanArray[index] = value
+    this.setState({ openActions: booleanArray });
+  }
 
   handleOpen = () => {
     this.setState({
@@ -125,7 +162,7 @@ class DetailsForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, connection } = this.props;
+    const { classes, intl, connection, channels } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -169,24 +206,113 @@ class DetailsForm extends React.Component {
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
             <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
-              {this.props.connection.channel ? (Object.keys(this.props.channels[this.props.connection.channel].details).length > 0 ? Object.keys(this.props.channels[this.props.connection.channel].details).map((detail, detailIndex) => (
-                <Grid key={`value_${detailIndex}`} container item xs={12}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id='detailValue'
-                      value={this.props.connection.details[detail]}
-                      label={detail}
-                      placeholder={this.props.channels[this.props.connection.channel].details[detail]}
-                      onChange={(evt) => { this.props.onChangeDetailValue(detail, evt.target.value) }}
-                      margin='normal'
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              )) : <Typography><FormattedMessage {...messages.noDetailsInChanell} /></Typography>) : <Typography><FormattedMessage {...messages.selectAChanelFirst} /></Typography>}
+              {connection.channel ? 
+                (Object.keys(channels[connection.channel].details).length > 0 ? 
+                  Object.keys(channels[connection.channel].details).map((detail, detailIndex) => {
+                    if (channels[connection.channel].details[detail].type === 'array'){
+                      return (
+                        <ChipInput
+                          key={`value_${detailIndex}`}
+                          value={connection.details[detail]}
+                          label={channels[connection.channel].details[detail].displayName}
+                          placeholder={channels[connection.channel].details[detail].description}
+                          onAdd={(newSynonym) => { 
+                            const oldArray = Immutable.asMutable(connection.details[detail], { deep: true });
+                            this.props.onChangeDetailValue(detail, oldArray.concat(newSynonym));
+                          }}
+                          onDelete={(synonymToDelete, indexToDelete) => { 
+                            const oldArray = Immutable.asMutable(connection.details[detail], { deep: true });
+                            oldArray.splice(indexToDelete, 1);
+                            this.props.onChangeDetailValue(detail, oldArray);
+                          }}
+                          fullWidth
+                          disableUnderline
+                          classes={{
+                            root: classes.chipInputRootFirst,
+                            chipContainer: classes.chipContainer,
+                            inputRoot: classes.inputRoot,
+                            chip: classes.chip,
+                            input: classes.chipInput,
+                          }}
+                          onDeleteAll={() => {
+                            this.props.onChangeDetailValue(detail, []);
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                        />
+                      );
+                    }
+                    else {
+                      if (channels[connection.channel].details[detail].type === 'action'){
+                        return (
+                          <Grid key={`value_${detailIndex}`} item lg={12} md={12} sm={12} xs={12}>
+                            <FormControl 
+                              margin='normal'
+                              fullWidth
+                            >
+                              <InputLabel
+                                focused={this.state.openActions[detailIndex]}
+                              >
+                                {channels[connection.channel].details[detail].displayName}
+                              </InputLabel>
+                              <Select
+                                id={detail}
+                                value={connection.details[detail] || 'select'}
+                                label={channels[connection.channel].details[detail].displayName}
+                                onChange={(evt) => { 
+                                  this.props.onChangeDetailValue(detail, evt.target.value);
+                                }}
+                                open={this.state.openActions[detailIndex]}
+                                onOpen={() => { this.changeOpenModalIndex(true, detailIndex);}}
+                                onClose={() => { this.changeOpenModalIndex(false, detailIndex)}}
+                              >     
+                                <MenuItem key={`select_${detail}`} value='select'>
+                                  {intl.formatMessage(messages.selectAnAgentFirst)}
+                                </MenuItem>         
+                                {
+                                  this.props.agentActions.map((action) => (
+                                    <MenuItem key={action.id} value={action.actionName}>
+                                      <Grid container justify='space-between'>
+                                        <div className={classes.categoryDataContainer}>
+                                          <span>{action.actionName}</span>
+                                        </div>
+                                      </Grid>
+                                    </MenuItem>
+                                  ))
+                                }
+                              </Select>
+                              <FormHelperText
+                                error={this.props.errorState[detail]}
+                              >                
+                                {intl.formatMessage(messages.requiredField)}
+                              </FormHelperText>
+                            </FormControl>
+                          </Grid>
+                        );
+                      }
+                      return (
+                        <Grid key={`value_${detailIndex}`} container item xs={12}>
+                          <Grid item xs={12}>
+                            <TextField
+                              id='detailValue'
+                              value={connection.details[detail]}
+                              label={channels[connection.channel].details[detail].displayName}
+                              placeholder={channels[connection.channel].details[detail].description}
+                              onChange={(evt) => { this.props.onChangeDetailValue(detail, evt.target.value) }}
+                              margin='normal'
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                        </Grid>
+                      );
+                    }
+                  }) : <Typography><FormattedMessage {...messages.noDetailsInChanell} /></Typography>) : 
+                  <Typography><FormattedMessage {...messages.selectAChanelFirst} /></Typography>
+                }
             </Grid>
           </Grid>
         </Grid>
@@ -206,7 +332,7 @@ DetailsForm.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   channels: PropTypes.object,
-  agents: PropTypes.array,
+  agentActions: PropTypes.array,
   connection: PropTypes.object,
   onChangeConnectionData: PropTypes.func.isRequired,
   onChangeDetailValue: PropTypes.func,

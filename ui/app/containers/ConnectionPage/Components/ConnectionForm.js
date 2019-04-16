@@ -180,7 +180,15 @@ class ConnectionForm extends React.Component {
                     id='agent'
                     value={connection.agent || 'select'}
                     label={intl.formatMessage(messages.agentSelect)}
-                    onChange={(evt) => { this.props.onChangeConnectionData('agent', evt.target.value === 'select' ? '' : parseInt(evt.target.value)) }}
+                    onChange={(evt) => { 
+                      if (evt.target.value === 'select'){
+                        this.props.onChangeConnectionData('agent', '');
+                        this.props.onResetActions();
+                      } else {
+                        this.props.onChangeConnectionData('agent',  parseInt(evt.target.value));
+                        this.props.onLoadActions(evt.target.value);
+                      }
+                    }}
                     margin='normal'
                     fullWidth
                     InputLabelProps={{
@@ -264,6 +272,8 @@ ConnectionForm.propTypes = {
   errorState: PropTypes.object,
   onDelete: PropTypes.func,
   newConnection: PropTypes.bool,
+  onLoadActions: PropTypes.func,
+  onResetActions: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(ConnectionForm));

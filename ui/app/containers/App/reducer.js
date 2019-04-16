@@ -80,6 +80,7 @@ import {
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
+  RESET_ACTIONS,
   LOAD_ACTIONS,
   LOAD_ACTIONS_ERROR,
   LOAD_ACTIONS_SUCCESS,
@@ -886,6 +887,11 @@ function appReducer(state = initialState, action) {
         .set('actionWebhook', initialState.actionWebhook)
         .set('actionPostFormat', initialState.actionPostFormat)
         .set('successAction', false);
+    case RESET_ACTIONS:
+      return state.set('actions', [])
+        .set('totalActions', 0)
+        .set('loading', false)
+        .set('error', false);
     case LOAD_ACTIONS:
       return state.set('actions', [])
         .set('totalActions', 0)

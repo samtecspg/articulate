@@ -28,6 +28,7 @@ import {
   UPDATE_CONNECTION,
   LOAD_AGENTS,
   LOAD_CHANNELS,
+  LOAD_ACTIONS,
 } from '../App/constants';
 
 import {
@@ -35,6 +36,7 @@ import {
 } from '../App/selectors';
 
 import { getAgents, getChannels, getConnections } from '../AgentsPage/saga';
+import { getActions } from '../ActionPage/saga';
 
 export function* getConnection(payload) {
   const { api, id } = payload;
@@ -102,4 +104,5 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_CONNECTIONS, getConnections);
   yield takeLatest(LOAD_AGENTS, getAgents);
   yield takeLatest(LOAD_CHANNELS, getChannels);
+  yield takeLatest(LOAD_ACTIONS, getActions);
 };
