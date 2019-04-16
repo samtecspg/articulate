@@ -17,6 +17,7 @@ const styles = {
     paddingLeft: '15px',
   },
   tab: {
+    maxWidth: '400px',
     paddingLeft: '20px',
     paddingRight: '20px',
   },
@@ -131,7 +132,7 @@ export class MainTab extends React.Component {
                       <span className={classes.subtitle}>
                         {newConnection && this.props.connectionName === '' ? 
                           <FormattedMessage { ...messages.createSubtitle } /> : 
-                          this.props.connectionName ? (this.props.connectionName.length > 8 ? `${this.props.connectionName.substring(0,8)}...` : this.props.connectionName) : intl.formatMessage(messages.noName)}
+                          this.props.connectionName ? this.props.connectionName : intl.formatMessage(messages.noName)}
                       </span>
                     </span>
                   }
