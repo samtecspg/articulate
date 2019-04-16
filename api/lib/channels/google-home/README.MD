@@ -53,21 +53,21 @@ Now, whenever this action is recognized by your agent, the propery response will
 
 5. Create a new connection in the Articulate UI between Google Home and your desired Agent. Please fill the Query Patterns for Main Action in the details Tab. This patterns are the phrases that users will use to start a conversation with your Agent over Google Home. The Query Patterns should include your Google Action Display Name: 
 
-![New Google Home Connection](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/screenshots/07%20-%20New%20Google%20Home%20Connection.png)
+![New Google Home Connection](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/screenshots/07%20-%20New%20Google%20Home%20Connection.png)
 
-![Google Home Details](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/screenshots/08%20-%20Query%20Patterns.png)
+![Google Home Details](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/screenshots/08%20-%20Query%20Patterns.png)
 
 6. If you are ready with your query patterns hit Save. This is going to enable you a download button in the main tab of your new connection. The file that you downloaded when you click the button is the actions package that you are going to upload to your project. BUT!, before uploading your actions package you need to modify the url of your conversation details with the address of your public server where the Articulate API is running. This file already haves the your connection route in the URL, but you need to replace "<YOUR API SERVER ADDRESS>" with the proper value. **YOUR ADDRESS MUST BE AN HTTPS SERVER, HTTP is not allowed**:
 
-![Download actions package](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/screenshots/09%20-%20Download%20Actions%20Package.png)
+![Download actions package](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/screenshots/09%20-%20Download%20Actions%20Package.png)
 
-![Actions Package](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/screenshots/10%20-%20Actions%20Package.png)
+![Actions Package](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/screenshots/10%20-%20Actions%20Package.png)
 
 7. Now, is time to recover the command you copied in the step 2. We are going to use the gactions CLI to upload our Actions Package. If you lost the command don't worry, just replace this one with your PACKAGE_NAME and the PROJECT_ID that you can find in your Google Actions project settings:
 
 `gactions update --action_package PACKAGE_NAME --project PROJECT_ID`
 
-![Project ID](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/screenshots/11%20-%20Project%20ID.png)
+![Project ID](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/screenshots/11%20-%20Project%20ID.png)
 
 **This is probably the first time you are uploading an Actions Package to your project so you will need to authorize the access to your Google account. Copy & paste the URL that your console shows you once you enter the gactions update command, follow the steps and copy the authorization code and paste it into the console to finish the authorization process**
 
