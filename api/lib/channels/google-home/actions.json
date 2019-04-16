@@ -14,19 +14,6 @@
       }
     },
     {
-      "description": "Welcome Intent",
-      "name": "CLOSE",
-      "fulfillment": {
-        "conversationName": "articulate_intent"
-      },
-      "intent": {
-        "name": "actions.intent.CLOSE",
-        "trigger": {
-          "queryPatterns":[]
-        }
-      }
-    },
-    {
       "description": "Articulate Intent",
       "name": "TEXT",
       "fulfillment": {
