@@ -1,3 +1,5 @@
+import Immutable from 'seamless-immutable';
+
 import { push } from 'react-router-redux';
 import {
   call,
@@ -61,23 +63,21 @@ export function* postConnection(payload) {
   }
 }
 
-/*
 export function* putConnection(payload) {
-  const agent = yield select(makeSelectAgent());
   const connection = yield select(makeSelectConnection());
   const mutableConnection = Immutable.asMutable(connection, { deep: true });
   const connectionId = connection.id;
   const { api } = payload;
   delete mutableConnection.id;
-  delete mutableConnection.agent;
+  delete mutableConnection.channel;
   try {
-    const response = yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONNECTION, connectionId]), mutableConnection);
+    const response = yield call(api.put, toAPIPath([ROUTE_CONNECTION, connectionId]), mutableConnection);
     yield put(updateConnectionSuccess(response));
   }
   catch (err) {
     yield put(updateConnectionError(err));
   }
-}*/
+}
 
 export function* deleteConnection(payload) {
   const { api, id } = payload;
@@ -99,7 +99,7 @@ export function* deleteConnection(payload) {
 export default function* rootSaga() {
   yield takeLatest(LOAD_CONNECTION, getConnection);
   yield takeLatest(CREATE_CONNECTION, postConnection);
-  //yield takeLatest(UPDATE_CONNECTION, putConnection);
+  yield takeLatest(UPDATE_CONNECTION, putConnection);
   yield takeLatest(DELETE_CONNECTION, deleteConnection);
   yield takeLatest(LOAD_CONNECTIONS, getConnections);
   yield takeLatest(LOAD_AGENTS, getAgents);

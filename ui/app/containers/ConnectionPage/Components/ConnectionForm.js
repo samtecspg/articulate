@@ -196,6 +196,10 @@ class ConnectionForm extends React.Component {
                     }}
                     helperText={intl.formatMessage(messages.requiredField)}
                     error={this.props.errorState.channel}
+                    disabled={!this.props.newConnection}
+                    inputProps={{
+                      className: this.props.newConnection ? '' : classes.disabledFields
+                    }}
                   >
                     <MenuItem key={'select'} value='select'>
                       <FormattedMessage {...messages.selectAValue} />

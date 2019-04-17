@@ -3,10 +3,7 @@ import Create from './connections/connection.create.service';
 import Post from './connections/connection.post.service';
 import Get from './connections/connection.get.service';
 import Delete from './connections/connection.delete.service';
-// import FindByName from './settings/settings.find-by-name.service';
-// import UpdateByName from './settings/settings.update-by-name.service';
-// import BulkCreate from './settings/settings.bulk-create-settings.service';
-// import BulkUpdate from './settings/settings.bulk-update-settings.service';
+import UpdateById from './connections/connection.update-by-id.service';
 
 module.exports = class ConnectionService extends Schmervice.Service {
 
@@ -29,21 +26,11 @@ module.exports = class ConnectionService extends Schmervice.Service {
 
         return await Delete.apply(this, arguments);
     }
+    
+    async updateById() {
 
-    // async updateByName() {
-
-    //     return await UpdateByName.apply(this, arguments);
-    // }
-
-    // async bulkCreate() {
-
-    //     return await BulkCreate.apply(this, arguments);
-    // }
-
-    // async bulkUpdate() {
-
-    //     return await BulkUpdate.apply(this, arguments);
-    // }
+        return await UpdateById.apply(this, arguments);
+    }
 
 };
 
