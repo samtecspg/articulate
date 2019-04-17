@@ -2,13 +2,13 @@ version: '3.0'
 
 services:
   api:
-    image: samtecspg/articulate-api:repo-head
+    image: samtecspg/articulate-api:0.22.0
     ports: ['7500:7500']
   ui:
-    image: samtecspg/articulate-ui:repo-head
+    image: samtecspg/articulate-ui:0.22.0
     ports: ['3000:3000']
   rasa:
-    image: samtecspg/articulate-rasa:repo-head
+    image: samtecspg/articulate-rasa:0.22.0
     ports: ['5000:5000']
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
   duckling:
