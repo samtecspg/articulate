@@ -115,7 +115,7 @@ export class FilterSelect extends React.Component {
                         <FormattedMessage {...messages.selectDefault} />
                     </MenuItem>}
                     <MenuItem className={classes.searchValueContainer} value="filter">
-                        <Grid container justify='flex-end' style={this.state.filterInput ? {position: 'absolute'} : {}}>
+                        <Grid container justify={this.props.hideAddButton ? 'flex-start' : 'flex-end'} style={this.state.filterInput ? {position: 'absolute'} : {}}>
                             <img src={searchIcon} />
                             <Input
                                 inputProps={{
@@ -156,13 +156,13 @@ export class FilterSelect extends React.Component {
                                     />
                                 </div>
                                 :
-                                <Button
+                                (this.props.hideAddButton ? null : <Button
                                     onClick={() => {
                                         this.props.onGoToUrl(this.props.onCreateRoute);
                                     }}
                                     className={classes.addValueButton}
                                     variant='contained'
-                                ><FormattedMessage {...messages.add} /></Button>
+                                ><FormattedMessage {...messages.add} /></Button>)
                             }
                         </Grid>
                     </MenuItem>
@@ -195,13 +195,13 @@ export class FilterSelect extends React.Component {
                         [<MenuItem key='no results' value='no results'>
                             <FormattedMessage {...messages.noResults} />
                         </MenuItem>,
-                        <MenuItem key='create' value='create'>
+                        (this.props.hideAddButton ? null : <MenuItem key='create' value='create'>
                             <Button
                             onClick={() => {
                                 this.props.onGoToUrl(this.props.onCreateRoute);
                             }} className={classes.addValueButton} variant='contained'
                             ><FormattedMessage {...messages.add} /></Button>
-                        </MenuItem>]
+                        </MenuItem>)]
                     :
                     this.props.values.map((value, index) => {
                         return (<MenuItem key={`value_${index}`} value={value[this.props.valueField]}>
@@ -257,6 +257,7 @@ FilterSelect.propTypes = {
     style: PropTypes.object,
     error: PropTypes.bool,
     helperText: PropTypes.string,
+    hideAddButton: PropTypes.bool
 };
 
 export default injectIntl(withStyles(styles)(FilterSelect));

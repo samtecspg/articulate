@@ -117,6 +117,7 @@ class ResponseRow extends React.Component {
             fullWidth
           />
           <FilterSelect
+            hideAddButton
             value='select'
             valueDisplayField='actionName'
             valueField='actionName'
