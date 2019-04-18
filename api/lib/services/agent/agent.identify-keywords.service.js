@@ -10,6 +10,7 @@ module.exports = async function ({ id, AgentModel, text }) {
 
     const { redis } = this.server.app;
     const { globalService } = await this.server.services();
+    const punctuation = [' ', ',', '.', ';', '?', '!', '¿', '...', '"'];
 
     try {
         AgentModel = AgentModel || await redis.factory(MODEL_AGENT, id);
@@ -28,7 +29,7 @@ module.exports = async function ({ id, AgentModel, text }) {
                     //If the value is in the user saying and also that start haven't been assigned
                     if (assignedStartIndex.indexOf(start) === -1){
                         const end = start + value.length;
-                        if (start === 0 && (!text[end] || text[end] === ' ' || text[end] === ',') || ((!text[start - 1] || text[start - 1] === ' ') && (!text[end] || text[end] === ' ' || text[end] === ','))) {
+                        if (start === 0 && (!text[end] || punctuation.indexOf(text[end]) !== -1) || ((!text[start - 1] || punctuation.indexOf(text[start - 1]) !== -1) && (!text[end] || punctuation.indexOf(text[end]) !== -1))) {
                             //Mark the start index as assigned and create the new keyword, and also, add every index between start and end
                             for (let i = start; i <= end; i++) {
                                 assignedStartIndex.push(i);
