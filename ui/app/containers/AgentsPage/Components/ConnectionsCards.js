@@ -155,7 +155,7 @@ class ConnectionsCards extends React.Component {
     render(){
       const { classes, connections, channels, agents } = this.props;
       return (
-        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>
+        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'flex-start'} container spacing={16}>
           <Grid key='newConnectionCard' item>
             <Card className={classes.newConnectionCard}>
               <CardContent  onClick={() => {this.props.onGoToUrl('/connection/create')}} className={classes.newConnectionCardContent}>

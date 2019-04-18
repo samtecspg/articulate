@@ -143,7 +143,7 @@ class AgentsCards extends React.Component {
     render(){
       const { classes, agents, onImportAgent } = this.props;
       return (
-        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>
+        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'flex-start'} container spacing={16}>
           <Grid key='newAgentCard' item>
             <Card className={classes.newAgentCard}>
               <CardContent  onClick={() => {this.props.onGoToUrl('/agent/create')}} className={classes.newAgentCardContent}>
