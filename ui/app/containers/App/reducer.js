@@ -1167,7 +1167,8 @@ function appReducer(state = initialState, action) {
             return response.set('textResponse', action.newResponse);
           }
           return response;
-        }));
+        }))
+        .set('actionTouched', true);
 
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers => modifiers.concat(state.newModifier));
