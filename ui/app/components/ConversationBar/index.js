@@ -107,6 +107,7 @@ const styles = {
     backgroundColor: '#00bd6f',
     borderRadius: '3px',
     padding: '8px',
+    wordBreak: 'break-word'
   },
   userMessageContainer: {
     position: 'relative',
