@@ -2,7 +2,8 @@ import _ from 'lodash';
 import {
     MODEL_ACTION,
     MODEL_KEYWORD,
-    STATUS_OUT_OF_DATE
+    STATUS_OUT_OF_DATE,
+    MODEL_SAYING
 } from '../../../util/constants';
 import InvalidKeywordsFromAgent from '../../errors/global.invalid-keywords-from-agent';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -48,12 +49,35 @@ module.exports = async function ({ data, actionId, AgentModel = null, returnMode
             if ((data.actionName !== undefined && ActionModel.property('actionName') !== data.actionName)){
                 AgentModel.property('status', STATUS_OUT_OF_DATE);
             }
+
+            // Create lists of keywords to be used later
+            const actionSayingIds = await ActionModel.getAll(MODEL_SAYING, MODEL_SAYING);
+            const ActionSayingsModels = await globalService.loadAllByIds({
+                ids: actionSayingIds,
+                model: MODEL_SAYING,
+                returnModel: true
+            });
+
             await AgentModel.saveInstance();
+            const oldActionName = ActionModel.property('actionName');
             await ActionModel.updateInstance({
                 data,
                 parentModels,
                 removedParents: removedKeywordModels
             });
+
+            if (data.actionName && oldActionName !== data.actionName){
+                ActionSayingsModels.forEach(async (ActionSayingModel) => {
+                    
+                    const actions = ActionSayingModel.property('actions');
+                    actions[actions.indexOf(oldActionName)] = data.actionName;
+                    await ActionSayingModel.updateInstance({
+                        data: {
+                            actions
+                        }
+                    });
+                });
+            }
         }
         else { // Create
             await ActionModel.createInstance({ data, parentModels });

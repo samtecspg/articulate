@@ -56,6 +56,31 @@ module.exports = async function ({ payload }) {
             });
             keywordsDir[newKeyword.keywordName] = parseInt(newKeyword.id);
         }));
+        
+        await Promise.all(actions.map(async (action) => {
+
+            const { postFormat, webhook, ...actionData } = action;
+            const ActionModel = await agentService.createAction({
+                AgentModel,
+                actionData
+            });
+
+            if (action.usePostFormat) {
+                await agentService.upsertPostFormatInAction({
+                    id: AgentModel.id,
+                    actionId: ActionModel.id,
+                    postFormatData: postFormat
+                });
+            }
+
+            if (action.useWebhook) {
+                await agentService.upsertWebhookInAction({
+                    id: AgentModel.id,
+                    actionId: ActionModel.id,
+                    data: webhook
+                });
+            }
+        }));
 
         await Promise.all(categories.map(async (category) => {
 
@@ -81,30 +106,6 @@ module.exports = async function ({ payload }) {
                     isImport: true
                 });
             }));
-        }));
-        await Promise.all(actions.map(async (action) => {
-
-            const { postFormat, webhook, ...actionData } = action;
-            const ActionModel = await agentService.createAction({
-                AgentModel,
-                actionData
-            });
-
-            if (action.usePostFormat) {
-                await agentService.upsertPostFormatInAction({
-                    id: AgentModel.id,
-                    actionId: ActionModel.id,
-                    postFormatData: postFormat
-                });
-            }
-
-            if (action.useWebhook) {
-                await agentService.upsertWebhookInAction({
-                    id: AgentModel.id,
-                    actionId: ActionModel.id,
-                    data: webhook
-                });
-            }
         }));
         return await agentService.export({ id: AgentModel.id });
     }
