@@ -56,6 +56,7 @@ export function* postCategory(payload) {
     const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY]), newCategory);
     response.actionThreshold = parseInt(response.actionThreshold * 100);
     yield put(createCategorySuccess(response));
+    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
   }
   catch (err) {
     yield put(createCategoryError(err));
