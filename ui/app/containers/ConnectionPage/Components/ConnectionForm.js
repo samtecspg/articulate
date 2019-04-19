@@ -118,7 +118,6 @@ class ConnectionForm extends React.Component {
   componentDidUpdate(prevProps) {
     const { newConnection } = this.props;
     if(!newConnection && newConnection !== prevProps.newConnection){
-      console.log('HERE HE HERE HERBHERE');
       this.generateActionExport();
     }
   }

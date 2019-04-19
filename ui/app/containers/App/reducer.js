@@ -1493,8 +1493,15 @@ function appReducer(state = initialState, action) {
 
     /* Connection */
     case CHANGE_CONNECTION_DATA:
-      return state.setIn(['connection', action.payload.field], action.payload.value)
-      .set('connectionTouched', true);
+      if (action.payload.field === 'channel'){
+        return state.setIn(['connection', action.payload.field], action.payload.value)
+          .setIn(['connection', 'details'], {})
+          .set('connectionTouched', true);
+      }
+      else {
+        return state.setIn(['connection', action.payload.field], action.payload.value)
+          .set('connectionTouched', true);
+      }
     case CREATE_CONNECTION:
       return state.set('loading', true)
         .set('success', false)

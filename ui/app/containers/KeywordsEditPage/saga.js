@@ -126,7 +126,6 @@ export function* getIdentifyKeywords(payload) {
     yield put(addModifierSayingSuccess(modifierIndex, newSaying, response));
   }
   catch (err) {
-    console.log(err);
     yield put(addModifierSayingSuccess(err));
   }
 }

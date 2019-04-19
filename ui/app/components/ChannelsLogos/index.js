@@ -5,12 +5,14 @@ import googleAssistant from '../../images/google-assistant.png';
 import slack from '../../images/slack.png';
 import facebook from '../../images/fb-messenger.png';
 import twilio from '../../images/twilio.png';
+import rocketchat from '../../images/rocketchat.png';
 
 const logosDir = {
   'google-home': googleAssistant,
   slack,
   facebook,
-  twilio
+  twilio,
+  rocketchat
 }
 
 function ChannelsLogos(props) {
