@@ -8,21 +8,6 @@
             "description" : "URL of the Rocket.Chat instance to connect to. Can be specified as host:port",
             "type": "string"
         },
-        "rocketchatRoom": {
-            "displayName": "Rocket.Chat Rooms",
-            "description" : "Receive messages from these channels names.",
-            "type": "array"
-        },
-        "rocketchatAuth": {
-            "displayName": "Rocket.Chat Auth",
-            "description" : "Default is password. Set to ldap to enable LDAP login for bot users.",
-            "type": "select",
-            "default": "password",
-            "values": {
-                "password": "Password",
-                "ldap": "LDAP"
-            }
-        },
         "rocketchatUser": {
             "displayName": "Rocket.Chat User",
             "description" : "The bot’s username. Must be registered on your Rocket.Chat server and granted bot role.",
@@ -32,31 +17,6 @@
             "displayName": "Rocket.Chat password",
             "description" : "The bot user’s password.",
             "type": "password"
-        },
-        "rocketchatUseSSL": {
-            "displayName": "Use SSL",
-            "description" : "Force bot to connect with SSL. If unset, it will try and detect from URL protocol.",
-            "type": "boolean"
-        },
-        "respondToDM": {
-            "displayName": "Respond to Direct Messages",
-            "description" : "Specify if your bot will respond to direct messages",
-            "type": "boolean"
-        },
-        "respondToEdited": {
-            "displayName": "Respond to Edited Messages",
-            "description" : "Stream callbacks receive edited messages (true/false). Defaults to false.",
-            "type": "boolean"
-        },
-        "respondToLivechat": {
-            "displayName": "Respond to Livechat",
-            "description" : "Stream callbacks receive messages from Livechat (true/false). Defaults to false.",
-            "type": "boolean"
-        },
-        "listenOnAllPublic": {
-            "displayName": "Listen on all public channels",
-            "description" : "Stream callbacks receive messages from all public channels (true/false). Defaults to false (only rooms the bot has joined).",
-            "type": "boolean"
         }
     }
 }

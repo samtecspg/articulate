@@ -40,7 +40,7 @@ class ConnectionRedisModel extends BaseModel {
 
     static get idGenerator() {
 
-        return 'increment';
+        return null;
     }
 
     static get definitions() {

@@ -22,6 +22,7 @@
     "@babel/core": "^7.0.0",
     "@babel/node": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@rocket.chat/sdk": "^0.2.9-2",
     "@slack/client": "^4.9.0",
     "actions-on-google": "^2.6.0",
     "axios": "^0.18.0",

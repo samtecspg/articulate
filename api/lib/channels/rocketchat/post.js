@@ -8,7 +8,7 @@ module.exports = async function ({ connection, request, h }) {
   const response = await agentService.converse({ 
     id: connection.agent,
     sessionId,
-    text: event.Body,
+    text: event.text,
     timezone: null,
     debug: false,
     additionalKeys: {
