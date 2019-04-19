@@ -11,7 +11,7 @@ This connector will allow sending messages between your Rocket.Chat server and y
 
 1. In Articulate UI create a connection between Rocket.Chat and your agent. Fill the details with the hostname, bot username, and bot password.
 
-![Connection Details](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rockechat/screenshots/01%20-%20Connection%20Details.png)
+![Connection Details](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/01%20-%20Connection%20Details.png)
 
 2. It's time to configure your Rocket.Chat incoming integration. For this, copy the Callback URL provided by Articulate. In case it isn't complete, please change the proper values to point to your public Articulate API server address.
 
@@ -37,8 +37,8 @@ This connector will allow sending messages between your Rocket.Chat server and y
 
 13. Save your changes. Your configuration should look somehting like this:
 
-![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rockechat/screenshots/02%20-%20Integration%20Settings%2001.png)
+![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/02%20-%20Integration%20Settings%2001.png)
 
-![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rockechat/screenshots/02%20-%20Integration%20Settings%2002.png)
+![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/02%20-%20Integration%20Settings%2002.png)
 
 14. Now based on the values you specified on the step 8, make a test of your bot. It should work now.
