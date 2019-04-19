@@ -6,7 +6,7 @@ class AgentModel {
     static get schema() {
 
         return {
-            id: Joi.number(),
+            id: Joi.string(),
             channel: Joi.string().valid(_.keys(Channels)),
             enabled: Joi.boolean(),
             agent: Joi.number(),

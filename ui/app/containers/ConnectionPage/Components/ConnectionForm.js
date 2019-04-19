@@ -1,6 +1,8 @@
 import React from "react";
 import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 
+import { PROXY_ROUTE_PREFIX } from '../../../../common/constants';
+
 import PropTypes from "prop-types";
 import { Grid, Typography, Button, Modal, TextField, MenuItem, Icon } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -104,7 +106,7 @@ class ConnectionForm extends React.Component {
       const queryPatterns = connection.details.queryPatterns;
       const clonedAction = _.cloneDeep(actionsJSON);
       clonedAction.actions[0].intent.trigger.queryPatterns = queryPatterns;
-      clonedAction.conversations.articulate_intent.url = `<YOUR API SERVER ADDRESS>/connection/${connection.id}/external`;
+      clonedAction.conversations.articulate_intent.url = `${window.location.protocol}//${window.location.hostname}${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`;
       this.setState({
         actionExport: clonedAction
       });
@@ -253,7 +255,7 @@ class ConnectionForm extends React.Component {
                   <Grid item xs={12}>
                     <TextField
                       id='callbackUrl'
-                      value={`<YOUR API SERVER ADDRESS>/connection/${connection.id}/external`}
+                      value={`${window.location.protocol}//${window.location.hostname}${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`}
                       label={intl.formatMessage(messages.callbackUrl)}
                       margin='normal'
                       fullWidth
