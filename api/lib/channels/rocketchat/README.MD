@@ -39,6 +39,6 @@ This connector will allow sending messages between your Rocket.Chat server and y
 
 ![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/02%20-%20Integration%20Settings%2001.png)
 
-![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/02%20-%20Integration%20Settings%2002.png)
+![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/03%20-%20Integration%20Settings%2002.png)
 
 14. Now based on the values you specified on the step 8, make a test of your bot. It should work now.
