@@ -8,6 +8,7 @@ import { Grid, Card, CardContent, CardHeader, Typography }  from '@material-ui/c
 import messages from '../messages';
 import gravatars from '../../../components/Gravatar';
 import ChannelsLogos from '../../../components/ChannelsLogos';
+import ChannelsColors from '../../../components/ChannelsColors';
 import connectionIcon from '../../../images/connection-icon.svg';
 
 const styles = {
@@ -109,14 +110,15 @@ const styles = {
   },
   connectionIcon: {
     marginRight: '5px',
-    height: '35px'
+    height: '30px'
   },
   channelIcon: {
     marginTop: '20px',
-    height: '35px'
+    height: '30px'
   },
   connectionLink: {
-    marginTop: '20px'
+    marginTop: '20px',
+    height: '15px'
   },
   agentNameTitle: {
     fontSize: '16px'
@@ -184,6 +186,9 @@ class ConnectionsCards extends React.Component {
                     </Grid>
                     <Grid container justify='center' item xs={12}>
                       <ChannelsLogos logo={connection.channel} className={classes.channelIcon} />
+                    </Grid>
+                    <Grid container justify='center' item xs={12}>
+                      <Typography className={classes.agentNameTitle} style={{ color: ChannelsColors[connection.channel] }}>{channels[connection.channel].name}</Typography>
                     </Grid>
                   </Grid>
                 </CardContent>

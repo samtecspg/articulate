@@ -15,6 +15,8 @@ const logosDir = {
   rocketchat
 }
 
+//4285F4
+
 function ChannelsLogos(props) {
 
   const { logo, ...rest } = props;
