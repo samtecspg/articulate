@@ -10,7 +10,7 @@ module.exports = {
     path: `/${ROUTE_CONNECTION}/{${PARAM_CONNECTION_ID}}`,
     options: {
         tags: ['api'],
-        validate: Validator.get,
+        validate: Validator.delete,
         handler: async (request) => {
 
             const { connectionService } = await request.services();
