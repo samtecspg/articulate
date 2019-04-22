@@ -8,6 +8,9 @@ module.exports = {
             accountId: Joi.string().required(),
             whiteList: TwilioJoi.array().items(
               TwilioJoi.string().phoneNumber({ defaultCountry: 'US', format: 'e164' })
+            ),
+            blackList: TwilioJoi.array().items(
+              TwilioJoi.string().phoneNumber({ defaultCountry: 'US', format: 'e164' })
             )
         }
 

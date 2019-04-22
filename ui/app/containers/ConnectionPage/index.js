@@ -147,7 +147,7 @@ export class ConnectionPage extends React.Component {
       const usedChannel = this.props.channels[this.props.connection.channel];
       Object.keys(usedChannel.details).forEach((channelDetail) => {
 
-        newErrorState.details[channelDetail] = this.props.connection.details[channelDetail] === undefined || this.props.connection.details[channelDetail] === null;
+        newErrorState.details[channelDetail] = (this.props.connection.details[channelDetail] === undefined || this.props.connection.details[channelDetail] === null) && !this.props.channels[this.props.connection.channel].details[channelDetail].allowEmpty;
         if (newErrorState.details[channelDetail]){
           errors = true;
           newErrorState.tabs.push(1);
