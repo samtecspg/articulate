@@ -8,7 +8,7 @@ module.exports = async function ({ name, value, returnModel = false }) {
     try {
         await Model.findByName({ name });
         if (CONFIG_SETTINGS_STRING_VALUE.indexOf(name) !== -1){
-            await Model.updateInstance({ data: { value: Object.keys(value)[0] } });
+            await Model.updateInstance({ data: { value: typeof value === 'string' ? value : Object.keys(value)[0] } });
         }
         else {
             await Model.updateInstance({ data: { value } });

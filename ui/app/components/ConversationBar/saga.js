@@ -1,6 +1,6 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { loadAgentsError, loadAgentsSuccess } from '../App/actions';
-import { LOAD_AGENTS } from '../App/constants';
+import { putSetting } from '../../containers/SettingsPage/saga';
+import { UPDATE_SETTING } from '../../containers/App/constants';
 
 export function* getAgents(payload) {
   const { api } = payload;
@@ -13,6 +13,6 @@ export function* getAgents(payload) {
   }
 }
 
-export default function* loadAgents() {
-  yield takeLatest(LOAD_AGENTS, getAgents);
-}
+export default function* rootSaga() {
+  yield takeLatest(UPDATE_SETTING, putSetting);
+};

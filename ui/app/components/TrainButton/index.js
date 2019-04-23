@@ -42,7 +42,7 @@ const styles = {
   readyLabel: {
     color: '#00ca9f',
     fontWeight: 'bold',
-  },
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
