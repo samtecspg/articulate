@@ -115,11 +115,11 @@ const styles = {
     color: 'red',
   },
   dialog: {
-    border: '1px solid #4e4e4e',
+    border: '1px solid #4e4e4e'
   },
   dialogContent: {
     backgroundColor: '#f6f7f8',
-    borderBottom: '1px solid #4e4e4e',
+    borderBottom: '1px solid #4e4e4e'
   },
   dialogCopy: {
     height: '105px',
@@ -247,6 +247,11 @@ class SayingRow extends React.Component {
           }}
           maxWidth='xs'
           className={classes.dialog}
+          PaperProps={{
+            style: {
+              maxWidth: '480px'
+            }
+          }}
         >
           <DialogContent className={classes.dialogContent}>
             <Grid className={classes.dialogContentGrid}>
