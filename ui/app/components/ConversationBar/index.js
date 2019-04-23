@@ -171,7 +171,7 @@ export class ConversationBar extends React.PureComponent {
     openCodeModal: false,
     isResizing: false,
     lastDownX: 0,
-    newWidth: {}
+    newWidth: this.props.settings.conversationPanelWidth
   };
 
   componentWillMount() {
@@ -186,8 +186,13 @@ export class ConversationBar extends React.PureComponent {
     document.addEventListener('mouseup', e => this.handleMouseup(e));
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.scrollToBottom();
+    if (this.props.settings.conversationPanelWidth !== prevProps.settings.conversationPanelWidth){
+      this.setState({
+        newWidth: this.props.settings.conversationPanelWidth
+      })
+    }
   }
 
   scrollToBottom = () => {
@@ -218,30 +223,30 @@ export class ConversationBar extends React.PureComponent {
     let minWidth = 300;
     let maxWidth = 600;
     if (offsetRight >= minWidth && offsetRight <= maxWidth) {
-      this.setState({ newWidth: { width: offsetRight } });
-      this.props.onUpdateConversationPanelWidth(offsetRight);
+      this.setState({ newWidth: offsetRight });
     }
   };
   
   handleMouseup = e => {
     this.setState({ isResizing: false });
+    this.props.onUpdateConversationPanelWidth(this.state.newWidth);
   };
   
 
   render() {
     const { classes, intl, settings } = this.props;
     return (
-      <Grid style={{ width: settings.conversationPanelWidth }} className={classes.container} onMouseDown={event => { this.handleMousedown(event); }}>
+      <Grid style={{ width: this.state.newWidth }} className={classes.container} onMouseDown={event => { this.handleMousedown(event); }}>
         <Grid style={{cursor: 'default'}}>
-          <Grid style={{ right: (settings.conversationPanelWidth * 107)/300, width: (settings.conversationPanelWidth * 85)/300 }} onClick={() => this.props.onResetSession()} container className={classes.clearAll}>
+          <Grid style={{ right: (this.state.newWidth * 107)/300, width: (this.state.newWidth * 85)/300 }} onClick={() => this.props.onResetSession()} container className={classes.clearAll}>
             <Typography className={classes.clearAllLabel}>
               {intl.formatMessage(messages.clearAll)}
             </Typography>
           </Grid>
-          <Grid style={{ right: settings.conversationPanelWidth }} container onClick={() => { this.props.onToggleConversationBar(false) }} className={classes.toggle}>
+          <Grid style={{ right: this.state.newWidth }} container onClick={() => { this.props.onToggleConversationBar(false) }} className={classes.toggle}>
             <img className={classes.arrow} src={rightArrowIcon}></img>
           </Grid>
-          <Grid style={{ width: settings.conversationPanelWidth + 17 }} className={classes.contentContainer}>
+          <Grid style={{ width: this.state.newWidth + 17 }} className={classes.contentContainer}>
             <Notifications notifications={this.props.notifications} onCloseNotification={this.props.onCloseNotification} />
             <Grid className={classes.messagesContainer}>
               {
@@ -292,7 +297,7 @@ export class ConversationBar extends React.PureComponent {
               </div>
             </Grid>
           </Grid>
-          <Grid style={{ width: settings.conversationPanelWidth - 2 }} container className={classes.inputContainer}>
+          <Grid style={{ width: this.state.newWidth - 2 }} container className={classes.inputContainer}>
             <Grid item xs={12}>
               <TextField
                 id='userMessage'
