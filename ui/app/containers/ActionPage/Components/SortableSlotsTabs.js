@@ -15,6 +15,8 @@ const styles = {
   },
   slotTabLabel: {
     padding: '0px 10px',
+    position: 'relative',
+    top: '5px'
   },
   dot: {
     marginRight: 5,
@@ -31,8 +33,8 @@ const styles = {
 	cursor: 'pointer',
 	fontSize: '12px',
 	position: 'relative',
-	top: '-1px',
-	right: '8px',
+	bottom: '1px',
+	left: '5px',
 	webkitTouchCallout: 'none',
 	webkitUserSelect: 'none',
 	khtmlUserSelect: 'none',
@@ -55,7 +57,15 @@ const styles = {
     position: 'relative',
     bottom: '4.5px',
     left: '0.5px'
-  }
+  },
+  selected: {
+    color: '#4e4e4e',
+    border: '1px solid #C5CBD8',
+    borderTopLeftRadius: '5px',
+    borderTopRightRadius: '5px',
+    backgroundColor: '#fff',
+    borderBottom: '0px'
+  },
 };
 
 class SortableSlotsTabs extends React.Component {
@@ -96,6 +106,11 @@ class SortableSlotsTabs extends React.Component {
 						}
 					}
 				}}
+				TabIndicatorProps={{
+					style: {
+						display: 'none'
+					}
+				}}
 			>
 				{action.slots.map((slot, index) => (
 					<SortableSlotTab
@@ -115,6 +130,7 @@ class SortableSlotsTabs extends React.Component {
 										<span className={classes.slotTabLabel}>
 											<span style={{backgroundColor: slot.uiColor}} className={classes.dot}>
 											</span><span>{slot.slotName}</span>
+											<img style={{display: this.state.slotHovered === index ? 'inline' : 'none' }} onClick={() => { this.props.onDeleteSlot(index) }} className={classes.deleteHighlight} src={trashIcon} />
 										</span>
 									}	
 									icon={
@@ -126,8 +142,8 @@ class SortableSlotsTabs extends React.Component {
 											</div> : 
 											null
 									}
+									className={this.props.selectedTab === index ? classes.selected : null}
 								/>
-								<img style={{display: this.state.slotHovered === index ? 'inline' : 'none' }} onClick={() => { this.props.onDeleteSlot(index) }} className={classes.deleteHighlight} src={trashIcon} />
 							</div>
 						)}
 					/>
@@ -139,6 +155,7 @@ class SortableSlotsTabs extends React.Component {
 							<FormattedMessage {...messages.newSlotTab} />
 						</span>
 					}
+					className={this.props.selectedTab === action.slots.length ? classes.selected : null}
 				/>
 			</Tabs>
 		);

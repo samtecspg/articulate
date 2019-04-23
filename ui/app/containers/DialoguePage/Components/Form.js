@@ -52,7 +52,15 @@ const styles = {
     paddingLeft: "2px",
   },
   agentTabs: {
-    paddingLeft: "5px",
+    paddingLeft: "15px",
+  },
+  selected: {
+    color: '#4e4e4e',
+    border: '1px solid #C5CBD8',
+    borderTopLeftRadius: '5px',
+    borderTopRightRadius: '5px',
+    backgroundColor: '#fff',
+    borderBottom: '0px'
   },
   modalContent: {
     top: "50%",
@@ -88,6 +96,8 @@ const styles = {
   },
   tabLabel: {
     padding: '0px 10px',
+    position: 'relative',
+    top: '5px'
   },
   settingsTabLabel: {
     padding: '0px 20px',
@@ -161,6 +171,11 @@ class Form extends React.Component {
             onChange={(evt, value) => {
               this.props.handleTabChange(evt, value);
             }}
+            TabIndicatorProps={{
+              style: {
+                display: 'none'
+              }
+            }}
           >
             <Tab
               value='sayings' 
@@ -169,6 +184,7 @@ class Form extends React.Component {
                   <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
                 </span>
               }
+              className={this.props.selectedTab === 'sayings' ? classes.selected : null}
             />
             <Tab 
               value='keywords'
@@ -177,6 +193,7 @@ class Form extends React.Component {
                   <span>{intl.formatMessage(messages.keywordsFormTitle)}</span>
                 </span>
               }
+              className={this.props.selectedTab === 'keywords' ? classes.selected : null}
             />
           </Tabs>
           {this.props.selectedTab === 'sayings' && (

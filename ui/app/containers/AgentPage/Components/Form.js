@@ -7,9 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import messages from "../messages";
 
-import agentIcon from "../../../images/agents-icon.svg";
 import playHelpIcon from "../../../images/play-help-icon.svg";
-import settingsIcon from "../../../images/settings-icon.svg";
 import gravatars from '../../../components/Gravatar/';
 
 import AgentDataForm from "./AgentDataForm";
@@ -57,7 +55,15 @@ const styles = {
     paddingLeft: "2px",
   },
   agentTabs: {
-    paddingLeft: "5px",
+    paddingLeft: "15px",
+  },
+  selected: {
+    color: '#4e4e4e',
+    border: '1px solid #C5CBD8',
+    borderTopLeftRadius: '5px',
+    borderTopRightRadius: '5px',
+    backgroundColor: '#fff',
+    borderBottom: '0px'
   },
   modalContent: {
     top: "50%",
@@ -93,6 +99,8 @@ const styles = {
   },
   tabLabel: {
     padding: '0px 10px',
+    position: 'relative',
+    top: '5px'
   },
   settingsTabLabel: {
     padding: '0px 20px',
@@ -173,8 +181,13 @@ class Form extends React.Component {
             onChange={(evt, value) => {
               this.handleChange(evt, value);
             }}
+            TabIndicatorProps={{
+              style: {
+                display: 'none'
+              }
+            }}
           >
-            <Tab 
+            <Tab
               label={
                 <span className={classes.tabLabel}>
                   <span>{intl.formatMessage(messages.main)}</span>
@@ -189,6 +202,7 @@ class Form extends React.Component {
                   </div> : 
                   null
               }
+              className={this.state.selectedTab === 0 ? classes.selected : null}
             />
             <Tab 
               label={
@@ -205,6 +219,7 @@ class Form extends React.Component {
                   </div> : 
                   null
               }
+              className={this.state.selectedTab === 1 ? classes.selected : null}
             />
             <Tab
               icon={[
@@ -221,6 +236,7 @@ class Form extends React.Component {
                   <span>{intl.formatMessage(messages.settings)}</span>
                 </span>
               }
+              className={this.state.selectedTab === 2 ? classes.selected : null}
             />
           </Tabs>
           {this.state.selectedTab === 0 && (
