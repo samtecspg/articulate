@@ -34,7 +34,7 @@ const mappings = {
     dynamic_templates: [
         {
             'raw_as_text': {
-                'path_match': 'webhookResponse.*',
+                'path_match': 'webhook.*',
                 'mapping': {
                     'type': 'text',
                     'fields': {

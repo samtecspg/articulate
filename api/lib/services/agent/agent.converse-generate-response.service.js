@@ -354,11 +354,11 @@ module.exports = async function ({ conversationStateObject }) {
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return { slots: conversationStateObject.slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
+            return { slots: conversationStateObject.slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhook: webhookResponse };
         }
-        conversationStateObject.webhookResponse = { ...webhookResponse };
+        conversationStateObject.webhook = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-        return { slots: conversationStateObject.slots, ...response, webhookResponse, actionWasFulfilled: true };
+        return { slots: conversationStateObject.slots, ...response, webhook: webhookResponse, actionWasFulfilled: true };
     }
     const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
     return { slots: conversationStateObject.slots, ...response, actionWasFulfilled: true };

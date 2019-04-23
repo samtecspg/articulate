@@ -6,7 +6,7 @@
   "app.components.CodeModal.context": "",
   "app.components.CodeModal.currentFrame": "",
   "app.components.CodeModal.rasaParseResults": "",
-  "app.components.CodeModal.webhookResponses": "",
+  "app.components.CodeModal.webhooks": "",
   "app.components.ConversationBar.clearAll": "",
   "app.components.ConversationBar.seeSource": "",
   "app.components.ConversationBar.userMessagePlaceholder": "",

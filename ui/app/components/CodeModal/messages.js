@@ -18,8 +18,8 @@ export default defineMessages({
     id: 'app.components.CodeModal.currentFrame',
     defaultMessage: 'Current Frame',
   },
-  webhookResponses: {
-    id: 'app.components.CodeModal.webhookResponses',
+  webhooks: {
+    id: 'app.components.CodeModal.webhooks',
     defaultMessage: 'Webhook Responses',
   },
 });

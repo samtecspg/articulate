@@ -20,7 +20,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
     const { redis, handlebars } = this.server.app;
     const { agentService, contextService, globalService, documentService } = await this.server.services();
-    const webhookResponses = [];
+    const webhooks = [];
 
     //MARK: reduce the remaining life of the saved slots
     const updateLifespanOfSlots = (conversationStateObject) => {
@@ -441,11 +441,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 templateContext: conversationStateObject
             });
             if (webhookResponse.textResponse) {
-                return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
+                return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhook: webhookResponse };
             }
-            conversationStateObject.webhookResponse = { ...webhookResponse };
+            conversationStateObject.webhook = { ...webhookResponse };
             const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject });
-            return { ...textResponse, webhookResponse, actionWasFulfilled: true };
+            return { ...textResponse, webhook: webhookResponse, actionWasFulfilled: true };
         }
         const textResponse = await agentService.converseCompileResponseTemplates({ responses: action.responses, templateContext: conversationStateObject });
         Object.assign(response, { ...textResponse });
@@ -498,8 +498,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         slots: {}
                     });
                     const response = await getResponseOfChainedAction({ action: agentAction, conversationStateObject });
-                    if (response.webhookResponse) {
-                        webhookResponses.push(response.webhookResponse);
+                    if (response.webhook) {
+                        webhooks.push(response.webhook);
                     }
                     conversationStateObject.context.responseQueue.push({ ...response });
                     await chainResponseActions({ conversationStateObject, responseActions: response.actions } )
@@ -615,8 +615,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 });
                 currentQueueIndex++;
             }
-            if (agentToolResponse.webhookResponse) {
-                webhookResponses.push(agentToolResponse.webhookResponse);
+            if (agentToolResponse.webhook) {
+                webhooks.push(agentToolResponse.webhook);
             }
             const cleanAgentToolResponse = {
                 docId: agentToolResponse.docId,
@@ -713,7 +713,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         textResponses = textResponses.concat(responsesFromQueue);
         const textResponse = textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
-        await documentService.update({ id: conversationStateObject.docId, data: { webhookResponses } });
+        await documentService.update({ id: conversationStateObject.docId, data: { webhooks } });
         await contextService.update({
             sessionId: conversationStateObject.context.sessionId,
             data: {
@@ -735,7 +735,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 context,
                 currentFrame,
                 parse,
-                webhookResponses
+                webhooks
             };
         }
         return converseResult;

@@ -64,13 +64,15 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
         const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         if (typeof response.data === 'string'){
             return {
-                text: response.data,
-                elapsed_time_ms
+                response: response.data,
+                elapsed_time_ms,
+                statusCode: response.status
             }
         }
         return {
-            ...response.data,
-            elapsed_time_ms
+            response: { ...response.data },
+            elapsed_time_ms,
+            statusCode: response.status
         };
     }
     catch (error) {
@@ -79,14 +81,14 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
         if (error.response && error.response.data){
             if (typeof error.response.data === 'string'){
                 return {
-                    text: error.response.data,
+                    error: error.response.data,
                     elapsed_time_ms,
                     statusCode: error.response.status
                 }
             }
             delete error.response.data.statusCode;
             return {
-                ...error.response.data,
+                error: { ...error.response.data },
                 elapsed_time_ms,
                 statusCode: error.response.status
             };
