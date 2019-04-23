@@ -173,6 +173,7 @@ const styles = {
   addActionIcon: {
     cursor: 'pointer',
     marginRight: '10px',
+    height: '15px'
   },
   actionBackgroundContainer: {
     '&:hover': {

@@ -16,6 +16,7 @@ const styles = {
     lineHeight: '1.5',
   },
   addActionIcon: {
+    height: '15px',
     '&:hover': {
       filter: 'invert(1)',
     },

@@ -154,6 +154,7 @@ const styles = {
     borderBottomRightRadius: '5px',
   },
   addActionIcon: {
+    height: '15px',
     cursor: 'pointer',
     marginRight: '10px',
   },
