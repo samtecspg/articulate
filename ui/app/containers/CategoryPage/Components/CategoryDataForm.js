@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, TextField, Typography, FormControlLabel, Switch } from '@material-ui/core';
+import { Grid, TextField, Typography, FormControlLabel, Switch, Icon, Tooltip } from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -33,6 +33,17 @@ const styles = {
   sliderTextField: {
     width: '100%',
   },
+  spanLabelExamples: {
+    position: 'relative',
+    bottom: '2px',
+  },
+  infoIcon: {    
+    color: '#4e4e4e',
+    position: 'relative',
+    top: '4px',
+    left: '2px',
+    fontSize: '18px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -139,7 +150,7 @@ class CategoryDataForm extends React.Component {
                       color="primary"
                     />
                   }
-                  label={intl.formatMessage(messages.extraTrainingData)}
+                  label={<span className={classes.spanLabelExamples}>{intl.formatMessage(messages.extraTrainingData)}<Tooltip placement='top' title={intl.formatMessage(messages.extraTrainingDataHelp)}><Icon className={classes.infoIcon}>info</Icon></Tooltip></span>}
                 />
               </Grid>
             </Grid>

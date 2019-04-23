@@ -135,6 +135,10 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingData',
     defaultMessage: 'Generate extra training examples',
   },
+  extraTrainingDataHelp: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
+    defaultMessage: 'If you enable this option your keyword values and synonyms will be used to generate training data examples by substituing highlighted values in your sayings.',
+  },
   enableModelsPerCategory: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.enableModelsPerCategory',
     defaultMessage: 'Generate separate models for each category',
