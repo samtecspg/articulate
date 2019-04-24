@@ -9,7 +9,7 @@ module.exports = async function ({ connection, request, h }) {
       return h.response(event.challenge).code(200)
     } else {
 
-      if (event.type == 'message' && !event.subtype) {
+      if (event.event.subtype !== 'bot_message') {
         const sessionId = await channelService.hash({ connection, event });
 
         const response = await agentService.converse({ 
