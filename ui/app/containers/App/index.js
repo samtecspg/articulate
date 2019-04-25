@@ -18,7 +18,7 @@ import {
 } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { PROXY_ROUTE_PREFIX } from '../../../common/constants';
+import { PROXY_ROUTE_PREFIX, ROUTE_AGENT } from '../../../common/constants';
 import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
@@ -131,7 +131,7 @@ class App extends React.Component {
           // If the socket was already subscribed to an agent
           if (this.state.agent) {
             // Unsubscribe from the agent
-            this.state.client.unsubscribe(`/agent/${this.state.agent}`);
+            this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.state.agent}`);
           }
           const handler = (agent) => {
 
@@ -139,7 +139,7 @@ class App extends React.Component {
               this.props.onRefreshAgent(agent);
             }
           };
-          this.state.client.subscribe(`/agent/${this.props.agent.id}`, handler);
+          this.state.client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}`, handler);
           this.setState({
             agent: this.props.agent.id,
           });
