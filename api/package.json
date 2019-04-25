@@ -54,6 +54,7 @@
     "moment-timezone": "^0.5.23",
     "nes": "^9.0.1",
     "nohm": "^2.2.0",
+    "numeral": "^2.0.6",
     "redis": "^2.8.0",
     "require-dir": "^1.0.0",
     "schmervice": "^1.0.0",
