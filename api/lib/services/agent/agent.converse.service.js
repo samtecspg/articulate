@@ -713,7 +713,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         textResponses = textResponses.concat(responsesFromQueue);
         const textResponse = textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
-        await documentService.update({ id: conversationStateObject.docId, data: { webhooks } });
+        await documentService.update({ id: conversationStateObject.docId, data: { webhooks: JSON.stringify(webhooks) } });
         await contextService.update({
             sessionId: conversationStateObject.context.sessionId,
             data: {
