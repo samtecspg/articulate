@@ -18,7 +18,7 @@ import {
 } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { PROXY_ROUTE_PREFIX, ROUTE_AGENT } from '../../../common/constants';
+import { ROUTE_AGENT } from '../../../common/constants';
 import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';

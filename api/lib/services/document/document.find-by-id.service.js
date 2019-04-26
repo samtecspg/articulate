@@ -10,7 +10,9 @@ module.exports = async function ({ id, returnModel = false }) {
         if (returnModel) {
             return doc;
         }
-        return { id: doc._id, ...doc._source };
+        const docData = { id: doc._id, ...doc._source };
+        docData.webhooks = JSON.parse(docData.webhooks);
+        return docData;
     }
     catch (error) {
         throw ESErrorHandler({ error });

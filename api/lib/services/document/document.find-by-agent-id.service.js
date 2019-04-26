@@ -33,7 +33,12 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
         if (results.hits.total === 0) {
             return { data: [], totalCount: 0 };
         }
-        const data = results.hits.hits.map((result) => ({ id: result._id, ...result._source }));
+        const data = results.hits.hits.map((result) => {
+
+            const tempDocData = { ...result._source };
+            tempDocData.webhooks = JSON.parse(tempDocData.webhooks);
+            return { id: result._id, ...tempDocData }
+        });
 
         return { data, totalCount: results.hits.total };
     }
