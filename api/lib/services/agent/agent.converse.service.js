@@ -713,14 +713,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         textResponses = textResponses.concat(responsesFromQueue);
         const textResponse = textResponses.join(' ');
         await saveContextQueues({ context: conversationStateObject.context });
-        await documentService.update({ id: conversationStateObject.docId, data: { webhooks: JSON.stringify(webhooks) } });
-        await contextService.update({
-            sessionId: conversationStateObject.context.sessionId,
-            data: {
-                savedSlots: conversationStateObject.context.savedSlots
-            }
-        });
-        //await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
 
         const converseResult = {
             textResponse,
@@ -728,17 +720,35 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             responses,
             ...allProcessedPostFormat
         };
-        if (debug) {
-            const { context, currentFrame, parse, docId } = conversationStateObject;
-            converseResult.conversationStateObject = {
-                docId,
-                context,
-                currentFrame,
-                parse,
-                webhooks
-            };
-        }
-        return converseResult;
+        const { context, currentFrame, parse, docId } = conversationStateObject;
+        const prunnedCSO = {
+            docId,
+            context,
+            currentFrame,
+            parse,
+            webhooks
+        };
+        const fullConverseResult = {
+            ...converseResult,
+            conversationStateObject: prunnedCSO
+        };
+
+        documentService.update({ 
+            id: conversationStateObject.docId,
+            data: { 
+                converseResult: JSON.stringify(fullConverseResult)
+            }
+        });
+        conversationStateObject.context.docIds.push(converseResult.docId)
+        contextService.update({
+            sessionId: conversationStateObject.context.sessionId,
+            data: {
+                savedSlots: conversationStateObject.context.savedSlots,
+                docIds: conversationStateObject.context.docIds
+            }
+        });
+
+        return debug ? fullConverseResult :converseResult;
     }
     catch (error) {
 

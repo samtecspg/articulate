@@ -23,6 +23,9 @@ export const RESPOND_MESSAGE = 'app/App/RESPOND_MESSAGE';
 export const STORE_SOURCE_DATA = 'app/App/STORE_SOURCE_DATA';
 export const RESET_SESSION = 'app/App/RESET_SESSION';
 export const RESET_SESSION_SUCCESS = 'app/App/RESET_SESSION_SUCCESS';
+export const LOAD_SESSION = 'app/App/LOAD_SESSION';
+export const LOAD_SESSION_SUCCESS = 'app/App/LOAD_SESSION_SUCCESS';
+export const LOAD_SESSION_ERROR = 'app/App/LOAD_SESSION_ERROR';
 
 /*
 * Connections

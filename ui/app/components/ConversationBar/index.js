@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import Guid from 'guid';
 
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
@@ -12,10 +13,12 @@ import { injectIntl, intlShape } from 'react-intl';
 import injectSaga from '../../utils/injectSaga';
 import saga from './saga';
 
-import { Grid, Typography, TextField } from '@material-ui/core';
+import { Grid, Typography, TextField, MenuItem, Button, Select, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import rightArrowIcon from '../../images/right-arrow-icon.svg';
+import expandTtrimmedSingleIcon from '../../images/expand-trimmed-single-icon.svg';
+import eraserIcon from '../../images/eraser-icon.svg';
 
 import messages from './messages';
 import { createStructuredSelector } from 'reselect';
@@ -27,7 +30,9 @@ import {
   makeSelectAgent,
   makeSelectWaitingResponse,
   makeSelectConversationStateObject,
-  makeSelectSettings 
+  makeSelectSettings, 
+  makeSelectSessionId,
+  makeSelectSessionLoaded
 } from '../../containers/App/selectors';
 
 import {
@@ -36,6 +41,7 @@ import {
   resetSession,
   loadSettings,
   updateSetting,
+  loadSession,
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
@@ -149,7 +155,7 @@ const styles = {
   },
   contentContainer: {
     position: 'fixed',
-    top: '50px',
+    top: '60px',
     bottom: '95px',
     overflowY: 'scroll',
     overflowX: 'hidden',
@@ -159,6 +165,30 @@ const styles = {
     height: '20px',
     position: 'relative',
     top: '3px',
+  },
+  sessionDropdownIcon: {
+    top: 'calc(50% - 2px)',
+    right: '13px',
+    position: 'absolute',
+    pointerEvents: 'none',
+    width: '0.75em',
+    display: 'inline-block',
+    fontSize: '14px',
+    userSelect: 'none',
+    flexShrink: '0',
+  },
+  eraseIcon: {
+    position: 'relative',
+    top: '30px',
+    left: '10px',
+    cursor: 'pointer'
+  },
+  selectSession: {
+    marginTop: '20px',
+    padding: '0px 10px'
+  },
+  sessionSelectMenu: {
+    padding: '8px 15px'
   }
 };
 
@@ -166,6 +196,7 @@ const styles = {
 export class ConversationBar extends React.PureComponent {
 
   state = {
+    sessionId: '',
     userMessage: '',
     repeatPreviousMessage: null,
     openCodeModal: false,
@@ -234,14 +265,80 @@ export class ConversationBar extends React.PureComponent {
   
 
   render() {
-    const { classes, intl, settings } = this.props;
+    const { classes, intl } = this.props;
     return (
       <Grid style={{ width: this.state.newWidth }} className={classes.container} onMouseDown={event => { this.handleMousedown(event); }}>
         <Grid style={{cursor: 'default'}}>
-          <Grid style={{ right: (this.state.newWidth * 107)/300, width: (this.state.newWidth * 85)/300 }} onClick={() => this.props.onResetSession()} container className={classes.clearAll}>
-            <Typography className={classes.clearAllLabel}>
-              {intl.formatMessage(messages.clearAll)}
-            </Typography>
+          <Grid id='sessionSelector' container>
+            <Grid item xs={10}>
+              <Select
+                className={classes.selectSession}
+                fullWidth
+                id='sessionId'
+                value={this.props.sessionId || 'select'}
+                IconComponent={() => { return (<img className={classes.sessionDropdownIcon} src={expandTtrimmedSingleIcon}/>)}}
+                onChange={(evt) => { 
+                  if (evt.target.value === 'newSession'){
+                    if (this.props.agent){
+                      let sessions = sessionStorage.getItem('sessions');
+                      if (!sessions){
+                        sessions = '{}';
+                      }
+                      sessions = JSON.parse(sessions);
+                      if (!sessions[this.props.agent.agentName]){
+                        sessions[this.props.agent.agentName] = [];
+                      }
+                      const newSessionId = `${this.props.agent.agentName.replace(' ', '')}-session-${Guid.create().toString()}`;
+                      sessions[this.props.agent.agentName].unshift(newSessionId);
+                      sessionStorage.setItem('sessions', JSON.stringify(sessions));
+                      sessionStorage.setItem('sessionId', newSessionId);
+                      this.props.onLoadSessionId(newSessionId, true);
+                    }
+                  }
+                  else { 
+                    if(evt.target.value !== 'select'){
+                      sessionStorage.setItem('sessionId', evt.target.value);
+                      this.props.onLoadSessionId(evt.target.value);
+                    }
+                  }
+                }}
+                classes={{
+                  selectMenu: classes.sessionSelectMenu
+                }}
+              >
+                <MenuItem style={{ marginBottom: '10px' }} key={`newSession`} value={'newSession'}>
+                    <Button variant='contained'>
+                      {intl.formatMessage(messages.newSession)}
+                    </Button>
+                </MenuItem>
+                {
+                  sessionStorage.getItem('sessions') ?
+                    JSON.parse(sessionStorage.getItem('sessions'))[this.props.agent.agentName] ? 
+                      [
+                        !this.props.sessionId ? 
+                        <MenuItem key={`select`} value={'select'}>
+                            <span>{intl.formatMessage(messages.noSession)}</span>
+                        </MenuItem> : null,
+                        JSON.parse(sessionStorage.getItem('sessions'))[this.props.agent.agentName].map((agentSession, index) => {
+                          return (
+                          <MenuItem key={`agentSession_${index}`} value={agentSession}>
+                              <span>{agentSession}</span>
+                          </MenuItem>
+                          )
+                        })
+                      ] :
+                    <MenuItem key={`select`} value={'select'}>
+                      <span>{intl.formatMessage(messages.noSession)}</span>
+                    </MenuItem> :
+                  <MenuItem key={`select`} value={'select'}>
+                    <span>{intl.formatMessage(messages.noSession)}</span>
+                  </MenuItem>
+                }
+              </Select>
+            </Grid>
+            <Grid item xs={2}>
+              <Tooltip placement='bottom-end' title={intl.formatMessage(messages.erase)}><img className={classes.eraseIcon} src={eraserIcon} onClick={() => this.props.onResetSession()} /></Tooltip>
+            </Grid>
           </Grid>
           <Grid style={{ right: this.state.newWidth }} container onClick={() => { this.props.onToggleConversationBar(false) }} className={classes.toggle}>
             <img className={classes.arrow} src={rightArrowIcon}></img>
@@ -307,7 +404,7 @@ export class ConversationBar extends React.PureComponent {
                 onKeyDown={(evt) => {
                   if(evt.key === 'Enter' && evt.target.value !== ''){
                     evt.preventDefault();
-                    this.props.onSendMessage(evt.target.value);
+                    this.props.onSendMessage(evt.target.value, this.props.sessionId);
                     this.setState({
                       userMessage: '',
                     })
@@ -349,6 +446,9 @@ ConversationBar.propTypes = {
   onResetSession: PropTypes.func,
   onCloseNotification: PropTypes.func,
   onSendMessage: PropTypes.func,
+  sessionId: PropTypes.string,
+  sessionLoaded: PropTypes.bool,
+  onLoadSessionId: PropTypes.func
 }; 
 
 const mapStateToProps = createStructuredSelector({
@@ -358,6 +458,8 @@ const mapStateToProps = createStructuredSelector({
   waitingResponse: makeSelectWaitingResponse(),
   conversationStateObject: makeSelectConversationStateObject(),
   settings: makeSelectSettings(),
+  sessionId: makeSelectSessionId(),
+  sessionLoaded: makeSelectSessionLoaded()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -368,10 +470,11 @@ function mapDispatchToProps(dispatch) {
     onCloseNotification: (index) => {
       dispatch(closeNotification(index));
     },
-    onSendMessage: (message) => {
+    onSendMessage: (message, sessionId) => {
       dispatch(sendMessage({
         author: 'User',
         message,
+        sessionId
       }));
     },
     onLoadSettings: () => {
@@ -379,6 +482,9 @@ function mapDispatchToProps(dispatch) {
     },
     onUpdateConversationPanelWidth(newWidth){
       dispatch(updateSetting('conversationPanelWidth', newWidth));
+    },
+    onLoadSessionId: (sessionId, newSession) => {
+      dispatch(loadSession(sessionId, newSession));
     }
   };
 }

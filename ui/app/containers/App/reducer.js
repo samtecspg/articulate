@@ -205,7 +205,10 @@ import {
   CHANGE_DETAIL_VALUE,
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
-  DELETE_CONNECTION_SUCCESS
+  DELETE_CONNECTION_SUCCESS,
+  LOAD_SESSION,
+  LOAD_SESSION_SUCCESS,
+  LOAD_SESSION_ERROR
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -216,6 +219,8 @@ const colors = [material.red['900'], material.red['700'], material.red['500'], m
 // The initial state of the App
 const initialState = Immutable({
   locale: DEFAULT_LOCALE,
+  sessionLoaded: false,
+  sessionId: '',
   conversationBarOpen: false,
   waitingResponse: false,
   notifications: [],
@@ -406,6 +411,21 @@ const initialState = Immutable({
 function appReducer(state = initialState, action) {
   switch (action.type) {
     /* Global */
+    case LOAD_SESSION:
+      return state.set('sessionId', '')
+        .set('messages', [])
+        .set('sessionLoaded', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_SESSION_SUCCESS:
+      return state.set('sessionId', action.sessionId)
+        .set('sessionLoaded', true)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_SESSION_ERROR:
+      return state.set('sessionId', '')
+        .set('loading', false)
+        .set('error', action.error);
     case CHECK_API:
       return state;
     case MISSING_API:
@@ -525,6 +545,10 @@ function appReducer(state = initialState, action) {
         .set('agentTouched', false)
         .set('successAgent', false)
         .set('actions', [])
+        .set('messages', [])
+        .set('sessionId', '')
+        .set('sessionLoaded', false)
+        .set('conversationBarOpen', false)
         .set('newSayingActions', [])
         .setIn(['agent', 'gravatar'], Math.floor(Math.random() * 16) + 1)
         .setIn(['agent', 'uiColor'], colors[Math.floor(Math.random() * (colors.length - 1))]);

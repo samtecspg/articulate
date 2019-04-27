@@ -8,6 +8,7 @@ module.exports = async function ({ data, returnModel = false }) {
     try {
         data.actionQueue = [];
         data.responseQueue = [];
+        data.docIds = [];
         data.savedSlots = {};
         await Model.createInstance({ data, ...{ frames: [] } });
         return returnModel ? Model : Model.allProperties();

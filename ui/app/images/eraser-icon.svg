@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="18px" viewBox="0 0 21 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Group 9</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="chat-panel:-Session-v.1-" transform="translate(-1399.000000, -16.000000)">
+            <g id="Group-9" transform="translate(1399.500000, 15.500000)">
+                <g id="Group-10" transform="translate(0.000000, 0.500000)">
+                    <polygon id="Fill-1" fill="#FFFFFF" points="3.3561 11.2619 8.6131 16.5179 13.8691 11.2619 8.6131 6.0069"></polygon>
+                    <polygon id="Stroke-2" stroke="#4E4E4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" points="3.3564 11.2622 8.6134 16.5182 13.8694 11.2622 8.6134 6.0062"></polygon>
+                    <polygon id="Fill-4" fill="#4E4E4E" points="8.613 6.0068 13.869 11.2618 19.125 6.0068 13.869 0.7498"></polygon>
+                    <polygon id="Stroke-5" stroke="#4E4E4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" points="8.6133 6.0064 13.8693 11.2624 19.1253 6.0064 13.8693 0.7504"></polygon>
+                    <path d="M0.7497,16.5179 L8.6127,16.5179 L0.7497,16.5179 Z" id="Fill-7" fill="#4E4E4E"></path>
+                    <path d="M8.6133,16.5181 L0.7503,16.5181" id="Stroke-8" stroke="#4E4E4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

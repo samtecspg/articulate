@@ -9,6 +9,16 @@ const makeSelectLocation = () => createSelector(
   (routeState) => routeState.location,
 );
 
+const makeSelectSessionId = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.sessionId
+);
+
+const makeSelectSessionLoaded = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.sessionLoaded
+)
+
 const makeSelectMissingAPI = () => createSelector(
   selectGlobal,
   (globalState) => globalState.missingAPI,
@@ -282,6 +292,8 @@ const makeSelectLocale = () =>createSelector(
 
 export {
   makeSelectLocation,
+  makeSelectSessionId,
+  makeSelectSessionLoaded,
   makeSelectMissingAPI,
   makeSelectLoading,
   makeSelectError,

@@ -68,6 +68,7 @@ class ContextValidate {
                     savedSlots: ContextModel.savedSlots,
                     actionQueue: ContextModel.actionQueue,
                     responseQueue: ContextModel.responseQueue,
+                    docIds: ContextModel.docIds,
                     creationDate: ContextModel.creationDate,
                     modificationDate: ContextModel.modificationDate
                 };
@@ -118,6 +119,15 @@ class ContextValidate {
                         .string()
                         .optional()
                         .description('Field used to do the sorting')
+                };
+            })()
+        };
+
+        this.findDocsBySession = {
+            params: (() => {
+
+                return {
+                    [PARAM_SESSION]: ContextModel.sessionId.required()
                 };
             })()
         };

@@ -30,7 +30,7 @@ const mappings = {
         agent_model: {
             type: 'text'
         },
-        webhooks: {
+        converseResult: {
             type: 'text'
         }
     }

@@ -36,7 +36,9 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
         const data = results.hits.hits.map((result) => {
 
             const tempDocData = { ...result._source };
-            tempDocData.webhooks = JSON.parse(tempDocData.webhooks);
+            if (tempDocData.converseResult){
+                tempDocData.converseResult = JSON.parse(tempDocData.converseResult);
+            }
             return { id: result._id, ...tempDocData }
         });
 

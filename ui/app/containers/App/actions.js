@@ -217,11 +217,37 @@ import {
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
   DELETE_CONNECTION_SUCCESS,
+  LOAD_SESSION,
+  LOAD_SESSION_ERROR,
+  LOAD_SESSION_SUCCESS,
 } from './constants';
 
 /*
 * Global
 */
+export function loadSession(sessionId, newSession) {
+  return {
+    type: LOAD_SESSION,
+    apiCall: true,
+    sessionId,
+    newSession
+  };
+}
+
+export function loadSessionSuccess(sessionId) {
+  return {
+    type: LOAD_SESSION_SUCCESS,
+    sessionId
+  };
+}
+
+export function loadSessionError(error) {
+  return {
+    type: LOAD_SESSION_ERROR,
+    error
+  };
+}
+
 export function checkAPI(refURL) {
   return {
     type: CHECK_API,

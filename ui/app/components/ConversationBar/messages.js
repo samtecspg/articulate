@@ -17,5 +17,21 @@ export default defineMessages({
   clearAll: {
     id: 'app.components.ConversationBar.clearAll',
     defaultMessage: 'Clear All'
+  },
+  sessionTitle: {
+    id: 'app.components.ConversationBar.sessionTitle',
+    defaultMessage: 'Session'
+  },
+  noSession: {
+    id: 'app.components.ConversationBar.noSession',
+    defaultMessage: 'No session'
+  },
+  newSession: {
+    id: 'app.components.ConversationBar.newSession',
+    defaultMessage: '+ New session'
+  },
+  erase: {
+    id: 'app.components.ConversationBar.erase',
+    defaultMessage: 'Clear current session'
   }
 });
