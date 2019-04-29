@@ -1,8 +1,8 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { putSetting } from '../../containers/SettingsPage/saga';
-import { UPDATE_SETTING, LOAD_SESSION } from '../../containers/App/constants';
+import { UPDATE_SETTING, LOAD_SESSION, DELETE_SESSION } from '../../containers/App/constants';
 import { ROUTE_CONTEXT, ROUTE_DOCUMENT } from '../../../common/constants';
-import { loadSessionSuccess, loadSessionError, respondMessage } from '../../containers/App/actions';
+import { loadSessionSuccess, loadSessionError, respondMessage, deleteSessionError, deleteSessionSuccess } from '../../containers/App/actions';
 import { toAPIPath } from '../../utils/locationResolver';
 import { makeSelectAgent } from '../../containers/App/selectors';
 
@@ -38,7 +38,22 @@ export function* getSession(payload) {
   }
 }
 
+export function* deleteSession(payload) {
+  const { api, sessionId, clearSessionId } = payload;
+  try {
+    yield call(api.delete, toAPIPath([ROUTE_CONTEXT, sessionId]));
+    yield put(deleteSessionSuccess());
+    if (clearSessionId){
+      yield put(loadSessionSuccess(''));
+    }
+  }
+  catch (err) {
+    yield put(deleteSessionError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(UPDATE_SETTING, putSetting);
   yield takeLatest(LOAD_SESSION, getSession);
+  yield takeLatest(DELETE_SESSION, deleteSession);
 };

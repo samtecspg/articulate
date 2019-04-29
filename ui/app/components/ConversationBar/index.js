@@ -19,6 +19,8 @@ import { withStyles } from '@material-ui/core/styles';
 import rightArrowIcon from '../../images/right-arrow-icon.svg';
 import expandTtrimmedSingleIcon from '../../images/expand-trimmed-single-icon.svg';
 import eraserIcon from '../../images/eraser-icon.svg';
+import trashIcon from '../../images/trash-icon.svg';
+import grabIcon from '../../images/grab-icon.svg';
 
 import messages from './messages';
 import { createStructuredSelector } from 'reselect';
@@ -32,7 +34,8 @@ import {
   makeSelectConversationStateObject,
   makeSelectSettings, 
   makeSelectSessionId,
-  makeSelectSessionLoaded
+  makeSelectSessionLoaded,
+  makeSelectLoading
 } from '../../containers/App/selectors';
 
 import {
@@ -42,6 +45,7 @@ import {
   loadSettings,
   updateSetting,
   loadSession,
+  deleteSession,
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
@@ -51,7 +55,6 @@ import gravatars from '../Gravatar';
 
 const styles = {
   container: {
-    cursor: 'col-resize',
     height: '100%',
     position: 'fixed',
     zIndex: 1,
@@ -189,6 +192,26 @@ const styles = {
   },
   sessionSelectMenu: {
     padding: '8px 15px'
+  },
+  deleteIcon: {
+    '&:hover': {
+      filter: 'invert(0)',
+    },
+    filter: 'invert(1)',
+    cursor: 'pointer',
+    marginLeft: '10px'
+  },
+  grabWidth: {
+    top: '50%',
+    width: '13px',
+    cursor: 'pointer',
+    height: '35px',
+    zIndex: 2,
+    position: 'fixed',
+    border: '1px solid #c5cbd8',
+    borderRight: '0px',
+    borderRadius: '3px 0px 0px 3px',
+    backgroundColor: '#f6f7f8',
   }
 };
 
@@ -215,6 +238,16 @@ export class ConversationBar extends React.PureComponent {
     this.scrollToBottom();
     document.addEventListener('mousemove', e => this.handleMousemove(e));
     document.addEventListener('mouseup', e => this.handleMouseup(e));
+
+    if (!this.props.sessionLoaded){
+      const sessions = JSON.parse(sessionStorage.getItem('sessions'));
+      if (sessions && sessions[this.props.agent.agentName]){
+        const sessionIdStored = sessions[this.props.agent.agentName].sessionId;
+        if (sessionIdStored){
+          this.props.onLoadSessionId(sessionIdStored);
+        }
+      }
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -259,15 +292,20 @@ export class ConversationBar extends React.PureComponent {
   };
   
   handleMouseup = e => {
+    if (this.state.isResizing){
+      this.props.onUpdateConversationPanelWidth(this.state.newWidth);
+    }
     this.setState({ isResizing: false });
-    this.props.onUpdateConversationPanelWidth(this.state.newWidth);
   };
   
 
   render() {
     const { classes, intl } = this.props;
     return (
-      <Grid style={{ width: this.state.newWidth }} className={classes.container} onMouseDown={event => { this.handleMousedown(event); }}>
+      <Grid style={{ width: this.state.newWidth }} className={classes.container}>
+        <div style={{ right: this.state.newWidth }} onMouseDown={event => { this.handleMousedown(event); }} id='resize' className={classes.grabWidth}>
+          <img style={{ position: 'relative', top: '2px', left: '2px' }} src={grabIcon}></img>
+        </div>
         <Grid style={{cursor: 'default'}}>
           <Grid id='sessionSelector' container>
             <Grid item xs={10}>
@@ -278,27 +316,51 @@ export class ConversationBar extends React.PureComponent {
                 value={this.props.sessionId || 'select'}
                 IconComponent={() => { return (<img className={classes.sessionDropdownIcon} src={expandTtrimmedSingleIcon}/>)}}
                 onChange={(evt) => { 
-                  if (evt.target.value === 'newSession'){
-                    if (this.props.agent){
-                      let sessions = sessionStorage.getItem('sessions');
-                      if (!sessions){
-                        sessions = '{}';
-                      }
-                      sessions = JSON.parse(sessions);
-                      if (!sessions[this.props.agent.agentName]){
-                        sessions[this.props.agent.agentName] = [];
-                      }
-                      const newSessionId = `${this.props.agent.agentName.replace(' ', '')}-session-${Guid.create().toString()}`;
-                      sessions[this.props.agent.agentName].unshift(newSessionId);
-                      sessionStorage.setItem('sessions', JSON.stringify(sessions));
-                      sessionStorage.setItem('sessionId', newSessionId);
-                      this.props.onLoadSessionId(newSessionId, true);
-                    }
+                  if (evt.nativeEvent && evt.nativeEvent.target && evt.nativeEvent.target.id.indexOf('deleteSession') > -1){
+                    
+                    //Removes the sessionId from the sessions array in the sessionStorage of the browser
+                    let sessions = JSON.parse(sessionStorage.getItem('sessions'));
+                    const indexOfSession = sessions[this.props.agent.agentName].sessions.indexOf(evt.target.value);
+                    sessions[this.props.agent.agentName].sessions.splice(indexOfSession, 1);
+                    
+                    //Gets current sessionId selected by the user
+                    const currentSession = sessions[this.props.agent.agentName].sessionId;
+                    const areTheSame = currentSession === evt.target.value;
+                    sessions[this.props.agent.agentName].sessionId = areTheSame ? '' : currentSession;
+                    sessionStorage.setItem('sessions', JSON.stringify(sessions));
+
+                    //If the current session is the same than the deleted session, then remove it from the storage
+                    this.props.onDeleteSession(evt.target.value, areTheSame);
                   }
-                  else { 
-                    if(evt.target.value !== 'select'){
-                      sessionStorage.setItem('sessionId', evt.target.value);
-                      this.props.onLoadSessionId(evt.target.value);
+                  else {
+                    if (evt.target.value === 'newSession'){
+                      if (this.props.agent){
+                        let sessions = sessionStorage.getItem('sessions');
+                        if (!sessions){
+                          sessions = '{}';
+                        }
+                        sessions = JSON.parse(sessions);
+                        if (!sessions[this.props.agent.agentName]){
+                          sessions[this.props.agent.agentName] = {
+                            sessionId: '',
+                            sessions: []
+                          };
+                        }
+                        const newSessionId = `${this.props.agent.agentName.replace(' ', '')}-session-${Guid.create().toString()}`;
+                        sessions[this.props.agent.agentName].sessions.unshift(newSessionId);
+                        sessions[this.props.agent.agentName].sessionId = newSessionId;
+                        sessionStorage.setItem('sessions', JSON.stringify(sessions));
+                        this.props.onLoadSessionId(newSessionId, true);
+                      }
+                    }
+                    else { 
+                      if(evt.target.value !== 'select'){
+                        let sessions = sessionStorage.getItem('sessions');
+                        sessions = JSON.parse(sessions);
+                        sessions[this.props.agent.agentName].sessionId = evt.target.value;
+                        sessionStorage.setItem('sessions', JSON.stringify(sessions));
+                        this.props.onLoadSessionId(evt.target.value);
+                      }
                     }
                   }
                 }}
@@ -319,10 +381,10 @@ export class ConversationBar extends React.PureComponent {
                         <MenuItem key={`select`} value={'select'}>
                             <span>{intl.formatMessage(messages.noSession)}</span>
                         </MenuItem> : null,
-                        JSON.parse(sessionStorage.getItem('sessions'))[this.props.agent.agentName].map((agentSession, index) => {
+                        JSON.parse(sessionStorage.getItem('sessions'))[this.props.agent.agentName].sessions.map((agentSession, index) => {
                           return (
                           <MenuItem key={`agentSession_${index}`} value={agentSession}>
-                              <span>{agentSession}</span>
+                              <span>{agentSession}<img id={`deleteSession_${index}`} className={classes.deleteIcon} src={trashIcon} /></span>
                           </MenuItem>
                           )
                         })
@@ -439,6 +501,7 @@ export class ConversationBar extends React.PureComponent {
 }
 
 ConversationBar.propTypes = {
+  loading: PropTypes.bool,
   classes: PropTypes.object,
   intl: intlShape.isRequired,
   notifications: PropTypes.array,
@@ -448,10 +511,12 @@ ConversationBar.propTypes = {
   onSendMessage: PropTypes.func,
   sessionId: PropTypes.string,
   sessionLoaded: PropTypes.bool,
-  onLoadSessionId: PropTypes.func
+  onLoadSessionId: PropTypes.func,
+  onDeleteSession: PropTypes.func,
 }; 
 
 const mapStateToProps = createStructuredSelector({
+  loading: makeSelectLoading(),
   agent: makeSelectAgent(),
   notifications: makeSelectNotifications(),
   messages: makeSelectMessages(),
@@ -485,6 +550,9 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadSessionId: (sessionId, newSession) => {
       dispatch(loadSession(sessionId, newSession));
+    },
+    onDeleteSession: (sessionId, clearSessionId) => {
+      dispatch(deleteSession(sessionId, clearSessionId));
     }
   };
 }

@@ -220,6 +220,9 @@ import {
   LOAD_SESSION,
   LOAD_SESSION_ERROR,
   LOAD_SESSION_SUCCESS,
+  DELETE_SESSION,
+  DELETE_SESSION_SUCCESS,
+  DELETE_SESSION_ERROR,
 } from './constants';
 
 /*
@@ -246,6 +249,28 @@ export function loadSessionError(error) {
     type: LOAD_SESSION_ERROR,
     error
   };
+}
+
+export function deleteSession(sessionId, clearSessionId) {
+  return {
+    apiCall: true,
+    type: DELETE_SESSION,
+    sessionId,
+    clearSessionId
+  }
+}
+
+export function deleteSessionSuccess(){
+  return {
+    type: DELETE_SESSION_SUCCESS
+  }
+}
+
+export function deleteSessionError(error) {
+  return {
+    type: DELETE_SESSION_ERROR,
+    error
+  }
 }
 
 export function checkAPI(refURL) {

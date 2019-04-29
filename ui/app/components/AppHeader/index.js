@@ -114,7 +114,7 @@ export class AppHeader extends React.Component {
               onToggleConversationBar={this.props.onToggleConversationBar}
             />
             <Grid item xl={2} lg={2} md={2}>
-              <Link to='/'>
+              <Link onClick={() => { this.props.onToggleConversationBar(false) }} to='/'>
                 <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </Link>
             </Grid>
@@ -142,7 +142,7 @@ export class AppHeader extends React.Component {
               onToggleConversationBar={this.props.onToggleConversationBar}
             />
             <Grid item sm={6} xs={6}>
-              <Link to='/' className={classes.link}>
+              <Link onClick={() => { this.props.onToggleConversationBar(false) }} to='/' className={classes.link}>
                 <Button variant='contained'>
                   <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                   <FormattedMessage {...messages.agentsButton} />
@@ -161,7 +161,7 @@ export class AppHeader extends React.Component {
         <Grid container className={classes.header} item xs={12}>
           <Hidden only={['xs', 'sm']}>
             <Grid item xl={2} lg={2} md={2}>
-              <Link to='/'>
+              <Link onClick={() => { this.props.onToggleConversationBar(false) }} to='/'>
                 <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </Link>
             </Grid>

@@ -208,7 +208,10 @@ import {
   DELETE_CONNECTION_SUCCESS,
   LOAD_SESSION,
   LOAD_SESSION_SUCCESS,
-  LOAD_SESSION_ERROR
+  LOAD_SESSION_ERROR,
+  DELETE_SESSION,
+  DELETE_SESSION_SUCCESS,
+  DELETE_SESSION_ERROR
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -425,6 +428,15 @@ function appReducer(state = initialState, action) {
     case LOAD_SESSION_ERROR:
       return state.set('sessionId', '')
         .set('loading', false)
+        .set('error', action.error);
+    case DELETE_SESSION:
+      return state.set('loading', true)
+        .set('error', false);
+    case DELETE_SESSION_SUCCESS:
+      return state.set('loading', false)
+        .set('error', false);
+    case DELETE_SESSION_ERROR:
+      return state.set('loading', false)
         .set('error', action.error);
     case CHECK_API:
       return state;

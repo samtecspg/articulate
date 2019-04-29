@@ -36,7 +36,6 @@ import {
 } from './actions';
 import {
   makeSelectAgent,
-  makeSelectSettings,
   makeSelectSessionId,
 } from './selectors';
 
