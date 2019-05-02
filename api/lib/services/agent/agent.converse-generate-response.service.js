@@ -207,7 +207,7 @@ module.exports = async function ({ conversationStateObject }) {
             const recognizedKeywordsNames = _.map(recognizedKeywords, (recognizedKeyword) => {
                 //If the name of the recognized keyword match with an keyword name of an slot
                 const slotOfRecognizedKeywords = _.filter(action.slots, (slot) => { return slot.keyword === recognizedKeyword.keyword });
-                let slotToFill = _.filter(action.slots, (slot) => { 
+                let slotToFill = _.filter(slotOfRecognizedKeywords, (slot) => { 
                     const slotValueInFrame = lastFrame.slots[slot.slotName] ? lastFrame.slots[slot.slotName].value : null;
                     return (!slotValueInFrame || (Array.isArray(slotValueInFrame) && slotValueInFrame.length === 0));
                 })[0];
