@@ -86,13 +86,13 @@ export function* deleteCategory(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidCategoryCategoryid, { agentId: agent.id, categoryId: id });
     yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, id]));
     yield put(deleteCategorySuccess());
     yield call(getCategories, { api });
     yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
   }
   catch (err) {
+    console.log(err);
     const error = { ...err };
     yield put(deleteCategoryError(error.response.data.message));
   }
