@@ -1,0 +1,385 @@
+[
+  {
+    "userSays": "what's the weather like",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's the weather like this morning",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "today's weather",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather Paris",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather of New York",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is the current weather",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is the current weather in Chicago",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather report",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "show me the weather",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather in Costa Rica",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's is the current weather in Moscow",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's the weather like in our area",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "how's the weather today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "how is the weather in my area",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather Colorado",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather now",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is the weather like today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "show me the weather in Madrid",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's the weather supposed to be in Milan",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "how's the weather in Berlin",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's the weather forecast for today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather this morning",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "current weather in Barcelona",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "today's weather in Manchester",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is the weather for Toronto",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "find weather in Madagascar",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "show me weather for today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's the weather like in Seattle",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is the weather like right now",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "I'd like to know the weather",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's the weather supposed to be",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather forecast in India",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is today's weather like",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "the weather in Los Angeles is what",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is the weather today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "how is the weather today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what is the weather in Rotterdam right now",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather outside",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "tell me what's the weather like in Ontario",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather in Quebec for today",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "New York weather report",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "what's the weather like",
+    "keywords": [],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather in Houston in Celsius",
+    "keywords": [
+      {
+        "start": 22,
+        "end": 29,
+        "value": "celsius",
+        "keyword": "unit",
+        "keywordId": 15
+      }
+    ],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "I'd like to the weather in Spain in celsius",
+    "keywords": [
+      {
+        "start": 36,
+        "end": 43,
+        "value": "celsius",
+        "keyword": "unit",
+        "keywordId": 15
+      }
+    ],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "show me the weather in celsius",
+    "keywords": [
+      {
+        "start": 23,
+        "end": 30,
+        "value": "celsius",
+        "keyword": "unit",
+        "keywordId": 15
+      }
+    ],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "tell me the weather in Sevilla in Fahrenheit",
+    "keywords": [
+      {
+        "start": 34,
+        "end": 44,
+        "value": "fahrenheit",
+        "keyword": "unit",
+        "keywordId": 15
+      }
+    ],
+    "actions": [
+      "current_weather"
+    ]
+  },
+  {
+    "userSays": "weather in celsius",
+    "keywords": [
+      {
+        "start": 11,
+        "end": 18,
+        "value": "celsius",
+        "keyword": "unit",
+        "keywordId": 15
+      }
+    ],
+    "actions": [
+      "current_weather"
+    ]
+  }
+]

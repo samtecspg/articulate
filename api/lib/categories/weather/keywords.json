@@ -1,0 +1,158 @@
+[
+  {
+    "keywordName": "condition",
+    "uiColor": "#01579b",
+    "examples": [
+      {
+        "value": "thunderstorm",
+        "synonyms": [
+          "thunderstorm"
+        ]
+      },
+      {
+        "value": "drizzle",
+        "synonyms": [
+          "drizzle"
+        ]
+      },
+      {
+        "value": "rain",
+        "synonyms": [
+          "rain"
+        ]
+      },
+      {
+        "value": "snow",
+        "synonyms": [
+          "snow"
+        ]
+      },
+      {
+        "value": "mist",
+        "synonyms": [
+          "mist"
+        ]
+      },
+      {
+        "value": "smoke",
+        "synonyms": [
+          "smoke"
+        ]
+      },
+      {
+        "value": "haze",
+        "synonyms": [
+          "haze"
+        ]
+      },
+      {
+        "value": "dust",
+        "synonyms": [
+          "dust"
+        ]
+      },
+      {
+        "value": "fog",
+        "synonyms": [
+          "fog"
+        ]
+      },
+      {
+        "value": "sand",
+        "synonyms": [
+          "sand"
+        ]
+      },
+      {
+        "value": "dust",
+        "synonyms": [
+          "dust"
+        ]
+      },
+      {
+        "value": "ash",
+        "synonyms": [
+          "ash"
+        ]
+      },
+      {
+        "value": "squall",
+        "synonyms": [
+          "squall"
+        ]
+      },
+      {
+        "value": "tornado",
+        "synonyms": [
+          "tornado"
+        ]
+      },
+      {
+        "value": "clear",
+        "synonyms": [
+          "clear"
+        ]
+      },
+      {
+        "value": "clouds",
+        "synonyms": [
+          "clouds"
+        ]
+      }
+    ],
+    "regex": "",
+    "type": "learned",
+    "modifiers": []
+  },
+  {
+    "keywordName": "feeling",
+    "uiColor": "#e91e63",
+    "examples": [
+      {
+        "value": "warm",
+        "synonyms": [
+          "warm"
+        ]
+      },
+      {
+        "value": "cold",
+        "synonyms": [
+          "cold",
+          "freezing"
+        ]
+      },
+      {
+        "value": "hot",
+        "synonyms": [
+          "hot"
+        ]
+      }
+    ],
+    "regex": "",
+    "type": "learned",
+    "modifiers": []
+  },
+  {
+    "keywordName": "unit",
+    "uiColor": "#4caf50",
+    "examples": [
+      {
+        "value": "imperial",
+        "synonyms": [
+          "fahrenheit",
+          "imperial"
+        ]
+      },
+      {
+        "value": "metric",
+        "synonyms": [
+          "celsius",
+          "metric"
+        ]
+      }
+    ],
+    "regex": "",
+    "type": "learned",
+    "modifiers": []
+  }
+]
