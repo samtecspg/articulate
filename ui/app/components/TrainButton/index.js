@@ -80,7 +80,7 @@ export class TrainButton extends React.Component {
                   <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{` ${this.getLastTrainingTime(lastTraining)}`}</span> :
                   null)}
         </Typography>
-        <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
+        <Button disabled={agentStatus === 'Training'} className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
           <FormattedMessage {...messages.trainButton} />
         </Button>
       </Grid>
