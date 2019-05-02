@@ -211,7 +211,8 @@ import {
   LOAD_SESSION_ERROR,
   DELETE_SESSION,
   DELETE_SESSION_SUCCESS,
-  DELETE_SESSION_ERROR
+  DELETE_SESSION_ERROR,
+  SHOW_WARNING
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -465,7 +466,8 @@ function appReducer(state = initialState, action) {
     case RESET_SESSION_SUCCESS:
       return state.set('messages', [])
         .set('notifications', []);
-
+    case SHOW_WARNING: 
+      return state.update('notifications', notifications => notifications.concat({ message: `${action.message} ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
 
     /* Connections */
     case LOAD_CONNECTIONS:

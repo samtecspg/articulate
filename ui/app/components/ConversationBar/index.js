@@ -46,6 +46,7 @@ import {
   updateSetting,
   loadSession,
   deleteSession,
+  showWarning,
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
@@ -466,10 +467,41 @@ export class ConversationBar extends React.PureComponent {
                 onKeyDown={(evt) => {
                   if(evt.key === 'Enter' && evt.target.value !== ''){
                     evt.preventDefault();
-                    this.props.onSendMessage(evt.target.value, this.props.sessionId);
-                    this.setState({
-                      userMessage: '',
-                    })
+                    if (!this.props.sessionId){
+                      if (this.props.agent){
+                        let sessions = sessionStorage.getItem('sessions');
+                        if (!sessions){
+                          sessions = '{}';
+                        }
+                        sessions = JSON.parse(sessions);
+                        if (!sessions[this.props.agent.agentName] || sessions[this.props.agent.agentName].sessions.length === 0){
+                          sessions[this.props.agent.agentName] = {
+                            sessionId: '',
+                            sessions: []
+                          };
+
+                          const newSessionId = `${this.props.agent.agentName.replace(' ', '')}-session-${Guid.create().toString()}`;
+                          sessions[this.props.agent.agentName].sessions.unshift(newSessionId);
+                          sessions[this.props.agent.agentName].sessionId = newSessionId;
+                          sessionStorage.setItem('sessions', JSON.stringify(sessions));
+                          this.props.onLoadSessionId(newSessionId, true);
+
+                          this.props.onSendMessage(evt.target.value, newSessionId);
+                          this.setState({
+                            userMessage: '',
+                          });
+                        }
+                        else {
+                          this.props.onShowWarning(intl.formatMessage(messages.selectSession))
+                        }
+                      }
+                    }
+                    else {
+                      this.props.onSendMessage(evt.target.value);
+                      this.setState({
+                        userMessage: '',
+                      })
+                    }
                   }
                   if (evt.key === 'ArrowUp') {
                     if (this.props.messages.length > 0) {
@@ -553,6 +585,9 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteSession: (sessionId, clearSessionId) => {
       dispatch(deleteSession(sessionId, clearSessionId));
+    },
+    onShowWarning: (message) => {
+      dispatch(showWarning(message));
     }
   };
 }

@@ -33,5 +33,9 @@ export default defineMessages({
   erase: {
     id: 'app.components.ConversationBar.erase',
     defaultMessage: 'Clear current session'
+  },
+  selectSession: {
+    id: 'app.components.ConversationBar.selectSession',
+    defaultMessage: 'Error: Please select a session to chat.'
   }
 });

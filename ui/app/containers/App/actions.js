@@ -223,6 +223,7 @@ import {
   DELETE_SESSION,
   DELETE_SESSION_SUCCESS,
   DELETE_SESSION_ERROR,
+  SHOW_WARNING,
 } from './constants';
 
 /*
@@ -340,6 +341,13 @@ export function resetSessionSuccess() {
   return {
     type: RESET_SESSION_SUCCESS,
   };
+}
+
+export function showWarning(message) {
+  return {
+    type: SHOW_WARNING,
+    message,
+  }
 }
 
 /*

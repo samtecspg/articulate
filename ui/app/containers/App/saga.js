@@ -33,6 +33,7 @@ import {
   respondMessage,
   storeSourceData,
   trainAgentError,
+  showWarning,
 } from './actions';
 import {
   makeSelectAgent,
@@ -41,10 +42,12 @@ import {
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
-  const sessionId = yield select(makeSelectSessionId());
+  const systemSessionId = yield select(makeSelectSessionId());
+
   if (agent.id) {
     const { api, message } = payload;
-    if (sessionId){
+    if (message.sessionId || systemSessionId){
+      let sessionId = systemSessionId || message.sessionId;
       try {
         const postPayload = {
           params: {
@@ -56,36 +59,25 @@ export function* postConverse(payload) {
           },
         };
         const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]), null, postPayload);
+
         yield put(respondMessage({
           author: agent.agentName,
           docId: response.docId,
           message: response.textResponse,
-          conversationStateObject: response.converseResult ? response.converseResult.conversationStateObject : null,
+          conversationStateObject: response.conversationStateObject,
         }));
         yield put(storeSourceData({ ...response.conversationStateObject }));
       }
       catch (err) {
-        yield put(respondMessage({
-          author: 'Error',
-          docId: null,
-          message: 'I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.',
-        }));
+        yield put(showWarning('Error: I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.'));
       }
     }
     else {
-      yield put(respondMessage({
-        author: 'Warning',
-        docId: null,
-        message: 'Select or create a session first',
-      }));
+      yield put(showWarning('Error: Select or create a session first.'));
     }
   }
   else {
-    yield put(respondMessage({
-      author: 'Warning',
-      docId: null,
-      message: 'Please click on an agent first',
-    }));
+    yield put(showWarning('Error: Please click on an agent first.'));
   }
 }
 
@@ -108,20 +100,12 @@ export function* deleteSession(payload) {
         yield put(resetSessionSuccess());
       }
       else {
-        yield put(respondMessage({
-          author: 'Error',
-          docId: null,
-          message: 'I\'m sorry. An error occurred cleaning your session data.',
-        }));
+        yield put(showWarning('Error: I\'m sorry. An error occurred cleaning your session data.'));
       }
     }
   }
   else {
-    yield put(respondMessage({
-      author: 'Warning',
-      docId: null,
-      message: 'Select a session to clear',
-    }));
+    yield put(showWarning('Select a session to clear.'));
   }
 }
 

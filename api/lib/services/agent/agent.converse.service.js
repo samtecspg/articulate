@@ -748,7 +748,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
         });
 
-        return debug ? fullConverseResult :converseResult;
+        return debug ? fullConverseResult : converseResult;
     }
     catch (error) {
 

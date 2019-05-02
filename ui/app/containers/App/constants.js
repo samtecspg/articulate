@@ -29,6 +29,7 @@ export const LOAD_SESSION_ERROR = 'app/App/LOAD_SESSION_ERROR';
 export const DELETE_SESSION = 'app/App/DELETE_SESSION';
 export const DELETE_SESSION_SUCCESS = 'app/App/DELETE_SESSION_SUCCESS';
 export const DELETE_SESSION_ERROR = 'app/App/DELETE_SESSION_ERROR';
+export const SHOW_WARNING = 'app/App/SHOW_WARNING';
 
 /*
 * Connections
