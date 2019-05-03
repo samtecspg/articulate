@@ -94,7 +94,7 @@ export function* deleteKeyword(payload) {
       filter: '',
       page: 1,
     });
-    yield put(push(`/agent/${agent.id}/keywords`));
+    yield put(push(`/agent/${agent.id}/dialogue?tab=keywords`));
   }
   catch (err) {
     const error = { ...err };
