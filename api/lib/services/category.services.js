@@ -1,4 +1,5 @@
 import Schmervice from 'schmervice';
+import Info from './category/category.info.service';
 import Create from './category/category.create.service';
 import FindAllByIds from './category/category.find-all-by-ids.service';
 import FindById from './category/category.find-by-id.service';
@@ -9,6 +10,11 @@ import Train from './category/category.train.service';
 import UnlinkKeywords from './category/category.unlink-keywords.service';
 
 module.exports = class CategoryService extends Schmervice.Service {
+
+    async info() {
+
+        return await Info.apply(this, arguments);
+    }
 
     async create() {
 
