@@ -1,0 +1,120 @@
+[
+  {
+    "actionName": "Default Fallback Action",
+    "slots": [],
+    "responses": [
+      {
+        "textResponse": "Sorry can you rephrase that?",
+        "actions": []
+      },
+      {
+        "textResponse": "I'm still learning to speak with humans. What you mean?",
+        "actions": []
+      }
+    ],
+    "useWebhook": false,
+    "usePostFormat": false,
+    "creationDate": "1556586182000",
+    "modificationDate": "1556586182000"
+  },
+  {
+    "actionName": "current_weather",
+    "slots": [
+      {
+        "slotName": "location",
+        "uiColor": "#673ab7",
+        "keyword": "sys.spacy_gpe",
+        "isList": false,
+        "isRequired": true,
+        "textPrompts": [
+          "From which city you want to know the weather?"
+        ],
+        "remainingLife": 2
+      },
+      {
+        "slotName": "unit",
+        "uiColor": "#4caf50",
+        "keyword": "unit",
+        "isList": false,
+        "isRequired": false,
+        "textPrompts": []
+      }
+    ],
+    "responses": [
+      {
+        "textResponse": "It's {{webhook.response.weather.0.description}} and {{webhook.response.main.temp}}{{#eq slots.unit.value compare= \"metric\"}}°C{{else}}°F{{/eq}} in {{webhook.response.name}}, {{webhook.response.sys.country}}",
+        "actions": []
+      }
+    ],
+    "useWebhook": true,
+    "usePostFormat": false,
+    "creationDate": "1556632702000",
+    "modificationDate": "1557160251000",
+    "webhook": {
+      "webhookUrl": "https://api.openweathermap.org/data/2.5/weather?q={{slots.location.value}}&appid={{categories.Weather.parameters.apiKey}}{{#if slots.unit.value}}&units={{slots.unit.value}}{{else}}&units=imperial{{/if}}",
+      "webhookVerb": "GET",
+      "webhookPayloadType": "None",
+      "webhookPayload": "",
+      "webhookHeaders": [],
+      "webhookUser": "",
+      "webhookPassword": "",
+      "creationDate": "1556632703000",
+      "modificationDate": "1557160251000"
+    }
+  },
+  {
+    "actionName": "weather_forecast",
+    "slots": [
+      {
+        "slotName": "location",
+        "uiColor": "#673ab7",
+        "keyword": "sys.spacy_gpe",
+        "isList": false,
+        "isRequired": true,
+        "textPrompts": [
+          "From which city you want to know the weather?"
+        ],
+        "remainingLife": 2
+      },
+      {
+        "slotName": "date",
+        "uiColor": "#009688",
+        "keyword": "sys.duckling_time",
+        "isList": false,
+        "isRequired": true,
+        "textPrompts": [
+          "for which date?"
+        ]
+      },
+      {
+        "slotName": "unit",
+        "uiColor": "#4caf50",
+        "keyword": "unit",
+        "isList": false,
+        "isRequired": false,
+        "textPrompts": []
+      }
+    ],
+    "responses": [
+      {
+        "textResponse": "{{! We check if the date the user specified is between the last date and first day of the forecast }}\n{{#and\n\t(gte (get \"dt_txt\" (itemAt webhook.response.list 39)) slots.date.to) \n\t(gte slots.date.from (get \"dt_txt\" (itemAt webhook.response.list 0))) \n}}\n        {{! Now we compare each forecat to get the closest forecast to the given date}}\n\t{{#eachIndex webhook.response.list}}\n\t  \t{{#compare (get \"dt_txt\" item) \"==\" (closestDate @root.slots.date.from (JSONPath @root.webhook.response.list \"*.dt_txt\"))}} \n  \t\t\tIt's {{item.weather.0.description}} and {{item.main.temp}}{{#eq @root.slots.unit.value compare=\"metric\"}}°C{{else}}°F{{/eq}} in {{@root.webhook.response.city.name}}, {{@root.webhook.response.city.country}}\n  \t\t{{/compare}}\n\t{{/eachIndex}}\n{{else}}\n\tSorry, but we don't have a forecast for those dates\n{{/and}}",
+        "actions": []
+      }
+    ],
+    "useWebhook": true,
+    "usePostFormat": false,
+    "creationDate": "1556914755000",
+    "modificationDate": "1557337151000",
+    "webhook": {
+      "webhookUrl": "https://api.openweathermap.org/data/2.5/forecast?q={{slots.location.value}}&appid={{categories.Weather.parameters.apiKey}}{{#if slots.unit.value}}&units={{slots.unit.value}}{{else}}&units=imperial{{/if}}",
+      "webhookVerb": "GET",
+      "webhookPayloadType": "None",
+      "webhookPayload": "",
+      "webhookHeaders": [],
+      "webhookUser": "",
+      "webhookPassword": "",
+      "creationDate": "1556914755000",
+      "modificationDate": "1557337152000"
+    }
+  }
+]

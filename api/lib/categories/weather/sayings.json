@@ -4,308 +4,396 @@
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556632980000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "what's the weather like this morning",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556632991000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "weather today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556632995000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "today's weather",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633000000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "weather Paris",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633028000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "weather of New York",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633033000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "what is the current weather",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633049000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "what is the current weather in Chicago",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633058000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "weather report",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633090000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "show me the weather",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633108000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "weather in Costa Rica",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633134000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "what's is the current weather in Moscow",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556633168000",
+    "modificationDate": "1556633956000"
   },
   {
     "userSays": "what's the weather like in our area",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634104000",
+    "modificationDate": "1556634104000"
   },
   {
     "userSays": "how's the weather today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634117000",
+    "modificationDate": "1556634117000"
   },
   {
     "userSays": "how is the weather in my area",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634130000",
+    "modificationDate": "1556634130000"
   },
   {
     "userSays": "weather Colorado",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634141000",
+    "modificationDate": "1556634141000"
   },
   {
     "userSays": "weather now",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634144000",
+    "modificationDate": "1556634144000"
   },
   {
     "userSays": "what is the weather like today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634149000",
+    "modificationDate": "1556634149000"
   },
   {
     "userSays": "show me the weather in Madrid",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634321000",
+    "modificationDate": "1556634321000"
   },
   {
     "userSays": "what's the weather supposed to be in Milan",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634336000",
+    "modificationDate": "1556634336000"
   },
   {
     "userSays": "how's the weather in Berlin",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634438000",
+    "modificationDate": "1556634438000"
   },
   {
     "userSays": "what's the weather forecast for today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634522000",
+    "modificationDate": "1556634522000"
   },
   {
     "userSays": "weather this morning",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634810000",
+    "modificationDate": "1556634810000"
   },
   {
     "userSays": "current weather in Barcelona",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634919000",
+    "modificationDate": "1556634919000"
   },
   {
     "userSays": "today's weather in Manchester",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634939000",
+    "modificationDate": "1556634939000"
   },
   {
     "userSays": "what is the weather for Toronto",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556634963000",
+    "modificationDate": "1556634963000"
   },
   {
     "userSays": "find weather in Madagascar",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635068000",
+    "modificationDate": "1556635068000"
   },
   {
     "userSays": "show me weather for today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635353000",
+    "modificationDate": "1556635353000"
   },
   {
     "userSays": "what's the weather like in Seattle",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635559000",
+    "modificationDate": "1556635559000"
   },
   {
     "userSays": "what is the weather like right now",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635571000",
+    "modificationDate": "1556635571000"
   },
   {
     "userSays": "I'd like to know the weather",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635582000",
+    "modificationDate": "1556635582000"
   },
   {
     "userSays": "weather",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635585000",
+    "modificationDate": "1556635585000"
   },
   {
     "userSays": "what's the weather supposed to be",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635595000",
+    "modificationDate": "1556635595000"
   },
   {
     "userSays": "weather forecast in India",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635608000",
+    "modificationDate": "1556635608000"
   },
   {
     "userSays": "what is today's weather like",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635618000",
+    "modificationDate": "1556635618000"
   },
   {
     "userSays": "the weather in Los Angeles is what",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635639000",
+    "modificationDate": "1556635639000"
   },
   {
     "userSays": "what is the weather today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635650000",
+    "modificationDate": "1556635650000"
   },
   {
     "userSays": "how is the weather today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635653000",
+    "modificationDate": "1556635653000"
   },
   {
     "userSays": "what is the weather in Rotterdam right now",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635705000",
+    "modificationDate": "1556635705000"
   },
   {
     "userSays": "weather outside",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635735000",
+    "modificationDate": "1556635735000"
   },
   {
     "userSays": "tell me what's the weather like in Ontario",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635791000",
+    "modificationDate": "1556635791000"
   },
   {
     "userSays": "weather in Quebec for today",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635798000",
+    "modificationDate": "1556635798000"
   },
   {
     "userSays": "New York weather report",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635832000",
+    "modificationDate": "1556635832000"
   },
   {
     "userSays": "what's the weather like",
     "keywords": [],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556635850000",
+    "modificationDate": "1556635850000"
   },
   {
     "userSays": "weather in Houston in Celsius",
@@ -314,13 +402,14 @@
         "start": 22,
         "end": 29,
         "value": "celsius",
-        "keyword": "unit",
-        "keywordId": 15
+        "keyword": "unit"
       }
     ],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556639878000",
+    "modificationDate": "1556639878000"
   },
   {
     "userSays": "I'd like to the weather in Spain in celsius",
@@ -329,13 +418,14 @@
         "start": 36,
         "end": 43,
         "value": "celsius",
-        "keyword": "unit",
-        "keywordId": 15
+        "keyword": "unit"
       }
     ],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556639888000",
+    "modificationDate": "1556639888000"
   },
   {
     "userSays": "show me the weather in celsius",
@@ -344,13 +434,14 @@
         "start": 23,
         "end": 30,
         "value": "celsius",
-        "keyword": "unit",
-        "keywordId": 15
+        "keyword": "unit"
       }
     ],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556639902000",
+    "modificationDate": "1556639902000"
   },
   {
     "userSays": "tell me the weather in Sevilla in Fahrenheit",
@@ -359,13 +450,14 @@
         "start": 34,
         "end": 44,
         "value": "fahrenheit",
-        "keyword": "unit",
-        "keywordId": 15
+        "keyword": "unit"
       }
     ],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556639913000",
+    "modificationDate": "1556639913000"
   },
   {
     "userSays": "weather in celsius",
@@ -374,12 +466,311 @@
         "start": 11,
         "end": 18,
         "value": "celsius",
-        "keyword": "unit",
-        "keywordId": 15
+        "keyword": "unit"
       }
     ],
     "actions": [
       "current_weather"
-    ]
+    ],
+    "creationDate": "1556639926000",
+    "modificationDate": "1556639926000"
+  },
+  {
+    "userSays": "weather data in celsius",
+    "keywords": [
+      {
+        "start": 16,
+        "end": 23,
+        "value": "celsius",
+        "keyword": "unit"
+      }
+    ],
+    "actions": [
+      "current_weather"
+    ],
+    "creationDate": "1556641444000",
+    "modificationDate": "1556915511000"
+  },
+  {
+    "userSays": "weather on friday",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1556915536000",
+    "modificationDate": "1556915536000"
+  },
+  {
+    "userSays": "I'd like to get the weather for July 22",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557155434000",
+    "modificationDate": "1557155458000"
+  },
+  {
+    "userSays": "how's the weather gonna be on Monday",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557155447000",
+    "modificationDate": "1557155459000"
+  },
+  {
+    "userSays": "weather forecast",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557155454000",
+    "modificationDate": "1557155461000"
+  },
+  {
+    "userSays": "what is the weather tomorrow in New York in celsius",
+    "keywords": [
+      {
+        "start": 44,
+        "end": 51,
+        "value": "celsius",
+        "keyword": "unit"
+      }
+    ],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557155485000",
+    "modificationDate": "1557155485000"
+  },
+  {
+    "userSays": "could you give me the weather forecast for Tokyo please",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557155519000",
+    "modificationDate": "1557155519000"
+  },
+  {
+    "userSays": "what's the weather going to be tomorrow",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557157117000",
+    "modificationDate": "1557157117000"
+  },
+  {
+    "userSays": "what will be the weather like in Chicago on the next friday",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557157138000",
+    "modificationDate": "1557157138000"
+  },
+  {
+    "userSays": "what's the weather tomorrow in Sidney",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557157158000",
+    "modificationDate": "1557157158000"
+  },
+  {
+    "userSays": "weather forecast in Boston next week",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158167000",
+    "modificationDate": "1557158167000"
+  },
+  {
+    "userSays": "tomorrow's weather",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158177000",
+    "modificationDate": "1557158177000"
+  },
+  {
+    "userSays": "weather for May 25",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158234000",
+    "modificationDate": "1557158234000"
+  },
+  {
+    "userSays": "what is the weather forecast for tomorrow morning",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158270000",
+    "modificationDate": "1557158270000"
+  },
+  {
+    "userSays": "what's the weather like in Seattle tomorrow",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158312000",
+    "modificationDate": "1557158312000"
+  },
+  {
+    "userSays": "tell me the weather for the next week",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158332000",
+    "modificationDate": "1557158332000"
+  },
+  {
+    "userSays": "what will be the weather like on the weekend",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158346000",
+    "modificationDate": "1557158346000"
+  },
+  {
+    "userSays": "now tell me the weather forecast in Las Vegas",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158367000",
+    "modificationDate": "1557158367000"
+  },
+  {
+    "userSays": "I'd like to know the weather for May 25 in Paris",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158391000",
+    "modificationDate": "1557158391000"
+  },
+  {
+    "userSays": "what's the weather supposed to be next monday in Washington",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158411000",
+    "modificationDate": "1557158411000"
+  },
+  {
+    "userSays": "weather in Madrid in 5 days",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158433000",
+    "modificationDate": "1557158433000"
+  },
+  {
+    "userSays": "what's the weather for tomorrow",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158656000",
+    "modificationDate": "1557158656000"
+  },
+  {
+    "userSays": "weather for May 3",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158661000",
+    "modificationDate": "1557158661000"
+  },
+  {
+    "userSays": "weather on Sunday",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158690000",
+    "modificationDate": "1557158690000"
+  },
+  {
+    "userSays": "weather in Rome tomorrow",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557158713000",
+    "modificationDate": "1557158713000"
+  },
+  {
+    "userSays": "show me the weather in Dublin for Wednesday",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557159024000",
+    "modificationDate": "1557159024000"
+  },
+  {
+    "userSays": "tomorrow's weather report for Brasilia",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557159049000",
+    "modificationDate": "1557159049000"
+  },
+  {
+    "userSays": "what's the weather supposed to be this week",
+    "keywords": [],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557159080000",
+    "modificationDate": "1557159080000"
+  },
+  {
+    "userSays": "weather on Sunday in celsius",
+    "keywords": [
+      {
+        "start": 21,
+        "end": 28,
+        "value": "celsius",
+        "keyword": "unit"
+      }
+    ],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557159573000",
+    "modificationDate": "1557159573000"
+  },
+  {
+    "userSays": "what will be the weather like on the weekend in celsius",
+    "keywords": [
+      {
+        "start": 48,
+        "end": 55,
+        "value": "celsius",
+        "keyword": "unit"
+      }
+    ],
+    "actions": [
+      "weather_forecast"
+    ],
+    "creationDate": "1557159584000",
+    "modificationDate": "1557166751000"
   }
 ]

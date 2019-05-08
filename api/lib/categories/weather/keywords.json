@@ -102,7 +102,36 @@
     ],
     "regex": "",
     "type": "learned",
-    "modifiers": []
+    "modifiers": [],
+    "creationDate": "1556586831000",
+    "modificationDate": "1556586831000"
+  },
+  {
+    "keywordName": "unit",
+    "uiColor": "#4caf50",
+    "examples": [
+      {
+        "value": "imperial",
+        "synonyms": [
+          "imperial",
+          "fahrenheit",
+          "F"
+        ]
+      },
+      {
+        "value": "metric",
+        "synonyms": [
+          "metric",
+          "celsius",
+          "C"
+        ]
+      }
+    ],
+    "regex": "",
+    "type": "learned",
+    "modifiers": [],
+    "creationDate": "1556586943000",
+    "modificationDate": "1556641504000"
   },
   {
     "keywordName": "feeling",
@@ -130,29 +159,8 @@
     ],
     "regex": "",
     "type": "learned",
-    "modifiers": []
-  },
-  {
-    "keywordName": "unit",
-    "uiColor": "#4caf50",
-    "examples": [
-      {
-        "value": "imperial",
-        "synonyms": [
-          "fahrenheit",
-          "imperial"
-        ]
-      },
-      {
-        "value": "metric",
-        "synonyms": [
-          "celsius",
-          "metric"
-        ]
-      }
-    ],
-    "regex": "",
-    "type": "learned",
-    "modifiers": []
+    "modifiers": [],
+    "creationDate": "1556587423000",
+    "modificationDate": "1556587423000"
   }
 ]
