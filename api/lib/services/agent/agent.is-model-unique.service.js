@@ -8,7 +8,23 @@ module.exports = async function ({ AgentModel, field, model, value }
     try {
 
         const Models = await globalService.searchByField({ field, value, model });
-        return Models && Models.length === 0 ? true : !await AgentModel.belongsTo(Models[0], model);
+        if (Models){
+            if (Models.length === 0){
+                return true;
+            }
+            else {
+
+                const validation = await Promise.all(Models.map(async (tempModel) => {
+
+                    return await AgentModel.belongsTo(tempModel, model);
+                }));
+
+                return validation.indexOf(true) === -1;
+            }
+        }
+        else {
+            return true;
+        }
     }
     catch (error) {
         throw RedisErrorHandler({ error });

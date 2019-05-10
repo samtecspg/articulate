@@ -8,6 +8,7 @@ import ConverseUpdateContextFrames from './agent/agent.converse-update-context-f
 import Converse from './agent/agent.converse.service';
 import CreateAction from './agent/agent.create-action.service';
 import CreateCategory from './agent/agent.create-category.service';
+import ImportCategory from './agent/agent.import-category.service';
 import CreateKeyword from './agent/agent.create-keyword.service';
 import CreatePostFormat from './agent/agent.create-post-format.service';
 import CreateWebhook from './agent/agent.create-webhook.service';
@@ -62,6 +63,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async createCategory() {
 
         return await CreateCategory.apply(this, arguments);
+    }
+
+    async importCategory() {
+
+        return await ImportCategory.apply(this, arguments);
     }
 
     async createAction() {

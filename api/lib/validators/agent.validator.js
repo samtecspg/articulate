@@ -110,6 +110,28 @@ class AgentValidate {
                 };
             })()
         };
+
+        this.importCategory = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    categoryName: CategorySchema.categoryName.required(),
+                    enabled: CategorySchema.enabled.required(),
+                    actionThreshold: CategorySchema.actionThreshold.required(),
+                    lastTraining: CategorySchema.lastTraining,
+                    model: CategorySchema.model,
+                    extraTrainingData: CategorySchema.extraTrainingData,
+                    parameters: Joi.object()
+                };
+            })()
+        }
+
         this.createAction = {
             params: (() => {
 

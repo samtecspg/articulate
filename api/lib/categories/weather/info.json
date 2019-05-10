@@ -2,8 +2,14 @@
     "name": "Weather",
     "description": "Most common requests from users regarding weather (fulfilled by OpenWeatherMap)",
     "documentation": "",
-    "parameters": {
-        "apiKey": {
+    "data": {
+        "categoryName": "weather",
+        "enabled": true,
+        "actionThreshold": 0.5,
+        "model": "",
+        "extraTrainingData": true,
+        "parameters": {
+            "name": "apiKey",
             "displayName": "API Key",
             "description" : "Your API Key provided by OpenWeatherMap",
             "type": "string"
