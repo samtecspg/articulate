@@ -16,6 +16,8 @@ TimeAgo.addLocale(es);
 TimeAgo.addLocale(pt);
 TimeAgo.addLocale(pl);
 
+import training from '../../images/training.svg';
+
 const styles = {
   button: {
     display: 'inline',
@@ -42,6 +44,11 @@ const styles = {
   readyLabel: {
     color: '#00ca9f',
     fontWeight: 'bold',
+  },
+  trainingAnimation: {
+    height: '24px',
+    position: 'relative',
+    bottom: '2px'
   }
 };
 
@@ -81,7 +88,10 @@ export class TrainButton extends React.Component {
                   null)}
         </Typography>
         <Button disabled={agentStatus === 'Training'} className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
-          <FormattedMessage {...messages.trainButton} />
+          {agentStatus !== 'Training' ? 
+            <FormattedMessage {...messages.trainButton} /> :
+            <img src={training} className={classes.trainingAnimation}></img>
+          }
         </Button>
       </Grid>
     );
