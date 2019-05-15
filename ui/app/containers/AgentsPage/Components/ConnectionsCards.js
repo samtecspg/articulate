@@ -10,6 +10,7 @@ import gravatars from '../../../components/Gravatar';
 import ChannelsLogos from '../../../components/ChannelsLogos';
 import ChannelsColors from '../../../components/ChannelsColors';
 import connectionIcon from '../../../images/connection-icon.svg';
+import brokenConnectionIcon from '../../../images/broken-connection-icon.svg';
 
 const styles = {
   cardsContainer: {
@@ -187,22 +188,22 @@ class ConnectionsCards extends React.Component {
           </Grid>
           {connections.map((connection, index) => {
             
-            const agent = agents.filter((tempAgent) => {
+            const agent = connection.agent ? agents.filter((tempAgent) => {
 
               return parseInt(tempAgent.id) === connection.agent;
-            })[0];
+            })[0] : null;
             return (<Grid key={`connectionCard_${index}`} item>
               <Card className={classes.connectionCard}>
                 <CardContent onClick={() => {this.props.onGoToUrl(`/connection/${connection.id}`)}} className={classes.connectionCardContent}>
                   <Grid className={classes.connectionDataContainer} container justify='center'>
                     <Grid container justify='center' item xs={12}>
-                      {gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.connectionIcon })}
+                      {agent ? gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.connectionIcon }) : null}
                     </Grid>
                     <Grid container justify='center' item xs={12}>
-                      <Typography className={classes.agentNameTitle} style={{ color: agent.uiColor }}>{agent.agentName}</Typography>
+                      <Typography className={classes.agentNameTitle} style={{ color: agent ? agent.uiColor : '' }}>{agent ? agent.agentName : null}</Typography>
                     </Grid>
                     <Grid container justify='center' item xs={12}>
-                      <img className={classes.connectionLink} src={connectionIcon} />
+                      <img className={classes.connectionLink} src={connection.agent ? connectionIcon : brokenConnectionIcon} />
                     </Grid>
                     <Grid container justify='center' item xs={12}>
                       <ChannelsLogos logo={connection.channel} className={classes.channelIcon} />

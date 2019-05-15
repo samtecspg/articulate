@@ -11,7 +11,8 @@ const schema = {
         type: 'boolean'
     },
     agent: {
-        type: 'number'
+        type: 'number',
+        index: true,
     },
     status: {
         type: 'string'
