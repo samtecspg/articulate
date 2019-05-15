@@ -3,5 +3,12 @@ import Categories from '../../categories';
 
 module.exports = async function () {
 
-    return _.mapValues(Categories, 'info');
+    const categories = {}
+    Object.keys(Categories).forEach((category) => {
+
+        const info = Categories[category].info;
+        const samples = _.take(_.map(Categories[category].sayings, 'userSays'), 10);
+        categories[category] = { ...info, samples };
+    });
+    return categories;
 };

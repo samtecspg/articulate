@@ -1,5 +1,6 @@
 {
     "name": "Weather",
+    "uiColor": "#44C3D8",
     "description": "Most common requests from users regarding weather (fulfilled by OpenWeatherMap)",
     "documentation": "",
     "data": {
@@ -9,10 +10,7 @@
         "model": "",
         "extraTrainingData": true,
         "parameters": {
-            "name": "apiKey",
-            "displayName": "API Key",
-            "description" : "Your API Key provided by OpenWeatherMap",
-            "type": "string"
+            "apiKey": ""
         }
     }
 }

@@ -140,11 +140,6 @@ const styles = {
     paddingLeft: '5px',
     fontSize: '14px',
   },
-  addCategoryButton: {
-    width: '62px',
-    height: '26px',
-    top: '3px',
-  },
   categoryDataContainer: {
     display: 'inline',
   },
@@ -260,7 +255,7 @@ class SayingsDataForm extends React.Component {
                 onSearch={this.props.onSearchCategory}
                 onGoToUrl={this.props.onGoToUrl}
                 onEditRoutePrefix={`/agent/${this.props.agentId}/category/`}
-                onCreateRoute={`/agent/${this.props.agentId}/category/create`}
+                onCreateRoute={`/agent/${this.props.agentId}/addCategory`}
                 filteredValues={this.props.agentFilteredCategories}
                 values={this.props.agentCategories}
                 inputLabelMessage={messages.categorySelect}

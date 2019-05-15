@@ -92,7 +92,6 @@ export function* deleteCategory(payload) {
     yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
   }
   catch (err) {
-    console.log(err);
     const error = { ...err };
     yield put(deleteCategoryError(error.response.data.message));
   }

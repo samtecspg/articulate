@@ -224,6 +224,12 @@ import {
   DELETE_SESSION_SUCCESS,
   DELETE_SESSION_ERROR,
   SHOW_WARNING,
+  LOAD_PREBUILT_CATEGORIES,
+  LOAD_PREBUILT_CATEGORIES_ERROR,
+  LOAD_PREBUILT_CATEGORIES_SUCCESS,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS,
 } from './constants';
 
 /*
@@ -940,6 +946,48 @@ export function loadCategoriesSuccess(categories) {
     type: LOAD_CATEGORIES_SUCCESS,
     categories,
   };
+}
+
+export function loadPrebuiltCategories() {
+  return {
+    type: LOAD_PREBUILT_CATEGORIES,
+    apiCall: true,
+  };
+}
+
+export function loadPrebuiltCategoriesError(error) {
+  return {
+    type: LOAD_PREBUILT_CATEGORIES_ERROR,
+    error,
+  };
+}
+
+export function loadPrebuiltCategoriesSuccess(prebuiltCategories) {
+  return {
+    type: LOAD_PREBUILT_CATEGORIES_SUCCESS,
+    prebuiltCategories,
+  };
+}
+
+export function importCategory(category) {
+  return {
+    type: IMPORT_CATEGORY,
+    category,
+    apiCall: true
+  }
+}
+
+export function importCategoryError(error) {
+  return {
+    type: IMPORT_CATEGORY_ERROR,
+    error
+  }
+}
+
+export function importCategorySuccess() {
+  return {
+    type: IMPORT_CATEGORY_SUCCESS
+  }
 }
 
 export function loadFilteredCategories(filter) {

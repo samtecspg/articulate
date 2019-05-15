@@ -28,6 +28,7 @@ import ActionPage from '../ActionPage/Loadable';
 import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
 import CategoryPage from '../CategoryPage/Loadable';
+import AddCategoryPage from '../AddCategoryPage/Loadable';
 import DialoguePage from '../DialoguePage/Loadable';
 import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
@@ -169,6 +170,7 @@ class App extends React.Component {
             <Route exact path='/agent/:id/dialogue' component={DialoguePage} />
             <Route exact path='/agent/:id/review' component={ReviewPage} />
             <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
+            <Route exact path='/agent/:id/addCategory' component={AddCategoryPage} />
             <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
             <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
             <Route exact path='/settings' component={SettingsPage} />

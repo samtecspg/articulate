@@ -29,6 +29,11 @@ const makeSelectLoading = () => createSelector(
   (globalState) => globalState.loading,
 );
 
+const makeSelectLoadingImportCategory = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.loadingImportCategory,
+);
+
 const makeSelectError = () => createSelector(
   selectGlobal,
   (globalState) => globalState.error,
@@ -157,6 +162,11 @@ const makeSelectTotalSayings = () => createSelector(
 const makeSelectCategories = () => createSelector(
   selectGlobal,
   (globalState) => globalState.categories,
+);
+
+const makeSelectPrebuiltCategories = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.prebuiltCategories,
 );
 
 const makeSelectFilteredCategories = () => createSelector(
@@ -296,6 +306,7 @@ export {
   makeSelectSessionLoaded,
   makeSelectMissingAPI,
   makeSelectLoading,
+  makeSelectLoadingImportCategory,
   makeSelectError,
   makeSelectSuccess,
   makeSelectConversationBarOpen,
@@ -319,6 +330,7 @@ export {
   makeSelectSayings,
   makeSelectTotalSayings,
   makeSelectCategories,
+  makeSelectPrebuiltCategories,
   makeSelectFilteredCategories,
   makeSelectFilteredActions,
   makeSelectSelectedCategory,

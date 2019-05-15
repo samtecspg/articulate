@@ -212,7 +212,13 @@ import {
   DELETE_SESSION,
   DELETE_SESSION_SUCCESS,
   DELETE_SESSION_ERROR,
-  SHOW_WARNING
+  SHOW_WARNING,
+  LOAD_PREBUILT_CATEGORIES,
+  LOAD_PREBUILT_CATEGORIES_ERROR,
+  LOAD_PREBUILT_CATEGORIES_SUCCESS,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -237,6 +243,7 @@ const initialState = Immutable({
     parameters: {},
   },
   categories: [],
+  prebuiltCategories: {},
   filteredCategories: [],
   filteredActions: [],
   channels: false,
@@ -402,6 +409,7 @@ const initialState = Immutable({
   },
   settingsTouched: false,
   loading: false,
+  loadingImportCategory: false,
   error: false,
   success: false,
   successKeyword: false,
@@ -829,6 +837,28 @@ function appReducer(state = initialState, action) {
       return state.set('categories', action.categories.categories)
         .set('loading', false)
         .set('error', false);
+    case LOAD_PREBUILT_CATEGORIES:
+      return state.set('prebuiltCategories', {})
+        .set('loading', true)
+        .set('loadingImportCategory', false)
+        .set('error', false);
+    case LOAD_PREBUILT_CATEGORIES_ERROR:
+      return state.set('prebuiltCategories', {})
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_PREBUILT_CATEGORIES_SUCCESS:
+      return state.set('prebuiltCategories', action.prebuiltCategories)
+        .set('loading', false)
+        .set('error', false);
+    case IMPORT_CATEGORY:
+      return state.set('loadingImportCategory', true)
+        .set('error', false);
+    case IMPORT_CATEGORY_ERROR:
+      return state.set('loadingImportCategory', false)
+        .set('error', action.error);
+    case IMPORT_CATEGORY_SUCCESS: 
+      return state.set('loadingImportCategory', false)
+        .set('error', false);      
     case LOAD_FILTERED_CATEGORIES:
       return state.set('filteredCategories', [])
         .set('loading', true)
