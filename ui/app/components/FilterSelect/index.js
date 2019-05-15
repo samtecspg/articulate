@@ -31,6 +31,18 @@ const styles = {
     searchValueContainer: {
       minWidth: '288px',
       borderBottom: '1px solid #4e4e4e',
+      position: 'relative',
+      bottom: '8px'
+    },
+    searchValueContainerWithoutHover: {
+      '&:hover': {
+        textDecoration: 'none',
+        backgroundColor: '#fff'
+      },
+      minWidth: '288px',
+      borderBottom: '1px solid #4e4e4e',
+      position: 'relative',
+      bottom: '8px'
     },
     searchValueField: {
       width: '200px',
@@ -49,7 +61,7 @@ const styles = {
     addValueButton: {
       width: '62px',
       height: '26px',
-      top: '3px',
+      top: '5px',
     },
     dataContainer: {
       display: 'inline',
@@ -71,6 +83,7 @@ export class FilterSelect extends React.Component {
         valuesDropdownOpen: false,
         filterInput: '',
         filteringValues: false,
+        buttonHovered: false,
     };
 
     render() {
@@ -114,7 +127,7 @@ export class FilterSelect extends React.Component {
                     <MenuItem key='select' value='select'>
                         <FormattedMessage {...messages.selectDefault} />
                     </MenuItem>}
-                    <MenuItem className={classes.searchValueContainer} value="filter">
+                    <MenuItem className={this.state.buttonHovered ? classes.searchValueContainerWithoutHover : classes.searchValueContainer} value="filter">
                         <Grid container justify={this.props.hideAddButton ? 'flex-start' : 'flex-end'} style={this.state.filterInput ? {position: 'absolute'} : {}}>
                             <img src={searchIcon} />
                             <Input
@@ -156,13 +169,18 @@ export class FilterSelect extends React.Component {
                                     />
                                 </div>
                                 :
-                                (this.props.hideAddButton ? null : <Button
-                                    onClick={() => {
-                                        this.props.onGoToUrl(this.props.onCreateRoute);
-                                    }}
-                                    className={classes.addValueButton}
-                                    variant='contained'
-                                ><FormattedMessage {...messages.add} /></Button>)
+                                (this.props.hideAddButton ? null : 
+                                    <Button
+                                        onClick={() => {
+                                            this.props.onGoToUrl(this.props.onCreateRoute);
+                                        }}
+                                        className={classes.addValueButton}
+                                        variant='contained'
+                                        onMouseEnter={() => { this.setState({buttonHovered: true})}}
+                                        onMouseLeave={() => { this.setState({buttonHovered: false})}}
+                                    >
+                                        <FormattedMessage {...messages.add} />
+                                    </Button>)
                             }
                         </Grid>
                     </MenuItem>
@@ -197,10 +215,16 @@ export class FilterSelect extends React.Component {
                         </MenuItem>,
                         (this.props.hideAddButton ? null : <MenuItem key='create' value='create'>
                             <Button
-                            onClick={() => {
-                                this.props.onGoToUrl(this.props.onCreateRoute);
-                            }} className={classes.addValueButton} variant='contained'
-                            ><FormattedMessage {...messages.add} /></Button>
+                                onClick={() => {
+                                    this.props.onGoToUrl(this.props.onCreateRoute);
+                                }}
+                                className={classes.addValueButton}
+                                variant='contained'
+                                onMouseEnter={() => { this.setState({buttonHovered: true})}}
+                                onMouseLeave={() => { this.setState({buttonHovered: false})}}
+                            >
+                                <FormattedMessage {...messages.add} />
+                            </Button>
                         </MenuItem>)]
                     :
                     this.props.values.map((value, index) => {
