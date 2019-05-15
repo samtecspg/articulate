@@ -418,6 +418,7 @@ const initialState = Immutable({
   successAgent: false,
   conversationStateObject: {},
   newActionResponse: 'hello',
+  documents: []
 });
 
 function appReducer(state = initialState, action) {
@@ -568,6 +569,7 @@ function appReducer(state = initialState, action) {
         .set('successAgent', false)
         .set('actions', [])
         .set('messages', [])
+        .set('documents', [])
         .set('sessionId', '')
         .set('sessionLoaded', false)
         .set('conversationBarOpen', false)
