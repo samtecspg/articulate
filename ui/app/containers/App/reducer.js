@@ -1117,7 +1117,8 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false)
         .set('actionTouched', false)
-        .set('successAction', true);
+        .set('successAction', true)
+        .update('newSayingActions', newSayingActions => newSayingActions.map((item) => { return item === action.oldActionName ? action.action.actionName : item }));
     case DELETE_ACTION:
       state = state.update('newSayingActions', newSayingActions => newSayingActions.filter((item) => item !== action.actionName));
       return state.set('loading', true)

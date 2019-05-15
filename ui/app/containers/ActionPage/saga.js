@@ -249,7 +249,7 @@ export function* putAction(payload) {
         yield call(putActionPostFormat, { id: currentAction.id, api });
       }
     }
-    yield put(updateActionSuccess(response));
+    yield put(updateActionSuccess(response, currentAction.actionName));
   }
   catch (err) {
     yield put(updateActionError(err));

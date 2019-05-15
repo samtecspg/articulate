@@ -1367,10 +1367,11 @@ export function updateActionError() {
   };
 }
 
-export function updateActionSuccess(action) {
+export function updateActionSuccess(action, oldActionName) {
   return {
     type: UPDATE_ACTION_SUCCESS,
     action,
+    oldActionName
   };
 }
 
