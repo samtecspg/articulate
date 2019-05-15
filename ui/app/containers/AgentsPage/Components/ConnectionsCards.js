@@ -18,7 +18,8 @@ const styles = {
     },
     marginBottom: '80px',
     flexWrap: 'nowrap',
-    overflowX: 'scroll'
+    overflowX: 'scroll',
+    scrollbarWidth: 'none'
   },
   newConnectionCard: {
     border: '1px solid #00bd6f',
@@ -138,6 +139,25 @@ class ConnectionsCards extends React.Component {
     constructor(props){
       super(props)
       this.addEmptyCards = this.addEmptyCards.bind(this);
+    }
+
+    componentDidMount(){
+      if (document.getElementById('dvCardsContainer').addEventListener) {
+        // IE9, Chrome, Safari, Opera
+        document.getElementById('dvCardsContainer').addEventListener("mousewheel", this.scrollHorizontally, false);
+        // Firefox
+        document.getElementById('dvCardsContainer').addEventListener("DOMMouseScroll", this.scrollHorizontally, false);
+      } else {
+        // IE 6/7/8
+        document.getElementById('dvCardsContainer').attachEvent("onmousewheel", this.scrollHorizontally);
+      }
+    }
+
+    scrollHorizontally(e) {
+      e = window.event || e;
+      var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+      document.getElementById('dvCardsContainer').scrollLeft -= (delta*40); // Multiplied by 40
+      e.preventDefault();
     }
 
     state = {

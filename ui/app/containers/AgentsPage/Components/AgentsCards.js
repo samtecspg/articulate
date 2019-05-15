@@ -17,7 +17,8 @@ const styles = {
     },
     marginBottom: '30px',
     flexWrap: 'nowrap',
-    overflowX: 'scroll'
+    overflowX: 'scroll',
+    scrollbarWidth: 'none'
   },
   newAgentCard: {
     border: '1px solid #00bd6f',
@@ -130,6 +131,25 @@ class AgentsCards extends React.Component {
       selectedAgent: null
     };
 
+    componentDidMount(){
+      if (document.getElementById('dvCardsContainer').addEventListener) {
+        // IE9, Chrome, Safari, Opera
+        document.getElementById('dvCardsContainer').addEventListener("mousewheel", this.scrollHorizontally, false);
+        // Firefox
+        document.getElementById('dvCardsContainer').addEventListener("DOMMouseScroll", this.scrollHorizontally, false);
+      } else {
+        // IE 6/7/8
+        document.getElementById('dvCardsContainer').attachEvent("onmousewheel", this.scrollHorizontally);
+      }
+    }
+
+    scrollHorizontally(e) {
+      e = window.event || e;
+      var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+      document.getElementById('dvCardsContainer').scrollLeft -= (delta*40); // Multiplied by 40
+      e.preventDefault();
+    }
+
     addEmptyCards(numOfCards){
       const emptyCards = [];
       //the ui show 4 cards as max per row
@@ -143,7 +163,7 @@ class AgentsCards extends React.Component {
     render(){
       const { classes, agents, onImportAgent } = this.props;
       return (
-        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'flex-start'} container spacing={16}>
+        <Grid id='dvCardsContainer' className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'flex-start'} container spacing={16}>
           <Grid key='newAgentCard' item>
             <Card className={classes.newAgentCard}>
               <CardContent  onClick={() => {this.props.onGoToUrl('/agent/create')}} className={classes.newAgentCardContent}>
