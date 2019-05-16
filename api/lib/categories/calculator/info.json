@@ -1,0 +1,14 @@
+{
+    "name": "Calculator",
+    "uiColor": "#4A4A4A",
+    "description": "Morning comes wheter you set the alarm or not",
+    "documentation": "",
+    "data": {
+        "categoryName": "calculator",
+        "enabled": true,
+        "actionThreshold": 0.5,
+        "model": "",
+        "extraTrainingData": true,
+        "parameters": {}
+    }
+}

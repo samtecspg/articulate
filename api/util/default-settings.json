@@ -758,5 +758,6 @@
   "sayingsPageSize": 5,
   "modifierSayingsPageSize": 5,
   "keywordsPageSize": 5,
-  "reviewPageSize": 5
+  "reviewPageSize": 5,
+  "conversationPanelWidth": 300
 }

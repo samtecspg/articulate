@@ -1,0 +1,16 @@
+{
+    "name": "Weather",
+    "uiColor": "#44C3D8",
+    "description": "Most common requests from users regarding weather (fulfilled by OpenWeatherMap)",
+    "documentation": "",
+    "data": {
+        "categoryName": "weather",
+        "enabled": true,
+        "actionThreshold": 0.5,
+        "model": "",
+        "extraTrainingData": true,
+        "parameters": {
+            "apiKey": ""
+        }
+    }
+}

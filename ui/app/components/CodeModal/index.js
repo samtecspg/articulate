@@ -124,12 +124,12 @@ class CodeModal extends React.Component { // eslint-disable-line react/prefer-st
               <Tab className={classes.tab} label={intl.formatMessage(messages.rasaParseResults)} />
               <Tab className={classes.tab} label={intl.formatMessage(messages.context)}/>
               <Tab className={classes.tab} label={intl.formatMessage(messages.currentFrame)} />
-              {this.props.conversationStateObject.webhookResponses ? <Tab label={intl.formatMessage(messages.webhookResponses)} /> : null}
+              {this.props.conversationStateObject.webhooks ? <Tab label={intl.formatMessage(messages.webhooks)} /> : null}
             </Tabs>
             {value === 0 && <TabContainer classes={classes} doc={appendDocIdToParseResults(this.props.conversationStateObject)}></TabContainer>}
             {value === 1 && <TabContainer classes={classes} doc={this.props.conversationStateObject.context}></TabContainer>}
             {value === 2 && <TabContainer classes={classes} doc={this.props.conversationStateObject.currentFrame}></TabContainer>}
-            {value === 3 && (this.props.conversationStateObject.webhookResponses ? <TabContainer classes={classes} doc={this.props.conversationStateObject.webhookResponses}></TabContainer> : null)}
+            {value === 3 && (this.props.conversationStateObject.webhooks ? <TabContainer classes={classes} doc={this.props.conversationStateObject.webhooks}></TabContainer> : null)}
           </Grid>
         </Modal>
       </Grid> :

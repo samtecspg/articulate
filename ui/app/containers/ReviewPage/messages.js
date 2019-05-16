@@ -93,7 +93,7 @@ export default defineMessages({
   },
   selectNewCategory: {
     id: 'app.containers.ReviewPage.component.SayingsDataForm.selectNewCategory',
-    defaultMessage: 'Select new cat...',
+    defaultMessage: 'Select new category',
   },
   required: {
     id: 'app.containers.ReviewPage.component.SayingsDataForm.required',
@@ -101,7 +101,7 @@ export default defineMessages({
   },
   copyAlert: {
     id: 'app.containers.ReviewPage.component.SayingRow.copyAlert',
-    defaultMessage: 'To copy this text as a new saying please specify the new category:'
+    defaultMessage: 'This agent is configured to use a single classification model for all categories. To copy this text as a new saying please specify the category it belongs to:'
   },
   copyDialogCancelButton: {
     id: 'app.containers.ReviewPage.component.SayingRow.copyDialogCancelButton',

@@ -45,6 +45,7 @@ import {
   changeAgentParameterValue,
   loadSettings,
   setAgentDefaults,
+  toggleConversationBar,
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -142,6 +143,7 @@ export class AgentPage extends React.PureComponent {
         this.navigateToNextLocation();
       }
       if (this.state.isNewAgent) {
+        this.props.onToggleChat(true);
         this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue`);
       }
     }
@@ -431,6 +433,7 @@ AgentPage.propTypes = {
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,
   onChangeParameterValue: PropTypes.func,
+  onToggleChat: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -533,6 +536,9 @@ function mapDispatchToProps(dispatch) {
     },
     onSetAgentDefaults: () => {
       dispatch(setAgentDefaults());
+    },
+    onToggleChat: (value) => {
+      dispatch(toggleConversationBar(value));
     }
   };
 }

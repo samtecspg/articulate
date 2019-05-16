@@ -114,13 +114,13 @@ export class AppHeader extends React.Component {
               onToggleConversationBar={this.props.onToggleConversationBar}
             />
             <Grid item xl={2} lg={2} md={2}>
-              <Link to='/'>
+              <Link onClick={() => { this.props.onToggleConversationBar(false) }} to='/'>
                 <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={2}/>
             <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
-              {this.props.location.pathname.indexOf('connection') === -1 && agent.gravatar !== '' && this.props.location.pathname !== '/' ? 
+              {this.props.location.pathname.indexOf('connection') === -1 && this.props.location.pathname.indexOf('settings') === -1 && agent.gravatar !== '' && this.props.location.pathname !== '/' ? 
               <Typography className={classes.agentName} style={{color: agent.uiColor}}>
                 {gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.agentIcon })}
                 <span className={classes.agentName}>{agent.agentName}</span>
@@ -142,7 +142,7 @@ export class AppHeader extends React.Component {
               onToggleConversationBar={this.props.onToggleConversationBar}
             />
             <Grid item sm={6} xs={6}>
-              <Link to='/' className={classes.link}>
+              <Link onClick={() => { this.props.onToggleConversationBar(false) }} to='/' className={classes.link}>
                 <Button variant='contained'>
                   <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                   <FormattedMessage {...messages.agentsButton} />
@@ -161,13 +161,13 @@ export class AppHeader extends React.Component {
         <Grid container className={classes.header} item xs={12}>
           <Hidden only={['xs', 'sm']}>
             <Grid item xl={2} lg={2} md={2}>
-              <Link to='/'>
+              <Link onClick={() => { this.props.onToggleConversationBar(false) }} to='/'>
                 <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </Link>
             </Grid>
             <Grid item xl={3} lg={3} md={3}/>
             <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
-              {this.props.location.pathname.indexOf('connection') === -1 && agent.gravatar !== '' && this.props.location.pathname !== '/' ? 
+              {this.props.location.pathname.indexOf('connection') === -1 && this.props.location.pathname.indexOf('settings') === -1 && agent.gravatar !== '' && this.props.location.pathname !== '/' ? 
               <Typography className={classes.agentName} style={{color: agent.uiColor}}>
                 {gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.agentIcon })}
                 <span>{agent.agentName}</span>
@@ -198,7 +198,7 @@ export class AppHeader extends React.Component {
           </Hidden>
           <Hidden only={['md', 'lg', 'xl']}>
             <Grid item sm={6} xs={6}>
-              {this.props.location.pathname.indexOf('connection') === -1 && agent.gravatar !== '' && this.props.location.pathname !== '/' ? 
+              {this.props.location.pathname.indexOf('connection') === -1 && this.props.location.pathname.indexOf('settings') === -1 && agent.gravatar !== '' && this.props.location.pathname !== '/' ? 
               <Typography className={classes.agentName} style={{color: agent.uiColor}}>
                 {gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.agentIcon })}
                 <span className={classes.agentName}>{agent.agentName}</span>

@@ -15,8 +15,15 @@
         },
         "whiteList": {
             "displayName": "Phone Numbers Whitelist",
-            "description" : "Whitelisted phone numbers in E164 format",
-            "type": "array"
+            "description" : "Allow only the numbers in this list. Allow all if empty.",
+            "type": "array",
+            "allowEmpty": true
+        },
+        "blackList": {
+            "displayName": "Phone Numbers Blacklist",
+            "description" : "Block the numbers in this list.",
+            "type": "array",
+            "allowEmpty": true
         }
     }
 }

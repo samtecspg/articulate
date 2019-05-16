@@ -35,6 +35,15 @@ class ConnetionValidate {
             })()
         };
 
+        this.delete = {
+            params: (() => {
+
+                return {
+                    [PARAM_CONNECTION_ID]: ConnectionSchema.id.required()
+                };
+            })()
+        };
+
         this.updateById = {
             params: (() => {
 

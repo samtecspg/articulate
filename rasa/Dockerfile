@@ -2,7 +2,7 @@ FROM python:3.6-slim
 
 ENV RASA_NLU_DOCKER="YES" \
     RASA_NLU_HOME=/app \
-    RASA_RELEASE=0.14.1 \
+    RASA_RELEASE=0.14.4 \
     RASA_NLU_PYTHON_PACKAGES=/usr/local/lib/python3.6/dist-packages
 
 # Run updates, install basics and cleanup
@@ -13,8 +13,8 @@ RUN apt-get update -qq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN wget -O - https://github.com/RasaHQ/rasa_nlu/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
-RUN mv rasa_nlu-${RASA_RELEASE} ${RASA_NLU_HOME}
+RUN wget -O - https://github.com/RasaHQ/rasa/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
+RUN mv rasa-${RASA_RELEASE} ${RASA_NLU_HOME}
 
 WORKDIR ${RASA_NLU_HOME}
 

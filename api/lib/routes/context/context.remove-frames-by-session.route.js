@@ -18,6 +18,7 @@ module.exports = {
             const { [PARAM_SESSION]: sessionId } = request.params;
             try {
                 await contextService.removeFramesBySessionId({ sessionId });
+                await contextService.update({ sessionId, data: { docIds: [] } });
                 return h.continue;
             }
             catch ({ message, statusCode }) {

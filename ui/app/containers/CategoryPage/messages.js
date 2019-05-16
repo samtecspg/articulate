@@ -63,6 +63,10 @@ export default defineMessages({
     id: 'app.containers.CategoryPage.component.CategoryDataForm.extraTrainingData',
     defaultMessage: 'Generate extra training examples',
   },
+  extraTrainingDataHelp: {
+    id: 'app.containers.CategoryPage.component.CategoryDataForm.extraTrainingDataHelp',
+    defaultMessage: 'If you enable this option your keyword values and synonyms will be used to generate training data examples by substituing highlighted values in your sayings.',
+  },
   main: {
     id: 'app.containers.CategoryPage.component.Form.main',
     defaultMessage: 'Main',

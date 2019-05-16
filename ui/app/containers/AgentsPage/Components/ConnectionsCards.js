@@ -8,7 +8,9 @@ import { Grid, Card, CardContent, CardHeader, Typography }  from '@material-ui/c
 import messages from '../messages';
 import gravatars from '../../../components/Gravatar';
 import ChannelsLogos from '../../../components/ChannelsLogos';
+import ChannelsColors from '../../../components/ChannelsColors';
 import connectionIcon from '../../../images/connection-icon.svg';
+import brokenConnectionIcon from '../../../images/broken-connection-icon.svg';
 
 const styles = {
   cardsContainer: {
@@ -17,7 +19,8 @@ const styles = {
     },
     marginBottom: '80px',
     flexWrap: 'nowrap',
-    overflowX: 'scroll'
+    overflowX: 'scroll',
+    scrollbarWidth: 'none'
   },
   newConnectionCard: {
     border: '1px solid #00bd6f',
@@ -109,14 +112,15 @@ const styles = {
   },
   connectionIcon: {
     marginRight: '5px',
-    height: '35px'
+    height: '30px'
   },
   channelIcon: {
     marginTop: '20px',
-    height: '35px'
+    height: '30px'
   },
   connectionLink: {
-    marginTop: '20px'
+    marginTop: '20px',
+    height: '15px'
   },
   agentNameTitle: {
     fontSize: '16px'
@@ -138,6 +142,25 @@ class ConnectionsCards extends React.Component {
       this.addEmptyCards = this.addEmptyCards.bind(this);
     }
 
+    componentDidMount(){
+      if (document.getElementById('dvCardsContainer').addEventListener) {
+        // IE9, Chrome, Safari, Opera
+        document.getElementById('dvCardsContainer').addEventListener("mousewheel", this.scrollHorizontally, false);
+        // Firefox
+        document.getElementById('dvCardsContainer').addEventListener("DOMMouseScroll", this.scrollHorizontally, false);
+      } else {
+        // IE 6/7/8
+        document.getElementById('dvCardsContainer').attachEvent("onmousewheel", this.scrollHorizontally);
+      }
+    }
+
+    scrollHorizontally(e) {
+      e = window.event || e;
+      var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+      document.getElementById('dvCardsContainer').scrollLeft -= (delta*40); // Multiplied by 40
+      e.preventDefault();
+    }
+
     state = {
       selectedConnection: null
     };
@@ -155,7 +178,7 @@ class ConnectionsCards extends React.Component {
     render(){
       const { classes, connections, channels, agents } = this.props;
       return (
-        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'space-between'} container spacing={16}>
+        <Grid className={classes.cardsContainer} justify={window.window.innerWidth < 675 ? 'center' : 'flex-start'} container spacing={16}>
           <Grid key='newConnectionCard' item>
             <Card className={classes.newConnectionCard}>
               <CardContent  onClick={() => {this.props.onGoToUrl('/connection/create')}} className={classes.newConnectionCardContent}>
@@ -165,25 +188,28 @@ class ConnectionsCards extends React.Component {
           </Grid>
           {connections.map((connection, index) => {
             
-            const agent = agents.filter((tempAgent) => {
+            const agent = connection.agent ? agents.filter((tempAgent) => {
 
               return parseInt(tempAgent.id) === connection.agent;
-            })[0];
+            })[0] : null;
             return (<Grid key={`connectionCard_${index}`} item>
               <Card className={classes.connectionCard}>
                 <CardContent onClick={() => {this.props.onGoToUrl(`/connection/${connection.id}`)}} className={classes.connectionCardContent}>
                   <Grid className={classes.connectionDataContainer} container justify='center'>
                     <Grid container justify='center' item xs={12}>
-                      {gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.connectionIcon })}
+                      {agent ? gravatars[agent.gravatar - 1]({ color: agent.uiColor, className: classes.connectionIcon }) : null}
                     </Grid>
                     <Grid container justify='center' item xs={12}>
-                      <Typography className={classes.agentNameTitle} style={{ color: agent.uiColor }}>{agent.agentName}</Typography>
+                      <Typography className={classes.agentNameTitle} style={{ color: agent ? agent.uiColor : '' }}>{agent ? agent.agentName : null}</Typography>
                     </Grid>
                     <Grid container justify='center' item xs={12}>
-                      <img className={classes.connectionLink} src={connectionIcon} />
+                      <img className={classes.connectionLink} src={connection.agent ? connectionIcon : brokenConnectionIcon} />
                     </Grid>
                     <Grid container justify='center' item xs={12}>
                       <ChannelsLogos logo={connection.channel} className={classes.channelIcon} />
+                    </Grid>
+                    <Grid container justify='center' item xs={12}>
+                      <Typography className={classes.agentNameTitle} style={{ color: ChannelsColors[connection.channel] }}>{channels[connection.channel].name}</Typography>
                     </Grid>
                   </Grid>
                 </CardContent>

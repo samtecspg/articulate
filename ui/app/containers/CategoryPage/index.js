@@ -58,8 +58,8 @@ export class CategoriesEditPage extends React.Component {
 
   state = {
     isNewCategory: this.props.match.params.categoryId === 'create',
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page : '',
     formError: false,
     exitAfterSubmit: false,
     errorState: {

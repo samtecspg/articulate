@@ -43,7 +43,7 @@ class DocumentModel {
                 .string(),
             modificationDate: Joi
                 .string(),
-            webhookResponses: Joi
+            webhooks: Joi
                 .array().items(Joi.any())
         };
     };

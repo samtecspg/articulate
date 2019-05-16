@@ -207,7 +207,7 @@ module.exports = async function ({ conversationStateObject }) {
             const recognizedKeywordsNames = _.map(recognizedKeywords, (recognizedKeyword) => {
                 //If the name of the recognized keyword match with an keyword name of an slot
                 const slotOfRecognizedKeywords = _.filter(action.slots, (slot) => { return slot.keyword === recognizedKeyword.keyword });
-                let slotToFill = _.filter(action.slots, (slot) => { 
+                let slotToFill = _.filter(slotOfRecognizedKeywords, (slot) => { 
                     const slotValueInFrame = lastFrame.slots[slot.slotName] ? lastFrame.slots[slot.slotName].value : null;
                     return (!slotValueInFrame || (Array.isArray(slotValueInFrame) && slotValueInFrame.length === 0));
                 })[0];
@@ -304,7 +304,7 @@ module.exports = async function ({ conversationStateObject }) {
             agentService.converseFulfillEmptySlotsWithSavedValues({ conversationStateObject });
             const missingKeywords = _.filter(requiredSlots, (slot) => {
     
-                return recognizedKeywordsNames.indexOf(slot.keyword) === -1 || !currentFrame.slots[slot.slotName].value;
+                return !currentFrame.slots[slot.slotName].original;
             });
             conversationStateObject.slots = currentFrame.slots;
             if (missingKeywords.length > 0) {
@@ -354,11 +354,11 @@ module.exports = async function ({ conversationStateObject }) {
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return { slots: conversationStateObject.slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhookResponse };
+            return { slots: conversationStateObject.slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhook: webhookResponse };
         }
-        conversationStateObject.webhookResponse = { ...webhookResponse };
+        conversationStateObject.webhook = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
-        return { slots: conversationStateObject.slots, ...response, webhookResponse, actionWasFulfilled: true };
+        return { slots: conversationStateObject.slots, ...response, webhook: webhookResponse, actionWasFulfilled: true };
     }
     const response = await agentService.converseCompileResponseTemplates({ responses: conversationStateObject.action.responses, templateContext: conversationStateObject });
     return { slots: conversationStateObject.slots, ...response, actionWasFulfilled: true };

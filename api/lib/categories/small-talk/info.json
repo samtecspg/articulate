@@ -1,0 +1,14 @@
+{
+    "name": "Small Talk",
+    "uiColor": "#00BD6F",
+    "description": "Let me help you with your simple math",
+    "documentation": "",
+    "data": {
+        "categoryName": "small-talk",
+        "enabled": true,
+        "actionThreshold": 0.5,
+        "model": "",
+        "extraTrainingData": true,
+        "parameters": {}
+    }
+}

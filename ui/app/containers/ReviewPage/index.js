@@ -25,6 +25,8 @@ import MainTab from '../../components/MainTab';
 import {
   ACTION_INTENT_SPLIT_SYMBOL,
   PROXY_ROUTE_PREFIX,
+  ROUTE_DOCUMENT,
+  ROUTE_AGENT,
 } from '../../../common/constants';
 import injectSaga from '../../utils/injectSaga';
 import { getWS } from '../../utils/locationResolver';
@@ -109,7 +111,7 @@ export class ReviewPage extends React.Component {
           }
         };
 
-        client.subscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.props.agent.id}/doc`, handler);
+        client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`, handler);
       };
       client.connect();
     }

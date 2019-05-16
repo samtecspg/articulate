@@ -115,8 +115,6 @@ export class DialoguePage extends React.PureComponent {
     this.setState({ filter, currentSayingsPage, pageSize: agentSayingsPageSize });
 
     if (this.state.selectedTab === 'sayings'){
-      this.props.onLoadActions();
-      this.props.onLoadCategories();
       this.props.onLoadSayings(filter, currentSayingsPage, agentSayingsPageSize);
     }
 
@@ -124,6 +122,8 @@ export class DialoguePage extends React.PureComponent {
       this.setState({ keywordsPageSize: this.props.agent.settings.keywordsPageSize });
       this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
     }    
+    this.props.onLoadActions();
+    this.props.onLoadCategories();
   }
 
   componentWillMount() {

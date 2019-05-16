@@ -29,24 +29,11 @@ const mappings = {
         },
         agent_model: {
             type: 'text'
+        },
+        converseResult: {
+            type: 'text'
         }
-    },
-    dynamic_templates: [
-        {
-            'raw_as_text': {
-                'path_match': 'webhookResponse.*',
-                'mapping': {
-                    'type': 'text',
-                    'fields': {
-                        'keyword': {
-                            'type': 'keyword',
-                            'ignore_above': 256
-                        }
-                    }
-                }
-            }
-        }
-    ]
+    }
 };
 
 const settings = {

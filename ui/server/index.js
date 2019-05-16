@@ -5,9 +5,7 @@ import Webpack from 'webpack';
 import argv from './argv';
 import logger from './logger';
 import * as WebpackPlugin from './middlewares/hapi-webpack-plugin';
-import * as WSProxyPlugin from './middlewares/ws-proxy-plugin';
 import port from './port';
-import Routes from './routes';
 
 const isDev = process.env.NODE_ENV !== 'production';
 const ngrok =
@@ -23,7 +21,7 @@ const prettyHost = customHost || 'localhost';
 
 const server = Hapi.server({
   port,
-  host,
+  host
 });
 
 const compiler = Webpack(Config);
@@ -43,14 +41,12 @@ const init = async () => {
     await server.register([
       {
         plugin: WebpackPlugin,
-        options: { compiler, assets, hot },
+        options: { compiler, assets, hot }
       }, {
-        plugin: WSProxyPlugin,
+        plugin: h2o2
       }, {
-        plugin: h2o2,
-      }, {
-        plugin: Blipp,
-      },
+        plugin: Blipp
+      }
     ]);
   }
   catch (error) {
@@ -59,7 +55,7 @@ const init = async () => {
 
   try {
     await server.start();
-    await server.route(Routes);
+    //await server.route(Routes);
   }
   catch (error) {
     return logger.error(error);

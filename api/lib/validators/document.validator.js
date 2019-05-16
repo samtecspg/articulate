@@ -58,7 +58,7 @@ class ContextValidate {
                     rasa_results: Model.rasa_results,
                     creationDate: Model.creationDate,
                     modificationDate: Model.modificationDate,
-                    webhookResponses: Model.webhookResponses
+                    webhooks: Model.webhooks
                 };
             })()
         };

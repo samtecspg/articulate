@@ -6,7 +6,7 @@
   "app.components.CodeModal.context": "Contexto",
   "app.components.CodeModal.currentFrame": "Context Actual",
   "app.components.CodeModal.rasaParseResults": "Resultados de Rasa",
-  "app.components.CodeModal.webhookResponses": "Respuestas de Webhooks",
+  "app.components.CodeModal.webhooks": "Respuestas de Webhooks",
   "app.components.ConversationBar.clearAll": "Limpiar",
   "app.components.ConversationBar.seeSource": "Ver fuente",
   "app.components.ConversationBar.userMessagePlaceholder": "Conversar con el agente",

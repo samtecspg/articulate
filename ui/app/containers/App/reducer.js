@@ -205,7 +205,20 @@ import {
   CHANGE_DETAIL_VALUE,
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
-  DELETE_CONNECTION_SUCCESS
+  DELETE_CONNECTION_SUCCESS,
+  LOAD_SESSION,
+  LOAD_SESSION_SUCCESS,
+  LOAD_SESSION_ERROR,
+  DELETE_SESSION,
+  DELETE_SESSION_SUCCESS,
+  DELETE_SESSION_ERROR,
+  SHOW_WARNING,
+  LOAD_PREBUILT_CATEGORIES,
+  LOAD_PREBUILT_CATEGORIES_ERROR,
+  LOAD_PREBUILT_CATEGORIES_SUCCESS,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -216,6 +229,8 @@ const colors = [material.red['900'], material.red['700'], material.red['500'], m
 // The initial state of the App
 const initialState = Immutable({
   locale: DEFAULT_LOCALE,
+  sessionLoaded: false,
+  sessionId: '',
   conversationBarOpen: false,
   waitingResponse: false,
   notifications: [],
@@ -228,6 +243,7 @@ const initialState = Immutable({
     parameters: {},
   },
   categories: [],
+  prebuiltCategories: {},
   filteredCategories: [],
   filteredActions: [],
   channels: false,
@@ -393,6 +409,7 @@ const initialState = Immutable({
   },
   settingsTouched: false,
   loading: false,
+  loadingImportCategory: false,
   error: false,
   success: false,
   successKeyword: false,
@@ -401,11 +418,36 @@ const initialState = Immutable({
   successAgent: false,
   conversationStateObject: {},
   newActionResponse: 'hello',
+  documents: []
 });
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
     /* Global */
+    case LOAD_SESSION:
+      return state.set('sessionId', '')
+        .set('messages', [])
+        .set('sessionLoaded', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_SESSION_SUCCESS:
+      return state.set('sessionId', action.sessionId)
+        .set('sessionLoaded', true)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_SESSION_ERROR:
+      return state.set('sessionId', '')
+        .set('loading', false)
+        .set('error', action.error);
+    case DELETE_SESSION:
+      return state.set('loading', true)
+        .set('error', false);
+    case DELETE_SESSION_SUCCESS:
+      return state.set('loading', false)
+        .set('error', false);
+    case DELETE_SESSION_ERROR:
+      return state.set('loading', false)
+        .set('error', action.error);
     case CHECK_API:
       return state;
     case MISSING_API:
@@ -433,7 +475,8 @@ function appReducer(state = initialState, action) {
     case RESET_SESSION_SUCCESS:
       return state.set('messages', [])
         .set('notifications', []);
-
+    case SHOW_WARNING: 
+      return state.update('notifications', notifications => notifications.concat({ message: `${action.message} ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
 
     /* Connections */
     case LOAD_CONNECTIONS:
@@ -525,6 +568,11 @@ function appReducer(state = initialState, action) {
         .set('agentTouched', false)
         .set('successAgent', false)
         .set('actions', [])
+        .set('messages', [])
+        .set('documents', [])
+        .set('sessionId', '')
+        .set('sessionLoaded', false)
+        .set('conversationBarOpen', false)
         .set('newSayingActions', [])
         .setIn(['agent', 'gravatar'], Math.floor(Math.random() * 16) + 1)
         .setIn(['agent', 'uiColor'], colors[Math.floor(Math.random() * (colors.length - 1))]);
@@ -791,6 +839,28 @@ function appReducer(state = initialState, action) {
       return state.set('categories', action.categories.categories)
         .set('loading', false)
         .set('error', false);
+    case LOAD_PREBUILT_CATEGORIES:
+      return state.set('prebuiltCategories', {})
+        .set('loading', true)
+        .set('loadingImportCategory', false)
+        .set('error', false);
+    case LOAD_PREBUILT_CATEGORIES_ERROR:
+      return state.set('prebuiltCategories', {})
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_PREBUILT_CATEGORIES_SUCCESS:
+      return state.set('prebuiltCategories', action.prebuiltCategories)
+        .set('loading', false)
+        .set('error', false);
+    case IMPORT_CATEGORY:
+      return state.set('loadingImportCategory', true)
+        .set('error', false);
+    case IMPORT_CATEGORY_ERROR:
+      return state.set('loadingImportCategory', false)
+        .set('error', action.error);
+    case IMPORT_CATEGORY_SUCCESS: 
+      return state.set('loadingImportCategory', false)
+        .set('error', false);      
     case LOAD_FILTERED_CATEGORIES:
       return state.set('filteredCategories', [])
         .set('loading', true)
@@ -1047,7 +1117,8 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false)
         .set('actionTouched', false)
-        .set('successAction', true);
+        .set('successAction', true)
+        .update('newSayingActions', newSayingActions => newSayingActions.map((item) => { return item === action.oldActionName ? action.action.actionName : item }));
     case DELETE_ACTION:
       state = state.update('newSayingActions', newSayingActions => newSayingActions.filter((item) => item !== action.actionName));
       return state.set('loading', true)
@@ -1167,7 +1238,8 @@ function appReducer(state = initialState, action) {
             return response.set('textResponse', action.newResponse);
           }
           return response;
-        }));
+        }))
+        .set('actionTouched', true);
 
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers => modifiers.concat(state.newModifier));
@@ -1492,8 +1564,15 @@ function appReducer(state = initialState, action) {
 
     /* Connection */
     case CHANGE_CONNECTION_DATA:
-      return state.setIn(['connection', action.payload.field], action.payload.value)
-      .set('connectionTouched', true);
+      if (action.payload.field === 'channel'){
+        return state.setIn(['connection', action.payload.field], action.payload.value)
+          .setIn(['connection', 'details'], {})
+          .set('connectionTouched', true);
+      }
+      else {
+        return state.setIn(['connection', action.payload.field], action.payload.value)
+          .set('connectionTouched', true);
+      }
     case CREATE_CONNECTION:
       return state.set('loading', true)
         .set('success', false)

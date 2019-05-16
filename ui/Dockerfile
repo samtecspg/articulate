@@ -11,7 +11,7 @@ COPY internals ./internals
 RUN yarn install
 ADD . .
 
-EXPOSE 3000
+#EXPOSE 3000
 
 CMD ["yarn", "start:prod"]
 #CMD ["yarn", "start"]

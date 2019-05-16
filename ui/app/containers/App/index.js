@@ -18,7 +18,7 @@ import {
 } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { PROXY_ROUTE_PREFIX } from '../../../common/constants';
+import { ROUTE_AGENT } from '../../../common/constants';
 import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
@@ -28,6 +28,7 @@ import ActionPage from '../ActionPage/Loadable';
 import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
 import CategoryPage from '../CategoryPage/Loadable';
+import AddCategoryPage from '../AddCategoryPage/Loadable';
 import DialoguePage from '../DialoguePage/Loadable';
 import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
@@ -131,7 +132,7 @@ class App extends React.Component {
           // If the socket was already subscribed to an agent
           if (this.state.agent) {
             // Unsubscribe from the agent
-            this.state.client.unsubscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.state.agent}`);
+            this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.state.agent}`);
           }
           const handler = (agent) => {
 
@@ -139,7 +140,7 @@ class App extends React.Component {
               this.props.onRefreshAgent(agent);
             }
           };
-          this.state.client.subscribe(`${PROXY_ROUTE_PREFIX}/agent/${this.props.agent.id}`, handler);
+          this.state.client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}`, handler);
           this.setState({
             agent: this.props.agent.id,
           });
@@ -169,6 +170,7 @@ class App extends React.Component {
             <Route exact path='/agent/:id/dialogue' component={DialoguePage} />
             <Route exact path='/agent/:id/review' component={ReviewPage} />
             <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
+            <Route exact path='/agent/:id/addCategory' component={AddCategoryPage} />
             <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
             <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
             <Route exact path='/settings' component={SettingsPage} />

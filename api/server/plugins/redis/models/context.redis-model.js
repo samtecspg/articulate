@@ -17,6 +17,9 @@ const schema = {
     responseQueue: {
         type: 'json'
     },
+    docIds: {
+        type: 'json'
+    },
     creationDate: {
         type: 'timestamp'
     },

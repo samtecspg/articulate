@@ -56,6 +56,7 @@ export function* postCategory(payload) {
     const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY]), newCategory);
     response.actionThreshold = parseInt(response.actionThreshold * 100);
     yield put(createCategorySuccess(response));
+    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
   }
   catch (err) {
     yield put(createCategoryError(err));
@@ -85,7 +86,6 @@ export function* deleteCategory(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, id } = payload;
   try {
-    yield call(api.agent.deleteAgentAgentidCategoryCategoryid, { agentId: agent.id, categoryId: id });
     yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, id]));
     yield put(deleteCategorySuccess());
     yield call(getCategories, { api });

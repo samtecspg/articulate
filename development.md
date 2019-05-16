@@ -8,6 +8,12 @@ So to enable docker-compose to work locally use the following arguments to compo
 
 ```docker-compose -f docker-compose.yml -f build-compose-override.yml XXXX```
 
+As of April 15 ew added NGINX as a reverse proxy, to ease development we added an aditional override that will enable you to run the API and UI on your terminal windows and still be able to use the NGINX proxy:
+
+```docker-compose -f docker-compose.yml -f dev-compose-override.yml -f dev-gateway-override.yml XXXX```
+
+running this command will route the NGINX docker container to the host API and UI ports.
+
 [`XXXX` being what ever compose command you wanted to run, `up`, `down`, `build api`, etc)
 
 # Branching strategy

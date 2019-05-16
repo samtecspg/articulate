@@ -53,16 +53,22 @@ export class ContentHeader extends React.Component {
     return (
       <Grid className={classes.container} item xs={12}>
         <Grid className={classes.titleContainer}>
-          <Typography className={classes.title}>
-            <FormattedMessage {...this.props.title} />:&nbsp;
-          </Typography>
-          <Typography className={classes.subtitle}>
-            {
-              typeof this.props.subtitle === 'string' ?
-                this.props.subtitle :
-                <FormattedMessage {...this.props.subtitle} />
-            }
-          </Typography>
+          {this.props.title ?
+            <Typography className={classes.title}>
+              <FormattedMessage {...this.props.title} />:&nbsp;
+            </Typography> :
+            null
+          }
+          {this.props.subtitle ?
+            <Typography className={classes.subtitle}>
+              {
+                typeof this.props.subtitle === 'string' ?
+                  this.props.subtitle :
+                  <FormattedMessage {...this.props.subtitle} />
+              }
+            </Typography> :
+            null
+          }
         </Grid>
         <Hidden only={this.props.sizesForHideInlineElement}>
           {this.props.inlineElement ? this.props.inlineElement : null}
@@ -73,7 +79,10 @@ export class ContentHeader extends React.Component {
 }
 
 ContentHeader.propTypes = {
-  title: PropTypes.object.isRequired,
+  title: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string,
+  ]).isRequired,
   subtitle: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.string,

@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl, intlShape } from "react-intl";
 import _ from 'lodash';
 
 import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@material-ui/core";
+import { Grid, Typography, Button, Modal, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText, FormControlLabel, Switch } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import ChipInput from 'components/ChipInput'
 
@@ -134,6 +134,16 @@ class DetailsForm extends React.Component {
               this.props.onChangeDetailValue(detail, []);
             }
           }
+          if (channels[connection.channel].details[detail].type === 'boolean'){
+            if (connection.details[detail] === undefined){
+              this.props.onChangeDetailValue(detail, channels[connection.channel].details[detail].default ? channels[connection.channel].details[detail].default : false);
+            }
+          }
+          if (channels[connection.channel].details[detail].type === 'select'){
+            if (connection.details[detail] === undefined){
+              this.props.onChangeDetailValue(detail, channels[connection.channel].details[detail].default);
+            }
+          }
         })
       }
       this.setState({ 
@@ -248,7 +258,7 @@ class DetailsForm extends React.Component {
                       );
                     }
                     else {
-                      if (channels[connection.channel].details[detail].type === 'action'){
+                      if (channels[connection.channel].details[detail].type === 'select'){
                         return (
                           <Grid key={`value_${detailIndex}`} item lg={12} md={12} sm={12} xs={12}>
                             <FormControl 
@@ -262,7 +272,7 @@ class DetailsForm extends React.Component {
                               </InputLabel>
                               <Select
                                 id={detail}
-                                value={connection.details[detail] || 'select'}
+                                value={connection.details[detail] || channels[connection.channel].details[detail].default}
                                 label={channels[connection.channel].details[detail].displayName}
                                 onChange={(evt) => { 
                                   this.props.onChangeDetailValue(detail, evt.target.value);
@@ -270,49 +280,66 @@ class DetailsForm extends React.Component {
                                 open={this.state.openActions[detailIndex]}
                                 onOpen={() => { this.changeOpenModalIndex(true, detailIndex);}}
                                 onClose={() => { this.changeOpenModalIndex(false, detailIndex)}}
-                              >     
-                                <MenuItem key={`select_${detail}`} value='select'>
-                                  {intl.formatMessage(messages.selectAnAgentFirst)}
-                                </MenuItem>         
+                              >       
                                 {
-                                  this.props.agentActions.map((action) => (
-                                    <MenuItem key={action.id} value={action.actionName}>
+                                  Object.keys(channels[connection.channel].details[detail].values).map((valueKey) => (
+                                    <MenuItem key={valueKey} value={valueKey}>
                                       <Grid container justify='space-between'>
                                         <div className={classes.categoryDataContainer}>
-                                          <span>{action.actionName}</span>
+                                          <span>{channels[connection.channel].details[detail].values[valueKey]}</span>
                                         </div>
                                       </Grid>
                                     </MenuItem>
                                   ))
                                 }
                               </Select>
-                              <FormHelperText
-                                error={this.props.errorState[detail]}
-                              >                
-                                {intl.formatMessage(messages.requiredField)}
-                              </FormHelperText>
                             </FormControl>
                           </Grid>
                         );
                       }
-                      return (
-                        <Grid key={`value_${detailIndex}`} container item xs={12}>
-                          <Grid item xs={12}>
-                            <TextField
-                              id='detailValue'
-                              value={connection.details[detail]}
-                              label={channels[connection.channel].details[detail].displayName}
-                              placeholder={channels[connection.channel].details[detail].description}
-                              onChange={(evt) => { this.props.onChangeDetailValue(detail, evt.target.value) }}
-                              margin='normal'
-                              fullWidth
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      );
+                      else {
+                        if(channels[connection.channel].details[detail].type === 'boolean'){
+                          return (
+                            <Grid key={`value_${detailIndex}`} item xs={12}>
+                              <FormControlLabel
+                                control={
+                                  <Switch
+                                    checked={connection.details[detail] === undefined ? false : connection.details[detail]}
+                                    onChange={(evt, value) => {
+                                      this.props.onChangeDetailValue(detail, value) 
+                                    }}
+                                    value={detail}
+                                    color="primary"
+                                  />
+                                }
+                                label={channels[connection.channel].details[detail].displayName}
+                              />
+                            </Grid>
+                          );
+                        }
+                        else {
+                          return (
+                            <Grid key={`value_${detailIndex}`} container item xs={12}>
+                              <Grid item xs={12}>
+                                <TextField
+                                  autoComplete='off'
+                                  id={detail}
+                                  value={connection.details[detail] ? connection.details[detail]  : ''}
+                                  label={channels[connection.channel].details[detail].displayName}
+                                  placeholder={channels[connection.channel].details[detail].description}
+                                  onChange={(evt) => { this.props.onChangeDetailValue(detail, evt.target.value) }}
+                                  margin='normal'
+                                  fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  type={channels[connection.channel].details[detail].type === 'password' ? 'password' : 'text'}
+                                />
+                              </Grid>
+                            </Grid>
+                          );
+                        }
+                      }
                     }
                   }) : <Typography><FormattedMessage {...messages.noDetailsInChanell} /></Typography>) : 
                   <Typography><FormattedMessage {...messages.selectAChanelFirst} /></Typography>

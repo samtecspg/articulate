@@ -8,6 +8,8 @@ import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
 import FilterSelect from "../../../components/FilterSelect";
+import { intlShape, injectIntl } from 'react-intl';
+import messages from '../messages';
 
 const styles = {
   actionBackgroundContainer: {
@@ -74,7 +76,7 @@ class ResponseRow extends React.Component {
   };
 
   render(){
-    const { classes, action, response, responseIndex } = this.props;
+    const { classes, action, response, responseIndex, intl } = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -107,7 +109,7 @@ class ResponseRow extends React.Component {
                   })}
                   className={classes.addActionIcon} src={addActionIcon}
                 />,
-                <Tooltip key='copyResponse' title='Copy response in the response input' placement='top'>
+                <Tooltip key='copyResponse' title={intl.formatMessage(messages.copyResponses)} placement='top'>
                   <img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} />
                 </Tooltip>,
                 <img key='deleteResponse' onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />
@@ -157,6 +159,7 @@ class ResponseRow extends React.Component {
 }
 
 ResponseRow.propTypes = {
+  intl: intlShape,
   classes: PropTypes.object,
   response: PropTypes.object,
   action: PropTypes.object,
@@ -171,4 +174,4 @@ ResponseRow.propTypes = {
   onSearchActions: PropTypes.func,
 };
 
-export default withStyles(styles)(ResponseRow);
+export default injectIntl(withStyles(styles)(ResponseRow));

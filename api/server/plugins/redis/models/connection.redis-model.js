@@ -11,7 +11,8 @@ const schema = {
         type: 'boolean'
     },
     agent: {
-        type: 'number'
+        type: 'number',
+        index: true,
     },
     status: {
         type: 'string'
@@ -40,7 +41,7 @@ class ConnectionRedisModel extends BaseModel {
 
     static get idGenerator() {
 
-        return 'increment';
+        return null;
     }
 
     static get definitions() {

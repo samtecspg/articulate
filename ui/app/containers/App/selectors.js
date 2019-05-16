@@ -9,6 +9,16 @@ const makeSelectLocation = () => createSelector(
   (routeState) => routeState.location,
 );
 
+const makeSelectSessionId = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.sessionId
+);
+
+const makeSelectSessionLoaded = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.sessionLoaded
+)
+
 const makeSelectMissingAPI = () => createSelector(
   selectGlobal,
   (globalState) => globalState.missingAPI,
@@ -17,6 +27,11 @@ const makeSelectMissingAPI = () => createSelector(
 const makeSelectLoading = () => createSelector(
   selectGlobal,
   (globalState) => globalState.loading,
+);
+
+const makeSelectLoadingImportCategory = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.loadingImportCategory,
 );
 
 const makeSelectError = () => createSelector(
@@ -147,6 +162,11 @@ const makeSelectTotalSayings = () => createSelector(
 const makeSelectCategories = () => createSelector(
   selectGlobal,
   (globalState) => globalState.categories,
+);
+
+const makeSelectPrebuiltCategories = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.prebuiltCategories,
 );
 
 const makeSelectFilteredCategories = () => createSelector(
@@ -282,8 +302,11 @@ const makeSelectLocale = () =>createSelector(
 
 export {
   makeSelectLocation,
+  makeSelectSessionId,
+  makeSelectSessionLoaded,
   makeSelectMissingAPI,
   makeSelectLoading,
+  makeSelectLoadingImportCategory,
   makeSelectError,
   makeSelectSuccess,
   makeSelectConversationBarOpen,
@@ -307,6 +330,7 @@ export {
   makeSelectSayings,
   makeSelectTotalSayings,
   makeSelectCategories,
+  makeSelectPrebuiltCategories,
   makeSelectFilteredCategories,
   makeSelectFilteredActions,
   makeSelectSelectedCategory,

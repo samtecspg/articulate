@@ -154,6 +154,7 @@ const styles = {
     borderBottomRightRadius: '5px',
   },
   addActionIcon: {
+    height: '15px',
     cursor: 'pointer',
     marginRight: '10px',
   },
@@ -427,7 +428,6 @@ SayingsDataForm.propTypes = {
   movePageBack: PropTypes.func,
   movePageForward: PropTypes.func,
   changePageSize: PropTypes.func,
-  onSelectCategory: PropTypes.func,
   category: PropTypes.string,
   onSearchCategory: PropTypes.func,
   newSayingActions: PropTypes.array,

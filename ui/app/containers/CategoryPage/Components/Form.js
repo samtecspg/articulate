@@ -47,8 +47,13 @@ const styles = {
     bottom: '2px',
     paddingLeft: '2px',
   },
-  agentTabs: {
-    paddingLeft: '5px',
+  selected: {
+    color: '#4e4e4e',
+    border: '1px solid #C5CBD8',
+    borderTopLeftRadius: '5px',
+    borderTopRightRadius: '5px',
+    backgroundColor: '#fff',
+    borderBottom: '0px'
   },
   modalContent: {
     top: '50%',
@@ -78,10 +83,12 @@ const styles = {
     fontWeight: 300,
   },
   categoryTabs: {
-    paddingLeft: "5px",
+    paddingLeft: "15px",
   },
   tabLabel: {
     padding: '0px 10px',
+    position: 'relative',
+    top: '5px'
   },
   notificationDot: {
     backgroundColor: '#Cb2121',
@@ -181,6 +188,11 @@ class Form extends React.Component {
             onChange={(evt, value) => {
               this.handleChange(evt, value);
             }}
+            TabIndicatorProps={{
+              style: {
+                display: 'none'
+              }
+            }}
           >
             <Tab 
               label={
@@ -197,6 +209,7 @@ class Form extends React.Component {
                   </div> : 
                   null
               }
+              className={this.state.selectedTab === 0 ? classes.selected : null}
             />
             <Tab 
               label={
@@ -213,6 +226,7 @@ class Form extends React.Component {
                   </div> : 
                   null
               }
+              className={this.state.selectedTab === 1 ? classes.selected : null}
             />
           </Tabs>
           {this.state.selectedTab === 0 && (

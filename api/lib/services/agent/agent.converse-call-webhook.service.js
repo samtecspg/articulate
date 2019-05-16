@@ -62,31 +62,18 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
         });
         endTime = new Moment();
         const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
-        if (typeof response.data === 'string'){
-            return {
-                text: response.data,
-                elapsed_time_ms
-            }
-        }
         return {
-            ...response.data,
-            elapsed_time_ms
+            response: response.data,
+            elapsed_time_ms,
+            statusCode: response.status
         };
     }
     catch (error) {
         endTime = new Moment();
         const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         if (error.response && error.response.data){
-            if (typeof error.response.data === 'string'){
-                return {
-                    text: error.response.data,
-                    elapsed_time_ms,
-                    statusCode: error.response.status
-                }
-            }
-            delete error.response.data.statusCode;
             return {
-                ...error.response.data,
+                error: error.response.data,
                 elapsed_time_ms,
                 statusCode: error.response.status
             };

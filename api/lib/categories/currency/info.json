@@ -1,0 +1,14 @@
+{
+    "name": "Currency",
+    "uiColor": "#E38D25",
+    "description": "Dollar, Euro, Pound, Yen. You name it.",
+    "documentation": "",
+    "data": {
+        "categoryName": "currency",
+        "enabled": true,
+        "actionThreshold": 0.5,
+        "model": "",
+        "extraTrainingData": true,
+        "parameters": {}
+    }
+}

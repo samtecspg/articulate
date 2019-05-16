@@ -15,6 +15,8 @@ class ScenarioModel {
                 .array(),
             responseQueue: Joi
                 .array(),
+            docIds: Joi
+                .array(),
             creationDate: Joi
                 .string(),
             modificationDate: Joi

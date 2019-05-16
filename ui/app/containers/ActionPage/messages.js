@@ -163,4 +163,8 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.SlotForm.slotIsList',
     defaultMessage: 'Is List?',
   },
+  copyResponses: {
+    id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
+    defaultMessage: 'Copy response in the response input'
+  }
 });

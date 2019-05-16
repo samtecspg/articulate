@@ -16,6 +16,8 @@ TimeAgo.addLocale(es);
 TimeAgo.addLocale(pt);
 TimeAgo.addLocale(pl);
 
+import training from '../../images/training.svg';
+
 const styles = {
   button: {
     display: 'inline',
@@ -43,6 +45,11 @@ const styles = {
     color: '#00ca9f',
     fontWeight: 'bold',
   },
+  trainingAnimation: {
+    height: '24px',
+    position: 'relative',
+    bottom: '2px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -80,8 +87,11 @@ export class TrainButton extends React.Component {
                   <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{` ${this.getLastTrainingTime(lastTraining)}`}</span> :
                   null)}
         </Typography>
-        <Button className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
-          <FormattedMessage {...messages.trainButton} />
+        <Button disabled={agentStatus === 'Training'} className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
+          {agentStatus !== 'Training' ? 
+            <FormattedMessage {...messages.trainButton} /> :
+            <img src={training} className={classes.trainingAnimation}></img>
+          }
         </Button>
       </Grid>
     );

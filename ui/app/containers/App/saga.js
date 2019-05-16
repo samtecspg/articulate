@@ -33,78 +33,79 @@ import {
   respondMessage,
   storeSourceData,
   trainAgentError,
+  showWarning,
 } from './actions';
 import {
   makeSelectAgent,
-  makeSelectSettings,
+  makeSelectSessionId,
 } from './selectors';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
-  const settings = yield select(makeSelectSettings());
+  const systemSessionId = yield select(makeSelectSessionId());
+
   if (agent.id) {
     const { api, message } = payload;
-    try {
-      const postPayload = {
-        params: {
-          debug: true,
-        },
-        data: {
-          sessionId: settings.defaultUISessionId,
-          text: message.message,
-        },
-      };
-      const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]), null, postPayload);
-      yield put(respondMessage({
-        author: agent.agentName,
-        docId: response.docId,
-        message: response.textResponse,
-        conversationStateObject: response.conversationStateObject,
-      }));
-      yield put(storeSourceData({ ...response.conversationStateObject }));
+    if (message.sessionId || systemSessionId){
+      let sessionId = systemSessionId || message.sessionId;
+      try {
+        const postPayload = {
+          params: {
+            debug: true,
+          },
+          data: {
+            sessionId,
+            text: message.message,
+          },
+        };
+        const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]), null, postPayload);
+
+        yield put(respondMessage({
+          author: agent.agentName,
+          docId: response.docId,
+          message: response.textResponse,
+          conversationStateObject: response.conversationStateObject,
+        }));
+        yield put(storeSourceData({ ...response.conversationStateObject }));
+      }
+      catch (err) {
+        yield put(showWarning('Error: I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.'));
+      }
     }
-    catch (err) {
-      yield put(respondMessage({
-        author: 'Error',
-        docId: null,
-        message: 'I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.',
-      }));
+    else {
+      yield put(showWarning('Error: Select or create a session first.'));
     }
   }
   else {
-    yield put(respondMessage({
-      author: 'Warning',
-      docId: null,
-      message: 'Please click on an agent first',
-    }));
+    yield put(showWarning('Error: Please click on an agent first.'));
   }
 }
 
 export function* deleteSession(payload) {
-  const settings = yield select(makeSelectSettings());
-  const sessionId = settings.defaultUISessionId;
-  try {
-    const { api } = payload;
-    yield call(api.delete, toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_FRAME]));
-    const patchPayload = {
-      actionQueue: [],
-      responseQueue: [],
-      savedSlots: {},
-    };
-    yield call(api.patch, toAPIPath([ROUTE_CONTEXT, sessionId]), patchPayload);
-    yield put(resetSessionSuccess());
-  }
-  catch ({ response }) {
-    if (response.status && response.status === 404) {
+  const sessionId = yield select(makeSelectSessionId());
+  if (sessionId){
+    try {
+      const { api } = payload;
+      yield call(api.delete, toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_FRAME]));
+      const patchPayload = {
+        actionQueue: [],
+        responseQueue: [],
+        savedSlots: {},
+      };
+      yield call(api.patch, toAPIPath([ROUTE_CONTEXT, sessionId]), patchPayload);
       yield put(resetSessionSuccess());
     }
-    else {
-      yield put(respondMessage({
-        author: 'Error',
-        docId: null,
-        message: 'I\'m sorry. An error occurred cleaning your session data.',
-      }));
+    catch ({ response }) {
+      if (response.status && response.status === 404) {
+        yield put(resetSessionSuccess());
+      }
+      else {
+        yield put(showWarning('Error: I\'m sorry. An error occurred cleaning your session data.'));
+      }
     }
+  }
+  else {
+    yield put(showWarning('Select a session to clear.'));
   }
 }
 

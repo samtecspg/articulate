@@ -217,11 +217,69 @@ import {
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
   DELETE_CONNECTION_SUCCESS,
+  LOAD_SESSION,
+  LOAD_SESSION_ERROR,
+  LOAD_SESSION_SUCCESS,
+  DELETE_SESSION,
+  DELETE_SESSION_SUCCESS,
+  DELETE_SESSION_ERROR,
+  SHOW_WARNING,
+  LOAD_PREBUILT_CATEGORIES,
+  LOAD_PREBUILT_CATEGORIES_ERROR,
+  LOAD_PREBUILT_CATEGORIES_SUCCESS,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS,
 } from './constants';
 
 /*
 * Global
 */
+export function loadSession(sessionId, newSession) {
+  return {
+    type: LOAD_SESSION,
+    apiCall: true,
+    sessionId,
+    newSession
+  };
+}
+
+export function loadSessionSuccess(sessionId) {
+  return {
+    type: LOAD_SESSION_SUCCESS,
+    sessionId
+  };
+}
+
+export function loadSessionError(error) {
+  return {
+    type: LOAD_SESSION_ERROR,
+    error
+  };
+}
+
+export function deleteSession(sessionId, clearSessionId) {
+  return {
+    apiCall: true,
+    type: DELETE_SESSION,
+    sessionId,
+    clearSessionId
+  }
+}
+
+export function deleteSessionSuccess(){
+  return {
+    type: DELETE_SESSION_SUCCESS
+  }
+}
+
+export function deleteSessionError(error) {
+  return {
+    type: DELETE_SESSION_ERROR,
+    error
+  }
+}
+
 export function checkAPI(refURL) {
   return {
     type: CHECK_API,
@@ -289,6 +347,13 @@ export function resetSessionSuccess() {
   return {
     type: RESET_SESSION_SUCCESS,
   };
+}
+
+export function showWarning(message) {
+  return {
+    type: SHOW_WARNING,
+    message,
+  }
 }
 
 /*
@@ -883,6 +948,48 @@ export function loadCategoriesSuccess(categories) {
   };
 }
 
+export function loadPrebuiltCategories() {
+  return {
+    type: LOAD_PREBUILT_CATEGORIES,
+    apiCall: true,
+  };
+}
+
+export function loadPrebuiltCategoriesError(error) {
+  return {
+    type: LOAD_PREBUILT_CATEGORIES_ERROR,
+    error,
+  };
+}
+
+export function loadPrebuiltCategoriesSuccess(prebuiltCategories) {
+  return {
+    type: LOAD_PREBUILT_CATEGORIES_SUCCESS,
+    prebuiltCategories,
+  };
+}
+
+export function importCategory(category) {
+  return {
+    type: IMPORT_CATEGORY,
+    category,
+    apiCall: true
+  }
+}
+
+export function importCategoryError(error) {
+  return {
+    type: IMPORT_CATEGORY_ERROR,
+    error
+  }
+}
+
+export function importCategorySuccess() {
+  return {
+    type: IMPORT_CATEGORY_SUCCESS
+  }
+}
+
 export function loadFilteredCategories(filter) {
   return {
     type: LOAD_FILTERED_CATEGORIES,
@@ -1260,10 +1367,11 @@ export function updateActionError() {
   };
 }
 
-export function updateActionSuccess(action) {
+export function updateActionSuccess(action, oldActionName) {
   return {
     type: UPDATE_ACTION_SUCCESS,
     action,
+    oldActionName
   };
 }
 
