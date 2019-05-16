@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid, Typography, Button, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import messages from './messages';
 
@@ -73,7 +73,7 @@ export class TrainButton extends React.Component {
   };
 
   render() {
-    const { classes, agentStatus, lastTraining, onTrain, locale } = this.props;
+    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain } = this.props;
     return (
       <Grid item className={classes.trainContainer}>
         <Typography className={classes.trainingStatusLabel}>
@@ -87,12 +87,16 @@ export class TrainButton extends React.Component {
                   <span className={classes.readyLabel}><FormattedMessage {...messages.statusReady} />{` ${this.getLastTrainingTime(lastTraining)}`}</span> :
                   null)}
         </Typography>
-        <Button disabled={agentStatus === 'Training'} className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
-          {agentStatus !== 'Training' ? 
-            <FormattedMessage {...messages.trainButton} /> :
-            <img src={training} className={classes.trainingAnimation}></img>
-          }
-        </Button>
+        <Tooltip title={serverStatus === 'Training' && agentStatus !== 'Training' ? intl.formatMessage(messages.anotherAgentTraining) : ''} placement='top'>
+          <div style={{display: 'inline'}}>
+            <Button disabled={serverStatus === 'Training'} className={classes.button} onClick={onTrain} key='btnFinish' variant='contained'>
+              {agentStatus !== 'Training' ? 
+                <FormattedMessage {...messages.trainButton} /> :
+                <img src={training} className={classes.trainingAnimation}></img>
+              }
+            </Button>
+          </div>
+        </Tooltip>
       </Grid>
     );
   }
@@ -103,6 +107,7 @@ TrainButton.propTypes = {
   intl: intlShape.isRequired,
   onTrain: PropTypes.func,
   agentStatus: PropTypes.string,
+  serverStatus: PropTypes.string,
   lastTraining: PropTypes.string,
   locale: PropTypes.string,
 };

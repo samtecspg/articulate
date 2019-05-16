@@ -34,4 +34,8 @@ export default defineMessages({
     id: 'app.components.TrainButton.justNow',
     defaultMessage: 'just now',
   },
+  anotherAgentTraining: {
+    id: 'app.components.TrainButton.anotherAgentTraining',
+    defaultMessage: 'Another agent is currently training',
+  }
 });

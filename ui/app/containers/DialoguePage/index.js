@@ -34,6 +34,7 @@ import {
   makeSelectTotalSayings,
   makeSelectLocale,
   makeSelectTotalKeywords,
+  makeSelectServerStatus,
 } from '../App/selectors';
 
 import {
@@ -288,6 +289,7 @@ export class DialoguePage extends React.PureComponent {
           onFinishAction={this.submit}
           onTrain={this.props.onTrain}
           agentStatus={this.props.agent.status}
+          serverStatus={this.props.serverStatus}
           lastTraining={this.props.agent.lastTraining}
           enableTabs={!this.state.isNewAgent}
           selectedTab="dialogue"
@@ -355,6 +357,7 @@ export class DialoguePage extends React.PureComponent {
 
 DialoguePage.propTypes = {
   agent: PropTypes.object,
+  serverStatus: PropTypes.string,
   onLoadSayings: PropTypes.func,
   onLoadKeywords: PropTypes.func,
   onLoadActions: PropTypes.func,
@@ -386,6 +389,7 @@ DialoguePage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
+  serverStatus: makeSelectServerStatus(),
   sayings: makeSelectSayings(),
   totalSayings: makeSelectTotalSayings(),
   agentCategories: makeSelectCategories(),

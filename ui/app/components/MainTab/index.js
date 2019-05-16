@@ -97,7 +97,7 @@ export class MainTab extends React.Component {
   };
 
   render() {
-    const { classes, intl, enableTabs, agentStatus, lastTraining, onTrain, newAgent, disableSave, locale } = this.props;
+    const { classes, intl, enableTabs, agentStatus, serverStatus, lastTraining, onTrain, newAgent, disableSave, locale } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
         <Hidden only={['sm', 'xs', 'md']}>
@@ -131,6 +131,7 @@ export class MainTab extends React.Component {
                 <TrainButton
                   locale={locale}
                   agentStatus={agentStatus}
+                  serverStatus={serverStatus}
                   lastTraining={lastTraining}
                   onTrain={onTrain}
                 />
@@ -194,6 +195,7 @@ export class MainTab extends React.Component {
                 <TrainButton
                   locale={locale}
                   agentStatus={agentStatus}
+                  serverStatus={serverStatus}
                   lastTraining={lastTraining}
                   onTrain={onTrain}
                 />
@@ -270,6 +272,7 @@ MainTab.propTypes = {
   disableSave: PropTypes.bool,
   touched: PropTypes.bool,
   locale: PropTypes.string,
+  serverStatus: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(MainTab));

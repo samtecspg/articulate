@@ -4,9 +4,15 @@ const selectGlobal = state => state.global;
 const selectRoute = state => state.route;
 
 /* Global */
+
 const makeSelectLocation = () => createSelector(
   selectRoute,
   (routeState) => routeState.location,
+);
+
+const makeSelectServerStatus = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.serverStatus,
 );
 
 const makeSelectSessionId = () => createSelector(
@@ -301,6 +307,7 @@ const makeSelectLocale = () =>createSelector(
 );
 
 export {
+  makeSelectServerStatus,
   makeSelectLocation,
   makeSelectSessionId,
   makeSelectSessionLoaded,
@@ -357,5 +364,5 @@ export {
   makeSelectSuccessCategory,
   makeSelectDocuments,
   makeSelectTotalDocuments,
-  makeSelectLocale
+  makeSelectLocale,
 };
