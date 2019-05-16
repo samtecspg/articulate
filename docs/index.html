@@ -1,0 +1,74 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Docs</title>
+    <link rel="stylesheet" href="https://unpkg.com/docute@4/dist/docute.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="docute"></div>
+    <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
+    <script>
+      new Docute({
+        title: "Articulate Documentation",
+        target: '#docute',
+        sidebar: [
+          // A sidebar item, with multiple sub-links
+          {
+            title: 'Getting Started', // Optional
+            links: [
+              {
+                title: 'Basic Installation',
+                link: '/getting-started/basic-installation.md'
+              },
+              {
+                title: 'Advanced Installation',
+                link: '/getting-started/advanced-installation.md'
+              },
+              {
+                title: 'Your First Agent',
+                link: '/getting-started/first-5-minutes.md'
+              }
+            ]
+          },
+          {
+            title: 'Concepts',
+            links: [
+              {
+                title: 'Action Tagging',
+                link: '/concepts/action-tags.md'
+              },
+              {
+                title: 'Modifiers',
+                link: '/concepts/modifiers.md'
+              },
+              {
+                title: 'Action Chaining',
+                link: '/concepts/action-chains.md'
+              },
+              {
+                title: 'Ubiquity',
+                link: '/concepts/ubiquity.md'
+              }
+            ]
+          },
+          {
+            title: 'Reference', // Optional
+            links: [
+              {
+                title: 'Common Terms',
+                link: '/reference/terms.md'
+              },
+              {
+                title: 'Frequently Asked Questions',
+                link: '/reference/faq.md'
+              }
+            ]
+          }
+        ]
+      })
+    </script>
+  </body>
+</html>
