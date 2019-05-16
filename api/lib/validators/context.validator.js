@@ -163,5 +163,5 @@ class ContextValidate {
     }
 }
 
-const actionValidate = new ContextValidate();
-module.exports = actionValidate;
+const contextValidate = new ContextValidate();
+module.exports = contextValidate;

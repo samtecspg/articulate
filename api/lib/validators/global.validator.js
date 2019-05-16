@@ -8,7 +8,7 @@ import {
     PARAM_VALUE
 } from '../../util/constants';
 
-class AgentValidate {
+class GlobalValidate {
     constructor() {
 
         this.searchByfield = {
@@ -55,5 +55,5 @@ class AgentValidate {
     }
 }
 
-const agentValidate = new AgentValidate();
-module.exports = agentValidate;
+const globalValidate = new GlobalValidate();
+module.exports = globalValidate;

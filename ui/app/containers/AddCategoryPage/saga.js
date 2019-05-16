@@ -42,7 +42,6 @@ export function* postPrebuiltCategory(payload) {
     yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
   }
   catch (err) {
-    console.log('ERROR: ', err);
     yield put(loadPrebuiltCategoriesError(err));
   }
 }
