@@ -253,7 +253,10 @@ class SayingRow extends React.Component {
                     }
                   }}
                   onSearch={this.props.onSearchActions}
-                  onGoToUrl={this.props.onGoToUrl}
+                  onGoToUrl={() => {          
+                    this.props.onSendSayingToAction(this.props.saying);
+                    this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
+                  }}
                   onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
                   onCreateRoute={`/agent/${this.props.agentId}/action/create`}
                   filteredValues={this.props.agentFilteredActions.filter((agentFilteredAction) => { return saying.actions.indexOf(agentFilteredAction.actionName) === -1 })}
