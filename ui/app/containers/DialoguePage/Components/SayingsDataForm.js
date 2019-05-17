@@ -356,9 +356,14 @@ class SayingsDataForm extends React.Component {
                   });
                 }}
                 onSearch={this.props.onSearchActions}
-                onGoToUrl={() => { 
+                onGoToUrl={({ isEdit = false, url = '' }) => { 
                   this.props.onClearSayingToAction();
-                  this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
+                  if (isEdit){
+                    this.props.onGoToUrl(url);
+                  }
+                  else {
+                    this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
+                  }
                 }}
                 onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
                 onCreateRoute={`/agent/${this.props.agentId}/action/create`}

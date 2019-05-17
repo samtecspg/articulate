@@ -106,6 +106,10 @@ export class FilterSelect extends React.Component {
                     });
                     if (['filter', 'create', 'no results'].indexOf(evt.target.value) === -1) {
                         if (!evt._targetInst || (evt._targetInst && evt._targetInst.type !== 'img')) {
+                            this.setState({
+                                filteringValues: false,
+                                filterInput: '',
+                            });
                             this.props.onSelect(evt.target.value);
                         }
                     }
@@ -201,7 +205,7 @@ export class FilterSelect extends React.Component {
                                     {this.props.displayEdit ? <img
                                         id={`edit_value_${filteredValue[this.props.valueField]}`}
                                         onClick={() => {
-                                            this.props.onGoToUrl(`${this.props.onEditRoutePrefix}${filteredValue.id}`);
+                                            this.props.onGoToUrl({ url: `${this.props.onEditRoutePrefix}${filteredValue.id}`, isEdit: true});
                                         }} className={classes.editValueIcon} src={pencilIcon}
                                     /> : null}
                                 </div>
@@ -241,7 +245,7 @@ export class FilterSelect extends React.Component {
                                             {this.props.displayEdit ? <img
                                                 id={`edit_value_${value[this.props.valueField]}`}
                                                 onClick={() => {
-                                                    this.props.onGoToUrl(`${this.props.onEditRoutePrefix}${value.id}`);
+                                                    this.props.onGoToUrl({ url: `${this.props.onEditRoutePrefix}${value.id}`, isEdit: true});
                                                 }}
                                                 className={classes.editValueIcon}
                                                 src={pencilIcon}
