@@ -8,6 +8,7 @@ import {
     CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import OverLimitErrorHandler from '../../errors/global.over-limit';
 
 module.exports = async function ({ data, isImport = false, returnModel = false }) {
 
@@ -28,6 +29,12 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
     }
 
     const AgentModel = await redis.factory(MODEL_AGENT);
+    const agentCount = await AgentModel.count();
+    const agentLimit = this.options.agentLimit;
+
+    if (agentLimit != -1 && agentCount >= agentLimit) {
+        throw OverLimitErrorHandler({ level: agentCount, limit: agentLimit, type: 'Agents' })
+    }
     try {
         const allSettings = await settingsService.findAll();
 

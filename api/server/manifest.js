@@ -94,7 +94,9 @@ module.exports = new Confidence.Store({
             },
             {
                 plugin: '../lib', // Main plugin
-                options: {}
+                options: {
+                    agentLimit: parseInt(process.env.AGENT_LIMIT || -1)
+                }
             },
             {
                 plugin: {
