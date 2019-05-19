@@ -30,6 +30,10 @@ export const DELETE_SESSION = 'app/App/DELETE_SESSION';
 export const DELETE_SESSION_SUCCESS = 'app/App/DELETE_SESSION_SUCCESS';
 export const DELETE_SESSION_ERROR = 'app/App/DELETE_SESSION_ERROR';
 export const SHOW_WARNING = 'app/App/SHOW_WARNING';
+export const REFRESH_SERVER_INFO = 'app/App/REFRESH_SERVER_INFO';
+export const LOAD_SERVER_INFO = 'app/App/LOAD_SERVER_INFO';
+export const LOAD_SERVER_INFO_ERROR = 'app/App/LOAD_SERVER_INFO_ERROR';
+export const LOAD_SERVER_INFO_SUCCESS = 'app/App/LOAD_SERVER_INFO_SUCCESS';
 
 /*
 * Connections

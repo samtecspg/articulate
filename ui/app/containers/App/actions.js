@@ -230,11 +230,44 @@ import {
   IMPORT_CATEGORY,
   IMPORT_CATEGORY_ERROR,
   IMPORT_CATEGORY_SUCCESS,
+  REFRESH_SERVER_INFO,
+  LOAD_SERVER_INFO,
+  LOAD_SERVER_INFO_ERROR,
+  LOAD_SERVER_INFO_SUCCESS,
 } from './constants';
 
 /*
 * Global
 */
+
+export function loadServerInfo() {
+  return {
+    type: LOAD_SERVER_INFO,
+    apiCall: true,
+  };
+}
+
+export function loadServerInfoError(error) {
+  return {
+    type: LOAD_SERVER_INFO_ERROR,
+    error,
+  };
+}
+
+export function loadServerInfoSuccess(server) {
+  return {
+    type: LOAD_SERVER_INFO_SUCCESS,
+    server,
+  };
+}
+
+export function refreshServerInfo(server) {
+  return {
+    type: REFRESH_SERVER_INFO,
+    server
+  }
+}
+
 export function loadSession(sessionId, newSession) {
   return {
     type: LOAD_SESSION,

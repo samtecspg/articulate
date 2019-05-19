@@ -218,7 +218,11 @@ import {
   LOAD_PREBUILT_CATEGORIES_SUCCESS,
   IMPORT_CATEGORY,
   IMPORT_CATEGORY_ERROR,
-  IMPORT_CATEGORY_SUCCESS
+  IMPORT_CATEGORY_SUCCESS,
+  REFRESH_SERVER_INFO,
+  LOAD_SERVER_INFO,
+  LOAD_SERVER_INFO_ERROR,
+  LOAD_SERVER_INFO_SUCCESS
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -418,12 +422,26 @@ const initialState = Immutable({
   successAgent: false,
   conversationStateObject: {},
   newActionResponse: 'hello',
-  documents: []
+  documents: [],
+  serverStatus: ''
 });
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
     /* Global */
+    case LOAD_SERVER_INFO:
+      return state.set('loading', true)
+        .set('error', false);
+    case LOAD_SERVER_INFO_ERROR:
+      return state.set('serverStatus', initialState.serverStatus)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_SERVER_INFO_SUCCESS:
+      return state.set('serverStatus', action.server.status)
+        .set('loading', false)
+        .set('error', false);
+    case REFRESH_SERVER_INFO: 
+      return state.set('serverStatus', action.server.status);
     case LOAD_SESSION:
       return state.set('sessionId', '')
         .set('messages', [])

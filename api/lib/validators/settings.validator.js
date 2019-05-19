@@ -66,5 +66,5 @@ class SettingsValidate {
     }
 }
 
-const actionValidate = new SettingsValidate();
-module.exports = actionValidate;
+const settingsValidate = new SettingsValidate();
+module.exports = settingsValidate;

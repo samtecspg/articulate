@@ -42,8 +42,10 @@ import {
   loadAgent,
   loadAgentSuccess,
   loadSettings,
+  loadServerInfo,
   toggleConversationBar,
   updateSetting,
+  refreshServerInfo,
 } from './actions';
 import saga from './saga';
 import {
@@ -61,6 +63,7 @@ class App extends React.Component {
     agent: null,
     client: null,
     socketClientConnected: false,
+    serverStatusConnected: false,
   };
 
   getAgentIdFromPath() {
@@ -74,6 +77,7 @@ class App extends React.Component {
   }
 
   componentWillMount() {
+    this.props.onLoadServerInfo();
     this.props.onLoadSettings();
     this.props.onCheckAPI();
     const agentId = this.getAgentIdFromPath();
@@ -146,6 +150,18 @@ class App extends React.Component {
           });
         }
       }
+    }
+    if (this.state.socketClientConnected && !this.state.serverStatusConnected){
+      const handler = (server) => {
+
+        if (server) {
+          this.props.onRefreshServerInfo(server);
+        }
+      };
+      this.state.client.subscribe('/', handler);
+      this.setState({
+        serverStatusConnected: true
+      });
     }
   }
 
@@ -222,9 +238,15 @@ export function mapDispatchToProps(dispatch) {
     onLoadSettings: () => {
       dispatch(loadSettings());
     },
+    onLoadServerInfo: () => {
+      dispatch(loadServerInfo());
+    },
     onChangeLanguage: (language) => {
       dispatch(updateSetting('uiLanguage', language));
     },
+    onRefreshServerInfo: (server) => {
+      dispatch(refreshServerInfo(server));
+    }
   };
 }
 

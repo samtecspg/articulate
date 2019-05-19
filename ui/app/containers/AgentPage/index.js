@@ -58,6 +58,7 @@ import {
   makeSelectLoading,
   makeSelectSuccessAgent,
   makeSelectLocale,
+  makeSelectServerStatus,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -353,6 +354,7 @@ export class AgentPage extends React.PureComponent {
           onFinishAction={this.submit}
           onTrain={this.props.onTrain}
           agentStatus={this.props.agent.status}
+          serverStatus={this.props.serverStatus}
           lastTraining={this.props.agent.lastTraining}
           enableTabs={!this.state.isNewAgent}
           selectedTab="agents"
@@ -403,6 +405,7 @@ export class AgentPage extends React.PureComponent {
 AgentPage.propTypes = {
   intl: intlShape.isRequired,
   agent: PropTypes.object,
+  serverStatus: PropTypes.string,
   webhook: PropTypes.object,
   postFormat: PropTypes.object,
   settings: PropTypes.object,
@@ -438,6 +441,7 @@ AgentPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
+  serverStatus: makeSelectServerStatus(),
   webhook: makeSelectAgentWebhook(),
   postFormat: makeSelectAgentPostFormat(),
   agentSettings: makeSelectAgentSettings(),

@@ -253,7 +253,14 @@ class SayingsDataForm extends React.Component {
                 thresholdField='actionThreshold'
                 onSelect={this.props.onSelectCategory}
                 onSearch={this.props.onSearchCategory}
-                onGoToUrl={this.props.onGoToUrl}
+                onGoToUrl={({ isEdit = false, url = '' }) => {
+                  if (isEdit){
+                    this.props.onGoToUrl(url);
+                  }
+                  else {
+                    this.props.onGoToUrl(`/agent/${this.props.agentId}/addCategory`);
+                  }
+                }}
                 onEditRoutePrefix={`/agent/${this.props.agentId}/category/`}
                 onCreateRoute={`/agent/${this.props.agentId}/addCategory`}
                 filteredValues={this.props.agentFilteredCategories}
@@ -356,7 +363,15 @@ class SayingsDataForm extends React.Component {
                   });
                 }}
                 onSearch={this.props.onSearchActions}
-                onGoToUrl={this.props.onGoToUrl}
+                onGoToUrl={({ isEdit = false, url = '' }) => { 
+                  this.props.onClearSayingToAction();
+                  if (isEdit){
+                    this.props.onGoToUrl(url);
+                  }
+                  else {
+                    this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
+                  }
+                }}
                 onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
                 onCreateRoute={`/agent/${this.props.agentId}/action/create`}
                 filteredValues={this.props.agentFilteredActions}

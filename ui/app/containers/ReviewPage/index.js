@@ -42,6 +42,7 @@ import {
   makeSelectSelectedCategory,
   makeSelectTotalDocuments,
   makeSelectLocale,
+  makeSelectServerStatus,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -273,6 +274,7 @@ export class ReviewPage extends React.Component {
             agentUIColor={agent.uiColor}
             onTrain={onTrain}
             agentStatus={agent.status}
+            serverStatus={this.props.serverStatus}
             lastTraining={agent.lastTraining}
             enableTabs
             selectedTab="review"
@@ -351,6 +353,7 @@ ReviewPage.propTypes = {
     onRefreshDocuments: PropTypes.func.isRequired,
   }),
   agent: PropTypes.object.isRequired,
+  serverStatus: PropTypes.string,
   documents: PropTypes.array,
   totalDocuments: PropTypes.number,
   agentCategories: PropTypes.array,
@@ -366,6 +369,7 @@ ReviewPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
+  serverStatus: makeSelectServerStatus(),
   totalDocuments: makeSelectTotalDocuments(),
   agentCategories: makeSelectCategories(),
   agentFilteredCategories: makeSelectFilteredCategories(),

@@ -17,6 +17,7 @@ import { toAPIPath } from '../../utils/locationResolver';
 import {
   LOAD_AGENT,
   LOAD_SETTINGS,
+  LOAD_SERVER_INFO,
   RESET_SESSION,
   SEND_MESSAGE,
   TRAIN_AGENT,
@@ -34,6 +35,8 @@ import {
   storeSourceData,
   trainAgentError,
   showWarning,
+  loadServerInfoSuccess,
+  loadServerInfoError,
 } from './actions';
 import {
   makeSelectAgent,
@@ -143,9 +146,22 @@ export function* getAgent(payload) {
   }
 }
 
+export function* getServerInfo(payload) {
+  const { api } = payload;
+  try {
+    const response = yield call(api.get, toAPIPath([]));
+    yield put(loadServerInfoSuccess(response));
+  }
+  catch (err) {
+    yield put(loadServerInfoError(err));
+  }
+}
+
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(LOAD_SETTINGS, getSettings);
+  yield takeLatest(LOAD_SERVER_INFO, getServerInfo);
   yield takeLatest(SEND_MESSAGE, postConverse);
   yield takeLatest(RESET_SESSION, deleteSession);
   yield takeLatest(TRAIN_AGENT, postTrainAgent);

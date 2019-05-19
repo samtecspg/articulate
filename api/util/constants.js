@@ -24,6 +24,7 @@ export const MODEL_SAYING = 'Saying';
 export const MODEL_SETTINGS = 'Settings';
 export const MODEL_WEBHOOK = 'Webhook';
 export const MODEL_CONNECTION = 'Connection';
+export const MODEL_SERVER = 'Server';
 export const MODEL_ALL = [
     MODEL_ACTION,
     MODEL_AGENT,
@@ -34,7 +35,9 @@ export const MODEL_ALL = [
     MODEL_SAYING,
     MODEL_SETTINGS,
     MODEL_WEBHOOK,
-    MODEL_POST_FORMAT
+    MODEL_POST_FORMAT,
+    MODEL_CONNECTION,
+    MODEL_SERVER
 ];
 
 //ROUTES
