@@ -1,15 +1,15 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Grid, FormControl, MenuItem, Select, Input, Tooltip } from '@material-ui/core';
+import { Grid, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import ContentEditable from 'react-contenteditable'
 
 import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
 import FilterSelect from "../../../components/FilterSelect";
 import { intlShape, injectIntl } from 'react-intl';
-import messages from '../messages';
 
 const styles = {
   actionBackgroundContainer: {
@@ -60,6 +60,9 @@ const styles = {
   response: {
     paddingRight: '5px',
     lineHeight: '1.5',
+    '&:focus': {
+      outline: '0px solid transparent'
+    }
   },
   responseInput: {
     border: 'none',
@@ -70,54 +73,70 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class ResponseRow extends React.Component {
 
+  constructor() {
+    super();
+    this.contentEditable = React.createRef();
+  }
+
   state = {
     openActions: false,
     anchorEl: null,
   };
 
+  getText(el) {
+    return el.innerText || this.getTextForFirefox(el);
+  }
+
+  getTextForFirefox(el) {
+    // Taken from http://stackoverflow.com/a/3908094
+    var text = "";
+    if (typeof window.getSelection != "undefined") {
+      var sel = window.getSelection();
+      var tempRange = sel.getRangeAt(0);
+      sel.removeAllRanges();
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      sel.addRange(range);
+      text = sel.toString();
+      sel.removeAllRanges();
+      sel.addRange(tempRange);
+    }
+
+    return text;
+  }
+
   render(){
-    const { classes, action, response, responseIndex, intl } = this.props;
+    const { classes, action, response, responseIndex } = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Input
-            id={`response_${responseIndex}`}
-            value={response.textResponse}
-            onChange={(evt) => {
-              this.props.onEditActionResponse(evt.target.value, responseIndex);
-            }}
-            inputProps={{
-             className: classes.responseInput
-            }}
-            endAdornment={
-              [
-                response.actions.map((action, actionIndex) => {
-                  return (
-                    <div key={`responseAction_${actionIndex}`} className={classes.actionBackgroundContainer}>
-                      <span
-                        className={classes.actionLabel}
-                      >{action}</span>
-                      <a onClick={() => { this.props.onUnchainActionFromResponse(responseIndex, actionIndex) }} className={classes.deleteActionX}>x</a>
-                    </div>
-                  )
-                }),
-                <img
-                  key='imgAddAction'
-                  onClick={(evt) => this.setState({
-                    anchorEl: evt.target,
-                    openActions: true,
-                  })}
-                  className={classes.addActionIcon} src={addActionIcon}
-                />,
-                <Tooltip key='copyResponse' title={intl.formatMessage(messages.copyResponses)} placement='top'>
-                  <img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} />
-                </Tooltip>,
-                <img key='deleteResponse' onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />
-              ]
-            }
-            multiline
-            fullWidth
+          <ContentEditable
+            className={classes.response}
+            innerRef={this.contentEditable}
+            html={response.textResponse} // innerHTML of the editable div
+            onChange={(evt) => { this.props.onEditActionResponse(evt.target.value, responseIndex) }} // handle innerHTML change
+            tagName='span' // Use a custom HTML tag (uses a div by default)
           />
+          {response.actions.map((action, actionIndex) => {
+            return (
+              <div key={`responseAction_${actionIndex}`} className={classes.actionBackgroundContainer}>
+                <span
+                  className={classes.actionLabel}
+                >{action}</span>
+                <a onClick={() => { this.props.onUnchainActionFromResponse(responseIndex, actionIndex) }} className={classes.deleteActionX}>x</a>
+              </div>
+            )
+          })}
+          <img
+            onClick={(evt) => this.setState({
+              anchorEl: evt.target,
+              openActions: true,
+            })}
+            className={classes.addActionIcon} src={addActionIcon}></img>
+          <Tooltip key='copyResponse' title='Copy response in the response input' placement='top'>
+            <img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} />
+          </Tooltip>
+          <img key='deleteResponse' onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />
           <FilterSelect
             hideAddButton
             value='select'
