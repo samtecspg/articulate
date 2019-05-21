@@ -53,6 +53,7 @@ import {
   makeSelectAgentSettings,
   makeSelectNewSayingActions,
   makeSelectSelectedCategory,
+  makeSelectTotalSayings,
 } from '../App/selectors';
 
 export function* getKeywords(payload) {
@@ -151,13 +152,15 @@ export function* postSaying(payload) {
 
 export function* deleteSaying(payload) {
   const agent = yield select(makeSelectAgent());
+  const totalSayings = yield select(makeSelectTotalSayings());
   const { api, sayingId, categoryId, filter, page, pageSize } = payload;
+  const newPage = (totalSayings % 5) === 1 ? page - 1 : page;
   try {
     yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, categoryId, ROUTE_SAYING, sayingId]));
     yield call(getSayings, {
       api,
       filter,
-      page,
+      page: newPage,
       pageSize,
     });
   }

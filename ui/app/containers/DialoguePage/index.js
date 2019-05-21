@@ -211,6 +211,12 @@ export class DialoguePage extends React.PureComponent {
 
   deleteSaying(sayingId, categoryId) {
     this.props.onDeleteSaying(this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize, sayingId, categoryId);
+    if (this.props.totalSayings % 5 === 1 && this.state.currentSayingsPage > 1){
+      const currentSayingsPage = this.state.currentSayingsPage - 1;
+      this.setState({
+        currentSayingsPage
+      });
+    }
   }
 
   setNumberOfKeywordsPages(pageSize){
