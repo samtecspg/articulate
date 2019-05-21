@@ -96,9 +96,6 @@ module.exports = async function ({ id, returnModel = false }) {
         });
 
         if (sayingsWithoutActions.length > 0){
-            const AgentModel = await redis.factory(MODEL_AGENT, id);
-            AgentModel.property('status', STATUS_ERROR);
-            await AgentModel.saveInstance();
             return Promise.reject(InvalidAgentTrain({ message: `The following user sayings doesn't have actions asigned: "${_.map(sayingsWithoutActions, 'userSays').join('", "')}"` }));
         }
 
