@@ -24,7 +24,7 @@ Here's how we suggest spending your first 5 minutes with Articulate:
 
 ## Create a Category
 
-4. Now that you have an agent the first thing you should do is create a category. Think of a category as a group of similar actions. From the Sayings page, click on categories dropdown. For now the list is empty, click **Add** to create your first category.
+4. Now that you have an agent the first thing you should do is create a category. A category is a group of similar actions. From the Sayings page, click on categories dropdown. For now the list is empty, click **Add** to create your first category.
 
 ![Add a Category](./img/getting-started/category-dropdown-empty.PNG)
 

@@ -18,7 +18,6 @@ A few warnings before we get started:
 
    * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
    * [Docker Compose](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
-   * Git (installed by default on mac and most linux varieties. To install on windows get it [here](https://git-for-windows.github.io))
 
 2. **Downloading** - Download the current release from this page: [https://github.com/samtecspg/articulate/releases/latest](https://github.com/samtecspg/articulate/releases/latest)
 
