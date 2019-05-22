@@ -96,9 +96,6 @@ module.exports = async function ({ id, returnModel = false }) {
         });
 
         if (sayingsWithoutActions.length > 0){
-            const AgentModel = await redis.factory(MODEL_AGENT, id);
-            AgentModel.property('status', STATUS_ERROR);
-            await AgentModel.saveInstance();
             return Promise.reject(InvalidAgentTrain({ message: `The following user sayings doesn't have actions asigned: "${_.map(sayingsWithoutActions, 'userSays').join('", "')}"` }));
         }
 
@@ -170,7 +167,7 @@ module.exports = async function ({ id, returnModel = false }) {
             const keywords = await globalService.loadAllByIds({ ids: await AgentModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
             const trainingData = await categoryService.generateTrainingData({ keywords, sayings: allAgentSayings, extraTrainingData: agent.extraTrainingData });
             if (trainingData.numberOfSayings === 0) {
-                return;
+                return Promise.reject(InvalidAgentTrain({ agent: AgentModel.property('agentName') }));
             }
             const pipeline = trainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
             model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
