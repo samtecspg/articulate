@@ -1,0 +1,18 @@
+:root {
+  --border-color: #54b976; 
+}
+
+.page-content h2 {
+  margin-top: 2rem;
+  border-bottom-width: 3px
+}
+
+.tut img {
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px;
+}
+
+.ItemLink.active {
+  border-right: 6px solid #54b976;
+}

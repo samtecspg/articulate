@@ -1,5 +1,6 @@
-![articulate logo](./docs/img/articulate-logo.png)
+![](./docs/img/articulate-logo.png)
 
+# Introducing Articulate
 ## A platform for building conversational interfaces with intelligent agents
 
 [![Join the chat at https://gitter.im/samtecspg/articulate](https://badges.gitter.im/samtecspg/articulate.svg)](https://gitter.im/samtecspg/articulate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -7,33 +8,24 @@
 ![](https://img.shields.io/github/downloads/samtecspg/articulate/total.svg)
 ![](https://img.shields.io/github/tag/samtecspg/articulate.svg)
 
-![Articulate Interface](./docs/img/main-ilus.png)
+Articulate is a platform for building conversational interfaces with intelligent agents. It is built primarily on top of Rasa NLU, which internally uses Duckling, spaCy, and tensorFlow. It implements a custom dialogue management solution capable of deep complex dialog, but with a focus on simplicity in use.
 
-## Documentation
+If you're ready to get started then jump straight to [basic installation](./getting-started/basic-installation.md)
 
-https://samtecspg.github.io/articulate/
+![](./docs/img/laptop-mockup.png)
 
-## QUICK START
+## The Team
 
-Make sure you've got these programs installed:
+### Smart Platform Group
 
-   * [Docker](https://docs.docker.com/engine/installation/) (If faced with any choices, get the Community Edition ("CE"))
-   * [`docker-compose`](https://docs.docker.com/compose/install/) (should be auto-installed as part of Docker on mac and windows)
-   
-> Running on Docker Machine or in the cloud, make sure to check out our [alternate installation](https://samtecspg.github.io/articulate/getting_started/basic-installation#running-remotely) docs.
+SPG is a team of full stack developers, machine learning engineers, and UX designers working to solve the problem of Enterprise data at scale. We love Open Source and are pleased to be able to build open source projects along our journey.
 
-> Docker for Windows and Docker for mac users, make sure you are [allocating at least 4Gb of RAM to Docker](https://docs.docker.com/docker-for-mac/#advanced).
+### Samtec, Inc.
 
-1. Download the current release zip (articulate-vX.X.X.zip): https://github.com/samtecspg/articulate/releases/latest
-
-2. Unzip and get a terminal or CMD in the release directory
-
-3. run `docker-compose up` (`sudo` might be needed)
-
-4. point your web browser at  http://localhost:8080 and enjoy Articulate
+Samtec is our mothership. Nearly all members of the SPG team got started as engineers, developers, or business users inside of Samtec. Recognizing problems faced by Samtec, and likely by other enterprises of the same scale, SPG was created to address some of those needs. We are driven by our love for Samtec as a company and family to build products that improve the experiences and services of Samtec's customers.
 
 ## License
-```
+
 Copyright 2018 Samtec.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,4 +39,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-```
+
