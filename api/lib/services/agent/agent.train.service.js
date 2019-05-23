@@ -258,6 +258,9 @@ module.exports = async function ({ id, returnModel = false }) {
         const AgentModel = await redis.factory(MODEL_AGENT, id);
         AgentModel.property('status', STATUS_ERROR);
         await AgentModel.saveInstance();
+        const ServerModel = await serverService.get({ returnModel: true });
+        ServerModel.property('status', STATUS_READY);
+        await ServerModel.saveInstance();
         throw RedisErrorHandler({ error });
     }
 };
