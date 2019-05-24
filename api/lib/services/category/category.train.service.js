@@ -18,9 +18,10 @@ module.exports = async function ({ AgentModel, CategoryModel, returnModel = fals
 
     const agent = AgentModel.allProperties();
     const category = CategoryModel.allProperties();
-    const { categoryService, globalService, rasaNLUService } = await this.server.services();
+    const { categoryService, globalService, rasaNLUService, serverService } = await this.server.services();
     let model = Guid.create().toString();
     try {
+        const ServerModel = await serverService.get({ returnModel: true });
         const keywords = await globalService.loadAllByIds({ ids: await CategoryModel.getAll(MODEL_KEYWORD, MODEL_KEYWORD), model: MODEL_KEYWORD });
         const sayings = await globalService.loadAllByIds({ ids: await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING), model: MODEL_SAYING });
         const trainingData = await categoryService.generateTrainingData({ keywords, sayings, extraTrainingData: category.extraTrainingData });
@@ -53,6 +54,8 @@ module.exports = async function ({ AgentModel, CategoryModel, returnModel = fals
     catch (error) {
         CategoryModel.property('status', STATUS_ERROR);
         await CategoryModel.saveInstance();
+        ServerModel.property('status', STATUS_READY);
+        await ServerModel.saveInstance();
         throw RedisErrorHandler({ error });
     }
 };
