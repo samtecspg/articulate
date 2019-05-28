@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
-import { Grid, CircularProgress } from '@material-ui/core';
+import { Grid, CircularProgress, Typography } from '@material-ui/core';
 
 import MainContentHeader from './Components/MainContentHeader';
 import AgentsCards from './Components/AgentsCards';
@@ -25,6 +25,7 @@ import { makeSelectAgents, makeSelectAgentExport, makeSelectConnections, makeSel
 import { loadAgents, exportAgent, importAgent, loadConnections, loadChannels } from '../App/actions';
 import { push } from 'react-router-redux';
 import ConnectionsCards from './Components/ConnectionsCards';
+import GetStarted from './Components/GetStarted';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {
@@ -38,6 +39,9 @@ export class AgentsPage extends React.PureComponent {
     return (
       agents && connections && channels ? 
         <Grid container>
+          <GetStarted
+            title={messages.title}
+            sizesForHideInlineElement={['sm', 'xs']} />
           <MainContentHeader
             title={messages.title}
             sizesForHideInlineElement={['sm', 'xs']}
