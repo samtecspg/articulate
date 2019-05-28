@@ -33,6 +33,7 @@ import {
 } from '../../../components/StyledTable';
 import messages from '../messages';
 import HighlightedSaying from './HighlightedSaying';
+import CodeModal from '../../../components/CodeModal';
 
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
@@ -134,6 +135,14 @@ const styles = {
     fontWeight: 'bold',
     textDecoration: 'underline'
   },
+  messageSource: {
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+    cursor: 'pointer',
+    fontSize: '10px',
+    marginTop: '10px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -143,6 +152,7 @@ class SayingRow extends React.Component {
     openCategoryModal: false,
     selectedCategory: '-1',
     categoryError: false,
+    openCodeModal: false,
   };
 
   constgetDocTime(timestamp) {
@@ -213,7 +223,13 @@ class SayingRow extends React.Component {
               </div>;
             })
           }
-
+          {
+            document.converseResult && document.converseResult.conversationStateObject ?
+            <span onClick={() => { this.setState({openCodeModal: true })}} className={classes.messageSource}>
+              {'</> '}<span>{intl.formatMessage(messages.seeSource)}</span>
+            </span> :
+            null
+          }
         </TableCell>
         <PercentCell value={document.maximum_category_score} align="center" />
         <PercentCell value={document.maximum_action_score} align="center" />
@@ -328,6 +344,7 @@ class SayingRow extends React.Component {
             </Grid>
           </DialogActions>
         </Dialog>
+        <CodeModal handleClose={() => { this.setState({ openCodeModal: false }) }} conversationStateObject={document.converseResult ? document.converseResult.conversationStateObject : null} open={this.state.openCodeModal} />
       </Fragment>
     );
   }

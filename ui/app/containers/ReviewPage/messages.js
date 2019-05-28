@@ -110,5 +110,9 @@ export default defineMessages({
   copyDialogCopyButton: {
     id: 'app.containers.ReviewPage.component.SayingRow.copyDialogCopyButton',
     defaultMessage: 'Copy'
-  }
+  },
+  seeSource: {
+    id: 'app.containers.ReviewPage.component.SayingRow.seeSource',
+    defaultMessage: 'See Source'
+  },
 });
