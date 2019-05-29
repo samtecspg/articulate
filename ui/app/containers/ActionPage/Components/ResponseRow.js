@@ -17,6 +17,7 @@ const styles = {
       backgroundColor: '#4e4e4e',
       color: '#fff',
     },
+    cursor: 'pointer',
     margin: '0px 5px 0px 5px',
     fontSize: '12px',
     padding: '4px 8px 4px 10px',
@@ -83,28 +84,6 @@ class ResponseRow extends React.Component {
     anchorEl: null,
   };
 
-  getText(el) {
-    return el.innerText || this.getTextForFirefox(el);
-  }
-
-  getTextForFirefox(el) {
-    // Taken from http://stackoverflow.com/a/3908094
-    var text = "";
-    if (typeof window.getSelection != "undefined") {
-      var sel = window.getSelection();
-      var tempRange = sel.getRangeAt(0);
-      sel.removeAllRanges();
-      var range = document.createRange();
-      range.selectNodeContents(el);
-      sel.addRange(range);
-      text = sel.toString();
-      sel.removeAllRanges();
-      sel.addRange(tempRange);
-    }
-
-    return text;
-  }
-
   render(){
     const { classes, action, response, responseIndex } = this.props;
     return (
@@ -117,12 +96,18 @@ class ResponseRow extends React.Component {
             onChange={(evt) => { this.props.onEditActionResponse(evt.target.value, responseIndex) }} // handle innerHTML change
             tagName='span' // Use a custom HTML tag (uses a div by default)
           />
-          {response.actions.map((action, actionIndex) => {
+          {response.actions.map((chainedAction, actionIndex) => {
+            let actionId = this.props.agentActions.filter((agentAction) => agentAction.actionName === chainedAction);
+            actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
             return (
               <div key={`responseAction_${actionIndex}`} className={classes.actionBackgroundContainer}>
                 <span
                   className={classes.actionLabel}
-                >{action}</span>
+                  onClick={() => {
+                    this.props.onGoToUrl(`/agent/${this.props.agentId}/actionDummy/${actionId}?ref=action&actionId=${action.id}`)
+                  }
+                  }
+                >{chainedAction}</span>
                 <a onClick={() => { this.props.onUnchainActionFromResponse(responseIndex, actionIndex) }} className={classes.deleteActionX}>x</a>
               </div>
             )
@@ -138,7 +123,6 @@ class ResponseRow extends React.Component {
           </Tooltip>
           <img key='deleteResponse' onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />
           <FilterSelect
-            hideAddButton
             value='select'
             valueDisplayField='actionName'
             valueField='actionName'
@@ -148,9 +132,16 @@ class ResponseRow extends React.Component {
               }
             }}
             onSearch={this.props.onSearchActions}
-            onGoToUrl={this.props.onGoToUrl}
-            onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
-            onCreateRoute={`/agent/${this.props.agentId}/action/create`}
+            onGoToUrl={({ isEdit = false, url = '' }) => { 
+              if (isEdit){
+                this.props.onGoToUrl(`${url}?ref=action&actionId=${action.id}`);
+              }
+              else {
+                this.props.onGoToUrl(`/agent/${this.props.agentId}/actionDummy/create?ref=action&actionId=${action.id}`);
+              }
+            }}
+            onEditRoutePrefix={`/agent/${this.props.agentId}/actionDummy/`}
+            onCreateRoute={`/agent/${this.props.agentId}/actionDummy/create?ref=action&actionId=${action.id}`}
             filteredValues={this.props.agentFilteredActions.filter((agentFilteredAction) => { return agentFilteredAction.actionName !== action.actionName && response.actions.indexOf(agentFilteredAction.actionName) === -1 })}
             values={this.props.agentActions.filter((agentAction) => { return agentAction.actionName !== action.actionName && response.actions.indexOf(agentAction.actionName) === -1 })}
             SelectProps={{
@@ -170,6 +161,7 @@ class ResponseRow extends React.Component {
             style={{
               display: 'none',
             }}
+            displayEdit
           />
         </Grid>
       </Grid>
@@ -191,6 +183,8 @@ ResponseRow.propTypes = {
   onDeleteResponse: PropTypes.func,
   agentFilteredActions: PropTypes.array,
   onSearchActions: PropTypes.func,
+  onGoToUrl: PropTypes.func,
+  agentId: PropTypes.string
 };
 
 export default injectIntl(withStyles(styles)(ResponseRow));

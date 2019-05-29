@@ -214,6 +214,7 @@ class ResponseForm extends React.Component {
                           <TableRow key={`${response}_${responseIndex}`}>
                             <TableCell>
                               <ResponseRow 
+                                agentId={this.props.agentId}
                                 response={response}
                                 responseIndex={responseIndex}
                                 action={action}
@@ -225,6 +226,7 @@ class ResponseForm extends React.Component {
                                 onDeleteResponse={this.props.onDeleteResponse}
                                 onSearchActions={this.props.onSearchActions}
                                 agentFilteredActions={this.props.agentFilteredActions}
+                                onGoToUrl={this.props.onGoToUrl}
                               />
                             </TableCell>
                           </TableRow>
@@ -284,6 +286,8 @@ ResponseForm.propTypes = {
   onEditActionResponse: PropTypes.func,
   agentFilteredActions: PropTypes.array,
   onSearchActions: PropTypes.func,
+  onGoToUrl: PropTypes.func,
+  agentId: PropTypes.string
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

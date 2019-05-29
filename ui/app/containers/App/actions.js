@@ -1408,12 +1408,13 @@ export function updateActionSuccess(action, oldActionName) {
   };
 }
 
-export function deleteAction(id, actionName) {
+export function deleteAction(id, actionName, redirectUrl) {
   return {
     type: DELETE_ACTION,
     apiCall: true,
     id,
     actionName,
+    redirectUrl,
   };
 }
 

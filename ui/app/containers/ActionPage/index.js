@@ -91,6 +91,32 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 export class ActionPage extends React.Component {
 
+  state = {
+    isNewAction: this.props.match.params.actionId === 'create',
+    currentTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionTab ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionTab : 'action',
+    userCompletedAllRequiredFields: false,
+    ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
+    refActionId: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionId,
+    tab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab,
+    actionTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionTab,
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page : '',
+    formError: false,
+    exitAfterSubmit: false,
+    errorState: {
+      actionName: false,
+      postFormatPayload: false,
+      webhookUrl: false,
+      webhookPayload: false,
+      responses: false,
+      slots: [],
+      tabs: [],
+      slotsTabs: [],
+    },
+    actionFilter: '',
+    exitUrl: ''
+  };
+
   constructor(props){
     super(props);
     this.moveNextTab = this.moveNextTab.bind(this);
@@ -111,6 +137,13 @@ export class ActionPage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const exitUrl = this.state.ref === 'agent' ? `/agent/${this.props.agent.id}` : (this.state.ref === 'action' ? `/agent/${this.props.agent.id}/actionDummy/${this.state.refActionId}?filter=${this.state.filter}&page=${this.state.page}&actionTab=response` : `/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`);
+    this.setState({
+      exitUrl
+    })
+  }
+
   componentWillMount() {
     if(this.props.agent.id) {
       this.initForm();
@@ -123,12 +156,7 @@ export class ActionPage extends React.Component {
     }
     if (this.props.success) {
       if (this.state.exitAfterSubmit){
-        if (this.state.ref === 'agent'){
-          this.props.onSuccess(`/agent/${this.props.agent.id}`);
-        }
-        else{
-          this.props.onSuccess(`/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`);
-        }
+        this.props.onSuccess(this.state.exitUrl);
       }
       if (this.state.isNewAction) {
         this.setState({
@@ -137,28 +165,6 @@ export class ActionPage extends React.Component {
       }
     }
   }
-
-  state = {
-    isNewAction: this.props.match.params.actionId === 'create',
-    currentTab: 'action',
-    userCompletedAllRequiredFields: false,
-    ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter,
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page,
-    formError: false,
-    exitAfterSubmit: false,
-    errorState: {
-      actionName: false,
-      postFormatPayload: false,
-      webhookUrl: false,
-      webhookPayload: false,
-      responses: false,
-      slots: [],
-      tabs: [],
-      slotsTabs: [],
-    },
-    actionFilter: '',
-  };
 
   moveNextTab(){
     // If isn't currently on the last tab
@@ -293,7 +299,7 @@ export class ActionPage extends React.Component {
       });
       if (this.state.isNewAction){
         // If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
-        this.props.onAddNewAction(this.props.saying.agent === '' && this.state.ref !== 'agent');
+        this.props.onAddNewAction(this.props.saying.agent === '' && this.state.ref !== 'agent' && this.state.ref !== 'action');
       }
       else {
         this.props.onEditAction();
@@ -310,13 +316,11 @@ export class ActionPage extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      this.props.agent.id ?
+      this.props.agent.id && (this.props.saying.keywords.length === 0 || (this.props.saying.keywords.length > 0 && this.props.agentKeywords.length > 0)) ?
       <Grid container>
         <Grid container>
           <Grid className={classes.goBackCard} onClick={() => {
-              this.state.ref === 'agent' ?
-                this.props.onGoToUrl(`/agent/${this.props.agent.id}`) :
-                this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`)
+              this.props.onGoToUrl(this.state.exitUrl);
             }}
           />
         </Grid>
@@ -325,9 +329,8 @@ export class ActionPage extends React.Component {
           loading={this.props.loading}
           success={this.props.success}
           onSaveAndExit={() => { this.submit(true) }}
-          goBack={() => {this.state.ref === 'agent' ? 
-            this.props.onGoToUrl(`/agent/${this.props.agent.id}`) :
-            this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`)
+          goBack={() => {
+            this.props.onGoToUrl(this.state.exitUrl);
           }}
           newAction={this.state.isNewAction}
           actionName={this.props.action.actionName}
@@ -383,6 +386,7 @@ export class ActionPage extends React.Component {
           }
           responseForm={
             <ResponseForm
+              agentId={this.props.agent.id}
               action={this.props.action}
               postFormat={this.props.postFormat}
               onChangeActionData={this.props.onChangeActionData}
@@ -403,6 +407,7 @@ export class ActionPage extends React.Component {
               onEditActionResponse={this.props.onEditActionResponse}
               onSearchActions={this.onSearchActions}
               agentFilteredActions={this.props.agentFilteredActions}
+              onGoToUrl={this.props.onGoToUrl}
             />
           }
           onChangeTab={this.onChangeTab}

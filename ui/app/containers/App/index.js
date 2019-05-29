@@ -15,6 +15,7 @@ import {
   Route,
   Switch,
   withRouter,
+  Redirect
 } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
@@ -191,6 +192,7 @@ class App extends React.Component {
             <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
             <Route exact path='/settings' component={SettingsPage} />
             <Route exact path='/missing-api' component={MissingAPIPage} />
+            <Redirect from='/agent/:id/actionDummy/:actionId' to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>

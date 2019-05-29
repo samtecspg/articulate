@@ -258,11 +258,11 @@ export function* putAction(payload) {
 
 export function* deleteAction(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, id } = payload;
+  const { api, id, redirectUrl } = payload;
   try {
     yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id]));
     yield put(deleteActionSuccess());
-    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
+    yield put(push(redirectUrl ? redirectUrl : `/agent/${agent.id}/dialogue?tab=sayings`));
   }
   catch (err) {
     const error = { ...err };
