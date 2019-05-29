@@ -403,7 +403,7 @@ export class ConversationBar extends React.PureComponent {
               <Tooltip placement='bottom-end' title={intl.formatMessage(messages.erase)}><img className={classes.eraseIcon} src={eraserIcon} onClick={() => this.props.onResetSession()} /></Tooltip>
             </Grid>
           </Grid>
-          <Grid style={{ right: this.state.newWidth }} container onClick={() => { this.props.onToggleConversationBar(false) }} className={classes.toggle}>
+          <Grid style={{ right: this.state.newWidth }} container onClick={() => { this.props.onToggleConversationBar(this.state.newWidth > 300 ? true : false) }} className={classes.toggle}>
             <img className={classes.arrow} src={rightArrowIcon}></img>
           </Grid>
           <Grid style={{ width: this.state.newWidth + 17 }} className={classes.contentContainer}>

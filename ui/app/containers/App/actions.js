@@ -337,6 +337,7 @@ export function toggleConversationBar(value) {
   return {
     type: TOGGLE_CONVERSATION_BAR,
     value,
+    apiCall: true
   };
 }
 
