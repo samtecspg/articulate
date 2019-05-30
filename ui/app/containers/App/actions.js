@@ -507,9 +507,10 @@ export function importAgentSuccess(agent) {
 * Agent
 */
 
-export function resetAgentData() {
+export function resetAgentData(ref) {
   return {
     type: RESET_AGENT_DATA,
+    ref
   };
 }
 
