@@ -622,7 +622,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 docId: agentToolResponse.docId,
                 textResponse: agentToolResponse.textResponse,
                 actionWasFulfilled: agentToolResponse.actionWasFulfilled,
-                actions: agentToolResponse.actions
+                actions: agentToolResponse.actions,
+                isFallback: agentToolResponse.isFallback
             };
             storeInQueue = storeInQueue || !cleanAgentToolResponse.actionWasFulfilled;
 
