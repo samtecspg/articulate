@@ -16,13 +16,13 @@ const mappings = {
             type: 'float'
         },
         total_elapsed_time_ms: {
-            type: 'text'
+            type: 'integer'
         },
         rasa_results: {
             type: 'object'
         },
         session: {
-            type: 'text'
+            type: 'keyword'
         },
         agent_id: {
             type: 'integer'
