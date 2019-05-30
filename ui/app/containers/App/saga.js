@@ -12,6 +12,7 @@ import {
   ROUTE_POST_FORMAT,
   ROUTE_TRAIN,
   ROUTE_WEBHOOK,
+  ROUTE_SETTINGS
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -22,6 +23,7 @@ import {
   SEND_MESSAGE,
   TRAIN_AGENT,
   UPDATE_SETTING,
+  TOGGLE_CONVERSATION_BAR,
 } from '../App/constants';
 import {
   getSettings,
@@ -37,11 +39,15 @@ import {
   showWarning,
   loadServerInfoSuccess,
   loadServerInfoError,
+  updateSettingsError,
+  updateSettingSuccess,
 } from './actions';
 import {
   makeSelectAgent,
   makeSelectSessionId,
+  makeSelectSettings,
 } from './selectors';
+import Immutable from 'seamless-immutable';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
@@ -157,6 +163,22 @@ export function* getServerInfo(payload) {
   }
 }
 
+export function* putConversationBarWidth(payload) {
+  const { api } = payload;
+  const settings = yield select(makeSelectSettings());
+  const mutableSettings = Immutable.asMutable(settings, { deep: true });
+  const width = settings.conversationPanelWidth;
+  try {
+    if (width > 300){
+      const response = yield call(api.put, toAPIPath([ROUTE_SETTINGS, 'conversationPanelWidth']), 300);
+      yield put(updateSettingSuccess(response));
+    }
+  }
+  catch (err) {
+    yield put(updateSettingsError(err));
+  }
+}
+
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
@@ -166,4 +188,5 @@ export default function* rootSaga() {
   yield takeLatest(RESET_SESSION, deleteSession);
   yield takeLatest(TRAIN_AGENT, postTrainAgent);
   yield takeLatest(UPDATE_SETTING, putSetting);
+  yield takeLatest(TOGGLE_CONVERSATION_BAR, putConversationBarWidth);
 };

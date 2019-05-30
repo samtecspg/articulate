@@ -300,7 +300,7 @@ export class DialoguePage extends React.PureComponent {
           enableTabs={!this.state.isNewAgent}
           selectedTab="dialogue"
           agentForm={Link}
-          agentURL={`/agent/${this.props.agent.id}`}
+          agentURL={`/agent/${this.props.agent.id}?ref=mainTab`}
           dialogueForm={
             <Form
               handleTabChange={this.handleTabChange}

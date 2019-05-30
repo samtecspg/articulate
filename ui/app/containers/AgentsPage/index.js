@@ -37,6 +37,7 @@ import MainContentHeader from './Components/MainContentHeader';
 import messages from './messages';
 
 import saga from './saga';
+import GetStarted from './Components/GetStarted';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {
@@ -50,6 +51,9 @@ export class AgentsPage extends React.PureComponent {
     return (
       agents && connections && channels ?
         <Grid container>
+          <GetStarted
+            title={messages.title}
+            sizesForHideInlineElement={['sm', 'xs']} />
           <MainContentHeader
             title={messages.title}
             sizesForHideInlineElement={['sm', 'xs']}

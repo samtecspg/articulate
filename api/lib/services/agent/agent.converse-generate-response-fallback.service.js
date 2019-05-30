@@ -45,12 +45,12 @@ module.exports = async function ({ agent, conversationStateObject }) {
             templateContext: conversationStateObject
         });
         if (webhookResponse.textResponse) {
-            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhook: webhookResponse };
+            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhook: webhookResponse, isFallback: true };
         }
         conversationStateObject.webhook = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: fallbackAction.responses, templateContext: conversationStateObject });
-        return { ...response, webhook: webhookResponse, actionWasFulfilled: true };
+        return { ...response, webhook: webhookResponse, actionWasFulfilled: true, isFallback: true };
     }
     const selectedFallbackResponse = fallbackAction.responses[Math.floor(Math.random() * fallbackAction.responses.length)];
-    return { textResponse: selectedFallbackResponse.textResponse, actions: selectedFallbackResponse.actions, actionWasFulfilled: true };
+    return { textResponse: selectedFallbackResponse.textResponse, actions: selectedFallbackResponse.actions, actionWasFulfilled: true, isFallback: true };
 };

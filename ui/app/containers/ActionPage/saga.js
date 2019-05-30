@@ -202,10 +202,12 @@ export function* postAction(payload) {
       yield call(postActionPostFormat, { id: response.id, api });
     }
     const sayingForAction = yield select(makeSelectSayingForAction());
-    const mutableSayingForAction = Immutable.asMutable(sayingForAction, { deep: true });
-    mutableSayingForAction.actions.push(response.actionName);
-    const updateSayingPayload = { api, sayingId: sayingForAction.id, saying: mutableSayingForAction };
-    yield call(putSaying, updateSayingPayload);
+    if (sayingForAction.agent){
+      const mutableSayingForAction = Immutable.asMutable(sayingForAction, { deep: true });
+      mutableSayingForAction.actions.push(response.actionName);
+      const updateSayingPayload = { api, sayingId: sayingForAction.id, saying: mutableSayingForAction };
+      yield call(putSaying, updateSayingPayload);
+    }
     yield put(addActionSuccess({ action: response, addToNewSayingActions }));
   }
   catch (err) {
@@ -258,11 +260,11 @@ export function* putAction(payload) {
 
 export function* deleteAction(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, id } = payload;
+  const { api, id, redirectUrl } = payload;
   try {
     yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id]));
     yield put(deleteActionSuccess());
-    yield put(push(`/agent/${agent.id}/dialogue?tab=sayings`));
+    yield put(push(redirectUrl ? redirectUrl : `/agent/${agent.id}/dialogue?tab=sayings`));
   }
   catch (err) {
     const error = { ...err };

@@ -346,6 +346,7 @@ export function toggleConversationBar(value) {
   return {
     type: TOGGLE_CONVERSATION_BAR,
     value,
+    apiCall: true
   };
 }
 
@@ -515,9 +516,10 @@ export function importAgentSuccess(agent) {
 * Agent
 */
 
-export function resetAgentData() {
+export function resetAgentData(ref) {
   return {
     type: RESET_AGENT_DATA,
+    ref
   };
 }
 
@@ -1417,12 +1419,13 @@ export function updateActionSuccess(action, oldActionName) {
   };
 }
 
-export function deleteAction(id, actionName) {
+export function deleteAction(id, actionName, redirectUrl) {
   return {
     type: DELETE_ACTION,
     apiCall: true,
     id,
     actionName,
+    redirectUrl,
   };
 }
 

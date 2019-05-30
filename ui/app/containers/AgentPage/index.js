@@ -64,6 +64,7 @@ import {
 import Form from './Components/Form';
 import saga from './saga';
 import ExitModal from '../../components/ExitModal';
+import qs from 'query-string';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
@@ -76,6 +77,7 @@ export class AgentPage extends React.PureComponent {
   }
 
   state = {
+    ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
     nextLocation: null,
     openExitModal: false,
     isNewAgent: this.props.match.params.id === 'create',
@@ -110,7 +112,7 @@ export class AgentPage extends React.PureComponent {
         });
       }
     } else {
-      this.props.onResetData();
+      this.props.onResetData(this.state.ref);
       this.props.onLoadActions(this.props.match.params.id);
       this.props.onLoadAgent(this.props.match.params.id);
     }
@@ -455,8 +457,8 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onResetData: () => {
-      dispatch(resetAgentData());
+    onResetData: (ref) => {
+      dispatch(resetAgentData(ref));
     },
     onLoadAgent: (agentId) => {
       dispatch(loadAgent(agentId));

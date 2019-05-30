@@ -307,19 +307,22 @@ function SayingsDataForm(props) {
                   />
                 </StyledRow>]
                 :
-                documents.map((document) => (
-                  <StyledRow key={`document_${document.id}`}>
-                    <SayingRow
-                      document={document}
-                      agentKeywords={props.agentKeywords}
-                      agentCategories={props.agentCategories}
-                      onToggleConversationBar={props.onToggleConversationBar}
-                      agentActions={props.agentActions}
-                      onSendMessage={props.onSendMessage}
-                      onCopySaying={props.onCopySaying}
-                    />
-                  </StyledRow>
-                ))}
+                documents.map((document) => {
+                  
+                  return (
+                    <StyledRow key={`document_${document.id}`}>
+                      <SayingRow
+                        document={document}
+                        agentKeywords={props.agentKeywords}
+                        agentCategories={props.agentCategories}
+                        onToggleConversationBar={props.onToggleConversationBar}
+                        agentActions={props.agentActions}
+                        onSendMessage={props.onSendMessage}
+                        onCopySaying={props.onCopySaying}
+                      />
+                    </StyledRow>
+                  )
+                })}
             onRequestSort={props.onRequestSort}
             sortField={props.sortField}
             sortDirection={props.sortDirection}

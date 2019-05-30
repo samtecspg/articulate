@@ -279,7 +279,7 @@ export class ReviewPage extends React.Component {
             enableTabs
             selectedTab="review"
             agentForm={Link}
-            agentURL={`/agent/${agent.id}`}
+            agentURL={`/agent/${agent.id}?ref=mainTab`}
             reviewForm={
               <Form
                 agentId={agent.id}

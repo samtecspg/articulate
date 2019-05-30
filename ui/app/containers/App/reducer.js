@@ -579,22 +579,27 @@ function appReducer(state = initialState, action) {
 
     /* Agent */
     case RESET_AGENT_DATA:
-      return state.set('agent', initialState.agent)
-        .set('currentAgent', initialState.currentAgent)
-        .set('agentWebhook', initialState.agentWebhook)
-        .set('agentPostFormat', initialState.agentPostFormat)
-        .set('agentSettings', initialState.agentSettings)
-        .set('agentTouched', false)
-        .set('successAgent', false)
-        .set('actions', [])
-        .set('messages', [])
-        .set('documents', [])
-        .set('sessionId', '')
-        .set('sessionLoaded', false)
-        .set('conversationBarOpen', false)
-        .set('newSayingActions', [])
-        .setIn(['agent', 'gravatar'], Math.floor(Math.random() * 16) + 1)
-        .setIn(['agent', 'uiColor'], colors[Math.floor(Math.random() * (colors.length - 1))]);
+      if(action.ref !== 'mainTab'){
+        return state.set('agent', initialState.agent)
+          .set('currentAgent', initialState.currentAgent)
+          .set('agentWebhook', initialState.agentWebhook)
+          .set('agentPostFormat', initialState.agentPostFormat)
+          .set('agentSettings', initialState.agentSettings)
+          .set('agentTouched', false)
+          .set('successAgent', false)
+          .set('actions', [])
+          .set('messages', [])
+          .set('documents', [])
+          .set('sessionId', '')
+          .set('sessionLoaded', false)
+          .set('conversationBarOpen', false)
+          .set('newSayingActions', [])
+          .setIn(['agent', 'gravatar'], Math.floor(Math.random() * 16) + 1)
+          .setIn(['agent', 'uiColor'], colors[Math.floor(Math.random() * (colors.length - 1))]);
+      }
+      else {
+        return state;
+      }
     case LOAD_AGENT:
       return state
         .set('loading', true)
