@@ -1,5 +1,4 @@
 Dockerfile
-.env
 node_modules
 .vscode
 .idea

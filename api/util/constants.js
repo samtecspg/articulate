@@ -25,6 +25,8 @@ export const MODEL_SETTINGS = 'Settings';
 export const MODEL_WEBHOOK = 'Webhook';
 export const MODEL_CONNECTION = 'Connection';
 export const MODEL_SERVER = 'Server';
+export const MODEL_USER_ACCOUNT = 'UserAccount';
+export const MODEL_USER_IDENTITY = 'UserIdentity';
 export const MODEL_ALL = [
     MODEL_ACTION,
     MODEL_AGENT,
@@ -37,7 +39,9 @@ export const MODEL_ALL = [
     MODEL_WEBHOOK,
     MODEL_POST_FORMAT,
     MODEL_CONNECTION,
-    MODEL_SERVER
+    MODEL_SERVER,
+    MODEL_USER_ACCOUNT,
+    MODEL_USER_IDENTITY
 ];
 
 //ROUTES
@@ -59,6 +63,8 @@ export const ROUTE_FRAME = 'frame';
 export const ROUTE_CHANNEL = 'channel';
 export const ROUTE_CONNECTION = 'connection';
 export const ROUTE_EXTERNAL = 'external';
+export const ROUTE_USER_ACCOUNT = 'user';
+export const ROUTE_USER_IDENTITY = 'identity';
 
 // STATUS
 export const STATUS_READY = 'Ready';
@@ -84,9 +90,19 @@ export const PARAM_BULK = 'bulk';
 export const PARAM_SEARCH = 'search';
 export const PARAM_FILTER = 'filter';
 export const PARAM_INCLUDE = 'include';
+export const PARAM_LAST_NAME = 'lastName';
+export const PARAM_EMAIL = 'email';
+export const PARAM_PASSWORD = 'password';
+export const PARAM_SALT = 'salt';
+export const PARAM_PROVIDER = 'provider';
+export const PARAM_TOKEN = 'token';
+export const PARAM_SECRET = 'secret';
+export const PARAM_PROFILE = 'profile';
+export const PARAM_IDENTITY = 'identity';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
+export const PARAM_USER_ACCOUNT_ID = ROUTE_USER_ACCOUNT + PARAMS_POSTFIX_ID;
 export const PARAM_CATEGORY_ID = ROUTE_CATEGORY + PARAMS_POSTFIX_ID;
 export const PARAM_KEYWORD_ID = ROUTE_KEYWORD + PARAMS_POSTFIX_ID;
 export const PARAM_SAYING_ID = ROUTE_SAYING + PARAMS_POSTFIX_ID;
@@ -113,7 +129,9 @@ export const ROUTE_TO_MODEL = {
     [ROUTE_SETTINGS]: MODEL_SETTINGS,
     [ROUTE_WEBHOOK]: MODEL_WEBHOOK,
     [ROUTE_CONNECTION]: MODEL_CONNECTION,
-    [ROUTE_POST_FORMAT]: MODEL_POST_FORMAT
+    [ROUTE_POST_FORMAT]: MODEL_POST_FORMAT,
+    [ROUTE_USER_ACCOUNT]: MODEL_USER_ACCOUNT,
+    [ROUTE_USER_IDENTITY]: MODEL_USER_IDENTITY
 };
 export const MODEL_TO_ROUTE = _.invert(ROUTE_TO_MODEL);
 
@@ -275,3 +293,7 @@ export const NOHM_SUB_ALL = [
 // Sort
 export const SORT_ASC = 'ASC';
 export const SORT_DESC = 'DESC';
+
+export const PROVIDER_BASIC = 'basic';
+export const PROVIDER_TWITTER = 'twitter';
+export const PROVIDER_github = 'github';

@@ -26,3 +26,4 @@ export const ROUTE_FRAME = 'frame';
 export const ROUTE_EXPORT = 'export';
 export const ROUTE_IMPORT = 'import';
 export const ROUTE_BULK = 'bulk';
+export const ROUTE_USER = 'user';

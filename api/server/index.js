@@ -17,6 +17,9 @@ exports.deployment = async (start) => {
     await server.start();
 
     logger.info(`Server started at ${server.info.uri}`);
+    if (process.env.DEBUG_ROUTES) {
+        console.log(server.plugins.blipp.text());
+    }
     return server;
 };
 

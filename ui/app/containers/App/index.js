@@ -30,13 +30,14 @@ import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
 import CategoryPage from '../CategoryPage/Loadable';
 import AddCategoryPage from '../AddCategoryPage/Loadable';
+import ConnectionPage from '../ConnectionPage/Loadable';
 import DialoguePage from '../DialoguePage/Loadable';
 import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
+import UserAuthPage from '../UserAuthPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
-import ConnectionPage from '../ConnectionPage/Loadable';
 
 import {
   checkAPI,
@@ -193,6 +194,7 @@ class App extends React.Component {
             <Route exact path='/settings' component={SettingsPage} />
             <Route exact path='/missing-api' component={MissingAPIPage} />
             <Redirect from='/agent/:id/actionDummy/:actionId' to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
+            <Route exact path='/login' component={UserAuthPage} />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>

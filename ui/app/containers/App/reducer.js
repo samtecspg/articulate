@@ -206,6 +206,8 @@ import {
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
   DELETE_CONNECTION_SUCCESS,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_ERROR,
   LOAD_SESSION,
   LOAD_SESSION_SUCCESS,
   LOAD_SESSION_ERROR,
@@ -368,7 +370,6 @@ const initialState = Immutable({
   actionTouched: false,
   keywordTouched: false,
   categoryTouched: false,
-  actionTouched: false,
   newSlot: {
     slotName: 'Slot',
     uiColor: '#4e4e4e',
@@ -520,7 +521,7 @@ function appReducer(state = initialState, action) {
     case LOAD_CHANNELS_SUCCESS:
       return state.set('channels', action.channels)
         .set('loading', false)
-        .set('error', false);         
+        .set('error', false);
 
     /* Agents */
     case LOAD_AGENTS:
@@ -656,7 +657,7 @@ function appReducer(state = initialState, action) {
         .setIn(['agentSettings', 'keywordClassifierPipeline'], state.settings.keywordClassifierPipeline)
         .setIn(['agentSettings', 'spacyPretrainedEntities'], state.settings.spacyPretrainedEntities)
         .setIn(['agentSettings', 'ducklingURL'], state.settings.ducklingURL)
-        .setIn(['agentSettings', 'ducklingDimension'], state.settings.ducklingDimension);      
+        .setIn(['agentSettings', 'ducklingDimension'], state.settings.ducklingDimension);
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)
@@ -1578,12 +1579,10 @@ function appReducer(state = initialState, action) {
         .update('notifications', notifications => notifications.concat({ message: `Notification: The saying <b>${action.saying.userSays}</b> was created successfully. ${happyEmojies[Math.floor(Math.random() * happyEmojies.length)]}`, type: 'success', datetime: new Date() }))
         .set('loading', false)
         .set('success', false);
-    
+
     /* Locale */
     case CHANGE_LOCALE:
         return state.set('locale', action.locale);
-    default:
-      return state;
 
     /* Connection */
     case CHANGE_CONNECTION_DATA:
@@ -1656,11 +1655,17 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false)
-        .set('connectionTouched', false);;
+        .set('connectionTouched', false);
     case DELETE_CONNECTION_ERROR:
       state = state.update('notifications', notifications => notifications.concat({ message: `Error: ${action.error}. ${errorEmojies[Math.floor(Math.random() * errorEmojies.length)]}`, type: 'error' }));
       return state.set('loading', false)
         .set('error', action.error);
+    case LOGIN_USER_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    default:
+      return state;
   }
 }
 

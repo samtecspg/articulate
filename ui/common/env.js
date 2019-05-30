@@ -29,7 +29,23 @@ const normalizeApi = () => {
 
 const env = {
   API_URL: normalizeApi(),
+  AUTH_TWITTER_KEY: process.env.AUTH_TWITTER_KEY,
+  AUTH_TWITTER_SECRET: process.env.AUTH_TWITTER_SECRET,
+  AUTH_GITHUB_KEY: process.env.AUTH_GITHUB_KEY,
+  AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
+  SESSION_SECRET: process.env.SESSION_SECRET,
+  AUTH_PROVIDERS: process.env.AUTH_PROVIDERS ? process.env.AUTH_PROVIDERS.split(';') : [],
+  AUTH_SIMPLE: process.env.AUTH_SIMPLE === 'true',
 };
 
 export default env;
-export const { API_URL } = env;
+export const {
+  API_URL,
+  AUTH_TWITTER_KEY,
+  AUTH_TWITTER_SECRET,
+  AUTH_GITHUB_KEY,
+  AUTH_GITHUB_SECRET,
+  SESSION_SECRET,
+  AUTH_PROVIDERS,
+  AUTH_SIMPLE,
+} = env;

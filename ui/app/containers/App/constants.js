@@ -240,12 +240,12 @@ export const CHANGE_EXAMPLE_SYNONYMS = 'app/KeywordsEditPage/CHANGE_EXAMPLE_SYNO
 export const CHANGE_EXAMPLE_NAME = 'app/KeywordsEditPage/CHANGE_EXAMPLE_NAME';
 export const DELETE_KEYWORD = 'app/KeywordsEditPage/DELETE_KEYWORD';
 export const DELETE_KEYWORD_ERROR = 'app/KeywordsEditPage/DELETE_KEYWORD_ERROR';
-export const DELETE_KEYWORD_SUCCESS = 'app/KeywordsEditPage/DELETE_KEYWORD_SUCCESS'
+export const DELETE_KEYWORD_SUCCESS = 'app/KeywordsEditPage/DELETE_KEYWORD_SUCCESS';
 export const ADD_NEW_MODIFIER = 'app/KeywordsEditPage/ADD_NEW_MODIFIER';
 export const CHANGE_MODIFIER_NAME = 'app/KeywordsEditPage/CHANGE_MODIFIER_NAME';
 export const CHANGE_MODIFIER_DATA = 'app/KeywordsEditPage/CHANGE_MODIFIER_DATA';
 export const ADD_MODIFIER_SAYING = 'app/KeywordsEditPage/ADD_MODIFIER_SAYING';
-export const ADD_MODIFIER_SAYING_SUCCESS = 'app/KeywordsEditPage/ADD_MODIFIER_SAYING_SUCCESS'
+export const ADD_MODIFIER_SAYING_SUCCESS = 'app/KeywordsEditPage/ADD_MODIFIER_SAYING_SUCCESS';
 export const DELETE_MODIFIER_SAYING = 'app/KeywordsEditPage/DELETE_MODIFIER_SAYING';
 export const SORT_MODIFIERS = 'app/KeywordsEditPage/SORT_MODIFIERS';
 export const DELETE_MODIFIER = 'app/KeywordsEditPage/DELETE_MODIFIER';
@@ -290,3 +290,21 @@ export const CHANGE_REVIEW_PAGE_SIZE = 'app/ReviewPage/CHANGE_REVIEW_PAGE_SIZE';
  * Locale
  */
 export const CHANGE_LOCALE = 'app/LanguageToggle/CHANGE_LOCALE';
+
+/*
+ * User
+ */
+export const LOGIN_USER = 'app/user/LOGIN_USER';
+export const LOGIN_USER_SUCCESS = 'app/user/LOGIN_USER_SUCCESS';
+export const LOGIN_USER_ERROR = 'app/user/LOGIN_USER_ERROR';
+
+export const LOGOUT_USER = 'app/user/LOGOUT_USER';
+export const LOGOUT_USER_SUCCESS = 'app/user/LOGOUT_USER_SUCCESS';
+export const LOGOUT_USER_ERROR = 'app/user/LOGOUT_USER_ERROR';
+
+
+export const SIGN_UP_USER = 'app/user/SIGN_UP_USER';
+export const SIGN_UP_USER_SUCCESS = 'app/user/SIGN_UP_USER_SUCCESS';
+export const SIGN_UP_USER_ERROR = 'app/user/SIGN_UP_USER_ERROR';
+
+

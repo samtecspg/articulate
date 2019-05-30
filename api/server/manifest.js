@@ -1,13 +1,14 @@
+import HapiAuthBasic from '@hapi/basic';
+import HapiBell from 'bell';
+import Blipp from 'blipp';
 import Boom from 'boom';
 import Confidence from 'confidence';
-import Dotenv from 'dotenv';
+import HapiAuthCookie from 'hapi-auth-cookie';
 import Nes from 'nes';
 import Schmervice from 'schmervice';
 import Toys from 'toys';
 import Package from '../package.json';
 
-// Pull .env into process.env
-Dotenv.config({ path: `${__dirname}/.env` });
 const redisOptions = {
     host: process.env.REDIS_HOST || 'redis',
     port: process.env.REDIS_PORT || 6379,
@@ -51,8 +52,28 @@ module.exports = new Confidence.Store({
         plugins: [
 
             {
+                plugin: HapiAuthCookie,
+                options: {}
+            },
+            {
+                plugin: HapiBell,
+                options: {}
+            },
+            {
+                plugin: HapiAuthBasic,
+                options: {}
+            },
+            {
                 plugin: Schmervice,
                 options: {}
+            },
+            {
+                plugin: Blipp,
+                options: {
+                    showAuth: true,
+                    showScope: true,
+                    showStart: false
+                }
             },
             {
 

@@ -29,8 +29,6 @@ import {
   ADD_SAYING_ERROR,
   ADD_SLOT_TEXT_PROMPT_SLOT,
   CHAIN_ACTION_TO_RESPONSE,
-  COPY_RESPONSE,
-  UPDATE_NEW_RESPONSE,
   CHANGE_ACTION_DATA,
   CHANGE_ACTION_NAME,
   CHANGE_ACTION_POST_FORMAT_DATA,
@@ -44,6 +42,8 @@ import {
   CHANGE_CATEGORY_DATA,
   CHANGE_CATEGORY_PARAMETER_NAME,
   CHANGE_CATEGORY_PARAMETER_VALUE,
+  CHANGE_CONNECTION_DATA,
+  CHANGE_DETAIL_VALUE,
   CHANGE_EXAMPLE_NAME,
   CHANGE_EXAMPLE_SYNONYMS,
   CHANGE_HEADER_KEY_ACTION_WEBHOOK,
@@ -52,11 +52,13 @@ import {
   CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
   CHANGE_KEYWORD_DATA,
   CHANGE_KEYWORDS_PAGE_SIZE,
+  CHANGE_LOCALE,
   CHANGE_MODIFIER_DATA,
   CHANGE_MODIFIER_NAME,
   CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
   CHANGE_POST_FORMAT_DATA,
   CHANGE_REVIEW_PAGE_SIZE,
+  CHANGE_SAYING_CATEGORY,
   CHANGE_SAYINGS_PAGE_SIZE,
   CHANGE_SETTINGS_DATA,
   CHANGE_SLOT_DATA,
@@ -66,12 +68,16 @@ import {
   CHECK_API,
   CLEAR_SAYING_TO_ACTION,
   CLOSE_NOTIFICATION,
+  COPY_RESPONSE,
   COPY_SAYING,
   COPY_SAYING_ERROR,
   COPY_SAYING_SUCCESS,
   CREATE_CATEGORY,
   CREATE_CATEGORY_ERROR,
   CREATE_CATEGORY_SUCCESS,
+  CREATE_CONNECTION,
+  CREATE_CONNECTION_ERROR,
+  CREATE_CONNECTION_SUCCESS,
   CREATE_KEYWORD,
   CREATE_KEYWORD_ERROR,
   CREATE_KEYWORD_SUCCESS,
@@ -90,6 +96,9 @@ import {
   DELETE_CATEGORY_ERROR,
   DELETE_CATEGORY_PARAMETER,
   DELETE_CATEGORY_SUCCESS,
+  DELETE_CONNECTION,
+  DELETE_CONNECTION_ERROR,
+  DELETE_CONNECTION_SUCCESS,
   DELETE_FALLBACK,
   DELETE_HEADER_ACTION_WEBHOOK,
   DELETE_HEADER_AGENT_WEBHOOK,
@@ -104,10 +113,15 @@ import {
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
   EDIT_ACTION_RESPONSE,
+  EXPORT_AGENT,
+  EXPORT_AGENT_ERROR,
+  EXPORT_AGENT_SUCCESS,
+  IMPORT_AGENT,
+  IMPORT_AGENT_ERROR,
+  IMPORT_AGENT_SUCCESS,
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
-  RESET_ACTIONS,
   LOAD_ACTIONS,
   LOAD_ACTIONS_ERROR,
   LOAD_ACTIONS_SUCCESS,
@@ -117,34 +131,30 @@ import {
   LOAD_AGENT_DOCUMENTS_SUCCESS,
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
-  SET_AGENT_DEFAULTS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
-  LOAD_CONNECTIONS,
-  LOAD_CONNECTIONS_ERROR,
-  LOAD_CONNECTIONS_SUCCESS,
-  LOAD_CHANNELS,
-  LOAD_CHANNELS_ERROR,
-  LOAD_CHANNELS_SUCCESS,
-  EXPORT_AGENT,
-  EXPORT_AGENT_ERROR,
-  EXPORT_AGENT_SUCCESS,
-  IMPORT_AGENT,
-  IMPORT_AGENT_ERROR,
-  IMPORT_AGENT_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
   LOAD_CATEGORIES_SUCCESS,
   LOAD_CATEGORY,
   LOAD_CATEGORY_ERROR,
   LOAD_CATEGORY_SUCCESS,
-  LOAD_FILTERED_CATEGORIES,
-  LOAD_FILTERED_CATEGORIES_ERROR,
-  LOAD_FILTERED_CATEGORIES_SUCCESS,
+  LOAD_CHANNELS,
+  LOAD_CHANNELS_ERROR,
+  LOAD_CHANNELS_SUCCESS,
+  LOAD_CONNECTION,
+  LOAD_CONNECTION_ERROR,
+  LOAD_CONNECTION_SUCCESS,
+  LOAD_CONNECTIONS,
+  LOAD_CONNECTIONS_ERROR,
+  LOAD_CONNECTIONS_SUCCESS,
   LOAD_FILTERED_ACTIONS,
   LOAD_FILTERED_ACTIONS_ERROR,
   LOAD_FILTERED_ACTIONS_SUCCESS,
+  LOAD_FILTERED_CATEGORIES,
+  LOAD_FILTERED_CATEGORIES_ERROR,
+  LOAD_FILTERED_CATEGORIES_SUCCESS,
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
   LOAD_KEYWORD_SUCCESS,
@@ -157,9 +167,17 @@ import {
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
   LOAD_SETTINGS_SUCCESS,
+  LOGIN_USER,
+  LOGIN_USER_ERROR,
+  LOGIN_USER_SUCCESS,
+  LOGOUT_USER,
+  LOGOUT_USER_ERROR,
+  LOGOUT_USER_SUCCESS,
   RESET_ACTION_DATA,
+  RESET_ACTIONS,
   RESET_AGENT_DATA,
   RESET_CATEGORY_DATA,
+  RESET_CONNECTION_DATA,
   RESET_KEYWORD_DATA,
   RESET_MISSING_API,
   RESET_SESSION,
@@ -169,10 +187,13 @@ import {
   SELECT_CATEGORY,
   SEND_MESSAGE,
   SEND_SAYING_TO_ACTION,
+  SET_AGENT_DEFAULTS,
+  SIGN_UP_USER,
+  SIGN_UP_USER_ERROR,
+  SIGN_UP_USER_SUCCESS,
   SORT_MODIFIERS,
   SORT_SLOTS,
   STORE_SOURCE_DATA,
-  CHANGE_SAYING_CATEGORY,
   TAG_KEYWORD,
   TAG_MODIFIER_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
@@ -190,33 +211,21 @@ import {
   UPDATE_CATEGORY,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
-  UPDATE_KEYWORD,
-  UPDATE_KEYWORD_ERROR,
-  UPDATE_KEYWORD_SUCCESS,
-  UPDATE_SAYING_ERROR,
-  UPDATE_SETTINGS,
-  UPDATE_SETTINGS_ERROR,
-  UPDATE_SETTINGS_SUCCESS,
-  UPDATE_SETTING,
-  UPDATE_SETTING_ERROR,
-  UPDATE_SETTING_SUCCESS,
-  CHANGE_LOCALE,
-  UPDATE_SAYING_SUCCESS,
-  CHANGE_CONNECTION_DATA,
-  LOAD_CONNECTION,
-  LOAD_CONNECTION_ERROR,
-  LOAD_CONNECTION_SUCCESS,
-  RESET_CONNECTION_DATA,
-  CREATE_CONNECTION,
-  CREATE_CONNECTION_ERROR,
-  CREATE_CONNECTION_SUCCESS,
   UPDATE_CONNECTION,
   UPDATE_CONNECTION_ERROR,
   UPDATE_CONNECTION_SUCCESS,
-  CHANGE_DETAIL_VALUE,
-  DELETE_CONNECTION,
-  DELETE_CONNECTION_ERROR,
-  DELETE_CONNECTION_SUCCESS,
+  UPDATE_KEYWORD,
+  UPDATE_KEYWORD_ERROR,
+  UPDATE_KEYWORD_SUCCESS,
+  UPDATE_NEW_RESPONSE,
+  UPDATE_SAYING_ERROR,
+  UPDATE_SAYING_SUCCESS,
+  UPDATE_SETTING,
+  UPDATE_SETTING_ERROR,
+  UPDATE_SETTING_SUCCESS,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
   LOAD_SESSION,
   LOAD_SESSION_ERROR,
   LOAD_SESSION_SUCCESS,
@@ -463,8 +472,8 @@ export function exportAgent(id) {
   return {
     type: EXPORT_AGENT,
     apiCall: true,
-    id
-  }
+    id,
+  };
 }
 
 export function exportAgentError(error) {
@@ -485,8 +494,8 @@ export function importAgent(agent) {
   return {
     type: IMPORT_AGENT,
     apiCall: true,
-    agent
-  }
+    agent,
+  };
 }
 
 export function importAgentError(error) {
@@ -539,7 +548,7 @@ export function loadAgentSuccess(payload) {
 export function setAgentDefaults() {
   return {
     type: SET_AGENT_DEFAULTS,
-  }
+  };
 }
 
 export function changeAgentData(payload) {
@@ -900,7 +909,7 @@ export function untagKeyword(filter, page, pageSize, saying, start, end) {
 export function updateSayingSuccess(saying) {
   return {
     type: UPDATE_SAYING_SUCCESS,
-    saying
+    saying,
   };
 }
 
@@ -1191,7 +1200,7 @@ export function updateSetting(setting, value) {
     type: UPDATE_SETTING,
     apiCall: true,
     setting,
-    value
+    value,
   };
 }
 
@@ -1205,7 +1214,7 @@ export function updateSettingError(error) {
 export function updateSettingSuccess(payload) {
   return {
     type: UPDATE_SETTING_SUCCESS,
-    payload
+    payload,
   };
 }
 
@@ -1242,7 +1251,7 @@ export function resetActionData() {
 export function resetActions() {
   return {
     type: RESET_ACTIONS,
-  }
+  };
 }
 
 export function loadActions(agentId) {
@@ -1336,15 +1345,15 @@ export function unchainActionFromResponse(responseIndex, actionIndex) {
 export function copyResponse(response) {
   return {
     type: COPY_RESPONSE,
-    response
-  }
+    response,
+  };
 }
 
 export function updateNewResponse(response) {
   return {
     type: UPDATE_NEW_RESPONSE,
-    response
-  }
+    response,
+  };
 }
 
 export function changeActionWebhookData(payload) {
@@ -1512,12 +1521,12 @@ export function deleteSlot(slotIndex) {
   };
 }
 
-export function editActionResponse(newResponse, responseIndex){
+export function editActionResponse(newResponse, responseIndex) {
   return {
     type: EDIT_ACTION_RESPONSE,
     newResponse,
     responseIndex,
-  }
+  };
 }
 
 /* Keyword */
@@ -1653,7 +1662,7 @@ export function addModifierSaying(modifierIndex, newSaying) {
     type: ADD_MODIFIER_SAYING,
     modifierIndex,
     newSaying,
-    apiCall: true
+    apiCall: true,
   };
 }
 
@@ -1880,18 +1889,18 @@ export function changeLocale(languageLocale) {
 
 /* Connection */
 export function changeConnectionData(payload) {
-	return {
+  return {
     type: CHANGE_CONNECTION_DATA,
-    payload
-  }
+    payload,
+  };
 }
 
 export function loadConnection(id) {
-	return {
+  return {
     type: LOAD_CONNECTION,
     id,
-    apiCall: true
-  }
+    apiCall: true,
+  };
 }
 
 export function loadConnectionError(error) {
@@ -1909,16 +1918,16 @@ export function loadConnectionSuccess(connection) {
 }
 
 export function resetConnectionData() {
-	return {
-    type: RESET_CONNECTION_DATA
-  }
+  return {
+    type: RESET_CONNECTION_DATA,
+  };
 }
 
 export function createConnection() {
-	return {
+  return {
     type: CREATE_CONNECTION,
-    apiCall: true
-  }
+    apiCall: true,
+  };
 }
 
 export function createConnectionError(error) {
@@ -1936,7 +1945,7 @@ export function createConnectionSuccess(connection) {
 }
 
 export function updateConnection() {
-	return {
+  return {
     type: UPDATE_CONNECTION,
     apiCall: true,
   };
@@ -1957,19 +1966,19 @@ export function updateConnectionSuccess(connection) {
 }
 
 export function changeDetailValue(detail, value) {
-	return {
+  return {
     type: CHANGE_DETAIL_VALUE,
     detail,
-    value
-  }
+    value,
+  };
 }
 
 export function deleteConnection(id) {
-	return {
+  return {
     type: DELETE_CONNECTION,
     apiCall: true,
     id,
-  }
+  };
 }
 
 export function deleteConnectionSuccess() {
@@ -1981,6 +1990,72 @@ export function deleteConnectionSuccess() {
 export function deleteConnectionError(error) {
   return {
     type: DELETE_CONNECTION_ERROR,
+    error,
+  };
+}
+
+export function loginUser(username, password) {
+  return {
+    type: LOGIN_USER,
+    apiCall: true,
+    username,
+    password,
+  };
+}
+
+export function loginUserSuccess() {
+  return {
+    type: LOGIN_USER_SUCCESS,
+  };
+}
+
+export function loginUserError(error) {
+  return {
+    type: LOGIN_USER_ERROR,
+    error,
+  };
+}
+
+export function logoutUser() {
+  return {
+    type: LOGOUT_USER,
+    apiCall: true,
+  };
+}
+
+export function logoutUserSuccess() {
+  return {
+    type: LOGOUT_USER_SUCCESS,
+  };
+}
+
+export function logoutUserError(error) {
+  return {
+    type: LOGOUT_USER_ERROR,
+    error,
+  };
+}
+
+export function signUpUser(name, lastName, username, password) {
+  return {
+    type: SIGN_UP_USER,
+    apiCall: true,
+    name,
+    lastName,
+    username,
+    password,
+  };
+}
+
+export function signUpUserSuccess() {
+  return {
+    type: SIGN_UP_USER_SUCCESS,
+  };
+}
+
+export function signUpUserError(error) {
+  return {
+    type: SIGN_UP_USER_ERROR,
     error,
   };
 }
