@@ -202,10 +202,12 @@ export function* postAction(payload) {
       yield call(postActionPostFormat, { id: response.id, api });
     }
     const sayingForAction = yield select(makeSelectSayingForAction());
-    const mutableSayingForAction = Immutable.asMutable(sayingForAction, { deep: true });
-    mutableSayingForAction.actions.push(response.actionName);
-    const updateSayingPayload = { api, sayingId: sayingForAction.id, saying: mutableSayingForAction };
-    yield call(putSaying, updateSayingPayload);
+    if (sayingForAction.agent){
+      const mutableSayingForAction = Immutable.asMutable(sayingForAction, { deep: true });
+      mutableSayingForAction.actions.push(response.actionName);
+      const updateSayingPayload = { api, sayingId: sayingForAction.id, saying: mutableSayingForAction };
+      yield call(putSaying, updateSayingPayload);
+    }
     yield put(addActionSuccess({ action: response, addToNewSayingActions }));
   }
   catch (err) {
