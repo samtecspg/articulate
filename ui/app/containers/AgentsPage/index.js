@@ -16,9 +16,6 @@ import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
-import { Grid, CircularProgress } from '@material-ui/core';
-
-import MainContentHeader from './Components/MainContentHeader';
 import injectSaga from 'utils/injectSaga';
 import {
   exportAgent,
