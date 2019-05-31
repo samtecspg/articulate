@@ -1,11 +1,12 @@
-/* eslint-disable no-console */
-import chalk from 'chalk';
-import ip from 'ip';
-import { isString } from 'lodash';
-import { inspect } from 'util';
+/* eslint-disable no-console,prefer-destructuring */
+const chalk = require('chalk');
+const ip = require('ip');
+const isString = require('lodash/isString');
+const util = require('util');
+const inspect = util.inspect;
 
 const divider = chalk.gray('\n-----------------------------------');
-const inspectLog = (message) => {
+const inspectLog = message => {
   if (isString(message)) {
     return message;
   }
@@ -41,7 +42,7 @@ Localhost: ${chalk.magenta(`http://${host}:${port}`)}
       : '')}${divider}
 ${chalk.blue(`Press ${chalk.italic('CTRL-C')} to stop`)}
     `);
-  }
+  },
 };
 
 module.exports = logger;

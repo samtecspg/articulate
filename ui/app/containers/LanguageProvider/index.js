@@ -6,27 +6,23 @@
  * IntlProvider component and i18n messages (loaded from `app/translations`)
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { IntlProvider } from 'react-intl';
-import { makeSelectLocale } from '../App/selectors';
+import { makeSelectLocale } from './selectors';
 
-
-export class LanguageProvider extends React.PureComponent {
-  // eslint-disable-line react/prefer-stateless-function
-  render() {
+export function LanguageProvider(props) {
     return (
       <IntlProvider
-        locale={this.props.locale}
-        key={this.props.locale}
-        messages={this.props.messages[this.props.locale]}
+      locale={props.locale}
+      key={props.locale}
+      messages={props.messages[props.locale]}
       >
-        {React.Children.only(this.props.children)}
+      {React.Children.only(props.children)}
       </IntlProvider>
     );
-  }
 }
 
 LanguageProvider.propTypes = {
@@ -35,9 +31,12 @@ LanguageProvider.propTypes = {
   children: PropTypes.element.isRequired,
 };
 
-const mapStateToProps = createSelector(makeSelectLocale(), locale => ({
+const mapStateToProps = createSelector(
+  makeSelectLocale(),
+  locale => ({
   locale,
-}));
+  }),
+);
 
 function mapDispatchToProps(dispatch) {
   return {

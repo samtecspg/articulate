@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectGlobal = state => state.global;
-const selectRoute = state => state.route;
+const selectRoute = state => state.router;
 
 /* Global */
 
@@ -17,13 +17,13 @@ const makeSelectServerStatus = () => createSelector(
 
 const makeSelectSessionId = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.sessionId
+  (globalState) => globalState.sessionId,
 );
 
 const makeSelectSessionLoaded = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.sessionLoaded
-)
+  (globalState) => globalState.sessionLoaded,
+);
 
 const makeSelectMissingAPI = () => createSelector(
   selectGlobal,
@@ -83,8 +83,8 @@ const makeSelectConnections = () => createSelector(
 
 const makeSelectChannels = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.channels
-)
+  (globalState) => globalState.channels,
+);
 
 /* Agents */
 const makeSelectAgents = () => createSelector(
@@ -253,8 +253,8 @@ const makeSelectSuccessAction = () => createSelector(
 
 const makeSelectNewActionResponse = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.newActionResponse
-)
+  (globalState) => globalState.newActionResponse,
+);
 
 /* Settings */
 const makeSelectSettings = () => createSelector(
@@ -311,9 +311,9 @@ const makeSelectSuccessCategory = () => createSelector(
 );
 
 /* Locale */
-const makeSelectLocale = () =>createSelector(
+const makeSelectLocale = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.locale
+  (globalState) => globalState.locale,
 );
 
 export {

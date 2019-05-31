@@ -446,7 +446,7 @@ function appReducer(state = initialState, action) {
       return state.set('serverStatus', action.server.status)
         .set('loading', false)
         .set('error', false);
-    case REFRESH_SERVER_INFO: 
+    case REFRESH_SERVER_INFO:
       return state.set('serverStatus', action.server.status);
     case LOAD_SESSION:
       return state.set('sessionId', '')
@@ -499,7 +499,7 @@ function appReducer(state = initialState, action) {
     case RESET_SESSION_SUCCESS:
       return state.set('messages', [])
         .set('notifications', []);
-    case SHOW_WARNING: 
+    case SHOW_WARNING:
       return state.update('notifications', notifications => notifications.concat({ template: action.message, emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)], type: 'error' }));
 
     /* Connections */
@@ -886,9 +886,9 @@ function appReducer(state = initialState, action) {
     case IMPORT_CATEGORY_ERROR:
       return state.set('loadingImportCategory', false)
         .set('error', action.error);
-    case IMPORT_CATEGORY_SUCCESS: 
+    case IMPORT_CATEGORY_SUCCESS:
       return state.set('loadingImportCategory', false)
-        .set('error', false);      
+        .set('error', false);
     case LOAD_FILTERED_CATEGORIES:
       return state.set('filteredCategories', [])
         .set('loading', true)
