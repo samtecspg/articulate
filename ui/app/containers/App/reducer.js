@@ -594,6 +594,7 @@ function appReducer(state = initialState, action) {
           .set('sessionLoaded', false)
           .set('conversationBarOpen', false)
           .set('newSayingActions', [])
+          .set('sayings', [])
           .setIn(['agent', 'gravatar'], Math.floor(Math.random() * 16) + 1)
           .setIn(['agent', 'uiColor'], colors[Math.floor(Math.random() * (colors.length - 1))]);
       }
@@ -795,9 +796,7 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     /* Sayings */
     case LOAD_SAYINGS:
-      return state.set('sayings', [])
-        .set('totalSayings', 0)
-        .set('loading', true)
+      return state.set('loading', true)
         .set('error', false);
     case LOAD_SAYINGS_ERROR:
       return state.set('sayings', [])
