@@ -90,17 +90,27 @@ export function* getActions(payload) {
 export function* getAction(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, actionId } = payload;
+  let response, webhook, postFormat;
   try {
-    let response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId]));
+    response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId]));
     const action = response;
-    let webhook, postFormat;
     if (action.useWebhook) {
-      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId, ROUTE_WEBHOOK]));
-      webhook = response;
+      try {
+        response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId, ROUTE_WEBHOOK]));
+        webhook = response;
+      }
+      catch(errWebhook) {
+        console.log(errWebhook);
+      }
     }
     if (action.usePostFormat) {
-      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId, ROUTE_POST_FORMAT]));
-      postFormat = response;
+      try {
+        response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId, ROUTE_POST_FORMAT]));
+        postFormat = response;
+      }
+      catch(errWebhook) {
+        console.log(errWebhook);
+      }
     }
     yield put(loadActionSuccess({ action, webhook, postFormat }));
   }

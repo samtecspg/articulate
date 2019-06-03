@@ -1012,12 +1012,12 @@ function appReducer(state = initialState, action) {
         .set('error', action.error);
     case LOAD_ACTION_SUCCESS:
       let actionWebhook, actionPostFormat;
-      if (!action.payload.action.useWebhook) {
+      if (!action.payload.action.useWebhook || (action.payload.action.useWebhook && !action.payload.webhook)) {
         actionWebhook = initialState.actionWebhook;
       } else {
         actionWebhook = action.payload.webhook;
       }
-      if (!action.payload.action.usePostFormat) {
+      if (!action.payload.action.usePostFormat || (action.payload.action.usePostFormat && !action.payload.postFormat)) {
         actionPostFormat = initialState.actionPostFormat;
       } else {
         actionPostFormat = action.payload.postFormat;
