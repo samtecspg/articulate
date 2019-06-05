@@ -63,7 +63,8 @@ export function* postKeyword(payload) {
     yield put(createKeywordSuccess(response));
   }
   catch (err) {
-    yield put(createKeywordError(err));
+    const error = { ...err };
+    yield put(createKeywordError(error.response.data.message));
   }
 }
 

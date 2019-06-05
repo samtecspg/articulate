@@ -1395,7 +1395,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case CREATE_KEYWORD_ERROR:
-      state = state.update('notifications', notifications => notifications.concat({ template: 'negativeNotificationTemplate', instanceType: 'keyword', action: 'creating', emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)], type: 'error' }));
+      state = state.update('notifications', notifications => notifications.concat({ template: 'errorMessageTemplate', error: action.error, emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)], type: 'error' }));
       return state.set('loading', false)
         .set('success', false)
         .set('error', action.error);
