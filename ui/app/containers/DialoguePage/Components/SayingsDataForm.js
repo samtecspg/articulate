@@ -183,6 +183,7 @@ const styles = {
     display: 'inline-block',
     position: 'relative',
     borderRadius: '5px',
+    width: 'max-content'
   },
   actionLabel: {
     textDecoration: 'none',
@@ -321,7 +322,7 @@ class SayingsDataForm extends React.Component {
                                 this.props.onClearSayingToAction();
                                 this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`);
                               }}
-                            >{action.length > 5 ? <Tooltip title={action} placement='top'><span>{`${action.substring(0, 5)}...`}</span></Tooltip> : action}</span>
+                            >{action.length > 15 ? <Tooltip title={action} placement='top'><span>{`${action.substring(0, 15)}...`}</span></Tooltip> : action}</span>
                             <a
                               onClick={() => {
                                 this.props.onDeleteNewSayingAction(action);

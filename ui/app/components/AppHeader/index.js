@@ -66,8 +66,6 @@ const styles = {
     top: '3px',
   },
   agentName: {
-    position: 'relative',
-    top: '8px',
     fontWeight: '500',
     fontSize: '16px'
   }
