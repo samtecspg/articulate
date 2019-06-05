@@ -74,6 +74,7 @@ const styles = {
     margin: '0px !important',
   },
   categorySelect: {
+    paddingRight: '22px',
     padding: '5px',
     backgroundColor: '#f6f7f8',
     border: 'none',

@@ -65,6 +65,8 @@ const styles = {
     },
     dataContainer: {
       display: 'inline',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     },
     editValueIcon: {
       '&:hover': {
