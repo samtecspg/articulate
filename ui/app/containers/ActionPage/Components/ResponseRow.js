@@ -85,7 +85,7 @@ class ResponseRow extends React.Component {
   };
 
   render(){
-    const { classes, action, response, responseIndex } = this.props;
+    const { classes, action, response, responseIndex, intl } = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -118,7 +118,7 @@ class ResponseRow extends React.Component {
               openActions: true,
             })}
             className={classes.addActionIcon} src={addActionIcon}></img>
-          <Tooltip key='copyResponse' title='Copy response in the response input' placement='top'>
+          <Tooltip key='copyResponse' title={intl.formatMessage(messages.copyResponses)} placement='top'>
             <img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} />
           </Tooltip>
           <img key='deleteResponse' onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />

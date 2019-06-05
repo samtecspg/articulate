@@ -78,15 +78,15 @@ export function* postConverse(payload) {
         yield put(storeSourceData({ ...response.conversationStateObject }));
       }
       catch (err) {
-        yield put(showWarning('Error: I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.'));
+        yield put(showWarning('errorCallingArticulate'));
       }
     }
     else {
-      yield put(showWarning('Error: Select or create a session first.'));
+      yield put(showWarning('errorSelectOrCreateASession'));
     }
   }
   else {
-    yield put(showWarning('Error: Please click on an agent first.'));
+    yield put(showWarning('errorClickOnAgentFirst'));
   }
 }
 
@@ -109,12 +109,12 @@ export function* deleteSession(payload) {
         yield put(resetSessionSuccess());
       }
       else {
-        yield put(showWarning('Error: I\'m sorry. An error occurred cleaning your session data.'));
+        yield put(showWarning('errorCleaningSessionData'));
       }
     }
   }
   else {
-    yield put(showWarning('Select a session to clear.'));
+    yield put(showWarning('errorSelectSessionToClear'));
   }
 }
 
