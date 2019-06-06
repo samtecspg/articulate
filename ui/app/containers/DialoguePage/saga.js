@@ -99,6 +99,8 @@ export function* getActionsPage(payload) {
       filter: filter === '' ? undefined : filter,
       skip,
       limit,
+      direction: 'ASC',
+      field: 'actionName',
     };
     const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION]), { params });
     // TODO: Fix in the api the return of total sayings

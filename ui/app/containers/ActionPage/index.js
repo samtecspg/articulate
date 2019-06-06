@@ -101,6 +101,8 @@ export class ActionPage extends React.Component {
     actionTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionTab,
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
     page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page : '',
+    isDuplicate: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).isDuplicate ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).isDuplicate : '',
+    actionId: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionId ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionId : '',
     formError: false,
     exitAfterSubmit: false,
     errorState: {
@@ -130,6 +132,9 @@ export class ActionPage extends React.Component {
     this.props.onLoadKeywords();
     this.props.onLoadActions();
     if(this.state.isNewAction) {
+      if (this.state.isDuplicate && this.state.actionId){
+        this.props.onLoadAction(this.state.actionId, this.state.isDuplicate);
+      }
       this.props.onResetData();
     }
     else {
@@ -487,8 +492,8 @@ function mapDispatchToProps(dispatch) {
     onResetData: () => {
       dispatch(resetActionData());
     },
-    onLoadAction: (actionId) => {
-      dispatch(loadAction(actionId));
+    onLoadAction: (actionId, isDuplicate) => {
+      dispatch(loadAction(actionId, isDuplicate));
     },
     onLoadKeywords: () => {
       dispatch(loadKeywords());

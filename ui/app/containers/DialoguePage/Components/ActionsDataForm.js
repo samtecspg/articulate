@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, TextField, Table, TableBody, TableRow, TableCell, Typography, Button, MenuItem  } from '@material-ui/core';
+import { Grid, TextField, Table, TableBody, TableRow, TableCell, Typography, Button, MenuItem, Tooltip  } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
+import copyIcon from '../../../images/icon-copy.svg';
 
 const styles = {
   formContainer: {
@@ -77,6 +77,17 @@ const styles = {
   actionRow: {
     cursor: 'pointer',
   },
+  icon: {
+    float: 'right',
+    '&:hover': {
+      filter: 'invert(0)'
+    },
+    filter: 'invert(1)',
+    height: '15px',
+    cursor: 'pointer',
+    verticalAlign: 'middle',
+    paddingLeft: '5px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -91,7 +102,7 @@ class ActionsDataForm extends React.Component {
     };
 
     render(){
-      const { classes, actionsPage } = this.props;
+      const { classes, actionsPage, intl } = this.props;
       return (
         <Grid className={classes.formContainer} container item xs={12}>
           <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
@@ -113,9 +124,12 @@ class ActionsDataForm extends React.Component {
                     <Table>
                       <TableBody>
                         {actionsPage.map((action, index) => (
-                          <TableRow className={classes.actionRow} onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`) }} key={`${action}_${index}`}>
-                            <TableCell>
+                          <TableRow className={classes.actionRow} key={`${action}_${index}`}>
+                            <TableCell onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`) }}>
                               <span>{action.actionName}</span>
+                            </TableCell>
+                            <TableCell>
+                              <Tooltip onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create?isDuplicate=true&actionId=${action.id}`) }} title={intl.formatMessage(messages.duplicateAction)} placement='top'><img className={classes.icon} src={copyIcon}></img></Tooltip>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -203,6 +217,7 @@ class ActionsDataForm extends React.Component {
 }
 
 ActionsDataForm.propTypes = {
+  intl: intlShape.isRequired,
   classes: PropTypes.object.isRequired,
   actionsPage: PropTypes.array,
   agentId: PropTypes.string,
@@ -214,7 +229,8 @@ ActionsDataForm.propTypes = {
   changeActionsPageSize: PropTypes.func,
   moveActionsPageBack: PropTypes.func,
   moveActionsPageForward: PropTypes.func,
+  onDuplicateAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
 };
 
-export default withStyles(styles)(ActionsDataForm);
+export default injectIntl(withStyles(styles)(ActionsDataForm));

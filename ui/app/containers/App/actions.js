@@ -1314,10 +1314,11 @@ export function loadActionsSuccess(actions) {
   };
 }
 
-export function loadAction(actionId) {
+export function loadAction(actionId, isDuplicate) {
   return {
     type: LOAD_ACTION,
     actionId,
+    isDuplicate,
     apiCall: true,
   };
 }

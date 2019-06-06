@@ -89,7 +89,7 @@ export function* getActions(payload) {
 
 export function* getAction(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, actionId } = payload;
+  const { api, actionId, isDuplicate } = payload;
   let response, webhook, postFormat;
   try {
     response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, actionId]));
@@ -112,7 +112,7 @@ export function* getAction(payload) {
         console.log(errWebhook);
       }
     }
-    yield put(loadActionSuccess({ action, webhook, postFormat }));
+    yield put(loadActionSuccess({ action, webhook, postFormat, isDuplicate }));
   }
   catch (err) {
     yield put(loadActionError(err));
@@ -202,6 +202,9 @@ export function* postAction(payload) {
   const agent = yield select(makeSelectAgent());
   const mutableAction = Immutable.asMutable(action, { deep: true });
   delete mutableAction.agent;
+  delete mutableAction.id;
+  delete mutableAction.creationDate;
+  delete mutableAction.modificationDate;
   const { api, addToNewSayingActions } = payload;
   try {
     const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION]), mutableAction);

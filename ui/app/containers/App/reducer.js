@@ -1040,13 +1040,14 @@ function appReducer(state = initialState, action) {
       }
       return state
         .set('action', action.payload.action)
+        .setIn(['action', 'actionName'], action.payload.isDuplicate ? `${action.payload.action.actionName} - 01` : action.payload.action.actionName)
         .set('currentAction', action.payload.action)
         .set('actionSettings', action.payload.settings)
         .set('actionWebhook', actionWebhook)
         .set('actionPostFormat', actionPostFormat)
         .set('loading', false)
         .set('error', false)
-        .set('actionTouched', false)
+        .set('actionTouched', action.payload.isDuplicate ? true : false)
         .set('successAction', false);
     case CHANGE_ACTION_NAME:
       return state

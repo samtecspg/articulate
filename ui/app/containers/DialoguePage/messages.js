@@ -131,4 +131,8 @@ export default defineMessages({
     id: 'app.containers.DialoguePage.component.KeywordsDataForm.create',
     defaultMessage: 'Create',
   },
+  duplicateAction: {
+    id: 'app.containers.DialoguePage.component.ActionsDataForm.duplicateAction',
+    defaultMessage: 'Create a duplicate of this action',
+  }
 });
