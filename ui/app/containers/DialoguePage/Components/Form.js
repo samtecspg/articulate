@@ -11,6 +11,7 @@ import agentIcon from "../../../images/agents-icon.svg";
 import playHelpIcon from "../../../images/play-help-icon.svg";
 import SayingsDataForm from './SayingsDataForm';
 import KeywordsDataForm from './KeywordsDataForm';
+import ActionsDataForm from './ActionsDataForm';
 
 const styles = {
   headerContainer: {
@@ -195,6 +196,15 @@ class Form extends React.Component {
               }
               className={this.props.selectedTab === 'keywords' ? classes.selected : null}
             />
+            <Tab 
+              value='actions'
+              label={
+                <span className={classes.tabLabel}>
+                  <span>{intl.formatMessage(messages.actionsFormTitle)}</span>
+                </span>
+              }
+              className={this.props.selectedTab === 'actions' ? classes.selected : null}
+            />
           </Tabs>
           {this.props.selectedTab === 'sayings' && (
             <SayingsDataForm
@@ -244,6 +254,21 @@ class Form extends React.Component {
               changeKeywordsPageSize={this.props.changeKeywordsPageSize}
               moveKeywordsPageBack={this.props.moveKeywordsPageBack}
               moveKeywordsPageForward={this.props.moveKeywordsPageForward}
+              onGoToUrl={this.props.onGoToUrl.bind(null, this.props.selectedTab)}
+            />
+          )}
+          {this.props.selectedTab === 'actions' && (
+            <ActionsDataForm
+              agentId={this.props.agentId}
+              actionsPage={this.props.actionsPage}
+              onCreateAction={this.props.onCreateAction}
+              currentActionsPage={this.props.currentActionsPage}
+              actionsPageSize={this.props.actionsPageSize}
+              numberOfActionsPages={this.props.numberOfActionsPages}
+              changeActionsPage={this.props.changeActionsPage}
+              changeActionsPageSize={this.props.changeActionsPageSize}
+              moveActionsPageBack={this.props.moveActionsPageBack}
+              moveActionsPageForward={this.props.moveActionsPageForward}
               onGoToUrl={this.props.onGoToUrl.bind(null, this.props.selectedTab)}
             />
           )}

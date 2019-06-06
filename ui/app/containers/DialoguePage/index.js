@@ -28,12 +28,14 @@ import {
   makeSelectFilteredCategories,
   makeSelectFilteredActions,
   makeSelectKeywords,
+  makeSelectActionsPage,
   makeSelectNewSayingActions,
   makeSelectSayings,
   makeSelectSelectedCategory,
   makeSelectTotalSayings,
   makeSelectLocale,
   makeSelectTotalKeywords,
+  makeSelectTotalActionsPage,
   makeSelectServerStatus,
 } from '../App/selectors';
 
@@ -52,6 +54,7 @@ import {
   loadFilteredCategories,
   loadFilteredActions,
   loadKeywords,
+  loadActionsPage,
   loadSayings,
   selectCategory,
   sendSayingToAction,
@@ -59,6 +62,7 @@ import {
   trainAgent,
   untagKeyword,
   changeKeywordsPageSize,
+  changeActionsPageSize,
   changeSayingCategory,
 } from '../App/actions';
 
@@ -84,6 +88,12 @@ export class DialoguePage extends React.PureComponent {
     this.onSearchKeyword = this.onSearchKeyword.bind(this);
     this.setNumberOfKeywordsPages = this.setNumberOfKeywordsPages.bind(this);
     this.changeKeywordsPageSize = this.changeKeywordsPageSize.bind(this);
+    this.changeActionsPage = this.changeActionsPage.bind(this);
+    this.moveActionsPageBack = this.moveActionsPageBack.bind(this);
+    this.moveActionsPageForward = this.moveActionsPageForward.bind(this);
+    this.onSearchAction = this.onSearchAction.bind(this);
+    this.setNumberOfActionsPages = this.setNumberOfActionsPages.bind(this);
+    this.changeActionsPageSize = this.changeActionsPageSize.bind(this);
     this.initForm = this.initForm.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
   }
@@ -98,9 +108,13 @@ export class DialoguePage extends React.PureComponent {
     numberOfSayingsPages: null,
     userSays: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).userSays,
     currentKeywordsPage: 1,
+    currentActionsPage: 1,
     keywordsPageSize: this.props.agent.id ? this.props.agent.settings.keywordsPageSize : 5,
+    actionsPageSize: this.props.agent.id ? (this.props.agent.settings.actionsPageSize ? this.props.agent.settings.actionsPageSize : 5) : 5,
     numberOfKeywordsPages: null,
     totalKeywords: null,
+    numberOfActionsPages: null,
+    totalActions: null,
 
   };
 
@@ -123,6 +137,11 @@ export class DialoguePage extends React.PureComponent {
       this.setState({ keywordsPageSize: this.props.agent.settings.keywordsPageSize });
       this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
     }    
+
+    if (this.state.selectedTab === 'actions'){
+      this.setState({ actionsPageSize: this.props.agent.settings.actionsPageSize });
+      this.props.onLoadActionsPage('', this.state.currentActionsPage, this.state.actionsPageSize);
+    } 
     this.props.onLoadActions();
     this.props.onLoadCategories();
   }
@@ -152,6 +171,12 @@ export class DialoguePage extends React.PureComponent {
       });
       this.setNumberOfKeywordsPages(this.state.keywordsPageSize);
     }
+    if (this.props.totalActions !== this.state.totalActions){
+      this.setState({
+        totalActions: this.props.totalActions,
+      });
+      this.setNumberOfActionsPages(this.state.actionsPageSize);
+    }
   }
 
   changeSayingsPage(pageNumber) {
@@ -175,6 +200,9 @@ export class DialoguePage extends React.PureComponent {
     this.setState({
       currentSayingsPage: 1,
       sayingsPageSize,
+    });
+    this.setState({
+      numberOfSayingsPages: Math.ceil(this.props.totalSayings / sayingsPageSize),
     });
     this.props.onChangeSayingsPageSize(this.props.agent.id, sayingsPageSize);
     this.props.onLoadSayings(this.state.filter, 1, sayingsPageSize);
@@ -226,11 +254,25 @@ export class DialoguePage extends React.PureComponent {
     });
   }
 
+  setNumberOfActionsPages(pageSize){
+    const numberOfActionsPages = Math.ceil(this.props.totalActions / pageSize);
+    this.setState({
+      numberOfActionsPages,
+    });
+  }
+
   changeKeywordsPage(pageNumber){
     this.setState({
       currentKeywordsPage: pageNumber,
     });
     this.props.onLoadKeywords(this.state.filter, pageNumber, this.state.keywordsPageSize);
+  }
+
+  changeActionsPage(pageNumber){
+    this.setState({
+      currentActionsPage: pageNumber,
+    });
+    this.props.onLoadActionsPage(this.state.filter, pageNumber, this.state.actionsPageSize);
   }
 
   moveKeywordsPageBack(){
@@ -254,6 +296,7 @@ export class DialoguePage extends React.PureComponent {
       currentKeywordsPage: 1,
       keywordsPageSize,
     });
+    this.setNumberOfKeywordsPages(keywordsPageSize);
     this.props.onChangeKeywordsPageSize(this.props.agent.id, keywordsPageSize);
     this.props.onLoadKeywords(this.state.filter, 1, keywordsPageSize);
   }
@@ -265,6 +308,39 @@ export class DialoguePage extends React.PureComponent {
     this.props.onLoadKeywords(filter, this.state.currentKeywordsPage, this.state.keywordsPageSize);
   }
 
+  moveActionsPageBack(){
+    let newPage = this.state.currentActionsPage;
+    if (this.state.currentActionsPage > 1){
+      newPage = this.state.currentActionsPage - 1;
+    }
+    this.changeActionsPage(newPage);
+  }
+
+  moveActionsPageForward(){
+    let newPage = this.state.currentActionsPage;
+    if (this.state.currentActionsPage < this.state.numberOfActionsPages){
+      newPage = this.state.currentActionsPage + 1;
+    }
+    this.changeActionsPage(newPage);
+  }
+
+  changeActionsPageSize(actionsPageSize){
+    this.setState({
+      currentActionsPage: 1,
+      actionsPageSize,
+    });
+    this.setNumberOfActionsPages(actionsPageSize);
+    this.props.onChangeActionsPageSize(this.props.agent.id, actionsPageSize);
+    this.props.onLoadActionsPage(this.state.filter, 1, actionsPageSize);
+  }
+
+  onSearchAction(filter){
+    this.setState({
+      filter,
+    });
+    this.props.onLoadActionsPage(filter, this.state.currentActionsPage, this.state.actionsPageSize);
+  }
+
   handleTabChange = (event, value) => {
     this.setState({
       selectedTab: value,
@@ -274,6 +350,9 @@ export class DialoguePage extends React.PureComponent {
     }
     if (value === 'keywords'){
       this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
+    }
+    if (value === 'actions'){
+      this.props.onLoadActionsPage('', this.state.currentActionsPage, this.state.actionsPageSize);
     }
   };
 
@@ -305,16 +384,25 @@ export class DialoguePage extends React.PureComponent {
             <Form
               handleTabChange={this.handleTabChange}
               selectedTab={this.state.selectedTab}
+              actionsPage={this.props.actionsPage}
               onSearchKeyword={this.onSearchKeyword}
-              keywords={this.props.keywords}
               onCreateKeyword={this.props.onCreateKeyword}
               currentKeywordsPage={this.state.currentKeywordsPage}
-              keywordsPageSize={this.state.keywordsPageSize}
               numberOfKeywordsPages={this.state.numberOfKeywordsPages}
               changeKeywordsPage={this.changeKeywordsPage}
               changeKeywordsPageSize={this.changeKeywordsPageSize}
               moveKeywordsPageBack={this.moveKeywordsPageBack}
               moveKeywordsPageForward={this.moveKeywordsPageForward}
+              onSearchAction={this.onSearchAction}
+              onCreateAction={this.props.onCreateAction}
+              currentActionsPage={this.state.currentActionsPage}
+              numberOfActionsPages={this.state.numberOfActionsPages}
+              changeActionsPage={this.changeActionsPage}
+              changeActionsPageSize={this.changeActionsPageSize}
+              moveActionsPageBack={this.moveActionsPageBack}
+              moveActionsPageForward={this.moveActionsPageForward}
+              keywordsPageSize={this.state.keywordsPageSize}
+              actionsPageSize={this.state.actionsPageSize}
               agentId={this.props.agent.id}
               sayingsPageSize={this.props.agent.settings.sayingsPageSize}
               sayings={this.props.sayings}
@@ -366,6 +454,7 @@ DialoguePage.propTypes = {
   serverStatus: PropTypes.string,
   onLoadSayings: PropTypes.func,
   onLoadKeywords: PropTypes.func,
+  onLoadActionsPage: PropTypes.func,
   onLoadActions: PropTypes.func,
   onChangeSayingsData: PropTypes.func,
   onDeleteSaying: PropTypes.func,
@@ -390,6 +479,7 @@ DialoguePage.propTypes = {
   newSayingActions: PropTypes.array,
   location: PropTypes.object,
   keywords: PropTypes.array,
+  actionsPage: PropTypes.array,
   onChangeSayingCategory: PropTypes.func,
 };
 
@@ -403,10 +493,12 @@ const mapStateToProps = createStructuredSelector({
   agentFilteredActions: makeSelectFilteredActions(),
   agentKeywords: makeSelectKeywords(),
   agentActions: makeSelectActions(),
+  actionsPage: makeSelectActionsPage(),
   category: makeSelectSelectedCategory(),
   newSayingActions: makeSelectNewSayingActions(),
   locale: makeSelectLocale(),
   totalKeywords: makeSelectTotalKeywords(),
+  totalActions: makeSelectTotalActionsPage(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -429,11 +521,20 @@ function mapDispatchToProps(dispatch) {
     onLoadKeywords: (filter, page, pageSize) => {
       dispatch(loadKeywords(filter, page, pageSize));
     },
+    onLoadActionsPage: (filter, page, pageSize) => {
+      dispatch(loadActionsPage(filter, page, pageSize));
+    },
     onCreateKeyword: (url) => {
+      dispatch(push(url))
+    },
+    onCreateAction: (url) => {
       dispatch(push(url))
     },
     onChangeKeywordsPageSize: (agentId, pageSize) => {
       dispatch(changeKeywordsPageSize(agentId, pageSize));
+    },
+    onChangeActionsPageSize: (agentId, pageSize) => {
+      dispatch(changeActionsPageSize(agentId, pageSize));
     },
     onLoadActions: () => {
       dispatch(loadActions());

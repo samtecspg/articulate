@@ -196,6 +196,16 @@ const makeSelectNewSayingActions = () => createSelector(
 );
 
 /* Actions */
+const makeSelectActionsPage = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.actionsPage,
+);
+
+const makeSelectTotalActionsPage = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.totalActionsPage,
+);
+
 const makeSelectActions = () => createSelector(
   selectGlobal,
   (globalState) => globalState.actions,
@@ -342,6 +352,8 @@ export {
   makeSelectFilteredActions,
   makeSelectSelectedCategory,
   makeSelectNewSayingActions,
+  makeSelectActionsPage,
+  makeSelectTotalActionsPage,
   makeSelectActions,
   makeSelectTotalActions,
   makeSelectAction,

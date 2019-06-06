@@ -179,11 +179,15 @@ export const DELETE_FALLBACK = 'app/SettingsPage/DELETE_FALLBACK';
 /*
  * Actions
  */
+export const CHANGE_ACTIONS_PAGE_SIZE = 'app/ActionPage/CHANGE_ACTIONS_PAGE_SIZE';
 export const RESET_ACTION_DATA = 'app/ActionPage/RESET_ACTION_DATA';
 export const RESET_ACTIONS = 'app/ActionPage/RESET_ACTIONS';
 export const LOAD_ACTIONS = 'app/ActionPage/LOAD_ACTIONS';
 export const LOAD_ACTIONS_ERROR = 'app/ActionPage/LOAD_ACTIONS_ERROR';
 export const LOAD_ACTIONS_SUCCESS = 'app/ActionPage/LOAD_ACTIONS_SUCCESS';
+export const LOAD_ACTIONS_PAGE = 'app/ActionPage/LOAD_ACTIONS_PAGE';
+export const LOAD_ACTIONS_PAGE_ERROR = 'app/ActionPage/LOAD_ACTIONS_PAGE_ERROR';
+export const LOAD_ACTIONS_PAGE_SUCCESS = 'app/ActionPage/LOAD_ACTIONS_PAGE_SUCCESS';
 export const LOAD_ACTION = 'app/ActionPage/LOAD_ACTION';
 export const LOAD_ACTION_ERROR = 'app/ActionPage/LOAD_ACTION_ERROR';
 export const LOAD_ACTION_SUCCESS = 'app/ActionPage/LOAD_ACTION_SUCCESS';

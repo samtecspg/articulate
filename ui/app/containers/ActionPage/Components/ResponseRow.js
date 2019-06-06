@@ -10,6 +10,7 @@ import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
 import FilterSelect from "../../../components/FilterSelect";
 import { intlShape, injectIntl } from 'react-intl';
+import messages from '../messages';
 
 const styles = {
   actionBackgroundContainer: {

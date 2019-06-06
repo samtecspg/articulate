@@ -52,6 +52,7 @@ import {
   CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
   CHANGE_KEYWORD_DATA,
   CHANGE_KEYWORDS_PAGE_SIZE,
+  CHANGE_ACTIONS_PAGE_SIZE,
   CHANGE_LOCALE,
   CHANGE_MODIFIER_DATA,
   CHANGE_MODIFIER_NAME,
@@ -125,6 +126,9 @@ import {
   LOAD_ACTIONS,
   LOAD_ACTIONS_ERROR,
   LOAD_ACTIONS_SUCCESS,
+  LOAD_ACTIONS_PAGE,
+  LOAD_ACTIONS_PAGE_ERROR,
+  LOAD_ACTIONS_PAGE_SUCCESS,
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS,
   LOAD_AGENT_DOCUMENTS_ERROR,
@@ -1242,6 +1246,40 @@ export function deleteFallbackResponse(fallbackIndex) {
 /*
 * Actions
 */
+
+export function changeActionsPageSize(agentId, pageSize) {
+  return {
+    apiCall: true,
+    type: CHANGE_ACTIONS_PAGE_SIZE,
+    agentId,
+    pageSize,
+  };
+}
+
+export function loadActionsPage(filter, page, pageSize) {
+  return {
+    type: LOAD_ACTIONS_PAGE,
+    apiCall: true,
+    filter,
+    page,
+    pageSize,
+  };
+}
+
+export function loadActionsPageError(error) {
+  return {
+    type: LOAD_ACTIONS_PAGE_ERROR,
+    error,
+  };
+}
+
+export function loadActionsPageSuccess(actions) {
+  return {
+    type: LOAD_ACTIONS_PAGE_SUCCESS,
+    actions,
+  };
+}
+
 export function resetActionData() {
   return {
     type: RESET_ACTION_DATA,

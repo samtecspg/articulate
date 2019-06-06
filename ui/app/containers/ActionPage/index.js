@@ -138,7 +138,12 @@ export class ActionPage extends React.Component {
   }
 
   componentDidMount() {
-    const exitUrl = this.state.ref === 'agent' ? `/agent/${this.props.agent.id}` : (this.state.ref === 'action' ? `/agent/${this.props.agent.id}/actionDummy/${this.state.refActionId}?filter=${this.state.filter}&page=${this.state.page}&actionTab=response` : `/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}&tab=sayings`);
+    const exitUrl = this.state.ref === 'agent' ? 
+      `/agent/${this.props.agent.id}` : 
+      (this.state.ref === 'action' ? 
+        `/agent/${this.props.agent.id}/actionDummy/${this.state.refActionId}?filter=${this.state.filter}&page=${this.state.page}&actionTab=response` :
+        `/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}${this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'}`
+      );
     this.setState({
       exitUrl
     })

@@ -123,6 +123,7 @@
       ],
       "sayingsPageSize": 5,
       "keywordsPageSize": 5,
+      "actionsPageSize": 5,
       "modifierSayingsPageSize": 10,
       "reviewPageSize": 5
     },

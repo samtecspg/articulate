@@ -18,7 +18,7 @@ const styles = {
   formSubContainer: {
     padding: '40px 25px',
   },
-  keywordsLabel: {
+  actionsLabel: {
     marginTop: '20px',
     marginBottom: '10px',
     color: '#a2a7b1',
@@ -68,26 +68,19 @@ const styles = {
     top: '39px',
     position: 'relative',
   },
-  keywordsPageSizeLabels: {
+  actionsPageSizeLabels: {
     display: 'inline',
     margin: '0px 5px',
     top: '39px',
     position: 'relative',
   },
-  keywordRow: {
+  actionRow: {
     cursor: 'pointer',
-  },
-  dot: {
-    marginRight: 5,
-    height: 10,
-    width: 10,
-    borderRadius: '50%',
-    display: 'inline-block',
   },
 };
 
 /* eslint-disable react/prefer-stateless-function */
-class KeywordsDataForm extends React.Component {
+class ActionsDataForm extends React.Component {
 
   constructor(){
     super();
@@ -98,7 +91,7 @@ class KeywordsDataForm extends React.Component {
     };
 
     render(){
-      const { classes, keywords } = this.props;
+      const { classes, actionsPage } = this.props;
       return (
         <Grid className={classes.formContainer} container item xs={12}>
           <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
@@ -106,24 +99,23 @@ class KeywordsDataForm extends React.Component {
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <Button
                   variant='contained'
-                  onClick={() => {this.props.onCreateKeyword(`/agent/${this.props.agentId}/keyword/create?tab=keywords`)}}
+                  onClick={() => {this.props.onCreateAction(`/agent/${this.props.agentId}/action/create?tab=actions`)}}
                 >
                   <FormattedMessage {...messages.create} />
                 </Button>
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
-                {keywords.length > 0 ?
+                {actionsPage.length > 0 ?
                   <Grid container>
-                    <Typography className={classes.keywordsLabel}>
-                      <FormattedMessage {...messages.keywordsLabel} />
+                    <Typography className={classes.actionsLabel}>
+                      <FormattedMessage {...messages.actionsLabel} />
                     </Typography>
                     <Table>
                       <TableBody>
-                        {keywords.map((keyword, index) => (
-                          <TableRow className={classes.keywordRow} onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/keyword/${keyword.id}`) }} key={`${keyword}_${index}`}>
+                        {actionsPage.map((action, index) => (
+                          <TableRow className={classes.actionRow} onClick={() => { this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`) }} key={`${action}_${index}`}>
                             <TableCell>
-                              <span style={{backgroundColor: keyword.uiColor}} className={classes.dot}></span>
-                              <span>{keyword.keywordName}</span>
+                              <span>{action.actionName}</span>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -131,50 +123,50 @@ class KeywordsDataForm extends React.Component {
                     </Table>
                     <Grid className={classes.pageControl} item xs={12}>
                       <Grid className={classes.pageSubControl}>
-                        <Typography className={classes.keywordsPageSizeLabels}>
+                        <Typography className={classes.actionsPageSizeLabels}>
                           <FormattedMessage {...messages.show} />
                         </Typography>
                         <TextField
                           select
                           className={classes.pageTextfield}
-                          id='keywordsPageSize'
-                          value={this.props.keywordsPageSize}
-                          onChange={(evt) => { this.props.changeKeywordsPageSize(evt.target.value) }}
+                          id='actionsPageSize'
+                          value={this.props.actionsPageSize}
+                          onChange={(evt) => { this.props.changeActionsPageSize(evt.target.value) }}
                           margin='normal'
                           InputLabelProps={{
                             shrink: true,
                           }}
                         >
                           <MenuItem key={5} value={5}>
-                                                    5
+                            5
                           </MenuItem>
                           <MenuItem key={10} value={10}>
-                                                    10
+                            10
                           </MenuItem>
                           <MenuItem key={25} value={25}>
-                                                    25
+                            25
                           </MenuItem>
                           <MenuItem key={50} value={50}>
-                                                    50
+                            50
                           </MenuItem>
                         </TextField>
-                        <Typography className={classes.keywordsPageSizeLabels}>
+                        <Typography className={classes.actionsPageSizeLabels}>
                           <FormattedMessage {...messages.entries} />
                         </Typography>
                       </Grid>
                       <Grid className={classes.pageNumberSubControl}>
-                        <Typography onClick={this.props.currentKeywordsPage > 1 ? this.props.moveKeywordsPageBack : null} className={this.props.currentKeywordsPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
+                        <Typography onClick={this.props.currentActionsPage > 1 ? this.props.moveActionsPageBack : null} className={this.props.currentActionsPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
                           <FormattedMessage {...messages.backPage} />
                         </Typography>
                         <TextField
                           id='page'
                           margin='normal'
-                          value={this.props.currentKeywordsPage}
+                          value={this.props.currentActionsPage}
                           onChange={(evt) => {
                             evt.target.value === '' ?
-                              this.props.changeKeywordsPage(0) :
-                              (evt.target.value <= this.props.numberOfKeywordsPages && evt.target.value >= 0 ?
-                                this.props.changeKeywordsPage(evt.target.value) :
+                              this.props.changeActionsPage(0) :
+                              (evt.target.value <= this.props.numberOfActionsPages && evt.target.value >= 0 ?
+                                this.props.changeActionsPage(evt.target.value) :
                                 false) }}
                           fullWidth
                           InputLabelProps={{
@@ -185,16 +177,16 @@ class KeywordsDataForm extends React.Component {
                               textAlign: 'center',
                             },
                             min: 1,
-                            max: this.props.numberOfKeywordsPages,
+                            max: this.props.numberOfActionsPages,
                             step: 1,
                           }}
                           className={classes.pageTextfield}
                           type='number'
                         />
                         <Typography className={classes.pagesLabel}>
-                                                / {this.props.numberOfKeywordsPages}
+                                                / {this.props.numberOfActionsPages}
                         </Typography>
-                        <Typography onClick={this.props.currentKeywordsPage < this.props.numberOfKeywordsPages ? this.props.moveKeywordsPageForward : null} className={this.props.currentKeywordsPage < this.props.numberOfKeywordsPages ? classes.pageCursors : classes.pageCursorsDisabled}>
+                        <Typography onClick={this.props.currentActionsPage < this.props.numberOfActionsPages ? this.props.moveActionsPageForward : null} className={this.props.currentActionsPage < this.props.numberOfActionsPages ? classes.pageCursors : classes.pageCursorsDisabled}>
                           <FormattedMessage {...messages.nextPage} />
                         </Typography>
                       </Grid>
@@ -210,19 +202,19 @@ class KeywordsDataForm extends React.Component {
     }
 }
 
-KeywordsDataForm.propTypes = {
+ActionsDataForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  keywords: PropTypes.array,
+  actionsPage: PropTypes.array,
   agentId: PropTypes.string,
-  onCreateKeyword: PropTypes.func.isRequired,
-  currentKeywordsPage: PropTypes.number,
-  keywordsPageSize: PropTypes.number,
-  numberOfKeywordsPages: PropTypes.number,
-  changeKeywordsPage: PropTypes.func,
-  changeKeywordsPageSize: PropTypes.func,
-  moveKeywordsPageBack: PropTypes.func,
-  moveKeywordsPageForward: PropTypes.func,
+  onCreateAction: PropTypes.func.isRequired,
+  currentActionsPage: PropTypes.number,
+  actionsPageSize: PropTypes.number,
+  numberOfActionsPages: PropTypes.number,
+  changeActionsPage: PropTypes.func,
+  changeActionsPageSize: PropTypes.func,
+  moveActionsPageBack: PropTypes.func,
+  moveActionsPageForward: PropTypes.func,
   onGoToUrl: PropTypes.func,
 };
 
-export default withStyles(styles)(KeywordsDataForm);
+export default withStyles(styles)(ActionsDataForm);

@@ -13,6 +13,7 @@ import {
   ROUTE_KEYWORD,
   ROUTE_SAYING,
   ROUTE_SETTINGS,
+  ROUTE_ACTION,
 } from '../../../common/constants';
 import ExtractTokensFromString from '../../utils/extractTokensFromString';
 import { toAPIPath } from '../../utils/locationResolver';
@@ -30,11 +31,14 @@ import {
   loadSayingsSuccess,
   updateSayingError,
   updateSayingSuccess,
+  loadActionsPageSuccess,
+  loadActionsPageError,
 } from '../App/actions';
 import {
   ADD_ACTION_SAYING,
   ADD_SAYING,
   CHANGE_KEYWORDS_PAGE_SIZE,
+  CHANGE_ACTIONS_PAGE_SIZE,
   CHANGE_SAYING_CATEGORY,
   CHANGE_SAYINGS_PAGE_SIZE,
   DELETE_ACTION_SAYING,
@@ -47,6 +51,7 @@ import {
   LOAD_SAYINGS,
   TAG_KEYWORD,
   UNTAG_KEYWORD,
+  LOAD_ACTIONS_PAGE,
 } from '../App/constants';
 import {
   makeSelectAgent,
@@ -80,11 +85,48 @@ export function* getKeywords(payload) {
   }
 }
 
+export function* getActionsPage(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, filter, page, pageSize } = payload;
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: filter === '' ? undefined : filter,
+      skip,
+      limit,
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION]), { params });
+    // TODO: Fix in the api the return of total sayings
+    yield put(loadActionsPageSuccess({ actions: response.data, total: response.totalCount }));
+  }
+  catch (err) {
+    yield put(loadActionsPageError(err));
+  }
+}
+
 export function* putKeywordsPageSize(payload) {
   const agentSettings = yield select(makeSelectAgentSettings());
   const { api, agentId, pageSize } = payload;
   const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
   mutableSettings.keywordsPageSize = pageSize;
+  try {
+    yield call(api.put, toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]), mutableSettings);
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+export function* putActionsPageSize(payload) {
+  const agentSettings = yield select(makeSelectAgentSettings());
+  const { api, agentId, pageSize } = payload;
+  const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
+  mutableSettings.actionsPageSize = pageSize;
   try {
     yield call(api.put, toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]), mutableSettings);
   }
@@ -322,5 +364,7 @@ export default function* rootSaga() {
   yield takeLatest(CHANGE_SAYINGS_PAGE_SIZE, putSayingsPageSize);
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(CHANGE_KEYWORDS_PAGE_SIZE, putKeywordsPageSize);
+  yield takeLatest(CHANGE_ACTIONS_PAGE_SIZE, putActionsPageSize);
   yield takeLatest(CHANGE_SAYING_CATEGORY, changeSayingCategory);
+  yield takeLatest(LOAD_ACTIONS_PAGE, getActionsPage);
 };

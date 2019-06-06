@@ -99,9 +99,17 @@ export default defineMessages({
     id: 'app.containers.DialoguePage.keywordsFormTitle',
     defaultMessage: 'Keywords',
   },
+  actionsFormTitle: {
+    id: 'app.containers.DialoguePage.actionsFormTitle',
+    defaultMessage: 'Actions',
+  },
   keywordsPlayHelpAlt : {
     id: 'app.containers.DialoguePage.keywordsPlayHelpAlt',
     defaultMessage: 'Play video off how to add/edit the keywords',
+  },
+  actionsPlayHelpAlt : {
+    id: 'app.containers.DialoguePage.actionsPlayHelpAlt',
+    defaultMessage: 'Play video off how to add/edit the actions',
   },
   searchKeywordsAlt: {
     id: 'app.containers.DialoguePage.component.Form.searchKeywordsAlt',
@@ -114,6 +122,10 @@ export default defineMessages({
   keywordsLabel: {
     id: 'app.containers.DialoguePage.component.KeywordsDataForm.keywordsLabel',
     defaultMessage: 'Keyword List:',
+  },
+  actionsLabel: {
+    id: 'app.containers.DialoguePage.component.KeywordsDataForm.actionsLabel',
+    defaultMessage: 'Actions List:',
   },
   create: {
     id: 'app.containers.DialoguePage.component.KeywordsDataForm.create',

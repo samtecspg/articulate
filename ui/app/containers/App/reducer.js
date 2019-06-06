@@ -84,6 +84,9 @@ import {
   LOAD_ACTIONS,
   LOAD_ACTIONS_ERROR,
   LOAD_ACTIONS_SUCCESS,
+  LOAD_ACTIONS_PAGE,
+  LOAD_ACTIONS_PAGE_ERROR,
+  LOAD_ACTIONS_PAGE_SUCCESS,
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
@@ -328,6 +331,8 @@ const initialState = Immutable({
   },
   keywords: [],
   totalKeywords: 0,
+  actionsPage: [],
+  totalActionsPage: 0,
   selectedCategory: '',
   sayings: [],
   totalSayings: 0,
@@ -913,9 +918,7 @@ function appReducer(state = initialState, action) {
 
     /* Keywords */
     case LOAD_KEYWORDS:
-      return state.set('keywords', [])
-        .set('totalKeywords', 0)
-        .set('loading', true)
+      return state.set('loading', true)
         .set('error', false);
     case LOAD_KEYWORDS_ERROR:
       return state.set('keywords', [])
@@ -975,6 +978,19 @@ function appReducer(state = initialState, action) {
       return state.updateIn(['settings', 'defaultAgentFallbackResponses'], defaultAgentFallbackResponses => defaultAgentFallbackResponses.filter((item, index) => index !== action.fallbackIndex));
 
     /* Actions */
+    case LOAD_ACTIONS_PAGE:
+      return state.set('loading', true)
+        .set('error', false);
+    case LOAD_ACTIONS_PAGE_ERROR:
+      return state.set('actionsPage', [])
+        .set('totalActionsPage', 0)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_ACTIONS_PAGE_SUCCESS:
+      return state.set('actionsPage', action.actions.actions)
+        .set('totalActionsPage', action.actions.total)
+        .set('loading', false)
+        .set('error', false);
     case RESET_ACTION_DATA:
       return state.set('action', initialState.action)
         .set('actionWebhook', initialState.actionWebhook)
