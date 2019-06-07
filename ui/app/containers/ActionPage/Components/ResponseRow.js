@@ -3,13 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import ContentEditable from 'react-contenteditable'
+import ContentEditable from 'react-contenteditable';
 
+import { intlShape, injectIntl } from 'react-intl';
 import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
-import FilterSelect from "../../../components/FilterSelect";
-import { intlShape, injectIntl } from 'react-intl';
+import FilterSelect from '../../../components/FilterSelect';
 import messages from '../messages';
 
 const styles = {
@@ -51,7 +51,7 @@ const styles = {
   },
   icon: {
     '&:hover': {
-      filter: 'invert(0)'
+      filter: 'invert(0)',
     },
     filter: 'invert(1)',
     height: '15px',
@@ -63,18 +63,17 @@ const styles = {
     paddingRight: '5px',
     lineHeight: '1.5',
     '&:focus': {
-      outline: '0px solid transparent'
-    }
+      outline: '0px solid transparent',
+    },
   },
   responseInput: {
     border: 'none',
     padding: '0px',
-  }
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class ResponseRow extends React.Component {
-
   constructor() {
     super();
     this.contentEditable = React.createRef();
@@ -85,7 +84,7 @@ class ResponseRow extends React.Component {
     anchorEl: null,
   };
 
-  render(){
+  render() {
     const { classes, action, response, responseIndex, intl } = this.props;
     return (
       <Grid container>
@@ -94,70 +93,139 @@ class ResponseRow extends React.Component {
             className={classes.response}
             innerRef={this.contentEditable}
             html={response.textResponse} // innerHTML of the editable div
-            onChange={(evt) => { this.props.onEditActionResponse(evt.target.value, responseIndex) }} // handle innerHTML change
-            tagName='span' // Use a custom HTML tag (uses a div by default)
+            onChange={evt => {
+              this.props.onEditActionResponse(evt.target.value, responseIndex);
+            }} // handle innerHTML change
+            tagName="span" // Use a custom HTML tag (uses a div by default)
           />
           {response.actions.map((chainedAction, actionIndex) => {
-            let actionId = this.props.agentActions.filter((agentAction) => agentAction.actionName === chainedAction);
-            actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
+            let actionId = this.props.agentActions.filter(
+              agentAction => agentAction.actionName === chainedAction,
+            );
+            actionId = actionId
+              ? Array.isArray(actionId) && actionId.length > 0
+                ? actionId[0].id
+                : 2
+              : null;
             return (
-              <div key={`responseAction_${actionIndex}`} className={classes.actionBackgroundContainer}>
+              <div
+                key={`responseAction_${actionIndex}`}
+                className={classes.actionBackgroundContainer}
+              >
                 <span
                   className={classes.actionLabel}
                   onClick={() => {
-                    this.props.onGoToUrl(`/agent/${this.props.agentId}/actionDummy/${actionId}?ref=action&actionId=${action.id}`)
-                  }
-                  }
-                >{chainedAction}</span>
-                <a onClick={() => { this.props.onUnchainActionFromResponse(responseIndex, actionIndex) }} className={classes.deleteActionX}>x</a>
+                    this.props.onGoToUrl(
+                      `/agent/${
+                        this.props.agentId
+                      }/actionDummy/${actionId}?ref=action&actionId=${
+                        action.id
+                      }`,
+                    );
+                  }}
+                >
+                  {chainedAction}
+                </span>
+                <a
+                  onClick={() => {
+                    this.props.onUnchainActionFromResponse(
+                      responseIndex,
+                      actionIndex,
+                    );
+                  }}
+                  className={classes.deleteActionX}
+                >
+                  x
+                </a>
               </div>
-            )
+            );
           })}
           <img
-            onClick={(evt) => this.setState({
-              anchorEl: evt.target,
-              openActions: true,
-            })}
-            className={classes.addActionIcon} src={addActionIcon}></img>
-          <Tooltip key='copyResponse' title={intl.formatMessage(messages.copyResponses)} placement='top'>
-            <img onClick={() => { this.props.onCopyResponse(response.textResponse) }} className={classes.icon} src={copyIcon} />
+            onClick={evt =>
+              this.setState({
+                anchorEl: evt.target,
+                openActions: true,
+              })
+            }
+            className={classes.addActionIcon}
+            src={addActionIcon}
+          />
+          <Tooltip
+            key="copyResponse"
+            title={intl.formatMessage(messages.copyResponses)}
+            placement="top"
+          >
+            <img
+              onClick={() => {
+                this.props.onCopyResponse(response.textResponse);
+              }}
+              className={classes.icon}
+              src={copyIcon}
+            />
           </Tooltip>
-          <img key='deleteResponse' onClick={() => { this.props.onDeleteResponse(responseIndex) }} className={classes.icon} src={trashIcon} />
+          <img
+            key="deleteResponse"
+            onClick={() => {
+              this.props.onDeleteResponse(responseIndex);
+            }}
+            className={classes.icon}
+            src={trashIcon}
+          />
           <FilterSelect
-            value='select'
-            valueDisplayField='actionName'
-            valueField='actionName'
-            onSelect={(value) => {
+            value="select"
+            valueDisplayField="actionName"
+            valueField="actionName"
+            onSelect={value => {
               if (value) {
-                this.props.onChainActionToResponse(responseIndex, value)
+                this.props.onChainActionToResponse(responseIndex, value);
               }
             }}
             onSearch={this.props.onSearchActions}
-            onGoToUrl={({ isEdit = false, url = '' }) => { 
-              if (isEdit){
+            onGoToUrl={({ isEdit = false, url = '' }) => {
+              if (isEdit) {
                 this.props.onGoToUrl(`${url}?ref=action&actionId=${action.id}`);
-              }
-              else {
-                this.props.onGoToUrl(`/agent/${this.props.agentId}/actionDummy/create?ref=action&actionId=${action.id}`);
+              } else {
+                this.props.onGoToUrl(
+                  `/agent/${
+                    this.props.agentId
+                  }/actionDummy/create?ref=action&actionId=${action.id}`,
+                );
               }
             }}
             onEditRoutePrefix={`/agent/${this.props.agentId}/actionDummy/`}
-            onCreateRoute={`/agent/${this.props.agentId}/actionDummy/create?ref=action&actionId=${action.id}`}
-            filteredValues={this.props.agentFilteredActions.filter((agentFilteredAction) => { return agentFilteredAction.actionName !== action.actionName && response.actions.indexOf(agentFilteredAction.actionName) === -1 })}
-            values={this.props.agentActions.filter((agentAction) => { return agentAction.actionName !== action.actionName && response.actions.indexOf(agentAction.actionName) === -1 })}
+            onCreateRoute={`/agent/${
+              this.props.agentId
+            }/actionDummy/create?ref=action&actionId=${action.id}`}
+            filteredValues={this.props.agentFilteredActions.filter(
+              agentFilteredAction => {
+                return (
+                  agentFilteredAction.actionName !== action.actionName &&
+                  response.actions.indexOf(agentFilteredAction.actionName) ===
+                    -1
+                );
+              },
+            )}
+            values={this.props.agentActions.filter(agentAction => {
+              return (
+                agentAction.actionName !== action.actionName &&
+                response.actions.indexOf(agentAction.actionName) === -1
+              );
+            })}
             SelectProps={{
               open: this.state.openActions,
-              onClose: () => this.setState({
-                openActions: false,
-                anchorEl: null,
-              }),
-              onOpen: (evt) => this.setState({
-                anchorEl: evt.target,
-                openActions: true,
-              }),
+              onClose: () =>
+                this.setState({
+                  openActions: false,
+                  anchorEl: null,
+                }),
+              onOpen: evt =>
+                this.setState({
+                  anchorEl: evt.target,
+                  openActions: true,
+                }),
               MenuProps: {
                 anchorEl: this.state.anchorEl,
-              }
+              },
             }}
             style={{
               display: 'none',
@@ -185,7 +253,7 @@ ResponseRow.propTypes = {
   agentFilteredActions: PropTypes.array,
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
-  agentId: PropTypes.string
+  agentId: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(ResponseRow));

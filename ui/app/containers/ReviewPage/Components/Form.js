@@ -1,18 +1,8 @@
-import {
-  Button,
-  Grid,
-  Input,
-  Modal,
-  Typography,
-} from '@material-ui/core';
+import { Button, Grid, Input, Modal, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  FormattedMessage,
-  injectIntl,
-  intlShape,
-} from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import reviewIcon from '../../../images/icon-review.svg';
 import searchIcon from '../../../images/search-icon.svg';
@@ -103,26 +93,29 @@ class Form extends React.Component {
 
   render() {
     const { classes, intl } = this.props;
-    return <Grid className={classes.headerContainer} container item xs={12}>
-      <Grid className={classes.titleContainer} item xs={12}>
-        <img alt="" className={classes.reviewIcon} src={reviewIcon} />
-        <Grid className={classes.titleTextHelpContainer} container>
-          <Typography className={classes.title} variant='h2'>
-            <FormattedMessage {...messages.formTitle} />
-          </Typography>
-          <Button
-            className={classes.helpButton}
-            variant='outlined'
-            onClick={this.handleOpen}
-          >
-            <img
-              className={classes.playIcon}
-              src={playHelpIcon}
-              alt={intl.formatMessage(messages.playHelpAlt)}
-            />
-            <span className={classes.helpText}><FormattedMessage {...messages.help} /></span>
-          </Button>
-          {/*<form className={classes.searchForm}>
+    return (
+      <Grid className={classes.headerContainer} container item xs={12}>
+        <Grid className={classes.titleContainer} item xs={12}>
+          <img alt="" className={classes.reviewIcon} src={reviewIcon} />
+          <Grid className={classes.titleTextHelpContainer} container>
+            <Typography className={classes.title} variant="h2">
+              <FormattedMessage {...messages.formTitle} />
+            </Typography>
+            <Button
+              className={classes.helpButton}
+              variant="outlined"
+              onClick={this.handleOpen}
+            >
+              <img
+                className={classes.playIcon}
+                src={playHelpIcon}
+                alt={intl.formatMessage(messages.playHelpAlt)}
+              />
+              <span className={classes.helpText}>
+                <FormattedMessage {...messages.help} />
+              </span>
+            </Button>
+            {/* <form className={classes.searchForm}>
             <img src={searchIcon} alt={intl.formatMessage(messages.searchReviewAlt)} />
             <Input
               inputProps={{
@@ -137,61 +130,64 @@ class Form extends React.Component {
                 this.props.onSearchSaying(evt.target.value);
               }}
             />
-            </form>*/}
-          <Modal open={this.state.openModal} onClose={this.handleClose}>
-            <Grid className={classes.modalContent} container>
-              <iframe
-                title="SPG Intro"
-                width='100%'
-                height='100%'
-                src='https://www.youtube.com/embed/o807YDeK6Vg'
-                frameBorder='0'
-                allow='autoplay; encrypted-media'
-                allowFullScreen
-              />
-            </Grid>
-          </Modal>
+            </form> */}
+            <Modal open={this.state.openModal} onClose={this.handleClose}>
+              <Grid className={classes.modalContent} container>
+                <iframe
+                  title="SPG Intro"
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/o807YDeK6Vg"
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </Grid>
+            </Modal>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          {
+            <SayingsDataForm
+              agentId={this.props.agentId}
+              documents={this.props.documents}
+              agentKeywords={this.props.agentKeywords}
+              agentActions={this.props.agentActions}
+              agentCategories={this.props.agentCategories}
+              agentFilteredCategories={this.props.agentFilteredCategories}
+              onCopySaying={this.props.onCopySaying}
+              onDeleteSaying={this.props.onDeleteSaying}
+              onTagKeyword={this.props.onTagKeyword}
+              onUntagKeyword={this.props.onUntagKeyword}
+              onAddAction={this.props.onAddAction}
+              onDeleteAction={this.props.onDeleteAction}
+              onAddNewSayingAction={this.props.onAddNewSayingAction}
+              onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
+              onSendSayingToAction={this.props.onSendSayingToAction}
+              currentPage={this.props.currentPage}
+              pageSize={this.props.pageSize}
+              numberOfPages={this.props.numberOfPages}
+              changePage={this.props.changePage}
+              movePageBack={this.props.movePageBack}
+              movePageForward={this.props.movePageForward}
+              changePageSize={this.props.changePageSize}
+              onSelectCategory={this.props.onSelectCategory}
+              category={this.props.category}
+              onSearchCategory={this.props.onSearchCategory}
+              newSayingActions={this.props.newSayingActions}
+              onClearSayingToAction={this.props.onClearSayingToAction}
+              onToggleConversationBar={this.props.onToggleConversationBar}
+              onSendMessage={this.props.onSendMessage}
+              onRequestSort={this.props.onRequestSort}
+              sortField={this.props.sortField}
+              sortDirection={this.props.sortDirection}
+              locale={this.props.locale}
+              timeSort={this.props.timeSort}
+            />
+          }
         </Grid>
       </Grid>
-      <Grid item xs={12}>
-        {<SayingsDataForm
-          agentId={this.props.agentId}
-          documents={this.props.documents}
-          agentKeywords={this.props.agentKeywords}
-          agentActions={this.props.agentActions}
-          agentCategories={this.props.agentCategories}
-          agentFilteredCategories={this.props.agentFilteredCategories}
-          onCopySaying={this.props.onCopySaying}
-          onDeleteSaying={this.props.onDeleteSaying}
-          onTagKeyword={this.props.onTagKeyword}
-          onUntagKeyword={this.props.onUntagKeyword}
-          onAddAction={this.props.onAddAction}
-          onDeleteAction={this.props.onDeleteAction}
-          onAddNewSayingAction={this.props.onAddNewSayingAction}
-          onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
-          onSendSayingToAction={this.props.onSendSayingToAction}
-          currentPage={this.props.currentPage}
-          pageSize={this.props.pageSize}
-          numberOfPages={this.props.numberOfPages}
-          changePage={this.props.changePage}
-          movePageBack={this.props.movePageBack}
-          movePageForward={this.props.movePageForward}
-          changePageSize={this.props.changePageSize}
-          onSelectCategory={this.props.onSelectCategory}
-          category={this.props.category}
-          onSearchCategory={this.props.onSearchCategory}
-          newSayingActions={this.props.newSayingActions}
-          onClearSayingToAction={this.props.onClearSayingToAction}
-          onToggleConversationBar={this.props.onToggleConversationBar}
-          onSendMessage={this.props.onSendMessage}
-          onRequestSort={this.props.onRequestSort}
-          sortField={this.props.sortField}
-          sortDirection={this.props.sortDirection}
-          locale={this.props.locale}
-          timeSort={this.props.timeSort}
-        />}
-      </Grid>
-    </Grid>;
+    );
   }
 }
 

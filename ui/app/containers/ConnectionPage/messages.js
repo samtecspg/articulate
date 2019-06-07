@@ -16,18 +16,21 @@ export default defineMessages({
     defaultMessage: 'connection',
   },
   connectionFormTitle: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionForm.connectionFormTitle',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionForm.connectionFormTitle',
     defaultMessage: 'Connection',
   },
   detailsFormTitle: {
-    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.detailsFormTitle',
+    id:
+      'app.containers.ConnectionsEditPage.component.DetailsForm.detailsFormTitle',
     defaultMessage: 'Details',
   },
   noDetailsInChanell: {
-    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.noDetailsInChanell',
+    id:
+      'app.containers.ConnectionsEditPage.component.DetailsForm.noDetailsInChanell',
     defaultMessage: 'This channel does not require details',
   },
-  playHelpAlt : {
+  playHelpAlt: {
     id: 'app.containers.ConnectionsEditPage.playHelpAlt',
     defaultMessage: 'Play video off how to add/edit the connections',
   },
@@ -36,28 +39,34 @@ export default defineMessages({
     defaultMessage: 'Help?',
   },
   connectionFormDescription: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionForm.connectionFormDescription',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionForm.connectionFormDescription',
     defaultMessage: 'Connections are used to link channels and agents.',
   },
   detailsFormDescription: {
-    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.detailsFormDescription',
-    defaultMessage: 'These are required details for the connection you are creating.',
+    id:
+      'app.containers.ConnectionsEditPage.component.DetailsForm.detailsFormDescription',
+    defaultMessage:
+      'These are required details for the connection you are creating.',
   },
   requiredField: {
     id: 'app.containers.ConnectionsEditPage.requiredField',
     defaultMessage: '*Required',
   },
   channelSelect: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.channelSelect',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.channelSelect',
     defaultMessage: 'Channel:',
   },
   agentSelect: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.agentSelect',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.agentSelect',
     defaultMessage: 'Agent:',
   },
   selectAValue: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.selectAValue',
-    defaultMessage: 'Select a value'
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.selectAValue',
+    defaultMessage: 'Select a value',
   },
   connection: {
     id: 'app.containers.ConnectionsEditPage.component.MainTab.connection',
@@ -84,43 +93,52 @@ export default defineMessages({
     defaultMessage: 'Next >',
   },
   valuesFormTitle: {
-    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.valuesFormTitle',
+    id:
+      'app.containers.ConnectionsEditPage.component.DetailsForm.valuesFormTitle',
     defaultMessage: 'Values',
   },
   detailPlaceholder: {
-    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.detailPlaceholder',
+    id:
+      'app.containers.ConnectionsEditPage.component.DetailsForm.detailPlaceholder',
     defaultMessage: 'Add detail value',
   },
   noName: {
     id: 'app.containers.ConnectionsEditPage.component.MainTab.noName',
-    defaultMessage: 'No Channel'
+    defaultMessage: 'No Channel',
   },
   selectAChanelFirst: {
-    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.selectAChanelFirst',
+    id:
+      'app.containers.ConnectionsEditPage.component.DetailsForm.selectAChanelFirst',
     defaultMessage: 'Please select a chanel first and then fill the details.',
   },
   selectAnAgentFirst: {
-    id: 'app.containers.ConnectionsEditPage.component.DetailsForm.selectAnAgentFirst',
+    id:
+      'app.containers.ConnectionsEditPage.component.DetailsForm.selectAnAgentFirst',
     defaultMessage: 'Please select an agent for the connection',
   },
   callbackUrl: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.callbackUrl',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.callbackUrl',
     defaultMessage: 'Callback URL:',
   },
   verifyToken: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.verifyToken',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.verifyToken',
     defaultMessage: 'Verify Token:',
   },
   setupInstructions: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.setupInstructions',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.setupInstructions',
     defaultMessage: 'Values for setting up your connection:',
   },
   documentation: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.documentation',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.documentation',
     defaultMessage: 'Documentation',
   },
   download: {
-    id: 'app.containers.ConnectionsEditPage.component.ConnectionDataForm.download',
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.download',
     defaultMessage: 'Download Actions Package',
-  }
+  },
 });

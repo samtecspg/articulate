@@ -18,7 +18,7 @@ export default function createReducer(injectedReducers = {}) {
     language: languageProviderReducer,
     router: connectRouter(history),
     ...injectedReducers,
-      });
+  });
 
   return rootReducer;
 }

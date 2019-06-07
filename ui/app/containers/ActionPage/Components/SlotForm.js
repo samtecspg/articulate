@@ -13,10 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  injectIntl,
-  intlShape,
-} from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import systemKeywords from 'systemKeywords';
 
 import trashIcon from '../../../images/trash-icon.svg';
@@ -53,7 +50,6 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class SlotForm extends React.Component {
-
   constructor(props) {
     super(props);
     this.replaceValuesWithSlotName = this.replaceValuesWithSlotName.bind(this);
@@ -68,79 +64,130 @@ class SlotForm extends React.Component {
     let newStart = 0;
     saying.keywords.forEach((keyword, index) => {
       if (newStart !== keyword.start) {
-        newUserSays.push(<span key={`preSlotText_${index}`}>{saying.userSays.substring(newStart, keyword.start)}</span>);
+        newUserSays.push(
+          <span key={`preSlotText_${index}`}>
+            {saying.userSays.substring(newStart, keyword.start)}
+          </span>,
+        );
       }
       newUserSays.push(
-        <span className={this.props.classes.userSayingSlot} key={`slotKeyword_${index}`}>
-          {`{{slots.${keyword.keyword.indexOf(' ') !== -1 ? `[${keyword.keyword}]` : keyword.keyword}.value}}`}
+        <span
+          className={this.props.classes.userSayingSlot}
+          key={`slotKeyword_${index}`}
+        >
+          {`{{slots.${
+            keyword.keyword.indexOf(' ') !== -1
+              ? `[${keyword.keyword}]`
+              : keyword.keyword
+          }.value}}`}
         </span>,
       );
       newStart = keyword.end;
     });
-    newUserSays.push(<span key="finaText">{saying.userSays.substring(newStart)}</span>);
+    newUserSays.push(
+      <span key="finaText">{saying.userSays.substring(newStart)}</span>,
+    );
     return newUserSays;
-  };
+  }
 
   render() {
     const { classes, intl, slot, agentKeywords } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
+        <Grid
+          className={classes.formSubContainer}
+          id="formContainer"
+          container
+          item
+          xs={12}
+        >
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <TextField
-                id='slotName'
+                id="slotName"
                 label={intl.formatMessage(messages.slotNameTextField)}
                 value={slot.slotName}
-                placeholder={intl.formatMessage(messages.slotNameTextFieldPlaceholder)}
-                onChange={(evt) => {
+                placeholder={intl.formatMessage(
+                  messages.slotNameTextFieldPlaceholder,
+                )}
+                onChange={evt => {
                   this.props.onChangeSlotName(evt.target.value);
                 }}
-                margin='normal'
+                margin="normal"
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
-                error={this.props.errorState ? this.props.errorState.slotName : false}
+                error={
+                  this.props.errorState ? this.props.errorState.slotName : false
+                }
               />
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <TextField
                 select
-                id='keyword'
+                id="keyword"
                 value={slot.keywordId ? slot.keywordId : slot.keyword}
                 label={intl.formatMessage(messages.keywordSelect)}
-                onChange={(evt) => {
-                  let selectedKeyword = agentKeywords.filter((agentKeyword) => { return agentKeyword.id === evt.target.value });
-                  if (selectedKeyword.length === 0){
-                    selectedKeyword = systemKeywords.filter((systemKeyword) => { return systemKeyword.keywordName === evt.target.value });
-                    this.props.onChangeSlotData('uiColor', selectedKeyword[0].uiColor);
-                    this.props.onChangeSlotData('keyword', selectedKeyword[0].keywordName);
+                onChange={evt => {
+                  let selectedKeyword = agentKeywords.filter(
+                    agentKeyword => agentKeyword.id === evt.target.value,
+                  );
+                  if (selectedKeyword.length === 0) {
+                    selectedKeyword = systemKeywords.filter(
+                      systemKeyword =>
+                        systemKeyword.keywordName === evt.target.value,
+                    );
+                    this.props.onChangeSlotData(
+                      'uiColor',
+                      selectedKeyword[0].uiColor,
+                    );
+                    this.props.onChangeSlotData(
+                      'keyword',
+                      selectedKeyword[0].keywordName,
+                    );
                     this.props.onChangeSlotData('keywordId', 0);
-                  }
-                  else {
-                    this.props.onChangeSlotData('uiColor', selectedKeyword[0].uiColor);
-                    this.props.onChangeSlotData('keyword', selectedKeyword[0].keywordName);
-                    this.props.onChangeSlotData('keywordId', selectedKeyword[0].id);
+                  } else {
+                    this.props.onChangeSlotData(
+                      'uiColor',
+                      selectedKeyword[0].uiColor,
+                    );
+                    this.props.onChangeSlotData(
+                      'keyword',
+                      selectedKeyword[0].keywordName,
+                    );
+                    this.props.onChangeSlotData(
+                      'keywordId',
+                      selectedKeyword[0].id,
+                    );
                   }
                 }}
-                margin='normal'
+                margin="normal"
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
-                error={this.props.errorState ? this.props.errorState.keyword : false}
+                error={
+                  this.props.errorState ? this.props.errorState.keyword : false
+                }
               >
                 {agentKeywords.map((keyword, index) => (
                   <MenuItem key={`keyword_${index}`} value={keyword.id}>
-                    <span style={{ color: keyword.uiColor }}>{keyword.keywordName}</span>
+                    <span style={{ color: keyword.uiColor }}>
+                      {keyword.keywordName}
+                    </span>
                   </MenuItem>
                 ))}
                 {systemKeywords.map((keyword, index) => (
-                  <MenuItem key={`keyword_${index}`} value={keyword.keywordName}>
-                    <span style={{ color: keyword.uiColor }}>{keyword.keywordName}</span>
+                  <MenuItem
+                    key={`keyword_${index}`}
+                    value={keyword.keywordName}
+                  >
+                    <span style={{ color: keyword.uiColor }}>
+                      {keyword.keywordName}
+                    </span>
                   </MenuItem>
                 ))}
               </TextField>
@@ -149,14 +196,19 @@ class SlotForm extends React.Component {
           <Grid container spacing={24} item xs={12}>
             <Grid item xs={6}>
               <TextField
-                id='remainingLife'
+                id="remainingLife"
                 label={intl.formatMessage(messages.remainingLifeTextField)}
                 value={slot.remainingLife}
-                placeholder={intl.formatMessage(messages.remainingLifeTextFieldPlaceholder)}
-                onChange={(evt) => {
-                  this.props.onChangeSlotData('remainingLife', evt.target.value ? parseInt(evt.target.value) : null);
+                placeholder={intl.formatMessage(
+                  messages.remainingLifeTextFieldPlaceholder,
+                )}
+                onChange={evt => {
+                  this.props.onChangeSlotData(
+                    'remainingLife',
+                    evt.target.value ? parseInt(evt.target.value) : null,
+                  );
                 }}
-                margin='normal'
+                margin="normal"
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
@@ -166,7 +218,7 @@ class SlotForm extends React.Component {
               />
             </Grid>
           </Grid>
-          <Grid style={{marginTop: 0}} container spacing={24} item xs={12}>
+          <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
             <Grid item xs={6}>
               <FormControlLabel
                 control={
@@ -175,8 +227,8 @@ class SlotForm extends React.Component {
                     onChange={(evt, value) => {
                       this.props.onChangeSlotData('isRequired', value);
                     }}
-                    value='anything'
-                    color='primary'
+                    value="anything"
+                    color="primary"
                   />
                 }
                 label={intl.formatMessage(messages.slotIsRequired)}
@@ -188,22 +240,24 @@ class SlotForm extends React.Component {
                     onChange={(evt, value) => {
                       this.props.onChangeSlotData('isList', value);
                     }}
-                    value='anything'
-                    color='primary'
+                    value="anything"
+                    color="primary"
                   />
                 }
                 label={intl.formatMessage(messages.slotIsList)}
               />
             </Grid>
           </Grid>
-          {slot.isRequired ?
+          {slot.isRequired ? (
             <Grid container spacing={24} item xs={12}>
               <Grid item xs={12}>
                 <TextField
-                  id='newTextPrompt'
+                  id="newTextPrompt"
                   label={intl.formatMessage(messages.textpromptTextField)}
-                  placeholder={intl.formatMessage(messages.textpromptTextFieldPlaceholder)}
-                  onKeyPress={(ev) => {
+                  placeholder={intl.formatMessage(
+                    messages.textpromptTextFieldPlaceholder,
+                  )}
+                  onKeyPress={ev => {
                     if (ev.key === 'Enter') {
                       ev.preventDefault();
                       if (ev.target.value !== '') {
@@ -212,7 +266,7 @@ class SlotForm extends React.Component {
                       }
                     }
                   }}
-                  margin='normal'
+                  margin="normal"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -221,33 +275,35 @@ class SlotForm extends React.Component {
                     disabled: !slot.isRequired,
                   }}
                   helperText={intl.formatMessage(messages.textpromptHelperText)}
-                  error={this.props.errorState ? this.props.errorState.textPrompts : false}
+                  error={
+                    this.props.errorState
+                      ? this.props.errorState.textPrompts
+                      : false
+                  }
                 />
-                {slot.textPrompts.length > 0 ?
+                {slot.textPrompts.length > 0 ? (
                   <Table className={classes.table}>
                     <TableBody>
                       {slot.textPrompts.map((textPrompt, index) => (
                         <TableRow key={`${textPrompt}_${index}`}>
-                          <TableCell>
-                            {textPrompt}
-                          </TableCell>
+                          <TableCell>{textPrompt}</TableCell>
                           <TableCell className={classes.deleteCell}>
                             <img
                               onClick={() => {
                                 this.props.onDeleteTextPrompt(index);
-                              }} className={classes.deleteIcon} src={trashIcon}
+                              }}
+                              className={classes.deleteIcon}
+                              src={trashIcon}
                             />
                           </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
-                  </Table> :
-                  null
-                }
+                  </Table>
+                ) : null}
               </Grid>
             </Grid>
-            : null
-          }
+          ) : null}
         </Grid>
       </Grid>
     );

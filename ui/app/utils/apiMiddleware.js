@@ -8,7 +8,6 @@ api.interceptors.response.use(
 );
 export default function apiMiddleware() {
   return () => next => action => {
-
     if (!action.apiCall) {
       return next(action);
     }

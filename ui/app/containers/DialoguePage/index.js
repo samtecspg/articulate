@@ -66,10 +66,8 @@ import {
   changeSayingCategory,
 } from '../App/actions';
 
-
 /* eslint-disable react/prefer-stateless-function */
 export class DialoguePage extends React.PureComponent {
-
   constructor(props) {
     super(props);
     this.moveSayingsPageBack = this.moveSayingsPageBack.bind(this);
@@ -99,49 +97,91 @@ export class DialoguePage extends React.PureComponent {
   }
 
   state = {
-    selectedTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab : 'sayings',
+    selectedTab: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
+      : 'sayings',
     filter: '',
     categoryFilter: '',
     actionFilter: '',
     currentSayingsPage: 1,
-    sayingsPageSize: this.props.agent.id ? this.props.agent.settings.sayingsPageSize : 5,
+    sayingsPageSize: this.props.agent.id
+      ? this.props.agent.settings.sayingsPageSize
+      : 5,
     numberOfSayingsPages: null,
-    userSays: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).userSays,
+    userSays: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+      .userSays,
     currentKeywordsPage: 1,
     currentActionsPage: 1,
-    keywordsPageSize: this.props.agent.id ? this.props.agent.settings.keywordsPageSize : 5,
-    actionsPageSize: this.props.agent.id ? (this.props.agent.settings.actionsPageSize ? this.props.agent.settings.actionsPageSize : 5) : 5,
+    keywordsPageSize: this.props.agent.id
+      ? this.props.agent.settings.keywordsPageSize
+      : 5,
+    actionsPageSize: this.props.agent.id
+      ? this.props.agent.settings.actionsPageSize
+        ? this.props.agent.settings.actionsPageSize
+        : 5
+      : 5,
     numberOfKeywordsPages: null,
     totalKeywords: null,
     numberOfActionsPages: null,
     totalActions: null,
-
   };
 
   initForm() {
     const agentSayingsPageSize = this.props.agent.settings.sayingsPageSize;
-    this.throttledOnLoadSayings = _.throttle((filter, currentSayingsPage = this.state.currentSayingsPage, pageSize = agentSayingsPageSize) => {
-      this.props.onLoadSayings(filter, currentSayingsPage, pageSize);
-    }, 2000, { 'trailing': true });
+    this.throttledOnLoadSayings = _.throttle(
+      (
+        filter,
+        currentSayingsPage = this.state.currentSayingsPage,
+        pageSize = agentSayingsPageSize,
+      ) => {
+        this.props.onLoadSayings(filter, currentSayingsPage, pageSize);
+      },
+      2000,
+      { trailing: true },
+    );
 
     const locationSearchParams = qs.parse(this.props.location.search);
     const filter = locationSearchParams.filter || this.state.filter;
-    const currentSayingsPage = locationSearchParams.page ? _.toNumber(locationSearchParams.page) : this.state.currentSayingsPage;
-    this.setState({ filter, currentSayingsPage, pageSize: agentSayingsPageSize });
+    const currentSayingsPage = locationSearchParams.page
+      ? _.toNumber(locationSearchParams.page)
+      : this.state.currentSayingsPage;
+    this.setState({
+      filter,
+      currentSayingsPage,
+      pageSize: agentSayingsPageSize,
+    });
 
-    if (this.state.selectedTab === 'sayings'){
-      this.props.onLoadSayings(filter, currentSayingsPage, agentSayingsPageSize);
+    if (this.state.selectedTab === 'sayings') {
+      this.props.onLoadSayings(
+        filter,
+        currentSayingsPage,
+        agentSayingsPageSize,
+      );
     }
 
-    if (this.state.selectedTab === 'keywords'){
-      this.setState({ keywordsPageSize: this.props.agent.settings.keywordsPageSize });
-      this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
-    }    
+    if (this.state.selectedTab === 'keywords') {
+      this.setState({
+        keywordsPageSize: this.props.agent.settings.keywordsPageSize,
+      });
+      this.props.onLoadKeywords(
+        '',
+        this.state.currentKeywordsPage,
+        this.state.keywordsPageSize,
+      );
+    }
 
-    if (this.state.selectedTab === 'actions'){
-      this.setState({ actionsPageSize: this.props.agent.settings.actionsPageSize });
-      this.props.onLoadActionsPage('', this.state.currentActionsPage, this.state.actionsPageSize);
-    } 
+    if (this.state.selectedTab === 'actions') {
+      this.setState({
+        actionsPageSize: this.props.agent.settings.actionsPageSize,
+      });
+      this.props.onLoadActionsPage(
+        '',
+        this.state.currentActionsPage,
+        this.state.actionsPageSize,
+      );
+    }
     this.props.onLoadActions();
     this.props.onLoadCategories();
   }
@@ -157,21 +197,23 @@ export class DialoguePage extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.agent.id && this.props.agent.id){
+    if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
     if (this.props.totalSayings !== prevProps.totalSayings) {
       this.setState({
-        numberOfSayingsPages: Math.ceil(this.props.totalSayings / this.state.sayingsPageSize),
+        numberOfSayingsPages: Math.ceil(
+          this.props.totalSayings / this.state.sayingsPageSize,
+        ),
       });
     }
-    if (this.props.totalKeywords !== this.state.totalKeywords){
+    if (this.props.totalKeywords !== this.state.totalKeywords) {
       this.setState({
         totalKeywords: this.props.totalKeywords,
       });
       this.setNumberOfKeywordsPages(this.state.keywordsPageSize);
     }
-    if (this.props.totalActions !== this.state.totalActions){
+    if (this.props.totalActions !== this.state.totalActions) {
       this.setState({
         totalActions: this.props.totalActions,
       });
@@ -183,17 +225,27 @@ export class DialoguePage extends React.PureComponent {
     this.setState({
       currentSayingsPage: pageNumber,
     });
-    this.props.onLoadSayings(this.state.filter, pageNumber, this.state.sayingsPageSize);
+    this.props.onLoadSayings(
+      this.state.filter,
+      pageNumber,
+      this.state.sayingsPageSize,
+    );
   }
 
   moveSayingsPageBack() {
     const { currentSayingsPage } = this.state;
-    this.changeSayingsPage(currentSayingsPage > 1 ? currentSayingsPage - 1 : currentSayingsPage);
+    this.changeSayingsPage(
+      currentSayingsPage > 1 ? currentSayingsPage - 1 : currentSayingsPage,
+    );
   }
 
   moveSayingsPageForward() {
     const { currentSayingsPage, numberOfSayingsPages } = this.state;
-    this.changeSayingsPage(currentSayingsPage < numberOfSayingsPages ? currentSayingsPage + 1 : currentSayingsPage);
+    this.changeSayingsPage(
+      currentSayingsPage < numberOfSayingsPages
+        ? currentSayingsPage + 1
+        : currentSayingsPage,
+    );
   }
 
   changeSayingsPageSize(sayingsPageSize) {
@@ -202,7 +254,9 @@ export class DialoguePage extends React.PureComponent {
       sayingsPageSize,
     });
     this.setState({
-      numberOfSayingsPages: Math.ceil(this.props.totalSayings / sayingsPageSize),
+      numberOfSayingsPages: Math.ceil(
+        this.props.totalSayings / sayingsPageSize,
+      ),
     });
     this.props.onChangeSayingsPageSize(this.props.agent.id, sayingsPageSize);
     this.props.onLoadSayings(this.state.filter, 1, sayingsPageSize);
@@ -234,64 +288,88 @@ export class DialoguePage extends React.PureComponent {
     this.setState({
       currentSayingsPage: 1,
     });
-    this.props.onAddSaying(this.state.filter, 1, this.state.sayingsPageSize, saying);
+    this.props.onAddSaying(
+      this.state.filter,
+      1,
+      this.state.sayingsPageSize,
+      saying,
+    );
   }
 
   deleteSaying(sayingId, categoryId) {
-    this.props.onDeleteSaying(this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize, sayingId, categoryId);
-    if (this.props.totalSayings % 5 === 1 && this.state.currentSayingsPage > 1){
+    this.props.onDeleteSaying(
+      this.state.filter,
+      this.state.currentSayingsPage,
+      this.state.sayingsPageSize,
+      sayingId,
+      categoryId,
+    );
+    if (
+      this.props.totalSayings % 5 === 1 &&
+      this.state.currentSayingsPage > 1
+    ) {
       const currentSayingsPage = this.state.currentSayingsPage - 1;
       this.setState({
-        currentSayingsPage
+        currentSayingsPage,
       });
     }
   }
 
-  setNumberOfKeywordsPages(pageSize){
-    const numberOfKeywordsPages = Math.ceil(this.props.totalKeywords / pageSize);
+  setNumberOfKeywordsPages(pageSize) {
+    const numberOfKeywordsPages = Math.ceil(
+      this.props.totalKeywords / pageSize,
+    );
     this.setState({
       numberOfKeywordsPages,
     });
   }
 
-  setNumberOfActionsPages(pageSize){
+  setNumberOfActionsPages(pageSize) {
     const numberOfActionsPages = Math.ceil(this.props.totalActions / pageSize);
     this.setState({
       numberOfActionsPages,
     });
   }
 
-  changeKeywordsPage(pageNumber){
+  changeKeywordsPage(pageNumber) {
     this.setState({
       currentKeywordsPage: pageNumber,
     });
-    this.props.onLoadKeywords(this.state.filter, pageNumber, this.state.keywordsPageSize);
+    this.props.onLoadKeywords(
+      this.state.filter,
+      pageNumber,
+      this.state.keywordsPageSize,
+    );
   }
 
-  changeActionsPage(pageNumber){
+  changeActionsPage(pageNumber) {
     this.setState({
       currentActionsPage: pageNumber,
     });
-    this.props.onLoadActionsPage(this.state.filter, pageNumber, this.state.actionsPageSize);
+    this.props.onLoadActionsPage(
+      this.state.filter,
+      pageNumber,
+      this.state.actionsPageSize,
+    );
   }
 
-  moveKeywordsPageBack(){
+  moveKeywordsPageBack() {
     let newPage = this.state.currentKeywordsPage;
-    if (this.state.currentKeywordsPage > 1){
+    if (this.state.currentKeywordsPage > 1) {
       newPage = this.state.currentKeywordsPage - 1;
     }
     this.changeKeywordsPage(newPage);
   }
 
-  moveKeywordsPageForward(){
+  moveKeywordsPageForward() {
     let newPage = this.state.currentKeywordsPage;
-    if (this.state.currentKeywordsPage < this.state.numberOfKeywordsPages){
+    if (this.state.currentKeywordsPage < this.state.numberOfKeywordsPages) {
       newPage = this.state.currentKeywordsPage + 1;
     }
     this.changeKeywordsPage(newPage);
   }
 
-  changeKeywordsPageSize(keywordsPageSize){
+  changeKeywordsPageSize(keywordsPageSize) {
     this.setState({
       currentKeywordsPage: 1,
       keywordsPageSize,
@@ -301,30 +379,34 @@ export class DialoguePage extends React.PureComponent {
     this.props.onLoadKeywords(this.state.filter, 1, keywordsPageSize);
   }
 
-  onSearchKeyword(filter){
+  onSearchKeyword(filter) {
     this.setState({
       filter,
     });
-    this.props.onLoadKeywords(filter, this.state.currentKeywordsPage, this.state.keywordsPageSize);
+    this.props.onLoadKeywords(
+      filter,
+      this.state.currentKeywordsPage,
+      this.state.keywordsPageSize,
+    );
   }
 
-  moveActionsPageBack(){
+  moveActionsPageBack() {
     let newPage = this.state.currentActionsPage;
-    if (this.state.currentActionsPage > 1){
+    if (this.state.currentActionsPage > 1) {
       newPage = this.state.currentActionsPage - 1;
     }
     this.changeActionsPage(newPage);
   }
 
-  moveActionsPageForward(){
+  moveActionsPageForward() {
     let newPage = this.state.currentActionsPage;
-    if (this.state.currentActionsPage < this.state.numberOfActionsPages){
+    if (this.state.currentActionsPage < this.state.numberOfActionsPages) {
       newPage = this.state.currentActionsPage + 1;
     }
     this.changeActionsPage(newPage);
   }
 
-  changeActionsPageSize(actionsPageSize){
+  changeActionsPageSize(actionsPageSize) {
     this.setState({
       currentActionsPage: 1,
       actionsPageSize,
@@ -334,40 +416,59 @@ export class DialoguePage extends React.PureComponent {
     this.props.onLoadActionsPage(this.state.filter, 1, actionsPageSize);
   }
 
-  onSearchAction(filter){
+  onSearchAction(filter) {
     this.setState({
       filter,
     });
-    this.props.onLoadActionsPage(filter, this.state.currentActionsPage, this.state.actionsPageSize);
+    this.props.onLoadActionsPage(
+      filter,
+      this.state.currentActionsPage,
+      this.state.actionsPageSize,
+    );
   }
 
   handleTabChange = (event, value) => {
     this.setState({
       selectedTab: value,
     });
-    if (value === 'sayings'){
-      this.props.onLoadSayings(this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize);
+    if (value === 'sayings') {
+      this.props.onLoadSayings(
+        this.state.filter,
+        this.state.currentSayingsPage,
+        this.state.sayingsPageSize,
+      );
     }
-    if (value === 'keywords'){
-      this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
+    if (value === 'keywords') {
+      this.props.onLoadKeywords(
+        '',
+        this.state.currentKeywordsPage,
+        this.state.keywordsPageSize,
+      );
     }
-    if (value === 'actions'){
-      this.props.onLoadActionsPage('', this.state.currentActionsPage, this.state.actionsPageSize);
+    if (value === 'actions') {
+      this.props.onLoadActionsPage(
+        '',
+        this.state.currentActionsPage,
+        this.state.actionsPageSize,
+      );
     }
   };
 
   render() {
-    return (
-      this.props.agent.id && this.props.agentKeywords ?
+    return this.props.agent.id && this.props.agentKeywords ? (
       <Grid container>
         <MainTab
           locale={this.props.locale}
           touched={this.props.touched}
           loading={this.props.loading}
           success={this.props.success}
-          onSaveAndExit={() => { this.submit(true) }}
+          onSaveAndExit={() => {
+            this.submit(true);
+          }}
           agentName={this.props.agent.agentName}
-          agentGravatar={this.props.agent.gravatar ? this.props.agent.gravatar : 1}
+          agentGravatar={
+            this.props.agent.gravatar ? this.props.agent.gravatar : 1
+          }
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
@@ -413,17 +514,47 @@ export class DialoguePage extends React.PureComponent {
               agentFilteredActions={this.props.agentFilteredActions}
               onAddSaying={this.addSaying}
               onDeleteSaying={this.deleteSaying}
-              onChangeSayingCategory={this.props.onChangeSayingCategory.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
-              onTagKeyword={this.props.onTagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
-              onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
-              onAddAction={this.props.onAddAction.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
-              onDeleteAction={this.props.onDeleteAction.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+              onChangeSayingCategory={this.props.onChangeSayingCategory.bind(
+                null,
+                this.state.filter,
+                this.state.currentSayingsPage,
+                this.state.sayingsPageSize,
+              )}
+              onTagKeyword={this.props.onTagKeyword.bind(
+                null,
+                this.state.filter,
+                this.state.currentSayingsPage,
+                this.state.sayingsPageSize,
+              )}
+              onUntagKeyword={this.props.onUntagKeyword.bind(
+                null,
+                this.state.filter,
+                this.state.currentSayingsPage,
+                this.state.sayingsPageSize,
+              )}
+              onAddAction={this.props.onAddAction.bind(
+                null,
+                this.state.filter,
+                this.state.currentSayingsPage,
+                this.state.sayingsPageSize,
+              )}
+              onDeleteAction={this.props.onDeleteAction.bind(
+                null,
+                this.state.filter,
+                this.state.currentSayingsPage,
+                this.state.sayingsPageSize,
+              )}
               onAddNewSayingAction={this.props.onAddNewSayingAction}
               onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
               onSearchCategory={this.onSearchCategory}
               onSearchActions={this.onSearchActions}
-              onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+              onGoToUrl={this.props.onGoToUrl.bind(
+                null,
+                this.state.filter,
+                this.state.currentSayingsPage,
+                this.state.sayingsPageSize,
+              )}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentSayingsPage={parseInt(this.state.currentSayingsPage)}
               sayingsPageSize={this.state.sayingsPageSize}
@@ -443,8 +574,11 @@ export class DialoguePage extends React.PureComponent {
           reviewURL={`/agent/${this.props.agent.id}/review`}
           reviewForm={Link}
         />
-      </Grid> : 
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -503,16 +637,16 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onLoadAgent: (id) => {
+    onLoadAgent: id => {
       dispatch(loadAgent(id));
     },
     onLoadSayings: (filter, page, pageSize) => {
       dispatch(loadSayings(filter, page, pageSize));
     },
-    onLoadFilteredCategories: (filter) => {
+    onLoadFilteredCategories: filter => {
       dispatch(loadFilteredCategories(filter));
     },
-    onLoadFilteredActions: (filter) => {
+    onLoadFilteredActions: filter => {
       dispatch(loadFilteredActions(filter));
     },
     onLoadCategories: () => {
@@ -524,11 +658,11 @@ function mapDispatchToProps(dispatch) {
     onLoadActionsPage: (filter, page, pageSize) => {
       dispatch(loadActionsPage(filter, page, pageSize));
     },
-    onCreateKeyword: (url) => {
-      dispatch(push(url))
+    onCreateKeyword: url => {
+      dispatch(push(url));
     },
-    onCreateAction: (url) => {
-      dispatch(push(url))
+    onCreateAction: url => {
+      dispatch(push(url));
     },
     onChangeKeywordsPageSize: (agentId, pageSize) => {
       dispatch(changeKeywordsPageSize(agentId, pageSize));
@@ -545,8 +679,30 @@ function mapDispatchToProps(dispatch) {
     onDeleteSaying: (filter, page, pageSize, sayingId, categoryId) => {
       dispatch(deleteSaying(filter, page, pageSize, sayingId, categoryId));
     },
-    onTagKeyword: (filter, page, pageSize, saying, value, start, end, keywordId, keywordName) => {
-      dispatch(tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName));
+    onTagKeyword: (
+      filter,
+      page,
+      pageSize,
+      saying,
+      value,
+      start,
+      end,
+      keywordId,
+      keywordName,
+    ) => {
+      dispatch(
+        tagKeyword(
+          filter,
+          page,
+          pageSize,
+          saying,
+          value,
+          start,
+          end,
+          keywordId,
+          keywordName,
+        ),
+      );
     },
     onUntagKeyword: (filter, page, pageSize, saying, start, end) => {
       dispatch(untagKeyword(filter, page, pageSize, saying, start, end));
@@ -557,22 +713,26 @@ function mapDispatchToProps(dispatch) {
     onDeleteAction: (filter, page, pageSize, saying, actionName) => {
       dispatch(deleteActionSaying(filter, page, pageSize, saying, actionName));
     },
-    onAddNewSayingAction: (actionName) => {
+    onAddNewSayingAction: actionName => {
       dispatch(addActionNewSaying(actionName));
     },
-    onDeleteNewSayingAction: (actionName) => {
+    onDeleteNewSayingAction: actionName => {
       dispatch(deleteActionNewSaying(actionName));
     },
     onGoToUrl: (filter, page, pageSize, tab, url) => {
-      dispatch(push(`${url}?filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`));
+      dispatch(
+        push(
+          `${url}?filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`,
+        ),
+      );
     },
-    onSendSayingToAction: (saying) => {
+    onSendSayingToAction: saying => {
       dispatch(sendSayingToAction(saying));
     },
     onClearSayingToAction: () => {
       dispatch(clearSayingToAction());
     },
-    onSelectCategory: (categoryName) => {
+    onSelectCategory: categoryName => {
       dispatch(selectCategory(categoryName));
     },
     onTrain: () => {
@@ -582,8 +742,10 @@ function mapDispatchToProps(dispatch) {
       dispatch(changeSayingsPageSize(agentId, pageSize));
     },
     onChangeSayingCategory: (filter, page, pageSize, saying, categoryId) => {
-      dispatch(changeSayingCategory(filter, page, pageSize, saying, categoryId));
-    }
+      dispatch(
+        changeSayingCategory(filter, page, pageSize, saying, categoryId),
+      );
+    },
   };
 }
 

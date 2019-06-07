@@ -8,7 +8,8 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   rasaSettingDescription: {
     id: 'app.components.RasaSettings.rasaSettingDescription',
-    defaultMessage: 'You can configure the address of your rasa instance and the desired pipelines you would like for your models. This values are overwritable at agent level.',
+    defaultMessage:
+      'You can configure the address of your rasa instance and the desired pipelines you would like for your models. This values are overwritable at agent level.',
   },
   rasaURL: {
     id: 'app.components.RasaSettings.rasaURL',
@@ -40,11 +41,13 @@ export default defineMessages({
   },
   pipelineError: {
     id: 'app.components.RasaSettings.pipelineError',
-    defaultMessage: 'This value is not valid for a rasa pipeline. Please specify an array of objects, you can select a default pipeline in the top right.',
+    defaultMessage:
+      'This value is not valid for a rasa pipeline. Please specify an array of objects, you can select a default pipeline in the top right.',
   },
   spacyPretrainedEntitiesError: {
     id: 'app.components.RasaSettings.spacyPretrainedEntitiesError',
-    defaultMessage: 'Please verify this value. It should be an array of strings. Example: [\'one\', \'two\', \'three\'].',
+    defaultMessage:
+      "Please verify this value. It should be an array of strings. Example: ['one', 'two', 'three'].",
   },
   keywords: {
     id: 'app.components.RasaSettings.keywords',

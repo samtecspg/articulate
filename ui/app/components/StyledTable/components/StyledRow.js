@@ -9,14 +9,8 @@ const styles = {
 };
 
 function StyledRow(props) {
-  const {
-    classes,
-    children,
-    ...rest
-  } = props;
-  return <TableRow {...rest}>
-    {children}
-  </TableRow>;
+  const { classes, children, ...rest } = props;
+  return <TableRow {...rest}>{children}</TableRow>;
 }
 
 StyledRow.propTypes = {

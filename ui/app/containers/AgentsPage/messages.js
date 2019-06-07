@@ -42,36 +42,39 @@ export default defineMessages({
     id: 'app.containers.AgentsPage.components.MainContentHeader.help',
     defaultMessage: 'Help?',
   },
-  playHelpAlt : {
+  playHelpAlt: {
     id: 'app.containers.AgentsPage.components.MainContentHeader.playHelpAlt',
     defaultMessage: 'Play video off how to add/edit agents and/or connections',
   },
-  export : {
+  export: {
     id: 'app.containers.AgentsPage.components.AgentsCards.export',
     defaultMessage: 'Export',
   },
-  download : {
+  download: {
     id: 'app.containers.AgentsPage.components.AgentsCards.download',
     defaultMessage: 'Download',
   },
-  import : {
+  import: {
     id: 'app.containers.AgentsPage.components.AgentsCards.import',
     defaultMessage: 'Import',
   },
   getStarted: {
     id: 'app.containers.AgentsPage.components.GetStarted.getStarted',
-    defaultMessage: 'Get Started'
+    defaultMessage: 'Get Started',
   },
   getStartedDescription1: {
-    id: 'app.containers.AgentsPage.components.GetStarted.getStartedDescription1',
-    defaultMessage: "Thanks for giving Articulate a try. If you're just getting started we encouraged you to check our docs. Also be on the lookout for the"
+    id:
+      'app.containers.AgentsPage.components.GetStarted.getStartedDescription1',
+    defaultMessage:
+      "Thanks for giving Articulate a try. If you're just getting started we encouraged you to check our docs. Also be on the lookout for the",
   },
   getStartedDescription2: {
-    id: 'app.containers.AgentsPage.components.GetStarted.getStartedDescription2',
-    defaultMessage: "button for information videos about the different pages."
+    id:
+      'app.containers.AgentsPage.components.GetStarted.getStartedDescription2',
+    defaultMessage: 'button for information videos about the different pages.',
   },
   clickHereFor: {
     id: 'app.containers.AgentsPage.components.GetStarted.clickHereFor',
-    defaultMessage: 'Click here for...'
-  }
+    defaultMessage: 'Click here for...',
+  },
 });

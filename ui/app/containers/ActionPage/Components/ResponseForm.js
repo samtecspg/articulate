@@ -1,38 +1,48 @@
-import React from "react";
-import { FormattedMessage, injectIntl, intlShape } from "react-intl";
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
-import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, TextField, Table, TableBody, TableRow, TableCell } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
+import {
+  Grid,
+  Typography,
+  Button,
+  Modal,
+  TextField,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
-import SingleHighlightedSaying from './SingleHighlightedSaying';
 import ResponseSettings from 'components/ResponseSettings';
+import SingleHighlightedSaying from './SingleHighlightedSaying';
 import ResponseRow from './ResponseRow';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import playHelpIcon from "../../../images/play-help-icon.svg";
-import singleQuotesIcon from "../../../images/single-quotes-icon.svg";
-import DeleteFooter from "../../../components/DeleteFooter";
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
+import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
-    backgroundColor: "#f6f7f8",
-    border: "1px solid #c5cbd8",
-    borderRadius: "5px",
-    marginBottom: "60px",
+    backgroundColor: '#f6f7f8',
+    border: '1px solid #c5cbd8',
+    borderRadius: '5px',
+    marginBottom: '60px',
   },
   titleContainer: {
-    padding: "25px",
+    padding: '25px',
   },
   titleTextHelpContainer: {
-    display: "inline",
-    position: "relative",
-    bottom: "6px",
+    display: 'inline',
+    position: 'relative',
+    bottom: '6px',
   },
   title: {
-    display: "inline",
-    paddingRight: "25px",
+    display: 'inline',
+    paddingRight: '25px',
   },
   formDescriptionContainer: {
     margin: '15px 0px',
@@ -42,30 +52,30 @@ const styles = {
     fontWeight: 300,
   },
   helpButton: {
-    display: "inline",
-    width: "50px",
-    height: "20px",
+    display: 'inline',
+    width: '50px',
+    height: '20px',
   },
   playIcon: {
-    height: "10px",
+    height: '10px',
   },
   helpText: {
-    fontSize: "9px",
+    fontSize: '9px',
     fontWeight: 300,
-    position: "relative",
-    bottom: "2px",
-    paddingLeft: "2px",
+    position: 'relative',
+    bottom: '2px',
+    paddingLeft: '2px',
   },
   modalContent: {
-    top: "50%",
-    left: "50%",
+    top: '50%',
+    left: '50%',
     transform: `translate(-50%, -50%)`,
-    position: "absolute",
+    position: 'absolute',
     width: '80%',
     height: '80%',
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -84,7 +94,7 @@ const styles = {
   },
   icon: {
     '&:hover': {
-      filter: 'invert(0)'
+      filter: 'invert(0)',
     },
     filter: 'invert(1)',
     display: 'inline',
@@ -92,7 +102,7 @@ const styles = {
     height: '15px',
     paddingLeft: '5px',
     position: 'relative',
-    top: '3px'
+    top: '3px',
   },
   postFormatLabel: {
     color: '#a2a7b1',
@@ -100,13 +110,12 @@ const styles = {
   },
   postFormatContainer: {
     marginTop: '20px',
-  }
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class ResponseForm extends React.Component {
-
-  componentWillMount(){
+  componentWillMount() {
     this.props.onUpdateNewResponse('');
   }
 
@@ -155,8 +164,8 @@ class ResponseForm extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
-                  width='100%'
-                  height='100%'
+                  width="100%"
+                  height="100%"
                   src="https://www.youtube.com/embed/o807YDeK6Vg"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
@@ -165,41 +174,52 @@ class ResponseForm extends React.Component {
               </Grid>
             </Modal>
           </Grid>
-          {
-            this.props.saying.userSays ?
-              <Grid className={classes.formDescriptionContainer} container>
-                <Typography className={classes.formDescription}>
-                  <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
-                  <SingleHighlightedSaying
-                    agentKeywords={this.props.agentKeywords}
-                    keywords={this.props.saying.keywords}
-                    text={this.props.saying.userSays}
-                    keywordIndex={0}
-                    lastStart={0}
-                  />
-                </Typography>
-              </Grid> : null}
+          {this.props.saying.userSays ? (
+            <Grid className={classes.formDescriptionContainer} container>
+              <Typography className={classes.formDescription}>
+                <img
+                  className={classes.singleQuotesIcon}
+                  src={singleQuotesIcon}
+                />
+                <SingleHighlightedSaying
+                  agentKeywords={this.props.agentKeywords}
+                  keywords={this.props.saying.keywords}
+                  text={this.props.saying.userSays}
+                  keywordIndex={0}
+                  lastStart={0}
+                />
+              </Typography>
+            </Grid>
+          ) : null}
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
+            <Grid
+              className={classes.formSubContainer}
+              id="formContainer"
+              container
+              item
+              xs={12}
+            >
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
-                    id='newResponse'
+                    id="newResponse"
                     value={this.props.newResponse}
                     label={intl.formatMessage(messages.responseTextField)}
-                    placeholder={intl.formatMessage(messages.responseTextFieldPlaceholder)}
-                    onKeyPress={(ev) => {
+                    placeholder={intl.formatMessage(
+                      messages.responseTextFieldPlaceholder,
+                    )}
+                    onKeyPress={ev => {
                       if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
                         ev.preventDefault();
                         this.props.onAddResponse(ev.target.value);
                       }
                     }}
-                    onChange={(evt) => {
+                    onChange={evt => {
                       this.props.onUpdateNewResponse(evt.target.value);
                     }}
-                    margin='normal'
+                    margin="normal"
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
@@ -207,37 +227,47 @@ class ResponseForm extends React.Component {
                     helperText={intl.formatMessage(messages.responseHelperText)}
                     error={this.props.errorState.responses}
                   />
-                  {action.responses.length > 0 ?
+                  {action.responses.length > 0 ? (
                     <Table className={classes.table}>
                       <TableBody>
                         {action.responses.map((response, responseIndex) => (
                           <TableRow key={`${response}_${responseIndex}`}>
                             <TableCell>
-                              <ResponseRow 
+                              <ResponseRow
                                 agentId={this.props.agentId}
                                 response={response}
                                 responseIndex={responseIndex}
                                 action={action}
                                 agentActions={this.props.agentActions}
-                                onChainActionToResponse={this.props.onChainActionToResponse}
-                                onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
-                                onEditActionResponse={this.props.onEditActionResponse}
+                                onChainActionToResponse={
+                                  this.props.onChainActionToResponse
+                                }
+                                onUnchainActionFromResponse={
+                                  this.props.onUnchainActionFromResponse
+                                }
+                                onEditActionResponse={
+                                  this.props.onEditActionResponse
+                                }
                                 onCopyResponse={this.props.onCopyResponse}
                                 onDeleteResponse={this.props.onDeleteResponse}
                                 onSearchActions={this.props.onSearchActions}
-                                agentFilteredActions={this.props.agentFilteredActions}
+                                agentFilteredActions={
+                                  this.props.agentFilteredActions
+                                }
                                 onGoToUrl={this.props.onGoToUrl}
                               />
                             </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
-                    </Table> :
-                    null
-                  }
+                    </Table>
+                  ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography className={classes.postFormatLabel} variant='caption'>
+                  <Typography
+                    className={classes.postFormatLabel}
+                    variant="caption"
+                  >
                     <FormattedMessage {...messages.postFormatTitle} />
                   </Typography>
                   <ResponseSettings
@@ -245,7 +275,9 @@ class ResponseForm extends React.Component {
                     usePostFormat={action.usePostFormat}
                     onChangeUsePostFormatData={this.props.onChangeActionData}
                     onChangePostFormatData={this.props.onChangePostFormatData}
-                    responseSettingDescription={messages.responseFormDescription}
+                    responseSettingDescription={
+                      messages.responseFormDescription
+                    }
                     errorState={this.props.errorState}
                   />
                 </Grid>
@@ -253,13 +285,12 @@ class ResponseForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newAction ? 
-          null : 
+        {this.props.newAction ? null : (
           <DeleteFooter
             onDelete={this.props.onDelete}
             type={intl.formatMessage(messages.instanceName)}
           />
-        }
+        )}
       </Grid>
     );
   }
@@ -287,7 +318,7 @@ ResponseForm.propTypes = {
   agentFilteredActions: PropTypes.array,
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
-  agentId: PropTypes.string
+  agentId: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

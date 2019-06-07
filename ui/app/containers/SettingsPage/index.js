@@ -27,7 +27,6 @@ import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
 export class SettingsPage extends React.PureComponent {
-
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
@@ -75,8 +74,11 @@ export class SettingsPage extends React.PureComponent {
       uiLanguage: false,
       defaultAgentFallbackResponses: false,
     };
-    
-    if (!this.props.settings.defaultUISessionId || this.props.settings.defaultUISessionId === '') {
+
+    if (
+      !this.props.settings.defaultUISessionId ||
+      this.props.settings.defaultUISessionId === ''
+    ) {
       errors = true;
       newErrorState.defaultUISessionId = true;
     } else {
@@ -90,44 +92,66 @@ export class SettingsPage extends React.PureComponent {
       newErrorState.rasaURL = false;
     }
 
-    if (!this.props.settings.ducklingURL || this.props.settings.ducklingURL === '') {
+    if (
+      !this.props.settings.ducklingURL ||
+      this.props.settings.ducklingURL === ''
+    ) {
       errors = true;
       newErrorState.ducklingURL = true;
     } else {
       newErrorState.ducklingURL = false;
     }
 
-    if (!this.props.settings.defaultAgentFallbackResponses || this.props.settings.defaultAgentFallbackResponses.length === 0) {
+    if (
+      !this.props.settings.defaultAgentFallbackResponses ||
+      this.props.settings.defaultAgentFallbackResponses.length === 0
+    ) {
       errors = true;
       newErrorState.defaultAgentFallbackResponses = true;
     } else {
       newErrorState.defaultAgentFallbackResponses = false;
     }
 
-    if (!Array.isArray(this.props.settings.agentLanguages) ||
+    if (
+      !Array.isArray(this.props.settings.agentLanguages) ||
       (Array.isArray(this.props.settings.agentLanguages) &&
-        this.props.settings.agentLanguages.filter((agentLanguage) => agentLanguage.value === this.props.settings.defaultAgentLanguage).length === 0) ||
-      !this.props.settings.defaultAgentLanguage || this.props.settings.defaultAgentLanguage === '') {
+        this.props.settings.agentLanguages.filter(
+          agentLanguage =>
+            agentLanguage.value === this.props.settings.defaultAgentLanguage,
+        ).length === 0) ||
+      !this.props.settings.defaultAgentLanguage ||
+      this.props.settings.defaultAgentLanguage === ''
+    ) {
       errors = true;
       newErrorState.defaultAgentLanguage = true;
     } else {
       newErrorState.defaultAgentLanguage = false;
     }
 
-    if (!Array.isArray(this.props.settings.uiLanguages) ||
+    if (
+      !Array.isArray(this.props.settings.uiLanguages) ||
       (Array.isArray(this.props.settings.uiLanguages) &&
-        this.props.settings.uiLanguages.filter((uiLanguage) => uiLanguage.value === this.props.settings.uiLanguage).length === 0) ||
-      !this.props.settings.uiLanguage || this.props.settings.uiLanguage === '') {
+        this.props.settings.uiLanguages.filter(
+          uiLanguage => uiLanguage.value === this.props.settings.uiLanguage,
+        ).length === 0) ||
+      !this.props.settings.uiLanguage ||
+      this.props.settings.uiLanguage === ''
+    ) {
       errors = true;
       newErrorState.uiLanguage = true;
     } else {
       newErrorState.uiLanguage = false;
     }
 
-    if (!Array.isArray(this.props.settings.timezones) ||
+    if (
+      !Array.isArray(this.props.settings.timezones) ||
       (Array.isArray(this.props.settings.timezones) &&
-        this.props.settings.timezones.indexOf(this.props.settings.defaultTimezone) === -1) ||
-      !this.props.settings.defaultTimezone || this.props.settings.defaultTimezone === '') {
+        this.props.settings.timezones.indexOf(
+          this.props.settings.defaultTimezone,
+        ) === -1) ||
+      !this.props.settings.defaultTimezone ||
+      this.props.settings.defaultTimezone === ''
+    ) {
       errors = true;
       newErrorState.defaultTimezone = true;
     } else {
@@ -217,7 +241,7 @@ export class SettingsPage extends React.PureComponent {
     if (!errors) {
       this.setState({
         formError: false,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
       this.props.onSaveChanges();
     } else {
@@ -229,8 +253,7 @@ export class SettingsPage extends React.PureComponent {
   }
 
   render() {
-    return (
-      this.props.settings.defaultUISessionId ?
+    return this.props.settings.defaultUISessionId ? (
       <Grid container>
         <ContentHeader
           title={messages.title}
@@ -249,8 +272,11 @@ export class SettingsPage extends React.PureComponent {
           onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
           errorState={this.state.errorState}
         />
-      </Grid> : 
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -278,10 +304,10 @@ function mapDispatchToProps(dispatch) {
     onSaveChanges: () => {
       dispatch(updateSettings());
     },
-    onAddFallbackResponse: (newFallback) => {
+    onAddFallbackResponse: newFallback => {
       dispatch(addFallbackResponse(newFallback));
     },
-    onDeleteFallbackResponse: (fallbackIndex) => {
+    onDeleteFallbackResponse: fallbackIndex => {
       dispatch(deleteFallbackResponse(fallbackIndex));
     },
   };

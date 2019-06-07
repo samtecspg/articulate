@@ -1,16 +1,9 @@
 import Immutable from 'seamless-immutable';
 
 import { push } from 'react-router-redux';
-import {
-  call,
-  put,
-  select,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 
-import {
-  ROUTE_CONNECTION
-} from '../../../common/constants';
+import { ROUTE_CONNECTION } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
   createConnectionError,
@@ -33,9 +26,7 @@ import {
   LOAD_ACTIONS,
 } from '../App/constants';
 
-import {
-  makeSelectConnection,
-} from '../App/selectors';
+import { makeSelectConnection } from '../App/selectors';
 
 import { getAgents, getChannels, getConnections } from '../AgentsPage/saga';
 import { getActions } from '../ActionPage/saga';
@@ -45,8 +36,7 @@ export function* getConnection(payload) {
   try {
     const response = yield call(api.get, toAPIPath([ROUTE_CONNECTION, id]));
     yield put(loadConnectionSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(loadConnectionError(err));
   }
 }
@@ -55,10 +45,13 @@ export function* postConnection(payload) {
   const connection = yield select(makeSelectConnection());
   const { api } = payload;
   try {
-    const response = yield call(api.post, toAPIPath([ROUTE_CONNECTION]), connection);
+    const response = yield call(
+      api.post,
+      toAPIPath([ROUTE_CONNECTION]),
+      connection,
+    );
     yield put(createConnectionSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(createConnectionError(err));
   }
 }
@@ -71,10 +64,13 @@ export function* putConnection(payload) {
   delete mutableConnection.id;
   delete mutableConnection.channel;
   try {
-    const response = yield call(api.put, toAPIPath([ROUTE_CONNECTION, connectionId]), mutableConnection);
+    const response = yield call(
+      api.put,
+      toAPIPath([ROUTE_CONNECTION, connectionId]),
+      mutableConnection,
+    );
     yield put(updateConnectionSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(updateConnectionError(err));
   }
 }
@@ -89,8 +85,7 @@ export function* deleteConnection(payload) {
       page: 1,
     });
     yield put(push(`/`));
-  }
-  catch (err) {
+  } catch (err) {
     const error = { ...err };
     yield put(deleteConnectionError(error.response.data.message));
   }
@@ -105,4 +100,4 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_AGENTS, getAgents);
   yield takeLatest(LOAD_CHANNELS, getChannels);
   yield takeLatest(LOAD_ACTIONS, getActions);
-};
+}

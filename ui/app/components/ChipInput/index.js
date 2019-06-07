@@ -15,9 +15,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import trashIcon from '../../images/trash-icon.svg';
 
-const styles = (theme) => {
+const styles = theme => {
   const light = theme.palette.type === 'light';
-  const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
+  const bottomLineColor = light
+    ? 'rgba(0, 0, 0, 0.42)'
+    : 'rgba(255, 255, 255, 0.7)';
 
   return {
     root: {},
@@ -123,11 +125,17 @@ const styles = (theme) => {
   };
 };
 
-export const defaultChipRenderer = ({ value, text, isFocused, isDisabled, handleClick, handleDelete, className }, key) => (
+export const defaultChipRenderer = (
+  { value, text, isFocused, isDisabled, handleClick, handleDelete, className },
+  key,
+) => (
   <Chip
     key={key}
     className={className}
-    style={{ pointerEvents: isDisabled ? 'none' : undefined, backgroundColor: isFocused ? blue[300] : undefined }}
+    style={{
+      pointerEvents: isDisabled ? 'none' : undefined,
+      backgroundColor: isFocused ? blue[300] : undefined,
+    }}
     onClick={handleClick}
     onDelete={handleDelete}
     label={text}
@@ -163,7 +171,11 @@ class ChipInput extends React.Component {
 
     // Lets assume that if the chips have changed, the inputValue should be empty
     // otherwise, we would need to make inputValue a controlled value. which is quite messy
-    if (nextProps.value && this.props.clearInputValueOnChange && nextProps.value.length !== this.props.value.length) {
+    if (
+      nextProps.value &&
+      this.props.clearInputValueOnChange &&
+      nextProps.value.length !== this.props.value.length
+    ) {
       this.setState({ inputValue: '' });
     }
   }
@@ -190,7 +202,7 @@ class ChipInput extends React.Component {
     }
   };
 
-  handleInputBlur = (event) => {
+  handleInputBlur = event => {
     if (this.props.onBlur) {
       this.props.onBlur(event);
     }
@@ -203,7 +215,7 @@ class ChipInput extends React.Component {
       // another event has not added a chip within 200ms .
       // e.g. onSelection Callback in Autocomplete case
       const numChipsBefore = (this.props.value || this.state.chips).length;
-      const value = event.target.value;
+      const { value } = event.target;
       this.inputBlurTimeout = setTimeout(() => {
         const numChipsAfter = (this.props.value || this.state.chips).length;
         if (numChipsBefore === numChipsAfter) {
@@ -217,14 +229,14 @@ class ChipInput extends React.Component {
     }
   };
 
-  handleInputFocus = (event) => {
+  handleInputFocus = event => {
     this.setState({ isFocused: true });
     if (this.props.onFocus) {
       this.props.onFocus(event);
     }
   };
 
-  handleKeyDown = (event) => {
+  handleKeyDown = event => {
     const { focusedChip } = this.state;
     this.setState({ keyPressed: false, preventChipCreation: false });
     if (this.props.onKeyDown) {
@@ -278,8 +290,12 @@ class ChipInput extends React.Component {
     }
   };
 
-  handleKeyUp = (event) => {
-    if (!this.state.preventChipCreation && this.props.newChipKeyCodes.indexOf(event.keyCode) > 0 && this.state.keyPressed) {
+  handleKeyUp = event => {
+    if (
+      !this.state.preventChipCreation &&
+      this.props.newChipKeyCodes.indexOf(event.keyCode) > 0 &&
+      this.state.keyPressed
+    ) {
       this.clearInput();
     } else {
       this.setState({ inputValue: event.target.value });
@@ -289,14 +305,14 @@ class ChipInput extends React.Component {
     }
   };
 
-  handleKeyPress = (event) => {
+  handleKeyPress = event => {
     this.setState({ keyPressed: true });
     if (this.props.onKeyPress) {
       this.props.onKeyPress(event);
     }
   };
 
-  handleUpdateInput = (e) => {
+  handleUpdateInput = e => {
     this.setState({ inputValue: e.target.value });
 
     if (this.props.onUpdateInput) {
@@ -304,7 +320,7 @@ class ChipInput extends React.Component {
     }
   };
 
-  handleOnDeleteAll = (e) => {
+  handleOnDeleteAll = e => {
     if (this.props.onDeleteAll) {
       this.props.onDeleteAll(e);
     }
@@ -331,7 +347,14 @@ class ChipInput extends React.Component {
         };
       }
 
-      if (this.props.allowDuplicates || !chips.some((c) => c[this.props.dataSourceConfig.value] === chip[this.props.dataSourceConfig.value])) {
+      if (
+        this.props.allowDuplicates ||
+        !chips.some(
+          c =>
+            c[this.props.dataSourceConfig.value] ===
+            chip[this.props.dataSourceConfig.value],
+        )
+      ) {
         if (this.props.value && this.props.onAdd) {
           this.props.onAdd(chip);
         } else {
@@ -367,7 +390,7 @@ class ChipInput extends React.Component {
       const chips = this.state.chips.slice();
       const changed = chips.splice(i, 1); // remove the chip at index i
       if (changed) {
-        let focusedChip = this.state.focusedChip;
+        let { focusedChip } = this.state;
         if (this.state.focusedChip === i) {
           focusedChip = null;
         } else if (this.state.focusedChip > i) {
@@ -393,7 +416,7 @@ class ChipInput extends React.Component {
    * Sets a reference to the Material-UI Input component.
    * @param {object} input - The Input reference
    */
-  setInputRef = (input) => {
+  setInputRef = input => {
     this.input = input;
   };
 
@@ -401,7 +424,7 @@ class ChipInput extends React.Component {
    * Set the reference to the actual input, that is the input of the Input.
    * @param {object} ref - The reference
    */
-  setActualInputRef = (ref) => {
+  setActualInputRef = ref => {
     this.actualInput = ref;
     if (this.props.inputRef) {
       this.props.inputRef(ref);
@@ -459,10 +482,13 @@ class ChipInput extends React.Component {
 
     // const actualFilter = openOnFocus ? (search, key) => (search === '' || filter(search, key)) : filter
 
-    const hasInput = (this.props.value || this.state.chips).length > 0 || this.state.inputValue.length > 0;
+    const hasInput =
+      (this.props.value || this.state.chips).length > 0 ||
+      this.state.inputValue.length > 0;
 
     // const showPlaceholder = placeholder && !hasInput
-    const shrinkFloatingLabel = label != null && (hasInput || this.state.isFocused);
+    const shrinkFloatingLabel =
+      label != null && (hasInput || this.state.isFocused);
 
     return (
       <FormControl
@@ -487,29 +513,30 @@ class ChipInput extends React.Component {
           </InputLabel>
         )}
         <div
-          className={cx(
-            classes.chipContainer,
-            {
-              [classes.inkbar]: !disableUnderline,
-              [classes.focused]: this.state.isFocused,
-              [classes.underline]: !disableUnderline,
-              [classes.disabled]: disabled,
-              [classes.labeled]: label != null,
-              [classes.error]: error,
-            })}
+          className={cx(classes.chipContainer, {
+            [classes.inkbar]: !disableUnderline,
+            [classes.focused]: this.state.isFocused,
+            [classes.underline]: !disableUnderline,
+            [classes.disabled]: disabled,
+            [classes.labeled]: label != null,
+            [classes.error]: error,
+          })}
         >
           {chips.map((tag, i) => {
             const value = dataSourceConfig ? tag[dataSourceConfig.value] : tag;
-            return chipRenderer({
-              value,
-              text: dataSourceConfig ? tag[dataSourceConfig.text] : tag,
-              chip: tag,
-              isDisabled: !!disabled,
-              isFocused: this.state.focusedChip === i,
-              handleClick: () => this.setState({ focusedChip: i }),
-              handleDelete: () => this.handleDeleteChip(value, i),
-              className: classes.chip,
-            }, i);
+            return chipRenderer(
+              {
+                value,
+                text: dataSourceConfig ? tag[dataSourceConfig.text] : tag,
+                chip: tag,
+                isDisabled: !!disabled,
+                isFocused: this.state.focusedChip === i,
+                handleClick: () => this.setState({ focusedChip: i }),
+                handleDelete: () => this.handleDeleteChip(value, i),
+                className: classes.chip,
+              },
+              i,
+            );
           })}
           <Input
             ref={this.setInputRef}
@@ -529,12 +556,20 @@ class ChipInput extends React.Component {
             placeholder={!hasInput ? placeholder : null}
             {...InputProps}
           />
-          <img onClick={this.handleOnDeleteAll} className={classes.deleteIcon} src={trashIcon} />
+          <img
+            onClick={this.handleOnDeleteAll}
+            className={classes.deleteIcon}
+            src={trashIcon}
+          />
         </div>
         {helperText && (
           <FormHelperText
             {...FormHelperTextProps}
-            className={FormHelperTextProps ? cx(FormHelperTextProps.className, classes.helperText) : classes.helperText}
+            className={
+              FormHelperTextProps
+                ? cx(FormHelperTextProps.className, classes.helperText)
+                : classes.helperText
+            }
           >
             {helperText}
           </FormHelperText>

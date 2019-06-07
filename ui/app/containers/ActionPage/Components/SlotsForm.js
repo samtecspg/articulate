@@ -1,40 +1,40 @@
-import React from "react";
-import { FormattedMessage, injectIntl, intlShape } from "react-intl";
-import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
-import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
+import { Grid, Typography, Button, Modal } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 import SingleHighlightedSaying from './SingleHighlightedSaying';
 import SortableSlotsTabs from './SortableSlotsTabs';
 import SlotForm from './SlotForm';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import playHelpIcon from "../../../images/play-help-icon.svg";
-import singleQuotesIcon from "../../../images/single-quotes-icon.svg";
-import DeleteFooter from "../../../components/DeleteFooter";
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
+import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
-    backgroundColor: "#f6f7f8",
-    border: "1px solid #c5cbd8",
-    borderRadius: "5px",
-    marginBottom: "60px",
+    backgroundColor: '#f6f7f8',
+    border: '1px solid #c5cbd8',
+    borderRadius: '5px',
+    marginBottom: '60px',
   },
   titleContainer: {
-    padding: "25px",
+    padding: '25px',
   },
   titleTextHelpContainer: {
-    display: "inline",
-    position: "relative",
-    bottom: "6px",
+    display: 'inline',
+    position: 'relative',
+    bottom: '6px',
   },
   title: {
-    display: "inline",
-    paddingRight: "25px",
+    display: 'inline',
+    paddingRight: '25px',
   },
   formDescriptionContainer: {
     margin: '15px 0px',
@@ -44,30 +44,30 @@ const styles = {
     fontWeight: 300,
   },
   helpButton: {
-    display: "inline",
-    width: "50px",
-    height: "20px",
+    display: 'inline',
+    width: '50px',
+    height: '20px',
   },
   playIcon: {
-    height: "10px",
+    height: '10px',
   },
   helpText: {
-    fontSize: "9px",
+    fontSize: '9px',
     fontWeight: 300,
-    position: "relative",
-    bottom: "2px",
-    paddingLeft: "2px",
+    position: 'relative',
+    bottom: '2px',
+    paddingLeft: '2px',
   },
   modalContent: {
-    top: "50%",
-    left: "50%",
+    top: '50%',
+    left: '50%',
     transform: `translate(-50%, -50%)`,
-    position: "absolute",
+    position: 'absolute',
     width: '80%',
     height: '80%',
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -95,14 +95,13 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class SlotsForm extends React.Component {
-
   state = {
     selectedTab: 0,
     actionNameError: false,
     openModal: false,
   };
 
-  handleChange = (value) => {
+  handleChange = value => {
     this.setState({
       selectedTab: value,
     });
@@ -146,8 +145,8 @@ class SlotsForm extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
-                  width='100%'
-                  height='100%'
+                  width="100%"
+                  height="100%"
                   src="https://www.youtube.com/embed/o807YDeK6Vg"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
@@ -156,21 +155,23 @@ class SlotsForm extends React.Component {
               </Grid>
             </Modal>
           </Grid>
-          {
-            this.props.saying.userSays ?
-              <Grid className={classes.formDescriptionContainer} container>
-                <Typography className={classes.formDescription}>
-                  <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
-                  <SingleHighlightedSaying
-                    agentKeywords={this.props.agentKeywords}
-                    keywords={this.props.saying.keywords}
-                    text={this.props.saying.userSays}
-                    keywordIndex={0}
-                    lastStart={0}
-                  />
-                </Typography>
-              </Grid> : null
-          }
+          {this.props.saying.userSays ? (
+            <Grid className={classes.formDescriptionContainer} container>
+              <Typography className={classes.formDescription}>
+                <img
+                  className={classes.singleQuotesIcon}
+                  src={singleQuotesIcon}
+                />
+                <SingleHighlightedSaying
+                  agentKeywords={this.props.agentKeywords}
+                  keywords={this.props.saying.keywords}
+                  text={this.props.saying.userSays}
+                  keywordIndex={0}
+                  lastStart={0}
+                />
+              </Typography>
+            </Grid>
+          ) : null}
         </Grid>
         <Grid item xs={12}>
           <SortableSlotsTabs
@@ -182,29 +183,31 @@ class SlotsForm extends React.Component {
             onDeleteSlot={this.props.onDeleteSlot}
             errorState={this.props.errorState}
           />
-          {action.slots.map((slot, index) => (
-            this.state.selectedTab === index ?
+          {action.slots.map((slot, index) =>
+            this.state.selectedTab === index ? (
               <SlotForm
                 slot={slot}
                 key={`slotForm_${index}`}
                 agentKeywords={this.props.agentKeywords}
                 onAddTextPrompt={this.props.onAddTextPrompt.bind(null, index)}
-                onDeleteTextPrompt={this.props.onDeleteTextPrompt.bind(null, index)}
+                onDeleteTextPrompt={this.props.onDeleteTextPrompt.bind(
+                  null,
+                  index,
+                )}
                 onChangeSlotData={this.props.onChangeSlotData.bind(null, index)}
                 onChangeSlotName={this.props.onChangeSlotName.bind(null, index)}
                 saying={this.props.saying}
                 errorState={this.props.errorState.slots[index]}
               />
-              : null
-          ))}
+            ) : null,
+          )}
         </Grid>
-        {this.props.newAction ? 
-          null : 
+        {this.props.newAction ? null : (
           <DeleteFooter
             onDelete={this.props.onDelete}
             type={intl.formatMessage(messages.instanceName)}
           />
-        }
+        )}
       </Grid>
     );
   }
@@ -224,7 +227,9 @@ SlotsForm.propTypes = {
   onChangeSlotName: PropTypes.func,
   errorState: PropTypes.object,
   onSortSlots: PropTypes.func,
-	onDeleteSlot: PropTypes.func,
+  onDeleteSlot: PropTypes.func,
 };
 
-export default DragDropContext(HTML5Backend)(injectIntl(withStyles(styles)(SlotsForm)));
+export default DragDropContext(HTML5Backend)(
+  injectIntl(withStyles(styles)(SlotsForm)),
+);

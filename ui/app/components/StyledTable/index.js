@@ -23,13 +23,13 @@ import TextCell from './components/TextCell';
 // import PropTypes from 'prop-types';
 const styles = {
   body: {
-    'border': '1px solid #a2a7b1',
+    border: '1px solid #a2a7b1',
   },
   tr: {
     '&:hover': {
-      backgroundColor: 'transparent'
-    }
-  }
+      backgroundColor: 'transparent',
+    },
+  },
 };
 
 function StyledTable(props) {
@@ -41,41 +41,44 @@ function StyledTable(props) {
     headers,
     onRequestSort,
     noBorder,
-    id
+    id,
   } = props;
-  return <Grid container item xs={12}>
-    <Grid container>
-      <Table id={id} style={{border: noBorder ? 'none' : '1px solid #a2a7b1'}}>
-        <TableHead>
-          {headers.length > 0 ?
-            <TableRow className={classes.tr}>
-              {
-                headers.map(({ id, width, label, sort }) => {
-                  return (
-                    <TableCell key={`tableCell_${id}`} style={{ width, color: '#A2A7B1' }}>
-                      {
-                        sort ?
-                          <TableSortLabel
-                            active={sortField === id}
-                            direction={sortDirection.toLowerCase()}
-                            onClick={() => onRequestSort(id)}
-                          >{label}</TableSortLabel>
-                          :
-                          <div>{label}</div>
-                      }
-
-                    </TableCell>
-                  );
-                })
-              }
-            </TableRow> : null}
-        </TableHead>
-        <TableBody>
-          {rows}
-        </TableBody>
-      </Table>
+  return (
+    <Grid container item xs={12}>
+      <Grid container>
+        <Table
+          id={id}
+          style={{ border: noBorder ? 'none' : '1px solid #a2a7b1' }}
+        >
+          <TableHead>
+            {headers.length > 0 ? (
+              <TableRow className={classes.tr}>
+                {headers.map(({ id, width, label, sort }) => (
+                  <TableCell
+                    key={`tableCell_${id}`}
+                    style={{ width, color: '#A2A7B1' }}
+                  >
+                    {sort ? (
+                      <TableSortLabel
+                        active={sortField === id}
+                        direction={sortDirection.toLowerCase()}
+                        onClick={() => onRequestSort(id)}
+                      >
+                        {label}
+                      </TableSortLabel>
+                    ) : (
+                      <div>{label}</div>
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ) : null}
+          </TableHead>
+          <TableBody>{rows}</TableBody>
+        </Table>
+      </Grid>
     </Grid>
-  </Grid>;
+  );
 }
 
 StyledTable.propTypes = {
@@ -86,12 +89,12 @@ StyledTable.propTypes = {
   rows: PropTypes.arrayOf(PropTypes.element),
   onRequestSort: PropTypes.func,
   noBorder: PropTypes.bool,
-  id: PropTypes.string
+  id: PropTypes.string,
 };
 StyledTable.defaultProps = {
   headers: [],
   onRequestSort: _.noop,
-  noBorder: false
+  noBorder: false,
 };
 
 export default withStyles(styles)(StyledTable);

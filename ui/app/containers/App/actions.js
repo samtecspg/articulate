@@ -250,8 +250,8 @@ import {
 } from './constants';
 
 /*
-* Global
-*/
+ * Global
+ */
 
 export function loadServerInfo() {
   return {
@@ -277,8 +277,8 @@ export function loadServerInfoSuccess(server) {
 export function refreshServerInfo(server) {
   return {
     type: REFRESH_SERVER_INFO,
-    server
-  }
+    server,
+  };
 }
 
 export function loadSession(sessionId, newSession) {
@@ -286,21 +286,21 @@ export function loadSession(sessionId, newSession) {
     type: LOAD_SESSION,
     apiCall: true,
     sessionId,
-    newSession
+    newSession,
   };
 }
 
 export function loadSessionSuccess(sessionId) {
   return {
     type: LOAD_SESSION_SUCCESS,
-    sessionId
+    sessionId,
   };
 }
 
 export function loadSessionError(error) {
   return {
     type: LOAD_SESSION_ERROR,
-    error
+    error,
   };
 }
 
@@ -309,21 +309,21 @@ export function deleteSession(sessionId, clearSessionId) {
     apiCall: true,
     type: DELETE_SESSION,
     sessionId,
-    clearSessionId
-  }
+    clearSessionId,
+  };
 }
 
-export function deleteSessionSuccess(){
+export function deleteSessionSuccess() {
   return {
-    type: DELETE_SESSION_SUCCESS
-  }
+    type: DELETE_SESSION_SUCCESS,
+  };
 }
 
 export function deleteSessionError(error) {
   return {
     type: DELETE_SESSION_ERROR,
-    error
-  }
+    error,
+  };
 }
 
 export function checkAPI(refURL) {
@@ -350,7 +350,7 @@ export function toggleConversationBar(value) {
   return {
     type: TOGGLE_CONVERSATION_BAR,
     value,
-    apiCall: true
+    apiCall: true,
   };
 }
 
@@ -400,12 +400,12 @@ export function showWarning(message) {
   return {
     type: SHOW_WARNING,
     message,
-  }
+  };
 }
 
 /*
-* Connections
-*/
+ * Connections
+ */
 export function loadConnections() {
   return {
     type: LOAD_CONNECTIONS,
@@ -449,8 +449,8 @@ export function loadChannelsSuccess(channels) {
 }
 
 /*
-* Agents
-*/
+ * Agents
+ */
 export function loadAgents() {
   return {
     type: LOAD_AGENTS,
@@ -517,13 +517,13 @@ export function importAgentSuccess(agent) {
 }
 
 /*
-* Agent
-*/
+ * Agent
+ */
 
 export function resetAgentData(ref) {
   return {
     type: RESET_AGENT_DATA,
-    ref
+    ref,
   };
 }
 
@@ -781,8 +781,8 @@ export function loadAgentDocumentsSuccess(documents) {
 }
 
 /*
-* Sayings
-*/
+ * Sayings
+ */
 export function loadSayings(filter, page, pageSize) {
   return {
     type: LOAD_SAYINGS,
@@ -869,7 +869,13 @@ export function deleteSayingError(error) {
   };
 }
 
-export function changeSayingCategory(filter, page, pageSize, saying, categoryId) {
+export function changeSayingCategory(
+  filter,
+  page,
+  pageSize,
+  saying,
+  categoryId,
+) {
   return {
     type: CHANGE_SAYING_CATEGORY,
     apiCall: true,
@@ -881,7 +887,17 @@ export function changeSayingCategory(filter, page, pageSize, saying, categoryId)
   };
 }
 
-export function tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName) {
+export function tagKeyword(
+  filter,
+  page,
+  pageSize,
+  saying,
+  value,
+  start,
+  end,
+  keywordId,
+  keywordName,
+) {
   return {
     type: TAG_KEYWORD,
     apiCall: true,
@@ -1021,21 +1037,21 @@ export function importCategory(category) {
   return {
     type: IMPORT_CATEGORY,
     category,
-    apiCall: true
-  }
+    apiCall: true,
+  };
 }
 
 export function importCategoryError(error) {
   return {
     type: IMPORT_CATEGORY_ERROR,
-    error
-  }
+    error,
+  };
 }
 
 export function importCategorySuccess() {
   return {
-    type: IMPORT_CATEGORY_SUCCESS
-  }
+    type: IMPORT_CATEGORY_SUCCESS,
+  };
 }
 
 export function loadFilteredCategories(filter) {
@@ -1099,8 +1115,8 @@ export function changeSayingsPageSize(agentId, pageSize) {
 }
 
 /*
-* Keywords
-*/
+ * Keywords
+ */
 export function loadKeywords(filter, page, pageSize) {
   return {
     type: LOAD_KEYWORDS,
@@ -1156,8 +1172,8 @@ export function changeKeywordsPageSize(agentId, pageSize) {
 }
 
 /*
-* Settings
-*/
+ * Settings
+ */
 export function loadSettings() {
   return {
     type: LOAD_SETTINGS,
@@ -1244,8 +1260,8 @@ export function deleteFallbackResponse(fallbackIndex) {
 }
 
 /*
-* Actions
-*/
+ * Actions
+ */
 
 export function changeActionsPageSize(agentId, pageSize) {
   return {
@@ -1454,7 +1470,7 @@ export function updateActionSuccess(action, oldActionName) {
   return {
     type: UPDATE_ACTION_SUCCESS,
     action,
-    oldActionName
+    oldActionName,
   };
 }
 
@@ -1736,7 +1752,15 @@ export function deleteModifier(modifierIndex) {
   };
 }
 
-export function tagModifierKeyword(modifierIndex, sayingIndex, value, start, end, keywordId, keywordName) {
+export function tagModifierKeyword(
+  modifierIndex,
+  sayingIndex,
+  value,
+  start,
+  end,
+  keywordId,
+  keywordName,
+) {
   return {
     type: TAG_MODIFIER_KEYWORD,
     modifierIndex,
@@ -1891,7 +1915,10 @@ export function deleteCategoryParameter(parameterName) {
   };
 }
 
-export function changeCategoryParameterName(oldParameterName, newParameterName) {
+export function changeCategoryParameterName(
+  oldParameterName,
+  newParameterName,
+) {
   return {
     type: CHANGE_CATEGORY_PARAMETER_NAME,
     oldParameterName,

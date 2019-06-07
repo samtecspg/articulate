@@ -26,7 +26,7 @@ export default function configureStore(initialState = {}, history) {
     //   reduxSagaMonitorOptions = {
     //     sagaMonitor: window.__SAGA_MONITOR_EXTENSION__,
     //   };
-  /* eslint-enable */
+    /* eslint-enable */
   }
 
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
@@ -34,7 +34,11 @@ export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
-  const middlewares = [ apiMiddleware(), sagaMiddleware, routerMiddleware(history)];
+  const middlewares = [
+    apiMiddleware(),
+    sagaMiddleware,
+    routerMiddleware(history),
+  ];
 
   const enhancers = [applyMiddleware(...middlewares)];
 

@@ -1,9 +1,5 @@
 import { push } from 'react-router-redux';
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { ROUTE_USER } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -12,10 +8,7 @@ import {
   signUpUserError,
   signUpUserSuccess,
 } from '../App/actions';
-import {
-  LOGIN_USER,
-  SIGN_UP_USER,
-} from '../App/constants';
+import { LOGIN_USER, SIGN_UP_USER } from '../App/constants';
 
 export function* loginUser(payload) {
   const { api, username, password } = payload;
@@ -29,14 +22,11 @@ export function* loginUser(payload) {
     if (response.isValid) {
       yield put(loginUserSuccess(response));
       yield put(push('/'));
-    }
-    else {
+    } else {
       yield put(loginUserError('Invalid Username or Password'));
     }
-  }
-  catch (err) {
+  } catch (err) {
     yield put(loginUserError(err));
-
   }
 }
 
@@ -52,10 +42,8 @@ export function* signUpUser(payload) {
   try {
     const response = yield call(api.post, toAPIPath([ROUTE_USER]), data);
     yield put(signUpUserSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(signUpUserError(err));
-
   }
 }
 

@@ -19,17 +19,15 @@ function CopyToClipboardImageCell(props) {
     document.execCommand('copy');
     textField.remove();
   };
-  const {
-    classes,
-    text,
-    ...rest
-  } = props;
-  return <ImageCell
-    {...rest}
-    className={classes.cell}
-    image={icon}
-    onClick={() => copyToClipboard({ text })}
-  />;
+  const { classes, text, ...rest } = props;
+  return (
+    <ImageCell
+      {...rest}
+      className={classes.cell}
+      image={icon}
+      onClick={() => copyToClipboard({ text })}
+    />
+  );
 }
 
 CopyToClipboardImageCell.propTypes = {
@@ -37,4 +35,6 @@ CopyToClipboardImageCell.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { name: 'CopyToClipboardImageCell' })(CopyToClipboardImageCell);
+export default withStyles(styles, { name: 'CopyToClipboardImageCell' })(
+  CopyToClipboardImageCell,
+);

@@ -3,12 +3,25 @@ import PropTypes from 'prop-types';
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
 
-import { TextField, InputAdornment, IconButton, Paper, MenuItem } from '@material-ui/core';
+import {
+  TextField,
+  InputAdornment,
+  IconButton,
+  Paper,
+  MenuItem,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import cancelIcon from '../../images/cancel-icon.svg';
 
 function renderInputComponent(inputProps) {
-  const { value, classes, onChange, inputRef = () => {}, ref, ...other } = inputProps;
+  const {
+    value,
+    classes,
+    onChange,
+    inputRef = () => {},
+    ref,
+    ...other
+  } = inputProps;
 
   return (
     <TextField
@@ -39,17 +52,30 @@ function renderInputComponent(inputProps) {
                 bottom: '12px',
                 padding: '0px',
               }}
-              onClick={(evt) => { evt.target.value = ''; onChange(evt, '') }}
+              onClick={evt => {
+                evt.target.value = '';
+                onChange(evt, '');
+              }}
             >
-              {value ? <img style={{ height: '20px', width: '20px', filter: 'invert(1)', '&:hover': { filter: 'invert(0) !important' } }} src={cancelIcon} /> : null}
+              {value ? (
+                <img
+                  style={{
+                    height: '20px',
+                    width: '20px',
+                    filter: 'invert(1)',
+                    '&:hover': { filter: 'invert(0) !important' },
+                  }}
+                  src={cancelIcon}
+                />
+              ) : null}
             </IconButton>
           </InputAdornment>
-        ),   
+        ),
       }}
       value={value}
       onChange={onChange}
       {...other}
-      margin='normal'
+      margin="normal"
     />
   );
 }
@@ -57,9 +83,7 @@ function renderInputComponent(inputProps) {
 function renderSuggestion(suggestion, { isHighlighted }) {
   return (
     <MenuItem selected={isHighlighted} component="div">
-      <div>
-        {suggestion.label}
-      </div>
+      <div>{suggestion.label}</div>
     </MenuItem>
   );
 }
@@ -96,7 +120,6 @@ const styles = theme => ({
 });
 
 class Autocomplete extends React.Component {
-
   constructor(props) {
     super(props);
     this.getSuggestions = this.getSuggestions.bind(this);
@@ -111,24 +134,24 @@ class Autocomplete extends React.Component {
     const inputLength = inputValue.length;
     let count = 0;
 
-    const transformedSuggestions = this.props.suggestions.map((suggestion) => ({
+    const transformedSuggestions = this.props.suggestions.map(suggestion => ({
       label: suggestion,
     }));
 
     return inputLength === 0
       ? []
       : transformedSuggestions.filter(suggestion => {
-        const keep =
-            count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+          const keep =
+            count < 5 &&
+            suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
 
-        if (keep) {
-          count += 1;
-        }
+          if (keep) {
+            count += 1;
+          }
 
-        return keep;
-      });
+          return keep;
+        });
   }
-
 
   handleSuggestionsFetchRequested = ({ value }) => {
     this.setState({
@@ -143,7 +166,7 @@ class Autocomplete extends React.Component {
   };
 
   handleChange = (event, { newValue }) => {
-    if (newValue || newValue === ''){
+    if (newValue || newValue === '') {
       this.props.onChange(newValue);
     }
   };

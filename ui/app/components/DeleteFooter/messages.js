@@ -24,6 +24,6 @@ export default defineMessages({
   },
   delete: {
     id: 'app.components.DeleteFooter.delete',
-    defaultMessage: 'Delete'
-  }
+    defaultMessage: 'Delete',
+  },
 });

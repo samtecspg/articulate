@@ -10,7 +10,7 @@ const styles = {
       '0%, 60%, 100%': {
         transform: 'initial',
       },
-      '30%':{
+      '30%': {
         opacity: 0.15,
       },
     },
@@ -39,15 +39,16 @@ const styles = {
 };
 
 export function LoadingWave(props) {
-
   const { classes } = props;
   return (
     <Grid>
       {props.agentName}
       <Typography className={classes.agentMessage}>
-        <span className={classes.dot}></span>&nbsp;
-        <span className={`${classes.dot} ${classes.dot1}`}></span>&nbsp;
-        <span className={`${classes.dot} ${classes.dot2}`}></span>
+        <span className={classes.dot} />
+        &nbsp;
+        <span className={`${classes.dot} ${classes.dot1}`} />
+        &nbsp;
+        <span className={`${classes.dot} ${classes.dot2}`} />
       </Typography>
     </Grid>
   );

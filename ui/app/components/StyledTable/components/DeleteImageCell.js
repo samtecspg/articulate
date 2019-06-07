@@ -11,17 +11,15 @@ const styles = {
 };
 
 function DeleteImageCell(props) {
-  const {
-    classes,
-    onClick,
-    ...rest
-  } = props;
-  return <ImageCell
-    className={classes.cell}
-    image={trashIcon}
-    onClick={onClick}
-    {...rest}
-  />;
+  const { classes, onClick, ...rest } = props;
+  return (
+    <ImageCell
+      className={classes.cell}
+      image={trashIcon}
+      onClick={onClick}
+      {...rest}
+    />
+  );
 }
 
 DeleteImageCell.propTypes = {

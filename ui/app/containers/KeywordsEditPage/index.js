@@ -12,11 +12,11 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 import { Grid, CircularProgress } from '@material-ui/core';
+import injectSaga from 'utils/injectSaga';
 import MainTab from './Components/MainTab';
 import KeywordForm from './Components/KeywordForm';
 import ValuesForm from './Components/ValuesForm';
 
-import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 
 import {
@@ -52,13 +52,12 @@ import {
   tagModifierKeyword,
   onChangeModifiersSayingsPageSize,
   loadSettings,
-  loadKeywords
+  loadKeywords,
 } from '../App/actions';
 import ModifiersForm from './Components/ModifiersForm';
 
 /* eslint-disable react/prefer-stateless-function */
 export class KeywordsEditPage extends React.Component {
-  
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
@@ -82,11 +81,10 @@ export class KeywordsEditPage extends React.Component {
     },
   };
 
-  initForm(){
-    if(this.state.isNewKeyword) {
+  initForm() {
+    if (this.state.isNewKeyword) {
       this.props.onResetData();
-    }
-    else {
+    } else {
       this.props.onLoadKeyword(this.props.match.params.keywordId);
       this.props.onLoadKeywords();
     }
@@ -94,18 +92,20 @@ export class KeywordsEditPage extends React.Component {
   }
 
   componentWillMount() {
-    if(this.props.agent.id) {
+    if (this.props.agent.id) {
       this.initForm();
     }
   }
 
-  componentDidUpdate(prevProps){
-    if (!prevProps.agent.id && this.props.agent.id){
+  componentDidUpdate(prevProps) {
+    if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
-    if (this.props.success){ 
+    if (this.props.success) {
       if (this.state.exitAfterSubmit) {
-        this.props.onSuccess(`/agent/${this.props.agent.id}/dialogue?tab=keywords`);
+        this.props.onSuccess(
+          `/agent/${this.props.agent.id}/dialogue?tab=keywords`,
+        );
       }
       if (this.state.isNewKeyword) {
         this.setState({
@@ -116,25 +116,25 @@ export class KeywordsEditPage extends React.Component {
     }
   }
 
-  moveNextTab(){
+  moveNextTab() {
     // If isn't currently on the last tab
-    if (this.state.currentTab !== 'modifiers'){
+    if (this.state.currentTab !== 'modifiers') {
       const tabs = ['keyword', 'values', 'modifiers'];
       const currentTab = tabs.indexOf(this.state.currentTab);
       const nextTab = currentTab + 1;
       this.setState({
         currentTab: tabs[nextTab],
-      })
+      });
     }
   }
 
-  onChangeTab(tab){
+  onChangeTab(tab) {
     this.setState({
       currentTab: tab,
     });
   }
 
-  submit(exit){
+  submit(exit) {
     let errors = false;
     const newErrorState = {
       keywordName: false,
@@ -144,25 +144,29 @@ export class KeywordsEditPage extends React.Component {
       modifiersTabs: [],
     };
 
-    if (!this.props.keyword.keywordName || this.props.keyword.keywordName === ''){
+    if (
+      !this.props.keyword.keywordName ||
+      this.props.keyword.keywordName === ''
+    ) {
       errors = true;
       newErrorState.keywordName = true;
       newErrorState.tabs.push(0);
-    }
-    else {
+    } else {
       newErrorState.keywordName = false;
     }
 
-    if (!this.props.keyword.examples || this.props.keyword.examples.length === 0){
+    if (
+      !this.props.keyword.examples ||
+      this.props.keyword.examples.length === 0
+    ) {
       errors = true;
       newErrorState.examples = true;
       newErrorState.tabs.push(1);
-    }
-    else {
+    } else {
       newErrorState.examples = false;
     }
 
-    if (this.props.keyword.modifiers.length > 0){
+    if (this.props.keyword.modifiers.length > 0) {
       this.props.keyword.modifiers.forEach((modifier, modifierIndex) => {
         const newModifierError = {
           modifierName: false,
@@ -170,83 +174,93 @@ export class KeywordsEditPage extends React.Component {
           sourceValue: false,
           staticValue: false,
         };
-        if (!modifier.modifierName){
+        if (!modifier.modifierName) {
           errors = true;
           newModifierError.modifierName = true;
           newErrorState.tabs.push(2);
           newErrorState.modifiersTabs.push(modifierIndex);
-        }
-        else{
+        } else {
           newModifierError.modifierName = false;
         }
-        if (!modifier.action){
+        if (!modifier.action) {
           errors = true;
           newModifierError.action = true;
           newErrorState.tabs.push(2);
           newErrorState.modifiersTabs.push(modifierIndex);
-        }
-        else{
+        } else {
           newModifierError.action = false;
         }
-        if (!modifier.valueSource){
+        if (!modifier.valueSource) {
           errors = true;
           newModifierError.valueSource = true;
           newErrorState.tabs.push(2);
           newErrorState.modifiersTabs.push(modifierIndex);
-        }
-        else{
+        } else {
           newModifierError.valueSource = false;
         }
-        if (modifier.valueSource && modifier.valueSource === 'static' && !modifier.staticValue){
+        if (
+          modifier.valueSource &&
+          modifier.valueSource === 'static' &&
+          !modifier.staticValue
+        ) {
           errors = true;
           newModifierError.staticValue = true;
           newErrorState.tabs.push(2);
           newErrorState.modifiersTabs.push(modifierIndex);
-        }
-        else{
+        } else {
           newModifierError.staticValue = false;
         }
         newErrorState.modifiers.push(newModifierError);
       });
     }
 
-    if (!errors){
+    if (!errors) {
       this.setState({
         formError: false,
         exitAfterSubmit: exit,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
-      if (this.state.isNewKeyword){
+      if (this.state.isNewKeyword) {
         this.props.onCreateKeyword();
-      }
-      else {
+      } else {
         this.props.onUpdateKeyword();
       }
-    }
-    else {
+    } else {
       this.setState({
         formError: true,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
     }
   }
 
   render() {
-    return (
-      this.props.settings && this.props.agent.id && this.props.agentKeywords ?
+    return this.props.settings &&
+      this.props.agent.id &&
+      this.props.agentKeywords ? (
       <Grid container>
         <MainTab
           touched={this.props.touched}
           loading={this.props.loading}
           success={this.props.success}
-          goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?tab=keywords`)}}
-          onSaveAndExit={() => { this.submit(true) }}
+          goBack={() => {
+            this.props.onGoToUrl(
+              `/agent/${this.props.agent.id}/dialogue?tab=keywords`,
+            );
+          }}
+          onSaveAndExit={() => {
+            this.submit(true);
+          }}
           newKeyword={this.state.isNewKeyword}
           keywordName={this.props.keyword.keywordName}
           formError={this.state.formError}
-          hideFinishButton={this.state.currentTab === 'keyword' && !this.state.userCompletedAllRequiredFields}
+          hideFinishButton={
+            this.state.currentTab === 'keyword' &&
+            !this.state.userCompletedAllRequiredFields
+          }
           isLastTab={this.state.currentTab === 'modifiers'}
-          onFinishAction={() => { this.submit(false) }}
+          onFinishAction={() => {
+            this.submit(false);
+          }}
           onNextAction={this.moveNextTab}
           selectedTab={this.state.currentTab}
           errorState={this.state.errorState}
@@ -289,14 +303,22 @@ export class KeywordsEditPage extends React.Component {
               agentKeywords={this.props.agentKeywords}
               onUntagModifierKeyword={this.props.onUntagModifierKeyword}
               onTagModifierKeyword={this.props.onTagModifierKeyword}
-              modifierSayingsPageSize={this.props.agent.settings.modifierSayingsPageSize}
-              onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize.bind(null, this.props.agent.id)}
+              modifierSayingsPageSize={
+                this.props.agent.settings.modifierSayingsPageSize
+              }
+              onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize.bind(
+                null,
+                this.props.agent.id,
+              )}
             />
           }
           onChangeTab={this.onChangeTab}
         />
-      </Grid> : 
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -342,7 +364,7 @@ function mapDispatchToProps(dispatch) {
     onResetData: () => {
       dispatch(resetKeywordData());
     },
-    onLoadKeyword: (id) => {
+    onLoadKeyword: id => {
       dispatch(loadKeyword(id));
     },
     onLoadKeywords: () => {
@@ -355,12 +377,12 @@ function mapDispatchToProps(dispatch) {
       dispatch(updateKeyword());
     },
     onChangeKeywordData: (field, value) => {
-      dispatch(changeKeywordData({field, value}));
+      dispatch(changeKeywordData({ field, value }));
     },
-    onAddKeywordExample: (newExample) => {
+    onAddKeywordExample: newExample => {
       dispatch(addKeywordExample(newExample));
     },
-    onDeleteKeywordExample: (exampleIndex) => {
+    onDeleteKeywordExample: exampleIndex => {
       dispatch(deleteKeywordExample(exampleIndex));
     },
     onChangeExampleName: (exampleIndex, name) => {
@@ -369,39 +391,57 @@ function mapDispatchToProps(dispatch) {
     onChangeExampleSynonyms: (exampleIndex, synonyms) => {
       dispatch(changeExampleSynonyms(exampleIndex, synonyms));
     },
-    onSuccess: (url) => {
+    onSuccess: url => {
       dispatch(resetStatusFlag());
       dispatch(push(url));
     },
-    onGoToUrl: (url) => {
+    onGoToUrl: url => {
       dispatch(push(url));
     },
-    onDelete: (id) => {
+    onDelete: id => {
       dispatch(deleteKeyword(id));
     },
     onAddNewModifier: () => {
       dispatch(addNewModifier());
     },
     onChangeModifierName: (modifierIndex, modifierName) => {
-      dispatch(changeModifierName({modifierIndex, modifierName}));
+      dispatch(changeModifierName({ modifierIndex, modifierName }));
     },
     onChangeModifierData: (modifierIndex, field, value) => {
-      dispatch(changeModifierData({modifierIndex, field, value}))
+      dispatch(changeModifierData({ modifierIndex, field, value }));
     },
     onAddModifierSaying: (modifierIndex, newSaying) => {
-      dispatch(addModifierSaying(modifierIndex, newSaying))
+      dispatch(addModifierSaying(modifierIndex, newSaying));
     },
     onDeleteModifierSaying: (modifierIndex, sayingIndex) => {
-      dispatch(deleteModifierSaying({modifierIndex, sayingIndex}));
+      dispatch(deleteModifierSaying({ modifierIndex, sayingIndex }));
     },
     onSortModifiers: (oldIndex, newIndex) => {
       dispatch(sortModifiers(oldIndex, newIndex));
     },
-    onDeleteModifier: (modifierIndex) => {
+    onDeleteModifier: modifierIndex => {
       dispatch(deleteModifier(modifierIndex));
     },
-    onTagModifierKeyword: (modifierIndex, sayingIndex, value, start, end, keywordId, keywordName) => {
-      dispatch(tagModifierKeyword(modifierIndex, sayingIndex, value, start, end, keywordId, keywordName));
+    onTagModifierKeyword: (
+      modifierIndex,
+      sayingIndex,
+      value,
+      start,
+      end,
+      keywordId,
+      keywordName,
+    ) => {
+      dispatch(
+        tagModifierKeyword(
+          modifierIndex,
+          sayingIndex,
+          value,
+          start,
+          end,
+          keywordId,
+          keywordName,
+        ),
+      );
     },
     onUntagModifierKeyword: (modifierIndex, sayingIndex, start, end) => {
       dispatch(untagModifierKeyword(modifierIndex, sayingIndex, start, end));
@@ -410,8 +450,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(onChangeModifiersSayingsPageSize(agentId, pageSize));
     },
     onLoadSettings: () => {
-      dispatch(loadSettings())
-    }
+      dispatch(loadSettings());
+    },
   };
 }
 
@@ -424,5 +464,5 @@ const withSaga = injectSaga({ key: 'keywordsEdit', saga });
 
 export default compose(
   withSaga,
-  withConnect
+  withConnect,
 )(KeywordsEditPage);

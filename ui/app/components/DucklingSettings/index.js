@@ -33,9 +33,8 @@ const styles = {
   },
 };
 
-const getStringSetting = (setting) => {
-
-  if (typeof setting === 'string'){
+const getStringSetting = setting => {
+  if (typeof setting === 'string') {
     return setting;
   }
   return JSON.stringify(setting, null, 2);
@@ -43,12 +42,11 @@ const getStringSetting = (setting) => {
 
 /* eslint-disable react/prefer-stateless-function */
 export class DucklingSettings extends React.Component {
-
   onChangeEditorValue(field, editorValue) {
     try {
       const value = JSON.parse(editorValue); // Ace editor send the value directly to the method as an string
       this.props.onChangeSettingsData(field, value);
-    } catch(e) {
+    } catch (e) {
       const value = editorValue; // Given the parse of the json failed store the value in the state as a string
       this.props.onChangeSettingsData(field, value);
     }
@@ -58,15 +56,9 @@ export class DucklingSettings extends React.Component {
     const { classes, intl, settings } = this.props;
     return (
       <Grid container spacing={16}>
-        <Grid
-          container
-          item
-          xs={12}
-        >
+        <Grid container item xs={12}>
           <Typography className={classes.panelContent}>
-            <FormattedMessage
-              {...messages.ducklingSettingDescription}
-            />
+            <FormattedMessage {...messages.ducklingSettingDescription} />
           </Typography>
         </Grid>
         <Grid container spacing={16} item xs={12}>
@@ -75,13 +67,11 @@ export class DucklingSettings extends React.Component {
               id="ducklingURL"
               label={intl.formatMessage(messages.ducklingURL)}
               value={settings.ducklingURL}
-              placeholder={intl.formatMessage(
-                messages.ducklingURLPlaceholder
-              )}
+              placeholder={intl.formatMessage(messages.ducklingURLPlaceholder)}
               onChange={evt => {
                 this.props.onChangeSettingsData(
-                  "ducklingURL",
-                  evt.target.value
+                  'ducklingURL',
+                  evt.target.value,
                 );
               }}
               margin="normal"
@@ -125,16 +115,11 @@ export class DucklingSettings extends React.Component {
               $blockScrolling: Infinity,
             }}
           />
-          {
-            this.props.errorState.ducklingDimension ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.ducklingDimensionError} />
-              </Typography> :
-              null
-          }
+          {this.props.errorState.ducklingDimension ? (
+            <Typography variant="caption" className={classes.errorLabel}>
+              <FormattedMessage {...messages.ducklingDimensionError} />
+            </Typography>
+          ) : null}
         </Grid>
       </Grid>
     );

@@ -12,22 +12,19 @@ const logosDir = {
   slack,
   facebook,
   twilio,
-  rocketchat
-}
+  rocketchat,
+};
 
-//4285F4
+// 4285F4
 
 function ChannelsLogos(props) {
-
   const { logo, ...rest } = props;
 
-  return (
-    <img {...rest} src={logosDir[logo]} />
-  );
+  return <img {...rest} src={logosDir[logo]} />;
 }
 
 ChannelsLogos.propTypes = {
-  logo: PropTypes.string.isRequired
+  logo: PropTypes.string.isRequired,
 };
 
 export default ChannelsLogos;

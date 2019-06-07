@@ -5,316 +5,376 @@ const selectRoute = state => state.router;
 
 /* Global */
 
-const makeSelectLocation = () => createSelector(
-  selectRoute,
-  (routeState) => routeState.location,
-);
+const makeSelectLocation = () =>
+  createSelector(
+    selectRoute,
+    routeState => routeState.location,
+  );
 
-const makeSelectServerStatus = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.serverStatus,
-);
+const makeSelectServerStatus = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.serverStatus,
+  );
 
-const makeSelectSessionId = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.sessionId,
-);
+const makeSelectSessionId = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.sessionId,
+  );
 
-const makeSelectSessionLoaded = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.sessionLoaded,
-);
+const makeSelectSessionLoaded = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.sessionLoaded,
+  );
 
-const makeSelectMissingAPI = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.missingAPI,
-);
+const makeSelectMissingAPI = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.missingAPI,
+  );
 
-const makeSelectLoading = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.loading,
-);
+const makeSelectLoading = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loading,
+  );
 
-const makeSelectLoadingImportCategory = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.loadingImportCategory,
-);
+const makeSelectLoadingImportCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingImportCategory,
+  );
 
-const makeSelectError = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.error,
-);
+const makeSelectError = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.error,
+  );
 
-const makeSelectSuccess = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.success,
-);
+const makeSelectSuccess = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.success,
+  );
 
-const makeSelectConversationBarOpen = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.conversationBarOpen,
-);
+const makeSelectConversationBarOpen = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.conversationBarOpen,
+  );
 
-const makeSelectNotifications = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.notifications,
-);
+const makeSelectNotifications = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.notifications,
+  );
 
-const makeSelectMessages = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.messages,
-);
+const makeSelectMessages = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.messages,
+  );
 
-const makeSelectWaitingResponse = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.waitingResponse,
-);
+const makeSelectWaitingResponse = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.waitingResponse,
+  );
 
-const makeSelectConversationStateObject = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.conversationStateObject,
-);
+const makeSelectConversationStateObject = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.conversationStateObject,
+  );
 
 /* Connections */
-const makeSelectConnections = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.connections,
-);
+const makeSelectConnections = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.connections,
+  );
 
-const makeSelectChannels = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.channels,
-);
+const makeSelectChannels = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.channels,
+  );
 
 /* Agents */
-const makeSelectAgents = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.agents,
-);
+const makeSelectAgents = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agents,
+  );
 
-const makeSelectAgentExport = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.agentExport,
-);
+const makeSelectAgentExport = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agentExport,
+  );
 
 /* Agent */
-const makeSelectAgent = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.agent,
-);
+const makeSelectAgent = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agent,
+  );
 
-const makeSelectCurrentAgent = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.currentAgent,
-);
+const makeSelectCurrentAgent = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.currentAgent,
+  );
 
-const makeSelectAgentWebhook = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.agentWebhook,
-);
+const makeSelectAgentWebhook = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agentWebhook,
+  );
 
-const makeSelectAgentPostFormat = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.agentPostFormat,
-);
+const makeSelectAgentPostFormat = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agentPostFormat,
+  );
 
-const makeSelectAgentSettings = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.agentSettings,
-);
+const makeSelectAgentSettings = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agentSettings,
+  );
 
-const makeSelectAgentTouched = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.agentTouched,
-);
+const makeSelectAgentTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agentTouched,
+  );
 
-const makeSelectSuccessAgent = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.successAgent,
-);
+const makeSelectSuccessAgent = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.successAgent,
+  );
 
-const makeSelectDocuments = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.documents,
-);
+const makeSelectDocuments = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.documents,
+  );
 
-const makeSelectTotalDocuments = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.totalDocuments,
-);
+const makeSelectTotalDocuments = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalDocuments,
+  );
 
 /* Keywords */
-const makeSelectKeywords = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.keywords,
-);
+const makeSelectKeywords = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.keywords,
+  );
 
-const makeSelectTotalKeywords = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.totalKeywords,
-);
+const makeSelectTotalKeywords = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalKeywords,
+  );
 
 /* Sayings */
-const makeSelectSayings = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.sayings,
-);
+const makeSelectSayings = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.sayings,
+  );
 
-const makeSelectTotalSayings = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.totalSayings,
-);
+const makeSelectTotalSayings = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalSayings,
+  );
 
-const makeSelectCategories = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.categories,
-);
+const makeSelectCategories = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.categories,
+  );
 
-const makeSelectPrebuiltCategories = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.prebuiltCategories,
-);
+const makeSelectPrebuiltCategories = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.prebuiltCategories,
+  );
 
-const makeSelectFilteredCategories = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.filteredCategories,
-);
+const makeSelectFilteredCategories = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.filteredCategories,
+  );
 
-const makeSelectFilteredActions = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.filteredActions,
-);
+const makeSelectFilteredActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.filteredActions,
+  );
 
-const makeSelectSelectedCategory = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.selectedCategory,
-);
+const makeSelectSelectedCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.selectedCategory,
+  );
 
-const makeSelectNewSayingActions = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.newSayingActions,
-);
+const makeSelectNewSayingActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.newSayingActions,
+  );
 
 /* Actions */
-const makeSelectActionsPage = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.actionsPage,
-);
+const makeSelectActionsPage = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.actionsPage,
+  );
 
-const makeSelectTotalActionsPage = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.totalActionsPage,
-);
+const makeSelectTotalActionsPage = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalActionsPage,
+  );
 
-const makeSelectActions = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.actions,
-);
+const makeSelectActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.actions,
+  );
 
-const makeSelectCurrentAction = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.currentAction,
-);
+const makeSelectCurrentAction = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.currentAction,
+  );
 
-const makeSelectTotalActions = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.totalActions,
-);
+const makeSelectTotalActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalActions,
+  );
 
-const makeSelectAction = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.action,
-);
+const makeSelectAction = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.action,
+  );
 
-const makeSelectActionWebhook = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.actionWebhook,
-);
+const makeSelectActionWebhook = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.actionWebhook,
+  );
 
-const makeSelectActionPostFormat = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.actionPostFormat,
-);
+const makeSelectActionPostFormat = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.actionPostFormat,
+  );
 
-const makeSelectSayingForAction = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.sayingForAction,
-);
+const makeSelectSayingForAction = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.sayingForAction,
+  );
 
-const makeSelectActionTouched = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.actionTouched,
-);
+const makeSelectActionTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.actionTouched,
+  );
 
-const makeSelectSuccessAction = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.successAction,
-);
+const makeSelectSuccessAction = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.successAction,
+  );
 
-const makeSelectNewActionResponse = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.newActionResponse,
-);
+const makeSelectNewActionResponse = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.newActionResponse,
+  );
 
 /* Settings */
-const makeSelectSettings = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.settings,
-);
+const makeSelectSettings = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.settings,
+  );
 
 /* Keyword */
-const makeSelectKeyword = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.keyword,
-);
+const makeSelectKeyword = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.keyword,
+  );
 
-const makeSelectKeywordTouched = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.keywordTouched,
-);
+const makeSelectKeywordTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.keywordTouched,
+  );
 
-const makeSelectSuccessKeyword = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.successKeyword,
-);
+const makeSelectSuccessKeyword = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.successKeyword,
+  );
 
 /* Connection */
-const makeSelectConnection = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.connection,
-);
+const makeSelectConnection = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.connection,
+  );
 
-const makeSelectConnectionTouched = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.connectionTouched,
-);
+const makeSelectConnectionTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.connectionTouched,
+  );
 
-const makeSelectSuccessConnection = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.successConnection,
-);
+const makeSelectSuccessConnection = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.successConnection,
+  );
 
 /* Category */
-const makeSelectCategory = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.category,
-);
+const makeSelectCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.category,
+  );
 
-const makeSelectCategoryTouched = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.categoryTouched,
-);
+const makeSelectCategoryTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.categoryTouched,
+  );
 
-const makeSelectSuccessCategory = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.successCategory,
-);
+const makeSelectSuccessCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.successCategory,
+  );
 
 /* Locale */
-const makeSelectLocale = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.locale,
-);
+const makeSelectLocale = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.locale,
+  );
 
 export {
   makeSelectServerStatus,

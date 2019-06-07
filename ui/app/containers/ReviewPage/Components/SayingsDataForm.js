@@ -1,18 +1,9 @@
-import {
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Grid, MenuItem, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  FormattedMessage,
-  injectIntl,
-  intlShape,
-} from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import StyledTable, { StyledRow } from '../../../components/StyledTable';
 import messages from '../messages';
 import SayingRow from './SayingRow';
@@ -222,7 +213,7 @@ const styles = {
     top: '41px',
     left: '10px',
     marginTop: '0px',
-    height: '20px'
+    height: '20px',
   },
   dateSelectLabel: {
     '&:hover': {
@@ -233,7 +224,7 @@ const styles = {
     cursor: 'pointer',
     fontSize: '0.75rem',
     fontWeight: '500',
-    paddingRight: '20px'
+    paddingRight: '20px',
   },
 };
 
@@ -241,8 +232,20 @@ const tableHeaders = [
   { id: 'category', disablePadding: true, label: '', width: '10%' },
   { id: 'time_stamp', disablePadding: true, label: '', width: '5%' },
   { id: 'document', disablePadding: true, label: '', width: '60%' },
-  { id: 'maximum_category_score', disablePadding: true, label: 'Category', width: '5%', sort: true },
-  { id: 'maximum_action_score', disablePadding: true, label: 'Action', width: '5%', sort: true },
+  {
+    id: 'maximum_category_score',
+    disablePadding: true,
+    label: 'Category',
+    width: '5%',
+    sort: true,
+  },
+  {
+    id: 'maximum_action_score',
+    disablePadding: true,
+    label: 'Action',
+    width: '5%',
+    sort: true,
+  },
   { id: 'copy', disablePadding: true, label: 'Copy', width: '5%' },
   { id: 'try', disablePadding: true, label: 'Try', width: '5%' },
 ];
@@ -259,57 +262,55 @@ function SayingsDataForm(props) {
     <div>
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} container item xs={12}>
-          {documents.length > 0 ?
-              <a
-                className={classes.dateSelectContainer}
-                onClick={
-                  (evt) => {
-                    props.onRequestSort('time_stamp');
-                  }
-                }
-              >
-                <Typography className={classes.dateSelectLabel}>
-                  {timeSort === 'DESC' ? intl.formatMessage(messages.newest) : intl.formatMessage(messages.oldest)}
-                </Typography>
-              </a>
-            : null
-          }
+          {documents.length > 0 ? (
+            <a
+              className={classes.dateSelectContainer}
+              onClick={evt => {
+                props.onRequestSort('time_stamp');
+              }}
+            >
+              <Typography className={classes.dateSelectLabel}>
+                {timeSort === 'DESC'
+                  ? intl.formatMessage(messages.newest)
+                  : intl.formatMessage(messages.oldest)}
+              </Typography>
+            </a>
+          ) : null}
           <StyledTable
-            id='reviewsTable'
+            id="reviewsTable"
             noBorder
             headers={tableHeaders}
             rows={
-              documents.length === 0 ?
-                [<StyledRow key={'document_0'}>
-                  <SayingRow
-                    locale={locale}
-                    document={{
-                      id: 'noData',
-                      document: intl.formatMessage(messages.noData),
-                      rasa_results: [
-                        {
-                          keywords: [],
-                          action: {
-                            name: '',
-                          },
-                          categoryScore: 0,
-                        },
-                      ],
-                      maximum_action_score: null,
-                      maximum_category_score: null,
-                    }}
-                    agentKeywords={props.agentKeywords}
-                    agentCategories={props.agentCategories}
-                    onToggleConversationBar={props.onToggleConversationBar}
-                    agentActions={props.agentActions}
-                    onSendMessage={props.onSendMessage}
-                    onCopySaying={props.onCopySaying}
-                  />
-                </StyledRow>]
-                :
-                documents.map((document) => {
-                  
-                  return (
+              documents.length === 0
+                ? [
+                    <StyledRow key="document_0">
+                      <SayingRow
+                        locale={locale}
+                        document={{
+                          id: 'noData',
+                          document: intl.formatMessage(messages.noData),
+                          rasa_results: [
+                            {
+                              keywords: [],
+                              action: {
+                                name: '',
+                              },
+                              categoryScore: 0,
+                            },
+                          ],
+                          maximum_action_score: null,
+                          maximum_category_score: null,
+                        }}
+                        agentKeywords={props.agentKeywords}
+                        agentCategories={props.agentCategories}
+                        onToggleConversationBar={props.onToggleConversationBar}
+                        agentActions={props.agentActions}
+                        onSendMessage={props.onSendMessage}
+                        onCopySaying={props.onCopySaying}
+                      />
+                    </StyledRow>,
+                  ]
+                : documents.map(document => (
                     <StyledRow key={`document_${document.id}`}>
                       <SayingRow
                         document={document}
@@ -321,12 +322,11 @@ function SayingsDataForm(props) {
                         onCopySaying={props.onCopySaying}
                       />
                     </StyledRow>
-                  )
-                })}
+                  ))
+            }
             onRequestSort={props.onRequestSort}
             sortField={props.sortField}
             sortDirection={props.sortDirection}
-
           />
           <Grid className={classes.pageControl} item xs={12}>
             <Grid className={classes.pageSubControl}>
@@ -336,12 +336,12 @@ function SayingsDataForm(props) {
               <TextField
                 select
                 className={classes.pageTextfield}
-                id='pageSize'
+                id="pageSize"
                 value={props.pageSize}
-                onChange={(evt) => {
+                onChange={evt => {
                   props.changePageSize(evt.target.value);
                 }}
-                margin='normal'
+                margin="normal"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -364,19 +364,27 @@ function SayingsDataForm(props) {
               </Typography>
             </Grid>
             <Grid className={classes.pageNumberSubControl}>
-              <Typography onClick={props.currentPage > 1 ? props.movePageBack : null} className={props.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
+              <Typography
+                onClick={props.currentPage > 1 ? props.movePageBack : null}
+                className={
+                  props.currentPage > 1
+                    ? classes.pageCursors
+                    : classes.pageCursorsDisabled
+                }
+              >
                 <FormattedMessage {...messages.backPage} />
               </Typography>
               <TextField
-                id='page'
-                margin='normal'
+                id="page"
+                margin="normal"
                 value={props.currentPage}
-                onChange={(evt) => {
-                  evt.target.value === '' ?
-                    props.changePage(0) :
-                    (evt.target.value <= props.numberOfPages && evt.target.value >= 0 ?
-                      props.changePage(evt.target.value) :
-                      false);
+                onChange={evt => {
+                  evt.target.value === ''
+                    ? props.changePage(0)
+                    : evt.target.value <= props.numberOfPages &&
+                      evt.target.value >= 0
+                    ? props.changePage(evt.target.value)
+                    : false;
                 }}
                 fullWidth
                 InputLabelProps={{
@@ -391,19 +399,29 @@ function SayingsDataForm(props) {
                   step: 1,
                 }}
                 className={classes.pageTextfield}
-                type='number'
+                type="number"
               />
               <Typography className={classes.pagesLabel}>
                 / {props.numberOfPages}
               </Typography>
-              <Typography onClick={props.currentPage < props.numberOfPages ? props.movePageForward : null} className={props.currentPage < props.numberOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
+              <Typography
+                onClick={
+                  props.currentPage < props.numberOfPages
+                    ? props.movePageForward
+                    : null
+                }
+                className={
+                  props.currentPage < props.numberOfPages
+                    ? classes.pageCursors
+                    : classes.pageCursorsDisabled
+                }
+              >
                 <FormattedMessage {...messages.nextPage} />
               </Typography>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-
     </div>
   );
 }

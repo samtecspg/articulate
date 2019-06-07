@@ -5,10 +5,7 @@
  *
  */
 
-import {
-  CircularProgress,
-  Grid,
-} from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -41,44 +38,45 @@ import GetStarted from './Components/GetStarted';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {
-
   componentWillMount() {
     this.props.onComponentMounted();
   }
 
   render() {
     const { agents, connections, channels } = this.props;
-    return (
-      agents && connections && channels ?
-        <Grid container>
-          <GetStarted
-            title={messages.title}
-            sizesForHideInlineElement={['sm', 'xs']} />
-          <MainContentHeader
-            title={messages.title}
-            sizesForHideInlineElement={['sm', 'xs']}
-          />
+    return agents && connections && channels ? (
+      <Grid container>
+        <GetStarted
+          title={messages.title}
+          sizesForHideInlineElement={['sm', 'xs']}
+        />
+        <MainContentHeader
+          title={messages.title}
+          sizesForHideInlineElement={['sm', 'xs']}
+        />
 
-          <AgentsCards
-            agents={agents}
-            onImportAgent={this.props.onImportAgent}
-            onExportAgent={this.props.onExportAgent}
-            agentExport={this.props.agentExport}
-            onGoToUrl={this.props.onGoToUrl}
-          />
-          <MainContentHeader
-            title={messages.connectionsTitle}
-            sizesForHideInlineElement={['sm', 'xs']}
-          />
-          <ConnectionsCards
-            agents={agents}
-            connections={connections}
-            channels={channels}
-            onGoToUrl={this.props.onGoToUrl}
-          />
-        </Grid>
-        :
-        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+        <AgentsCards
+          agents={agents}
+          onImportAgent={this.props.onImportAgent}
+          onExportAgent={this.props.onExportAgent}
+          agentExport={this.props.agentExport}
+          onGoToUrl={this.props.onGoToUrl}
+        />
+        <MainContentHeader
+          title={messages.connectionsTitle}
+          sizesForHideInlineElement={['sm', 'xs']}
+        />
+        <ConnectionsCards
+          agents={agents}
+          connections={connections}
+          channels={channels}
+          onGoToUrl={this.props.onGoToUrl}
+        />
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -86,18 +84,9 @@ export class AgentsPage extends React.PureComponent {
 AgentsPage.propTypes = {
   onComponentMounted: PropTypes.func,
   loading: PropTypes.bool,
-  error: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.bool,
-  ]),
-  agents: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.bool,
-  ]),
-  connections: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.bool,
-  ]),
+  error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  agents: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
+  connections: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
   agentExport: PropTypes.object,
 };
 
@@ -115,20 +104,23 @@ function mapDispatchToProps(dispatch) {
       dispatch(loadConnections());
       dispatch(loadChannels());
     },
-    onGoToUrl: (url) => {
+    onGoToUrl: url => {
       dispatch(push(url));
     },
-    onExportAgent: (id) => {
+    onExportAgent: id => {
       dispatch(exportAgent(id));
     },
-    onImportAgent: (agent) => {
+    onImportAgent: agent => {
       dispatch(importAgent(agent));
     },
   };
 }
 
 const withSaga = injectSaga({ key: 'agents', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 export default compose(
   withSaga,

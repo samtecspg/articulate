@@ -9,17 +9,14 @@ export function getWS() {
   const loc = window.location;
   if (loc.protocol === 'https:') {
     WS_URL = 'wss:';
-  }
-  else {
+  } else {
     WS_URL = 'ws:';
   }
   WS_URL += `//${loc.host}/api/`;
 
   return WS_URL;
-
 }
 
 export function toAPIPath(paths) {
   return `${PROXY_ROUTE_PREFIX}/${paths.join('/')}`;
 }
-

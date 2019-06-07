@@ -11,12 +11,7 @@ import Nes from 'nes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  Route,
-  Switch,
-  withRouter,
-  Redirect
-} from 'react-router-dom';
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { ROUTE_AGENT } from '../../../common/constants';
@@ -60,7 +55,6 @@ import {
 } from './selectors';
 
 class App extends React.Component {
-
   state = {
     agent: null,
     client: null,
@@ -95,7 +89,7 @@ class App extends React.Component {
           socketClientConnected: true,
         });
       };
-      client.onError = (err) => {
+      client.onError = err => {
         logger.error(`[WS] Error ${getWS()}`);
         logger.error(err);
       };
@@ -104,7 +98,7 @@ class App extends React.Component {
         logger.log(log);
         logger.log(`[WS] Will Reconnect = ${willReconnect}`);
       };
-      client.onHeartbeatTimeout = (willReconnect) => {
+      client.onHeartbeatTimeout = willReconnect => {
         logger.log(`[WS] Heartbeat Timeout from ${getWS()}`);
         logger.log(`[WS] Will Reconnect = ${willReconnect}`);
       };
@@ -112,7 +106,6 @@ class App extends React.Component {
         delay: 1000,
       });
     }
-
   }
 
   componentDidMount() {
@@ -138,37 +131,44 @@ class App extends React.Component {
           // If the socket was already subscribed to an agent
           if (this.state.agent) {
             // Unsubscribe from the agent
-            this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.state.agent}`);
+            this.state.client.unsubscribe(
+              `/${ROUTE_AGENT}/${this.state.agent}`,
+            );
           }
-          const handler = (agent) => {
-
+          const handler = agent => {
             if (agent) {
               this.props.onRefreshAgent(agent);
             }
           };
-          this.state.client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}`, handler);
+          this.state.client.subscribe(
+            `/${ROUTE_AGENT}/${this.props.agent.id}`,
+            handler,
+          );
           this.setState({
             agent: this.props.agent.id,
           });
         }
       }
     }
-    if (this.state.socketClientConnected && !this.state.serverStatusConnected){
-      const handler = (server) => {
-
+    if (this.state.socketClientConnected && !this.state.serverStatusConnected) {
+      const handler = server => {
         if (server) {
           this.props.onRefreshServerInfo(server);
         }
       };
       this.state.client.subscribe('/', handler);
       this.setState({
-        serverStatusConnected: true
+        serverStatusConnected: true,
       });
     }
   }
 
   render() {
-    const { conversationBarOpen, onToggleConversationBar, notifications } = this.props;
+    const {
+      conversationBarOpen,
+      onToggleConversationBar,
+      notifications,
+    } = this.props;
     return (
       <div>
         <AppHeader
@@ -182,19 +182,38 @@ class App extends React.Component {
         />
         <AppContent conversationBarOpen={conversationBarOpen}>
           <Switch>
-            <Route exact path='/' component={AgentsPage} />
-            <Route exact path='/agent/:id' component={AgentPage} />
-            <Route exact path='/connection/:id' component={ConnectionPage} />
-            <Route exact path='/agent/:id/dialogue' component={DialoguePage} />
-            <Route exact path='/agent/:id/review' component={ReviewPage} />
-            <Route exact path='/agent/:id/keyword/:keywordId' component={KeywordsEditPage} />
-            <Route exact path='/agent/:id/addCategory' component={AddCategoryPage} />
-            <Route exact path='/agent/:id/category/:categoryId' component={CategoryPage} />
-            <Route exact path='/agent/:id/action/:actionId' component={ActionPage} />
-            <Route exact path='/settings' component={SettingsPage} />
-            <Route exact path='/missing-api' component={MissingAPIPage} />
-            <Redirect from='/agent/:id/actionDummy/:actionId' to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
-            <Route exact path='/login' component={UserAuthPage} />
+            <Route exact path="/" component={AgentsPage} />
+            <Route exact path="/agent/:id" component={AgentPage} />
+            <Route exact path="/connection/:id" component={ConnectionPage} />
+            <Route exact path="/agent/:id/dialogue" component={DialoguePage} />
+            <Route exact path="/agent/:id/review" component={ReviewPage} />
+            <Route
+              exact
+              path="/agent/:id/keyword/:keywordId"
+              component={KeywordsEditPage}
+            />
+            <Route
+              exact
+              path="/agent/:id/addCategory"
+              component={AddCategoryPage}
+            />
+            <Route
+              exact
+              path="/agent/:id/category/:categoryId"
+              component={CategoryPage}
+            />
+            <Route
+              exact
+              path="/agent/:id/action/:actionId"
+              component={ActionPage}
+            />
+            <Route exact path="/settings" component={SettingsPage} />
+            <Route exact path="/missing-api" component={MissingAPIPage} />
+            <Redirect
+              from="/agent/:id/actionDummy/:actionId"
+              to={`/agent/:id/action/:actionId?${this.props.location.search}`}
+            />
+            <Route exact path="/login" component={UserAuthPage} />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>
@@ -218,25 +237,25 @@ App.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onMissingAPI: (refURL) => {
+    onMissingAPI: refURL => {
       if (refURL !== '/missing-api') {
         dispatch(push('/missing-api'));
       }
     },
-    onCheckAPI: (refURL) => {
+    onCheckAPI: refURL => {
       if (refURL && refURL !== '/missing-api') {
         dispatch(checkAPI(refURL));
       }
       dispatch(checkAPI());
     },
-    onToggleConversationBar: (value) => {
+    onToggleConversationBar: value => {
       dispatch(toggleConversationBar(value));
     },
-    onRefreshAgent: (agent) => {
+    onRefreshAgent: agent => {
       agent.categoryClassifierThreshold *= 100;
       dispatch(loadAgentSuccess({ agent, socket: true }));
     },
-    onLoadAgent: (agentId) => {
+    onLoadAgent: agentId => {
       dispatch(loadAgent(agentId));
     },
     onLoadSettings: () => {
@@ -245,12 +264,12 @@ export function mapDispatchToProps(dispatch) {
     onLoadServerInfo: () => {
       dispatch(loadServerInfo());
     },
-    onChangeLanguage: (language) => {
+    onChangeLanguage: language => {
       dispatch(updateSetting('uiLanguage', language));
     },
-    onRefreshServerInfo: (server) => {
+    onRefreshServerInfo: server => {
       dispatch(refreshServerInfo(server));
-    }
+    },
   };
 }
 

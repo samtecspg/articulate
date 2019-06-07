@@ -13,70 +13,75 @@ import { compose } from 'redux';
 
 import { Grid, CircularProgress } from '@material-ui/core';
 import ContentHeader from 'components/ContentHeader';
+import injectSaga from 'utils/injectSaga';
+import qs from 'query-string';
 import Form from './Components/Form';
 
-import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
-
-import qs from 'query-string';
 
 import {
   makeSelectAgent,
   makeSelectLoadingImportCategory,
-  makeSelectPrebuiltCategories
+  makeSelectPrebuiltCategories,
 } from '../App/selectors';
 
-import {
-  loadPrebuiltCategories,
-  importCategory,
-} from '../App/actions';
+import { loadPrebuiltCategories, importCategory } from '../App/actions';
 
 import ActionButtons from './Components/ActionButtons';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AddCategoryPage extends React.Component {
-
   constructor(props) {
     super(props);
     this.initForm = this.initForm.bind(this);
   }
 
   state = {
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page : '',
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+      .filter
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter
+      : '',
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      : '',
   };
 
-  initForm(){
+  initForm() {
     this.props.onLoadPrebuiltCategories();
   }
 
   componentWillMount() {
-    if(this.props.agent.id) {
+    if (this.props.agent.id) {
       this.initForm();
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.agent.id && this.props.agent.id){
+    if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
   }
 
   render() {
-    return (
-      this.props.agent.id ?
+    return this.props.agent.id ? (
       <Grid container>
         <ContentHeader
-          title=''
-          subtitle=''
+          title=""
+          subtitle=""
           inlineElement={
             <ActionButtons
               page={this.state.page}
               filter={this.state.filter}
               agentId={this.props.agent.id}
               backButton={messages.backButton}
-              goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${this.state.filter}&page=${this.state.page}`)}}
+              goBack={() => {
+                this.props.onGoToUrl(
+                  `/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${
+                    this.state.filter
+                  }&page=${this.state.page}`,
+                );
+              }}
             />
           }
         />
@@ -87,8 +92,11 @@ export class AddCategoryPage extends React.Component {
           importCategory={this.props.onImportCategory}
           loading={this.props.loading}
         />
-      </Grid> : 
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -108,15 +116,15 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onGoToUrl: (url) => {
+    onGoToUrl: url => {
       dispatch(push(url));
     },
     onLoadPrebuiltCategories: () => {
       dispatch(loadPrebuiltCategories());
     },
-    onImportCategory: (category) => {
+    onImportCategory: category => {
       dispatch(importCategory(category));
-    }
+    },
   };
 }
 
@@ -129,5 +137,5 @@ const withSaga = injectSaga({ key: 'addCategory', saga });
 
 export default compose(
   withSaga,
-  withConnect
+  withConnect,
 )(AddCategoryPage);

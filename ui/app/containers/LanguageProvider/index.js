@@ -14,15 +14,15 @@ import { createSelector } from 'reselect';
 import { makeSelectLocale } from './selectors';
 
 export function LanguageProvider(props) {
-    return (
-      <IntlProvider
+  return (
+    <IntlProvider
       locale={props.locale}
       key={props.locale}
       messages={props.messages[props.locale]}
-      >
+    >
       {React.Children.only(props.children)}
-      </IntlProvider>
-    );
+    </IntlProvider>
+  );
 }
 
 LanguageProvider.propTypes = {
@@ -34,7 +34,7 @@ LanguageProvider.propTypes = {
 const mapStateToProps = createSelector(
   makeSelectLocale(),
   locale => ({
-  locale,
+    locale,
   }),
 );
 

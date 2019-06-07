@@ -51,7 +51,7 @@ const styles = {
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
     backgroundColor: '#fff',
-    borderBottom: '0px'
+    borderBottom: '0px',
   },
   modalContent: {
     top: '50%',
@@ -81,12 +81,12 @@ const styles = {
     fontWeight: 300,
   },
   categoryTabs: {
-    paddingLeft: "15px",
+    paddingLeft: '15px',
   },
   tabLabel: {
     padding: '0px 10px',
     position: 'relative',
-    top: '5px'
+    top: '5px',
   },
   notificationDot: {
     backgroundColor: '#Cb2121',
@@ -95,20 +95,19 @@ const styles = {
     borderRadius: '50%',
     position: 'absolute',
     top: '10px',
-    left: '5px'
+    left: '5px',
   },
   numOfErrorsLabel: {
     fontSize: '10px',
     color: 'white',
     position: 'relative',
     bottom: '4.5px',
-    left: '0.5px'
+    left: '0.5px',
   },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
-
   state = {
     selectedTab: 0,
     openModal: false,
@@ -135,16 +134,15 @@ class Form extends React.Component {
   render() {
     const { classes, intl } = this.props;
     return (
-
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
           <Grid className={classes.titleTextHelpContainer} container>
-            <Typography className={classes.title} variant='h2'>
+            <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.formTitle} />
             </Typography>
             <Button
               className={classes.helpButton}
-              variant='outlined'
+              variant="outlined"
               onClick={this.handleOpen}
             >
               <img
@@ -159,11 +157,11 @@ class Form extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
-                  width='100%'
-                  height='100%'
-                  src='https://www.youtube.com/embed/WoZkMN0m1oA'
-                  frameBorder='0'
-                  allow='autoplay; encrypted-media'
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/WoZkMN0m1oA"
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
                   allowFullScreen
                 />
               </Grid>
@@ -196,7 +194,7 @@ Form.propTypes = {
   agentId: PropTypes.string,
   onGoToUrl: PropTypes.func,
   importCategory: PropTypes.func,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(Form));

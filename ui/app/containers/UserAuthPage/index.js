@@ -1,9 +1,4 @@
-import {
-  Grid,
-  Paper,
-  Tab,
-  Tabs,
-} from '@material-ui/core';
+import { Grid, Paper, Tab, Tabs } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -13,10 +8,7 @@ import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import injectSaga from '../../utils/injectSaga';
-import {
-  loginUser,
-  signUpUser,
-} from '../App/actions';
+import { loginUser, signUpUser } from '../App/actions';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import saga from './saga';
@@ -73,8 +65,8 @@ export class UserAuthPage extends React.PureComponent {
         <Paper square className={classes.root}>
           <Tabs
             value={selectedTab}
-            indicatorColor='primary'
-            textColor='secondary'
+            indicatorColor="primary"
+            textColor="secondary"
             onChange={this.handleTabChange}
             centered
             fullWidth
@@ -82,27 +74,26 @@ export class UserAuthPage extends React.PureComponent {
             <Tab value={TAB_LOGIN} label="Login" />
             <Tab value={TAB_SIGN_UP} label="Sign Up" />
           </Tabs>
-          {
-            selectedTab === TAB_LOGIN &&
+          {selectedTab === TAB_LOGIN && (
             <LoginForm
               onLogin={this.onLogin}
               onInputChange={this.onInputChange}
               username={username}
               password={password}
             />
-          }
-          {selectedTab === TAB_SIGN_UP &&
-          <SignUpForm
-            onSignUp={this.onSignUp}
-            onInputChange={this.onInputChange}
-            username={username}
-            password={password}
-            name={name}
-            lastName={lastName}
-          />}
+          )}
+          {selectedTab === TAB_SIGN_UP && (
+            <SignUpForm
+              onSignUp={this.onSignUp}
+              onInputChange={this.onInputChange}
+              username={username}
+              password={password}
+              name={name}
+              lastName={lastName}
+            />
+          )}
         </Paper>
       </Grid>
-
     );
   }
 }
@@ -118,7 +109,7 @@ const mapStateToProps = createStructuredSelector({});
 
 function mapDispatchToProps(dispatch) {
   return {
-    onGoToUrl: (url) => {
+    onGoToUrl: url => {
       dispatch(push(url));
     },
     onLogin: (username, password) => {
@@ -131,9 +122,16 @@ function mapDispatchToProps(dispatch) {
 }
 
 const withSaga = injectSaga({ key: 'user', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default injectIntl(withStyles(styles)(compose(
-  withSaga,
-  withConnect,
-)(UserAuthPage)));
+export default injectIntl(
+  withStyles(styles)(
+    compose(
+      withSaga,
+      withConnect,
+    )(UserAuthPage),
+  ),
+);

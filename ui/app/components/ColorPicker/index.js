@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { SwatchesPicker } from 'react-color';
 
 import { withStyles } from '@material-ui/core/styles';
-import { Grid }  from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 const styles = {
   swatchContainer: {
@@ -19,7 +19,7 @@ const styles = {
     borderRadius: '50%',
     cursor: 'pointer',
     position: 'absolute',
-    right: '5%'
+    right: '5%',
   },
   swatch: {
     padding: '5px',
@@ -52,45 +52,48 @@ const styles = {
     height: '2.4rem',
   },
   expandArrow: {
-    float:'right',
+    float: 'right',
     marginTop: 15,
     marginRight: 5,
   },
 };
 
-function ColorPicker(props) { // eslint-disable-line react/prefer-stateless-function
+function ColorPicker(props) {
+  // eslint-disable-line react/prefer-stateless-function
 
   const { classes, dotDisplay } = props;
-  return (
-    dotDisplay ? 
-    <Grid style={{background: props.color }} className={classes.swatchContainerDot} >
-      <Grid className={ classes.swatchDot } onClick={ props.handleOpen }>
-        <div style={{background: props.color }} className={ classes.color } />
+  return dotDisplay ? (
+    <Grid
+      style={{ background: props.color }}
+      className={classes.swatchContainerDot}
+    >
+      <Grid className={classes.swatchDot} onClick={props.handleOpen}>
+        <div style={{ background: props.color }} className={classes.color} />
       </Grid>
-      {
-        props.displayColorPicker ?
-          <Grid className={ classes.popover }>
-            <Grid className={ classes.cover } onClick={ props.handleClose }/>
-            <SwatchesPicker color={ props.color } onChange={ props.handleColorChange } />
-          </Grid>
-          :
-          null
-      }
+      {props.displayColorPicker ? (
+        <Grid className={classes.popover}>
+          <Grid className={classes.cover} onClick={props.handleClose} />
+          <SwatchesPicker
+            color={props.color}
+            onChange={props.handleColorChange}
+          />
+        </Grid>
+      ) : null}
     </Grid>
-    :
+  ) : (
     <Grid className={classes.swatchContainer}>
-      <Grid className={ classes.swatch } onClick={ props.handleOpen }>
-        <div style={{background: props.color }} className={ classes.color } />
+      <Grid className={classes.swatch} onClick={props.handleOpen}>
+        <div style={{ background: props.color }} className={classes.color} />
       </Grid>
-      {
-        props.displayColorPicker ?
-          <Grid className={ classes.popover }>
-            <Grid className={ classes.cover } onClick={ props.handleClose }/>
-            <SwatchesPicker color={ props.color } onChange={ props.handleColorChange } />
-          </Grid>
-          :
-          null
-      }
+      {props.displayColorPicker ? (
+        <Grid className={classes.popover}>
+          <Grid className={classes.cover} onClick={props.handleClose} />
+          <SwatchesPicker
+            color={props.color}
+            onChange={props.handleColorChange}
+          />
+        </Grid>
+      ) : null}
     </Grid>
   );
 }

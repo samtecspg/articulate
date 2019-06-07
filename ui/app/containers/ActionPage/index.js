@@ -10,19 +10,18 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 
 import { Grid, CircularProgress } from '@material-ui/core';
+import injectSaga from 'utils/injectSaga';
+import qs from 'query-string';
 import MainTab from './Components/MainTab';
 import ActionForm from './Components/ActionForm';
 import SlotsForm from './Components/SlotsForm';
 import WebhookForm from './Components/WebhookForm';
 import ResponseForm from './Components/ResponseForm';
 
-import injectSaga from 'utils/injectSaga';
 import saga from './saga';
-
-import qs from 'query-string';
 
 import {
   makeSelectAction,
@@ -36,7 +35,7 @@ import {
   makeSelectSuccessAction,
   makeSelectLoading,
   makeSelectActionTouched,
-  makeSelectNewActionResponse
+  makeSelectNewActionResponse,
 } from '../App/selectors';
 
 import {
@@ -90,19 +89,40 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 export class ActionPage extends React.Component {
-
   state = {
     isNewAction: this.props.match.params.actionId === 'create',
-    currentTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionTab ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionTab : 'action',
+    currentTab: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).actionTab
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+          .actionTab
+      : 'action',
     userCompletedAllRequiredFields: false,
     ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
-    refActionId: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionId,
+    refActionId: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).actionId,
     tab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab,
-    actionTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionTab,
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page : '',
-    isDuplicate: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).isDuplicate ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).isDuplicate : '',
-    actionId: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionId ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).actionId : '',
+    actionTab: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+      .actionTab,
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+      .filter
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter
+      : '',
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      : '',
+    isDuplicate: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).isDuplicate
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+          .isDuplicate
+      : '',
+    actionId: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+      .actionId
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+          .actionId
+      : '',
     formError: false,
     exitAfterSubmit: false,
     errorState: {
@@ -116,10 +136,10 @@ export class ActionPage extends React.Component {
       slotsTabs: [],
     },
     actionFilter: '',
-    exitUrl: ''
+    exitUrl: '',
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.moveNextTab = this.moveNextTab.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
@@ -128,44 +148,51 @@ export class ActionPage extends React.Component {
     this.onSearchActions = this.onSearchActions.bind(this);
   }
 
-  initForm(){
+  initForm() {
     this.props.onLoadKeywords();
     this.props.onLoadActions();
-    if(this.state.isNewAction) {
-      if (this.state.isDuplicate && this.state.actionId){
+    if (this.state.isNewAction) {
+      if (this.state.isDuplicate && this.state.actionId) {
         this.props.onLoadAction(this.state.actionId, this.state.isDuplicate);
       }
       this.props.onResetData();
-    }
-    else {
+    } else {
       this.props.onLoadAction(this.props.match.params.actionId);
     }
   }
 
   componentDidMount() {
-    const exitUrl = this.state.ref === 'agent' ? 
-      `/agent/${this.props.agent.id}` : 
-      (this.state.ref === 'action' ? 
-        `/agent/${this.props.agent.id}/actionDummy/${this.state.refActionId}?filter=${this.state.filter}&page=${this.state.page}&actionTab=response` :
-        `/agent/${this.props.agent.id}/dialogue?filter=${this.state.filter}&page=${this.state.page}${this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'}`
-      );
+    const exitUrl =
+      this.state.ref === 'agent'
+        ? `/agent/${this.props.agent.id}`
+        : this.state.ref === 'action'
+        ? `/agent/${this.props.agent.id}/actionDummy/${
+            this.state.refActionId
+          }?filter=${this.state.filter}&page=${
+            this.state.page
+          }&actionTab=response`
+        : `/agent/${this.props.agent.id}/dialogue?filter=${
+            this.state.filter
+          }&page=${this.state.page}${
+            this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'
+          }`;
     this.setState({
-      exitUrl
-    })
+      exitUrl,
+    });
   }
 
   componentWillMount() {
-    if(this.props.agent.id) {
+    if (this.props.agent.id) {
       this.initForm();
     }
   }
 
-  componentDidUpdate(prevProps){
-    if (!prevProps.agent.id && this.props.agent.id){
+  componentDidUpdate(prevProps) {
+    if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
     if (this.props.success) {
-      if (this.state.exitAfterSubmit){
+      if (this.state.exitAfterSubmit) {
         this.props.onSuccess(this.state.exitUrl);
       }
       if (this.state.isNewAction) {
@@ -176,24 +203,24 @@ export class ActionPage extends React.Component {
     }
   }
 
-  moveNextTab(){
+  moveNextTab() {
     // If isn't currently on the last tab
-    if (this.state.currentTab !== 'response'){
+    if (this.state.currentTab !== 'response') {
       const tabs = ['action', 'slots', 'webhook', 'response'];
       const currentTab = tabs.indexOf(this.state.currentTab);
       const nextTab = currentTab + 1;
       this.setState({
         currentTab: tabs[nextTab],
-      })
+      });
     }
   }
 
-  onChangeTab(tab){
+  onChangeTab(tab) {
     this.setState({
       currentTab: tab,
     });
   }
-  
+
   onSearchActions(actionFilter) {
     this.setState({
       actionFilter,
@@ -201,7 +228,7 @@ export class ActionPage extends React.Component {
     this.props.onLoadFilteredActions(actionFilter);
   }
 
-  submit(exit){
+  submit(exit) {
     let errors = false;
     const newErrorState = {
       actionName: false,
@@ -214,65 +241,65 @@ export class ActionPage extends React.Component {
       slotsTabs: [],
     };
 
-    if (!this.props.action.actionName || this.props.action.actionName === ''){
+    if (!this.props.action.actionName || this.props.action.actionName === '') {
       errors = true;
       newErrorState.actionName = true;
       newErrorState.tabs.push(0);
-    }
-    else {
+    } else {
       newErrorState.actionName = false;
     }
 
-    if (this.props.action.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')){
+    if (
+      this.props.action.useWebhook &&
+      (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')
+    ) {
       errors = true;
       newErrorState.webhookUrl = true;
       newErrorState.tabs.push(2);
-    }
-    else {
+    } else {
       newErrorState.webhookUrl = false;
     }
 
-    if (!this.props.action.responses || this.props.action.responses.length === 0){
+    if (
+      !this.props.action.responses ||
+      this.props.action.responses.length === 0
+    ) {
       errors = true;
       newErrorState.responses = true;
       newErrorState.tabs.push(3);
-    }
-    else {
+    } else {
       newErrorState.responses = false;
     }
 
-    if (this.props.action.slots.length > 0){
+    if (this.props.action.slots.length > 0) {
       this.props.action.slots.forEach((slot, slotIndex) => {
         const newSlotError = {
           slotName: false,
           keyword: false,
           textPrompts: false,
         };
-        if (!slot.slotName){
+        if (!slot.slotName) {
           errors = true;
           newSlotError.slotName = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        }
-        else{
+        } else {
           newSlotError.slotName = false;
         }
-        if (!slot.keyword){
+        if (!slot.keyword) {
           errors = true;
           newSlotError.keyword = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        }
-        else{
+        } else {
           newSlotError.keyword = false;
         }
-        if (slot.isRequired && slot.textPrompts.length === 0){
+        if (slot.isRequired && slot.textPrompts.length === 0) {
           errors = true;
           newSlotError.textPrompts = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        }
-        else{
+        } else {
           newSlotError.textPrompts = false;
         }
         newErrorState.slots.push(newSlotError);
@@ -280,56 +307,69 @@ export class ActionPage extends React.Component {
     }
 
     try {
-      if (this.props.action.usePostFormat && this.props.postFormat.postFormatPayload === ''){
+      if (
+        this.props.action.usePostFormat &&
+        this.props.postFormat.postFormatPayload === ''
+      ) {
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.postFormatPayload = true;
       newErrorState.tabs.push(3);
     }
 
     try {
-      if (this.props.action.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === ''){
+      if (
+        this.props.action.useWebhook &&
+        this.props.webhook.webhookPayloadType !== 'None' &&
+        this.props.webhook.webhookPayload === ''
+      ) {
         throw 'Webhook payload is not an object';
       }
       newErrorState.webhookPayload = false;
-    } catch(e) {
+    } catch (e) {
       errors = true;
       newErrorState.webhookPayload = true;
       newErrorState.tabs.push(2);
     }
 
-    if (!errors){
+    if (!errors) {
       this.setState({
         formError: false,
         exitAfterSubmit: exit,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
-      if (this.state.isNewAction){
+      if (this.state.isNewAction) {
         // If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
-        this.props.onAddNewAction(this.props.saying.agent === '' && this.state.ref !== 'agent' && this.state.ref !== 'action');
-      }
-      else {
+        this.props.onAddNewAction(
+          this.props.saying.agent === '' &&
+            this.state.ref !== 'agent' &&
+            this.state.ref !== 'action',
+        );
+      } else {
         this.props.onEditAction();
       }
-    }
-    else {
+    } else {
       this.setState({
         formError: true,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
     }
   }
 
   render() {
     const { classes } = this.props;
-    return (
-      this.props.agent.id && (this.props.saying.keywords.length === 0 || (this.props.saying.keywords.length > 0 && this.props.agentKeywords.length > 0)) ?
+    return this.props.agent.id &&
+      (this.props.saying.keywords.length === 0 ||
+        (this.props.saying.keywords.length > 0 &&
+          this.props.agentKeywords.length > 0)) ? (
       <Grid container>
         <Grid container>
-          <Grid className={classes.goBackCard} onClick={() => {
+          <Grid
+            className={classes.goBackCard}
+            onClick={() => {
               this.props.onGoToUrl(this.state.exitUrl);
             }}
           />
@@ -338,14 +378,19 @@ export class ActionPage extends React.Component {
           touched={this.props.touched}
           loading={this.props.loading}
           success={this.props.success}
-          onSaveAndExit={() => { this.submit(true) }}
+          onSaveAndExit={() => {
+            this.submit(true);
+          }}
           goBack={() => {
             this.props.onGoToUrl(this.state.exitUrl);
           }}
           newAction={this.state.isNewAction}
           actionName={this.props.action.actionName}
           formError={this.state.formError}
-          hideFinishButton={this.state.currentTab === 'action' && !this.state.userCompletedAllRequiredFields}
+          hideFinishButton={
+            this.state.currentTab === 'action' &&
+            !this.state.userCompletedAllRequiredFields
+          }
           isLastTab={this.state.currentTab === 'response'}
           onFinishAction={this.submit}
           onNextAction={this.moveNextTab}
@@ -357,7 +402,11 @@ export class ActionPage extends React.Component {
               onChangeActionName={this.props.onChangeActionName}
               errorState={this.state.errorState}
               newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
+              onDelete={this.props.onDelete.bind(
+                null,
+                this.props.action.id,
+                this.props.action.actionName,
+              )}
             />
           }
           slotsForm={
@@ -373,7 +422,11 @@ export class ActionPage extends React.Component {
               agentKeywords={this.props.agentKeywords}
               errorState={this.state.errorState}
               newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
+              onDelete={this.props.onDelete.bind(
+                null,
+                this.props.action.id,
+                this.props.action.actionName,
+              )}
               onSortSlots={this.props.onSortSlots}
               onDeleteSlot={this.props.onDeleteSlot}
             />
@@ -391,7 +444,11 @@ export class ActionPage extends React.Component {
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               errorState={this.state.errorState}
               newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
+              onDelete={this.props.onDelete.bind(
+                null,
+                this.props.action.id,
+                this.props.action.actionName,
+              )}
             />
           }
           responseForm={
@@ -406,11 +463,17 @@ export class ActionPage extends React.Component {
               onAddResponse={this.props.onAddResponse}
               onDeleteResponse={this.props.onDeleteResponse}
               onChainActionToResponse={this.props.onChainActionToResponse}
-              onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
+              onUnchainActionFromResponse={
+                this.props.onUnchainActionFromResponse
+              }
               errorState={this.state.errorState}
               agentActions={this.props.agentActions}
               newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(null, this.props.action.id, this.props.action.actionName)}
+              onDelete={this.props.onDelete.bind(
+                null,
+                this.props.action.id,
+                this.props.action.actionName,
+              )}
               newResponse={this.props.newResponse}
               onUpdateNewResponse={this.props.onUpdateNewResponse}
               onCopyResponse={this.props.onCopyResponse}
@@ -422,8 +485,11 @@ export class ActionPage extends React.Component {
           }
           onChangeTab={this.onChangeTab}
         />
-      </Grid> : 
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -504,10 +570,10 @@ function mapDispatchToProps(dispatch) {
     onChangeActionData: (field, value) => {
       dispatch(changeActionData({ field, value }));
     },
-    onAddResponse: (response) => {
+    onAddResponse: response => {
       dispatch(addActionResponse(response));
     },
-    onDeleteResponse: (responseIndex) => {
+    onDeleteResponse: responseIndex => {
       dispatch(deleteActionResponse(responseIndex));
     },
     onChainActionToResponse: (responseIndex, actionName) => {
@@ -517,15 +583,15 @@ function mapDispatchToProps(dispatch) {
       dispatch(unchainActionFromResponse(responseIndex, actionIndex));
     },
     onChangeWebhookData: (field, value) => {
-      dispatch(changeActionWebhookData({field, value}));
+      dispatch(changeActionWebhookData({ field, value }));
     },
     onChangeWebhookPayloadType: (field, value) => {
-      dispatch(changeActionWebhookPayloadType({field, value}));
+      dispatch(changeActionWebhookPayloadType({ field, value }));
     },
-    onAddNewHeader: (payload) => {
+    onAddNewHeader: payload => {
       dispatch(addNewHeaderActionWebhook(payload));
     },
-    onDeleteHeader: (headerIndex) => {
+    onDeleteHeader: headerIndex => {
       dispatch(deleteHeaderActionWebhook(headerIndex));
     },
     onChangeHeaderName: (headerIndex, value) => {
@@ -535,19 +601,19 @@ function mapDispatchToProps(dispatch) {
       dispatch(changeHeaderValueActionWebhook(headerIndex, value));
     },
     onChangePostFormatData: (field, value) => {
-      dispatch(changeActionPostFormatData({field, value}));
+      dispatch(changeActionPostFormatData({ field, value }));
     },
-    onAddNewAction: (addToNewSayingActions) => {
+    onAddNewAction: addToNewSayingActions => {
       dispatch(addAction(addToNewSayingActions));
     },
-    onSuccess: (url) => {
+    onSuccess: url => {
       dispatch(resetStatusFlag());
       dispatch(push(url));
     },
     onEditAction: () => {
       dispatch(updateAction());
     },
-    onGoToUrl: (url) => {
+    onGoToUrl: url => {
       dispatch(push(url));
     },
     onDelete: (id, actionName) => {
@@ -557,33 +623,33 @@ function mapDispatchToProps(dispatch) {
       dispatch(addNewSlot());
     },
     onChangeSlotName: (slotIndex, slotName) => {
-      dispatch(changeSlotName({slotIndex, slotName}));
+      dispatch(changeSlotName({ slotIndex, slotName }));
     },
     onChangeSlotData: (slotIndex, field, value) => {
-      dispatch(changeSlotData({slotIndex, field, value}))
+      dispatch(changeSlotData({ slotIndex, field, value }));
     },
     onAddTextPrompt: (slotIndex, newTextPrompt) => {
-      dispatch(addSlotTextPrompt({slotIndex, newTextPrompt}))
+      dispatch(addSlotTextPrompt({ slotIndex, newTextPrompt }));
     },
     onDeleteTextPrompt: (slotIndex, textPromptIndex) => {
-      dispatch(deleteSlotTextPrompt({slotIndex, textPromptIndex}));
+      dispatch(deleteSlotTextPrompt({ slotIndex, textPromptIndex }));
     },
     onSortSlots: (oldIndex, newIndex) => {
       dispatch(sortSlots(oldIndex, newIndex));
     },
-    onDeleteSlot: (slotIndex) => {
+    onDeleteSlot: slotIndex => {
       dispatch(deleteSlot(slotIndex));
     },
-    onUpdateNewResponse: (response) => {
+    onUpdateNewResponse: response => {
       dispatch(updateNewResponse(response));
     },
-    onCopyResponse: (response) => {
+    onCopyResponse: response => {
       dispatch(copyResponse(response));
     },
     onEditActionResponse: (newResponse, responseIndex) => {
       dispatch(editActionResponse(newResponse, responseIndex));
     },
-    onLoadFilteredActions: (filter) => {
+    onLoadFilteredActions: filter => {
       dispatch(loadFilteredActions(filter));
     },
     onLoadActions: () => {
@@ -602,5 +668,5 @@ const withSaga = injectSaga({ key: 'action', saga });
 export default compose(
   withSaga,
   withConnect,
-  withStyles(styles)
+  withStyles(styles),
 )(ActionPage);

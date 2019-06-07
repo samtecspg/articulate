@@ -6,13 +6,8 @@ import React from 'react';
 const styles = {};
 
 function TextCell(props) {
-  const {
-    children,
-    ...rest
-  } = props;
-  return <TableCell {...rest}>
-    {children}
-  </TableCell>;
+  const { children, ...rest } = props;
+  return <TableCell {...rest}>{children}</TableCell>;
 }
 
 TextCell.propTypes = {
