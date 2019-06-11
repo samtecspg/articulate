@@ -4,13 +4,14 @@ import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Hidden, Button, Typography } from '@material-ui/core';
+import { Grid, Hidden, Button, Typography, Tooltip } from '@material-ui/core';
 import { compose } from 'redux';
 import messages from './messages';
 
 import logo from '../../images/logo.svg';
 import agentsIcon from '../../images/agents-icon.svg';
 import chatIcon from '../../images/chat-icon.svg';
+import shareIcon from '../../images/share-icon.svg';
 
 import ConversationBar from '../ConversationBar';
 import LanguageSelect from '../LanguageSelect';
@@ -68,6 +69,17 @@ const styles = {
     fontWeight: '500',
     fontSize: '16px',
   },
+  shareIcon: {
+    '&:hover': { 
+      filter: 'invert(0) !important' 
+    },
+    filter: 'invert(1)',
+    cursor: 'pointer',
+    width: '15px',
+    marginLeft: '5px',
+    position: 'relative',
+    top: '2px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -165,6 +177,9 @@ export class AppHeader extends React.Component {
                   className: classes.agentIcon,
                 })}
                 <span className={classes.agentName}>{agent.agentName}</span>
+                <Tooltip title={intl.formatMessage(messages.shareAgent)} placement='bottom'>
+                  <img src={shareIcon} className={classes.shareIcon} onClick={() => { this.props.onShareAgent(agent.id) }} />
+                </Tooltip>
               </Typography>
             ) : null}
           </Grid>
@@ -280,6 +295,9 @@ export class AppHeader extends React.Component {
                   className: classes.agentIcon,
                 })}
                 <span>{agent.agentName}</span>
+                <Tooltip title={intl.formatMessage(messages.shareAgent)} placement='bottom'>
+                  <img src={shareIcon} className={classes.shareIcon} onClick={() => { this.props.onShareAgent(agent.id) }} />
+                </Tooltip>
               </Typography>
             ) : null}
           </Grid>
@@ -354,6 +372,9 @@ export class AppHeader extends React.Component {
                     className: classes.agentIcon,
                   })}
                   <span className={classes.agentName}>{agent.agentName}</span>
+                  <Tooltip title={intl.formatMessage(messages.shareAgent)} placement='bottom'>
+                    <img src={shareIcon} className={classes.shareIcon} onClick={() => { this.props.onShareAgent(agent.id) }} />
+                  </Tooltip>
                 </Typography>
               ) : null}
             </Grid>
@@ -418,6 +439,7 @@ AppHeader.propTypes = {
   onChangeLanguage: PropTypes.func,
   agent: PropTypes.object,
   demoMode: PropTypes.bool,
+  onShareAgent: PropTypes.func,
 };
 
 const withDefinedStyles = withStyles(styles);

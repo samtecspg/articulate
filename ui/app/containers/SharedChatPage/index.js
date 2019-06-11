@@ -17,7 +17,7 @@ import messages from './messages';
 import saga from './saga';
 import gravatars from '../../components/Gravatar';
 import { makeSelectAgent, makeSelectConnection } from '../App/selectors';
-import { loadConnection } from '../App/actions';
+import { loadConnection, toggleConversationBar } from '../App/actions';
 
 const styles = {
   mainContainer: { 
@@ -79,6 +79,7 @@ export class SharedChatPage extends React.PureComponent {
 
   componentWillMount(){
     this.props.onLoadConnection(this.props.match.params.id);
+    this.props.onToggleConversationBar(true);
   }
 
   render() {
@@ -145,6 +146,9 @@ function mapDispatchToProps(dispatch) {
   return {
     onLoadConnection(id){
       dispatch(loadConnection(id));
+    },
+    onToggleConversationBar(value){
+      dispatch(toggleConversationBar(value));
     }
   };
 }

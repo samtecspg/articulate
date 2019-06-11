@@ -182,6 +182,7 @@ class App extends React.Component {
           conversationBarOpen={conversationBarOpen}
           notifications={notifications}
           demoMode={demoMode}
+          onShareAgent={this.props.onShareAgent}
         />
         <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen}>
           <Switch>
@@ -274,6 +275,9 @@ export function mapDispatchToProps(dispatch) {
     onRefreshServerInfo: server => {
       dispatch(refreshServerInfo(server));
     },
+    onShareAgent: agentId => {
+      dispatch(push(`/connection/create?channel=web-demo&agent=${agentId}`));
+    }
   };
 }
 

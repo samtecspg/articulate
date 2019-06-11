@@ -21,5 +21,9 @@ export default defineMessages({
   openChatButtonSmall: {
     id: 'app.components.AppHeader.openChatButtonSmall',
     defaultMessage: 'Chat',
+  },
+  shareAgent: {
+    id: 'app.components.AppHeader.shareAgent',
+    defaultMessage: 'Share agent for user testing in a web demo',
   }
 });

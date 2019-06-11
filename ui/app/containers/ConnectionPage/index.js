@@ -16,6 +16,7 @@ import injectSaga from 'utils/injectSaga';
 import MainTab from './Components/MainTab';
 import ConnectionForm from './Components/ConnectionForm';
 import DetailsForm from './Components/DetailsForm';
+import qs from 'query-string';
 
 import saga from './saga';
 
@@ -66,11 +67,32 @@ export class ConnectionPage extends React.Component {
       details: {},
       tabs: [],
     },
+    channel: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).channel
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).channel
+      : '',
+    agent: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).agent
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).agent
+      : '',
   };
 
   initForm() {
     if (this.state.isNewConnection) {
       this.props.onResetData();
+      if (this.state.channel){
+        this.props.onChangeConnectionData(
+          'channel',
+          this.state.channel,
+        );
+      }
+      if (this.state.agent){
+        this.props.onChangeConnectionData(
+          'agent',
+          this.state.agent,
+        );
+      }
+      if (this.state.channel && this.state.agent){
+        this.onChangeTab('details');
+      }
     } else {
       this.props.onLoadConnection(this.props.match.params.id);
     }

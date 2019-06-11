@@ -1,44 +1,22 @@
 # ROCKET.CHAT CHANNEL
 
-This connector will allow sending messages between your Rocket.Chat server and your agents
+This connector will allow you to share with external users a demo of your Articulate agent
 
 ## Prerequisites
 
-1. Admin access to your Rocket.Chat server
-2. [Create a bot user](https://rocket.chat/docs/bots/creating-bot-users/)
+1. An agent trained in Articulate platform
 
 ## Configuration
 
-1. In Articulate UI create a connection between Rocket.Chat and your agent. Fill the details with the hostname, bot username, and bot password.
+1. There is two ways of create a connection between the Web Demo and your agent. You could use the share button that is located next of your agent's name. Or you could create it by selecting the `Web demo` option in the dropdown of channels in the connection form.
 
-![Connection Details](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/01%20-%20Connection%20Details.png)
+![Share icon](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/web-demo/screenshots/01%20-%Share%icon.png)
 
-2. It's time to configure your Rocket.Chat incoming integration. For this, copy the Callback URL provided by Articulate. In case it isn't complete, please change the proper values to point to your public Articulate API server address.
+![Web demo channel](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/web-demo/screenshots/02%20-%20Web%20demo%20channel.png)
 
-3. Now go to Rocket.Chat administration panel and click on Integrations. Then in the integrations screen, click in the upper right corner to add a *New Integration*.
+2. Once you selected the web demo channel and your agent, or, if you clicked on the share icon, you will move to the details tab. In this tab you can add a message to your users. This message could be anything you like, you can see an example in the screenshot.
 
-4. Select the *Outgoing WebHook* option.
+![Web demo example](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/web-demo/screenshots/02%20-%20Agent%20custom%20message.png)
 
-5. In the Event Trigger dropdown select Message Sent.
 
-6. The default value of your integration is to be disabled, so make sure to enable it.
-
-7. Give it a name, which is optional, but good to identify your integations if you have more than one.
-
-8. Now is time to configure what channels is your bot listening. You can enter as many values as you want separated by commas.
-
-9. You can also set trigger words if you think that will help to enhance the user experience.
-
-10. Paste the callback URL provided by Articulate in the URLs textbox.
-
-11. In the *Post as* please type your bot user name.
-
-12. Check out the other settings in case you want to personalize your bot settings, but defaults values are good to go.
-
-13. Save your changes. Your configuration should look somehting like this:
-
-![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/02%20-%20Integration%20Settings%2001.png)
-
-![Integration Settings Summary](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/screenshots/03%20-%20Integration%20Settings%2002.png)
-
-14. Now based on the values you specified on the step 8, make a test of your bot. It should work now.
+4. With the link generated in the `Connection` tab once you hit save your users will be able to talk with your agent. Share this link as many times as you want an your users will have different sessions to talk with your agent. Remember you can review their conversations in the `Review` tab of Articulate.
