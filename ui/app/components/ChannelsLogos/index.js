@@ -6,6 +6,7 @@ import slack from '../../images/slack.png';
 import facebook from '../../images/fb-messenger.png';
 import twilio from '../../images/twilio.png';
 import rocketchat from '../../images/rocketchat.png';
+import webDemo from '../../images/web-demo.png';
 
 const logosDir = {
   'google-home': googleAssistant,
@@ -13,9 +14,8 @@ const logosDir = {
   facebook,
   twilio,
   rocketchat,
+  'web-demo': webDemo
 };
-
-// 4285F4
 
 function ChannelsLogos(props) {
   const { logo, ...rest } = props;

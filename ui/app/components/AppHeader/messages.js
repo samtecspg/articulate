@@ -18,4 +18,8 @@ export default defineMessages({
     id: 'app.components.AppHeader.openChatButton',
     defaultMessage: 'Open Chat',
   },
+  openChatButtonSmall: {
+    id: 'app.components.AppHeader.openChatButtonSmall',
+    defaultMessage: 'Chat',
+  }
 });

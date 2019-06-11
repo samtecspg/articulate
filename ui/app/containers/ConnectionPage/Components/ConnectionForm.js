@@ -287,7 +287,7 @@ class ConnectionForm extends React.Component {
                   </TextField>
                 </Grid>
               </Grid>
-              {!this.props.newConnection ? (
+              {!this.props.newConnection ? (connection.channel !== 'web-demo' ? (
                 <Grid container item xs={12}>
                   <Grid item xs={12}>
                     <TextField
@@ -344,6 +344,29 @@ class ConnectionForm extends React.Component {
                     </Grid>
                   ) : null}
                 </Grid>
+              ) : 
+              <Grid container item xs={12}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="shareLink"
+                    value={`${window.location.protocol}//${
+                      window.location.hostname
+                    }${window.location.port === 80 ? null : `:${window.location.port}`}/demo/${
+                      connection.id
+                    }`}
+                    label={intl.formatMessage(messages.shareUrl)}
+                    margin="normal"
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    disabled
+                    inputProps={{
+                      className: classes.disabledFields,
+                    }}
+                  />
+                </Grid>
+              </Grid>
               ) : null}
             </Grid>
           </Grid>

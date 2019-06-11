@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
 
@@ -89,6 +89,7 @@ export class AppHeader extends React.Component {
       conversationBarOpen,
       notifications,
       agent,
+      demoMode
     } = this.props;
 
     let notificationDotColor = '#358fec';
@@ -116,20 +117,30 @@ export class AppHeader extends React.Component {
             uiLanguages={this.props.uiLanguages}
             onChangeLanguage={this.props.onChangeLanguage}
             onToggleConversationBar={this.props.onToggleConversationBar}
+            demoMode={demoMode}
           />
           <Grid item xl={2} lg={2} md={2}>
+            {demoMode ?
+            <a href='https://spg.ai/projects/articulate/' target='_blank'>
+              <img
+                className={classes.logo}
+                src={logo}
+                alt={intl.formatMessage(messages.articulateLogoAlt)}
+              />
+            </a> :
             <Link
               onClick={() => {
                 this.props.onToggleConversationBar(false);
               }}
-              to="/"
+              to={'/'}
+              
             >
               <img
                 className={classes.logo}
                 src={logo}
                 alt={intl.formatMessage(messages.articulateLogoAlt)}
               />
-            </Link>
+            </Link>}
           </Grid>
           <Grid item xl={2} lg={2} md={2} />
           <Grid
@@ -142,6 +153,7 @@ export class AppHeader extends React.Component {
             {this.props.location.pathname.indexOf('connection') === -1 &&
             this.props.location.pathname.indexOf('settings') === -1 &&
             this.props.location.pathname.indexOf('login') === -1 &&
+            this.props.location.pathname.indexOf('demo') === -1 &&
             agent.gravatar !== '' &&
             this.props.location.pathname !== '/' ? (
               <Typography
@@ -158,61 +170,80 @@ export class AppHeader extends React.Component {
           </Grid>
         </Hidden>
         <Hidden only={['md', 'lg', 'xl']}>
-          <Grid className={classes.languageSelectContainer}>
-            <LanguageSelect
-              key="selectLanguage"
+          {demoMode ?
+            <ConversationBar
               uiLanguage={this.props.uiLanguage}
               uiLanguages={this.props.uiLanguages}
               onChangeLanguage={this.props.onChangeLanguage}
-            />
-          </Grid>
-          <ConversationBar
-            uiLanguage={this.props.uiLanguage}
-            uiLanguages={this.props.uiLanguages}
-            onChangeLanguage={this.props.onChangeLanguage}
-            onToggleConversationBar={this.props.onToggleConversationBar}
-          />
-          <Grid item sm={6} xs={6}>
-            <Link
-              onClick={() => {
-                this.props.onToggleConversationBar(false);
-              }}
-              to="/"
-              className={classes.link}
-            >
-              <Button variant="contained">
-                <img
-                  className={classes.icon}
-                  src={agentsIcon}
-                  alt={intl.formatMessage(messages.articulateLogoAlt)}
+              onToggleConversationBar={this.props.onToggleConversationBar}
+              demoMode={demoMode}
+            /> :
+            <Fragment>
+              <Grid className={classes.languageSelectContainer}>
+                <LanguageSelect
+                  key="selectLanguage"
+                  uiLanguage={this.props.uiLanguage}
+                  uiLanguages={this.props.uiLanguages}
+                  onChangeLanguage={this.props.onChangeLanguage}
                 />
-                <FormattedMessage {...messages.agentsButton} />
-              </Button>
-            </Link>
-          </Grid>
-          <Grid item sm={6} xs={6}>
-            <Button
-              onClick={() => {
-                this.props.onToggleConversationBar(true);
-              }}
-              color="primary"
-              variant="contained"
-              className={classes.openChat}
-            >
-              <img
-                className={classes.icon}
-                src={chatIcon}
-                alt={intl.formatMessage(messages.articulateLogoAlt)}
+              </Grid>
+              <ConversationBar
+                uiLanguage={this.props.uiLanguage}
+                uiLanguages={this.props.uiLanguages}
+                onChangeLanguage={this.props.onChangeLanguage}
+                onToggleConversationBar={this.props.onToggleConversationBar}
               />
-              <FormattedMessage {...messages.openChatButton} />
-            </Button>
-          </Grid>
+              <Grid item sm={6} xs={6}>
+                <Link
+                  onClick={() => {
+                    this.props.onToggleConversationBar(false);
+                  }}
+                  to="/"
+                  className={classes.link}
+                >
+                  <Button variant="contained">
+                    <img
+                      className={classes.icon}
+                      src={agentsIcon}
+                      alt={intl.formatMessage(messages.articulateLogoAlt)}
+                    />
+                    <FormattedMessage {...messages.agentsButton} />
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item sm={6} xs={6}>
+                <Button
+                  onClick={() => {
+                    this.props.onToggleConversationBar(true);
+                  }}
+                  color="primary"
+                  variant="contained"
+                  className={classes.openChat}
+                >
+                  <img
+                    className={classes.icon}
+                    src={chatIcon}
+                    alt={intl.formatMessage(messages.articulateLogoAlt)}
+                  />
+                  <FormattedMessage {...messages.openChatButton} />
+                </Button>
+              </Grid>
+            </Fragment>
+          }
         </Hidden>
       </Grid>
     ) : (
       <Grid container className={classes.header} item xs={12}>
         <Hidden only={['xs', 'sm']}>
           <Grid item xl={2} lg={2} md={2}>
+            {demoMode ?
+            <a href='https://spg.ai/projects/articulate/' target='_blank'>
+              <img
+                className={classes.logo}
+                src={logo}
+                alt={intl.formatMessage(messages.articulateLogoAlt)}
+              />
+            </a> :
             <Link
               onClick={() => {
                 this.props.onToggleConversationBar(false);
@@ -224,7 +255,7 @@ export class AppHeader extends React.Component {
                 src={logo}
                 alt={intl.formatMessage(messages.articulateLogoAlt)}
               />
-            </Link>
+            </Link>}
           </Grid>
           <Grid item xl={3} lg={3} md={3} />
           <Grid
@@ -237,6 +268,7 @@ export class AppHeader extends React.Component {
             {this.props.location.pathname.indexOf('connection') === -1 &&
             this.props.location.pathname.indexOf('settings') === -1 &&
             this.props.location.pathname.indexOf('login') === -1 &&
+            this.props.location.pathname.indexOf('demo') === -1 &&
             agent.gravatar !== '' &&
             this.props.location.pathname !== '/' ? (
               <Typography
@@ -296,25 +328,37 @@ export class AppHeader extends React.Component {
           </Grid>
         </Hidden>
         <Hidden only={['md', 'lg', 'xl']}>
-          <Grid item sm={6} xs={6}>
-            {this.props.location.pathname.indexOf('connection') === -1 &&
-            this.props.location.pathname.indexOf('settings') === -1 &&
-            this.props.location.pathname.indexOf('login') === -1 &&
-            agent.gravatar !== '' &&
-            this.props.location.pathname !== '/' ? (
-              <Typography
-                className={classes.agentName}
-                style={{ color: agent.uiColor }}
-              >
-                {gravatars[agent.gravatar - 1]({
-                  color: agent.uiColor,
-                  className: classes.agentIcon,
-                })}
-                <span className={classes.agentName}>{agent.agentName}</span>
-              </Typography>
-            ) : null}
-          </Grid>
-          <Grid item sm={6} xs={6}>
+          {demoMode ?
+            <Grid item xs={4}>
+              <a href='https://spg.ai/projects/articulate/' target='_blank'>
+                <img
+                  className={classes.logo}
+                  src={logo}
+                  alt={intl.formatMessage(messages.articulateLogoAlt)}
+                />
+              </a>
+            </Grid> :
+            <Grid item sm={6} xs={6}>
+              {this.props.location.pathname.indexOf('connection') === -1 &&
+              this.props.location.pathname.indexOf('settings') === -1 &&
+              this.props.location.pathname.indexOf('login') === -1 &&
+              this.props.location.pathname.indexOf('demo') === -1 &&
+              agent.gravatar !== '' &&
+              this.props.location.pathname !== '/' ? (
+                <Typography
+                  className={classes.agentName}
+                  style={{ color: agent.uiColor }}
+                >
+                  {gravatars[agent.gravatar - 1]({
+                    color: agent.uiColor,
+                    className: classes.agentIcon,
+                  })}
+                  <span className={classes.agentName}>{agent.agentName}</span>
+                </Typography>
+              ) : null}
+            </Grid>
+          }
+          <Grid item xs={8}>
             {this.props.location.pathname !== '/' ? (
               [
                 validNotifications.length > 0 ? (
@@ -332,13 +376,14 @@ export class AppHeader extends React.Component {
                   color="primary"
                   variant="contained"
                   className={classes.openChat}
+                  style={{ marginLeft: '15px' }}
                 >
                   <img
                     className={classes.icon}
                     src={chatIcon}
                     alt={intl.formatMessage(messages.articulateLogoAlt)}
                   />
-                  <FormattedMessage {...messages.openChatButton} />
+                  <FormattedMessage {...messages.openChatButtonSmall} />
                 </Button>,
                 <LanguageSelect
                   key="selectLanguage"
@@ -372,6 +417,7 @@ AppHeader.propTypes = {
   uiLanguage: PropTypes.string,
   onChangeLanguage: PropTypes.func,
   agent: PropTypes.object,
+  demoMode: PropTypes.bool,
 };
 
 const withDefinedStyles = withStyles(styles);

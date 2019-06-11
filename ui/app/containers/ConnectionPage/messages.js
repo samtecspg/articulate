@@ -121,6 +121,11 @@ export default defineMessages({
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.callbackUrl',
     defaultMessage: 'Callback URL:',
   },
+  shareUrl: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.shareUrl',
+    defaultMessage: 'Link to share:',
+  },
   verifyToken: {
     id:
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.verifyToken',

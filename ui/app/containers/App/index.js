@@ -33,6 +33,7 @@ import NotFoundPage from '../NotFoundPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
+import SharedChatPage from '../SharedChatPage/Loadable';
 
 import {
   checkAPI,
@@ -169,6 +170,7 @@ class App extends React.Component {
       onToggleConversationBar,
       notifications,
     } = this.props;
+    const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
     return (
       <div>
         <AppHeader
@@ -179,8 +181,9 @@ class App extends React.Component {
           onToggleConversationBar={onToggleConversationBar}
           conversationBarOpen={conversationBarOpen}
           notifications={notifications}
+          demoMode={demoMode}
         />
-        <AppContent conversationBarOpen={conversationBarOpen}>
+        <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen}>
           <Switch>
             <Route exact path="/" component={AgentsPage} />
             <Route exact path="/agent/:id" component={AgentPage} />
@@ -214,6 +217,7 @@ class App extends React.Component {
               to={`/agent/:id/action/:actionId?${this.props.location.search}`}
             />
             <Route exact path="/login" component={UserAuthPage} />
+            <Route exact path="/demo/:id" component={SharedChatPage} />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>

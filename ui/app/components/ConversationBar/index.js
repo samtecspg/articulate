@@ -306,7 +306,7 @@ export class ConversationBar extends React.PureComponent {
   };
 
   render() {
-    const { classes, intl } = this.props;
+    const { classes, intl, demoMode } = this.props;
     return (
       <Grid
         style={{ width: this.state.newWidth }}
@@ -327,7 +327,7 @@ export class ConversationBar extends React.PureComponent {
         </div>
         <Grid style={{ cursor: 'default' }}>
           <Grid id="sessionSelector" container>
-            <Grid item xs={10}>
+            <Grid item xs={demoMode ? 12 : 10}>
               <Select
                 className={classes.selectSession}
                 fullWidth
@@ -444,11 +444,13 @@ export class ConversationBar extends React.PureComponent {
                         >
                           <span>
                             {agentSession}
+                            {demoMode ? null :
                             <img
                               id={`deleteSession_${index}`}
                               className={classes.deleteIcon}
                               src={trashIcon}
                             />
+                            }
                           </span>
                         </MenuItem>
                       )),
@@ -465,6 +467,7 @@ export class ConversationBar extends React.PureComponent {
                 )}
               </Select>
             </Grid>
+            {demoMode ? null :
             <Grid item xs={2}>
               <Tooltip
                 placement="bottom-end"
@@ -477,6 +480,7 @@ export class ConversationBar extends React.PureComponent {
                 />
               </Tooltip>
             </Grid>
+            }
           </Grid>
           <Grid
             style={{ right: this.state.newWidth }}
@@ -533,7 +537,7 @@ export class ConversationBar extends React.PureComponent {
                       className={classes.agentMessage}
                     >
                       {message.message}
-                      {message.docId ? (
+                      {message.docId && !demoMode ? (
                         <span
                           onClick={() => {
                             this.setState({
@@ -700,6 +704,7 @@ ConversationBar.propTypes = {
   sessionLoaded: PropTypes.bool,
   onLoadSessionId: PropTypes.func,
   onDeleteSession: PropTypes.func,
+  demoMode: PropTypes.bool,
 };
 const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),

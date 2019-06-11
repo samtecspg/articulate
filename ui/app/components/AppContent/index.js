@@ -22,7 +22,7 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 export class AppContent extends React.Component {
   render() {
-    const { classes, intl, conversationBarOpen } = this.props;
+    const { classes, intl, conversationBarOpen, demoMode } = this.props;
     return conversationBarOpen ? (
       <Grid container>
         <Grid container item xs={12}>
@@ -31,14 +31,18 @@ export class AppContent extends React.Component {
             {this.props.children}
           </Grid>
         </Grid>
-        <Grid className={classes.settings} item xs={12}>
-          <Link id="settings" to="/settings">
-            <img
-              src={settingsIcon}
-              alt={intl.formatMessage(messages.settingsIconAlt)}
-            />
-          </Link>
-        </Grid>
+        {
+          demoMode ?
+          null :
+          <Grid className={classes.settings} item xs={12}>
+            <Link id="settings" to="/settings">
+              <img
+                src={settingsIcon}
+                alt={intl.formatMessage(messages.settingsIconAlt)}
+              />
+            </Link>
+          </Grid>
+        }
       </Grid>
     ) : (
       <Grid container>
@@ -49,14 +53,18 @@ export class AppContent extends React.Component {
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
         </Grid>
-        <Grid className={classes.settings} item xs={12}>
-          <Link id="settings" to="/settings">
-            <img
-              src={settingsIcon}
-              alt={intl.formatMessage(messages.settingsIconAlt)}
-            />
-          </Link>
-        </Grid>
+        {
+          demoMode ?
+          null :
+          <Grid className={classes.settings} item xs={12}>
+            <Link id="settings" to="/settings">
+              <img
+                src={settingsIcon}
+                alt={intl.formatMessage(messages.settingsIconAlt)}
+              />
+            </Link>
+          </Grid>
+        }
       </Grid>
     );
   }
@@ -67,6 +75,7 @@ AppContent.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   conversationBarOpen: PropTypes.bool,
+  demoMode: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(AppContent));

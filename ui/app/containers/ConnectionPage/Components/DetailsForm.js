@@ -14,7 +14,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormHelperText,
   FormControlLabel,
   Switch,
 } from '@material-ui/core';
@@ -407,6 +406,58 @@ class DetailsForm extends React.Component {
                                   .displayName
                               }
                             />
+                          </Grid>
+                        );
+                      }
+                      if (
+                        channels[connection.channel].details[detail].type ===
+                        'textarea'
+                      ) {
+                        return (
+                          <Grid
+                            key={`value_${detailIndex}`}
+                            container
+                            item
+                            xs={12}
+                          >
+                            <Grid item xs={12}>
+                              <TextField
+                                autoComplete="off"
+                                id={detail}
+                                value={
+                                  connection.details[detail]
+                                    ? connection.details[detail]
+                                    : ''
+                                }
+                                label={
+                                  channels[connection.channel].details[detail]
+                                    .displayName
+                                }
+                                placeholder={
+                                  channels[connection.channel].details[detail]
+                                    .description
+                                }
+                                onChange={evt => {
+                                  this.props.onChangeDetailValue(
+                                    detail,
+                                    evt.target.value,
+                                  );
+                                }}
+                                margin="normal"
+                                fullWidth
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                type={
+                                  channels[connection.channel].details[detail]
+                                    .type === 'password'
+                                    ? 'password'
+                                    : 'text'
+                                }
+                                multiline
+                                rows={4}
+                              />
+                            </Grid>
                           </Grid>
                         );
                       }
