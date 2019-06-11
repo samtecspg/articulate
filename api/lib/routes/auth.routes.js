@@ -1,4 +1,8 @@
 import Boom from 'boom';
+import {
+    AUTH_ENABLED,
+    AUTH_PROVIDERS
+} from '../../util/env';
 
 const BASIC_ROUTE = {
     method: 'POST',
@@ -18,16 +22,6 @@ const BASIC_ROUTE = {
         }
     }
 };
-
-const AUTH_ENABLED = (() => {
-    if (process.env.AUTH_ENABLED === undefined) {
-        return true;
-    }
-    return process.env.AUTH_ENABLED === 'true';
-
-})();
-
-const PROVIDERS = process.env.AUTH_PROVIDERS ? process.env.AUTH_PROVIDERS.split(';') : [];
 
 const HANDLER = async (request, h) => {
     try {
@@ -55,7 +49,7 @@ const HANDLER = async (request, h) => {
 module.exports = () => {
 
     if (AUTH_ENABLED) {
-        const authRoutes = PROVIDERS.map((provider) => ({
+        const authRoutes = AUTH_PROVIDERS.map((provider) => ({
             method: ['GET'],
             path: `/auth/${provider}`,
             config: {

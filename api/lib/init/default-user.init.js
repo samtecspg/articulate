@@ -5,23 +5,12 @@ import {
     PARAM_SALT,
     PROVIDER_BASIC
 } from '../../util/constants';
+import {
+    AUTH_ENABLED,
+    AUTH_FORCE_DEFAULT_USER
+} from '../../util/env';
 
 const logger = require('../../util/logger')({ name: `server:init:defaultUser` });
-
-const AUTH_ENABLED = (() => {
-    if (process.env.AUTH_ENABLED === undefined) {
-        return true;
-    }
-    return process.env.AUTH_ENABLED === 'true';
-
-})();
-const AUTH_FORCE_DEFAULT_USER = (() => {
-    if (process.env.AUTH_FORCE_DEFAULT_USER === undefined) {
-        return false;
-    }
-    return process.env.AUTH_FORCE_DEFAULT_USER === 'true';
-
-})();
 
 module.exports = async (server) => {
 

@@ -300,4 +300,4 @@ export const SORT_DESC = 'DESC';
 
 export const PROVIDER_BASIC = 'basic';
 export const PROVIDER_TWITTER = 'twitter';
-export const PROVIDER_github = 'github';
+export const PROVIDER_GITHUB = 'github';
