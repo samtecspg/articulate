@@ -7,6 +7,7 @@ const headers = {
   'User-Agent': 'hapi-bell-github'
 };
 module.exports = {
+  name: 'github',
   scheme: 'bell',
   options: {
     provider: {

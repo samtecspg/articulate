@@ -1,6 +1,29 @@
 import Boom from 'boom';
+import {
+    AUTH_ENABLED,
+    AUTH_PROVIDERS
+} from '../../util/env';
 
-const handler = async (request, h) => {
+const BASIC_ROUTE = {
+    method: 'POST',
+    path: '/auth/basic',
+    config: {
+        auth: {
+            mode: 'try',
+            strategy: 'simple'
+        },
+        handler: async (request) => {
+            const { credentials } = request.auth;
+            if (credentials) {
+                await request.cookieAuth.set(credentials);
+                return { isValid: true };
+            }
+            return { isValid: false };
+        }
+    }
+};
+
+const HANDLER = async (request, h) => {
     try {
         const { userService } = await request.services();
 
@@ -23,44 +46,21 @@ const handler = async (request, h) => {
     }
 };
 
-const authRoutes = ['twitter', 'github'].map((provider) => ({
-    method: ['GET'],
-    path: `/auth/${provider}`,
-    config: {
-        auth: {
-            mode: 'try',
-            strategy: provider
-        },
-        handler
-    }
-}));
-module.exports = [
-    ...authRoutes,
-    {
-        method: 'GET',
-        path: '/session',
-        config: {
-            auth: 'session',
-            handler: (request, h) => {
-                return `Hello, ${request.auth.credentials.name}!`;
+module.exports = () => {
+
+    if (AUTH_ENABLED) {
+        const authRoutes = AUTH_PROVIDERS.map((provider) => ({
+            method: ['GET'],
+            path: `/auth/${provider}`,
+            config: {
+                auth: {
+                    mode: 'try',
+                    strategy: provider
+                },
+                handler: HANDLER
             }
-        }
-    }, {
-        method: 'POST',
-        path: '/auth/basic',
-        config: {
-            auth: {
-                mode: 'try',
-                strategy: 'simple',
-            },
-            handler: async (request, h) => {
-                const { credentials } = request.auth;
-                if (credentials) {
-                    await request.cookieAuth.set(credentials);
-                    return { isValid: true };
-                }
-                return { isValid: false };
-            },
-        },
+        }));
+        return [...authRoutes, BASIC_ROUTE];
     }
-];
+    return [];
+};
