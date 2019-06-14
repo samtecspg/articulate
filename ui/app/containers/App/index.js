@@ -55,6 +55,7 @@ import {
   makeSelectNotifications,
   makeSelectSettings,
 } from './selectors';
+import { AUTH_ENABLED } from '../../../common/env';
 
 class App extends React.Component {
   state = {
@@ -200,6 +201,7 @@ class App extends React.Component {
               exact
               path="/connection/:id"
               component={ConnectionPage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute
               exact
@@ -210,32 +212,43 @@ class App extends React.Component {
               exact
               path="/agent/:id/review"
               component={ReviewPage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute
               exact
               path="/agent/:id/keyword/:keywordId"
               component={KeywordsEditPage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute
               exact
               path="/agent/:id/addCategory"
               component={AddCategoryPage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute
               exact
               path="/agent/:id/category/:categoryId"
               component={CategoryPage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute
               exact
               path="/agent/:id/action/:actionId"
               component={ActionPage}
+              isAuthEnabled={AUTH_ENABLED}
             />
-            <PrivateRoute exact path="/settings" component={SettingsPage} />
+            <PrivateRoute
+              exact
+              path="/settings"
+              component={SettingsPage}
+              isAuthEnabled={AUTH_ENABLED}
+            />
             <PrivateRoute
               exact
               path="/missing-api"
               component={MissingAPIPage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <Redirect
               from="/agent/:id/actionDummy/:actionId"

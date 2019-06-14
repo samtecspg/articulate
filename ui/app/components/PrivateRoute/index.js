@@ -2,11 +2,11 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { checkCookie } from '../../utils/cookies';
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
+const PrivateRoute = ({ component: Component, isAuthEnabled, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      checkCookie() !== null ? (
+      checkCookie() !== null || !isAuthEnabled ? (
         <Component {...props} />
       ) : (
         <Redirect

@@ -38,9 +38,11 @@ const env = {
     ? process.env.AUTH_PROVIDERS.split(';')
     : [],
   AUTH_SIMPLE: process.env.AUTH_SIMPLE === 'true',
+  AUTH_ENABLED: process.env.AUTH_ENABLED === undefined ? false : process.env.AUTH_ENABLED === 'true',
 };
 
 export default env;
+
 export const {
   API_URL,
   AUTH_TWITTER_KEY,
@@ -50,4 +52,5 @@ export const {
   SESSION_SECRET,
   AUTH_PROVIDERS,
   AUTH_SIMPLE,
+  AUTH_ENABLED,
 } = env;
