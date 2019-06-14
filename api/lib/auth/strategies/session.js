@@ -4,9 +4,7 @@ module.exports = {
     options: {
         password: process.env.SESSION_SECRET,
         isSecure: false,
+        isHttpOnly: false,
         clearInvalid: true,
-        validateFunc: async (request, session) => {
-            return { valid: true, credentials: request.auth.credentials };
-        },
     },
 };

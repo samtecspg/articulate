@@ -1,3 +1,6 @@
 'use strict';
+import { AUTH_ENABLED } from '../../../util/env';
 
-module.exports = undefined;
+module.exports = () => {
+    return AUTH_ENABLED ? 'session' : undefined;
+};

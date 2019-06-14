@@ -11,39 +11,40 @@ import Nes from 'nes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { ROUTE_AGENT } from '../../../common/constants';
 import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
+import PrivateRoute from '../../components/PrivateRoute';
+import { checkCookie } from '../../utils/cookies';
 import injectSaga from '../../utils/injectSaga';
 import { getWS } from '../../utils/locationResolver';
 import ActionPage from '../ActionPage/Loadable';
+import AddCategoryPage from '../AddCategoryPage/Loadable';
 import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
 import CategoryPage from '../CategoryPage/Loadable';
-import AddCategoryPage from '../AddCategoryPage/Loadable';
 import ConnectionPage from '../ConnectionPage/Loadable';
 import DialoguePage from '../DialoguePage/Loadable';
 import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
-import UserAuthPage from '../UserAuthPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
-
+import UserAuthPage from '../UserAuthPage/Loadable';
 import {
   checkAPI,
   loadAgent,
   loadAgentSuccess,
-  loadSettings,
   loadServerInfo,
+  loadSettings,
+  refreshServerInfo,
   toggleConversationBar,
   updateSetting,
-  refreshServerInfo,
 } from './actions';
 import saga from './saga';
 import {
@@ -103,8 +104,12 @@ class App extends React.Component {
         logger.log(`[WS] Heartbeat Timeout from ${getWS()}`);
         logger.log(`[WS] Will Reconnect = ${willReconnect}`);
       };
+      console.log(`index::componentWillMount`); // TODO: REMOVE!!!!
+      const cookie = checkCookie();
+      console.log(`nes=${cookie}`); // TODO: REMOVE!!!!
       client.connect({
         delay: 1000,
+        auth: { headers: { cookie: document.cookie } },
       });
     }
   }
@@ -184,41 +189,60 @@ class App extends React.Component {
           demoMode={demoMode}
           onShareAgent={this.props.onShareAgent}
         />
-        <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen}>
+        <AppContent
+          demoMode={demoMode}
+          conversationBarOpen={conversationBarOpen}
+        >
           <Switch>
-            <Route exact path="/" component={AgentsPage} />
-            <Route exact path="/agent/:id" component={AgentPage} />
-            <Route exact path="/connection/:id" component={ConnectionPage} />
-            <Route exact path="/agent/:id/dialogue" component={DialoguePage} />
-            <Route exact path="/agent/:id/review" component={ReviewPage} />
-            <Route
+            <PrivateRoute exact path="/" component={AgentsPage} />
+            <PrivateRoute exact path="/agent/:id" component={AgentPage} />
+            <PrivateRoute
+              exact
+              path="/connection/:id"
+              component={ConnectionPage}
+            />
+            <PrivateRoute
+              exact
+              path="/agent/:id/dialogue"
+              component={DialoguePage}
+            />
+            <PrivateRoute
+              exact
+              path="/agent/:id/review"
+              component={ReviewPage}
+            />
+            <PrivateRoute
               exact
               path="/agent/:id/keyword/:keywordId"
               component={KeywordsEditPage}
             />
-            <Route
+            <PrivateRoute
               exact
               path="/agent/:id/addCategory"
               component={AddCategoryPage}
             />
-            <Route
+            <PrivateRoute
               exact
               path="/agent/:id/category/:categoryId"
               component={CategoryPage}
             />
-            <Route
+            <PrivateRoute
               exact
               path="/agent/:id/action/:actionId"
               component={ActionPage}
             />
-            <Route exact path="/settings" component={SettingsPage} />
-            <Route exact path="/missing-api" component={MissingAPIPage} />
+            <PrivateRoute exact path="/settings" component={SettingsPage} />
+            <PrivateRoute
+              exact
+              path="/missing-api"
+              component={MissingAPIPage}
+            />
             <Redirect
               from="/agent/:id/actionDummy/:actionId"
               to={`/agent/:id/action/:actionId?${this.props.location.search}`}
             />
             <Route exact path="/login" component={UserAuthPage} />
-            <Route exact path="/demo/:id" component={SharedChatPage} />
+            <PrivateRoute exact path="/demo/:id" component={SharedChatPage} />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>

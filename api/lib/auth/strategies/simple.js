@@ -3,7 +3,7 @@ module.exports = {
     scheme: 'basic',
     options: {
         validate: async (request, email, password, h) => {
-            const { userService } = await request.services();
+            const { userService } = await request.server.services();
             const { isValid, user } = await userService.validate({ email, password, returnUser: true });
 
             if (!isValid) {

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
     MODEL_USER_ACCOUNT,
     PARAM_EMAIL
@@ -10,7 +11,8 @@ module.exports = async function ({ email, password, returnUser = false }) {
 
     try {
 
-        const user = await globalService.searchByField({ field: PARAM_EMAIL, value: email, model: MODEL_USER_ACCOUNT });
+        let user = await globalService.searchByField({ field: PARAM_EMAIL, value: email, model: MODEL_USER_ACCOUNT });
+        user = _.isArray(user) ? user[0] : user;
         if (!user) {
             return { isValid: false };
         }

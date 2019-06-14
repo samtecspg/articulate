@@ -2,6 +2,7 @@ import {
     AUTH_ENABLED,
     AUTH_PROVIDERS
 } from '../../../util/env';
+import Session from './session';
 import Simple from './simple';
 
 const logger = require('../../../util/logger')({ name: `server:strategy` });
@@ -10,7 +11,7 @@ module.exports = () => {
     if (!AUTH_ENABLED) {
         return [];
     }
-    const strategies = [Simple];
+    const strategies = [Simple, Session];
     AUTH_PROVIDERS.map((provider) => {
         let p;
         try {

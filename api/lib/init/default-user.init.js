@@ -31,6 +31,7 @@ module.exports = async (server) => {
                 if (user) {
                     const UserModel = await redis.factory(MODEL_USER_ACCOUNT, user.id);
                     const { passwordHash, salt } = securityService.saltHashPassword({ password });
+                    UserModel.property(PARAM_EMAIL, username);
                     UserModel.property(PARAM_PASSWORD, passwordHash);
                     UserModel.property(PARAM_SALT, salt);
                     await UserModel.save();
