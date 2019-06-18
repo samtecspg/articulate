@@ -66,15 +66,15 @@ export default defineMessages({
     id:
       'app.containers.AgentsPage.components.GetStarted.getStartedDescription1',
     defaultMessage:
-      "Thanks for giving Articulate a try. If you're just getting started we encouraged you to check our docs. Also be on the lookout for the",
+      "Thanks for giving Articulate a try! If you're just getting started we encourage you to check our docs. Also, be on the lookout for the",
   },
   getStartedDescription2: {
     id:
       'app.containers.AgentsPage.components.GetStarted.getStartedDescription2',
-    defaultMessage: 'button for information videos about the different pages.',
+    defaultMessage: 'button for informational videos about the different pages.',
   },
   clickHereFor: {
     id: 'app.containers.AgentsPage.components.GetStarted.clickHereFor',
-    defaultMessage: 'Click here for...',
+    defaultMessage: 'From our Blog:',
   },
 });
