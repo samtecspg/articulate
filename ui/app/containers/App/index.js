@@ -15,11 +15,11 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { ROUTE_AGENT } from '../../../common/constants';
+import { AUTH_ENABLED } from '../../../common/env';
 import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
 import PrivateRoute from '../../components/PrivateRoute';
-import { checkCookie } from '../../utils/cookies';
 import injectSaga from '../../utils/injectSaga';
 import { getWS } from '../../utils/locationResolver';
 import ActionPage from '../ActionPage/Loadable';
@@ -55,7 +55,6 @@ import {
   makeSelectNotifications,
   makeSelectSettings,
 } from './selectors';
-import { AUTH_ENABLED } from '../../../common/env';
 
 class App extends React.Component {
   state = {
@@ -105,12 +104,11 @@ class App extends React.Component {
         logger.log(`[WS] Heartbeat Timeout from ${getWS()}`);
         logger.log(`[WS] Will Reconnect = ${willReconnect}`);
       };
-      console.log(`index::componentWillMount`); // TODO: REMOVE!!!!
-      const cookie = checkCookie();
-      console.log(`nes=${cookie}`); // TODO: REMOVE!!!!
       client.connect({
         delay: 1000,
-        auth: { headers: { cookie: document.cookie } },
+        auth: AUTH_ENABLED
+          ? { headers: { cookie: document.cookie } }
+          : undefined,
       });
     }
   }
@@ -195,8 +193,18 @@ class App extends React.Component {
           conversationBarOpen={conversationBarOpen}
         >
           <Switch>
-            <PrivateRoute exact path="/" component={AgentsPage} />
-            <PrivateRoute exact path="/agent/:id" component={AgentPage} />
+            <PrivateRoute
+              exact
+              path="/"
+              component={AgentsPage}
+              isAuthEnabled={AUTH_ENABLED}
+            />
+            <PrivateRoute
+              exact
+              path="/agent/:id"
+              component={AgentPage}
+              isAuthEnabled={AUTH_ENABLED}
+            />
             <PrivateRoute
               exact
               path="/connection/:id"
@@ -255,7 +263,12 @@ class App extends React.Component {
               to={`/agent/:id/action/:actionId?${this.props.location.search}`}
             />
             <Route exact path="/login" component={UserAuthPage} />
-            <PrivateRoute exact path="/demo/:id" component={SharedChatPage} />
+            <PrivateRoute
+              exact
+              path="/demo/:id"
+              component={SharedChatPage}
+              isAuthEnabled={AUTH_ENABLED}
+            />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>
@@ -314,7 +327,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onShareAgent: agentId => {
       dispatch(push(`/connection/create?channel=web-demo&agent=${agentId}`));
-    }
+    },
   };
 }
 

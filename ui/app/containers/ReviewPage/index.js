@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { bindActionCreators, compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { AUTH_ENABLED } from "../../../common/env";
 import MainTab from '../../components/MainTab';
 import {
   ACTION_INTENT_SPLIT_SYMBOL,
@@ -132,7 +133,12 @@ export class ReviewPage extends React.Component {
           handler,
         );
       };
-      client.connect();
+      client.connect({
+        delay: 1000,
+        auth: AUTH_ENABLED
+          ? { headers: { cookie: document.cookie } }
+          : undefined,
+      });
     }
   }
 
