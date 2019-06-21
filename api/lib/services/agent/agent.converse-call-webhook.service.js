@@ -74,7 +74,6 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
         };
     }
     catch (error) {
-        console.log(error);
         endTime = new Moment();
         const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
         if (error.response && error.response.data){

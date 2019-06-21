@@ -500,7 +500,10 @@ class DetailsForm extends React.Component {
                                 channels[connection.channel].details[detail]
                                   .type === 'password'
                                   ? 'password'
-                                  : 'text'
+                                  : (channels[connection.channel].details[detail]
+                                    .type === 'number'
+                                    ? 'number'
+                                    : 'text')
                               }
                             />
                           </Grid>

@@ -8,7 +8,7 @@ module.exports = async function ({ connection, request, h }) {
   const sessionId = await channelService.hash({ connection, event });
 
   try {
-    const response = await agentService.converse({ 
+    await agentService.converse({ 
       id: connection.agent,
       sessionId,
       text: event.text,
@@ -22,7 +22,7 @@ module.exports = async function ({ connection, request, h }) {
       }
     });
   
-    return h.response(response).code(200);
+    return h.response().code(200);
   }
   catch ({ message, statusCode }) {
       return new Boom(message, { statusCode });

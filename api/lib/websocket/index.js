@@ -26,7 +26,10 @@ const schema = {
         .description('Actions'),
     isESModel: Joi
         .boolean()
-        .description('Specifies if the model is using ES as back end')
+        .description('Specifies if the model is using ES as back end'),
+    isResponse: Joi
+        .boolean()
+        .description('Specifies if the model is a converse response')
 };
 
 module.exports = async (server) => {
@@ -42,7 +45,7 @@ module.exports = async (server) => {
             return Promise.reject(`The WebSocket [${key}.js] is not valid.\n${validation.error}`);
         }
         try {
-            if (ws.isESModel) {
+            if (ws.isESModel || ws.isResponse) {
                 server.subscription(ws.subscribePath);
             }
             else {

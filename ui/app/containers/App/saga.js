@@ -59,14 +59,14 @@ export function* postConverse(payload) {
             text: message.message,
           },
         };
-        const response = yield call(
+        yield call(
           api.post,
           toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]),
           null,
           postPayload,
         );
 
-        yield put(
+        /*yield put(
           respondMessage({
             author: agent.agentName,
             docId: response.docId,
@@ -74,7 +74,7 @@ export function* postConverse(payload) {
             conversationStateObject: response.conversationStateObject,
           }),
         );
-        yield put(storeSourceData({ ...response.conversationStateObject }));
+        yield put(storeSourceData({ ...response.conversationStateObject }));*/
       } catch (err) {
         yield put(showWarning('errorCallingArticulate'));
       }

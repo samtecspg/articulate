@@ -54,12 +54,19 @@ import {
   loadSession,
   deleteSession,
   showWarning,
+  respondMessage,
+  storeSourceData,
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
 import Notifications from './components/Notifications';
 import gravatars from '../Gravatar';
+
+import Nes from 'nes';
+import { ROUTE_AGENT, ROUTE_CONVERSE } from '../../../../api/util/constants';
+import { getWS } from '../../utils/locationResolver';
+import { AUTH_ENABLED } from "../../../common/env";
 
 const styles = {
   container: {
@@ -232,12 +239,47 @@ export class ConversationBar extends React.PureComponent {
     openCodeModal: false,
     isResizing: false,
     lastDownX: 0,
-    newWidth: this.props.settings.conversationPanelWidth,
+    newWidth: this.props.settings.conversationPanelWidth ? this.props.settings.conversationPanelWidth : 300,
+    client: null,
+    socketClientConnected: false,
   };
 
   componentWillMount() {
     if (!this.props.settings.defaultAgentLanguage) {
       this.props.onLoadSettings();
+    }
+
+    if (!this.state.socketClientConnected) {
+      const client = new Nes.Client(getWS());
+      client.onConnect = () => {
+        this.setState({
+          client,
+          socketClientConnected: true,
+        });
+
+        const handler = response => {
+          if (response) {
+            this.props.onRespondMessage({
+              author: this.props.agent.agentName,
+              docId: response.docId,
+              message: response.textResponse,
+              conversationStateObject: response.conversationStateObject,
+            });
+            this.props.onStoreSourceData({ ...response.conversationStateObject });
+          }
+        };
+
+        client.subscribe(
+          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`,
+          handler,
+        );
+      };
+      client.connect({
+        delay: 1000,
+        auth: AUTH_ENABLED
+          ? { headers: { cookie: document.cookie } }
+          : undefined,
+      });
     }
   }
 
@@ -750,6 +792,12 @@ function mapDispatchToProps(dispatch) {
     onShowWarning: message => {
       dispatch(showWarning(message));
     },
+    onRespondMessage: (payload) => {
+      dispatch(respondMessage(payload));
+    },
+    onStoreSourceData: (payload) => {
+      dispatch(storeSourceData(payload));
+    }
   };
 }
 

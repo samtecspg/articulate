@@ -75,7 +75,9 @@ module.exports = async function ({ connection, request }) {
               })
 
               if (response.textResponse !== null && response.textResponse !== '') {
-                await channelService.reply({ connection, event, response })
+                if (!connection.details.outgoingMessages){
+                  await channelService.reply({ connection, event, response });
+                }
               }
             } else {
               console.log('Unhandled content type:', JSON.stringify(event));

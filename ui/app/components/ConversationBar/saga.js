@@ -1,4 +1,4 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select, all } from 'redux-saga/effects';
 import { putSetting } from '../../containers/SettingsPage/saga';
 import {
   UPDATE_SETTING,
@@ -16,8 +16,20 @@ import {
 import { toAPIPath } from '../../utils/locationResolver';
 import { makeSelectAgent } from '../../containers/App/selectors';
 
+function* agentMessageIterator(message, response) {
+  const agent = yield select(makeSelectAgent());yield put(
+  respondMessage({
+      author: agent.agentName,
+      docId: message.id,
+      message: response.textResponse,
+      conversationStateObject: message.converseResult
+        ? message.converseResult.conversationStateObject
+        : null,
+    }),
+  );
+}
+
 function* messageIterator(message) {
-  const agent = yield select(makeSelectAgent());
   yield put(
     respondMessage({
       author: 'User',
@@ -25,16 +37,10 @@ function* messageIterator(message) {
       message: message.document,
     }),
   );
-  yield put(
-    respondMessage({
-      author: agent.agentName,
-      docId: message.id,
-      message: message.converseResult.textResponse,
-      conversationStateObject: message.converseResult
-        ? message.converseResult.conversationStateObject
-        : null,
-    }),
-  );
+  yield all(message.converseResult.responses.map((response) => {
+
+    return call(agentMessageIterator, message, response);
+  }));
 }
 
 export function* getSession(payload) {
@@ -43,15 +49,19 @@ export function* getSession(payload) {
     if (newSession) {
       yield call(api.post, toAPIPath([ROUTE_CONTEXT]), { sessionId });
     }
-    yield call(api.get, toAPIPath([ROUTE_CONTEXT, sessionId]));
     const conversationLog = yield call(
       api.get,
       toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_DOCUMENT]),
     );
-    yield conversationLog.map(message => call(messageIterator, message));
+    
+    yield all(conversationLog.map((message) => { 
+      
+      return call(messageIterator, message);
+    }));
 
     yield put(loadSessionSuccess(sessionId));
   } catch (err) {
+    console.log(err);
     yield put(loadSessionError(err));
   }
 }

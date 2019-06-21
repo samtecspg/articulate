@@ -4,8 +4,6 @@ import { Redirect, Route } from 'react-router-dom';
 import { checkCookie } from '../../utils/cookies';
 
 const PrivateRoute = ({ component: Component, isAuthEnabled, ...rest }) => {
-  console.log(`index::PrivateRoute`); // TODO: REMOVE!!!!
-  console.log({ isAuthEnabled }); // TODO: REMOVE!!!!
   return (
     <Route
       {...rest}

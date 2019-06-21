@@ -11,7 +11,9 @@ import {
     PARAM_DOCUMENT_RASA_RESULTS,
     RASA_INTENT_SPLIT_SYMBOL,
     CSO_CATEGORIES,
-    MODEL_POST_FORMAT
+    MODEL_POST_FORMAT,
+    ROUTE_AGENT,
+    ROUTE_CONVERSE
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -19,8 +21,11 @@ import RedisErrorHandler from '../../errors/redis.error-handler';
 module.exports = async function ({ id, sessionId, text, timezone, debug = false, additionalKeys = null }) {
 
     const { redis, handlebars } = this.server.app;
-    const { agentService, contextService, globalService, documentService } = await this.server.services();
+    const { agentService, contextService, globalService, documentService, channelService } = await this.server.services();
     const webhooks = [];
+    const processedResponses = [];
+    let sendMessage = true;
+    let converseResult, fullConverseResult;
 
     //MARK: reduce the remaining life of the saved slots
     const updateLifespanOfSlots = (conversationStateObject) => {
@@ -452,12 +457,15 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         return response;
     };
 
-    const chainResponseActions = async ({ conversationStateObject, responseActions }) => {
+    const chainResponseActions = async ({ conversationStateObject, responseActions, sendMessage }) => {
 
         const agentActions = conversationStateObject[CSO_AGENT].actions;
         let currentQueueIndex = 0;
 
-        for (let responseAction of responseActions) {
+        await responseActions.reduce(async (previousPromise, responseAction) => {
+            let finalResponse = null;
+            const data = await previousPromise;
+
             let agentAction = _.filter(agentActions, (tempAction) => {
 
                 return tempAction.actionName === responseAction;
@@ -493,18 +501,48 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         slots: slotsOfChainedAction
                     });
 
-                    conversationStateObject.context.actionQueue.push({
-                        action: agentAction.actionName,
-                        slots: {}
-                    });
+                    if (!sendMessage){
+                        conversationStateObject.context.actionQueue.push({
+                            action: agentAction.actionName,
+                            slots: {}
+                        });
+                    }
                     const response = await getResponseOfChainedAction({ action: agentAction, conversationStateObject });
                     if (response.webhook) {
                         webhooks.push(response.webhook);
                     }
-                    conversationStateObject.context.responseQueue.push({ ...response });
-                    await chainResponseActions({ conversationStateObject, responseActions: response.actions } )
+                    if (sendMessage){
+                        processedResponses.push(response);
+                        await sendResponseToUbiquityChannel({ response, ubiquity: conversationStateObject.ubiquity });
+                    }
+                    else {
+                        conversationStateObject.context.responseQueue.push({ ...response });   
+                    }
+                    sendMessage = response.actionWasFulfilled;
+                    await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                    await chainResponseActions({ conversationStateObject, responseActions: response.actions, sendMessage } )
                 }
             }
+
+            data.push(finalResponse);
+
+            return data;
+        }, Promise.resolve([]));
+    };
+
+    function timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const sendResponseToUbiquityChannel = async ({ response, ubiquity }) => {
+
+        if (ubiquity && ubiquity.connection && ubiquity.connection.details.outgoingMessages){
+
+            channelService.reply({ connection: ubiquity.connection, event: ubiquity.event, response });
+            await timeout(ubiquity.connection.details.waitTimeBetweenMessages);
+        }
+        else {
+            this.server.publish(`/${ROUTE_AGENT}/${id}/${ROUTE_CONVERSE}`, response);
         }
     };
 
@@ -530,7 +568,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         let storeInQueue = false;
         let currentQueueIndex = 0;
 
-        const responses = await recognizedActionNames.reduce(async (previousPromise, recognizedActionName) => {
+        await recognizedActionNames.reduce(async (previousPromise, recognizedActionName) => {
             let finalResponse = null;
             const data = await previousPromise;
 
@@ -625,12 +663,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 actions: agentToolResponse.actions,
                 isFallback: agentToolResponse.isFallback
             };
+
+            sendMessage = !storeInQueue;
             storeInQueue = storeInQueue || !cleanAgentToolResponse.actionWasFulfilled;
 
             cleanAgentToolResponse.docId = conversationStateObject.docId;
             let postFormatPayloadToUse;
             let usedPostFormatAction;
-
 
             if ((conversationStateObject.action && conversationStateObject.action.usePostFormat) || conversationStateObject.agent.usePostFormat) {
                 let modelPath, postFormat;
@@ -697,57 +736,60 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
                 data.push(finalResponse);
             }
+            
+            if (sendMessage){
+                processedResponses.push(finalResponse);
+            }
+
+            converseResult = {
+                textResponse: finalResponse.textResponse,
+                docId: conversationStateObject.docId,
+                responses: processedResponses,
+                ...allProcessedPostFormat
+            };
+            
+            const prunnedCSO = {
+                docId: conversationStateObject.docId,
+                context: conversationStateObject.context,
+                currentFrame: conversationStateObject.currentFrame,
+                parse: conversationStateObject.parse,
+                webhooks
+            };
+            fullConverseResult = {
+                ...converseResult,
+                conversationStateObject: prunnedCSO
+            };
+    
+            await documentService.update({ 
+                id: conversationStateObject.docId,
+                data: { 
+                    converseResult: JSON.stringify(fullConverseResult)
+                }
+            });
+
+            if (conversationStateObject.context.docIds.indexOf(converseResult.docId) === -1){
+                conversationStateObject.context.docIds.push(converseResult.docId);
+            }
+  
+            await contextService.update({
+                sessionId: conversationStateObject.context.sessionId,
+                data: {
+                    savedSlots: conversationStateObject.context.savedSlots,
+                    docIds: conversationStateObject.context.docIds
+                }
+            });
+
+            if (sendMessage){
+                await sendResponseToUbiquityChannel({ response: debug ? fullConverseResult : converseResult, ubiquity: conversationStateObject.ubiquity });
+            }
+
             if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0) {
                 context = await contextService.findBySession({ sessionId, loadFrames: true });
                 conversationStateObject[CSO_CONTEXT] = context;
-                await chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions });
-                await agentService.converseUpdateContextFrames({ id: conversationStateObject.context.id, frames: conversationStateObject.context.frames });
+                await chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions, sendMessage });
             }
             return data;
         }, Promise.resolve([]));
-        
-        let textResponses = _.map(responses, 'textResponse');
-        //extract responses from previous answers
-        const responsesFromQueue = getResponsesFromQueue({
-            context: conversationStateObject.context
-        });
-        textResponses = textResponses.concat(responsesFromQueue);
-        const textResponse = textResponses.join(' ');
-        await saveContextQueues({ context: conversationStateObject.context });
-
-        const converseResult = {
-            textResponse,
-            docId: conversationStateObject.docId,
-            responses,
-            ...allProcessedPostFormat
-        };
-        const { context, currentFrame, parse, docId } = conversationStateObject;
-        const prunnedCSO = {
-            docId,
-            context,
-            currentFrame,
-            parse,
-            webhooks
-        };
-        const fullConverseResult = {
-            ...converseResult,
-            conversationStateObject: prunnedCSO
-        };
-
-        documentService.update({ 
-            id: conversationStateObject.docId,
-            data: { 
-                converseResult: JSON.stringify(fullConverseResult)
-            }
-        });
-        conversationStateObject.context.docIds.push(converseResult.docId)
-        contextService.update({
-            sessionId: conversationStateObject.context.sessionId,
-            data: {
-                savedSlots: conversationStateObject.context.savedSlots,
-                docIds: conversationStateObject.context.docIds
-            }
-        });
 
         return debug ? fullConverseResult : converseResult;
     }
