@@ -64,9 +64,9 @@ import Notifications from './components/Notifications';
 import gravatars from '../Gravatar';
 
 import Nes from 'nes';
-import { ROUTE_AGENT, ROUTE_CONVERSE } from '../../../../api/util/constants';
 import { getWS } from '../../utils/locationResolver';
 import { AUTH_ENABLED } from "../../../common/env";
+import { ROUTE_AGENT, ROUTE_CONVERSE } from '../../../common/constants';
 
 const styles = {
   container: {
