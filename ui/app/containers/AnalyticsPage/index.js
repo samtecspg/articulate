@@ -13,10 +13,18 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import MainTab from '../../components/MainTab';
 import injectSaga from '../../utils/injectSaga';
+import Nes from 'nes';
+import { getWS } from '../../utils/locationResolver';
 
 import {
-  trainAgent, loadKeywords, loadActions, loadAgentDocuments
+  trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess
 } from '../App/actions';
+
+import { AUTH_ENABLED } from "../../../common/env";
+import {
+  ROUTE_DOCUMENT,
+  ROUTE_AGENT,
+} from '../../../common/constants';
 
 import {
   makeSelectAgent,
@@ -31,16 +39,53 @@ import saga from './saga';
 /* eslint-disable react/prefer-stateless-function */
 export class AnalyticsPage extends React.PureComponent {
 
+  state = {
+    client: null,
+    socketClientConnected: false,
+  };
+
   componentWillMount(){
     const {
       onLoadKeywords,
       onLoadActions,
-      onLoadDocuments
+      onLoadDocuments,
+      onRefreshDocuments
     } = this.props;
 
     onLoadKeywords();
     onLoadActions();
     onLoadDocuments();
+
+    if (!this.state.socketClientConnected) {
+      const client = new Nes.Client(getWS());
+      client.onConnect = () => {
+        this.setState({
+          client,
+          socketClientConnected: true,
+        });
+
+        const handler = documents => {
+          if (documents) {
+            const payload = {
+              documents: documents.data,
+              total: documents.totalCount,
+            };
+            onRefreshDocuments(payload);
+          }
+        };
+
+        client.subscribe(
+          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`,
+          handler,
+        );
+      };
+      client.connect({
+        delay: 1000,
+        auth: AUTH_ENABLED
+          ? { headers: { cookie: document.cookie } }
+          : undefined,
+      });
+    }
   }
 
   render() {
@@ -110,6 +155,9 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadDocuments: () => {
       dispatch(loadAgentDocuments());
+    },
+    onRefreshDocuments: (payload) => {
+      dispatch(loadAgentDocumentsSuccess(payload));
     }
   };
 }
