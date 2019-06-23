@@ -21,7 +21,7 @@ export default defineMessages({
   },
   playHelpAlt: {
     id: 'app.containers.ReviewPage.playHelpAlt',
-    defaultMessage: 'Play video off how tor review user sayings',
+    defaultMessage: 'Play video of how to understand the review page',
   },
   sayingTextField: {
     id: 'app.containers.ReviewPage.component.ReviewDataForm.sayingTextField',

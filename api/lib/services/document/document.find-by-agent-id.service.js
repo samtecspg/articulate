@@ -37,7 +37,16 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
 
             const tempDocData = { ...result._source };
             if (tempDocData.converseResult){
-                tempDocData.converseResult = JSON.parse(tempDocData.converseResult);
+                if (tempDocData.converseResult.conversationStateObject){
+                    if (tempDocData.converseResult.conversationStateObject.webhooks){
+                        if (tempDocData.converseResult.conversationStateObject.webhooks.response){
+                            tempDocData.converseResult.conversationStateObject.webhooks = tempDocData.converseResult.conversationStateObject.webhooks.map((webhook) => {
+                                webhook.response = JSON.parse(webhook.response);
+                                return webhook;
+                            });
+                        }
+                    }
+                }
             }
             return { id: result._id, ...tempDocData }
         });

@@ -573,6 +573,8 @@ export class DialoguePage extends React.PureComponent {
           }
           reviewURL={`/agent/${this.props.agent.id}/review`}
           reviewForm={Link}
+          analyticsForm={Link}
+          analyticsURL={`/agent/${this.props.agent.id}/analytics`}
         />
       </Grid>
     ) : (

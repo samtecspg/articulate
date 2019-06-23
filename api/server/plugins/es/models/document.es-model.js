@@ -31,7 +31,58 @@ const mappings = {
             type: 'text'
         },
         converseResult: {
-            type: 'text'
+            type: 'nested',
+            properties: {
+                document: {
+                    type: 'text'
+                },
+                docId: {
+                    type: 'text'
+                },
+                textResponse: {
+                    type: 'text'
+                },
+                actionWasFulfilled: {
+                    type: 'boolean'
+                },
+                actions: {
+                    type: 'text'
+                },
+                responses: {
+                    type: 'object'
+                },
+                conversationStateObject: {
+                    type: 'nested',
+                    properties: {
+                        docId: {
+                            type: 'text'
+                        },
+                        context: {
+                            type: 'object'
+                        },
+                        currentFrame: {
+                            type: 'object'
+                        },
+                        parse: {
+                            type: 'object'
+                        },
+                        webhooks: {
+                            type: 'nested',
+                            properties: {
+                                response: {
+                                    type: 'text'
+                                },
+                                elapsed_time_ms: {
+                                    type: 'integer'
+                                },
+                                statusCode: {
+                                    type: 'integer'
+                                }
+                            }
+                        }
+                    }
+                }
+            }        
         }
     }
 };

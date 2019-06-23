@@ -660,7 +660,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 docId: agentToolResponse.docId,
                 textResponse: agentToolResponse.textResponse,
                 actionWasFulfilled: agentToolResponse.actionWasFulfilled,
-                actions: agentToolResponse.actions,
+                actions: agentToolResponse.actions ? agentToolResponse.actions : [],
                 isFallback: agentToolResponse.isFallback
             };
 
@@ -742,18 +742,22 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
 
             converseResult = {
-                textResponse: finalResponse.textResponse,
-                docId: conversationStateObject.docId,
-                responses: processedResponses,
-                ...allProcessedPostFormat
+                ...finalResponse,
+                responses: processedResponses
             };
             
+            const processedWebhooks = webhooks.map((webhook) => {
+
+                webhook.response = JSON.stringify(webhook.response);
+                return webhook;
+            });
+
             const prunnedCSO = {
                 docId: conversationStateObject.docId,
                 context: conversationStateObject.context,
                 currentFrame: conversationStateObject.currentFrame,
                 parse: conversationStateObject.parse,
-                webhooks
+                webhooks: processedWebhooks
             };
             fullConverseResult = {
                 ...converseResult,
@@ -763,7 +767,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             await documentService.update({ 
                 id: conversationStateObject.docId,
                 data: { 
-                    converseResult: JSON.stringify(fullConverseResult)
+                    converseResult: fullConverseResult
                 }
             });
 
@@ -783,10 +787,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 await sendResponseToUbiquityChannel({ response: debug ? fullConverseResult : converseResult, ubiquity: conversationStateObject.ubiquity });
             }
 
-            if (cleanAgentToolResponse.actionWasFulfilled && cleanAgentToolResponse.actions && cleanAgentToolResponse.actions.length > 0) {
+            if (finalResponse.actionWasFulfilled && finalResponse.actions && finalResponse.actions.length > 0) {
                 context = await contextService.findBySession({ sessionId, loadFrames: true });
                 conversationStateObject[CSO_CONTEXT] = context;
-                await chainResponseActions({ conversationStateObject, responseActions: cleanAgentToolResponse.actions, sendMessage });
+                await chainResponseActions({ conversationStateObject, responseActions: finalResponse.actions, sendMessage });
             }
             return data;
         }, Promise.resolve([]));

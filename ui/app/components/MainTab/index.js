@@ -6,6 +6,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import TrainButton from '../TrainButton';
 import agentIcon from '../../images/agents-icon.svg';
 import reviewIcon from '../../images/icon-review.svg';
+import analyticsIcon from '../../images/icon-analytics.svg';
 import dialogueIcon from '../../images/sayings-icon.svg';
 import vDivider from '../../images/v-divider.svg';
 import messages from './messages';
@@ -221,6 +222,25 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 )}
+                {this.props.analyticsURL ? (
+                  <Tab
+                    value="analytics"
+                    className={classes.tab}
+                    icon={<img className={classes.icon} src={analyticsIcon} />}
+                    label={intl.formatMessage(messages.analytics)}
+                    component={this.props.analyticsForm}
+                    to={this.props.analyticsURL}
+                    disabled={!enableTabs}
+                  />
+                ) : (
+                  <Tab
+                    value="analytics"
+                    className={classes.tab}
+                    icon={<img className={classes.icon} src={analyticsIcon} />}
+                    label={intl.formatMessage(messages.analytics)}
+                    disabled={!enableTabs}
+                  />
+                )}
               </Tabs>
             </Grid>
             <Grid className={classes.actionsContainer}>
@@ -263,6 +283,11 @@ export class MainTab extends React.Component {
           {!this.props.reviewURL
             ? this.state.selectedTab === 'review'
               ? this.props.reviewForm
+              : null
+            : null}
+          {!this.props.analyticsURL
+            ? this.state.selectedTab === 'analytics'
+              ? this.props.analyticsForm
               : null
             : null}
         </Hidden>
@@ -335,6 +360,25 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 )}
+                {this.props.analyticsURL ? (
+                  <Tab
+                    value="analytics"
+                    className={classes.tab}
+                    icon={<img className={classes.icon} src={analyticsIcon} />}
+                    label={intl.formatMessage(messages.analytics)}
+                    component={this.props.analyticsForm}
+                    to={this.props.analyticsURL}
+                    disabled={!enableTabs}
+                  />
+                ) : (
+                  <Tab
+                    value="analytics"
+                    className={classes.tab}
+                    icon={<img className={classes.icon} src={analyticsIcon} />}
+                    label={intl.formatMessage(messages.analytics)}
+                    disabled={!enableTabs}
+                  />
+                )}
               </Tabs>
             </Grid>
             <Grid className={classes.actionsContainer}>
@@ -387,6 +431,11 @@ export class MainTab extends React.Component {
           {!this.props.reviewURL
             ? this.state.selectedTab === 'review'
               ? this.props.reviewForm
+              : null
+            : null}
+          {!this.props.analyticsURL
+            ? this.state.selectedTab === 'analytics'
+              ? this.props.analyticsForm
               : null
             : null}
         </Hidden>

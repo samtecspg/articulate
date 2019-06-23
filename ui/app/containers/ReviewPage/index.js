@@ -19,7 +19,6 @@ import { AUTH_ENABLED } from "../../../common/env";
 import MainTab from '../../components/MainTab';
 import {
   ACTION_INTENT_SPLIT_SYMBOL,
-  PROXY_ROUTE_PREFIX,
   ROUTE_DOCUMENT,
   ROUTE_AGENT,
 } from '../../../common/constants';
@@ -392,8 +391,10 @@ export class ReviewPage extends React.Component {
               timeSort={this.state.timeSort}
             />
           }
-          dialogueURL={`/agent/${agent.id}/dialogue`}
           dialogueForm={Link}
+          dialogueURL={`/agent/${agent.id}/dialogue`}
+          analyticsForm={Link}
+          analyticsURL={`/agent/${this.props.agent.id}/analytics`}
         />
       </Grid>
     ) : (

@@ -33,6 +33,7 @@ import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
+import AnalyticsPage from '../AnalyticsPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
@@ -220,6 +221,12 @@ class App extends React.Component {
               exact
               path="/agent/:id/review"
               component={ReviewPage}
+              isAuthEnabled={AUTH_ENABLED}
+            />
+            <PrivateRoute
+              exact
+              path="/agent/:id/analytics"
+              component={AnalyticsPage}
               isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute

@@ -422,8 +422,10 @@ export class AgentPage extends React.PureComponent {
           }
           dialogueForm={Link}
           dialogueURL={`/agent/${this.props.agent.id}/dialogue`}
-          reviewURL={`/agent/${this.props.agent.id}/review`}
           reviewForm={Link}
+          reviewURL={`/agent/${this.props.agent.id}/review`}
+          analyticsForm={Link}
+          analyticsURL={`/agent/${this.props.agent.id}/analytics`}
         />
       </Grid>
     ) : (
