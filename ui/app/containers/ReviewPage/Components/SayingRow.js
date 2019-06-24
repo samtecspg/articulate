@@ -245,6 +245,17 @@ class SayingRow extends React.Component {
               <span>{intl.formatMessage(messages.seeSource)}</span>
             </span>
           ) : null}
+          <CodeModal
+            handleClose={() => {
+              this.setState({ openCodeModal: false });
+            }}
+            conversationStateObject={
+              document.converseResult
+                ? document.converseResult.conversationStateObject
+                : null
+            }
+            open={this.state.openCodeModal}
+          />
         </TableCell>
         <PercentCell value={document.maximum_category_score} align="center" />
         <PercentCell value={document.maximum_action_score} align="center" />
@@ -369,17 +380,6 @@ class SayingRow extends React.Component {
             </Grid>
           </DialogActions>
         </Dialog>
-        <CodeModal
-          handleClose={() => {
-            this.setState({ openCodeModal: false });
-          }}
-          conversationStateObject={
-            document.converseResult
-              ? document.converseResult.conversationStateObject
-              : null
-          }
-          open={this.state.openCodeModal}
-        />
       </Fragment>
     );
   }
