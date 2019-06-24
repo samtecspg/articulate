@@ -15,6 +15,7 @@ import CreateWebhook from './agent/agent.create-webhook.service';
 import Create from './agent/agent.create.service';
 import Export from './agent/agent.export.service';
 import FindAllDocuments from './agent/agent.find-all-documents.service';
+import FindAllSessions from './agent/agent.find-all-sessions.service';
 import FindAllSayings from './agent/agent.find-all-sayings.service';
 import FindAllSettings from './agent/agent.find-all-settings.service';
 import FindSettingByName from './agent/agent.find-setting-by-name.service';
@@ -288,6 +289,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async findAllDocuments() {
 
         return await FindAllDocuments.apply(this, arguments);
+    }
+
+    async findAllSessions() {
+
+        return await FindAllSessions.apply(this, arguments);
     }
 };
 

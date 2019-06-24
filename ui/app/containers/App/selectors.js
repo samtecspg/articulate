@@ -170,6 +170,18 @@ const makeSelectTotalDocuments = () =>
     globalState => globalState.totalDocuments,
   );
 
+const makeSelectSessions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.sessions,
+  );
+
+const makeSelectTotalSessions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalSessions,
+  );
+
 /* Keywords */
 const makeSelectKeywords = () =>
   createSelector(
@@ -436,5 +448,7 @@ export {
   makeSelectSuccessCategory,
   makeSelectDocuments,
   makeSelectTotalDocuments,
+  makeSelectSessions,
+  makeSelectTotalSessions,
   makeSelectLocale,
 };

@@ -6,7 +6,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import StyledTable, { StyledRow } from '../../../components/StyledTable';
 import messages from '../messages';
-import SayingRow from './SayingRow';
+import SessionRow from './SessionRow';
 
 const styles = {
   formContainer: {
@@ -229,48 +229,32 @@ const styles = {
 };
 
 const tableHeaders = [
-  { id: 'category', disablePadding: true, label: '', width: '10%' },
-  { id: 'time_stamp', disablePadding: true, label: '', width: '5%' },
-  { id: 'document', disablePadding: true, label: '', width: '60%' },
-  {
-    id: 'maximum_category_score',
-    disablePadding: true,
-    label: 'Category',
-    width: '5%',
-    sort: true,
-  },
-  {
-    id: 'maximum_action_score',
-    disablePadding: true,
-    label: 'Action',
-    width: '5%',
-    sort: true,
-  },
-  { id: 'copy', disablePadding: true, label: 'Copy', width: '5%' },
+  { id: 'modificationDate', disablePadding: true, label: '', width: '7%' },
+  { id: 'session', disablePadding: true, label: '', width: '88%' },
   { id: 'try', disablePadding: true, label: 'Try', width: '5%' },
 ];
 
 /**
  * @return {null}
  */
-function SayingsDataForm(props) {
-  const { classes, documents, intl, locale, timeSort } = props;
-  if (_.isNil(documents)) {
+function SessionsDataForm(props) {
+  const { classes, sessions, intl, locale, timeSort, onLoadSessionId, agent } = props;
+  if (_.isNil(sessions)) {
     return null;
   }
   return (
     <div>
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} container item xs={12}>
-          {documents.length > 0 ? (
+          {sessions.length > 0 ? (
             <a
               className={classes.dateSelectContainer}
               onClick={evt => {
-                props.onRequestSort('time_stamp');
+                props.onRequestSort('modificationDate');
               }}
             >
               <Typography className={classes.dateSelectLabel}>
-                {timeSort === 'DESC'
+                {timeSort === 'desc'
                   ? intl.formatMessage(messages.newest)
                   : intl.formatMessage(messages.oldest)}
               </Typography>
@@ -281,45 +265,29 @@ function SayingsDataForm(props) {
             noBorder
             headers={tableHeaders}
             rows={
-              documents.length === 0
+              sessions.length === 0
                 ? [
-                    <StyledRow key="document_0">
-                      <SayingRow
+                    <StyledRow key="session_0">
+                      <SessionRow
                         locale={locale}
-                        document={{
+                        session={{
                           id: 'noData',
-                          document: intl.formatMessage(messages.noData),
-                          rasa_results: [
-                            {
-                              keywords: [],
-                              action: {
-                                name: '',
-                              },
-                              categoryScore: 0,
-                            },
-                          ],
-                          maximum_action_score: null,
-                          maximum_category_score: null,
+                          session: intl.formatMessage(messages.noData),
                         }}
-                        agentKeywords={props.agentKeywords}
-                        agentCategories={props.agentCategories}
                         onToggleConversationBar={props.onToggleConversationBar}
-                        agentActions={props.agentActions}
                         onSendMessage={props.onSendMessage}
-                        onCopySaying={props.onCopySaying}
                       />
                     </StyledRow>,
                   ]
-                : documents.map(document => (
-                    <StyledRow key={`document_${document.id}`}>
-                      <SayingRow
-                        document={document}
-                        agentKeywords={props.agentKeywords}
-                        agentCategories={props.agentCategories}
+                : sessions.map(session => (
+                    <StyledRow key={`session_${session.id}`}>
+                      <SessionRow
+                        session={session}
+                        locale={locale}
+                        agent={agent}
                         onToggleConversationBar={props.onToggleConversationBar}
-                        agentActions={props.agentActions}
                         onSendMessage={props.onSendMessage}
-                        onCopySaying={props.onCopySaying}
+                        onLoadSessionId={onLoadSessionId}
                       />
                     </StyledRow>
                   ))
@@ -426,14 +394,15 @@ function SayingsDataForm(props) {
   );
 }
 
-SayingsDataForm.propTypes = {
+SessionsDataForm.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  documents: PropTypes.array,
+  sessions: PropTypes.array,
   agentId: PropTypes.string,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
+  agentFilteredCategories: PropTypes.array,
   onCopySaying: PropTypes.func.isRequired,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
@@ -456,6 +425,7 @@ SayingsDataForm.propTypes = {
   sortDirection: PropTypes.string,
   locale: PropTypes.string,
   timeSort: PropTypes.string,
+  onLoadSessionId: PropTypes.func,
 };
 
-export default injectIntl(withStyles(styles)(SayingsDataForm));
+export default injectIntl(withStyles(styles)(SessionsDataForm));

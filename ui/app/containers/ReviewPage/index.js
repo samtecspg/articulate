@@ -30,11 +30,13 @@ import {
   makeSelectAgent,
   makeSelectCategories,
   makeSelectDocuments,
+  makeSelectSessions,
   makeSelectFilteredCategories,
   makeSelectKeywords,
   makeSelectNewSayingActions,
   makeSelectSelectedCategory,
   makeSelectTotalDocuments,
+  makeSelectTotalSessions,
   makeSelectLocale,
   makeSelectServerStatus,
 } from '../App/selectors';
@@ -54,32 +56,47 @@ export class ReviewPage extends React.Component {
     this.copySayingFromDocument = this.copySayingFromDocument.bind(this);
     this.handleOnRequestSort = this.handleOnRequestSort.bind(this);
     this.initForm = this.initForm.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   state = {
+    selectedTab: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
+      : 'documents',
     filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
       .filter
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter
       : '',
-    currentPage: qs.parse(this.props.location.search, {
-      ignoreQueryPrefix: true,
-    }).page
-      ? parseInt(
-          qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
-            .page,
-        )
-      : 1,
-    pageSize: this.props.agent.id
-      ? this.props.agent.settings.reviewPageSize
-      : 5,
-    numberOfPages: null,
-    totalDocuments: null,
     documents: [],
-    sortField: 'time_stamp',
-    sortDirection: 'DESC',
+    sessions: [],
     client: null,
     socketClientConnected: false,
-    timeSort: 'DESC',
+    pageStatus: {
+      documents: {
+        total: null,
+        currentPage: 1,
+        pageSize: this.props.agent.id && this.props.agent.settings.reviewPageSize
+        ? this.props.agent.settings.reviewPageSize
+        : 5,
+        numberOfPages: null,
+        sortField: 'time_stamp',
+        sortDirection: 'DESC',
+        timeSort: 'DESC',
+      },
+      sessions: {
+        total: null,
+        currentPage: 1,
+        pageSize: this.props.agent.id && this.props.agent.settings.sessionsPageSize
+        ? this.props.agent.settings.sessionsPageSize
+        : 5,
+        numberOfPages: null,
+        sortField: 'modificationDate',
+        sortDirection: 'desc',
+        timeSort: 'desc',
+      }
+    }
   };
 
   async initForm() {
@@ -88,21 +105,30 @@ export class ReviewPage extends React.Component {
       onLoadActions,
       onLoadCategories,
       onLoadAgentDocuments,
+      onLoadAgentSessions,
       onRefreshDocuments,
     } = this.props.actions;
 
     this.setState({
       pageSize: this.props.agent.settings.reviewPageSize,
     });
-    this.setNumberOfPages(this.props.agent.settings.reviewPageSize);
+    this.setNumberOfPages(this.props.agent.settings.reviewPageSize, 'documents');
+    this.setNumberOfPages(this.props.agent.settings.sessionsPageSize, 'sessions');
     onLoadKeywords();
     onLoadActions();
     onLoadCategories();
     onLoadAgentDocuments(
-      this.state.currentPage,
-      this.state.pageSize,
-      this.state.sortField,
-      this.state.sortDirection,
+      this.state.pageStatus.documents.currentPage,
+      this.state.pageStatus.documents.pageSize,
+      this.state.pageStatus.documents.sortField,
+      this.state.pageStatus.documents.sortDirection,
+    );
+
+    onLoadAgentSessions(
+      this.state.pageStatus.sessions.currentPage,
+      this.state.pageStatus.sessions.pageSize,
+      this.state.pageStatus.sessions.sortField,
+      this.state.pageStatus.sessions.sortDirection,
     );
 
     if (!this.state.socketClientConnected) {
@@ -115,10 +141,8 @@ export class ReviewPage extends React.Component {
 
         const handler = documents => {
           if (documents) {
-            const paginatedDocuments = documents.data.slice(
-              0,
-              this.state.pageSize,
-            );
+            const paginatedDocuments = _.orderBy(_.take(documents.data, this.state.pageStatus.documents.pageSize), this.state.pageStatus.documents.sortField, this.state.pageStatus.documents.sortDirection);
+
             const payload = {
               documents: paginatedDocuments,
               total: documents.totalCount,
@@ -151,10 +175,14 @@ export class ReviewPage extends React.Component {
     if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
-    const { documents } = this.props;
+    const { documents, sessions } = this.props;
     if (documents !== this.state.documents) {
       this.setState({ documents });
-      this.setNumberOfPages(this.state.pageSize);
+      this.setNumberOfPages(this.state.pageStatus.documents.pageSize, 'documents');
+    }
+    if (sessions !== this.state.sessions) {
+      this.setState({ sessions });
+      this.setNumberOfPages(this.state.pageStatus.sessions.pageSize, 'sessions');
     }
   }
 
@@ -166,55 +194,82 @@ export class ReviewPage extends React.Component {
     }
   }
 
-  setNumberOfPages(pageSize) {
-    const numberOfPages = Math.ceil(this.props.totalDocuments / pageSize);
+  setNumberOfPages(pageSize, type) {
+    const numberOfPages = Math.ceil((type === 'documents' ? this.props.totalDocuments : this.props.totalSessions) / pageSize);
+    const newPageStatus = this.state.pageStatus;
+    newPageStatus[type].numberOfPages = numberOfPages;
     this.setState({
-      numberOfPages,
+      pageStatus: newPageStatus,
     });
   }
 
   changePage(pageNumber) {
-    const { onLoadAgentDocuments } = this.props.actions;
+    const { onLoadAgentDocuments, onLoadAgentSessions } = this.props.actions;
+    const newPageStatus = this.state.pageStatus;
+    newPageStatus[this.state.selectedTab].currentPage = pageNumber;
     this.setState({
-      currentPage: pageNumber,
+      pageStatus: newPageStatus,
     });
-    onLoadAgentDocuments(
-      pageNumber,
-      this.state.pageSize,
-      this.state.sortField,
-      this.state.sortDirection,
-    );
+    if (this.state.selectedTab === 'documents'){
+      onLoadAgentDocuments(
+        pageNumber,
+        this.state.pageStatus.documents.pageSize,
+        this.state.pageStatus.documents.sortField,
+        this.state.pageStatus.documents.sortDirection,
+      );
+    }
+    if (this.state.selectedTab === 'sessions'){
+      onLoadAgentSessions(
+        pageNumber,
+        this.state.pageStatus.sessions.pageSize,
+        this.state.pageStatus.sessions.sortField,
+        this.state.pageStatus.sessions.sortDirection,
+      );
+    }
   }
 
   movePageBack() {
-    let newPage = this.state.currentPage;
-    if (this.state.currentPage > 1) {
-      newPage = this.state.currentPage - 1;
+    let newPage = this.state.pageStatus[this.state.selectedTab].currentPage;
+    if (this.state.pageStatus[this.state.selectedTab].currentPage > 1) {
+      newPage = this.state.pageStatus[this.state.selectedTab].currentPage - 1;
     }
     this.changePage(newPage);
   }
 
   movePageForward() {
-    let newPage = this.state.currentPage;
-    if (this.state.currentPage < this.state.numberOfPages) {
-      newPage = this.state.currentPage + 1;
+    let newPage = this.state.pageStatus[this.state.selectedTab].currentPage;
+    if (this.state.pageStatus[this.state.selectedTab].currentPage < this.state.pageStatus[this.state.selectedTab].numberOfPages) {
+      newPage = this.state.pageStatus[this.state.selectedTab].currentPage + 1;
     }
     this.changePage(newPage);
   }
 
   changePageSize(pageSize) {
-    const { onLoadAgentDocuments, onChangeReviewPageSize } = this.props.actions;
+    const { onLoadAgentDocuments, onLoadAgentSessions, onChangeReviewPageSize, onChangeSessionsPageSize } = this.props.actions;
+    const newPageStatus = this.state.pageStatus;
+    newPageStatus[this.state.selectedTab].pageSize = pageSize;
+    newPageStatus[this.state.selectedTab].currentPage = 1;
     this.setState({
-      currentPage: 1,
-      pageSize,
+      pageStatus: newPageStatus,
     });
-    onChangeReviewPageSize(this.props.agent.id, pageSize);
-    onLoadAgentDocuments(
-      1,
-      pageSize,
-      this.state.sortField,
-      this.state.sortDirection,
-    );
+    if (this.state.selectedTab === 'documents'){
+      onChangeReviewPageSize(this.props.agent.id, pageSize);
+      onLoadAgentDocuments(
+        1,
+        pageSize,
+        this.state.pageStatus[this.state.selectedTab].sortField,
+        this.state.pageStatus[this.state.selectedTab].sortDirection,
+      );
+    }
+    if (this.state.selectedTab === 'sessions'){
+      onChangeSessionsPageSize(this.props.agent.id, pageSize);
+      onLoadAgentSessions(
+        1,
+        pageSize,
+        this.state.pageStatus[this.state.selectedTab].sortField,
+        this.state.pageStatus[this.state.selectedTab].sortDirection,
+      );
+    }
   }
 
   onSearchSaying(filter) {
@@ -265,43 +320,64 @@ export class ReviewPage extends React.Component {
   }
 
   handleOnRequestSort(id) {
-    const { onLoadAgentDocuments } = this.props.actions;
+    const { onLoadAgentDocuments, onLoadAgentSessions } = this.props.actions;
+
     const sortField = id;
     let sortDirection = 'DESC';
 
     if (this.state.sortField === id && this.state.sortDirection === 'DESC') {
       sortDirection = 'ASC';
     }
-    const timeSort = id === 'time_stamp' ? sortDirection : this.state.timeSort;
-    this.setState({ sortDirection, sortField, timeSort });
-    onLoadAgentDocuments(
-      this.state.currentPage,
-      this.state.pageSize,
-      sortField,
-      sortDirection,
-    );
+    const timeSort = id === 'time_stamp' || id === 'modificationDate' ? sortDirection : this.state.timeSort;
+
+    const newPageStatus = this.state.pageStatus;
+    newPageStatus[this.state.selectedTab].sortField = id;
+    newPageStatus[this.state.selectedTab].sortDirection = sortDirection;
+    newPageStatus[this.state.selectedTab].timeSort = timeSort;
+    this.setState({
+      pageStatus: newPageStatus,
+    });
+
+    if (this.state.selectedTab === 'documents'){
+      onLoadAgentDocuments(
+        this.state.pageStatus[this.state.selectedTab].currentPage,
+        this.state.pageStatus[this.state.selectedTab].pageSize,
+        sortField,
+        sortDirection,
+      );
+    }
+    if (this.state.selectedTab === 'sessions'){
+      onLoadAgentSessions(
+        this.state.pageStatus[this.state.selectedTab].currentPage,
+        this.state.pageStatus[this.state.selectedTab].pageSize,
+        sortField,
+        sortDirection,
+      );
+    }
   }
+
+
+  handleTabChange = (event, value) => {
+    this.setState({
+      selectedTab: value,
+    });
+  };
 
   render() {
     const {
-      onDeleteSaying,
-      onTagKeyword,
-      onUntagKeyword,
-      onAddAction,
-      onDeleteAction,
-      onAddNewSayingAction,
-      onDeleteNewSayingAction,
       onSendSayingToAction,
       onClearSayingToAction,
       onSelectCategory,
       onTrain,
       onToggleConversationBar,
       onSendMessage,
+      onLoadSessionId,
     } = this.props.actions;
 
     const {
       agent,
       documents,
+      sessions,
       agentCategories,
       agentFilteredCategories,
       agentKeywords,
@@ -309,6 +385,7 @@ export class ReviewPage extends React.Component {
       category,
       newSayingActions,
     } = this.props;
+
     return this.props.agent.id ? (
       <Grid container>
         <MainTab
@@ -326,54 +403,23 @@ export class ReviewPage extends React.Component {
           agentURL={`/agent/${agent.id}?ref=mainTab`}
           reviewForm={
             <Form
+              selectedTab={this.state.selectedTab}
+              handleTabChange={this.handleTabChange}
+              agent={agent}
               agentId={agent.id}
               documents={documents}
+              sessions={sessions}
               agentKeywords={agentKeywords}
               agentActions={agentActions}
               agentCategories={agentCategories}
               agentFilteredCategories={agentFilteredCategories}
               onCopySaying={this.copySayingFromDocument}
-              onDeleteSaying={() => onDeleteSaying(null, this.state.pageSize)}
-              onTagKeyword={() =>
-                onTagKeyword(
-                  null,
-                  this.state.filter,
-                  this.state.currentPage,
-                  this.state.pageSize,
-                )
-              }
-              onUntagKeyword={() =>
-                onUntagKeyword(
-                  null,
-                  this.state.filter,
-                  this.state.currentPage,
-                  this.state.pageSize,
-                )
-              }
-              onAddAction={() =>
-                onAddAction(
-                  null,
-                  this.state.filter,
-                  this.state.currentPage,
-                  this.state.pageSize,
-                )
-              }
-              onDeleteAction={() =>
-                onDeleteAction(
-                  null,
-                  this.state.filter,
-                  this.state.currentPage,
-                  this.state.pageSize,
-                )
-              }
-              onAddNewSayingAction={onAddNewSayingAction}
-              onDeleteNewSayingAction={onDeleteNewSayingAction}
               onSearchSaying={this.onSearchSaying}
               onSearchCategory={this.onSearchCategory}
               onSendSayingToAction={onSendSayingToAction}
-              currentPage={this.state.currentPage}
-              pageSize={this.state.pageSize}
-              numberOfPages={this.state.numberOfPages}
+              currentPage={this.state.pageStatus[this.state.selectedTab].currentPage}
+              pageSize={this.state.pageStatus[this.state.selectedTab].pageSize}
+              numberOfPages={this.state.pageStatus[this.state.selectedTab].numberOfPages}
               changePage={this.changePage}
               movePageBack={this.movePageBack}
               movePageForward={this.movePageForward}
@@ -385,10 +431,11 @@ export class ReviewPage extends React.Component {
               onToggleConversationBar={onToggleConversationBar}
               onSendMessage={onSendMessage}
               onRequestSort={this.handleOnRequestSort}
-              sortField={this.state.sortField}
-              sortDirection={this.state.sortDirection}
+              sortField={this.state.pageStatus[this.state.selectedTab].sortField}
+              sortDirection={this.state.pageStatus[this.state.selectedTab].sortDirection}
               locale={this.props.locale}
-              timeSort={this.state.timeSort}
+              timeSort={this.state.pageStatus[this.state.selectedTab].timeSort}
+              onLoadSessionId={onLoadSessionId}
             />
           }
           dialogueForm={Link}
@@ -413,13 +460,6 @@ ReviewPage.propTypes = {
     onLoadKeywords: PropTypes.func.isRequired,
     onLoadActions: PropTypes.func.isRequired,
     onCopySaying: PropTypes.func.isRequired,
-    onDeleteSaying: PropTypes.func.isRequired,
-    onTagKeyword: PropTypes.func.isRequired,
-    onUntagKeyword: PropTypes.func.isRequired,
-    onAddAction: PropTypes.func.isRequired,
-    onDeleteAction: PropTypes.func.isRequired,
-    onAddNewSayingAction: PropTypes.func.isRequired,
-    onDeleteNewSayingAction: PropTypes.func.isRequired,
     onSendSayingToAction: PropTypes.func.isRequired,
     onClearSayingToAction: PropTypes.func.isRequired,
     onSelectCategory: PropTypes.func.isRequired,
@@ -427,7 +467,9 @@ ReviewPage.propTypes = {
     onToggleConversationBar: PropTypes.func.isRequired,
     onSendMessage: PropTypes.func.isRequired,
     onChangeReviewPageSize: PropTypes.func.isRequired,
+    onChangeSessionsPageSize: PropTypes.func.isRequired,
     onRefreshDocuments: PropTypes.func.isRequired,
+    onLoadSessionId: PropTypes.func.isRequired,
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -448,6 +490,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   serverStatus: makeSelectServerStatus(),
   totalDocuments: makeSelectTotalDocuments(),
+  totalSessions: makeSelectTotalSessions(),
   agentCategories: makeSelectCategories(),
   agentFilteredCategories: makeSelectFilteredCategories(),
   agentKeywords: makeSelectKeywords(),
@@ -455,6 +498,7 @@ const mapStateToProps = createStructuredSelector({
   category: makeSelectSelectedCategory(),
   newSayingActions: makeSelectNewSayingActions(),
   documents: makeSelectDocuments(),
+  sessions: makeSelectSessions(),
   locale: makeSelectLocale(),
 });
 
@@ -463,18 +507,12 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(
       {
         onLoadAgentDocuments: Actions.loadAgentDocuments,
+        onLoadAgentSessions: Actions.loadAgentSessions,
         onLoadFilteredCategories: Actions.loadFilteredCategories,
         onLoadCategories: Actions.loadCategories,
         onLoadKeywords: Actions.loadKeywords,
         onLoadActions: Actions.loadActions,
         onCopySaying: Actions.copySaying,
-        onDeleteSaying: Actions.deleteSaying,
-        onTagKeyword: Actions.tagKeyword,
-        onUntagKeyword: Actions.untagKeyword,
-        onAddAction: Actions.addActionSaying,
-        onDeleteAction: Actions.deleteActionSaying,
-        onAddNewSayingAction: Actions.addActionNewSaying,
-        onDeleteNewSayingAction: Actions.deleteActionNewSaying,
         onSendSayingToAction: Actions.sendSayingToAction,
         onClearSayingToAction: Actions.clearSayingToAction,
         onSelectCategory: Actions.selectCategory,
@@ -482,7 +520,9 @@ function mapDispatchToProps(dispatch) {
         onToggleConversationBar: Actions.toggleConversationBar,
         onSendMessage: Actions.sendMessage,
         onChangeReviewPageSize: Actions.changeReviewPageSize,
+        onChangeSessionsPageSize: Actions.changeSessionsPageSize,
         onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
+        onLoadSessionId: Actions.loadSession
       },
       dispatch,
     ),

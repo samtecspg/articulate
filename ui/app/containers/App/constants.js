@@ -134,6 +134,9 @@ export const LOAD_AGENT_DOCUMENTS_ERROR =
 export const LOAD_AGENT_DOCUMENTS_SUCCESS =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_SUCCESS';
 export const SET_AGENT_DEFAULTS = 'app/AgentPage/SET_AGENT_DEFAULTS';
+export const LOAD_AGENT_SESSIONS = 'app/AgentPage/LOAD_AGENT_SESSIONS';
+export const LOAD_AGENT_SESSIONS_SUCCESS = 'app/AgentPage/LOAD_AGENT_SESSIONS_SUCCESS';
+export const LOAD_AGENT_SESSIONS_ERROR = 'app/AgentPage/LOAD_AGENT_SESSIONS_ERROR';
 
 /*
  * Sayings
@@ -350,6 +353,7 @@ export const IMPORT_CATEGORY_SUCCESS =
  * Review
  */
 export const CHANGE_REVIEW_PAGE_SIZE = 'app/ReviewPage/CHANGE_REVIEW_PAGE_SIZE';
+export const CHANGE_SESSIONS_PAGE_SIZE = 'app/ReviewPage/CHANGE_SESSIONS_PAGE_SIZE';
 
 /*
  * Locale

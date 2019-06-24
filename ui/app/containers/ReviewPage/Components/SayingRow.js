@@ -149,7 +149,7 @@ class SayingRow extends React.Component {
     openCodeModal: false,
   };
 
-  constgetDocTime(timestamp) {
+  getDocTime(timestamp) {
     if (timestamp) {
       const timeAgo = new TimeAgo(this.props.locale).format(
         new Date(timestamp),
@@ -211,7 +211,7 @@ class SayingRow extends React.Component {
             variant="body1"
             style={{ fontSize: '10px', color: '#4e4e4e' }}
           >
-            {this.constgetDocTime(document.time_stamp)}
+            {this.getDocTime(document.time_stamp)}
           </Typography>
         </TableCell>
         <TableCell>

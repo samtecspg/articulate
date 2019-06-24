@@ -247,6 +247,9 @@ import {
   LOAD_SERVER_INFO,
   LOAD_SERVER_INFO_ERROR,
   LOAD_SERVER_INFO_SUCCESS,
+  LOAD_AGENT_SESSIONS,
+  LOAD_AGENT_SESSIONS_ERROR,
+  LOAD_AGENT_SESSIONS_SUCCESS,
 } from './constants';
 
 /*
@@ -777,6 +780,31 @@ export function loadAgentDocumentsSuccess(documents) {
   return {
     type: LOAD_AGENT_DOCUMENTS_SUCCESS,
     documents,
+  };
+}
+
+export function loadAgentSessions(page, pageSize, field, direction) {
+  return {
+    type: LOAD_AGENT_SESSIONS,
+    apiCall: true,
+    page,
+    pageSize,
+    field,
+    direction,
+  };
+}
+
+export function loadAgentSessionsError(error) {
+  return {
+    type: LOAD_AGENT_SESSIONS_ERROR,
+    error,
+  };
+}
+
+export function loadAgentSessionsSuccess(sessions) {
+  return {
+    type: LOAD_AGENT_SESSIONS_SUCCESS,
+    sessions,
   };
 }
 
@@ -1940,6 +1968,15 @@ export function changeReviewPageSize(agentId, pageSize) {
   return {
     apiCall: true,
     type: CHANGE_REVIEW_PAGE_SIZE,
+    agentId,
+    pageSize,
+  };
+}
+
+export function changeSessionsPageSize(agentId, pageSize) {
+  return {
+    apiCall: true,
+    type: CHANGE_SESSIONS_PAGE_SIZE,
     agentId,
     pageSize,
   };

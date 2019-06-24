@@ -228,6 +228,8 @@ import {
   LOAD_SERVER_INFO,
   LOAD_SERVER_INFO_ERROR,
   LOAD_SERVER_INFO_SUCCESS,
+  LOAD_AGENT_SESSIONS_SUCCESS,
+  LOAD_AGENT_SESSIONS_ERROR,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -586,6 +588,9 @@ const initialState = Immutable({
   conversationStateObject: {},
   newActionResponse: 'hello',
   documents: [],
+  totalDocuments: null,
+  sessions: [],
+  totalSessions: null,
   serverStatus: '',
 });
 
@@ -1137,6 +1142,17 @@ function appReducer(state = initialState, action) {
       return state
         .setIn(['agent', 'parameters', action.parameterName], action.value)
         .set('agentTouched', true);
+    case LOAD_AGENT_SESSIONS_SUCCESS:
+      return state
+        .set('sessions', action.sessions.sessions)
+        .set('totalSessions', action.sessions.total)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_AGENT_SESSIONS_ERROR:
+      return state
+        .set('sessions', [])
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_AGENT_DOCUMENTS_SUCCESS:
       return state
         .set('documents', action.documents.documents)

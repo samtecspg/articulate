@@ -6,6 +6,7 @@ import {
   ROUTE_DOCUMENT,
   ROUTE_SAYING,
   ROUTE_SETTINGS,
+  ROUTE_SESSION,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
@@ -16,6 +17,8 @@ import {
   deleteSayingError,
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
+  loadAgentSessionsSuccess,
+  loadAgentSessionsError,
   loadCategoriesError,
   loadCategoriesSuccess,
   loadFilteredCategoriesError,
@@ -28,22 +31,26 @@ import {
 import {
   ADD_ACTION_SAYING,
   CHANGE_REVIEW_PAGE_SIZE,
+  CHANGE_SESSIONS_PAGE_SIZE,
   COPY_SAYING,
   DELETE_ACTION_SAYING,
   DELETE_SAYING,
   LOAD_ACTIONS,
   LOAD_AGENT_DOCUMENTS,
+  LOAD_AGENT_SESSIONS,
   LOAD_CATEGORIES,
   LOAD_FILTERED_CATEGORIES,
   LOAD_KEYWORDS,
   LOAD_SAYINGS,
   TAG_KEYWORD,
   UNTAG_KEYWORD,
+  LOAD_SESSION,
 } from '../App/constants';
 
 import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
 
 import { getKeywords } from '../DialoguePage/saga';
+import { getSession } from '../../components/ConversationBar/saga';
 
 export function* getSayings(payload) {
   const agent = yield select(makeSelectAgent());
@@ -309,6 +316,22 @@ export function* putReviewPageSize(payload) {
   }
 }
 
+export function* putSessionsPageSize(payload) {
+  const agentSettings = yield select(makeSelectAgentSettings());
+  const { api, agentId, pageSize } = payload;
+  const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
+  mutableSettings.sessionsPageSize = pageSize;
+  try {
+    yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]),
+      mutableSettings,
+    );
+  } catch (err) {
+    throw err;
+  }
+}
+
 export function* getAgentDocument(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, page, pageSize, field, direction } = payload;
@@ -341,6 +364,38 @@ export function* getAgentDocument(payload) {
   }
 }
 
+export function* getAgentSessions(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, page, pageSize, field, direction } = payload;
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      skip,
+      limit,
+      field,
+      direction,
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_SESSION]),
+      { params },
+    );
+    yield put(
+      loadAgentSessionsSuccess({
+        sessions: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadAgentSessionsError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_SAYINGS, getSayings);
   yield takeLatest(COPY_SAYING, postSaying);
@@ -354,5 +409,8 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_CATEGORIES, getCategories);
   yield takeLatest(LOAD_FILTERED_CATEGORIES, getCategories);
   yield takeLatest(CHANGE_REVIEW_PAGE_SIZE, putReviewPageSize);
+  yield takeLatest(CHANGE_SESSIONS_PAGE_SIZE, putSessionsPageSize);
   yield takeLatest(LOAD_AGENT_DOCUMENTS, getAgentDocument);
+  yield takeLatest(LOAD_AGENT_SESSIONS, getAgentSessions);
+  yield takeLatest(LOAD_SESSION, getSession);
 }

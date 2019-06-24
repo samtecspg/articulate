@@ -116,4 +116,16 @@ export default defineMessages({
     id: 'app.containers.ReviewPage.component.SayingRow.seeSource',
     defaultMessage: 'See Source',
   },
+  sayingsFormTitle: {
+    id: 'app.containers.ReviewPage.component.Form.sayingsFormTitle',
+    defaultMessage: 'Sayings',
+  },
+  sessionsFormTitle: {
+    id: 'app.containers.ReviewPage.component.Form.sessionsFormTitle',
+    defaultMessage: 'Sessions',
+  },
+  reproduceSession: {
+    id: 'app.containers.ReviewPage.component.SessionRow.reproduceSession',
+    defaultMessage: 'Reproduce session on chat window',
+  }
 });

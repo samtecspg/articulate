@@ -760,5 +760,6 @@
   "keywordsPageSize": 5,
   "actionsPageSize": 5,
   "reviewPageSize": 5,
+  "sessionsPageSize": 5,
   "conversationPanelWidth": 300
 }
