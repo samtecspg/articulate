@@ -1637,7 +1637,7 @@ function appReducer(state = initialState, action) {
           template: 'positiveNotificationTemplate',
           instanceType: 'Action',
           action: 'updated',
-          instanceName: action.payload.action.actionName,
+          instanceName: action.action.actionName,
           emoji: happyEmojies[Math.floor(Math.random() * happyEmojies.length)],
           type: 'success',
           datetime: new Date(),
