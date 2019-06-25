@@ -1,14 +1,10 @@
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import {
   ROUTE_AGENT,
   ROUTE_EXPORT,
   ROUTE_IMPORT,
   ROUTE_CONNECTION,
-  ROUTE_CHANNEL
+  ROUTE_CHANNEL,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -28,7 +24,7 @@ import {
   IMPORT_AGENT,
   LOAD_AGENTS,
   LOAD_CONNECTIONS,
-  LOAD_CHANNELS
+  LOAD_CHANNELS,
 } from '../App/constants';
 
 export function* getAgents(payload) {
@@ -37,8 +33,7 @@ export function* getAgents(payload) {
   try {
     const response = yield call(api.get, toAPIPath([ROUTE_AGENT]));
     yield put(loadAgentsSuccess(response.data));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(loadAgentsError(err));
   }
 }
@@ -49,8 +44,7 @@ export function* getConnections(payload) {
   try {
     const response = yield call(api.get, toAPIPath([ROUTE_CONNECTION]));
     yield put(loadConnectionsSuccess(response.data));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(loadConnectionsError(err));
   }
 }
@@ -61,8 +55,7 @@ export function* getChannels(payload) {
   try {
     const response = yield call(api.get, toAPIPath([ROUTE_CHANNEL]));
     yield put(loadChannelsSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(loadChannelsError(err));
   }
 }
@@ -72,14 +65,15 @@ export function* getAgentExport(payload) {
 
   try {
     if (id !== 0) {
-      const response = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
+      const response = yield call(
+        api.get,
+        toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]),
+      );
       yield put(exportAgentSuccess(response));
-    }
-    else {
+    } else {
       yield put(exportAgentSuccess(null));
     }
-  }
-  catch (err) {
+  } catch (err) {
     yield put(exportAgentError(err));
   }
 }
@@ -87,11 +81,14 @@ export function* getAgentExport(payload) {
 export function* postAgentImport(payload) {
   const { api, agent } = payload;
   try {
-    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
+    const response = yield call(
+      api.post,
+      toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]),
+      agent,
+    );
     yield put(importAgentSuccess(response.obj));
     yield call(getAgents, { api });
-  }
-  catch (err) {
+  } catch (err) {
     yield put(importAgentError(err));
   }
 }

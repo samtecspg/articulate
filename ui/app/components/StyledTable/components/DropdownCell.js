@@ -1,8 +1,4 @@
-import {
-  MenuItem,
-  TableCell,
-  TextField,
-} from '@material-ui/core';
+import { MenuItem, TableCell, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -23,36 +19,33 @@ const styles = {
 };
 
 function DropdownCell(props) {
-  const {
-    onChange,
-    options,
-    selected,
-    enabled,
-    classes,
-    ...rest
-  } = props;
-  return <TableCell {...rest}>
-    <TextField
-      className={classes.categorySelectContainer}
-      select
-      value={selected}
-      onChange={onChange}
-      margin='normal'
-      fullWidth
-      enabled={enabled}
-      inputProps={{
-        className: classes.categorySelect,
-      }}
-    >
-      {options.map((option) =>
-        (
-          <MenuItem key={`dropdown_cell_${option.id}`} style={{ minWidth: '150px' }} value={option.id}>
+  const { onChange, options, selected, enabled, classes, ...rest } = props;
+  return (
+    <TableCell {...rest}>
+      <TextField
+        className={classes.categorySelectContainer}
+        select
+        value={selected}
+        onChange={onChange}
+        margin="normal"
+        fullWidth
+        enabled={enabled}
+        inputProps={{
+          className: classes.categorySelect,
+        }}
+      >
+        {options.map(option => (
+          <MenuItem
+            key={`dropdown_cell_${option.id}`}
+            style={{ minWidth: '150px' }}
+            value={option.id}
+          >
             <span className={classes.categoryLabel}>{option.categoryName}</span>
           </MenuItem>
-        ),
-      )}
-    </TextField>
-  </TableCell>;
+        ))}
+      </TextField>
+    </TableCell>
+  );
 }
 
 DropdownCell.propTypes = {

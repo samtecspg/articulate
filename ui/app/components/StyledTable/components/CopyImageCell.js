@@ -11,17 +11,15 @@ const styles = {
 };
 
 function CopyImageCell(props) {
-  const {
-    classes,
-    onClick,
-    ...rest
-  } = props;
-  return <ImageCell
-    className={classes.cell}
-    image={icon}
-    onClick={onClick}
-    {...rest}
-  />;
+  const { classes, onClick, ...rest } = props;
+  return (
+    <ImageCell
+      className={classes.cell}
+      image={icon}
+      onClick={onClick}
+      {...rest}
+    />
+  );
 }
 
 CopyImageCell.propTypes = {

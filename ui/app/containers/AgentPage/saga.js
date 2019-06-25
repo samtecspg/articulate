@@ -1,10 +1,5 @@
 import { push } from 'react-router-redux';
-import {
-  call,
-  put,
-  select,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
@@ -42,9 +37,12 @@ function* postAgentWebhook(payload) {
   const agentWebhook = yield select(makeSelectAgentWebhook());
   const { api } = payload;
   try {
-    yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_WEBHOOK]), agentWebhook);
-  }
-  catch (err) {
+    yield call(
+      api.post,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_WEBHOOK]),
+      agentWebhook,
+    );
+  } catch (err) {
     yield put(addAgentError(err));
   }
 }
@@ -54,9 +52,12 @@ function* postAgentPostFormat(payload) {
   const agentPostFormat = yield select(makeSelectAgentPostFormat());
   const { api } = payload;
   try {
-    yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_POST_FORMAT]), agentPostFormat);
-  }
-  catch (err) {
+    yield call(
+      api.post,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_POST_FORMAT]),
+      agentPostFormat,
+    );
+  } catch (err) {
     yield put(addAgentError(err));
   }
 }
@@ -71,9 +72,12 @@ function* putAgentWebhook(payload) {
     delete mutableAgentWebhook.id;
   }
   try {
-    yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_WEBHOOK]), mutableAgentWebhook);
-  }
-  catch (err) {
+    yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_WEBHOOK]),
+      mutableAgentWebhook,
+    );
+  } catch (err) {
     yield put(addAgentError(err));
   }
 }
@@ -88,9 +92,12 @@ function* putAgentPostFormat(payload) {
     delete mutablePostFormat.id;
   }
   try {
-    yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_POST_FORMAT]), mutablePostFormat);
-  }
-  catch (err) {
+    yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_POST_FORMAT]),
+      mutablePostFormat,
+    );
+  } catch (err) {
     yield put(addAgentError(err));
   }
 }
@@ -99,8 +106,7 @@ function* deleteAgentWebhook(payload) {
   const { api, id } = payload;
   try {
     yield call(api.delete, toAPIPath([ROUTE_AGENT, id, ROUTE_WEBHOOK]));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(addAgentError(err));
   }
 }
@@ -109,8 +115,7 @@ function* deleteAgentPostFormat(payload) {
   const { api, id } = payload;
   try {
     yield call(api.delete, toAPIPath([ROUTE_AGENT, id, ROUTE_POST_FORMAT]));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(addAgentError(err));
   }
 }
@@ -119,16 +124,22 @@ function* putAgentSettings(payload) {
   const agentSettings = yield select(makeSelectAgentSettings());
   const { api, id } = payload;
   try {
-    yield call(api.put, toAPIPath([ROUTE_AGENT, id, ROUTE_SETTINGS]), agentSettings);
-  }
-  catch (err) {
+    yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, id, ROUTE_SETTINGS]),
+      agentSettings,
+    );
+  } catch (err) {
     throw err;
   }
 }
 
 export function* postAgent(payload) {
   let agent = yield select(makeSelectAgent());
-  agent = agent.set('categoryClassifierThreshold', agent.categoryClassifierThreshold / 100);
+  agent = agent.set(
+    'categoryClassifierThreshold',
+    agent.categoryClassifierThreshold / 100,
+  );
   const { api } = payload;
   try {
     const response = yield call(api.post, toAPIPath([ROUTE_AGENT]), agent);
@@ -139,10 +150,11 @@ export function* postAgent(payload) {
       yield call(postAgentPostFormat, { id: response.id, api });
     }
     yield call(putAgentSettings, { id: response.id, api });
-    response.categoryClassifierThreshold = parseInt(response.categoryClassifierThreshold * 100);
+    response.categoryClassifierThreshold = parseInt(
+      response.categoryClassifierThreshold * 100,
+    );
     yield put(addAgentSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(addAgentError(err));
   }
 }
@@ -151,7 +163,8 @@ export function* putAgent(payload) {
   const agent = yield select(makeSelectAgent());
   const currentAgent = yield select(makeSelectCurrentAgent());
   const mutableAgent = Immutable.asMutable(agent, { deep: true });
-  mutableAgent.categoryClassifierThreshold = agent.categoryClassifierThreshold / 100;
+  mutableAgent.categoryClassifierThreshold =
+    agent.categoryClassifierThreshold / 100;
   const { api } = payload;
   delete mutableAgent.id;
   delete mutableAgent.settings;
@@ -159,17 +172,19 @@ export function* putAgent(payload) {
   delete mutableAgent.lastTraining;
   try {
     yield call(putAgentSettings, { id: currentAgent.id, api });
-    const response = yield call(api.put, toAPIPath([ROUTE_AGENT, currentAgent.id]), mutableAgent);
+    const response = yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, currentAgent.id]),
+      mutableAgent,
+    );
     if (!currentAgent.useWebhook) {
       if (agent.useWebhook) {
         yield call(postAgentWebhook, { id: currentAgent.id, api });
       }
-    }
-    else if (currentAgent.useWebhook) {
+    } else if (currentAgent.useWebhook) {
       if (!agent.useWebhook) {
         yield call(deleteAgentWebhook, { id: currentAgent.id, api });
-      }
-      else {
+      } else {
         yield call(putAgentWebhook, { id: currentAgent.id, api });
       }
     }
@@ -177,19 +192,18 @@ export function* putAgent(payload) {
       if (agent.usePostFormat) {
         yield call(postAgentPostFormat, { id: currentAgent.id, api });
       }
-    }
-    else if (currentAgent.usePostFormat) {
+    } else if (currentAgent.usePostFormat) {
       if (!agent.usePostFormat) {
         yield call(deleteAgentPostFormat, { id: currentAgent.id, api });
-      }
-      else {
+      } else {
         yield call(putAgentPostFormat, { id: currentAgent.id, api });
       }
     }
-    response.categoryClassifierThreshold = parseInt(response.categoryClassifierThreshold * 100);
+    response.categoryClassifierThreshold = parseInt(
+      response.categoryClassifierThreshold * 100,
+    );
     yield put(updateAgentSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(updateAgentError(err));
   }
 }
@@ -202,8 +216,7 @@ export function* deleteAgent(payload) {
     const response = yield call(api.get, toAPIPath([ROUTE_AGENT]));
     yield put(loadAgentsSuccess(response.data));
     yield put(push('/'));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(deleteAgentError(err));
   }
 }
@@ -213,4 +226,4 @@ export default function* rootSaga() {
   yield takeLatest(UPDATE_AGENT, putAgent);
   yield takeLatest(DELETE_AGENT, deleteAgent);
   yield takeLatest(LOAD_ACTIONS, getActions);
-};
+}

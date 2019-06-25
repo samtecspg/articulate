@@ -1,5 +1,5 @@
 {
-   "actions": [
+  "actions": [
     {
       "description": "Welcome Intent",
       "name": "MAIN",
@@ -9,7 +9,7 @@
       "intent": {
         "name": "actions.intent.MAIN",
         "trigger": {
-          "queryPatterns":["talk to <YOUR GOOGLE ACTION DISPLAY NAME>"]
+          "queryPatterns": ["talk to <YOUR GOOGLE ACTION DISPLAY NAME>"]
         }
       }
     },
@@ -22,7 +22,7 @@
       "intent": {
         "name": "actions.intent.TEXT",
         "trigger": {
-          "queryPatterns":[]
+          "queryPatterns": []
         }
       }
     }

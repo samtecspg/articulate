@@ -1,0 +1,17 @@
+{
+    "name": "Web Demo",
+    "description": "Standalone chat window hosted by your Articulate server for testing purposes",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/web-demo/README.MD",
+    "details": {
+        "messageTitle": {
+            "displayName": "Message title for users",
+            "description" : "Title of the message you want to share to your web demo users",
+            "type": "string"
+        },
+        "message": {
+            "displayName": "Message for users",
+            "description" : "The message you want to share with your users (i.e.: instructions, saying examples).",
+            "type": "textarea"
+        }
+    }
+}

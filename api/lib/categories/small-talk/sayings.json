@@ -1,0 +1,623 @@
+[
+    {
+      "userSays": "hey",
+      "keywords": [],
+      "actions": [
+        "Greet"
+      ],
+      "creationDate": "1558573067000",
+      "modificationDate": "1558573067000"
+    },
+    {
+      "userSays": "hi",
+      "keywords": [],
+      "actions": [
+        "Greet"
+      ],
+      "creationDate": "1558573068000",
+      "modificationDate": "1558573068000"
+    },
+    {
+      "userSays": "hello",
+      "keywords": [],
+      "actions": [
+        "Greet"
+      ],
+      "creationDate": "1558573070000",
+      "modificationDate": "1558573070000"
+    },
+    {
+      "userSays": "hola",
+      "keywords": [],
+      "actions": [
+        "Greet"
+      ],
+      "creationDate": "1558573071000",
+      "modificationDate": "1558573071000"
+    },
+    {
+      "userSays": "howdy",
+      "keywords": [],
+      "actions": [
+        "Greet"
+      ],
+      "creationDate": "1558573076000",
+      "modificationDate": "1558573076000"
+    },
+    {
+      "userSays": "greetings",
+      "keywords": [],
+      "actions": [
+        "Greet"
+      ],
+      "creationDate": "1558573079000",
+      "modificationDate": "1558573079000"
+    },
+    {
+      "userSays": "👋",
+      "keywords": [],
+      "actions": [
+        "Greet"
+      ],
+      "creationDate": "1558573086000",
+      "modificationDate": "1558573086000"
+    },
+    {
+      "userSays": "bye",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558573211000",
+      "modificationDate": "1558573211000"
+    },
+    {
+      "userSays": "farewell",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558573213000",
+      "modificationDate": "1558573213000"
+    },
+    {
+      "userSays": "goodbye",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558573214000",
+      "modificationDate": "1558573214000"
+    },
+    {
+      "userSays": "cya",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558573216000",
+      "modificationDate": "1558573216000"
+    },
+    {
+      "userSays": "c-ya",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558573217000",
+      "modificationDate": "1558573217000"
+    },
+    {
+      "userSays": "see you",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558573218000",
+      "modificationDate": "1558573218000"
+    },
+    {
+      "userSays": "see you later",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558573220000",
+      "modificationDate": "1558573220000"
+    },
+    {
+      "userSays": "thanks",
+      "keywords": [],
+      "actions": [
+        "Gratitude"
+      ],
+      "creationDate": "1558573272000",
+      "modificationDate": "1558573272000"
+    },
+    {
+      "userSays": "thank you",
+      "keywords": [],
+      "actions": [
+        "Gratitude"
+      ],
+      "creationDate": "1558573408000",
+      "modificationDate": "1558573408000"
+    },
+    {
+      "userSays": "tyvm",
+      "keywords": [],
+      "actions": [
+        "Gratitude"
+      ],
+      "creationDate": "1558573410000",
+      "modificationDate": "1558573410000"
+    },
+    {
+      "userSays": "ty",
+      "keywords": [],
+      "actions": [
+        "Gratitude"
+      ],
+      "creationDate": "1558573411000",
+      "modificationDate": "1558573411000"
+    },
+    {
+      "userSays": "gracias",
+      "keywords": [],
+      "actions": [
+        "Gratitude"
+      ],
+      "creationDate": "1558573418000",
+      "modificationDate": "1558573418000"
+    },
+    {
+      "userSays": "Who are you?",
+      "keywords": [],
+      "actions": [
+        "Who Am I"
+      ],
+      "creationDate": "1558576798000",
+      "modificationDate": "1558576798000"
+    },
+    {
+      "userSays": "what are you",
+      "keywords": [],
+      "actions": [
+        "Who Am I"
+      ],
+      "creationDate": "1558578032000",
+      "modificationDate": "1558578032000"
+    },
+    {
+      "userSays": "When were you created?",
+      "keywords": [],
+      "actions": [
+        "How Old"
+      ],
+      "creationDate": "1558609343000",
+      "modificationDate": "1558609343000"
+    },
+    {
+      "userSays": "when were you born?",
+      "keywords": [],
+      "actions": [
+        "How Old"
+      ],
+      "creationDate": "1558609348000",
+      "modificationDate": "1558609348000"
+    },
+    {
+      "userSays": "how old are you?",
+      "keywords": [],
+      "actions": [
+        "How Old"
+      ],
+      "creationDate": "1558609475000",
+      "modificationDate": "1558609475000"
+    },
+    {
+      "userSays": "what's your age",
+      "keywords": [],
+      "actions": [
+        "How Old"
+      ],
+      "creationDate": "1558609484000",
+      "modificationDate": "1558609484000"
+    },
+    {
+      "userSays": "What have you learned?",
+      "keywords": [],
+      "actions": [
+        "Capabilities"
+      ],
+      "creationDate": "1558609864000",
+      "modificationDate": "1558609864000"
+    },
+    {
+      "userSays": "What can you do?",
+      "keywords": [],
+      "actions": [
+        "Capabilities"
+      ],
+      "creationDate": "1558609868000",
+      "modificationDate": "1558609868000"
+    },
+    {
+      "userSays": "capabilities",
+      "keywords": [],
+      "actions": [
+        "Capabilities"
+      ],
+      "creationDate": "1558609877000",
+      "modificationDate": "1558609877000"
+    },
+    {
+      "userSays": "Do you have the capability?",
+      "keywords": [],
+      "actions": [
+        "Capabilities"
+      ],
+      "creationDate": "1558609886000",
+      "modificationDate": "1558609886000"
+    },
+    {
+      "userSays": "are you busy?",
+      "keywords": [],
+      "actions": [
+        "Busy"
+      ],
+      "creationDate": "1558612623000",
+      "modificationDate": "1558612623000"
+    },
+    {
+      "userSays": "are you too busy to talk to me?",
+      "keywords": [],
+      "actions": [
+        "Busy"
+      ],
+      "creationDate": "1558612632000",
+      "modificationDate": "1558612632000"
+    },
+    {
+      "userSays": "do you have time for me?",
+      "keywords": [],
+      "actions": [
+        "Busy"
+      ],
+      "creationDate": "1558612640000",
+      "modificationDate": "1558612640000"
+    },
+    {
+      "userSays": "are you there?",
+      "keywords": [],
+      "actions": [
+        "Are you there"
+      ],
+      "creationDate": "1558613004000",
+      "modificationDate": "1558613004000"
+    },
+    {
+      "userSays": "tell me your age",
+      "keywords": [],
+      "actions": [
+        "How Old"
+      ],
+      "creationDate": "1558613361000",
+      "modificationDate": "1558613361000"
+    },
+    {
+      "userSays": "your age",
+      "keywords": [],
+      "actions": [
+        "How Old"
+      ],
+      "creationDate": "1558613373000",
+      "modificationDate": "1558613373000"
+    },
+    {
+      "userSays": "tell me how old you are",
+      "keywords": [],
+      "actions": [
+        "How Old"
+      ],
+      "creationDate": "1558613386000",
+      "modificationDate": "1558613386000"
+    },
+    {
+      "userSays": "are you here",
+      "keywords": [],
+      "actions": [
+        "Are you there"
+      ],
+      "creationDate": "1558613670000",
+      "modificationDate": "1558613670000"
+    },
+    {
+      "userSays": "are you still there?",
+      "keywords": [],
+      "actions": [
+        "Are you there"
+      ],
+      "creationDate": "1558613674000",
+      "modificationDate": "1558613674000"
+    },
+    {
+      "userSays": "you there?",
+      "keywords": [],
+      "actions": [
+        "Are you there"
+      ],
+      "creationDate": "1558613682000",
+      "modificationDate": "1558613682000"
+    },
+    {
+      "userSays": "How are you?",
+      "keywords": [],
+      "actions": [
+        "Answer Mood"
+      ],
+      "creationDate": "1558615433000",
+      "modificationDate": "1558615433000"
+    },
+    {
+      "userSays": "are you okay?",
+      "keywords": [],
+      "actions": [
+        "Answer Mood"
+      ],
+      "creationDate": "1558615438000",
+      "modificationDate": "1558615440000"
+    },
+    {
+      "userSays": "are you doing okay?",
+      "keywords": [],
+      "actions": [
+        "Answer Mood"
+      ],
+      "creationDate": "1558615449000",
+      "modificationDate": "1558615451000"
+    },
+    {
+      "userSays": "you're funny",
+      "keywords": [],
+      "actions": [
+        "You Are Funny"
+      ],
+      "creationDate": "1558615954000",
+      "modificationDate": "1558615954000"
+    },
+    {
+      "userSays": "you are very funny",
+      "keywords": [],
+      "actions": [
+        "You Are Funny"
+      ],
+      "creationDate": "1558615957000",
+      "modificationDate": "1558615957000"
+    },
+    {
+      "userSays": "you make me laugh",
+      "keywords": [],
+      "actions": [
+        "You Are Funny"
+      ],
+      "creationDate": "1558615961000",
+      "modificationDate": "1558615961000"
+    },
+    {
+      "userSays": "I like you",
+      "keywords": [],
+      "actions": [
+        "I like you"
+      ],
+      "creationDate": "1558616016000",
+      "modificationDate": "1558616016000"
+    },
+    {
+      "userSays": "I really like you",
+      "keywords": [],
+      "actions": [
+        "I like you"
+      ],
+      "creationDate": "1558616019000",
+      "modificationDate": "1558616019000"
+    },
+    {
+      "userSays": "will you be friend",
+      "keywords": [],
+      "actions": [
+        "By my Friend"
+      ],
+      "creationDate": "1558616072000",
+      "modificationDate": "1558616072000"
+    },
+    {
+      "userSays": "can I be your friend?",
+      "keywords": [],
+      "actions": [
+        "By my Friend"
+      ],
+      "creationDate": "1558616076000",
+      "modificationDate": "1558616076000"
+    },
+    {
+      "userSays": "that's true",
+      "keywords": [],
+      "actions": [
+        "Agree"
+      ],
+      "creationDate": "1558616463000",
+      "modificationDate": "1558616463000"
+    },
+    {
+      "userSays": "I agree",
+      "keywords": [],
+      "actions": [
+        "Agree"
+      ],
+      "creationDate": "1558616465000",
+      "modificationDate": "1558616465000"
+    },
+    {
+      "userSays": "buhbye",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558623932000",
+      "modificationDate": "1558623932000"
+    },
+    {
+      "userSays": "buh-bye",
+      "keywords": [],
+      "actions": [
+        "Goodbye"
+      ],
+      "creationDate": "1558623937000",
+      "modificationDate": "1558623937000"
+    },
+    {
+      "userSays": "You really suck",
+      "keywords": [],
+      "actions": [
+        "You Suck"
+      ],
+      "creationDate": "1558624055000",
+      "modificationDate": "1558624235000"
+    },
+    {
+      "userSays": "you kinda suck",
+      "keywords": [],
+      "actions": [
+        "You Suck"
+      ],
+      "creationDate": "1558624058000",
+      "modificationDate": "1558624235000"
+    },
+    {
+      "userSays": "you're horrible",
+      "keywords": [],
+      "actions": [
+        "You Suck"
+      ],
+      "creationDate": "1558624065000",
+      "modificationDate": "1558624235000"
+    },
+    {
+      "userSays": "you aren't very good",
+      "keywords": [],
+      "actions": [
+        "You Suck"
+      ],
+      "creationDate": "1558624073000",
+      "modificationDate": "1558624235000"
+    },
+    {
+      "userSays": "you're awesome",
+      "keywords": [],
+      "actions": [
+        "You Awesome"
+      ],
+      "creationDate": "1558624466000",
+      "modificationDate": "1558624469000"
+    },
+    {
+      "userSays": "I think you are kind of awesome",
+      "keywords": [],
+      "actions": [
+        "You Awesome"
+      ],
+      "creationDate": "1558624478000",
+      "modificationDate": "1558624487000"
+    },
+    {
+      "userSays": "you are great",
+      "keywords": [],
+      "actions": [
+        "You Awesome"
+      ],
+      "creationDate": "1558624484000",
+      "modificationDate": "1558624486000"
+    },
+    {
+      "userSays": "you are really good.",
+      "keywords": [],
+      "actions": [
+        "You Awesome"
+      ],
+      "creationDate": "1558624498000",
+      "modificationDate": "1558624500000"
+    },
+    {
+      "userSays": "you're welcome",
+      "keywords": [],
+      "actions": [
+        "You're Welcome"
+      ],
+      "creationDate": "1558624686000",
+      "modificationDate": "1558624686000"
+    },
+    {
+      "userSays": "you are very welcome",
+      "keywords": [],
+      "actions": [
+        "You're Welcome"
+      ],
+      "creationDate": "1558624689000",
+      "modificationDate": "1558624689000"
+    },
+    {
+      "userSays": "Will you marry me?",
+      "keywords": [],
+      "actions": [
+        "Marriage Proposal"
+      ],
+      "creationDate": "1558648200000",
+      "modificationDate": "1558648200000"
+    },
+    {
+      "userSays": "marry me",
+      "keywords": [],
+      "actions": [
+        "Marriage Proposal"
+      ],
+      "creationDate": "1558648202000",
+      "modificationDate": "1558648202000"
+    },
+    {
+      "userSays": "propose marriage",
+      "keywords": [],
+      "actions": [
+        "Marriage Proposal"
+      ],
+      "creationDate": "1558648208000",
+      "modificationDate": "1558648208000"
+    },
+    {
+      "userSays": "that makes me sad",
+      "keywords": [],
+      "actions": [
+        "Sad"
+      ],
+      "creationDate": "1558648639000",
+      "modificationDate": "1558648639000"
+    },
+    {
+      "userSays": "I'm sad",
+      "keywords": [],
+      "actions": [
+        "Sad"
+      ],
+      "creationDate": "1558648641000",
+      "modificationDate": "1558648641000"
+    },
+    {
+      "userSays": "😢",
+      "keywords": [],
+      "actions": [
+        "Sad"
+      ],
+      "creationDate": "1558648672000",
+      "modificationDate": "1558648672000"
+    }
+  ]

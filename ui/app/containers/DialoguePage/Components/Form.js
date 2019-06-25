@@ -1,58 +1,59 @@
-import React from "react";
-import { FormattedMessage, injectIntl, intlShape } from "react-intl";
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
-import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, Tabs, Tab } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
+import { Grid, Typography, Button, Modal, Tabs, Tab } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import agentIcon from "../../../images/agents-icon.svg";
-import playHelpIcon from "../../../images/play-help-icon.svg";
+import agentIcon from '../../../images/agents-icon.svg';
+import playHelpIcon from '../../../images/play-help-icon.svg';
 import SayingsDataForm from './SayingsDataForm';
 import KeywordsDataForm from './KeywordsDataForm';
+import ActionsDataForm from './ActionsDataForm';
 
 const styles = {
   headerContainer: {
-    backgroundColor: "#f6f7f8",
-    border: "1px solid #c5cbd8",
-    borderRadius: "5px",
-    marginBottom: "60px",
+    backgroundColor: '#f6f7f8',
+    border: '1px solid #c5cbd8',
+    borderRadius: '5px',
+    marginBottom: '60px',
   },
   titleContainer: {
-    padding: "25px",
+    padding: '25px',
   },
   agentIcon: {
-    display: "inline",
-    paddingRight: "10px",
-    height: "30px",
+    display: 'inline',
+    paddingRight: '10px',
+    height: '30px',
   },
   titleTextHelpContainer: {
-    display: "inline",
-    position: "relative",
-    bottom: "6px",
+    display: 'inline',
+    position: 'relative',
+    bottom: '6px',
   },
   title: {
-    display: "inline",
-    paddingRight: "25px",
+    display: 'inline',
+    paddingRight: '25px',
   },
   helpButton: {
-    display: "inline",
-    width: "50px",
-    height: "20px",
+    display: 'inline',
+    width: '50px',
+    height: '20px',
   },
   playIcon: {
-    height: "10px",
+    height: '10px',
   },
   helpText: {
-    fontSize: "9px",
+    fontSize: '9px',
     fontWeight: 300,
-    position: "relative",
-    bottom: "2px",
-    paddingLeft: "2px",
+    position: 'relative',
+    bottom: '2px',
+    paddingLeft: '2px',
   },
   agentTabs: {
-    paddingLeft: "15px",
+    paddingLeft: '15px',
   },
   selected: {
     color: '#4e4e4e',
@@ -60,23 +61,23 @@ const styles = {
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
     backgroundColor: '#fff',
-    borderBottom: '0px'
+    borderBottom: '0px',
   },
   modalContent: {
-    top: "50%",
-    left: "50%",
+    top: '50%',
+    left: '50%',
     transform: `translate(-50%, -50%)`,
-    position: "absolute",
+    position: 'absolute',
     width: '80%',
     height: '80%',
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   settingsIcon: {
-    height: "18px",
-    paddingRight: "5px",
-    position: 'absolute'
+    height: '18px',
+    paddingRight: '5px',
+    position: 'absolute',
   },
   notificationDot: {
     backgroundColor: '#Cb2121',
@@ -85,19 +86,19 @@ const styles = {
     borderRadius: '50%',
     position: 'absolute',
     top: '10px',
-    left: '5px'
+    left: '5px',
   },
   numOfErrorsLabel: {
     fontSize: '10px',
     color: 'white',
     position: 'relative',
     bottom: '4.5px',
-    left: '0.5px'
+    left: '0.5px',
   },
   tabLabel: {
     padding: '0px 10px',
     position: 'relative',
-    top: '5px'
+    top: '5px',
   },
   settingsTabLabel: {
     padding: '0px 20px',
@@ -149,9 +150,13 @@ class Form extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
-                  width='100%'
-                  height='100%'
-                  src={this.props.selectedTab === 'sayings' ? 'https://www.youtube.com/embed/opL04qS6S5U' : 'https://www.youtube.com/embed/-Agogt68gSg'}
+                  width="100%"
+                  height="100%"
+                  src={
+                    this.props.selectedTab === 'sayings'
+                      ? 'https://www.youtube.com/embed/opL04qS6S5U'
+                      : 'https://www.youtube.com/embed/-Agogt68gSg'
+                  }
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
                   allowFullScreen
@@ -173,27 +178,42 @@ class Form extends React.Component {
             }}
             TabIndicatorProps={{
               style: {
-                display: 'none'
-              }
+                display: 'none',
+              },
             }}
           >
             <Tab
-              value='sayings' 
+              value="sayings"
               label={
                 <span className={classes.tabLabel}>
                   <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
                 </span>
               }
-              className={this.props.selectedTab === 'sayings' ? classes.selected : null}
+              className={
+                this.props.selectedTab === 'sayings' ? classes.selected : null
+              }
             />
-            <Tab 
-              value='keywords'
+            <Tab
+              value="keywords"
               label={
                 <span className={classes.tabLabel}>
                   <span>{intl.formatMessage(messages.keywordsFormTitle)}</span>
                 </span>
               }
-              className={this.props.selectedTab === 'keywords' ? classes.selected : null}
+              className={
+                this.props.selectedTab === 'keywords' ? classes.selected : null
+              }
+            />
+            <Tab
+              value="actions"
+              label={
+                <span className={classes.tabLabel}>
+                  <span>{intl.formatMessage(messages.actionsFormTitle)}</span>
+                </span>
+              }
+              className={
+                this.props.selectedTab === 'actions' ? classes.selected : null
+              }
             />
           </Tabs>
           {this.props.selectedTab === 'sayings' && (
@@ -215,7 +235,10 @@ class Form extends React.Component {
               onDeleteAction={this.props.onDeleteAction}
               onAddNewSayingAction={this.props.onAddNewSayingAction}
               onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
-              onGoToUrl={this.props.onGoToUrl.bind(null, this.props.selectedTab)}
+              onGoToUrl={this.props.onGoToUrl.bind(
+                null,
+                this.props.selectedTab,
+              )}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentSayingsPage={this.props.currentSayingsPage}
               numberOfSayingsPages={this.props.numberOfSayingsPages}
@@ -244,7 +267,28 @@ class Form extends React.Component {
               changeKeywordsPageSize={this.props.changeKeywordsPageSize}
               moveKeywordsPageBack={this.props.moveKeywordsPageBack}
               moveKeywordsPageForward={this.props.moveKeywordsPageForward}
-              onGoToUrl={this.props.onGoToUrl.bind(null, this.props.selectedTab)}
+              onGoToUrl={this.props.onGoToUrl.bind(
+                null,
+                this.props.selectedTab,
+              )}
+            />
+          )}
+          {this.props.selectedTab === 'actions' && (
+            <ActionsDataForm
+              agentId={this.props.agentId}
+              actionsPage={this.props.actionsPage}
+              onCreateAction={this.props.onCreateAction}
+              currentActionsPage={this.props.currentActionsPage}
+              actionsPageSize={this.props.actionsPageSize}
+              numberOfActionsPages={this.props.numberOfActionsPages}
+              changeActionsPage={this.props.changeActionsPage}
+              changeActionsPageSize={this.props.changeActionsPageSize}
+              moveActionsPageBack={this.props.moveActionsPageBack}
+              moveActionsPageForward={this.props.moveActionsPageForward}
+              onGoToUrl={this.props.onGoToUrl.bind(
+                null,
+                this.props.selectedTab,
+              )}
             />
           )}
         </Grid>

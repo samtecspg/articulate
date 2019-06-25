@@ -1,39 +1,39 @@
-import React from "react";
-import { FormattedMessage, injectIntl, intlShape } from "react-intl";
-import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
-import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
+import { Grid, Typography, Button, Modal } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 import SortableModifiersTabs from './SortableModifiersTabs';
 import ModifierForm from './ModifierForm';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import playHelpIcon from "../../../images/play-help-icon.svg";
-import singleQuotesIcon from "../../../images/single-quotes-icon.svg";
-import DeleteFooter from "../../../components/DeleteFooter";
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
+import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
-    backgroundColor: "#f6f7f8",
-    border: "1px solid #c5cbd8",
-    borderRadius: "5px",
-    marginBottom: "60px",
+    backgroundColor: '#f6f7f8',
+    border: '1px solid #c5cbd8',
+    borderRadius: '5px',
+    marginBottom: '60px',
   },
   titleContainer: {
-    padding: "25px",
+    padding: '25px',
   },
   titleTextHelpContainer: {
-    display: "inline",
-    position: "relative",
-    bottom: "6px",
+    display: 'inline',
+    position: 'relative',
+    bottom: '6px',
   },
   title: {
-    display: "inline",
-    paddingRight: "25px",
+    display: 'inline',
+    paddingRight: '25px',
   },
   formDescriptionContainer: {
     margin: '15px 0px',
@@ -43,30 +43,30 @@ const styles = {
     fontWeight: 300,
   },
   helpButton: {
-    display: "inline",
-    width: "50px",
-    height: "20px",
+    display: 'inline',
+    width: '50px',
+    height: '20px',
   },
   playIcon: {
-    height: "10px",
+    height: '10px',
   },
   helpText: {
-    fontSize: "9px",
+    fontSize: '9px',
     fontWeight: 300,
-    position: "relative",
-    bottom: "2px",
-    paddingLeft: "2px",
+    position: 'relative',
+    bottom: '2px',
+    paddingLeft: '2px',
   },
   modalContent: {
-    top: "50%",
-    left: "50%",
+    top: '50%',
+    left: '50%',
     transform: `translate(-50%, -50%)`,
-    position: "absolute",
+    position: 'absolute',
     width: '80%',
     height: '80%',
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -97,14 +97,13 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class ModifiersForm extends React.Component {
-
   state = {
     selectedTab: 0,
     keywordNameError: false,
     openModal: false,
   };
 
-  handleChange = (value) => {
+  handleChange = value => {
     this.setState({
       selectedTab: value,
     });
@@ -148,8 +147,8 @@ class ModifiersForm extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
-                  width='100%'
-                  height='100%'
+                  width="100%"
+                  height="100%"
                   src="https://www.youtube.com/embed/hrIiD_U2wg4"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
@@ -174,34 +173,53 @@ class ModifiersForm extends React.Component {
             onDeleteModifier={this.props.onDeleteModifier}
             errorState={this.props.errorState}
           />
-          {keyword.modifiers.map((modifier, index) => (
-            this.state.selectedTab === index ?
+          {keyword.modifiers.map((modifier, index) =>
+            this.state.selectedTab === index ? (
               <ModifierForm
                 modifier={modifier}
                 settings={this.props.settings}
                 key={`modifierForm_${index}`}
-                onAddModifierSaying={this.props.onAddModifierSaying.bind(null, index)}
-                onDeleteModifierSaying={this.props.onDeleteModifierSaying.bind(null, index)}
-                onChangeModifierData={this.props.onChangeModifierData.bind(null, index)}
-                onChangeModifierName={this.props.onChangeModifierName.bind(null, index)}
+                onAddModifierSaying={this.props.onAddModifierSaying.bind(
+                  null,
+                  index,
+                )}
+                onDeleteModifierSaying={this.props.onDeleteModifierSaying.bind(
+                  null,
+                  index,
+                )}
+                onChangeModifierData={this.props.onChangeModifierData.bind(
+                  null,
+                  index,
+                )}
+                onChangeModifierName={this.props.onChangeModifierName.bind(
+                  null,
+                  index,
+                )}
                 saying={this.props.saying}
                 errorState={this.props.errorState.modifiers[index]}
                 agentKeywords={this.props.agentKeywords}
-                onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(null, index)}
-                onTagModifierKeyword={this.props.onTagModifierKeyword.bind(null, index)}
+                onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(
+                  null,
+                  index,
+                )}
+                onTagModifierKeyword={this.props.onTagModifierKeyword.bind(
+                  null,
+                  index,
+                )}
                 modifierSayingsPageSize={this.props.modifierSayingsPageSize}
-                onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize}
+                onChangeModifiersSayingsPageSize={
+                  this.props.onChangeModifiersSayingsPageSize
+                }
               />
-              : null
-          ))}
+            ) : null,
+          )}
         </Grid>
-        {this.props.newKeyword ? 
-          null : 
+        {this.props.newKeyword ? null : (
           <DeleteFooter
             onDelete={this.props.onDelete}
             type={intl.formatMessage(messages.instanceName)}
           />
-        }
+        )}
       </Grid>
     );
   }
@@ -221,7 +239,7 @@ ModifiersForm.propTypes = {
   onDeleteModifierSaying: PropTypes.func,
   errorState: PropTypes.object,
   onSortModifiers: PropTypes.func,
-	onDeleteModifier: PropTypes.func,
+  onDeleteModifier: PropTypes.func,
   settings: PropTypes.object,
   agentKeywords: PropTypes.array,
   onUntagModifierKeyword: PropTypes.func,
@@ -230,4 +248,6 @@ ModifiersForm.propTypes = {
   onChangeModifiersSayingsPageSize: PropTypes.func,
 };
 
-export default DragDropContext(HTML5Backend)(injectIntl(withStyles(styles)(ModifiersForm)));
+export default DragDropContext(HTML5Backend)(
+  injectIntl(withStyles(styles)(ModifiersForm)),
+);

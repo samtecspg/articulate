@@ -13,10 +13,12 @@ export default function({ text, tokens = [] }) {
         results.push(match[1]);
         remainingText = _.replace(remainingText, match[0], '');
       }
-    }
-    while ((match !== null));
+    } while (match !== null);
 
-    return { ...accumulator, ...{ [currentValue]: results.length > 0 ? results : undefined } };
+    return {
+      ...accumulator,
+      ...{ [currentValue]: results.length > 0 ? results : undefined },
+    };
   };
   const found = tokens.reduce(reducer, {});
   return { remainingText: remainingText.trim(), found };

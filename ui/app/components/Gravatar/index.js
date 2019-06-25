@@ -16,6 +16,24 @@ import Gravatar15 from './Gravatar15';
 import Gravatar16 from './Gravatar16';
 import Gravatar17 from './Gravatar17';
 
-const gravatars = [Gravatar1, Gravatar2, Gravatar3, Gravatar4, Gravatar5, Gravatar6, Gravatar7, Gravatar8, Gravatar9, Gravatar10, Gravatar11, Gravatar12, Gravatar13, Gravatar14, Gravatar15, Gravatar16, Gravatar17];
+const gravatars = [
+  Gravatar1,
+  Gravatar2,
+  Gravatar3,
+  Gravatar4,
+  Gravatar5,
+  Gravatar6,
+  Gravatar7,
+  Gravatar8,
+  Gravatar9,
+  Gravatar10,
+  Gravatar11,
+  Gravatar12,
+  Gravatar13,
+  Gravatar14,
+  Gravatar15,
+  Gravatar16,
+  Gravatar17,
+];
 
 export default gravatars;

@@ -24,6 +24,6 @@ export default defineMessages({
   },
   exit: {
     id: 'app.components.ExitModal.exit',
-    defaultMessage: 'Exit'
-  }
+    defaultMessage: 'Exit',
+  },
 });

@@ -41,6 +41,7 @@ const ParseSchema = require('../models/parse.model').schema;
 const ModifierSchema = require('../models/modifier.model').schema;
 const ModifierSayingSchema = require('../models/modifier.saying.model').schema;
 const DocumentSchema = require('../models/document.model').schema;
+const SessionChema = require('../models/context.model').schema;
 
 const defaultSettings = require('../../util/default-settings.json');
 
@@ -524,6 +525,45 @@ class AgentValidate {
                         .allow(_(DocumentSchema).keys().sort().value())
                         .optional()
                         .description('Field to sort with. Default= "time_stamp"')
+                };
+            })()
+        };
+
+        this.findAllSessions = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    [PARAM_SKIP]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to skip. Default=0')
+                        .default(0),
+                    [PARAM_LIMIT]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to return. Default=-1 (all)')
+                        .default(-1),
+                    [PARAM_DIRECTION]: Joi
+                        .string()
+                        .optional()
+                        .allow(SORT_ASC.toLowerCase(), SORT_DESC.toLowerCase())
+                        .description('Sort direction. Default= asc')
+                        .default('asc'),
+                    [PARAM_FIELD]: Joi
+                        .string()
+                        .allow(_(SessionChema).keys().sort().value())
+                        .optional()
+                        .description('Field to sort with. Default= "id"')
+                        .default('id')
                 };
             })()
         };

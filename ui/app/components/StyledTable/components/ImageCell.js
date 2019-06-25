@@ -14,29 +14,26 @@ const styles = {
     cursor: 'pointer',
     position: 'relative',
     top: '4px',
-    height: '15px'
+    height: '15px',
   },
 };
 
 function ImageCell(props) {
-  const {
-    classes,
-    image,
-    onClick,
-    disabled,
-    tooltip,
-    ...rest
-  } = props;
+  const { classes, image, onClick, disabled, tooltip, ...rest } = props;
   return (
     <TableCell {...rest}>
       <Tooltip title={tooltip} placement="top-start">
         <img
-          alt="" onClick={() => {
-          onClick && !disabled ? onClick() : _.noop;
-        }} className={classes.icon} src={image}
+          alt=""
+          onClick={() => {
+            onClick && !disabled ? onClick() : _.noop;
+          }}
+          className={classes.icon}
+          src={image}
         />
       </Tooltip>
-    </TableCell>);
+    </TableCell>
+  );
 }
 
 ImageCell.propTypes = {

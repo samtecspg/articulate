@@ -4,12 +4,12 @@ export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 export const ACTION_INTENT_SPLIT_SYMBOL = '+__+';
 export const PROXY_ROUTE_PREFIX = '/api';
 
-
 // ROUTES
 export const ROUTE_ACTION = 'action';
 export const ROUTE_AGENT = 'agent';
 export const ROUTE_CONNECTION = 'connection';
 export const ROUTE_CHANNEL = 'channel';
+export const ROUTE_SESSION = 'session';
 export const ROUTE_CONTEXT = 'context';
 export const ROUTE_DOCUMENT = 'doc';
 export const ROUTE_CATEGORY = 'category';
@@ -26,3 +26,4 @@ export const ROUTE_FRAME = 'frame';
 export const ROUTE_EXPORT = 'export';
 export const ROUTE_IMPORT = 'import';
 export const ROUTE_BULK = 'bulk';
+export const ROUTE_USER = 'user';

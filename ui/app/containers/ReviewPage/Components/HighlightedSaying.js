@@ -5,10 +5,8 @@ import React from 'react';
 import systemKeywords from 'systemKeywords';
 
 const compareKeywords = (a, b) => {
-  if (a.start < b.start)
-    return -1;
-  if (a.start > b.start)
-    return 1;
+  if (a.start < b.start) return -1;
+  if (a.start > b.start) return 1;
   return 0;
 };
 
@@ -40,7 +38,7 @@ const styles = {
   },
 };
 
-const HighlightedSaying = withStyles(styles)((props) => {
+const HighlightedSaying = withStyles(styles)(props => {
   const { classes } = props;
   const keywords = [...props.keywords].sort(compareKeywords);
   const keyword = keywords.length > 0 ? keywords.splice(0, 1)[0] : null;
@@ -51,15 +49,26 @@ const HighlightedSaying = withStyles(styles)((props) => {
     const lastStart = +props.lastStart;
     const beforeTaggedText = props.text.substring(0, start - lastStart);
     const taggedText = props.text.substring(start - lastStart, end - lastStart);
-    const afterTaggedText = props.text.substring(end - lastStart, props.text.length);
-    let filteredKeyword = props.agentKeywords.filter((agentKeyword) => agentKeyword.keywordName === keyword.keyword)[0];
+    const afterTaggedText = props.text.substring(
+      end - lastStart,
+      props.text.length,
+    );
+    let filteredKeyword = props.agentKeywords.filter(
+      agentKeyword => agentKeyword.keywordName === keyword.keyword,
+    )[0];
     if (!filteredKeyword) {
-      filteredKeyword = systemKeywords.filter((sysKeyword) => sysKeyword.keywordName === keyword.keyword)[0];
+      filteredKeyword = systemKeywords.filter(
+        sysKeyword => sysKeyword.keywordName === keyword.keyword,
+      )[0];
     }
-    const highlightColor = filteredKeyword ? filteredKeyword.uiColor : 'transparent';
+    const highlightColor = filteredKeyword
+      ? filteredKeyword.uiColor
+      : 'transparent';
     formattedElement = (
       <span key={`keywordTag_${props.keywordIndex}`}>
-        <span key={`beforeKeywordTagText_${props.keywordIndex}`}>{beforeTaggedText}</span>
+        <span key={`beforeKeywordTagText_${props.keywordIndex}`}>
+          {beforeTaggedText}
+        </span>
         <Tooltip title={keyword.keyword} placement="top-start">
           <span
             key={`keywordTagText_${props.keywordIndex}`}
@@ -67,7 +76,9 @@ const HighlightedSaying = withStyles(styles)((props) => {
             style={{
               backgroundColor: highlightColor,
             }}
-          >{taggedText}</span>
+          >
+            {taggedText}
+          </span>
         </Tooltip>
 
         <HighlightedSaying
@@ -82,9 +93,7 @@ const HighlightedSaying = withStyles(styles)((props) => {
     );
   } else {
     formattedElement = (
-      <span key={`keywordTag_${props.keywordIndex}`}>
-        {props.text}
-      </span>
+      <span key={`keywordTag_${props.keywordIndex}`}>{props.text}</span>
     );
   }
   return formattedElement;

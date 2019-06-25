@@ -12,7 +12,8 @@ export default defineMessages({
   },
   notFoundParagraph: {
     id: 'app.components.NotFoundPage.not_found_paragraph',
-    defaultMessage: 'The page you are looking doesn\'t seem to exists. If you are not able to find your desired resource please go to our docs and find more about how to use Articulate. If you think this is an issue please contact us.',
+    defaultMessage:
+      "The page you are looking doesn't seem to exists. If you are not able to find your desired resource please go to our docs and find more about how to use Articulate. If you think this is an issue please contact us.",
   },
   needHelp: {
     id: 'app.components.NotFoundPage.needHelp',

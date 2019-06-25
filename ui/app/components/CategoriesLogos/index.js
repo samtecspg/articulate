@@ -12,22 +12,17 @@ const logosDir = {
   'small-talk': smallTalk,
   weather,
   music,
-  currency
-}
+  currency,
+};
 
 function CategoriesLogos(props) {
-
   const { logo, ...rest } = props;
 
-  return (
-      logo ?
-      <img {...rest} src={logosDir[logo]} /> :
-      null
-  );
+  return logo ? <img {...rest} src={logosDir[logo]} /> : null;
 }
 
 CategoriesLogos.propTypes = {
-  logo: PropTypes.string.isRequired
+  logo: PropTypes.string.isRequired,
 };
 
 export default CategoriesLogos;

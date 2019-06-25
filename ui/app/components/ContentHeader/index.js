@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Typography, Hidden }  from '@material-ui/core';
+import { Grid, Typography, Hidden } from '@material-ui/core';
 
 const styles = {
   container: {
@@ -48,45 +48,39 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 export class ContentHeader extends React.Component {
-  render(){
+  render() {
     const { classes } = this.props;
     return (
       <Grid className={classes.container} item xs={12}>
         <Grid className={classes.titleContainer}>
-          {this.props.title ?
+          {this.props.title ? (
             <Typography className={classes.title}>
-              <FormattedMessage {...this.props.title} />:&nbsp;
-            </Typography> :
-            null
-          }
-          {this.props.subtitle ?
+              <FormattedMessage {...this.props.title} />
+              :&nbsp;
+            </Typography>
+          ) : null}
+          {this.props.subtitle ? (
             <Typography className={classes.subtitle}>
-              {
-                typeof this.props.subtitle === 'string' ?
-                  this.props.subtitle :
-                  <FormattedMessage {...this.props.subtitle} />
-              }
-            </Typography> :
-            null
-          }
+              {typeof this.props.subtitle === 'string' ? (
+                this.props.subtitle
+              ) : (
+                <FormattedMessage {...this.props.subtitle} />
+              )}
+            </Typography>
+          ) : null}
         </Grid>
         <Hidden only={this.props.sizesForHideInlineElement}>
           {this.props.inlineElement ? this.props.inlineElement : null}
         </Hidden>
       </Grid>
-    )
+    );
   }
 }
 
 ContentHeader.propTypes = {
-  title: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.string,
-  ]).isRequired,
-  subtitle: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.string,
-  ]).isRequired,
+  title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
+  subtitle: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+    .isRequired,
   inlineElement: PropTypes.node,
   classes: PropTypes.object.isRequired,
   sizesForHideInlineElement: PropTypes.array,

@@ -19,9 +19,9 @@ export default defineMessages({
     id: 'app.containers.ReviewPage.help',
     defaultMessage: 'Help?',
   },
-  playHelpAlt : {
+  playHelpAlt: {
     id: 'app.containers.ReviewPage.playHelpAlt',
-    defaultMessage: 'Play video off how tor review user sayings',
+    defaultMessage: 'Play video of how to understand the review page',
   },
   sayingTextField: {
     id: 'app.containers.ReviewPage.component.ReviewDataForm.sayingTextField',
@@ -101,14 +101,31 @@ export default defineMessages({
   },
   copyAlert: {
     id: 'app.containers.ReviewPage.component.SayingRow.copyAlert',
-    defaultMessage: 'This agent is configured to use a single classification model for all categories. To copy this text as a new saying please specify the category it belongs to:'
+    defaultMessage:
+      'This agent is configured to use a single classification model for all categories. To copy this text as a new saying please specify the category it belongs to:',
   },
   copyDialogCancelButton: {
     id: 'app.containers.ReviewPage.component.SayingRow.copyDialogCancelButton',
-    defaultMessage: 'Cancel'
+    defaultMessage: 'Cancel',
   },
   copyDialogCopyButton: {
     id: 'app.containers.ReviewPage.component.SayingRow.copyDialogCopyButton',
-    defaultMessage: 'Copy'
+    defaultMessage: 'Copy',
+  },
+  seeSource: {
+    id: 'app.containers.ReviewPage.component.SayingRow.seeSource',
+    defaultMessage: 'See Source',
+  },
+  sayingsFormTitle: {
+    id: 'app.containers.ReviewPage.component.Form.sayingsFormTitle',
+    defaultMessage: 'Sayings',
+  },
+  sessionsFormTitle: {
+    id: 'app.containers.ReviewPage.component.Form.sessionsFormTitle',
+    defaultMessage: 'Sessions',
+  },
+  reproduceSession: {
+    id: 'app.containers.ReviewPage.component.SessionRow.reproduceSession',
+    defaultMessage: 'Reproduce session on chat window',
   }
 });

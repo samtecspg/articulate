@@ -116,9 +116,8 @@ const tensorflowPipeline = [
   },
 ];
 
-const getStringSetting = (setting) => {
-
-  if (typeof setting === 'string'){
+const getStringSetting = setting => {
+  if (typeof setting === 'string') {
     return setting;
   }
   return JSON.stringify(setting, null, 2);
@@ -126,7 +125,6 @@ const getStringSetting = (setting) => {
 
 /* eslint-disable react/prefer-stateless-function */
 export class RasaSettings extends React.Component {
-
   state = {
     pipeline: null,
     openPipelineMenu: false,
@@ -137,7 +135,7 @@ export class RasaSettings extends React.Component {
     try {
       const value = JSON.parse(editorValue); // Ace editor send the value directly to the method as an string
       this.props.onChangeSettingsData(field, value);
-    } catch(e) {
+    } catch (e) {
       const value = editorValue; // Given the parse of the json failed store the value in the state as a string
       this.props.onChangeSettingsData(field, value);
     }
@@ -149,7 +147,7 @@ export class RasaSettings extends React.Component {
     return (
       <Grid container spacing={16}>
         <Menu
-          id='long-menu'
+          id="long-menu"
           anchorEl={anchorEl}
           open={this.state.openPipelineMenu}
           onClose={() => {
@@ -167,7 +165,8 @@ export class RasaSettings extends React.Component {
                 anchorEl: null,
                 pipeline: null,
               });
-            }}>
+            }}
+          >
             <Typography className={classes.panelContent}>
               <FormattedMessage {...messages.keywords} />
             </Typography>
@@ -180,7 +179,8 @@ export class RasaSettings extends React.Component {
                 anchorEl: null,
                 pipeline: null,
               });
-            }}>
+            }}
+          >
             <Typography className={classes.panelContent}>
               <FormattedMessage {...messages.tensorflow} />
             </Typography>
@@ -193,7 +193,8 @@ export class RasaSettings extends React.Component {
                 anchorEl: null,
                 pipeline: null,
               });
-            }}>
+            }}
+          >
             <Typography className={classes.panelContent}>
               <FormattedMessage {...messages.spacy} />
             </Typography>
@@ -207,14 +208,14 @@ export class RasaSettings extends React.Component {
         <Grid container spacing={16} item xs={12}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
             <TextField
-              id='rasaURL'
+              id="rasaURL"
               label={intl.formatMessage(messages.rasaURL)}
               value={settings.rasaURL}
               placeholder={intl.formatMessage(messages.rasaURLPlaceholder)}
               onChange={evt => {
                 this.props.onChangeSettingsData('rasaURL', evt.target.value);
               }}
-              margin='normal'
+              margin="normal"
               fullWidth
               InputLabelProps={{
                 shrink: true,
@@ -228,25 +229,28 @@ export class RasaSettings extends React.Component {
           <Grid item xs={12} className={classes.labelContainer}>
             <Typography
               className={classes.settingEditorLabel}
-              id='categoryClassifierPipeline'
+              id="categoryClassifierPipeline"
             >
               <FormattedMessage {...messages.categoryClassifierPipeline} />
             </Typography>
             <img
-              onClick={(evt) => {
+              onClick={evt => {
                 this.setState({
                   openPipelineMenu: true,
                   anchorEl: evt.currentTarget,
                   pipeline: 'categoryClassifierPipeline',
-                });}
-              } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+                });
+              }}
+              src={addPipelineIcon}
+              className={classes.addPipelineIcon}
+            />
           </Grid>
           <AceEditor
-            width='100%'
-            height='300px'
-            mode='json'
-            theme='terminal'
-            name='categoryClassifierPipeline'
+            width="100%"
+            height="300px"
+            mode="json"
+            theme="terminal"
+            name="categoryClassifierPipeline"
             readOnly={false}
             onChange={value =>
               this.onChangeEditorValue('categoryClassifierPipeline', value)
@@ -265,40 +269,38 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity,
             }}
           />
-          {
-            this.props.errorState.categoryClassifierPipeline ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.pipelineError} />
-              </Typography> :
-              null
-          }
+          {this.props.errorState.categoryClassifierPipeline ? (
+            <Typography variant="caption" className={classes.errorLabel}>
+              <FormattedMessage {...messages.pipelineError} />
+            </Typography>
+          ) : null}
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
             <Typography
               className={classes.settingEditorLabel}
-              id='sayingClassifierPipeline'
+              id="sayingClassifierPipeline"
             >
               <FormattedMessage {...messages.sayingClassifierPipeline} />
             </Typography>
             <img
-              onClick={(evt) => {
+              onClick={evt => {
                 this.setState({
                   openPipelineMenu: true,
                   anchorEl: evt.currentTarget,
                   pipeline: 'sayingClassifierPipeline',
-                });}
-              } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+                });
+              }}
+              src={addPipelineIcon}
+              className={classes.addPipelineIcon}
+            />
           </Grid>
           <AceEditor
-            width='100%'
-            height='300px'
-            mode='json'
-            theme='terminal'
-            name='sayingClassifierPipeline'
+            width="100%"
+            height="300px"
+            mode="json"
+            theme="terminal"
+            name="sayingClassifierPipeline"
             readOnly={false}
             onChange={value =>
               this.onChangeEditorValue('sayingClassifierPipeline', value)
@@ -317,40 +319,38 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity,
             }}
           />
-          {
-            this.props.errorState.sayingClassifierPipeline ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.pipelineError} />
-              </Typography> :
-              null
-          }
+          {this.props.errorState.sayingClassifierPipeline ? (
+            <Typography variant="caption" className={classes.errorLabel}>
+              <FormattedMessage {...messages.pipelineError} />
+            </Typography>
+          ) : null}
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
             <Typography
               className={classes.settingEditorLabel}
-              id='keywordClassifierPipeline'
+              id="keywordClassifierPipeline"
             >
               <FormattedMessage {...messages.keywordClassifierPipeline} />
             </Typography>
             <img
-              onClick={(evt) => {
+              onClick={evt => {
                 this.setState({
                   openPipelineMenu: true,
                   anchorEl: evt.currentTarget,
                   pipeline: 'keywordClassifierPipeline',
-                });}
-              } src={addPipelineIcon} className={classes.addPipelineIcon}></img>
+                });
+              }}
+              src={addPipelineIcon}
+              className={classes.addPipelineIcon}
+            />
           </Grid>
           <AceEditor
-            width='100%'
-            height='300px'
-            mode='json'
-            theme='terminal'
-            name='keywordClassifierPipeline'
+            width="100%"
+            height="300px"
+            mode="json"
+            theme="terminal"
+            name="keywordClassifierPipeline"
             readOnly={false}
             onChange={value =>
               this.onChangeEditorValue('keywordClassifierPipeline', value)
@@ -369,32 +369,27 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity,
             }}
           />
-          {
-            this.props.errorState.keywordClassifierPipeline ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.pipelineError} />
-              </Typography> :
-              null
-          }
+          {this.props.errorState.keywordClassifierPipeline ? (
+            <Typography variant="caption" className={classes.errorLabel}>
+              <FormattedMessage {...messages.pipelineError} />
+            </Typography>
+          ) : null}
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
             <Typography
               className={classes.settingEditorLabel}
-              id='spacyPretrainedEntities'
+              id="spacyPretrainedEntities"
             >
               <FormattedMessage {...messages.spacyPretrainedEntities} />
             </Typography>
           </Grid>
           <AceEditor
-            width='100%'
-            height='300px'
-            mode='json'
-            theme='terminal'
-            name='spacyPretrainedEntities'
+            width="100%"
+            height="300px"
+            mode="json"
+            theme="terminal"
+            name="spacyPretrainedEntities"
             readOnly={false}
             onChange={value =>
               this.onChangeEditorValue('spacyPretrainedEntities', value)
@@ -413,16 +408,11 @@ export class RasaSettings extends React.Component {
               $blockScrolling: Infinity,
             }}
           />
-          {
-            this.props.errorState.spacyPretrainedEntities ?
-              <Typography
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.spacyPretrainedEntitiesError} />
-              </Typography> :
-              null
-          }
+          {this.props.errorState.spacyPretrainedEntities ? (
+            <Typography variant="caption" className={classes.errorLabel}>
+              <FormattedMessage {...messages.spacyPretrainedEntitiesError} />
+            </Typography>
+          ) : null}
         </Grid>
       </Grid>
     );

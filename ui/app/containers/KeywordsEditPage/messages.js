@@ -9,7 +9,8 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   modifierFormDescription: {
     id: 'app.containers.KeywordsEditPage.modifierFormDescription',
-    defaultMessage: 'Keyword modifiers are special kind of user saying that take a keyword and turn it into an action. These saying can modify the slot values by setting, adding, and removing values from slots.',
+    defaultMessage:
+      'Keyword modifiers are special kind of user saying that take a keyword and turn it into an action. These saying can modify the slot values by setting, adding, and removing values from slots.',
   },
   createSubtitle: {
     id: 'app.containers.KeywordsEditPage.createSubtitle',
@@ -20,10 +21,11 @@ export default defineMessages({
     defaultMessage: 'keyword',
   },
   keywordFormTitle: {
-    id: 'app.containers.KeywordsEditPage.component.KeywordForm.keywordFormTitle',
+    id:
+      'app.containers.KeywordsEditPage.component.KeywordForm.keywordFormTitle',
     defaultMessage: 'Keyword',
   },
-  playHelpAlt : {
+  playHelpAlt: {
     id: 'app.containers.KeywordsEditPage.playHelpAlt',
     defaultMessage: 'Play video off how to add/edit the keywords',
   },
@@ -32,19 +34,25 @@ export default defineMessages({
     defaultMessage: 'Help?',
   },
   keywordFormDescription: {
-    id: 'app.containers.KeywordsEditPage.component.KeywordForm.keywordFormDescription',
-    defaultMessage: 'Keywords are elements in the text that your agent is going to recognized according to the training you give it.',
+    id:
+      'app.containers.KeywordsEditPage.component.KeywordForm.keywordFormDescription',
+    defaultMessage:
+      'Keywords are elements in the text that your agent is going to recognized according to the training you give it.',
   },
   valuesFormDescription: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.valuesFormDescription',
-    defaultMessage: 'These are going to be samples of the values that your keyword could take. You could specify also synonyms for each value that represent your keyword.',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.valuesFormDescription',
+    defaultMessage:
+      'These are going to be samples of the values that your keyword could take. You could specify also synonyms for each value that represent your keyword.',
   },
   keywordNameTextField: {
-    id: 'app.containers.KeywordsEditPage.component.KeywordForm.keywordNameTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.KeywordForm.keywordNameTextField',
     defaultMessage: 'Keyword Name:',
   },
   keywordNameTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.KeywordForm.keywordNameTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.KeywordForm.keywordNameTextFieldPlaceholder',
     defaultMessage: 'Add a name for your keyword',
   },
   requiredField: {
@@ -52,7 +60,8 @@ export default defineMessages({
     defaultMessage: '*Required',
   },
   uiColorLabel: {
-    id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.uiColorLabel',
+    id:
+      'app.containers.KeywordsEditPage.component.KeywordDataForm.uiColorLabel',
     defaultMessage: 'Color Highlight:',
   },
   learned: {
@@ -68,11 +77,13 @@ export default defineMessages({
     defaultMessage: 'Regex',
   },
   regexTextField: {
-    id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.regexTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.KeywordDataForm.regexTextField',
     defaultMessage: 'Regex Matching:',
   },
   regexTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.KeywordDataForm.regexTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.KeywordDataForm.regexTextFieldPlaceholder',
     defaultMessage: 'This will Rasa NLU classifier to improve its performance',
   },
   keyword: {
@@ -104,39 +115,47 @@ export default defineMessages({
     defaultMessage: 'Values',
   },
   newKeywordValueTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextField',
     defaultMessage: 'Value:',
   },
   newKeywordSynonymTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordSynonymTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordSynonymTextField',
     defaultMessage: 'Synonyms:',
   },
   newKeywordValueTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueTextFieldPlaceholder',
     defaultMessage: 'Type keyword value',
   },
   newKeywordRegexTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordRegexTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordRegexTextFieldPlaceholder',
     defaultMessage: 'Type regex value',
   },
   newKeywordValueSynonymTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueSynonymTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueSynonymTextField',
     defaultMessage: 'Synonym Values:',
   },
   newKeywordValueSynonymTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueSynonymTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.newKeywordValueSynonymTextFieldPlaceholder',
     defaultMessage: '+ Synonym',
   },
   keywordValuesError: {
-    id: 'app.containers.KeywordsEditPage.component.ValuesForm.keywordValuesError',
+    id:
+      'app.containers.KeywordsEditPage.component.ValuesForm.keywordValuesError',
     defaultMessage: '*At least one value is required',
   },
   noName: {
     id: 'app.containers.KeywordsEditPage.component.MainTab.noName',
-    defaultMessage: 'No name'
+    defaultMessage: 'No name',
   },
   modifiersFormTitle: {
-    id: 'app.containers.KeywordsEditPage.component.ActionForm.modifiersFormTitle',
+    id:
+      'app.containers.KeywordsEditPage.component.ActionForm.modifiersFormTitle',
     defaultMessage: 'Modifiers',
   },
   modifiers: {
@@ -144,15 +163,18 @@ export default defineMessages({
     defaultMessage: 'Modifiers',
   },
   modifierNameTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextField',
     defaultMessage: 'Modifier Name',
   },
   modifierNameTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextFieldPlaceholder',
     defaultMessage: 'Set a name to reference the modifier in your responses',
   },
   newModifierTab: {
-    id: 'app.containers.KeywordsEditPage.component.ModifiersForm.newModifierTab',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifiersForm.newModifierTab',
     defaultMessage: '+ Add Modifier',
   },
   actionSelect: {
@@ -160,23 +182,28 @@ export default defineMessages({
     defaultMessage: 'Action:',
   },
   valueSourceSelect: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.valueSourceSelect',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.valueSourceSelect',
     defaultMessage: 'Using:',
   },
   staticValueTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.staticValueTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.staticValueTextField',
     defaultMessage: 'Value:',
   },
   staticValueTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.staticValueTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.staticValueTextFieldPlaceholder',
     defaultMessage: 'Enter the value you want to use for this modifier',
   },
   sayingTextField: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.sayingTextField',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.sayingTextField',
     defaultMessage: 'User Says',
   },
   sayingTextFieldPlaceholder: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.sayingTextFieldPlaceholder',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.sayingTextFieldPlaceholder',
     defaultMessage: 'Write what a user would say to your agent',
   },
   sayingEnter: {
@@ -184,7 +211,8 @@ export default defineMessages({
     defaultMessage: 'Enter',
   },
   highlightTooltip: {
-    id: 'app.containers.KeywordsEditPage.component.ModifierForm.highlightTooltip',
+    id:
+      'app.containers.KeywordsEditPage.component.ModifierForm.highlightTooltip',
     defaultMessage: 'Highlight a word to make it a keyword',
   },
   backPage: {

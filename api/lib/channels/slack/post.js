@@ -25,8 +25,11 @@ module.exports = async function ({ connection, request, h }) {
               }
             }
         })
+
+        if (!connection.details.outgoingMessages){
+          channelService.reply({ connection, event, response});
+        }
   
-        channelService.reply({ connection, event, response})
       }
 
       return h.response().code(200);

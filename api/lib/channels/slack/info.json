@@ -12,6 +12,16 @@
             "displayName": "Bot Access Token",
             "description" : "Token provided by Slack when you created your bot",
             "type": "string"
+        },
+        "outgoingMessages": {
+            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+            "type": "boolean"
+        },
+        "waitTimeBetweenMessages": {
+            "displayName": "Time in MS between response messages:",
+            "description": "How much the channel should wait between agent responses?",
+            "type": "number"
         }
     }
 }

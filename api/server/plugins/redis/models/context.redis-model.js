@@ -33,6 +33,7 @@ class ContextRedisModel extends BaseModel {
     constructor() {
 
         super({ schema });
+        this.publish = true;
     }
 
     static get modelName() {

@@ -14,20 +14,19 @@ import { compose } from 'redux';
 
 import { Grid, CircularProgress } from '@material-ui/core';
 import ContentHeader from 'components/ContentHeader';
+import injectSaga from 'utils/injectSaga';
+import qs from 'query-string';
 import Form from './Components/Form';
 
-import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import messages from './messages';
-
-import qs from 'query-string';
 
 import {
   makeSelectCategory,
   makeSelectAgent,
   makeSelectLoading,
   makeSelectSuccessCategory,
-  makeSelectCategoryTouched
+  makeSelectCategoryTouched,
 } from '../App/selectors';
 
 import {
@@ -49,7 +48,6 @@ import ActionButtons from './Components/ActionButtons';
 
 /* eslint-disable react/prefer-stateless-function */
 export class CategoriesEditPage extends React.Component {
-
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
@@ -58,8 +56,13 @@ export class CategoriesEditPage extends React.Component {
 
   state = {
     isNewCategory: this.props.match.params.categoryId === 'create',
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter : '',
-    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page : '',
+    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+      .filter
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter
+      : '',
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      : '',
     formError: false,
     exitAfterSubmit: false,
     errorState: {
@@ -68,28 +71,31 @@ export class CategoriesEditPage extends React.Component {
     },
   };
 
-  initForm(){
-    if(this.state.isNewCategory) {
+  initForm() {
+    if (this.state.isNewCategory) {
       this.props.onResetData();
-    }
-    else {
+    } else {
       this.props.onLoadCategory(this.props.match.params.categoryId);
     }
   }
 
   componentWillMount() {
-    if(this.props.agent.id) {
+    if (this.props.agent.id) {
       this.initForm();
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.agent.id && this.props.agent.id){
+    if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
     if (this.props.success) {
-      if (this.state.exitAfterSubmit){
-        this.props.onSuccess(`/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${this.state.filter}&page=${this.state.page}`);
+      if (this.state.exitAfterSubmit) {
+        this.props.onSuccess(
+          `/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${
+            this.state.filter
+          }&page=${this.state.page}`,
+        );
       }
       if (this.state.isNewCategory) {
         this.setState({
@@ -99,51 +105,54 @@ export class CategoriesEditPage extends React.Component {
     }
   }
 
-  submit(exit){
+  submit(exit) {
     let errors = false;
     const newErrorState = {
       categoryName: false,
-      tabs: []
+      tabs: [],
     };
 
-    if (!this.props.category.categoryName || this.props.category.categoryName === ''){
+    if (
+      !this.props.category.categoryName ||
+      this.props.category.categoryName === ''
+    ) {
       errors = true;
       newErrorState.categoryName = true;
       newErrorState.tabs.push(0);
-    }
-    else {
+    } else {
       newErrorState.categoryName = false;
     }
 
-    if (!errors){
+    if (!errors) {
       this.setState({
         formError: false,
         exitAfterSubmit: exit,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
-      if (this.state.isNewCategory){
+      if (this.state.isNewCategory) {
         this.props.onCreateCategory();
-      }
-      else {
+      } else {
         this.props.onUpdateCategory();
       }
-    }
-    else {
+    } else {
       this.setState({
         formError: true,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
     }
   }
 
   render() {
     const { intl } = this.props;
-    return (
-      this.props.agent.id ?
+    return this.props.agent.id ? (
       <Grid container>
         <ContentHeader
           title={messages.title}
-          subtitle={this.state.isNewCategory && this.props.category.categoryName === '' ? intl.formatMessage(messages.newCategory) : this.props.category.categoryName}
+          subtitle={
+            this.state.isNewCategory && this.props.category.categoryName === ''
+              ? intl.formatMessage(messages.newCategory)
+              : this.props.category.categoryName
+          }
           inlineElement={
             <ActionButtons
               touched={this.props.touched}
@@ -155,8 +164,16 @@ export class CategoriesEditPage extends React.Component {
               agentId={this.props.agent.id}
               onFinishAction={this.submit}
               backButton={messages.backButton}
-              goBack={() => {this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${this.state.filter}&page=${this.state.page}`)}}
-              onSaveAndExit={() => { this.submit(true) }}
+              goBack={() => {
+                this.props.onGoToUrl(
+                  `/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${
+                    this.state.filter
+                  }&page=${this.state.page}`,
+                );
+              }}
+              onSaveAndExit={() => {
+                this.submit(true);
+              }}
             />
           }
         />
@@ -172,8 +189,11 @@ export class CategoriesEditPage extends React.Component {
           onChangeParameterName={this.props.onChangeParameterName}
           onChangeParameterValue={this.props.onChangeParameterValue}
         />
-      </Grid> : 
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -208,7 +228,7 @@ function mapDispatchToProps(dispatch) {
     onResetData: () => {
       dispatch(resetCategoryData());
     },
-    onLoadCategory: (id) => {
+    onLoadCategory: id => {
       dispatch(loadCategory(id));
     },
     onCreateCategory: () => {
@@ -218,25 +238,25 @@ function mapDispatchToProps(dispatch) {
       dispatch(updateCategory());
     },
     onChangeCategoryData: (field, value) => {
-      dispatch(changeCategoryData({field, value}));
+      dispatch(changeCategoryData({ field, value }));
     },
-    onSuccess: (url) => {
+    onSuccess: url => {
       dispatch(resetStatusFlag());
       dispatch(push(url));
     },
-    onChangeActionThreshold: (value) => {
+    onChangeActionThreshold: value => {
       dispatch(changeActionThreshold(value));
     },
-    onGoToUrl: (url) => {
+    onGoToUrl: url => {
       dispatch(push(url));
     },
-    onDelete: (id) => {
+    onDelete: id => {
       dispatch(deleteCategory(id));
     },
-    onAddNewParameter: (payload) => {
+    onAddNewParameter: payload => {
       dispatch(addNewCategoryParameter(payload));
     },
-    onDeleteParameter: (parameterName) => {
+    onDeleteParameter: parameterName => {
       dispatch(deleteCategoryParameter(parameterName));
     },
     onChangeParameterName: (oldParameterName, newParameterName) => {
@@ -258,5 +278,5 @@ const withSaga = injectSaga({ key: 'category', saga });
 export default compose(
   injectIntl,
   withSaga,
-  withConnect
+  withConnect,
 )(CategoriesEditPage);

@@ -1,41 +1,41 @@
-import React from "react";
-import { FormattedMessage } from "react-intl";
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import {
   Grid,
   Typography,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-} from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 import RasaSettings from 'components/RasaSettings';
 import DucklingSettings from 'components/DucklingSettings';
 import GeneralSettings from './GeneralSettings';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import expandedSingle from "../../../images/expand-single-icon.svg";
-import expandedSingleOpened from "../../../images/expand-single-opened-icon.svg";
+import expandedSingle from '../../../images/expand-single-icon.svg';
+import expandedSingleOpened from '../../../images/expand-single-opened-icon.svg';
 
 const styles = {
   formContainer: {
-    backgroundColor: "#ffffff",
-    borderTop: "1px solid #c5cbd8",
-    borderBottomLeftRadius: "5px",
-    borderBottomRightRadius: "5px",
+    backgroundColor: '#ffffff',
+    borderTop: '1px solid #c5cbd8',
+    borderBottomLeftRadius: '5px',
+    borderBottomRightRadius: '5px',
   },
   formSubContainer: {
-    padding: "40px 25px",
+    padding: '40px 25px',
   },
   root: {
-    width: "100%",
+    width: '100%',
   },
   panelHeading: {
-    fontSize: "15px",
-    color: "#4e4e4e",
+    fontSize: '15px',
+    color: '#4e4e4e',
   },
 };
 
@@ -51,7 +51,7 @@ class SettingsDataForm extends React.Component {
     });
   };
 
-  getExpandIcon = (expanded) => {
+  getExpandIcon = expanded => {
     if (expanded) {
       return <img src={expandedSingleOpened} />;
     }
@@ -72,13 +72,13 @@ class SettingsDataForm extends React.Component {
         >
           <div className={classes.root}>
             <ExpansionPanel
-              expanded={expanded === "panelGeneral"}
+              expanded={expanded === 'panelGeneral'}
               onChange={() => {
-                this.handleChange("expanded", "panelGeneral");
+                this.handleChange('expanded', 'panelGeneral');
               }}
             >
               <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(expanded === "panelGeneral")}
+                expandIcon={this.getExpandIcon(expanded === 'panelGeneral')}
               >
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.generalSetting} />
@@ -95,13 +95,13 @@ class SettingsDataForm extends React.Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
-              expanded={expanded === "panelRasa"}
+              expanded={expanded === 'panelRasa'}
               onChange={() => {
-                this.handleChange("expanded", "panelRasa");
+                this.handleChange('expanded', 'panelRasa');
               }}
             >
               <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(expanded === "panelRasa")}
+                expandIcon={this.getExpandIcon(expanded === 'panelRasa')}
               >
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.rasaSetting} />
@@ -116,13 +116,13 @@ class SettingsDataForm extends React.Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
-              expanded={expanded === "panelDuckling"}
+              expanded={expanded === 'panelDuckling'}
               onChange={() => {
-                this.handleChange("expanded", "panelDuckling");
+                this.handleChange('expanded', 'panelDuckling');
               }}
             >
               <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(expanded === "panelDuckling")}
+                expandIcon={this.getExpandIcon(expanded === 'panelDuckling')}
               >
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.ducklingSetting} />

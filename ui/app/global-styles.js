@@ -1,1 +1,2 @@
-import 'typeface-roboto/index.css';
+const GlobalStyle = {};
+export default GlobalStyle;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="22px" viewBox="0 0 50 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.704200634">
+        <g id="v.2---Agent-create-screen" transform="translate(-318.000000, -188.000000)">
+            <g id="Group-4" transform="translate(318.500000, 188.500000)">
+                <path d="M2.66685605,0.856862261 L46.4035938,0.856862261 C47.662803,0.856862261 48.6835937,1.87765302 48.6835938,3.13686223 L48.6835938,18.1507354 C48.6835938,19.4099446 47.662803,20.4307354 46.4035938,20.4307354 L2.66685605,20.4307354 C1.40764683,20.4307354 0.386856075,19.4099446 0.386856075,18.1507354 L0.386856075,3.13686223 C0.386856075,1.87765302 1.40764683,0.856862261 2.66685605,0.856862261 Z" id="Rectangle-8" stroke-opacity="0.801941803" stroke="#4E4E4E" stroke-width="0.75999999"></path>
+                <text id="Help?" font-family=".AppleSystemUIFont" font-size="9.11999989" font-weight="normal" letter-spacing="-0.274941236" fill="#4E4E4E">
+                    <tspan font-family="Montserrat, Helvetica, Arial, sans-serif" x="17.8026566" y="13.7609358">Help?</tspan>
+                </text>
+                <polygon id="Path-6" stroke="#4E4E4E" stroke-width="0.75999999" stroke-linecap="round" stroke-linejoin="round" points="8.68265675 7.60379887 8.68265675 14.4437988 13.2426567 11.0237988"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

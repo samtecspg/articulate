@@ -6,28 +6,25 @@ import slack from '../../images/slack.png';
 import facebook from '../../images/fb-messenger.png';
 import twilio from '../../images/twilio.png';
 import rocketchat from '../../images/rocketchat.png';
+import webDemo from '../../images/web-demo.png';
 
 const logosDir = {
   'google-home': googleAssistant,
   slack,
   facebook,
   twilio,
-  rocketchat
-}
-
-//4285F4
+  rocketchat,
+  'web-demo': webDemo
+};
 
 function ChannelsLogos(props) {
-
   const { logo, ...rest } = props;
 
-  return (
-    <img {...rest} src={logosDir[logo]} />
-  );
+  return <img {...rest} src={logosDir[logo]} />;
 }
 
 ChannelsLogos.propTypes = {
-  logo: PropTypes.string.isRequired
+  logo: PropTypes.string.isRequired,
 };
 
 export default ChannelsLogos;

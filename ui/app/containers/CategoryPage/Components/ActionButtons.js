@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 import { Grid, Hidden, Icon } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import messages from '../messages';
 import { Link } from 'react-router-dom';
-import SaveButton from "../../../components/SaveButton";
-import ExitModal from "../../../components/ExitModal";
+import messages from '../messages';
+import SaveButton from '../../../components/SaveButton';
+import ExitModal from '../../../components/ExitModal';
 
 const styles = {
   container: {
@@ -48,57 +48,86 @@ const styles = {
     paddingRight: '10px',
     position: 'relative',
     bottom: '10px',
-  }
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class ActionButtons extends React.Component {
-
   state = {
     openExitModal: false,
-  }
+  };
 
-  render(){
+  render() {
     const { classes, intl } = this.props;
     return (
       <Grid className={classes.container}>
         <ExitModal
           open={this.state.openExitModal}
-          onExit={() => {this.props.goBack()}}
-          onSaveAndExit={() => { this.props.onSaveAndExit() }}
-          onClose={() => {this.setState({ openExitModal: false })}}
+          onExit={() => {
+            this.props.goBack();
+          }}
+          onSaveAndExit={() => {
+            this.props.onSaveAndExit();
+          }}
+          onClose={() => {
+            this.setState({ openExitModal: false });
+          }}
           type={intl.formatMessage(messages.instanceName)}
         />
         <Hidden only={['xl', 'lg', 'md']}>
-          <Link className={`${classes.icon} ${classes.link}`} to={`/agent/${this.props.agentId}/dialogue?filter=${this.props.filter}&page=${this.props.page}&tab=sayings`}>
+          <Link
+            className={`${classes.icon} ${classes.link}`}
+            to={`/agent/${this.props.agentId}/dialogue?filter=${
+              this.props.filter
+            }&page=${this.props.page}&tab=sayings`}
+          >
             <Icon>arrow_back</Icon>
           </Link>
-          <a style={{color: this.props.formError ? '#f44336' : ''}} key='btnFinish' onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
+          <a
+            style={{ color: this.props.formError ? '#f44336' : '' }}
+            key="btnFinish"
+            onClick={this.props.onFinishAction}
+            className={`${classes.icon} ${classes.link}`}
+          >
             <Icon>save</Icon>
           </a>
         </Hidden>
         <Hidden only={['sm', 'xs']}>
-          {this.props.backButton ?
+          {this.props.backButton ? (
             <Grid className={classes.backButtonContainer}>
-              <span 
+              <span
                 className={classes.backArrow}
                 onClick={() => {
-                  this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
+                  this.props.touched
+                    ? this.setState({ openExitModal: true })
+                    : this.props.goBack();
                 }}
-                key='backArrow'
+                key="backArrow"
               >
                 {'< '}
               </span>
-              <a key='backLink' className={classes.backButton} 
+              <a
+                key="backLink"
+                className={classes.backButton}
                 onClick={() => {
-                  this.props.touched ? this.setState({ openExitModal : true }) : this.props.goBack()
-                }}>
+                  this.props.touched
+                    ? this.setState({ openExitModal: true })
+                    : this.props.goBack();
+                }}
+              >
                 <FormattedMessage {...messages.backButton} />
               </a>
-            </Grid> :
-            null}
+            </Grid>
+          ) : null}
           <Grid className={classes.buttonContainer}>
-            <SaveButton touched={this.props.touched} formError={this.props.formError} success={this.props.success} loading={this.props.loading} label={messages.finishButton} onClick={this.props.onFinishAction} />
+            <SaveButton
+              touched={this.props.touched}
+              formError={this.props.formError}
+              success={this.props.success}
+              loading={this.props.loading}
+              label={messages.finishButton}
+              onClick={this.props.onFinishAction}
+            />
           </Grid>
         </Hidden>
       </Grid>

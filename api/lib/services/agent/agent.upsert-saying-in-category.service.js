@@ -33,7 +33,7 @@ module.exports = async function (
     const { redis } = this.server.app;
     const { globalService, categoryService, keywordService, actionService, agentService } = await this.server.services();
     try {
-
+        sayingData.actions = sayingData.actions || [];
         const modelPath = [MODEL_AGENT, MODEL_CATEGORY];
         const modelPathIds = [id, categoryId, sayingId];
         if (sayingId) {

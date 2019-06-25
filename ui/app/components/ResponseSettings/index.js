@@ -16,11 +16,11 @@ import messages from './messages';
 
 const styles = {
   toggleContainer: {
-    display: "inline",
+    display: 'inline',
   },
   toggle: {
-    display: "inline",
-    float: "right",
+    display: 'inline',
+    float: 'right',
   },
   panelContent: {
     display: 'inline',
@@ -37,30 +37,23 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 export class ResponseSettings extends React.Component {
-
   render() {
     const { classes, usePostFormat, postFormat } = this.props;
     return (
       <Grid container spacing={16}>
-        <Grid
-          className={classes.toggleContainer}
-          container
-          item
-          xs={12}
-        >
-          {this.props.responseSettingDescription ?
+        <Grid className={classes.toggleContainer} container item xs={12}>
+          {this.props.responseSettingDescription ? (
             <Typography className={classes.panelContent}>
-              <FormattedMessage
-                {...this.props.responseSettingDescription}
-              />
-            </Typography> : null}
+              <FormattedMessage {...this.props.responseSettingDescription} />
+            </Typography>
+          ) : null}
           <Switch
             className={classes.toggle}
             checked={usePostFormat}
             onChange={() => {
               this.props.onChangeUsePostFormatData(
-                "usePostFormat",
-                !usePostFormat
+                'usePostFormat',
+                !usePostFormat,
               );
             }}
             value="usePostFormat"
@@ -68,45 +61,46 @@ export class ResponseSettings extends React.Component {
           />
         </Grid>
         <Grid item xs={12}>
-          {usePostFormat ? (
-            [<AceEditor
-              key='postFormatEditor'
-              width="100%"
-              height="300px"
-              mode="json"
-              theme="terminal"
-              name="webhookPayload"
-              readOnly={false}
-              onLoad={this.onLoad}
-              onChange={this.props.onChangePostFormatData.bind(
-                null,
-                "postFormatPayload"
-              )}
-              fontSize={14}
-              showPrintMargin
-              showGutter
-              highlightActiveLine
-              value={postFormat.postFormatPayload}
-              editorProps={{
-                $blockScrolling: Infinity,
-              }}
-              setOptions={{
-                useWorker: false,
-                showLineNumbers: true,
-                tabSize: 2,
-              }}
-            />,
-            this.props.errorState.postFormatPayload ?
-              <Typography
-                key='postFormatPayloadError'
-                variant='caption'
-                className={classes.errorLabel}
-              >
-                <FormattedMessage {...messages.payloadError} />
-              </Typography> :
-              null,
-            ]
-          ) : null}
+          {usePostFormat
+            ? [
+                <AceEditor
+                  key="postFormatEditor"
+                  width="100%"
+                  height="300px"
+                  mode="json"
+                  theme="terminal"
+                  name="webhookPayload"
+                  readOnly={false}
+                  onLoad={this.onLoad}
+                  onChange={this.props.onChangePostFormatData.bind(
+                    null,
+                    'postFormatPayload',
+                  )}
+                  fontSize={14}
+                  showPrintMargin
+                  showGutter
+                  highlightActiveLine
+                  value={postFormat.postFormatPayload}
+                  editorProps={{
+                    $blockScrolling: Infinity,
+                  }}
+                  setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }}
+                />,
+                this.props.errorState.postFormatPayload ? (
+                  <Typography
+                    key="postFormatPayloadError"
+                    variant="caption"
+                    className={classes.errorLabel}
+                  >
+                    <FormattedMessage {...messages.payloadError} />
+                  </Typography>
+                ) : null,
+              ]
+            : null}
         </Grid>
       </Grid>
     );

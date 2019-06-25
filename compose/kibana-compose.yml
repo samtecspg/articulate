@@ -1,0 +1,9 @@
+version: '3.0'
+
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_TAG:-6.5.1}
+    ports:
+      - '0.0.0.0:5601:5601'
+    depends_on:
+      - elasticsearch

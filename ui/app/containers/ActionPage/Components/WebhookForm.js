@@ -1,36 +1,35 @@
-import React from "react";
-import { FormattedMessage, injectIntl, intlShape } from "react-intl";
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
-import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal} from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-
+import PropTypes from 'prop-types';
+import { Grid, Typography, Button, Modal } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 import WebhookSettings from 'components/WebhookSettings';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import playHelpIcon from "../../../images/play-help-icon.svg";
-import DeleteFooter from "../../../components/DeleteFooter";
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
-    backgroundColor: "#f6f7f8",
-    border: "1px solid #c5cbd8",
-    borderRadius: "5px",
-    marginBottom: "60px",
+    backgroundColor: '#f6f7f8',
+    border: '1px solid #c5cbd8',
+    borderRadius: '5px',
+    marginBottom: '60px',
   },
   titleContainer: {
-    padding: "25px",
+    padding: '25px',
   },
   titleTextHelpContainer: {
-    display: "inline",
-    position: "relative",
-    bottom: "6px",
+    display: 'inline',
+    position: 'relative',
+    bottom: '6px',
   },
   title: {
-    display: "inline",
-    paddingRight: "25px",
+    display: 'inline',
+    paddingRight: '25px',
   },
   formDescriptionContainer: {
     margin: '15px 0px',
@@ -40,30 +39,30 @@ const styles = {
     fontWeight: 300,
   },
   helpButton: {
-    display: "inline",
-    width: "50px",
-    height: "20px",
+    display: 'inline',
+    width: '50px',
+    height: '20px',
   },
   playIcon: {
-    height: "10px",
+    height: '10px',
   },
   helpText: {
-    fontSize: "9px",
+    fontSize: '9px',
     fontWeight: 300,
-    position: "relative",
-    bottom: "2px",
-    paddingLeft: "2px",
+    position: 'relative',
+    bottom: '2px',
+    paddingLeft: '2px',
   },
   modalContent: {
-    top: "50%",
-    left: "50%",
+    top: '50%',
+    left: '50%',
     transform: `translate(-50%, -50%)`,
-    position: "absolute",
+    position: 'absolute',
     width: '80%',
     height: '80%',
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -128,8 +127,8 @@ class WebhookForm extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
-                  width='100%'
-                  height='100%'
+                  width="100%"
+                  height="100%"
                   src="https://www.youtube.com/embed/o807YDeK6Vg"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
@@ -141,18 +140,24 @@ class WebhookForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
+            <Grid
+              className={classes.formSubContainer}
+              id="formContainer"
+              container
+              item
+              xs={12}
+            >
               <Typography className={classes.panelContent}>
-                <FormattedMessage
-                  {...messages.webhookFormDescription}
-                />
+                <FormattedMessage {...messages.webhookFormDescription} />
               </Typography>
               <WebhookSettings
                 webhook={webhook}
                 useWebhook={action.useWebhook}
                 onChangeUseWebhook={this.props.onChangeActionData}
                 onChangeWebhookData={this.props.onChangeWebhookData}
-                onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+                onChangeWebhookPayloadType={
+                  this.props.onChangeWebhookPayloadType
+                }
                 onAddNewHeader={this.props.onAddNewHeader}
                 onDeleteHeader={this.props.onDeleteHeader}
                 onChangeHeaderName={this.props.onChangeHeaderName}
@@ -162,13 +167,12 @@ class WebhookForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newAction ? 
-          null : 
+        {this.props.newAction ? null : (
           <DeleteFooter
             onDelete={this.props.onDelete}
             type={intl.formatMessage(messages.instanceName)}
           />
-        }
+        )}
       </Grid>
     );
   }

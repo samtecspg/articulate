@@ -10,27 +10,27 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.webhookVerbSelect',
     defaultMessage: 'Webhook Verb:',
   },
-  webhookUrl:{
+  webhookUrl: {
     id: 'app.components.WebhookSettings.webhookUrl',
     defaultMessage: 'URL:',
   },
-  webhookUrlPlaceholder:{
+  webhookUrlPlaceholder: {
     id: 'app.components.WebhookSettings.webhookUrlPlaceholder',
     defaultMessage: 'Example: http://localhost:3000',
   },
-  webhookUser:{
+  webhookUser: {
     id: 'app.components.WebhookSettings.webhookUser',
     defaultMessage: 'User:',
   },
-  webhookUserPlaceholder:{
+  webhookUserPlaceholder: {
     id: 'app.components.WebhookSettings.webhookUserPlaceholder',
     defaultMessage: 'username',
   },
-  webhookPassword:{
+  webhookPassword: {
     id: 'app.components.WebhookSettings.webhookPassword',
     defaultMessage: 'Password:',
   },
-  webhookPasswordPlaceholder:{
+  webhookPasswordPlaceholder: {
     id: 'app.components.WebhookSettings.webhookPasswordPlaceholder',
     defaultMessage: 'password',
   },
@@ -48,7 +48,8 @@ export default defineMessages({
   },
   payloadError: {
     id: 'app.components.WebhookSettings.payloadError',
-    defaultMessage: 'Please specify the payload value. It should be a JSON object.',
+    defaultMessage:
+      'Please specify the payload value. It should be a JSON object.',
   },
   basicAuthTitle: {
     id: 'app.components.WebhookSettings.basicAuthTitle',
@@ -85,5 +86,5 @@ export default defineMessages({
   bodyTitle: {
     id: 'app.components.WebhookSettings.bodyTitle',
     defaultMessage: 'Body',
-  }
+  },
 });

@@ -1,89 +1,56 @@
-import Blipp from 'blipp';
-import h2o2 from 'h2o2';
-import Hapi from 'hapi';
-import Webpack from 'webpack';
-import argv from './argv';
-import logger from './logger';
-import * as WebpackPlugin from './middlewares/hapi-webpack-plugin';
-import port from './port';
+/* eslint consistent-return:0 import/order:0 */
 
+const express = require('express');
+const logger = require('./logger');
+
+const argv = require('./argv');
+const port = require('./port');
+const setup = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
 const ngrok =
   (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel
     ? require('ngrok')
     : false;
-const Config = isDev ? require('../internals/webpack/webpack.dev.babel') : require('../internals/webpack/webpack.prod.babel');
+const { resolve } = require('path');
+const app = express();
+
+// If you need a backend, e.g. an API, add your custom backend-specific middleware here
+// app.use('/api', myApi);
+
+// In production we need to pass these values in instead of relying on webpack
+setup(app, {
+  outputPath: resolve(process.cwd(), 'build'),
+  publicPath: '/',
+});
 
 // get the intended host and port number, use localhost and port 3000 if not provided
 const customHost = argv.host || process.env.HOST;
 const host = customHost || null; // Let http.Server use its default IPv6/4 host
 const prettyHost = customHost || 'localhost';
 
-const server = Hapi.server({
-  port,
-  host
+// use the gzipped bundle
+app.get('*.js', (req, res, next) => {
+  req.url = req.url + '.gz'; // eslint-disable-line
+  res.set('Content-Encoding', 'gzip');
+  next();
 });
 
-const compiler = Webpack(Config);
-const assets = {
-  // webpack-dev-middleware options
-  // See https://github.com/webpack/webpack-dev-middleware
-};
-
-const hot = {
-  // webpack-hot-middleware options
-  // See https://github.com/glenjamin/webpack-hot-middleware
-};
-
-const init = async () => {
-
-  try {
-    await server.register([
-      {
-        plugin: WebpackPlugin,
-        options: { compiler, assets, hot }
-      }, {
-        plugin: h2o2
-      }, {
-        plugin: Blipp
-      }
-    ]);
-  }
-  catch (error) {
-    return logger.error(error);
+// Start your app.
+app.listen(port, host, async err => {
+  if (err) {
+    return logger.error(err.message);
   }
 
-  try {
-    await server.start();
-    //await server.route(Routes);
-  }
-  catch (error) {
-    return logger.error(error);
-  }
-
+  // Connect to ngrok in dev mode
   if (ngrok) {
     let url;
     try {
       url = await ngrok.connect(port);
-    }
-    catch (error) {
-      return logger.error(error);
+    } catch (e) {
+      return logger.error(e);
     }
     logger.appStarted(port, prettyHost, url);
-  }
-  else {
+  } else {
     logger.appStarted(port, prettyHost);
   }
-  // eslint-disable-next-line no-console
-  console.log(server.plugins.blipp.text());
-  return server;
-};
-
-process.on('unhandledRejection', (error) => {
-
-  logger.error(error);
-  process.exit(1);
 });
-
-// noinspection JSIgnoredPromiseFromCall
-init();

@@ -123,8 +123,10 @@
       ],
       "sayingsPageSize": 5,
       "keywordsPageSize": 5,
+      "actionsPageSize": 5,
       "modifierSayingsPageSize": 10,
-      "reviewPageSize": 5
+      "reviewPageSize": 5,
+      "sessionsPageSize": 5
     },
     "categoryRecognizer": true,
     "modifiersRecognizer": true,

@@ -1,9 +1,4 @@
-import {
-  call,
-  put,
-  select,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
@@ -11,6 +6,7 @@ import {
   ROUTE_DOCUMENT,
   ROUTE_SAYING,
   ROUTE_SETTINGS,
+  ROUTE_SESSION,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
@@ -21,6 +17,8 @@ import {
   deleteSayingError,
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
+  loadAgentSessionsSuccess,
+  loadAgentSessionsError,
   loadCategoriesError,
   loadCategoriesSuccess,
   loadFilteredCategoriesError,
@@ -33,25 +31,26 @@ import {
 import {
   ADD_ACTION_SAYING,
   CHANGE_REVIEW_PAGE_SIZE,
+  CHANGE_SESSIONS_PAGE_SIZE,
   COPY_SAYING,
   DELETE_ACTION_SAYING,
   DELETE_SAYING,
   LOAD_ACTIONS,
   LOAD_AGENT_DOCUMENTS,
+  LOAD_AGENT_SESSIONS,
   LOAD_CATEGORIES,
   LOAD_FILTERED_CATEGORIES,
   LOAD_KEYWORDS,
   LOAD_SAYINGS,
   TAG_KEYWORD,
   UNTAG_KEYWORD,
+  LOAD_SESSION,
 } from '../App/constants';
 
-import {
-  makeSelectAgent,
-  makeSelectAgentSettings,
-} from '../App/selectors';
+import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
 
 import { getKeywords } from '../DialoguePage/saga';
+import { getSession } from '../../components/ConversationBar/saga';
 
 export function* getSayings(payload) {
   const agent = yield select(makeSelectAgent());
@@ -72,10 +71,18 @@ export function* getSayings(payload) {
       direction: 'DESC',
       loadCategoryId: true,
     };
-    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_SAYING]), { params });
-    yield put(loadSayingsSuccess({ sayings: response.data, total: response.totalCount }));
-  }
-  catch (err) {
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_SAYING]),
+      { params },
+    );
+    yield put(
+      loadSayingsSuccess({
+        sayings: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
     yield put(loadSayingsError(err));
   }
 }
@@ -89,10 +96,19 @@ export function* postSaying(payload) {
       keywords,
       actions,
     };
-    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, categoryId, ROUTE_SAYING]), newSayingData);
+    const response = yield call(
+      api.post,
+      toAPIPath([
+        ROUTE_AGENT,
+        agent.id,
+        ROUTE_CATEGORY,
+        categoryId,
+        ROUTE_SAYING,
+      ]),
+      newSayingData,
+    );
     yield put(copySayingSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(copySayingError(err));
   }
 }
@@ -101,15 +117,24 @@ export function* deleteSaying(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, sayingId, categoryId, pageSize } = payload;
   try {
-    yield call(api.delete, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, categoryId, ROUTE_SAYING, sayingId]));
+    yield call(
+      api.delete,
+      toAPIPath([
+        ROUTE_AGENT,
+        agent.id,
+        ROUTE_CATEGORY,
+        categoryId,
+        ROUTE_SAYING,
+        sayingId,
+      ]),
+    );
     yield call(getSayings, {
       api,
       filter: '',
       page: 1,
       pageSize,
     });
-  }
-  catch (err) {
+  } catch (err) {
     yield put(deleteSayingError(err));
   }
 }
@@ -122,21 +147,42 @@ export function* putSaying(payload) {
   delete saying.agent;
   delete saying.category;
   try {
-    yield call(api.put, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY, categoryId, ROUTE_SAYING, sayingId]), saying);
+    yield call(
+      api.put,
+      toAPIPath([
+        ROUTE_AGENT,
+        agent.id,
+        ROUTE_CATEGORY,
+        categoryId,
+        ROUTE_SAYING,
+        sayingId,
+      ]),
+      saying,
+    );
     yield call(getSayings, {
       api,
       filter,
       page,
       pageSize,
     });
-  }
-  catch (err) {
+  } catch (err) {
     yield put(updateSayingError(err));
   }
 }
 
 export function* tagKeyword(payload) {
-  const { api, saying, value, start, end, keywordId, keywordName, filter, page, pageSize } = payload;
+  const {
+    api,
+    saying,
+    value,
+    start,
+    end,
+    keywordId,
+    keywordName,
+    filter,
+    page,
+    pageSize,
+  } = payload;
   const mutableSaying = Immutable.asMutable(saying, { deep: true });
   const keywordToAdd = {
     value,
@@ -151,9 +197,15 @@ export function* tagKeyword(payload) {
   }
   mutableSaying.keywords.push(keywordToAdd);
   try {
-    yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  }
-  catch (err) {
+    yield call(putSaying, {
+      api,
+      sayingId: saying.id,
+      saying: mutableSaying,
+      filter,
+      page,
+      pageSize,
+    });
+  } catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -161,11 +213,19 @@ export function* tagKeyword(payload) {
 export function* untagKeyword(payload) {
   const { api, saying, start, end, filter, page, pageSize } = payload;
   const mutableSaying = Immutable.asMutable(saying, { deep: true });
-  mutableSaying.keywords = mutableSaying.keywords.filter((keyword) => keyword.start !== start || keyword.end !== end);
+  mutableSaying.keywords = mutableSaying.keywords.filter(
+    keyword => keyword.start !== start || keyword.end !== end,
+  );
   try {
-    yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  }
-  catch (err) {
+    yield call(putSaying, {
+      api,
+      sayingId: saying.id,
+      saying: mutableSaying,
+      filter,
+      page,
+      pageSize,
+    });
+  } catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -175,9 +235,15 @@ export function* addAction(payload) {
   const mutableSaying = Immutable.asMutable(saying, { deep: true });
   mutableSaying.actions.push(actionName);
   try {
-    yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  }
-  catch (err) {
+    yield call(putSaying, {
+      api,
+      sayingId: saying.id,
+      saying: mutableSaying,
+      filter,
+      page,
+      pageSize,
+    });
+  } catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -185,11 +251,19 @@ export function* addAction(payload) {
 export function* deleteAction(payload) {
   const { api, saying, actionName, filter, page, pageSize } = payload;
   const mutableSaying = Immutable.asMutable(saying, { deep: true });
-  mutableSaying.actions = mutableSaying.actions.filter((action) => action !== actionName);
+  mutableSaying.actions = mutableSaying.actions.filter(
+    action => action !== actionName,
+  );
   try {
-    yield call(putSaying, { api, sayingId: saying.id, saying: mutableSaying, filter, page, pageSize });
-  }
-  catch (err) {
+    yield call(putSaying, {
+      api,
+      sayingId: saying.id,
+      saying: mutableSaying,
+      filter,
+      page,
+      pageSize,
+    });
+  } catch (err) {
     yield put(updateSayingError(err));
   }
 }
@@ -205,21 +279,22 @@ export function* getCategories(payload) {
       skip,
       limit,
     };
-    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY]), { params });
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CATEGORY]),
+      { params },
+    );
 
     if (filter !== undefined) {
       yield put(loadFilteredCategoriesSuccess({ categories: response.data }));
-    }
-    else {
+    } else {
       yield put(loadCategoriesSuccess({ categories: response.data }));
       yield put(loadFilteredCategoriesSuccess({ categories: response.data }));
     }
-  }
-  catch (err) {
+  } catch (err) {
     if (filter !== undefined) {
       yield put(loadFilteredCategoriesError(response));
-    }
-    else {
+    } else {
       yield put(loadCategoriesError(err));
     }
   }
@@ -231,9 +306,28 @@ export function* putReviewPageSize(payload) {
   const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
   mutableSettings.reviewPageSize = pageSize;
   try {
-    yield call(api.put, toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]), mutableSettings);
+    yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]),
+      mutableSettings,
+    );
+  } catch (err) {
+    throw err;
   }
-  catch (err) {
+}
+
+export function* putSessionsPageSize(payload) {
+  const agentSettings = yield select(makeSelectAgentSettings());
+  const { api, agentId, pageSize } = payload;
+  const mutableSettings = Immutable.asMutable(agentSettings, { deep: true });
+  mutableSettings.sessionsPageSize = pageSize;
+  try {
+    yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, agentId, ROUTE_SETTINGS]),
+      mutableSettings,
+    );
+  } catch (err) {
     throw err;
   }
 }
@@ -254,12 +348,51 @@ export function* getAgentDocument(payload) {
       field,
       direction,
     };
-    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_DOCUMENT]), { params });
-    yield put(loadAgentDocumentsSuccess({ documents: response.data, total: response.totalCount }));
-
-  }
-  catch (err) {
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_DOCUMENT]),
+      { params },
+    );
+    yield put(
+      loadAgentDocumentsSuccess({
+        documents: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
     yield put(loadAgentDocumentsError(err));
+  }
+}
+
+export function* getAgentSessions(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, page, pageSize, field, direction } = payload;
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      skip,
+      limit,
+      field,
+      direction,
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_SESSION]),
+      { params },
+    );
+    yield put(
+      loadAgentSessionsSuccess({
+        sessions: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadAgentSessionsError(err));
   }
 }
 
@@ -276,5 +409,8 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_CATEGORIES, getCategories);
   yield takeLatest(LOAD_FILTERED_CATEGORIES, getCategories);
   yield takeLatest(CHANGE_REVIEW_PAGE_SIZE, putReviewPageSize);
+  yield takeLatest(CHANGE_SESSIONS_PAGE_SIZE, putSessionsPageSize);
   yield takeLatest(LOAD_AGENT_DOCUMENTS, getAgentDocument);
-};
+  yield takeLatest(LOAD_AGENT_SESSIONS, getAgentSessions);
+  yield takeLatest(LOAD_SESSION, getSession);
+}

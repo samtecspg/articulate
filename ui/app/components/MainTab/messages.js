@@ -30,6 +30,10 @@ export default defineMessages({
     id: 'app.components.MainTab.review',
     defaultMessage: 'Review',
   },
+  analytics: {
+    id: 'app.components.MainTab.analytics',
+    defaultMessage: 'Analytics',
+  },
   instanceName: {
     id: 'app.components.MainTab.instanceName',
     defaultMessage: 'agent',

@@ -1,0 +1,236 @@
+[
+    {
+      "keywordName": "Yes/No",
+      "uiColor": "#1976d2",
+      "examples": [
+        {
+          "value": "yes",
+          "synonyms": [
+            "yes"
+          ]
+        },
+        {
+          "value": "no",
+          "synonyms": [
+            "no"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [
+        {
+          "modifierName": "Affirmation",
+          "action": "SET",
+          "valueSource": "static",
+          "staticValue": "yes",
+          "sayings": [
+            {
+              "userSays": "👍",
+              "keywords": []
+            },
+            {
+              "userSays": "sounds good",
+              "keywords": []
+            },
+            {
+              "userSays": "affirmative",
+              "keywords": []
+            },
+            {
+              "userSays": "y",
+              "keywords": []
+            },
+            {
+              "userSays": "yep",
+              "keywords": []
+            },
+            {
+              "userSays": "yes",
+              "keywords": []
+            }
+          ]
+        },
+        {
+          "modifierName": "Negation",
+          "action": "SET",
+          "valueSource": "static",
+          "staticValue": "no",
+          "sayings": [
+            {
+              "userSays": "never",
+              "keywords": []
+            },
+            {
+              "userSays": "no thanks",
+              "keywords": [
+                {
+                  "start": 0,
+                  "end": 2,
+                  "value": "no",
+                  "keyword": "Yes/No",
+                  "keywordId": 6
+                }
+              ]
+            },
+            {
+              "userSays": "👎",
+              "keywords": []
+            },
+            {
+              "userSays": "n",
+              "keywords": []
+            },
+            {
+              "userSays": "negative",
+              "keywords": []
+            },
+            {
+              "userSays": "nope",
+              "keywords": []
+            },
+            {
+              "userSays": "no",
+              "keywords": []
+            }
+          ]
+        }
+      ],
+      "creationDate": "1558576113000",
+      "modificationDate": "1558576255000"
+    },
+    {
+      "keywordName": "Mood",
+      "uiColor": "#9c27b0",
+      "examples": [
+        {
+          "value": "bad",
+          "synonyms": [
+            "bad",
+            "horrible",
+            "terrible",
+            "no good",
+            "awful"
+          ]
+        },
+        {
+          "value": "okay",
+          "synonyms": [
+            "okay",
+            "meh",
+            "so so",
+            "mas o menos",
+            "fine"
+          ]
+        },
+        {
+          "value": "good",
+          "synonyms": [
+            "good",
+            "great",
+            "wonderful",
+            "perfect",
+            "awesome"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [
+        {
+          "modifierName": "Bad",
+          "action": "SET",
+          "valueSource": "static",
+          "staticValue": "bad",
+          "sayings": [
+            {
+              "userSays": "I am awful",
+              "keywords": []
+            },
+            {
+              "userSays": "not so good",
+              "keywords": []
+            },
+            {
+              "userSays": "no good",
+              "keywords": []
+            },
+            {
+              "userSays": "very bad",
+              "keywords": []
+            },
+            {
+              "userSays": "bad",
+              "keywords": []
+            },
+            {
+              "userSays": "horrible",
+              "keywords": []
+            },
+            {
+              "userSays": "I'm terrible",
+              "keywords": []
+            },
+            {
+              "userSays": "I'm having a horrible day",
+              "keywords": []
+            }
+          ]
+        },
+        {
+          "modifierName": "Okay",
+          "action": "SET",
+          "valueSource": "static",
+          "staticValue": "okay",
+          "sayings": [
+            {
+              "userSays": "meh",
+              "keywords": []
+            },
+            {
+              "userSays": "I'm fine",
+              "keywords": []
+            },
+            {
+              "userSays": "mas o menos",
+              "keywords": []
+            },
+            {
+              "userSays": "I'm doing okay",
+              "keywords": []
+            },
+            {
+              "userSays": "eh, I'm okay",
+              "keywords": []
+            }
+          ]
+        },
+        {
+          "modifierName": "Good",
+          "action": "SET",
+          "valueSource": "static",
+          "staticValue": "good",
+          "sayings": [
+            {
+              "userSays": "everything is wonderful",
+              "keywords": []
+            },
+            {
+              "userSays": "I am wonderful",
+              "keywords": []
+            },
+            {
+              "userSays": "I'm great",
+              "keywords": []
+            },
+            {
+              "userSays": "good",
+              "keywords": []
+            }
+          ]
+        }
+      ],
+      "creationDate": "1558614913000",
+      "modificationDate": "1558648332000"
+    }
+]

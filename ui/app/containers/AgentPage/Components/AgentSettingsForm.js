@@ -1,15 +1,15 @@
-import React from "react";
-import { FormattedMessage } from "react-intl";
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import {
   Grid,
   Typography,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-} from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 import WebhookSettings from 'components/WebhookSettings';
 import ResponseSettings from 'components/ResponseSettings';
@@ -17,31 +17,31 @@ import RasaSettings from 'components/RasaSettings';
 import DucklingSettings from 'components/DucklingSettings';
 import TrainingSettings from './TrainingSettings';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import expandedNotEnabled from "../../../images/expand-not-enabled-icon.svg";
-import expandedNotEnabledOpened from "../../../images/expand-not-enabled-opened-icon.svg";
-import expandedEnabled from "../../../images/expand-enabled-icon.svg";
-import expandedEnabledOpened from "../../../images/expand-enabled-opened-icon.svg";
-import expandedSingle from "../../../images/expand-single-icon.svg";
-import expandedSingleOpened from "../../../images/expand-single-opened-icon.svg";
+import expandedNotEnabled from '../../../images/expand-not-enabled-icon.svg';
+import expandedNotEnabledOpened from '../../../images/expand-not-enabled-opened-icon.svg';
+import expandedEnabled from '../../../images/expand-enabled-icon.svg';
+import expandedEnabledOpened from '../../../images/expand-enabled-opened-icon.svg';
+import expandedSingle from '../../../images/expand-single-icon.svg';
+import expandedSingleOpened from '../../../images/expand-single-opened-icon.svg';
 
 const styles = {
   formContainer: {
-    backgroundColor: "#ffffff",
-    borderTop: "1px solid #c5cbd8",
-    borderBottomLeftRadius: "5px",
-    borderBottomRightRadius: "5px",
+    backgroundColor: '#ffffff',
+    borderTop: '1px solid #c5cbd8',
+    borderBottomLeftRadius: '5px',
+    borderBottomRightRadius: '5px',
   },
   formSubContainer: {
-    padding: "40px 25px",
+    padding: '40px 25px',
   },
   root: {
-    width: "100%",
+    width: '100%',
   },
   panelHeading: {
-    fontSize: "15px",
-    color: "#4e4e4e",
+    fontSize: '15px',
+    color: '#4e4e4e',
   },
 };
 
@@ -90,16 +90,16 @@ class AgentSettingsForm extends React.Component {
         >
           <div className={classes.root}>
             <ExpansionPanel
-              expanded={expanded === "panelWebhook"}
+              expanded={expanded === 'panelWebhook'}
               onChange={() => {
-                this.handleChange("expanded", "panelWebhook");
+                this.handleChange('expanded', 'panelWebhook');
               }}
             >
               <ExpansionPanelSummary
                 expandIcon={this.getExpandIcon(
                   true,
-                  expanded === "panelWebhook",
-                  agent.useWebhook
+                  expanded === 'panelWebhook',
+                  agent.useWebhook,
                 )}
               >
                 <Typography className={classes.panelHeading}>
@@ -112,7 +112,9 @@ class AgentSettingsForm extends React.Component {
                   webhook={webhook}
                   onChangeUseWebhook={this.props.onChangeAgentData}
                   onChangeWebhookData={this.props.onChangeWebhookData}
-                  onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+                  onChangeWebhookPayloadType={
+                    this.props.onChangeWebhookPayloadType
+                  }
                   webhookSettingDescription={messages.webhookSettingDescription}
                   onAddNewHeader={this.props.onAddNewHeader}
                   onDeleteHeader={this.props.onDeleteHeader}
@@ -123,16 +125,16 @@ class AgentSettingsForm extends React.Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
-              expanded={expanded === "panelResponse"}
+              expanded={expanded === 'panelResponse'}
               onChange={() => {
-                this.handleChange("expanded", "panelResponse");
+                this.handleChange('expanded', 'panelResponse');
               }}
             >
               <ExpansionPanelSummary
                 expandIcon={this.getExpandIcon(
                   true,
-                  expanded === "panelResponse",
-                  agent.usePostFormat
+                  expanded === 'panelResponse',
+                  agent.usePostFormat,
                 )}
               >
                 <Typography className={classes.panelHeading}>
@@ -145,22 +147,24 @@ class AgentSettingsForm extends React.Component {
                   usePostFormat={agent.usePostFormat}
                   onChangeUsePostFormatData={this.props.onChangeAgentData}
                   onChangePostFormatData={this.props.onChangePostFormatData}
-                  responseSettingDescription={messages.responseSettingDescription}
+                  responseSettingDescription={
+                    messages.responseSettingDescription
+                  }
                   errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
-              expanded={expanded === "panelTraining"}
+              expanded={expanded === 'panelTraining'}
               onChange={() => {
-                this.handleChange("expanded", "panelTraining");
+                this.handleChange('expanded', 'panelTraining');
               }}
             >
               <ExpansionPanelSummary
                 expandIcon={this.getExpandIcon(
                   true,
-                  expanded === "panelTraining",
-                  agent.enableModelsPerCategory || agent.extraTrainingData
+                  expanded === 'panelTraining',
+                  agent.enableModelsPerCategory || agent.extraTrainingData,
                 )}
               >
                 <Typography className={classes.panelHeading}>
@@ -176,13 +180,13 @@ class AgentSettingsForm extends React.Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
-              expanded={expanded === "panelRasa"}
+              expanded={expanded === 'panelRasa'}
               onChange={() => {
-                this.handleChange("expanded", "panelRasa");
+                this.handleChange('expanded', 'panelRasa');
               }}
             >
               <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(false, expanded === "panelRasa")}
+                expandIcon={this.getExpandIcon(false, expanded === 'panelRasa')}
               >
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.rasaSetting} />
@@ -197,15 +201,15 @@ class AgentSettingsForm extends React.Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
-              expanded={expanded === "panelDuckling"}
+              expanded={expanded === 'panelDuckling'}
               onChange={() => {
-                this.handleChange("expanded", "panelDuckling");
+                this.handleChange('expanded', 'panelDuckling');
               }}
             >
               <ExpansionPanelSummary
                 expandIcon={this.getExpandIcon(
                   false,
-                  expanded === "panelDuckling"
+                  expanded === 'panelDuckling',
                 )}
               >
                 <Typography className={classes.panelHeading}>

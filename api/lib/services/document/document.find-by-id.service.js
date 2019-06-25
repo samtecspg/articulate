@@ -15,7 +15,15 @@ module.exports = async function ({ id, returnModel = false }) {
         }
         const docData = { id: doc._id, ...doc._source };
         if (docData.converseResult){
-            docData.converseResult = JSON.parse(docData.converseResult);
+            if (docData.converseResult.conversationStateObject){
+                if (docData.converseResult.conversationStateObject.webhooks){
+                    docData.converseResult.conversationStateObject.webhooks = docData.converseResult.conversationStateObject.webhooks.map((webhook) => {
+                        
+                        webhook.response = JSON.parse(webhook.response);
+                        return webhook;
+                    });
+                }
+            }
         }
         return docData;
     }

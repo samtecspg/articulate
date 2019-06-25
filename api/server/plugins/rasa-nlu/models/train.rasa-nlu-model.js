@@ -2,7 +2,8 @@
 const config = {
     headers: {
         'Content-Type': 'application/x-yml'
-    }
+    },
+    maxContentLength: Infinity
 };
 export const name = 'Train';
 export const path = '/train';

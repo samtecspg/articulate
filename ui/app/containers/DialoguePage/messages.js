@@ -19,11 +19,11 @@ export default defineMessages({
     id: 'app.containers.DialoguePage.help',
     defaultMessage: 'Help?',
   },
-  playHelpAlt : {
+  playHelpAlt: {
     id: 'app.containers.DialoguePage.playHelpAlt',
     defaultMessage: 'Play video off how to use dialog features',
   },
-  sayingsPlayHelpAlt : {
+  sayingsPlayHelpAlt: {
     id: 'app.containers.DialoguePage.sayingsPlayHelpAlt',
     defaultMessage: 'Play video off how to add/edit the user sayings',
   },
@@ -84,11 +84,13 @@ export default defineMessages({
     defaultMessage: 'entries',
   },
   categorySelectDefault: {
-    id: 'app.containers.DialoguePage.component.SayingDataForm.categorySelectDefault',
+    id:
+      'app.containers.DialoguePage.component.SayingDataForm.categorySelectDefault',
     defaultMessage: 'Select',
   },
   categoryNoResults: {
-    id: 'app.containers.DialoguePage.component.SayingDataForm.categoryNoResults',
+    id:
+      'app.containers.DialoguePage.component.SayingDataForm.categoryNoResults',
     defaultMessage: 'No Results',
   },
   categoryAdd: {
@@ -99,9 +101,17 @@ export default defineMessages({
     id: 'app.containers.DialoguePage.keywordsFormTitle',
     defaultMessage: 'Keywords',
   },
-  keywordsPlayHelpAlt : {
+  actionsFormTitle: {
+    id: 'app.containers.DialoguePage.actionsFormTitle',
+    defaultMessage: 'Actions',
+  },
+  keywordsPlayHelpAlt: {
     id: 'app.containers.DialoguePage.keywordsPlayHelpAlt',
     defaultMessage: 'Play video off how to add/edit the keywords',
+  },
+  actionsPlayHelpAlt: {
+    id: 'app.containers.DialoguePage.actionsPlayHelpAlt',
+    defaultMessage: 'Play video off how to add/edit the actions',
   },
   searchKeywordsAlt: {
     id: 'app.containers.DialoguePage.component.Form.searchKeywordsAlt',
@@ -115,8 +125,16 @@ export default defineMessages({
     id: 'app.containers.DialoguePage.component.KeywordsDataForm.keywordsLabel',
     defaultMessage: 'Keyword List:',
   },
+  actionsLabel: {
+    id: 'app.containers.DialoguePage.component.KeywordsDataForm.actionsLabel',
+    defaultMessage: 'Actions List:',
+  },
   create: {
     id: 'app.containers.DialoguePage.component.KeywordsDataForm.create',
     defaultMessage: 'Create',
+  },
+  duplicateAction: {
+    id: 'app.containers.DialoguePage.component.ActionsDataForm.duplicateAction',
+    defaultMessage: 'Create a duplicate of this action',
   },
 });

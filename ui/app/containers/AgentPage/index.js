@@ -7,12 +7,13 @@
 import { Grid, CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { intlShape, injectIntl } from "react-intl";
+import { intlShape, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import qs from 'query-string';
 import MainTab from '../../components/MainTab';
 import injectSaga from '../../utils/injectSaga';
 import messages from './messages';
@@ -67,7 +68,6 @@ import ExitModal from '../../components/ExitModal';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
-
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
@@ -76,6 +76,7 @@ export class AgentPage extends React.PureComponent {
   }
 
   state = {
+    ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
     nextLocation: null,
     openExitModal: false,
     isNewAgent: this.props.match.params.id === 'create',
@@ -100,7 +101,7 @@ export class AgentPage extends React.PureComponent {
     },
   };
 
-  initForm(){
+  initForm() {
     if (this.state.isNewAgent) {
       this.props.onResetData();
       if (!this.state.settingsLoaded) {
@@ -110,24 +111,23 @@ export class AgentPage extends React.PureComponent {
         });
       }
     } else {
-      this.props.onResetData();
+      this.props.onResetData(this.state.ref);
       this.props.onLoadActions(this.props.match.params.id);
       this.props.onLoadAgent(this.props.match.params.id);
     }
   }
 
   componentWillMount() {
-    if (this.props.settings.defaultAgentLanguage){
+    if (this.props.settings.defaultAgentLanguage) {
       this.initForm();
-    }
-    else {
+    } else {
       this.props.onLoadSettings();
     }
-    this.unblock = this.props.history.block((nextLocation) => {
+    this.unblock = this.props.history.block(nextLocation => {
       if (this.props.touched && !this.props.success) {
         this.setState({
           openExitModal: true,
-          nextLocation
+          nextLocation,
         });
         return false;
       }
@@ -135,12 +135,15 @@ export class AgentPage extends React.PureComponent {
     });
   }
 
-  componentDidUpdate(prevProps){
-    if (!prevProps.settings.defaultAgentLanguage && this.props.settings.defaultAgentLanguage){
+  componentDidUpdate(prevProps) {
+    if (
+      !prevProps.settings.defaultAgentLanguage &&
+      this.props.settings.defaultAgentLanguage
+    ) {
       this.initForm();
     }
     if (this.props.success) {
-      if (this.state.exitAfterSubmit){
+      if (this.state.exitAfterSubmit) {
         this.navigateToNextLocation();
       }
       if (this.state.isNewAgent) {
@@ -197,35 +200,47 @@ export class AgentPage extends React.PureComponent {
     } else {
       newErrorState.fallbackAction = false;
     }
-    if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')) {
+    if (
+      this.props.agent.useWebhook &&
+      (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')
+    ) {
       errors = true;
       newErrorState.webhookUrl = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.webhookUrl = false;
     }
-    if (!this.props.agentSettings.rasaURL || this.props.agentSettings.rasaURL === '') {
+    if (
+      !this.props.agentSettings.rasaURL ||
+      this.props.agentSettings.rasaURL === ''
+    ) {
       errors = true;
       newErrorState.rasaURL = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.rasaURL = false;
     }
-    if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === '') {
+    if (
+      !this.props.agentSettings.ducklingURL ||
+      this.props.agentSettings.ducklingURL === ''
+    ) {
       errors = true;
       newErrorState.ducklingURL = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.ducklingURL = false;
     }
-    if (!this.props.agent.enableModelsPerCategory && this.props.agent.multiCategory) {
+    if (
+      !this.props.agent.enableModelsPerCategory &&
+      this.props.agent.multiCategory
+    ) {
       errors = true;
       newErrorState.training = true;
       newErrorState.tabs.push(2);
     } else {
       newErrorState.training = false;
     }
-    
+
     try {
       if (!Array.isArray(this.props.agentSettings.ducklingDimension)) {
         throw 'Duckling dimensions is not an array';
@@ -282,7 +297,10 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
+      if (
+        this.props.agent.usePostFormat &&
+        this.props.postFormat.postFormatPayload === ''
+      ) {
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;
@@ -293,7 +311,11 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (this.props.agent.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === '') {
+      if (
+        this.props.agent.useWebhook &&
+        this.props.webhook.webhookPayloadType !== 'None' &&
+        this.props.webhook.webhookPayload === ''
+      ) {
         throw 'Webhook payload is not an object';
       }
       newErrorState.webhookPayload = false;
@@ -307,7 +329,7 @@ export class AgentPage extends React.PureComponent {
       this.setState({
         formError: false,
         exitAfterSubmit: exit,
-        errorState: {...newErrorState},
+        errorState: { ...newErrorState },
       });
       if (this.state.isNewAgent) {
         this.props.onAddNewAgent();
@@ -324,20 +346,19 @@ export class AgentPage extends React.PureComponent {
 
   render() {
     const { intl } = this.props;
-    return (
-      this.props.settings.defaultAgentLanguage ?
+    return this.props.settings.defaultAgentLanguage ? (
       <Grid container>
         <ExitModal
           open={this.state.openExitModal}
           onExit={() => {
             this.navigateToNextLocation();
           }}
-          onSaveAndExit={() => { 
-            this.submit(true) 
+          onSaveAndExit={() => {
+            this.submit(true);
           }}
           onClose={() => {
-            this.setState({ openExitModal: false })}
-          }
+            this.setState({ openExitModal: false });
+          }}
           type={intl.formatMessage(messages.instanceName)}
         />
         <MainTab
@@ -345,9 +366,13 @@ export class AgentPage extends React.PureComponent {
           touched={this.props.touched}
           loading={this.props.loading}
           success={this.props.success}
-          onSaveAndExit={() => { this.submit(true) }}
+          onSaveAndExit={() => {
+            this.submit(true);
+          }}
           agentName={this.props.agent.agentName}
-          agentGravatar={this.props.agent.gravatar ? this.props.agent.gravatar : 1}
+          agentGravatar={
+            this.props.agent.gravatar ? this.props.agent.gravatar : 1
+          }
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
@@ -377,14 +402,18 @@ export class AgentPage extends React.PureComponent {
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
-              onChangeCategoryClassifierThreshold={this.props.onChangeCategoryClassifierThreshold}
+              onChangeCategoryClassifierThreshold={
+                this.props.onChangeCategoryClassifierThreshold
+              }
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               onDelete={this.props.onDelete.bind(null, this.props.agent.id)}
               newAgent={this.state.isNewAgent}
               agentActions={this.props.agentActions}
               onGoToUrl={this.props.onGoToUrl}
-              defaultaFallbackActionName={this.props.settings.defaultaFallbackActionName}
+              defaultaFallbackActionName={
+                this.props.settings.defaultaFallbackActionName
+              }
               onAddNewParameter={this.props.onAddNewParameter}
               onDeleteParameter={this.props.onDeleteParameter}
               onChangeParameterName={this.props.onChangeParameterName}
@@ -393,11 +422,16 @@ export class AgentPage extends React.PureComponent {
           }
           dialogueForm={Link}
           dialogueURL={`/agent/${this.props.agent.id}/dialogue`}
-          reviewURL={`/agent/${this.props.agent.id}/review`}
           reviewForm={Link}
+          reviewURL={`/agent/${this.props.agent.id}/review`}
+          analyticsForm={Link}
+          analyticsURL={`/agent/${this.props.agent.id}/analytics`}
         />
-      </Grid> : 
-      <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+      </Grid>
+    ) : (
+      <CircularProgress
+        style={{ position: 'absolute', top: '40%', left: '49%' }}
+      />
     );
   }
 }
@@ -455,10 +489,10 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onResetData: () => {
-      dispatch(resetAgentData());
+    onResetData: ref => {
+      dispatch(resetAgentData(ref));
     },
-    onLoadAgent: (agentId) => {
+    onLoadAgent: agentId => {
       dispatch(loadAgent(agentId));
     },
     onChangeAgentData: (field, value) => {
@@ -473,10 +507,10 @@ function mapDispatchToProps(dispatch) {
     onChangeWebhookPayloadType: (field, value) => {
       dispatch(changeWebhookPayloadType({ field, value }));
     },
-    onAddNewHeader: (payload) => {
+    onAddNewHeader: payload => {
       dispatch(addNewHeaderAgentWebhook(payload));
     },
-    onDeleteHeader: (headerIndex) => {
+    onDeleteHeader: headerIndex => {
       dispatch(deleteHeaderAgentWebhook(headerIndex));
     },
     onChangeHeaderName: (headerIndex, value) => {
@@ -491,19 +525,19 @@ function mapDispatchToProps(dispatch) {
     onChangeAgentSettingsData: (field, value) => {
       dispatch(changeAgentSettingsData({ field, value }));
     },
-    onChangeCategoryClassifierThreshold: (value) => {
+    onChangeCategoryClassifierThreshold: value => {
       dispatch(changeCategoryClassifierThreshold(value));
     },
-    onAddFallbackResponse: (newFallback) => {
+    onAddFallbackResponse: newFallback => {
       dispatch(addAgentFallbackResponse(newFallback));
     },
-    onDeleteFallbackResponse: (fallbackIndex) => {
+    onDeleteFallbackResponse: fallbackIndex => {
       dispatch(deleteAgentFallbackResponse(fallbackIndex));
     },
     onAddNewAgent: () => {
       dispatch(addAgent());
     },
-    onSuccess: (url) => {
+    onSuccess: url => {
       dispatch(resetStatusFlag());
       dispatch(push(url));
     },
@@ -513,20 +547,20 @@ function mapDispatchToProps(dispatch) {
     onTrain: () => {
       dispatch(trainAgent());
     },
-    onDelete: (id) => {
+    onDelete: id => {
       dispatch(deleteAgent(id));
     },
-    onLoadActions: (agentId) => {
+    onLoadActions: agentId => {
       dispatch(loadActions(agentId));
     },
-    onGoToUrl: (url) => {
+    onGoToUrl: url => {
       dispatch(clearSayingToAction());
       dispatch(push(`${url}?ref=agent`));
     },
-    onAddNewParameter: (payload) => {
+    onAddNewParameter: payload => {
       dispatch(addNewAgentParameter(payload));
     },
-    onDeleteParameter: (parameterName) => {
+    onDeleteParameter: parameterName => {
       dispatch(deleteAgentParameter(parameterName));
     },
     onChangeParameterName: (oldParameterName, newParameterName) => {
@@ -541,9 +575,9 @@ function mapDispatchToProps(dispatch) {
     onSetAgentDefaults: () => {
       dispatch(setAgentDefaults());
     },
-    onToggleChat: (value) => {
+    onToggleChat: value => {
       dispatch(toggleConversationBar(value));
-    }
+    },
   };
 }
 
@@ -554,7 +588,9 @@ const withConnect = connect(
 
 const withSaga = injectSaga({ key: 'agent', saga });
 
-export default injectIntl(compose(
-  withSaga,
-  withConnect,
-)(withRouter(AgentPage)));
+export default injectIntl(
+  compose(
+    withSaga,
+    withConnect,
+  )(withRouter(AgentPage)),
+);

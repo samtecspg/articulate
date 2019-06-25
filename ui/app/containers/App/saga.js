@@ -1,9 +1,5 @@
-import {
-  call,
-  put,
-  select,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
+import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
   ROUTE_CONTEXT,
@@ -12,6 +8,7 @@ import {
   ROUTE_POST_FORMAT,
   ROUTE_TRAIN,
   ROUTE_WEBHOOK,
+  ROUTE_SETTINGS,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -22,11 +19,9 @@ import {
   SEND_MESSAGE,
   TRAIN_AGENT,
   UPDATE_SETTING,
-} from '../App/constants';
-import {
-  getSettings,
-  putSetting,
-} from '../SettingsPage/saga';
+  TOGGLE_CONVERSATION_BAR,
+} from './constants';
+import { getSettings, putSetting } from '../SettingsPage/saga';
 import {
   loadAgentError,
   loadAgentSuccess,
@@ -37,10 +32,13 @@ import {
   showWarning,
   loadServerInfoSuccess,
   loadServerInfoError,
+  updateSettingsError,
+  updateSettingSuccess,
 } from './actions';
 import {
   makeSelectAgent,
   makeSelectSessionId,
+  makeSelectSettings,
 } from './selectors';
 
 export function* postConverse(payload) {
@@ -49,8 +47,8 @@ export function* postConverse(payload) {
 
   if (agent.id) {
     const { api, message } = payload;
-    if (message.sessionId || systemSessionId){
-      let sessionId = systemSessionId || message.sessionId;
+    if (message.sessionId || systemSessionId) {
+      const sessionId = systemSessionId || message.sessionId;
       try {
         const postPayload = {
           params: {
@@ -61,54 +59,62 @@ export function* postConverse(payload) {
             text: message.message,
           },
         };
-        const response = yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]), null, postPayload);
+        yield call(
+          api.post,
+          toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]),
+          null,
+          postPayload,
+        );
 
-        yield put(respondMessage({
-          author: agent.agentName,
-          docId: response.docId,
-          message: response.textResponse,
-          conversationStateObject: response.conversationStateObject,
-        }));
-        yield put(storeSourceData({ ...response.conversationStateObject }));
+        /*yield put(
+          respondMessage({
+            author: agent.agentName,
+            docId: response.docId,
+            message: response.textResponse,
+            conversationStateObject: response.conversationStateObject,
+          }),
+        );
+        yield put(storeSourceData({ ...response.conversationStateObject }));*/
+      } catch (err) {
+        yield put(showWarning('errorCallingArticulate'));
       }
-      catch (err) {
-        yield put(showWarning('Error: I\'m sorry. An error occurred calling Articulate\'s converse service. This is not an issue with your agent.'));
-      }
+    } else {
+      yield put(showWarning('errorSelectOrCreateASession'));
     }
-    else {
-      yield put(showWarning('Error: Select or create a session first.'));
-    }
-  }
-  else {
-    yield put(showWarning('Error: Please click on an agent first.'));
+  } else {
+    yield put(showWarning('errorClickOnAgentFirst'));
   }
 }
 
 export function* deleteSession(payload) {
   const sessionId = yield select(makeSelectSessionId());
-  if (sessionId){
+  if (sessionId) {
     try {
       const { api } = payload;
-      yield call(api.delete, toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_FRAME]));
+      yield call(
+        api.delete,
+        toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_FRAME]),
+      );
       const patchPayload = {
         actionQueue: [],
         responseQueue: [],
         savedSlots: {},
       };
-      yield call(api.patch, toAPIPath([ROUTE_CONTEXT, sessionId]), patchPayload);
+      yield call(
+        api.patch,
+        toAPIPath([ROUTE_CONTEXT, sessionId]),
+        patchPayload,
+      );
       yield put(resetSessionSuccess());
-    }
-    catch ({ response }) {
+    } catch ({ response }) {
       if (response.status && response.status === 404) {
         yield put(resetSessionSuccess());
-      }
-      else {
-        yield put(showWarning('Error: I\'m sorry. An error occurred cleaning your session data.'));
+      } else {
+        yield put(showWarning('errorCleaningSessionData'));
       }
     }
-  }
-  else {
-    yield put(showWarning('Select a session to clear.'));
+  } else {
+    yield put(showWarning('errorSelectSessionToClear'));
   }
 }
 
@@ -117,8 +123,7 @@ export function* postTrainAgent(payload) {
   const { api } = payload;
   try {
     yield call(api.post, toAPIPath([ROUTE_AGENT, agent.id, ROUTE_TRAIN]));
-  }
-  catch (err) {
+  } catch (err) {
     const error = { ...err };
     yield put(trainAgentError(error.response.data.message));
   }
@@ -130,18 +135,24 @@ export function* getAgent(payload) {
     let response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId]));
     const agent = response;
     agent.categoryClassifierThreshold *= 100;
-    let webhook, postFormat;
+    let webhook;
+    let postFormat;
     if (agent.useWebhook) {
-      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]));
+      response = yield call(
+        api.get,
+        toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]),
+      );
       webhook = response;
     }
     if (agent.usePostFormat) {
-      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]));
+      response = yield call(
+        api.get,
+        toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]),
+      );
       postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(loadAgentError(err));
   }
 }
@@ -151,12 +162,29 @@ export function* getServerInfo(payload) {
   try {
     const response = yield call(api.get, toAPIPath([]));
     yield put(loadServerInfoSuccess(response));
-  }
-  catch (err) {
+  } catch (err) {
     yield put(loadServerInfoError(err));
   }
 }
 
+export function* putConversationBarWidth(payload) {
+  const { api } = payload;
+  const settings = yield select(makeSelectSettings());
+  const mutableSettings = Immutable.asMutable(settings, { deep: true });
+  const width = settings.conversationPanelWidth;
+  try {
+    if (width > 300) {
+      const response = yield call(
+        api.put,
+        toAPIPath([ROUTE_SETTINGS, 'conversationPanelWidth']),
+        300,
+      );
+      yield put(updateSettingSuccess(response));
+    }
+  } catch (err) {
+    yield put(updateSettingsError(err));
+  }
+}
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
@@ -166,4 +194,5 @@ export default function* rootSaga() {
   yield takeLatest(RESET_SESSION, deleteSession);
   yield takeLatest(TRAIN_AGENT, postTrainAgent);
   yield takeLatest(UPDATE_SETTING, putSetting);
-};
+  yield takeLatest(TOGGLE_CONVERSATION_BAR, putConversationBarWidth);
+}

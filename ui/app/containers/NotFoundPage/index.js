@@ -27,14 +27,20 @@ const styles = {
   },
 };
 
-class NotFoundPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class NotFoundPage extends React.Component {
+  // eslint-disable-line react/prefer-stateless-function
 
   render() {
     const { classes } = this.props;
     return (
-      <Grid className={classes.mainContainer} container justify='center' spacing={8}>
+      <Grid
+        className={classes.mainContainer}
+        container
+        justify="center"
+        spacing={8}
+      >
         <Grid item xs={12}>
-          <Typography align='center'>
+          <Typography align="center">
             <FormattedMessage {...messages.notFoundTitle} />
           </Typography>
         </Grid>
@@ -42,15 +48,18 @@ class NotFoundPage extends React.Component { // eslint-disable-line react/prefer
           <img className={classes.image} src={image404} alt="" />
         </Grid>
         <Grid item xs={6}>
-          <Typography align='center'>
+          <Typography align="center">
             <FormattedMessage {...messages.notFoundParagraph} />
           </Typography>
         </Grid>
+        <Grid item xs={12} />
         <Grid item xs={12}>
-        </Grid>
-        <Grid item xs={12}>
-          <a className={classes.needHelpLink} target="_blank" href='https://samtecspg.github.io/articulate/'>
-            <Typography align='center'>
+          <a
+            className={classes.needHelpLink}
+            target="_blank"
+            href="https://samtecspg.github.io/articulate/"
+          >
+            <Typography align="center">
               <FormattedMessage {...messages.needHelp} />
             </Typography>
           </a>

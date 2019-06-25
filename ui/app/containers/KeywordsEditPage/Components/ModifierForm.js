@@ -13,11 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  FormattedMessage,
-  injectIntl,
-  intlShape,
-} from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import trashIcon from '../../../images/trash-icon.svg';
 
@@ -121,22 +117,33 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class ModifierForm extends React.Component {
-
   constructor(props) {
     super(props);
-    this.replaceValuesWithModifierName = this.replaceValuesWithModifierName.bind(this);
+    this.replaceValuesWithModifierName = this.replaceValuesWithModifierName.bind(
+      this,
+    );
   }
 
   state = {
     currentPage: 1,
     pageSize: this.props.modifierSayingsPageSize,
-    numOfPages: Math.ceil(this.props.modifier.sayings.length / this.props.modifierSayingsPageSize),
+    numOfPages: Math.ceil(
+      this.props.modifier.sayings.length / this.props.modifierSayingsPageSize,
+    ),
   };
 
-  componentDidUpdate(prevProps, prevState){
-    if (prevState.numOfPages !== Math.ceil(this.props.modifier.sayings.length / this.props.modifierSayingsPageSize)){
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.numOfPages !==
+      Math.ceil(
+        this.props.modifier.sayings.length / this.props.modifierSayingsPageSize,
+      )
+    ) {
       this.setState({
-        numOfPages: Math.ceil(this.props.modifier.sayings.length / this.props.modifierSayingsPageSize),
+        numOfPages: Math.ceil(
+          this.props.modifier.sayings.length /
+            this.props.modifierSayingsPageSize,
+        ),
       });
     }
   }
@@ -146,135 +153,176 @@ class ModifierForm extends React.Component {
     let newStart = 0;
     saying.keywords.forEach((keyword, index) => {
       if (newStart !== keyword.start) {
-        newUserSays.push(<span key={`preModifierText_${index}`}>{saying.userSays.substring(newStart, keyword.start)}</span>);
+        newUserSays.push(
+          <span key={`preModifierText_${index}`}>
+            {saying.userSays.substring(newStart, keyword.start)}
+          </span>,
+        );
       }
       newUserSays.push(
-        <span className={this.props.classes.userSayingModifier} key={`modifierKeyword_${index}`}>
-          {`{{modifiers.${keyword.keyword.indexOf(' ') !== -1 ? `[${keyword.keyword}]` : keyword.keyword}.value}}`}
+        <span
+          className={this.props.classes.userSayingModifier}
+          key={`modifierKeyword_${index}`}
+        >
+          {`{{modifiers.${
+            keyword.keyword.indexOf(' ') !== -1
+              ? `[${keyword.keyword}]`
+              : keyword.keyword
+          }.value}}`}
         </span>,
       );
       newStart = keyword.end;
     });
-    newUserSays.push(<span key="finaText">{saying.userSays.substring(newStart)}</span>);
+    newUserSays.push(
+      <span key="finaText">{saying.userSays.substring(newStart)}</span>,
+    );
     return newUserSays;
-  };
+  }
 
   render() {
     const { classes, intl, modifier, settings } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid className={classes.formSubContainer} id='formContainer' container item xs={12}>
+        <Grid
+          className={classes.formSubContainer}
+          id="formContainer"
+          container
+          item
+          xs={12}
+        >
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <TextField
-                id='modifierName'
+                id="modifierName"
                 label={intl.formatMessage(messages.modifierNameTextField)}
                 value={modifier.modifierName}
-                placeholder={intl.formatMessage(messages.modifierNameTextFieldPlaceholder)}
-                onChange={(evt) => {
+                placeholder={intl.formatMessage(
+                  messages.modifierNameTextFieldPlaceholder,
+                )}
+                onChange={evt => {
                   this.props.onChangeModifierName(evt.target.value);
                 }}
-                margin='normal'
+                margin="normal"
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
-                error={this.props.errorState ? this.props.errorState.modifierName : false}
+                error={
+                  this.props.errorState
+                    ? this.props.errorState.modifierName
+                    : false
+                }
               />
             </Grid>
           </Grid>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <TextField
-                  select
-                  id='action'
-                  value={modifier.action}
-                  label={intl.formatMessage(messages.actionSelect)}
-                  onChange={(evt) => { this.props.onChangeModifierData('action', evt.target.value) }}
-                  margin='normal'
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  helperText={intl.formatMessage(messages.requiredField)}
-                  error={this.props.errorState ? this.props.errorState.action : false}
-                >
-                  {
-                    settings.modifierActions.map((action) => (
-                      <MenuItem key={action.value} value={action.value}>
-                        {action.text}
-                      </MenuItem>
-                    ))
-                  }
-                </TextField>
+                select
+                id="action"
+                value={modifier.action}
+                label={intl.formatMessage(messages.actionSelect)}
+                onChange={evt => {
+                  this.props.onChangeModifierData('action', evt.target.value);
+                }}
+                margin="normal"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                helperText={intl.formatMessage(messages.requiredField)}
+                error={
+                  this.props.errorState ? this.props.errorState.action : false
+                }
+              >
+                {settings.modifierActions.map(action => (
+                  <MenuItem key={action.value} value={action.value}>
+                    {action.text}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <TextField
-                  select
-                  id='valueSource'
-                  value={modifier.valueSource}
-                  label={intl.formatMessage(messages.valueSourceSelect)}
-                  onChange={(evt) => { 
-                    this.props.onChangeModifierData('valueSource', evt.target.value) 
-                    if (evt.target.value === 'keyword'){
-                      this.props.onChangeModifierData('staticValue', '');
-                    }
+                select
+                id="valueSource"
+                value={modifier.valueSource}
+                label={intl.formatMessage(messages.valueSourceSelect)}
+                onChange={evt => {
+                  this.props.onChangeModifierData(
+                    'valueSource',
+                    evt.target.value,
+                  );
+                  if (evt.target.value === 'keyword') {
+                    this.props.onChangeModifierData('staticValue', '');
+                  }
+                }}
+                margin="normal"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                helperText={intl.formatMessage(messages.requiredField)}
+                error={
+                  this.props.errorState
+                    ? this.props.errorState.valueSource
+                    : false
+                }
+              >
+                {settings.modifierValueSources.map(valueSource => (
+                  <MenuItem key={valueSource.value} value={valueSource.value}>
+                    {valueSource.text}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            {modifier.valueSource === 'static' ? (
+              <Grid item lg={4} md={4} sm={12} xs={12}>
+                <TextField
+                  id="staticValue"
+                  label={intl.formatMessage(messages.staticValueTextField)}
+                  value={modifier.staticValue}
+                  placeholder={intl.formatMessage(
+                    messages.staticValueTextFieldPlaceholder,
+                  )}
+                  onChange={evt => {
+                    this.props.onChangeModifierData(
+                      'staticValue',
+                      evt.target.value,
+                    );
                   }}
-                  margin='normal'
+                  margin="normal"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
                   }}
                   helperText={intl.formatMessage(messages.requiredField)}
-                  error={this.props.errorState ? this.props.errorState.valueSource : false}
-                >
-                  {
-                    settings.modifierValueSources.map((valueSource) => (
-                      <MenuItem key={valueSource.value} value={valueSource.value}>
-                        {valueSource.text}
-                      </MenuItem>
-                    ))
+                  error={
+                    this.props.errorState
+                      ? this.props.errorState.staticValue
+                      : false
                   }
-                </TextField>
-            </Grid>
-            {
-              modifier.valueSource === 'static' ?
-                <Grid item lg={4} md={4} sm={12} xs={12}>
-                  <TextField
-                    id='staticValue'
-                    label={intl.formatMessage(messages.staticValueTextField)}
-                    value={modifier.staticValue}
-                    placeholder={intl.formatMessage(messages.staticValueTextFieldPlaceholder)}
-                    onChange={(evt) => {
-                      this.props.onChangeModifierData('staticValue', evt.target.value);
-                    }}
-                    margin='normal'
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    helperText={intl.formatMessage(messages.requiredField)}
-                    error={this.props.errorState ? this.props.errorState.staticValue : false}
-                  />
-                </Grid> :
-                null
-            }
+                />
+              </Grid>
+            ) : null}
           </Grid>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={8} xs={8}>
               <TextField
-                id='newSaying'
+                id="newSaying"
                 label={intl.formatMessage(messages.sayingTextField)}
-                placeholder={intl.formatMessage(messages.sayingTextFieldPlaceholder)}
-                onKeyPress={(ev) => {
+                placeholder={intl.formatMessage(
+                  messages.sayingTextFieldPlaceholder,
+                )}
+                onKeyPress={ev => {
                   if (ev.key === 'Enter' && ev.target.value !== '') {
                     ev.preventDefault();
                     this.props.onAddModifierSaying(ev.target.value);
                     ev.target.value = '';
                   }
                 }}
-                margin='normal'
+                margin="normal"
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
@@ -299,32 +347,53 @@ class ModifierForm extends React.Component {
           </Grid>
           <Grid container spacing={24} item xs={12}>
             <Grid container item xs={12}>
-              {modifier.sayings.length > 0 ?
+              {modifier.sayings.length > 0 ? (
                 <Grid container>
                   <Typography className={classes.highlightLabel}>
                     <FormattedMessage {...messages.highlightTooltip} />
                   </Typography>
                   <Table>
                     <TableBody>
-                      {modifier.sayings.slice((this.state.currentPage - 1) * this.state.pageSize, this.state.currentPage * this.state.pageSize).map((saying, index) => (
-                        <TableRow key={`${saying}_${index}`}>
-                          <TableCell>
-                            <ModifierSayingRow
-                              saying={saying}
-                              agentKeywords={this.props.agentKeywords}
-                              onTagModifierKeyword={this.props.onTagModifierKeyword.bind(null, (this.state.currentPage - 1) * this.state.pageSize + index)}
-                              onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(null, (this.state.currentPage - 1) * this.state.pageSize + index)}
-                            />
-                          </TableCell>
-                          <TableCell className={classes.deleteCell}>
-                            <img
-                              onClick={() => {
-                                this.props.onDeleteModifierSaying((this.state.currentPage - 1) * this.state.pageSize + index);
-                              }} className={classes.deleteIcon} src={trashIcon}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {modifier.sayings
+                        .slice(
+                          (this.state.currentPage - 1) * this.state.pageSize,
+                          this.state.currentPage * this.state.pageSize,
+                        )
+                        .map((saying, index) => (
+                          <TableRow key={`${saying}_${index}`}>
+                            <TableCell>
+                              <ModifierSayingRow
+                                saying={saying}
+                                agentKeywords={this.props.agentKeywords}
+                                onTagModifierKeyword={this.props.onTagModifierKeyword.bind(
+                                  null,
+                                  (this.state.currentPage - 1) *
+                                    this.state.pageSize +
+                                    index,
+                                )}
+                                onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(
+                                  null,
+                                  (this.state.currentPage - 1) *
+                                    this.state.pageSize +
+                                    index,
+                                )}
+                              />
+                            </TableCell>
+                            <TableCell className={classes.deleteCell}>
+                              <img
+                                onClick={() => {
+                                  this.props.onDeleteModifierSaying(
+                                    (this.state.currentPage - 1) *
+                                      this.state.pageSize +
+                                      index,
+                                  );
+                                }}
+                                className={classes.deleteIcon}
+                                src={trashIcon}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                   <Grid className={classes.pageControl} item xs={12}>
@@ -335,15 +404,17 @@ class ModifierForm extends React.Component {
                       <TextField
                         select
                         className={classes.pageTextfield}
-                        id='pageSize'
+                        id="pageSize"
                         value={this.state.pageSize}
-                        onChange={(evt) => {
+                        onChange={evt => {
                           this.setState({
-                            pageSize: evt.target.value
+                            pageSize: evt.target.value,
                           });
-                          this.props.onChangeModifiersSayingsPageSize(evt.target.value);
+                          this.props.onChangeModifiersSayingsPageSize(
+                            evt.target.value,
+                          );
                         }}
-                        margin='normal'
+                        margin="normal"
                         InputLabelProps={{
                           shrink: true,
                         }}
@@ -366,19 +437,33 @@ class ModifierForm extends React.Component {
                       </Typography>
                     </Grid>
                     <Grid className={classes.pageNumberSubControl}>
-                      <Typography onClick={() => { this.state.currentPage > 1 ? this.setState({ currentPage: this.state.currentPage - 1 }) : null }} className={this.state.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}>
+                      <Typography
+                        onClick={() => {
+                          this.state.currentPage > 1
+                            ? this.setState({
+                                currentPage: this.state.currentPage - 1,
+                              })
+                            : null;
+                        }}
+                        className={
+                          this.state.currentPage > 1
+                            ? classes.pageCursors
+                            : classes.pageCursorsDisabled
+                        }
+                      >
                         <FormattedMessage {...messages.backPage} />
                       </Typography>
                       <TextField
-                        id='page'
-                        margin='normal'
+                        id="page"
+                        margin="normal"
                         value={this.state.currentPage}
-                        onChange={(evt) => {
-                          evt.target.value === '' ?
-                          this.setState({ currentPage: 0 }) :
-                            (evt.target.value <= this.state.numOfPages && evt.target.value >= 0 ?
-                              this.setState({ currentPage: evt.target.value }) :
-                              false);
+                        onChange={evt => {
+                          evt.target.value === ''
+                            ? this.setState({ currentPage: 0 })
+                            : evt.target.value <= this.state.numOfPages &&
+                              evt.target.value >= 0
+                            ? this.setState({ currentPage: evt.target.value })
+                            : false;
                         }}
                         fullWidth
                         InputLabelProps={{
@@ -393,19 +478,31 @@ class ModifierForm extends React.Component {
                           step: 1,
                         }}
                         className={classes.pageTextfield}
-                        type='number'
+                        type="number"
                       />
                       <Typography className={classes.pagesLabel}>
                         / {this.state.numOfPages}
                       </Typography>
-                      <Typography onClick={() => { this.state.currentPage < this.state.numOfPages ? this.setState({ currentPage: this.state.currentPage + 1 }) : null }} className={this.state.currentPage < this.state.numOfPages ? classes.pageCursors : classes.pageCursorsDisabled}>
+                      <Typography
+                        onClick={() => {
+                          this.state.currentPage < this.state.numOfPages
+                            ? this.setState({
+                                currentPage: this.state.currentPage + 1,
+                              })
+                            : null;
+                        }}
+                        className={
+                          this.state.currentPage < this.state.numOfPages
+                            ? classes.pageCursors
+                            : classes.pageCursorsDisabled
+                        }
+                      >
                         <FormattedMessage {...messages.nextPage} />
                       </Typography>
                     </Grid>
                   </Grid>
-                </Grid> :
-                null
-              }
+                </Grid>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>

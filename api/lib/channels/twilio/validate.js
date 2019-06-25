@@ -11,7 +11,9 @@ module.exports = {
             ),
             blackList: TwilioJoi.array().items(
               TwilioJoi.string().phoneNumber({ defaultCountry: 'US', format: 'e164' })
-            )
+            ),
+            outgoingMessages: Joi.boolean(),
+            waitTimeBetweenMessages: Joi.number()
         }
 
         return Joi.validate(details, schema)

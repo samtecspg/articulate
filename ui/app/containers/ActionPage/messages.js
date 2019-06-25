@@ -25,13 +25,14 @@ export default defineMessages({
   },
   actionFormDescription: {
     id: 'app.containers.ActionPage.component.ActionForm.actionFormDescription',
-    defaultMessage: 'Actions are in charge of helping your agent with the conversation management. You can link user sayings to actions, therefore, your agent will learn from this and will be able to talk back with your users.',
+    defaultMessage:
+      'Actions are in charge of helping your agent with the conversation management. You can link user sayings to actions, therefore, your agent will learn from this and will be able to talk back with your users.',
   },
   help: {
     id: 'app.containers.ActionPage..help',
     defaultMessage: 'Help?',
   },
-  playHelpAlt : {
+  playHelpAlt: {
     id: 'app.containers.ActionPage.playHelpAlt',
     defaultMessage: 'Play video off how to add/edit the keywords',
   },
@@ -64,7 +65,8 @@ export default defineMessages({
     defaultMessage: 'Action Name:',
   },
   actionNameTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.component.ActionForm.actionNameTextFieldPlaceholder',
+    id:
+      'app.containers.ActionPage.component.ActionForm.actionNameTextFieldPlaceholder',
     defaultMessage: 'Add a name for your action',
   },
   backButton: {
@@ -88,24 +90,29 @@ export default defineMessages({
     defaultMessage: 'Webhook',
   },
   webhookFormDescription: {
-    id: 'app.containers.ActionPage.component.WebhookForm.webhookFormDescription',
-    defaultMessage: 'This is a local webhook that will be called when the ML engine resolves that this action is being triggered by the user.',
+    id:
+      'app.containers.ActionPage.component.WebhookForm.webhookFormDescription',
+    defaultMessage:
+      'This is a local webhook that will be called when the ML engine resolves that this action is being triggered by the user.',
   },
   responseFormTitle: {
     id: 'app.containers.ActionPage.component.ResponseForm.responseFormTitle',
     defaultMessage: 'Response',
   },
   responseFormDescription: {
-    id: 'app.containers.ActionPage.component.ResponseForm.responseFormDescription',
-    defaultMessage: 'Whenever you talk with your agent you may want to have additional data in your response beside the text. Here you can enable this settings to add more data to your /converse endpoint.',
+    id:
+      'app.containers.ActionPage.component.ResponseForm.responseFormDescription',
+    defaultMessage:
+      'Whenever you talk with your agent you may want to have additional data in your response beside the text. Here you can enable this settings to add more data to your /converse endpoint.',
   },
   responseTextField: {
     id: 'app.containers.ActionPage.components.ResponseForm.responseTextField',
     defaultMessage: 'Agent Response:',
   },
   responseTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.components.ResponseForm.responseTextFieldPlaceholder',
-    defaultMessage: 'Write bot\'s response when this actions is triggered',
+    id:
+      'app.containers.ActionPage.components.ResponseForm.responseTextFieldPlaceholder',
+    defaultMessage: "Write bot's response when this actions is triggered",
   },
   responseHelperText: {
     id: 'app.containers.ActionPage.component.ResponseForm.responseHelperText',
@@ -117,7 +124,7 @@ export default defineMessages({
   },
   noName: {
     id: 'app.containers.ActionPage.component.MainTab.noName',
-    defaultMessage: 'No name'
+    defaultMessage: 'No name',
   },
   slotsFormTitle: {
     id: 'app.containers.ActionPage.component.ActionForm.slotsFormTitle',
@@ -128,19 +135,23 @@ export default defineMessages({
     defaultMessage: 'Slots',
   },
   textpromptTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.component.SlotForm.textpromptTextFieldPlaceholder',
-    defaultMessage: 'Write bot\'s response when this slot is required and it is missing',
+    id:
+      'app.containers.ActionPage.component.SlotForm.textpromptTextFieldPlaceholder',
+    defaultMessage:
+      "Write bot's response when this slot is required and it is missing",
   },
   textpromptHelperText: {
     id: 'app.containers.ActionPage.component.SlotForm.textpromptHelperText',
-    defaultMessage: '*Please add at least one text prompt if the slot is required',
+    defaultMessage:
+      '*Please add at least one text prompt if the slot is required',
   },
   slotNameTextField: {
     id: 'app.containers.ActionPage.component.SlotForm.slotNameTextField',
     defaultMessage: 'Slot Name',
   },
   slotNameTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.component.SlotForm.slotNameTextFieldPlaceholder',
+    id:
+      'app.containers.ActionPage.component.SlotForm.slotNameTextFieldPlaceholder',
     defaultMessage: 'Set a name to reference the slot in your responses',
   },
   slotNameTextFieldHelp: {
@@ -152,8 +163,10 @@ export default defineMessages({
     defaultMessage: 'Remaining Life:',
   },
   remainingLifeTextFieldPlaceholder: {
-    id: 'app.containers.ActionPage.component.SlotForm.remainingLifeTextFieldPlaceholder',
-    defaultMessage: 'Set the number of messages that the agent will remember the assigned value',
+    id:
+      'app.containers.ActionPage.component.SlotForm.remainingLifeTextFieldPlaceholder',
+    defaultMessage:
+      'Set the number of messages that the agent will remember the assigned value',
   },
   slotIsRequired: {
     id: 'app.containers.ActionPage.component.SlotForm.slotIsRequired',
@@ -165,6 +178,6 @@ export default defineMessages({
   },
   copyResponses: {
     id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
-    defaultMessage: 'Copy response in the response input'
-  }
+    defaultMessage: 'Copy response in the response input',
+  },
 });

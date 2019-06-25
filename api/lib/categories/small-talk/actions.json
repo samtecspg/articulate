@@ -1,0 +1,322 @@
+[
+    {
+      "actionName": "Greet",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Hello 👋.",
+          "actions": [
+            "Ask Mood"
+          ]
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558573041000",
+      "modificationDate": "1558615836000"
+    },
+    {
+      "actionName": "Goodbye",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Bye!",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558573183000",
+      "modificationDate": "1558573183000"
+    },
+    {
+      "actionName": "Gratitude",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "You are very welcome.",
+          "actions": []
+        },
+        {
+          "textResponse": "Just doing my part.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558573266000",
+      "modificationDate": "1558623704000"
+    },
+    {
+      "actionName": "Who Am I",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I'm a bot.",
+          "actions": []
+        },
+        {
+          "textResponse": "Just your friendly neighborhood chatbot.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558576794000",
+      "modificationDate": "1558576794000"
+    },
+    {
+      "actionName": "How Old",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I was created {{moment agent.creationDate \"fromNow\"}}. At first I didn't know much, but I'm learning all the time.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558609332000",
+      "modificationDate": "1558609713000"
+    },
+    {
+      "actionName": "Capabilities",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I can do anything that I've been taught to do. Very meta, I know.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558609850000",
+      "modificationDate": "1558609850000"
+    },
+    {
+      "actionName": "Busy",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I always have time for you.",
+          "actions": []
+        },
+        {
+          "textResponse": "Never too busy to chitchat.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558612572000",
+      "modificationDate": "1558612572000"
+    },
+    {
+      "actionName": "Are you there",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I am always here for you.",
+          "actions": []
+        },
+        {
+          "textResponse": "yep, unless there's a power outage. They're my kryptonite.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558612695000",
+      "modificationDate": "1558612695000"
+    },
+    {
+      "actionName": "Ask Mood",
+      "slots": [
+        {
+          "slotName": "mood",
+          "uiColor": "#9c27b0",
+          "keyword": "Mood",
+          "keywordId": 7,
+          "isList": false,
+          "isRequired": true,
+          "textPrompts": [
+            "How are you?"
+          ]
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "{{#eq slots.mood.value 'bad'}}I'm sorry to hear that, maybe the sun will come out tomorrow.{{/eq}}",
+          "actions": []
+        },
+        {
+          "textResponse": "{{#eq slots.mood.value 'okay'}}Okay's better than bad.{{/eq}}",
+          "actions": []
+        },
+        {
+          "textResponse": "{{#eq slots.mood.value 'good'}}That is good to hear!{{/eq}}",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558615330000",
+      "modificationDate": "1558648332000"
+    },
+    {
+      "actionName": "Answer Mood",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Well I'm alive.",
+          "actions": []
+        },
+        {
+          "textResponse": "I am doing absolutely superb.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558615428000",
+      "modificationDate": "1558615619000"
+    },
+    {
+      "actionName": "You Are Funny",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I know right. I laugh at my own jokes all of the time.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558615948000",
+      "modificationDate": "1558615948000"
+    },
+    {
+      "actionName": "I like you",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Aww shucks 😊, I like you too.",
+          "actions": []
+        },
+        {
+          "textResponse": "Thanks, that really boosts my spirits.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558616009000",
+      "modificationDate": "1558616009000"
+    },
+    {
+      "actionName": "By my Friend",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Of Course. I would be happy to be.",
+          "actions": []
+        },
+        {
+          "textResponse": "I already consider you my friend.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558616068000",
+      "modificationDate": "1558616068000"
+    },
+    {
+      "actionName": "Agree",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I'm glad you agree.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558616454000",
+      "modificationDate": "1558616454000"
+    },
+    {
+      "actionName": "You Suck",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I'm sorry to disappoint. I am trying my best.",
+          "actions": []
+        },
+        {
+          "textResponse": "I can blame it on someone else.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558624050000",
+      "modificationDate": "1558624235000"
+    },
+    {
+      "actionName": "You Awesome",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Well, thanks. You're pretty awesome too.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558624455000",
+      "modificationDate": "1558624455000"
+    },
+    {
+      "actionName": "You're Welcome",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "😊",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558624679000",
+      "modificationDate": "1558624679000"
+    },
+    {
+      "actionName": "Marriage Proposal",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "I'm already spoken for.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558648163000",
+      "modificationDate": "1558648163000"
+    },
+    {
+      "actionName": "Sad",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Don't worry 🎵 be happy.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1558648629000",
+      "modificationDate": "1558648633000"
+    }
+  ]

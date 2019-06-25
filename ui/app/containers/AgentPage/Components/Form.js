@@ -1,61 +1,61 @@
-import React from "react";
-import { FormattedMessage, injectIntl, intlShape } from "react-intl";
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
-import PropTypes from "prop-types";
-import { Grid, Typography, Button, Modal, Tabs, Tab } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
+import { Grid, Typography, Button, Modal, Tabs, Tab } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
-import messages from "../messages";
+import messages from '../messages';
 
-import playHelpIcon from "../../../images/play-help-icon.svg";
-import gravatars from '../../../components/Gravatar/';
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import gravatars from '../../../components/Gravatar';
 
-import AgentDataForm from "./AgentDataForm";
+import AgentDataForm from './AgentDataForm';
 import AgentParametersForm from './AgentParametersForm';
-import AgentSettingsForm from "./AgentSettingsForm";
-import DeleteFooter from "../../../components/DeleteFooter";
+import AgentSettingsForm from './AgentSettingsForm';
+import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
-    backgroundColor: "#f6f7f8",
-    border: "1px solid #c5cbd8",
-    borderRadius: "5px",
-    marginBottom: "60px",
+    backgroundColor: '#f6f7f8',
+    border: '1px solid #c5cbd8',
+    borderRadius: '5px',
+    marginBottom: '60px',
   },
   titleContainer: {
-    padding: "25px",
+    padding: '25px',
   },
   agentIcon: {
-    display: "inline",
-    paddingRight: "10px",
-    height: "30px",
+    display: 'inline',
+    paddingRight: '10px',
+    height: '30px',
   },
   titleTextHelpContainer: {
-    display: "inline",
-    position: "relative",
-    bottom: "6px",
+    display: 'inline',
+    position: 'relative',
+    bottom: '6px',
   },
   title: {
-    display: "inline",
-    paddingRight: "25px",
+    display: 'inline',
+    paddingRight: '25px',
   },
   helpButton: {
-    display: "inline",
-    width: "50px",
-    height: "20px",
+    display: 'inline',
+    width: '50px',
+    height: '20px',
   },
   playIcon: {
-    height: "10px",
+    height: '10px',
   },
   helpText: {
-    fontSize: "9px",
+    fontSize: '9px',
     fontWeight: 300,
-    position: "relative",
-    bottom: "2px",
-    paddingLeft: "2px",
+    position: 'relative',
+    bottom: '2px',
+    paddingLeft: '2px',
   },
   agentTabs: {
-    paddingLeft: "15px",
+    paddingLeft: '15px',
   },
   selected: {
     color: '#4e4e4e',
@@ -63,23 +63,23 @@ const styles = {
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
     backgroundColor: '#fff',
-    borderBottom: '0px'
+    borderBottom: '0px',
   },
   modalContent: {
-    top: "50%",
-    left: "50%",
+    top: '50%',
+    left: '50%',
     transform: `translate(-50%, -50%)`,
-    position: "absolute",
+    position: 'absolute',
     width: '80%',
     height: '80%',
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)",
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   settingsIcon: {
-    height: "18px",
-    paddingRight: "5px",
-    position: 'absolute'
+    height: '18px',
+    paddingRight: '5px',
+    position: 'absolute',
   },
   notificationDot: {
     backgroundColor: '#Cb2121',
@@ -88,19 +88,19 @@ const styles = {
     borderRadius: '50%',
     position: 'absolute',
     top: '10px',
-    left: '5px'
+    left: '5px',
   },
   numOfErrorsLabel: {
     fontSize: '10px',
     color: 'white',
     position: 'relative',
     bottom: '4.5px',
-    left: '0.5px'
+    left: '0.5px',
   },
   tabLabel: {
     padding: '0px 10px',
     position: 'relative',
-    top: '5px'
+    top: '5px',
   },
   settingsTabLabel: {
     padding: '0px 20px',
@@ -137,7 +137,12 @@ class Form extends React.Component {
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
-          {this.props.agent.gravatar === '' ? null : gravatars[this.props.agent.gravatar - 1]({ color: this.props.agent.uiColor, className: classes.agentIcon })}
+          {this.props.agent.gravatar === ''
+            ? null
+            : gravatars[this.props.agent.gravatar - 1]({
+                color: this.props.agent.uiColor,
+                className: classes.agentIcon,
+              })}
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />
@@ -159,8 +164,8 @@ class Form extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
-                  width='100%'
-                  height='100%'
+                  width="100%"
+                  height="100%"
                   src="https://www.youtube.com/embed/Xc1j2F1Em9M"
                   frameBorder="0"
                   allow="autoplay; encrypted-media"
@@ -183,8 +188,8 @@ class Form extends React.Component {
             }}
             TabIndicatorProps={{
               style: {
-                display: 'none'
-              }
+                display: 'none',
+              },
             }}
           >
             <Tab
@@ -192,44 +197,61 @@ class Form extends React.Component {
                 <span className={classes.tabLabel}>
                   <span>{intl.formatMessage(messages.main)}</span>
                 </span>
-              }	
+              }
               icon={
-                this.props.errorState.tabs.indexOf(0) > -1 ? 
-                  <div id='notificationDot' className={classes.notificationDot}>
+                this.props.errorState.tabs.indexOf(0) > -1 ? (
+                  <div id="notificationDot" className={classes.notificationDot}>
                     <span className={classes.numOfErrorsLabel}>
-                      {(this.props.errorState.tabs.filter((element) => { return element === 0 })).length}
+                      {
+                        this.props.errorState.tabs.filter(
+                          element => element === 0,
+                        ).length
+                      }
                     </span>
-                  </div> : 
-                  null
+                  </div>
+                ) : null
               }
               className={this.state.selectedTab === 0 ? classes.selected : null}
             />
-            <Tab 
+            <Tab
               label={
                 <span className={classes.tabLabel}>
                   <span>{intl.formatMessage(messages.parameters)}</span>
                 </span>
               }
               icon={
-                this.props.errorState.tabs.indexOf(1) > -1 ? 
-                  <div id='notificationDot' className={classes.notificationDot}>
+                this.props.errorState.tabs.indexOf(1) > -1 ? (
+                  <div id="notificationDot" className={classes.notificationDot}>
                     <span className={classes.numOfErrorsLabel}>
-                      {(this.props.errorState.tabs.filter((element) => { return element === 1 })).length}
+                      {
+                        this.props.errorState.tabs.filter(
+                          element => element === 1,
+                        ).length
+                      }
                     </span>
-                  </div> : 
-                  null
+                  </div>
+                ) : null
               }
               className={this.state.selectedTab === 1 ? classes.selected : null}
             />
             <Tab
               icon={[
-                this.props.errorState.tabs.indexOf(2) > -1 ? 
-                  <div style={{left: '0px'}} key='notification_settings' id='notificationDot' className={classes.notificationDot}>
+                this.props.errorState.tabs.indexOf(2) > -1 ? (
+                  <div
+                    style={{ left: '0px' }}
+                    key="notification_settings"
+                    id="notificationDot"
+                    className={classes.notificationDot}
+                  >
                     <span className={classes.numOfErrorsLabel}>
-                      {(this.props.errorState.tabs.filter((element) => { return element === 2 })).length}
+                      {
+                        this.props.errorState.tabs.filter(
+                          element => element === 2,
+                        ).length
+                      }
                     </span>
-                  </div> : 
-                  null
+                  </div>
+                ) : null,
               ]}
               label={
                 <span className={classes.tabLabel}>
@@ -286,11 +308,12 @@ class Form extends React.Component {
             />
           )}
         </Grid>
-        {this.props.newAgent ? null : 
-        <DeleteFooter
-          onDelete={this.props.onDelete}
-          type={intl.formatMessage(messages.instanceName)}
-        />}
+        {this.props.newAgent ? null : (
+          <DeleteFooter
+            onDelete={this.props.onDelete}
+            type={intl.formatMessage(messages.instanceName)}
+          />
+        )}
       </Grid>
     );
   }
