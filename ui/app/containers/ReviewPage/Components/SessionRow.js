@@ -170,26 +170,29 @@ class SessionRow extends React.Component {
           <span className={classes.userSays}>
             {session.sessionId}
           </span>
-          <span
-            onClick={() => {
-              this.setState({ openCodeModal: true });
-            }}
-            className={classes.messageSource}
-          >
-            {'</> '}
-            <span>{intl.formatMessage(messages.seeSource)}</span>
-          </span>
-          <CodeModal
-            handleClose={() => {
-              this.setState({ openCodeModal: false });
-            }}
-            conversationStateObject={
-              session.converseResult
-                ? session.converseResult.conversationStateObject
-                : null
-            }
-            open={this.state.openCodeModal}
-          />
+          {session.id !== 'noData' ? 
+            [<span key='seeSourceLabel'
+              onClick={() => {
+                this.setState({ openCodeModal: true });
+              }}
+              className={classes.messageSource}
+            >
+              {'</> '}
+              <span>{intl.formatMessage(messages.seeSource)}</span>
+            </span>,
+            <CodeModal key='codeModal'
+              handleClose={() => {
+                this.setState({ openCodeModal: false });
+              }}
+              conversationStateObject={
+                session.converseResult
+                  ? session.converseResult.conversationStateObject
+                  : null
+              }
+              open={this.state.openCodeModal}
+            />]
+          : null
+          }
         </TableCell>
         <PlayImageCell
           tooltip={intl.formatMessage(messages.reproduceSession)}

@@ -10,13 +10,20 @@ module.exports = async function ({ id, direction, skip, limit, field }) {
         await globalService.findById({ id, model: MODEL_AGENT, returnModel: true });
         const agentDocuments = await documentService.findByAgentId({ agentId: id });
         const sessionIds = _.uniq(_.map(agentDocuments.data, 'session'));
-        const sessions = await Promise.all(sessionIds.map(async (sessionId) => {
+        let sessions = await Promise.all(sessionIds.map(async (sessionId) => {
 
-            return await contextService.findBySession({ sessionId, loadFrames: true });
+            try {
+                return await contextService.findBySession({ sessionId, loadFrames: true });
+            }
+            catch(e){
+                //There could be cases where the session doesn't exists anymore
+                return null;
+            }
         }));
+        sessions = _.compact(sessions);
         return {
-            data: _.orderBy(_.take(_.drop(sessions, skip), limit === -1 ? sessionIds.length : limit), field, direction),
-            totalCount: sessionIds.length
+            data: _.orderBy(_.take(_.drop(sessions, skip), limit === -1 ? sessions.length : limit), field, direction),
+            totalCount: sessions.length
         };
     }
     catch (error) {

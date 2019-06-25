@@ -272,7 +272,7 @@ function SessionsDataForm(props) {
                         locale={locale}
                         session={{
                           id: 'noData',
-                          session: intl.formatMessage(messages.noData),
+                          sessionId: intl.formatMessage(messages.noData),
                         }}
                         onToggleConversationBar={props.onToggleConversationBar}
                         onSendMessage={props.onSendMessage}

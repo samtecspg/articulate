@@ -21,6 +21,7 @@ import {
   ACTION_INTENT_SPLIT_SYMBOL,
   ROUTE_DOCUMENT,
   ROUTE_AGENT,
+  ROUTE_CONTEXT,
 } from '../../../common/constants';
 import injectSaga from '../../utils/injectSaga';
 import { getWS } from '../../utils/locationResolver';
@@ -71,10 +72,10 @@ export class ReviewPage extends React.Component {
       : '',
     documents: [],
     sessions: [],
-    client: null,
-    socketClientConnected: false,
     pageStatus: {
       documents: {
+        client: null,
+        socketClientConnected: false,
         total: null,
         currentPage: 1,
         pageSize: this.props.agent.id && this.props.agent.settings.reviewPageSize
@@ -86,6 +87,8 @@ export class ReviewPage extends React.Component {
         timeSort: 'DESC',
       },
       sessions: {
+        client: null,
+        socketClientConnected: false,
         total: null,
         currentPage: 1,
         pageSize: this.props.agent.id && this.props.agent.settings.sessionsPageSize
@@ -131,12 +134,17 @@ export class ReviewPage extends React.Component {
       this.state.pageStatus.sessions.sortDirection,
     );
 
-    if (!this.state.socketClientConnected) {
+    const newPageStatus = this.state.pageStatus;
+
+    if (!this.state.pageStatus.documents.socketClientConnected) {
       const client = new Nes.Client(getWS());
       client.onConnect = () => {
+        
+        newPageStatus.documents.client = client;
+        newPageStatus.documents.socketClientConnected = true;
+        
         this.setState({
-          client,
-          socketClientConnected: true,
+          pageStatus: newPageStatus,
         });
 
         const handler = documents => {
@@ -153,6 +161,41 @@ export class ReviewPage extends React.Component {
 
         client.subscribe(
           `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`,
+          handler,
+        );
+      };
+      client.connect({
+        delay: 1000,
+        auth: AUTH_ENABLED
+          ? { headers: { cookie: document.cookie } }
+          : undefined,
+      });
+    }
+
+    if (!this.state.pageStatus.sessions.socketClientConnected) {
+      const client = new Nes.Client(getWS());
+      client.onConnect = () => {
+        
+        newPageStatus.sessions.client = client;
+        newPageStatus.sessions.socketClientConnected = true;
+        
+        this.setState({
+          pageStatus: newPageStatus,
+        });
+
+        const handler = (sessions) => {
+          if (sessions) {
+            onLoadAgentSessions(
+              this.state.pageStatus.sessions.currentPage,
+              this.state.pageStatus.sessions.pageSize,
+              this.state.pageStatus.sessions.sortField,
+              this.state.pageStatus.sessions.sortDirection,
+            );
+          }
+        };
+
+        client.subscribe(
+          `/${ROUTE_CONTEXT}`,
           handler,
         );
       };
