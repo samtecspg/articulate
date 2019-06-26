@@ -291,7 +291,7 @@ export class FilterSelect extends React.Component {
             this.props.showRecent ?
               [
                 <MenuItem disabled className={classes.menuItemTitle} key='titleRecent'>
-                  <Typography className={classes.title}>Recent</Typography>
+                  <Typography className={classes.title}>{intl.formatMessage(messages.recent)}</Typography>
                 </MenuItem>,
                 this.props.values.filter((value) => { return value.recent; }).map((value, index) => {
                   return (<MenuItem
@@ -327,7 +327,7 @@ export class FilterSelect extends React.Component {
                   </MenuItem>);
                 }),
                 <MenuItem disabled className={classes.menuItemTitle} key='titleAll'>
-                  <Typography className={classes.title}>All</Typography>
+                  <Typography className={classes.title}>{intl.formatMessage(messages.all)}</Typography>
                 </MenuItem>
               ]
             : null,

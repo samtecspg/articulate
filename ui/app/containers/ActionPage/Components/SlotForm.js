@@ -56,7 +56,8 @@ class SlotForm extends React.Component {
   }
 
   state = {
-    agentNameError: false,
+    remember: false,
+    rememberForever: false,
   };
 
   replaceValuesWithSlotName(saying) {
@@ -193,31 +194,80 @@ class SlotForm extends React.Component {
               </TextField>
             </Grid>
           </Grid>
-          <Grid container spacing={24} item xs={12}>
+          <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
             <Grid item xs={6}>
-              <TextField
-                id="remainingLife"
-                label={intl.formatMessage(messages.remainingLifeTextField)}
-                value={slot.remainingLife}
-                placeholder={intl.formatMessage(
-                  messages.remainingLifeTextFieldPlaceholder,
-                )}
-                onChange={evt => {
-                  this.props.onChangeSlotData(
-                    'remainingLife',
-                    evt.target.value ? parseInt(evt.target.value) : null,
-                  );
-                }}
-                margin="normal"
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                helperText={intl.formatMessage(messages.slotNameTextFieldHelp)}
-                type="number"
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.remember}
+                    onChange={(evt, value) => {
+                      this.setState({
+                        remember: value
+                      });
+                    }}
+                    value="anything"
+                    color="primary"
+                  />
+                }
+                label={intl.formatMessage(messages.rememberSlot)}
               />
+              {this.state.remember ?   
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.rememberForever}
+                      onChange={(evt, value) => {
+                        this.setState({
+                          rememberForever: value
+                        });
+                        if (value){
+                          this.props.onChangeSlotData(
+                            'remainingLife',
+                            0,
+                          );
+                        }
+                        else {
+                          this.props.onChangeSlotData(
+                            'remainingLife',
+                            null,
+                          );
+                        }
+                      }}
+                      value="anything"
+                      color="primary"
+                    />
+                  }
+                  label={intl.formatMessage(messages.rememberSlotForever)}
+                />
+              : null}
             </Grid>
           </Grid>
+          {this.state.remember && !this.state.rememberForever ? (
+            <Grid container spacing={24} item xs={12}>
+              <Grid item xs={6}>
+                <TextField
+                  id="remainingLife"
+                  label={intl.formatMessage(messages.remainingLifeTextField)}
+                  value={slot.remainingLife === 0 ? '' : slot.remainingLife}
+                  placeholder={intl.formatMessage(
+                    messages.remainingLifeTextFieldPlaceholder,
+                  )}
+                  onChange={evt => {
+                    this.props.onChangeSlotData(
+                      'remainingLife',
+                      evt.target.value ? parseInt(evt.target.value) : null,
+                    );
+                  }}
+                  margin="normal"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  type="number"
+                />
+              </Grid>
+            </Grid>
+          ) : null}
           <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
             <Grid item xs={6}>
               <FormControlLabel
