@@ -1,4 +1,4 @@
-import { Button, Grid, Modal, Typography, Card, CardContent } from '@material-ui/core';
+import { Button, Grid, Modal, Typography, Card, CardContent, CardHeader } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -7,6 +7,10 @@ import playHelpIcon from '../../../images/play-help-icon.svg';
 import analyticsIcon from '../../../images/icon-analytics.svg';
 import messages from '../messages';
 import _ from 'lodash';
+import { HorizontalBar, Bar } from 'react-chartjs-2';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+const moment = extendMoment(Moment);
 
 const styles = {
   headerContainer: {
@@ -67,15 +71,13 @@ const styles = {
   formSubContainer: {
     padding: '0 25px 40px 25px',
   },
+  cardTitle: {
+    fontSize: '12px'
+  },
   analyticsCard: {
-    '&:hover': {
-      boxShadow: '0 1px 4px 1px #4A4A4A',
-    },
     border: '1px solid #919192',
-    height: '205px',
-    width: '205px',
+    width: '100%',
     position: 'relative',
-    cursor: 'pointer',
     marginTop: '40px'
   },
   analyticsCardContent: {
@@ -88,9 +90,16 @@ const styles = {
     display: 'grid',
     textAlign: 'center',
     height: '150px',
-    position: 'relative',
-    top: '15%',
   },
+  valueLabel: {
+    fontSize: '60px',
+    fontWeight: 'bold',
+    color: '#4e4e4e'
+  },
+  countLabel: {
+    marginTop: '-40px',
+    fontSize: '12px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -119,7 +128,59 @@ class Form extends React.Component {
     }));
     const result = _.take(_.orderBy(_.values(_.groupBy(actions)).map(d => ({name: d[0], count: d.length})), 'count', 'desc'), 5);
     
-    return result
+    const data = {
+      labels: _.map(result, 'name'),
+      datasets: [
+        {
+          label: this.props.intl.formatMessage(messages.count),
+          backgroundColor: '#3ccb8e',
+          borderColor: '#3ccb8e',
+          borderWidth: 1,
+          hoverBackgroundColor: '#00c582',
+          hoverBorderColor: '#00c582',
+          data: _.map(result, 'count')
+        }
+      ]
+    };
+
+    return data
+  };
+
+
+
+  getRequestsOverTime = (documents) => {
+
+    const timestamps = _.sortBy(_.map(documents, (document) => { return new Moment(document.time_stamp) }));
+    const range = moment.range(timestamps[0].clone().subtract(1, 'minutes'), timestamps[timestamps.length - 1].clone().add(1, 'minutes'));
+    const minutes = Array.from(range.by('minutes'));
+    const labels = minutes.map(m => m.format('MM-DD-YYYY hh:mm'));
+    const minutesOfRequests = timestamps.map(t => t.format('MM-DD-YYYY hh:mm'));
+    
+    const tempResult = _.values(_.groupBy(minutesOfRequests)).map(d => ({name: d[0], count: d.length}));
+
+    const result = _.times(labels.length, _.constant(0));
+    
+    tempResult.forEach((minuteOfRequest) => {
+      
+      result[labels.indexOf(minuteOfRequest.name)] = minuteOfRequest.count;
+    });
+    
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: this.props.intl.formatMessage(messages.count),
+          backgroundColor: '#3ccb8e',
+          borderColor: '#3ccb8e',
+          borderWidth: 1,
+          hoverBackgroundColor: '#00c582',
+          hoverBorderColor: '#00c582',
+          data: result
+        }
+      ]
+    };
+
+    return data
   };
 
   getAverageWebhookResponseTime = (documents) => {
@@ -186,102 +247,150 @@ class Form extends React.Component {
               xs={12}
             >
               <Grid container
+                spacing={8}
+                justify="space-around"
+                item
+                xs={12}
+              >
+                <Grid item xs={4}>
+                  <Card
+                    className={classes.analyticsCard}
+                  >
+                    <CardHeader
+                      title={intl.formatMessage(messages.requests)}
+                      titleTypographyProps={{
+                        className: classes.cardTitle
+                      }}
+                    />
+                    <CardContent className={classes.analyticsCardContent}>
+                      <Typography className={classes.valueLabel}>
+                        {this.props.totalDocuments}
+                      </Typography>
+                      <Typography className={classes.countLabel}>
+                        {intl.formatMessage(messages.count)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={4}>
+                  <Card
+                    className={classes.analyticsCard}
+                  >
+                    <CardHeader
+                      title={intl.formatMessage(messages.sessions)}
+                      titleTypographyProps={{
+                        className: classes.cardTitle
+                      }}
+                    />
+                    <CardContent className={classes.analyticsCardContent}>
+                      <Typography className={classes.valueLabel}>
+                          {_.uniqBy(this.props.documents, 'session').length}
+                      </Typography>
+                      <Typography className={classes.countLabel}>
+                        {intl.formatMessage(messages.count)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={4}>
+                  <Card
+                    className={classes.analyticsCard}
+                  >
+                    <CardHeader
+                      title={intl.formatMessage(messages.fallbacks)}
+                      titleTypographyProps={{
+                        className: classes.cardTitle
+                      }}
+                    />
+                    <CardContent className={classes.analyticsCardContent}>
+                      <Typography className={classes.valueLabel}>
+                          {this.props.documents.filter((document) => {
+
+                            return document.converseResult && document.converseResult.isFallback;
+                          }).length}
+                      </Typography>
+                      <Typography className={classes.countLabel}>
+                        {intl.formatMessage(messages.count)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            
+              <Grid container
                 spacing={16}
                 justify="space-around"
               >
-                <Card
-                  className={classes.analyticsCard}
-                >
-                  <CardContent className={classes.analyticsCardContent}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography>
-                          {intl.formatMessage(messages.requests)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        {this.props.totalDocuments}
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-                <Card
-                  className={classes.analyticsCard}
-                >
-                  <CardContent className={classes.analyticsCardContent}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography>
-                          {intl.formatMessage(messages.sessions)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        {_.uniqBy(this.props.documents, 'session').length}
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-                <Card
-                  className={classes.analyticsCard}
-                >
-                  <CardContent className={classes.analyticsCardContent}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography>
-                          {intl.formatMessage(messages.fallbacks)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        {this.props.documents.filter((document) => {
+                <Grid item xs={6}>
+                  <Card
+                    className={classes.analyticsCard}
+                    style={{height: 330}}
+                  >
+                    <CardHeader
+                      title={intl.formatMessage(messages.topActions
+                        )}
+                      titleTypographyProps={{
+                        className: classes.cardTitle
+                      }}
+                    />
+                    <CardContent className={classes.analyticsCardContent}>
+                      {this.props.documents.length > 0 ?
+                      <HorizontalBar
+                        data={this.getTopActions(this.props.documents)}
+                        options={{
+                          maintainAspectRatio: true,
+                          scales: {
+                            xAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1
+                                }
+                            }]
+                          }
+                        }}
+                      /> :
+                      <Typography>
+                          {intl.formatMessage(messages.noActionsInvokedSoFar)}
+                      </Typography>}
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={6}>
 
-                          return document.converseResult && document.converseResult.isFallback;
-                        }).length}
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-                <Card
-                  className={classes.analyticsCard}
-                >
-                  <CardContent className={classes.analyticsCardContent}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography>
-                          {intl.formatMessage(messages.requestsOverTime)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        TBD
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-                <Card
-                  className={classes.analyticsCard}
-                >
-                  <CardContent className={classes.analyticsCardContent}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography>
-                          {intl.formatMessage(messages.topActions)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        {this.props.documents.length > 0 ? 
-                        this.getTopActions(this.props.documents).map((action, index) => {
-
-                          return (<Typography key={`topAction_${index}`}>
-                            {`${action.name}: ${action.count}`}
-                          </Typography>)
-                        }) :
-                        <Typography>
-                            {intl.formatMessage(messages.noActionsInvokedSoFar)}
-                        </Typography>}
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-                <Card
+                  <Card
+                    className={classes.analyticsCard}
+                    style={{height: 330}}
+                  >
+                    <CardHeader
+                      title={intl.formatMessage(messages.requestsOverTime)}
+                      titleTypographyProps={{
+                        className: classes.cardTitle
+                      }}
+                    />
+                    <CardContent className={classes.analyticsCardContent}>
+                      {this.props.documents.length > 0 ?
+                      <Bar
+                        data={this.getRequestsOverTime(this.props.documents)}
+                        options={{
+                          maintainAspectRatio: true,
+                          scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1
+                                }
+                            }]
+                          }
+                        }}
+                      /> 
+                      :
+                      <Typography>
+                          {intl.formatMessage(messages.noActionsInvokedSoFar)}
+                      </Typography>}
+                    </CardContent>
+                  </Card>
+                </Grid>
+                {/*<Card
                   className={classes.analyticsCard}
                 >
                   <CardContent className={classes.analyticsCardContent}>
@@ -299,7 +408,7 @@ class Form extends React.Component {
                       </Grid>
                     </Grid>
                   </CardContent>
-                </Card>
+                </Card>*/}
               </Grid>
             </Grid>
           </Grid>

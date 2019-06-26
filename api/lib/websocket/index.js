@@ -60,7 +60,6 @@ module.exports = async (server) => {
                     await model.subscribe(action, (event) => {
 
                         const { target } = event;
-                        console.log(event);
                         server.publish(ws.publishPath({ properties: target.properties }), target.properties);
                     });
                 }));

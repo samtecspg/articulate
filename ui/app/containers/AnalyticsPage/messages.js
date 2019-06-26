@@ -50,5 +50,9 @@ export default defineMessages({
   noWebhooksCallsSoFar: {
     id: 'app.containers.AnalyticsPage.noWebhooksCallsSoFar',
     defaultMessage: 'No webhook calls so far',
-  },  
+  },
+  count: {
+    id: 'app.containers.AnalyticsPage.count',
+    defaultMessage: 'count',
+  }
 });
