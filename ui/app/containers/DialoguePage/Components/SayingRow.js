@@ -288,6 +288,7 @@ class SayingRow extends React.Component {
                 src={addActionIcon}
               />
               <FilterSelect
+                showRecent
                 value="select"
                 valueDisplayField="actionName"
                 valueField="actionName"

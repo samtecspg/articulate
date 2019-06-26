@@ -384,6 +384,7 @@ class SayingsDataForm extends React.Component {
                 }}
               />
               <FilterSelect
+                showRecent
                 value="select"
                 valueDisplayField="actionName"
                 valueField="actionName"

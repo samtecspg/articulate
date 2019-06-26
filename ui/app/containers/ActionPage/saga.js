@@ -44,7 +44,7 @@ import { getKeywords, putSaying } from '../DialoguePage/saga';
 
 export function* getActions(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, agentId, filter } = payload;
+  const { api, agentId, filter, loadForDropdown } = payload;
   let transformedFilter = filter;
   if (filter !== undefined) {
     transformedFilter = {
@@ -67,16 +67,38 @@ export function* getActions(payload) {
       toAPIPath([ROUTE_AGENT, agentId || agent.id, ROUTE_ACTION]),
       { params },
     );
+
+    params.skip = 0;
+    params.limit = 3;
+    params.field = 'modificationDate';
+    params.direction = 'DESC';
+    const recentActions = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agentId || agent.id, ROUTE_ACTION]),
+      { params },
+    );
+    const recentActionsIds = [];
+    recentActions.data.forEach((recentAction) => {
+
+      recentAction.recent = true;
+      recentActionsIds.push(recentAction.id);
+    });
+    const actionsWithoutRecents = response.data.filter((action) => {
+
+      return recentActionsIds.indexOf(action.id) === -1;
+    });
+    const sortedActions = recentActions.data.concat(actionsWithoutRecents);
+
     if (filter !== undefined) {
-      yield put(loadFilteredActionsuccess({ actions: response.data }));
+      yield put(loadFilteredActionsuccess({ actions: sortedActions }));
     } else {
       yield put(
         loadActionsSuccess({
-          actions: response.data,
+          actions: sortedActions,
           total: response.totalCount,
         }),
       );
-      yield put(loadFilteredActionsuccess({ actions: response.data }));
+      yield put(loadFilteredActionsuccess({ actions: sortedActions }));
     }
   } catch (err) {
     if (filter !== undefined) {

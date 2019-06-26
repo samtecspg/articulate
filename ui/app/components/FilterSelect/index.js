@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { TextField, MenuItem, Grid, Input, Button } from '@material-ui/core';
+import { TextField, MenuItem, Grid, Input, Button, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import clearIcon from '../../images/clear-icon.svg';
@@ -76,6 +76,16 @@ const styles = {
     top: '2px',
     marginLeft: '10px',
   },
+  menuItemTitle: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+    cursor: 'default'
+  },
+  title: {
+    fontSize: '18px',
+    fontWeight: 'bold'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -276,7 +286,54 @@ export class FilterSelect extends React.Component {
                   </MenuItem>
                 ),
               ]
-          : this.props.values.map((value, index) => (
+          : 
+          ([
+            this.props.showRecent ?
+              [
+                <MenuItem disabled className={classes.menuItemTitle} key='titleRecent'>
+                  <Typography className={classes.title}>Recent</Typography>
+                </MenuItem>,
+                this.props.values.filter((value) => { return value.recent; }).map((value, index) => {
+                  return (<MenuItem
+                    key={`recentValue_${index}`}
+                    value={value[this.props.valueField]}
+                  >
+                    <Grid container justify="space-between">
+                      <div className={classes.dataContainer}>
+                        <span>{value[this.props.valueDisplayField]}</span>
+                      </div>
+                      {value[this.props.valueField] === this.props.value &&
+                      !this.state.valuesDropdownOpen ? null : (
+                        <div className={classes.dataContainer}>
+                          {this.props.displayThreshold ? (
+                            <span>{value[this.props.thresholdField] * 100}%</span>
+                          ) : null}
+                          {this.props.displayEdit ? (
+                            <img
+                              id={`edit_value_${value[this.props.valueField]}`}
+                              onClick={() => {
+                                this.props.onGoToUrl({
+                                  url: `${this.props.onEditRoutePrefix}${value.id}`,
+                                  isEdit: true,
+                                });
+                              }}
+                              className={classes.editValueIcon}
+                              src={pencilIcon}
+                            />
+                          ) : null}
+                        </div>
+                      )}
+                    </Grid>
+                  </MenuItem>);
+                }),
+                <MenuItem disabled className={classes.menuItemTitle} key='titleAll'>
+                  <Typography className={classes.title}>All</Typography>
+                </MenuItem>
+              ]
+            : null,
+            this.props.values.map((value, index) => (
+
+              this.props.showRecent && value.recent ? null :
               <MenuItem
                 key={`value_${index}`}
                 value={value[this.props.valueField]}
@@ -307,8 +364,9 @@ export class FilterSelect extends React.Component {
                     </div>
                   )}
                 </Grid>
-              </MenuItem>
-            ))}
+              </MenuItem>))
+          ])
+          }
       </TextField>
     );
   }
@@ -336,6 +394,7 @@ FilterSelect.propTypes = {
   error: PropTypes.bool,
   helperText: PropTypes.string,
   hideAddButton: PropTypes.bool,
+  showRecent: PropTypes.bool
 };
 
 export default injectIntl(withStyles(styles)(FilterSelect));
