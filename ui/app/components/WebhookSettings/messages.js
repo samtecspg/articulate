@@ -59,9 +59,9 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.headersTitle',
     defaultMessage: 'Headers',
   },
-  webhookTitle: {
-    id: 'app.components.WebhookSettings.webhookTitle',
-    defaultMessage: 'Webhook (Required)',
+  title: {
+    id: 'app.components.WebhookSettings.title',
+    defaultMessage: 'Webhook',
   },
   headerKey: {
     id: 'app.components.WebhookSettings.headerKey',
