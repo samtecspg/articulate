@@ -1,7 +1,11 @@
 import Boom from 'boom';
 import { ROUTE_USER_ACCOUNT } from '../../../util/constants';
+import { AUTH_ENABLED } from '../../../util/env';
 import UserValidator from '../../validators/user.validator';
 
+const auth = AUTH_ENABLED ? {
+    mode: 'optional'
+} : undefined;
 module.exports = {
     method: 'post',
     path: `/${ROUTE_USER_ACCOUNT}`,
@@ -9,9 +13,7 @@ module.exports = {
     options: {
         tags: ['api'],
         validate: UserValidator.create,
-        auth: {
-            mode: 'optional'
-        },
+        auth,
         handler: async (request) => {
 
             const { userService } = await request.services();

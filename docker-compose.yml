@@ -11,16 +11,9 @@ services:
   api:
     image: samtecspg/articulate-api:repo-head
     ports: ['${API_PORT:-7500}:7500']
-    environment:
-      - SESSION_SECRET=L}nrF{k/&MG3P:Bt*^:F6ycd}4<qAdS-n
-      - AUTH_USER=admin@articulate.com
-      - AUTH_PASSWORD=password12345
-      - AUTH_ENABLED=true
   ui:
     image: samtecspg/articulate-ui:repo-head
     ports: ['3000']
-    environment:
-      - AUTH_ENABLED=true
   rasa:
     image: samtecspg/articulate-rasa:repo-head
     ports: ['5000:5000']
