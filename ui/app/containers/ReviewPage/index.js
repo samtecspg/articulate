@@ -331,35 +331,36 @@ export class ReviewPage extends React.Component {
 
   copySayingFromDocument(userSays, saying) {
     const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
-    if (saying.categoryScore === 0) {
+    /*if (saying.categoryScore === 0) {
       onGoToUrl(`/agent/${agent.id}/dialogue?tab=sayings&userSays=${userSays}`);
     } else {
-      const { onCopySaying } = this.props.actions;
-      const category = _.find(agentCategories, {
-        categoryName: saying.category,
-      });
-      const sayingToCopy = {
-        userSays,
-        keywords: saying.keywords.map(keyword => {
-          const agentKeyword = _.find(agentKeywords, {
-            keywordName: keyword.keyword,
-          });
-          return {
-            value: keyword.value.value,
-            keyword: keyword.keyword,
-            start: keyword.start,
-            end: keyword.end,
-            keywordId: agentKeyword.id,
-          };
-        }),
-        actions:
-          saying.action.name === ''
-            ? []
-            : saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
-        categoryId: category ? category.id : null,
-      };
-      onCopySaying(sayingToCopy);
-    }
+    }*/
+
+    const { onCopySaying } = this.props.actions;
+    const category = _.find(agentCategories, {
+      categoryName: saying.category,
+    });
+    const sayingToCopy = {
+      userSays,
+      keywords: saying.keywords.map(keyword => {
+        const agentKeyword = _.find(agentKeywords, {
+          keywordName: keyword.keyword,
+        });
+        return {
+          value: keyword.value.value,
+          keyword: keyword.keyword,
+          start: keyword.start,
+          end: keyword.end,
+          keywordId: agentKeyword.id,
+        };
+      }),
+      actions:
+        saying.action.name === ''
+          ? []
+          : saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
+      categoryId: category ? category.id : null,
+    };
+    onCopySaying(sayingToCopy);
   }
 
   handleOnRequestSort(id) {

@@ -301,43 +301,41 @@ class SayingRow extends React.Component {
               <DialogContentText>
                 <FormattedMessage {...messages.copyAlert} />
               </DialogContentText>
-              {saying.categoryScore !== 0 && (
-                <TextField
-                  select
-                  value={this.state.selectedCategory}
-                  margin="normal"
-                  fullWidth
-                  onChange={evt => {
-                    evt.target.value !== '-1'
-                      ? this.setState({
-                          selectedCategory: evt.target.value,
-                          categoryError: false,
-                        })
-                      : null;
-                  }}
-                  error={this.state.categoryError}
-                  helperText={
-                    this.state.categoryError
-                      ? intl.formatMessage(messages.required)
-                      : null
-                  }
-                >
-                  {this.state.selectedCategory === '-1' ? (
-                    <MenuItem key="newSayingCategory" value="-1">
-                      {intl.formatMessage(messages.selectNewCategory)}
-                    </MenuItem>
-                  ) : null}
-                  {agentCategories.map(category => (
-                    // TODO: return the category id in the API to be able to select the category id of the saying in
-                    <MenuItem
-                      key={`${document.id}_category_${category.id}`}
-                      value={category.categoryName}
-                    >
-                      {category.categoryName}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
+              <TextField
+                select
+                value={this.state.selectedCategory}
+                margin="normal"
+                fullWidth
+                onChange={evt => {
+                  evt.target.value !== '-1'
+                    ? this.setState({
+                        selectedCategory: evt.target.value,
+                        categoryError: false,
+                      })
+                    : null;
+                }}
+                error={this.state.categoryError}
+                helperText={
+                  this.state.categoryError
+                    ? intl.formatMessage(messages.required)
+                    : null
+                }
+              >
+                {this.state.selectedCategory === '-1' ? (
+                  <MenuItem key="newSayingCategory" value="-1">
+                    {intl.formatMessage(messages.selectNewCategory)}
+                  </MenuItem>
+                ) : null}
+                {agentCategories.map(category => (
+                  // TODO: return the category id in the API to be able to select the category id of the saying in
+                  <MenuItem
+                    key={`${document.id}_category_${category.id}`}
+                    value={category.categoryName}
+                  >
+                    {category.categoryName}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
           </DialogContent>
           <DialogActions className={classes.dialogCopy}>
