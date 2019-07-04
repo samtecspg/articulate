@@ -560,7 +560,7 @@ export class ConversationBar extends React.PureComponent {
 
                 return (
                   <Grid key={`message_${index}`}>
-                    <Typography
+                    {index !== 0 && this.props.messages[index-1].author === 'User' ? <Typography
                       style={{ color: this.props.agent.uiColor }}
                       className={classes.agentName}
                     >
@@ -571,7 +571,7 @@ export class ConversationBar extends React.PureComponent {
                           })
                         : null}
                       {message.author}
-                    </Typography>
+                    </Typography> : null}
                     <Typography
                       style={{
                         border: `1px solid ${this.props.agent.uiColor}`,
