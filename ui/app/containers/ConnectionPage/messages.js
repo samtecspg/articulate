@@ -61,12 +61,12 @@ export default defineMessages({
   agentSelect: {
     id:
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.agentSelect',
-    defaultMessage: 'Agent:',
+    defaultMessage: 'First select Agent:',
   },
   selectAValue: {
     id:
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.selectAValue',
-    defaultMessage: 'Select a value',
+    defaultMessage: 'Choose Agent',
   },
   connection: {
     id: 'app.containers.ConnectionsEditPage.component.MainTab.connection',

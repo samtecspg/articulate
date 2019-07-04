@@ -9,7 +9,7 @@ import {
   Modal,
   TextField,
   MenuItem,
-  Icon,
+  InputLabel,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
@@ -20,6 +20,8 @@ import messages from '../messages';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import DeleteFooter from '../../../components/DeleteFooter';
 import actionsJSON from './actions.json';
+import ChannelCard from './ChannelCard';
+import gravatars from '../../../components/Gravatar';
 
 const styles = {
   headerContainer: {
@@ -92,6 +94,19 @@ const styles = {
   disabledFields: {
     backgroundColor: '#eaeaea',
   },
+  cardsLabel: {
+    marginTop: '20px',
+    marginBottom: '10px'
+  },
+  agentIcon: {
+    marginRight: '5px',
+    height: '20px',
+  },
+  agentName: {
+    position: 'relative',
+    bottom: '3px',
+    fontWeight: '500',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -146,6 +161,18 @@ class ConnectionForm extends React.Component {
     });
   };
 
+  fillEmptyCards() {
+    const numberOfPrebuiltChannels = Object.keys(
+      this.props.channels,
+    ).length;
+    const numberOfEmptyCardsNeeded = 4 - (numberOfPrebuiltChannels % 4);
+    const emptyCards = [];
+    for (let index = 0; index < numberOfEmptyCardsNeeded; index++) {
+      emptyCards.push(<ChannelCard key={`empty_${index}`} isEmpty />);
+    }
+    return emptyCards;
+  }
+
   render() {
     const { classes, intl, connection, channels, agents } = this.props;
 
@@ -198,59 +225,8 @@ class ConnectionForm extends React.Component {
               item
               xs={12}
             >
-              <Grid container spacing={24} item xs={12}>
-                <Grid item md={6} sm={12} xs={12}>
-                  <TextField
-                    select
-                    id="channel"
-                    value={connection.channel || 'select'}
-                    label={
-                      <span>
-                        {intl.formatMessage(messages.channelSelect)}{' '}
-                        {connection.channel &&
-                        channels[connection.channel].documentation ? (
-                          <a
-                            target="_blank"
-                            href={channels[connection.channel].documentation}
-                          >
-                            <Icon style={{ position: 'relative', top: '5px' }}>
-                              info
-                            </Icon>
-                          </a>
-                        ) : null}
-                      </span>
-                    }
-                    onChange={evt => {
-                      this.props.onChangeConnectionData(
-                        'channel',
-                        evt.target.value === 'select' ? '' : evt.target.value,
-                      );
-                    }}
-                    margin="normal"
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    helperText={intl.formatMessage(messages.requiredField)}
-                    error={this.props.errorState.channel}
-                    disabled={!this.props.newConnection}
-                    inputProps={{
-                      className: this.props.newConnection
-                        ? ''
-                        : classes.disabledFields,
-                    }}
-                  >
-                    <MenuItem key="select" value="select">
-                      <FormattedMessage {...messages.selectAValue} />
-                    </MenuItem>
-                    {Object.keys(channels).map(channel => (
-                      <MenuItem key={channel} value={channel}>
-                        {channels[channel].name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item md={6} sm={12} xs={12}>
+              <Grid container item xs={12}>
+                <Grid item md={12} sm={12} xs={12}>
                   <TextField
                     select
                     id="agent"
@@ -281,10 +257,43 @@ class ConnectionForm extends React.Component {
                     </MenuItem>
                     {agents.map(agent => (
                       <MenuItem key={agent.id} value={agent.id}>
-                        {agent.agentName}
+                        <span>
+                          {gravatars[agent.gravatar - 1]({
+                            color: agent.uiColor,
+                            className: classes.agentIcon,
+                          })}
+                          <span style={{
+                            color: agent.uiColor,
+                          }} className={classes.agentName}>
+                            {agent.agentName}
+                          </span>
+                        </span>
                       </MenuItem>
                     ))}
                   </TextField>
+                </Grid>
+                <InputLabel className={classes.cardsLabel} shrink>Pick a chat platform:</InputLabel>
+                <Grid container spacing={16} justify="space-between" item md={12} sm={12} xs={12}>
+                  {Object.keys(channels).map(
+                    (channel, index) => (
+                      <ChannelCard
+                        disabled={!connection.agent || !this.props.newConnection}
+                        selected={channel === connection.channel}
+                        channelKey={channel}
+                        key={`channel_${index}`}
+                        channel={channels[channel]}
+                        onClick={() => {
+                          if (connection.agent && this.props.newConnection){
+                            this.props.onChangeConnectionData(
+                              'channel',
+                              channel,
+                            );
+                          }
+                        }}
+                      />
+                    ),
+                  )}
+                  {this.fillEmptyCards()}
                 </Grid>
               </Grid>
               {!this.props.newConnection ? (connection.channel !== 'web-demo' ? (
