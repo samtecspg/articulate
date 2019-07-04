@@ -21,10 +21,10 @@ export default defineMessages({
   },
   recent: {
     id: 'app.components.FilterSelect.recent',
-    defaultMessage: 'Recent',
+    defaultMessage: 'Recent:',
   },
   all: {
     id: 'app.components.FilterSelect.all',
-    defaultMessage: 'All',
+    defaultMessage: 'All:',
   },
 });

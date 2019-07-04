@@ -80,11 +80,12 @@ const styles = {
     '&:hover': {
       backgroundColor: 'transparent',
     },
-    cursor: 'default'
+    cursor: 'default',
+    opacity: 1
   },
   title: {
-    fontSize: '18px',
-    fontWeight: 'bold'
+    fontSize: '12px',
+    fontWeight: '600',
   }
 };
 
