@@ -1,4 +1,5 @@
 const colors = {
+  'chat-widget': '#01aaea',
   'google-home': '#4285F4',
   facebook: '#4489ff',
   rocketchat: '#bc272c',

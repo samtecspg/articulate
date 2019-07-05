@@ -209,7 +209,6 @@ import {
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
   DELETE_CONNECTION_SUCCESS,
-  LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOAD_SESSION,
   LOAD_SESSION_SUCCESS,
@@ -2284,14 +2283,25 @@ function appReducer(state = initialState, action) {
 
     /* Connection */
     case CHANGE_CONNECTION_DATA:
+      const details = action.payload.field === 'channel' ? {} : Immutable.asMutable(state.connection.details, { deep: true });
+      if (action.payload.value === 'chat-widget' || state.connection.channel === 'chat-widget'){
+        const connectionAgent = action.payload.field === 'agent' ? action.payload.value : state.connection.agent;
+        const agentData = state.agents.filter((agent) => {
+
+          return parseInt(agent.id) === connectionAgent;
+        })[0];
+        details.title = agentData.agentName;
+        details.subtitle = agentData.description;
+      }
       if (action.payload.field === 'channel') {
         return state
           .setIn(['connection', action.payload.field], action.payload.value)
-          .setIn(['connection', 'details'], {})
+          .setIn(['connection', 'details'], details)
           .set('connectionTouched', true);
       } else {
         return state
           .setIn(['connection', action.payload.field], action.payload.value)
+          .setIn(['connection', 'details'], details)
           .set('connectionTouched', true);
       }
     case CREATE_CONNECTION:

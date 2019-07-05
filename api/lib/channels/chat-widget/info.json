@@ -8,7 +8,7 @@
             "description" : "Title of the widget window",
             "type": "string"
         },
-        "subTitle": {
+        "subtitle": {
             "displayName": "Widget subtitle",
             "description" : "Subtitle of the widget window",
             "type": "string"

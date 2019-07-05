@@ -126,6 +126,26 @@ export default defineMessages({
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.shareUrl',
     defaultMessage: 'Link to share:',
   },
+  socketUrl: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.socketUrl',
+    defaultMessage: 'Socket URL:',
+  },
+  socketPath: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.socketPath',
+    defaultMessage: 'Socket path:',
+  },
+  converseUrl: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.converseUrl',
+    defaultMessage: 'Converse URL:',
+  },
+  copySnippet: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.copySnippet',
+    defaultMessage: 'Copy and paste this conde into a new html file to test your widget:',
+  },
   verifyToken: {
     id:
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.verifyToken',

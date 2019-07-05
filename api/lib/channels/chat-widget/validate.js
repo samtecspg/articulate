@@ -3,8 +3,9 @@ import Joi from 'joi';
 module.exports = {
     create: ( details ) => {
         const schema = {
-            messageTitle: Joi.string().required(),
-            message: Joi.string().required(),
+            title: Joi.string().required(),
+            subtitle: Joi.string().required(),
+            senderPlaceHolder: Joi.string().required(),
             outgoingMessages: Joi.boolean(),
             waitTimeBetweenMessages: Joi.number()
         };

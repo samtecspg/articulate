@@ -10,6 +10,7 @@ import {
   TextField,
   MenuItem,
   InputLabel,
+  FormControl,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
@@ -22,6 +23,12 @@ import DeleteFooter from '../../../components/DeleteFooter';
 import actionsJSON from './actions.json';
 import ChannelCard from './ChannelCard';
 import gravatars from '../../../components/Gravatar';
+
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/html';
+import 'brace/theme/terminal';
 
 const styles = {
   headerContainer: {
@@ -107,6 +114,12 @@ const styles = {
     bottom: '3px',
     fontWeight: '500',
   },
+  editorLabel: {
+    marginTop: '20px',
+  },
+  editor: {
+    marginTop: '30px',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -296,17 +309,17 @@ class ConnectionForm extends React.Component {
                   {this.fillEmptyCards()}
                 </Grid>
               </Grid>
-              {!this.props.newConnection ? (connection.channel !== 'web-demo' ? (
+              {!this.props.newConnection ? (connection.channel === 'web-demo' ? 
                 <Grid container item xs={12}>
                   <Grid item xs={12}>
                     <TextField
-                      id="callbackUrl"
+                      id="shareLink"
                       value={`${window.location.protocol}//${
                         window.location.hostname
-                      }${PROXY_ROUTE_PREFIX}/connection/${
+                      }${window.location.port === 80 ? null : `:${window.location.port}`}/demo/${
                         connection.id
-                      }/external`}
-                      label={intl.formatMessage(messages.callbackUrl)}
+                      }`}
+                      label={intl.formatMessage(messages.shareUrl)}
                       margin="normal"
                       fullWidth
                       InputLabelProps={{
@@ -318,12 +331,16 @@ class ConnectionForm extends React.Component {
                       }}
                     />
                   </Grid>
-                  {connection.channel === 'facebook' ? (
+                </Grid> : 
+                (connection.channel === 'chat-widget' ?
+                  <Grid container item xs={12}>
                     <Grid item xs={12}>
                       <TextField
-                        id="verifyToken"
-                        value={connection.details.verifyToken}
-                        label={intl.formatMessage(messages.verifyToken)}
+                        id="socketUrl"
+                        value={`ws://${
+                          window.location.hostname
+                        }:7500`}
+                        label={intl.formatMessage(messages.socketUrl)}
                         margin="normal"
                         fullWidth
                         InputLabelProps={{
@@ -335,48 +352,155 @@ class ConnectionForm extends React.Component {
                         }}
                       />
                     </Grid>
-                  ) : null}
-                  {connection.channel === 'google-home' ? (
                     <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        href={`data: text/json;charset=utf-8,${encodeURIComponent(
-                          JSON.stringify(this.state.actionExport, null, 2),
-                        )}`}
-                        download="actions.json"
-                        style={{
-                          marginTop: '20px',
+                      <TextField
+                        id="socketPath"
+                        value={`/connection/${
+                          connection.id
+                        }/external`}
+                        label={intl.formatMessage(messages.socketPath)}
+                        margin="normal"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
                         }}
-                      >
-                        <FormattedMessage {...messages.download} />
-                      </Button>
+                        disabled
+                        inputProps={{
+                          className: classes.disabledFields,
+                        }}
+                      />
                     </Grid>
-                  ) : null}
-                </Grid>
-              ) : 
-              <Grid container item xs={12}>
-                <Grid item xs={12}>
-                  <TextField
-                    id="shareLink"
-                    value={`${window.location.protocol}//${
-                      window.location.hostname
-                    }${window.location.port === 80 ? null : `:${window.location.port}`}/demo/${
-                      connection.id
-                    }`}
-                    label={intl.formatMessage(messages.shareUrl)}
-                    margin="normal"
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    disabled
-                    inputProps={{
-                      className: classes.disabledFields,
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              ) : null}
+                    <Grid item xs={12}>
+                      <TextField
+                        id="converseUrl"
+                        value={`${window.location.protocol}//${
+                          window.location.hostname
+                        }${PROXY_ROUTE_PREFIX}/connection/${
+                          connection.id
+                        }/external`}
+                        label={intl.formatMessage(messages.converseUrl)}
+                        margin="normal"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        disabled
+                        inputProps={{
+                          className: classes.disabledFields,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormControl className={classes.editorLabel} fullWidth>
+                        <InputLabel shrink>{intl.formatMessage(messages.copySnippet)}</InputLabel>
+                      </FormControl>
+                      <AceEditor
+                        className={classes.editor}
+                        width="100%"
+                        height="550px"
+                        mode="html"
+                        theme="terminal"
+                        name="snippet"
+                        readOnly={true}
+                        fontSize={14}
+                        showPrintMargin
+                        showGutter
+                        highlightActiveLine
+                        value={`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
+    <title>Dev Widget</title>
+    <link href="https://storage.cloud.google.com/articulate-webchat/articulate-webchat-0.0.1.css" rel="stylesheet" type="text/css">
+    <script src="https://storage.cloud.google.com/articulate-webchat/articulate-webchat-0.0.1.js"></script>
+  </head>
+  <body>
+    <div id="webchat"></div>
+    <script>
+      WebChat.default.init({
+        selector: '#webchat',
+        socketUrl: 'ws://${window.location.hostname}:7500',
+        socketPath: '/connection/${connection.id}/external',
+        converseUrl: '${window.location.protocol}//${window.location.hostname}${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external',
+        title: '${connection.details.title}',
+        subtitle: '${connection.details.subtitle}',
+        senderPlaceHolder: 'Type a message...',
+        titleAvatar: 'https://static.thenounproject.com/png/815603-200.png',
+        profileAvatar: 'https://static.thenounproject.com/png/815603-200.png'
+      });
+    </script>
+  </body>
+</html>                                              
+                        `}
+                        setOptions={{
+                          useWorker: false,
+                          showLineNumbers: true,
+                          tabSize: 2,
+                        }}
+                        editorProps={{
+                          $blockScrolling: Infinity,
+                        }}
+                      />
+                    </Grid>
+                  </Grid> :
+                  (<Grid container item xs={12}>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="callbackUrl"
+                        value={`${window.location.protocol}//${
+                          window.location.hostname
+                        }${PROXY_ROUTE_PREFIX}/connection/${
+                          connection.id
+                        }/external`}
+                        label={intl.formatMessage(messages.callbackUrl)}
+                        margin="normal"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        disabled
+                        inputProps={{
+                          className: classes.disabledFields,
+                        }}
+                      />
+                    </Grid>
+                    {connection.channel === 'facebook' ? (
+                      <Grid item xs={12}>
+                        <TextField
+                          id="verifyToken"
+                          value={connection.details.verifyToken}
+                          label={intl.formatMessage(messages.verifyToken)}
+                          margin="normal"
+                          fullWidth
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          disabled
+                          inputProps={{
+                            className: classes.disabledFields,
+                          }}
+                        />
+                      </Grid>
+                    ) : null}
+                    {connection.channel === 'google-home' ? (
+                      <Grid item xs={12}>
+                        <Button
+                          variant="contained"
+                          href={`data: text/json;charset=utf-8,${encodeURIComponent(
+                            JSON.stringify(this.state.actionExport, null, 2),
+                          )}`}
+                          download="actions.json"
+                          style={{
+                            marginTop: '20px',
+                          }}
+                        >
+                          <FormattedMessage {...messages.download} />
+                        </Button>
+                      </Grid>
+                    ) : null}
+                  </Grid>
+                ))) : null}
             </Grid>
           </Grid>
         </Grid>

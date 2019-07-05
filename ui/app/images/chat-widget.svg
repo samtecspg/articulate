@@ -1,0 +1,33 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 55">
+    <defs>
+      <style>
+        .cls-1,
+        .cls-3 {
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke-width: 1.5px;
+        }
+
+        .cls-1 {
+          stroke: #01aaea;
+        }
+
+        .cls-2 {
+          fill: #01aaea;
+        }
+
+        .cls-3 {
+          stroke: #fff;
+        }
+      </style>
+    </defs>
+    <title>widget-v.2</title>
+    <path class="cls-1" d="M1.12,37.61V53.73l9.28-9.28H51.73a2.15,2.15,0,0,0,2.15-2.15V9.2a2.15,2.15,0,0,0-2.15-2.15H3.27A2.15,2.15,0,0,0,1.12,9.2V42.3" />
+    <circle class="cls-2" cx="17.58" cy="26.37" r="3.38" />
+    <circle class="cls-2" cx="27.9" cy="26.37" r="3.38" />
+    <circle class="cls-2" cx="38.22" cy="26.37" r="3.38" />
+    <circle class="cls-2" cx="11.63" cy="7.05" r="6.28" />
+    <line class="cls-3" x1="8.91" y1="7.1" x2="14.36" y2="7.1" />
+    <line class="cls-3" x1="11.63" y1="9.82" x2="11.63" y2="4.38" />
+</svg>

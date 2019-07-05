@@ -5,7 +5,8 @@ module.exports = async function ({ connection, request, h }) {
   const { agentService, channelService } = request.services();
 
   const event = request.payload;
-  const sessionId = await channelService.hash({ connection, event });
+  event.server = request.server;
+  const sessionId = event.sessionId;
 
   try {
     await agentService.converse({ 
@@ -21,6 +22,10 @@ module.exports = async function ({ connection, request, h }) {
         }
       }
     });
+
+    if (!connection.details.outgoingMessages){
+      channelService.reply({ connection, event, response});
+    }
   
     return h.response().code(200);
   }
