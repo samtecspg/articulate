@@ -651,11 +651,7 @@ export class ConversationBar extends React.PureComponent {
                           sessions = '{}';
                         }
                         sessions = JSON.parse(sessions);
-                        if (
-                          !sessions[this.props.agent.agentName] ||
-                          sessions[this.props.agent.agentName].sessions
-                            .length === 0
-                        ) {
+                        if (!sessions[this.props.agent.agentName] || sessions[this.props.agent.agentName].sessions.length === 0) {
                           sessions[this.props.agent.agentName] = {
                             sessionId: '',
                             sessions: [],
@@ -675,19 +671,17 @@ export class ConversationBar extends React.PureComponent {
                             'sessions',
                             JSON.stringify(sessions),
                           );
-                          this.props.onLoadSessionId(newSessionId, true);
 
                           this.props.onSendMessage(
                             evt.target.value,
                             newSessionId,
+                            true
                           );
                           this.setState({
                             userMessage: '',
                           });
                         } else {
-                          this.props.onShowWarning(
-                            intl.formatMessage(messages.selectSession),
-                          );
+                          this.props.onShowWarning('selectSession');
                         }
                       }
                     } else {
@@ -768,13 +762,13 @@ function mapDispatchToProps(dispatch) {
     onCloseNotification: index => {
       dispatch(closeNotification(index));
     },
-    onSendMessage: (message, sessionId) => {
+    onSendMessage: (message, sessionId, newSession) => {
       dispatch(
         sendMessage({
           author: 'User',
           message,
           sessionId,
-        }),
+        }, newSession),
       );
     },
     onLoadSettings: () => {

@@ -34,6 +34,7 @@ import {
   loadServerInfoError,
   updateSettingsError,
   updateSettingSuccess,
+  loadSessionSuccess,
 } from './actions';
 import {
   makeSelectAgent,
@@ -46,7 +47,7 @@ export function* postConverse(payload) {
   const systemSessionId = yield select(makeSelectSessionId());
 
   if (agent.id) {
-    const { api, message } = payload;
+    const { api, message, newSession } = payload;
     if (message.sessionId || systemSessionId) {
       const sessionId = systemSessionId || message.sessionId;
       try {
@@ -66,15 +67,9 @@ export function* postConverse(payload) {
           postPayload,
         );
 
-        /*yield put(
-          respondMessage({
-            author: agent.agentName,
-            docId: response.docId,
-            message: response.textResponse,
-            conversationStateObject: response.conversationStateObject,
-          }),
-        );
-        yield put(storeSourceData({ ...response.conversationStateObject }));*/
+        if (newSession){
+          yield put(loadSessionSuccess(sessionId));
+        }
       } catch (err) {
         yield put(showWarning('errorCallingArticulate'));
       }
