@@ -123,9 +123,6 @@ const styles = {
     marginTop: '20px',
   },
   userMessage: {
-    '&:hover': {
-      boxShadow: '0 2px 10px 0px #000000',
-    },
     color: '#fff',
     backgroundColor: '#00bd6f',
     borderRadius: '3px',
@@ -145,9 +142,6 @@ const styles = {
     marginLeft: '60px',
   },
   agentMessage: {
-    '&:hover': {
-      boxShadow: '0 2px 10px 0px #000000',
-    },
     color: '#4A4A4A',
     borderRadius: '3px',
     padding: '8px',
