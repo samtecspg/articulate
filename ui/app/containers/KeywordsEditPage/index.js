@@ -410,8 +410,8 @@ function mapDispatchToProps(dispatch) {
     onChangeModifierData: (modifierIndex, field, value) => {
       dispatch(changeModifierData({ modifierIndex, field, value }));
     },
-    onAddModifierSaying: (modifierIndex, newSaying) => {
-      dispatch(addModifierSaying(modifierIndex, newSaying));
+    onAddModifierSaying: (modifierIndex, newSaying, keyword) => {
+      dispatch(addModifierSaying(modifierIndex, newSaying, keyword));
     },
     onDeleteModifierSaying: (modifierIndex, sayingIndex) => {
       dispatch(deleteModifierSaying({ modifierIndex, sayingIndex }));

@@ -1741,11 +1741,12 @@ export function changeModifierData(payload) {
   };
 }
 
-export function addModifierSaying(modifierIndex, newSaying) {
+export function addModifierSaying(modifierIndex, newSaying, keyword) {
   return {
     type: ADD_MODIFIER_SAYING,
     modifierIndex,
     newSaying,
+    keyword,
     apiCall: true,
   };
 }
