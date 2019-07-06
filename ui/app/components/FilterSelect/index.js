@@ -33,6 +33,7 @@ const styles = {
     borderBottom: '1px solid #4e4e4e',
     position: 'relative',
     bottom: '8px',
+    cursor: 'default'
   },
   searchValueContainerWithoutHover: {
     '&:hover': {
@@ -43,11 +44,26 @@ const styles = {
     borderBottom: '1px solid #4e4e4e',
     position: 'relative',
     bottom: '8px',
+    cursor: 'default',
+    padding: '14px'
   },
-  searchValueField: {
+  searchValueFieldHovered: {
+    backgroundColor: '#d5d5d5',
     width: '200px',
     paddingLeft: '5px',
     fontSize: '14px',
+    margin: '0px 10px',
+    borderRadius: '5px'
+  },
+  searchValueField: {
+    '&:hover': {
+      backgroundColor: '#d5d5d5'
+    },
+    width: '200px',
+    paddingLeft: '5px',
+    fontSize: '14px',
+    margin: '0px 10px',
+    borderRadius: '5px'
   },
   clearIconContainer: {
     display: 'inline',
@@ -95,7 +111,7 @@ export class FilterSelect extends React.Component {
     valuesDropdownOpen: false,
     filterInput: '',
     filteringValues: false,
-    buttonHovered: false,
+    searchInputHovered: false,
   };
 
   render() {
@@ -152,11 +168,7 @@ export class FilterSelect extends React.Component {
           </MenuItem>
         )}
         <MenuItem
-          className={
-            this.state.buttonHovered
-              ? classes.searchValueContainerWithoutHover
-              : classes.searchValueContainer
-          }
+          className={classes.searchValueContainerWithoutHover}
           value="filter"
         >
           <Grid
@@ -164,7 +176,14 @@ export class FilterSelect extends React.Component {
             justify={this.props.hideAddButton ? 'flex-start' : 'flex-end'}
             style={this.state.filterInput ? { position: 'absolute' } : {}}
           >
-            <img src={searchIcon} />
+            <img 
+              onMouseEnter={() => {
+                this.setState({ searchInputHovered: true });
+              }}
+              onMouseLeave={() => {
+                this.setState({ searchInputHovered: false });
+              }}
+            src={searchIcon} />
             <Input
               inputProps={{
                 style: {
@@ -177,7 +196,7 @@ export class FilterSelect extends React.Component {
                 return 0;
               }}
               disableUnderline
-              className={classes.searchValueField}
+              className={this.state.searchInputHovered ? classes.searchValueFieldHovered : classes.searchValueField}
               onChange={evt => {
                 this.setState({
                   filteringValues: evt.target.value.length > 0,
@@ -209,12 +228,6 @@ export class FilterSelect extends React.Component {
                 }}
                 className={classes.addValueButton}
                 variant="contained"
-                onMouseEnter={() => {
-                  this.setState({ buttonHovered: true });
-                }}
-                onMouseLeave={() => {
-                  this.setState({ buttonHovered: false });
-                }}
               >
                 <FormattedMessage {...messages.add} />
               </Button>
@@ -275,12 +288,6 @@ export class FilterSelect extends React.Component {
                       }}
                       className={classes.addValueButton}
                       variant="contained"
-                      onMouseEnter={() => {
-                        this.setState({ buttonHovered: true });
-                      }}
-                      onMouseLeave={() => {
-                        this.setState({ buttonHovered: false });
-                      }}
                     >
                       <FormattedMessage {...messages.add} />
                     </Button>
