@@ -7,6 +7,14 @@
       "text": "English"
     },
     {
+      "value": "fr",
+      "text": "Français"
+    },
+    {
+      "value": "pt",
+      "text": "Portugues"
+    },
+    {
       "value": "es",
       "text": "Español"
     }
