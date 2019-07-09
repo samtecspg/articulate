@@ -39,7 +39,7 @@ const HANDLER = async (request, h) => {
         });
 
         await request.cookieAuth.set(credential);
-        return h.redirect('/');
+        return h.redirect('/Login');
     }
     catch (err) {
         console.error(err);
