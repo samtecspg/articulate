@@ -359,5 +359,9 @@
   "app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp":"Si vous activez cette option, les valeurs de vos mots-clés et synonymes seront utilisés pour générer des exemples de données de formation en substituant des valeurs surlignées dans vos dialogues.",
   "app.containers.ConnectionsEditPage.component.DetailsForm.detailsFormTitle":"Details",
   "app.containers.ConnectionsEditPage.component.DetailsForm.detailsFormDescription":"Ces détails sont obligatoires pour la connexion que vous créez.",
-  "app.containers.ConnectionsEditPage.component.DetailsForm.selectAChanelFirst":"Veuillez d'abord sélectionner un canal avant de remplir les détails."
+  "app.containers.ConnectionsEditPage.component.DetailsForm.selectAChanelFirst":"Veuillez d'abord sélectionner un canal avant de remplir les détails.",
+  "app.containers.UserAuth.username":"Nom d'utilisateur",
+  "app.containers.UserAuth.password":"Mot de passe",
+  "app.containers.UserAuth.name":"Prenom",
+  "app.containers.UserAuth.lastName":"Nom"
 }
