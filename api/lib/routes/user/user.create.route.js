@@ -20,7 +20,9 @@ module.exports = {
             try {
                 const { identity, ...rest } = request.payload;
                 const user = await userService.create({ data: rest, identity, filterSensitiveData: true });
-                await request.cookieAuth.set({ id: user.id, name: user.name, email: user.email });
+                if(AUTH_ENABLED){
+                    await request.cookieAuth.set({ id: user.id, name: user.name, email: user.email });
+                }
                 return user;
             }
             catch ({ message, statusCode }) {
