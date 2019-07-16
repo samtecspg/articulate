@@ -3,6 +3,7 @@ import CreateFrame from './context/context.create-frame.service';
 import Create from './context/context.create.service';
 import UpdateFrameBySessionIdAndFrameId from './context/context.update-frame-by-session-and-frame.service';
 import FindBySession from './context/context.find-by-session.service';
+import FindOrCreateSession from './context/context.find-or-create-session.service';
 import FindDocsBySession from './context/context.find-docs-by-session.service';
 import FindFramesBySession from './context/context.find-frames-by-session.service';
 import FindFrameBySessionIdAndFrameId from './context/context.find-frame-by-session-and-frame.service';
@@ -36,6 +37,11 @@ module.exports = class ContextService extends Schmervice.Service {
     async findBySession() {
 
         return await FindBySession.apply(this, arguments);
+    }
+
+    async findOrCreateSession() {
+
+        return await FindOrCreateSession.apply(this, arguments);
     }
 
     async findDocsBySession() {
