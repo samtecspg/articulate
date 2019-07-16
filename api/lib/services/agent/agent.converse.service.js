@@ -163,16 +163,15 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             */
             if (CSO.recognizedModifiers.length > 0){
     
-                CSO.recognizedModifiers.forEach(async (recognizedModifierName) => {
-    
+                for (const recognizedModifierName of CSO.recognizedModifiers){
                     if (CSO.context.actionQueue.length > 0){
 
                         const recognizedModifier = getModifierData({ recognizedModifierName, CSO });
-                        const actionToModify = getActionToModify({ recognizedModifier, CSO });
+                        CSO.actionToModify = getActionToModify({ recognizedModifier, CSO });
     
-                        if (actionToModify && actionToModify.actionData.slots && actionToModify.actionData.slots.length > 0){
-                            CSO.currentAction = CSO.context.actionQueue[actionToModify.index];
-                            agentService.converseFillActionSlots({ actionData: actionToModify.actionData, CSO, recognizedModifier });
+                        if (CSO.actionToModify && CSO.actionToModify.actionData.slots && CSO.actionToModify.actionData.slots.length > 0){
+                            CSO.currentAction = CSO.context.actionQueue[CSO.actionToModify.index];
+                            await agentService.converseFillActionSlots({ actionData: CSO.actionToModify.actionData, CSO, recognizedModifier });
                         }
                         else {
                             //Return fallback because this means user send a modifier for an action that doesn't exists in the queue
@@ -185,20 +184,27 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         const fallback = await agentService.converseGenerateResponseFallback({ CSO });
                         await agentService.converseSendResponseToUbiquity({ CSO, response: fallback });
                     }
-                });
+                }
             }
     
             /*
             * We are going to concat the recognized actions to the action queue of the context.
             * If a modifier was recognized, then nothing will be concatenated as we don't recognize modifiers
             * and actions at the same time
+            * The actions to concatenate are going to be inserted right before the oldest unfulfilled action
+            * So we are going to generate the response for the new action and we will recover the unfulfilled action later
             */
+            let newActionIndex = _.findIndex(CSO.context.actionQueue, (action) => {
+
+                return !action.fulfilled;
+            });
+
             CSO.recognizedActions.forEach((recognizedAction) => {
-    
-                CSO.context.actionQueue.push({
+                CSO.context.actionQueue.splice(newActionIndex, 0, {
                     name: recognizedAction,
                     fulfilled: false
-                })
+                });
+                newActionIndex++;
             });
         
             /*
@@ -213,7 +219,17 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     const actionData = getActionData({ actionName: action.name, CSO });
                     CSO.currentAction = CSO.context.actionQueue[CSO.actionIndex];
     
-                    if (actionData.slots && actionData.slots.length > 0){
+                    /*
+                    * We include CSO.recognizedModifiers.length === 0 to avoid duplicate filling if a modifier was recognized
+                    * If in the future we enable action + modifier model we will need another strategy
+                    */
+                    if (actionData.slots && 
+                        actionData.slots.length > 0 && 
+                        (CSO.recognizedModifiers.length === 0 || 
+                            CSO.recognizedModifiers.length > 0 && 
+                            CSO.actionToModify.actionData.actionName !== actionData.actionName
+                        )
+                    ){
                         await agentService.converseFillActionSlots({ actionData, CSO });
                     }
     

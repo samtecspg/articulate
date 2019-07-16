@@ -61,7 +61,6 @@ export function* getSession(payload) {
 
     yield put(loadSessionSuccess(sessionId));
   } catch (err) {
-    console.log(err);
     yield put(loadSessionError(err));
   }
 }
