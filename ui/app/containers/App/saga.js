@@ -88,6 +88,7 @@ export function* deleteSession(payload) {
       const patchPayload = {
         actionQueue: [],
         savedSlots: {},
+        docIds: []
       };
       yield call(
         api.patch,

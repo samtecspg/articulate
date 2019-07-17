@@ -351,11 +351,14 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         }
 
                         if (response.webhook) {
-                            response.webhook.response = JSON.stringify(response.webhook.response);
                             CSO.processedWebhooks.push(response.webhook);
                         }
 
                         CSO.processedResponses.push(finalResponse);
+
+                        if (CSO.context.docIds.indexOf(CSO.docId) === -1){
+                            CSO.context.docIds.push(CSO.docId);
+                        }
 
                         converseResult = {
                             ...finalResponse,
@@ -381,10 +384,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                                 converseResult: fullConverseResult
                             }
                         });
-
-                        if (CSO.context.docIds.indexOf(converseResult.docId) === -1){
-                            CSO.context.docIds.push(converseResult.docId);
-                        }
             
                         await contextService.update({
                             sessionId: CSO.context.sessionId,

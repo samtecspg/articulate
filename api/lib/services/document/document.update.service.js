@@ -16,6 +16,13 @@ module.exports = async function ({ id, data }) {
             ...{ id: undefined },
             ...data
         };
+        if (merged.converseResult && merged.converseResult.CSO && merged.converseResult.CSO.webhooks){
+            merged.converseResult.CSO.webhooks = merged.converseResult.CSO.webhooks.map((webhook) => {
+                        
+                webhook.response = JSON.stringify(webhook.response);
+                return webhook;
+            });
+        }
         await DocumentModel.updateInstance({ id, data: merged });
         const agentDocuments = await documentService.findByAgentId({ agentId: original.agent_id });
         this.server.publish(`/${ROUTE_AGENT}/${original.agent_id}/${ROUTE_DOCUMENT}`, agentDocuments);
