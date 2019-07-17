@@ -251,7 +251,7 @@ export class ConversationBar extends React.PureComponent {
           socketClientConnected: true,
         });
 
-        const handler = response => {
+        const handler = (response) => {
           if (response) {
             this.props.onRespondMessage({
               author: this.props.agent.agentName,

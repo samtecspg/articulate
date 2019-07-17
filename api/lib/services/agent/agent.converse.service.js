@@ -61,7 +61,8 @@ const getActionToModify = ({ recognizedModifier, CSO }) => {
         if (isCandidate){
             return {
                 actionData,
-                index: actionIndex
+                index: actionIndex,
+                fulfilled: action.fulfilled
             }
         }
         return null;
