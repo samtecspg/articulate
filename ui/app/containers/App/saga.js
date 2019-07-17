@@ -4,7 +4,6 @@ import {
   ROUTE_AGENT,
   ROUTE_CONTEXT,
   ROUTE_CONVERSE,
-  ROUTE_FRAME,
   ROUTE_POST_FORMAT,
   ROUTE_TRAIN,
   ROUTE_WEBHOOK,
@@ -86,10 +85,6 @@ export function* deleteSession(payload) {
   if (sessionId) {
     try {
       const { api } = payload;
-      yield call(
-        api.delete,
-        toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_FRAME]),
-      );
       const patchPayload = {
         actionQueue: [],
         savedSlots: {},

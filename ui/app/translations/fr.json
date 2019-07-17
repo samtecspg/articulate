@@ -3,7 +3,7 @@
   "app.components.AppHeader.agentsButton": "Agents",
   "app.components.AppHeader.openChatButton": "Chat ouvert",
   "app.components.CodeModal.context": "Contexte",
-  "app.components.CodeModal.currentFrame": "Cadre actuel",
+  "app.components.CodeModal.currentAction": "Action actuel",
   "app.components.CodeModal.rasaParseResults": "Résultats de l'analyse Rasa",
   "app.components.CodeModal.webhooks": "Réponses Webhook",
   "app.components.ConversationBar.clearAll": "Effacer tout",

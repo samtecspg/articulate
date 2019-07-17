@@ -12,6 +12,30 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
+//Reduce the remaining life of the saved slots
+const updateLifespanOfSlots = ({ CSO }) => {
+    Object.keys(CSO.context.savedSlots).forEach(slot => {
+        const savedSlot = CSO.context.savedSlots[slot];
+        if (savedSlot.remainingLife > -1){
+            if (savedSlot.remainingLife > 0){
+                //1 is the shortest value of life, after that it is set to null as 0 is infinity
+                if (savedSlot.remainingLife === 1){
+                    savedSlot.remainingLife = null;
+                }
+                else {
+                    savedSlot.remainingLife--;
+                }
+            }
+        }
+    });
+    //Removes all the slots that doesn't have a remaining life
+    Object.keys(CSO.context.savedSlots).forEach((slot) => {
+        if (!CSO.context.savedSlots[slot].remainingLife){
+            delete CSO.context.savedSlots[slot];
+        };
+    });
+};
+
 const getAgentModifiers = ({ agentKeywords }) => {
 
     const agentModifiers = _.flatten(_.map(agentKeywords, (keyword) => {
@@ -126,7 +150,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         }
     
         if (CSO.rasaResult.action && CSO.rasaResult.action.name){
-    
+            
+            updateLifespanOfSlots({ CSO });
             /*
             * This is the result action of RASA it could be a multiaction, a single action or a modifier
             * We don't support action + modifiers recognition, we can just do single action, 
