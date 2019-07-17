@@ -7,7 +7,6 @@ import {
     PARAM_DOCUMENT_RASA_RESULTS,
     RASA_INTENT_SPLIT_SYMBOL,
     CSO_CATEGORIES,
-    MODEL_POST_FORMAT,
     CSO_TIMEZONE_DEFAULT
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -107,6 +106,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         const { agentService, contextService, globalService, documentService } = await this.server.services();
     
         const CSO = {
+            debug,
             text,
             sessionId,
             sendMessage: true,
@@ -201,14 +201,14 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         }
                         else {
                             //Return fallback because this means user send a modifier for an action that doesn't exists in the queue
-                            const fallback = await agentService.converseGenerateResponseFallback({ CSO });
-                            await agentService.converseSendResponseToUbiquity({ CSO, response: fallback });
+                            CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                            await agentService.converseSendResponseToUbiquity({ CSO });
                         }
                     }
                     else {
                         //Return fallback because this means user started the conversation with a modifier
-                        const fallback = await agentService.converseGenerateResponseFallback({ CSO });
-                        await agentService.converseSendResponseToUbiquity({ CSO, response: fallback });
+                        CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                        await agentService.converseSendResponseToUbiquity({ CSO });
                     }
                 }
             }
@@ -260,32 +260,21 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         await agentService.converseFillActionSlots({ actionData, CSO });
                     }
     
-                    let response;
                     if (CSO.sendMessage){
 
-                        let postFormatPayloadToUse, usedPostFormatAction, finalResponse, converseResult, fullConverseResult;
-
-                        response = await agentService.converseGenerateResponse({ actionData, CSO });
-
-                        const cleanResponse = {
-                            docId: CSO.docId,
-                            textResponse: response.textResponse,
-                            fulfilled: response.fulfilled,
-                            actions: response.actions ? response.actions : [],
-                            isFallback: response.isFallback
-                        };
+                        CSO.response = await agentService.converseGenerateResponse({ actionData, CSO });
                 
                         //As the action wasn't fulfilled we are not going to send any more messages to the user
-                        if (!response.fulfilled){
+                        if (!CSO.response.fulfilled){
                             CSO.sendMessage = false
                         }
                         else {
                             CSO.currentAction.fulfilled = true;
             
                             //If there is any chained action
-                            if (response.actions && response.actions.length > 0){
+                            if (CSO.response.actions && CSO.response.actions.length > 0){
                                 let newActionIndex = CSO.actionIndex + 1;
-                                response.actions.forEach((chainedAction) => {
+                                CSO.response.actions.forEach((chainedAction) => {
                                     
                                     CSO.context.actionQueue.splice(newActionIndex, 0, {
                                         name: chainedAction,
@@ -295,125 +284,19 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                                 });
                             }
                         }
-
-                        if ((actionData && actionData.usePostFormat) || CSO.agent.usePostFormat) {
-                            let modelPath, postFormat;
-                            if (actionData && actionData.usePostFormat){
-                                modelPath = [
-                                    {
-                                        model: MODEL_AGENT,
-                                        id: CSO.agent.id
-                                    },
-                                    {
-                                        model: MODEL_ACTION,
-                                        id: actionData.id
-                                    },
-                                    {
-                                        model: MODEL_POST_FORMAT
-                                    }
-                                ];
-                                usedPostFormatAction = true;
-                                postFormat = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
-                            }
-                            else {
-                                modelPath = [
-                                    {
-                                        model: MODEL_AGENT,
-                                        id: CSO.agent.id
-                                    },
-                                    {
-                                        model: MODEL_POST_FORMAT
-                                    }
-                                ];
-                                usedPostFormatAction = false;
-                                postFormat = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
-                            }
-                            postFormatPayloadToUse = postFormat.postFormatPayload;
-                        }
-                        if (postFormatPayloadToUse) {
-                            try {
-                                const compiledPostFormat = handlebars.compile(postFormatPayloadToUse);
-                                const processedPostFormat = compiledPostFormat({ ...CSO, ...{ textResponse: cleanResponse.textResponse } });
-                                const processedPostFormatJson = JSON.parse(processedPostFormat);
-
-                                allProcessedPostFormat = { ...allProcessedPostFormat, ...processedPostFormatJson };
-                                finalResponse = { ...cleanResponse, ...processedPostFormatJson };
-                            }
-                            catch (error) {
-                                const errorMessage = usedPostFormatAction ? 'Error formatting the post response using action POST format : ' : 'Error formatting the post response using agent POST format : ';
-                                console.error(errorMessage, error);
-                                const responseWithError = { ...{ postFormatting: errorMessage + error }, cleanResponse };
-                                finalResponse = responseWithError;
-                            }
-                        }
-                        else {
-                            finalResponse = cleanResponse;
-                        }
-
-                        if (response.webhook) {
-                            CSO.processedWebhooks.push(response.webhook);
-                        }
-
-                        CSO.processedResponses.push(finalResponse);
-
-                        if (CSO.context.docIds.indexOf(CSO.docId) === -1){
-                            CSO.context.docIds.push(CSO.docId);
-                        }
-
-                        converseResult = {
-                            ...finalResponse,
-                            responses: CSO.processedResponses
-                        };
-
-                        const prunnedCSO = {
-                            docId: CSO.docId,
-                            context: CSO.context,
-                            currentAction: CSO.currentAction,
-                            parse: CSO.parse,
-                            webhooks: CSO.processedWebhooks
-                        };
-
-                        fullConverseResult = {
-                            ...converseResult,
-                            CSO: prunnedCSO
-                        };
-
-                        await documentService.update({ 
-                            id: CSO.docId,
-                            data: { 
-                                converseResult: fullConverseResult
-                            }
-                        });
-            
-                        await contextService.update({
-                            sessionId: CSO.context.sessionId,
-                            data: {
-                                savedSlots: CSO.context.savedSlots,
-                                docIds: CSO.context.docIds,
-                                actionQueue: CSO.context.actionQueue
-                            }
-                        });
-
-                        //Once we store the webhook response in the document we need to convert it back to an object
-                        prunnedCSO.webhooks = prunnedCSO.webhooks.map((webhook) => {
-
-                            webhook.response = JSON.parse(webhook.response);
-                            return webhook;
-                        });
-
                         /*
                         * This would either send a response, a text promt or a fallback
                         * CSO.ubiquity could be filled by using the additionalKeys param
                         */
-                        await agentService.converseSendResponseToUbiquity({ CSO, response: debug ? fullConverseResult : converseResult });
+                        await agentService.converseSendResponseToUbiquity({ actionData, CSO });
                     }
                 }
                 CSO.actionIndex++;
             }
         }
         else {
-            const fallback = await agentService.converseGenerateResponseFallback({ CSO });
-            await agentService.converseSendResponseToUbiquity({ CSO, response: fallback });
+            CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+            await agentService.converseSendResponseToUbiquity({ CSO });
         }
         return CSO;
     }

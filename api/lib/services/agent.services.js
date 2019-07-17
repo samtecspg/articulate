@@ -8,6 +8,7 @@ import ConverseGetKeywordsFromRasaResults from './agent/agent.converse-get-keywo
 import ConverseGetBestRasaResult from './agent/agent.converse-get-best-rasa-result.service';
 import ConverseFillActionSlots from './agent/agent.converse-fill-action-slots.service';
 import ConverseSendResponseToUbiquity from './agent/agent.converse-send-response-to-ubiquity';
+import ConverseProcessPostFormat from './agent/agent.converse-process-post-format';
 import Converse from './agent/agent.converse.service';
 import CreateAction from './agent/agent.create-action.service';
 import CreateCategory from './agent/agent.create-category.service';
@@ -295,6 +296,10 @@ module.exports = class AgentService extends Schmervice.Service {
 
     async converseSendResponseToUbiquity(){
         return await ConverseSendResponseToUbiquity.apply(this, arguments);
+    }
+
+    async converseProcessPostFormat(){
+        return await ConverseProcessPostFormat.apply(this, arguments);
     }
 
     async isModelUnique() {
