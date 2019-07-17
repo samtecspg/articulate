@@ -187,8 +187,8 @@ class Form extends React.Component {
 
     const webhookResponseTimes = _.compact(_.flattenDeep((documents.map((document) => {
 
-      if (document.converseResult && document.converseResult.conversationStateObject && document.converseResult.conversationStateObject.webhooks){
-        return document.converseResult.conversationStateObject.webhooks.map((webhook) => {
+      if (document.converseResult && document.converseResult.CSO && document.converseResult.CSO.webhooks){
+        return document.converseResult.CSO.webhooks.map((webhook) => {
 
           return webhook.elapsed_time_ms;
         });

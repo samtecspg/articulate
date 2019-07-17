@@ -234,7 +234,7 @@ class SayingRow extends React.Component {
               </div>
             ))}
           {document.converseResult &&
-          document.converseResult.conversationStateObject ? (
+          document.converseResult.CSO ? (
             <span
               onClick={() => {
                 this.setState({ openCodeModal: true });
@@ -249,9 +249,9 @@ class SayingRow extends React.Component {
             handleClose={() => {
               this.setState({ openCodeModal: false });
             }}
-            conversationStateObject={
+            CSO={
               document.converseResult
-                ? document.converseResult.conversationStateObject
+                ? document.converseResult.CSO
                 : null
             }
             open={this.state.openCodeModal}

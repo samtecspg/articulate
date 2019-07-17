@@ -184,9 +184,9 @@ class SessionRow extends React.Component {
               handleClose={() => {
                 this.setState({ openCodeModal: false });
               }}
-              conversationStateObject={
+              CSO={
                 session.converseResult
-                  ? session.converseResult.conversationStateObject
+                  ? session.converseResult.CSO
                   : null
               }
               open={this.state.openCodeModal}

@@ -584,7 +584,7 @@ const initialState = Immutable({
   successCategory: false,
   successAction: false,
   successAgent: false,
-  conversationStateObject: {},
+  CSO: {},
   newActionResponse: 'hello',
   documents: [],
   totalDocuments: null,
@@ -661,8 +661,8 @@ function appReducer(state = initialState, action) {
         .set('waitingResponse', false);
     case STORE_SOURCE_DATA:
       return state.set(
-        'conversationStateObject',
-        action.conversationStateObject,
+        'CSO',
+        action.CSO,
       );
     case RESET_SESSION_SUCCESS:
       return state.set('messages', []).set('notifications', []);

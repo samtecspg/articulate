@@ -89,7 +89,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             recognizedActions: [],
             recognizedModifiers: [],
             recognizedKeywords: [],
-            webhooks: [],
+            processedWebhooks: [],
             processedResponses: []
         };
     
@@ -112,7 +112,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         CSO.docId = ParsedDocument.id;
         CSO.parse = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS];
     
-        CSO.context = await contextService.findOrCreateSession({ sessionId, loadFrames: true });
+        CSO.context = await contextService.findOrCreateSession({ sessionId });
     
         CSO.rasaResult = await agentService.converseGetBestRasaResult({ CSO });
 
@@ -199,6 +199,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
                 return !action.fulfilled;
             });
+            newActionIndex = newActionIndex === -1 ? CSO.context.actionQueue.length : newActionIndex;
 
             CSO.recognizedActions.forEach((recognizedAction) => {
                 CSO.context.actionQueue.splice(newActionIndex, 0, {
@@ -240,10 +241,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         let postFormatPayloadToUse, usedPostFormatAction, finalResponse, converseResult, fullConverseResult;
 
                         response = await agentService.converseGenerateResponse({ actionData, CSO });
-
-                        if (response.webhook) {
-                            CSO.webhooks.push(response.webhook);
-                        }
 
                         const cleanResponse = {
                             docId: CSO.docId,
@@ -328,6 +325,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                             finalResponse = cleanResponse;
                         }
 
+                        if (response.webhook) {
+                            response.webhook.response = JSON.stringify(response.webhook.response);
+                            CSO.processedWebhooks.push(response.webhook);
+                        }
+
                         CSO.processedResponses.push(finalResponse);
 
                         converseResult = {
@@ -366,6 +368,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                                 docIds: CSO.context.docIds,
                                 actionQueue: CSO.context.actionQueue
                             }
+                        });
+
+                        //Once we store the webhook response in the document we need to convert it back to an object
+                        prunnedCSO.webhooks = prunnedCSO.webhooks.map((webhook) => {
+
+                            webhook.response = JSON.parse(webhook.response);
+                            return webhook;
                         });
 
                         /*

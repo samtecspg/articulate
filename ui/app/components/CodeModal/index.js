@@ -77,10 +77,10 @@ const styles = {
   },
 };
 
-const appendDocIdToParseResults = conversationStateObject => {
-  if (conversationStateObject && conversationStateObject.parse) {
-    return conversationStateObject.parse.map(result => ({
-      docId: conversationStateObject.docId,
+const appendDocIdToParseResults = CSO => {
+  if (CSO && CSO.parse) {
+    return CSO.parse.map(result => ({
+      docId: CSO.docId,
       ...result,
     }));
   }
@@ -101,7 +101,7 @@ class CodeModal extends React.Component {
   render() {
     const { classes, intl } = this.props;
     const { value } = this.state;
-    return this.props.conversationStateObject ? (
+    return this.props.CSO ? (
       <Grid>
         <Modal open={this.props.open} onClose={this.props.handleClose}>
           <Grid className={classes.modalContent} container>
@@ -125,9 +125,9 @@ class CodeModal extends React.Component {
               />
               <Tab
                 className={classes.tab}
-                label={intl.formatMessage(messages.currentFrame)}
+                label={intl.formatMessage(messages.currentAction)}
               />
-              {this.props.conversationStateObject.webhooks ? (
+              {this.props.CSO.webhooks ? (
                 <Tab label={intl.formatMessage(messages.webhooks)} />
               ) : null}
             </Tabs>
@@ -135,27 +135,27 @@ class CodeModal extends React.Component {
               <TabContainer
                 classes={classes}
                 doc={appendDocIdToParseResults(
-                  this.props.conversationStateObject,
+                  this.props.CSO,
                 )}
               />
             )}
             {value === 1 && (
               <TabContainer
                 classes={classes}
-                doc={this.props.conversationStateObject.context}
+                doc={this.props.CSO.context}
               />
             )}
             {value === 2 && (
               <TabContainer
                 classes={classes}
-                doc={this.props.conversationStateObject.currentFrame}
+                doc={this.props.CSO.currentAction}
               />
             )}
             {value === 3 &&
-              (this.props.conversationStateObject.webhooks ? (
+              (this.props.CSO.webhooks ? (
                 <TabContainer
                   classes={classes}
-                  doc={this.props.conversationStateObject.webhooks}
+                  doc={this.props.CSO.webhooks}
                 />
               ) : null)}
           </Grid>
@@ -170,7 +170,7 @@ CodeModal.propTypes = {
   intl: intlShape.isRequired,
   handleClose: PropTypes.func,
   open: PropTypes.bool,
-  conversationStateObject: PropTypes.object,
+  CSO: PropTypes.object,
 };
 
 export default injectIntl(withStyles(styles)(CodeModal));

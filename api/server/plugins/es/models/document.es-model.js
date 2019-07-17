@@ -51,7 +51,7 @@ const mappings = {
                 responses: {
                     type: 'object'
                 },
-                conversationStateObject: {
+                CSO: {
                     type: 'nested',
                     properties: {
                         docId: {
@@ -60,7 +60,7 @@ const mappings = {
                         context: {
                             type: 'object'
                         },
-                        currentFrame: {
+                        currentAction: {
                             type: 'object'
                         },
                         parse: {

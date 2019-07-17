@@ -380,10 +380,10 @@ export function respondMessage(message) {
   };
 }
 
-export function storeSourceData(conversationStateObject) {
+export function storeSourceData(CSO) {
   return {
     type: STORE_SOURCE_DATA,
-    conversationStateObject,
+    CSO,
   };
 }
 

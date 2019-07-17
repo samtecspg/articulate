@@ -4,7 +4,6 @@ import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
 import ConverseGenerateResponseFallback from './agent/agent.converse-generate-response-fallback.service';
 import ConverseGenerateResponse from './agent/agent.converse-generate-response.service';
-import ConverseUpdateContextFrames from './agent/agent.converse-update-context-frames.service';
 import ConverseGetKeywordsFromRasaResults from './agent/agent.converse-get-keywords-from-rasa-results';
 import ConverseGetBestRasaResult from './agent/agent.converse-get-best-rasa-result.service';
 import ConverseFillActionSlots from './agent/agent.converse-fill-action-slots.service';
@@ -263,11 +262,6 @@ module.exports = class AgentService extends Schmervice.Service {
     async converseGenerateResponse() {
 
         return await ConverseGenerateResponse.apply(this, arguments);
-    }
-
-    async converseUpdateContextFrames() {
-
-        return await ConverseUpdateContextFrames.apply(this, arguments);
     }
 
     async converseCompileResponseTemplates() {

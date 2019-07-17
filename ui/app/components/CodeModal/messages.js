@@ -14,9 +14,9 @@ export default defineMessages({
     id: 'app.components.CodeModal.context',
     defaultMessage: 'Context',
   },
-  currentFrame: {
-    id: 'app.components.CodeModal.currentFrame',
-    defaultMessage: 'Current Frame',
+  currentAction: {
+    id: 'app.components.CodeModal.currentAction',
+    defaultMessage: 'Current Action',
   },
   webhooks: {
     id: 'app.components.CodeModal.webhooks',

@@ -38,7 +38,7 @@ import {
   makeSelectMessages,
   makeSelectAgent,
   makeSelectWaitingResponse,
-  makeSelectConversationStateObject,
+  makeSelectCSO,
   makeSelectSettings,
   makeSelectSessionId,
   makeSelectSessionLoaded,
@@ -257,9 +257,9 @@ export class ConversationBar extends React.PureComponent {
               author: this.props.agent.agentName,
               docId: response.docId,
               message: response.textResponse,
-              conversationStateObject: response.conversationStateObject,
+              CSO: response.CSO,
             });
-            this.props.onStoreSourceData({ ...response.conversationStateObject });
+            this.props.onStoreSourceData({ ...response.CSO });
           }
         };
 
@@ -578,8 +578,8 @@ export class ConversationBar extends React.PureComponent {
                           onClick={() => {
                             this.setState({
                               openCodeModal: true,
-                              conversationStateObject:
-                                message.conversationStateObject,
+                              CSO:
+                                message.CSO,
                             });
                           }}
                           className={classes.messageSource}
@@ -712,7 +712,7 @@ export class ConversationBar extends React.PureComponent {
             handleClose={() => {
               this.setState({ openCodeModal: false });
             }}
-            conversationStateObject={this.state.conversationStateObject}
+            CSO={this.state.CSO}
             open={this.state.openCodeModal}
           />
         </Grid>
@@ -726,7 +726,7 @@ ConversationBar.propTypes = {
   classes: PropTypes.object,
   intl: intlShape.isRequired,
   notifications: PropTypes.array,
-  conversationStateObject: PropTypes.object,
+  CSO: PropTypes.object,
   onResetSession: PropTypes.func,
   onCloseNotification: PropTypes.func,
   onSendMessage: PropTypes.func,
@@ -742,7 +742,7 @@ const mapStateToProps = createStructuredSelector({
   notifications: makeSelectNotifications(),
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
-  conversationStateObject: makeSelectConversationStateObject(),
+  CSO: makeSelectCSO(),
   settings: makeSelectSettings(),
   sessionId: makeSelectSessionId(),
   sessionLoaded: makeSelectSessionLoaded(),

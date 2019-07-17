@@ -22,8 +22,8 @@ function* agentMessageIterator(message, response) {
       author: agent.agentName,
       docId: message.id,
       message: response.textResponse,
-      conversationStateObject: message.converseResult
-        ? message.converseResult.conversationStateObject
+      CSO: message.converseResult
+        ? message.converseResult.CSO
         : null,
     }),
   );

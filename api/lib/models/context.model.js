@@ -13,8 +13,6 @@ class ScenarioModel {
                 .object(),
             actionQueue: Joi
                 .array(),
-            responseQueue: Joi
-                .array(),
             docIds: Joi
                 .array(),
             creationDate: Joi

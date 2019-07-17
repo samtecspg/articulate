@@ -208,8 +208,8 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
 
             //We iterate over all possible fillable slots to get the best candidate
             let slotToFill = _.find(slotOfRecognizedKeywords, (slot) => { 
-                const slotValueInFrame = CSO.currentAction.slots[slot.slotName] ? CSO.currentAction.slots[slot.slotName].value : null;
-                return (!slotValueInFrame || (Array.isArray(slotValueInFrame) && slotValueInFrame.length === 0));
+                const slotValueInAction = CSO.currentAction.slots[slot.slotName] ? CSO.currentAction.slots[slot.slotName].value : null;
+                return (!slotValueInAction || (Array.isArray(slotValueInAction) && slotValueInAction.length === 0));
             });
 
             //If there is an slot that can be filled and doesn't have a value yet, then let's use that one, if not, let's use the first slot that can be filled
