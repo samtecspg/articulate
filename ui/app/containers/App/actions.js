@@ -373,10 +373,11 @@ export function sendMessage(message, newSession) {
   };
 }
 
-export function respondMessage(message) {
+export function respondMessage(message, source) {
   return {
     type: RESPOND_MESSAGE,
     message,
+    source
   };
 }
 

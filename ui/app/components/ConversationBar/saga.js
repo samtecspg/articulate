@@ -17,7 +17,8 @@ import { toAPIPath } from '../../utils/locationResolver';
 import { makeSelectAgent } from '../../containers/App/selectors';
 
 function* agentMessageIterator(message, response) {
-  const agent = yield select(makeSelectAgent());yield put(
+  const agent = yield select(makeSelectAgent());
+  yield put(
   respondMessage({
       author: agent.agentName,
       docId: message.id,
@@ -25,7 +26,7 @@ function* agentMessageIterator(message, response) {
       CSO: message.converseResult
         ? message.converseResult.CSO
         : null,
-    }),
+    }, 'MESSAGE ITERATOR AGENT'),
   );
 }
 
@@ -35,10 +36,10 @@ function* messageIterator(message) {
       author: 'User',
       docId: null,
       message: message.document,
-    }),
+    }, 'MESSAGE ITERATOR USER'),
   );
   yield all(message.converseResult.responses.map((response) => {
-
+    
     return call(agentMessageIterator, message, response);
   }));
 }

@@ -201,8 +201,25 @@ class SessionRow extends React.Component {
             this.props.onToggleConversationBar(true);
 
             let sessions = sessionStorage.getItem('sessions');
+
+            if (!sessions){
+              sessions = '{}';
+            }
             sessions = JSON.parse(sessions);
+
+            if (!sessions[this.props.agent.agentName] || sessions[this.props.agent.agentName].sessions.length === 0) {
+              sessions[this.props.agent.agentName] = {
+                sessionId: '',
+                sessions: [],
+              };
+            }
+
             sessions[this.props.agent.agentName].sessionId = session.sessionId;
+            if(sessions[this.props.agent.agentName].sessions.indexOf(session.sessionId) === -1){
+              sessions[this.props.agent.agentName].sessions.unshift(
+                session.sessionId,
+              );
+            }
             sessionStorage.setItem(
               'sessions',
               JSON.stringify(sessions),

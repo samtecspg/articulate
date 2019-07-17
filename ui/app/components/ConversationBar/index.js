@@ -293,6 +293,12 @@ export class ConversationBar extends React.PureComponent {
     }
   }
 
+  componentWillUnmount(){
+    if (this.state.client) {
+      this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`);
+    }
+  }
+
   componentDidUpdate(prevProps) {
     this.scrollToBottom();
     if (
@@ -781,7 +787,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(showWarning(message));
     },
     onRespondMessage: (payload) => {
-      dispatch(respondMessage(payload));
+      dispatch(respondMessage(payload, 'CONVERSATION BAR SIMPLE MESSAGE'));
     },
     onStoreSourceData: (payload) => {
       dispatch(storeSourceData(payload));

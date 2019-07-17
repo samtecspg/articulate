@@ -665,7 +665,9 @@ function appReducer(state = initialState, action) {
         action.CSO,
       );
     case RESET_SESSION_SUCCESS:
-      return state.set('messages', []).set('notifications', []);
+      return state
+        .set('messages', [])
+        .set('notifications', []);
     case SHOW_WARNING:
       return state.update('notifications', notifications =>
         notifications.concat({
@@ -1160,7 +1162,8 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case LOAD_AGENT_DOCUMENTS_ERROR:
       return state
-        .set('documents', [])
+        .set('documents', initialState.documents)
+        .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)
         .set('error', action.error);
     /* Sayings */

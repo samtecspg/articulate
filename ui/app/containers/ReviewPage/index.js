@@ -149,7 +149,7 @@ export class ReviewPage extends React.Component {
 
         const handler = documents => {
           if (documents) {
-            const paginatedDocuments = _.orderBy(_.take(documents.data, this.state.pageStatus.documents.pageSize), this.state.pageStatus.documents.sortField, this.state.pageStatus.documents.sortDirection);
+            const paginatedDocuments = _.orderBy(_.take(documents.data, this.state.pageStatus.documents.pageSize), this.state.pageStatus.documents.sortField, this.state.pageStatus.documents.sortDirection.toLowerCase());
 
             const payload = {
               documents: paginatedDocuments,
@@ -230,10 +230,11 @@ export class ReviewPage extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.state.client) {
-      if (this.props.agent.id) {
-        this.state.client.unsubscribe(`/agent/${this.state.agent}/doc`);
-      }
+    if (this.state.pageStatus.documents.client) {
+      this.state.pageStatus.documents.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`);
+    }
+    if (this.state.pageStatus.sessions.client) {
+      this.state.pageStatus.sessions.client.unsubscribe(`/${ROUTE_CONTEXT}`);
     }
   }
 
