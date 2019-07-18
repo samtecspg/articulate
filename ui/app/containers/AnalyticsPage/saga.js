@@ -25,7 +25,7 @@ export function* getAgentDocument(payload) {
   const agent = yield select(makeSelectAgent());
   const { api } = payload;
   let skip = 0;
-  let limit = -1;
+  let limit = 10000; //MAX ALLOWED BY ElasticSearch
   try {
     const params = {
       skip,
