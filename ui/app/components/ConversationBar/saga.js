@@ -26,7 +26,7 @@ function* agentMessageIterator(message, response) {
       CSO: message.converseResult
         ? message.converseResult.CSO
         : null,
-    }, 'MESSAGE ITERATOR AGENT'),
+    }),
   );
 }
 
@@ -36,8 +36,9 @@ function* messageIterator(message) {
       author: 'User',
       docId: null,
       message: message.document,
-    }, 'MESSAGE ITERATOR USER'),
+    }),
   );
+
   yield all(message.converseResult.responses.map((response) => {
     
     return call(agentMessageIterator, message, response);
