@@ -787,7 +787,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(showWarning(message));
     },
     onRespondMessage: (payload) => {
-      dispatch(respondMessage(payload, 'CONVERSATION BAR SIMPLE MESSAGE'));
+      dispatch(respondMessage(payload));
     },
     onStoreSourceData: (payload) => {
       dispatch(storeSourceData(payload));

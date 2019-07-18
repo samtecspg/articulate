@@ -50,7 +50,7 @@ import {
 import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
 
 import { getKeywords } from '../DialoguePage/saga';
-import { getSession } from '../../components/ConversationBar/saga';
+//import { getSession } from '../../components/ConversationBar/saga';
 
 export function* getSayings(payload) {
   const agent = yield select(makeSelectAgent());
@@ -412,5 +412,5 @@ export default function* rootSaga() {
   yield takeLatest(CHANGE_SESSIONS_PAGE_SIZE, putSessionsPageSize);
   yield takeLatest(LOAD_AGENT_DOCUMENTS, getAgentDocument);
   yield takeLatest(LOAD_AGENT_SESSIONS, getAgentSessions);
-  yield takeLatest(LOAD_SESSION, getSession);
+  //yield takeLatest(LOAD_SESSION, getSession);
 }

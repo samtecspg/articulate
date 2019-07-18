@@ -290,7 +290,7 @@ export function loadSession(sessionId, newSession) {
     type: LOAD_SESSION,
     apiCall: true,
     sessionId,
-    newSession,
+    newSession
   };
 }
 
@@ -374,11 +374,10 @@ export function sendMessage(message, newSession) {
   };
 }
 
-export function respondMessage(message, source) {
+export function respondMessage(message) {
   return {
     type: RESPOND_MESSAGE,
-    message,
-    source
+    message
   };
 }
 
