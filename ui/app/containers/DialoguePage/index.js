@@ -724,7 +724,7 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: (filter, page, pageSize, tab, url) => {
       dispatch(
         push(
-          `${url}?filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`,
+          `${url}${url.indexOf('?') > -1 ? '&' : '?'}filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`,
         ),
       );
     },
