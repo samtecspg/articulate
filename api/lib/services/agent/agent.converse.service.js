@@ -261,8 +261,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     if (actionData.slots && 
                         actionData.slots.length > 0 && 
                         (CSO.recognizedModifiers.length === 0 || 
-                            CSO.recognizedModifiers.length > 0 && 
-                            CSO.actionToModify.actionData.actionName !== actionData.actionName
+                            (CSO.recognizedModifiers.length > 0 && 
+                            CSO.actionToModify &&
+                            CSO.actionToModify.actionData.actionName !== actionData.actionName)
                         )
                     ){
                         await agentService.converseFillActionSlots({ actionData, CSO });
