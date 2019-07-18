@@ -94,7 +94,7 @@ const getActionToModify = ({ recognizedModifier, CSO }) => {
     const oldestModifiableUnfulfilledAction = _.find(possibleModifiableActions, (possibleModifiableAction) => { return !possibleModifiableAction.fulfilled });
 
     //In case all the actions in the queue are already fulfilled, we are going to modify the newest modifiable action
-    actionToModify = oldestModifiableUnfulfilledAction ? oldestModifiableUnfulfilledAction : possibleModifiableActions[possibleModifiableActions.length - 1];
+    actionToModify = oldestModifiableUnfulfilledAction ? oldestModifiableUnfulfilledAction : (possibleModifiableActions.length > 0 ? possibleModifiableActions[possibleModifiableActions.length - 1] : undefined);
 
     return actionToModify;
 };
@@ -237,7 +237,15 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             /*
             * Once we have every action in the actionQueue, we are going to process that action queue to get responses
             */
-            //TODO: CHANGE TO WHILE
+            const unfulfilledActionsInQueue = CSO.context.actionQueue.some((action) => {
+
+                return !action.fulfilled;
+            });
+            if (!unfulfilledActionsInQueue){
+                if (CSO.recognizedModifiers.length > 0 && CSO.actionToModify){
+                    CSO.context.actionQueue[CSO.actionToModify.index].fulfilled = false;
+                }
+            }
             CSO.actionIndex = 0;
             while(CSO.context.actionQueue[CSO.actionIndex] !== undefined){
                 
