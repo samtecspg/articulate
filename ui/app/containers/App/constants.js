@@ -141,6 +141,7 @@ export const LOAD_AGENT_SESSIONS_ERROR = 'app/AgentPage/LOAD_AGENT_SESSIONS_ERRO
 /*
  * Sayings
  */
+export const RESET_SAYINGS = 'app/SayingsPage/RESET_SAYINGS';
 export const LOAD_SAYINGS = 'app/SayingsPage/LOAD_SAYINGS';
 export const LOAD_SAYINGS_ERROR = 'app/SayingsPage/LOAD_SAYINGS_ERROR';
 export const LOAD_SAYINGS_SUCCESS = 'app/SayingsPage/LOAD_SAYINGS_SUCCESS';

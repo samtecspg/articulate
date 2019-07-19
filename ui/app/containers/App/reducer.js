@@ -133,6 +133,7 @@ import {
   LOAD_SETTINGS_ERROR,
   LOAD_SETTINGS_SUCCESS,
   MISSING_API,
+  RESET_SAYINGS,
   RESET_ACTION_DATA,
   RESET_AGENT_DATA,
   RESET_CATEGORY_DATA,
@@ -1167,6 +1168,10 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', action.error);
     /* Sayings */
+    case RESET_SAYINGS:
+      return state
+        .set('sayings', initialState.sayings)
+        .set('totalSayings', initialState.totalSayings);
     case LOAD_SAYINGS:
       return state.set('loading', true).set('error', false);
     case LOAD_SAYINGS_ERROR:
