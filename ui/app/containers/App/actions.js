@@ -177,6 +177,7 @@ import {
   LOGOUT_USER,
   LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
+  RESET_SAYINGS,
   RESET_ACTION_DATA,
   RESET_ACTIONS,
   RESET_AGENT_DATA,
@@ -813,6 +814,12 @@ export function loadAgentSessionsSuccess(sessions) {
 /*
  * Sayings
  */
+export function resetSayings(){
+  return {
+    type: RESET_SAYINGS
+  }
+}
+
 export function loadSayings(filter, page, pageSize) {
   return {
     type: LOAD_SAYINGS,
