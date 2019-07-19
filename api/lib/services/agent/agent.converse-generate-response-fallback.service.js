@@ -1,16 +1,16 @@
-module.exports = async function ({ agent, conversationStateObject }) {
+module.exports = async function ({ CSO }) {
 
-    const fallbackAction = agent.actions.filter((action) => {
-        return action.actionName === agent.fallbackAction;
-    })[0];
+    const fallbackAction = CSO.agent.actions.find((action) => {
+        return action.actionName === CSO.agent.fallbackAction;
+    });
 
-    if (fallbackAction.useWebhook || agent.useWebhook) {
+    if (fallbackAction.useWebhook || CSO.agent.useWebhook) {
         let modelPath, webhook;
         if (fallbackAction.useWebhook){
             modelPath = [
                 {
                     model: MODEL_AGENT,
-                    id: agent.id
+                    id: CSO.agent.id
                 },
                 {
                     model: MODEL_ACTION,
@@ -26,7 +26,7 @@ module.exports = async function ({ agent, conversationStateObject }) {
             modelPath = [
                 {
                     model: MODEL_AGENT,
-                    id: agent.id
+                    id: CSO.agent.id
                 },
                 {
                     model: MODEL_WEBHOOK
@@ -42,15 +42,15 @@ module.exports = async function ({ agent, conversationStateObject }) {
             headers: webhook.webhookHeaders,
             username: webhook.webhookUser ? webhook.webhookUser : undefined,
             password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
-            templateContext: conversationStateObject
+            templateContext: CSO
         });
         if (webhookResponse.textResponse) {
-            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], actionWasFulfilled: true, webhook: webhookResponse, isFallback: true };
+            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: webhookResponse, isFallback: true };
         }
-        conversationStateObject.webhook = { ...webhookResponse };
-        const response = await agentService.converseCompileResponseTemplates({ responses: fallbackAction.responses, templateContext: conversationStateObject });
-        return { ...response, webhook: webhookResponse, actionWasFulfilled: true, isFallback: true };
+        CSO.webhook = { ...webhookResponse };
+        const response = await agentService.converseCompileResponseTemplates({ responses: fallbackAction.responses, templateContext: CSO });
+        return { ...response, webhook: webhookResponse, fulfilled: true, isFallback: true };
     }
     const selectedFallbackResponse = fallbackAction.responses[Math.floor(Math.random() * fallbackAction.responses.length)];
-    return { textResponse: selectedFallbackResponse.textResponse, actions: selectedFallbackResponse.actions, actionWasFulfilled: true, isFallback: true };
+    return { textResponse: selectedFallbackResponse.textResponse, actions: selectedFallbackResponse.actions, fulfilled: true, isFallback: true };
 };

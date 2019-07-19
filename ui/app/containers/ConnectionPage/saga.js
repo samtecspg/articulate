@@ -52,7 +52,6 @@ export function* postConnection(payload) {
     );
     yield put(createConnectionSuccess(response));
   } catch (err) {
-    console.log(err);
     yield put(createConnectionError(err));
   }
 }

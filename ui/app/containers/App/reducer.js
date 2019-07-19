@@ -133,6 +133,7 @@ import {
   LOAD_SETTINGS_ERROR,
   LOAD_SETTINGS_SUCCESS,
   MISSING_API,
+  RESET_SAYINGS,
   RESET_ACTION_DATA,
   RESET_AGENT_DATA,
   RESET_CATEGORY_DATA,
@@ -209,7 +210,6 @@ import {
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
   DELETE_CONNECTION_SUCCESS,
-  LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOAD_SESSION,
   LOAD_SESSION_SUCCESS,
@@ -585,7 +585,7 @@ const initialState = Immutable({
   successCategory: false,
   successAction: false,
   successAgent: false,
-  conversationStateObject: {},
+  CSO: {},
   newActionResponse: 'hello',
   documents: [],
   totalDocuments: null,
@@ -662,11 +662,13 @@ function appReducer(state = initialState, action) {
         .set('waitingResponse', false);
     case STORE_SOURCE_DATA:
       return state.set(
-        'conversationStateObject',
-        action.conversationStateObject,
+        'CSO',
+        action.CSO,
       );
     case RESET_SESSION_SUCCESS:
-      return state.set('messages', []).set('notifications', []);
+      return state
+        .set('messages', [])
+        .set('notifications', []);
     case SHOW_WARNING:
       return state.update('notifications', notifications =>
         notifications.concat({
@@ -1161,10 +1163,15 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case LOAD_AGENT_DOCUMENTS_ERROR:
       return state
-        .set('documents', [])
+        .set('documents', initialState.documents)
+        .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)
         .set('error', action.error);
     /* Sayings */
+    case RESET_SAYINGS:
+      return state
+        .set('sayings', initialState.sayings)
+        .set('totalSayings', initialState.totalSayings);
     case LOAD_SAYINGS:
       return state.set('loading', true).set('error', false);
     case LOAD_SAYINGS_ERROR:
@@ -2284,14 +2291,25 @@ function appReducer(state = initialState, action) {
 
     /* Connection */
     case CHANGE_CONNECTION_DATA:
+      const details = action.payload.field === 'channel' ? {} : Immutable.asMutable(state.connection.details, { deep: true });
+      if (action.payload.value === 'chat-widget' || state.connection.channel === 'chat-widget'){
+        const connectionAgent = action.payload.field === 'agent' ? action.payload.value : state.connection.agent;
+        const agentData = state.agents.filter((agent) => {
+
+          return parseInt(agent.id) === connectionAgent;
+        })[0];
+        details.title = agentData.agentName;
+        details.subtitle = agentData.description;
+      }
       if (action.payload.field === 'channel') {
         return state
           .setIn(['connection', action.payload.field], action.payload.value)
-          .setIn(['connection', 'details'], {})
+          .setIn(['connection', 'details'], details)
           .set('connectionTouched', true);
       } else {
         return state
           .setIn(['connection', action.payload.field], action.payload.value)
+          .setIn(['connection', 'details'], details)
           .set('connectionTouched', true);
       }
     case CREATE_CONNECTION:

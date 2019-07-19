@@ -22,7 +22,6 @@ export const ROUTE_TRAIN = 'train';
 export const ROUTE_PARSE = 'parse';
 export const ROUTE_IDENTIFY_KEYWORDS = 'identifyKeywords';
 export const ROUTE_CONVERSE = 'converse';
-export const ROUTE_FRAME = 'frame';
 export const ROUTE_EXPORT = 'export';
 export const ROUTE_IMPORT = 'import';
 export const ROUTE_BULK = 'bulk';

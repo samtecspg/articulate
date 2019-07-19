@@ -24,7 +24,7 @@ export default defineMessages({
   },
   noSession: {
     id: 'app.components.ConversationBar.noSession',
-    defaultMessage: 'No session',
+    defaultMessage: 'No session selected',
   },
   newSession: {
     id: 'app.components.ConversationBar.newSession',

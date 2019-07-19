@@ -17,13 +17,14 @@ import { toAPIPath } from '../../utils/locationResolver';
 import { makeSelectAgent } from '../../containers/App/selectors';
 
 function* agentMessageIterator(message, response) {
-  const agent = yield select(makeSelectAgent());yield put(
+  const agent = yield select(makeSelectAgent());
+  yield put(
   respondMessage({
       author: agent.agentName,
       docId: message.id,
       message: response.textResponse,
-      conversationStateObject: message.converseResult
-        ? message.converseResult.conversationStateObject
+      CSO: message.converseResult
+        ? message.converseResult.CSO
         : null,
     }),
   );
@@ -37,8 +38,9 @@ function* messageIterator(message) {
       message: message.document,
     }),
   );
-  yield all(message.converseResult.responses.map((response) => {
 
+  yield all(message.converseResult.responses.map((response) => {
+    
     return call(agentMessageIterator, message, response);
   }));
 }
@@ -61,7 +63,6 @@ export function* getSession(payload) {
 
     yield put(loadSessionSuccess(sessionId));
   } catch (err) {
-    console.log(err);
     yield put(loadSessionError(err));
   }
 }

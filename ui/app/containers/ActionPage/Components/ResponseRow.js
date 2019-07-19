@@ -172,6 +172,7 @@ class ResponseRow extends React.Component {
             src={trashIcon}
           />
           <FilterSelect
+            showRecent
             value="select"
             valueDisplayField="actionName"
             valueField="actionName"

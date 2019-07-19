@@ -7,10 +7,9 @@ module.exports = async function ({ data, returnModel = false }) {
     const Model = await redis.factory(MODEL_CONTEXT);
     try {
         data.actionQueue = [];
-        data.responseQueue = [];
         data.docIds = [];
         data.savedSlots = {};
-        await Model.createInstance({ data, ...{ frames: [] } });
+        await Model.createInstance({ data });
         return returnModel ? Model : Model.allProperties();
     }
     catch (error) {

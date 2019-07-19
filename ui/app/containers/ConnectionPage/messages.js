@@ -61,12 +61,12 @@ export default defineMessages({
   agentSelect: {
     id:
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.agentSelect',
-    defaultMessage: 'Agent:',
+    defaultMessage: 'First select Agent:',
   },
   selectAValue: {
     id:
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.selectAValue',
-    defaultMessage: 'Select a value',
+    defaultMessage: 'Choose Agent',
   },
   connection: {
     id: 'app.containers.ConnectionsEditPage.component.MainTab.connection',
@@ -125,6 +125,26 @@ export default defineMessages({
     id:
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.shareUrl',
     defaultMessage: 'Link to share:',
+  },
+  socketUrl: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.socketUrl',
+    defaultMessage: 'Socket URL:',
+  },
+  socketPath: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.socketPath',
+    defaultMessage: 'Socket path:',
+  },
+  converseUrl: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.converseUrl',
+    defaultMessage: 'Converse URL:',
+  },
+  copySnippet: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.copySnippet',
+    defaultMessage: 'Copy and paste this conde into a new html file to test your widget:',
   },
   verifyToken: {
     id:

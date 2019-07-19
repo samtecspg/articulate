@@ -4,7 +4,6 @@ import {
   ROUTE_AGENT,
   ROUTE_CONTEXT,
   ROUTE_CONVERSE,
-  ROUTE_FRAME,
   ROUTE_POST_FORMAT,
   ROUTE_TRAIN,
   ROUTE_WEBHOOK,
@@ -34,6 +33,7 @@ import {
   loadServerInfoError,
   updateSettingsError,
   updateSettingSuccess,
+  loadSessionSuccess,
 } from './actions';
 import {
   makeSelectAgent,
@@ -46,7 +46,7 @@ export function* postConverse(payload) {
   const systemSessionId = yield select(makeSelectSessionId());
 
   if (agent.id) {
-    const { api, message } = payload;
+    const { api, message, newSession } = payload;
     if (message.sessionId || systemSessionId) {
       const sessionId = systemSessionId || message.sessionId;
       try {
@@ -66,15 +66,9 @@ export function* postConverse(payload) {
           postPayload,
         );
 
-        /*yield put(
-          respondMessage({
-            author: agent.agentName,
-            docId: response.docId,
-            message: response.textResponse,
-            conversationStateObject: response.conversationStateObject,
-          }),
-        );
-        yield put(storeSourceData({ ...response.conversationStateObject }));*/
+        if (newSession){
+          yield put(loadSessionSuccess(sessionId));
+        }
       } catch (err) {
         yield put(showWarning('errorCallingArticulate'));
       }
@@ -91,14 +85,10 @@ export function* deleteSession(payload) {
   if (sessionId) {
     try {
       const { api } = payload;
-      yield call(
-        api.delete,
-        toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_FRAME]),
-      );
       const patchPayload = {
         actionQueue: [],
-        responseQueue: [],
         savedSlots: {},
+        docIds: []
       };
       yield call(
         api.patch,

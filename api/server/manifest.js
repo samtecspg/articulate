@@ -8,6 +8,10 @@ import Nes from 'nes';
 import Schmervice from 'schmervice';
 import Toys from 'toys';
 import Package from '../package.json';
+import {
+    AUTH_ENABLED,
+    AUTH_PROVIDERS
+} from '../util/env';
 
 const redisOptions = {
     host: process.env.REDIS_HOST || 'redis',
@@ -81,6 +85,11 @@ module.exports = new Confidence.Store({
                 options: { //options passed to axios
                     baseURL: process.env.RASA_URL || 'http://rasa:5000'
                 }
+            },
+            {
+
+                plugin: './plugins/authentication',
+                options: { AUTH_ENABLED, AUTH_PROVIDERS }
             },
             {
 

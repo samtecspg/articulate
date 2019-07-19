@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { TextField, MenuItem, Grid, Input, Button } from '@material-ui/core';
+import { TextField, MenuItem, Grid, Input, Button, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import clearIcon from '../../images/clear-icon.svg';
@@ -33,6 +33,7 @@ const styles = {
     borderBottom: '1px solid #4e4e4e',
     position: 'relative',
     bottom: '8px',
+    cursor: 'default'
   },
   searchValueContainerWithoutHover: {
     '&:hover': {
@@ -43,11 +44,26 @@ const styles = {
     borderBottom: '1px solid #4e4e4e',
     position: 'relative',
     bottom: '8px',
+    cursor: 'default',
+    padding: '14px'
   },
-  searchValueField: {
+  searchValueFieldHovered: {
+    backgroundColor: '#d5d5d5',
     width: '200px',
     paddingLeft: '5px',
     fontSize: '14px',
+    margin: '0px 10px',
+    borderRadius: '5px'
+  },
+  searchValueField: {
+    '&:hover': {
+      backgroundColor: '#d5d5d5'
+    },
+    width: '200px',
+    paddingLeft: '5px',
+    fontSize: '14px',
+    margin: '0px 10px',
+    borderRadius: '5px'
   },
   clearIconContainer: {
     display: 'inline',
@@ -76,6 +92,17 @@ const styles = {
     top: '2px',
     marginLeft: '10px',
   },
+  menuItemTitle: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+    cursor: 'default',
+    opacity: 1
+  },
+  title: {
+    fontSize: '12px',
+    fontWeight: '600',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -84,7 +111,7 @@ export class FilterSelect extends React.Component {
     valuesDropdownOpen: false,
     filterInput: '',
     filteringValues: false,
-    buttonHovered: false,
+    searchInputHovered: false,
   };
 
   render() {
@@ -141,11 +168,7 @@ export class FilterSelect extends React.Component {
           </MenuItem>
         )}
         <MenuItem
-          className={
-            this.state.buttonHovered
-              ? classes.searchValueContainerWithoutHover
-              : classes.searchValueContainer
-          }
+          className={classes.searchValueContainerWithoutHover}
           value="filter"
         >
           <Grid
@@ -153,7 +176,14 @@ export class FilterSelect extends React.Component {
             justify={this.props.hideAddButton ? 'flex-start' : 'flex-end'}
             style={this.state.filterInput ? { position: 'absolute' } : {}}
           >
-            <img src={searchIcon} />
+            <img 
+              onMouseEnter={() => {
+                this.setState({ searchInputHovered: true });
+              }}
+              onMouseLeave={() => {
+                this.setState({ searchInputHovered: false });
+              }}
+            src={searchIcon} />
             <Input
               inputProps={{
                 style: {
@@ -166,7 +196,7 @@ export class FilterSelect extends React.Component {
                 return 0;
               }}
               disableUnderline
-              className={classes.searchValueField}
+              className={this.state.searchInputHovered ? classes.searchValueFieldHovered : classes.searchValueField}
               onChange={evt => {
                 this.setState({
                   filteringValues: evt.target.value.length > 0,
@@ -198,12 +228,6 @@ export class FilterSelect extends React.Component {
                 }}
                 className={classes.addValueButton}
                 variant="contained"
-                onMouseEnter={() => {
-                  this.setState({ buttonHovered: true });
-                }}
-                onMouseLeave={() => {
-                  this.setState({ buttonHovered: false });
-                }}
               >
                 <FormattedMessage {...messages.add} />
               </Button>
@@ -264,19 +288,60 @@ export class FilterSelect extends React.Component {
                       }}
                       className={classes.addValueButton}
                       variant="contained"
-                      onMouseEnter={() => {
-                        this.setState({ buttonHovered: true });
-                      }}
-                      onMouseLeave={() => {
-                        this.setState({ buttonHovered: false });
-                      }}
                     >
                       <FormattedMessage {...messages.add} />
                     </Button>
                   </MenuItem>
                 ),
               ]
-          : this.props.values.map((value, index) => (
+          : 
+          ([
+            this.props.showRecent ?
+              [
+                <MenuItem disabled className={classes.menuItemTitle} key='titleRecent'>
+                  <Typography className={classes.title}>{intl.formatMessage(messages.recent)}</Typography>
+                </MenuItem>,
+                this.props.values.filter((value) => { return value.recent; }).map((value, index) => {
+                  return (<MenuItem
+                    key={`recentValue_${index}`}
+                    value={value[this.props.valueField]}
+                  >
+                    <Grid container justify="space-between">
+                      <div className={classes.dataContainer}>
+                        <span>{value[this.props.valueDisplayField]}</span>
+                      </div>
+                      {value[this.props.valueField] === this.props.value &&
+                      !this.state.valuesDropdownOpen ? null : (
+                        <div className={classes.dataContainer}>
+                          {this.props.displayThreshold ? (
+                            <span>{value[this.props.thresholdField] * 100}%</span>
+                          ) : null}
+                          {this.props.displayEdit ? (
+                            <img
+                              id={`edit_value_${value[this.props.valueField]}`}
+                              onClick={() => {
+                                this.props.onGoToUrl({
+                                  url: `${this.props.onEditRoutePrefix}${value.id}`,
+                                  isEdit: true,
+                                });
+                              }}
+                              className={classes.editValueIcon}
+                              src={pencilIcon}
+                            />
+                          ) : null}
+                        </div>
+                      )}
+                    </Grid>
+                  </MenuItem>);
+                }),
+                <MenuItem disabled className={classes.menuItemTitle} key='titleAll'>
+                  <Typography className={classes.title}>{intl.formatMessage(messages.all)}</Typography>
+                </MenuItem>
+              ]
+            : null,
+            this.props.values.map((value, index) => (
+
+              this.props.showRecent && value.recent ? null :
               <MenuItem
                 key={`value_${index}`}
                 value={value[this.props.valueField]}
@@ -307,8 +372,9 @@ export class FilterSelect extends React.Component {
                     </div>
                   )}
                 </Grid>
-              </MenuItem>
-            ))}
+              </MenuItem>))
+          ])
+          }
       </TextField>
     );
   }
@@ -336,6 +402,7 @@ FilterSelect.propTypes = {
   error: PropTypes.bool,
   helperText: PropTypes.string,
   hideAddButton: PropTypes.bool,
+  showRecent: PropTypes.bool
 };
 
 export default injectIntl(withStyles(styles)(FilterSelect));

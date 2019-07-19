@@ -83,10 +83,10 @@ const makeSelectWaitingResponse = () =>
     globalState => globalState.waitingResponse,
   );
 
-const makeSelectConversationStateObject = () =>
+const makeSelectCSO = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.conversationStateObject,
+    globalState => globalState.CSO,
   );
 
 /* Connections */
@@ -402,7 +402,7 @@ export {
   makeSelectNotifications,
   makeSelectMessages,
   makeSelectWaitingResponse,
-  makeSelectConversationStateObject,
+  makeSelectCSO,
   makeSelectConnections,
   makeSelectChannels,
   makeSelectAgents,

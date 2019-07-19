@@ -88,6 +88,12 @@ export class AnalyticsPage extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    if (this.state.client) {
+      this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`);
+    }
+  }
+
   render() {
     const { agent, onTrain } = this.props;
     return agent.id ? (

@@ -14,16 +14,12 @@ module.exports = async function ({ id, returnModel = false }) {
             return doc;
         }
         const docData = { id: doc._id, ...doc._source };
-        if (docData.converseResult){
-            if (docData.converseResult.conversationStateObject){
-                if (docData.converseResult.conversationStateObject.webhooks){
-                    docData.converseResult.conversationStateObject.webhooks = docData.converseResult.conversationStateObject.webhooks.map((webhook) => {
+        if (docData.converseResult && docData.converseResult.CSO && docData.converseResult.CSO.webhooks){
+            docData.converseResult.CSO.webhooks = docData.converseResult.CSO.webhooks.map((webhook) => {
                         
-                        webhook.response = JSON.parse(webhook.response);
-                        return webhook;
-                    });
-                }
-            }
+                webhook.response = JSON.parse(webhook.response);
+                return webhook;
+            });
         }
         return docData;
     }

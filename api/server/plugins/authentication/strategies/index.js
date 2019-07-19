@@ -1,13 +1,9 @@
-import {
-    AUTH_ENABLED,
-    AUTH_PROVIDERS
-} from '../../../util/env';
 import Session from './session';
 import Simple from './simple';
 
-const logger = require('../../../util/logger')({ name: `server:strategy` });
+const logger = require('../../../../util/logger')({ name: `server:strategy` });
 
-module.exports = () => {
+module.exports = ({ AUTH_ENABLED, AUTH_PROVIDERS }) => {
     if (!AUTH_ENABLED) {
         return [];
     }
@@ -27,5 +23,6 @@ module.exports = () => {
             logger.error(e);
         }
     });
+    logger.info('Strategies loaded');
     return strategies;
 };

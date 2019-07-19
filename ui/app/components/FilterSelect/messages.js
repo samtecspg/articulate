@@ -19,4 +19,12 @@ export default defineMessages({
     id: 'app.components.FilterSelect.selectDefault',
     defaultMessage: 'Select',
   },
+  recent: {
+    id: 'app.components.FilterSelect.recent',
+    defaultMessage: 'Recent:',
+  },
+  all: {
+    id: 'app.components.FilterSelect.all',
+    defaultMessage: 'All:',
+  },
 });

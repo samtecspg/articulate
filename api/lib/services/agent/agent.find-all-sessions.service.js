@@ -13,7 +13,7 @@ module.exports = async function ({ id, direction, skip, limit, field }) {
         let sessions = await Promise.all(sessionIds.map(async (sessionId) => {
 
             try {
-                return await contextService.findBySession({ sessionId, loadFrames: true });
+                return await contextService.findBySession({ sessionId });
             }
             catch(e){
                 //There could be cases where the session doesn't exists anymore

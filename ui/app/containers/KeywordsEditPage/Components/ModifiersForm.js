@@ -176,6 +176,7 @@ class ModifiersForm extends React.Component {
           {keyword.modifiers.map((modifier, index) =>
             this.state.selectedTab === index ? (
               <ModifierForm
+                keyword={keyword}
                 modifier={modifier}
                 settings={this.props.settings}
                 key={`modifierForm_${index}`}

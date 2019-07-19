@@ -4,7 +4,7 @@
   "app.components.AppHeader.articulateLogoAlt": "",
   "app.components.AppHeader.openChatButton": "",
   "app.components.CodeModal.context": "",
-  "app.components.CodeModal.currentFrame": "",
+  "app.components.CodeModal.currentAction": "",
   "app.components.CodeModal.rasaParseResults": "",
   "app.components.CodeModal.webhookss": "",
   "app.components.ConversationBar.clearAll": "",

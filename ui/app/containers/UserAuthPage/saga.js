@@ -22,6 +22,7 @@ export function* loginUser(payload) {
     if (response.isValid) {
       yield put(loginUserSuccess(response));
       yield put(push('/'));
+      window.location.reload();
     } else {
       yield put(loginUserError('Invalid Username or Password'));
     }
@@ -42,6 +43,8 @@ export function* signUpUser(payload) {
   try {
     const response = yield call(api.post, toAPIPath([ROUTE_USER]), data);
     yield put(signUpUserSuccess(response));
+    yield put(push('/'));
+    window.location.reload();
   } catch (err) {
     yield put(signUpUserError(err));
   }

@@ -64,6 +64,7 @@ import {
   changeKeywordsPageSize,
   changeActionsPageSize,
   changeSayingCategory,
+  resetSayings,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -194,6 +195,7 @@ export class DialoguePage extends React.PureComponent {
 
   componentWillUnmount() {
     this.throttledOnLoadSayings = null;
+    this.props.onResetSayings();
   }
 
   componentDidUpdate(prevProps) {
@@ -724,7 +726,7 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: (filter, page, pageSize, tab, url) => {
       dispatch(
         push(
-          `${url}?filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`,
+          `${url}${url.indexOf('?') > -1 ? '&' : '?'}filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`,
         ),
       );
     },
@@ -748,6 +750,11 @@ function mapDispatchToProps(dispatch) {
         changeSayingCategory(filter, page, pageSize, saying, categoryId),
       );
     },
+    onResetSayings: () => {
+      dispatch(
+        resetSayings()
+      );
+    }
   };
 }
 

@@ -4,7 +4,6 @@ import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
   ROUTE_CATEGORY,
-  ROUTE_IDENTIFY_KEYWORDS,
   ROUTE_KEYWORD,
   ROUTE_SAYING,
   ROUTE_SETTINGS,

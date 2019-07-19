@@ -9,7 +9,6 @@ import {
 const schema = {
     model: Joi
         .string()
-        .required()
         .valid(MODEL_ALL)
         .description('Model'),
     subscribePath: Joi
@@ -22,14 +21,16 @@ const schema = {
     actions: Joi
         .array()
         .items(Joi.string().valid(NOHM_SUB_ALL))
-        .required()
         .description('Actions'),
     isESModel: Joi
         .boolean()
         .description('Specifies if the model is using ES as back end'),
     isResponse: Joi
         .boolean()
-        .description('Specifies if the model is a converse response')
+        .description('Specifies if the model is a converse response'),
+    isConnection: Joi
+        .boolean()
+        .description('Specifies if the model is a connection response')
 };
 
 module.exports = async (server) => {
@@ -45,7 +46,7 @@ module.exports = async (server) => {
             return Promise.reject(`The WebSocket [${key}.js] is not valid.\n${validation.error}`);
         }
         try {
-            if (ws.isESModel || ws.isResponse) {
+            if (ws.isESModel || ws.isResponse || ws.isConnection) {
                 server.subscription(ws.subscribePath);
             }
             else {
@@ -60,7 +61,6 @@ module.exports = async (server) => {
                     await model.subscribe(action, (event) => {
 
                         const { target } = event;
-                        console.log(event);
                         server.publish(ws.publishPath({ properties: target.properties }), target.properties);
                     });
                 }));

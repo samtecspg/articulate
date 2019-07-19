@@ -180,7 +180,7 @@ class ModifierForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, modifier, settings } = this.props;
+    const { classes, intl, modifier, settings, keyword } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid
@@ -318,7 +318,7 @@ class ModifierForm extends React.Component {
                 onKeyPress={ev => {
                   if (ev.key === 'Enter' && ev.target.value !== '') {
                     ev.preventDefault();
-                    this.props.onAddModifierSaying(ev.target.value);
+                    this.props.onAddModifierSaying(ev.target.value, keyword.keywordName);
                     ev.target.value = '';
                   }
                 }}
@@ -513,6 +513,7 @@ class ModifierForm extends React.Component {
 
 ModifierForm.propTypes = {
   classes: PropTypes.object.isRequired,
+  keyword: PropTypes.object,
   intl: intlShape.isRequired,
   modifier: PropTypes.object,
   saying: PropTypes.object,

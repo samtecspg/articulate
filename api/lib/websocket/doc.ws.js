@@ -6,8 +6,6 @@ import {
 } from '../../util/constants';
 
 module.exports = {
-    model: MODEL_DOCUMENT,
     subscribePath: `/${ROUTE_AGENT}/{id}/${ROUTE_DOCUMENT}`,
-    actions: [NOHM_SUB_SAVE],
     isESModel: true
 };

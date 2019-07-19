@@ -149,7 +149,7 @@ export class ReviewPage extends React.Component {
 
         const handler = documents => {
           if (documents) {
-            const paginatedDocuments = _.orderBy(_.take(documents.data, this.state.pageStatus.documents.pageSize), this.state.pageStatus.documents.sortField, this.state.pageStatus.documents.sortDirection);
+            const paginatedDocuments = _.orderBy(_.take(documents.data, this.state.pageStatus.documents.pageSize), this.state.pageStatus.documents.sortField, this.state.pageStatus.documents.sortDirection.toLowerCase());
 
             const payload = {
               documents: paginatedDocuments,
@@ -230,10 +230,11 @@ export class ReviewPage extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.state.client) {
-      if (this.props.agent.id) {
-        this.state.client.unsubscribe(`/agent/${this.state.agent}/doc`);
-      }
+    if (this.state.pageStatus.documents.client) {
+      this.state.pageStatus.documents.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`);
+    }
+    if (this.state.pageStatus.sessions.client) {
+      this.state.pageStatus.sessions.client.unsubscribe(`/${ROUTE_CONTEXT}`);
     }
   }
 
@@ -331,35 +332,36 @@ export class ReviewPage extends React.Component {
 
   copySayingFromDocument(userSays, saying) {
     const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
-    if (saying.categoryScore === 0) {
+    /*if (saying.categoryScore === 0) {
       onGoToUrl(`/agent/${agent.id}/dialogue?tab=sayings&userSays=${userSays}`);
     } else {
-      const { onCopySaying } = this.props.actions;
-      const category = _.find(agentCategories, {
-        categoryName: saying.category,
-      });
-      const sayingToCopy = {
-        userSays,
-        keywords: saying.keywords.map(keyword => {
-          const agentKeyword = _.find(agentKeywords, {
-            keywordName: keyword.keyword,
-          });
-          return {
-            value: keyword.value.value,
-            keyword: keyword.keyword,
-            start: keyword.start,
-            end: keyword.end,
-            keywordId: agentKeyword.id,
-          };
-        }),
-        actions:
-          saying.action.name === ''
-            ? []
-            : saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
-        categoryId: category ? category.id : null,
-      };
-      onCopySaying(sayingToCopy);
-    }
+    }*/
+
+    const { onCopySaying } = this.props.actions;
+    const category = _.find(agentCategories, {
+      categoryName: saying.category,
+    });
+    const sayingToCopy = {
+      userSays,
+      keywords: saying.keywords.map(keyword => {
+        const agentKeyword = _.find(agentKeywords, {
+          keywordName: keyword.keyword,
+        });
+        return {
+          value: keyword.value.value,
+          keyword: keyword.keyword,
+          start: keyword.start,
+          end: keyword.end,
+          keywordId: agentKeyword.id,
+        };
+      }),
+      actions:
+        saying.action.name === ''
+          ? []
+          : saying.action.name.split(ACTION_INTENT_SPLIT_SYMBOL),
+      categoryId: category ? category.id : null,
+    };
+    onCopySaying(sayingToCopy);
   }
 
   handleOnRequestSort(id) {

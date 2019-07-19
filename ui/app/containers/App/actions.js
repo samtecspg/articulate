@@ -177,6 +177,7 @@ import {
   LOGOUT_USER,
   LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
+  RESET_SAYINGS,
   RESET_ACTION_DATA,
   RESET_ACTIONS,
   RESET_AGENT_DATA,
@@ -289,7 +290,7 @@ export function loadSession(sessionId, newSession) {
     type: LOAD_SESSION,
     apiCall: true,
     sessionId,
-    newSession,
+    newSession
   };
 }
 
@@ -364,25 +365,26 @@ export function closeNotification(index) {
   };
 }
 
-export function sendMessage(message) {
+export function sendMessage(message, newSession) {
   return {
     type: SEND_MESSAGE,
     apiCall: true,
     message,
+    newSession,
   };
 }
 
 export function respondMessage(message) {
   return {
     type: RESPOND_MESSAGE,
-    message,
+    message
   };
 }
 
-export function storeSourceData(conversationStateObject) {
+export function storeSourceData(CSO) {
   return {
     type: STORE_SOURCE_DATA,
-    conversationStateObject,
+    CSO,
   };
 }
 
@@ -811,6 +813,12 @@ export function loadAgentSessionsSuccess(sessions) {
 /*
  * Sayings
  */
+export function resetSayings(){
+  return {
+    type: RESET_SAYINGS
+  }
+}
+
 export function loadSayings(filter, page, pageSize) {
   return {
     type: LOAD_SAYINGS,
@@ -1740,11 +1748,12 @@ export function changeModifierData(payload) {
   };
 }
 
-export function addModifierSaying(modifierIndex, newSaying) {
+export function addModifierSaying(modifierIndex, newSaying, keyword) {
   return {
     type: ADD_MODIFIER_SAYING,
     modifierIndex,
     newSaying,
+    keyword,
     apiCall: true,
   };
 }

@@ -126,7 +126,7 @@ export function* putModifierSayingsPageSize(payload) {
 
 export function* getIdentifyKeywords(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, modifierIndex, newSaying } = payload;
+  const { api, modifierIndex, newSaying, keyword } = payload;
   try {
     const params = {
       text: newSaying,
@@ -136,7 +136,11 @@ export function* getIdentifyKeywords(payload) {
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_IDENTIFY_KEYWORDS]),
       { params },
     );
-    yield put(addModifierSayingSuccess(modifierIndex, newSaying, response));
+    const filteredResponse = response.filter((identifiedKeyword) => {
+
+      return identifiedKeyword.keyword === keyword;
+    });
+    yield put(addModifierSayingSuccess(modifierIndex, newSaying, filteredResponse));
   } catch (err) {
     yield put(addModifierSayingSuccess(err));
   }

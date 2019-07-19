@@ -14,9 +14,6 @@ const schema = {
     actionQueue: {
         type: 'json'
     },
-    responseQueue: {
-        type: 'json'
-    },
     docIds: {
         type: 'json'
     },

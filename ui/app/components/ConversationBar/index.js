@@ -38,7 +38,7 @@ import {
   makeSelectMessages,
   makeSelectAgent,
   makeSelectWaitingResponse,
-  makeSelectConversationStateObject,
+  makeSelectCSO,
   makeSelectSettings,
   makeSelectSessionId,
   makeSelectSessionLoaded,
@@ -123,9 +123,6 @@ const styles = {
     marginTop: '20px',
   },
   userMessage: {
-    '&:hover': {
-      boxShadow: '0 2px 10px 0px #000000',
-    },
     color: '#fff',
     backgroundColor: '#00bd6f',
     borderRadius: '3px',
@@ -145,9 +142,6 @@ const styles = {
     marginLeft: '60px',
   },
   agentMessage: {
-    '&:hover': {
-      boxShadow: '0 2px 10px 0px #000000',
-    },
     color: '#4A4A4A',
     borderRadius: '3px',
     padding: '8px',
@@ -257,15 +251,15 @@ export class ConversationBar extends React.PureComponent {
           socketClientConnected: true,
         });
 
-        const handler = response => {
+        const handler = (response) => {
           if (response) {
             this.props.onRespondMessage({
               author: this.props.agent.agentName,
               docId: response.docId,
               message: response.textResponse,
-              conversationStateObject: response.conversationStateObject,
+              CSO: response.CSO,
             });
-            this.props.onStoreSourceData({ ...response.conversationStateObject });
+            this.props.onStoreSourceData({ ...response.CSO });
           }
         };
 
@@ -296,6 +290,12 @@ export class ConversationBar extends React.PureComponent {
           this.props.onLoadSessionId(sessionIdStored);
         }
       }
+    }
+  }
+
+  componentWillUnmount(){
+    if (this.state.client) {
+      this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`);
     }
   }
 
@@ -560,7 +560,7 @@ export class ConversationBar extends React.PureComponent {
 
                 return (
                   <Grid key={`message_${index}`}>
-                    <Typography
+                    {index !== 0 && this.props.messages[index-1].author === 'User' ? <Typography
                       style={{ color: this.props.agent.uiColor }}
                       className={classes.agentName}
                     >
@@ -571,7 +571,7 @@ export class ConversationBar extends React.PureComponent {
                           })
                         : null}
                       {message.author}
-                    </Typography>
+                    </Typography> : null}
                     <Typography
                       style={{
                         border: `1px solid ${this.props.agent.uiColor}`,
@@ -584,8 +584,8 @@ export class ConversationBar extends React.PureComponent {
                           onClick={() => {
                             this.setState({
                               openCodeModal: true,
-                              conversationStateObject:
-                                message.conversationStateObject,
+                              CSO:
+                                message.CSO,
                             });
                           }}
                           className={classes.messageSource}
@@ -651,11 +651,7 @@ export class ConversationBar extends React.PureComponent {
                           sessions = '{}';
                         }
                         sessions = JSON.parse(sessions);
-                        if (
-                          !sessions[this.props.agent.agentName] ||
-                          sessions[this.props.agent.agentName].sessions
-                            .length === 0
-                        ) {
+                        if (!sessions[this.props.agent.agentName] || sessions[this.props.agent.agentName].sessions.length === 0) {
                           sessions[this.props.agent.agentName] = {
                             sessionId: '',
                             sessions: [],
@@ -675,19 +671,17 @@ export class ConversationBar extends React.PureComponent {
                             'sessions',
                             JSON.stringify(sessions),
                           );
-                          this.props.onLoadSessionId(newSessionId, true);
 
                           this.props.onSendMessage(
                             evt.target.value,
                             newSessionId,
+                            true
                           );
                           this.setState({
                             userMessage: '',
                           });
                         } else {
-                          this.props.onShowWarning(
-                            intl.formatMessage(messages.selectSession),
-                          );
+                          this.props.onShowWarning('selectSession');
                         }
                       }
                     } else {
@@ -724,7 +718,7 @@ export class ConversationBar extends React.PureComponent {
             handleClose={() => {
               this.setState({ openCodeModal: false });
             }}
-            conversationStateObject={this.state.conversationStateObject}
+            CSO={this.state.CSO}
             open={this.state.openCodeModal}
           />
         </Grid>
@@ -738,7 +732,7 @@ ConversationBar.propTypes = {
   classes: PropTypes.object,
   intl: intlShape.isRequired,
   notifications: PropTypes.array,
-  conversationStateObject: PropTypes.object,
+  CSO: PropTypes.object,
   onResetSession: PropTypes.func,
   onCloseNotification: PropTypes.func,
   onSendMessage: PropTypes.func,
@@ -754,7 +748,7 @@ const mapStateToProps = createStructuredSelector({
   notifications: makeSelectNotifications(),
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
-  conversationStateObject: makeSelectConversationStateObject(),
+  CSO: makeSelectCSO(),
   settings: makeSelectSettings(),
   sessionId: makeSelectSessionId(),
   sessionLoaded: makeSelectSessionLoaded(),
@@ -768,13 +762,13 @@ function mapDispatchToProps(dispatch) {
     onCloseNotification: index => {
       dispatch(closeNotification(index));
     },
-    onSendMessage: (message, sessionId) => {
+    onSendMessage: (message, sessionId, newSession) => {
       dispatch(
         sendMessage({
           author: 'User',
           message,
           sessionId,
-        }),
+        }, newSession),
       );
     },
     onLoadSettings: () => {
