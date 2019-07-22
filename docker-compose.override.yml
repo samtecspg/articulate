@@ -1,0 +1,17 @@
+version: '3.0'
+
+services:
+  nginx:
+    ports: ['${PORT:-8080}:80']
+  api:
+    ports: ['${API_PORT:-7500}:7500']
+  ui:
+    ports: ['3000']
+  rasa:
+    ports: ['5000:5000']
+  duckling:
+    ports: ['8000:8000']
+  redis:
+    ports: ['6379:6379']
+  elasticsearch:
+    ports: ['9200:9200']
