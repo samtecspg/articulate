@@ -20,6 +20,8 @@ git clone -b $1 https://github.com/samtecspg/articulate.git
 BUILD="articulate-$1"
 mkdir $BUILD
 cp articulate/docker-compose.yml $BUILD
+cp articulate/docker-compose.override.yml $BUILD
+cp -r articulate/compose 
 cp -r articulate/local-storage $BUILD
 rm $BUILD/local-storage/*/.gitignore
 zip -9 -y -r $BUILD.zip $BUILD
