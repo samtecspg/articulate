@@ -699,6 +699,20 @@
     retry "^0.12.0"
     ws "^5.2.0"
 
+"@slack/types@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@slack/types/-/types-1.0.0.tgz#1dc7a63b293c4911e474197585c3feda012df17a"
+  integrity sha512-IktC4uD/CHfLQcSitKSmjmRu4a6+Nf/KzfS6dTgUlDzENhh26l8aESKAuIpvYD5VOOE6NxDDIAdPJOXBvUGxlg==
+
+"@slack/webhook@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@slack/webhook/-/webhook-5.0.0.tgz#0044a3940afc16cbc607c71acdffddb9e9d4f161"
+  integrity sha512-cDj3kz3x9z9271xPNzlwb90DpKTYybG2OWPJHigJL8FegR80rzQyD0v4bGuStGGkHbAYDKE2BMpJambR55hnSg==
+  dependencies:
+    "@slack/types" "^1.0.0"
+    "@types/node" ">=8.9.0"
+    axios "^0.18.0"
+
 "@types/aws-lambda@^0.0.33":
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-0.0.33.tgz#17083d9c569048792f4f33ef6cd6aaf54d5b22d3"
@@ -774,6 +788,11 @@
   version "11.12.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.12.2.tgz#d7f302e74b10e9801d52852137f652d9ee235da8"
   integrity sha512-c82MtnqWB/CqqK7/zit74Ob8H1dBdV7bK+BcErwtXbe0+nUGkgzq5NTDmRW/pAv2lFtmeNmW95b0zK2hxpeklg==
+
+"@types/node@>=8.9.0":
+  version "12.6.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.8.tgz#e469b4bf9d1c9832aee4907ba8a051494357c12c"
+  integrity sha512-aX+gFgA5GHcDi89KG5keey2zf0WfZk/HAQotEamsK2kbey+8yGKcson0hbK8E+v0NArlCJQCqMP161YhV6ZXLg==
 
 "@types/node@^9.4.6":
   version "9.6.47"

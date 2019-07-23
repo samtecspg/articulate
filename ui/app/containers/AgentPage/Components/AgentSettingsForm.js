@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
 import {
@@ -8,6 +8,7 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
+  TextField,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -77,7 +78,7 @@ class AgentSettingsForm extends React.Component {
   };
 
   render() {
-    const { classes, agent, webhook, postFormat, agentSettings } = this.props;
+    const { classes, agent, webhook, postFormat, agentSettings, intl } = this.props;
     const { expanded } = this.state;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
@@ -224,6 +225,47 @@ class AgentSettingsForm extends React.Component {
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
+            <ExpansionPanel
+              expanded={expanded === 'panelLogging'}
+              onChange={() => {
+                this.handleChange('expanded', 'panelLogging');
+              }}
+            >
+              <ExpansionPanelSummary
+                expandIcon={this.getExpandIcon(
+                  false,
+                  expanded === 'panelLogging',
+                )}
+              >
+                <Typography className={classes.panelHeading}>
+                  <FormattedMessage {...messages.loggingSetting} />
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container spacing={16}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="slackLoggingURL"
+                      label={intl.formatMessage(messages.slackLoggingURL)}
+                      value={agentSettings.slackLoggingURL ? agentSettings.slackLoggingURL : ''}
+                      placeholder={intl.formatMessage(
+                        messages.slackLoggingURLPlaceholder,
+                      )}
+                      onChange={evt => {
+                        this.props.onChangeAgentSettingsData('slackLoggingURL', evt.target.value);
+                      }}
+                      margin="normal"
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      helperText={intl.formatMessage(messages.requiredField)}
+                      error={this.props.errorState.webhookUrl}
+                    />
+                  </Grid>
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
           </div>
         </Grid>
       </Grid>
@@ -232,6 +274,7 @@ class AgentSettingsForm extends React.Component {
 }
 
 AgentSettingsForm.propTypes = {
+  intl: intlShape.isRequired,
   classes: PropTypes.object.isRequired,
   agent: PropTypes.object,
   webhook: PropTypes.object,
@@ -249,4 +292,4 @@ AgentSettingsForm.propTypes = {
   errorState: PropTypes.object,
 };
 
-export default withStyles(styles)(AgentSettingsForm);
+export default injectIntl(withStyles(styles)(AgentSettingsForm));

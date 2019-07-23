@@ -144,6 +144,18 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentSettingsForm.ducklingSetting',
     defaultMessage: 'Duckling',
   },
+  loggingSetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.loggingSetting',
+    defaultMessage: 'Logging',
+  },
+  slackLoggingURL: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.slackLogginURL',
+    defaultMessage: 'Slack Logging URL',
+  },
+  slackLoggingURLPlaceholder: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.slackLogginURLPlaceholder',
+    defaultMessage: 'Incoming webhook url provided by slack',
+  },
   extraTrainingData: {
     id:
       'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingData',

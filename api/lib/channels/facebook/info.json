@@ -2,6 +2,8 @@
     "name": "Messenger",
     "description": "A connection for Facebook Messenger Bots.",
     "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/README.MD",
+    "userField": "sender.id",
+    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/fb-messenger.png",
     "details": {
         "pageAccessToken": {
             "displayName": "Page Access Token",

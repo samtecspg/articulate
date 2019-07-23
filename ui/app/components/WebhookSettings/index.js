@@ -7,7 +7,6 @@ import {
   TextField,
   Typography,
   MenuItem,
-  Switch,
   InputAdornment,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';

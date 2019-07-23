@@ -8,6 +8,7 @@ module.exports = async (server) => {
     const { settingsService, contextService } = await server.services();
     const CurrentSettings = await settingsService.findAll();
 
+
     await Promise.all(_.map(defaultSettings, async (value, name) => {
 
         if (CurrentSettings[name]) {

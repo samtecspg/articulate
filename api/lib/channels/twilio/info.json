@@ -2,6 +2,8 @@
     "name": "Twilio SMS",
     "description": "A quick connection to the webhook of Twilio SMS Numbers.",
     "documentation": null,
+    "userField": "From",
+    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/twilio.png",
     "details": {
         "authToken": {
             "displayName": "Auth Token",

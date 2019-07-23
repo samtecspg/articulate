@@ -78,7 +78,7 @@ module.exports = async function ({ actionData, CSO }) {
 
     if (CSO.ubiquity && CSO.ubiquity.connection && CSO.ubiquity.connection.details.outgoingMessages){
 
-        channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity });
+        await channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity, sessionId: CSO.sessionId });
         await timeout(CSO.ubiquity.connection.details.waitTimeBetweenMessages);
     }
     else {

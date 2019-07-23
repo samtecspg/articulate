@@ -32,7 +32,6 @@ module.exports = async function ({ connection, request }) {
   } else {
 
     const elements = signature.split('=');
-    const method = elements[0];
     const signatureHash = elements[1];
     const expectedHash = Crypto.createHmac('sha1', connection.details.appSecret)
       .update(regenerateRawPayload(data))
@@ -55,7 +54,7 @@ module.exports = async function ({ connection, request }) {
             // Gets the message. entry.messaging is an array, but 
             // will only ever contain one message, so we get index 0
             const event = entry.messaging[0];
-            const sessionId = await channelService.hash({ connection, event })
+            const sessionId = await channelService.hash({ event })
 
             //Messages like stickers don't have a text and are unhandled at the moment.
 
@@ -76,7 +75,7 @@ module.exports = async function ({ connection, request }) {
 
               if (response.textResponse !== null && response.textResponse !== '') {
                 if (!connection.details.outgoingMessages){
-                  await channelService.reply({ connection, event, response });
+                  await channelService.reply({ connection, event, response, sessionId });
                 }
               }
             } else {

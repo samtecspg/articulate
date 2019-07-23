@@ -5,14 +5,15 @@ module.exports = async function ({ connection, request, h }) {
   const { agentService, channelService } = request.services();
 
   const event = request.payload;
-  const sessionId = await channelService.hash({ connection, event });
+  event.server = request.server;
+  const sessionId = event.sessionId;
 
   try {
     await agentService.converse({ 
       id: connection.agent,
       sessionId,
       text: event.text,
-      timezone: null,
+      timezone: event.timezone ? event.timezone : null,
       debug: false,
       additionalKeys: {
         ubiquity: {
@@ -21,6 +22,10 @@ module.exports = async function ({ connection, request, h }) {
         }
       }
     });
+
+    if (!connection.details.outgoingMessages){
+      await channelService.reply({ connection, event, response, sessionId });
+    }
   
     return h.response().code(200);
   }

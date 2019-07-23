@@ -1,38 +1,38 @@
 module.exports = async function ({ connection, request, h }) {
 
-    const { agentService, channelService } = request.services();
+  const { agentService, channelService } = request.services();
 
-    const event = request.payload;
+  const event = request.payload;
 
-    if (event.type == 'url_verification') {
+  if (event.type == 'url_verification') {
 
-      return h.response(event.challenge).code(200)
-    } else {
+    return h.response(event.challenge).code(200)
+  } else {
 
-      if (event.event.subtype !== 'bot_message') {
-        const sessionId = await channelService.hash({ connection, event });
+    if (event.event.subtype !== 'bot_message') {
+      const sessionId = await channelService.hash({ connection, event });
 
-        const response = await agentService.converse({ 
-            id: connection.agent,
-            sessionId,
-            text: event.event.text,
-            timezone: null,
-            debug: false,
-            additionalKeys: {
-              ubiquity: {
-                connection,
-                event
-              }
+      const response = await agentService.converse({ 
+          id: connection.agent,
+          sessionId,
+          text: event.event.text,
+          timezone: null,
+          debug: false,
+          additionalKeys: {
+            ubiquity: {
+              connection,
+              event
             }
-        })
+          }
+      })
 
-        if (!connection.details.outgoingMessages){
-          channelService.reply({ connection, event, response});
-        }
-  
+      if (!connection.details.outgoingMessages){
+        await channelService.reply({ connection, event, response, sessionId });
       }
 
-      return h.response().code(200);
     }
+
+    return h.response().code(200);
+  }
 };
 
