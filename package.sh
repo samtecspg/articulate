@@ -21,7 +21,8 @@ BUILD="articulate-$1"
 mkdir $BUILD
 cp articulate/docker-compose.yml $BUILD
 cp articulate/docker-compose.override.yml $BUILD
-cp -r articulate/compose 
+cp articulate/init-letsencrypt.sh $BUILD
+cp -r articulate/compose $BUILD 
 cp -r articulate/local-storage $BUILD
 rm $BUILD/local-storage/*/.gitignore
 zip -9 -y -r $BUILD.zip $BUILD
