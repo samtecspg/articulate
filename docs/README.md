@@ -9,7 +9,7 @@
 
 Articulate is a platform for building conversational interfaces with intelligent agents. It is built primarily on top of Rasa NLU, which internally uses Duckling, spaCy, and tensorFlow. It implements a custom dialogue management solution capable of deep complex dialog, but with a focus on simplicity in use.
 
-If you're ready to get started then jump straight to [basic installation](./getting-started/basic-installation.md)
+If you're ready to get started then jump straight to [basic installation](./getting-started/basic-installation.md) or if you're wanting to get some development done check out our [developer docs](./developer/getting-started.md).
 
 ![](./img/laptop-mockup.png)
 
