@@ -223,6 +223,7 @@ import {
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
   UPDATE_NEW_RESPONSE,
+  UPDATE_SAYING,
   UPDATE_SAYING_ERROR,
   UPDATE_SAYING_SUCCESS,
   UPDATE_SETTING,
@@ -959,6 +960,16 @@ export function untagKeyword(filter, page, pageSize, saying, start, end) {
     saying,
     start,
     end,
+  };
+}
+
+export function updateSaying(saying, field, value) {
+  return {
+    type: UPDATE_SAYING,
+    apiCall: true,
+    saying,
+    field,
+    value
   };
 }
 

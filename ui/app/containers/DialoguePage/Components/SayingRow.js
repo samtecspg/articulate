@@ -17,6 +17,7 @@ import HighlightedSaying from './HighlightedSaying';
 
 import addActionIcon from '../../../images/add-action-icon.svg';
 import FilterSelect from '../../../components/FilterSelect';
+import Star from '../../../components/Star';
 
 const styles = {
   userSays: {
@@ -106,6 +107,7 @@ class SayingRow extends React.Component {
       left: 0,
       top: 0,
     },
+    starHovered: false,
   };
 
   handleClose = selectName => {
@@ -230,6 +232,14 @@ class SayingRow extends React.Component {
                 ))}
               </TextField>
             </div>
+            <Star
+              style={{ width: '15px', marginLeft: '5px', cursor: 'pointer' }}
+              starred={saying.starred}
+              hovered={this.state.starHovered}
+              onMouseEnter={() => { this.setState({ starHovered: true }) }}
+              onMouseLeave={() => { this.setState({ starHovered: false }) }}
+              onClick={() => { this.props.onUpdateSayingData(saying, 'starred', !saying.starred) }}
+            />
             <Grid item md={10} xs={8}>
               <span
                 className={classes.userSays}
@@ -391,6 +401,7 @@ SayingRow.propTypes = {
   onChangeSayingCategory: PropTypes.func,
   onSearchActions: PropTypes.func,
   agentFilteredActions: PropTypes.array,
+  onUpdateSayingData: PropTypes.func,
 };
 
 export default withStyles(styles)(SayingRow);

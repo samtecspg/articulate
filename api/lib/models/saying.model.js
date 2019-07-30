@@ -14,7 +14,8 @@ class SayingModel {
             creationDate: Joi
                 .string(),
             modificationDate: Joi
-                .string()
+                .string(),
+            starred: Joi.boolean()
         };
     };
 }

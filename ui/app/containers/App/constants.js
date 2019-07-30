@@ -152,6 +152,7 @@ export const DELETE_SAYING_ERROR = 'app/SayingsPage/DELETE_SAYING_ERROR';
 export const TAG_KEYWORD = 'app/SayingsPage/TAG_KEYWORD';
 export const UNTAG_KEYWORD = 'app/SayingsPage/UNTAG_KEYWORD';
 export const CHANGE_SAYING_CATEGORY = 'app/SayingsPage/CHANGE_SAYING_CATEGORY';
+export const UPDATE_SAYING = 'app/SayingsPage/UPDATE_SAYING';
 export const UPDATE_SAYING_SUCCESS = 'app/SayingsPage/UPDATE_SAYING_SUCCESS';
 export const UPDATE_SAYING_ERROR = 'app/SayingsPage/UPDATE_SAYING_ERROR';
 export const ADD_ACTION_SAYING = 'app/SayingsPage/ADD_ACTION_SAYING';

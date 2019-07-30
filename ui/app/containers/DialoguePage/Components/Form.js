@@ -253,6 +253,7 @@ class Form extends React.Component {
               onSearchActions={this.props.onSearchActions}
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
+              onUpdateSayingData={this.props.onUpdateSayingData}
             />
           )}
           {this.props.selectedTab === 'keywords' && (
@@ -346,6 +347,7 @@ Form.propTypes = {
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
+  onUpdateSayingData: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

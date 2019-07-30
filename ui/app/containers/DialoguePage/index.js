@@ -65,6 +65,7 @@ import {
   changeActionsPageSize,
   changeSayingCategory,
   resetSayings,
+  updateSaying,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -571,6 +572,7 @@ export class DialoguePage extends React.PureComponent {
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
               filter={this.state.filter}
+              onUpdateSayingData={this.props.onUpdateSayingData}
             />
           }
           reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -619,6 +621,7 @@ DialoguePage.propTypes = {
   keywords: PropTypes.array,
   actionsPage: PropTypes.array,
   onChangeSayingCategory: PropTypes.func,
+  onUpdateSayingData: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -754,6 +757,11 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         resetSayings()
       );
+    },
+    onUpdateSayingData: (saying, field, value) => {
+      dispatch(
+        updateSaying(saying, field, value)
+      )
     }
   };
 }

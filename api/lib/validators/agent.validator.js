@@ -635,7 +635,8 @@ class AgentValidate {
                     }).required().allow([]),
                     actions: SayingSchema.actions.allow([]),
                     creationDate: SayingSchema.creationDate,
-                    modificationDate: SayingSchema.modificationDate
+                    modificationDate: SayingSchema.modificationDate,
+                    starred: SayingSchema.starred.default(false),
                 };
             })()
         };

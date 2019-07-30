@@ -16,7 +16,10 @@ const schema = {
     },
     modificationDate: {
         type: 'timestamp'
-    }
+    },
+    starred: {
+        type: 'boolean'
+    },
 };
 
 class SayingRedisModel extends BaseModel {

@@ -230,6 +230,7 @@ import {
   LOAD_SERVER_INFO_SUCCESS,
   LOAD_AGENT_SESSIONS_SUCCESS,
   LOAD_AGENT_SESSIONS_ERROR,
+  UPDATE_SAYING,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -1210,6 +1211,11 @@ function appReducer(state = initialState, action) {
       return state.update('newSayingActions', newSayingActions =>
         newSayingActions.filter(item => item !== action.actionName),
       );
+    case UPDATE_SAYING:
+      return state
+        .set('loading', true)
+        .set('success', false)
+        .set('error', false);
     case UPDATE_SAYING_SUCCESS:
       return state.update('sayings', sayings =>
         sayings.map(tempSaying => {
@@ -1218,9 +1224,12 @@ function appReducer(state = initialState, action) {
           }
           return tempSaying;
         }),
-      );
+      )
+      .set('loading', false)
+      .set('success', true)
+      .set('error', false);
     case UPDATE_SAYING_ERROR:
-      return state.set('loading', false).set('error', action.error);
+      return state.set('loading', false).set('success', false).set('error', action.error);
     case SEND_SAYING_TO_ACTION:
       return state.set('sayingForAction', action.saying);
     case CLEAR_SAYING_TO_ACTION:

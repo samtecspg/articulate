@@ -472,6 +472,7 @@ class SayingsDataForm extends React.Component {
                               this.props.agentFilteredActions
                             }
                             onSearchActions={this.props.onSearchActions}
+                            onUpdateSayingData={this.props.onUpdateSayingData}
                           />
                         </TableCell>
                         <TableCell className={classes.deleteCell}>
@@ -638,6 +639,7 @@ SayingsDataForm.propTypes = {
   onDeleteNewSayingAction: PropTypes.func,
   onClearSayingToAction: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
+  onUpdateSayingData: PropTypes.func,
 };
 
 export default useShallowEqual(injectIntl(withStyles(styles)(SayingsDataForm)));
