@@ -1,0 +1,13 @@
+version: '3.0'
+
+services:
+  api:
+    environment:
+     - SESSION_SECRET=_session_secret_
+     - AUTH_ENABLED=true
+     - AUTH_USER=${AUTH_USER:-arty}
+     - AUTH_PASSWORD
+     - AUTH_FORCE_DEFAULT_USER=${AUTH_FORCE_DEFAULT_USER:-false}
+  ui:
+    environment:
+     - AUTH_ENABLED=true
