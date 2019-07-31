@@ -233,7 +233,7 @@ class SayingRow extends React.Component {
               </TextField>
             </div>
             <Star
-              style={{ width: '15px', marginLeft: '5px', cursor: 'pointer' }}
+              style={{ width: '15px', height: '15px', position: 'relative', top: '12px', marginLeft: '5px', cursor: 'pointer' }}
               starred={saying.starred}
               hovered={this.state.starHovered}
               onMouseEnter={() => { this.setState({ starHovered: true }) }}
