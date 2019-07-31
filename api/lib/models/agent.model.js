@@ -26,7 +26,8 @@ class AgentModel {
             modifiersRecognizerJustER: Joi.string().allow(''),
             creationDate: Joi.string(),
             modificationDate: Joi.string(),
-            parameters: Joi.object()
+            parameters: Joi.object(),
+            enableDiscoverySheet: Joi.boolean()
         };
     };
 }

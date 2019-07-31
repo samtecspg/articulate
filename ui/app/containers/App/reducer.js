@@ -231,6 +231,12 @@ import {
   LOAD_AGENT_SESSIONS_SUCCESS,
   LOAD_AGENT_SESSIONS_ERROR,
   UPDATE_SAYING,
+  LOAD_STARRED_SAYINGS,
+  LOAD_STARRED_SAYINGS_ERROR,
+  LOAD_STARRED_SAYINGS_SUCCESS,
+  LOAD_STARRED_SAYING,
+  LOAD_STARRED_SAYING_ERROR,
+  LOAD_STARRED_SAYING_SUCCESS,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -593,6 +599,8 @@ const initialState = Immutable({
   sessions: [],
   totalSessions: null,
   serverStatus: '',
+  starredSayings: [],
+  starredSaying: null
 });
 
 function appReducer(state = initialState, action) {
@@ -2431,6 +2439,38 @@ function appReducer(state = initialState, action) {
       return state.set('loading', false).set('error', action.error);
     case LOGIN_USER_ERROR:
       return state.set('loading', false).set('error', action.error);
+
+    /* Cheat sheet*/
+    case LOAD_STARRED_SAYINGS:
+      return state
+        .set('starredSayings', initialState.starredSayings)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_STARRED_SAYINGS_ERROR:
+      return state
+        .set('starredSayings', initialState.starredSayings)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_STARRED_SAYINGS_SUCCESS:
+      return state
+        .set('starredSayings', action.sayings)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_STARRED_SAYING:
+      return state
+        .set('starredSaying', initialState.starredSaying)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_STARRED_SAYING_ERROR:
+      return state
+        .set('starredSaying', initialState.starredSaying)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_STARRED_SAYING_SUCCESS:
+      return state
+        .set('starredSaying', action.saying)
+        .set('loading', false)
+        .set('error', false);
     default:
       return state;
   }

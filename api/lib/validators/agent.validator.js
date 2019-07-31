@@ -77,7 +77,8 @@ class AgentValidate {
                     fallbackAction: AgentSchema.fallbackAction,
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
-                    parameters: Joi.object()
+                    parameters: Joi.object(),
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false)
                 };
             })()
         };
@@ -271,7 +272,8 @@ class AgentValidate {
                     modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
                     creationDate: AgentSchema.creationDate,
                     modificationDate: AgentSchema.modificationDate,
-                    parameters: Joi.object()
+                    parameters: Joi.object(),
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet
                 };
             })()
         };

@@ -9,6 +9,10 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   TextField,
+  Button,
+  Switch,
+  FormControlLabel,
+  FormHelperText,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -50,6 +54,7 @@ const styles = {
 class AgentSettingsForm extends React.Component {
   state = {
     expanded: null,
+    showSaveHint: false,
   };
 
   handleChange = (field, value) => {
@@ -263,6 +268,72 @@ class AgentSettingsForm extends React.Component {
                       error={this.props.errorState.webhookUrl}
                     />
                   </Grid>
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel
+              expanded={expanded === 'panelDiscovery'}
+              onChange={() => {
+                this.handleChange('expanded', 'panelDiscovery');
+              }}
+            >
+              <ExpansionPanelSummary
+                expandIcon={this.getExpandIcon(
+                  false,
+                  expanded === 'panelDiscovery',
+                )}
+              >
+                <Typography className={classes.panelHeading}>
+                  <FormattedMessage {...messages.discoverySetting} />
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container spacing={16}>
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={agent.enableDiscoverySheet}
+                          onChange={(evt, value) => {
+                            this.setState({
+                              showSaveHint: true
+                            })
+                            this.props.onChangeAgentData('enableDiscoverySheet', value);
+                          }}
+                          value="enableDiscoverySheet"
+                          color="primary"
+                          inputProps={{
+                            'aria-describedby': "helper-text"
+                          }}
+                        />
+                      }
+                      label={intl.formatMessage(messages.enableDiscoverySheet)}
+                    />
+                    {
+                      this.state.showSaveHint ?
+                      <FormHelperText  style={{marginTop: '0px', marginBottom: '10px'}} id='helper-text'>
+                        *Save to apply changes
+                      </FormHelperText>
+                      : null
+                    }
+                  </Grid>
+                  {
+                    agent.enableDiscoverySheet ? 
+                    <Grid item xs={12}>
+                      <Typography>
+                        <a style={{textDecoration: 'none'}} target='_blank' href={`${window.location.protocol}//${
+                          window.location.hostname
+                        }:${window.location.port}/agent/${
+                          agent.id
+                        }/discovery`}>
+                        <Button variant='contained'>
+                          {intl.formatMessage(messages.openDiscoverySheet)}
+                        </Button>
+                        </a>
+                      </Typography>
+                    </Grid>
+                    : null
+                  }
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>

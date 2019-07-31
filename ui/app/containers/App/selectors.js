@@ -388,6 +388,19 @@ const makeSelectLocale = () =>
     globalState => globalState.locale,
   );
 
+/* Cheat sheet */
+const makeSelectStarredSayings = () => 
+  createSelector(
+    selectGlobal,
+    globalState => globalState.starredSayings
+  )
+
+const makeSelectStarredSaying = () => 
+  createSelector(
+    selectGlobal,
+    globalState => globalState.starredSaying
+  )
+
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -451,4 +464,6 @@ export {
   makeSelectSessions,
   makeSelectTotalSessions,
   makeSelectLocale,
+  makeSelectStarredSayings,
+  makeSelectStarredSaying
 };

@@ -148,6 +148,14 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentSettingsForm.loggingSetting',
     defaultMessage: 'Logging',
   },
+  discoverySetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.discoverySetting',
+    defaultMessage: 'Discovery Sheet',
+  },
+  discoveryURL: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.slackLogginURL',
+    defaultMessage: 'Discovery Sheet URL',
+  },
   slackLoggingURL: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.slackLogginURL',
     defaultMessage: 'Slack Logging URL',
@@ -166,6 +174,14 @@ export default defineMessages({
       'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
     defaultMessage:
       'If you enable this option your keyword values and synonyms will be used to generate training data examples by substituing highlighted values in your sayings.',
+  },
+  enableDiscoverySheet: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.enableDiscoverySheet',
+    defaultMessage: 'Enable Discovery Sheet'
+  },
+  openDiscoverySheet: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.openDiscoverySheet',
+    defaultMessage: 'Open Discovery Sheet'
   },
   enableModelsPerCategory: {
     id:

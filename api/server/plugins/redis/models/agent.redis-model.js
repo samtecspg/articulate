@@ -77,6 +77,10 @@ const schema = {
     },
     modificationDate: {
         type: 'timestamp'
+    },
+    enableDiscoverySheet: {
+        type: 'boolean',
+        defaultValue: false
     }
 };
 

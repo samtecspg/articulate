@@ -252,6 +252,12 @@ import {
   LOAD_AGENT_SESSIONS,
   LOAD_AGENT_SESSIONS_ERROR,
   LOAD_AGENT_SESSIONS_SUCCESS,
+  LOAD_STARRED_SAYINGS,
+  LOAD_STARRED_SAYINGS_ERROR,
+  LOAD_STARRED_SAYINGS_SUCCESS,
+  LOAD_STARRED_SAYING,
+  LOAD_STARRED_SAYING_ERROR,
+  LOAD_STARRED_SAYING_SUCCESS,
 } from './constants';
 
 /*
@@ -2180,5 +2186,54 @@ export function signUpUserError(error) {
   return {
     type: SIGN_UP_USER_ERROR,
     error,
+  };
+}
+
+/* Cheat sheet*/
+
+export function loadStarredSayings(agentId, filter) {
+  return {
+    type: LOAD_STARRED_SAYINGS,
+    apiCall: true,
+    agentId,
+    filter,
+  };
+}
+
+export function loadStarredSayingsError(error) {
+  return {
+    type: LOAD_STARRED_SAYINGS_ERROR,
+    error,
+  };
+}
+
+export function loadStarredSayingsSuccess(sayings) {
+  return {
+    type: LOAD_STARRED_SAYINGS_SUCCESS,
+    sayings,
+  };
+}
+
+export function loadStarredSaying(agentId, categoryId, sayingId) {
+  return {
+    type: LOAD_STARRED_SAYING,
+    apiCall: true,
+    agentId,
+    categoryId,
+    sayingId
+  };
+}
+
+export function loadStarredSayingError(error) {
+  return {
+    type: LOAD_STARRED_SAYING_ERROR,
+    error,
+  };
+}
+
+export function loadStarredSayingSuccess(saying) {
+  return {
+    type: LOAD_STARRED_SAYING_SUCCESS,
+    saying,
   };
 }

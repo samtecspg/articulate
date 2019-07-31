@@ -37,6 +37,9 @@ import AnalyticsPage from '../AnalyticsPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
+import CheatSheetPage from '../CheatSheetPage/Loadable';
+import SayingsInfoPage from '../SayingsInfoPage/Loadable';
+
 import {
   checkAPI,
   loadAgent,
@@ -176,7 +179,27 @@ class App extends React.Component {
       notifications,
     } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
+    const disableHeader = this.props.location.pathname.indexOf('discovery') !== -1;
     return (
+      disableHeader ?
+      <div>
+        <Switch>
+          <Route
+            exact
+            path="/agent/:id/discovery"
+            component={CheatSheetPage}
+          />
+          <Route
+            exact
+            path="/agent/:id/discovery/saying/:sayingId"
+            component={SayingsInfoPage}
+          />
+          <Redirect
+            from="/agent/:id/discovery/sayingDummy/:sayingId"
+            to={`/agent/:id/discovery/saying/:sayingId?${this.props.location.search}`}
+          />
+        </Switch>
+      </div> :
       <div>
         <AppHeader
           agent={this.props.agent}

@@ -376,3 +376,11 @@ export const LOGOUT_USER_ERROR = 'app/user/LOGOUT_USER_ERROR';
 export const SIGN_UP_USER = 'app/user/SIGN_UP_USER';
 export const SIGN_UP_USER_SUCCESS = 'app/user/SIGN_UP_USER_SUCCESS';
 export const SIGN_UP_USER_ERROR = 'app/user/SIGN_UP_USER_ERROR';
+
+/* Cheat sheet*/
+export const LOAD_STARRED_SAYINGS = 'app/ActionPage/LOAD_STARRED_SAYINGS';
+export const LOAD_STARRED_SAYINGS_ERROR = 'app/ActionPage/LOAD_STARRED_SAYINGS_ERROR';
+export const LOAD_STARRED_SAYINGS_SUCCESS = 'app/ActionPage/LOAD_STARRED_SAYINGS_SUCCESS';
+export const LOAD_STARRED_SAYING = 'app/ActionPage/LOAD_STARRED_SAYING';
+export const LOAD_STARRED_SAYING_ERROR = 'app/ActionPage/LOAD_STARRED_SAYING_ERROR';
+export const LOAD_STARRED_SAYING_SUCCESS = 'app/ActionPage/LOAD_STARRED_SAYING_SUCCESS';
