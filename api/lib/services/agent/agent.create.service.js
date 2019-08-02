@@ -33,7 +33,7 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
     const agentLimit = this.options.agentLimit;
 
     if (agentLimit != -1 && agentCount >= agentLimit) {
-        throw OverLimitErrorHandler({ level: agentCount, limit: agentLimit, type: 'Agents' })
+        return Promise.reject(OverLimitErrorHandler({ level: agentCount, limit: agentLimit, type: 'Agents' }));
     }
     try {
         const allSettings = await settingsService.findAll();

@@ -154,8 +154,8 @@ export function* postAgent(payload) {
       response.categoryClassifierThreshold * 100,
     );
     yield put(addAgentSuccess(response));
-  } catch (err) {
-    yield put(addAgentError(err));
+  } catch (error) {
+    yield put(addAgentError(error.response.data.message));
   }
 }
 

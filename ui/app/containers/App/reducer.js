@@ -1016,15 +1016,27 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case ADD_AGENT_ERROR:
-      state = state.update('notifications', notifications =>
-        notifications.concat({
-          template: 'negativeNotificationTemplate',
-          instanceType: 'agent',
-          action: 'creating',
-          emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)],
-          type: 'error',
-        }),
-      );
+      if (action.error.indexOf('is already using')){  
+        state = state.update('notifications', notifications =>
+          notifications.concat({
+            template: 'errorMessageTemplate',
+            error: action.error,
+            emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)],
+            type: 'error',
+          }),
+        );
+      }
+      else {
+        state = state.update('notifications', notifications =>
+          notifications.concat({
+            template: 'negativeNotificationTemplate',
+            instanceType: 'agent',
+            action: 'creating',
+            emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)],
+            type: 'error',
+          }),
+        );
+      }
       return state
         .set('loading', false)
         .set('success', false)

@@ -640,9 +640,10 @@ export function addAgent() {
   };
 }
 
-export function addAgentError() {
+export function addAgentError(error) {
   return {
     type: ADD_AGENT_ERROR,
+    error
   };
 }
 
