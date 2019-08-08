@@ -12,8 +12,8 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
-import React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import React, { Fragment } from 'react';
+import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import systemKeywords from 'systemKeywords';
 
 import trashIcon from '../../../images/trash-icon.svg';
@@ -58,7 +58,12 @@ class SlotForm extends React.Component {
   state = {
     remember: false,
     rememberForever: false,
+    newQuickResponseKey: '',
+    newQuickResponseKeyValue: '',
+    lastQuickResponseEdited: false,
   };
+
+  
 
   replaceValuesWithSlotName(saying) {
     const newUserSays = [];
@@ -93,6 +98,7 @@ class SlotForm extends React.Component {
 
   render() {
     const { classes, intl, slot, agentKeywords } = this.props;
+
     return (
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid
@@ -299,60 +305,117 @@ class SlotForm extends React.Component {
             </Grid>
           </Grid>
           {slot.isRequired ? (
-            <Grid container spacing={24} item xs={12}>
-              <Grid item xs={12}>
-                <TextField
-                  id="newTextPrompt"
-                  label={intl.formatMessage(messages.textpromptTextField)}
-                  placeholder={intl.formatMessage(
-                    messages.textpromptTextFieldPlaceholder,
-                  )}
-                  onKeyPress={ev => {
-                    if (ev.key === 'Enter') {
-                      ev.preventDefault();
-                      if (ev.target.value !== '') {
-                        this.props.onAddTextPrompt(ev.target.value);
-                        ev.target.value = '';
+            <Fragment>
+              <Grid container spacing={24} item xs={12}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="newTextPrompt"
+                    label={intl.formatMessage(messages.textpromptTextField)}
+                    placeholder={intl.formatMessage(
+                      messages.textpromptTextFieldPlaceholder,
+                    )}
+                    onKeyPress={ev => {
+                      if (ev.key === 'Enter') {
+                        ev.preventDefault();
+                        if (ev.target.value !== '') {
+                          this.props.onAddTextPrompt(ev.target.value);
+                          ev.target.value = '';
+                        }
                       }
+                    }}
+                    margin="normal"
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      disabled: !slot.isRequired,
+                    }}
+                    helperText={intl.formatMessage(messages.textpromptHelperText)}
+                    error={
+                      this.props.errorState
+                        ? this.props.errorState.textPrompts
+                        : false
                     }
-                  }}
-                  margin="normal"
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  InputProps={{
-                    disabled: !slot.isRequired,
-                  }}
-                  helperText={intl.formatMessage(messages.textpromptHelperText)}
-                  error={
-                    this.props.errorState
-                      ? this.props.errorState.textPrompts
-                      : false
-                  }
-                />
-                {slot.textPrompts.length > 0 ? (
-                  <Table className={classes.table}>
-                    <TableBody>
-                      {slot.textPrompts.map((textPrompt, index) => (
-                        <TableRow key={`${textPrompt}_${index}`}>
-                          <TableCell>{textPrompt}</TableCell>
-                          <TableCell className={classes.deleteCell}>
-                            <img
-                              onClick={() => {
-                                this.props.onDeleteTextPrompt(index);
-                              }}
-                              className={classes.deleteIcon}
-                              src={trashIcon}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : null}
+                  />
+                  {slot.textPrompts.length > 0 ? (
+                    <Table className={classes.table}>
+                      <TableBody>
+                        {slot.textPrompts.map((textPrompt, index) => (
+                          <TableRow key={`${textPrompt}_${index}`}>
+                            <TableCell>{textPrompt}</TableCell>
+                            <TableCell className={classes.deleteCell}>
+                              <img
+                                onClick={() => {
+                                  this.props.onDeleteTextPrompt(index);
+                                }}
+                                className={classes.deleteIcon}
+                                src={trashIcon}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : null}
+                </Grid>
               </Grid>
-            </Grid>
+             
+
+              <Grid container spacing={24} item xs={12}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="newQuickResponse"
+                    label={intl.formatMessage(messages.quickResponseValue)}
+                    placeholder={intl.formatMessage(
+                      messages.newQuickResponsePlaceholder,
+                    )}
+                    onKeyPress={ev => {
+                      if (ev.key === 'Enter') {
+                        ev.preventDefault();
+                        if (ev.target.value !== '') {
+                          this.props.onAddNewQuickResponse(ev.target.value);
+                          ev.target.value = '';
+                        }
+                      }
+                    }}
+                    margin="normal"
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      disabled: !slot.isRequired,
+                    }}
+                    error={
+                      this.props.errorState
+                        ? this.props.errorState.quickResponses
+                        : false
+                    }
+                  />
+                  {slot.quickResponses && slot.quickResponses.length > 0 ? (
+                    <Table className={classes.table}>
+                      <TableBody>
+                        {slot.quickResponses.map((quickResponse, index) => (
+                          <TableRow key={`${quickResponse}_${index}`}>
+                            <TableCell>{quickResponse}</TableCell>
+                            <TableCell className={classes.deleteCell}>
+                              <img
+                                onClick={() => {
+                                  this.props.onDeleteQuickResponse(index);
+                                }}
+                                className={classes.deleteIcon}
+                                src={trashIcon}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : null}
+                </Grid>
+              </Grid>
+            </Fragment>
           ) : null}
         </Grid>
       </Grid>
@@ -371,6 +434,9 @@ SlotForm.propTypes = {
   onDeleteTextPrompt: PropTypes.func.isRequired,
   onChangeSlotName: PropTypes.func.isRequired,
   errorState: PropTypes.object,
+  onChangeQuickResponse: PropTypes.func.isRequired,
+  onDeleteQuickResponse: PropTypes.func.isRequired,
+  onAddNewQuickResponse: PropTypes.func.isRequired
 };
 
 export default injectIntl(withStyles(styles)(SlotForm));

@@ -230,6 +230,9 @@ import {
   LOAD_SERVER_INFO_SUCCESS,
   LOAD_AGENT_SESSIONS_SUCCESS,
   LOAD_AGENT_SESSIONS_ERROR,
+  ADD_NEW_QUICK_RESPONSE,
+  DELETE_QUICK_RESPONSE,
+  CHANGE_QUICK_RESPONSE,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -541,6 +544,7 @@ const initialState = Immutable({
     keywordId: '0',
     isList: false,
     isRequired: false,
+    quickResponses: [],
     textPrompts: [],
   },
   newModifier: {
@@ -1815,6 +1819,59 @@ function appReducer(state = initialState, action) {
           }),
         )
         .set('actionTouched', true);
+    case ADD_NEW_QUICK_RESPONSE:
+      if (!state.action.slots[action.slotIndex].quickResponses){
+        state = state.setIn(['action', 'slots'], state.action.slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            if (!slot.quickResponses){
+              return slot.set('quickResponses', []);
+            }
+            return slot;
+          }
+          return slot;
+        }))
+      }
+      return state.updateIn(
+        ['action', 'slots'],
+        slots => slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            return slot.update('quickResponses', quickResponses => quickResponses.concat(action.response));
+          }
+          return slot;
+        })
+      )
+      .set('actionTouched', true);;
+    case DELETE_QUICK_RESPONSE:
+      return state.updateIn(
+        ['action', 'slots'],
+        slots => slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            return slot.set('quickResponses', slot.quickResponses.filter((quickResponse, index) => { return index !== action.quickResponseIndex }));
+          }
+          return slot;
+        })
+      )
+      .set('actionTouched', true);
+    case CHANGE_QUICK_RESPONSE:
+      return state.updateIn(
+        ['action', 'slots'],
+        slots => slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            return slot.set('quickResponses', slot.quickResponses.map((quickResponse, index) => { 
+              if(index === action.quickResponseIndex){
+                return action.response;
+              } 
+              return quickResponse;
+            }));
+          }
+          return slot;
+        })
+      )
+      .set('actionTouched', true);
 
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers =>

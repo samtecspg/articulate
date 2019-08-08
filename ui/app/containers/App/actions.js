@@ -251,6 +251,9 @@ import {
   LOAD_AGENT_SESSIONS,
   LOAD_AGENT_SESSIONS_ERROR,
   LOAD_AGENT_SESSIONS_SUCCESS,
+  ADD_NEW_QUICK_RESPONSE,
+  DELETE_QUICK_RESPONSE,
+  CHANGE_QUICK_RESPONSE,
 } from './constants';
 
 /*
@@ -1617,6 +1620,31 @@ export function editActionResponse(newResponse, responseIndex) {
     type: EDIT_ACTION_RESPONSE,
     newResponse,
     responseIndex,
+  };
+}
+
+export function addNewQuickResponse(slotIndex, response) {
+  return {
+    type: ADD_NEW_QUICK_RESPONSE,
+    slotIndex,
+    response,
+  };
+}
+
+export function deleteQuickResponse(slotIndex, quickResponseIndex) {
+  return {
+    type: DELETE_QUICK_RESPONSE,
+    slotIndex,
+    quickResponseIndex,
+  };
+}
+
+export function changeQuickResponse(slotIndex, quickResponseIndex, response) {
+  return {
+    type: CHANGE_QUICK_RESPONSE,
+    slotIndex,
+    quickResponseIndex,
+    response,
   };
 }
 

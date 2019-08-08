@@ -149,6 +149,18 @@ const styles = {
     marginLeft: '15px',
     marginBottom: '16px',
   },
+  agentButtonContainer: {
+    overflowWrap: 'break-word'
+  },
+  agentMessageButton: {
+    color: '#4A4A4A',
+    borderRadius: '3px',
+    padding: '8px',
+    marginLeft: '15px',
+    marginBottom: '16px',
+    display: 'inline',
+    width: 'auto'
+  },
   agentName: {
     display: 'block',
     marginLeft: '15px',
@@ -257,6 +269,7 @@ export class ConversationBar extends React.PureComponent {
               author: this.props.agent.agentName,
               docId: response.docId,
               message: response.textResponse,
+              quickResponses: response.quickResponses,
               CSO: response.CSO,
             });
             this.props.onStoreSourceData({ ...response.CSO });
@@ -597,6 +610,25 @@ export class ConversationBar extends React.PureComponent {
                         </span>
                       ) : null}
                     </Typography>
+                    {message.quickResponses ? 
+                      <Grid className={classes.agentButtonContainer}>
+                        {message.quickResponses.map((quickResponse, buttonIndex) => {
+                          return (
+                            <Button
+                              key={`message_${index}_button_${buttonIndex}`}
+                              style={{
+                                border: `1px solid ${this.props.agent.uiColor}`,
+                              }}
+                              className={classes.agentMessageButton}
+                              onClick={() => {
+                                this.props.onSendMessage(quickResponse);
+                              }}
+                            >
+                              {quickResponse}
+                            </Button>
+                          )
+                        })}
+                      </Grid> : null}
                   </Grid>
                 );
               })}

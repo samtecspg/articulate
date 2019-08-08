@@ -11,5 +11,11 @@ module.exports = async function({
         appSecret: connection.details.appSecret
     });
 
-    bot.say(event.sender.id, response.textResponse);
+    const finalResponse = {
+        text: response.textResponse
+    }
+    if (response.quickResponses){
+        finalResponse.quickReplies = response.quickResponses;
+    }
+    bot.say(event.sender.id, response.quickResponses ? finalResponse : response.textResponse);
 }

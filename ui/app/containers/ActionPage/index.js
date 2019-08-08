@@ -71,6 +71,9 @@ import {
   updateNewResponse,
   editActionResponse,
   loadFilteredActions,
+  addNewQuickResponse,
+  deleteQuickResponse,
+  changeQuickResponse
 } from '../App/actions';
 
 const styles = {
@@ -429,6 +432,9 @@ export class ActionPage extends React.Component {
               )}
               onSortSlots={this.props.onSortSlots}
               onDeleteSlot={this.props.onDeleteSlot}
+              onChangeQuickResponse={this.props.onChangeQuickResponse}
+              onDeleteQuickResponse={this.props.onDeleteQuickResponse}
+              onAddNewQuickResponse={this.props.onAddNewQuickResponse}
             />
           }
           webhookForm={
@@ -536,6 +542,9 @@ ActionPage.propTypes = {
   newResponse: PropTypes.string,
   onEditActionResponse: PropTypes.func,
   onLoadActions: PropTypes.func,
+  onChangeQuickResponse: PropTypes.func.isRequired,
+  onDeleteQuickResponse: PropTypes.func.isRequired,
+  onAddNewQuickResponse: PropTypes.func.isRequired
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -654,6 +663,15 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadActions: () => {
       dispatch(loadActions());
+    },
+    onAddNewQuickResponse: (slotIndex, response) => {
+      dispatch(addNewQuickResponse(slotIndex, response));
+    },
+    onDeleteQuickResponse: (slotIndex, quickResponseIndex) => {
+      dispatch(deleteQuickResponse(slotIndex, quickResponseIndex));
+    },
+    onChangeQuickResponse: (slotIndex, quickResponseIndex, response) => {
+      dispatch(changeQuickResponse(slotIndex, quickResponseIndex, response));
     },
   };
 }

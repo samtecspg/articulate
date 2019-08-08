@@ -20,7 +20,7 @@ module.exports = async function ({ actionData, CSO }) {
     CSO.slots = CSO.currentAction.slots;
     if (missingSlots.length > 0) {
         const response = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: CSO, isTextPrompt: true });
-        return { ...response, fulfilled: false };
+        return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
     }
 
     if (actionData.useWebhook || CSO.agent.useWebhook) {
@@ -68,8 +68,8 @@ module.exports = async function ({ actionData, CSO }) {
         }
         CSO.webhook = { ...webhookResponse };
         const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, webhook: webhookResponse, fulfilled: true };
+        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, webhook: webhookResponse, fulfilled: true };
     }
     const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, fulfilled: true };
+    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, fulfilled: true };
 };

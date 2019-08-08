@@ -184,4 +184,12 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
     defaultMessage: 'Copy response in the response input',
   },
+  quickResponseValue: {
+    id: 'app.components.WebhookSettings.quickResponseValue',
+    defaultMessage: 'Quick Responses',
+  },
+  newQuickResponsePlaceholder: {
+    id: 'app.components.WebhookSettings.newQuickResponsePlaceholder',
+    defaultMessage: 'Please type possible responses that are going to be shown as buttons',
+  },
 });

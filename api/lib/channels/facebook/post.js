@@ -54,7 +54,7 @@ module.exports = async function ({ connection, request }) {
             // Gets the message. entry.messaging is an array, but 
             // will only ever contain one message, so we get index 0
             const event = entry.messaging[0];
-            const sessionId = await channelService.hash({ event })
+            const sessionId = await channelService.hash({ connection, event })
 
             //Messages like stickers don't have a text and are unhandled at the moment.
 

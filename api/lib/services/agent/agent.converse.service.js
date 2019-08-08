@@ -103,7 +103,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
     try {
         const { redis } = this.server.app;
-        const { agentService, contextService, globalService, documentService } = await this.server.services();
+        const { agentService, contextService, globalService } = await this.server.services();
     
         const CSO = {
             debug,
