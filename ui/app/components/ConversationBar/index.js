@@ -67,6 +67,7 @@ import Nes from 'nes';
 import { getWS } from '../../utils/locationResolver';
 import { AUTH_ENABLED } from "../../../common/env";
 import { ROUTE_AGENT, ROUTE_CONVERSE } from '../../../common/constants';
+import fontColorContrast from 'font-color-contrast';
 
 const styles = {
   container: {
@@ -617,7 +618,8 @@ export class ConversationBar extends React.PureComponent {
                             <Button
                               key={`message_${index}_button_${buttonIndex}`}
                               style={{
-                                border: `1px solid ${this.props.agent.uiColor}`,
+                                color: fontColorContrast(this.props.agent.uiColor),
+                                backgroundColor: this.props.agent.uiColor,
                               }}
                               className={classes.agentMessageButton}
                               onClick={() => {
