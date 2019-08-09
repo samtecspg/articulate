@@ -10,7 +10,23 @@ module.exports = async function({ connection, event, response }) {
   const botUserId = await driver.login({username: USER, password: PASS});
 
   if (event.user_id !== botUserId){
-    await driver.sendToRoomId(response.textResponse, event.channel_id);
+
+    await driver.sendToRoomId(response.quickResponses ? {
+      msg: response.textResponse,
+      attachments: [
+        {
+          title: '',
+          actions: response.quickResponses.map((quickResponse) => {
+
+            return {
+              type: 'button',
+              text: quickResponse,
+              msg: quickResponse,
+              msg_in_chat_window: true
+            }
+          })
+        }
+      ]} : response.textResponse, event.channel_id);
   }
 }
 
