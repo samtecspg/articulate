@@ -8,6 +8,7 @@ import {
   ROUTE_TRAIN,
   ROUTE_WEBHOOK,
   ROUTE_SETTINGS,
+  ROUTE_CONNECTION,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -39,14 +40,16 @@ import {
   makeSelectAgent,
   makeSelectSessionId,
   makeSelectSettings,
+  makeSelectConnection,
 } from './selectors';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
+  const connection = yield select(makeSelectConnection());
   const systemSessionId = yield select(makeSelectSessionId());
 
   if (agent.id) {
-    const { api, message, newSession } = payload;
+    const { api, message, newSession, isDemo } = payload;
     if (message.sessionId || systemSessionId) {
       const sessionId = systemSessionId || message.sessionId;
       try {
@@ -61,7 +64,7 @@ export function* postConverse(payload) {
         };
         yield call(
           api.post,
-          toAPIPath([ROUTE_AGENT, agent.id, ROUTE_CONVERSE]),
+          toAPIPath(isDemo ? [ROUTE_CONNECTION, connection.id, 'external'] : [ROUTE_AGENT, agent.id, ROUTE_CONVERSE]),
           null,
           postPayload,
         );

@@ -368,12 +368,13 @@ export function closeNotification(index) {
   };
 }
 
-export function sendMessage(message, newSession) {
+export function sendMessage(message, newSession, isDemo) {
   return {
     type: SEND_MESSAGE,
     apiCall: true,
     message,
     newSession,
+    isDemo
   };
 }
 
