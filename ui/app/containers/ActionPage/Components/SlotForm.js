@@ -56,8 +56,8 @@ class SlotForm extends React.Component {
   }
 
   state = {
-    remember: false,
-    rememberForever: false,
+    remember: this.props.slot.remainingLife === undefined || this.props.slot.remainingLife === '' || this.props.slot.remainingLife === null ? false : true,
+    rememberForever: this.props.slot.remainingLife === 0 ? true : false,
     newQuickResponseKey: '',
     newQuickResponseKeyValue: '',
     lastQuickResponseEdited: false,
@@ -210,6 +210,12 @@ class SlotForm extends React.Component {
                       this.setState({
                         remember: value
                       });
+                      if (!value){
+                        this.props.onChangeSlotData(
+                          'remainingLife',
+                          null,
+                        );
+                      }
                     }}
                     value="anything"
                     color="primary"

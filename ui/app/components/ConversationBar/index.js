@@ -279,9 +279,6 @@ export class ConversationBar extends React.PureComponent {
           }
         };
 
-        console.log(this.props.demoMode ?
-          `/${ROUTE_CONNECTION}/${this.props.connection.id}/external` :
-          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`);
         client.subscribe(
           this.props.demoMode ?
             `/${ROUTE_CONNECTION}/${this.props.connection.id}/external` :
