@@ -457,7 +457,9 @@ export class DialoguePage extends React.PureComponent {
   };
 
   render() {
-    return this.props.agent.id && this.props.agentKeywords ? (
+    return this.props.agent.id && this.props.agentKeywords && 
+      (this.state.selectedTab !== 'sayings' || 
+        (this.state.selectedTab === 'sayings' && this.props.agentKeywords.length === this.props.totalKeywords)) ? (
       <Grid container>
         <MainTab
           locale={this.props.locale}
