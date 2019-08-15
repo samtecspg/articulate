@@ -1,0 +1,27 @@
+{
+    "name": "Mattermost",
+    "description": "A quick connection to Mattermost using the Events API.",
+    "documentation": null,
+    "details": {
+        "signingSecret": {
+            "displayName": "Signing Secret",
+            "description" : "Unique string provided by Mattermost to verify requests",
+            "type": "string"
+        },
+        "botAccessToken": {
+            "displayName": "Bot Access Token",
+            "description" : "Token provided by Mattermost when you created your bot",
+            "type": "string"
+        },
+        "outgoingMessages": {
+            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+            "type": "boolean"
+        },
+        "waitTimeBetweenMessages": {
+            "displayName": "Time in MS between response messages:",
+            "description": "How much the channel should wait between agent responses?",
+            "type": "number"
+        }
+    }
+}
