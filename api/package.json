@@ -1,6 +1,6 @@
 {
   "name": "articulate",
-  "version": "master",
+  "version": "0.28.0",
   "description": "Articulate API",
   "author": "Samtec Smart Platform Group",
   "license": "Apache-2.0",
