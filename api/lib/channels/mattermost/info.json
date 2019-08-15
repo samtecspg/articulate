@@ -3,11 +3,6 @@
     "description": "A quick connection to Mattermost using the Events API.",
     "documentation": null,
     "details": {
-        "signingSecret": {
-            "displayName": "Signing Secret",
-            "description" : "Unique string provided by Mattermost to verify requests",
-            "type": "string"
-        },
         "botAccessToken": {
             "displayName": "Bot Access Token",
             "description" : "Token provided by Mattermost when you created your bot",

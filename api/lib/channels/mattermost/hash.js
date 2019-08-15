@@ -3,9 +3,9 @@ import Crypto from 'crypto';
 module.exports = async function ({ event }) {
     
     const secret = {
-        app: event.api_app_id,
-        channel: event.event.channel,
-        user: event.event.user
+        team: event.team_id,
+        channel: event.channel_id,
+        user: event.user_id
     };
 
     const hash = Crypto.createHmac("sha256", JSON.stringify(secret)).digest("hex");
