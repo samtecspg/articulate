@@ -1,12 +1,14 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Grid } from '@material-ui/core';
+import { Grid, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ContentEditable from 'react-contenteditable';
 
 import { intlShape, injectIntl } from 'react-intl';
 import trashIcon from '../../../images/trash-icon.svg';
+import copyIcon from '../../../images/icon-copy.svg';
+import messages from '../messages';
 
 const styles = {
   icon: {
@@ -40,7 +42,7 @@ class TextPromptRow extends React.Component {
   }
 
   render() {
-    const { classes, textPrompt, textPromptIndex } = this.props;
+    const { classes, textPrompt, textPromptIndex, intl } = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -53,8 +55,23 @@ class TextPromptRow extends React.Component {
             }} // handle innerHTML change
             tagName="span" // Use a custom HTML tag (uses a div by default)
           />
+          <Tooltip
+            title={intl.formatMessage(messages.copyTextPrompt)}
+            placement="top"
+          >
+            <img
+              onClick={() => {
+                this.props.onCopyTextPrompt(textPrompt);
+              }}
+              className={classes.icon}
+              src={copyIcon}
+            />
+          </Tooltip>
           <img
-            key="deleteTextPrompt"
+            style={{
+              position: 'relative',
+              bottom: '1px'
+            }}
             onClick={() => {
               this.props.onDeleteTextPrompt(textPromptIndex);
             }}
@@ -74,6 +91,7 @@ TextPromptRow.propTypes = {
   textPromptIndex: PropTypes.number,
   onEditSlotTextPrompt: PropTypes.func,
   onDeleteTextPrompt: PropTypes.func,
+  onCopyTextPrompt: PropTypes.func,
   agentId: PropTypes.string,
 };
 

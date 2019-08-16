@@ -184,6 +184,10 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
     defaultMessage: 'Copy response in the response input',
   },
+  copyTextPrompt: {
+    id: 'app.containers.ActionPage.component.ResponseRow.copyTextPrompt',
+    defaultMessage: 'Copy text prompt',
+  },
   quickResponseValue: {
     id: 'app.components.WebhookSettings.quickResponseValue',
     defaultMessage: 'Quick Responses',

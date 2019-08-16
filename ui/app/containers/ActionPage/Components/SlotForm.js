@@ -357,6 +357,7 @@ class SlotForm extends React.Component {
                                 textPromptIndex={textPromptIndex}
                                 onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
                                 onDeleteTextPrompt={this.props.onDeleteTextPrompt}
+                                onCopyTextPrompt={this.props.onCopyTextPrompt}
                               />
                             </TableCell>
                           </TableRow>
@@ -444,6 +445,7 @@ SlotForm.propTypes = {
   onChangeQuickResponse: PropTypes.func.isRequired,
   onDeleteQuickResponse: PropTypes.func.isRequired,
   onAddNewQuickResponse: PropTypes.func.isRequired,
+  onCopyTextPrompt: PropTypes.func.isRequired
 };
 
 export default injectIntl(withStyles(styles)(SlotForm));
