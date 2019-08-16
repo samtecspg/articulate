@@ -200,6 +200,7 @@ class SlotsForm extends React.Component {
                 onChangeQuickResponse={this.props.onChangeQuickResponse.bind(null, index)}
                 onDeleteQuickResponse={this.props.onDeleteQuickResponse.bind(null, index)}
                 onAddNewQuickResponse={this.props.onAddNewQuickResponse.bind(null, index)}
+                onEditSlotTextPrompt={this.props.onEditSlotTextPrompt.bind(null, index)}
               />
             ) : null,
           )}
@@ -232,7 +233,8 @@ SlotsForm.propTypes = {
   onDeleteSlot: PropTypes.func,
   onChangeQuickResponse: PropTypes.func.isRequired,
   onDeleteQuickResponse: PropTypes.func.isRequired,
-  onAddNewQuickResponse: PropTypes.func.isRequired  
+  onAddNewQuickResponse: PropTypes.func.isRequired,
+  onEditSlotTextPrompt: PropTypes.func.isRequired,
 };
 
 export default DragDropContext(HTML5Backend)(

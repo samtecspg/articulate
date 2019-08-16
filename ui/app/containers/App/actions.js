@@ -254,6 +254,8 @@ import {
   ADD_NEW_QUICK_RESPONSE,
   DELETE_QUICK_RESPONSE,
   CHANGE_QUICK_RESPONSE,
+  EDIT_SLOT_TEXT_PROMPT,
+  DELETE_SLOT_TEXT_PROMPT,
 } from './constants';
 
 /*
@@ -1621,6 +1623,15 @@ export function editActionResponse(newResponse, responseIndex) {
     type: EDIT_ACTION_RESPONSE,
     newResponse,
     responseIndex,
+  };
+}
+
+export function editSlotTextPrompt(slotIndex, textPromptIndex, textPrompt) {
+  return {
+    type: EDIT_SLOT_TEXT_PROMPT,
+    slotIndex,
+    textPromptIndex,
+    textPrompt
   };
 }
 
