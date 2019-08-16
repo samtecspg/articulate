@@ -3,6 +3,7 @@
     "uiColor": "#00BD6F",
     "description": "Handling some common chit chat Items.",
     "documentation": "",
+    "enabled": true,
     "data": {
         "categoryName": "small-talk",
         "enabled": true,
