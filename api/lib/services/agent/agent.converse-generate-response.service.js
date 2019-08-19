@@ -15,7 +15,8 @@ module.exports = async function ({ actionData, CSO }) {
         if (CSO.currentAction.slots[slot.slotName] && Array.isArray(CSO.currentAction.slots[slot.slotName])){
             return CSO.currentAction.slots[slot.slotName].length === 0;
         }
-        return !CSO.currentAction.slots[slot.slotName].value;
+        return (CSO.currentAction.slots[slot.slotName].value !== undefined && !CSO.currentAction.slots[slot.slotName].value) 
+            || (CSO.currentAction.slots[slot.slotName].value === undefined && !CSO.currentAction.slots[slot.slotName].from && !CSO.currentAction.slots[slot.slotName].to);
     });
     CSO.slots = CSO.currentAction.slots;
     if (missingSlots.length > 0) {
