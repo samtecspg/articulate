@@ -71,6 +71,13 @@ module.exports = async function (
                         await Promise.all(categoryToImport.actions.map(async (action) => {
 
                             const { postFormat, webhook, ...actionData } = action;
+
+                            actionData.slots = actionData.slots.map((tempSlot) => {
+
+                                tempSlot.keywordId = keywordsDir[tempSlot.keyword];
+                                return tempSlot;
+                            });
+
                             const ActionModel = await agentService.createAction({
                                 AgentModel,
                                 actionData
