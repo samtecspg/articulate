@@ -8,7 +8,9 @@ module.exports = async function () {
 
         const info = Categories[category].info;
         const samples = _.take(_.map(Categories[category].sayings, 'userSays'), 10);
-        categories[category] = { ...info, samples };
+        if (Categories[category].info.enabled){
+            categories[category] = { ...info, samples };
+        }
     });
     return categories;
 };

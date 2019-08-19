@@ -19,6 +19,7 @@ import systemKeywords from 'systemKeywords';
 import trashIcon from '../../../images/trash-icon.svg';
 
 import messages from '../messages';
+import TextPromptRow from './TextPromptRow';
 
 const styles = {
   formContainer: {
@@ -347,16 +348,16 @@ class SlotForm extends React.Component {
                   {slot.textPrompts.length > 0 ? (
                     <Table className={classes.table}>
                       <TableBody>
-                        {slot.textPrompts.map((textPrompt, index) => (
-                          <TableRow key={`${textPrompt}_${index}`}>
-                            <TableCell>{textPrompt}</TableCell>
-                            <TableCell className={classes.deleteCell}>
-                              <img
-                                onClick={() => {
-                                  this.props.onDeleteTextPrompt(index);
-                                }}
-                                className={classes.deleteIcon}
-                                src={trashIcon}
+                        {slot.textPrompts.map((textPrompt, textPromptIndex) => (
+                          <TableRow key={`${textPrompt}_${textPromptIndex}`}>
+                            <TableCell>
+                              <TextPromptRow
+                                agentId={this.props.agentId}
+                                textPrompt={textPrompt}
+                                textPromptIndex={textPromptIndex}
+                                onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
+                                onDeleteTextPrompt={this.props.onDeleteTextPrompt}
+                                onCopyTextPrompt={this.props.onCopyTextPrompt}
                               />
                             </TableCell>
                           </TableRow>
@@ -438,11 +439,13 @@ SlotForm.propTypes = {
   onChangeSlotData: PropTypes.func.isRequired,
   onAddTextPrompt: PropTypes.func.isRequired,
   onDeleteTextPrompt: PropTypes.func.isRequired,
+  onEditSlotTextPrompt: PropTypes.func.isRequired,
   onChangeSlotName: PropTypes.func.isRequired,
   errorState: PropTypes.object,
   onChangeQuickResponse: PropTypes.func.isRequired,
   onDeleteQuickResponse: PropTypes.func.isRequired,
-  onAddNewQuickResponse: PropTypes.func.isRequired
+  onAddNewQuickResponse: PropTypes.func.isRequired,
+  onCopyTextPrompt: PropTypes.func.isRequired
 };
 
 export default injectIntl(withStyles(styles)(SlotForm));
