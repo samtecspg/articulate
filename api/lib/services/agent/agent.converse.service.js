@@ -79,7 +79,8 @@ const getActionToModify = ({ recognizedModifier, recognizedKeyword, CSO }) => {
         const actionData = getActionData({ actionName: action.name, CSO });
         const isCandidate = actionData.slots.some((actionSlot) => {
 
-            return actionSlot.keyword === recognizedModifier.keyword ? recognizedModifier.keyword : recognizedKeyword.keyword;
+            const keywordName = (recognizedModifier && recognizedModifier.keyword) ? recognizedModifier.keyword : recognizedKeyword.keyword;
+            return actionSlot.keyword === keywordName;
         });
         if (isCandidate){
             return {
