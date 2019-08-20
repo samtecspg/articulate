@@ -20,8 +20,21 @@ module.exports = async function ({ actionData, CSO }) {
     });
     CSO.slots = CSO.currentAction.slots;
     if (missingSlots.length > 0) {
-        const response = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: CSO, isTextPrompt: true });
-        return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
+        let missingSlotIndex = null;
+        missingSlots.some((missingSlot, tempMissingSlotIndex) => {
+
+            CSO.currentAction.slots[missingSlot.slotName].promptCount += 1;
+            if (missingSlot.promptCountLimit >= CSO.currentAction.slots[missingSlot.slotName].promptCount){
+                missingSlotIndex = tempMissingSlotIndex;
+                return true;
+            }
+            return false;
+        });
+        if (missingSlotIndex !== null){
+            const missingSlot = missingSlots[missingSlotIndex];
+            const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount});
+            return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
+        }
     }
 
     if (actionData.useWebhook || CSO.agent.useWebhook) {

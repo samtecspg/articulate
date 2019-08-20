@@ -1,20 +1,25 @@
 import _ from 'lodash';
 
-module.exports = function ({ responses, templateContext, isTextPrompt = false }) {
+module.exports = function ({ responses, templateContext, isTextPrompt = false, promptCount }) {
 
     const { handlebars } = this.server.app;
 
-    let parsedResponses = _.map(responses, (response) => {
+    let parsedResponses = _.map(responses, (response, index) => {
 
-        response = isTextPrompt ? { textResponse: response, actions: [] } : response;
-        const match = response.textResponse.match(/{{/g);
-        const numberOfSlots = match ? match.length : 0;
-        const compiledResponse = handlebars.compile(response.textResponse, { strict: true });
-        try {
-            return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions };
+        if (!promptCount || (promptCount && (promptCount - 1) === index)){
+            response = isTextPrompt ? { textResponse: response, actions: [] } : response;
+            const match = response.textResponse.match(/{{/g);
+            const numberOfSlots = match ? match.length : 0;
+            const compiledResponse = handlebars.compile(response.textResponse, { strict: true });
+            try {
+                return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions };
+            }
+            catch (error) {
+                console.error(error);
+                return null;
+            }
         }
-        catch (error) {
-            console.error(error);
+        else {
             return null;
         }
     });

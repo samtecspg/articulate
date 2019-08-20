@@ -8,6 +8,8 @@ import {
   TableCell,
   TableRow,
   TextField,
+  Tooltip,
+  Icon,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -47,6 +49,12 @@ const styles = {
   userSayingSlot: {
     color: '#4e4e4e',
   },
+  infoIcon: {
+    color: '#4e4e4e',
+    position: 'relative',
+    top: '4px',
+    fontSize: '16px !important',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -59,6 +67,7 @@ class SlotForm extends React.Component {
   state = {
     remember: this.props.slot.remainingLife === undefined || this.props.slot.remainingLife === '' || this.props.slot.remainingLife === null ? false : true,
     rememberForever: this.props.slot.remainingLife === 0 ? true : false,
+    limitPrompt: this.props.slot.promptCountLimit === undefined || this.props.slot.promptCountLimit === '' || this.props.slot.promptCountLimit === null ? false : true,
     newQuickResponseKey: '',
     newQuickResponseKeyValue: '',
     lastQuickResponseEdited: false,
@@ -223,7 +232,19 @@ class SlotForm extends React.Component {
                   />
                 }
                 label={intl.formatMessage(messages.rememberSlot)}
+                style={{
+                  marginRight: '5px'
+                }}
               />
+              <Tooltip
+                placement="top"
+                title={intl.formatMessage(messages.rememberSlotInfo)}
+                style={{
+                  marginRight: '15px'
+                }}
+              >
+                <Icon className={classes.infoIcon}>info</Icon>
+              </Tooltip>
               {this.state.remember ?   
                 <FormControlLabel
                   control={
@@ -257,7 +278,7 @@ class SlotForm extends React.Component {
           </Grid>
           {this.state.remember && !this.state.rememberForever ? (
             <Grid container spacing={24} item xs={12}>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <TextField
                   id="remainingLife"
                   label={intl.formatMessage(messages.remainingLifeTextField)}
@@ -313,6 +334,66 @@ class SlotForm extends React.Component {
           </Grid>
           {slot.isRequired ? (
             <Fragment>
+              <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
+                <Grid item xs={6}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.limitPrompt}
+                        onChange={(evt, value) => {
+                          this.setState({
+                            limitPrompt: value
+                          });
+                          if (!value){
+                            this.props.onChangeSlotData(
+                              'promptCountLimit',
+                              null,
+                            );
+                          }
+                        }}
+                        value="anything"
+                        color="primary"
+                      />
+                    }
+                    label={intl.formatMessage(messages.limitPrompt)}
+                    style={{
+                      marginRight: '5px'
+                    }}
+                  />
+                  <Tooltip
+                    placement="top"
+                    title={intl.formatMessage(messages.limitPromptInfo)}
+                  >
+                    <Icon className={classes.infoIcon}>info</Icon>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+              {this.state.limitPrompt ? (
+                <Grid container spacing={24} item xs={12}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="promptCountLimit"
+                      label={intl.formatMessage(messages.promptCountLimitTextField)}
+                      value={slot.promptCountLimit ? slot.promptCountLimit : ''}
+                      placeholder={intl.formatMessage(
+                        messages.promptCountLimitTextFieldPlaceholder,
+                      )}
+                      onChange={evt => {
+                        this.props.onChangeSlotData(
+                          'promptCountLimit',
+                          evt.target.value ? parseInt(evt.target.value) : null,
+                        );
+                      }}
+                      margin="normal"
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      type="number"
+                    />
+                  </Grid>
+                </Grid>
+              ) : null}
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
