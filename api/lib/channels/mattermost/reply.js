@@ -1,31 +1,65 @@
-const { WebClient } = require('@slack/client');
+const axios = require('axios')
 
-module.exports = async function({ connection, event, response }) {
+module.exports = async function({ connection, event, response}) {
+    var payload = await buildReplyPayload(response, event, connection);
+    await axios.post(connection.details.incomingWebhookURL, payload);
+}
 
-    const web = new WebClient(connection.details.botAccessToken);
+async function buildReplyPayload(response, event, connection){
 
-    let attachments;
-    if (response.quickResponses){
-        const actions = response.quickResponses.map((quickResponse, index) => {
+    var channel_name = await getChannelName(event);
+    var attachments = await buildQuickResponseAttachments(response, connection, event);
 
-            return {
-                name: `{ "api_app_id": "${event.api_app_id}", "quickResponse": ${index + 1} }`,
-                text: quickResponse,
-                type: 'button',
-                value: quickResponse
-            }
-        });
-        attachments = [
-            {
-                text: "",
-                fallback: "Quick response not selected",
-                callback_id: "quickResponse",
-                color: "#3AA3E3",
-                attachment_type: "default",
-                actions
-            }
-        ]
+    return {
+        text: response.textResponse,
+        channel: channel_name,
+        username: event.user_name,
+        attachments
+    };
+  } 
+
+async function getChannelName(event){
+    return await isQuickResponseSelected(event) ? event.context.channel_name : event.channel_name;
+}
+
+async function getUserName(event){
+    return await isQuickResponseSelected(event) ? event.context.user_name : event.user_name;
+}
+
+async function isQuickResponseSelected(event){
+    return event.context;
+}
+
+async function buildQuickResponseAttachments(response, connection, event){
+    var attachments = [];
+        if (await isQuickResponseRequest(response)){
+            var token = await getToken(event);
+            var channel_name = await getChannelName(event);
+            var user_name = await getUserName(event);
+            var actions = response.quickResponses.map((quickResponse) => {
+                return {
+                    name: quickResponse,
+                    integration:{
+                        url: connection.callbackURL,
+                            context: {
+                            text: quickResponse,
+                            token,
+                            channel_name,
+                            user_name
+                            }
+                    }
+                }
+            });
+            var temp = {actions};
+            attachments.push(temp);
     }
+    return attachments;
+  } 
 
-    web.chat.postMessage({ channel: event.event.channel, text: response.textResponse, attachments });
+async function isQuickResponseRequest(response){
+    return response.quickResponses;
+}
+
+async function getToken(event){
+    return await isQuickResponseSelected(event) ? event.context.token : event.token
 }
