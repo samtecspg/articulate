@@ -8,11 +8,11 @@ services:
       - ./local-storage/nginx/nginx-http.conf:/etc/nginx/nginx.conf
     command: [nginx-debug, '-g', 'daemon off;']
   api:
-    image: samtecspg/articulate-api:0.28.1
+    image: samtecspg/articulate-api:0.28.2
   ui:
-    image: samtecspg/articulate-ui:0.28.1
+    image: samtecspg/articulate-ui:0.28.2
   rasa:
-    image: samtecspg/articulate-rasa:0.28.1
+    image: samtecspg/articulate-rasa:0.28.2
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
   duckling:
     image: samtecspg/duckling:0.1.6.0
