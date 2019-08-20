@@ -1,6 +1,6 @@
 {
   "name": "articulate",
-  "version": "0.0.0",
+  "version": "master",
   "description": "Smart conversational interfaces",
   "repository": {
     "type": "git",
