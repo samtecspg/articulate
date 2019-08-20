@@ -73,7 +73,8 @@ import {
   loadFilteredActions,
   addNewQuickResponse,
   deleteQuickResponse,
-  changeQuickResponse
+  changeQuickResponse,
+  editSlotTextPrompt,
 } from '../App/actions';
 
 const styles = {
@@ -435,6 +436,8 @@ export class ActionPage extends React.Component {
               onChangeQuickResponse={this.props.onChangeQuickResponse}
               onDeleteQuickResponse={this.props.onDeleteQuickResponse}
               onAddNewQuickResponse={this.props.onAddNewQuickResponse}
+              onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
+              onCopyTextPrompt={this.props.onCopyTextPrompt}
             />
           }
           webhookForm={
@@ -544,7 +547,10 @@ ActionPage.propTypes = {
   onLoadActions: PropTypes.func,
   onChangeQuickResponse: PropTypes.func.isRequired,
   onDeleteQuickResponse: PropTypes.func.isRequired,
-  onAddNewQuickResponse: PropTypes.func.isRequired
+  onAddNewQuickResponse: PropTypes.func.isRequired,
+  onEditSlotTextPrompt: PropTypes.func.isRequired,
+  onDeleteSlotTextPrompt: PropTypes.func.isRequired,
+  onCopyTextPrompt: PropTypes.func.isRequired
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -673,6 +679,15 @@ function mapDispatchToProps(dispatch) {
     onChangeQuickResponse: (slotIndex, quickResponseIndex, response) => {
       dispatch(changeQuickResponse(slotIndex, quickResponseIndex, response));
     },
+    onEditSlotTextPrompt: (slotIndex, textPromptIndex, textPrompt) => {
+      dispatch(editSlotTextPrompt(slotIndex, textPromptIndex, textPrompt));
+    },
+    onDeleteSlotTextPrompt: (slotIndex, textPromptIndex) => {
+      dispatch(deleteSlotTextPrompt(slotIndex, textPromptIndex));
+    },
+    onCopyTextPrompt: (slotIndex, newTextPrompt) => {
+      dispatch(addSlotTextPrompt({ slotIndex, newTextPrompt }));
+    }
   };
 }
 

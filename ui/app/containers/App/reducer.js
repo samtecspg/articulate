@@ -233,6 +233,8 @@ import {
   ADD_NEW_QUICK_RESPONSE,
   DELETE_QUICK_RESPONSE,
   CHANGE_QUICK_RESPONSE,
+  EDIT_SLOT_TEXT_PROMPT,
+  DELETE_SLOT_TEXT_PROMPT,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -1872,6 +1874,24 @@ function appReducer(state = initialState, action) {
         })
       )
       .set('actionTouched', true);
+    case EDIT_SLOT_TEXT_PROMPT:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.slotIndex) {
+              return slot.update('textPrompts', textPrompts => textPrompts.map((textPrompt, textPromptIndex) => {
+                
+                if (action.textPromptIndex === textPromptIndex){
+                  return action.textPrompt;
+                }
+                return textPrompt;
+              }));
+            }
+
+            return slot;
+          }),
+        )
+        .set('actionTouched', true);
 
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers =>

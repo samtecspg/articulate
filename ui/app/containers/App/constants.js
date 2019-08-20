@@ -272,6 +272,7 @@ export const EDIT_ACTION_RESPONSE = 'app/ActionPage/EDIT_ACTION_RESPONSE';
 export const ADD_NEW_QUICK_RESPONSE = 'app/ActionPage/ADD_NEW_QUICK_RESPONSE';
 export const DELETE_QUICK_RESPONSE = 'app/ActionPage/DELETE_QUICK_RESPONSE';
 export const CHANGE_QUICK_RESPONSE = 'app/ActionPage/CHANGE_QUICK_RESPONSE';
+export const EDIT_SLOT_TEXT_PROMPT = 'app/ActionPage/EDIT_SLOT_TEXT_PROMPT';
 
 /*
  * Keyword

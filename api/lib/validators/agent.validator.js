@@ -162,6 +162,7 @@ class AgentValidate {
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         quickResponses: SlotSchema.quickResponses,
+                        promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
                         remainingLife: SlotSchema.remainingLife
                     })
@@ -196,6 +197,7 @@ class AgentValidate {
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         quickResponses: SlotSchema.quickResponses,
+                        promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
                         remainingLife: SlotSchema.remainingLife
                     }),
@@ -966,6 +968,7 @@ class AgentValidate {
                             isList: SlotSchema.isList.required(),
                             isRequired: SlotSchema.isRequired.required(),
                             quickResponses: SlotSchema.quickResponses,
+                            promptCountLimit: SlotSchema.promptCountLimit,
                             textPrompts: SlotSchema.textPrompts,
                             remainingLife: SlotSchema.remainingLife
                         }),

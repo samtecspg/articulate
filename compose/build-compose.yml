@@ -2,13 +2,13 @@ version: '3.0'
 
 services:
   api:
-    build: './api/.'
+    build: '../api/.'
   ui:
     build:
-      context: './ui/.'
+      context: '../ui/.'
   rasa:
     build:
-      context: './rasa/.'
+      context: '../rasa/.'
   duckling:
     build:
-      context: './duckling/.'
+      context: '../duckling/.'
