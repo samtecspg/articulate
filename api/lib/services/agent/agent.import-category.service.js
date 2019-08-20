@@ -2,7 +2,8 @@ import {
     MODEL_AGENT,
     MODEL_CATEGORY,
     MODEL_KEYWORD,
-    MODEL_ACTION
+    MODEL_ACTION,
+    STATUS_OUT_OF_DATE
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -16,7 +17,7 @@ module.exports = async function (
     }
 ) {
 
-    const { globalService, agentService } = await this.server.services();
+    const { globalService, agentService, serverService } = await this.server.services();
 
     try {
 
@@ -120,6 +121,12 @@ module.exports = async function (
                                 isImport: true
                             });
                         }));
+
+                        const ServerModel = await serverService.get({ returnModel: true });
+                        AgentModel.property('status', STATUS_OUT_OF_DATE);
+                        ServerModel.property('status', STATUS_OUT_OF_DATE);
+                        await AgentModel.saveInstance();
+                        await ServerModel.saveInstance();
 
                         return returnModel ? CategoryModel : CategoryModel.allProperties();
                     }
