@@ -6,7 +6,7 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false, p
 
     let parsedResponses = _.map(responses, (response, index) => {
 
-        if (!promptCount || (promptCount && (promptCount - 1) === index)){
+        if (!promptCount || (promptCount && ((promptCount - 1) === index) || (promptCount > responses.length && index === (responses.length - 1) )) ){
             response = isTextPrompt ? { textResponse: response, actions: [] } : response;
             const match = response.textResponse.match(/{{/g);
             const numberOfSlots = match ? match.length : 0;

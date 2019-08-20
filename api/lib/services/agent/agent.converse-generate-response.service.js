@@ -24,7 +24,7 @@ module.exports = async function ({ actionData, CSO }) {
         missingSlots.some((missingSlot, tempMissingSlotIndex) => {
 
             CSO.currentAction.slots[missingSlot.slotName].promptCount += 1;
-            if (missingSlot.promptCountLimit >= CSO.currentAction.slots[missingSlot.slotName].promptCount){
+            if (missingSlot.promptCountLimit === undefined || missingSlot.promptCountLimit === null || missingSlot.promptCountLimit >= CSO.currentAction.slots[missingSlot.slotName].promptCount){
                 missingSlotIndex = tempMissingSlotIndex;
                 return true;
             }
