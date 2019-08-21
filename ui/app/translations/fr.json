@@ -407,7 +407,9 @@
   "app.components.WebhookSettings.quickResponseValue":"Réponses rapides",
   "app.components.WebhookSettings.newQuickResponsePlaceholder":"Veuillez saisir les réponses possible afin qu'elles soient affichées sous forme de boutons",
   "app.containers.ActionPage.component.ResponseRow.copyTextPrompt":"Copier le texte",
-  "app.components.ConversationBar.negativeNotificationTemplate":"il y a eu une erreur {action} , {instanceType}. {emoji}",
+  "app.components.ConversationBar.negativeNotificationTemplate":"il y a eu une erreur {action}, {instanceType}. {emoji}",
+  "app.components.ConversationBar.errorCopyingSayingTemplate":"une erreur s'est produite lors de la copie du texte dans les expressions. Veuillez saisir le texte manuellement. {emoji}",
+  "app.components.ConversationBar.errorMessageTemplate":"{error}. {emoji}",
   "app.components.ConversationBar.agentTrainingErrorTemplate":"Une erreur s'est produite lors de l'entrainement de l'agent <b>{agentName}</b>. {emoji}`"
   
 }
