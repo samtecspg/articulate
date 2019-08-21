@@ -3,6 +3,11 @@
     "description": "A quick connection to Mattermost using the Events API.",
     "documentation": null,
     "details": {
+        "userName": {
+            "displayName": "User name",
+            "description" : "This is the user name that your agent will use to post messages",
+            "type": "string"
+        },
         "userSelectionsPrefix": {
             "displayName": "User selections prefix",
             "description" : "Prefix displayed for messages like quick responses or slash commands. \"Username said: \" is the default",
@@ -13,8 +18,13 @@
             "description" : "URL provided by Mattermost when you created the Incoming Webhook",
             "type": "string"
         },
-        "botAccessToken": {
-            "displayName": "Bot Access Token",
+        "botAccessTokenOutgoingWebhook": {
+            "displayName": "Bot Access Token from Outgoing Webhook",
+            "description" : "Token provided by Mattermost when you created your Outgoing Webhook",
+            "type": "string"
+        },
+        "botAccessTokenSlashCommand": {
+            "displayName": "Bot Access Token from Slash Command",
             "description" : "Token provided by Mattermost when you created your Outgoing Webhook",
             "type": "string"
         },

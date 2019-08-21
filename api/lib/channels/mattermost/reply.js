@@ -13,7 +13,7 @@ async function buildReplyPayload(response, event, connection){
     return {
         text: response.textResponse,
         channel: channel_name,
-        username: event.user_name,
+        username: connection.details.userName,
         attachments
     };
   } 
