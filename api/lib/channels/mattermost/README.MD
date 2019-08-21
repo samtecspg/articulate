@@ -124,5 +124,8 @@ Return to the Integrations Page in Mattermost and select edit to your Slash Comm
 
 Following this steps will make the communication between Mattermost and your agent possible
 
+After following the entire process you should be able to talk to your agent from mattermost directly to the channel you selected or using the Slash Command defined.
+
+![Integrations Screen](https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/screenshots/01%20-%20Google%20Actions%20Console.png)
 
 
