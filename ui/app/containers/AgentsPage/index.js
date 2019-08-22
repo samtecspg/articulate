@@ -21,14 +21,12 @@ import {
   loadChannels,
   loadConnections,
   toggleConversationBar,
-  toggleChatButton
 } from '../App/actions';
 import {
   makeSelectAgentExport,
   makeSelectAgents,
   makeSelectChannels,
-  makeSelectConnections,
-  makeSelectShowChatButton
+  makeSelectConnections
 } from '../App/selectors';
 import AgentsCards from './Components/AgentsCards';
 import ConnectionsCards from './Components/ConnectionsCards';
@@ -65,7 +63,6 @@ export class AgentsPage extends React.PureComponent {
           agentExport={this.props.agentExport}
           onGoToUrl={this.props.onGoToUrl}
           onToggleConversationBar = {this.props.onToggleConversationBar}
-          onShowChatButton = {this.props.onShowChatButton}
         />
         <MainContentHeader
           title={messages.connectionsTitle}
@@ -120,9 +117,6 @@ function mapDispatchToProps(dispatch) {
     },
     onToggleConversationBar : value => {
       dispatch(toggleConversationBar(value));
-    },
-    onShowChatButton : value => {
-      dispatch(toggleChatButton(value));
     }
   };
 }

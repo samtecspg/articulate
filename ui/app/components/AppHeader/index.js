@@ -315,7 +315,7 @@ export class AppHeader extends React.Component {
                   />
                 ) : null,
                 
-                this.props.chatButtonOpen && (<Button
+                chatButtonOpen && (<Button
                   key="conversat_button"
                   onClick={() => {
                     this.props.onToggleConversationBar(true);
@@ -392,7 +392,7 @@ export class AppHeader extends React.Component {
                     style={{ backgroundColor: notificationDotColor }}
                   />
                 ) : null,
-                <Button
+                chatButtonOpen && (<Button
                   key="conversat_button"
                   onClick={() => {
                     this.props.onToggleConversationBar(true);
@@ -408,7 +408,7 @@ export class AppHeader extends React.Component {
                     alt={intl.formatMessage(messages.articulateLogoAlt)}
                   />
                   <FormattedMessage {...messages.openChatButtonSmall} />
-                </Button>,
+                </Button>),
                 <LanguageSelect
                   key="selectLanguage"
                   uiLanguage={this.props.uiLanguage}
@@ -437,7 +437,7 @@ AppHeader.propTypes = {
   conversationBarOpen: PropTypes.bool,
   onToggleConversationBar: PropTypes.func,
   chatButtonOpen: PropTypes.bool,
-  onToggleChatButton: PropTypes.func,
+  onShowChatButton: PropTypes.func,
   notifications: PropTypes.array,
   uiLanguages: PropTypes.array,
   uiLanguage: PropTypes.string,
