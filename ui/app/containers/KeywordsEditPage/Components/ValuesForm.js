@@ -3,7 +3,7 @@ import Immutable from 'seamless-immutable';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, TextField } from '@material-ui/core';
+import { Grid, Typography, Button, Modal, TextField , InputAdornment} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ChipInput from 'components/ChipInput';
 
@@ -103,6 +103,18 @@ const styles = {
   newValueInput: {
     marginTop: '-15px !important',
   },
+  sayingEnter: {
+    color: '#4e4e4e',
+    fontSize: '10px',
+    paddingRight: '15px',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  sayingInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderTopRightRadius: '5px',
+    borderBottomRightRadius: '5px',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -312,6 +324,21 @@ class ValuesForm extends React.Component {
                             messages.newKeywordRegexTextFieldPlaceholder,
                           )
                     }
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
+                    InputProps={{
+                      className: classes.sayingInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span className={classes.sayingEnter}>
+                            {intl.formatMessage(messages.sayingEnter)}
+                          </span>
+                        </InputAdornment>
+                      ),
+                    }}
                     onKeyPress={evt => {
                       if (evt.key === 'Enter') {
                         evt.preventDefault();
