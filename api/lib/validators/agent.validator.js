@@ -524,13 +524,16 @@ class AgentValidate {
                         .string()
                         .optional()
                         .allow(SORT_ASC, SORT_DESC)
-
                         .description('Sort direction. Default= ASC'),
                     [PARAM_FIELD]: Joi
                         .string()
                         .allow(_(DocumentSchema).keys().sort().value())
                         .optional()
-                        .description('Field to sort with. Default= "time_stamp"')
+                        .description('Field to sort with. Default= "time_stamp"'),
+                    dateRange: Joi
+                        .string()
+                        .optional()
+                        .description('ES range in format: now-1h, now-1d, now-7d, now-1M, now-1y')
                 };
             })()
         };

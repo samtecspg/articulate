@@ -54,5 +54,29 @@ export default defineMessages({
   count: {
     id: 'app.containers.AnalyticsPage.count',
     defaultMessage: 'count',
+  },
+  selectTime: {
+    id: 'app.containers.AnalyticsPage.selectTime',
+    defaultMessage: 'Select time:',
+  },
+  lastHour: {
+    id: 'app.containers.AnalyticsPage.lastHour',
+    defaultMessage: 'Last hour',
+  },
+  lastDay: {
+    id: 'app.containers.AnalyticsPage.lastDay',
+    defaultMessage: 'Last day',
+  },
+  lastWeek: {
+    id: 'app.containers.AnalyticsPage.lastWeek',
+    defaultMessage: 'Last week',
+  },
+  lastMonth: {
+    id: 'app.containers.AnalyticsPage.lastMonth',
+    defaultMessage: 'Last month',
+  },
+  allTime: {
+    id: 'app.containers.AnalyticsPage.allTime',
+    defaultMessage: 'All time',
   }
 });

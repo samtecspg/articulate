@@ -42,6 +42,7 @@ export class AnalyticsPage extends React.PureComponent {
   state = {
     client: null,
     socketClientConnected: false,
+    dateRange: 'all'
   };
 
   componentWillMount(){
@@ -70,7 +71,8 @@ export class AnalyticsPage extends React.PureComponent {
               documents: documents.data,
               total: documents.totalCount,
             };
-            onRefreshDocuments(payload);
+            //onRefreshDocuments(payload);
+            onLoadDocuments(this.state.dateRange);
           }
         };
 
@@ -115,6 +117,13 @@ export class AnalyticsPage extends React.PureComponent {
             <Form
               totalDocuments={this.props.totalDocuments}
               documents={this.props.documents}
+              dateRange={this.state.dateRange}
+              onSetDateRange={(dateRange) => {
+                this.setState({
+                  dateRange
+                });
+                this.props.onLoadDocuments(dateRange);
+              }}
             />
           }
           agentForm={Link}
@@ -159,8 +168,8 @@ function mapDispatchToProps(dispatch) {
     onLoadActions: () => {
       dispatch(loadActions());
     },
-    onLoadDocuments: () => {
-      dispatch(loadAgentDocuments());
+    onLoadDocuments: (dateRange) => {
+      dispatch(loadAgentDocuments({ dateRange }));
     },
     onRefreshDocuments: (payload) => {
       dispatch(loadAgentDocumentsSuccess(payload));

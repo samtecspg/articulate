@@ -23,14 +23,17 @@ import { getActions } from '../ActionPage/saga';
 
 export function* getAgentDocument(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api } = payload;
+  const { api, dateRange } = payload;
   let skip = 0;
   let limit = 10000; //MAX ALLOWED BY ElasticSearch
   try {
     const params = {
       skip,
-      limit
+      limit,
     };
+    if (dateRange !== 'all'){
+      params.dateRange = dateRange
+    }
     const response = yield call(
       api.get,
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_DOCUMENT]),

@@ -54,7 +54,6 @@ export class AgentsPage extends React.PureComponent {
           title={messages.title}
           sizesForHideInlineElement={['sm', 'xs']}
         />
-
         <AgentsCards
           agents={agents}
           onImportAgent={this.props.onImportAgent}
