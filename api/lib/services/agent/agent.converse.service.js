@@ -302,32 +302,37 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     if (CSO.sendMessage){
 
                         CSO.response = await agentService.converseGenerateResponse({ actionData, CSO });
-                
-                        //As the action wasn't fulfilled we are not going to send any more messages to the user
-                        if (!CSO.response.fulfilled){
-                            CSO.sendMessage = false
+
+                        if (CSO.response.slotPromptLimitReached){                        
+                            CSO.currentAction.fulfilled = true;
                         }
                         else {
-                            CSO.currentAction.fulfilled = true;
-            
-                            //If there is any chained action
-                            if (CSO.response.actions && CSO.response.actions.length > 0){
-                                let newActionIndex = CSO.actionIndex + 1;
-                                CSO.response.actions.forEach((chainedAction) => {
-                                    
-                                    CSO.context.actionQueue.splice(newActionIndex, 0, {
-                                        name: chainedAction,
-                                        fulfilled: false
-                                    });
-                                    newActionIndex++;
-                                });
+                            //As the action wasn't fulfilled we are not going to send any more messages to the user
+                            if (!CSO.response.fulfilled){
+                                CSO.sendMessage = false
                             }
+                            else {
+                                CSO.currentAction.fulfilled = true;
+                
+                                //If there is any chained action
+                                if (CSO.response.actions && CSO.response.actions.length > 0){
+                                    let newActionIndex = CSO.actionIndex + 1;
+                                    CSO.response.actions.forEach((chainedAction) => {
+                                        
+                                        CSO.context.actionQueue.splice(newActionIndex, 0, {
+                                            name: chainedAction,
+                                            fulfilled: false
+                                        });
+                                        newActionIndex++;
+                                    });
+                                }
+                            }
+                            /*
+                            * This would either send a response, a text promt or a fallback
+                            * CSO.ubiquity could be filled by using the additionalKeys param
+                            */
+                            await agentService.converseSendResponseToUbiquity({ actionData, CSO });
                         }
-                        /*
-                        * This would either send a response, a text promt or a fallback
-                        * CSO.ubiquity could be filled by using the additionalKeys param
-                        */
-                        await agentService.converseSendResponseToUbiquity({ actionData, CSO });
                     }
                 }
                 CSO.actionIndex++;

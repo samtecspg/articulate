@@ -35,6 +35,7 @@ module.exports = async function ({ actionData, CSO }) {
             const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount});
             return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
         }
+        return { slotPromptLimitReached: true }
     }
 
     if (actionData.useWebhook || CSO.agent.useWebhook) {

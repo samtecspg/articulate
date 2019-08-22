@@ -237,7 +237,7 @@ class AgentValidate {
                                 end: SayingKeywordSchema.end.required(),
                                 value: SayingKeywordSchema.value.required(),
                                 keyword: SayingKeywordSchema.keyword.required(),
-                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                keywordId: SayingKeywordSchema.keywordId,
                                 extractor: SayingKeywordSchema.extractor
                             })
                         })
@@ -710,7 +710,7 @@ class AgentValidate {
                                 end: SayingKeywordSchema.end.required(),
                                 value: SayingKeywordSchema.value.required(),
                                 keyword: SayingKeywordSchema.keyword.required(),
-                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                keywordId: SayingKeywordSchema.keywordId,
                                 extractor: SayingKeywordSchema.extractor
                             })
                         })
@@ -903,7 +903,7 @@ class AgentValidate {
                                     end: SayingKeywordSchema.end.required(),
                                     value: SayingKeywordSchema.value.required(),
                                     keyword: SayingKeywordSchema.keyword.required(),
-                                    keywordId: SayingKeywordSchema.keywordId.required(),
+                                    keywordId: SayingKeywordSchema.keywordId,
                                     extractor: SayingKeywordSchema.extractor
                                 })
                             })
