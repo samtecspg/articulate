@@ -275,6 +275,7 @@ class AgentsCards extends React.Component {
               <Card className={classes.agentCard}>
                 <CardHeader
                   onClick={() => {
+                    this.props.onToggleConversationBar(false);
                     this.props.onGoToUrl(`/agent/${agent.id}`);
                   }}
                   className={classes.agentCardHeader}
@@ -372,6 +373,7 @@ AgentsCards.propTypes = {
   onExportAgent: PropTypes.func,
   onImportAgent: PropTypes.func,
   agentExport: PropTypes.object,
+  onToggleConversationBar : PropTypes.func
 };
 
 export default withStyles(styles)(AgentsCards);

@@ -164,6 +164,7 @@ import {
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
+  TOGGLE_CHAT_BUTTON,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
@@ -399,6 +400,7 @@ const initialState = Immutable({
   sessionLoaded: false,
   sessionId: '',
   conversationBarOpen: false,
+  showChatButton: false,
   waitingResponse: false,
   notifications: [],
   messages: [],
@@ -654,6 +656,8 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case TOGGLE_CONVERSATION_BAR:
       return state.set('conversationBarOpen', action.value);
+    case TOGGLE_CHAT_BUTTON:
+        return state.set('showChatButton', action.value);
     case CLOSE_NOTIFICATION:
       return state.update('notifications', notifications =>
         notifications.filter((item, index) => index !== action.index),

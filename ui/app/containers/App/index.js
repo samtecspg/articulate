@@ -51,6 +51,7 @@ import saga from './saga';
 import {
   makeSelectAgent,
   makeSelectConversationBarOpen,
+  makeSelectShowChatButton,
   makeSelectLocation,
   makeSelectMissingAPI,
   makeSelectNotifications,
@@ -172,6 +173,7 @@ class App extends React.Component {
   render() {
     const {
       conversationBarOpen,
+      chatButtonOpen,
       onToggleConversationBar,
       notifications,
     } = this.props;
@@ -185,6 +187,7 @@ class App extends React.Component {
           onChangeLanguage={this.props.onChangeLanguage}
           onToggleConversationBar={onToggleConversationBar}
           conversationBarOpen={conversationBarOpen}
+          chatButtonOpen = {chatButtonOpen}
           notifications={notifications}
           demoMode={demoMode}
           onShareAgent={this.props.onShareAgent}
@@ -343,6 +346,7 @@ const mapStateToProps = createStructuredSelector({
   missingAPI: makeSelectMissingAPI(),
   location: makeSelectLocation(),
   conversationBarOpen: makeSelectConversationBarOpen(),
+  chatButtonOpen: makeSelectShowChatButton(),
   notifications: makeSelectNotifications(),
   settings: makeSelectSettings(),
 });

@@ -17,6 +17,7 @@ export const RESET_MISSING_API = 'app/App/RESET_MISSING_API';
 export const CHECK_API = 'app/App/CHECK_API';
 export const RESET_STATUS_FLAGS = 'app/App/RESET_STATUS_FLAGS';
 export const TOGGLE_CONVERSATION_BAR = 'app/App/TOGGLE_CONVERSATION_BAR';
+export const TOGGLE_CHAT_BUTTON = 'app/App/TOGGLE_CHAT_BUTTON';
 export const CLOSE_NOTIFICATION = 'app/App/CLOSE_NOTIFICATION';
 export const SEND_MESSAGE = 'app/App/SEND_MESSAGE';
 export const RESPOND_MESSAGE = 'app/App/RESPOND_MESSAGE';

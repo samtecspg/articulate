@@ -18,6 +18,7 @@ import {
   deleteFallbackResponse,
   loadSettings,
   updateSettings,
+  toggleChatButton
 } from '../App/actions';
 import { makeSelectSettings } from '../App/selectors';
 import ActionButtons from './Components/ActionButtons';
@@ -33,6 +34,7 @@ export class SettingsPage extends React.PureComponent {
   }
 
   componentWillMount() {
+    this.props.onShowChatButton(false);
     this.props.onLoadSettings();
   }
 
@@ -287,6 +289,7 @@ SettingsPage.propTypes = {
   onSaveChanges: PropTypes.func,
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
+  onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -310,6 +313,9 @@ function mapDispatchToProps(dispatch) {
     onDeleteFallbackResponse: fallbackIndex => {
       dispatch(deleteFallbackResponse(fallbackIndex));
     },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(false));
+    }
   };
 }
 

@@ -65,6 +65,12 @@ const makeSelectConversationBarOpen = () =>
     globalState => globalState.conversationBarOpen,
   );
 
+const makeSelectShowChatButton = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.showChatButton,
+  );
+
 const makeSelectNotifications = () =>
   createSelector(
     selectGlobal,
@@ -399,6 +405,7 @@ export {
   makeSelectError,
   makeSelectSuccess,
   makeSelectConversationBarOpen,
+  makeSelectShowChatButton,
   makeSelectNotifications,
   makeSelectMessages,
   makeSelectWaitingResponse,
