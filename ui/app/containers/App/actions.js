@@ -202,6 +202,7 @@ import {
   TAG_KEYWORD,
   TAG_MODIFIER_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
+  TOGGLE_CHAT_BUTTON,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
@@ -360,6 +361,13 @@ export function toggleConversationBar(value) {
     type: TOGGLE_CONVERSATION_BAR,
     value,
     apiCall: true,
+  };
+}
+
+export function toggleChatButton(value) {
+  return {
+    type: TOGGLE_CHAT_BUTTON,
+    value
   };
 }
 

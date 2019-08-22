@@ -251,6 +251,8 @@ class AgentsCards extends React.Component {
             <Card className={classes.agentCard}>
               <CardHeader
                 onClick={() => {
+                  this.props.onToggleConversationBar(false);
+                  this.props.onShowChatButton(true);
                   this.props.onGoToUrl(`/agent/${agent.id}`);
                 }}
                 className={classes.agentCardHeader}
@@ -278,6 +280,7 @@ class AgentsCards extends React.Component {
               />
               <CardContent
                 onClick={() => {
+                  this.props.onShowChatButton(true);
                   this.props.onGoToUrl(`/agent/${agent.id}`);
                 }}
                 className={classes.agentCardContent}
@@ -342,6 +345,8 @@ AgentsCards.propTypes = {
   onExportAgent: PropTypes.func,
   onImportAgent: PropTypes.func,
   agentExport: PropTypes.object,
+  onToggleConversationBar : PropTypes.func,
+  onShowChatButton : PropTypes.func
 };
 
 export default withStyles(styles)(AgentsCards);
