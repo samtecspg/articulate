@@ -218,4 +218,8 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.newQuickResponsePlaceholder',
     defaultMessage: 'Please type possible responses that are going to be shown as buttons',
   },
+  responseEnter: {
+    id: 'app.containers.ActionPage.component.ResponseForm.responseEnter',
+    defaultMessage: 'Enter',
+  }
 });

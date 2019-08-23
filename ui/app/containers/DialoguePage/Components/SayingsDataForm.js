@@ -8,7 +8,7 @@ import {
   TableRow,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -193,6 +193,18 @@ const styles = {
     fontWeight: 300,
     cursor: 'pointer',
   },
+  sayingEnter: {
+    color: '#4e4e4e',
+    fontSize: '10px',
+    paddingRight: '15px',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  sayingInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderTopRightRadius: '5px',
+    borderBottomRightRadius: '5px',
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -379,6 +391,9 @@ class SayingsDataForm extends React.Component {
                           });
                         }}
                       />
+                      <span className={classes.sayingEnter}>
+                        {intl.formatMessage(messages.sayingEnter)}
+                      </span>
                     </InputAdornment>
                   ),
                 }}
