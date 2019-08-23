@@ -219,6 +219,7 @@ class App extends React.Component {
               exact
               path="/agent/:id/dialogue"
               component={DialoguePage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute
               exact
