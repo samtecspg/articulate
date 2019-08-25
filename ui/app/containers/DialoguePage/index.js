@@ -65,6 +65,7 @@ import {
   changeActionsPageSize,
   changeSayingCategory,
   resetSayings,
+  toggleChatButton
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -191,6 +192,7 @@ export class DialoguePage extends React.PureComponent {
     if (this.props.agent.id) {
       this.initForm();
     }
+    this.props.onShowChatButton(true);
   }
 
   componentWillUnmount() {
@@ -621,6 +623,7 @@ DialoguePage.propTypes = {
   keywords: PropTypes.array,
   actionsPage: PropTypes.array,
   onChangeSayingCategory: PropTypes.func,
+  onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -756,6 +759,9 @@ function mapDispatchToProps(dispatch) {
       dispatch(
         resetSayings()
       );
+    },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
     }
   };
 }

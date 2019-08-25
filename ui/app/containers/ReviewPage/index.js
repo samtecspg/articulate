@@ -212,6 +212,7 @@ export class ReviewPage extends React.Component {
     if (this.props.agent.id) {
       this.initForm();
     }
+    this.props.actions.onShowChatButton(true);
   }
 
   componentDidUpdate(prevProps) {
@@ -416,7 +417,7 @@ export class ReviewPage extends React.Component {
       onTrain,
       onToggleConversationBar,
       onSendMessage,
-      onLoadSessionId,
+      onLoadSessionId
     } = this.props.actions;
 
     const {
@@ -510,6 +511,7 @@ ReviewPage.propTypes = {
     onSelectCategory: PropTypes.func.isRequired,
     onTrain: PropTypes.func.isRequired,
     onToggleConversationBar: PropTypes.func.isRequired,
+    onShowChatButton: PropTypes.func.isRequired,
     onSendMessage: PropTypes.func.isRequired,
     onChangeReviewPageSize: PropTypes.func.isRequired,
     onChangeSessionsPageSize: PropTypes.func.isRequired,
@@ -528,7 +530,7 @@ ReviewPage.propTypes = {
   newSayingActions: PropTypes.array,
   onGoToUrl: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
-  locale: PropTypes.string,
+  locale: PropTypes.string
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -567,13 +569,14 @@ function mapDispatchToProps(dispatch) {
         onChangeReviewPageSize: Actions.changeReviewPageSize,
         onChangeSessionsPageSize: Actions.changeSessionsPageSize,
         onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
-        onLoadSessionId: Actions.loadSession
+        onLoadSessionId: Actions.loadSession,
+        onShowChatButton: Actions.toggleChatButton
       },
       dispatch,
     ),
     onGoToUrl: url => {
       dispatch(push(url));
-    },
+    }
   };
 }
 
