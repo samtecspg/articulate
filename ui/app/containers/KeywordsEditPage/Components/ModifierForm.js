@@ -119,7 +119,7 @@ const styles = {
 class ModifierForm extends React.Component {
   constructor(props) {
     super(props);
-    this.replaceValuesWithModifierName = this.replaceValuesWithModifierName.bind(
+    this.handleNewSayingTextFieldChange = this.handleNewSayingTextFieldChange.bind(
       this,
     );
   }
@@ -130,6 +130,7 @@ class ModifierForm extends React.Component {
     numOfPages: Math.ceil(
       this.props.modifier.sayings.length / this.props.modifierSayingsPageSize,
     ),
+    currentNewSaying: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -177,6 +178,12 @@ class ModifierForm extends React.Component {
       <span key="finaText">{saying.userSays.substring(newStart)}</span>,
     );
     return newUserSays;
+  }
+
+  handleNewSayingTextFieldChange(e) {
+    this.setState({
+      currentNewSaying: e.target.value,
+    });
   }
 
   render() {
@@ -311,6 +318,8 @@ class ModifierForm extends React.Component {
             <Grid item lg={12} md={12} sm={8} xs={8}>
               <TextField
                 id="newSaying"
+                onChange={this.handleNewSayingTextFieldChange}
+                value={this.state.currentNewSaying}
                 label={intl.formatMessage(messages.sayingTextField)}
                 placeholder={intl.formatMessage(
                   messages.sayingTextFieldPlaceholder,
@@ -318,8 +327,13 @@ class ModifierForm extends React.Component {
                 onKeyPress={ev => {
                   if (ev.key === 'Enter' && ev.target.value !== '') {
                     ev.preventDefault();
-                    this.props.onAddModifierSaying(ev.target.value, keyword.keywordName);
-                    ev.target.value = '';
+                    this.props.onAddModifierSaying(
+                      this.state.currentNewSaying,
+                      keyword.keywordName,
+                    );
+                    this.setState({
+                      currentNewSaying: '',
+                    });
                   }
                 }}
                 margin="normal"
@@ -336,7 +350,19 @@ class ModifierForm extends React.Component {
                   className: classes.sayingInputContainer,
                   endAdornment: (
                     <InputAdornment position="end">
-                      <span className={classes.sayingEnter}>
+                      <span
+                        className={classes.sayingEnter}
+                        onClick={ev => {
+                          ev.preventDefault();
+                          this.props.onAddModifierSaying(
+                            this.state.currentNewSaying,
+                            keyword.keywordName,
+                          );
+                          this.setState({
+                            currentNewSaying: '',
+                          });
+                        }}
+                      >
                         {intl.formatMessage(messages.sayingEnter)}
                       </span>
                     </InputAdornment>
