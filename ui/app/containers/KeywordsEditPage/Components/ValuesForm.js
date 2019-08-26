@@ -3,7 +3,14 @@ import Immutable from 'seamless-immutable';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, TextField , InputAdornment} from '@material-ui/core';
+import {
+  Grid,
+  Typography,
+  Button,
+  Modal,
+  TextField,
+  InputAdornment,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ChipInput from 'components/ChipInput';
 
@@ -114,7 +121,7 @@ const styles = {
     border: '1px solid #a2a7b1',
     borderTopRightRadius: '5px',
     borderBottomRightRadius: '5px',
-  }
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -333,7 +340,20 @@ class ValuesForm extends React.Component {
                       className: classes.sayingInputContainer,
                       endAdornment: (
                         <InputAdornment position="end">
-                          <span className={classes.sayingEnter}>
+                          <span
+                            className={classes.sayingEnter}
+                            onClick={evt => {
+                              evt.preventDefault();
+                              this.setState({
+                                newKeyword: '',
+                                lastExampleEdited: true,
+                              });
+                              this.props.onAddKeywordExample({
+                                value: this.state.newKeyword,
+                                synonyms: [this.state.newKeyword],
+                              });
+                            }}
+                          >
                             {intl.formatMessage(messages.sayingEnter)}
                           </span>
                         </InputAdornment>
