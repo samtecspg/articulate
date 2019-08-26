@@ -12,7 +12,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  InputAdornment
+  InputAdornment,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -246,7 +246,14 @@ class ResponseForm extends React.Component {
                       className: classes.sayingInputContainer,
                       endAdornment: (
                         <InputAdornment position="end">
-                          <span className={classes.responseEnter}>
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              ev.preventDefault();
+                              this.props.onAddResponse(this.props.newResponse);
+                              this.props.onUpdateNewResponse('');
+                            }}
+                          >
                             {intl.formatMessage(messages.responseEnter)}
                           </span>
                         </InputAdornment>
