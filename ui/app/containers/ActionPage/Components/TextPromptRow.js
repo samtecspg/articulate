@@ -50,8 +50,8 @@ class TextPromptRow extends React.Component {
             className={classes.textPrompt}
             innerRef={this.contentEditable}
             html={textPrompt} // innerHTML of the editable div
-            onChange={evt => {
-              this.props.onEditSlotTextPrompt(textPromptIndex, evt.target.value);
+            onBlur={evt => {
+              this.props.onEditSlotTextPrompt(textPromptIndex, evt.currentTarget.textContent);
             }} // handle innerHTML change
             tagName="span" // Use a custom HTML tag (uses a div by default)
           />
