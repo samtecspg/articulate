@@ -73,7 +73,7 @@ export class UsersPage extends React.PureComponent {
   state = {
     numberOfUsersPages: null,
     currentUsersPage: 1,
-    usersPageSize: this.props.settings ? this.props.settings.usersPageSize : 5,
+    usersPageSize: this.props.settings ? (this.props.settings.usersPageSize ? this.props.settings.usersPageSize : 5) : 5,
   };
 
   changeUsersPage(pageNumber) {
