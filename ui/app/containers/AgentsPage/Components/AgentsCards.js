@@ -129,7 +129,6 @@ const styles = {
   scrollerContainer: {
     height: 205,
     zIndex: 999,
-    cursor: 'pointer',
     webkitTouchCallout: 'none',
     webkitUserSelect: 'none',
     khtmlUserSelect: 'none',
@@ -148,7 +147,8 @@ class AgentsCards extends React.Component {
   }
 
   state = {
-    selectedAgent: null
+    showLeftArrow: false,
+    showRightArrow: document.getElementById('dvCardsContainer') ? document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft :  false
   };
 
   componentDidMount() {
@@ -167,6 +167,9 @@ class AgentsCards extends React.Component {
         .getElementById('dvCardsContainer')
         .attachEvent('onmousewheel', this.scrollHorizontally);
     }
+    this.setState({
+      showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft
+    });
   }
 
   scrollHorizontally(e) {
@@ -174,7 +177,8 @@ class AgentsCards extends React.Component {
     const delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
     document.getElementById('dvCardsContainer').scrollLeft -= delta * 10;
     this.setState({
-      scrolled: document.getElementById('dvCardsContainer').scrollLeft > 0
+      showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0,
+      showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
     });
     e.preventDefault();
   }
@@ -200,8 +204,12 @@ class AgentsCards extends React.Component {
       <Grid container>
         <Grid onClick={() => {
           document.getElementById('dvCardsContainer').scrollLeft -= 205;
+          this.setState({
+            showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
+            showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0
+          });
         }} className={classes.scrollerContainer} item xs={1}>
-          <img src={rightArrowIcon} style={{height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40, WebkitTransform: 'scaleX(-1)', transform: 'scaleX(-1)'}} />
+          {this.state.showLeftArrow ? <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40, WebkitTransform: 'scaleX(-1)', transform: 'scaleX(-1)'}} /> : null}
         </Grid>
         <Grid
           id="dvCardsContainer"
@@ -358,8 +366,17 @@ class AgentsCards extends React.Component {
         </Grid>
         <Grid onClick={() => {
           document.getElementById('dvCardsContainer').scrollLeft -= -205;
+          console.log(document.getElementById('dvCardsContainer').scrollLeft);
+          this.setState({
+            showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
+            showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0
+          });
         }} className={classes.scrollerContainer} item xs={1}>
-          <img src={rightArrowIcon} style={{height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40}} />
+          {
+            this.state.showRightArrow ?
+            <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40}} /> :
+            null
+          }
         </Grid>
       </Grid>
     );

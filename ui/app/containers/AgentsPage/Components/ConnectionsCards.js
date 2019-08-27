@@ -142,7 +142,6 @@ const styles = {
   scrollerContainer: {
     height: 205,
     zIndex: 999,
-    cursor: 'pointer',
     webkitTouchCallout: 'none',
     webkitUserSelect: 'none',
     khtmlUserSelect: 'none',
@@ -158,6 +157,11 @@ class ConnectionsCards extends React.Component {
     super(props);
     this.addEmptyCards = this.addEmptyCards.bind(this);
   }
+
+  state = {
+    showLeftArrow: false,
+    showRightArrow: document.getElementById('dvConnectionsCardsContainer') ? document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth :  false
+  };
 
   componentDidMount() {
     if (document.getElementById('dvConnectionsCardsContainer').addEventListener) {
@@ -175,12 +179,19 @@ class ConnectionsCards extends React.Component {
         .getElementById('dvConnectionsCardsContainer')
         .attachEvent('onmousewheel', this.scrollHorizontally);
     }
+    this.setState({
+      showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft
+    });
   }
 
   scrollHorizontally(e) {
     e = window.event || e;
     const delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
     document.getElementById('dvConnectionsCardsContainer').scrollLeft -= delta * 10;
+    this.setState({
+      showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0,
+      showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft
+    });
     e.preventDefault();
   }
 
@@ -209,8 +220,12 @@ class ConnectionsCards extends React.Component {
       <Grid container>
         <Grid onClick={() => {
           document.getElementById('dvConnectionsCardsContainer').scrollLeft -= 205;
+          this.setState({
+            showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft,
+            showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0
+          });
         }} className={classes.scrollerContainer} item xs={1}>
-          <img src={rightArrowIcon} style={{height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40, WebkitTransform: 'scaleX(-1)', transform: 'scaleX(-1)'}} />
+          {this.state.showLeftArrow ? <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40, WebkitTransform: 'scaleX(-1)', transform: 'scaleX(-1)'}} /> : null}
         </Grid>
         <Grid
           id="dvConnectionsCardsContainer"
@@ -303,8 +318,16 @@ class ConnectionsCards extends React.Component {
         </Grid>
         <Grid onClick={() => {
           document.getElementById('dvConnectionsCardsContainer').scrollLeft -= -205;
+          this.setState({
+            showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft,
+            showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0
+          });
         }} className={classes.scrollerContainer} item xs={1}>
-          <img src={rightArrowIcon} style={{height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40}} />
+          {
+            this.state.showRightArrow ?
+            <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40}} /> :
+            null
+          }
         </Grid>
       </Grid>
     );
