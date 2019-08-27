@@ -378,7 +378,9 @@ export class AgentPage extends React.PureComponent {
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
-          onFinishAction={this.submit}
+          onFinishAction={() => {
+            this.submit(false);
+          }}
           onTrain={this.props.onTrain}
           agentStatus={this.props.agent.status}
           serverStatus={this.props.serverStatus}

@@ -17,7 +17,8 @@ import Nes from 'nes';
 import { getWS } from '../../utils/locationResolver';
 
 import {
-  trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess
+  trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
+  toggleChatButton
 } from '../App/actions';
 
 import { AUTH_ENABLED } from "../../../common/env";
@@ -88,6 +89,7 @@ export class AnalyticsPage extends React.PureComponent {
           : undefined,
       });
     }
+    this.props.onShowChatButton(true);
   }
 
   componentWillUnmount() {
@@ -148,6 +150,7 @@ AnalyticsPage.propTypes = {
   onTrain: PropTypes.func,
   documents: PropTypes.array,
   totalDocuments: PropTypes.number,
+  onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -173,6 +176,9 @@ function mapDispatchToProps(dispatch) {
     },
     onRefreshDocuments: (payload) => {
       dispatch(loadAgentDocumentsSuccess(payload));
+    },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
     }
   };
 }
