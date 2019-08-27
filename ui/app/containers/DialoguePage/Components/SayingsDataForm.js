@@ -321,7 +321,10 @@ class SayingsDataForm extends React.Component {
                   messages.sayingTextFieldPlaceholder,
                 )}
                 onKeyPress={ev => {
-                  if (ev.key === 'Enter') {
+                  if (
+                    ev.key === 'Enter' &&
+                    this.state.currentNewSaying.trim() !== ''
+                  ) {
                     if (!category || category === '' || category === 'select') {
                       this.setState({
                         errorCategory: true,
@@ -331,8 +334,10 @@ class SayingsDataForm extends React.Component {
                         errorCategory: false,
                       });
                       ev.preventDefault();
-                      this.props.onAddSaying(ev.target.value);
-                      ev.target.value = '';
+                      this.props.onAddSaying(this.state.currentNewSaying);
+                      this.setState({
+                        currentNewSaying: '',
+                      });
                     }
                   }
                 }}
@@ -410,23 +415,27 @@ class SayingsDataForm extends React.Component {
                       <span
                         className={classes.sayingEnter}
                         onClick={ev => {
-                          if (
-                            !category ||
-                            category === '' ||
-                            category === 'select'
-                          ) {
-                            this.setState({
-                              errorCategory: true,
-                            });
-                          } else {
-                            this.setState({
-                              errorCategory: false,
-                            });
-                            ev.preventDefault();
-                            this.props.onAddSaying(this.state.currentNewSaying);
-                            this.setState({
-                              currentNewSaying: '',
-                            });
+                          if (this.state.currentNewSaying.trim() !== '') {
+                            if (
+                              !category ||
+                              category === '' ||
+                              category === 'select'
+                            ) {
+                              this.setState({
+                                errorCategory: true,
+                              });
+                            } else {
+                              this.setState({
+                                errorCategory: false,
+                              });
+                              ev.preventDefault();
+                              this.props.onAddSaying(
+                                this.state.currentNewSaying,
+                              );
+                              this.setState({
+                                currentNewSaying: '',
+                              });
+                            }
                           }
                         }}
                       >

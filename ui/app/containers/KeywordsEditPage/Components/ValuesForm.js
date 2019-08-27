@@ -119,8 +119,7 @@ const styles = {
   },
   sayingInputContainer: {
     border: '1px solid #a2a7b1',
-    borderTopRightRadius: '5px',
-    borderBottomRightRadius: '5px',
+    borderRadius: '5px',
   },
 };
 
@@ -343,15 +342,17 @@ class ValuesForm extends React.Component {
                           <span
                             className={classes.sayingEnter}
                             onClick={evt => {
-                              evt.preventDefault();
-                              this.setState({
-                                newKeyword: '',
-                                lastExampleEdited: true,
-                              });
-                              this.props.onAddKeywordExample({
-                                value: this.state.newKeyword,
-                                synonyms: [this.state.newKeyword],
-                              });
+                              if (this.state.newKeyword.trim() !== '') {
+                                evt.preventDefault();
+                                this.setState({
+                                  newKeyword: '',
+                                  lastExampleEdited: true,
+                                });
+                                this.props.onAddKeywordExample({
+                                  value: this.state.newKeyword,
+                                  synonyms: [this.state.newKeyword],
+                                });
+                              }
                             }}
                           >
                             {intl.formatMessage(messages.sayingEnter)}
@@ -360,7 +361,10 @@ class ValuesForm extends React.Component {
                       ),
                     }}
                     onKeyPress={evt => {
-                      if (evt.key === 'Enter') {
+                      if (
+                        evt.key === 'Enter' &&
+                        this.state.newKeyword.trim() !== ''
+                      ) {
                         evt.preventDefault();
                         this.setState({
                           newKeyword: '',

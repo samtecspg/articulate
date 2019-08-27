@@ -325,7 +325,10 @@ class ModifierForm extends React.Component {
                   messages.sayingTextFieldPlaceholder,
                 )}
                 onKeyPress={ev => {
-                  if (ev.key === 'Enter' && ev.target.value !== '') {
+                  if (
+                    ev.key === 'Enter' &&
+                    this.state.currentNewSaying.trim() !== ''
+                  ) {
                     ev.preventDefault();
                     this.props.onAddModifierSaying(
                       this.state.currentNewSaying,
@@ -353,14 +356,16 @@ class ModifierForm extends React.Component {
                       <span
                         className={classes.sayingEnter}
                         onClick={ev => {
-                          ev.preventDefault();
-                          this.props.onAddModifierSaying(
-                            this.state.currentNewSaying,
-                            keyword.keywordName,
-                          );
-                          this.setState({
-                            currentNewSaying: '',
-                          });
+                          if (this.state.currentNewSaying.trim() != '') {
+                            ev.preventDefault();
+                            this.props.onAddModifierSaying(
+                              this.state.currentNewSaying,
+                              keyword.keywordName,
+                            );
+                            this.setState({
+                              currentNewSaying: '',
+                            });
+                          }
                         }}
                       >
                         {intl.formatMessage(messages.sayingEnter)}

@@ -121,8 +121,7 @@ const styles = {
   },
   sayingInputContainer: {
     border: '1px solid #a2a7b1',
-    borderTopRightRadius: '5px',
-    borderBottomRightRadius: '5px',
+    borderRadius: '5px',
   },
 };
 
@@ -249,9 +248,13 @@ class ResponseForm extends React.Component {
                           <span
                             className={classes.responseEnter}
                             onClick={ev => {
-                              ev.preventDefault();
-                              this.props.onAddResponse(this.props.newResponse);
-                              this.props.onUpdateNewResponse('');
+                              if (this.props.newResponse.trim() !== '') {
+                                ev.preventDefault();
+                                this.props.onAddResponse(
+                                  this.props.newResponse,
+                                );
+                                this.props.onUpdateNewResponse('');
+                              }
                             }}
                           >
                             {intl.formatMessage(messages.responseEnter)}
