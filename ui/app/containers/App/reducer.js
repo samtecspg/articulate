@@ -236,6 +236,12 @@ import {
   CHANGE_QUICK_RESPONSE,
   EDIT_SLOT_TEXT_PROMPT,
   DELETE_SLOT_TEXT_PROMPT,
+  LOAD_USERS,
+  LOAD_USERS_SUCCESS,
+  LOAD_USERS_ERROR,
+  DELETE_USER,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -600,6 +606,8 @@ const initialState = Immutable({
   sessions: [],
   totalSessions: null,
   serverStatus: '',
+  users: [],
+  totalUsers: null,
 });
 
 function appReducer(state = initialState, action) {
@@ -2503,6 +2511,36 @@ function appReducer(state = initialState, action) {
       return state.set('loading', false).set('error', action.error);
     case LOGIN_USER_ERROR:
       return state.set('loading', false).set('error', action.error);
+
+    /* Users */
+    case LOAD_USERS:
+      return state
+        .set('users', initialState.users)
+        .set('totalUsers', initialState.totalUsers)
+        .set('loading', true)
+        .set('error', false)
+    case LOAD_USERS_SUCCESS:
+      return state
+        .set('users', action.users.data)
+        .set('totalUsers', action.users.totalCount)
+        .set('loading', false)
+        .set('error', false)
+    case LOAD_USERS_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error)
+    case DELETE_USER:
+      return state
+        .set('loading', true)
+        .set('error', false)
+    case DELETE_USER_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+    case DELETE_USER_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error)
     default:
       return state;
   }

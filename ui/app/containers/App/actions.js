@@ -257,6 +257,12 @@ import {
   CHANGE_QUICK_RESPONSE,
   EDIT_SLOT_TEXT_PROMPT,
   DELETE_SLOT_TEXT_PROMPT,
+  LOAD_USERS,
+  LOAD_USERS_ERROR,
+  LOAD_USERS_SUCCESS,
+  DELETE_USER,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
 } from './constants';
 
 /*
@@ -2197,7 +2203,7 @@ export function logoutUserError(error) {
   };
 }
 
-export function signUpUser(name, lastName, username, password) {
+export function signUpUser(name, lastName, username, password, ref) {
   return {
     type: SIGN_UP_USER,
     apiCall: true,
@@ -2205,6 +2211,7 @@ export function signUpUser(name, lastName, username, password) {
     lastName,
     username,
     password,
+    ref
   };
 }
 
@@ -2217,6 +2224,52 @@ export function signUpUserSuccess() {
 export function signUpUserError(error) {
   return {
     type: SIGN_UP_USER_ERROR,
+    error,
+  };
+}
+
+export function loadUsers(page, pageSize) {
+  return {
+    type: LOAD_USERS,
+    apiCall: true,
+    page,
+    pageSize,
+  };
+}
+
+export function loadUsersSuccess(users) {
+  return {
+    type: LOAD_USERS_SUCCESS,
+    users
+  };
+}
+
+export function loadUsersError(error) {
+  return {
+    type: LOAD_USERS_ERROR,
+    error,
+  };
+}
+
+export function deleteUser(page, pageSize, id) {
+  return {
+    type: DELETE_USER,
+    apiCall: true,
+    id,
+    page,
+    pageSize
+  };
+}
+
+export function deleteUserSuccess() {
+  return {
+    type: DELETE_USER_SUCCESS,
+  };
+}
+
+export function deleteUserError(error) {
+  return {
+    type: DELETE_USER_ERROR,
     error,
   };
 }

@@ -6,7 +6,7 @@ class SettingsModel {
         return {
             id: Joi.number(),
             name: Joi.string().trim().description('Setting Name'),
-            value: Joi.alternatives().try(Joi.array(), Joi.string(), Joi.object(), Joi.number()).description('Setting Value (string|object|array)')
+            value: Joi.alternatives().try(Joi.array(), Joi.string(), Joi.object(), Joi.number(), Joi.boolean()).description('Setting Value (string|object|array|boolean)')
         };
     };
 }

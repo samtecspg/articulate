@@ -7,10 +7,11 @@ module.exports = async (server) => {
     const { redis } = server.app;
     const { settingsService, contextService } = await server.services();
     const CurrentSettings = await settingsService.findAll();
+    const CurrentSettingsNames = Object.keys(CurrentSettings);
 
     await Promise.all(_.map(defaultSettings, async (value, name) => {
 
-        if (CurrentSettings[name]) {
+        if (CurrentSettingsNames.indexOf(name) > -1) {
             return;
         }
         return await settingsService.create({ data: { name, value } });

@@ -756,5 +756,7 @@
   "actionsPageSize": 5,
   "reviewPageSize": 5,
   "sessionsPageSize": 5,
-  "conversationPanelWidth": 300
+  "usersPageSize": 5,
+  "conversationPanelWidth": 300,
+  "allowNewUsersSignUps": true
 }

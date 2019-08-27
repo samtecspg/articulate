@@ -3,6 +3,7 @@ import AddIdentity from './user/user.add-identity.service';
 import AuthorizeOauth from './user/user.authorize-oauth.service';
 import Create from './user/user.create-account.service';
 import FindById from './user/user.find-by-id.service';
+import RemoveById from './user/user.remove-by-id.service';
 import Validate from './user/user.validate.service';
 
 module.exports = class UserService extends Schmervice.Service {
@@ -14,6 +15,10 @@ module.exports = class UserService extends Schmervice.Service {
 
     async findById() {
         return await FindById.apply(this, arguments);
+    }
+
+    async removeById() {
+        return await RemoveById.apply(this, arguments);
     }
 
     async addIdentity() {

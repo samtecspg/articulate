@@ -166,6 +166,7 @@ export class AppHeader extends React.Component {
             {this.props.location.pathname.indexOf('connection') === -1 &&
             this.props.location.pathname.indexOf('settings') === -1 &&
             this.props.location.pathname.indexOf('login') === -1 &&
+            this.props.location.pathname.indexOf('users') === -1 &&
             this.props.location.pathname.indexOf('demo') === -1 &&
             agent.gravatar !== '' &&
             this.props.location.pathname !== '/' ? (
@@ -285,6 +286,7 @@ export class AppHeader extends React.Component {
             {this.props.location.pathname.indexOf('connection') === -1 &&
             this.props.location.pathname.indexOf('settings') === -1 &&
             this.props.location.pathname.indexOf('login') === -1 &&
+            this.props.location.pathname.indexOf('users') === -1 &&
             this.props.location.pathname.indexOf('demo') === -1 &&
             agent.gravatar !== '' &&
             this.props.location.pathname !== '/' ? (
@@ -363,6 +365,7 @@ export class AppHeader extends React.Component {
               {this.props.location.pathname.indexOf('connection') === -1 &&
               this.props.location.pathname.indexOf('settings') === -1 &&
               this.props.location.pathname.indexOf('login') === -1 &&
+              this.props.location.pathname.indexOf('users') === -1 &&
               this.props.location.pathname.indexOf('demo') === -1 &&
               agent.gravatar !== '' &&
               this.props.location.pathname !== '/' ? (

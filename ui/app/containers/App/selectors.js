@@ -394,6 +394,19 @@ const makeSelectLocale = () =>
     globalState => globalState.locale,
   );
 
+/* Users */
+const makeSelectUsers = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.users,
+  );
+
+const makeSelectTotalUsers = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalUsers,
+  );
+
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -458,4 +471,6 @@ export {
   makeSelectSessions,
   makeSelectTotalSessions,
   makeSelectLocale,
+  makeSelectUsers,
+  makeSelectTotalUsers
 };

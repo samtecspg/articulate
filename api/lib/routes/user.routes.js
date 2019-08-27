@@ -15,5 +15,4 @@ module.exports = [
     GlobalFindAll({ ROUTE: ROUTE_USER_ACCOUNT }),
     GlobalSearchByField({ ROUTE: ROUTE_USER_ACCOUNT }),
     GlobalFindInModelPath({ models: [MODEL_USER_ACCOUNT, MODEL_USER_IDENTITY] })
-
 ];

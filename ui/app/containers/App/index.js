@@ -37,6 +37,7 @@ import AnalyticsPage from '../AnalyticsPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
+import UsersPage from '../UsersPage/Loadable';
 import {
   checkAPI,
   loadAgent,
@@ -274,6 +275,12 @@ class App extends React.Component {
               to={`/agent/:id/action/:actionId?${this.props.location.search}`}
             />
             <Route exact path="/login" component={UserAuthPage} />
+            <PrivateRoute
+              exact
+              path="/users"
+              component={UsersPage}
+              isAuthEnabled={AUTH_ENABLED}
+            />
             <PrivateRoute
               exact
               path="/demo/:id"

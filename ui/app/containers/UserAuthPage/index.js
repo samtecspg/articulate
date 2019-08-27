@@ -12,6 +12,8 @@ import { loginUser, signUpUser } from '../App/actions';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import saga from './saga';
+import qs from 'query-string';
+import { makeSelectSettings } from '../App/selectors';
 
 const styles = theme => ({
   root: {
@@ -32,7 +34,16 @@ export class UserAuthPage extends React.PureComponent {
   }
 
   state = {
-    selectedTab: TAB_LOGIN,
+    selectedTab: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab && this.props.settings.allowNewUsersSignUps
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
+      : TAB_LOGIN,
+    ref: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).ref
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref
+      : '',
     name: '',
     lastName: '',
     username: '',
@@ -53,13 +64,13 @@ export class UserAuthPage extends React.PureComponent {
   }
 
   onSignUp() {
-    const { name, lastName, username, password } = this.state;
-    this.props.onSignUp(name, lastName, username, password);
+    const { name, lastName, username, password, ref } = this.state;
+    this.props.onSignUp(name, lastName, username, password, ref);
   }
 
   render() {
-    const { classes } = this.props;
-    const { selectedTab, username, password, name, lastName } = this.state;
+    const { classes, onGoToUrl, settings } = this.props;
+    const { selectedTab, username, password, name, lastName, ref } = this.state;
     return (
       <Grid container justify="center">
         <Paper square className={classes.root}>
@@ -72,7 +83,7 @@ export class UserAuthPage extends React.PureComponent {
             fullWidth
           >
             <Tab value={TAB_LOGIN} label="Login" />
-            <Tab value={TAB_SIGN_UP} label="Sign Up" />
+            {this.props.settings.allowNewUsersSignUps ? <Tab value={TAB_SIGN_UP} label="Sign Up" /> : null}
           </Tabs>
           {selectedTab === TAB_LOGIN && (
             <LoginForm
@@ -82,7 +93,7 @@ export class UserAuthPage extends React.PureComponent {
               password={password}
             />
           )}
-          {selectedTab === TAB_SIGN_UP && (
+          {selectedTab === TAB_SIGN_UP && this.props.settings.allowNewUsersSignUps && (
             <SignUpForm
               onSignUp={this.onSignUp}
               onInputChange={this.onInputChange}
@@ -90,6 +101,8 @@ export class UserAuthPage extends React.PureComponent {
               password={password}
               name={name}
               lastName={lastName}
+              refUrl={ref}
+              onGoToUrl={onGoToUrl}
             />
           )}
         </Paper>
@@ -103,9 +116,12 @@ UserAuthPage.propTypes = {
   onLogin: PropTypes.func.isRequired,
   onSignUp: PropTypes.func.isRequired,
   onGoToUrl: PropTypes.func.isRequired,
+  settings: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = createStructuredSelector({});
+const mapStateToProps = createStructuredSelector({
+  settings: makeSelectSettings(),
+});
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -115,8 +131,8 @@ function mapDispatchToProps(dispatch) {
     onLogin: (username, password) => {
       dispatch(loginUser(username, password));
     },
-    onSignUp: (name, lastName, username, password) => {
-      dispatch(signUpUser(name, lastName, username, password));
+    onSignUp: (name, lastName, username, password, ref) => {
+      dispatch(signUpUser(name, lastName, username, password, ref));
     },
   };
 }
