@@ -70,16 +70,16 @@ const styles = {
     fontSize: '16px',
   },
   shareIcon: {
-    '&:hover': { 
-      filter: 'invert(0) !important' 
+    '&:hover': {
+      filter: 'invert(0) !important',
     },
     filter: 'invert(1)',
     cursor: 'pointer',
     width: '15px',
     marginLeft: '5px',
     position: 'relative',
-    top: '2px'
-  }
+    top: '2px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -102,7 +102,7 @@ export class AppHeader extends React.Component {
       chatButtonOpen,
       notifications,
       agent,
-      demoMode
+      demoMode,
     } = this.props;
 
     let notificationDotColor = '#358fec';
@@ -133,27 +133,28 @@ export class AppHeader extends React.Component {
             demoMode={demoMode}
           />
           <Grid item xl={2} lg={2} md={2}>
-            {demoMode ?
-            <a href='https://spg.ai/projects/articulate/' target='_blank'>
-              <img
-                className={classes.logo}
-                src={logo}
-                alt={intl.formatMessage(messages.articulateLogoAlt)}
-              />
-            </a> :
-            <Link
-              onClick={() => {
-                this.props.onToggleConversationBar(false);
-              }}
-              to={'/'}
-              
-            >
-              <img
-                className={classes.logo}
-                src={logo}
-                alt={intl.formatMessage(messages.articulateLogoAlt)}
-              />
-            </Link>}
+            {demoMode ? (
+              <a href="https://spg.ai/projects/articulate/" target="_blank">
+                <img
+                  className={classes.logo}
+                  src={logo}
+                  alt={intl.formatMessage(messages.articulateLogoAlt)}
+                />
+              </a>
+            ) : (
+              <Link
+                onClick={() => {
+                  this.props.onToggleConversationBar(false);
+                }}
+                to={'/'}
+              >
+                <img
+                  className={classes.logo}
+                  src={logo}
+                  alt={intl.formatMessage(messages.articulateLogoAlt)}
+                />
+              </Link>
+            )}
           </Grid>
           <Grid item xl={2} lg={2} md={2} />
           <Grid
@@ -179,22 +180,32 @@ export class AppHeader extends React.Component {
                   className: classes.agentIcon,
                 })}
                 <span className={classes.agentName}>{agent.agentName}</span>
-                <Tooltip title={intl.formatMessage(messages.shareAgent)} placement='bottom'>
-                  <img src={shareIcon} className={classes.shareIcon} onClick={() => { this.props.onShareAgent(agent.id) }} />
+                <Tooltip
+                  title={intl.formatMessage(messages.shareAgent)}
+                  placement="bottom"
+                >
+                  <img
+                    src={shareIcon}
+                    className={classes.shareIcon}
+                    onClick={() => {
+                      this.props.onShareAgent(agent.id);
+                    }}
+                  />
                 </Tooltip>
               </Typography>
             ) : null}
           </Grid>
         </Hidden>
         <Hidden only={['md', 'lg', 'xl']}>
-          {demoMode ?
+          {demoMode ? (
             <ConversationBar
               uiLanguage={this.props.uiLanguage}
               uiLanguages={this.props.uiLanguages}
               onChangeLanguage={this.props.onChangeLanguage}
               onToggleConversationBar={this.props.onToggleConversationBar}
               demoMode={demoMode}
-            /> :
+            />
+          ) : (
             <Fragment>
               <Grid className={classes.languageSelectContainer}>
                 <LanguageSelect
@@ -245,35 +256,36 @@ export class AppHeader extends React.Component {
                   <FormattedMessage {...messages.openChatButton} />
                 </Button>
               </Grid>
-              
             </Fragment>
-          }
+          )}
         </Hidden>
       </Grid>
     ) : (
       <Grid container className={classes.header} item xs={12}>
         <Hidden only={['xs', 'sm']}>
           <Grid item xl={2} lg={2} md={2}>
-            {demoMode ?
-            <a href='https://spg.ai/projects/articulate/' target='_blank'>
-              <img
-                className={classes.logo}
-                src={logo}
-                alt={intl.formatMessage(messages.articulateLogoAlt)}
-              />
-            </a> :
-            <Link
-              onClick={() => {
-                this.props.onToggleConversationBar(false);
-              }}
-              to="/"
-            >
-              <img
-                className={classes.logo}
-                src={logo}
-                alt={intl.formatMessage(messages.articulateLogoAlt)}
-              />
-            </Link>}
+            {demoMode ? (
+              <a href="https://spg.ai/projects/articulate/" target="_blank">
+                <img
+                  className={classes.logo}
+                  src={logo}
+                  alt={intl.formatMessage(messages.articulateLogoAlt)}
+                />
+              </a>
+            ) : (
+              <Link
+                onClick={() => {
+                  this.props.onToggleConversationBar(false);
+                }}
+                to="/"
+              >
+                <img
+                  className={classes.logo}
+                  src={logo}
+                  alt={intl.formatMessage(messages.articulateLogoAlt)}
+                />
+              </Link>
+            )}
           </Grid>
           <Grid item xl={3} lg={3} md={3} />
           <Grid
@@ -299,8 +311,17 @@ export class AppHeader extends React.Component {
                   className: classes.agentIcon,
                 })}
                 <span>{agent.agentName}</span>
-                <Tooltip title={intl.formatMessage(messages.shareAgent)} placement='bottom'>
-                  <img src={shareIcon} className={classes.shareIcon} onClick={() => { this.props.onShareAgent(agent.id) }} />
+                <Tooltip
+                  title={intl.formatMessage(messages.shareAgent)}
+                  placement="bottom"
+                >
+                  <img
+                    src={shareIcon}
+                    className={classes.shareIcon}
+                    onClick={() => {
+                      this.props.onShareAgent(agent.id);
+                    }}
+                  />
                 </Tooltip>
               </Typography>
             ) : null}
@@ -309,30 +330,32 @@ export class AppHeader extends React.Component {
           <Grid item xl={2} lg={2} md={2}>
             {this.props.location.pathname !== '/' ? (
               [
-                validNotifications.length > 0 ? (
+                validNotifications.length > 0 && chatButtonOpen ? (
                   <div
                     key="conversationNotificationDot"
                     className={classes.notificationDot}
                     style={{ backgroundColor: notificationDotColor }}
                   />
                 ) : null,
-                
-                chatButtonOpen && (<Button
-                  key="conversat_button"
-                  onClick={() => {
-                    this.props.onToggleConversationBar(true);
-                  }}
-                  color="primary"
-                  variant="contained"
-                  className={classes.openChat}
-                >
-                  <img
-                    className={classes.icon}
-                    src={chatIcon}
-                    alt={intl.formatMessage(messages.articulateLogoAlt)}
-                  />
-                  <FormattedMessage {...messages.openChatButton} />
-                </Button>),
+
+                chatButtonOpen && (
+                  <Button
+                    key="conversat_button"
+                    onClick={() => {
+                      this.props.onToggleConversationBar(true);
+                    }}
+                    color="primary"
+                    variant="contained"
+                    className={classes.openChat}
+                  >
+                    <img
+                      className={classes.icon}
+                      src={chatIcon}
+                      alt={intl.formatMessage(messages.articulateLogoAlt)}
+                    />
+                    <FormattedMessage {...messages.openChatButton} />
+                  </Button>
+                ),
                 <LanguageSelect
                   key="selectLanguage"
                   uiLanguage={this.props.uiLanguage}
@@ -351,16 +374,17 @@ export class AppHeader extends React.Component {
           </Grid>
         </Hidden>
         <Hidden only={['md', 'lg', 'xl']}>
-          {demoMode ?
+          {demoMode ? (
             <Grid item xs={4}>
-              <a href='https://spg.ai/projects/articulate/' target='_blank'>
+              <a href="https://spg.ai/projects/articulate/" target="_blank">
                 <img
                   className={classes.logo}
                   src={logo}
                   alt={intl.formatMessage(messages.articulateLogoAlt)}
                 />
               </a>
-            </Grid> :
+            </Grid>
+          ) : (
             <Grid item sm={6} xs={6}>
               {this.props.location.pathname.indexOf('connection') === -1 &&
               this.props.location.pathname.indexOf('settings') === -1 &&
@@ -378,40 +402,51 @@ export class AppHeader extends React.Component {
                     className: classes.agentIcon,
                   })}
                   <span className={classes.agentName}>{agent.agentName}</span>
-                  <Tooltip title={intl.formatMessage(messages.shareAgent)} placement='bottom'>
-                    <img src={shareIcon} className={classes.shareIcon} onClick={() => { this.props.onShareAgent(agent.id) }} />
+                  <Tooltip
+                    title={intl.formatMessage(messages.shareAgent)}
+                    placement="bottom"
+                  >
+                    <img
+                      src={shareIcon}
+                      className={classes.shareIcon}
+                      onClick={() => {
+                        this.props.onShareAgent(agent.id);
+                      }}
+                    />
                   </Tooltip>
                 </Typography>
               ) : null}
             </Grid>
-          }
+          )}
           <Grid item xs={8}>
             {this.props.location.pathname !== '/' ? (
               [
-                validNotifications.length > 0 ? (
+                validNotifications.length > 0 && chatButtonOpen ? (
                   <div
                     key="conversationNotificationDot"
                     className={classes.notificationDot}
                     style={{ backgroundColor: notificationDotColor }}
                   />
                 ) : null,
-                chatButtonOpen && (<Button
-                  key="conversat_button"
-                  onClick={() => {
-                    this.props.onToggleConversationBar(true);
-                  }}
-                  color="primary"
-                  variant="contained"
-                  className={classes.openChat}
-                  style={{ marginLeft: '15px' }}
-                >
-                  <img
-                    className={classes.icon}
-                    src={chatIcon}
-                    alt={intl.formatMessage(messages.articulateLogoAlt)}
-                  />
-                  <FormattedMessage {...messages.openChatButtonSmall} />
-                </Button>),
+                chatButtonOpen && (
+                  <Button
+                    key="conversat_button"
+                    onClick={() => {
+                      this.props.onToggleConversationBar(true);
+                    }}
+                    color="primary"
+                    variant="contained"
+                    className={classes.openChat}
+                    style={{ marginLeft: '15px' }}
+                  >
+                    <img
+                      className={classes.icon}
+                      src={chatIcon}
+                      alt={intl.formatMessage(messages.articulateLogoAlt)}
+                    />
+                    <FormattedMessage {...messages.openChatButtonSmall} />
+                  </Button>
+                ),
                 <LanguageSelect
                   key="selectLanguage"
                   uiLanguage={this.props.uiLanguage}
@@ -457,4 +492,3 @@ export default compose(
   withDefinedStyles,
   injectIntl,
 )(AppHeader);
-
