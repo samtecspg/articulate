@@ -75,6 +75,7 @@ import {
   deleteQuickResponse,
   changeQuickResponse,
   editSlotTextPrompt,
+  toggleChatButton,
 } from '../App/actions';
 
 const styles = {
@@ -163,6 +164,7 @@ export class ActionPage extends React.Component {
     } else {
       this.props.onLoadAction(this.props.match.params.actionId);
     }
+    this.props.onShowChatButton(true);
   }
 
   componentDidMount() {
@@ -550,7 +552,8 @@ ActionPage.propTypes = {
   onAddNewQuickResponse: PropTypes.func.isRequired,
   onEditSlotTextPrompt: PropTypes.func.isRequired,
   onDeleteSlotTextPrompt: PropTypes.func.isRequired,
-  onCopyTextPrompt: PropTypes.func.isRequired
+  onCopyTextPrompt: PropTypes.func.isRequired,
+  onShowChatButton: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -687,7 +690,10 @@ function mapDispatchToProps(dispatch) {
     },
     onCopyTextPrompt: (slotIndex, newTextPrompt) => {
       dispatch(addSlotTextPrompt({ slotIndex, newTextPrompt }));
-    }
+    },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
+    },
   };
 }
 
