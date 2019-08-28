@@ -8,6 +8,7 @@ import facebook from '../../images/fb-messenger.png';
 import twilio from '../../images/twilio.png';
 import rocketchat from '../../images/rocketchat.png';
 import webDemo from '../../images/web-demo.png';
+import matterMost from '../../images/mattermost.png';
 
 const logosDir = {
   'chat-widget': chatWidget,
@@ -16,7 +17,8 @@ const logosDir = {
   facebook,
   twilio,
   rocketchat,
-  'web-demo': webDemo
+  'web-demo': webDemo,
+  'mattermost': matterMost
 };
 
 function ChannelsLogos(props) {

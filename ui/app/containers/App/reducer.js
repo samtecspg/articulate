@@ -164,6 +164,7 @@ import {
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
+  TOGGLE_CHAT_BUTTON,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
@@ -237,6 +238,17 @@ import {
   LOAD_STARRED_SAYING,
   LOAD_STARRED_SAYING_ERROR,
   LOAD_STARRED_SAYING_SUCCESS,
+  ADD_NEW_QUICK_RESPONSE,
+  DELETE_QUICK_RESPONSE,
+  CHANGE_QUICK_RESPONSE,
+  EDIT_SLOT_TEXT_PROMPT,
+  DELETE_SLOT_TEXT_PROMPT,
+  LOAD_USERS,
+  LOAD_USERS_SUCCESS,
+  LOAD_USERS_ERROR,
+  DELETE_USER,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -401,6 +413,7 @@ const initialState = Immutable({
   sessionLoaded: false,
   sessionId: '',
   conversationBarOpen: false,
+  showChatButton: false,
   waitingResponse: false,
   notifications: [],
   messages: [],
@@ -548,6 +561,7 @@ const initialState = Immutable({
     keywordId: '0',
     isList: false,
     isRequired: false,
+    quickResponses: [],
     textPrompts: [],
   },
   newModifier: {
@@ -600,7 +614,9 @@ const initialState = Immutable({
   totalSessions: null,
   serverStatus: '',
   starredSayings: [],
-  starredSaying: null
+  starredSaying: null,
+  users: [],
+  totalUsers: null,
 });
 
 function appReducer(state = initialState, action) {
@@ -657,6 +673,8 @@ function appReducer(state = initialState, action) {
         .set('error', false);
     case TOGGLE_CONVERSATION_BAR:
       return state.set('conversationBarOpen', action.value);
+    case TOGGLE_CHAT_BUTTON:
+        return state.set('showChatButton', action.value);
     case CLOSE_NOTIFICATION:
       return state.update('notifications', notifications =>
         notifications.filter((item, index) => index !== action.index),
@@ -1844,6 +1862,77 @@ function appReducer(state = initialState, action) {
           }),
         )
         .set('actionTouched', true);
+    case ADD_NEW_QUICK_RESPONSE:
+      if (!state.action.slots[action.slotIndex].quickResponses){
+        state = state.setIn(['action', 'slots'], state.action.slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            if (!slot.quickResponses){
+              return slot.set('quickResponses', []);
+            }
+            return slot;
+          }
+          return slot;
+        }))
+      }
+      return state.updateIn(
+        ['action', 'slots'],
+        slots => slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            return slot.update('quickResponses', quickResponses => quickResponses.concat(action.response));
+          }
+          return slot;
+        })
+      )
+      .set('actionTouched', true);;
+    case DELETE_QUICK_RESPONSE:
+      return state.updateIn(
+        ['action', 'slots'],
+        slots => slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            return slot.set('quickResponses', slot.quickResponses.filter((quickResponse, index) => { return index !== action.quickResponseIndex }));
+          }
+          return slot;
+        })
+      )
+      .set('actionTouched', true);
+    case CHANGE_QUICK_RESPONSE:
+      return state.updateIn(
+        ['action', 'slots'],
+        slots => slots.map((slot, index) => {
+
+          if (index === action.slotIndex){
+            return slot.set('quickResponses', slot.quickResponses.map((quickResponse, index) => { 
+              if(index === action.quickResponseIndex){
+                return action.response;
+              } 
+              return quickResponse;
+            }));
+          }
+          return slot;
+        })
+      )
+      .set('actionTouched', true);
+    case EDIT_SLOT_TEXT_PROMPT:
+      return state
+        .updateIn(['action', 'slots'], slots =>
+          slots.map((slot, index) => {
+            if (index === action.slotIndex) {
+              return slot.update('textPrompts', textPrompts => textPrompts.map((textPrompt, textPromptIndex) => {
+                
+                if (action.textPromptIndex === textPromptIndex){
+                  return action.textPrompt;
+                }
+                return textPrompt;
+              }));
+            }
+
+            return slot;
+          }),
+        )
+        .set('actionTouched', true);
 
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers =>
@@ -2483,6 +2572,35 @@ function appReducer(state = initialState, action) {
         .set('starredSaying', action.saying)
         .set('loading', false)
         .set('error', false);
+    /* Users */
+    case LOAD_USERS:
+      return state
+        .set('users', initialState.users)
+        .set('totalUsers', initialState.totalUsers)
+        .set('loading', true)
+        .set('error', false)
+    case LOAD_USERS_SUCCESS:
+      return state
+        .set('users', action.users.data)
+        .set('totalUsers', action.users.totalCount)
+        .set('loading', false)
+        .set('error', false)
+    case LOAD_USERS_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error)
+    case DELETE_USER:
+      return state
+        .set('loading', true)
+        .set('error', false)
+    case DELETE_USER_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('error', false)
+    case DELETE_USER_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error)
     default:
       return state;
   }

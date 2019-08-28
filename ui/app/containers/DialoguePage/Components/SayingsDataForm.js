@@ -193,6 +193,18 @@ const styles = {
     fontWeight: 300,
     cursor: 'pointer',
   },
+  sayingEnter: {
+    color: '#4e4e4e',
+    fontSize: '10px',
+    paddingRight: '15px',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  sayingInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderTopRightRadius: '5px',
+    borderBottomRightRadius: '5px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -205,7 +217,15 @@ class SayingsDataForm extends React.Component {
     openActions: false,
     anchorEl: null,
     changedPage: false,
+    currentNewSaying: '',
   };
+
+  constructor(props) {
+    super(props);
+    this.handleNewSayingTextFieldChange = this.handleNewSayingTextFieldChange.bind(
+      this,
+    );
+  }
 
   scrollToNextPageCursor() {
     const pageControl = document.querySelector('#pageControl');
@@ -238,6 +258,12 @@ class SayingsDataForm extends React.Component {
     if (this.state.changedPage) {
       this.scrollToNextPageCursor();
     }
+  }
+
+  handleNewSayingTextFieldChange(e) {
+    this.setState({
+      currentNewSaying: e.target.value,
+    });
   }
 
   render() {
@@ -288,12 +314,17 @@ class SayingsDataForm extends React.Component {
               <TextField
                 id="newSaying"
                 defaultValue={userSays || undefined}
+                onChange={this.handleNewSayingTextFieldChange}
+                value={this.state.currentNewSaying}
                 label={intl.formatMessage(messages.sayingTextField)}
                 placeholder={intl.formatMessage(
                   messages.sayingTextFieldPlaceholder,
                 )}
                 onKeyPress={ev => {
-                  if (ev.key === 'Enter') {
+                  if (
+                    ev.key === 'Enter' &&
+                    this.state.currentNewSaying.trim() !== ''
+                  ) {
                     if (!category || category === '' || category === 'select') {
                       this.setState({
                         errorCategory: true,
@@ -303,8 +334,10 @@ class SayingsDataForm extends React.Component {
                         errorCategory: false,
                       });
                       ev.preventDefault();
-                      this.props.onAddSaying(ev.target.value);
-                      ev.target.value = '';
+                      this.props.onAddSaying(this.state.currentNewSaying);
+                      this.setState({
+                        currentNewSaying: '',
+                      });
                     }
                   }
                 }}
@@ -379,6 +412,35 @@ class SayingsDataForm extends React.Component {
                           });
                         }}
                       />
+                      <span
+                        className={classes.sayingEnter}
+                        onClick={ev => {
+                          if (this.state.currentNewSaying.trim() !== '') {
+                            if (
+                              !category ||
+                              category === '' ||
+                              category === 'select'
+                            ) {
+                              this.setState({
+                                errorCategory: true,
+                              });
+                            } else {
+                              this.setState({
+                                errorCategory: false,
+                              });
+                              ev.preventDefault();
+                              this.props.onAddSaying(
+                                this.state.currentNewSaying,
+                              );
+                              this.setState({
+                                currentNewSaying: '',
+                              });
+                            }
+                          }
+                        }}
+                      >
+                        {intl.formatMessage(messages.sayingEnter)}
+                      </span>
                     </InputAdornment>
                   ),
                 }}

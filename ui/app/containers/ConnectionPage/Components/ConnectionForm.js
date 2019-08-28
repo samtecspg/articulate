@@ -142,7 +142,7 @@ class ConnectionForm extends React.Component {
       clonedAction.actions[0].intent.trigger.queryPatterns = queryPatterns;
       clonedAction.conversations.articulate_intent.url = `${
         window.location.protocol
-      }//${window.location.hostname}${PROXY_ROUTE_PREFIX}/connection/${
+      }//${window.location.hostname}${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
         connection.id
       }/external`;
       this.setState({
@@ -316,7 +316,7 @@ class ConnectionForm extends React.Component {
                       id="shareLink"
                       value={`${window.location.protocol}//${
                         window.location.hostname
-                      }${window.location.port === 80 ? null : `:${window.location.port}`}/demo/${
+                      }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}/demo/${
                         connection.id
                       }`}
                       label={intl.formatMessage(messages.shareUrl)}
@@ -375,7 +375,7 @@ class ConnectionForm extends React.Component {
                         id="converseUrl"
                         value={`${window.location.protocol}//${
                           window.location.hostname
-                        }${PROXY_ROUTE_PREFIX}/connection/${
+                        }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
                           connection.id
                         }/external`}
                         label={intl.formatMessage(messages.converseUrl)}
@@ -422,7 +422,7 @@ class ConnectionForm extends React.Component {
         selector: '#webchat',
         socketUrl: 'ws://${window.location.hostname}:7500',
         socketPath: '/connection/${connection.id}/external',
-        converseUrl: '${window.location.protocol}//${window.location.hostname}${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external',
+        converseUrl: '${window.location.protocol}//${window.location.hostname}${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external',
         title: '${connection.details.title}',
         subtitle: '${connection.details.subtitle}',
         senderPlaceHolder: 'Type a message...',
@@ -450,7 +450,7 @@ class ConnectionForm extends React.Component {
                         id="callbackUrl"
                         value={`${window.location.protocol}//${
                           window.location.hostname
-                        }${PROXY_ROUTE_PREFIX}/connection/${
+                        }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
                           connection.id
                         }/external`}
                         label={intl.formatMessage(messages.callbackUrl)}

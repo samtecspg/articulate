@@ -47,6 +47,7 @@ import {
   loadSettings,
   setAgentDefaults,
   toggleConversationBar,
+  toggleChatButton
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -133,6 +134,7 @@ export class AgentPage extends React.PureComponent {
       }
       return true;
     });
+    this.props.onShowChatButton(true);
   }
 
   componentDidUpdate(prevProps) {
@@ -376,7 +378,9 @@ export class AgentPage extends React.PureComponent {
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
-          onFinishAction={this.submit}
+          onFinishAction={() => {
+            this.submit(false);
+          }}
           onTrain={this.props.onTrain}
           agentStatus={this.props.agent.status}
           serverStatus={this.props.serverStatus}
@@ -471,6 +475,7 @@ AgentPage.propTypes = {
   onChangeParameterName: PropTypes.func,
   onChangeParameterValue: PropTypes.func,
   onToggleChat: PropTypes.func,
+  onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -578,6 +583,9 @@ function mapDispatchToProps(dispatch) {
     onToggleChat: value => {
       dispatch(toggleConversationBar(value));
     },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
+    }
   };
 }
 

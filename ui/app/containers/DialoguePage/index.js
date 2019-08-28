@@ -66,6 +66,7 @@ import {
   changeSayingCategory,
   resetSayings,
   updateSaying,
+  toggleChatButton
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -192,6 +193,7 @@ export class DialoguePage extends React.PureComponent {
     if (this.props.agent.id) {
       this.initForm();
     }
+    this.props.onShowChatButton(true);
   }
 
   componentWillUnmount() {
@@ -458,7 +460,9 @@ export class DialoguePage extends React.PureComponent {
   };
 
   render() {
-    return this.props.agent.id && this.props.agentKeywords ? (
+    return this.props.agent.id && this.props.agentKeywords && 
+      (this.state.selectedTab !== 'sayings' || 
+        (this.state.selectedTab === 'sayings' && this.props.agentKeywords.length === this.props.totalKeywords)) ? (
       <Grid container>
         <MainTab
           locale={this.props.locale}
@@ -622,6 +626,7 @@ DialoguePage.propTypes = {
   actionsPage: PropTypes.array,
   onChangeSayingCategory: PropTypes.func,
   onUpdateSayingData: PropTypes.func,
+  onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -761,7 +766,10 @@ function mapDispatchToProps(dispatch) {
     onUpdateSayingData: (saying, field, value) => {
       dispatch(
         updateSaying(saying, field, value)
-      )
+      );
+    },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
     }
   };
 }

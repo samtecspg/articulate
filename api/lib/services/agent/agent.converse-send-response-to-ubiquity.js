@@ -17,7 +17,8 @@ module.exports = async function ({ actionData, CSO }) {
         textResponse: CSO.response.textResponse,
         fulfilled: CSO.response.fulfilled,
         actions: CSO.response.actions ? CSO.response.actions : [],
-        isFallback: CSO.response.isFallback
+        isFallback: CSO.response.isFallback,
+        quickResponses: CSO.response.quickResponses
     };
 
     //This will store the final response in CSO.finalResponse

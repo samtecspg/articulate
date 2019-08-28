@@ -158,11 +158,33 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.SlotForm.remainingLifeTextField',
     defaultMessage: 'Remaining Life:',
   },
+  rememberSlotInfo: {
+    id: 'app.containers.ActionPage.component.SlotForm.rememberSlotInfo',
+    defaultMessage: 'If this feature is enabled, the agent will remember the slot value for future messages'
+  },
   remainingLifeTextFieldPlaceholder: {
     id:
       'app.containers.ActionPage.component.SlotForm.remainingLifeTextFieldPlaceholder',
     defaultMessage:
-      'Set the number of messages that the agent will remember the assigned value',
+      'Number of messages that the agent will remember the assigned value',
+  },
+  limitPromptInfo: {
+    id: 'app.containers.ActionPage.component.SlotForm.limitPromptInfo',
+    defaultMessage: 'Flag to enable a limit in the number of prompts the agent will show to fill this slot'
+  },
+  limitPrompt: {
+    id: 'app.containers.ActionPage.component.SlotForm.limitPrompt',
+    defaultMessage: 'Limit prompt?',
+  },
+  promptCountLimitTextField: {
+    id: 'app.containers.ActionPage.component.SlotForm.promptCountLimitTextField',
+    defaultMessage: 'Prompt Count Limit:',
+  },
+  promptCountLimitTextFieldPlaceholder: {
+    id:
+      'app.containers.ActionPage.component.SlotForm.promptCountLimitTextFieldPlaceholder',
+    defaultMessage:
+      'Number of messages that the agent will prompt for this slot',
   },
   rememberSlot: {
     id: 'app.containers.ActionPage.component.SlotForm.rememberSlot',
@@ -184,4 +206,20 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
     defaultMessage: 'Copy response in the response input',
   },
+  copyTextPrompt: {
+    id: 'app.containers.ActionPage.component.ResponseRow.copyTextPrompt',
+    defaultMessage: 'Copy text prompt',
+  },
+  quickResponseValue: {
+    id: 'app.components.WebhookSettings.quickResponseValue',
+    defaultMessage: 'Quick Responses',
+  },
+  newQuickResponsePlaceholder: {
+    id: 'app.components.WebhookSettings.newQuickResponsePlaceholder',
+    defaultMessage: 'Please type possible responses that are going to be shown as buttons',
+  },
+  responseEnter: {
+    id: 'app.containers.ActionPage.component.ResponseForm.responseEnter',
+    defaultMessage: 'Enter',
+  }
 });

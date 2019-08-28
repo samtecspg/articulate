@@ -89,6 +89,16 @@ export default defineMessages({
     defaultMessage:
       'These are some general settings for define default values in the creation of your agents',
   },
+  groupAndUsersSettings: {
+    id: 'app.containers.SettingsPage.component.SettingsDataForm.groupAndUsersSettings',
+    defaultMessage: 'Group and Users',
+  },
+  allowNewUsersSignUps: {
+    id:
+      'app.containers.SettingsPage.component.GroupAndUsersForm.allowNewUsersSignUps',
+    defaultMessage:
+      'Allow new users to sign up in the server',
+  },
   rasaSetting: {
     id: 'app.containers.SettingsPage.component.SettingsDataForm.rasaSetting',
     defaultMessage: 'Rasa',

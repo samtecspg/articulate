@@ -14,7 +14,8 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
             keyword: slot.keyword,
             value: '',
             original: '',
-            remainingLife: slot.remainingLife
+            remainingLife: slot.remainingLife,
+            promptCount: 0,
         };
     });
 

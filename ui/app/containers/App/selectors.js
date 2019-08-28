@@ -65,6 +65,12 @@ const makeSelectConversationBarOpen = () =>
     globalState => globalState.conversationBarOpen,
   );
 
+const makeSelectShowChatButton = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.showChatButton,
+  );
+
 const makeSelectNotifications = () =>
   createSelector(
     selectGlobal,
@@ -401,6 +407,19 @@ const makeSelectStarredSaying = () =>
     globalState => globalState.starredSaying
   )
 
+/* Users */
+const makeSelectUsers = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.users,
+  );
+
+const makeSelectTotalUsers = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalUsers,
+  );
+
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -412,6 +431,7 @@ export {
   makeSelectError,
   makeSelectSuccess,
   makeSelectConversationBarOpen,
+  makeSelectShowChatButton,
   makeSelectNotifications,
   makeSelectMessages,
   makeSelectWaitingResponse,
@@ -465,5 +485,7 @@ export {
   makeSelectTotalSessions,
   makeSelectLocale,
   makeSelectStarredSayings,
-  makeSelectStarredSaying
+  makeSelectStarredSaying,
+  makeSelectUsers,
+  makeSelectTotalUsers
 };

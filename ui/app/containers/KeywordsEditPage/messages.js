@@ -234,5 +234,5 @@ export default defineMessages({
   modifiersTooltip: {
     id: 'app.containers.KeywordsEditPage.component.MainTab.modifiersTooltip',
     defaultMessage: 'You must save the keyword before creating modifiers.',
-  },
+  }
 });

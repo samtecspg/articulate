@@ -53,6 +53,7 @@ import {
   onChangeModifiersSayingsPageSize,
   loadSettings,
   loadKeywords,
+  toggleChatButton,
 } from '../App/actions';
 import ModifiersForm from './Components/ModifiersForm';
 
@@ -89,6 +90,7 @@ export class KeywordsEditPage extends React.Component {
       this.props.onLoadKeywords();
     }
     this.props.onLoadSettings();
+    this.props.onShowChatButton(true);
   }
 
   componentWillMount() {
@@ -347,6 +349,7 @@ KeywordsEditPage.propTypes = {
   loading: PropTypes.bool,
   success: PropTypes.bool,
   touched: PropTypes.bool,
+  onShowChatButton: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -451,6 +454,9 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadSettings: () => {
       dispatch(loadSettings());
+    },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
     },
   };
 }

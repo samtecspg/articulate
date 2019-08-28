@@ -1,0 +1,14 @@
+version: '3.0'
+
+services:
+  api:
+    environment:
+     - SESSION_SECRET=${SESSION_SECRET:-_super_secret_session_secret_needs_to_be_long_}
+     - AUTH_ENABLED=true
+     - AUTH_USER=${AUTH_USER:-arty}
+     - AUTH_PASSWORD
+     - AUTH_FORCE_DEFAULT_USER=${AUTH_FORCE_DEFAULT_USER:-false}
+  ui:
+    build:
+      args:
+        - AUTH_ENABLED=true #needed in args section to be available during build (Dockerfile)

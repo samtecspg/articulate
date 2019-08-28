@@ -1,4 +1,4 @@
-import { Button, Grid, Modal, Typography, Card, CardContent, CardHeader } from '@material-ui/core';
+import { Button, Grid, Modal, Typography, Card, CardContent, CardHeader, TextField, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -99,6 +99,9 @@ const styles = {
   countLabel: {
     marginTop: '-40px',
     fontSize: '12px'
+  },
+  periodSelect: {
+    marginTop: '20px'
   }
 };
 
@@ -106,6 +109,7 @@ const styles = {
 class Form extends React.Component {
   state = {
     openModal: false,
+    period: ''
   };
 
   handleOpen = () => {
@@ -246,6 +250,38 @@ class Form extends React.Component {
               item
               xs={12}
             >
+              <Grid container item xs={12}>
+                <TextField
+                  label={intl.formatMessage(messages.selectTime)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  fullWidth
+                  select
+                  id="period"
+                  className={classes.periodSelect}
+                  value={this.props.dateRange}
+                  onChange={evt => {
+                    this.props.onSetDateRange(evt.target.value);
+                  }}
+                >
+                  <MenuItem key={'lastHour'} value={'now-1d'}>
+                    {intl.formatMessage(messages.lastHour)}
+                  </MenuItem>
+                  <MenuItem key={'lastDay'} value={'now-1d'}>
+                    {intl.formatMessage(messages.lastDay)}
+                  </MenuItem>
+                  <MenuItem key={'lastWeek'} value={'now-7d'}>
+                    {intl.formatMessage(messages.lastWeek)}
+                  </MenuItem>
+                  <MenuItem key={'lastMonth'} value={'now-1M'}>
+                    {intl.formatMessage(messages.lastMonth)}
+                  </MenuItem>
+                  <MenuItem key={'allTime'} value={'all'}>
+                    {intl.formatMessage(messages.allTime)}
+                  </MenuItem>
+                </TextField>
+              </Grid>
               <Grid container
                 spacing={8}
                 justify="space-around"
@@ -315,8 +351,7 @@ class Form extends React.Component {
                     </CardContent>
                   </Card>
                 </Grid>
-              </Grid>
-            
+              </Grid> 
               <Grid container
                 spacing={16}
                 justify="space-around"
@@ -423,6 +458,8 @@ Form.propTypes = {
   intl: intlShape.isRequired,
   documents: PropTypes.array,
   totalDocuments: PropTypes.number,
+  dateRange: PropTypes.string,
+  onSetDateRange: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

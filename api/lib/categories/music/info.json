@@ -3,6 +3,7 @@
     "uiColor": "#303f9f",
     "description": "Get real control of your music",
     "documentation": "",
+    "enabled": false,
     "data": {
         "categoryName": "music",
         "enabled": true,

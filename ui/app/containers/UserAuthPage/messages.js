@@ -22,4 +22,12 @@ export default defineMessages({
     id: 'app.containers.UserAuth.lastName',
     defaultMessage: 'Last Name',
   },
+  signUp: {
+    id: 'app.containers.UserAuth.lastName',
+    defaultMessage: 'Sign Up',
+  },
+  goBack: {
+    id: 'app.containers.UserAuth.lastName',
+    defaultMessage: 'Go Back',
+  }
 });

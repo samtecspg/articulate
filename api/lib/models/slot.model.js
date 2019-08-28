@@ -11,6 +11,8 @@ class SlotModel {
             keywordId: KeywordSchema.id,
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
+            quickResponses: Joi.array().items(Joi.string().trim()),
+            promptCountLimit: Joi.number(),
             textPrompts: Joi.array().items(Joi.string().trim()),
             remainingLife: Joi.number().allow(null),
         };

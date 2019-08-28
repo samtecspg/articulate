@@ -40,6 +40,7 @@ import UserAuthPage from '../UserAuthPage/Loadable';
 import CheatSheetPage from '../CheatSheetPage/Loadable';
 import SayingsInfoPage from '../SayingsInfoPage/Loadable';
 
+import UsersPage from '../UsersPage/Loadable';
 import {
   checkAPI,
   loadAgent,
@@ -54,6 +55,7 @@ import saga from './saga';
 import {
   makeSelectAgent,
   makeSelectConversationBarOpen,
+  makeSelectShowChatButton,
   makeSelectLocation,
   makeSelectMissingAPI,
   makeSelectNotifications,
@@ -175,6 +177,7 @@ class App extends React.Component {
   render() {
     const {
       conversationBarOpen,
+      chatButtonOpen,
       onToggleConversationBar,
       notifications,
     } = this.props;
@@ -208,6 +211,7 @@ class App extends React.Component {
           onChangeLanguage={this.props.onChangeLanguage}
           onToggleConversationBar={onToggleConversationBar}
           conversationBarOpen={conversationBarOpen}
+          chatButtonOpen = {chatButtonOpen}
           notifications={notifications}
           demoMode={demoMode}
           onShareAgent={this.props.onShareAgent}
@@ -239,6 +243,7 @@ class App extends React.Component {
               exact
               path="/agent/:id/dialogue"
               component={DialoguePage}
+              isAuthEnabled={AUTH_ENABLED}
             />
             <PrivateRoute
               exact
@@ -293,6 +298,12 @@ class App extends React.Component {
               to={`/agent/:id/action/:actionId?${this.props.location.search}`}
             />
             <Route exact path="/login" component={UserAuthPage} />
+            <PrivateRoute
+              exact
+              path="/users"
+              component={UsersPage}
+              isAuthEnabled={AUTH_ENABLED}
+            />
             <PrivateRoute
               exact
               path="/demo/:id"
@@ -366,6 +377,7 @@ const mapStateToProps = createStructuredSelector({
   missingAPI: makeSelectMissingAPI(),
   location: makeSelectLocation(),
   conversationBarOpen: makeSelectConversationBarOpen(),
+  chatButtonOpen: makeSelectShowChatButton(),
   notifications: makeSelectNotifications(),
   settings: makeSelectSettings(),
 });

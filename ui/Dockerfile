@@ -11,7 +11,9 @@ COPY internals ./internals
 RUN yarn install
 ADD . .
 
-#EXPOSE 3000
+# read the arg from docker-compose and set the env for building AND runtime
+ARG AUTH_ENABLED
+ENV AUTH_ENABLED=${AUTH_ENABLED:-false}
 RUN yarn build
 CMD ["yarn", "start:prod"]
 #CMD ["yarn", "start"]

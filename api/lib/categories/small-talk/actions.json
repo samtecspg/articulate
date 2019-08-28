@@ -136,7 +136,6 @@
           "slotName": "mood",
           "uiColor": "#9c27b0",
           "keyword": "Mood",
-          "keywordId": 7,
           "isList": false,
           "isRequired": true,
           "textPrompts": [

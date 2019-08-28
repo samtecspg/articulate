@@ -3,6 +3,7 @@
     "uiColor": "#4A4A4A",
     "description": "Morning comes wheter you set the alarm or not",
     "documentation": "",
+    "enabled": false,
     "data": {
         "categoryName": "calculator",
         "enabled": true,

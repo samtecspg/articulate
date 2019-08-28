@@ -3,6 +3,7 @@
     "uiColor": "#E38D25",
     "description": "Dollar, Euro, Pound, Yen. You name it.",
     "documentation": "",
+    "enabled": false,
     "data": {
         "categoryName": "currency",
         "enabled": true,

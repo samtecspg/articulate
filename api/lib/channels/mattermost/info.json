@@ -1,0 +1,42 @@
+{
+    "name": "Mattermost",
+    "description": "A quick connection to Mattermost using the Events API.",
+    "documentation": null,
+    "details": {
+        "userName": {
+            "displayName": "User name",
+            "description" : "This is the user name that your agent will use to post messages",
+            "type": "string"
+        },
+        "userSelectionsPrefix": {
+            "displayName": "User selections prefix",
+            "description" : "Prefix displayed for messages like quick responses or slash commands. \"Username said: \" is the default",
+            "type": "string"
+        },
+        "incomingWebhookURL": {
+            "displayName": "Incoming Webhook URL",
+            "description" : "URL provided by Mattermost when you created the Incoming Webhook",
+            "type": "string"
+        },
+        "botAccessTokenOutgoingWebhook": {
+            "displayName": "Bot Access Token from Outgoing Webhook",
+            "description" : "Token provided by Mattermost when you created your Outgoing Webhook",
+            "type": "string"
+        },
+        "botAccessTokenSlashCommand": {
+            "displayName": "Bot Access Token from Slash Command",
+            "description" : "Token provided by Mattermost when you created your Outgoing Webhook",
+            "type": "string"
+        },
+        "outgoingMessages": {
+            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+            "type": "boolean"
+        },
+        "waitTimeBetweenMessages": {
+            "displayName": "Time in MS between response messages:",
+            "description": "How much the channel should wait between agent responses?",
+            "type": "number"
+        }
+    }
+}

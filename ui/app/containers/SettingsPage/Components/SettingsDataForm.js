@@ -19,6 +19,7 @@ import messages from '../messages';
 
 import expandedSingle from '../../../images/expand-single-icon.svg';
 import expandedSingleOpened from '../../../images/expand-single-opened-icon.svg';
+import GroupAndUsersForm from './GroupAndUsersForm';
 
 const styles = {
   formContainer: {
@@ -131,6 +132,27 @@ class SettingsDataForm extends React.Component {
               <ExpansionPanelDetails>
                 <DucklingSettings
                   settings={settings}
+                  onChangeSettingsData={this.props.onChangeSettingsData}
+                  errorState={this.props.errorState}
+                />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel
+              expanded={expanded === 'panelGroupUsers'}
+              onChange={() => {
+                this.handleChange('expanded', 'panelGroupUsers');
+              }}
+            >
+              <ExpansionPanelSummary
+                expandIcon={this.getExpandIcon(expanded === 'panelGroupUsers')}
+              >
+                <Typography className={classes.panelHeading}>
+                  <FormattedMessage {...messages.groupAndUsersSettings} />
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <GroupAndUsersForm 
+                  settings={this.props.settings}
                   onChangeSettingsData={this.props.onChangeSettingsData}
                   errorState={this.props.errorState}
                 />

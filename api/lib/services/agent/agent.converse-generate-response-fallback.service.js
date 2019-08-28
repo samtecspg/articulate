@@ -1,4 +1,8 @@
+import { MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
+
 module.exports = async function ({ CSO }) {
+    
+    const { agentService, globalService } = await this.server.services();
 
     const fallbackAction = CSO.agent.actions.find((action) => {
         return action.actionName === CSO.agent.fallbackAction;

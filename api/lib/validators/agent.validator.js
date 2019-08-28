@@ -154,6 +154,7 @@ class AgentValidate {
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
                         actions: ActionResponseSchema.actions
                     }).required().min(1).error(new Error('Please specify at least one response.')),
+                    quickResponses: ActionSchema.quickResponses,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -161,6 +162,8 @@ class AgentValidate {
                         keyword: SlotSchema.keyword,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
+                        quickResponses: SlotSchema.quickResponses,
+                        promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
                         remainingLife: SlotSchema.remainingLife
                     })
@@ -186,6 +189,7 @@ class AgentValidate {
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
                         actions: ActionResponseSchema.actions
                     }).min(1).error(new Error('Please specify at least one response.')),
+                    quickResponses: ActionSchema.quickResponses,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -193,6 +197,8 @@ class AgentValidate {
                         keyword: SlotSchema.keyword,
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
+                        quickResponses: SlotSchema.quickResponses,
+                        promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
                         remainingLife: SlotSchema.remainingLife
                     }),
@@ -232,7 +238,7 @@ class AgentValidate {
                                 end: SayingKeywordSchema.end.required(),
                                 value: SayingKeywordSchema.value.required(),
                                 keyword: SayingKeywordSchema.keyword.required(),
-                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                keywordId: SayingKeywordSchema.keywordId,
                                 extractor: SayingKeywordSchema.extractor
                             })
                         })
@@ -520,13 +526,16 @@ class AgentValidate {
                         .string()
                         .optional()
                         .allow(SORT_ASC, SORT_DESC)
-
                         .description('Sort direction. Default= ASC'),
                     [PARAM_FIELD]: Joi
                         .string()
                         .allow(_(DocumentSchema).keys().sort().value())
                         .optional()
-                        .description('Field to sort with. Default= "time_stamp"')
+                        .description('Field to sort with. Default= "time_stamp"'),
+                    dateRange: Joi
+                        .string()
+                        .optional()
+                        .description('ES range in format: now-1h, now-1d, now-7d, now-1M, now-1y')
                 };
             })()
         };
@@ -704,7 +713,7 @@ class AgentValidate {
                                 end: SayingKeywordSchema.end.required(),
                                 value: SayingKeywordSchema.value.required(),
                                 keyword: SayingKeywordSchema.keyword.required(),
-                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                keywordId: SayingKeywordSchema.keywordId,
                                 extractor: SayingKeywordSchema.extractor
                             })
                         })
@@ -897,7 +906,7 @@ class AgentValidate {
                                     end: SayingKeywordSchema.end.required(),
                                     value: SayingKeywordSchema.value.required(),
                                     keyword: SayingKeywordSchema.keyword.required(),
-                                    keywordId: SayingKeywordSchema.keywordId.required(),
+                                    keywordId: SayingKeywordSchema.keywordId,
                                     extractor: SayingKeywordSchema.extractor
                                 })
                             })
@@ -956,6 +965,7 @@ class AgentValidate {
                             textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
                             actions: ActionResponseSchema.actions
                         }).required().min(1).error(new Error('Please specify at least one response.')),
+                        quickResponses: ActionSchema.quickResponses,
                         slots: Joi.array().items({
                             slotName: SlotSchema.slotName.required(),
                             uiColor: SlotSchema.uiColor.required(),
@@ -963,6 +973,8 @@ class AgentValidate {
                             keyword: SlotSchema.keyword,
                             isList: SlotSchema.isList.required(),
                             isRequired: SlotSchema.isRequired.required(),
+                            quickResponses: SlotSchema.quickResponses,
+                            promptCountLimit: SlotSchema.promptCountLimit,
                             textPrompts: SlotSchema.textPrompts,
                             remainingLife: SlotSchema.remainingLife
                         }),

@@ -99,6 +99,7 @@ export class AppHeader extends React.Component {
       classes,
       intl,
       conversationBarOpen,
+      chatButtonOpen,
       notifications,
       agent,
       demoMode
@@ -165,6 +166,7 @@ export class AppHeader extends React.Component {
             {this.props.location.pathname.indexOf('connection') === -1 &&
             this.props.location.pathname.indexOf('settings') === -1 &&
             this.props.location.pathname.indexOf('login') === -1 &&
+            this.props.location.pathname.indexOf('users') === -1 &&
             this.props.location.pathname.indexOf('demo') === -1 &&
             agent.gravatar !== '' &&
             this.props.location.pathname !== '/' ? (
@@ -243,6 +245,7 @@ export class AppHeader extends React.Component {
                   <FormattedMessage {...messages.openChatButton} />
                 </Button>
               </Grid>
+              
             </Fragment>
           }
         </Hidden>
@@ -283,6 +286,7 @@ export class AppHeader extends React.Component {
             {this.props.location.pathname.indexOf('connection') === -1 &&
             this.props.location.pathname.indexOf('settings') === -1 &&
             this.props.location.pathname.indexOf('login') === -1 &&
+            this.props.location.pathname.indexOf('users') === -1 &&
             this.props.location.pathname.indexOf('demo') === -1 &&
             agent.gravatar !== '' &&
             this.props.location.pathname !== '/' ? (
@@ -312,7 +316,8 @@ export class AppHeader extends React.Component {
                     style={{ backgroundColor: notificationDotColor }}
                   />
                 ) : null,
-                <Button
+                
+                chatButtonOpen && (<Button
                   key="conversat_button"
                   onClick={() => {
                     this.props.onToggleConversationBar(true);
@@ -327,7 +332,7 @@ export class AppHeader extends React.Component {
                     alt={intl.formatMessage(messages.articulateLogoAlt)}
                   />
                   <FormattedMessage {...messages.openChatButton} />
-                </Button>,
+                </Button>),
                 <LanguageSelect
                   key="selectLanguage"
                   uiLanguage={this.props.uiLanguage}
@@ -360,6 +365,7 @@ export class AppHeader extends React.Component {
               {this.props.location.pathname.indexOf('connection') === -1 &&
               this.props.location.pathname.indexOf('settings') === -1 &&
               this.props.location.pathname.indexOf('login') === -1 &&
+              this.props.location.pathname.indexOf('users') === -1 &&
               this.props.location.pathname.indexOf('demo') === -1 &&
               agent.gravatar !== '' &&
               this.props.location.pathname !== '/' ? (
@@ -389,7 +395,7 @@ export class AppHeader extends React.Component {
                     style={{ backgroundColor: notificationDotColor }}
                   />
                 ) : null,
-                <Button
+                chatButtonOpen && (<Button
                   key="conversat_button"
                   onClick={() => {
                     this.props.onToggleConversationBar(true);
@@ -405,7 +411,7 @@ export class AppHeader extends React.Component {
                     alt={intl.formatMessage(messages.articulateLogoAlt)}
                   />
                   <FormattedMessage {...messages.openChatButtonSmall} />
-                </Button>,
+                </Button>),
                 <LanguageSelect
                   key="selectLanguage"
                   uiLanguage={this.props.uiLanguage}
@@ -433,6 +439,8 @@ AppHeader.propTypes = {
   intl: intlShape.isRequired,
   conversationBarOpen: PropTypes.bool,
   onToggleConversationBar: PropTypes.func,
+  chatButtonOpen: PropTypes.bool,
+  onShowChatButton: PropTypes.func,
   notifications: PropTypes.array,
   uiLanguages: PropTypes.array,
   uiLanguage: PropTypes.string,
@@ -449,3 +457,4 @@ export default compose(
   withDefinedStyles,
   injectIntl,
 )(AppHeader);
+

@@ -43,6 +43,7 @@ import {
   loadChannels,
   resetActions,
   loadActions,
+  toggleChatButton,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -98,6 +99,7 @@ export class ConnectionPage extends React.Component {
     }
     this.props.onLoadAgents();
     this.props.onLoadChannels();
+    this.props.onShowChatButton(false);
   }
 
   componentWillMount() {
@@ -348,6 +350,9 @@ function mapDispatchToProps(dispatch) {
     onLoadSettings: () => {
       dispatch(loadSettings());
     },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
+    }
   };
 }
 

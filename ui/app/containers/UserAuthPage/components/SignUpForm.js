@@ -26,6 +26,7 @@ const styles = theme => ({
 });
 
 function SignUpForm(props) {
+
   const {
     intl,
     classes,
@@ -35,6 +36,8 @@ function SignUpForm(props) {
     name,
     lastName,
     onSignUp,
+    refUrl,
+    onGoToUrl
   } = props;
 
   return (
@@ -98,13 +101,32 @@ function SignUpForm(props) {
           value={password}
         />
         <Button
+          style={{
+            margin: '20px 0px'
+          }}
           color="primary"
           variant="contained"
           fullWidth
           onClick={onSignUp}
         >
-          Sign Up
+          {intl.formatMessage(messages.signUp)}
         </Button>
+        {
+          refUrl === 'users' ?
+          <Button
+            style={{
+              marginBottom: '20px'
+            }}
+            variant="contained"
+            fullWidth
+            onClick={() => {
+              onGoToUrl(`/${refUrl}`);
+            }}
+          >
+            {intl.formatMessage(messages.goBack)}
+          </Button>
+          : null
+        }
         <Typography
           className={classes.separator}
           align="center"
@@ -145,6 +167,8 @@ SignUpForm.propTypes = {
   username: PropTypes.string,
   name: PropTypes.string,
   lastName: PropTypes.string,
+  refUrl: PropTypes.string,
+  onGoToUrl: PropTypes.func.isRequired
 };
 
 export default injectIntl(withStyles(styles)(SignUpForm));
