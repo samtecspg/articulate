@@ -114,7 +114,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             recognizedActions: [],
             recognizedModifiers: [],
             recognizedKeywords: [],
-            processedWebhooks: [],
+            processedWebhooks: {},
             processedResponses: []
         };
     

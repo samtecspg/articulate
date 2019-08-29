@@ -17,10 +17,9 @@ module.exports = async function ({ id, data }) {
             ...data
         };
         if (merged.converseResult && merged.converseResult.CSO && merged.converseResult.CSO.webhooks){
-            merged.converseResult.CSO.webhooks = merged.converseResult.CSO.webhooks.map((webhook) => {
+            Object.keys(merged.converseResult.CSO.webhooks).forEach((webhookKey) => {
                         
-                webhook.response = JSON.stringify(webhook.response);
-                return webhook;
+                merged.converseResult.CSO.webhooks[webhookKey].response = JSON.stringify(merged.converseResult.CSO.webhooks[webhookKey].response);
             });
         }
         await DocumentModel.updateInstance({ id, data: merged });

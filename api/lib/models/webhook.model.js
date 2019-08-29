@@ -5,6 +5,7 @@ class WebhookModel {
 
         return {
             id: Joi.number(),
+            webhookKey: Joi.string().trim(),
             webhookUrl: Joi.string().trim(),
             webhookVerb: Joi
                 .string()

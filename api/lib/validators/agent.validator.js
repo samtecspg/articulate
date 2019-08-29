@@ -311,6 +311,7 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
@@ -335,6 +336,7 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    webhookKey: WebhookSchema.webhookKey,
                     webhookUrl: WebhookSchema.webhookUrl,
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
@@ -362,6 +364,7 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
                     webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
@@ -387,6 +390,7 @@ class AgentValidate {
             payload: (() => {
 
                 return {
+                    webhookKey: WebhookSchema.webhookKey,
                     webhookUrl: WebhookSchema.webhookUrl,
                     webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                     webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
@@ -871,6 +875,7 @@ class AgentValidate {
                     model: AgentSchema.model,
                     parameters: Joi.object(),
                     webhook: {
+                        webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
                         webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                         webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                         webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
@@ -948,6 +953,7 @@ class AgentValidate {
                             postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                         },
                         webhook: {
+                            webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
                             webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
                             webhookVerb: WebhookSchema.webhookVerb.required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
                             webhookPayloadType: WebhookSchema.webhookPayloadType.required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),

@@ -25,7 +25,8 @@ module.exports = async function ({ actionData, CSO }) {
     await agentService.converseProcessPostFormat({ actionData, CSO });
 
     if (CSO.response.webhook) {
-        CSO.processedWebhooks.push(CSO.response.webhook);
+        const webhookKey = Object.keys(CSO.response.webhook)[0];
+        CSO.processedWebhooks[webhookKey] = CSO.response.webhook[webhookKey];
     }
 
     CSO.processedResponses.push(CSO.finalResponse);
@@ -69,10 +70,9 @@ module.exports = async function ({ actionData, CSO }) {
     });
 
     //Once we store the webhook response in the document we need to convert it back to an object
-    prunnedCSO.webhooks = prunnedCSO.webhooks.map((webhook) => {
+    Object.keys(prunnedCSO.webhooks).forEach((webhookKey) => {
 
-        webhook.response = JSON.parse(webhook.response);
-        return webhook;
+        prunnedCSO.webhooks[webhookKey].response = JSON.parse(prunnedCSO.webhooks[webhookKey].response);
     });
 
     const responseForUbiquity = CSO.debug ? fullConverseResult : converseResult; 

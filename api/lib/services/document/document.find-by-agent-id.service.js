@@ -57,9 +57,8 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
                 if (tempDocData.converseResult.CSO){
                     if (tempDocData.converseResult.CSO.webhooks){
                         if (tempDocData.converseResult.CSO.webhooks.response){
-                            tempDocData.converseResult.CSO.webhooks = tempDocData.converseResult.CSO.webhooks.map((webhook) => {
-                                webhook.response = JSON.parse(webhook.response);
-                                return webhook;
+                            Object.keys(tempDocData.converseResult.CSO.webhooks).forEach((webhookKey) => {
+                                tempDocData.converseResult.CSO.webhooks[webhookKey].response = JSON.parse(tempDocData.converseResult.CSO.webhooks[webhookKey].response);
                             });
                         }
                     }

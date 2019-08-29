@@ -79,11 +79,13 @@ module.exports = async function ({ actionData, CSO }) {
             templateContext: CSO
         });
         if (webhookResponse.textResponse) {
-            return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: webhookResponse };
+            return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
         }
-        CSO.webhook = { ...webhookResponse };
+        CSO.webhook = { 
+            [webhook.webhookKey]: {...webhookResponse}
+        };
         const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, webhook: webhookResponse, fulfilled: true };
+        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
     }
     const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
     return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, fulfilled: true };
