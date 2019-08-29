@@ -147,12 +147,10 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
             case 'SET':
                 if (modifierUsesKeywordValue){
                     if (Array.isArray(CSO.currentAction.slots[slotToModify].value) || recognizedModifierKeywordsValues.length > 1){
-                        CSO.currentAction.slots[slotToModify] = {
-                            keyword: recognizedModifier.keyword,
-                            value: [],
-                            original: [],
-                            remainingLife: actionSlot.remainingLife
-                        };
+                        CSO.currentAction.slots[slotToModify].keyword = recognizedModifier.keyword;
+                        CSO.currentAction.slots[slotToModify].value = [];
+                        CSO.currentAction.slots[slotToModify].original = [];
+                        CSO.currentAction.slots[slotToModify].remainingLife = actionSlot.remainingLife;
                         recognizedModifierKeywordsValues.forEach((keywordValue) => {
 
                             CSO.currentAction.slots[slotToModify].value.push(keywordValue.value);
@@ -161,36 +159,39 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                     }
                     else {
                         if (recognizedModifierKeywordsValues.length > 0){
-                            CSO.currentAction.slots[slotToModify] = {
-                                keyword: recognizedModifier.keyword,
-                                value: recognizedModifierKeywordsValues[0].value,
-                                original: recognizedModifierKeywordsValues[0].original,
-                                remainingLife: actionSlot.remainingLife
-                            };
+                            CSO.currentAction.slots[slotToModify].keyword = recognizedModifier.keyword;
+                            CSO.currentAction.slots[slotToModify].value = recognizedModifierKeywordsValues[0].value;
+                            CSO.currentAction.slots[slotToModify].original = recognizedModifierKeywordsValues[0].original;
+                            CSO.currentAction.slots[slotToModify].remainingLife = actionSlot.remainingLife;
                         }
                     }
                 }
                 else {
                     if (Array.isArray(CSO.currentAction.slots[slotToModify].value)){
-                        CSO.currentAction.slots[slotToModify] = {
-                            keyword: recognizedModifier.keyword,
-                            value: [],
-                            original: []
-                        };
+                        CSO.currentAction.slots[slotToModify].keyword = recognizedModifier.keyword;
+                        CSO.currentAction.slots[slotToModify].value = [];
+                        CSO.currentAction.slots[slotToModify].original = [];
                         CSO.currentAction.slots[slotToModify].value.push(recognizedModifier.staticValue);
                         CSO.currentAction.slots[slotToModify].original.push(recognizedModifier.staticValue);
                     }
                     else {
-                        CSO.currentAction.slots[slotToModify] = {
-                            keyword: recognizedModifier.keyword,
-                            value: recognizedModifier.staticValue,
-                            original: recognizedModifier.staticValue
-                        };
+                        CSO.currentAction.slots[slotToModify].keyword = recognizedModifier.keyword;
+                        CSO.currentAction.slots[slotToModify].value = recognizedModifier.staticValue;
+                        CSO.currentAction.slots[slotToModify].original = recognizedModifier.staticValue;
                     }
                 }
                 break;
             case 'UNSET':
-                CSO.currentAction.slots[slotToModify] = '';
+                CSO.currentAction.slots[slotToModify] = {
+                    keyword: actionSlot.keyword,
+                    value: '',
+                    original: '',
+                    remainingLife: actionSlot.remainingLife,
+                    promptCount: 0,
+                };
+                if (CSO.context.savedSlots[slotToModify]){
+                    delete CSO.context.savedSlots[slotToModify];
+                }
                 break;
             default:
                 break;
