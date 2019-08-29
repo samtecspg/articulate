@@ -6277,6 +6277,11 @@ vision@^5.3.1, vision@^5.4.0:
     items "2.x.x"
     joi "14.x.x"
 
+vm2@^3.8.3:
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.8.3.tgz#608d71f12584a1e898e60db5c4a61933bd7044bd"
+  integrity sha512-ENQFzvyofYuR6ADLwK7v3eTVXPx8R4EPDoOBb4vDZ18doMH6UR2xe735VZKz+BrgIpi5SAt9laBqZJf1FlqHTw==
+
 warning-symbol@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/warning-symbol/-/warning-symbol-0.1.0.tgz#bb31dd11b7a0f9d67ab2ed95f457b65825bbad21"
