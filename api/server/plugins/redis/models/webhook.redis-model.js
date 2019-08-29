@@ -2,6 +2,9 @@ import { MODEL_WEBHOOK } from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
 
 const schema = {
+    webhookKey: {
+        type: 'string'
+    },
     webhookUrl: {
         type: 'string'
     },
@@ -21,6 +24,9 @@ const schema = {
         type: 'string'
     },
     webhookPassword: {
+        type: 'string'
+    },
+    postscript: {
         type: 'string'
     },
     creationDate: {

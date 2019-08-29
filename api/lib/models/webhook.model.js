@@ -5,6 +5,7 @@ class WebhookModel {
 
         return {
             id: Joi.number(),
+            webhookKey: Joi.string().trim(),
             webhookUrl: Joi.string().trim(),
             webhookVerb: Joi
                 .string()
@@ -21,6 +22,7 @@ class WebhookModel {
             }),
             webhookUser: Joi.string().allow(''),
             webhookPassword: Joi.string().allow(''),
+            postscript: Joi.string().trim(),
             creationDate: Joi
                 .string(),
             modificationDate: Joi
