@@ -22,6 +22,7 @@ class WebhookModel {
             }),
             webhookUser: Joi.string().allow(''),
             webhookPassword: Joi.string().allow(''),
+            postScript: Joi.string().trim(),
             creationDate: Joi
                 .string(),
             modificationDate: Joi

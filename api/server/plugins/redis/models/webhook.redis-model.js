@@ -26,6 +26,9 @@ const schema = {
     webhookPassword: {
         type: 'string'
     },
+    postScript: {
+        type: 'string'
+    },
     creationDate: {
         type: 'timestamp'
     },
