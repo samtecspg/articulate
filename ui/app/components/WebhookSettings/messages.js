@@ -18,6 +18,14 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.webhookUrlPlaceholder',
     defaultMessage: 'Example: http://localhost:3000',
   },
+  webhookKey: {
+    id: 'app.components.WebhookSettings.webhookKey',
+    defaultMessage: 'Key:',
+  },
+  webhookKeyPlaceholder: {
+    id: 'app.components.WebhookSettings.webhookKeyPlaceholder',
+    defaultMessage: 'This is the identifier to extract data using handlebars, ie: webhook.<yourKey>.response.value',
+  },
   webhookUser: {
     id: 'app.components.WebhookSettings.webhookUser',
     defaultMessage: 'User:',
@@ -62,6 +70,10 @@ export default defineMessages({
   title: {
     id: 'app.components.WebhookSettings.title',
     defaultMessage: 'Webhook',
+  },
+  webhookKeyTitle: {
+    id: 'app.components.WebhookSettings.webhookKeyTitle',
+    defaultMessage: 'Webhook Key'
   },
   headerKey: {
     id: 'app.components.WebhookSettings.headerKey',

@@ -91,6 +91,34 @@ export class WebhookSettings extends React.Component {
         >
           <Grid item xs={12}>
             <Typography variant="h2">
+              <FormattedMessage {...messages.webhookKeyTitle} />
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="webhookKey"
+              label={intl.formatMessage(messages.webhookKey)}
+              value={webhook.webhookKey}
+              placeholder={intl.formatMessage(
+                messages.webhookKeyPlaceholder,
+              )}
+              onChange={evt => {
+                this.props.onChangeWebhookData(
+                  'webhookKey',
+                  evt.target.value,
+                );
+              }}
+              margin="normal"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.webhookKey}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h2">
               <FormattedMessage {...messages.title} />
             </Typography>
           </Grid>
