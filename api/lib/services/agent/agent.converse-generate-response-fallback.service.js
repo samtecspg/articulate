@@ -1,4 +1,5 @@
 import { MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
+const {VM, VMScript} = require('vm2');
 
 module.exports = async function ({ CSO }) {
     
@@ -48,12 +49,27 @@ module.exports = async function ({ CSO }) {
             password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
             templateContext: CSO
         });
-        if (webhookResponse.textResponse) {
-            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse }, isFallback: true };
-        }
         CSO.webhook = { 
             [webhook.webhookKey]: {...webhookResponse}
         };
+        if (webhook.postScript){
+            const vm = new VM({
+                timeout: 1000,
+                sandbox: {
+                    CSO
+                }
+            });
+
+            const script = new VMScript(webhook.postScript);
+            try {
+                CSO = vm.run(script);
+            } catch (err) {
+                console.error(`Failed to execute postScript of the webhook ${webhook.webhookKey}`, err);
+            }
+        }
+        if (webhookResponse.textResponse) {
+            return { textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse }, isFallback: true };
+        }
         const response = await agentService.converseCompileResponseTemplates({ responses: fallbackAction.responses, templateContext: CSO });
         return { ...response, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true, isFallback: true };
     }

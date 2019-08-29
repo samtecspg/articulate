@@ -68,7 +68,8 @@
     "schmervice": "^1.0.0",
     "toys": "2.x.x",
     "twilio": "^3.28.0",
-    "vision": "^5.4.0"
+    "vision": "^5.4.0",
+    "vm2": "^3.8.3"
   },
   "devDependencies": {
     "code": "5.x.x",
