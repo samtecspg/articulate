@@ -87,6 +87,7 @@ export class AgentPage extends React.PureComponent {
     errorState: {
       agentName: false,
       fallbackAction: false,
+      webhookKey: false,
       webhookUrl: false,
       rasaURL: false,
       ducklingURL: false,
@@ -171,6 +172,7 @@ export class AgentPage extends React.PureComponent {
       agentDescription: false,
       fallbackAction: false,
       webhookUrl: false,
+      webhookKey: false,
       rasaURL: false,
       ducklingURL: false,
       ducklingDimension: false,
@@ -201,6 +203,16 @@ export class AgentPage extends React.PureComponent {
       newErrorState.tabs.push(0);
     } else {
       newErrorState.fallbackAction = false;
+    }
+    if (
+      this.props.agent.useWebhook &&
+      (!this.props.webhook.webhookKey || this.props.webhook.webhookKey === '')
+    ) {
+      errors = true;
+      newErrorState.webhookKey = true;
+      newErrorState.tabs.push(1);
+    } else {
+      newErrorState.webhookKey = false;
     }
     if (
       this.props.agent.useWebhook &&

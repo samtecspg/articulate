@@ -133,6 +133,7 @@ export class ActionPage extends React.Component {
     errorState: {
       actionName: false,
       postFormatPayload: false,
+      webhookKey: false,
       webhookUrl: false,
       webhookPayload: false,
       responses: false,
@@ -239,6 +240,7 @@ export class ActionPage extends React.Component {
     const newErrorState = {
       actionName: false,
       postFormatPayload: false,
+      webhookKey: false,
       webhookUrl: false,
       webhookPayload: false,
       responses: false,
@@ -253,6 +255,17 @@ export class ActionPage extends React.Component {
       newErrorState.tabs.push(0);
     } else {
       newErrorState.actionName = false;
+    }
+
+    if (
+      this.props.action.useWebhook &&
+      (!this.props.webhook.webhookKey || this.props.webhook.webhookKey === '')
+    ) {
+      errors = true;
+      newErrorState.webhookKey = true;
+      newErrorState.tabs.push(2);
+    } else {
+      newErrorState.webhookKey = false;
     }
 
     if (
