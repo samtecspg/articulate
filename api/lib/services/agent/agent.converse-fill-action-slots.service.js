@@ -280,7 +280,7 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                 else {
                     //Just insert an object with attributes value and original into the context slot after sorting the matching regex to keep the last one
                     if (recognizedKeyword.extractor === CONFIG_KEYWORD_TYPE_REGEX) {
-                        const allRecognizedKeywordsForRegex = recognizedKeywords.filter((ent) => {
+                        const allRecognizedKeywordsForRegex = CSO.recognizedKeywords.filter((ent) => {
 
                             return ent.keyword === recognizedKeyword.keyword && ent.extractor === CONFIG_KEYWORD_TYPE_REGEX;
 
@@ -290,11 +290,15 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                             return b.end - a.end;
                         });
 
-                        CSO.currentAction.slots[slotName] = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text: CSO.text });
+                        const keywordValue = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text: CSO.text });
+                        CSO.currentAction.slots[slotName].value = keywordValue.value;
+                        CSO.currentAction.slots[slotName].original = keywordValue.original;
                         CSO.currentAction.slots[slotName].remainingLife = slotToFill.remainingLife;
                     }
                     else {
-                        CSO.currentAction.slots[slotName] = keywordService.parseSysValue({ keyword: recognizedKeyword, text: CSO.text });
+                        const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text: CSO.text });
+                        CSO.currentAction.slots[slotName].value = keywordValue.value;
+                        CSO.currentAction.slots[slotName].original = keywordValue.original;
                         CSO.currentAction.slots[slotName].remainingLife = slotToFill.remainingLife;
 
                     }

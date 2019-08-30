@@ -220,26 +220,28 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             * an action in the queue that can be fulfilled with those recognized values
             */
             if (CSO.recognizedKeywords.length > 0 && CSO.recognizedModifiers.length === 0 && CSO.recognizedActions.length === 0){
-                for (const recognizedKeyword of CSO.recognizedKeywords){
-                    if (CSO.context.actionQueue.length > 0){
+                let noActionToModify = true;
+                if (CSO.context.actionQueue.length > 0){
+                    for (const recognizedKeyword of CSO.recognizedKeywords){
 
                         CSO.actionToModify = getActionToModify({ recognizedKeyword, CSO });
     
                         if (CSO.actionToModify && CSO.actionToModify.actionData.slots && CSO.actionToModify.actionData.slots.length > 0){
+                            noActionToModify = false;
                             CSO.currentAction = CSO.context.actionQueue[CSO.actionToModify.index];
                             await agentService.converseFillActionSlots({ actionData: CSO.actionToModify.actionData, CSO });
                         }
-                        else {
-                            //Return fallback because this means a keyword was recognized for an action that doesn't exists in the queue
-                            CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                            await agentService.converseSendResponseToUbiquity({ CSO });
-                        }
                     }
-                    else {
-                        //Return fallback because this means user started the conversation with the keyword flow
+                    if(noActionToModify) {
+                        //Return fallback because this means a keyword was recognized for an action that doesn't exists in the queue
                         CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
                         await agentService.converseSendResponseToUbiquity({ CSO });
                     }
+                }
+                else {
+                    //Return fallback because this means user started the conversation with the keyword flow
+                    CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                    await agentService.converseSendResponseToUbiquity({ CSO });
                 }
             }
     
