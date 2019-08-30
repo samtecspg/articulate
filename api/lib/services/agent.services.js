@@ -1,5 +1,5 @@
 import Schmervice from 'schmervice';
-import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent-converse-fulfill-empty-slots-with-saved-values.service';
+import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent.converse-fulfill-empty-slots-with-saved-values.service';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
 import ConverseGenerateResponseFallback from './agent/agent.converse-generate-response-fallback.service';
