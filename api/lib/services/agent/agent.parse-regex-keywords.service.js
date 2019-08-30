@@ -43,17 +43,17 @@ module.exports = async function ({ AgentModel, text }) {
                     let match;
 
                     if (match = regexToTest.exec(text)) {
-
+ 
                         while (match) {
-                            if (foundRegex.indexOf(match) < 0) {
+                            if (foundRegex.indexOf(match[0]) < 0) {
                                 const startIndex = text.indexOf(match[0]);
                                 const endIndex = startIndex + match[0].length;
                                 const resultToSend = Object.assign(regex, { resolvedRegex: match[0], keywordValue, start: startIndex, end: endIndex, regexType: 'keywordRegex' });
                                 regexKeywords.push(_.cloneDeep(resultToSend));
                                 foundRegex.push(match[0]);
                                 match = regexToTest.exec(text);
-
                             }
+                            match = match[0] ? match : null;
                         }
                     }
 
