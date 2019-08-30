@@ -230,7 +230,8 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                             keyword: recognizedKeyword.keyword,
                             value: keywordValue.value,
                             original: keywordValue.original,
-                            remainingLife: slotToFill.remainingLife
+                            remainingLife: slotToFill.remainingLife,
+                            promptCount: 0,
                         };
                     }
                     //If an slot in the context already exists for the recognized slot
@@ -246,7 +247,8 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                                     keyword: recognizedKeyword.keyword,
                                     value: [],
                                     original: [],
-                                    remainingLife: slotToFill.remainingLife
+                                    remainingLife: slotToFill.remainingLife,
+                                    promptCount: 0,
                                 };
                             }
                             //Get the original and parsed value of the keyword
@@ -262,9 +264,10 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                             //Transform the current slot in the context to an array and insert the existent values in this array
                             CSO.currentAction.slots[slotName] = {
                                 keyword: recognizedKeyword.keyword,
-                                value: [CSO.currentAction.slots[slotName].value],
-                                original: [CSO.currentAction.slots[slotName].original],
-                                remainingLife: slotToFill.remainingLife
+                                remainingLife: slotToFill.remainingLife,
+                                value: CSO.currentAction.slots[slotName].value ? [CSO.currentAction.slots[slotName].value] : [],
+                                original: CSO.currentAction.slots[slotName].original ? [CSO.currentAction.slots[slotName].original] : [],
+                                promptCount: CSO.currentAction.slots[slotName].promptCount,
                             };
                             //Push the new recognized values to the list
                             CSO.currentAction.slots[slotName].value.push(keywordValue.value);
