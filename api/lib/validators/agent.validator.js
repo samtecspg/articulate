@@ -877,6 +877,7 @@ class AgentValidate {
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model,
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
                     parameters: Joi.object(),
                     webhook: {
                         webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
@@ -945,7 +946,8 @@ class AgentValidate {
                                 extractor: SayingKeywordSchema.extractor
                             }).required().allow([]),
                             creationDate: KeywordSchema.creationDate,
-                            modificationDate: KeywordSchema.modificationDate
+                            modificationDate: KeywordSchema.modificationDate,
+                            starred: SayingSchema.starred
                         }),
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
