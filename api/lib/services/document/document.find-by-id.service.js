@@ -16,8 +16,10 @@ module.exports = async function ({ id, returnModel = false }) {
         const docData = { id: doc._id, ...doc._source };
         if (docData.converseResult && docData.converseResult.CSO && docData.converseResult.CSO.webhooks){
             Object.keys(docData.converseResult.CSO.webhooks).forEach((webhookKey) => {
-                        
-                docData.converseResult.CSO.webhooks[webhookKey].response = JSON.parse(docData.converseResult.CSO.webhooks[webhookKey].response);
+
+                if (docData.converseResult.CSO.webhooks[webhookKey].response){
+                    docData.converseResult.CSO.webhooks[webhookKey].response = JSON.parse(docData.converseResult.CSO.webhooks[webhookKey].response);
+                }                
             });
         }
         return docData;
