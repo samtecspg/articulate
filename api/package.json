@@ -13,7 +13,7 @@
     "start": "cross-env NODE_ENV=development env-cmd server/.env nodemon server --exec babel-node",
     "start:debug": "cross-env NODE_ENV=development env-cmd server/.env babel-node server $NODE_DEBUG_OPTION",
     "start:prod": "cross-env NODE_ENV=production env-cmd .env babel-node server",
-    "test": "DEBUG=-articulate:* lab -v -a code -T node_modules/lab-transform-preset-env -S $NODE_DEBUG_OPTION -m 5000",
+    "test": "DEBUG=-* REDIS_HOST=0.0.0.0 ES_HOST=http://0.0.0.0:9200 lab -v -a code -T node_modules/lab-transform-preset-env -S $NODE_DEBUG_OPTION -m 5000",
     "coverage:html": "DEBUG=-articulate:* lab -a code -T node_modules/lab-transform-preset-env -S -c -r html -o coverage.html",
     "lint": "lab -dL -T node_modules/lab-transform-preset-env -S",
     "lint:fix": "lab -dL --lint-fix -T node_modules/lab-transform-preset-env -S"
