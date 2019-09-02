@@ -12,6 +12,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  InputAdornment,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -110,6 +111,17 @@ const styles = {
   },
   postFormatContainer: {
     marginTop: '20px',
+  },
+  responseEnter: {
+    color: '#4e4e4e',
+    fontSize: '12px',
+    paddingRight: '15px',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  sayingInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderRadius: '5px',
   },
 };
 
@@ -223,6 +235,32 @@ class ResponseForm extends React.Component {
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
+                    }}
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
+                    InputProps={{
+                      className: classes.sayingInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              if (this.props.newResponse.trim() !== '') {
+                                ev.preventDefault();
+                                this.props.onAddResponse(
+                                  this.props.newResponse,
+                                );
+                                this.props.onUpdateNewResponse('');
+                              }
+                            }}
+                          >
+                            {intl.formatMessage(messages.responseEnter)}
+                          </span>
+                        </InputAdornment>
+                      ),
                     }}
                     helperText={intl.formatMessage(messages.responseHelperText)}
                     error={this.props.errorState.responses}

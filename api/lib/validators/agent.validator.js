@@ -162,6 +162,7 @@ class AgentValidate {
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         quickResponses: SlotSchema.quickResponses,
+                        promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
                         remainingLife: SlotSchema.remainingLife
                     })
@@ -196,6 +197,7 @@ class AgentValidate {
                         isList: SlotSchema.isList.required(),
                         isRequired: SlotSchema.isRequired.required(),
                         quickResponses: SlotSchema.quickResponses,
+                        promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
                         remainingLife: SlotSchema.remainingLife
                     }),
@@ -235,7 +237,7 @@ class AgentValidate {
                                 end: SayingKeywordSchema.end.required(),
                                 value: SayingKeywordSchema.value.required(),
                                 keyword: SayingKeywordSchema.keyword.required(),
-                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                keywordId: SayingKeywordSchema.keywordId,
                                 extractor: SayingKeywordSchema.extractor
                             })
                         })
@@ -522,13 +524,16 @@ class AgentValidate {
                         .string()
                         .optional()
                         .allow(SORT_ASC, SORT_DESC)
-
                         .description('Sort direction. Default= ASC'),
                     [PARAM_FIELD]: Joi
                         .string()
                         .allow(_(DocumentSchema).keys().sort().value())
                         .optional()
-                        .description('Field to sort with. Default= "time_stamp"')
+                        .description('Field to sort with. Default= "time_stamp"'),
+                    dateRange: Joi
+                        .string()
+                        .optional()
+                        .description('ES range in format: now-1h, now-1d, now-7d, now-1M, now-1y')
                 };
             })()
         };
@@ -705,7 +710,7 @@ class AgentValidate {
                                 end: SayingKeywordSchema.end.required(),
                                 value: SayingKeywordSchema.value.required(),
                                 keyword: SayingKeywordSchema.keyword.required(),
-                                keywordId: SayingKeywordSchema.keywordId.required(),
+                                keywordId: SayingKeywordSchema.keywordId,
                                 extractor: SayingKeywordSchema.extractor
                             })
                         })
@@ -898,7 +903,7 @@ class AgentValidate {
                                     end: SayingKeywordSchema.end.required(),
                                     value: SayingKeywordSchema.value.required(),
                                     keyword: SayingKeywordSchema.keyword.required(),
-                                    keywordId: SayingKeywordSchema.keywordId.required(),
+                                    keywordId: SayingKeywordSchema.keywordId,
                                     extractor: SayingKeywordSchema.extractor
                                 })
                             })
@@ -966,6 +971,7 @@ class AgentValidate {
                             isList: SlotSchema.isList.required(),
                             isRequired: SlotSchema.isRequired.required(),
                             quickResponses: SlotSchema.quickResponses,
+                            promptCountLimit: SlotSchema.promptCountLimit,
                             textPrompts: SlotSchema.textPrompts,
                             remainingLife: SlotSchema.remainingLife
                         }),

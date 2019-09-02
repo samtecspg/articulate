@@ -67,6 +67,15 @@ class UserValidate {
                 };
             })()
         };
+
+        this.removeById = {
+            params: (() => {
+
+                return {
+                    [PARAM_USER_ACCOUNT_ID]: UserIdentityModel.id.required()
+                };
+            })()
+        };
     }
 }
 

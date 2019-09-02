@@ -69,12 +69,12 @@ export default defineMessages({
     defaultMessage: 'There was an error {action} your {instanceType}. {emoji}',
   },
   errorCopyingSayingTemplate: {
-    id: 'app.components.ConversationBar.negativeNotificationTemplate',
+    id: 'app.components.ConversationBar.errorCopyingSayingTemplate',
     defaultMessage:
       'There was an error copying the utterance into your sayings. Please add it manually. {emoji}',
   },
   errorMessageTemplate: {
-    id: 'app.components.ConversationBar.negativeNotificationTemplate',
+    id: 'app.components.ConversationBar.errorMessageTemplate',
     defaultMessage: '{error}. {emoji}',
   },
   errorCallingArticulate: {

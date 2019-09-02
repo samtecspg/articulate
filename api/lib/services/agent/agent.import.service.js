@@ -56,6 +56,38 @@ module.exports = async function ({ payload }) {
             });
             keywordsDir[newKeyword.keywordName] = parseInt(newKeyword.id);
         }));
+
+        const updatedKeywords = {}
+        await Promise.all(keywords.map(async (keyword) => {
+
+            updatedKeywords[keyword.keywordName] = false;
+            keyword.modifiers = keyword.modifiers.map((modifier) => {
+
+                modifier.sayings = modifier.sayings.map((saying) => {
+
+                    saying.keywords = saying.keywords.map((sayingkeyword) => {
+
+                        updatedKeywords[keyword.keywordName] = true;
+                        sayingkeyword.keywordId = keywordsDir[sayingkeyword.keyword]
+                        return sayingkeyword;
+                    });
+
+                    return saying;
+                });
+
+                return modifier;
+            });
+
+            if (updatedKeywords[keyword.keywordName]){
+                await agentService.updateKeyword({
+                    id: AgentModel.id,
+                    keywordId: keywordsDir[keyword.keywordName],
+                    keywordData: {
+                        modifiers: keyword.modifiers
+                    }
+                });
+            }
+        }));
         
         await Promise.all(actions.map(async (action) => {
 

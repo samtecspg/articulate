@@ -8,8 +8,6 @@ module.exports = async (server) => {
     const { redis } = server.app;
     const { serverService, } = await server.services();
 
-    const Model = await redis.factory(MODEL_SERVER);
-    const serverId = await Model.findServerId();
     const ServerModel = await serverService.get({ returnModel: true });
     
     serverInfo.version = Package.version;

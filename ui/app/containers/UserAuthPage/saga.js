@@ -32,7 +32,7 @@ export function* loginUser(payload) {
 }
 
 export function* signUpUser(payload) {
-  const { api, name, lastName, username, password } = payload;
+  const { api, name, lastName, username, password, ref } = payload;
   const data = {
     name,
     lastName,
@@ -43,7 +43,12 @@ export function* signUpUser(payload) {
   try {
     const response = yield call(api.post, toAPIPath([ROUTE_USER]), data);
     yield put(signUpUserSuccess(response));
-    yield put(push('/'));
+    if (ref === 'users'){
+      yield put(push('/users'));
+    }
+    else {
+      yield put(push('/'));
+    }
     window.location.reload();
   } catch (err) {
     yield put(signUpUserError(err));

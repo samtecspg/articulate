@@ -17,7 +17,8 @@ import Nes from 'nes';
 import { getWS } from '../../utils/locationResolver';
 
 import {
-  trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess
+  trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
+  toggleChatButton
 } from '../App/actions';
 
 import { AUTH_ENABLED } from "../../../common/env";
@@ -42,6 +43,7 @@ export class AnalyticsPage extends React.PureComponent {
   state = {
     client: null,
     socketClientConnected: false,
+    dateRange: 'all'
   };
 
   componentWillMount(){
@@ -70,7 +72,8 @@ export class AnalyticsPage extends React.PureComponent {
               documents: documents.data,
               total: documents.totalCount,
             };
-            onRefreshDocuments(payload);
+            //onRefreshDocuments(payload);
+            onLoadDocuments(this.state.dateRange);
           }
         };
 
@@ -86,6 +89,7 @@ export class AnalyticsPage extends React.PureComponent {
           : undefined,
       });
     }
+    this.props.onShowChatButton(true);
   }
 
   componentWillUnmount() {
@@ -115,6 +119,13 @@ export class AnalyticsPage extends React.PureComponent {
             <Form
               totalDocuments={this.props.totalDocuments}
               documents={this.props.documents}
+              dateRange={this.state.dateRange}
+              onSetDateRange={(dateRange) => {
+                this.setState({
+                  dateRange
+                });
+                this.props.onLoadDocuments(dateRange);
+              }}
             />
           }
           agentForm={Link}
@@ -139,6 +150,7 @@ AnalyticsPage.propTypes = {
   onTrain: PropTypes.func,
   documents: PropTypes.array,
   totalDocuments: PropTypes.number,
+  onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -159,11 +171,14 @@ function mapDispatchToProps(dispatch) {
     onLoadActions: () => {
       dispatch(loadActions());
     },
-    onLoadDocuments: () => {
-      dispatch(loadAgentDocuments());
+    onLoadDocuments: (dateRange) => {
+      dispatch(loadAgentDocuments({ dateRange }));
     },
     onRefreshDocuments: (payload) => {
       dispatch(loadAgentDocumentsSuccess(payload));
+    },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
     }
   };
 }

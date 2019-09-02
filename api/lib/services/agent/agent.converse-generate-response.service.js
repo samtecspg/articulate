@@ -15,12 +15,27 @@ module.exports = async function ({ actionData, CSO }) {
         if (CSO.currentAction.slots[slot.slotName] && Array.isArray(CSO.currentAction.slots[slot.slotName])){
             return CSO.currentAction.slots[slot.slotName].length === 0;
         }
-        return !CSO.currentAction.slots[slot.slotName].value;
+        return (CSO.currentAction.slots[slot.slotName].value !== undefined && !CSO.currentAction.slots[slot.slotName].value) 
+            || (CSO.currentAction.slots[slot.slotName].value === undefined && !CSO.currentAction.slots[slot.slotName].from && !CSO.currentAction.slots[slot.slotName].to);
     });
     CSO.slots = CSO.currentAction.slots;
     if (missingSlots.length > 0) {
-        const response = await agentService.converseCompileResponseTemplates({ responses: missingSlots[0].textPrompts, templateContext: CSO, isTextPrompt: true });
-        return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
+        let missingSlotIndex = null;
+        missingSlots.some((missingSlot, tempMissingSlotIndex) => {
+
+            CSO.currentAction.slots[missingSlot.slotName].promptCount += 1;
+            if (missingSlot.promptCountLimit === undefined || missingSlot.promptCountLimit === null || missingSlot.promptCountLimit >= CSO.currentAction.slots[missingSlot.slotName].promptCount){
+                missingSlotIndex = tempMissingSlotIndex;
+                return true;
+            }
+            return false;
+        });
+        if (missingSlotIndex !== null){
+            const missingSlot = missingSlots[missingSlotIndex];
+            const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount});
+            return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
+        }
+        return { slotPromptLimitReached: true }
     }
 
     if (actionData.useWebhook || CSO.agent.useWebhook) {

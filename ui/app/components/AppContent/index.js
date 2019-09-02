@@ -9,6 +9,7 @@ import { Grid } from '@material-ui/core';
 import messages from './messages';
 
 import settingsIcon from '../../images/settings-icon.svg';
+import userListIcon from '../../images/user-list-icon.svg';
 
 const styles = {
   settings: {
@@ -57,6 +58,16 @@ export class AppContent extends React.Component {
           demoMode ?
           null :
           <Grid className={classes.settings} item xs={12}>
+            <Link id="users" to="/users">
+              <img
+                style={{
+                  filter: 'invert(0.51)',
+                  paddingBottom: '10px'
+                }}
+                src={userListIcon}
+                alt={intl.formatMessage(messages.usersIconAlt)}
+              />
+            </Link>
             <Link id="settings" to="/settings">
               <img
                 src={settingsIcon}

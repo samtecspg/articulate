@@ -17,6 +17,7 @@ export const RESET_MISSING_API = 'app/App/RESET_MISSING_API';
 export const CHECK_API = 'app/App/CHECK_API';
 export const RESET_STATUS_FLAGS = 'app/App/RESET_STATUS_FLAGS';
 export const TOGGLE_CONVERSATION_BAR = 'app/App/TOGGLE_CONVERSATION_BAR';
+export const TOGGLE_CHAT_BUTTON = 'app/App/TOGGLE_CHAT_BUTTON';
 export const CLOSE_NOTIFICATION = 'app/App/CLOSE_NOTIFICATION';
 export const SEND_MESSAGE = 'app/App/SEND_MESSAGE';
 export const RESPOND_MESSAGE = 'app/App/RESPOND_MESSAGE';
@@ -272,6 +273,7 @@ export const EDIT_ACTION_RESPONSE = 'app/ActionPage/EDIT_ACTION_RESPONSE';
 export const ADD_NEW_QUICK_RESPONSE = 'app/ActionPage/ADD_NEW_QUICK_RESPONSE';
 export const DELETE_QUICK_RESPONSE = 'app/ActionPage/DELETE_QUICK_RESPONSE';
 export const CHANGE_QUICK_RESPONSE = 'app/ActionPage/CHANGE_QUICK_RESPONSE';
+export const EDIT_SLOT_TEXT_PROMPT = 'app/ActionPage/EDIT_SLOT_TEXT_PROMPT';
 
 /*
  * Keyword
@@ -378,3 +380,12 @@ export const LOGOUT_USER_ERROR = 'app/user/LOGOUT_USER_ERROR';
 export const SIGN_UP_USER = 'app/user/SIGN_UP_USER';
 export const SIGN_UP_USER_SUCCESS = 'app/user/SIGN_UP_USER_SUCCESS';
 export const SIGN_UP_USER_ERROR = 'app/user/SIGN_UP_USER_ERROR';
+
+/* Users */ 
+export const LOAD_USERS = 'app/user/LOAD_USERS';
+export const LOAD_USERS_SUCCESS = 'app/user/LOAD_USERS_SUCCESS';
+export const LOAD_USERS_ERROR = 'app/user/LOAD_USERS_ERROR';
+
+export const DELETE_USER = 'app/user/DELETE_USER';
+export const DELETE_USER_SUCCESS = 'app/user/DELETE_USER_SUCCESS';
+export const DELETE_USER_ERROR = 'app/user/DELETE_USER_ERROR';

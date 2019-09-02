@@ -66,7 +66,7 @@ const getModifierData = ({ recognizedModifierName, CSO }) => {
 }
 
 
-const getActionToModify = ({ recognizedModifier, CSO }) => {
+const getActionToModify = ({ recognizedModifier, recognizedKeyword, CSO }) => {
 
     let actionToModify;
 
@@ -79,7 +79,8 @@ const getActionToModify = ({ recognizedModifier, CSO }) => {
         const actionData = getActionData({ actionName: action.name, CSO });
         const isCandidate = actionData.slots.some((actionSlot) => {
 
-            return actionSlot.keyword === recognizedModifier.keyword;
+            const keywordName = (recognizedModifier && recognizedModifier.keyword) ? recognizedModifier.keyword : recognizedKeyword.keyword;
+            return actionSlot.keyword === keywordName;
         });
         if (isCandidate){
             return {
@@ -148,8 +149,11 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
             });
         }
+
+        //We extract the keywords from the best rasa result
+        CSO.recognizedKeywords = await agentService.converseGetKeywordsFromRasaResults({ rasaResults: [ CSO.rasaResult ] })
     
-        if (CSO.rasaResult.action && CSO.rasaResult.action.name){
+        if (CSO.rasaResult.action && CSO.rasaResult.action.name || CSO.recognizedKeywords.length > 0){
             
             updateLifespanOfSlots({ CSO });
             /*
@@ -180,9 +184,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 });
             });
     
-            //We extract the keywords from the best rasa result
-            CSO.recognizedKeywords = await agentService.converseGetKeywordsFromRasaResults({ rasaResults: [ CSO.rasaResult ] })
-    
             /*
             * Given that we don't have actions + modifiers models, we know that if there is a modifier, then we know that this is
             * what we need to process. Remember we don't support multi modifier models, but, we iterate as if we have it
@@ -207,6 +208,35 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     }
                     else {
                         //Return fallback because this means user started the conversation with a modifier
+                        CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                        await agentService.converseSendResponseToUbiquity({ CSO });
+                    }
+                }
+            }
+
+            /*
+            * This is known as the keyword flow 
+            * In case no modifiers neither actions were recognized we are going to use recognized keywords to try to fulfill
+            * an action in the queue that can be fulfilled with those recognized values
+            */
+            if (CSO.recognizedKeywords.length > 0 && CSO.recognizedModifiers.length === 0 && CSO.recognizedActions.length === 0){
+                for (const recognizedKeyword of CSO.recognizedKeywords){
+                    if (CSO.context.actionQueue.length > 0){
+
+                        CSO.actionToModify = getActionToModify({ recognizedKeyword, CSO });
+    
+                        if (CSO.actionToModify && CSO.actionToModify.actionData.slots && CSO.actionToModify.actionData.slots.length > 0){
+                            CSO.currentAction = CSO.context.actionQueue[CSO.actionToModify.index];
+                            await agentService.converseFillActionSlots({ actionData: CSO.actionToModify.actionData, CSO });
+                        }
+                        else {
+                            //Return fallback because this means a keyword was recognized for an action that doesn't exists in the queue
+                            CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                            await agentService.converseSendResponseToUbiquity({ CSO });
+                        }
+                    }
+                    else {
+                        //Return fallback because this means user started the conversation with the keyword flow
                         CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
                         await agentService.converseSendResponseToUbiquity({ CSO });
                     }
@@ -272,32 +302,37 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     if (CSO.sendMessage){
 
                         CSO.response = await agentService.converseGenerateResponse({ actionData, CSO });
-                
-                        //As the action wasn't fulfilled we are not going to send any more messages to the user
-                        if (!CSO.response.fulfilled){
-                            CSO.sendMessage = false
+
+                        if (CSO.response.slotPromptLimitReached){                        
+                            CSO.currentAction.fulfilled = true;
                         }
                         else {
-                            CSO.currentAction.fulfilled = true;
-            
-                            //If there is any chained action
-                            if (CSO.response.actions && CSO.response.actions.length > 0){
-                                let newActionIndex = CSO.actionIndex + 1;
-                                CSO.response.actions.forEach((chainedAction) => {
-                                    
-                                    CSO.context.actionQueue.splice(newActionIndex, 0, {
-                                        name: chainedAction,
-                                        fulfilled: false
-                                    });
-                                    newActionIndex++;
-                                });
+                            //As the action wasn't fulfilled we are not going to send any more messages to the user
+                            if (!CSO.response.fulfilled){
+                                CSO.sendMessage = false
                             }
+                            else {
+                                CSO.currentAction.fulfilled = true;
+                
+                                //If there is any chained action
+                                if (CSO.response.actions && CSO.response.actions.length > 0){
+                                    let newActionIndex = CSO.actionIndex + 1;
+                                    CSO.response.actions.forEach((chainedAction) => {
+                                        
+                                        CSO.context.actionQueue.splice(newActionIndex, 0, {
+                                            name: chainedAction,
+                                            fulfilled: false
+                                        });
+                                        newActionIndex++;
+                                    });
+                                }
+                            }
+                            /*
+                            * This would either send a response, a text promt or a fallback
+                            * CSO.ubiquity could be filled by using the additionalKeys param
+                            */
+                            await agentService.converseSendResponseToUbiquity({ actionData, CSO });
                         }
-                        /*
-                        * This would either send a response, a text promt or a fallback
-                        * CSO.ubiquity could be filled by using the additionalKeys param
-                        */
-                        await agentService.converseSendResponseToUbiquity({ actionData, CSO });
                     }
                 }
                 CSO.actionIndex++;

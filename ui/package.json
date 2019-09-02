@@ -1,6 +1,6 @@
 {
   "name": "articulate",
-  "version": "0.0.0",
+  "version": "0.29.0",
   "description": "Smart conversational interfaces",
   "repository": {
     "type": "git",
@@ -75,6 +75,7 @@
     "chart.js": "^2.8.0",
     "compression": "1.7.4",
     "connected-react-router": "6.4.0",
+    "font-color-contrast": "^1.0.3",
     "guid": "^0.0.12",
     "history": "4.9.0",
     "hoist-non-react-statics": "3.3.0",

@@ -202,6 +202,7 @@ import {
   TAG_KEYWORD,
   TAG_MODIFIER_KEYWORD,
   TOGGLE_CONVERSATION_BAR,
+  TOGGLE_CHAT_BUTTON,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
@@ -254,6 +255,14 @@ import {
   ADD_NEW_QUICK_RESPONSE,
   DELETE_QUICK_RESPONSE,
   CHANGE_QUICK_RESPONSE,
+  EDIT_SLOT_TEXT_PROMPT,
+  DELETE_SLOT_TEXT_PROMPT,
+  LOAD_USERS,
+  LOAD_USERS_ERROR,
+  LOAD_USERS_SUCCESS,
+  DELETE_USER,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
 } from './constants';
 
 /*
@@ -361,6 +370,13 @@ export function toggleConversationBar(value) {
   };
 }
 
+export function toggleChatButton(value) {
+  return {
+    type: TOGGLE_CHAT_BUTTON,
+    value
+  };
+}
+
 export function closeNotification(index) {
   return {
     type: CLOSE_NOTIFICATION,
@@ -368,12 +384,13 @@ export function closeNotification(index) {
   };
 }
 
-export function sendMessage(message, newSession) {
+export function sendMessage(message, newSession, isDemo) {
   return {
     type: SEND_MESSAGE,
     apiCall: true,
     message,
     newSession,
+    isDemo
   };
 }
 
@@ -763,7 +780,7 @@ export function changeAgentParameterValue(parameterName, value) {
   };
 }
 
-export function loadAgentDocuments(page, pageSize, field, direction) {
+export function loadAgentDocuments({ page, pageSize, field, direction, dateRange }) {
   return {
     type: LOAD_AGENT_DOCUMENTS,
     apiCall: true,
@@ -771,6 +788,7 @@ export function loadAgentDocuments(page, pageSize, field, direction) {
     pageSize,
     field,
     direction,
+    dateRange
   };
 }
 
@@ -1623,6 +1641,15 @@ export function editActionResponse(newResponse, responseIndex) {
   };
 }
 
+export function editSlotTextPrompt(slotIndex, textPromptIndex, textPrompt) {
+  return {
+    type: EDIT_SLOT_TEXT_PROMPT,
+    slotIndex,
+    textPromptIndex,
+    textPrompt
+  };
+}
+
 export function addNewQuickResponse(slotIndex, response) {
   return {
     type: ADD_NEW_QUICK_RESPONSE,
@@ -2176,7 +2203,7 @@ export function logoutUserError(error) {
   };
 }
 
-export function signUpUser(name, lastName, username, password) {
+export function signUpUser(name, lastName, username, password, ref) {
   return {
     type: SIGN_UP_USER,
     apiCall: true,
@@ -2184,6 +2211,7 @@ export function signUpUser(name, lastName, username, password) {
     lastName,
     username,
     password,
+    ref
   };
 }
 
@@ -2196,6 +2224,52 @@ export function signUpUserSuccess() {
 export function signUpUserError(error) {
   return {
     type: SIGN_UP_USER_ERROR,
+    error,
+  };
+}
+
+export function loadUsers(page, pageSize) {
+  return {
+    type: LOAD_USERS,
+    apiCall: true,
+    page,
+    pageSize,
+  };
+}
+
+export function loadUsersSuccess(users) {
+  return {
+    type: LOAD_USERS_SUCCESS,
+    users
+  };
+}
+
+export function loadUsersError(error) {
+  return {
+    type: LOAD_USERS_ERROR,
+    error,
+  };
+}
+
+export function deleteUser(page, pageSize, id) {
+  return {
+    type: DELETE_USER,
+    apiCall: true,
+    id,
+    page,
+    pageSize
+  };
+}
+
+export function deleteUserSuccess() {
+  return {
+    type: DELETE_USER_SUCCESS,
+  };
+}
+
+export function deleteUserError(error) {
+  return {
+    type: DELETE_USER_ERROR,
     error,
   };
 }

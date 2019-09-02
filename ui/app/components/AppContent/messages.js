@@ -10,4 +10,8 @@ export default defineMessages({
     id: 'app.components.AppContent.settingsIconAlt',
     defaultMessage: 'Settings',
   },
+  usersIconAlt: {
+    id: 'app.components.AppContent.usersIconAlt',
+    defaultMessage: 'Users',
+  }  
 });

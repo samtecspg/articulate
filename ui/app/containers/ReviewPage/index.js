@@ -120,12 +120,12 @@ export class ReviewPage extends React.Component {
     onLoadKeywords();
     onLoadActions();
     onLoadCategories();
-    onLoadAgentDocuments(
-      this.state.pageStatus.documents.currentPage,
-      this.state.pageStatus.documents.pageSize,
-      this.state.pageStatus.documents.sortField,
-      this.state.pageStatus.documents.sortDirection,
-    );
+    onLoadAgentDocuments({
+      page: this.state.pageStatus.documents.currentPage,
+      pageSize: this.state.pageStatus.documents.pageSize,
+      field: this.state.pageStatus.documents.sortField,
+      direction: this.state.pageStatus.documents.sortDirection,
+    });
 
     onLoadAgentSessions(
       this.state.pageStatus.sessions.currentPage,
@@ -212,6 +212,7 @@ export class ReviewPage extends React.Component {
     if (this.props.agent.id) {
       this.initForm();
     }
+    this.props.actions.onShowChatButton(true);
   }
 
   componentDidUpdate(prevProps) {
@@ -255,12 +256,12 @@ export class ReviewPage extends React.Component {
       pageStatus: newPageStatus,
     });
     if (this.state.selectedTab === 'documents'){
-      onLoadAgentDocuments(
-        pageNumber,
-        this.state.pageStatus.documents.pageSize,
-        this.state.pageStatus.documents.sortField,
-        this.state.pageStatus.documents.sortDirection,
-      );
+      onLoadAgentDocuments({
+        page: pageNumber,
+        pageSize: this.state.pageStatus.documents.pageSize,
+        field: this.state.pageStatus.documents.sortField,
+        direction: this.state.pageStatus.documents.sortDirection,
+      });
     }
     if (this.state.selectedTab === 'sessions'){
       onLoadAgentSessions(
@@ -298,12 +299,12 @@ export class ReviewPage extends React.Component {
     });
     if (this.state.selectedTab === 'documents'){
       onChangeReviewPageSize(this.props.agent.id, pageSize);
-      onLoadAgentDocuments(
-        1,
+      onLoadAgentDocuments({
+        page: 1,
         pageSize,
-        this.state.pageStatus[this.state.selectedTab].sortField,
-        this.state.pageStatus[this.state.selectedTab].sortDirection,
-      );
+        field: this.state.pageStatus[this.state.selectedTab].sortField,
+        direction: this.state.pageStatus[this.state.selectedTab].sortDirection,
+      });
     }
     if (this.state.selectedTab === 'sessions'){
       onChangeSessionsPageSize(this.props.agent.id, pageSize);
@@ -322,12 +323,12 @@ export class ReviewPage extends React.Component {
       filter,
       currentPage: 1,
     });
-    onLoadAgentDocuments(
-      1,
-      this.state.pageSize,
-      this.state.sortField,
-      this.state.sortDirection,
-    );
+    onLoadAgentDocuments({
+      page: 1,
+      pageSize: this.state.pageSize,
+      field: this.state.sortField,
+      direction: this.state.sortDirection,
+    });
   }
 
   copySayingFromDocument(userSays, saying) {
@@ -384,12 +385,12 @@ export class ReviewPage extends React.Component {
     });
 
     if (this.state.selectedTab === 'documents'){
-      onLoadAgentDocuments(
-        this.state.pageStatus[this.state.selectedTab].currentPage,
-        this.state.pageStatus[this.state.selectedTab].pageSize,
-        sortField,
-        sortDirection,
-      );
+      onLoadAgentDocuments({
+        page: this.state.pageStatus[this.state.selectedTab].currentPage,
+        pageSize: this.state.pageStatus[this.state.selectedTab].pageSize,
+        field: sortField,
+        direction: sortDirection,
+      });
     }
     if (this.state.selectedTab === 'sessions'){
       onLoadAgentSessions(
@@ -416,7 +417,7 @@ export class ReviewPage extends React.Component {
       onTrain,
       onToggleConversationBar,
       onSendMessage,
-      onLoadSessionId,
+      onLoadSessionId
     } = this.props.actions;
 
     const {
@@ -510,6 +511,7 @@ ReviewPage.propTypes = {
     onSelectCategory: PropTypes.func.isRequired,
     onTrain: PropTypes.func.isRequired,
     onToggleConversationBar: PropTypes.func.isRequired,
+    onShowChatButton: PropTypes.func.isRequired,
     onSendMessage: PropTypes.func.isRequired,
     onChangeReviewPageSize: PropTypes.func.isRequired,
     onChangeSessionsPageSize: PropTypes.func.isRequired,
@@ -528,7 +530,7 @@ ReviewPage.propTypes = {
   newSayingActions: PropTypes.array,
   onGoToUrl: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
-  locale: PropTypes.string,
+  locale: PropTypes.string
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -567,13 +569,14 @@ function mapDispatchToProps(dispatch) {
         onChangeReviewPageSize: Actions.changeReviewPageSize,
         onChangeSessionsPageSize: Actions.changeSessionsPageSize,
         onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
-        onLoadSessionId: Actions.loadSession
+        onLoadSessionId: Actions.loadSession,
+        onShowChatButton: Actions.toggleChatButton
       },
       dispatch,
     ),
     onGoToUrl: url => {
       dispatch(push(url));
-    },
+    }
   };
 }
 
