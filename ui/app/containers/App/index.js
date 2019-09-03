@@ -46,6 +46,7 @@ import {
   loadSettings,
   refreshServerInfo,
   toggleConversationBar,
+  toggleChatButton,
   updateSetting,
 } from './actions';
 import saga from './saga';
@@ -124,6 +125,10 @@ class App extends React.Component {
 
   componentWillUpdate() {
     this.props.onCheckAPI(this.props.location.pathname);
+
+    if (this.props.location.pathname.indexOf('demo') !== -1) {
+      this.props.onShowChatButton(true);
+    }
   }
 
   componentDidUpdate() {
@@ -188,7 +193,7 @@ class App extends React.Component {
           onChangeLanguage={this.props.onChangeLanguage}
           onToggleConversationBar={onToggleConversationBar}
           conversationBarOpen={conversationBarOpen}
-          chatButtonOpen = {chatButtonOpen}
+          chatButtonOpen={chatButtonOpen}
           notifications={notifications}
           demoMode={demoMode}
           onShareAgent={this.props.onShareAgent}
@@ -302,6 +307,7 @@ App.propTypes = {
   onMissingAPI: PropTypes.func,
   onCheckAPI: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
+  onShowChatButton: PropTypes.func,
   onRefreshAgent: PropTypes.func,
   onChangeLanguage: PropTypes.func,
   notifications: PropTypes.array,
@@ -323,6 +329,9 @@ export function mapDispatchToProps(dispatch) {
     },
     onToggleConversationBar: value => {
       dispatch(toggleConversationBar(value));
+    },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
     },
     onRefreshAgent: agent => {
       agent.categoryClassifierThreshold *= 100;
