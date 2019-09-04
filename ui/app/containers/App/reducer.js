@@ -242,6 +242,7 @@ import {
   DELETE_USER,
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
+  RESET_SUCCESS_AGENT,
 } from './constants';
 
 import { DEFAULT_LOCALE } from '../../i18n';
@@ -795,6 +796,9 @@ function appReducer(state = initialState, action) {
         .set('error', false);
 
     /* Agent */
+    case RESET_SUCCESS_AGENT:
+      return state
+        .set('successAgent', false);
     case RESET_AGENT_DATA:
       if (action.ref !== 'mainTab') {
         return state

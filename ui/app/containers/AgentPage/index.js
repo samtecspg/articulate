@@ -47,7 +47,8 @@ import {
   loadSettings,
   setAgentDefaults,
   toggleConversationBar,
-  toggleChatButton
+  toggleChatButton,
+  resetSuccessAgent
 } from '../App/actions';
 import {
   makeSelectAgent,
@@ -148,6 +149,9 @@ export class AgentPage extends React.PureComponent {
     if (this.props.success) {
       if (this.state.exitAfterSubmit) {
         this.navigateToNextLocation();
+      }
+      else {
+        this.props.onResetSuccessAgent();
       }
       if (this.state.isNewAgent) {
         this.props.onToggleChat(true);
@@ -597,6 +601,9 @@ function mapDispatchToProps(dispatch) {
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
+    },
+    onResetSuccessAgent: () => {
+      dispatch(resetSuccessAgent());
     }
   };
 }

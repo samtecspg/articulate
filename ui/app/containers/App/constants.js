@@ -90,6 +90,7 @@ export const IMPORT_AGENT_ERROR = 'app/AgentsPage/IMPORT_AGENT_ERROR';
 /*
  * Agent
  */
+export const RESET_SUCCESS_AGENT = 'app/AgentPage/RESET_SUCCESS_AGENT';
 export const RESET_AGENT_DATA = 'app/AgentPage/RESET_AGENT_DATA';
 export const LOAD_AGENT = 'app/AgentPage/LOAD_AGENT';
 export const LOAD_AGENT_ERROR = 'app/AgentPage/LOAD_AGENT_ERROR';
