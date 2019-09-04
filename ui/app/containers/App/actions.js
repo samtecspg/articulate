@@ -834,7 +834,7 @@ export function loadAgentSessionsSuccess(sessions) {
 /*
  * Sayings
  */
-export function resetSayings(){
+export function resetSayings() {
   return {
     type: RESET_SAYINGS
   }
@@ -907,15 +907,13 @@ export function addSayingError(error) {
   };
 }
 
-export function deleteSaying(filter, page, pageSize, sayingId, categoryId) {
+export function deleteSaying(filter, sayingId, categoryId) {
   return {
     type: DELETE_SAYING,
     apiCall: true,
     sayingId,
     categoryId,
-    filter,
-    page,
-    pageSize,
+    filter
   };
 }
 

@@ -303,20 +303,36 @@ export class DialoguePage extends React.PureComponent {
   deleteSaying(sayingId, categoryId) {
     this.props.onDeleteSaying(
       this.state.filter,
-      this.state.currentSayingsPage,
-      this.state.sayingsPageSize,
       sayingId,
       categoryId,
     );
-    if (
-      this.props.totalSayings % 5 === 1 &&
-      this.state.currentSayingsPage > 1
-    ) {
+
+    if (this.needSwitchToPreviousPage(this.state.currentSayingsPage,
+      this.props.totalSayings,
+      this.state.sayingsPageSize)) {
       const currentSayingsPage = this.state.currentSayingsPage - 1;
-      this.setState({
-        currentSayingsPage,
-      });
+      this.changeSayingsPage(currentSayingsPage);
+    } else {
+      this.props.onLoadSayings(
+        this.state.filter,
+        this.state.currentSayingsPage,
+        this.state.sayingsPageSize,
+      );
     }
+  }
+
+  needSwitchToPreviousPage(currentPage, totalElements, pageSize) {
+    return this.isLastElementOfPage(totalElements, pageSize)
+      && this.isLastPage(currentPage, totalElements, pageSize)
+      && currentPage > 1;
+  }
+
+  isLastElementOfPage(totalElements, pageSize) {
+    return totalElements % pageSize === 1;
+  }
+
+  isLastPage(currentPage, totalElements, pageSize) {
+    return currentPage === Math.ceil(totalElements / pageSize);
   }
 
   setNumberOfKeywordsPages(pageSize) {
@@ -459,135 +475,135 @@ export class DialoguePage extends React.PureComponent {
   };
 
   render() {
-    return this.props.agent.id && this.props.agentKeywords && 
-      (this.state.selectedTab !== 'sayings' || 
+    return this.props.agent.id && this.props.agentKeywords &&
+      (this.state.selectedTab !== 'sayings' ||
         (this.state.selectedTab === 'sayings' && this.props.agentKeywords.length === this.props.totalKeywords)) ? (
-      <Grid container>
-        <MainTab
-          locale={this.props.locale}
-          touched={this.props.touched}
-          loading={this.props.loading}
-          success={this.props.success}
-          onSaveAndExit={() => {
-            this.submit(true);
-          }}
-          agentName={this.props.agent.agentName}
-          agentGravatar={
-            this.props.agent.gravatar ? this.props.agent.gravatar : 1
-          }
-          agentUIColor={this.props.agent.uiColor}
-          newAgent={this.state.isNewAgent}
-          formError={this.state.formError}
-          onFinishAction={this.submit}
-          onTrain={this.props.onTrain}
-          agentStatus={this.props.agent.status}
-          serverStatus={this.props.serverStatus}
-          lastTraining={this.props.agent.lastTraining}
-          enableTabs={!this.state.isNewAgent}
-          selectedTab="dialogue"
-          agentForm={Link}
-          agentURL={`/agent/${this.props.agent.id}?ref=mainTab`}
-          dialogueForm={
-            <Form
-              handleTabChange={this.handleTabChange}
-              selectedTab={this.state.selectedTab}
-              actionsPage={this.props.actionsPage}
-              onSearchKeyword={this.onSearchKeyword}
-              onCreateKeyword={this.props.onCreateKeyword}
-              currentKeywordsPage={this.state.currentKeywordsPage}
-              numberOfKeywordsPages={this.state.numberOfKeywordsPages}
-              changeKeywordsPage={this.changeKeywordsPage}
-              changeKeywordsPageSize={this.changeKeywordsPageSize}
-              moveKeywordsPageBack={this.moveKeywordsPageBack}
-              moveKeywordsPageForward={this.moveKeywordsPageForward}
-              onSearchAction={this.onSearchAction}
-              onCreateAction={this.props.onCreateAction}
-              currentActionsPage={this.state.currentActionsPage}
-              numberOfActionsPages={this.state.numberOfActionsPages}
-              changeActionsPage={this.changeActionsPage}
-              changeActionsPageSize={this.changeActionsPageSize}
-              moveActionsPageBack={this.moveActionsPageBack}
-              moveActionsPageForward={this.moveActionsPageForward}
-              keywordsPageSize={this.state.keywordsPageSize}
-              actionsPageSize={this.state.actionsPageSize}
-              agentId={this.props.agent.id}
-              sayingsPageSize={this.props.agent.settings.sayingsPageSize}
-              sayings={this.props.sayings}
-              agentKeywords={this.props.agentKeywords}
-              agentActions={this.props.agentActions}
-              agentCategories={this.props.agentCategories}
-              agentFilteredCategories={this.props.agentFilteredCategories}
-              agentFilteredActions={this.props.agentFilteredActions}
-              onAddSaying={this.addSaying}
-              onDeleteSaying={this.deleteSaying}
-              onChangeSayingCategory={this.props.onChangeSayingCategory.bind(
-                null,
-                this.state.filter,
-                this.state.currentSayingsPage,
-                this.state.sayingsPageSize,
-              )}
-              onTagKeyword={this.props.onTagKeyword.bind(
-                null,
-                this.state.filter,
-                this.state.currentSayingsPage,
-                this.state.sayingsPageSize,
-              )}
-              onUntagKeyword={this.props.onUntagKeyword.bind(
-                null,
-                this.state.filter,
-                this.state.currentSayingsPage,
-                this.state.sayingsPageSize,
-              )}
-              onAddAction={this.props.onAddAction.bind(
-                null,
-                this.state.filter,
-                this.state.currentSayingsPage,
-                this.state.sayingsPageSize,
-              )}
-              onDeleteAction={this.props.onDeleteAction.bind(
-                null,
-                this.state.filter,
-                this.state.currentSayingsPage,
-                this.state.sayingsPageSize,
-              )}
-              onAddNewSayingAction={this.props.onAddNewSayingAction}
-              onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
-              onSearchSaying={this.onSearchSaying}
-              onSearchCategory={this.onSearchCategory}
-              onSearchActions={this.onSearchActions}
-              onGoToUrl={this.props.onGoToUrl.bind(
-                null,
-                this.state.filter,
-                this.state.currentSayingsPage,
-                this.state.sayingsPageSize,
-              )}
-              onSendSayingToAction={this.props.onSendSayingToAction}
-              currentSayingsPage={parseInt(this.state.currentSayingsPage)}
-              sayingsPageSize={this.state.sayingsPageSize}
-              numberOfSayingsPages={this.state.numberOfSayingsPages}
-              changeSayingsPage={this.changeSayingsPage}
-              moveSayingsPageBack={this.moveSayingsPageBack}
-              moveSayingsPageForward={this.moveSayingsPageForward}
-              changeSayingsPageSize={this.changeSayingsPageSize}
-              onSelectCategory={this.props.onSelectCategory}
-              category={this.props.category}
-              userSays={this.state.userSays}
-              newSayingActions={this.props.newSayingActions}
-              onClearSayingToAction={this.props.onClearSayingToAction}
-              filter={this.state.filter}
-            />
-          }
-          reviewURL={`/agent/${this.props.agent.id}/review`}
-          reviewForm={Link}
-          analyticsForm={Link}
-          analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+        <Grid container>
+          <MainTab
+            locale={this.props.locale}
+            touched={this.props.touched}
+            loading={this.props.loading}
+            success={this.props.success}
+            onSaveAndExit={() => {
+              this.submit(true);
+            }}
+            agentName={this.props.agent.agentName}
+            agentGravatar={
+              this.props.agent.gravatar ? this.props.agent.gravatar : 1
+            }
+            agentUIColor={this.props.agent.uiColor}
+            newAgent={this.state.isNewAgent}
+            formError={this.state.formError}
+            onFinishAction={this.submit}
+            onTrain={this.props.onTrain}
+            agentStatus={this.props.agent.status}
+            serverStatus={this.props.serverStatus}
+            lastTraining={this.props.agent.lastTraining}
+            enableTabs={!this.state.isNewAgent}
+            selectedTab="dialogue"
+            agentForm={Link}
+            agentURL={`/agent/${this.props.agent.id}?ref=mainTab`}
+            dialogueForm={
+              <Form
+                handleTabChange={this.handleTabChange}
+                selectedTab={this.state.selectedTab}
+                actionsPage={this.props.actionsPage}
+                onSearchKeyword={this.onSearchKeyword}
+                onCreateKeyword={this.props.onCreateKeyword}
+                currentKeywordsPage={this.state.currentKeywordsPage}
+                numberOfKeywordsPages={this.state.numberOfKeywordsPages}
+                changeKeywordsPage={this.changeKeywordsPage}
+                changeKeywordsPageSize={this.changeKeywordsPageSize}
+                moveKeywordsPageBack={this.moveKeywordsPageBack}
+                moveKeywordsPageForward={this.moveKeywordsPageForward}
+                onSearchAction={this.onSearchAction}
+                onCreateAction={this.props.onCreateAction}
+                currentActionsPage={this.state.currentActionsPage}
+                numberOfActionsPages={this.state.numberOfActionsPages}
+                changeActionsPage={this.changeActionsPage}
+                changeActionsPageSize={this.changeActionsPageSize}
+                moveActionsPageBack={this.moveActionsPageBack}
+                moveActionsPageForward={this.moveActionsPageForward}
+                keywordsPageSize={this.state.keywordsPageSize}
+                actionsPageSize={this.state.actionsPageSize}
+                agentId={this.props.agent.id}
+                sayingsPageSize={this.props.agent.settings.sayingsPageSize}
+                sayings={this.props.sayings}
+                agentKeywords={this.props.agentKeywords}
+                agentActions={this.props.agentActions}
+                agentCategories={this.props.agentCategories}
+                agentFilteredCategories={this.props.agentFilteredCategories}
+                agentFilteredActions={this.props.agentFilteredActions}
+                onAddSaying={this.addSaying}
+                onDeleteSaying={this.deleteSaying}
+                onChangeSayingCategory={this.props.onChangeSayingCategory.bind(
+                  null,
+                  this.state.filter,
+                  this.state.currentSayingsPage,
+                  this.state.sayingsPageSize,
+                )}
+                onTagKeyword={this.props.onTagKeyword.bind(
+                  null,
+                  this.state.filter,
+                  this.state.currentSayingsPage,
+                  this.state.sayingsPageSize,
+                )}
+                onUntagKeyword={this.props.onUntagKeyword.bind(
+                  null,
+                  this.state.filter,
+                  this.state.currentSayingsPage,
+                  this.state.sayingsPageSize,
+                )}
+                onAddAction={this.props.onAddAction.bind(
+                  null,
+                  this.state.filter,
+                  this.state.currentSayingsPage,
+                  this.state.sayingsPageSize,
+                )}
+                onDeleteAction={this.props.onDeleteAction.bind(
+                  null,
+                  this.state.filter,
+                  this.state.currentSayingsPage,
+                  this.state.sayingsPageSize,
+                )}
+                onAddNewSayingAction={this.props.onAddNewSayingAction}
+                onDeleteNewSayingAction={this.props.onDeleteNewSayingAction}
+                onSearchSaying={this.onSearchSaying}
+                onSearchCategory={this.onSearchCategory}
+                onSearchActions={this.onSearchActions}
+                onGoToUrl={this.props.onGoToUrl.bind(
+                  null,
+                  this.state.filter,
+                  this.state.currentSayingsPage,
+                  this.state.sayingsPageSize,
+                )}
+                onSendSayingToAction={this.props.onSendSayingToAction}
+                currentSayingsPage={parseInt(this.state.currentSayingsPage)}
+                sayingsPageSize={this.state.sayingsPageSize}
+                numberOfSayingsPages={this.state.numberOfSayingsPages}
+                changeSayingsPage={this.changeSayingsPage}
+                moveSayingsPageBack={this.moveSayingsPageBack}
+                moveSayingsPageForward={this.moveSayingsPageForward}
+                changeSayingsPageSize={this.changeSayingsPageSize}
+                onSelectCategory={this.props.onSelectCategory}
+                category={this.props.category}
+                userSays={this.state.userSays}
+                newSayingActions={this.props.newSayingActions}
+                onClearSayingToAction={this.props.onClearSayingToAction}
+                filter={this.state.filter}
+              />
+            }
+            reviewURL={`/agent/${this.props.agent.id}/review`}
+            reviewForm={Link}
+            analyticsForm={Link}
+            analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          />
+        </Grid>
+      ) : (
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
         />
-      </Grid>
-    ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
-    );
+      );
   }
 }
 
@@ -685,8 +701,8 @@ function mapDispatchToProps(dispatch) {
     onAddSaying: (filter, page, pageSize, value) => {
       dispatch(addSaying(filter, page, pageSize, value));
     },
-    onDeleteSaying: (filter, page, pageSize, sayingId, categoryId) => {
-      dispatch(deleteSaying(filter, page, pageSize, sayingId, categoryId));
+    onDeleteSaying: (filter, sayingId, categoryId) => {
+      dispatch(deleteSaying(filter, sayingId, categoryId));
     },
     onTagKeyword: (
       filter,

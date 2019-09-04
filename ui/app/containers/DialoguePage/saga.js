@@ -164,10 +164,10 @@ export function* getSayings(payload) {
     filter === ''
       ? undefined
       : JSON.stringify({
-          category: found.category,
-          actions: found.actions,
-          query: remainingText,
-        });
+        category: found.category,
+        actions: found.actions,
+        query: remainingText,
+      });
   let skip = 0;
   let limit = -1;
   if (page) {
@@ -235,9 +235,7 @@ export function* postSaying(payload) {
 
 export function* deleteSaying(payload) {
   const agent = yield select(makeSelectAgent());
-  const totalSayings = yield select(makeSelectTotalSayings());
-  const { api, sayingId, categoryId, filter, page, pageSize } = payload;
-  const newPage = totalSayings % 5 === 1 ? page - 1 : page;
+  const { api, sayingId, categoryId, filter } = payload;
   try {
     yield call(
       api.delete,
@@ -250,12 +248,6 @@ export function* deleteSaying(payload) {
         sayingId,
       ]),
     );
-    yield call(getSayings, {
-      api,
-      filter,
-      page: newPage,
-      pageSize,
-    });
   } catch (err) {
     yield put(deleteSayingError(err));
   }
