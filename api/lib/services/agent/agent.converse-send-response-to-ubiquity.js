@@ -83,6 +83,8 @@ module.exports = async function ({ actionData, CSO }) {
         await timeout(CSO.ubiquity.connection.details.waitTimeBetweenMessages);
     }
     else {
-        this.server.publish(`/${ROUTE_AGENT}/${CSO.agent.id}/${ROUTE_CONVERSE}`, responseForUbiquity );
+        if (CSO.articulateUI){
+            this.server.publish(`/${ROUTE_AGENT}/${CSO.agent.id}/${ROUTE_CONVERSE}`, responseForUbiquity );
+        }
     }
 };

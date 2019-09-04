@@ -344,7 +344,29 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
             await agentService.converseSendResponseToUbiquity({ CSO });
         }
-        return CSO;
+
+        CSO.textResponse = CSO.processedResponses.map((processedResponse) => {
+
+            return processedResponse.textResponse;
+        }).join(' ');
+
+        const converseResult = {
+            textResponse: CSO.textResponse,
+            docId: CSO.docId,
+            responses: CSO.processedResponses
+        };
+
+        if (debug) {
+            const { context, parse, currentAction, docId, webhooks } = CSO;
+            converseResult.CSO = {
+                docId,
+                parse,
+                currentAction,
+                context,
+                webhooks
+            };
+        }
+        return converseResult;
     }
     catch (error) {
         if (error.isParseError){
