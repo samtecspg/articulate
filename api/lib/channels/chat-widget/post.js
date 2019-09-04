@@ -9,7 +9,7 @@ module.exports = async function ({ connection, request, h }) {
   const sessionId = event.sessionId;
 
   try {
-    await agentService.converse({ 
+    const response = await agentService.converse({ 
       id: connection.agent,
       sessionId,
       text: event.text,
