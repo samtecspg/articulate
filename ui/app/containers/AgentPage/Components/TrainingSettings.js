@@ -39,7 +39,7 @@ const styles = {
     position: 'relative',
     top: '4px',
     left: '2px',
-    fontSize: '18px',
+    fontSize: '18px !important',
   },
 };
 
