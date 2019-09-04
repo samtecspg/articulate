@@ -74,8 +74,16 @@ function ColorPicker(props) {
         <Grid className={classes.popover}>
           <Grid className={classes.cover} onClick={props.handleClose} />
           <SwatchesPicker
+            colors={[['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
+              ['#B28DFF','#C5A3FF','#D5AAFF','#ECD4FF','#FBE4FF'],
+              ['#DCD3FF','#A79AFF','#B5B9FF','#97A2FF','#AFCBFF'],
+              ['#AFF8DB','#C4FAF8','#85E3FF','#ACE7FF','#6EB5FF'],
+              ['#BFFCC6','#DBFFD6','#F3FFE3','#E7FFAC','#FFFFD1'],
+              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']]
+            }
             color={props.color}
             onChange={props.handleColorChange}
+            height={155}
           />
         </Grid>
       ) : null}
@@ -89,8 +97,16 @@ function ColorPicker(props) {
         <Grid className={classes.popover}>
           <Grid className={classes.cover} onClick={props.handleClose} />
           <SwatchesPicker
+            colors={[['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
+              ['#B28DFF','#C5A3FF','#D5AAFF','#ECD4FF','#FBE4FF'],
+              ['#DCD3FF','#A79AFF','#B5B9FF','#97A2FF','#AFCBFF'],
+              ['#AFF8DB','#C4FAF8','#85E3FF','#ACE7FF','#6EB5FF'],
+              ['#BFFCC6','#DBFFD6','#F3FFE3','#E7FFAC','#FFFFD1'],
+              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']]
+            }
             color={props.color}
             onChange={props.handleColorChange}
+            height={155}
           />
         </Grid>
       ) : null}
