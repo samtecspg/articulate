@@ -3,7 +3,8 @@ import {
     MODEL_CATEGORY,
     MODEL_KEYWORD,
     MODEL_ACTION,
-    STATUS_OUT_OF_DATE
+    STATUS_OUT_OF_DATE,
+    KEYWORD_PREFIX_SYS
 } from '../../../util/constants';
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -75,7 +76,7 @@ module.exports = async function (
 
                             actionData.slots = actionData.slots.map((tempSlot) => {
 
-                                tempSlot.keywordId = keywordsDir[tempSlot.keyword];
+                                tempSlot.keywordId = tempSlot.keyword.indexOf(KEYWORD_PREFIX_SYS) === 0 ? 0 : keywordsDir[tempSlot.keyword];
                                 return tempSlot;
                             });
 
@@ -111,7 +112,8 @@ module.exports = async function (
                         await Promise.all(categoryToImport.sayings.map(async (saying) => {
 
                             saying.keywords.forEach((tempKeyword) => {
-            
+                                
+                                tempKeyword.keywordId = tempKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS) === 0 ? 0 : keywordsDir[tempKeyword.keyword];
                                 tempKeyword.keywordId = keywordsDir[tempKeyword.keyword];
                             });
                             return await agentService.upsertSayingInCategory({
