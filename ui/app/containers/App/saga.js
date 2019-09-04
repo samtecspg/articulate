@@ -60,6 +60,7 @@ export function* postConverse(payload) {
           data: {
             sessionId,
             text: message.message,
+            articulateUI: true
           },
         };
         yield call(
