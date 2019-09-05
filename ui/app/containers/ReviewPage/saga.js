@@ -14,7 +14,6 @@ import { getActions } from '../ActionPage/saga';
 import {
   copySayingError,
   copySayingSuccess,
-  deleteSayingError,
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
   loadAgentSessionsSuccess,
@@ -52,41 +51,6 @@ import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
 import { getKeywords } from '../DialoguePage/saga';
 //import { getSession } from '../../components/ConversationBar/saga';
 
-export function* getSayings(payload) {
-  const agent = yield select(makeSelectAgent());
-  const { api, filter, page, pageSize } = payload;
-  const tempFilter = filter === '' ? undefined : filter;
-  let skip = 0;
-  let limit = -1;
-  if (page) {
-    skip = (page - 1) * pageSize;
-    limit = pageSize;
-  }
-  try {
-    const params = {
-      filter: tempFilter,
-      skip,
-      limit,
-      field: 'id',
-      direction: 'DESC',
-      loadCategoryId: true,
-    };
-    const response = yield call(
-      api.get,
-      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_SAYING]),
-      { params },
-    );
-    yield put(
-      loadSayingsSuccess({
-        sayings: response.data,
-        total: response.totalCount,
-      }),
-    );
-  } catch (err) {
-    yield put(loadSayingsError(err));
-  }
-}
-
 export function* postSaying(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, userSays, keywords = [], categoryId, actions } = payload;
@@ -110,32 +74,6 @@ export function* postSaying(payload) {
     yield put(copySayingSuccess(response));
   } catch (err) {
     yield put(copySayingError(err));
-  }
-}
-
-export function* deleteSaying(payload) {
-  const agent = yield select(makeSelectAgent());
-  const { api, sayingId, categoryId, pageSize } = payload;
-  try {
-    yield call(
-      api.delete,
-      toAPIPath([
-        ROUTE_AGENT,
-        agent.id,
-        ROUTE_CATEGORY,
-        categoryId,
-        ROUTE_SAYING,
-        sayingId,
-      ]),
-    );
-    yield call(getSayings, {
-      api,
-      filter: '',
-      page: 1,
-      pageSize,
-    });
-  } catch (err) {
-    yield put(deleteSayingError(err));
   }
 }
 
@@ -397,9 +335,7 @@ export function* getAgentSessions(payload) {
 }
 
 export default function* rootSaga() {
-  yield takeLatest(LOAD_SAYINGS, getSayings);
   yield takeLatest(COPY_SAYING, postSaying);
-  yield takeLatest(DELETE_SAYING, deleteSaying);
   yield takeLatest(TAG_KEYWORD, tagKeyword);
   yield takeLatest(UNTAG_KEYWORD, untagKeyword);
   yield takeLatest(ADD_ACTION_SAYING, addAction);

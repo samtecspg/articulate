@@ -283,46 +283,46 @@ function SayingsDataForm(props) {
             rows={
               documents.length === 0
                 ? [
-                    <StyledRow key="document_0">
-                      <SayingRow
-                        locale={locale}
-                        document={{
-                          id: 'noData',
-                          document: intl.formatMessage(messages.noData),
-                          rasa_results: [
-                            {
-                              keywords: [],
-                              action: {
-                                name: '',
-                              },
-                              categoryScore: 0,
+                  <StyledRow key="document_0">
+                    <SayingRow
+                      locale={locale}
+                      document={{
+                        id: 'noData',
+                        document: intl.formatMessage(messages.noData),
+                        rasa_results: [
+                          {
+                            keywords: [],
+                            action: {
+                              name: '',
                             },
-                          ],
-                          maximum_action_score: null,
-                          maximum_category_score: null,
-                        }}
-                        agentKeywords={props.agentKeywords}
-                        agentCategories={props.agentCategories}
-                        onToggleConversationBar={props.onToggleConversationBar}
-                        agentActions={props.agentActions}
-                        onSendMessage={props.onSendMessage}
-                        onCopySaying={props.onCopySaying}
-                      />
-                    </StyledRow>,
-                  ]
+                            categoryScore: 0,
+                          },
+                        ],
+                        maximum_action_score: null,
+                        maximum_category_score: null,
+                      }}
+                      agentKeywords={props.agentKeywords}
+                      agentCategories={props.agentCategories}
+                      onToggleConversationBar={props.onToggleConversationBar}
+                      agentActions={props.agentActions}
+                      onSendMessage={props.onSendMessage}
+                      onCopySaying={props.onCopySaying}
+                    />
+                  </StyledRow>,
+                ]
                 : documents.map(document => (
-                    <StyledRow key={`document_${document.id}`}>
-                      <SayingRow
-                        document={document}
-                        agentKeywords={props.agentKeywords}
-                        agentCategories={props.agentCategories}
-                        onToggleConversationBar={props.onToggleConversationBar}
-                        agentActions={props.agentActions}
-                        onSendMessage={props.onSendMessage}
-                        onCopySaying={props.onCopySaying}
-                      />
-                    </StyledRow>
-                  ))
+                  <StyledRow key={`document_${document.id}`}>
+                    <SayingRow
+                      document={document}
+                      agentKeywords={props.agentKeywords}
+                      agentCategories={props.agentCategories}
+                      onToggleConversationBar={props.onToggleConversationBar}
+                      agentActions={props.agentActions}
+                      onSendMessage={props.onSendMessage}
+                      onCopySaying={props.onCopySaying}
+                    />
+                  </StyledRow>
+                ))
             }
             onRequestSort={props.onRequestSort}
             sortField={props.sortField}
@@ -379,12 +379,13 @@ function SayingsDataForm(props) {
                 margin="normal"
                 value={props.currentPage}
                 onChange={evt => {
+                  evt.target.value = evt.target.value.replace(/^0+/, '');
                   evt.target.value === ''
-                    ? props.changePage(0)
+                    ? props.changePage(1)
                     : evt.target.value <= props.numberOfPages &&
-                      evt.target.value >= 0
-                    ? props.changePage(evt.target.value)
-                    : false;
+                      evt.target.value >= 1
+                      ? props.changePage(Number(evt.target.value))
+                      : false;
                 }}
                 fullWidth
                 InputLabelProps={{

@@ -376,7 +376,7 @@ class SayingsDataForm extends React.Component {
                                 this.props.onClearSayingToAction();
                                 this.props.onGoToUrl(
                                   `/agent/${
-                                    this.props.agentId
+                                  this.props.agentId
                                   }/action/${actionId}`,
                                 );
                               }}
@@ -386,8 +386,8 @@ class SayingsDataForm extends React.Component {
                                   <span>{`${action.substring(0, 15)}...`}</span>
                                 </Tooltip>
                               ) : (
-                                action
-                              )}
+                                  action
+                                )}
                             </span>
                             <a
                               onClick={() => {
@@ -612,13 +612,14 @@ class SayingsDataForm extends React.Component {
                       margin="normal"
                       value={this.props.currentSayingsPage}
                       onChange={evt => {
+                        evt.target.value = evt.target.value.replace(/^0+/, '');
                         evt.target.value === ''
                           ? this.props.changeSayingsPage(1)
                           : evt.target.value <=
-                              this.props.numberOfSayingsPages &&
-                            evt.target.value >= 0
-                          ? this.props.changeSayingsPage(evt.target.value)
-                          : false;
+                            this.props.numberOfSayingsPages &&
+                            evt.target.value >= 1
+                            ? this.props.changeSayingsPage(Number(evt.target.value))
+                            : false;
                       }}
                       fullWidth
                       InputLabelProps={{
@@ -641,13 +642,13 @@ class SayingsDataForm extends React.Component {
                     <Typography
                       onClick={
                         this.props.currentSayingsPage <
-                        this.props.numberOfSayingsPages
+                          this.props.numberOfSayingsPages
                           ? this.props.moveSayingsPageForward
                           : null
                       }
                       className={
                         this.props.currentSayingsPage <
-                        this.props.numberOfSayingsPages
+                          this.props.numberOfSayingsPages
                           ? classes.pageCursors
                           : classes.pageCursorsDisabled
                       }

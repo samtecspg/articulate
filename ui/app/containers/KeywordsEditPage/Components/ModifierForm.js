@@ -122,6 +122,9 @@ class ModifierForm extends React.Component {
     this.handleNewSayingTextFieldChange = this.handleNewSayingTextFieldChange.bind(
       this,
     );
+    this.addModifierSaying = this.addModifierSaying.bind(
+      this,
+    );
   }
 
   state = {
@@ -143,9 +146,12 @@ class ModifierForm extends React.Component {
       this.setState({
         numOfPages: Math.ceil(
           this.props.modifier.sayings.length /
-            this.props.modifierSayingsPageSize,
+          this.props.modifierSayingsPageSize,
         ),
       });
+    }
+    if (this.state.currentPage > this.state.numOfPages && this.state.numOfPages > 0) {
+      this.setState({ currentPage: this.state.numOfPages });
     }
   }
 
@@ -169,7 +175,7 @@ class ModifierForm extends React.Component {
             keyword.keyword.indexOf(' ') !== -1
               ? `[${keyword.keyword}]`
               : keyword.keyword
-          }.value}}`}
+            }.value}}`}
         </span>,
       );
       newStart = keyword.end;
@@ -184,6 +190,17 @@ class ModifierForm extends React.Component {
     this.setState({
       currentNewSaying: e.target.value,
     });
+  }
+
+  addModifierSaying(keyword) {
+    this.props.onAddModifierSaying(
+      this.state.currentNewSaying,
+      keyword.keywordName,
+    );
+    this.setState({
+      currentNewSaying: '',
+    });
+    this.setState({ currentPage: 1 });
   }
 
   render() {
@@ -330,13 +347,7 @@ class ModifierForm extends React.Component {
                     this.state.currentNewSaying.trim() !== ''
                   ) {
                     ev.preventDefault();
-                    this.props.onAddModifierSaying(
-                      this.state.currentNewSaying,
-                      keyword.keywordName,
-                    );
-                    this.setState({
-                      currentNewSaying: '',
-                    });
+                    this.addModifierSaying(keyword);
                   }
                 }}
                 margin="normal"
@@ -358,13 +369,7 @@ class ModifierForm extends React.Component {
                         onClick={ev => {
                           if (this.state.currentNewSaying.trim() != '') {
                             ev.preventDefault();
-                            this.props.onAddModifierSaying(
-                              this.state.currentNewSaying,
-                              keyword.keywordName,
-                            );
-                            this.setState({
-                              currentNewSaying: '',
-                            });
+                            this.addModifierSaying(keyword);
                           }
                         }}
                       >
@@ -399,14 +404,14 @@ class ModifierForm extends React.Component {
                                 onTagModifierKeyword={this.props.onTagModifierKeyword.bind(
                                   null,
                                   (this.state.currentPage - 1) *
-                                    this.state.pageSize +
-                                    index,
+                                  this.state.pageSize +
+                                  index,
                                 )}
                                 onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(
                                   null,
                                   (this.state.currentPage - 1) *
-                                    this.state.pageSize +
-                                    index,
+                                  this.state.pageSize +
+                                  index,
                                 )}
                               />
                             </TableCell>
@@ -415,8 +420,8 @@ class ModifierForm extends React.Component {
                                 onClick={() => {
                                   this.props.onDeleteModifierSaying(
                                     (this.state.currentPage - 1) *
-                                      this.state.pageSize +
-                                      index,
+                                    this.state.pageSize +
+                                    index,
                                   );
                                 }}
                                 className={classes.deleteIcon}
@@ -444,6 +449,7 @@ class ModifierForm extends React.Component {
                           this.props.onChangeModifiersSayingsPageSize(
                             evt.target.value,
                           );
+                          this.setState({ currentPage: 1 });
                         }}
                         margin="normal"
                         InputLabelProps={{
@@ -472,8 +478,8 @@ class ModifierForm extends React.Component {
                         onClick={() => {
                           this.state.currentPage > 1
                             ? this.setState({
-                                currentPage: this.state.currentPage - 1,
-                              })
+                              currentPage: this.state.currentPage - 1,
+                            })
                             : null;
                         }}
                         className={
@@ -489,12 +495,13 @@ class ModifierForm extends React.Component {
                         margin="normal"
                         value={this.state.currentPage}
                         onChange={evt => {
+                          evt.target.value = evt.target.value.replace(/^0+/, '');
                           evt.target.value === ''
-                            ? this.setState({ currentPage: 0 })
+                            ? this.setState({ currentPage: 1 })
                             : evt.target.value <= this.state.numOfPages &&
-                              evt.target.value >= 0
-                            ? this.setState({ currentPage: evt.target.value })
-                            : false;
+                              evt.target.value >= 1
+                              ? this.setState({ currentPage: Number(evt.target.value) })
+                              : false;
                         }}
                         fullWidth
                         InputLabelProps={{
@@ -518,8 +525,8 @@ class ModifierForm extends React.Component {
                         onClick={() => {
                           this.state.currentPage < this.state.numOfPages
                             ? this.setState({
-                                currentPage: this.state.currentPage + 1,
-                              })
+                              currentPage: this.state.currentPage + 1,
+                            })
                             : null;
                         }}
                         className={
