@@ -3,6 +3,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import PropTypes from 'prop-types';
 import React from 'react';
 import systemKeywords from 'systemKeywords';
+import fontColorContrast from 'font-color-contrast';
 
 const compareKeywords = (a, b) => {
   if (a.start < b.start) return -1;
@@ -16,7 +17,6 @@ const styles = {
       opacity: 1,
     },
     opacity: 0.9,
-    color: 'white',
     padding: '2px 5px',
   },
   deleteHighlight: {
@@ -74,6 +74,7 @@ const HighlightedSaying = withStyles(styles)(props => {
             key={`keywordTagText_${props.keywordIndex}`}
             className={classes.highlightedText}
             style={{
+              color: fontColorContrast(highlightColor),
               backgroundColor: highlightColor,
             }}
           >

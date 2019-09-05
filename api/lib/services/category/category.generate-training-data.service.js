@@ -110,7 +110,7 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, categor
     try {
 
         let keywordsCombinations = [];
-        if (extraTrainingData && keywords.length > 0) {
+        if (extraTrainingData && keywords.length > 0 && sayings) {
             keywordsCombinations = await keywordService.combinationsFromSayings({ keywords, sayings });
         }
         const sayingsPerActions = {};
@@ -128,6 +128,7 @@ module.exports = async function ({ keywords, sayings, extraTrainingData, categor
                     return saying;
                 });
             }));
+            keywordsCombinations = await keywordService.combinationsFromSayings({ keywords, sayings: modifiersSayings });
             commonExamplesModifiersSayings = getCommonExamples(modifiersSayings, extraTrainingData, keywordsCombinations, categoryName, sayingsPerActions);
         }
 
