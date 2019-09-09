@@ -15,6 +15,7 @@ class SlotModel {
             promptCountLimit: Joi.number(),
             textPrompts: Joi.array().items(Joi.string().trim()),
             remainingLife: Joi.number().allow(null),
+            freeText: Joi.boolean(),
         };
     };
 }
