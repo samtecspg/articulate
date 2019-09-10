@@ -10,6 +10,7 @@ import {
   TextField,
   Tooltip,
   Icon,
+  InputAdornment,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -60,7 +61,22 @@ const styles = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%,-50%)'
-  }
+  },
+  responseEnter: {
+    color: '#4e4e4e',
+    fontSize: '12px',
+    paddingRight: '15px',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  newQuickResponseInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderRadius: '5px',
+  },
+  newCurrentSlotInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderRadius: '5px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -68,6 +84,7 @@ class SlotForm extends React.Component {
   constructor(props) {
     super(props);
     this.replaceValuesWithSlotName = this.replaceValuesWithSlotName.bind(this);
+    this.addNewCurrentSayingToListFromEvent = this.addNewCurrentSayingToListFromEvent.bind(this);
   }
 
   state = {
@@ -76,10 +93,12 @@ class SlotForm extends React.Component {
     limitPrompt: this.props.slot.promptCountLimit === undefined || this.props.slot.promptCountLimit === '' || this.props.slot.promptCountLimit === null ? false : true,
     newQuickResponseKey: '',
     newQuickResponseKeyValue: '',
+    currentNewQuickResponse: '',
+    currentNewSlotPrompt: '',
     lastQuickResponseEdited: false,
   };
 
-  
+
 
   replaceValuesWithSlotName(saying) {
     const newUserSays = [];
@@ -101,7 +120,7 @@ class SlotForm extends React.Component {
             keyword.keyword.indexOf(' ') !== -1
               ? `[${keyword.keyword}]`
               : keyword.keyword
-          }.value}}`}
+            }.value}}`}
         </span>,
       );
       newStart = keyword.end;
@@ -110,6 +129,22 @@ class SlotForm extends React.Component {
       <span key="finaText">{saying.userSays.substring(newStart)}</span>,
     );
     return newUserSays;
+  }
+
+  addNewCurrentSayingToListFromEvent(ev) {
+    ev.preventDefault();
+    if (this.state.currentNewQuickResponse.trim() !== '') {
+      this.props.onAddNewQuickResponse(this.state.currentNewQuickResponse);
+      this.setState({ currentNewQuickResponse: '' });
+    }
+  }
+
+  addNewCurrentSlotPromptToListFromEvent(ev) {
+    ev.preventDefault();
+    if (this.state.currentNewSlotPrompt.trim() !== '') {
+      this.props.onAddTextPrompt(this.state.currentNewSlotPrompt);
+      this.setState({ currentNewSlotPrompt: '' });
+    }
   }
 
   render() {
@@ -284,7 +319,7 @@ class SlotForm extends React.Component {
                       this.setState({
                         remember: value
                       });
-                      if (!value){
+                      if (!value) {
                         this.props.onChangeSlotData(
                           'remainingLife',
                           null,
@@ -310,7 +345,7 @@ class SlotForm extends React.Component {
               >
                 <Icon className={classes.infoIcon}>info</Icon>
               </Tooltip>
-              {this.state.remember ?   
+              {this.state.remember ?
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -319,7 +354,7 @@ class SlotForm extends React.Component {
                         this.setState({
                           rememberForever: value
                         });
-                        if (value){
+                        if (value) {
                           this.props.onChangeSlotData(
                             'remainingLife',
                             0,
@@ -338,7 +373,7 @@ class SlotForm extends React.Component {
                   }
                   label={intl.formatMessage(messages.rememberSlotForever)}
                 />
-              : null}
+                : null}
             </Grid>
           </Grid>
           {this.state.remember && !this.state.rememberForever ? (
@@ -411,7 +446,7 @@ class SlotForm extends React.Component {
                           this.setState({
                             limitPrompt: value
                           });
-                          if (!value){
+                          if (!value) {
                             this.props.onChangeSlotData(
                               'promptCountLimit',
                               null,
@@ -467,25 +502,44 @@ class SlotForm extends React.Component {
                   <TextField
                     id="newTextPrompt"
                     label={intl.formatMessage(messages.textpromptTextField)}
+                    value={this.state.currentNewSlotPrompt}
                     placeholder={intl.formatMessage(
                       messages.textpromptTextFieldPlaceholder,
                     )}
                     onKeyPress={ev => {
                       if (ev.key === 'Enter') {
-                        ev.preventDefault();
-                        if (ev.target.value !== '') {
-                          this.props.onAddTextPrompt(ev.target.value);
-                          ev.target.value = '';
-                        }
+                        this.addNewCurrentSlotPromptToListFromEvent(ev);
                       }
                     }}
+                    onChange={ev => {
+                      this.setState({ currentNewSlotPrompt: ev.target.value });
+                    }
+                    }
                     margin="normal"
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
                     InputProps={{
                       disabled: !slot.isRequired,
+                      className: classes.newCurrentSlotInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              this.addNewCurrentSlotPromptToListFromEvent(ev);
+                            }}
+                          >
+                            {intl.formatMessage(messages.responseEnter)}
+                          </span>
+                        </InputAdornment>
+                      )
                     }}
                     helperText={intl.formatMessage(messages.textpromptHelperText)}
                     error={
@@ -516,32 +570,50 @@ class SlotForm extends React.Component {
                   ) : null}
                 </Grid>
               </Grid>
-             
+
 
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
                     id="newQuickResponse"
                     label={intl.formatMessage(messages.quickResponseValue)}
+                    value={this.state.currentNewQuickResponse}
                     placeholder={intl.formatMessage(
                       messages.newQuickResponsePlaceholder,
                     )}
                     onKeyPress={ev => {
                       if (ev.key === 'Enter') {
-                        ev.preventDefault();
-                        if (ev.target.value !== '') {
-                          this.props.onAddNewQuickResponse(ev.target.value);
-                          ev.target.value = '';
-                        }
+                        this.addNewCurrentSayingToListFromEvent(ev);
                       }
+                    }}
+                    onChange={ev => {
+                      this.setState({ currentNewQuickResponse: ev.target.value });
                     }}
                     margin="normal"
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
                     InputProps={{
                       disabled: !slot.isRequired,
+                      className: classes.newQuickResponseInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              this.addNewCurrentSayingToListFromEvent(ev);
+                            }}
+                          >
+                            {intl.formatMessage(messages.responseEnter)}
+                          </span>
+                        </InputAdornment>
+                      ),
                     }}
                     error={
                       this.props.errorState
