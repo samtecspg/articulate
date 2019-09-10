@@ -263,104 +263,99 @@ class SlotForm extends React.Component {
               </Grid>
             : null}
           </Grid>
-          {
-            !slot.freeText ? 
-              <Fragment>
-                <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
-                  <Grid item xs={6}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.remember}
-                          onChange={(evt, value) => {
-                            this.setState({
-                              remember: value
-                            });
-                            if (!value){
-                              this.props.onChangeSlotData(
-                                'remainingLife',
-                                null,
-                              );
-                            }
-                          }}
-                          value="anything"
-                          color="primary"
-                        />
+          <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
+            <Grid item xs={6}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.remember}
+                    onChange={(evt, value) => {
+                      this.setState({
+                        remember: value
+                      });
+                      if (!value){
+                        this.props.onChangeSlotData(
+                          'remainingLife',
+                          null,
+                        );
                       }
-                      label={intl.formatMessage(messages.rememberSlot)}
-                      style={{
-                        marginRight: '5px'
-                      }}
-                    />
-                    <Tooltip
-                      placement="top"
-                      title={intl.formatMessage(messages.rememberSlotInfo)}
-                      style={{
-                        marginRight: '15px'
-                      }}
-                    >
-                      <Icon className={classes.infoIcon}>info</Icon>
-                    </Tooltip>
-                    {this.state.remember ?   
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={this.state.rememberForever}
-                            onChange={(evt, value) => {
-                              this.setState({
-                                rememberForever: value
-                              });
-                              if (value){
-                                this.props.onChangeSlotData(
-                                  'remainingLife',
-                                  0,
-                                );
-                              }
-                              else {
-                                this.props.onChangeSlotData(
-                                  'remainingLife',
-                                  null,
-                                );
-                              }
-                            }}
-                            value="anything"
-                            color="primary"
-                          />
-                        }
-                        label={intl.formatMessage(messages.rememberSlotForever)}
-                      />
-                    : null}
-                  </Grid>
-                </Grid>
-                {this.state.remember && !this.state.rememberForever ? (
-                  <Grid container spacing={24} item xs={12}>
-                    <Grid item xs={12}>
-                      <TextField
-                        id="remainingLife"
-                        label={intl.formatMessage(messages.remainingLifeTextField)}
-                        value={slot.remainingLife === 0 ? '' : slot.remainingLife}
-                        placeholder={intl.formatMessage(
-                          messages.remainingLifeTextFieldPlaceholder,
-                        )}
-                        onChange={evt => {
+                    }}
+                    value="anything"
+                    color="primary"
+                    disabled={slot.freeText}
+                  />
+                }
+                label={intl.formatMessage(messages.rememberSlot)}
+                style={{
+                  marginRight: '5px'
+                }}
+              />
+              <Tooltip
+                placement="top"
+                title={intl.formatMessage(messages.rememberSlotInfo)}
+                style={{
+                  marginRight: '15px'
+                }}
+              >
+                <Icon className={classes.infoIcon}>info</Icon>
+              </Tooltip>
+              {this.state.remember ?   
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.rememberForever}
+                      onChange={(evt, value) => {
+                        this.setState({
+                          rememberForever: value
+                        });
+                        if (value){
                           this.props.onChangeSlotData(
                             'remainingLife',
-                            evt.target.value ? parseInt(evt.target.value) : null,
+                            0,
                           );
-                        }}
-                        margin="normal"
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        type="number"
-                      />
-                    </Grid>
-                  </Grid>
-                ) : null}
-              </Fragment>
-            : null
-          }
+                        }
+                        else {
+                          this.props.onChangeSlotData(
+                            'remainingLife',
+                            null,
+                          );
+                        }
+                      }}
+                      value="anything"
+                      color="primary"
+                    />
+                  }
+                  label={intl.formatMessage(messages.rememberSlotForever)}
+                />
+              : null}
+            </Grid>
+          </Grid>
+          {this.state.remember && !this.state.rememberForever ? (
+            <Grid container spacing={24} item xs={12}>
+              <Grid item xs={12}>
+                <TextField
+                  id="remainingLife"
+                  label={intl.formatMessage(messages.remainingLifeTextField)}
+                  value={slot.remainingLife === 0 ? '' : slot.remainingLife}
+                  placeholder={intl.formatMessage(
+                    messages.remainingLifeTextFieldPlaceholder,
+                  )}
+                  onChange={evt => {
+                    this.props.onChangeSlotData(
+                      'remainingLife',
+                      evt.target.value ? parseInt(evt.target.value) : null,
+                    );
+                  }}
+                  margin="normal"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  type="number"
+                />
+              </Grid>
+            </Grid>
+          ) : null}
           <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
             <Grid item xs={6}>
               <FormControlLabel
