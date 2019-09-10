@@ -172,6 +172,17 @@ class SlotForm extends React.Component {
                             remember: false,
                             limitPrompt: false
                           });
+                          this.props.onChangeSlotData(
+                            'keyword',
+                            'sys.any',
+                          );
+                          this.props.onChangeSlotData('keywordId', 0);
+                        }
+                        else {
+                          this.props.onChangeSlotData(
+                            'keyword',
+                            '',
+                          );
                         }
                       }}
                     />

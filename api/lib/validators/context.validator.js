@@ -34,7 +34,8 @@ class ContextValidate {
                     actionQueue: ContextModel.actionQueue,
                     docIds: ContextModel.docIds,
                     creationDate: ContextModel.creationDate,
-                    modificationDate: ContextModel.modificationDate
+                    modificationDate: ContextModel.modificationDate,
+                    listenFreeText: ContextModel.listenFreeText
                 };
             })()
         };
