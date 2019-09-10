@@ -1,0 +1,483 @@
+{
+    "gravatar": 3,
+    "uiColor": "#C5A3FF",
+    "agentName": "unitTestConverseBot",
+    "description": "Test converse functionality",
+    "language": "en",
+    "timezone": "UTC",
+    "useWebhook": false,
+    "usePostFormat": false,
+    "multiCategory": false,
+    "categoryClassifierThreshold": 0.5,
+    "fallbackAction": "Default Fallback Action",
+    "status": "Ready",
+    "lastTraining": "2019-09-10T23:24:08Z",
+    "extraTrainingData": false,
+    "enableModelsPerCategory": false,
+    "model": "default_8ed51557-7690-5065-f8af-7cb35edaaeb5",
+    "parameters": {},
+    "settings": {
+        "rasaURL": "http://localhost:5000",
+        "ducklingURL": "http://localhost:8000",
+        "ducklingDimension": [
+            "amount-of-money",
+            "distance",
+            "duration",
+            "email",
+            "number",
+            "ordinal",
+            "phone-number",
+            "quantity",
+            "temperature",
+            "time",
+            "url",
+            "volume"
+        ],
+        "spacyPretrainedEntities": [
+            "PERSON",
+            "NORP",
+            "FAC",
+            "ORG",
+            "GPE",
+            "LOC",
+            "PRODUCT",
+            "EVENT",
+            "WORK_OF_ART",
+            "LAW",
+            "LANGUAGE",
+            "DATE",
+            "TIME",
+            "PERCENT",
+            "MONEY",
+            "QUANTITY",
+            "ORDINAL",
+            "CARDINAL"
+        ],
+        "categoryClassifierPipeline": [
+            {
+                "name": "intent_featurizer_count_vectors",
+                "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
+            },
+            {
+                "name": "intent_classifier_tensorflow_embedding",
+                "intent_tokenization_flag": true,
+                "intent_split_symbol": "+__+"
+            }
+        ],
+        "sayingClassifierPipeline": [
+            {
+                "name": "intent_featurizer_count_vectors",
+                "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
+            },
+            {
+                "name": "intent_classifier_tensorflow_embedding",
+                "intent_tokenization_flag": true,
+                "intent_split_symbol": "+__+"
+            },
+            {
+                "name": "nlp_spacy"
+            },
+            {
+                "name": "tokenizer_spacy"
+            },
+            {
+                "name": "ner_crf"
+            },
+            {
+                "name": "ner_synonyms"
+            },
+            {
+                "name": "ner_spacy"
+            }
+        ],
+        "keywordClassifierPipeline": [
+            {
+                "name": "nlp_spacy"
+            },
+            {
+                "name": "tokenizer_spacy"
+            },
+            {
+                "name": "ner_crf"
+            },
+            {
+                "name": "ner_synonyms"
+            },
+            {
+                "name": "ner_spacy"
+            }
+        ],
+        "sayingsPageSize": 5,
+        "keywordsPageSize": 5,
+        "actionsPageSize": 5,
+        "modifierSayingsPageSize": 5,
+        "reviewPageSize": 5,
+        "sessionsPageSize": 5
+    },
+    "categoryRecognizer": true,
+    "modifiersRecognizer": true,
+    "modifiersRecognizerJustER": "Modifier",
+    "creationDate": "1568157622000",
+    "modificationDate": "1568157848000",
+    "actions": [
+        {
+            "actionName": "Default Fallback Action",
+            "slots": [],
+            "responses": [
+                {
+                    "textResponse": "Default Response",
+                    "actions": []
+                }
+            ],
+            "useWebhook": false,
+            "usePostFormat": false,
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157622000"
+        },
+        {
+            "actionName": "normalAction",
+            "slots": [],
+            "responses": [
+                {
+                    "textResponse": "Normal Action Response",
+                    "actions": []
+                }
+            ],
+            "useWebhook": false,
+            "usePostFormat": false,
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157622000"
+        },
+        {
+            "actionName": "normalAction2",
+            "slots": [],
+            "responses": [
+                {
+                    "textResponse": "Normal Action Response 2",
+                    "actions": []
+                }
+            ],
+            "useWebhook": false,
+            "usePostFormat": false,
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157622000"
+        },
+        {
+            "actionName": "modifierAction",
+            "slots": [
+                {
+                    "slotName": "modifierRequiredSlot",
+                    "uiColor": "#B28DFF",
+                    "keyword": "modifierKeyword",
+                    "keywordId": 549,
+                    "isList": false,
+                    "isRequired": true,
+                    "quickResponses": [],
+                    "textPrompts": [
+                        "The slot is required"
+                    ]
+                }
+            ],
+            "responses": [
+                {
+                    "textResponse": "The slots: {{slots.modifierRequiredSlot.original}}",
+                    "actions": []
+                }
+            ],
+            "useWebhook": false,
+            "usePostFormat": false,
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157622000"
+        },
+        {
+            "actionName": "rememberSlot",
+            "slots": [
+                {
+                    "slotName": "slotToRemember",
+                    "uiColor": "#FFCBC1",
+                    "keyword": "normalKeyword",
+                    "keywordId": 656,
+                    "isList": false,
+                    "isRequired": false,
+                    "quickResponses": [],
+                    "textPrompts": [],
+                    "remainingLife": 4
+                }
+            ],
+            "responses": [
+                {
+                    "textResponse": "Remember slot response",
+                    "actions": []
+                }
+            ],
+            "useWebhook": false,
+            "usePostFormat": false,
+            "creationDate": "1568157701000",
+            "modificationDate": "1568157751000"
+        }
+    ],
+    "categories": [
+        {
+            "categoryName": "unitTestNormalCategory",
+            "enabled": true,
+            "actionThreshold": 0.5,
+            "status": "Out of Date",
+            "lastTraining": "1970-01-01T00:00:00Z",
+            "model": "",
+            "extraTrainingData": true,
+            "parameters": {},
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157810000",
+            "sayings": [
+                {
+                    "userSays": "This is normalKeyword1 action",
+                    "keywords": [
+                        {
+                            "start": 8,
+                            "end": 22,
+                            "value": "normalKeyword1",
+                            "keyword": "normalKeyword",
+                            "keywordId": 656
+                        }
+                    ],
+                    "actions": [
+                        "normalAction"
+                    ],
+                    "creationDate": "1568157622000",
+                    "modificationDate": "1568157622000"
+                },
+                {
+                    "userSays": "This is normalKeyword2Synonym action",
+                    "keywords": [
+                        {
+                            "start": 8,
+                            "end": 29,
+                            "value": "normalKeyword2Synonym",
+                            "keyword": "normalKeyword",
+                            "keywordId": 656
+                        }
+                    ],
+                    "actions": [
+                        "normalAction"
+                    ],
+                    "creationDate": "1568157622000",
+                    "modificationDate": "1568157622000"
+                },
+                {
+                    "userSays": "This is normalKeyword3",
+                    "keywords": [
+                        {
+                            "start": 8,
+                            "end": 22,
+                            "value": "normalKeyword3",
+                            "keyword": "normalKeyword",
+                            "keywordId": 656
+                        }
+                    ],
+                    "actions": [
+                        "normalAction2"
+                    ],
+                    "creationDate": "1568157622000",
+                    "modificationDate": "1568157622000"
+                },
+                {
+                    "userSays": "This is also normalKeyword3",
+                    "keywords": [
+                        {
+                            "start": 13,
+                            "end": 27,
+                            "value": "normalKeyword3",
+                            "keyword": "normalKeyword",
+                            "keywordId": 656
+                        }
+                    ],
+                    "actions": [
+                        "normalAction2"
+                    ],
+                    "creationDate": "1568157622000",
+                    "modificationDate": "1568157622000"
+                },
+                {
+                    "userSays": "Remember NormalKeyword2",
+                    "keywords": [
+                        {
+                            "start": 9,
+                            "end": 23,
+                            "value": "normalKeyword2",
+                            "keyword": "normalKeyword",
+                            "keywordId": 656
+                        }
+                    ],
+                    "actions": [
+                        "rememberSlot"
+                    ],
+                    "creationDate": "1568157795000",
+                    "modificationDate": "1568157795000"
+                },
+                {
+                    "userSays": "Also remember NormalKeyword3",
+                    "keywords": [
+                        {
+                            "start": 14,
+                            "end": 28,
+                            "value": "normalKeyword3",
+                            "keyword": "normalKeyword",
+                            "keywordId": 656
+                        }
+                    ],
+                    "actions": [
+                        "rememberSlot"
+                    ],
+                    "creationDate": "1568157810000",
+                    "modificationDate": "1568157810000"
+                }
+            ]
+        },
+        {
+            "categoryName": "unitTestModifierCategory",
+            "enabled": true,
+            "actionThreshold": 0.5,
+            "status": "Out of Date",
+            "lastTraining": "2019-09-10T18:54:54Z",
+            "model": "",
+            "extraTrainingData": true,
+            "parameters": {},
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157622000",
+            "sayings": [
+                {
+                    "userSays": "Request a modifier",
+                    "keywords": [],
+                    "actions": [
+                        "modifierAction"
+                    ],
+                    "creationDate": "1568157622000",
+                    "modificationDate": "1568157622000"
+                },
+                {
+                    "userSays": "This is a modifierKeyword1",
+                    "keywords": [
+                        {
+                            "start": 10,
+                            "end": 26,
+                            "value": "modifierKeyword1",
+                            "keyword": "modifierKeyword",
+                            "keywordId": 657
+                        }
+                    ],
+                    "actions": [
+                        "modifierAction"
+                    ],
+                    "creationDate": "1568157622000",
+                    "modificationDate": "1568157622000"
+                },
+                {
+                    "userSays": "This is a modifierKeyword2",
+                    "keywords": [
+                        {
+                            "start": 10,
+                            "end": 26,
+                            "value": "modifierKeyword2",
+                            "keyword": "modifierKeyword",
+                            "keywordId": 657
+                        }
+                    ],
+                    "actions": [
+                        "modifierAction"
+                    ],
+                    "creationDate": "1568157622000",
+                    "modificationDate": "1568157622000"
+                }
+            ]
+        }
+    ],
+    "keywords": [
+        {
+            "keywordName": "normalKeyword",
+            "uiColor": "#FFCBC1",
+            "examples": [
+                {
+                    "value": "normalKeyword1",
+                    "synonyms": [
+                        "normalKeyword1",
+                        "normalKeyword1Synonym"
+                    ]
+                },
+                {
+                    "value": "normalKeyword2",
+                    "synonyms": [
+                        "normalKeyword2",
+                        "normalKeyword2Synonym"
+                    ]
+                },
+                {
+                    "value": "normalKeyword3",
+                    "synonyms": [
+                        "normalKeyword3"
+                    ]
+                }
+            ],
+            "regex": "",
+            "type": "learned",
+            "modifiers": [],
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157622000"
+        },
+        {
+            "keywordName": "modifierKeyword",
+            "uiColor": "#B28DFF",
+            "examples": [
+                {
+                    "value": "modifierKeyword1",
+                    "synonyms": [
+                        "modifierKeyword1"
+                    ]
+                },
+                {
+                    "value": "modifierKeyword2",
+                    "synonyms": [
+                        "modifierKeyword2"
+                    ]
+                }
+            ],
+            "regex": "",
+            "type": "learned",
+            "modifiers": [
+                {
+                    "modifierName": "Modifier",
+                    "action": "SET",
+                    "valueSource": "keyword",
+                    "staticValue": "",
+                    "sayings": [
+                        {
+                            "userSays": "use also modifierKeyword2",
+                            "keywords": [
+                                {
+                                    "start": 9,
+                                    "end": 25,
+                                    "value": "modifierKeyword2",
+                                    "keyword": "modifierKeyword",
+                                    "keywordId": 657
+                                }
+                            ]
+                        },
+                        {
+                            "userSays": "use modifierKeyword1",
+                            "keywords": [
+                                {
+                                    "start": 4,
+                                    "end": 20,
+                                    "value": "modifierKeyword1",
+                                    "keyword": "modifierKeyword",
+                                    "keywordId": 657
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "creationDate": "1568157622000",
+            "modificationDate": "1568157622000"
+        }
+    ]
+}

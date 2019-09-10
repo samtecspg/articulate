@@ -1,1019 +1,1021 @@
 {
-    "agentName": "57f0a070-bcff-11e8-bd42-f7ad09e07ef5",
-    "description": "Base agent for import test",
-    "language": "en",
-    "timezone": "UTC",
-    "useWebhook": false,
-    "usePostFormat": false,
-    "multiCategory": false,
-    "categoryClassifierThreshold": 0.5,
-    "fallbackAction": "Default Fallback Action",
-    "status": "Ready",
-    "lastTraining": "2019-03-05T15:27:49Z",
-    "extraTrainingData": false,
-    "enableModelsPerCategory": false,
-    "model": "default_2827ba9c-37b7-5d2e-a924-f50a1b3424e2",
-    "parameters": {
-      "name": "NomNom",
-      "webmaster": "webmaster@nomnom.com"
-    },
-    "settings": {
-      "rasaURL": "http://localhost:5000",
-      "ducklingURL": "http://localhost:8000",
-      "ducklingDimension": [
-        "amount-of-money",
-        "distance",
-        "duration",
-        "email",
-        "number",
-        "ordinal",
-        "phone-number",
-        "quantity",
-        "temperature",
-        "time",
-        "url",
-        "volume"
-      ],
-      "spacyPretrainedEntities": [
-        "PERSON",
-        "NORP",
-        "FAC",
-        "ORG",
-        "GPE",
-        "LOC",
-        "PRODUCT",
-        "EVENT",
-        "WORK_OF_ART",
-        "LAW",
-        "LANGUAGE",
-        "DATE",
-        "TIME",
-        "PERCENT",
-        "MONEY",
-        "QUANTITY",
-        "ORDINAL",
-        "CARDINAL"
-      ],
-      "categoryClassifierPipeline": [
-        {
-          "name": "intent_featurizer_count_vectors"
-        },
-        {
-          "name": "intent_classifier_tensorflow_embedding",
-          "intent_tokenization_flag": true,
-          "intent_split_symbol": "+__+"
-        },
-        {
-          "name": "nlp_spacy"
-        },
-        {
-          "name": "tokenizer_spacy"
-        },
-        {
-          "name": "ner_crf"
-        },
-        {
-          "name": "ner_synonyms"
-        },
-        {
-          "name": "ner_spacy"
-        }
-      ],
-      "sayingClassifierPipeline": [
-        {
-          "name": "intent_featurizer_count_vectors"
-        },
-        {
-          "name": "intent_classifier_tensorflow_embedding",
-          "intent_tokenization_flag": true,
-          "intent_split_symbol": "+__+"
-        },
-        {
-          "name": "nlp_spacy"
-        },
-        {
-          "name": "tokenizer_spacy"
-        },
-        {
-          "name": "ner_crf"
-        },
-        {
-          "name": "ner_synonyms"
-        },
-        {
-          "name": "ner_spacy"
-        }
-      ],
-      "keywordClassifierPipeline": [
-        {
-          "name": "nlp_spacy"
-        },
-        {
-          "name": "tokenizer_spacy"
-        },
-        {
-          "name": "ner_crf"
-        },
-        {
-          "name": "ner_synonyms"
-        },
-        {
-          "name": "ner_spacy"
-        }
-      ],
-      "sayingsPageSize": 5,
-      "keywordsPageSize": 5,
-      "actionsPageSize": 5,
-      "modifierSayingsPageSize": 10,
-      "reviewPageSize": 5,
-      "sessionsPageSize": 5
-    },
-    "categoryRecognizer": true,
-    "modifiersRecognizer": true,
-    "modifiersRecognizerJustER": "",
-    "creationDate": "1551796312000",
-    "modificationDate": "1551799669000",
-    "actions": [
+  "gravatar": 5,
+  "uiColor": "#6EB5FF",
+  "agentName": "57f0a070-bcff-11e8-bd42-f7ad09e07ef5",
+  "description": "Base agent for import test",
+  "language": "en",
+  "timezone": "UTC",
+  "useWebhook": false,
+  "usePostFormat": false,
+  "multiCategory": false,
+  "categoryClassifierThreshold": 0.5,
+  "fallbackAction": "Default Fallback Action",
+  "status": "Ready",
+  "lastTraining": "2019-03-05T15:27:49Z",
+  "extraTrainingData": false,
+  "enableModelsPerCategory": false,
+  "model": "default_2827ba9c-37b7-5d2e-a924-f50a1b3424e2",
+  "parameters": {
+    "name": "NomNom",
+    "webmaster": "webmaster@nomnom.com"
+  },
+  "settings": {
+    "rasaURL": "http://localhost:5000",
+    "ducklingURL": "http://localhost:8000",
+    "ducklingDimension": [
+      "amount-of-money",
+      "distance",
+      "duration",
+      "email",
+      "number",
+      "ordinal",
+      "phone-number",
+      "quantity",
+      "temperature",
+      "time",
+      "url",
+      "volume"
+    ],
+    "spacyPretrainedEntities": [
+      "PERSON",
+      "NORP",
+      "FAC",
+      "ORG",
+      "GPE",
+      "LOC",
+      "PRODUCT",
+      "EVENT",
+      "WORK_OF_ART",
+      "LAW",
+      "LANGUAGE",
+      "DATE",
+      "TIME",
+      "PERCENT",
+      "MONEY",
+      "QUANTITY",
+      "ORDINAL",
+      "CARDINAL"
+    ],
+    "categoryClassifierPipeline": [
       {
-        "actionName": "Gratitude",
-        "slots": [],
-        "responses": [
-          {
-            "textResponse": "Happy I could help.",
-            "actions": []
-          }
-        ],
-        "useWebhook": false,
-        "usePostFormat": false,
-        "creationDate": "1551796313000",
-        "modificationDate": "1551796313000"
+        "name": "intent_featurizer_count_vectors"
       },
       {
-        "actionName": "Order Pizza",
-        "slots": [
-          {
-            "slotName": "toppings",
-            "uiColor": "#f44336",
-            "keyword": "toppings",
-            "keywordId": 0,
-            "isList": true,
-            "isRequired": true,
-            "textPrompts": [
-              "What toppings would you like on your pizza?",
-              "I'd be happy to make you a pizza, what toppings do you want?"
-            ]
-          },
-          {
-            "slotName": "confirmation",
-            "uiColor": "#e91e63",
-            "keyword": "confirmation",
-            "keywordId": 0,
-            "isList": false,
-            "isRequired": true,
-            "textPrompts": [
-              "We're going to make you a pizza with {{andList slots.toppings.value}}. Does that sound correct?",
-              "That's a pizza with {{andList slots.toppings.value}}, sound right?"
-            ]
-          }
-        ],
-        "responses": [
-          {
-            "textResponse": "{{#eq slots.confirmation.value 'yes'}} Okay we'll get started on that right away.{{/eq}}",
-            "actions": []
-          },
-          {
-            "textResponse": "{{#eq slots.confirmation.value 'no'}}Don't worry we won't start cooking yet.{{/eq}}",
-            "actions": []
-          }
-        ],
-        "useWebhook": false,
-        "usePostFormat": false,
-        "creationDate": "1551796313000",
-        "modificationDate": "1551796313000"
+        "name": "intent_classifier_tensorflow_embedding",
+        "intent_tokenization_flag": true,
+        "intent_split_symbol": "+__+"
       },
       {
-        "actionName": "Default Fallback Action",
-        "slots": [],
-        "responses": [
-          {
-            "textResponse": "Sorry can you rephrase that?",
-            "actions": []
-          },
-          {
-            "textResponse": "I'm still learning to speak with humans. What you mean?",
-            "actions": []
-          }
-        ],
-        "useWebhook": false,
-        "usePostFormat": false,
-        "creationDate": "1551796313000",
-        "modificationDate": "1551796313000"
+        "name": "nlp_spacy"
       },
       {
-        "actionName": "Greet",
-        "slots": [],
-        "responses": [
-          {
-            "textResponse": "Hello human.",
-            "actions": []
-          }
-        ],
-        "useWebhook": false,
-        "usePostFormat": false,
-        "creationDate": "1551796313000",
-        "modificationDate": "1551796313000"
+        "name": "tokenizer_spacy"
       },
       {
-        "actionName": "Goodbye",
-        "slots": [],
-        "responses": [
-          {
-            "textResponse": "Farewell, come back when you're hungry for more pizza.",
-            "actions": []
-          }
-        ],
-        "useWebhook": false,
-        "usePostFormat": false,
-        "creationDate": "1551796313000",
-        "modificationDate": "1551796313000"
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
       }
     ],
-    "categories": [
+    "sayingClassifierPipeline": [
       {
-        "categoryName": "Small Talk",
-        "enabled": true,
-        "actionThreshold": 0.5,
-        "status": "Ready",
-        "lastTraining": "2019-03-05T14:32:40Z",
-        "model": "Small Talk_a476cc2b-57d8-13e8-17ed-233b5a397b2f",
-        "extraTrainingData": false,
-        "parameters": {},
-        "creationDate": "1551796312000",
-        "modificationDate": "1551796360000",
-        "sayings": [
-          {
-            "userSays": "hey",
-            "keywords": [],
-            "actions": [
-              "Greet"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "hi",
-            "keywords": [],
-            "actions": [
-              "Greet"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "hello",
-            "keywords": [],
-            "actions": [
-              "Greet"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "greetings",
-            "keywords": [],
-            "actions": [
-              "Greet"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "hola",
-            "keywords": [],
-            "actions": [
-              "Greet"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "bye",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "good bye",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "goodbye",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "farewell",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "later",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "see you later",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "ciao",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "adios",
-            "keywords": [],
-            "actions": [
-              "Goodbye"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "great, thanks.",
-            "keywords": [],
-            "actions": [
-              "Gratitude"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "thank you",
-            "keywords": [],
-            "actions": [
-              "Gratitude"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "thank you very much",
-            "keywords": [],
-            "actions": [
-              "Gratitude"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "perfect",
-            "keywords": [],
-            "actions": [
-              "Gratitude"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "excellent",
-            "keywords": [],
-            "actions": [
-              "Gratitude"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          }
-        ]
+        "name": "intent_featurizer_count_vectors"
       },
       {
-        "categoryName": "Food",
-        "enabled": true,
-        "actionThreshold": 0.5,
-        "status": "Ready",
-        "lastTraining": "2019-03-05T14:32:54Z",
-        "model": "Food_57cebd68-02e0-ccbe-e3cb-6ca3b9af1dd5",
-        "extraTrainingData": false,
-        "parameters": {
-          "favorite": "pepperoni pizza with extra cheese. Yum!"
-        },
-        "creationDate": "1551796312000",
-        "modificationDate": "1551796374000",
-        "sayings": [
-          {
-            "userSays": "can I get a pizza?",
-            "keywords": [],
-            "actions": [
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "I'd like to order a pizza",
-            "keywords": [],
-            "actions": [
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "I want a pizza",
-            "keywords": [],
-            "actions": [
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "pizza please",
-            "keywords": [],
-            "actions": [
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "Hey, can I get a pizza?",
-            "keywords": [],
-            "actions": [
-              "Greet",
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "Hola, pizza please.",
-            "keywords": [],
-            "actions": [
-              "Greet",
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "can I get a cheese pizza?",
-            "keywords": [
-              {
-                "value": "cheese",
-                "keyword": "toppings",
-                "start": 12,
-                "end": 18,
-                "keywordId": 13
-              }
-            ],
-            "actions": [
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "I'd like to order a pizza with ham and pineapple",
-            "keywords": [
-              {
-                "value": "ham",
-                "keyword": "toppings",
-                "start": 31,
-                "end": 34,
-                "keywordId": 13
-              },
-              {
-                "value": "pineapple",
-                "keyword": "toppings",
-                "start": 39,
-                "end": 48,
-                "keywordId": 13
-              }
-            ],
-            "actions": [
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "I want a pizza with onion, sausage, and pepperoni.",
-            "keywords": [
-              {
-                "value": "onion",
-                "keyword": "toppings",
-                "start": 20,
-                "end": 25,
-                "keywordId": 13
-              },
-              {
-                "value": "sausage",
-                "keyword": "toppings",
-                "start": 27,
-                "end": 34,
-                "keywordId": 13
-              },
-              {
-                "value": "pepperoni",
-                "keyword": "toppings",
-                "start": 40,
-                "end": 49,
-                "keywordId": 13
-              }
-            ],
-            "actions": [
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          },
-          {
-            "userSays": "hello, I would like to order a cheese pizza.",
-            "keywords": [
-              {
-                "value": "cheese",
-                "keyword": "toppings",
-                "start": 31,
-                "end": 37,
-                "keywordId": 13
-              }
-            ],
-            "actions": [
-              "Greet",
-              "Order Pizza"
-            ],
-            "creationDate": "1551796312000",
-            "modificationDate": "1551796312000"
-          }
-        ]
+        "name": "intent_classifier_tensorflow_embedding",
+        "intent_tokenization_flag": true,
+        "intent_split_symbol": "+__+"
+      },
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
       }
     ],
-    "keywords": [
+    "keywordClassifierPipeline": [
       {
-        "keywordName": "toppings",
-        "uiColor": "#f44336",
-        "examples": [
-          {
-            "value": "sausage",
-            "synonyms": [
-              "sausage",
-              "sausages"
-            ]
-          },
-          {
-            "value": "pepperoni",
-            "synonyms": [
-              "pepperoni",
-              "pepperonis"
-            ]
-          },
-          {
-            "value": "ham",
-            "synonyms": [
-              "ham",
-              "Canadian bacon",
-              "canadian bacon"
-            ]
-          },
-          {
-            "value": "pineapple",
-            "synonyms": [
-              "pineapple",
-              "pineapples"
-            ]
-          },
-          {
-            "value": "sardines",
-            "synonyms": [
-              "sardines"
-            ]
-          },
-          {
-            "value": "onions",
-            "synonyms": [
-              "onions"
-            ]
-          },
-          {
-            "value": "banana peppers",
-            "synonyms": [
-              "banana peppers",
-              "yellow peppers"
-            ]
-          }
-        ],
-        "regex": "",
-        "type": "learned",
-        "modifiers": [
-          {
-            "modifierName": "Add Toppings",
-            "action": "SET",
-            "valueSource": "keyword",
-            "staticValue": "",
-            "sayings": [
-              {
-                "userSays": "can you add pineapple to that?",
-                "keywords": [
-                  {
-                    "value": "pineapple",
-                    "keyword": "toppings",
-                    "start": 12,
-                    "end": 21,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "add cheese please",
-                "keywords": [
-                  {
-                    "value": "cheese",
-                    "keyword": "toppings",
-                    "start": 4,
-                    "end": 10,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "add ham and pineapple",
-                "keywords": [
-                  {
-                    "value": "ham",
-                    "keyword": "toppings",
-                    "start": 4,
-                    "end": 7,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "pineapple",
-                    "keyword": "toppings",
-                    "start": 12,
-                    "end": 21,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "I also wanted pepperoni",
-                "keywords": [
-                  {
-                    "value": "pepperoni",
-                    "keyword": "toppings",
-                    "start": 14,
-                    "end": 23,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "add bacon, onions, and pepperoni",
-                "keywords": [
-                  {
-                    "value": "bacon",
-                    "keyword": "toppings",
-                    "start": 4,
-                    "end": 9,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "onions",
-                    "keyword": "toppings",
-                    "start": 11,
-                    "end": 17,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "pepperoni",
-                    "keyword": "toppings",
-                    "start": 23,
-                    "end": 32,
-                    "keywordId": 2
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "modifierName": "Set Toppings",
-            "action": "SET",
-            "valueSource": "keyword",
-            "staticValue": "",
-            "sayings": [
-              {
-                "userSays": "ham and pineapple please",
-                "keywords": [
-                  {
-                    "value": "ham",
-                    "keyword": "toppings",
-                    "start": 0,
-                    "end": 3,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "pineapple",
-                    "keyword": "toppings",
-                    "start": 8,
-                    "end": 17,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "just cheese and bacon",
-                "keywords": [
-                  {
-                    "value": "cheese",
-                    "keyword": "toppings",
-                    "start": 5,
-                    "end": 11,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "bacon",
-                    "keyword": "toppings",
-                    "start": 16,
-                    "end": 21,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "just pepperoni",
-                "keywords": [
-                  {
-                    "value": "pepperoni",
-                    "keyword": "toppings",
-                    "start": 5,
-                    "end": 14,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "I only want ham and pineapple on my pizza",
-                "keywords": [
-                  {
-                    "value": "ham",
-                    "keyword": "toppings",
-                    "start": 12,
-                    "end": 15,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "pineapple",
-                    "keyword": "toppings",
-                    "start": 20,
-                    "end": 29,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "ham and pineapple",
-                "keywords": [
-                  {
-                    "value": "ham",
-                    "keyword": "toppings",
-                    "start": 0,
-                    "end": 3,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "pineapple",
-                    "keyword": "toppings",
-                    "start": 8,
-                    "end": 17,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "cheese",
-                "keywords": [
-                  {
-                    "value": "cheese",
-                    "keyword": "toppings",
-                    "start": 0,
-                    "end": 6,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "pepperoni",
-                "keywords": [
-                  {
-                    "value": "pepperoni",
-                    "keyword": "toppings",
-                    "start": 0,
-                    "end": 9,
-                    "keywordId": 2
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "modifierName": "Remove Toppings",
-            "action": "SET",
-            "valueSource": "keyword",
-            "staticValue": "",
-            "sayings": [
-              {
-                "userSays": "Can you take the onions off?",
-                "keywords": [
-                  {
-                    "value": "onions",
-                    "keyword": "toppings",
-                    "start": 17,
-                    "end": 23,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "no cheese",
-                "keywords": [
-                  {
-                    "value": "cheese",
-                    "keyword": "toppings",
-                    "start": 3,
-                    "end": 9,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "no pepperoni please",
-                "keywords": [
-                  {
-                    "value": "pepperoni",
-                    "keyword": "toppings",
-                    "start": 3,
-                    "end": 12,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "I didn't want the bacon or onions",
-                "keywords": [
-                  {
-                    "value": "bacon",
-                    "keyword": "toppings",
-                    "start": 18,
-                    "end": 23,
-                    "keywordId": 2
-                  },
-                  {
-                    "value": "onions",
-                    "keyword": "toppings",
-                    "start": 27,
-                    "end": 33,
-                    "keywordId": 2
-                  }
-                ]
-              },
-              {
-                "userSays": "remove the sardines",
-                "keywords": [
-                  {
-                    "value": "sardines",
-                    "keyword": "toppings",
-                    "start": 11,
-                    "end": 19,
-                    "keywordId": 2
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "creationDate": "1551796312000",
-        "modificationDate": "1551796312000"
+        "name": "nlp_spacy"
       },
       {
-        "keywordName": "confirmation",
-        "uiColor": "#e91e63",
-        "examples": [
-          {
-            "value": "yes",
-            "synonyms": [
-              "yes"
-            ]
-          },
-          {
-            "value": "no",
-            "synonyms": [
-              "no"
-            ]
-          }
-        ],
-        "regex": "",
-        "type": "learned",
-        "modifiers": [
-          {
-            "modifierName": "Affirmation",
-            "action": "SET",
-            "valueSource": "static",
-            "staticValue": "yes",
-            "sayings": [
-              {
-                "userSays": "yep",
-                "keywords": []
-              },
-              {
-                "userSays": "yes",
-                "keywords": []
-              },
-              {
-                "userSays": "yes please",
-                "keywords": []
-              },
-              {
-                "userSays": "sounds great",
-                "keywords": []
-              },
-              {
-                "userSays": "affirmative",
-                "keywords": []
-              },
-              {
-                "userSays": "that's what I wanted",
-                "keywords": []
-              }
-            ]
-          },
-          {
-            "modifierName": "Negation",
-            "action": "SET",
-            "valueSource": "static",
-            "staticValue": "no",
-            "sayings": [
-              {
-                "userSays": "no",
-                "keywords": []
-              },
-              {
-                "userSays": "nope",
-                "keywords": []
-              },
-              {
-                "userSays": "negative",
-                "keywords": []
-              },
-              {
-                "userSays": "negatory",
-                "keywords": []
-              },
-              {
-                "userSays": "that's not right",
-                "keywords": []
-              },
-              {
-                "userSays": "that is not correct",
-                "keywords": []
-              },
-              {
-                "userSays": "no thank you",
-                "keywords": []
-              }
-            ]
-          }
-        ],
-        "creationDate": "1551796312000",
-        "modificationDate": "1551796312000"
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
       }
-    ]
-  }
+    ],
+    "sayingsPageSize": 5,
+    "keywordsPageSize": 5,
+    "actionsPageSize": 5,
+    "modifierSayingsPageSize": 10,
+    "reviewPageSize": 5,
+    "sessionsPageSize": 5
+  },
+  "categoryRecognizer": true,
+  "modifiersRecognizer": true,
+  "modifiersRecognizerJustER": "",
+  "creationDate": "1551796312000",
+  "modificationDate": "1551799669000",
+  "actions": [
+    {
+      "actionName": "Gratitude",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Happy I could help.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1551796313000",
+      "modificationDate": "1551796313000"
+    },
+    {
+      "actionName": "Order Pizza",
+      "slots": [
+        {
+          "slotName": "toppings",
+          "uiColor": "#f44336",
+          "keyword": "toppings",
+          "keywordId": 0,
+          "isList": true,
+          "isRequired": true,
+          "textPrompts": [
+            "What toppings would you like on your pizza?",
+            "I'd be happy to make you a pizza, what toppings do you want?"
+          ]
+        },
+        {
+          "slotName": "confirmation",
+          "uiColor": "#e91e63",
+          "keyword": "confirmation",
+          "keywordId": 0,
+          "isList": false,
+          "isRequired": true,
+          "textPrompts": [
+            "We're going to make you a pizza with {{andList slots.toppings.value}}. Does that sound correct?",
+            "That's a pizza with {{andList slots.toppings.value}}, sound right?"
+          ]
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "{{#eq slots.confirmation.value 'yes'}} Okay we'll get started on that right away.{{/eq}}",
+          "actions": []
+        },
+        {
+          "textResponse": "{{#eq slots.confirmation.value 'no'}}Don't worry we won't start cooking yet.{{/eq}}",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1551796313000",
+      "modificationDate": "1551796313000"
+    },
+    {
+      "actionName": "Default Fallback Action",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Sorry can you rephrase that?",
+          "actions": []
+        },
+        {
+          "textResponse": "I'm still learning to speak with humans. What you mean?",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1551796313000",
+      "modificationDate": "1551796313000"
+    },
+    {
+      "actionName": "Greet",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Hello human.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1551796313000",
+      "modificationDate": "1551796313000"
+    },
+    {
+      "actionName": "Goodbye",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Farewell, come back when you're hungry for more pizza.",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1551796313000",
+      "modificationDate": "1551796313000"
+    }
+  ],
+  "categories": [
+    {
+      "categoryName": "Small Talk",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Ready",
+      "lastTraining": "2019-03-05T14:32:40Z",
+      "model": "Small Talk_a476cc2b-57d8-13e8-17ed-233b5a397b2f",
+      "extraTrainingData": false,
+      "parameters": {},
+      "creationDate": "1551796312000",
+      "modificationDate": "1551796360000",
+      "sayings": [
+        {
+          "userSays": "hey",
+          "keywords": [],
+          "actions": [
+            "Greet"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "hi",
+          "keywords": [],
+          "actions": [
+            "Greet"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "hello",
+          "keywords": [],
+          "actions": [
+            "Greet"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "greetings",
+          "keywords": [],
+          "actions": [
+            "Greet"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "hola",
+          "keywords": [],
+          "actions": [
+            "Greet"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "bye",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "good bye",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "goodbye",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "farewell",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "later",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "see you later",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "ciao",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "adios",
+          "keywords": [],
+          "actions": [
+            "Goodbye"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "great, thanks.",
+          "keywords": [],
+          "actions": [
+            "Gratitude"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "thank you",
+          "keywords": [],
+          "actions": [
+            "Gratitude"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "thank you very much",
+          "keywords": [],
+          "actions": [
+            "Gratitude"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "perfect",
+          "keywords": [],
+          "actions": [
+            "Gratitude"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "excellent",
+          "keywords": [],
+          "actions": [
+            "Gratitude"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        }
+      ]
+    },
+    {
+      "categoryName": "Food",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Ready",
+      "lastTraining": "2019-03-05T14:32:54Z",
+      "model": "Food_57cebd68-02e0-ccbe-e3cb-6ca3b9af1dd5",
+      "extraTrainingData": false,
+      "parameters": {
+        "favorite": "pepperoni pizza with extra cheese. Yum!"
+      },
+      "creationDate": "1551796312000",
+      "modificationDate": "1551796374000",
+      "sayings": [
+        {
+          "userSays": "can I get a pizza?",
+          "keywords": [],
+          "actions": [
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "I'd like to order a pizza",
+          "keywords": [],
+          "actions": [
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "I want a pizza",
+          "keywords": [],
+          "actions": [
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "pizza please",
+          "keywords": [],
+          "actions": [
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "Hey, can I get a pizza?",
+          "keywords": [],
+          "actions": [
+            "Greet",
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "Hola, pizza please.",
+          "keywords": [],
+          "actions": [
+            "Greet",
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "can I get a cheese pizza?",
+          "keywords": [
+            {
+              "value": "cheese",
+              "keyword": "toppings",
+              "start": 12,
+              "end": 18,
+              "keywordId": 13
+            }
+          ],
+          "actions": [
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "I'd like to order a pizza with ham and pineapple",
+          "keywords": [
+            {
+              "value": "ham",
+              "keyword": "toppings",
+              "start": 31,
+              "end": 34,
+              "keywordId": 13
+            },
+            {
+              "value": "pineapple",
+              "keyword": "toppings",
+              "start": 39,
+              "end": 48,
+              "keywordId": 13
+            }
+          ],
+          "actions": [
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "I want a pizza with onion, sausage, and pepperoni.",
+          "keywords": [
+            {
+              "value": "onion",
+              "keyword": "toppings",
+              "start": 20,
+              "end": 25,
+              "keywordId": 13
+            },
+            {
+              "value": "sausage",
+              "keyword": "toppings",
+              "start": 27,
+              "end": 34,
+              "keywordId": 13
+            },
+            {
+              "value": "pepperoni",
+              "keyword": "toppings",
+              "start": 40,
+              "end": 49,
+              "keywordId": 13
+            }
+          ],
+          "actions": [
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        },
+        {
+          "userSays": "hello, I would like to order a cheese pizza.",
+          "keywords": [
+            {
+              "value": "cheese",
+              "keyword": "toppings",
+              "start": 31,
+              "end": 37,
+              "keywordId": 13
+            }
+          ],
+          "actions": [
+            "Greet",
+            "Order Pizza"
+          ],
+          "creationDate": "1551796312000",
+          "modificationDate": "1551796312000"
+        }
+      ]
+    }
+  ],
+  "keywords": [
+    {
+      "keywordName": "toppings",
+      "uiColor": "#f44336",
+      "examples": [
+        {
+          "value": "sausage",
+          "synonyms": [
+            "sausage",
+            "sausages"
+          ]
+        },
+        {
+          "value": "pepperoni",
+          "synonyms": [
+            "pepperoni",
+            "pepperonis"
+          ]
+        },
+        {
+          "value": "ham",
+          "synonyms": [
+            "ham",
+            "Canadian bacon",
+            "canadian bacon"
+          ]
+        },
+        {
+          "value": "pineapple",
+          "synonyms": [
+            "pineapple",
+            "pineapples"
+          ]
+        },
+        {
+          "value": "sardines",
+          "synonyms": [
+            "sardines"
+          ]
+        },
+        {
+          "value": "onions",
+          "synonyms": [
+            "onions"
+          ]
+        },
+        {
+          "value": "banana peppers",
+          "synonyms": [
+            "banana peppers",
+            "yellow peppers"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [
+        {
+          "modifierName": "Add Toppings",
+          "action": "SET",
+          "valueSource": "keyword",
+          "staticValue": "",
+          "sayings": [
+            {
+              "userSays": "can you add pineapple to that?",
+              "keywords": [
+                {
+                  "value": "pineapple",
+                  "keyword": "toppings",
+                  "start": 12,
+                  "end": 21,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "add cheese please",
+              "keywords": [
+                {
+                  "value": "cheese",
+                  "keyword": "toppings",
+                  "start": 4,
+                  "end": 10,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "add ham and pineapple",
+              "keywords": [
+                {
+                  "value": "ham",
+                  "keyword": "toppings",
+                  "start": 4,
+                  "end": 7,
+                  "keywordId": 2
+                },
+                {
+                  "value": "pineapple",
+                  "keyword": "toppings",
+                  "start": 12,
+                  "end": 21,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "I also wanted pepperoni",
+              "keywords": [
+                {
+                  "value": "pepperoni",
+                  "keyword": "toppings",
+                  "start": 14,
+                  "end": 23,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "add bacon, onions, and pepperoni",
+              "keywords": [
+                {
+                  "value": "bacon",
+                  "keyword": "toppings",
+                  "start": 4,
+                  "end": 9,
+                  "keywordId": 2
+                },
+                {
+                  "value": "onions",
+                  "keyword": "toppings",
+                  "start": 11,
+                  "end": 17,
+                  "keywordId": 2
+                },
+                {
+                  "value": "pepperoni",
+                  "keyword": "toppings",
+                  "start": 23,
+                  "end": 32,
+                  "keywordId": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "modifierName": "Set Toppings",
+          "action": "SET",
+          "valueSource": "keyword",
+          "staticValue": "",
+          "sayings": [
+            {
+              "userSays": "ham and pineapple please",
+              "keywords": [
+                {
+                  "value": "ham",
+                  "keyword": "toppings",
+                  "start": 0,
+                  "end": 3,
+                  "keywordId": 2
+                },
+                {
+                  "value": "pineapple",
+                  "keyword": "toppings",
+                  "start": 8,
+                  "end": 17,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "just cheese and bacon",
+              "keywords": [
+                {
+                  "value": "cheese",
+                  "keyword": "toppings",
+                  "start": 5,
+                  "end": 11,
+                  "keywordId": 2
+                },
+                {
+                  "value": "bacon",
+                  "keyword": "toppings",
+                  "start": 16,
+                  "end": 21,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "just pepperoni",
+              "keywords": [
+                {
+                  "value": "pepperoni",
+                  "keyword": "toppings",
+                  "start": 5,
+                  "end": 14,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "I only want ham and pineapple on my pizza",
+              "keywords": [
+                {
+                  "value": "ham",
+                  "keyword": "toppings",
+                  "start": 12,
+                  "end": 15,
+                  "keywordId": 2
+                },
+                {
+                  "value": "pineapple",
+                  "keyword": "toppings",
+                  "start": 20,
+                  "end": 29,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "ham and pineapple",
+              "keywords": [
+                {
+                  "value": "ham",
+                  "keyword": "toppings",
+                  "start": 0,
+                  "end": 3,
+                  "keywordId": 2
+                },
+                {
+                  "value": "pineapple",
+                  "keyword": "toppings",
+                  "start": 8,
+                  "end": 17,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "cheese",
+              "keywords": [
+                {
+                  "value": "cheese",
+                  "keyword": "toppings",
+                  "start": 0,
+                  "end": 6,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "pepperoni",
+              "keywords": [
+                {
+                  "value": "pepperoni",
+                  "keyword": "toppings",
+                  "start": 0,
+                  "end": 9,
+                  "keywordId": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "modifierName": "Remove Toppings",
+          "action": "SET",
+          "valueSource": "keyword",
+          "staticValue": "",
+          "sayings": [
+            {
+              "userSays": "Can you take the onions off?",
+              "keywords": [
+                {
+                  "value": "onions",
+                  "keyword": "toppings",
+                  "start": 17,
+                  "end": 23,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "no cheese",
+              "keywords": [
+                {
+                  "value": "cheese",
+                  "keyword": "toppings",
+                  "start": 3,
+                  "end": 9,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "no pepperoni please",
+              "keywords": [
+                {
+                  "value": "pepperoni",
+                  "keyword": "toppings",
+                  "start": 3,
+                  "end": 12,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "I didn't want the bacon or onions",
+              "keywords": [
+                {
+                  "value": "bacon",
+                  "keyword": "toppings",
+                  "start": 18,
+                  "end": 23,
+                  "keywordId": 2
+                },
+                {
+                  "value": "onions",
+                  "keyword": "toppings",
+                  "start": 27,
+                  "end": 33,
+                  "keywordId": 2
+                }
+              ]
+            },
+            {
+              "userSays": "remove the sardines",
+              "keywords": [
+                {
+                  "value": "sardines",
+                  "keyword": "toppings",
+                  "start": 11,
+                  "end": 19,
+                  "keywordId": 2
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "creationDate": "1551796312000",
+      "modificationDate": "1551796312000"
+    },
+    {
+      "keywordName": "confirmation",
+      "uiColor": "#e91e63",
+      "examples": [
+        {
+          "value": "yes",
+          "synonyms": [
+            "yes"
+          ]
+        },
+        {
+          "value": "no",
+          "synonyms": [
+            "no"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [
+        {
+          "modifierName": "Affirmation",
+          "action": "SET",
+          "valueSource": "static",
+          "staticValue": "yes",
+          "sayings": [
+            {
+              "userSays": "yep",
+              "keywords": []
+            },
+            {
+              "userSays": "yes",
+              "keywords": []
+            },
+            {
+              "userSays": "yes please",
+              "keywords": []
+            },
+            {
+              "userSays": "sounds great",
+              "keywords": []
+            },
+            {
+              "userSays": "affirmative",
+              "keywords": []
+            },
+            {
+              "userSays": "that's what I wanted",
+              "keywords": []
+            }
+          ]
+        },
+        {
+          "modifierName": "Negation",
+          "action": "SET",
+          "valueSource": "static",
+          "staticValue": "no",
+          "sayings": [
+            {
+              "userSays": "no",
+              "keywords": []
+            },
+            {
+              "userSays": "nope",
+              "keywords": []
+            },
+            {
+              "userSays": "negative",
+              "keywords": []
+            },
+            {
+              "userSays": "negatory",
+              "keywords": []
+            },
+            {
+              "userSays": "that's not right",
+              "keywords": []
+            },
+            {
+              "userSays": "that is not correct",
+              "keywords": []
+            },
+            {
+              "userSays": "no thank you",
+              "keywords": []
+            }
+          ]
+        }
+      ],
+      "creationDate": "1551796312000",
+      "modificationDate": "1551796312000"
+    }
+  ]
+}
