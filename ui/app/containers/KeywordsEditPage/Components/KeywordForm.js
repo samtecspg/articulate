@@ -187,6 +187,7 @@ class KeywordForm extends React.Component {
                     <FormattedMessage {...messages.uiColorLabel} />
                   </Typography>
                   <ColorPicker
+                    isKeyword
                     handleClose={() => {
                       this.setState({
                         displayColorPicker: false,
