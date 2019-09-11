@@ -56,6 +56,12 @@ const styles = {
     top: '4px',
     fontSize: '16px !important',
   },
+  freeTextContainer: {
+    position: 'relative',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%,-50%)'
+  },
   responseEnter: {
     color: '#4e4e4e',
     fontSize: '12px',
@@ -154,7 +160,7 @@ class SlotForm extends React.Component {
           xs={12}
         >
           <Grid container spacing={24} item xs={12}>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item md={4} sm={12} xs={12}>
               <TextField
                 id="slotName"
                 label={intl.formatMessage(messages.slotNameTextField)}
@@ -176,74 +182,132 @@ class SlotForm extends React.Component {
                 }
               />
             </Grid>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <TextField
-                select
-                id="keyword"
-                value={slot.keywordId ? slot.keywordId : slot.keyword}
-                label={intl.formatMessage(messages.keywordSelect)}
-                onChange={evt => {
-                  let selectedKeyword = agentKeywords.filter(
-                    agentKeyword => agentKeyword.id === evt.target.value,
-                  );
-                  if (selectedKeyword.length === 0) {
-                    selectedKeyword = systemKeywords.filter(
-                      systemKeyword =>
-                        systemKeyword.keywordName === evt.target.value,
-                    );
-                    this.props.onChangeSlotData(
-                      'uiColor',
-                      selectedKeyword[0].uiColor,
-                    );
-                    this.props.onChangeSlotData(
-                      'keyword',
-                      selectedKeyword[0].keywordName,
-                    );
-                    this.props.onChangeSlotData('keywordId', 0);
-                  } else {
-                    this.props.onChangeSlotData(
-                      'uiColor',
-                      selectedKeyword[0].uiColor,
-                    );
-                    this.props.onChangeSlotData(
-                      'keyword',
-                      selectedKeyword[0].keywordName,
-                    );
-                    this.props.onChangeSlotData(
-                      'keywordId',
-                      selectedKeyword[0].id,
-                    );
+            <Grid item md={2} xs={12}>
+              <Grid className={classes.freeTextContainer}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={slot.freeText}
+                      value="anything"
+                      color="primary"
+                      onChange={(evt, value) => {
+                        this.props.onChangeSlotData('freeText', value);
+                        if (value){
+                          this.props.onChangeSlotData('isRequired', true);
+                          this.props.onChangeSlotData('isList', false);
+                          this.props.onChangeSlotData(
+                            'remainingLife',
+                            null,
+                          );
+                          this.props.onChangeSlotData(
+                            'promptCountLimit',
+                            null,
+                          );
+                          this.setState({
+                            remember: false,
+                            limitPrompt: false
+                          });
+                          this.props.onChangeSlotData(
+                            'keyword',
+                            'sys.any',
+                          );
+                          this.props.onChangeSlotData('keywordId', 0);
+                        }
+                        else {
+                          this.props.onChangeSlotData(
+                            'keyword',
+                            '',
+                          );
+                        }
+                      }}
+                    />
                   }
-                }}
-                margin="normal"
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                helperText={intl.formatMessage(messages.requiredField)}
-                error={
-                  this.props.errorState ? this.props.errorState.keyword : false
-                }
-              >
-                {agentKeywords.map((keyword, index) => (
-                  <MenuItem key={`keyword_${index}`} value={keyword.id}>
-                    <span style={{ color: keyword.uiColor }}>
-                      {keyword.keywordName}
-                    </span>
-                  </MenuItem>
-                ))}
-                {systemKeywords.map((keyword, index) => (
-                  <MenuItem
-                    key={`keyword_${index}`}
-                    value={keyword.keywordName}
-                  >
-                    <span style={{ color: keyword.uiColor }}>
-                      {keyword.keywordName}
-                    </span>
-                  </MenuItem>
-                ))}
-              </TextField>
+                  label={intl.formatMessage(messages.freeTextSlot)}
+                  style={{
+                    marginRight: '5px'
+                  }}
+                />
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage(messages.freeTextInfo)}
+                  style={{
+                    marginRight: '15px'
+                  }}
+                >
+                  <Icon className={classes.infoIcon}>info</Icon>
+                </Tooltip>
+              </Grid>
             </Grid>
+            {!slot.freeText ? 
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  select
+                  id="keyword"
+                  value={slot.keywordId ? slot.keywordId : slot.keyword}
+                  label={intl.formatMessage(messages.keywordSelect)}
+                  onChange={evt => {
+                    let selectedKeyword = agentKeywords.filter(
+                      agentKeyword => agentKeyword.id === evt.target.value,
+                    );
+                    if (selectedKeyword.length === 0) {
+                      selectedKeyword = systemKeywords.filter(
+                        systemKeyword =>
+                          systemKeyword.keywordName === evt.target.value,
+                      );
+                      this.props.onChangeSlotData(
+                        'uiColor',
+                        selectedKeyword[0].uiColor,
+                      );
+                      this.props.onChangeSlotData(
+                        'keyword',
+                        selectedKeyword[0].keywordName,
+                      );
+                      this.props.onChangeSlotData('keywordId', 0);
+                    } else {
+                      this.props.onChangeSlotData(
+                        'uiColor',
+                        selectedKeyword[0].uiColor,
+                      );
+                      this.props.onChangeSlotData(
+                        'keyword',
+                        selectedKeyword[0].keywordName,
+                      );
+                      this.props.onChangeSlotData(
+                        'keywordId',
+                        selectedKeyword[0].id,
+                      );
+                    }
+                  }}
+                  margin="normal"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  helperText={intl.formatMessage(messages.requiredField)}
+                  error={
+                    this.props.errorState ? this.props.errorState.keyword : false
+                  }
+                >
+                  {agentKeywords.map((keyword, index) => (
+                    <MenuItem key={`keyword_${index}`} value={keyword.id}>
+                      <span style={{ color: keyword.uiColor }}>
+                        {keyword.keywordName}
+                      </span>
+                    </MenuItem>
+                  ))}
+                  {systemKeywords.map((keyword, index) => (
+                    <MenuItem
+                      key={`keyword_${index}`}
+                      value={keyword.keywordName}
+                    >
+                      <span style={{ color: keyword.uiColor }}>
+                        {keyword.keywordName}
+                      </span>
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            : null}
           </Grid>
           <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
             <Grid item xs={6}>
@@ -264,6 +328,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
+                    disabled={slot.freeText}
                   />
                 }
                 label={intl.formatMessage(messages.rememberSlot)}
@@ -348,6 +413,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
+                    disabled={slot.freeText}
                   />
                 }
                 label={intl.formatMessage(messages.slotIsRequired)}
@@ -361,6 +427,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
+                    disabled={slot.freeText}
                   />
                 }
                 label={intl.formatMessage(messages.slotIsList)}
@@ -388,6 +455,7 @@ class SlotForm extends React.Component {
                         }}
                         value="anything"
                         color="primary"
+                        disabled={slot.freeText}
                       />
                     }
                     label={intl.formatMessage(messages.limitPrompt)}

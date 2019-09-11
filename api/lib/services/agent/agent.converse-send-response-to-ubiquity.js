@@ -65,7 +65,8 @@ module.exports = async function ({ actionData, CSO }) {
         data: {
             savedSlots: CSO.context.savedSlots,
             docIds: CSO.context.docIds,
-            actionQueue: CSO.context.actionQueue
+            actionQueue: CSO.context.actionQueue,
+            listenFreeText: CSO.context.listenFreeText ? true : false
         }
     });
 

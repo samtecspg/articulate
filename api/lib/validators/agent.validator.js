@@ -164,7 +164,8 @@ class AgentValidate {
                         quickResponses: SlotSchema.quickResponses,
                         promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
-                        remainingLife: SlotSchema.remainingLife
+                        remainingLife: SlotSchema.remainingLife,
+                        freeText: SlotSchema.freeText
                     })
                 };
             })()
@@ -199,7 +200,8 @@ class AgentValidate {
                         quickResponses: SlotSchema.quickResponses,
                         promptCountLimit: SlotSchema.promptCountLimit,
                         textPrompts: SlotSchema.textPrompts,
-                        remainingLife: SlotSchema.remainingLife
+                        remainingLife: SlotSchema.remainingLife,
+                        freeText: SlotSchema.freeText
                     }),
                     creationDate: ActionSchema.creationDate,
                     modificationDate: ActionSchema.modificationDate
@@ -979,7 +981,8 @@ class AgentValidate {
                             quickResponses: SlotSchema.quickResponses,
                             promptCountLimit: SlotSchema.promptCountLimit,
                             textPrompts: SlotSchema.textPrompts,
-                            remainingLife: SlotSchema.remainingLife
+                            remainingLife: SlotSchema.remainingLife,
+                            freeText: SlotSchema.freeText
                         }),
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate

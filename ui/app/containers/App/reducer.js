@@ -463,6 +463,7 @@ const initialState = Immutable({
     isRequired: false,
     quickResponses: [],
     textPrompts: [],
+    freeText: false,
   },
   newModifier: {
     modifierName: 'Modifier',

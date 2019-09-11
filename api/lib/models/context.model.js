@@ -18,7 +18,9 @@ class ScenarioModel {
             creationDate: Joi
                 .string(),
             modificationDate: Joi
-                .string()
+                .string(),
+            listenFreeText: Joi
+                .boolean().default(false)
         };
     };
 }

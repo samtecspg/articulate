@@ -7,14 +7,15 @@ class SlotModel {
         return {
             slotName: Joi.string().trim(),
             uiColor: Joi.string().trim(),
-            keyword: Joi.string().trim(),
-            keywordId: KeywordSchema.id,
+            keyword: Joi.string().trim().allow(null),
+            keywordId: KeywordSchema.id.allow(null),
             isList: Joi.boolean(),
             isRequired: Joi.boolean(),
             quickResponses: Joi.array().items(Joi.string().trim()),
-            promptCountLimit: Joi.number(),
+            promptCountLimit: Joi.number().allow(null),
             textPrompts: Joi.array().items(Joi.string().trim()),
             remainingLife: Joi.number().allow(null),
+            freeText: Joi.boolean(),
         };
     };
 }

@@ -25,6 +25,19 @@ module.exports = async function ({ actionData, CSO }) {
 
             CSO.currentAction.slots[missingSlot.slotName].promptCount += 1;
             if (missingSlot.promptCountLimit === undefined || missingSlot.promptCountLimit === null || missingSlot.promptCountLimit >= CSO.currentAction.slots[missingSlot.slotName].promptCount){
+                if (missingSlots[tempMissingSlotIndex].freeText){
+                    if (CSO.context.listenFreeText){
+                        Object.assign(CSO.currentAction.slots[missingSlots[tempMissingSlotIndex].slotName], {
+                            value: CSO.text,
+                            original: CSO.text,
+                        });
+                        CSO.context.listenFreeText = false;
+                        return false;
+                    }
+                    else {
+                        CSO.context.listenFreeText = true;
+                    }
+                }
                 missingSlotIndex = tempMissingSlotIndex;
                 return true;
             }
@@ -35,7 +48,9 @@ module.exports = async function ({ actionData, CSO }) {
             const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount});
             return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
         }
-        return { slotPromptLimitReached: true }
+        if (!CSO.context.listenFreeText){
+            return { slotPromptLimitReached: true }
+        }
     }
 
     if (actionData.useWebhook || CSO.agent.useWebhook) {
