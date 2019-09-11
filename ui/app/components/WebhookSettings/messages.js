@@ -99,4 +99,8 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.bodyTitle',
     defaultMessage: 'Body',
   },
+  postScript: {
+    id: 'app.components.WebhookSettings.postScript',
+    defaultMessage: 'Postscript',
+  },
 });
