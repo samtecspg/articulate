@@ -61,7 +61,7 @@ const styles = {
 function ColorPicker(props) {
   // eslint-disable-line react/prefer-stateless-function
 
-  const { classes, dotDisplay } = props;
+  const { classes, dotDisplay, isKeyword } = props;
   return dotDisplay ? (
     <Grid
       style={{ background: props.color }}
@@ -74,12 +74,12 @@ function ColorPicker(props) {
         <Grid className={classes.popover}>
           <Grid className={classes.cover} onClick={props.handleClose} />
           <SwatchesPicker
-            colors={[['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
+            colors={isKeyword ? [['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
               ['#B28DFF','#C5A3FF','#D5AAFF','#ECD4FF','#FBE4FF'],
               ['#DCD3FF','#A79AFF','#B5B9FF','#97A2FF','#AFCBFF'],
               ['#AFF8DB','#C4FAF8','#85E3FF','#ACE7FF','#6EB5FF'],
               ['#BFFCC6','#DBFFD6','#F3FFE3','#E7FFAC','#FFFFD1'],
-              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']]
+              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']] : undefined
             }
             color={props.color}
             onChange={props.handleColorChange}
@@ -97,12 +97,12 @@ function ColorPicker(props) {
         <Grid className={classes.popover}>
           <Grid className={classes.cover} onClick={props.handleClose} />
           <SwatchesPicker
-            colors={[['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
+            colors={isKeyword ? [['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
               ['#B28DFF','#C5A3FF','#D5AAFF','#ECD4FF','#FBE4FF'],
               ['#DCD3FF','#A79AFF','#B5B9FF','#97A2FF','#AFCBFF'],
               ['#AFF8DB','#C4FAF8','#85E3FF','#ACE7FF','#6EB5FF'],
               ['#BFFCC6','#DBFFD6','#F3FFE3','#E7FFAC','#FFFFD1'],
-              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']]
+              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']] : undefined
             }
             color={props.color}
             onChange={props.handleColorChange}
@@ -122,6 +122,7 @@ ColorPicker.propTypes = {
   color: PropTypes.string,
   displayColorPicker: PropTypes.bool,
   dotDisplay: PropTypes.bool,
+  isKeyword: PropTypes.bool,
 };
 
 export default withStyles(styles)(ColorPicker);
