@@ -4,6 +4,7 @@ import { MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constant
 module.exports = async function ({ actionData, CSO }) {
     
     const { agentService, globalService } = await this.server.services();
+    const previousListenState = CSO.context.listenFreeText === true;
     
     //This will initialize the slots in the current action and also will return the required slots of the action
     const requiredSlots = _.filter(actionData.slots, (slot) => {
@@ -48,7 +49,7 @@ module.exports = async function ({ actionData, CSO }) {
             const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount});
             return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
         }
-        if (!CSO.context.listenFreeText){
+        if (!previousListenState && !CSO.context.listenFreeText){
             return { slotPromptLimitReached: true }
         }
     }
