@@ -65,7 +65,8 @@ module.exports = async function ({ actionData, CSO }) {
         data: {
             savedSlots: CSO.context.savedSlots,
             docIds: CSO.context.docIds,
-            actionQueue: CSO.context.actionQueue
+            actionQueue: CSO.context.actionQueue,
+            listenFreeText: CSO.context.listenFreeText ? true : false
         }
     });
 
@@ -83,6 +84,8 @@ module.exports = async function ({ actionData, CSO }) {
         await timeout(CSO.ubiquity.connection.details.waitTimeBetweenMessages);
     }
     else {
-        this.server.publish(`/${ROUTE_AGENT}/${CSO.agent.id}/${ROUTE_CONVERSE}`, responseForUbiquity );
+        if (CSO.articulateUI){
+            this.server.publish(`/${ROUTE_AGENT}/${CSO.agent.id}/${ROUTE_CONVERSE}`, responseForUbiquity );
+        }
     }
 };

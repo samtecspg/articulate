@@ -60,6 +60,7 @@ export function* postConverse(payload) {
           data: {
             sessionId,
             text: message.message,
+            articulateUI: true
           },
         };
         yield call(
@@ -91,7 +92,8 @@ export function* deleteSession(payload) {
       const patchPayload = {
         actionQueue: [],
         savedSlots: {},
-        docIds: []
+        docIds: [],
+        listenFreeText: false
       };
       yield call(
         api.patch,

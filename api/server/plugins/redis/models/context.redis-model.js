@@ -22,6 +22,9 @@ const schema = {
     },
     modificationDate: {
         type: 'timestamp'
+    },
+    listenFreeText: {
+        type: 'boolean'
     }
 };
 

@@ -144,7 +144,7 @@ class KeywordsDataForm extends React.Component {
                           onClick={() => {
                             this.props.onGoToUrl(
                               `/agent/${this.props.agentId}/keyword/${
-                                keyword.id
+                              keyword.id
                               }`,
                             );
                           }}
@@ -216,13 +216,14 @@ class KeywordsDataForm extends React.Component {
                         margin="normal"
                         value={this.props.currentKeywordsPage}
                         onChange={evt => {
+                          evt.target.value = evt.target.value.replace(/^0+/, '');
                           evt.target.value === ''
-                            ? this.props.changeKeywordsPage(0)
+                            ? this.props.changeKeywordsPage(1)
                             : evt.target.value <=
-                                this.props.numberOfKeywordsPages &&
-                              evt.target.value >= 0
-                            ? this.props.changeKeywordsPage(evt.target.value)
-                            : false;
+                              this.props.numberOfKeywordsPages &&
+                              evt.target.value >= 1
+                              ? this.props.changeKeywordsPage(Number(evt.target.value))
+                              : false;
                         }}
                         fullWidth
                         InputLabelProps={{
@@ -245,13 +246,13 @@ class KeywordsDataForm extends React.Component {
                       <Typography
                         onClick={
                           this.props.currentKeywordsPage <
-                          this.props.numberOfKeywordsPages
+                            this.props.numberOfKeywordsPages
                             ? this.props.moveKeywordsPageForward
                             : null
                         }
                         className={
                           this.props.currentKeywordsPage <
-                          this.props.numberOfKeywordsPages
+                            this.props.numberOfKeywordsPages
                             ? classes.pageCursors
                             : classes.pageCursorsDisabled
                         }

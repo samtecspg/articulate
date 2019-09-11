@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CONFIG_KEYWORD_TYPE_REGEX } from '../../../util/constants';
+import { CONFIG_KEYWORD_TYPE_REGEX, KEYWORD_PREFIX_SYS, DUCKLING_TIME } from '../../../util/constants';
 
 module.exports = async function ({ actionData, CSO, recognizedModifier }) {
 
@@ -278,6 +278,7 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                 }
                 //If slot is not a list
                 else {
+                    let keywordValue;
                     //Just insert an object with attributes value and original into the context slot after sorting the matching regex to keep the last one
                     if (recognizedKeyword.extractor === CONFIG_KEYWORD_TYPE_REGEX) {
                         const allRecognizedKeywordsForRegex = CSO.recognizedKeywords.filter((ent) => {
@@ -290,19 +291,16 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                             return b.end - a.end;
                         });
 
-                        const keywordValue = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text: CSO.text });
-                        CSO.currentAction.slots[slotName].value = keywordValue.value;
-                        CSO.currentAction.slots[slotName].original = keywordValue.original;
-                        CSO.currentAction.slots[slotName].remainingLife = slotToFill.remainingLife;
+                        keywordValue = keywordService.parseSysValue({ keyword: allRecognizedKeywordsForRegex[0], text: CSO.text });
                     }
                     else {
-                        const keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text: CSO.text });
-                        CSO.currentAction.slots[slotName].value = keywordValue.value;
-                        CSO.currentAction.slots[slotName].original = keywordValue.original;
-                        CSO.currentAction.slots[slotName].remainingLife = slotToFill.remainingLife;
-
+                        keywordValue = keywordService.parseSysValue({ keyword: recognizedKeyword, text: CSO.text });
                     }
-
+                    if (recognizedKeyword.keyword === `${KEYWORD_PREFIX_SYS}${DUCKLING_TIME}`){
+                        delete CSO.currentAction.slots[slotName].value;
+                    }
+                    Object.assign(CSO.currentAction.slots[slotName], keywordValue);
+                    CSO.currentAction.slots[slotName].remainingLife = slotToFill.remainingLife;
                 }
                 if (CSO.currentAction.slots[slotName].remainingLife > -1){
                     CSO.context.savedSlots[slotName] = CSO.currentAction.slots[slotName];

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import systemKeywords from 'systemKeywords';
+import fontColorContrast from 'font-color-contrast';
 
 import { Tooltip } from '@material-ui/core';
 import xIcon from '../../../images/x-icon.svg';
@@ -18,7 +19,6 @@ const styles = {
       opacity: 1,
     },
     opacity: 0.9,
-    color: 'white',
     padding: '2px 5px',
   },
   deleteHighlight: {
@@ -76,6 +76,7 @@ const HighlightedSaying = withStyles(styles)(props => {
             key={`keywordTagText_${props.keywordIndex}`}
             className={classes.highlightedText}
             style={{
+              color: fontColorContrast(highlightColor),
               backgroundColor: highlightColor,
             }}
           >

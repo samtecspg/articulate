@@ -221,5 +221,13 @@ export default defineMessages({
   responseEnter: {
     id: 'app.containers.ActionPage.component.ResponseForm.responseEnter',
     defaultMessage: 'Enter',
-  }
+  },
+  freeTextSlot: {
+    id: 'app.containers.ActionPage.component.SlotForm.freeTextSlot',
+    defaultMessage: 'Free text',
+  },
+  freeTextInfo: {
+    id: 'app.containers.ActionPage.component.SlotForm.freeTextInfo',
+    defaultMessage: 'If this feature is enabled, the agent will fill this slot with the next text entered by the user'
+  },
 });

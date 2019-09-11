@@ -18,7 +18,8 @@ module.exports = async function ({ sessionId, returnModel = false }) {
                 sessionId,
                 actionQueue: [],
                 docIds: [],
-                savedSlots: {}
+                savedSlots: {},
+                listenFreeText: false
             }
             await Model.createInstance({ data });
             return returnModel ? Model : Model.allProperties();

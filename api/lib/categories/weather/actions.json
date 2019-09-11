@@ -24,7 +24,7 @@
     ],
     "responses": [
       {
-        "textResponse": "It's {{webhook.response.weather.0.description}} and {{webhook.response.main.temp}}{{#eq slots.unit.value compare= \"metric\"}}°C{{else}}°F{{/eq}} in {{webhook.response.name}}, {{webhook.response.sys.country}}",
+        "textResponse": "It's {{webhook.callCurrentWeather.response.weather.0.description}} and {{webhook.callCurrentWeather.response.main.temp}}{{#eq slots.unit.value compare= \"metric\"}}°C{{else}}°F{{/eq}} in {{webhook.callCurrentWeather.response.name}}, {{webhook.callCurrentWeather.response.sys.country}}",
         "actions": []
       }
     ],
@@ -33,6 +33,7 @@
     "creationDate": "1556632702000",
     "modificationDate": "1557160251000",
     "webhook": {
+      "webhookKey": "callCurrentWeather",
       "webhookUrl": "https://api.openweathermap.org/data/2.5/weather?q={{slots.location.value}}&appid={{categories.Weather.parameters.apiKey}}{{#if slots.unit.value}}&units={{slots.unit.value}}{{else}}&units=imperial{{/if}}",
       "webhookVerb": "GET",
       "webhookPayloadType": "None",
@@ -79,7 +80,7 @@
     ],
     "responses": [
       {
-        "textResponse": "{{! We check if the date the user specified is between the last date and first day of the forecast }}\n{{#and\n\t(gte (get \"dt_txt\" (itemAt webhook.response.list 39)) slots.date.to) \n\t(gte slots.date.from (get \"dt_txt\" (itemAt webhook.response.list 0))) \n}}\n        {{! Now we compare each forecat to get the closest forecast to the given date}}\n\t{{#eachIndex webhook.response.list}}\n\t  \t{{#compare (get \"dt_txt\" item) \"==\" (closestDate @root.slots.date.from (JSONPath @root.webhook.response.list \"*.dt_txt\"))}} \n  \t\t\tIt's {{item.weather.0.description}} and {{item.main.temp}}{{#eq @root.slots.unit.value compare=\"metric\"}}°C{{else}}°F{{/eq}} in {{@root.webhook.response.city.name}}, {{@root.webhook.response.city.country}}\n  \t\t{{/compare}}\n\t{{/eachIndex}}\n{{else}}\n\tSorry, but we don't have a forecast for those dates\n{{/and}}",
+        "textResponse": "{{! We check if the date the user specified is between the last date and first day of the forecast }}\n{{#and\n\t(gte (get \"dt_txt\" (itemAt webhook.callForecast.response.list 39)) slots.date.to) \n\t(gte slots.date.from (get \"dt_txt\" (itemAt webhook.callForecast.response.list 0))) \n}}\n        {{! Now we compare each forecat to get the closest forecast to the given date}}\n\t{{#eachIndex webhook.callForecast.response.list}}\n\t  \t{{#compare (get \"dt_txt\" item) \"==\" (closestDate @root.slots.date.from (JSONPath @root.webhook.callForecast.response.list \"*.dt_txt\"))}} \n  \t\t\tIt's {{item.weather.0.description}} and {{item.main.temp}}{{#eq @root.slots.unit.value compare=\"metric\"}}°C{{else}}°F{{/eq}} in {{@root.webhook.callForecast.response.city.name}}, {{@root.webhook.callForecast.response.city.country}}\n  \t\t{{/compare}}\n\t{{/eachIndex}}\n{{else}}\n\tSorry, but we don't have a forecast for those dates\n{{/and}}",
         "actions": []
       }
     ],
@@ -88,6 +89,7 @@
     "creationDate": "1556914755000",
     "modificationDate": "1557337151000",
     "webhook": {
+      "webhookKey": "callForecast",
       "webhookUrl": "https://api.openweathermap.org/data/2.5/forecast?q={{slots.location.value}}&appid={{categories.Weather.parameters.apiKey}}{{#if slots.unit.value}}&units={{slots.unit.value}}{{else}}&units=imperial{{/if}}",
       "webhookVerb": "GET",
       "webhookPayloadType": "None",

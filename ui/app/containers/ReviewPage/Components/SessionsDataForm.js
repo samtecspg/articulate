@@ -267,30 +267,30 @@ function SessionsDataForm(props) {
             rows={
               sessions.length === 0
                 ? [
-                    <StyledRow key="session_0">
-                      <SessionRow
-                        locale={locale}
-                        session={{
-                          id: 'noData',
-                          sessionId: intl.formatMessage(messages.noData),
-                        }}
-                        onToggleConversationBar={props.onToggleConversationBar}
-                        onSendMessage={props.onSendMessage}
-                      />
-                    </StyledRow>,
-                  ]
+                  <StyledRow key="session_0">
+                    <SessionRow
+                      locale={locale}
+                      session={{
+                        id: 'noData',
+                        sessionId: intl.formatMessage(messages.noData),
+                      }}
+                      onToggleConversationBar={props.onToggleConversationBar}
+                      onSendMessage={props.onSendMessage}
+                    />
+                  </StyledRow>,
+                ]
                 : sessions.map(session => (
-                    <StyledRow key={`session_${session.id}`}>
-                      <SessionRow
-                        session={session}
-                        locale={locale}
-                        agent={agent}
-                        onToggleConversationBar={props.onToggleConversationBar}
-                        onSendMessage={props.onSendMessage}
-                        onLoadSessionId={onLoadSessionId}
-                      />
-                    </StyledRow>
-                  ))
+                  <StyledRow key={`session_${session.id}`}>
+                    <SessionRow
+                      session={session}
+                      locale={locale}
+                      agent={agent}
+                      onToggleConversationBar={props.onToggleConversationBar}
+                      onSendMessage={props.onSendMessage}
+                      onLoadSessionId={onLoadSessionId}
+                    />
+                  </StyledRow>
+                ))
             }
             onRequestSort={props.onRequestSort}
             sortField={props.sortField}
@@ -347,12 +347,13 @@ function SessionsDataForm(props) {
                 margin="normal"
                 value={props.currentPage}
                 onChange={evt => {
+                  evt.target.value = evt.target.value.replace(/^0+/, '');
                   evt.target.value === ''
-                    ? props.changePage(0)
+                    ? props.changePage(1)
                     : evt.target.value <= props.numberOfPages &&
-                      evt.target.value >= 0
-                    ? props.changePage(evt.target.value)
-                    : false;
+                      evt.target.value >= 1
+                      ? props.changePage(Number(evt.target.value))
+                      : false;
                 }}
                 fullWidth
                 InputLabelProps={{

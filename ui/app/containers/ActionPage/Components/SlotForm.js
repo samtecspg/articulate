@@ -10,6 +10,7 @@ import {
   TextField,
   Tooltip,
   Icon,
+  InputAdornment,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -55,6 +56,27 @@ const styles = {
     top: '4px',
     fontSize: '16px !important',
   },
+  freeTextContainer: {
+    position: 'relative',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%,-50%)'
+  },
+  responseEnter: {
+    color: '#4e4e4e',
+    fontSize: '12px',
+    paddingRight: '15px',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+  newQuickResponseInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderRadius: '5px',
+  },
+  newCurrentSlotInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderRadius: '5px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -62,6 +84,7 @@ class SlotForm extends React.Component {
   constructor(props) {
     super(props);
     this.replaceValuesWithSlotName = this.replaceValuesWithSlotName.bind(this);
+    this.addNewCurrentSayingToListFromEvent = this.addNewCurrentSayingToListFromEvent.bind(this);
   }
 
   state = {
@@ -70,10 +93,12 @@ class SlotForm extends React.Component {
     limitPrompt: this.props.slot.promptCountLimit === undefined || this.props.slot.promptCountLimit === '' || this.props.slot.promptCountLimit === null ? false : true,
     newQuickResponseKey: '',
     newQuickResponseKeyValue: '',
+    currentNewQuickResponse: '',
+    currentNewSlotPrompt: '',
     lastQuickResponseEdited: false,
   };
 
-  
+
 
   replaceValuesWithSlotName(saying) {
     const newUserSays = [];
@@ -95,7 +120,7 @@ class SlotForm extends React.Component {
             keyword.keyword.indexOf(' ') !== -1
               ? `[${keyword.keyword}]`
               : keyword.keyword
-          }.value}}`}
+            }.value}}`}
         </span>,
       );
       newStart = keyword.end;
@@ -104,6 +129,22 @@ class SlotForm extends React.Component {
       <span key="finaText">{saying.userSays.substring(newStart)}</span>,
     );
     return newUserSays;
+  }
+
+  addNewCurrentSayingToListFromEvent(ev) {
+    ev.preventDefault();
+    if (this.state.currentNewQuickResponse.trim() !== '') {
+      this.props.onAddNewQuickResponse(this.state.currentNewQuickResponse);
+      this.setState({ currentNewQuickResponse: '' });
+    }
+  }
+
+  addNewCurrentSlotPromptToListFromEvent(ev) {
+    ev.preventDefault();
+    if (this.state.currentNewSlotPrompt.trim() !== '') {
+      this.props.onAddTextPrompt(this.state.currentNewSlotPrompt);
+      this.setState({ currentNewSlotPrompt: '' });
+    }
   }
 
   render() {
@@ -119,7 +160,7 @@ class SlotForm extends React.Component {
           xs={12}
         >
           <Grid container spacing={24} item xs={12}>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item md={4} sm={12} xs={12}>
               <TextField
                 id="slotName"
                 label={intl.formatMessage(messages.slotNameTextField)}
@@ -141,74 +182,132 @@ class SlotForm extends React.Component {
                 }
               />
             </Grid>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <TextField
-                select
-                id="keyword"
-                value={slot.keywordId ? slot.keywordId : slot.keyword}
-                label={intl.formatMessage(messages.keywordSelect)}
-                onChange={evt => {
-                  let selectedKeyword = agentKeywords.filter(
-                    agentKeyword => agentKeyword.id === evt.target.value,
-                  );
-                  if (selectedKeyword.length === 0) {
-                    selectedKeyword = systemKeywords.filter(
-                      systemKeyword =>
-                        systemKeyword.keywordName === evt.target.value,
-                    );
-                    this.props.onChangeSlotData(
-                      'uiColor',
-                      selectedKeyword[0].uiColor,
-                    );
-                    this.props.onChangeSlotData(
-                      'keyword',
-                      selectedKeyword[0].keywordName,
-                    );
-                    this.props.onChangeSlotData('keywordId', 0);
-                  } else {
-                    this.props.onChangeSlotData(
-                      'uiColor',
-                      selectedKeyword[0].uiColor,
-                    );
-                    this.props.onChangeSlotData(
-                      'keyword',
-                      selectedKeyword[0].keywordName,
-                    );
-                    this.props.onChangeSlotData(
-                      'keywordId',
-                      selectedKeyword[0].id,
-                    );
+            <Grid item md={2} xs={12}>
+              <Grid className={classes.freeTextContainer}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={slot.freeText}
+                      value="anything"
+                      color="primary"
+                      onChange={(evt, value) => {
+                        this.props.onChangeSlotData('freeText', value);
+                        if (value){
+                          this.props.onChangeSlotData('isRequired', true);
+                          this.props.onChangeSlotData('isList', false);
+                          this.props.onChangeSlotData(
+                            'remainingLife',
+                            null,
+                          );
+                          this.props.onChangeSlotData(
+                            'promptCountLimit',
+                            null,
+                          );
+                          this.setState({
+                            remember: false,
+                            limitPrompt: false
+                          });
+                          this.props.onChangeSlotData(
+                            'keyword',
+                            'sys.any',
+                          );
+                          this.props.onChangeSlotData('keywordId', 0);
+                        }
+                        else {
+                          this.props.onChangeSlotData(
+                            'keyword',
+                            '',
+                          );
+                        }
+                      }}
+                    />
                   }
-                }}
-                margin="normal"
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                helperText={intl.formatMessage(messages.requiredField)}
-                error={
-                  this.props.errorState ? this.props.errorState.keyword : false
-                }
-              >
-                {agentKeywords.map((keyword, index) => (
-                  <MenuItem key={`keyword_${index}`} value={keyword.id}>
-                    <span style={{ color: keyword.uiColor }}>
-                      {keyword.keywordName}
-                    </span>
-                  </MenuItem>
-                ))}
-                {systemKeywords.map((keyword, index) => (
-                  <MenuItem
-                    key={`keyword_${index}`}
-                    value={keyword.keywordName}
-                  >
-                    <span style={{ color: keyword.uiColor }}>
-                      {keyword.keywordName}
-                    </span>
-                  </MenuItem>
-                ))}
-              </TextField>
+                  label={intl.formatMessage(messages.freeTextSlot)}
+                  style={{
+                    marginRight: '5px'
+                  }}
+                />
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage(messages.freeTextInfo)}
+                  style={{
+                    marginRight: '15px'
+                  }}
+                >
+                  <Icon className={classes.infoIcon}>info</Icon>
+                </Tooltip>
+              </Grid>
             </Grid>
+            {!slot.freeText ? 
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  select
+                  id="keyword"
+                  value={slot.keywordId ? slot.keywordId : slot.keyword}
+                  label={intl.formatMessage(messages.keywordSelect)}
+                  onChange={evt => {
+                    let selectedKeyword = agentKeywords.filter(
+                      agentKeyword => agentKeyword.id === evt.target.value,
+                    );
+                    if (selectedKeyword.length === 0) {
+                      selectedKeyword = systemKeywords.filter(
+                        systemKeyword =>
+                          systemKeyword.keywordName === evt.target.value,
+                      );
+                      this.props.onChangeSlotData(
+                        'uiColor',
+                        selectedKeyword[0].uiColor,
+                      );
+                      this.props.onChangeSlotData(
+                        'keyword',
+                        selectedKeyword[0].keywordName,
+                      );
+                      this.props.onChangeSlotData('keywordId', 0);
+                    } else {
+                      this.props.onChangeSlotData(
+                        'uiColor',
+                        selectedKeyword[0].uiColor,
+                      );
+                      this.props.onChangeSlotData(
+                        'keyword',
+                        selectedKeyword[0].keywordName,
+                      );
+                      this.props.onChangeSlotData(
+                        'keywordId',
+                        selectedKeyword[0].id,
+                      );
+                    }
+                  }}
+                  margin="normal"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  helperText={intl.formatMessage(messages.requiredField)}
+                  error={
+                    this.props.errorState ? this.props.errorState.keyword : false
+                  }
+                >
+                  {agentKeywords.map((keyword, index) => (
+                    <MenuItem key={`keyword_${index}`} value={keyword.id}>
+                      <span style={{ color: keyword.uiColor }}>
+                        {keyword.keywordName}
+                      </span>
+                    </MenuItem>
+                  ))}
+                  {systemKeywords.map((keyword, index) => (
+                    <MenuItem
+                      key={`keyword_${index}`}
+                      value={keyword.keywordName}
+                    >
+                      <span style={{ color: keyword.uiColor }}>
+                        {keyword.keywordName}
+                      </span>
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            : null}
           </Grid>
           <Grid style={{ marginTop: 0 }} container spacing={24} item xs={12}>
             <Grid item xs={6}>
@@ -220,7 +319,7 @@ class SlotForm extends React.Component {
                       this.setState({
                         remember: value
                       });
-                      if (!value){
+                      if (!value) {
                         this.props.onChangeSlotData(
                           'remainingLife',
                           null,
@@ -229,6 +328,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
+                    disabled={slot.freeText}
                   />
                 }
                 label={intl.formatMessage(messages.rememberSlot)}
@@ -245,7 +345,7 @@ class SlotForm extends React.Component {
               >
                 <Icon className={classes.infoIcon}>info</Icon>
               </Tooltip>
-              {this.state.remember ?   
+              {this.state.remember ?
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -254,7 +354,7 @@ class SlotForm extends React.Component {
                         this.setState({
                           rememberForever: value
                         });
-                        if (value){
+                        if (value) {
                           this.props.onChangeSlotData(
                             'remainingLife',
                             0,
@@ -273,7 +373,7 @@ class SlotForm extends React.Component {
                   }
                   label={intl.formatMessage(messages.rememberSlotForever)}
                 />
-              : null}
+                : null}
             </Grid>
           </Grid>
           {this.state.remember && !this.state.rememberForever ? (
@@ -313,6 +413,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
+                    disabled={slot.freeText}
                   />
                 }
                 label={intl.formatMessage(messages.slotIsRequired)}
@@ -326,6 +427,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
+                    disabled={slot.freeText}
                   />
                 }
                 label={intl.formatMessage(messages.slotIsList)}
@@ -344,7 +446,7 @@ class SlotForm extends React.Component {
                           this.setState({
                             limitPrompt: value
                           });
-                          if (!value){
+                          if (!value) {
                             this.props.onChangeSlotData(
                               'promptCountLimit',
                               null,
@@ -353,6 +455,7 @@ class SlotForm extends React.Component {
                         }}
                         value="anything"
                         color="primary"
+                        disabled={slot.freeText}
                       />
                     }
                     label={intl.formatMessage(messages.limitPrompt)}
@@ -399,25 +502,44 @@ class SlotForm extends React.Component {
                   <TextField
                     id="newTextPrompt"
                     label={intl.formatMessage(messages.textpromptTextField)}
+                    value={this.state.currentNewSlotPrompt}
                     placeholder={intl.formatMessage(
                       messages.textpromptTextFieldPlaceholder,
                     )}
                     onKeyPress={ev => {
                       if (ev.key === 'Enter') {
-                        ev.preventDefault();
-                        if (ev.target.value !== '') {
-                          this.props.onAddTextPrompt(ev.target.value);
-                          ev.target.value = '';
-                        }
+                        this.addNewCurrentSlotPromptToListFromEvent(ev);
                       }
                     }}
+                    onChange={ev => {
+                      this.setState({ currentNewSlotPrompt: ev.target.value });
+                    }
+                    }
                     margin="normal"
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
                     InputProps={{
                       disabled: !slot.isRequired,
+                      className: classes.newCurrentSlotInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              this.addNewCurrentSlotPromptToListFromEvent(ev);
+                            }}
+                          >
+                            {intl.formatMessage(messages.responseEnter)}
+                          </span>
+                        </InputAdornment>
+                      )
                     }}
                     helperText={intl.formatMessage(messages.textpromptHelperText)}
                     error={
@@ -448,32 +570,50 @@ class SlotForm extends React.Component {
                   ) : null}
                 </Grid>
               </Grid>
-             
+
 
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
                     id="newQuickResponse"
                     label={intl.formatMessage(messages.quickResponseValue)}
+                    value={this.state.currentNewQuickResponse}
                     placeholder={intl.formatMessage(
                       messages.newQuickResponsePlaceholder,
                     )}
                     onKeyPress={ev => {
                       if (ev.key === 'Enter') {
-                        ev.preventDefault();
-                        if (ev.target.value !== '') {
-                          this.props.onAddNewQuickResponse(ev.target.value);
-                          ev.target.value = '';
-                        }
+                        this.addNewCurrentSayingToListFromEvent(ev);
                       }
+                    }}
+                    onChange={ev => {
+                      this.setState({ currentNewQuickResponse: ev.target.value });
                     }}
                     margin="normal"
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
                     InputProps={{
                       disabled: !slot.isRequired,
+                      className: classes.newQuickResponseInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              this.addNewCurrentSayingToListFromEvent(ev);
+                            }}
+                          >
+                            {intl.formatMessage(messages.responseEnter)}
+                          </span>
+                        </InputAdornment>
+                      ),
                     }}
                     error={
                       this.props.errorState

@@ -270,6 +270,7 @@ import {
   DELETE_USER,
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
+  RESET_SUCCESS_AGENT,
 } from './constants';
 
 /*
@@ -551,6 +552,12 @@ export function importAgentSuccess(agent) {
 /*
  * Agent
  */
+
+export function resetSuccessAgent(){
+  return {
+    type: RESET_SUCCESS_AGENT,
+  }
+}
 
 export function resetAgentData(ref) {
   return {
@@ -842,7 +849,7 @@ export function loadAgentSessionsSuccess(sessions) {
 /*
  * Sayings
  */
-export function resetSayings(){
+export function resetSayings() {
   return {
     type: RESET_SAYINGS
   }
@@ -915,15 +922,13 @@ export function addSayingError(error) {
   };
 }
 
-export function deleteSaying(filter, page, pageSize, sayingId, categoryId) {
+export function deleteSaying(filter, sayingId, categoryId) {
   return {
     type: DELETE_SAYING,
     apiCall: true,
     sayingId,
     categoryId,
-    filter,
-    page,
-    pageSize,
+    filter
   };
 }
 

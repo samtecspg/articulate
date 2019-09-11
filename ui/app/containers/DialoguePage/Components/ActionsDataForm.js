@@ -152,7 +152,7 @@ class ActionsDataForm extends React.Component {
                             onClick={() => {
                               this.props.onGoToUrl(
                                 `/agent/${this.props.agentId}/action/${
-                                  action.id
+                                action.id
                                 }`,
                               );
                             }}
@@ -164,9 +164,9 @@ class ActionsDataForm extends React.Component {
                               onClick={() => {
                                 this.props.onGoToUrl(
                                   `/agent/${
-                                    this.props.agentId
+                                  this.props.agentId
                                   }/action/create?isDuplicate=true&actionId=${
-                                    action.id
+                                  action.id
                                   }`,
                                 );
                               }}
@@ -237,13 +237,14 @@ class ActionsDataForm extends React.Component {
                         margin="normal"
                         value={this.props.currentActionsPage}
                         onChange={evt => {
+                          evt.target.value = evt.target.value.replace(/^0+/, '');
                           evt.target.value === ''
-                            ? this.props.changeActionsPage(0)
+                            ? this.props.changeActionsPage(1)
                             : evt.target.value <=
-                                this.props.numberOfActionsPages &&
-                              evt.target.value >= 0
-                            ? this.props.changeActionsPage(evt.target.value)
-                            : false;
+                              this.props.numberOfActionsPages &&
+                              evt.target.value >= 1
+                              ? this.props.changeActionsPage(Number(evt.target.value))
+                              : false;
                         }}
                         fullWidth
                         InputLabelProps={{
@@ -266,13 +267,13 @@ class ActionsDataForm extends React.Component {
                       <Typography
                         onClick={
                           this.props.currentActionsPage <
-                          this.props.numberOfActionsPages
+                            this.props.numberOfActionsPages
                             ? this.props.moveActionsPageForward
                             : null
                         }
                         className={
                           this.props.currentActionsPage <
-                          this.props.numberOfActionsPages
+                            this.props.numberOfActionsPages
                             ? classes.pageCursors
                             : classes.pageCursorsDisabled
                         }
