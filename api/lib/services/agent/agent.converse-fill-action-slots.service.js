@@ -126,7 +126,7 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                         }
                     }
                     else {
-                        if (keywordsRasaValues.indexOf(CSO.currentAction.slots[slotToModify].value) || keywordsOriginalValues.indexOf(CSO.currentAction.slots[slotToModify].original)){
+                        if (keywordsRasaValues.indexOf(CSO.currentAction.slots[slotToModify].value) > -1 || keywordsOriginalValues.indexOf(CSO.currentAction.slots[slotToModify].original) > - 1){
                             CSO.currentAction.slots[slotToModify] = {
                                 keyword: actionSlot.keyword,
                                 value: '',
