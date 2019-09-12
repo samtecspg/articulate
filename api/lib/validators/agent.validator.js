@@ -321,7 +321,8 @@ class AgentValidate {
                         value: Joi.string()
                     }),
                     webhookUser: WebhookSchema.webhookUser,
-                    webhookPassword: WebhookSchema.webhookPassword
+                    webhookPassword: WebhookSchema.webhookPassword,
+                    postScript: WebhookSchema.postScript
                 };
             })()
         };
@@ -347,6 +348,7 @@ class AgentValidate {
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
+                    postScript: WebhookSchema.postScript,
                     creationDate: WebhookSchema.creationDate,
                     modificationDate: WebhookSchema.modificationDate
                 };
@@ -374,7 +376,8 @@ class AgentValidate {
                         value: Joi.string()
                     }),
                     webhookUser: WebhookSchema.webhookUser,
-                    webhookPassword: WebhookSchema.webhookPassword
+                    webhookPassword: WebhookSchema.webhookPassword,
+                    postScript: WebhookSchema.postScript
                 };
             })()
         };
@@ -401,6 +404,7 @@ class AgentValidate {
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
+                    postScript: WebhookSchema.postScript,
                     creationDate: WebhookSchema.creationDate,
                     modificationDate: WebhookSchema.modificationDate
                 };
@@ -885,8 +889,9 @@ class AgentValidate {
                         }),
                         webhookUser: WebhookSchema.webhookUser,
                         webhookPassword: WebhookSchema.webhookPassword,
-                        creationDate: ActionSchema.creationDate,
-                        modificationDate: ActionSchema.modificationDate
+                        postScript: WebhookSchema.postScript,
+                        creationDate: WebhookSchema.creationDate,
+                        modificationDate: WebhookSchema.modificationDate
                     },
                     settings: Joi.object(),
                     keywords: Joi.array().items({
@@ -963,6 +968,7 @@ class AgentValidate {
                             }),
                             webhookUser: WebhookSchema.webhookUser,
                             webhookPassword: WebhookSchema.webhookPassword,
+                            postScript: WebhookSchema.postScript,
                             creationDate: ActionSchema.creationDate,
                             modificationDate: ActionSchema.modificationDate
                         },

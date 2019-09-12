@@ -17,6 +17,7 @@ import AceEditor from 'react-ace';
 
 import 'brace/mode/xml';
 import 'brace/mode/json';
+import 'brace/mode/javascript';
 import 'brace/theme/terminal';
 
 import messages from './messages';
@@ -476,6 +477,49 @@ export class WebhookSettings extends React.Component {
                 ) : null,
               ]
             : null}
+        </Grid>
+        <Grid key="grid-editor-postscript" item xs={12}>
+          <Grid className={classes.bodyTitleContainer} item xs={12}>
+            <Typography variant="h2">
+              <FormattedMessage {...messages.postScript} />
+            </Typography>
+          </Grid>
+          <AceEditor
+            key="postScript"
+            width="100%"
+            height="300px"
+            mode={'javascript'}
+            theme="terminal"
+            name="postScript"
+            readOnly={false}
+            onLoad={this.onLoad}
+            onChange={this.props.onChangeWebhookData.bind(
+              null,
+              'postScript',
+            )}
+            fontSize={14}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
+            value={webhook.postScript}
+            editorProps={{
+              $blockScrolling: Infinity,
+            }}
+            setOptions={{
+              useWorker: false,
+              showLineNumbers: true,
+              tabSize: 2,
+            }}
+          />
+          {this.props.errorState.postScript ? (
+            <Typography
+              key="postScriptError"
+              variant="caption"
+              className={classes.errorLabel}
+            >
+              <FormattedMessage {...messages.postScriptError} />
+            </Typography>
+          ) : null}
         </Grid>
       </Grid>
     );

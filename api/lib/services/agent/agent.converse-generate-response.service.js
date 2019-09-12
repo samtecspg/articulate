@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import { MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
+const {VM, VMScript} = require('vm2');
 
 module.exports = async function ({ actionData, CSO }) {
     
     const { agentService, globalService } = await this.server.services();
+    const previousListenState = CSO.context.listenFreeText === true;
     
     //This will initialize the slots in the current action and also will return the required slots of the action
     const requiredSlots = _.filter(actionData.slots, (slot) => {
@@ -48,7 +50,7 @@ module.exports = async function ({ actionData, CSO }) {
             const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount});
             return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
         }
-        if (!CSO.context.listenFreeText){
+        if (!previousListenState && !CSO.context.listenFreeText){
             return { slotPromptLimitReached: true }
         }
     }
@@ -93,12 +95,27 @@ module.exports = async function ({ actionData, CSO }) {
             password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
             templateContext: CSO
         });
-        if (webhookResponse.textResponse) {
-            return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
-        }
         CSO.webhook = { 
             [webhook.webhookKey]: {...webhookResponse}
         };
+        if (webhook.postScript){
+            const vm = new VM({
+                timeout: 1000,
+                sandbox: {
+                    CSO
+                }
+            });
+
+            const script = new VMScript(webhook.postScript);
+            try {
+                CSO = vm.run(script);
+            } catch (err) {
+                console.error(`Failed to execute postScript of the webhook ${webhook.webhookKey}`, err);
+            }
+        }
+        if (webhookResponse.textResponse) {
+            return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
+        }
         const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
         return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
     }
