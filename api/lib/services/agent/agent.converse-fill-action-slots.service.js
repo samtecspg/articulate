@@ -113,13 +113,27 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                             return keywordsOriginalValues.indexOf(original) === -1;
                         });
                         if (CSO.currentAction.slots[slotToModify].value.length === 0){
-                            CSO.currentAction.slots[slotToModify] = ''
+                            CSO.currentAction.slots[slotToModify] = {
+                                keyword: actionSlot.keyword,
+                                value: '',
+                                original: '',
+                                remainingLife: actionSlot.remainingLife,
+                                promptCount: 0,
+                            }
                         }
-                        CSO.currentAction.slots[slotToModify].remainingLife = actionSlot.remainingLife;
+                        else {
+                            CSO.currentAction.slots[slotToModify].remainingLife = actionSlot.remainingLife;
+                        }
                     }
                     else {
                         if (keywordsRasaValues.indexOf(CSO.currentAction.slots[slotToModify].value) || keywordsOriginalValues.indexOf(CSO.currentAction.slots[slotToModify].original)){
-                            CSO.currentAction.slots[slotToModify] = '';
+                            CSO.currentAction.slots[slotToModify] = {
+                                keyword: actionSlot.keyword,
+                                value: '',
+                                original: '',
+                                remainingLife: actionSlot.remainingLife,
+                                promptCount: 0,
+                            };
                         }
                     }
                 }
