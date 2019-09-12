@@ -62,7 +62,7 @@ describe('Agent', () => {
         expect(response.result.status).to.be.equal(STATUS_READY);
     });
 
-    it('post /agent/agentId/converse - checks action response with keyword inside saying', async ({ context }) => {
+    it('post /agent/agentId/converse - Checks action response with keyword inside saying', async ({ context }) => {
 
         const { importedAgentId } = context;
         const server = await Server.deployment();
@@ -84,7 +84,7 @@ describe('Agent', () => {
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
     });
 
-    it('post /agent/agentId/converse - checks default fallback action response', async ({ context }) => {
+    it('post /agent/agentId/converse - Checks default fallback action response', async ({ context }) => {
 
         const { importedAgentId } = context;
         const server = await Server.deployment();
@@ -107,7 +107,7 @@ describe('Agent', () => {
         expect(response.result.responses[0].isFallback).to.be.equal(true);
     });
 
-    it('post /agent/agentId/converse - checks for required empty slot asking and modifier for filling it include the slot in the answer (Handlebars)', async ({ context }) => {
+    it('post /agent/agentId/converse - Checks for required empty slot asking a modifier for filling it include the slot in the answer (Handlebars)', async ({ context }) => {
 
         const { importedAgentId } = context;
         const server = await Server.deployment();
@@ -146,7 +146,66 @@ describe('Agent', () => {
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
     });
 
-    it('post /agent/agentId/converse - checks the remember slot functionality using the context API and a life of 4', async ({ context }) => {
+    it('post /agent/agentId/converse -  From previous a modifierKeyword1 is set, this one adds another', async ({ context }) => {
+
+        const server = await Server.deployment();
+        const { importedAgentId } = context;
+
+        var payload = {
+            sessionId,
+            text: "add modifierKeyword2",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("The slots: modifierKeyword1,modifierKeyword2");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+    });
+
+    it('post /agent/agentId/converse - From previous a modifierKeyword1 and modifierKeyword2 are set, this one unset them, and set it again to fullfill the action', async ({ context }) => {
+
+        const server = await Server.deployment();
+        const { importedAgentId } = context;
+
+        var payload = {
+            sessionId,
+            text: "unset modifierKeyword2",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("The slot is required");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+
+        payload = {
+            sessionId,
+            text: "use modifierKeyword1",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+    });
+
+    /*TODO REMOVE*/
+
+    it('post /agent/agentId/converse - Check the remember slot functionality using the context API and a life of 4', async ({ context }) => {
         const { importedAgentId } = context;
         const server = await Server.deployment();
         var payload = {
@@ -210,6 +269,108 @@ describe('Agent', () => {
         expect(response.result.responses).to.be.an.array();
         expect(response.result.responses.length).to.be.greaterThan(0);
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
+    });
+
+    it('post /agent/agentId/converse - Ask for regex required slot using modifier (9 digits regex)', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "This is a regexSlot",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("Enter regex match");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+
+        var payload = {
+            sessionId,
+            text: "987654321",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("The answer 987654321");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+    });
+
+    it('post /agent/agentId/converse - Ask for a webhook response from pokeapi', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "Get a webhook response",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("This is the answer pikachu");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+
+    });
+
+    it('post /agent/agentId/converse - Ask for a free text slot with a modifier', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "This is a freeTextSlot",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("Enter free text slot");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+
+        var payload = {
+            sessionId,
+            text: "random free text slot",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("The answer random free text slot");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+
     });
 
     after(async ({ context }) => {
