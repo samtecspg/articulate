@@ -35,6 +35,7 @@ describe('Agent', () => {
 
     before(async ({ context }) => {
 
+        console.log('Executing training-agent test, please wait... ');
         const server = await Server.deployment();
 
         await deleteRemainingAgent(server, importAgentConverse.agentName);
@@ -129,7 +130,7 @@ describe('Agent', () => {
 
         payload = {
             sessionId,
-            text: "modifierKeyword1",
+            text: "use modifierKeyword1",
             timezone: "UTC"
         };
         var response = await server.inject({
@@ -138,23 +139,11 @@ describe('Agent', () => {
             method: 'POST'
         });
 
-        console.log(response.result);
-
         expect(response.statusCode).to.equal(200);
         expect(response.result.textResponse).to.be.equal("The slots: modifierKeyword1");
         expect(response.result.responses).to.be.an.array();
         expect(response.result.responses.length).to.be.greaterThan(0);
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
-    });
-
-    after(async ({ context }) => {
-
-        const { importedAgentId } = context;
-        const server = await Server.deployment();
-        await server.inject({
-            url: `/${ROUTE_AGENT}/${importedAgentId}`,
-            method: 'DELETE'
-        });
     });
 
     it('post /agent/agentId/converse - checks the remember slot functionality using the context API and a life of 4', async ({ context }) => {
@@ -199,5 +188,37 @@ describe('Agent', () => {
                 method: 'POST'
             });
         }
+    });
+
+    it('post /agent/agentId/converse - Check for list slots and use a chained action, also, use handlebar helper', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "This is listKeyword1, listKeyword2 and listKeyword3",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("The list: listkeyword1, listkeyword2, and listkeyword3 Chained action response");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+    });
+
+    after(async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}`,
+            method: 'DELETE'
+        });
     });
 });
