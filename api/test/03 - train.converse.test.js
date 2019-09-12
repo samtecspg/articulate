@@ -169,7 +169,7 @@ describe('Agent', () => {
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
     });
 
-    it('post /agent/agentId/converse - From previous a modifierKeyword1 and modifierKeyword2 are set, this one unset them, and set it again to fullfill the action', async ({ context }) => {
+    it('post /agent/agentId/converse - From previous the slot is still required, this one fill it and remove', async ({ context }) => {
 
         const server = await Server.deployment();
         const { importedAgentId } = context;
@@ -203,7 +203,40 @@ describe('Agent', () => {
         });
     });
 
-    /*TODO REMOVE*/
+
+    it('post /agent/agentId/converse - From previous a modifierKeyword1 is set, this one remove it and set it again to fullfill the action', async ({ context }) => {
+
+        const server = await Server.deployment();
+        const { importedAgentId } = context;
+
+        var payload = {
+            sessionId,
+            text: "remove modifierKeyword1",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("The slot is required");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+
+        payload = {
+            sessionId,
+            text: "use modifierKeyword1",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+    });
 
     it('post /agent/agentId/converse - Check the remember slot functionality using the context API and a life of 4', async ({ context }) => {
         const { importedAgentId } = context;
