@@ -32,24 +32,46 @@ let postedAgentCategoryId = null;
 let postedCategorySayingId = null;
 let postedAgentKeywordId = null;
 
+const deleteRemainingPostedAndImportedAgents = async (server) => {
+    await deleteRemainingAgent(server, postAgent.agentName);
+    await deleteRemainingAgent(server, importAgent.agentName);
+}
+
+const deleteRemainingAgent = async (server, agentName) => {
+    var response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${agentName}`);
+    var id = '';
+    if (response.result.id) {
+        var id = Number(response.result.id)
+        response = await server.inject({
+            url: `/${ROUTE_AGENT}/${id}`,
+            method: 'DELETE'
+        });
+    }
+}
+
+const loadImportAgent = async (server) => {
+    await server.inject({
+        url: `/${ROUTE_AGENT}/import`,
+        payload: importAgent,
+        method: 'POST'
+    });
+    return await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgent.agentName}`);
+}
+
+var server = null;
+
 describe('Agent', () => {
 
     before(async ({ context }) => {
-
-        const server = await Server.deployment();
-        await server.inject({ 
-            url: `/${ROUTE_AGENT}/import`,
-            payload: importAgent,
-            method: 'POST'
-        });
-        const response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgent.agentName}`);
-        context.importedAgentId = response.result.id;
+        server = await Server.deployment();
+        await deleteRemainingPostedAndImportedAgents(server);
+        var importAgentResponse = await loadImportAgent(server);
+        context.importedAgentId = importAgentResponse.result.id;
     });
 
-    it('post /agent', async () => {
+    it('post /agent', async ({ context }) => {
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}`,
             payload: postAgent,
             method: 'POST'
@@ -61,9 +83,8 @@ describe('Agent', () => {
         expect(response.result.status).to.be.equal(STATUS_READY);
     });
 
-    it('get /agent', async () => {
+    it('get /agent', async ({ context }) => {
 
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}`);
 
         expect(response.statusCode).to.equal(200);
@@ -75,17 +96,16 @@ describe('Agent', () => {
     it('get /agent/agentId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}`);
 
         expect(response.statusCode).to.equal(200);
         expect(response.result.agentName).to.be.equal(importAgent.agentName);
     });
 
+
     it('delete /agent/agentId', async () => {
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${postedAgentId}`,
             method: 'DELETE'
         });
@@ -94,15 +114,14 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
-        const server = await Server.deployment();
 
         const payload = {
             description: 'This agent was updated'
         };
 
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}`,
             payload,
             method: 'PUT'
@@ -115,8 +134,7 @@ describe('Agent', () => {
     it('post /agent/agentId/action', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}`,
             payload: postAction,
             method: 'POST'
@@ -130,7 +148,6 @@ describe('Agent', () => {
     it('get /agent/agentId/action', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}`);
 
         expect(response.statusCode).to.equal(200);
@@ -142,7 +159,6 @@ describe('Agent', () => {
     it('get /agent/agentId/action/actionId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}`);
 
         expect(response.statusCode).to.equal(200);
@@ -150,7 +166,7 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId/action/actionId', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
         const server = await Server.deployment();
 
@@ -158,7 +174,7 @@ describe('Agent', () => {
             actionName: 'updatedActionName'
         };
 
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}`,
             payload,
             method: 'PUT'
@@ -169,15 +185,14 @@ describe('Agent', () => {
     });
 
     it('post /agent/agentId/action/actionId/postFormat', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
             postFormatPayload: '{"textResponse" : "{{ textResponse }}", "docId" : "{{ docId }}"}'
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_POST_FORMAT}`,
             payload,
             method: 'POST'
@@ -189,7 +204,6 @@ describe('Agent', () => {
     it('get /agent/agentId/action/actionId/postFormat', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_POST_FORMAT}`);
 
         expect(response.statusCode).to.equal(200);
@@ -197,15 +211,14 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId/action/actionId/postFormat', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
             postFormatPayload: 'updated payload'
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_POST_FORMAT}`,
             payload,
             method: 'PUT'
@@ -217,8 +230,7 @@ describe('Agent', () => {
     it('delete /agent/agentId/action/actionId/postFormat', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_POST_FORMAT}`,
             method: 'DELETE'
         });
@@ -226,11 +238,13 @@ describe('Agent', () => {
         expect(response.statusCode).to.equal(200);
     });
 
+
     it('post /agent/agentId/action/actionId/webhook', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
+            webhookKey: "Key",
             webhookUrl: 'string',
             webhookVerb: 'GET',
             webhookPayloadType: 'None',
@@ -245,8 +259,7 @@ describe('Agent', () => {
             webhookPassword: 'string'
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_WEBHOOK}`,
             payload,
             method: 'POST'
@@ -258,23 +271,22 @@ describe('Agent', () => {
     it('get /agent/agentId/action/actionId/webhook', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_WEBHOOK}`);
 
         expect(response.statusCode).to.equal(200);
         expect(response.result.webhookUrl).to.be.an.string();
     });
 
+
     it('put /agent/agentId/action/actionId/webhook', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
             webhookUrl: 'updated payload'
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_WEBHOOK}`,
             payload,
             method: 'PUT'
@@ -286,8 +298,7 @@ describe('Agent', () => {
     it('delete /agent/agentId/action/actionId/webhook', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}/${ROUTE_WEBHOOK}`,
             method: 'DELETE'
         });
@@ -298,8 +309,7 @@ describe('Agent', () => {
     it('delete /agent/agentId/action/actionId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_ACTION}/${postedAgentActionId}`,
             method: 'DELETE'
         });
@@ -310,8 +320,7 @@ describe('Agent', () => {
     it('post /agent/agentId/category', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}`,
             payload: postCategory,
             method: 'POST'
@@ -325,7 +334,6 @@ describe('Agent', () => {
     it('get /agent/agentId/category', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}`);
 
         expect(response.statusCode).to.equal(200);
@@ -334,10 +342,10 @@ describe('Agent', () => {
         expect(response.result.totalCount).to.be.greaterThan(0);
     });
 
+
     it('get /agent/agentId/category/categoryId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}`);
 
         expect(response.statusCode).to.equal(200);
@@ -345,15 +353,14 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId/category/categoryId', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
-        const server = await Server.deployment();
 
         const payload = {
             categoryName: 'updatedCategoryName'
         };
 
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}`,
             payload,
             method: 'PUT'
@@ -364,7 +371,7 @@ describe('Agent', () => {
     });
 
     it('post /agent/agentId/category/categoryId/saying', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
@@ -373,8 +380,7 @@ describe('Agent', () => {
             actions: []
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}/${ROUTE_SAYING}`,
             payload,
             method: 'POST'
@@ -387,7 +393,6 @@ describe('Agent', () => {
     it('get /agent/agentId/category/categoryId/saying', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}/${ROUTE_SAYING}`);
 
         expect(response.statusCode).to.equal(200);
@@ -399,7 +404,6 @@ describe('Agent', () => {
     it('get /agent/agentId/category/categoryId/saying/sayingId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}/${ROUTE_SAYING}/${postedCategorySayingId}`);
 
         expect(response.statusCode).to.equal(200);
@@ -407,9 +411,8 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId/category/categoryId/saying/sayingId', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
-        const server = await Server.deployment();
 
         const payload = {
             userSays: 'Change of text',
@@ -417,7 +420,7 @@ describe('Agent', () => {
             actions: []
         };
 
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}/${ROUTE_SAYING}/${postedCategorySayingId}`,
             payload,
             method: 'PUT'
@@ -430,8 +433,7 @@ describe('Agent', () => {
     it('delete /agent/agentId/category/categoryId/saying/sayingId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}/${ROUTE_SAYING}/${postedCategorySayingId}`,
             method: 'DELETE'
         });
@@ -442,8 +444,7 @@ describe('Agent', () => {
     it('delete /agent/agentId/category/categoryId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CATEGORY}/${postedAgentCategoryId}`,
             method: 'DELETE'
         });
@@ -454,13 +455,13 @@ describe('Agent', () => {
     it('get /agent/agentId/export', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/export`);
 
         expect(response.statusCode).to.equal(200);
         expect(response.result).to.be.an.object();
         expect(response.result.actionName).to.be.equal(importAgent.actionName);
     });
+
 
     it('get /agent/agentId/identifyKeywords', async ({ context }) => {
 
@@ -495,11 +496,11 @@ describe('Agent', () => {
         });
     });
 
+
     it('post /agent/agentId/keyword', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_KEYWORD}`,
             payload: postKeyword,
             method: 'POST'
@@ -513,7 +514,6 @@ describe('Agent', () => {
     it('get /agent/agentId/keyword', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_KEYWORD}`);
 
         expect(response.statusCode).to.equal(200);
@@ -525,7 +525,6 @@ describe('Agent', () => {
     it('get /agent/agentId/keyword/keywordId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_KEYWORD}/${postedAgentKeywordId}`);
 
         expect(response.statusCode).to.equal(200);
@@ -533,15 +532,14 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId/keyword/keywordId', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
-        const server = await Server.deployment();
 
         const payload = {
             keywordName: 'updatedKeywordName'
         };
 
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_KEYWORD}/${postedAgentKeywordId}`,
             payload,
             method: 'PUT'
@@ -554,8 +552,7 @@ describe('Agent', () => {
     it('delete /agent/agentId/keyword/keywordId', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_KEYWORD}/${postedAgentKeywordId}`,
             method: 'DELETE'
         });
@@ -563,16 +560,16 @@ describe('Agent', () => {
         expect(response.statusCode).to.equal(200);
     });
 
+
     it('post /agent/agentId/postFormat', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
             postFormatPayload: '{"textResponse" : "{{ textResponse }}", "docId" : "{{ docId }}"}'
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_POST_FORMAT}`,
             payload,
             method: 'POST'
@@ -584,7 +581,6 @@ describe('Agent', () => {
     it('get /agent/agentId/postFormat', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_POST_FORMAT}`);
 
         expect(response.statusCode).to.equal(200);
@@ -592,15 +588,14 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId/postFormat', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
             postFormatPayload: 'updated payload'
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_POST_FORMAT}`,
             payload,
             method: 'PUT'
@@ -609,11 +604,11 @@ describe('Agent', () => {
         expect(response.statusCode).to.equal(200);
     });
 
+
     it('delete /agent/agentId/postFormat', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_POST_FORMAT}`,
             method: 'DELETE'
         });
@@ -624,7 +619,6 @@ describe('Agent', () => {
     it('get /agent/agentId/saying', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_SAYING}`);
 
         expect(response.statusCode).to.equal(200);
@@ -636,12 +630,11 @@ describe('Agent', () => {
     it('get /agent/agentId/settings', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_SETTINGS}`);
 
         expect(response.statusCode).to.equal(200);
         expect(response.result).to.be.an.object();
-        
+
         const agentSettings = Object.keys(response.result);
         CONFIG_SETTINGS_DEFAULT_AGENT.forEach((setting) => {
             expect(agentSettings.indexOf(setting)).to.be.not.equal(-1);
@@ -651,7 +644,6 @@ describe('Agent', () => {
     it('put /agent/agentId/settings', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const currentAgentSettings = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_SETTINGS}`);
         const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_SETTINGS}`,
@@ -661,7 +653,7 @@ describe('Agent', () => {
 
         expect(response.statusCode).to.equal(200);
         expect(response.result).to.be.an.object();
-        
+
         const agentSettings = Object.keys(response.result.settings);
         CONFIG_SETTINGS_DEFAULT_AGENT.forEach((setting) => {
             expect(agentSettings.indexOf(setting)).to.be.not.equal(-1);
@@ -671,7 +663,6 @@ describe('Agent', () => {
     it('get /agent/agentId/settings/name', async ({ context }) => {
 
         const { importedAgentId } = context;
-        const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_SETTINGS}/${CONFIG_SETTINGS_RASA_URL}`);
 
         expect(response.statusCode).to.equal(200);
@@ -679,10 +670,11 @@ describe('Agent', () => {
     });
 
     it('post /agent/agentId/webhook', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
+            webhookKey: 'string',
             webhookUrl: 'string',
             webhookVerb: 'GET',
             webhookPayloadType: 'None',
@@ -697,8 +689,7 @@ describe('Agent', () => {
             webhookPassword: 'string'
         }
 
-        const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_WEBHOOK}`,
             payload,
             method: 'POST'
@@ -706,6 +697,7 @@ describe('Agent', () => {
 
         expect(response.statusCode).to.equal(200);
     });
+
 
     it('get /agent/agentId/webhook', async ({ context }) => {
 
@@ -718,7 +710,7 @@ describe('Agent', () => {
     });
 
     it('put /agent/agentId/webhook', async ({ context }) => {
-        
+
         const { importedAgentId } = context;
 
         const payload = {
@@ -726,7 +718,7 @@ describe('Agent', () => {
         }
 
         const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_WEBHOOK}`,
             payload,
             method: 'PUT'
@@ -739,7 +731,7 @@ describe('Agent', () => {
 
         const { importedAgentId } = context;
         const server = await Server.deployment();
-        const response = await server.inject({ 
+        const response = await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_WEBHOOK}`,
             method: 'DELETE'
         });
@@ -747,24 +739,25 @@ describe('Agent', () => {
         expect(response.statusCode).to.equal(200);
     });
 
+
     it('post /agent/import', async ({ context }) => {
 
         const server = await Server.deployment();
 
         const importAgentCopy = _.clone(importAgent);
         importAgentCopy.agentName = '57f0a070-bcff-11e8-bd42-f7ad09e07ef5-copy'; //For uniqueness
-        await server.inject({ 
+        await server.inject({
             url: `/${ROUTE_AGENT}/import`,
             payload: importAgentCopy,
             method: 'POST'
         });
         const response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgentCopy.agentName}`);
-        
+
         expect(response.statusCode).to.equal(200);
         expect(response.result.agentName).to.be.equal(importAgentCopy.agentName);
         expect(response.result.status).to.be.equal(STATUS_OUT_OF_DATE);
-        
-        await server.inject({ 
+
+        await server.inject({
             url: `/${ROUTE_AGENT}/${response.result.id}`,
             method: 'DELETE'
         });
@@ -774,7 +767,7 @@ describe('Agent', () => {
 
         const server = await Server.deployment();
         const response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgent.agentName}`);
-        
+
         expect(response.statusCode).to.equal(200);
         expect(response.result.agentName).to.be.equal(importAgent.agentName);
     });
@@ -783,10 +776,12 @@ describe('Agent', () => {
 
         const { importedAgentId } = context;
         const server = await Server.deployment();
-        await server.inject({ 
+        await server.inject({
             url: `/${ROUTE_AGENT}/${importedAgentId}`,
             method: 'DELETE'
         });
     });
 
 });
+
+
