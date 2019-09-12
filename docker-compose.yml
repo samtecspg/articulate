@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3.7'
 
 services:
   nginx:
@@ -36,3 +36,18 @@ services:
       - ${ES_CONFIG:-./local-storage/elasticsearch/config/elasticsearch.yml}:/usr/share/elasticsearch/config/elasticsearch.yml
       - ${ES_DATA:-./local-storage/elasticsearch/data}:/usr/share/elasticsearch/data
       - ${ES_DATA:-./local-storage/elasticsearch/docker-healthcheck.sh}:/usr/share/docker-healthcheck.sh
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:${ELASTIC_VERSION:-7.1.1}
+    user: root
+    volumes:
+      - ./local-storage/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./local-storage/filebeat/data:/usr/share/filebeat/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      # This is needed for filebeat to load container log path as specified in filebeat.yml
+      - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
+      # This is needed for filebeat to load logs for system and auth modules
+      - /var/log/:/var/log/:ro
+    environment:
+      - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST:-elasticsearch}
+    command: ["--strict.perms=false"]
+    
