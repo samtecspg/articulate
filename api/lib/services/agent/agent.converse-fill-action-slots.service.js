@@ -115,7 +115,9 @@ module.exports = async function ({ actionData, CSO, recognizedModifier }) {
                         if (CSO.currentAction.slots[slotToModify].value.length === 0){
                             CSO.currentAction.slots[slotToModify] = ''
                         }
-                        CSO.currentAction.slots[slotToModify].remainingLife = actionSlot.remainingLife;
+                        else {
+                            CSO.currentAction.slots[slotToModify].remainingLife = actionSlot.remainingLife;
+                        }
                     }
                     else {
                         if (keywordsRasaValues.indexOf(CSO.currentAction.slots[slotToModify].value) || keywordsOriginalValues.indexOf(CSO.currentAction.slots[slotToModify].original)){
