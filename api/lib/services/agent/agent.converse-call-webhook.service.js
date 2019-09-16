@@ -2,18 +2,19 @@ import Axios from 'axios';
 import QueryString from 'querystring';
 import Moment from 'moment';
 
-const getHeaders = (headers, contentType) => {
+const getAndCompileHeaders = (headers, contentType, handlebars, templateContext) => {
 
     const result = {};
     let userSpecifiedContentType = false;
     headers.forEach((header) => {
 
-        result[header.key] = header.value;
-        if (header.key.toUpperCase() === 'Content-Type'.toUpperCase()){
+        header.key = handlebars.compile(header.key)(templateContext);
+        result[header.key] = handlebars.compile(header.value)(templateContext);
+        if (header.key.toUpperCase() === 'Content-Type'.toUpperCase()) {
             userSpecifiedContentType = true;
         }
     });
-    if (!userSpecifiedContentType && contentType){
+    if (!userSpecifiedContentType && contentType) {
         result['Content-Type'] = contentType;
     }
     return result;
@@ -58,7 +59,7 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
             method,
             url: compiledUrl,
             data,
-            headers: getHeaders(headers, contentType),
+            headers: getAndCompileHeaders(headers, contentType, handlebars, templateContext),
             responseType: payloadType === 'XML' ? 'text' : 'json',
             auth: username ? {
                 username: compiledUsername,
@@ -76,7 +77,7 @@ module.exports = async function ({ url, templatePayload, payloadType, method, te
     catch (error) {
         endTime = new Moment();
         const elapsed_time_ms = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
-        if (error.response && error.response.data){
+        if (error.response && error.response.data) {
             return {
                 error: error.response.data,
                 elapsed_time_ms,

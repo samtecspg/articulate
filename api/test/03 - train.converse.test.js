@@ -107,7 +107,7 @@ describe('Agent', () => {
         expect(response.result.responses[0].isFallback).to.be.equal(true);
     });
 
-    it('post /agent/agentId/converse - Checks for required empty slot asking a modifier for filling it include the slot in the answer (Handlebars)', async ({ context }) => {
+    it('post /agent/agentId/converse - Checks for required empty slot asking a modifier for SET it include the slot in the answer (Handlebars)', async ({ context }) => {
 
         const { importedAgentId } = context;
         const server = await Server.deployment();
@@ -146,7 +146,7 @@ describe('Agent', () => {
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
     });
 
-    it('post /agent/agentId/converse -  From previous a modifierKeyword1 is set, this one adds another', async ({ context }) => {
+    it('post /agent/agentId/converse -  From previous a modifierKeyword1 is set, this one ADD another (turning it into a list)', async ({ context }) => {
 
         const server = await Server.deployment();
         const { importedAgentId } = context;
@@ -169,7 +169,7 @@ describe('Agent', () => {
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
     });
 
-    it('post /agent/agentId/converse - From previous the slot is still required, this one fill it and remove', async ({ context }) => {
+    it('post /agent/agentId/converse - From previous the slots are full, this one UNSET them and fill again to fullfill the action', async ({ context }) => {
 
         const server = await Server.deployment();
         const { importedAgentId } = context;
@@ -204,7 +204,7 @@ describe('Agent', () => {
     });
 
 
-    it('post /agent/agentId/converse - From previous a modifierKeyword1 is set, this one remove it and set it again to fullfill the action', async ({ context }) => {
+    it('post /agent/agentId/converse - From previous a modifierKeyword1 is set, this one REMOVE it and set it again to fullfill the action', async ({ context }) => {
 
         const server = await Server.deployment();
         const { importedAgentId } = context;
