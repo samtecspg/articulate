@@ -29,7 +29,7 @@ const styles = {
     borderRight: 'none',
   },
   searchValueContainer: {
-    minWidth: '288px',
+    minWidth: '335px',
     borderBottom: '1px solid #4e4e4e',
     position: 'relative',
     bottom: '8px',
@@ -40,7 +40,7 @@ const styles = {
       textDecoration: 'none',
       backgroundColor: '#fff',
     },
-    minWidth: '288px',
+    minWidth: '335px',
     borderBottom: '1px solid #4e4e4e',
     position: 'relative',
     bottom: '8px',
@@ -49,7 +49,7 @@ const styles = {
   },
   searchValueFieldHovered: {
     backgroundColor: '#d5d5d5',
-    width: '200px',
+    width: '70%',
     paddingLeft: '5px',
     fontSize: '14px',
     margin: '0px 10px',
@@ -59,7 +59,7 @@ const styles = {
     '&:hover': {
       backgroundColor: '#d5d5d5'
     },
-    width: '200px',
+    width: '70%',
     paddingLeft: '5px',
     fontSize: '14px',
     margin: '0px 10px',
@@ -173,8 +173,8 @@ export class FilterSelect extends React.Component {
         >
           <Grid
             container
-            justify={this.props.hideAddButton ? 'flex-start' : 'flex-end'}
-            style={this.state.filterInput ? { position: 'absolute' } : {}}
+            justify={this.props.hideAddButton ? 'space-around' : 'space-around'}
+            style={this.state.filterInput ? { position: 'absolute', flexWrap: 'initial' } : {}}
           >
             <img 
               onMouseEnter={() => {
