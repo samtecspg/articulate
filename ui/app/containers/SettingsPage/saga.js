@@ -7,6 +7,8 @@ import {
   loadAccessPolicyGroupsSuccess,
   loadSettingsError,
   loadSettingsSuccess,
+  removeAccessPolicyGroupError,
+  removeAccessPolicyGroupSuccess,
   updateAccessPolicyGroupError,
   updateAccessPolicyGroupSuccess,
   updateSettingError,
@@ -16,8 +18,6 @@ import {
   addAccessPolicyGroup,
   addAccessPolicyGroupError,
   addAccessPolicyGroupSuccess,
-  removeAccessPolicyGroupSuccess,
-  removeAccessPolicyGroupError,
 } from '../App/actions';
 import { LOAD_ACCESS_CONTROL, LOAD_SETTINGS, REMOVE_ACCESS_CONTROL, UPDATE_ACCESS_CONTROL, UPDATE_SETTING, UPDATE_SETTINGS } from '../App/constants';
 import { makeSelectSettings } from '../App/selectors';

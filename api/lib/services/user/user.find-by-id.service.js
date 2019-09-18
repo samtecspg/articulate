@@ -24,7 +24,7 @@ module.exports = async function ({ id, filterSensitiveData = false, includeAcces
             const policies = await this.server.app[P_GBAC].getSimplifiedPolicy({ groups: properties.groups });
             return { ...properties, ...{ simplifiedGroupPolicies: policies } };
         }
-        return { properties };
+        return properties;
 
     }
     catch (error) {

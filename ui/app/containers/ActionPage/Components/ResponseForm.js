@@ -1,8 +1,8 @@
 import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
-import PropTypes from 'prop-types';
 import {
   Grid,
   Typography,
@@ -15,16 +15,13 @@ import {
   TableCell,
   InputAdornment,
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import DeleteFooter from '../../../components/DeleteFooter';
 import ResponseSettings from '../../../components/ResponseSettings';
-import SingleHighlightedSaying from './SingleHighlightedSaying';
-import ResponseRow from './ResponseRow';
-
-import messages from '../messages';
-
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
+import messages from '../messages';
+import ResponseRow from './ResponseRow';
+import SingleHighlightedSaying from './SingleHighlightedSaying';
 import trashIcon from '../../../images/trash-icon.svg';
 
 const styles = {
@@ -184,16 +181,8 @@ class ResponseForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.responseFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -214,10 +203,7 @@ class ResponseForm extends React.Component {
           {this.props.saying.userSays ? (
             <Grid className={classes.formDescriptionContainer} container>
               <Typography className={classes.formDescription}>
-                <img
-                  className={classes.singleQuotesIcon}
-                  src={singleQuotesIcon}
-                />
+                <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
                 <SingleHighlightedSaying
                   isReadOnly={isReadOnly}
                   agentKeywords={this.props.agentKeywords}
@@ -232,22 +218,14 @@ class ResponseForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid
-              className={classes.formSubContainer}
-              id="formContainer"
-              container
-              item
-              xs={12}
-            >
+            <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
                     id="newResponse"
                     value={this.props.newResponse}
                     label={intl.formatMessage(messages.responseTextField)}
-                    placeholder={intl.formatMessage(
-                      messages.responseTextFieldPlaceholder,
-                    )}
+                    placeholder={intl.formatMessage(messages.responseTextFieldPlaceholder)}
                     onKeyPress={ev => {
                       if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
                         ev.preventDefault();
@@ -303,21 +281,13 @@ class ResponseForm extends React.Component {
                                 responseIndex={responseIndex}
                                 action={action}
                                 agentActions={this.props.agentActions}
-                                onChainActionToResponse={
-                                  this.props.onChainActionToResponse
-                                }
-                                onUnchainActionFromResponse={
-                                  this.props.onUnchainActionFromResponse
-                                }
-                                onEditActionResponse={
-                                  this.props.onEditActionResponse
-                                }
+                                onChainActionToResponse={this.props.onChainActionToResponse}
+                                onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
+                                onEditActionResponse={this.props.onEditActionResponse}
                                 onCopyResponse={this.props.onCopyResponse}
                                 onDeleteResponse={this.props.onDeleteResponse}
                                 onSearchActions={this.props.onSearchActions}
-                                agentFilteredActions={
-                                  this.props.agentFilteredActions
-                                }
+                                agentFilteredActions={this.props.agentFilteredActions}
                                 onGoToUrl={this.props.onGoToUrl}
                               />
                             </TableCell>
@@ -397,10 +367,7 @@ class ResponseForm extends React.Component {
                   ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography
-                    className={classes.postFormatLabel}
-                    variant="caption"
-                  >
+                  <Typography className={classes.postFormatLabel} variant="caption">
                     <FormattedMessage {...messages.postFormatTitle} />
                   </Typography>
                   <ResponseSettings
@@ -409,9 +376,7 @@ class ResponseForm extends React.Component {
                     usePostFormat={action.usePostFormat}
                     onChangeUsePostFormatData={this.props.onChangeActionData}
                     onChangePostFormatData={this.props.onChangePostFormatData}
-                    responseSettingDescription={
-                      messages.responseFormDescription
-                    }
+                    responseSettingDescription={messages.responseFormDescription}
                     errorState={this.props.errorState}
                   />
                 </Grid>

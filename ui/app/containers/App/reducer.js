@@ -58,6 +58,9 @@ import {
   CHANGE_SETTINGS_DATA,
   CHANGE_SLOT_DATA,
   CHANGE_SLOT_NAME,
+  CHANGE_USER_DATA,
+  CHANGE_SLOT_DATA,
+  CHANGE_SLOT_NAME,
   CHANGE_WEBHOOK_DATA,
   CHANGE_WEBHOOK_PAYLOAD_TYPE,
   CHECK_API,
@@ -139,6 +142,9 @@ import {
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_AGENT_ERROR,
+  LOAD_AGENT_SESSIONS_ERROR,
+  LOAD_AGENT_SESSIONS_SUCCESS,
   LOAD_LOGS,
   LOAD_LOGS_ERROR,
   LOAD_LOGS_SUCCESS,
@@ -196,6 +202,19 @@ import {
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
   LOAD_SETTINGS_SUCCESS,
+  LOAD_STARRED_SAYING,
+  LOAD_STARRED_SAYING_ERROR,
+  LOAD_STARRED_SAYING_SUCCESS,
+  LOAD_STARRED_SAYINGS,
+  LOAD_STARRED_SAYINGS_ERROR,
+  LOAD_STARRED_SAYINGS_SUCCESS,
+  LOAD_USER,
+  LOAD_USER_ERROR,
+  LOAD_USER_SUCCESS,
+  LOAD_USERS,
+  LOAD_USERS_ERROR,
+  LOAD_USERS_SUCCESS,
+  LOGIN_USER_ERROR,
   LOAD_STARRED_SAYING,
   LOAD_STARRED_SAYING_ERROR,
   LOAD_STARRED_SAYING_SUCCESS,
@@ -261,6 +280,19 @@ import {
   UPDATE_SAYING,
   UPDATE_SAYING_ERROR,
   UPDATE_SAYING_SUCCESS,
+  UPDATE_SETTING,
+  UPDATE_SETTING_ERROR,
+  UPDATE_SETTING_SUCCESS,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
+  UPDATE_USER,
+  UPDATE_USER_ERROR,
+  UPDATE_USER_SUCCESS,
+  UPDATE_NEW_RESPONSE,
+  UPDATE_SAYING,
+  UPDATE_SAYING_ERROR,
+  UPDATE_SAYING_SUCCESS,
   UPDATE_SETTINGS_TOUCHED,
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
@@ -277,6 +309,7 @@ import {
   ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
 } from './constants';
+
 const happyEmojies = [
   '😀',
   '😁',
@@ -574,6 +607,8 @@ const initialState = Immutable({
   users: [],
   totalUsers: null,
   accessPolicyGroups: [],
+  user: null,
+  userDataTouched: false,
 });
 
 function appReducer(state = initialState, action) {
@@ -2747,18 +2782,6 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', action.error);
-    case LOAD_CURRENT_USER:
-      return state
-        .set('loadingCurrentUser', false);
-    case LOAD_CURRENT_USER_SUCCESS:
-      return state
-        .set('currentUser', action.user)
-        .set('loadingCurrentUser', true);
-    case LOAD_CURRENT_USER_ERROR:
-      return state
-        .set('currentUser', null)
-        .set('loadingCurrentUser', true)
-        .set('error', false);
     /* Access Policy Group */
     case LOAD_ACCESS_CONTROL:
       return state.set('loading', true).set('error', false);
@@ -2810,6 +2833,41 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false);
+    case LOAD_USER:
+      return state
+        .set('loading', true)
+        .set('user', null)
+        .set('error', false);
+    case LOAD_USER_ERROR:
+      return state
+        .set('loading', false)
+        .set('user', null)
+        .set('error', action.error);
+    case LOAD_USER_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('success', true)
+        .set('user', action.user)
+        .set('error', false);
+    case CHANGE_USER_DATA:
+      return state
+        .setIn(['user', action.field], action.value)
+        .set('userDataTouched', true);
+    case UPDATE_USER:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case UPDATE_USER_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case UPDATE_USER_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('success', true)
+        .set('user', action.user)
+        .set('error', false)
+        .set('userDataTouched', false);
     default:
       return state;
   }

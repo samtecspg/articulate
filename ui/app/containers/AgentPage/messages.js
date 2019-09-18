@@ -252,7 +252,7 @@ export default defineMessages({
     defaultMessage:
       'If you enable this option, your agent will automatically generate suggestions for missing required slots.',
   },
-  slotsQuickRepliesLabel : {
+  slotsQuickRepliesLabel: {
     id:
       'app.containers.AgentPage.component.AgentSettingsForm.slotsQuickRepliesLabel',
     defaultMessage: 'Max quick replies generated for slots',
@@ -265,15 +265,15 @@ export default defineMessages({
   actionsQuickRepliesHelp: {
     id:
       'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
-      defaultMessage:
+    defaultMessage:
       'If you enable this option, your agent will automatically generate suggestions after sending the response for an action using current context',
   },
-  actionsQuickRepliesLabel : {
+  actionsQuickRepliesLabel: {
     id:
       'app.containers.AgentPage.component.AgentSettingsForm.actionsQuickRepliesLabel',
     defaultMessage: 'Max quick replies generated for actions',
   },
-  automaticQuickRepliesSettingsDescription : {
+  automaticQuickRepliesSettingsDescription: {
     id:
       'app.containers.AgentPage.component.AgentSettingsForm.automaticQuickRepliesSettingsDescription',
     defaultMessage:

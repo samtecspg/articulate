@@ -13,8 +13,6 @@ import {
   ROUTE_WEBHOOK,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
-  LOAD_CURRENT_USER,
-  LOGOUT_USER,
 import { getSettings, putSetting } from '../SettingsPage/saga';
 import {
   loadAgentError,
@@ -39,6 +37,7 @@ import {
   LOAD_CURRENT_USER,
   LOAD_SERVER_INFO,
   LOAD_SETTINGS,
+  LOGOUT_USER,
   RESET_SESSION,
   SEND_MESSAGE,
   TOGGLE_CONVERSATION_BAR,
@@ -201,6 +200,7 @@ export default function* rootSaga() {
   yield takeLatest(TRAIN_AGENT, postTrainAgent);
   yield takeLatest(UPDATE_SETTING, putSetting);
   yield takeLatest(TOGGLE_CONVERSATION_BAR, putConversationBarWidth);
+  yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
   yield takeLatest(LOGOUT_USER, logoutUser);
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
 }

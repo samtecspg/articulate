@@ -199,13 +199,13 @@ const makeSelectDocumentsStats = () =>
     selectGlobal,
     globalState => {
       return {
-        'documentsAnalyticsRequestCount': globalState.documentsAnalyticsRequestCount,
-        'documentsAnalyticsSessionsCount': globalState.documentsAnalyticsSessionsCount,
-        'documentsAnalyticsFallbacksCount': globalState.documentsAnalyticsFallbacksCount,
-        'documentsAnalyticsTopActions': globalState.documentsAnalyticsTopActions,
-        'documentsAnalyticsRequestsOverTime': globalState.documentsAnalyticsRequestsOverTime
-      }
-    }
+        documentsAnalyticsRequestCount: globalState.documentsAnalyticsRequestCount,
+        documentsAnalyticsSessionsCount: globalState.documentsAnalyticsSessionsCount,
+        documentsAnalyticsFallbacksCount: globalState.documentsAnalyticsFallbacksCount,
+        documentsAnalyticsTopActions: globalState.documentsAnalyticsTopActions,
+        documentsAnalyticsRequestsOverTime: globalState.documentsAnalyticsRequestsOverTime,
+      };
+    },
   );
 
 const makeSelectTotalDocumentsAnalytics = () =>
@@ -474,14 +474,14 @@ const makeSelectLocale = () =>
 const makeSelectStarredSayings = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.starredSayings
-  )
+    globalState => globalState.starredSayings,
+  );
 
 const makeSelectStarredSaying = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.starredSaying
-  )
+    globalState => globalState.starredSaying,
+  );
 
 /* Users */
 const makeSelectUsers = () =>
@@ -512,18 +512,17 @@ const makeSelectAccessPolicyGroups = () =>
     globalState => globalState.accessPolicyGroups,
   );
 
-const makeSelectCurrentUser = () =>
+const makeSelectUser = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.currentUser,
+    globalState => globalState.user,
   );
-const makeSelectLoadingCurrentUser = () =>
+
+const makeSelectUserDataTouched = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.loadingCurrentUser,
+    globalState => globalState.userDataTouched,
   );
-
-
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -602,7 +601,12 @@ export {
   makeSelectSuccessKeywordExamplesUpdate,
   makeSelectAccessPolicyGroups,
   makeSelectLoadingKeywordExamplesUpdate,
+  makeSelectCurrentUser,
+  makeSelectLoadingCurrentUser,
+  makeSelectTotalUsers,
   makeSelectAccessPolicyGroups,
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
+  makeSelectUser,
+  makeSelectUserDataTouched,
 };

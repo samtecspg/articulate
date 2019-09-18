@@ -1,34 +1,23 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  Typography,
-  Button,
-  Modal,
-  TextField,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from '@material-ui/core';
+import { Button, FormControl, Grid, InputLabel, MenuItem, Modal, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import _ from 'lodash';
-import { PROXY_ROUTE_PREFIX } from '../../../../common/constants';
-
-import messages from '../messages';
-
-import playHelpIcon from '../../../images/play-help-icon.svg';
-import DeleteFooter from '../../../components/DeleteFooter';
-import actionsJSON from './actions.json';
-import ChannelCard from './ChannelCard';
-import gravatars from '../../../components/Gravatar';
-
-import brace from 'brace';
-import AceEditor from 'react-ace';
 
 import 'brace/mode/html';
 import 'brace/theme/terminal';
+import _ from 'lodash';
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import AceEditor from 'react-ace';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { PROXY_ROUTE_PREFIX } from '../../../../common/constants';
+import DeleteFooter from '../../../components/DeleteFooter';
+import gravatars from '../../../components/Gravatar';
+
+import playHelpIcon from '../../../images/play-help-icon.svg';
+
+import messages from '../messages';
+import actionsJSON from './actions.json';
+import ChannelCard from './ChannelCard';
 
 const styles = {
   headerContainer: {
@@ -79,8 +68,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -103,7 +91,7 @@ const styles = {
   },
   cardsLabel: {
     marginTop: '20px',
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   agentIcon: {
     marginRight: '5px',
@@ -273,14 +261,14 @@ class ConnectionForm extends React.Component {
                 </InputLabel>
                 <Grid container spacing={16} justify="space-between" item md={12} sm={12} xs={12}>
                   {Object.keys(channels).map((channel, index) => (
-                      <ChannelCard
-                        disabled={!connection.agent || !this.props.newConnection}
-                        selected={channel === connection.channel}
-                        channelKey={channel}
-                        key={`channel_${index}`}
-                        channel={channels[channel]}
-                        onClick={() => {
-                          if (connection.agent && this.props.newConnection) {
+                    <ChannelCard
+                      disabled={!connection.agent || !this.props.newConnection}
+                      selected={channel === connection.channel}
+                      channelKey={channel}
+                      key={`channel_${index}`}
+                      channel={channels[channel]}
+                      onClick={() => {
+                        if (connection.agent && this.props.newConnection) {
                           this.props.onChangeConnectionData('channel', channel);
                         }
                       }}

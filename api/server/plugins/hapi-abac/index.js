@@ -6,6 +6,7 @@ import Package from '../../../package.json';
 import {
     MODEL_AGENT,
     MODEL_USER_ACCOUNT,
+    P_GBAC,
     P_HAPI_ABAC,
     PARAM_AGENT_ID
 } from '../../../util/constants';
@@ -45,7 +46,6 @@ schemas.routeOption = [
 internals.policyHandler = (server, options) => {
 
     return async (request, h) => {
-
         const { redis } = server.app;
         const credentials = request.auth.credentials;
         const {
@@ -114,7 +114,7 @@ module.exports = {
 
         try {
             options = Hoek.applyToDefaults(defaults.options, options);
-            server.dependency('gbac', () => {
+            server.dependency(P_GBAC, () => {
 
                 server.ext('onPostAuth', internals.policyHandler(server, options));
             });

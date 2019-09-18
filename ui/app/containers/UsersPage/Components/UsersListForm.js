@@ -156,20 +156,11 @@ class UsersListForm extends React.Component {
                 <Table>
                   <TableBody>
                     {users.map((user, index) => (
-                      <TableRow key={`${user}_${index}`}>
+                      <TableRow key={`${user}_${index}`} onClick={() => {
+                        this.props.onGoToUrl(`/user/${user.id}`);
+                      }}>
                         <TableCell>
                           {`${user.name}${user.lastName ? ` ${user.lastName}` : ''} (${user.email})`}
-                        </TableCell>
-                        <TableCell className={classes.deleteCell}>
-                          <img
-                            onClick={() => {
-                              this.props.onDeleteUser(
-                                user.id,
-                              );
-                            }}
-                            className={classes.deleteIcon}
-                            src={trashIcon}
-                          />
                         </TableCell>
                       </TableRow>
                     ))}
@@ -280,7 +271,7 @@ class UsersListForm extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-            ) : 
+            ) :
               <Table>
                 <TableBody>
                   <TableRow>
@@ -310,6 +301,7 @@ UsersListForm.propTypes = {
   moveUsersPageBack: PropTypes.func,
   onDeleteUser: PropTypes.func,
   changeUsersPageSize: PropTypes.func,
+  onGoToUrl: PropTypes.func,
 };
 
 export default useShallowEqual(withStyles(styles)(UsersListForm));

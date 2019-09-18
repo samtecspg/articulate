@@ -79,6 +79,8 @@ class AgentValidate {
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     parameters: Joi.object(),
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
+                    accessPolicies: AgentSchema.accessPolicies
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
                     generateSlotsQuickResponses: AgentSchema.generateSlotsQuickResponses,
                     accessPolicies: AgentSchema.accessPolicies,
                     generateSlotsQuickResponsesMax: AgentSchema.generateSlotsQuickResponsesMax,

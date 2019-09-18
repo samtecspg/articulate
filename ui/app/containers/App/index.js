@@ -41,6 +41,7 @@ import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
 import UsersPage from '../UsersPage/Loadable';
+import UserPage from '../UserPage/Loadable';
 import { checkCookie } from '../../utils/cookies';
 import {
   checkAPI,
@@ -120,9 +121,7 @@ class App extends React.Component {
         };
         client.connect({
           delay: 1000,
-          auth: AUTH_ENABLED
-            ? { headers: { cookie: document.cookie } }
-            : undefined,
+        auth: AUTH_ENABLED ? { headers: { cookie: document.cookie } } : undefined,
         });
       }
     }
@@ -180,8 +179,13 @@ class App extends React.Component {
   }
 
   render() {
-    const { conversationBarOpen, chatButtonOpen, onToggleConversationBar, notifications, loadingCurrentUser } = this.props;
+    const {
+      conversationBarOpen,
+      chatButtonOpen,
+      onToggleConversationBar,
+      notifications,
       loadingCurrentUser
+    } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
     const disableHeader = this.props.location.pathname.indexOf('discovery') !== -1;
     if (!loadingCurrentUser) {
@@ -227,6 +231,7 @@ class App extends React.Component {
             <Redirect from="/agent/:id/actionDummy/:actionId" to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
             <Route exact path="/login" component={UserAuthPage} />
             <PrivateRoute exact path="/users" component={UsersPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/user/:id" component={UserPage} isAuthEnabled={AUTH_ENABLED} />
             <PrivateRoute exact path="/demo/:id" component={SharedChatPage} isAuthEnabled={AUTH_ENABLED} />
             <Route component={NotFoundPage} />
           </Switch>
@@ -257,7 +262,6 @@ App.propTypes = {
   onShareAgent: PropTypes.func,
   conversationBarOpen: PropTypes.bool,
   chatButtonOpen: PropTypes.bool,
-  loadingCurrentUser: PropTypes.bool,
 };
 
 export function mapDispatchToProps(dispatch) {

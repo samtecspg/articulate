@@ -135,24 +135,4 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.component.GeneralSettings.backButton',
     defaultMessage: 'Exit',
   },
-  groupPoliciesLabel: {
-    id: 'app.containers.SettingsPage.component.GeneralSettings.groupPoliciesLabel',
-    defaultMessage: 'Group Policies',
-  },
-  groupNameTextFieldPlaceholder: {
-    id: 'app.containers.SettingsPage.component.GeneralSettings.groupNameTextFieldPlaceholder',
-    defaultMessage: 'Group name',
-  },
-  groupNameTextField: {
-    id: 'app.containers.SettingsPage.component.GeneralSettings.groupNameTextField',
-    defaultMessage: 'Add new group:',
-  },
-  saveButton: {
-    id: 'app.containers.SettingsPage.saveButton',
-    defaultMessage: 'Save',
-  },
-  instanceName: {
-    id: 'app.containers.SettingsPage.deleteButton',
-    defaultMessage: 'group',
-  },
 });

@@ -1,4 +1,5 @@
 import {
+    ACL_ACTION_CONVERSE,
     ACL_ACTION_READ,
     ACL_ACTION_WRITE,
     MODEL_ACCESS_POLICY_GROUP,
@@ -15,6 +16,7 @@ const defaults = {};
 defaults.rules = {
     [`${MODEL_AGENT}:${ACL_ACTION_READ}`]: true,
     [`${MODEL_AGENT}:${ACL_ACTION_WRITE}`]: false,
+    [`${MODEL_AGENT}:${ACL_ACTION_CONVERSE}`]: true,
     [`${MODEL_CONNECTION}:${ACL_ACTION_READ}`]: true,
     [`${MODEL_CONNECTION}:${ACL_ACTION_WRITE}`]: false,
     [`${MODEL_USER_ACCOUNT}:${ACL_ACTION_READ}`]: true,

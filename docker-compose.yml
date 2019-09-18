@@ -23,6 +23,7 @@ services:
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
   duckling:
     image: samtecspg/duckling:0.1.6.0
+    ports: ['${DUCKLING_URL:-8000}:8000']
   redis:
     image: redis:4.0.6-alpine
     command: redis-server --appendonly yes

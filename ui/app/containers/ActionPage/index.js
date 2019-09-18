@@ -400,7 +400,7 @@ export class ActionPage extends React.Component {
             />
           </Grid>
           <MainTab
-            isReadOnly={isReadOnly}
+          isReadOnly={isReadOnly}
             touched={this.props.touched}
             loading={this.props.loading}
             success={this.props.success}

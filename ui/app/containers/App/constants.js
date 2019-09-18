@@ -354,9 +354,18 @@ export const LOAD_USERS = 'app/user/LOAD_USERS';
 export const LOAD_USERS_SUCCESS = 'app/user/LOAD_USERS_SUCCESS';
 export const LOAD_USERS_ERROR = 'app/user/LOAD_USERS_ERROR';
 
+export const LOAD_USER = 'app/user/LOAD_USER';
+export const LOAD_USER_SUCCESS = 'app/user/LOAD_USER_SUCCESS';
+export const LOAD_USER_ERROR = 'app/user/LOAD_USER_ERROR';
+
 export const DELETE_USER = 'app/user/DELETE_USER';
 export const DELETE_USER_SUCCESS = 'app/user/DELETE_USER_SUCCESS';
 export const DELETE_USER_ERROR = 'app/user/DELETE_USER_ERROR';
+export const CHANGE_USER_DATA = 'app/user/CHANGE_USER_DATA';
+
+export const UPDATE_USER = 'app/UserPage/UPDATE_USER';
+export const UPDATE_USER_ERROR = 'app/UserPage/UPDATE_USER_ERROR';
+export const UPDATE_USER_SUCCESS = 'app/UserPage/UPDATE_USER_SUCCESS';
 
 /* Access Policy Groups */
 

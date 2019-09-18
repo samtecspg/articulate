@@ -10,7 +10,8 @@ import Toys from 'toys';
 import Package from '../package.json';
 import {
     AUTH_ENABLED,
-    AUTH_PROVIDERS
+    AUTH_PROVIDERS,
+    RASA_URL
 } from '../util/env';
 
 const redisOptions = {
@@ -87,7 +88,7 @@ module.exports = new Confidence.Store({
 
                 plugin: './plugins/rasa-nlu',
                 options: { //options passed to axios
-                    baseURL: process.env.RASA_URL || 'http://rasa:5000'
+                    baseURL: RASA_URL
                 }
             },
             {

@@ -124,6 +124,7 @@ class Form extends React.Component {
             moveUsersPageBack={this.props.moveUsersPageBack}
             onDeleteUser={this.props.onDeleteUser}
             changeUsersPageSize={this.props.changeUsersPageSize}
+            onGoToUrl={this.props.onGoToUrl}
           />
         </Grid>
       </Grid>
@@ -144,6 +145,7 @@ Form.propTypes = {
   moveUsersPageForward: PropTypes.func,
   moveUsersPageBack: PropTypes.func,
   onDeleteUser: PropTypes.func,
+  onGoToUrl: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

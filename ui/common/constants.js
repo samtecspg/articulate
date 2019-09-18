@@ -28,9 +28,7 @@ export const ROUTE_EXPORT = 'export';
 export const ROUTE_IMPORT = 'import';
 export const ROUTE_BULK = 'bulk';
 export const ROUTE_USER = 'user';
-export const ROUTE_SEARCH = 'search';
-export const ROUTE_CURRENT = 'current';
-export const ROUTE_DELETE_BY_QUERY = '_delete_by_query?refresh';
+export const PARAM_SEARCH = 'search';
 export const ROUTE_ACCESS_CONTROL = 'ac';
 export const ROUTE_GROUP = 'group';
 export const ROUTE_CURRENT = 'current';
@@ -41,6 +39,8 @@ export const MODEL_AGENT = 'Agent';
 export const MODEL_CONNECTION = 'Connection';
 export const MODEL_USER_ACCOUNT = 'UserAccount';
 export const MODEL_ACCESS_POLICY_GROUP = 'AccessPolicyGroup';
+export const ROUTE_SEARCH = 'search';
+export const ROUTE_DELETE_BY_QUERY = '_delete_by_query?refresh';
 
 export const GROUP_ACCESS_CONTROL = {
   AGENT_READ: `${MODEL_AGENT}:${ACL_ACTION_READ}`,

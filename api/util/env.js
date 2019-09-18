@@ -11,3 +11,4 @@ export const AUTH_FORCE_DEFAULT_USER = (() => {
 })();
 export const AUTH_FORCE_DEFAULT_GROUP = process.env.AUTH_FORCE_DEFAULT_GROUP === 'true';
 export const DEBUG_ROUTES = process.env.DEBUG_ROUTES === 'true';
+export const RASA_URL = process.env.RASA_URL || 'http://rasa:5000';

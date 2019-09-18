@@ -4,6 +4,7 @@ import AuthorizeOauth from './user/user.authorize-oauth.service';
 import Create from './user/user.create-account.service';
 import FindById from './user/user.find-by-id.service';
 import RemoveById from './user/user.remove-by-id.service';
+import UpdateById from './user/user.update-by-id.service';
 import Validate from './user/user.validate.service';
 
 module.exports = class UserService extends Schmervice.Service {
@@ -34,5 +35,10 @@ module.exports = class UserService extends Schmervice.Service {
     async authorizeOauth() {
 
         return await AuthorizeOauth.apply(this, arguments);
+    }
+
+    async updateById() {
+
+        return await UpdateById.apply(this, arguments);
     }
 };

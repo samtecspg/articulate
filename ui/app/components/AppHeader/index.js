@@ -1,21 +1,34 @@
-import React, { Fragment } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
+import {
+  Button,
+  Grid,
+  Hidden,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { Grid, Hidden, Button, Typography, Tooltip } from '@material-ui/core';
+import React, { Fragment } from 'react';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
+import {
+  Link,
+  withRouter,
+} from 'react-router-dom';
 import { compose } from 'redux';
-import messages from './messages';
-
-import logo from '../../images/logo.svg';
 import agentsIcon from '../../images/agents-icon.svg';
 import chatIcon from '../../images/chat-icon.svg';
+
+import logo from '../../images/logo.svg';
 import shareIcon from '../../images/share-icon.svg';
 
 import ConversationBar from '../ConversationBar';
-import LanguageSelect from '../LanguageSelect';
 import gravatars from '../Gravatar';
+import LanguageSelect from '../LanguageSelect';
+import messages from './messages';
 
 const styles = {
   root: {
@@ -103,9 +116,22 @@ export class AppHeader extends React.Component {
       notifications,
       agent,
       demoMode,
+      location,
     } = this.props;
+    const { pathname } = location;
 
     let notificationDotColor = '#358fec';
+
+    const isAgentNameHidden =
+      pathname.indexOf('connection') === -1 &&
+      pathname.indexOf('settings') === -1 &&
+      pathname.indexOf('login') === -1 &&
+      pathname.indexOf('users') === -1 &&
+      pathname.indexOf('user') === -1 &&
+      pathname.indexOf('demo') === -1 &&
+      agent.gravatar !== '' &&
+      pathname !== '/';
+
     const validNotifications = notifications.filter(notification => {
       if (notification.type === 'error') {
         notificationDotColor = '#cb2121';
@@ -164,13 +190,7 @@ export class AppHeader extends React.Component {
             lg={2}
             md={2}
           >
-            {this.props.location.pathname.indexOf('connection') === -1 &&
-            this.props.location.pathname.indexOf('settings') === -1 &&
-            this.props.location.pathname.indexOf('login') === -1 &&
-            this.props.location.pathname.indexOf('users') === -1 &&
-            this.props.location.pathname.indexOf('demo') === -1 &&
-            agent.gravatar !== '' &&
-            this.props.location.pathname !== '/' ? (
+            {isAgentNameHidden ? (
               <Typography
                 className={classes.agentName}
                 style={{ color: agent.uiColor }}
@@ -295,13 +315,7 @@ export class AppHeader extends React.Component {
             lg={2}
             md={2}
           >
-            {this.props.location.pathname.indexOf('connection') === -1 &&
-            this.props.location.pathname.indexOf('settings') === -1 &&
-            this.props.location.pathname.indexOf('login') === -1 &&
-            this.props.location.pathname.indexOf('users') === -1 &&
-            this.props.location.pathname.indexOf('demo') === -1 &&
-            agent.gravatar !== '' &&
-            this.props.location.pathname !== '/' ? (
+            {isAgentNameHidden ? (
               <Typography
                 className={classes.agentName}
                 style={{ color: agent.uiColor }}
@@ -328,7 +342,7 @@ export class AppHeader extends React.Component {
           </Grid>
           <Grid item xl={3} lg={3} md={3} />
           <Grid item xl={2} lg={2} md={2}>
-            {this.props.location.pathname !== '/' ? (
+            {pathname !== '/' ? (
               [
                 validNotifications.length > 0 && chatButtonOpen ? (
                   <div
@@ -386,13 +400,7 @@ export class AppHeader extends React.Component {
             </Grid>
           ) : (
             <Grid item sm={6} xs={6}>
-              {this.props.location.pathname.indexOf('connection') === -1 &&
-              this.props.location.pathname.indexOf('settings') === -1 &&
-              this.props.location.pathname.indexOf('login') === -1 &&
-              this.props.location.pathname.indexOf('users') === -1 &&
-              this.props.location.pathname.indexOf('demo') === -1 &&
-              agent.gravatar !== '' &&
-              this.props.location.pathname !== '/' ? (
+              {isAgentNameHidden ? (
                 <Typography
                   className={classes.agentName}
                   style={{ color: agent.uiColor }}
@@ -419,7 +427,7 @@ export class AppHeader extends React.Component {
             </Grid>
           )}
           <Grid item xs={8}>
-            {this.props.location.pathname !== '/' ? (
+            {pathname !== '/' ? (
               [
                 validNotifications.length > 0 && chatButtonOpen ? (
                   <div

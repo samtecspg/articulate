@@ -23,7 +23,15 @@ import {
   updateAccessPolicyGroup,
   updateSettings,
 } from '../App/actions';
-import { makeSelectAccessPolicyGroups, makeSelectCurrentUser, makeSelectSettings } from '../App/selectors';
+import {
+  makeSelectAccessPolicyGroups,
+  makeSelectCurrentUser,
+  makeSelectError,
+  makeSelectLoading,
+  makeSelectSettings,
+  makeSelectSettingsTouched,
+  makeSelectSuccess,
+} from '../App/selectors';
 import ActionButtons from './Components/ActionButtons';
 import Form from './Components/Form';
 import messages from './messages';
@@ -296,9 +304,7 @@ export class SettingsPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-        <CircularProgress
-          style={{ position: 'absolute', top: '40%', left: '49%' }}
-        />
+      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
       );
   }
 }
@@ -330,7 +336,7 @@ const mapStateToProps = createStructuredSelector({
   currentUser: makeSelectCurrentUser(),
   settingsSuccess: makeSelectSuccess(),
   settingsLoading: makeSelectLoading(),
-  settingsError: makeSelectError()
+  settingsError: makeSelectError(),
 });
 
 function mapDispatchToProps(dispatch) {
