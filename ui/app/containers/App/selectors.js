@@ -176,6 +176,18 @@ const makeSelectTotalDocuments = () =>
     globalState => globalState.totalDocuments,
   );
 
+const makeSelectDocumentsAnalytics = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.documentsAnalytics,
+  );
+
+const makeSelectTotalDocumentsAnalytics = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalDocumentsAnalytics,
+  );
+
 const makeSelectSessions = () =>
   createSelector(
     selectGlobal,
@@ -481,6 +493,8 @@ export {
   makeSelectSuccessCategory,
   makeSelectDocuments,
   makeSelectTotalDocuments,
+  makeSelectDocumentsAnalytics,
+  makeSelectTotalDocumentsAnalytics,
   makeSelectSessions,
   makeSelectTotalSessions,
   makeSelectLocale,

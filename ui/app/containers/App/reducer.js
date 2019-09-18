@@ -522,6 +522,8 @@ const initialState = Immutable({
   newActionResponse: 'hello',
   documents: [],
   totalDocuments: null,
+  documentsAnalytics: [],
+  totalDocumentsAnalytics: null,
   sessions: [],
   totalSessions: null,
   serverStatus: '',
@@ -1110,13 +1112,24 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', action.error);
     case LOAD_AGENT_DOCUMENTS_SUCCESS:
-      return state
+      if (action.documents.analytics){
+        return state
+        .set('documentsAnalytics', action.documents.documents)
+        .set('totalDocumentsAnalytics', action.documents.total)
+        .set('loading', false)
+        .set('error', false);
+      }
+      else {
+        return state
         .set('documents', action.documents.documents)
         .set('totalDocuments', action.documents.total)
         .set('loading', false)
         .set('error', false);
+      }
     case LOAD_AGENT_DOCUMENTS_ERROR:
       return state
+        .set('documentsAnalytics', initialState.documents)
+        .set('totalDocumentsAnalytics', initialState.totalDocuments)
         .set('documents', initialState.documents)
         .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)

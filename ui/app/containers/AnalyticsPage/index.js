@@ -30,8 +30,8 @@ import {
 import {
   makeSelectAgent,
   makeSelectServerStatus,
-  makeSelectDocuments,
-  makeSelectTotalDocuments
+  makeSelectDocumentsAnalytics,
+  makeSelectTotalDocumentsAnalytics
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -72,7 +72,6 @@ export class AnalyticsPage extends React.PureComponent {
               documents: documents.data,
               total: documents.totalCount,
             };
-            //onRefreshDocuments(payload);
             onLoadDocuments(this.state.dateRange);
           }
         };
@@ -156,8 +155,8 @@ AnalyticsPage.propTypes = {
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   serverStatus: makeSelectServerStatus(),
-  documents: makeSelectDocuments(),
-  totalDocuments: makeSelectTotalDocuments(),
+  documents: makeSelectDocumentsAnalytics(),
+  totalDocuments: makeSelectTotalDocumentsAnalytics(),
 });
 
 function mapDispatchToProps(dispatch) {
