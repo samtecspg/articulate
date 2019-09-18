@@ -1,0 +1,140 @@
+[
+    {
+        "keywordName": "githubItem",
+        "uiColor": "#D5AAFF",
+        "examples": [
+            {
+                "value": "forks",
+                "synonyms": [
+                    "forks",
+                    "fork"
+                ]
+            },
+            {
+                "value": "watchers",
+                "synonyms": [
+                    "watcher",
+                    "watchers"
+                ]
+            },
+            {
+                "value": "user",
+                "synonyms": [
+                    "user"
+                ]
+            },
+            {
+                "value": "password",
+                "synonyms": [
+                    "password"
+                ]
+            },
+            {
+                "value": "repository",
+                "synonyms": [
+                    "repository",
+                    "repo"
+                ]
+            },
+            {
+                "value": "issue",
+                "synonyms": [
+                    "issue",
+                    "issues"
+                ]
+            },
+            {
+                "value": "label",
+                "synonyms": [
+                    "label",
+                    "labels"
+                ]
+            },
+            {
+                "value": "milestone",
+                "synonyms": [
+                    "milestone",
+                    "milestones"
+                ]
+            }
+        ],
+        "regex": "",
+        "type": "learned",
+        "modifiers": [
+            {
+                "modifierName": "Modifier",
+                "action": "SET",
+                "valueSource": "keyword",
+                "staticValue": "",
+                "sayings": []
+            }
+        ],
+        "creationDate": "1568646026000",
+        "modificationDate": "1568751146000"
+    },
+    {
+        "keywordName": "issueLabels",
+        "uiColor": "#B28DFF",
+        "examples": [
+            {
+                "value": "bug",
+                "synonyms": [
+                    "bug"
+                ]
+            },
+            {
+                "value": "documentation",
+                "synonyms": [
+                    "documentation"
+                ]
+            },
+            {
+                "value": "duplicate",
+                "synonyms": [
+                    "duplicate"
+                ]
+            },
+            {
+                "value": "enhancement",
+                "synonyms": [
+                    "enhancement"
+                ]
+            },
+            {
+                "value": "good first issue",
+                "synonyms": [
+                    "good first issue"
+                ]
+            },
+            {
+                "value": "help wanted",
+                "synonyms": [
+                    "help wanted"
+                ]
+            },
+            {
+                "value": "invalid",
+                "synonyms": [
+                    "invalid"
+                ]
+            },
+            {
+                "value": "question",
+                "synonyms": [
+                    "question"
+                ]
+            },
+            {
+                "value": "wontfix",
+                "synonyms": [
+                    "wontfix"
+                ]
+            }
+        ],
+        "regex": "",
+        "type": "learned",
+        "modifiers": [],
+        "creationDate": "1568738154000",
+        "modificationDate": "1568744065000"
+    }
+]

@@ -6,6 +6,7 @@ import weather from '../../images/weather.svg';
 import smallTalk from '../../images/small-talk.svg';
 import music from '../../images/music.svg';
 import currency from '../../images/currency.svg';
+import github from '../../images/github.svg'
 
 const logosDir = {
   calculator,
@@ -13,6 +14,7 @@ const logosDir = {
   weather,
   music,
   currency,
+  github
 };
 
 function CategoriesLogos(props) {

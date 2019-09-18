@@ -1,0 +1,15 @@
+{
+    "name": "Github",
+    "uiColor": "#7a7a78",
+    "description": "Handle github interactions",
+    "documentation": "",
+    "enabled": true,
+    "data": {
+        "categoryName": "github",
+        "enabled": true,
+        "actionThreshold": 0.5,
+        "model": "",
+        "extraTrainingData": true,
+        "parameters": {}
+    }
+}

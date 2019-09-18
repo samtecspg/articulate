@@ -22,6 +22,7 @@ export function* getSettings(payload) {
   try {
     const response = yield call(api.get, toAPIPath([ROUTE_SETTINGS]));
     yield put(loadSettingsSuccess(response));
+    yield put(changeLocale(response.uiLanguage));
   } catch (err) {
     yield put(loadSettingsError(err));
   }

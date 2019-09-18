@@ -1,0 +1,447 @@
+[
+    {
+        "actionName": "Default Fallback Action",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "Sorry can you rephrase that?",
+                "actions": []
+            },
+            {
+                "textResponse": "I'm still learning to speak with humans. What you mean?",
+                "actions": []
+            }
+        ],
+        "useWebhook": false,
+        "usePostFormat": false,
+        "creationDate": "1568646026000",
+        "modificationDate": "1568646026000"
+    },
+    {
+        "actionName": "getCount",
+        "slots": [
+            {
+                "slotName": "githubItem",
+                "uiColor": "#D5AAFF",
+                "keyword": "githubItem",
+                "keywordId": 1508,
+                "isList": false,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "Which item do you want the count of?"
+                ],
+                "freeText": false
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "It has {{lookup webhook.countWebhook.response slots.githubItem.value}} {{slots.githubItem.original}}",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568646026000",
+        "modificationDate": "1568646026000",
+        "webhook": {
+            "webhookKey": "countWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "",
+            "creationDate": "1568646026000",
+            "modificationDate": "1568646026000"
+        }
+    },
+    {
+        "actionName": "postIssue",
+        "slots": [
+            {
+                "slotName": "title",
+                "uiColor": "#4e4e4e",
+                "keyword": "sys.any",
+                "keywordId": 0,
+                "isList": false,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "What title do you want?"
+                ],
+                "freeText": true,
+                "remainingLife": null,
+                "promptCountLimit": null
+            },
+            {
+                "slotName": "body",
+                "uiColor": "#4e4e4e",
+                "keyword": "sys.any",
+                "keywordId": 0,
+                "isList": false,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "What is the description of the issue"
+                ],
+                "freeText": true,
+                "remainingLife": null,
+                "promptCountLimit": null
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "Done",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568646026000",
+        "modificationDate": "1568675127000",
+        "webhook": {
+            "webhookKey": "postIssueWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues",
+            "webhookVerb": "POST",
+            "webhookPayloadType": "JSON",
+            "webhookPayload": "{\n  \"title\": \"{{{slots.title.value}}}\",\n  \"body\": \"{{{slots.body.value}}}\"\n}",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextIssue\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.postIssueWebhook.response,\n    \"original\": CSO.webhook.postIssueWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568646026000",
+            "modificationDate": "1568675127000"
+        }
+    },
+    {
+        "actionName": "assignCurrentContextIssue",
+        "slots": [
+            {
+                "slotName": "lastPostedIssueNo",
+                "uiColor": "#D5AAFF",
+                "keyword": "githubItem",
+                "keywordId": 1508,
+                "isList": false,
+                "isRequired": false,
+                "quickResponses": [],
+                "textPrompts": [
+                    "Sorry, you haven't posted an issue yet"
+                ],
+                "freeText": false,
+                "promptCountLimit": 1
+            },
+            {
+                "slotName": "githubUserName",
+                "uiColor": "#4e4e4e",
+                "keyword": "sys.any",
+                "keywordId": 0,
+                "isList": false,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "To which user you want to assign this issue?"
+                ],
+                "freeText": true,
+                "remainingLife": null,
+                "promptCountLimit": null
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "Done",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568646026000",
+        "modificationDate": "1568670292000",
+        "webhook": {
+            "webhookKey": "assignCurrentContextIssueWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}",
+            "webhookVerb": "PATCH",
+            "webhookPayloadType": "JSON",
+            "webhookPayload": "{\n\t\"assignees\" : [\"{{{slots.githubUserName.value}}}\"]\n}",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "",
+            "creationDate": "1568646026000",
+            "modificationDate": "1568670292000"
+        }
+    },
+    {
+        "actionName": "getLastOpenIssue",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "This one: \"{{webhook.lastOpenIssueWebhook.response.0.title}}\"",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568666645000",
+        "modificationDate": "1568673403000",
+        "webhook": {
+            "webhookKey": "lastOpenIssueWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues?state=open&direction=desc&assignee={{context.savedSlots.currentContextUserName.value.login}}",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextIssue\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenIssueWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenIssueWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568666888000",
+            "modificationDate": "1568673403000"
+        }
+    },
+    {
+        "actionName": "getUserName",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "I see that your username is: {{webhook.getUserNameWebhook.response.login}}",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568671854000",
+        "modificationDate": "1568673132000",
+        "webhook": {
+            "webhookKey": "getUserNameWebhook",
+            "webhookUrl": "https://api.github.com/user",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextUserName\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.getUserNameWebhook.response,\n    \"original\": CSO.webhook.getUserNameWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568671854000",
+            "modificationDate": "1568673132000"
+        }
+    },
+    {
+        "actionName": "postCommentOnIssue",
+        "slots": [
+            {
+                "slotName": "body",
+                "uiColor": "#4e4e4e",
+                "keyword": "sys.any",
+                "keywordId": 0,
+                "isList": false,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "Please write your comment"
+                ],
+                "freeText": true,
+                "remainingLife": null,
+                "promptCountLimit": null
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "Done",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568674143000",
+        "modificationDate": "1568674618000",
+        "webhook": {
+            "webhookKey": "postCommentOnIssueWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}/comments",
+            "webhookVerb": "POST",
+            "webhookPayloadType": "JSON",
+            "webhookPayload": "{\n  \"body\": \"{{{slots.body.value}}}\"\n}",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "",
+            "creationDate": "1568674144000",
+            "modificationDate": "1568674618000"
+        }
+    },
+    {
+        "actionName": "closeCurrentContextIssue",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "Done",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568736601000",
+        "modificationDate": "1568736620000",
+        "webhook": {
+            "webhookKey": "assignCurrentContextIssueWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}",
+            "webhookVerb": "PATCH",
+            "webhookPayloadType": "JSON",
+            "webhookPayload": "{\n\t\"state\" : \"closed\"\n}",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "",
+            "creationDate": "1568646026000",
+            "modificationDate": "1568736620000"
+        }
+    },
+    {
+        "actionName": "labelIssue",
+        "slots": [
+            {
+                "slotName": "labelList",
+                "uiColor": "#B28DFF",
+                "keyword": "issueLabels",
+                "keywordId": 1510,
+                "isList": true,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "Which labels do you want to add?"
+                ],
+                "freeText": false,
+                "remainingLife": null,
+                "promptCountLimit": null
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "Done",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568738574000",
+        "modificationDate": "1568744065000",
+        "webhook": {
+            "webhookKey": "labelIssueWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}/labels",
+            "webhookVerb": "POST",
+            "webhookPayloadType": "JSON",
+            "webhookPayload": "{\n  \"labels\": [{{#each slots.labelList.value}} \"{{this}}\"{{#unless @last}},{{/unless}} {{/each}}]\n}",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "",
+            "creationDate": "1568738574000",
+            "modificationDate": "1568743735000"
+        }
+    },
+    {
+        "actionName": "getLastOpenMilestone",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "{{#if webhook.lastOpenMilestoneWebhook.response}} This is the most recent milestone: \"{{webhook.lastOpenMilestoneWebhook.response.0.title}}\" {{else}} There is no open milestone {{/if}}",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568748310000",
+        "modificationDate": "1568750877000",
+        "webhook": {
+            "webhookKey": "lastOpenMilestoneWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/milestones",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextMilestone\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568748310000",
+            "modificationDate": "1568750877000"
+        }
+    },
+    {
+        "actionName": "countLastOpenMilestoneOpenIssues",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "It has {{context.savedSlots.currentContextMilestone.value.open_issues}} open issues<br>",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568749486000",
+        "modificationDate": "1568750696000",
+        "webhook": {
+            "webhookKey": "lastOpenMilestoneWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/milestones",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextMilestone\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568749486000",
+            "modificationDate": "1568750696000"
+        }
+    }
+]
