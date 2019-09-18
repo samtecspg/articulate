@@ -43,6 +43,7 @@ export function* getAgentDocument(payload) {
       loadAgentDocumentsSuccess({
         documents: response.data,
         total: response.totalCount,
+        analytics: true,
       }),
     );
   } catch (err) {
