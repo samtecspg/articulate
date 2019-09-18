@@ -389,5 +389,115 @@
         ],
         "creationDate": "1568749565000",
         "modificationDate": "1568749565000"
+    },
+    {
+        "userSays": "Label the issue as wontfix",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 5,
+                "value": "label",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            },
+            {
+                "start": 10,
+                "end": 15,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            },
+            {
+                "start": 19,
+                "end": 26,
+                "value": "wontfix",
+                "keyword": "issueLabels",
+                "keywordId": 1510
+            }
+        ],
+        "actions": [
+            "labelIssue"
+        ],
+        "creationDate": "1568831707000",
+        "modificationDate": "1568833355000"
+    },
+    {
+        "userSays": "Which is the last commit from the repo?",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 24,
+                "value": "commit",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            },
+            {
+                "start": 34,
+                "end": 38,
+                "value": "repo",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastCommit"
+        ],
+        "creationDate": "1568833009000",
+        "modificationDate": "1568833348000"
+    },
+    {
+        "userSays": "Which is the last commit?",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 24,
+                "value": "commit",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastCommit"
+        ],
+        "creationDate": "1568833020000",
+        "modificationDate": "1568833344000"
+    },
+    {
+        "userSays": "Label the issue as duplicate and invalid",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 5,
+                "value": "label",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            },
+            {
+                "start": 10,
+                "end": 15,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            },
+            {
+                "start": 19,
+                "end": 28,
+                "value": "duplicate",
+                "keyword": "issueLabels",
+                "keywordId": 1510
+            },
+            {
+                "start": 33,
+                "end": 40,
+                "value": "invalid",
+                "keyword": "issueLabels",
+                "keywordId": 1510
+            }
+        ],
+        "actions": [
+            "labelIssue"
+        ],
+        "creationDate": "1568836670000",
+        "modificationDate": "1568836670000"
     }
 ]
