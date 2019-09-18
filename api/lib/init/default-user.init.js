@@ -1,6 +1,9 @@
 import {
     MODEL_USER_ACCOUNT,
     PARAM_EMAIL,
+    PARAM_GROUPS,
+    PARAM_LAST_NAME,
+    PARAM_NAME,
     PARAM_PASSWORD,
     PARAM_SALT,
     PROVIDER_BASIC
@@ -18,30 +21,37 @@ module.exports = async (server) => {
     const { userService, securityService, globalService } = await server.services();
 
     const userCount = await (async () => {
+
         const UserModel = await redis.factory(MODEL_USER_ACCOUNT);
         return await UserModel.count();
     })();
     const username = process.env.AUTH_USER;
     const password = process.env.AUTH_PASSWORD;
+    const groups = ['admin'];
     const createUser = async () => {
+
         try {
             logger.info(`Creating user`);
             if (username && password) {
-                let user = await globalService.searchByField({ field: PARAM_EMAIL, value: username, model: MODEL_USER_ACCOUNT });
+                const user = await globalService.searchByField({ field: PARAM_EMAIL, value: username, model: MODEL_USER_ACCOUNT });
                 if (user) {
                     const UserModel = await redis.factory(MODEL_USER_ACCOUNT, user.id);
                     const { passwordHash, salt } = securityService.saltHashPassword({ password });
                     UserModel.property(PARAM_EMAIL, username);
+                    UserModel.property(PARAM_NAME, 'admin');
+                    UserModel.property(PARAM_LAST_NAME, 'admin');
                     UserModel.property(PARAM_PASSWORD, passwordHash);
                     UserModel.property(PARAM_SALT, salt);
+                    UserModel.property(PARAM_GROUPS, groups);
                     await UserModel.save();
                 }
                 else {
                     await userService.create({
                         data: {
                             email: username,
-                            password: password,
-                            provider: PROVIDER_BASIC
+                            password,
+                            provider: PROVIDER_BASIC,
+                            groups
                         }
                     });
                 }

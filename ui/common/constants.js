@@ -31,3 +31,11 @@ export const ROUTE_USER = 'user';
 export const ROUTE_SEARCH = 'search';
 export const ROUTE_CURRENT = 'current';
 export const ROUTE_DELETE_BY_QUERY = '_delete_by_query?refresh';
+export const ROUTE_ACCESS_CONTROL = 'ac';
+export const ROUTE_GROUP = 'group';
+
+export const AGENT_ACCESS_POLICIES = {
+  [`agent:read`]: false,
+  [`agent:write`]: false,
+  [`agent:converse`]: false,
+};

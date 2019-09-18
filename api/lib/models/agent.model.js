@@ -33,6 +33,7 @@ class AgentModel {
       parameters: Joi.object(),
       enableDiscoverySheet: Joi.boolean(),
       generateSlotsQuickResponses: Joi.boolean(),
+      accessPolicies: Joi.object(),
       generateSlotsQuickResponsesMax: Joi.number(),
       generateActionsQuickResponses: Joi.boolean(),
       generateActionsQuickResponsesMax: Joi.number()

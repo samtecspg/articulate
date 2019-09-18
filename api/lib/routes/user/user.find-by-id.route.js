@@ -3,6 +3,7 @@ import {
     PARAM_USER_ACCOUNT_ID,
     ROUTE_USER_ACCOUNT
 } from '../../../util/constants';
+import UserModel from '../../models/user-account.model';
 import UserValidator from '../../validators/user.validator';
 
 module.exports = {
@@ -11,6 +12,11 @@ module.exports = {
     options: {
         tags: ['api'],
         validate: UserValidator.findById,
+        response: {
+            modify: true,
+            schema: UserModel.responseSchema,
+            options: { stripUnknown: true }
+        },
         handler: async (request) => {
 
             const { userService } = await request.services();

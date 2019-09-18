@@ -118,7 +118,6 @@ module.exports = new Confidence.Store({
                 options: redisOptions
             },
             {
-
                 plugin: './plugins/handlebars',
                 options: {}
             },
@@ -140,6 +139,18 @@ module.exports = new Confidence.Store({
                 }
             },
             {
+                plugin: './plugins/gbac',
+                options: {}
+            },
+            {
+                plugin: './plugins/hapi-gbac',
+                options: {}
+            },
+            {
+                plugin: './plugins/hapi-abac',
+                options: {}
+            },
+            {
                 plugin: './plugins/swagger',
                 options: {
                     info: {
@@ -152,7 +163,8 @@ module.exports = new Confidence.Store({
                     documentationPage: false,
                     schemes: process.env.SWAGGER_SCHEMES || null,
                     host: process.env.SWAGGER_HOST || null,
-                    basePath: process.env.SWAGGER_BASE_PATH || null
+                    basePath: process.env.SWAGGER_BASE_PATH || '/api',
+                    auth: AUTH_ENABLED ? 'session' : undefined
                 }
             }
         ]

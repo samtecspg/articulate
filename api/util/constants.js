@@ -1,9 +1,14 @@
 import _ from 'lodash';
+//Plugins
+export const P_HAPI_GBAC = 'hapi-gbac';
+export const P_HAPI_ABAC = 'hapi-abac';
+export const P_GBAC = 'gbac';
 
 //DEBUG
 export const DEBUG_LEVEL_INFO = 'info';
 export const DEBUG_LEVEL_DEBUG = 'debug';
 export const DEBUG_LEVEL_ERROR = 'error';
+export const DEBUG_LEVEL_INSPECT = 'inspect';
 
 //ERRORS
 export const ERROR_NOT_FOUND = 'not found';
@@ -28,6 +33,7 @@ export const MODEL_CONNECTION = 'Connection';
 export const MODEL_SERVER = 'Server';
 export const MODEL_USER_ACCOUNT = 'UserAccount';
 export const MODEL_USER_IDENTITY = 'UserIdentity';
+export const MODEL_ACCESS_POLICY_GROUP = 'AccessPolicyGroup';
 export const MODEL_ALL = [
     MODEL_ACTION,
     MODEL_AGENT,
@@ -42,7 +48,8 @@ export const MODEL_ALL = [
     MODEL_CONNECTION,
     MODEL_SERVER,
     MODEL_USER_ACCOUNT,
-    MODEL_USER_IDENTITY
+    MODEL_USER_IDENTITY,
+    MODEL_ACCESS_POLICY_GROUP
 ];
 
 //ROUTES
@@ -68,6 +75,7 @@ export const ROUTE_CONNECTION = 'connection';
 export const ROUTE_EXTERNAL = 'external';
 export const ROUTE_USER_ACCOUNT = 'user';
 export const ROUTE_USER_IDENTITY = 'identity';
+export const ROUTE_ACCESS_CONTROL = 'ac';
 
 // STATUS
 export const STATUS_READY = 'Ready';
@@ -101,6 +109,11 @@ export const PARAM_TOKEN = 'token';
 export const PARAM_SECRET = 'secret';
 export const PARAM_PROFILE = 'profile';
 export const PARAM_IDENTITY = 'identity';
+export const PARAM_GROUP = 'group';
+export const PARAM_GROUPS = 'groups';
+export const PARAM_GROUP_NAME = 'groupName';
+export const PARAM_VALIDATE = 'validate';
+export const PARAM_RULES = 'rules';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
@@ -135,7 +148,8 @@ export const ROUTE_TO_MODEL = {
     [ROUTE_CONNECTION]: MODEL_CONNECTION,
     [ROUTE_POST_FORMAT]: MODEL_POST_FORMAT,
     [ROUTE_USER_ACCOUNT]: MODEL_USER_ACCOUNT,
-    [ROUTE_USER_IDENTITY]: MODEL_USER_IDENTITY
+    [ROUTE_USER_IDENTITY]: MODEL_USER_IDENTITY,
+    [ROUTE_ACCESS_CONTROL]: MODEL_ACCESS_POLICY_GROUP
 };
 export const MODEL_TO_ROUTE = _.invert(ROUTE_TO_MODEL);
 
@@ -327,3 +341,6 @@ export const SORT_DESC = 'DESC';
 export const PROVIDER_BASIC = 'basic';
 export const PROVIDER_TWITTER = 'twitter';
 export const PROVIDER_GITHUB = 'github';
+export const ACL_ACTION_READ = 'read';
+export const ACL_ACTION_WRITE = 'write';
+export const ACL_ACTION_CONVERSE = 'converse';

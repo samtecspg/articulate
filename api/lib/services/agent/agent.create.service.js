@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import {
     CONFIG_SETTINGS_DEFAULT_AGENT,
+    CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME,
+    CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT,
     MODEL_AGENT,
     STATUS_OUT_OF_DATE,
-    STATUS_READY,
-    CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME,
-    CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT
+    STATUS_READY
 } from '../../../util/constants';
-import RedisErrorHandler from '../../errors/redis.error-handler';
 import OverLimitErrorHandler from '../../errors/global.over-limit';
+import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ data, isImport = false, returnModel = false }) {
+module.exports = async function ({ data, isImport = false, returnModel = false, userCredentials = null }) {
 
     const defaultFallbackAction = {
         useWebhook: false,
@@ -31,8 +31,12 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
     const AgentModel = await redis.factory(MODEL_AGENT);
     const agentCount = await AgentModel.count();
     const agentLimit = this.options.agentLimit;
-
-    if (agentLimit != -1 && agentCount >= agentLimit) {
+    const defaults = AgentModel.defaults;
+    const ownerAccessPolicy = _.mapValues(defaults.accessPolicies, () => true);
+    data.accessPolicies = {
+        [userCredentials.id]: ownerAccessPolicy
+    };
+    if (agentLimit !== -1 && agentCount >= agentLimit) {
         return Promise.reject(OverLimitErrorHandler({ level: agentCount, limit: agentLimit, type: 'Agents' }));
     }
     try {
@@ -54,12 +58,12 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
 
         data.fallbackAction = isImport ? data.fallbackAction : allSettings[CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME];
 
-        if (isImport && data.model){
+        if (isImport && data.model) {
             delete data.model;
         }
 
         await AgentModel.createInstance({ data });
-        if (!isImport){
+        if (!isImport) {
             await agentService.createAction({
                 AgentModel,
                 actionData: defaultFallbackAction

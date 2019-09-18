@@ -1,14 +1,16 @@
 import Boom from 'boom';
 import {
+    ACL_ACTION_READ,
+    P_HAPI_GBAC,
     PARAM_AGENT_ID,
     PARAM_DIRECTION,
     PARAM_FIELD,
     PARAM_FILTER,
-    PARAM_INCLUDE,
     PARAM_LIMIT,
     PARAM_SKIP,
     ROUTE_AGENT,
-    ROUTE_SAYING
+    ROUTE_SAYING,
+    ROUTE_TO_MODEL
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';
 
@@ -16,6 +18,11 @@ module.exports = {
     method: 'get',
     path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_SAYING}`,
     options: {
+        plugins: {
+            [P_HAPI_GBAC]: [
+                `${ROUTE_TO_MODEL[ROUTE_AGENT]}:${ACL_ACTION_READ}`
+            ]
+        },
         tags: ['api'],
         validate: AgentValidator.findAllSayings,
         handler: async (request) => {
@@ -31,7 +38,7 @@ module.exports = {
                 loadCategoryId
             } = request.query;
             try {
-                return await agentService.findAllSayings({ id, loadCategoryId, skip, limit, direction, field,filter });
+                return await agentService.findAllSayings({ id, loadCategoryId, skip, limit, direction, field, filter });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

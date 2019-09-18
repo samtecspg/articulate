@@ -1,21 +1,38 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
-import { ROUTE_BULK, ROUTE_SETTINGS } from '../../../common/constants';
+import {
+  call,
+  put,
+  select,
+  takeLatest,
+} from 'redux-saga/effects';
+import {
+  ROUTE_ACCESS_CONTROL,
+  ROUTE_BULK,
+  ROUTE_GROUP,
+  ROUTE_SETTINGS,
+} from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
   changeLocale,
+  loadAccessPolicyGroupsError,
+  loadAccessPolicyGroupsSuccess,
   loadSettingsError,
   loadSettingsSuccess,
+  updateAccessPolicyGroupError,
+  updateAccessPolicyGroupSuccess,
   updateSettingError,
   updateSettingsError,
   updateSettingsSuccess,
   updateSettingSuccess,
 } from '../App/actions';
 import {
+  LOAD_ACCESS_CONTROL,
   LOAD_SETTINGS,
+  UPDATE_ACCESS_CONTROL,
   UPDATE_SETTING,
   UPDATE_SETTINGS,
 } from '../App/constants';
 import { makeSelectSettings } from '../App/selectors';
+import { getCategories } from '../DialoguePage/saga';
 
 export function* getSettings(payload) {
   const { api } = payload;
@@ -23,7 +40,8 @@ export function* getSettings(payload) {
     const response = yield call(api.get, toAPIPath([ROUTE_SETTINGS]));
     yield put(loadSettingsSuccess(response));
     yield put(changeLocale(response.uiLanguage));
-  } catch (err) {
+  }
+  catch (err) {
     yield put(loadSettingsError(err));
   }
 }
@@ -39,7 +57,8 @@ export function* putSettings(payload) {
     );
     yield put(updateSettingsSuccess(response));
     yield put(changeLocale(settings.uiLanguage));
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSettingsError(err));
   }
 }
@@ -56,13 +75,43 @@ export function* putSetting(payload) {
     if (setting === 'uiLanguage') {
       yield put(changeLocale(value));
     }
-  } catch (err) {
+  }
+  catch (err) {
     yield put(updateSettingError(err));
+  }
+}
+
+export function* getAccessPolicyGroups(payload) {
+  const { api } = payload;
+  try {
+    const response = yield call(api.get, toAPIPath([ROUTE_ACCESS_CONTROL]));
+    yield put(loadAccessPolicyGroupsSuccess(response.data));
+  }
+  catch (err) {
+    yield put(loadAccessPolicyGroupsError(err));
+  }
+}
+
+export function* postAccessPolicyGroups(payload) {
+  const { api, groupName, rules } = payload;
+  try {
+    const response = yield call(
+      api.post,
+      toAPIPath([ROUTE_ACCESS_CONTROL, ROUTE_GROUP, groupName]),
+      rules,
+    );
+    yield put(updateAccessPolicyGroupSuccess(response.data));
+    yield call(getAccessPolicyGroups, { api });
+  }
+  catch (err) {
+    yield put(updateAccessPolicyGroupError(err));
   }
 }
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
+  yield takeLatest(LOAD_ACCESS_CONTROL, getAccessPolicyGroups);
+  yield takeLatest(UPDATE_ACCESS_CONTROL, postAccessPolicyGroups);
   yield takeLatest(UPDATE_SETTINGS, putSettings);
   yield takeLatest(UPDATE_SETTING, putSetting);
 }

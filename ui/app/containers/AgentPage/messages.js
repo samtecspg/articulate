@@ -88,7 +88,7 @@ export default defineMessages({
     id:
       'app.containers.AgentPage.component.AgentDataForm.fallbackTextFieldPlaceholder',
     defaultMessage:
-      "What your agent should say if he weren't able to recognize what user said?",
+      'What your agent should say if he weren\'t able to recognize what user said?',
   },
   requiredField: {
     id: 'app.containers.AgentPage.component.AgentDataForm.requiredField',
@@ -104,7 +104,7 @@ export default defineMessages({
   },
   noFallbacks: {
     id: 'app.containers.AgentPage.component.AgentDataForm.noFallbacks',
-    defaultMessage: "You haven't specified any fallback response",
+    defaultMessage: 'You haven\'t specified any fallback response',
   },
   webhookSetting: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.webhookSetting',
@@ -177,11 +177,11 @@ export default defineMessages({
   },
   enableDiscoverySheet: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.enableDiscoverySheet',
-    defaultMessage: 'Enable Discovery Sheet'
+    defaultMessage: 'Enable Discovery Sheet',
   },
   openDiscoverySheet: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.openDiscoverySheet',
-    defaultMessage: 'Open Discovery Sheet'
+    defaultMessage: 'Open Discovery Sheet',
   },
   enableModelsPerCategory: {
     id:
@@ -228,6 +228,14 @@ export default defineMessages({
     id:
       'app.containers.AgentPage.component.AgentParametersForm.newAgentParameterValueTextFieldPlaceholder',
     defaultMessage: 'Type your parameter value',
+  },
+  accessControlSettings: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.accessControlSettings',
+    defaultMessage: 'Access Control',
+  },
+  accessControlLabel: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.accessControlSettings',
+    defaultMessage: 'Access Control',
   },
   AutomaticQuickRepliesSetting: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.automaticQuickRepliesSetting',

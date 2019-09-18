@@ -1,5 +1,7 @@
-import Immutable from 'seamless-immutable';
 import material from 'material-colors';
+import Immutable from 'seamless-immutable';
+
+import { DEFAULT_LOCALE } from '../../i18n';
 import {
   ADD_ACTION,
   ADD_ACTION_ERROR,
@@ -10,15 +12,21 @@ import {
   ADD_AGENT,
   ADD_AGENT_ERROR,
   ADD_AGENT_FALLBACK,
+  ADD_AGENT_PARAMETER,
   ADD_AGENT_SUCCESS,
+  ADD_CATEGORY_PARAMETER,
   ADD_FALLBACK,
   ADD_HEADER_ACTION_WEBHOOK,
   ADD_HEADER_AGENT_WEBHOOK,
   ADD_KEYWORD_EXAMPLE,
+  ADD_MODIFIER_SAYING,
+  ADD_MODIFIER_SAYING_SUCCESS,
+  ADD_NEW_MODIFIER,
+  ADD_NEW_QUICK_RESPONSE,
+  ADD_NEW_SLOT,
   ADD_SAYING,
   ADD_SAYING_ERROR,
-  UPDATE_NEW_RESPONSE,
-  COPY_RESPONSE,
+  ADD_SLOT_TEXT_PROMPT_SLOT,
   CHAIN_ACTION_TO_RESPONSE,
   CHANGE_ACTION_DATA,
   CHANGE_ACTION_NAME,
@@ -27,12 +35,14 @@ import {
   CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE,
   CHANGE_AGENT_DATA,
   CHANGE_AGENT_NAME,
-  CHANGE_AGENT_SETTINGS_DATA,
-  ADD_AGENT_PARAMETER,
-  DELETE_AGENT_PARAMETER,
   CHANGE_AGENT_PARAMETER_NAME,
   CHANGE_AGENT_PARAMETER_VALUE,
+  CHANGE_AGENT_SETTINGS_DATA,
   CHANGE_CATEGORY_DATA,
+  CHANGE_CATEGORY_PARAMETER_NAME,
+  CHANGE_CATEGORY_PARAMETER_VALUE,
+  CHANGE_CONNECTION_DATA,
+  CHANGE_DETAIL_VALUE,
   CHANGE_EXAMPLE_NAME,
   CHANGE_EXAMPLE_SYNONYMS,
   CHANGE_HEADER_KEY_ACTION_WEBHOOK,
@@ -40,18 +50,28 @@ import {
   CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
   CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
   CHANGE_KEYWORD_DATA,
+  CHANGE_LOCALE,
+  CHANGE_MODIFIER_DATA,
+  CHANGE_MODIFIER_NAME,
   CHANGE_POST_FORMAT_DATA,
+  CHANGE_QUICK_RESPONSE,
   CHANGE_SETTINGS_DATA,
+  CHANGE_SLOT_DATA,
+  CHANGE_SLOT_NAME,
   CHANGE_WEBHOOK_DATA,
   CHANGE_WEBHOOK_PAYLOAD_TYPE,
   CHECK_API,
   CLEAR_SAYING_TO_ACTION,
   CLOSE_NOTIFICATION,
+  COPY_RESPONSE,
   COPY_SAYING_ERROR,
   COPY_SAYING_SUCCESS,
   CREATE_CATEGORY,
   CREATE_CATEGORY_ERROR,
   CREATE_CATEGORY_SUCCESS,
+  CREATE_CONNECTION,
+  CREATE_CONNECTION_ERROR,
+  CREATE_CONNECTION_SUCCESS,
   CREATE_KEYWORD,
   CREATE_KEYWORD_ERROR,
   CREATE_KEYWORD_SUCCESS,
@@ -64,10 +84,15 @@ import {
   DELETE_AGENT,
   DELETE_AGENT_ERROR,
   DELETE_AGENT_FALLBACK,
+  DELETE_AGENT_PARAMETER,
   DELETE_AGENT_SUCCESS,
   DELETE_CATEGORY,
   DELETE_CATEGORY_ERROR,
+  DELETE_CATEGORY_PARAMETER,
   DELETE_CATEGORY_SUCCESS,
+  DELETE_CONNECTION,
+  DELETE_CONNECTION_ERROR,
+  DELETE_CONNECTION_SUCCESS,
   DELETE_FALLBACK,
   DELETE_HEADER_ACTION_WEBHOOK,
   DELETE_HEADER_AGENT_WEBHOOK,
@@ -75,18 +100,42 @@ import {
   DELETE_KEYWORD_ERROR,
   DELETE_KEYWORD_EXAMPLE,
   DELETE_KEYWORD_SUCCESS,
+  DELETE_MODIFIER,
+  DELETE_MODIFIER_SAYING,
+  DELETE_QUICK_RESPONSE,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
+  DELETE_SESSION,
+  DELETE_SESSION_ERROR,
+  DELETE_SESSION_SUCCESS,
+  DELETE_SLOT,
+  DELETE_SLOT_TEXT_PROMPT_SLOT,
+  DELETE_USER,
+  DELETE_USER_ERROR,
+  DELETE_USER_SUCCESS,
+  EDIT_ACTION_RESPONSE,
+  EDIT_SLOT_TEXT_PROMPT,
+  EXPORT_AGENT,
+  EXPORT_AGENT_ERROR,
+  EXPORT_AGENT_SUCCESS,
+  IMPORT_AGENT,
+  IMPORT_AGENT_ERROR,
+  IMPORT_AGENT_SUCCESS,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS,
+  LOAD_ACCESS_CONTROL,
+  LOAD_ACCESS_CONTROL_ERROR,
+  LOAD_ACCESS_CONTROL_SUCCESS,
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
-  RESET_ACTIONS,
   LOAD_ACTIONS,
   LOAD_ACTIONS_ERROR,
-  LOAD_ACTIONS_SUCCESS,
   LOAD_ACTIONS_PAGE,
   LOAD_ACTIONS_PAGE_ERROR,
   LOAD_ACTIONS_PAGE_SUCCESS,
+  LOAD_ACTIONS_SUCCESS,
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
@@ -96,84 +145,98 @@ import {
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
   LOAD_AGENT_ERROR,
+  LOAD_AGENT_SESSIONS_ERROR,
+  LOAD_AGENT_SESSIONS_SUCCESS,
   LOAD_AGENT_SUCCESS,
-  SET_AGENT_DEFAULTS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
-  LOAD_CONNECTIONS,
-  LOAD_CONNECTIONS_ERROR,
-  LOAD_CONNECTIONS_SUCCESS,
-  LOAD_CHANNELS,
-  LOAD_CHANNELS_ERROR,
-  LOAD_CHANNELS_SUCCESS,
-  EXPORT_AGENT,
-  EXPORT_AGENT_ERROR,
-  EXPORT_AGENT_SUCCESS,
-  IMPORT_AGENT,
-  IMPORT_AGENT_ERROR,
-  IMPORT_AGENT_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
   LOAD_CATEGORIES_SUCCESS,
   LOAD_CATEGORY,
   LOAD_CATEGORY_ERROR,
   LOAD_CATEGORY_SUCCESS,
-  LOAD_FILTERED_CATEGORIES,
-  LOAD_FILTERED_CATEGORIES_ERROR,
-  LOAD_FILTERED_CATEGORIES_SUCCESS,
+  LOAD_CHANNELS,
+  LOAD_CHANNELS_ERROR,
+  LOAD_CHANNELS_SUCCESS,
+  LOAD_CONNECTION,
+  LOAD_CONNECTION_ERROR,
+  LOAD_CONNECTION_SUCCESS,
+  LOAD_CONNECTIONS,
+  LOAD_CONNECTIONS_ERROR,
+  LOAD_CONNECTIONS_SUCCESS,
   LOAD_FILTERED_ACTIONS,
   LOAD_FILTERED_ACTIONS_ERROR,
   LOAD_FILTERED_ACTIONS_SUCCESS,
+  LOAD_FILTERED_CATEGORIES,
+  LOAD_FILTERED_CATEGORIES_ERROR,
+  LOAD_FILTERED_CATEGORIES_SUCCESS,
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
   LOAD_KEYWORD_SUCCESS,
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
   LOAD_KEYWORDS_SUCCESS,
+  LOAD_PREBUILT_CATEGORIES,
+  LOAD_PREBUILT_CATEGORIES_ERROR,
+  LOAD_PREBUILT_CATEGORIES_SUCCESS,
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
   LOAD_SAYINGS_SUCCESS,
+  LOAD_SERVER_INFO,
+  LOAD_SERVER_INFO_ERROR,
+  LOAD_SERVER_INFO_SUCCESS,
+  LOAD_SESSION,
+  LOAD_SESSION_ERROR,
+  LOAD_SESSION_SUCCESS,
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
   LOAD_SETTINGS_SUCCESS,
+  LOAD_STARRED_SAYING,
+  LOAD_STARRED_SAYING_ERROR,
+  LOAD_STARRED_SAYING_SUCCESS,
+  LOAD_STARRED_SAYINGS,
+  LOAD_STARRED_SAYINGS_ERROR,
+  LOAD_STARRED_SAYINGS_SUCCESS,
+  LOAD_USERS,
+  LOAD_USERS_ERROR,
+  LOAD_USERS_SUCCESS,
+  LOGIN_USER_ERROR,
   MISSING_API,
-  RESET_SAYINGS,
+  REFRESH_SERVER_INFO,
   RESET_ACTION_DATA,
+  RESET_ACTIONS,
   RESET_AGENT_DATA,
   RESET_CATEGORY_DATA,
+  RESET_CONNECTION_DATA,
   RESET_KEYWORD_DATA,
   RESET_MISSING_API,
+  RESET_SAYINGS,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
+  RESET_SUCCESS_AGENT,
   RESPOND_MESSAGE,
   SELECT_CATEGORY,
   SEND_MESSAGE,
   SEND_SAYING_TO_ACTION,
-  ADD_NEW_SLOT,
-  ADD_SLOT_TEXT_PROMPT_SLOT,
-  CHANGE_SLOT_DATA,
-  CHANGE_SLOT_NAME,
-  DELETE_SLOT,
-  DELETE_SLOT_TEXT_PROMPT_SLOT,
-  EDIT_ACTION_RESPONSE,
-  SORT_SLOTS,
-  ADD_NEW_MODIFIER,
-  ADD_MODIFIER_SAYING,
-  ADD_MODIFIER_SAYING_SUCCESS,
-  CHANGE_MODIFIER_DATA,
-  CHANGE_MODIFIER_NAME,
-  DELETE_MODIFIER,
-  DELETE_MODIFIER_SAYING,
+  SET_AGENT_DEFAULTS,
+  SHOW_WARNING,
   SORT_MODIFIERS,
+  SORT_SLOTS,
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
-  TOGGLE_CONVERSATION_BAR,
+  TAG_MODIFIER_KEYWORD,
   TOGGLE_CHAT_BUTTON,
+  TOGGLE_CONVERSATION_BAR,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
   UNTAG_KEYWORD,
+  UNTAG_MODIFIER_KEYWORD,
+  UPDATE_ACCESS_CONTROL,
+  UPDATE_ACCESS_CONTROL_ERROR,
+  UPDATE_ACCESS_CONTROL_SUCCESS,
   UPDATE_ACTION,
   UPDATE_ACTION_ERROR,
   UPDATE_ACTION_SUCCESS,
@@ -183,88 +246,32 @@ import {
   UPDATE_CATEGORY,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
-  ADD_CATEGORY_PARAMETER,
-  DELETE_CATEGORY_PARAMETER,
-  CHANGE_CATEGORY_PARAMETER_NAME,
-  CHANGE_CATEGORY_PARAMETER_VALUE,
+  UPDATE_CONNECTION,
+  UPDATE_CONNECTION_ERROR,
+  UPDATE_CONNECTION_SUCCESS,
   UPDATE_KEYWORD,
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
-  UPDATE_SAYING_SUCCESS,
+  UPDATE_NEW_RESPONSE,
+  UPDATE_SAYING,
   UPDATE_SAYING_ERROR,
-  UPDATE_SETTINGS,
-  UPDATE_SETTINGS_ERROR,
-  UPDATE_SETTINGS_SUCCESS,
+  UPDATE_SAYING_SUCCESS,
   UPDATE_SETTINGS_TOUCHED,
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
-  UNTAG_MODIFIER_KEYWORD,
-  TAG_MODIFIER_KEYWORD,
-  CHANGE_LOCALE,
-  CHANGE_CONNECTION_DATA,
-  LOAD_CONNECTION,
-  LOAD_CONNECTION_ERROR,
-  LOAD_CONNECTION_SUCCESS,
+  UPDATE_SETTINGS,
+  UPDATE_SETTINGS_ERROR,
+  UPDATE_SETTINGS_SUCCESS,
   LOAD_CURRENT_USER,
   LOAD_CURRENT_USER_ERROR,
   LOAD_CURRENT_USER_SUCCESS,
-  RESET_CONNECTION_DATA,
-  CREATE_CONNECTION,
-  CREATE_CONNECTION_ERROR,
-  CREATE_CONNECTION_SUCCESS,
-  UPDATE_CONNECTION,
-  UPDATE_CONNECTION_ERROR,
-  UPDATE_CONNECTION_SUCCESS,
-  CHANGE_DETAIL_VALUE,
-  DELETE_CONNECTION,
-  DELETE_CONNECTION_ERROR,
-  DELETE_CONNECTION_SUCCESS,
-  LOGIN_USER_ERROR,
-  LOAD_SESSION,
-  LOAD_SESSION_SUCCESS,
-  LOAD_SESSION_ERROR,
-  DELETE_SESSION,
-  DELETE_SESSION_SUCCESS,
-  DELETE_SESSION_ERROR,
-  SHOW_WARNING,
-  LOAD_PREBUILT_CATEGORIES,
-  LOAD_PREBUILT_CATEGORIES_ERROR,
-  LOAD_PREBUILT_CATEGORIES_SUCCESS,
-  IMPORT_CATEGORY,
-  IMPORT_CATEGORY_ERROR,
-  IMPORT_CATEGORY_SUCCESS,
-  REFRESH_SERVER_INFO,
-  LOAD_SERVER_INFO,
-  LOAD_SERVER_INFO_ERROR,
-  LOAD_SERVER_INFO_SUCCESS,
-  LOAD_AGENT_SESSIONS_SUCCESS,
-  LOAD_AGENT_SESSIONS_ERROR,
-  UPDATE_SAYING,
-  LOAD_STARRED_SAYINGS,
-  LOAD_STARRED_SAYINGS_ERROR,
-  LOAD_STARRED_SAYINGS_SUCCESS,
-  LOAD_STARRED_SAYING,
-  LOAD_STARRED_SAYING_ERROR,
-  LOAD_STARRED_SAYING_SUCCESS,
-  ADD_NEW_QUICK_RESPONSE,
-  DELETE_QUICK_RESPONSE,
-  CHANGE_QUICK_RESPONSE,
-  EDIT_SLOT_TEXT_PROMPT,
-  LOAD_USERS,
-  LOAD_USERS_SUCCESS,
-  LOAD_USERS_ERROR,
-  DELETE_USER,
-  DELETE_USER_SUCCESS,
-  DELETE_USER_ERROR,
-  RESET_SUCCESS_AGENT,
   LOGIN_USER,
   LOGIN_USER_SUCCESS,
   REFRESH_KEYWORD_EXAMPLE_UPDATE,
   ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
 } from './constants';
-import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
   '😀',
   '😁',
@@ -477,7 +484,7 @@ const initialState = Immutable({
   actionOldPayloadJSON:
     '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   actionOldPayloadXML:
-    "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
+    '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
   actions: [],
   newSayingActions: [],
   agentJustEdited: false,
@@ -561,6 +568,7 @@ const initialState = Immutable({
   starredSaying: null,
   users: [],
   totalUsers: null,
+  accessPolicyGroups: [],
 });
 
 function appReducer(state = initialState, action) {
@@ -772,7 +780,8 @@ function appReducer(state = initialState, action) {
             ['agent', 'uiColor'],
             agentColors[Math.floor(Math.random() * (agentColors.length - 1))],
           );
-      } else {
+      }
+      else {
         return state;
       }
     case LOAD_AGENT:
@@ -830,7 +839,8 @@ function appReducer(state = initialState, action) {
           'agent',
           action.payload.agent.agentName,
         );
-      } else {
+      }
+      else {
         agentWebhook = action.payload.webhook;
       }
       if (!action.payload.agent.usePostFormat) {
@@ -839,7 +849,8 @@ function appReducer(state = initialState, action) {
           'agent',
           action.payload.agent.agentName,
         );
-      } else {
+      }
+      else {
         agentPostFormat = action.payload.postFormat;
       }
       return state
@@ -981,7 +992,7 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case ADD_AGENT_ERROR:
-      if (action.error.indexOf('is already using')){  
+      if (action.error.indexOf('is already using')) {
         state = state.update('notifications', notifications =>
           notifications.concat({
             template: 'errorMessageTemplate',
@@ -1273,9 +1284,9 @@ function appReducer(state = initialState, action) {
           return tempSaying;
         }),
       )
-      .set('loading', false)
-      .set('success', true)
-      .set('error', false);
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
     case UPDATE_SAYING_ERROR:
       return state.set('loading', false).set('success', false).set('error', action.error);
     case SEND_SAYING_TO_ACTION:
@@ -1499,7 +1510,8 @@ function appReducer(state = initialState, action) {
         (action.payload.action.useWebhook && !action.payload.webhook)
       ) {
         actionWebhook = initialState.actionWebhook;
-      } else {
+      }
+      else {
         actionWebhook = action.payload.webhook;
       }
       if (
@@ -1507,7 +1519,8 @@ function appReducer(state = initialState, action) {
         (action.payload.action.usePostFormat && !action.payload.postFormat)
       ) {
         actionPostFormat = initialState.actionPostFormat;
-      } else {
+      }
+      else {
         actionPostFormat = action.payload.postFormat;
       }
       return state
@@ -1889,7 +1902,7 @@ function appReducer(state = initialState, action) {
             return slot;
           }
           return slot;
-        }))
+        }));
       }
       return state.updateIn(
         ['action', 'slots'],
@@ -1899,19 +1912,22 @@ function appReducer(state = initialState, action) {
             return slot.update('quickResponses', quickResponses => quickResponses.concat(action.response));
           }
           return slot;
-        })
+        }),
       )
         .set('actionTouched', true);
+      ;
     case DELETE_QUICK_RESPONSE:
       return state.updateIn(
         ['action', 'slots'],
         slots => slots.map((slot, index) => {
 
           if (index === action.slotIndex) {
-            return slot.set('quickResponses', slot.quickResponses.filter((quickResponse, index) => { return index !== action.quickResponseIndex }));
+            return slot.set('quickResponses', slot.quickResponses.filter((quickResponse, index) => {
+              return index !== action.quickResponseIndex;
+            }));
           }
           return slot;
-        })
+        }),
       )
         .set('actionTouched', true);
     case CHANGE_QUICK_RESPONSE:
@@ -1928,7 +1944,7 @@ function appReducer(state = initialState, action) {
             }));
           }
           return slot;
-        })
+        }),
       )
         .set('actionTouched', true);
     case EDIT_SLOT_TEXT_PROMPT:
@@ -2540,7 +2556,8 @@ function appReducer(state = initialState, action) {
           .setIn(['connection', action.payload.field], action.payload.value)
           .setIn(['connection', 'details'], details)
           .set('connectionTouched', true);
-      } else {
+      }
+      else {
         return state
           .setIn(['connection', action.payload.field], action.payload.value)
           .setIn(['connection', 'details'], details)
@@ -2698,29 +2715,29 @@ function appReducer(state = initialState, action) {
         .set('users', initialState.users)
         .set('totalUsers', initialState.totalUsers)
         .set('loading', true)
-        .set('error', false)
+        .set('error', false);
     case LOAD_USERS_SUCCESS:
       return state
         .set('users', action.users.data)
         .set('totalUsers', action.users.totalCount)
         .set('loading', false)
-        .set('error', false)
+        .set('error', false);
     case LOAD_USERS_ERROR:
       return state
         .set('loading', false)
-        .set('error', action.error)
+        .set('error', action.error);
     case DELETE_USER:
       return state
         .set('loading', true)
-        .set('error', false)
+        .set('error', false);
     case DELETE_USER_SUCCESS:
       return state
         .set('loading', false)
-        .set('error', false)
+        .set('error', false);
     case DELETE_USER_ERROR:
       return state
         .set('loading', false)
-        .set('error', action.error)
+        .set('error', action.error);
     case LOAD_CURRENT_USER:
       return state
         .set('loadingCurrentUser', false);
@@ -2731,7 +2748,35 @@ function appReducer(state = initialState, action) {
     case LOAD_CURRENT_USER_ERROR:
       return state
         .set('currentUser', null)
-        .set('loadingCurrentUser', true);
+        .set('loadingCurrentUser', true)
+        .set('error', false);
+    /* Access Policy Group */
+    case LOAD_ACCESS_CONTROL:
+      return state.set('loading', true).set('error', false);
+    case LOAD_ACCESS_CONTROL_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_ACCESS_CONTROL_SUCCESS:
+      return state
+        .set('accessPolicyGroups', action.accessPolicyGroups)
+        .set('loading', false)
+        .set('error', false);
+    case UPDATE_ACCESS_CONTROL:
+      return state
+        .set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_ACCESS_CONTROL_ERROR:
+      return state
+        .set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case UPDATE_ACCESS_CONTROL_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
     default:
       return state;
   }

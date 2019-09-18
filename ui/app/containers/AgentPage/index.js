@@ -4,69 +4,71 @@
  *
  */
 
-import { Grid, CircularProgress } from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import qs from 'query-string';
 import React from 'react';
-import { intlShape, injectIntl } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import qs from 'query-string';
+import ExitModal from '../../components/ExitModal';
 import MainTab from '../../components/MainTab';
 import injectSaga from '../../utils/injectSaga';
-import messages from './messages';
 import {
   addAgent,
   addAgentFallbackResponse,
+  addNewAgentParameter,
+  addNewHeaderAgentWebhook,
   changeAgentData,
   changeAgentName,
+  changeAgentParameterName,
+  changeAgentParameterValue,
   changeAgentSettingsData,
   changeCategoryClassifierThreshold,
+  changeHeaderNameAgentWebhook,
+  changeHeaderValueAgentWebhook,
   changePostFormatData,
   changeWebhookData,
   changeWebhookPayloadType,
+  clearSayingToAction,
+  deleteAgent,
   deleteAgentFallbackResponse,
+  deleteAgentParameter,
+  deleteHeaderAgentWebhook,
+  loadActions,
   loadAgent,
+  loadSettings,
+  loadUsers,
   resetAgentData,
   resetStatusFlag,
+  resetSuccessAgent,
+  setAgentDefaults,
+  toggleChatButton,
+  toggleConversationBar,
   trainAgent,
   updateAgent,
-  addNewHeaderAgentWebhook,
-  deleteHeaderAgentWebhook,
-  changeHeaderNameAgentWebhook,
-  changeHeaderValueAgentWebhook,
-  deleteAgent,
-  loadActions,
-  clearSayingToAction,
-  addNewAgentParameter,
-  deleteAgentParameter,
-  changeAgentParameterName,
-  changeAgentParameterValue,
-  loadSettings,
-  setAgentDefaults,
-  toggleConversationBar,
-  toggleChatButton,
-  resetSuccessAgent
 } from '../App/actions';
 import {
+  makeSelectActions,
   makeSelectAgent,
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
-  makeSelectAgentWebhook,
-  makeSelectSettings,
   makeSelectAgentTouched,
-  makeSelectActions,
+  makeSelectAgentWebhook,
   makeSelectLoading,
-  makeSelectSuccessAgent,
   makeSelectLocale,
   makeSelectServerStatus,
+  makeSelectSettings,
+  makeSelectSuccessAgent,
+  makeSelectUsers,
 } from '../App/selectors';
 
 import Form from './Components/Form';
+import messages from './messages';
 import saga from './saga';
-import ExitModal from '../../components/ExitModal';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
@@ -75,6 +77,7 @@ export class AgentPage extends React.PureComponent {
     this.submit = this.submit.bind(this);
     this.initForm = this.initForm.bind(this);
     this.navigateToNextLocation = this.navigateToNextLocation.bind(this);
+    this.onAccessControlUserChange = this.onAccessControlUserChange.bind(this);
   }
 
   state = {
@@ -102,6 +105,7 @@ export class AgentPage extends React.PureComponent {
       training: false,
       tabs: [],
     },
+    selectedAccessControlUser: null,
   };
 
   initForm() {
@@ -137,6 +141,7 @@ export class AgentPage extends React.PureComponent {
       return true;
     });
     this.props.onShowChatButton(true);
+    this.props.onLoadUsers();
   }
 
   componentDidUpdate(prevProps) {
@@ -149,8 +154,7 @@ export class AgentPage extends React.PureComponent {
     if (this.props.success) {
       if (this.state.exitAfterSubmit) {
         this.navigateToNextLocation();
-      }
-      else {
+      } else {
         this.props.onResetSuccessAgent();
       }
       if (this.state.isNewAgent) {
@@ -167,6 +171,10 @@ export class AgentPage extends React.PureComponent {
   navigateToNextLocation() {
     this.unblock();
     this.props.history.push(this.state.nextLocation.pathname);
+  }
+
+  onAccessControlUserChange({ user }) {
+    this.setState({ selectedAccessControlUser: user });
   }
 
   submit(exit) {
@@ -438,6 +446,9 @@ export class AgentPage extends React.PureComponent {
               onDeleteParameter={this.props.onDeleteParameter}
               onChangeParameterName={this.props.onChangeParameterName}
               onChangeParameterValue={this.props.onChangeParameterValue}
+              users={this.props.users}
+              selectedAccessControlUser={this.state.selectedAccessControlUser}
+              onAccessControlUserChange={this.onAccessControlUserChange}
             />
           }
           dialogueForm={Link}
@@ -491,7 +502,12 @@ AgentPage.propTypes = {
   onChangeParameterName: PropTypes.func,
   onChangeParameterValue: PropTypes.func,
   onToggleChat: PropTypes.func,
-  onShowChatButton: PropTypes.func
+  onShowChatButton: PropTypes.func,
+  onResetSuccessAgent: PropTypes.func,
+  onSetAgentDefaults: PropTypes.func,
+  onResetData: PropTypes.func,
+  onLoadUsers: PropTypes.func,
+  users: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -506,6 +522,7 @@ const mapStateToProps = createStructuredSelector({
   success: makeSelectSuccessAgent(),
   touched: makeSelectAgentTouched(),
   locale: makeSelectLocale(),
+  users: makeSelectUsers(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -604,7 +621,10 @@ function mapDispatchToProps(dispatch) {
     },
     onResetSuccessAgent: () => {
       dispatch(resetSuccessAgent());
-    }
+    },
+    onLoadUsers: () => {
+      dispatch(loadUsers());
+    },
   };
 }
 

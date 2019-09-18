@@ -24,6 +24,7 @@ import {
   ADD_MODIFIER_SAYING,
   ADD_MODIFIER_SAYING_SUCCESS,
   ADD_NEW_MODIFIER,
+  ADD_NEW_QUICK_RESPONSE,
   ADD_NEW_SLOT,
   ADD_SAYING,
   ADD_SAYING_ERROR,
@@ -34,6 +35,7 @@ import {
   CHANGE_ACTION_POST_FORMAT_DATA,
   CHANGE_ACTION_WEBHOOK_DATA,
   CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE,
+  CHANGE_ACTIONS_PAGE_SIZE,
   CHANGE_AGENT_DATA,
   CHANGE_AGENT_NAME,
   CHANGE_AGENT_PARAMETER_NAME,
@@ -52,15 +54,16 @@ import {
   CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
   CHANGE_KEYWORD_DATA,
   CHANGE_KEYWORDS_PAGE_SIZE,
-  CHANGE_ACTIONS_PAGE_SIZE,
   CHANGE_LOCALE,
   CHANGE_MODIFIER_DATA,
   CHANGE_MODIFIER_NAME,
   CHANGE_MODIFIER_SAYINGS_PAGE_SIZE,
   CHANGE_POST_FORMAT_DATA,
+  CHANGE_QUICK_RESPONSE,
   CHANGE_REVIEW_PAGE_SIZE,
   CHANGE_SAYING_CATEGORY,
   CHANGE_SAYINGS_PAGE_SIZE,
+  CHANGE_SESSIONS_PAGE_SIZE,
   CHANGE_SETTINGS_DATA,
   CHANGE_SLOT_DATA,
   CHANGE_SLOT_NAME,
@@ -111,28 +114,41 @@ import {
   DELETE_KEYWORD_SUCCESS,
   DELETE_MODIFIER,
   DELETE_MODIFIER_SAYING,
+  DELETE_QUICK_RESPONSE,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
   DELETE_SESSION_DATA,
   DELETE_SESSION_DATA_ERROR,
+  DELETE_SESSION,
+  DELETE_SESSION_ERROR,
+  DELETE_SESSION_SUCCESS,
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
+  DELETE_USER,
+  DELETE_USER_ERROR,
+  DELETE_USER_SUCCESS,
   EDIT_ACTION_RESPONSE,
+  EDIT_SLOT_TEXT_PROMPT,
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
   IMPORT_AGENT,
   IMPORT_AGENT_ERROR,
   IMPORT_AGENT_SUCCESS,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS,
+  LOAD_ACCESS_CONTROL,
+  LOAD_ACCESS_CONTROL_SUCCESS,
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
   LOAD_ACTION_SUCCESS,
   LOAD_ACTIONS,
   LOAD_ACTIONS_ERROR,
-  LOAD_ACTIONS_SUCCESS,
   LOAD_ACTIONS_PAGE,
   LOAD_ACTIONS_PAGE_ERROR,
   LOAD_ACTIONS_PAGE_SUCCESS,
+  LOAD_ACTIONS_SUCCESS,
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS,
   LOAD_AGENT_DOCUMENTS_ERROR,
@@ -140,10 +156,13 @@ import {
   LOAD_LOGS,
   LOAD_LOGS_ERROR,
   LOAD_LOGS_SUCCESS,
+  LOAD_AGENT_ERROR,
+  LOAD_AGENT_SESSIONS,
+  LOAD_AGENT_SESSIONS_ERROR,
+  LOAD_AGENT_SESSIONS_SUCCESS,
   LOAD_AGENT_STATS,
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
-  LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
@@ -178,12 +197,30 @@ import {
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
   LOAD_KEYWORDS_SUCCESS,
+  LOAD_PREBUILT_CATEGORIES,
+  LOAD_PREBUILT_CATEGORIES_ERROR,
+  LOAD_PREBUILT_CATEGORIES_SUCCESS,
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
   LOAD_SAYINGS_SUCCESS,
+  LOAD_SERVER_INFO,
+  LOAD_SERVER_INFO_ERROR,
+  LOAD_SERVER_INFO_SUCCESS,
+  LOAD_SESSION,
+  LOAD_SESSION_ERROR,
+  LOAD_SESSION_SUCCESS,
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
   LOAD_SETTINGS_SUCCESS,
+  LOAD_STARRED_SAYING,
+  LOAD_STARRED_SAYING_ERROR,
+  LOAD_STARRED_SAYING_SUCCESS,
+  LOAD_STARRED_SAYINGS,
+  LOAD_STARRED_SAYINGS_ERROR,
+  LOAD_STARRED_SAYINGS_SUCCESS,
+  LOAD_USERS,
+  LOAD_USERS_ERROR,
+  LOAD_USERS_SUCCESS,
   LOGIN_USER,
   LOGIN_USER_ERROR,
   LOGIN_USER_SUCCESS,
@@ -191,7 +228,7 @@ import {
   LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
   REFRESH_KEYWORD_EXAMPLE_UPDATE,
-  RESET_SAYINGS,
+  REFRESH_SERVER_INFO,
   RESET_ACTION_DATA,
   RESET_ACTIONS,
   RESET_AGENT_DATA,
@@ -199,14 +236,17 @@ import {
   RESET_CONNECTION_DATA,
   RESET_KEYWORD_DATA,
   RESET_MISSING_API,
+  RESET_SAYINGS,
   RESET_SESSION,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
+  RESET_SUCCESS_AGENT,
   RESPOND_MESSAGE,
   SELECT_CATEGORY,
   SEND_MESSAGE,
   SEND_SAYING_TO_ACTION,
   SET_AGENT_DEFAULTS,
+  SHOW_WARNING,
   SIGN_UP_USER,
   SIGN_UP_USER_ERROR,
   SIGN_UP_USER_SUCCESS,
@@ -215,13 +255,16 @@ import {
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
   TAG_MODIFIER_KEYWORD,
-  TOGGLE_CONVERSATION_BAR,
   TOGGLE_CHAT_BUTTON,
+  TOGGLE_CONVERSATION_BAR,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
   UNTAG_KEYWORD,
   UNTAG_MODIFIER_KEYWORD,
+  UPDATE_ACCESS_CONTROL,
+  UPDATE_ACCESS_CONTROL_ERROR,
+  UPDATE_ACCESS_CONTROL_SUCCESS,
   UPDATE_ACTION,
   UPDATE_ACTION_ERROR,
   UPDATE_ACTION_SUCCESS,
@@ -248,44 +291,6 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
-  LOAD_SESSION,
-  LOAD_SESSION_ERROR,
-  LOAD_SESSION_SUCCESS,
-  DELETE_SESSION,
-  DELETE_SESSION_SUCCESS,
-  DELETE_SESSION_ERROR,
-  SHOW_WARNING,
-  LOAD_PREBUILT_CATEGORIES,
-  LOAD_PREBUILT_CATEGORIES_ERROR,
-  LOAD_PREBUILT_CATEGORIES_SUCCESS,
-  IMPORT_CATEGORY,
-  IMPORT_CATEGORY_ERROR,
-  IMPORT_CATEGORY_SUCCESS,
-  REFRESH_SERVER_INFO,
-  LOAD_SERVER_INFO,
-  LOAD_SERVER_INFO_ERROR,
-  LOAD_SERVER_INFO_SUCCESS,
-  LOAD_AGENT_SESSIONS,
-  LOAD_AGENT_SESSIONS_ERROR,
-  LOAD_AGENT_SESSIONS_SUCCESS,
-  LOAD_STARRED_SAYINGS,
-  LOAD_STARRED_SAYINGS_ERROR,
-  LOAD_STARRED_SAYINGS_SUCCESS,
-  LOAD_STARRED_SAYING,
-  LOAD_STARRED_SAYING_ERROR,
-  LOAD_STARRED_SAYING_SUCCESS,
-  ADD_NEW_QUICK_RESPONSE,
-  DELETE_QUICK_RESPONSE,
-  CHANGE_QUICK_RESPONSE,
-  EDIT_SLOT_TEXT_PROMPT,
-  DELETE_SLOT_TEXT_PROMPT,
-  LOAD_USERS,
-  LOAD_USERS_ERROR,
-  LOAD_USERS_SUCCESS,
-  DELETE_USER,
-  DELETE_USER_SUCCESS,
-  DELETE_USER_ERROR,
-  RESET_SUCCESS_AGENT,
   RECOGNIZE_UPDATED_KEYWORDS,
   ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
@@ -328,7 +333,7 @@ export function loadSession(sessionId, newSession) {
     type: LOAD_SESSION,
     apiCall: true,
     sessionId,
-    newSession
+    newSession,
   };
 }
 
@@ -399,7 +404,7 @@ export function toggleConversationBar(value) {
 export function toggleChatButton(value) {
   return {
     type: TOGGLE_CHAT_BUTTON,
-    value
+    value,
   };
 }
 
@@ -416,14 +421,14 @@ export function sendMessage(message, newSession, isDemo) {
     apiCall: true,
     message,
     newSession,
-    isDemo
+    isDemo,
   };
 }
 
 export function respondMessage(message) {
   return {
     type: RESPOND_MESSAGE,
-    message
+    message,
   };
 }
 
@@ -574,7 +579,7 @@ export function importAgentSuccess(agent) {
 export function resetSuccessAgent() {
   return {
     type: RESET_SUCCESS_AGENT,
-  }
+  };
 }
 
 export function resetAgentData(ref) {
@@ -631,7 +636,7 @@ export function changeCategoryClassifierThreshold(value) {
     type: CHANGE_AGENT_DATA,
     payload: {
       field: 'categoryClassifierThreshold',
-      value: parseInt(value),
+      value: parseInt(value, 10),
     },
   };
 }
@@ -688,7 +693,7 @@ export function addAgent() {
 export function addAgentError(error) {
   return {
     type: ADD_AGENT_ERROR,
-    error
+    error,
   };
 }
 
@@ -813,7 +818,14 @@ export function changeAgentParameterValue(parameterName, value) {
   };
 }
 
-export function loadAgentDocuments({ page, pageSize, field, direction, dateRange, filter = null }) {
+export function loadAgentDocuments({
+  page,
+  pageSize,
+  field,
+  direction,
+  dateRange,
+  filter = null
+}) {
   return {
     type: LOAD_AGENT_DOCUMENTS,
     apiCall: true,
@@ -911,7 +923,7 @@ export function loadAgentStats(filters, dateRange) {
     type: LOAD_AGENT_STATS,
     apiCall: true,
     filters,
-    dateRange
+    dateRange,
   };
 }
 
@@ -959,8 +971,8 @@ export function loadAgentSessionsSuccess(sessions) {
  */
 export function resetSayings() {
   return {
-    type: RESET_SAYINGS
-  }
+    type: RESET_SAYINGS,
+  };
 }
 
 export function loadSayings(filter, page, pageSize, ignoreKeywords) {
@@ -1039,7 +1051,7 @@ export function deleteSaying(filter, page, pageSize, sayingId, categoryId) {
     categoryId,
     filter,
     page,
-    pageSize
+    pageSize,
   };
 }
 
@@ -1113,7 +1125,7 @@ export function updateSaying(saying, field, value) {
     apiCall: true,
     saying,
     field,
-    value
+    value,
   };
 }
 
@@ -1795,7 +1807,7 @@ export function editSlotTextPrompt(slotIndex, textPromptIndex, textPrompt) {
     type: EDIT_SLOT_TEXT_PROMPT,
     slotIndex,
     textPromptIndex,
-    textPrompt
+    textPrompt,
   };
 }
 
@@ -2126,7 +2138,7 @@ export function changeActionThreshold(value) {
     type: CHANGE_CATEGORY_DATA,
     payload: {
       field: 'actionThreshold',
-      value: parseInt(value),
+      value: parseInt(value, 10),
     },
   };
 }
@@ -2370,7 +2382,7 @@ export function signUpUser(name, lastName, username, password, ref) {
     lastName,
     username,
     password,
-    ref
+    ref,
   };
 }
 
@@ -2387,7 +2399,7 @@ export function signUpUserError(error) {
   };
 }
 
-/* Cheat sheet*/
+/* Cheat sheet */
 
 export function loadStarredSayings(agentId, filter) {
   return {
@@ -2418,7 +2430,7 @@ export function loadStarredSaying(agentId, categoryId, sayingId) {
     apiCall: true,
     agentId,
     categoryId,
-    sayingId
+    sayingId,
   };
 }
 
@@ -2435,6 +2447,7 @@ export function loadStarredSayingSuccess(saying) {
     saying,
   };
 }
+
 export function loadUsers(page, pageSize) {
   return {
     type: LOAD_USERS,
@@ -2447,7 +2460,7 @@ export function loadUsers(page, pageSize) {
 export function loadUsersSuccess(users) {
   return {
     type: LOAD_USERS_SUCCESS,
-    users
+    users,
   };
 }
 
@@ -2464,7 +2477,7 @@ export function deleteUser(page, pageSize, id) {
     apiCall: true,
     id,
     page,
-    pageSize
+    pageSize,
   };
 }
 
@@ -2478,6 +2491,52 @@ export function deleteUserError(error) {
   return {
     type: DELETE_USER_ERROR,
     error,
+  };
+}
+
+/*
+ * Access Policy Group
+ */
+export function loadAccessPolicyGroups() {
+  return {
+    type: LOAD_ACCESS_CONTROL,
+    apiCall: true,
+  };
+}
+
+export function loadAccessPolicyGroupsError(error) {
+  return {
+    type: LOAD_ACTION_ERROR,
+    error,
+  };
+}
+
+export function loadAccessPolicyGroupsSuccess(accessPolicyGroups) {
+  return {
+    type: LOAD_ACCESS_CONTROL_SUCCESS,
+    accessPolicyGroups,
+  };
+}
+
+export function updateAccessPolicyGroup({ groupName, rules }) {
+  return {
+    type: UPDATE_ACCESS_CONTROL,
+    apiCall: true,
+    groupName,
+    rules,
+  };
+}
+
+export function updateAccessPolicyGroupError(error) {
+  return {
+    type: UPDATE_ACCESS_CONTROL_ERROR,
+    error,
+  };
+}
+
+export function updateAccessPolicyGroupSuccess() {
+  return {
+    type: UPDATE_ACCESS_CONTROL_SUCCESS,
   };
 }
 

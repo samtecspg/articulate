@@ -1,14 +1,23 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Modal,
+  Typography,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import messages from '../messages';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
+import playHelpIcon from '../../../images/play-help-icon.svg';
 
 import settingsIcon from '../../../images/settings-icon.svg';
-import playHelpIcon from '../../../images/play-help-icon.svg';
+
+import messages from '../messages';
 
 import SettingsDataForm from './SettingsDataForm';
 
@@ -69,6 +78,7 @@ class Form extends React.Component {
   state = {
     selectedTab: 0,
     openModal: false,
+    selectedAccessPolicyGroup: null,
   };
 
   handleChange = (event, value) => {
@@ -89,8 +99,11 @@ class Form extends React.Component {
     });
   };
 
+  handleOnchangeAccessPolicyGroup = ({ accessPolicyGroup }) => {
+    this.setState({ selectedAccessPolicyGroup: accessPolicyGroup });
+  };
   render() {
-    const { classes, intl } = this.props;
+    const { classes, intl, accessPolicyGroups,onUpdateAccessPolicyGroup } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -134,6 +147,12 @@ class Form extends React.Component {
             onAddFallbackResponse={this.props.onAddFallbackResponse}
             onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
             errorState={this.props.errorState}
+            accessPolicyGroups={accessPolicyGroups}
+            handleOnchangeAccessPolicyGroup={
+              this.handleOnchangeAccessPolicyGroup
+            }
+            selectedAccessPolicyGroup={this.state.selectedAccessPolicyGroup}
+            onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
           />
         </Grid>
       </Grid>
@@ -148,7 +167,9 @@ Form.propTypes = {
   onChangeSettingsData: PropTypes.func,
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
+  onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
   errorState: PropTypes.object,
+  accessPolicyGroups: PropTypes.array.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(Form));

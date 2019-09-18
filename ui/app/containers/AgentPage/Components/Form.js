@@ -1,19 +1,19 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, Tabs, Tab } from '@material-ui/core';
+import { Button, Grid, Modal, Tab, Tabs, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import messages from '../messages';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import DeleteFooter from '../../../components/DeleteFooter';
+import gravatars from '../../../components/Gravatar';
 
 import playHelpIcon from '../../../images/play-help-icon.svg';
-import gravatars from '../../../components/Gravatar';
+
+import messages from '../messages';
 
 import AgentDataForm from './AgentDataForm';
 import AgentParametersForm from './AgentParametersForm';
 import AgentSettingsForm from './AgentSettingsForm';
-import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
@@ -305,6 +305,10 @@ class Form extends React.Component {
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
               errorState={this.props.errorState}
+              users={this.props.users}
+              selectedAccessControlUser={this.props.selectedAccessControlUser}
+              onAccessControlUserChange={this.props.onAccessControlUserChange}
+              onUpdateAccessPolicy={this.props.onUpdateAccessPolicy}
             />
           )}
         </Grid>
@@ -350,6 +354,10 @@ Form.propTypes = {
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,
   onChangeParameterValue: PropTypes.func,
+  users: PropTypes.array,
+  selectedAccessControlUser: PropTypes.object,
+  onAccessControlUserChange: PropTypes.func,
+  onUpdateAccessPolicy: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(Form));

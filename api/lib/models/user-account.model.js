@@ -10,9 +10,21 @@ class UserAccountModel {
             email: Joi.string().trim().description('Email'),
             password: Joi.string().description('Password'),
             salt: Joi.any().forbidden().strip().description('Salt'),
+            isActive: Joi.boolean().description('User Status'),
+            groups: Joi.array().items(Joi.string().trim()).description('Access Control Groups'),
             creationDate: Joi.date().description('Creation Date'),
             modificationDate: Joi.date().description('Modification Date')
         };
+    };
+
+    static get responseSchema() {
+
+        return Joi.object().keys({
+            ...this.schema, ...{
+                password: Joi.strip().forbidden(),
+                salt: Joi.strip().forbidden()
+            }
+        });
     };
 }
 

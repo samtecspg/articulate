@@ -12,6 +12,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development env-cmd server/.env nodemon server --exec babel-node",
     "start:debug": "cross-env NODE_ENV=development env-cmd server/.env babel-node server $NODE_DEBUG_OPTION",
+    "start:remote-debug": "cross-env NODE_ENV=development env-cmd server/.env babel-node server --inspect",
     "start:prod": "cross-env NODE_ENV=production env-cmd .env babel-node server",
     "test": "DEBUG=-* REDIS_HOST=0.0.0.0 ES_HOST=http://0.0.0.0:9200 lab -v -a code -T node_modules/lab-transform-preset-env -S $NODE_DEBUG_OPTION -m 5000 -l",
     "test-cov": "DEBUG=-* REDIS_HOST=0.0.0.0 ES_HOST=http://0.0.0.0:9200 lab -r html -o coverage.html",
@@ -52,6 +53,7 @@
     "hapi-swaggered": "^3.0.3",
     "hapi-swaggered-ui": "^3.0.2",
     "haute-couture": "3.x.x",
+    "hoek": "^6.1.3",
     "inert": "^5.1.0",
     "joi": "13.x.x",
     "joi-phone-number": "^2.1.1",

@@ -4,7 +4,10 @@
  *
  */
 
-import { Grid, CircularProgress } from '@material-ui/core';
+import {
+  CircularProgress,
+  Grid,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -17,16 +20,19 @@ import {
   addFallbackResponse,
   changeSettingsData,
   deleteFallbackResponse,
+  loadAccessPolicyGroups,
   loadSettings,
-  updateSettings,
   updateSettingsTouched,
   toggleChatButton,
-  toggleConversationBar
+  toggleConversationBar,
+  updateAccessPolicyGroup,
+  updateSettings,
 } from '../App/actions';
 import {
   makeSelectSettings,
   makeSelectSettingsTouched,
   makeSelectLoading,
+  makeSelectAccessPolicyGroups,
   makeSelectSuccess,
   makeSelectError
 } from '../App/selectors';
@@ -46,6 +52,7 @@ export class SettingsPage extends React.PureComponent {
     this.props.onShowChatButton(false);
     this.props.onToggleConversationBar(false);
     this.props.onLoadSettings();
+    this.props.onLoadAccessPolicyGroups();
   }
 
   componentDidUpdate() {
@@ -103,14 +110,16 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.defaultUISessionId = true;
-    } else {
+    }
+    else {
       newErrorState.defaultUISessionId = false;
     }
 
     if (!this.props.settings.rasaURL || this.props.settings.rasaURL === '') {
       errors = true;
       newErrorState.rasaURL = true;
-    } else {
+    }
+    else {
       newErrorState.rasaURL = false;
     }
 
@@ -120,7 +129,8 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.ducklingURL = true;
-    } else {
+    }
+    else {
       newErrorState.ducklingURL = false;
     }
 
@@ -130,7 +140,8 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.defaultAgentFallbackResponses = true;
-    } else {
+    }
+    else {
       newErrorState.defaultAgentFallbackResponses = false;
     }
 
@@ -146,7 +157,8 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.defaultAgentLanguage = true;
-    } else {
+    }
+    else {
       newErrorState.defaultAgentLanguage = false;
     }
 
@@ -161,7 +173,8 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.uiLanguage = true;
-    } else {
+    }
+    else {
       newErrorState.uiLanguage = false;
     }
 
@@ -176,7 +189,8 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.defaultTimezone = true;
-    } else {
+    }
+    else {
       newErrorState.defaultTimezone = false;
     }
 
@@ -185,7 +199,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'Duckling dimensions is not an array';
       }
       newErrorState.ducklingDimension = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.ducklingDimension = true;
     }
@@ -195,7 +210,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'Category classifier pipeline is not an array';
       }
       newErrorState.categoryClassifierPipeline = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.categoryClassifierPipeline = true;
     }
@@ -205,7 +221,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'Saying classifier pipeline is not an array';
       }
       newErrorState.sayingClassifierPipeline = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.sayingClassifierPipeline = true;
     }
@@ -215,7 +232,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'Keyword classifier pipeline is not an array';
       }
       newErrorState.keywordClassifierPipeline = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.keywordClassifierPipeline = true;
     }
@@ -225,7 +243,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'Spacy pretrained entities is not an array';
       }
       newErrorState.spacyPretrainedEntities = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.spacyPretrainedEntities = true;
     }
@@ -235,7 +254,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'Timezones is not an array';
       }
       newErrorState.timezones = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.timezones = true;
     }
@@ -245,7 +265,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'Agent languages is not an array of object';
       }
       newErrorState.agentLanguages = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.agentLanguages = true;
     }
@@ -255,7 +276,8 @@ export class SettingsPage extends React.PureComponent {
         throw 'UI languages is not an array of object';
       }
       newErrorState.uiLanguages = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.uiLanguages = true;
     }
@@ -267,7 +289,8 @@ export class SettingsPage extends React.PureComponent {
         exitAfterSubmit: exit
       });
       this.props.onSaveChanges();
-    } else {
+    }
+    else {
       this.setState({
         formError: true,
         errorState: { ...newErrorState },
@@ -305,6 +328,8 @@ export class SettingsPage extends React.PureComponent {
           onAddFallbackResponse={this.props.onAddFallbackResponse}
           onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
           errorState={this.state.errorState}
+          accessPolicyGroups={this.props.accessPolicyGroups}
+          onUpdateAccessPolicyGroup={this.props.onUpdateAccessPolicyGroup}
         />
       </Grid>
     ) : (
@@ -323,12 +348,17 @@ SettingsPage.propTypes = {
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
   onShowChatButton: PropTypes.func,
-  onToggleConversationBar: PropTypes.func
+  onToggleConversationBar: PropTypes.func,
+  onLoadSettings: PropTypes.func,
+  onLoadAccessPolicyGroups: PropTypes.func,
+  onUpdateAccessPolicyGroup: PropTypes.func,
+  accessPolicyGroups: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   settingsTouched: makeSelectSettingsTouched(),
+  accessPolicyGroups: makeSelectAccessPolicyGroups(),
   settingsSuccess: makeSelectSuccess(),
   settingsLoading: makeSelectLoading(),
   settingsError: makeSelectError()
@@ -362,6 +392,12 @@ function mapDispatchToProps(dispatch) {
     },
     onGoToUrl: url => {
       dispatch(push(url));
+    },
+    onLoadAccessPolicyGroups: () => {
+      dispatch(loadAccessPolicyGroups());
+    },
+    onUpdateAccessPolicyGroup: ({ groupName, rules }) => {
+      dispatch(updateAccessPolicyGroup({ groupName, rules }));
     },
   };
 }

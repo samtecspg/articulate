@@ -156,4 +156,10 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.component.GeneralSettings.backButton',
     defaultMessage: 'Exit',
   },
+  groupPoliciesLabel: {
+    id:
+      'app.containers.SettingsPage.component.GeneralSettings.groupPoliciesLabel',
+    defaultMessage:
+      'Group Policies',
+  },
 });

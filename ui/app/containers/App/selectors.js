@@ -471,13 +471,13 @@ const makeSelectLocale = () =>
   );
 
 /* Cheat sheet */
-const makeSelectStarredSayings = () => 
+const makeSelectStarredSayings = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.starredSayings
   )
 
-const makeSelectStarredSaying = () => 
+const makeSelectStarredSaying = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.starredSaying
@@ -506,7 +506,11 @@ const makeSelectLoadingCurrentUser = () =>
     selectGlobal,
     globalState => globalState.loadingCurrentUser,
   );
-
+const makeSelectAccessPolicyGroups = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.accessPolicyGroups,
+  );
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -583,6 +587,7 @@ export {
   makeSelectUsers,
   makeSelectTotalUsers,
   makeSelectSuccessKeywordExamplesUpdate,
+  makeSelectAccessPolicyGroups,
   makeSelectLoadingKeywordExamplesUpdate,
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,

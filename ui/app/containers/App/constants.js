@@ -128,8 +128,10 @@ export const LOAD_AGENT_STATS_ERROR = 'app/AgentPage/LOAD_AGENT_STATS_ERROR';
 export const LOAD_AGENT_STATS_SUCCESS = 'app/AgentPage/LOAD_AGENT_STATS_SUCCESS';
 export const SET_AGENT_DEFAULTS = 'app/AgentPage/SET_AGENT_DEFAULTS';
 export const LOAD_AGENT_SESSIONS = 'app/AgentPage/LOAD_AGENT_SESSIONS';
-export const LOAD_AGENT_SESSIONS_SUCCESS = 'app/AgentPage/LOAD_AGENT_SESSIONS_SUCCESS';
-export const LOAD_AGENT_SESSIONS_ERROR = 'app/AgentPage/LOAD_AGENT_SESSIONS_ERROR';
+export const LOAD_AGENT_SESSIONS_SUCCESS =
+  'app/AgentPage/LOAD_AGENT_SESSIONS_SUCCESS';
+export const LOAD_AGENT_SESSIONS_ERROR =
+  'app/AgentPage/LOAD_AGENT_SESSIONS_ERROR';
 
 /*
  * Sayings
@@ -315,7 +317,8 @@ export const IMPORT_CATEGORY_SUCCESS = 'app/CategoryPage/IMPORT_CATEGORY_SUCCESS
  * Review
  */
 export const CHANGE_REVIEW_PAGE_SIZE = 'app/ReviewPage/CHANGE_REVIEW_PAGE_SIZE';
-export const CHANGE_SESSIONS_PAGE_SIZE = 'app/ReviewPage/CHANGE_SESSIONS_PAGE_SIZE';
+export const CHANGE_SESSIONS_PAGE_SIZE =
+  'app/ReviewPage/CHANGE_SESSIONS_PAGE_SIZE';
 
 /*
  * Locale
@@ -341,13 +344,17 @@ export const LOAD_CURRENT_USER = 'app/user/LOAD_CURRENT_USER';
 export const LOAD_CURRENT_USER_SUCCESS = 'app/user/LOAD_CURRENT_USER_SUCCESS';
 export const LOAD_CURRENT_USER_ERROR = 'app/user/LOAD_CURRENT_USER_ERROR';
 
-/* Cheat sheet*/
+/* Cheat sheet */
 export const LOAD_STARRED_SAYINGS = 'app/ActionPage/LOAD_STARRED_SAYINGS';
-export const LOAD_STARRED_SAYINGS_ERROR = 'app/ActionPage/LOAD_STARRED_SAYINGS_ERROR';
-export const LOAD_STARRED_SAYINGS_SUCCESS = 'app/ActionPage/LOAD_STARRED_SAYINGS_SUCCESS';
+export const LOAD_STARRED_SAYINGS_ERROR =
+  'app/ActionPage/LOAD_STARRED_SAYINGS_ERROR';
+export const LOAD_STARRED_SAYINGS_SUCCESS =
+  'app/ActionPage/LOAD_STARRED_SAYINGS_SUCCESS';
 export const LOAD_STARRED_SAYING = 'app/ActionPage/LOAD_STARRED_SAYING';
-export const LOAD_STARRED_SAYING_ERROR = 'app/ActionPage/LOAD_STARRED_SAYING_ERROR';
-export const LOAD_STARRED_SAYING_SUCCESS = 'app/ActionPage/LOAD_STARRED_SAYING_SUCCESS';
+export const LOAD_STARRED_SAYING_ERROR =
+  'app/ActionPage/LOAD_STARRED_SAYING_ERROR';
+export const LOAD_STARRED_SAYING_SUCCESS =
+  'app/ActionPage/LOAD_STARRED_SAYING_SUCCESS';
 
 /* Users */
 export const LOAD_USERS = 'app/user/LOAD_USERS';
@@ -357,3 +364,16 @@ export const LOAD_USERS_ERROR = 'app/user/LOAD_USERS_ERROR';
 export const DELETE_USER = 'app/user/DELETE_USER';
 export const DELETE_USER_SUCCESS = 'app/user/DELETE_USER_SUCCESS';
 export const DELETE_USER_ERROR = 'app/user/DELETE_USER_ERROR';
+
+/* Access Policy Groups */
+
+export const LOAD_ACCESS_CONTROL = 'app/SettingsPage/LOAD_ACCESS_CONTROL';
+export const LOAD_ACCESS_CONTROL_ERROR =
+  'app/SettingsPage/LOAD_ACCESS_CONTROL_ERROR';
+export const LOAD_ACCESS_CONTROL_SUCCESS =
+  'app/SettingsPage/LOAD_ACCESS_CONTROL_SUCCESS';
+export const UPDATE_ACCESS_CONTROL = 'app/SettingsPage/UPDATE_ACCESS_CONTROL';
+export const UPDATE_ACCESS_CONTROL_ERROR =
+  'app/SettingsPage/UPDATE_ACCESS_CONTROL_ERROR';
+export const UPDATE_ACCESS_CONTROL_SUCCESS =
+  'app/SettingsPage/UPDATE_ACCESS_CONTROL_SUCCESS';

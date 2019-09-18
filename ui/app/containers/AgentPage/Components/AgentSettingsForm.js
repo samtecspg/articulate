@@ -1,36 +1,33 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
 import {
-  Grid,
-  Typography,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  TextField,
   Button,
-  Switch,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
   FormControlLabel,
   FormHelperText,
+  Grid,
+  Switch,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import WebhookSettings from 'components/WebhookSettings';
-import ResponseSettings from 'components/ResponseSettings';
-import RasaSettings from 'components/RasaSettings';
-import DucklingSettings from 'components/DucklingSettings';
-import TrainingSettings from './TrainingSettings';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import DucklingSettings from '../../../components/DucklingSettings';
+import RasaSettings from '../../../components/RasaSettings';
+import ResponseSettings from '../../../components/ResponseSettings';
 import AutomaticQuickRepliesSettings from './AutomaticQuickRepliesSettings'
-
-import messages from '../messages';
-
-import expandedNotEnabled from '../../../images/expand-not-enabled-icon.svg';
-import expandedNotEnabledOpened from '../../../images/expand-not-enabled-opened-icon.svg';
+import WebhookSettings from '../../../components/WebhookSettings';
 import expandedEnabled from '../../../images/expand-enabled-icon.svg';
 import expandedEnabledOpened from '../../../images/expand-enabled-opened-icon.svg';
+import expandedNotEnabled from '../../../images/expand-not-enabled-icon.svg';
+import expandedNotEnabledOpened from '../../../images/expand-not-enabled-opened-icon.svg';
 import expandedSingle from '../../../images/expand-single-icon.svg';
 import expandedSingleOpened from '../../../images/expand-single-opened-icon.svg';
+import messages from '../messages';
+import AgentAccessControlSettings from './AgentAccessControlSettings';
+import TrainingSettings from './TrainingSettings';
 
 const styles = {
   formContainer: {
@@ -68,23 +65,30 @@ class AgentSettingsForm extends React.Component {
     if (withToggle) {
       if (enabled) {
         if (expanded) {
-          return <img src={expandedEnabledOpened} />;
+          return <img alt="" src={expandedEnabledOpened} />;
         }
-        return <img src={expandedEnabled} />;
+        return <img alt="" src={expandedEnabled} />;
       }
       if (expanded) {
-        return <img src={expandedNotEnabledOpened} />;
+        return <img alt="" src={expandedNotEnabledOpened} />;
       }
-      return <img src={expandedNotEnabled} />;
+      return <img alt="" src={expandedNotEnabled} />;
     }
     if (expanded) {
-      return <img src={expandedSingleOpened} />;
+      return <img alt="" src={expandedSingleOpened} />;
     }
-    return <img src={expandedSingle} />;
+    return <img alt="" src={expandedSingle} />;
   };
 
   render() {
-    const { classes, agent, webhook, postFormat, agentSettings, intl } = this.props;
+    const {
+      classes,
+      agent,
+      webhook,
+      postFormat,
+      agentSettings,
+      intl,
+    } = this.props;
     const { expanded } = this.state;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
@@ -253,12 +257,19 @@ class AgentSettingsForm extends React.Component {
                     <TextField
                       id="slackLoggingURL"
                       label={intl.formatMessage(messages.slackLoggingURL)}
-                      value={agentSettings.slackLoggingURL ? agentSettings.slackLoggingURL : ''}
+                      value={
+                        agentSettings.slackLoggingURL
+                          ? agentSettings.slackLoggingURL
+                          : ''
+                      }
                       placeholder={intl.formatMessage(
                         messages.slackLoggingURLPlaceholder,
                       )}
                       onChange={evt => {
-                        this.props.onChangeAgentSettingsData('slackLoggingURL', evt.target.value);
+                        this.props.onChangeAgentSettingsData(
+                          'slackLoggingURL',
+                          evt.target.value,
+                        );
                       }}
                       margin="normal"
                       fullWidth
@@ -297,44 +308,50 @@ class AgentSettingsForm extends React.Component {
                           checked={agent.enableDiscoverySheet}
                           onChange={(evt, value) => {
                             this.setState({
-                              showSaveHint: true
-                            })
-                            this.props.onChangeAgentData('enableDiscoverySheet', value);
+                              showSaveHint: true,
+                            });
+                            this.props.onChangeAgentData(
+                              'enableDiscoverySheet',
+                              value,
+                            );
                           }}
                           value="enableDiscoverySheet"
                           color="primary"
                           inputProps={{
-                            'aria-describedby': "helper-text"
+                            'aria-describedby': 'helper-text',
                           }}
                         />
                       }
                       label={intl.formatMessage(messages.enableDiscoverySheet)}
                     />
-                    {
-                      this.state.showSaveHint ?
-                      <FormHelperText  style={{marginTop: '0px', marginBottom: '10px'}} id='helper-text'>
+                    {this.state.showSaveHint ? (
+                      <FormHelperText
+                        style={{ marginTop: '0px', marginBottom: '10px' }}
+                        id="helper-text"
+                      >
                         *Save to apply changes
                       </FormHelperText>
-                      : null
-                    }
+                    ) : null}
                   </Grid>
-                  {
-                    agent.enableDiscoverySheet ? 
+                  {agent.enableDiscoverySheet ? (
                     <Grid item xs={12}>
                       <Typography>
-                        <a style={{textDecoration: 'none'}} target='_blank' href={`${window.location.protocol}//${
-                          window.location.hostname
-                        }:${window.location.port}/agent/${
-                          agent.id
-                        }/discovery`}>
-                        <Button variant='contained'>
-                          {intl.formatMessage(messages.openDiscoverySheet)}
-                        </Button>
+                        <a
+                          style={{ textDecoration: 'none' }}
+                          target="_blank"
+                          href={`${window.location.protocol}//${
+                            window.location.hostname
+                          }:${window.location.port}/agent/${
+                            agent.id
+                          }/discovery`}
+                        >
+                          <Button variant="contained">
+                            {intl.formatMessage(messages.openDiscoverySheet)}
+                          </Button>
                         </a>
                       </Typography>
                     </Grid>
-                    : null
-                  }
+                  ) : null}
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -362,6 +379,34 @@ class AgentSettingsForm extends React.Component {
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
+            <ExpansionPanel
+              expanded={expanded === 'panelAccessControl'}
+              onChange={() =>
+                this.handleChange('expanded', 'panelAccessControl')
+              }
+            >
+              <ExpansionPanelSummary
+                expandIcon={this.getExpandIcon(
+                  false,
+                  expanded === 'panelAccessControl',
+                )}
+              >
+                <Typography className={classes.panelHeading}>
+                  <FormattedMessage {...messages.accessControlSettings} />
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <AgentAccessControlSettings
+                  users={this.props.users}
+                  onUpdateAccessPolicy={this.props.onChangeAgentData}
+                  accessPolicies={agent.accessPolicies}
+                  selectedUser={this.props.selectedAccessControlUser}
+                  onAccessControlUserChange={
+                    this.props.onAccessControlUserChange
+                  }
+                />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
           </div>
         </Grid>
       </Grid>
@@ -386,6 +431,10 @@ AgentSettingsForm.propTypes = {
   onChangePostFormatData: PropTypes.func,
   onChangeAgentSettingsData: PropTypes.func,
   errorState: PropTypes.object,
+  users: PropTypes.array,
+  selectedAccessControlUser: PropTypes.object,
+  onAccessControlUserChange: PropTypes.func,
+  onUpdateAccessPolicy: PropTypes.func,
 };
 
 export default injectIntl(withStyles(styles)(AgentSettingsForm));

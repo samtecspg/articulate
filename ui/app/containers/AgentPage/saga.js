@@ -5,6 +5,7 @@ import {
   ROUTE_AGENT,
   ROUTE_POST_FORMAT,
   ROUTE_SETTINGS,
+  ROUTE_USER,
   ROUTE_WEBHOOK,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
@@ -15,6 +16,8 @@ import {
   deleteAgentError,
   deleteAgentSuccess,
   loadAgentsSuccess,
+  loadUsersError,
+  loadUsersSuccess,
   updateAgentError,
   updateAgentSuccess,
 } from '../App/actions';
@@ -22,6 +25,7 @@ import {
   ADD_AGENT,
   DELETE_AGENT,
   LOAD_ACTIONS,
+  LOAD_USERS,
   UPDATE_AGENT,
 } from '../App/constants';
 import {
@@ -221,9 +225,24 @@ export function* deleteAgent(payload) {
   }
 }
 
+export function* getUsers(payload) {
+  const { api } = payload;
+  try {
+    const params = {
+      skip: 0,
+      limit: -1,
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_USER]), { params });
+    yield put(loadUsersSuccess(response));
+  } catch (err) {
+    yield put(loadUsersError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(ADD_AGENT, postAgent);
   yield takeLatest(UPDATE_AGENT, putAgent);
   yield takeLatest(DELETE_AGENT, deleteAgent);
   yield takeLatest(LOAD_ACTIONS, getActions);
+  yield takeLatest(LOAD_USERS, getUsers);
 }

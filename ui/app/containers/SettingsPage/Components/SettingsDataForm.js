@@ -1,24 +1,20 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
-
-import PropTypes from 'prop-types';
 import {
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
   Grid,
   Typography,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import RasaSettings from 'components/RasaSettings';
 import DucklingSettings from 'components/DucklingSettings';
-import GeneralSettings from './GeneralSettings';
-
-import messages from '../messages';
-
+import RasaSettings from 'components/RasaSettings';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import expandedSingle from '../../../images/expand-single-icon.svg';
 import expandedSingleOpened from '../../../images/expand-single-opened-icon.svg';
+import messages from '../messages';
+import GeneralSettings from './GeneralSettings';
 import GroupAndUsersForm from './GroupAndUsersForm';
 
 const styles = {
@@ -60,7 +56,14 @@ class SettingsDataForm extends React.Component {
   };
 
   render() {
-    const { classes, settings } = this.props;
+    const {
+      classes,
+      settings,
+      accessPolicyGroups,
+      selectedAccessPolicyGroup,
+      handleOnchangeAccessPolicyGroup,
+      onUpdateAccessPolicyGroup,
+    } = this.props;
     const { expanded } = this.state;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
@@ -151,10 +154,16 @@ class SettingsDataForm extends React.Component {
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <GroupAndUsersForm 
+                <GroupAndUsersForm
+                  accessPolicyGroups={accessPolicyGroups}
                   settings={this.props.settings}
                   onChangeSettingsData={this.props.onChangeSettingsData}
                   errorState={this.props.errorState}
+                  selectedAccessPolicyGroup={selectedAccessPolicyGroup}
+                  handleOnchangeAccessPolicyGroup={
+                    handleOnchangeAccessPolicyGroup
+                  }
+                  onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -172,6 +181,10 @@ SettingsDataForm.propTypes = {
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
   errorState: PropTypes.object,
+  accessPolicyGroups: PropTypes.array,
+  selectedAccessPolicyGroup: PropTypes.object,
+  handleOnchangeAccessPolicyGroup: PropTypes.func.isRequired,
+  onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(SettingsDataForm);

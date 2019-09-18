@@ -80,6 +80,7 @@ class AgentValidate {
                     parameters: Joi.object(),
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
                     generateSlotsQuickResponses: AgentSchema.generateSlotsQuickResponses,
+                    accessPolicies: AgentSchema.accessPolicies,
                     generateSlotsQuickResponsesMax: AgentSchema.generateSlotsQuickResponsesMax,
                     generateActionsQuickResponses: AgentSchema.generateActionsQuickResponses,
                     generateActionsQuickResponsesMax: AgentSchema.generateActionsQuickResponsesMax
@@ -136,7 +137,7 @@ class AgentValidate {
                     parameters: Joi.object()
                 };
             })()
-        }
+        };
 
         this.createAction = {
             params: (() => {
@@ -285,7 +286,8 @@ class AgentValidate {
                     creationDate: AgentSchema.creationDate,
                     modificationDate: AgentSchema.modificationDate,
                     parameters: Joi.object(),
-                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
+                    accessPolicies: AgentSchema.accessPolicies
                 };
             })()
         };
@@ -665,7 +667,7 @@ class AgentValidate {
                     actions: SayingSchema.actions.allow([]),
                     creationDate: SayingSchema.creationDate,
                     modificationDate: SayingSchema.modificationDate,
-                    starred: SayingSchema.starred.default(false),
+                    starred: SayingSchema.starred.default(false)
                 };
             })()
         };
