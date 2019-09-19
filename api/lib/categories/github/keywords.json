@@ -63,6 +63,20 @@
                     "commit",
                     "commits"
                 ]
+            },
+            {
+                "value": "release",
+                "synonyms": [
+                    "release",
+                    "releases"
+                ]
+            },
+            {
+                "value": "tag",
+                "synonyms": [
+                    "tag",
+                    "tags"
+                ]
             }
         ],
         "regex": "",
@@ -77,7 +91,7 @@
             }
         ],
         "creationDate": "1568646026000",
-        "modificationDate": "1568832985000"
+        "modificationDate": "1568919449000"
     },
     {
         "keywordName": "issueLabels",

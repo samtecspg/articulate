@@ -266,7 +266,7 @@
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568674143000",
-        "modificationDate": "1568674618000",
+        "modificationDate": "1568931802000",
         "webhook": {
             "webhookKey": "postCommentOnIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}/comments",
@@ -283,7 +283,7 @@
             "webhookPassword": "",
             "postScript": "",
             "creationDate": "1568674144000",
-            "modificationDate": "1568674618000"
+            "modificationDate": "1568931802000"
         }
     },
     {
@@ -460,6 +460,165 @@
             "postScript": "CSO.context.savedSlots[\"currentContextCommit\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastCommitWebhook.response[0],\n    \"original\": CSO.webhook.lastCommitWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568833337000",
             "modificationDate": "1568833838000"
+        }
+    },
+    {
+        "actionName": "getLastRelease",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "{{#if webhook.lastReleaseWebhook.response}} This is the most recent release: \"{{webhook.lastReleaseWebhook.response.name}}\" and it's tag is: \"{{webhook.lastReleaseWebhook.response.tag_name}}\" {{else}} There are no releases {{/if}}",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568914720000",
+        "modificationDate": "1568915731000",
+        "webhook": {
+            "webhookKey": "lastReleaseWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases/latest",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextRelease\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastReleaseWebhook.response,\n    \"original\": CSO.webhook.lastReleaseWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568914720000",
+            "modificationDate": "1568915731000"
+        }
+    },
+    {
+        "actionName": "getLastTag",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "The last tag is : \"{{webhook.lastTagWebhook.response.0.name}}\"",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568919711000",
+        "modificationDate": "1568919822000",
+        "webhook": {
+            "webhookKey": "lastTagWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/tags",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextTag\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastTagWebhook.response[0],\n    \"original\": CSO.webhook.lastTagWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568919711000",
+            "modificationDate": "1568919822000"
+        }
+    },
+    {
+        "actionName": "postReleaseUsingLastTag",
+        "slots": [
+            {
+                "slotName": "name",
+                "uiColor": "#4e4e4e",
+                "keyword": "sys.any",
+                "keywordId": 0,
+                "isList": false,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "What name do you want for your release?"
+                ],
+                "freeText": true,
+                "remainingLife": null,
+                "promptCountLimit": null
+            },
+            {
+                "slotName": "body",
+                "uiColor": "#4e4e4e",
+                "keyword": "sys.any",
+                "keywordId": 0,
+                "isList": false,
+                "isRequired": true,
+                "quickResponses": [],
+                "textPrompts": [
+                    "What is the description of the release?"
+                ],
+                "freeText": true,
+                "remainingLife": null,
+                "promptCountLimit": null
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "Done",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568921972000",
+        "modificationDate": "1568928762000",
+        "webhook": {
+            "webhookKey": "postReleaseUsingLastTagWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases",
+            "webhookVerb": "POST",
+            "webhookPayloadType": "JSON",
+            "webhookPayload": "{\n  \"tag_name\": \"{{{context.savedSlots.currentContextTag.value.name}}}\",\n  \"name\": \"{{{slots.name.value}}}\",\n  \"body\": \"{{{slots.body.value}}}\"\n}",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "CSO.context.savedSlots[\"currentContextRelease\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.postReleaseUsingLastTagWebhook.response,\n    \"original\": CSO.webhook.postReleaseUsingLastTagWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
+            "creationDate": "1568921972000",
+            "modificationDate": "1568928762000"
+        }
+    },
+    {
+        "actionName": "deleteCurrentContextRelease",
+        "slots": [],
+        "responses": [
+            {
+                "textResponse": "Done",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1568927503000",
+        "modificationDate": "1568928634000",
+        "webhook": {
+            "webhookKey": "deleteCurrentContextReleaseWebhook",
+            "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases/{{context.savedSlots.currentContextRelease.value.id}}",
+            "webhookVerb": "DELETE",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "Authorization",
+                    "value": "{{categories.Github.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "delete CSO.context.savedSlots.currentContextRelease;\n\nCSO;",
+            "creationDate": "1568927504000",
+            "modificationDate": "1568928634000"
         }
     }
 ]

@@ -499,5 +499,143 @@
         ],
         "creationDate": "1568836670000",
         "modificationDate": "1568836670000"
+    },
+    {
+        "userSays": "Which one is the last release",
+        "keywords": [
+            {
+                "start": 22,
+                "end": 29,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastRelease"
+        ],
+        "creationDate": "1568914751000",
+        "modificationDate": "1568914751000"
+    },
+    {
+        "userSays": "Get the last release",
+        "keywords": [
+            {
+                "start": 13,
+                "end": 20,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastRelease"
+        ],
+        "creationDate": "1568914769000",
+        "modificationDate": "1568914769000"
+    },
+    {
+        "userSays": "Which is the last tag?",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 21,
+                "value": "tag",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag"
+        ],
+        "creationDate": "1568919728000",
+        "modificationDate": "1568919728000"
+    },
+    {
+        "userSays": "Get the last tag",
+        "keywords": [
+            {
+                "start": 13,
+                "end": 16,
+                "value": "tag",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag"
+        ],
+        "creationDate": "1568919739000",
+        "modificationDate": "1568919739000"
+    },
+    {
+        "userSays": "Create a release",
+        "keywords": [
+            {
+                "start": 9,
+                "end": 16,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag",
+            "postReleaseUsingLastTag"
+        ],
+        "creationDate": "1568922908000",
+        "modificationDate": "1568926288000"
+    },
+    {
+        "userSays": "Post a release",
+        "keywords": [
+            {
+                "start": 7,
+                "end": 14,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag",
+            "postReleaseUsingLastTag"
+        ],
+        "creationDate": "1568922914000",
+        "modificationDate": "1568926288000"
+    },
+    {
+        "userSays": "Delete the release",
+        "keywords": [
+            {
+                "start": 11,
+                "end": 18,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "deleteCurrentContextRelease"
+        ],
+        "creationDate": "1568927526000",
+        "modificationDate": "1568927526000"
+    },
+    {
+        "userSays": "Undo the release",
+        "keywords": [
+            {
+                "start": 9,
+                "end": 16,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "deleteCurrentContextRelease"
+        ],
+        "creationDate": "1568927533000",
+        "modificationDate": "1568927533000"
     }
 ]
