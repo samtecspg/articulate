@@ -31,7 +31,7 @@ module.exports = async function ({ actionData, CSO }) {
 
     CSO.processedResponses.push(CSO.finalResponse);
 
-    if (CSO.context.docIds.indexOf(CSO.docId) === -1){
+    if (CSO.context.docIds.indexOf(CSO.docId) === -1) {
         CSO.context.docIds.push(CSO.docId);
     }
 
@@ -53,9 +53,9 @@ module.exports = async function ({ actionData, CSO }) {
         CSO: prunnedCSO
     };
 
-    await documentService.update({ 
+    await documentService.update({
         id: CSO.docId,
-        data: { 
+        data: {
             converseResult: fullConverseResult
         }
     });
@@ -73,19 +73,23 @@ module.exports = async function ({ actionData, CSO }) {
     //Once we store the webhook response in the document we need to convert it back to an object
     Object.keys(prunnedCSO.webhooks).forEach((webhookKey) => {
 
-        prunnedCSO.webhooks[webhookKey].response = JSON.parse(prunnedCSO.webhooks[webhookKey].response);
+        if (prunnedCSO.webhooks[webhookKey].response) {
+            prunnedCSO.webhooks[webhookKey].response = JSON.parse(prunnedCSO.webhooks[webhookKey].response);
+        } else if (prunnedCSO.webhooks[webhookKey].error) {
+            prunnedCSO.webhooks[webhookKey].error = JSON.parse(prunnedCSO.webhooks[webhookKey].error);
+        }
     });
 
-    const responseForUbiquity = CSO.debug ? fullConverseResult : converseResult; 
+    const responseForUbiquity = CSO.debug ? fullConverseResult : converseResult;
 
-    if (CSO.ubiquity && CSO.ubiquity.connection && CSO.ubiquity.connection.details.outgoingMessages){
+    if (CSO.ubiquity && CSO.ubiquity.connection && CSO.ubiquity.connection.details.outgoingMessages) {
 
         channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity });
         await timeout(CSO.ubiquity.connection.details.waitTimeBetweenMessages);
     }
     else {
-        if (CSO.articulateUI){
-            this.server.publish(`/${ROUTE_AGENT}/${CSO.agent.id}/${ROUTE_CONVERSE}`, responseForUbiquity );
+        if (CSO.articulateUI) {
+            this.server.publish(`/${ROUTE_AGENT}/${CSO.agent.id}/${ROUTE_CONVERSE}`, responseForUbiquity);
         }
     }
 };
