@@ -18,14 +18,14 @@
         ],
         "responses": [
             {
-                "textResponse": "It has {{lookup webhook.countWebhook.response slots.githubItem.value}} {{slots.githubItem.original}}",
+                "textResponse": "The repository has: {{lookup webhook.countWebhook.response slots.githubItem.value}} {{slots.githubItem.original}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568646026000",
-        "modificationDate": "1568646026000",
+        "modificationDate": "1569014869000",
         "webhook": {
             "webhookKey": "countWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}",
@@ -42,7 +42,7 @@
             "webhookPassword": "",
             "postScript": "",
             "creationDate": "1568646026000",
-            "modificationDate": "1568646026000"
+            "modificationDate": "1569014869000"
         }
     },
     {
@@ -81,14 +81,14 @@
         ],
         "responses": [
             {
-                "textResponse": "Done",
+                "textResponse": "{{#if webhook.postIssueWebhook.response}} The issue was created succesfully {{else}} Im sorry, there was a problem creating your issue{{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568646026000",
-        "modificationDate": "1568675127000",
+        "modificationDate": "1569015612000",
         "webhook": {
             "webhookKey": "postIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues",
@@ -105,7 +105,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextIssue\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.postIssueWebhook.response,\n    \"original\": CSO.webhook.postIssueWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568646026000",
-            "modificationDate": "1568675127000"
+            "modificationDate": "1569015613000"
         }
     },
     {
@@ -129,14 +129,14 @@
         ],
         "responses": [
             {
-                "textResponse": "Done",
+                "textResponse": "{{#if webhook.assignCurrentContextIssueWebhook.error}} {{#eq webhook.assignCurrentContextIssueWebhook.error.message compare = \"Validation Failed\"}} I'm sorry, there was a problem with your request, make sure that the username is correct {{/eq}} {{#eq webhook.assignCurrentContextIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue posted or requested recently in this conversation{{/eq}} {{else}} The issue has been assigned {{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568646026000",
-        "modificationDate": "1568836731000",
+        "modificationDate": "1569010312000",
         "webhook": {
             "webhookKey": "assignCurrentContextIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}",
@@ -153,7 +153,7 @@
             "webhookPassword": "",
             "postScript": "",
             "creationDate": "1568646026000",
-            "modificationDate": "1568836731000"
+            "modificationDate": "1569010312000"
         }
     },
     {
@@ -161,14 +161,14 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "This is the last open issue: \"{{webhook.lastOpenIssueWebhook.response.0.title}}\"",
+                "textResponse": "{{#if webhook.lastOpenIssueWebhook.response}} This is the last open issue: \"{{webhook.lastOpenIssueWebhook.response.0.title}}\" {{else}}There was an error getting the last commit{{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568666645000",
-        "modificationDate": "1568834418000",
+        "modificationDate": "1569013984000",
         "webhook": {
             "webhookKey": "lastOpenIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues?state=open&direction=desc&assignee={{context.savedSlots.currentContextUserName.value.login}}",
@@ -185,7 +185,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextIssue\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenIssueWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenIssueWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568666888000",
-            "modificationDate": "1568834418000"
+            "modificationDate": "1569013984000"
         }
     },
     {
@@ -193,14 +193,14 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "I see that your username is: {{webhook.getUserNameWebhook.response.login}}",
+                "textResponse": "{{#if webhook.getUserNameWebhook.response}}I see that your username is: {{webhook.getUserNameWebhook.response.login}}{{else}}I'm sorry, there was a problem getting your user name{{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568671854000",
-        "modificationDate": "1568673132000",
+        "modificationDate": "1569014329000",
         "webhook": {
             "webhookKey": "getUserNameWebhook",
             "webhookUrl": "https://api.github.com/user",
@@ -217,7 +217,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextUserName\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.getUserNameWebhook.response,\n    \"original\": CSO.webhook.getUserNameWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568671854000",
-            "modificationDate": "1568673132000"
+            "modificationDate": "1569014329000"
         }
     },
     {
@@ -243,12 +243,16 @@
             {
                 "textResponse": "Done",
                 "actions": []
+            },
+            {
+                "textResponse": "{{#if webhook.postCommentOnIssueWebhook.error}} {{#eq webhook.postCommentOnIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue created or requested recently in this conversation{{/eq}} {{else}}  The comment was added to the issue {{/if}}",
+                "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568674143000",
-        "modificationDate": "1568931802000",
+        "modificationDate": "1569015416000",
         "webhook": {
             "webhookKey": "postCommentOnIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}/comments",
@@ -265,7 +269,7 @@
             "webhookPassword": "",
             "postScript": "",
             "creationDate": "1568674144000",
-            "modificationDate": "1568931802000"
+            "modificationDate": "1569015416000"
         }
     },
     {
@@ -273,16 +277,16 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "Done",
+                "textResponse": "{{#if webhook.closeCurrentContextIssueWebhook.error}} {{#eq webhook.closeCurrentContextIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue posted or requested recently in this conversation{{/eq}} {{else}} The issue has been closed {{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568736601000",
-        "modificationDate": "1568736620000",
+        "modificationDate": "1569010362000",
         "webhook": {
-            "webhookKey": "assignCurrentContextIssueWebhook",
+            "webhookKey": "closeCurrentContextIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}",
             "webhookVerb": "PATCH",
             "webhookPayloadType": "JSON",
@@ -297,7 +301,7 @@
             "webhookPassword": "",
             "postScript": "",
             "creationDate": "1568646026000",
-            "modificationDate": "1568736620000"
+            "modificationDate": "1569010362000"
         }
     },
     {
@@ -321,14 +325,14 @@
         ],
         "responses": [
             {
-                "textResponse": "Done",
+                "textResponse": "{{#if webhook.labelIssueWebhook.error}} {{#eq webhook.labelIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue created or requested recently in this conversation{{/eq}} {{else}}  The issue has been labeled correctly {{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568738574000",
-        "modificationDate": "1568744065000",
+        "modificationDate": "1569014744000",
         "webhook": {
             "webhookKey": "labelIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}/labels",
@@ -345,7 +349,7 @@
             "webhookPassword": "",
             "postScript": "",
             "creationDate": "1568738574000",
-            "modificationDate": "1568743735000"
+            "modificationDate": "1569014744000"
         }
     },
     {
@@ -353,14 +357,14 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "{{#if webhook.lastOpenMilestoneWebhook.response}} This is the most recent milestone: \"{{webhook.lastOpenMilestoneWebhook.response.0.title}}\" {{else}} There is no open milestone {{/if}}",
+                "textResponse": "{{#if webhook.lastOpenMilestoneWebhook.response}} This is the most recent milestone: \"{{webhook.lastOpenMilestoneWebhook.response.0.title}}\" {{else}} There are no open milestones {{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568748310000",
-        "modificationDate": "1568750877000",
+        "modificationDate": "1569011264000",
         "webhook": {
             "webhookKey": "lastOpenMilestoneWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/milestones",
@@ -377,7 +381,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextMilestone\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568748310000",
-            "modificationDate": "1568750877000"
+            "modificationDate": "1569011264000"
         }
     },
     {
@@ -385,14 +389,14 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "It has {{context.savedSlots.currentContextMilestone.value.open_issues}} open issues<br>",
+                "textResponse": "{{#if webhook.lastOpenMilestoneWebhook.error}} {{#eq webhook.lastOpenMilestoneWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any milestone created or requested recently in this conversation{{/eq}} {{else}}  The milestone has {{context.savedSlots.currentContextMilestone.value.open_issues}} open issue(s) {{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568749486000",
-        "modificationDate": "1568750696000",
+        "modificationDate": "1569014832000",
         "webhook": {
             "webhookKey": "lastOpenMilestoneWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/milestones",
@@ -409,7 +413,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextMilestone\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568749486000",
-            "modificationDate": "1568750696000"
+            "modificationDate": "1569014832000"
         }
     },
     {
@@ -417,14 +421,14 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "The commit message is : \"{{webhook.lastCommitWebhook.response.0.commit.message}}\" and it was commited by : {{webhook.lastCommitWebhook.response.0.committer.login}}",
+                "textResponse": "{{#if webhook.lastCommitWebhook.response.0.commit}} The commit message is : \"{{webhook.lastCommitWebhook.response.0.commit.message}}\" and it was commited by: {{webhook.lastCommitWebhook.response.0.committer.login}}{{else}}There was an error getting the last commit{{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568833337000",
-        "modificationDate": "1568833838000",
+        "modificationDate": "1569013270000",
         "webhook": {
             "webhookKey": "lastCommitWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/commits",
@@ -441,7 +445,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextCommit\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastCommitWebhook.response[0],\n    \"original\": CSO.webhook.lastCommitWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568833337000",
-            "modificationDate": "1568833838000"
+            "modificationDate": "1569013270000"
         }
     },
     {
@@ -456,7 +460,7 @@
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568914720000",
-        "modificationDate": "1568915731000",
+        "modificationDate": "1569013551000",
         "webhook": {
             "webhookKey": "lastReleaseWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases/latest",
@@ -473,7 +477,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextRelease\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastReleaseWebhook.response,\n    \"original\": CSO.webhook.lastReleaseWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568914720000",
-            "modificationDate": "1568915731000"
+            "modificationDate": "1569013552000"
         }
     },
     {
@@ -481,14 +485,14 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "The last tag is : \"{{webhook.lastTagWebhook.response.0.name}}\"",
+                "textResponse": "{{#if webhook.lastTagWebhook.response}}The last tag is: \"{{webhook.lastTagWebhook.response.0.name}}\"{{else}} I'm sorry, there was a problem getting the last tag{{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568919711000",
-        "modificationDate": "1568919822000",
+        "modificationDate": "1569014211000",
         "webhook": {
             "webhookKey": "lastTagWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/tags",
@@ -505,7 +509,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextTag\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastTagWebhook.response[0],\n    \"original\": CSO.webhook.lastTagWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568919711000",
-            "modificationDate": "1568919822000"
+            "modificationDate": "1569014211000"
         }
     },
     {
@@ -544,14 +548,14 @@
         ],
         "responses": [
             {
-                "textResponse": "Done",
+                "textResponse": "{{#if webhook.postReleaseUsingLastTagWebhook.error}} {{#eq webhook.postReleaseUsingLastTagWebhook.error.errors.0.code compare = \"already_exists\"}} I'm sorry, this release already exists {{else}} I'm sorry, there was an error creating the release {{/eq}} {{else}} The release has been created {{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568921972000",
-        "modificationDate": "1568928762000",
+        "modificationDate": "1569016064000",
         "webhook": {
             "webhookKey": "postReleaseUsingLastTagWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases",
@@ -568,7 +572,7 @@
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextRelease\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.postReleaseUsingLastTagWebhook.response,\n    \"original\": CSO.webhook.postReleaseUsingLastTagWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
             "creationDate": "1568921972000",
-            "modificationDate": "1568928762000"
+            "modificationDate": "1569016065000"
         }
     },
     {
@@ -576,14 +580,14 @@
         "slots": [],
         "responses": [
             {
-                "textResponse": "Done",
+                "textResponse": "{{#if webhook.deleteCurrentContextReleaseWebhook.error}} {{#eq webhook.deleteCurrentContextReleaseWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any release created or requested recently in this conversation{{/eq}} {{else}}  The release has been deleted {{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1568927503000",
-        "modificationDate": "1568928634000",
+        "modificationDate": "1569011968000",
         "webhook": {
             "webhookKey": "deleteCurrentContextReleaseWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases/{{context.savedSlots.currentContextRelease.value.id}}",
@@ -600,7 +604,7 @@
             "webhookPassword": "",
             "postScript": "delete CSO.context.savedSlots.currentContextRelease;\n\nCSO;",
             "creationDate": "1568927504000",
-            "modificationDate": "1568928634000"
+            "modificationDate": "1569011968000"
         }
     }
 ]
