@@ -1,23 +1,5 @@
 [
     {
-        "actionName": "Default Fallback Action",
-        "slots": [],
-        "responses": [
-            {
-                "textResponse": "Sorry can you rephrase that?",
-                "actions": []
-            },
-            {
-                "textResponse": "I'm still learning to speak with humans. What you mean?",
-                "actions": []
-            }
-        ],
-        "useWebhook": false,
-        "usePostFormat": false,
-        "creationDate": "1568646026000",
-        "modificationDate": "1568646026000"
-    },
-    {
         "actionName": "getCount",
         "slots": [
             {
