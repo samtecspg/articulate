@@ -146,24 +146,6 @@
         "modificationDate": "1568671908000"
     },
     {
-        "userSays": "Get last open issue",
-        "keywords": [
-            {
-                "start": 14,
-                "end": 19,
-                "value": "issue",
-                "keyword": "githubItem",
-                "keywordId": 1509
-            }
-        ],
-        "actions": [
-            "getUserName",
-            "getLastOpenIssue"
-        ],
-        "creationDate": "1568666932000",
-        "modificationDate": "1568671897000"
-    },
-    {
         "userSays": "Comment on it",
         "keywords": [],
         "actions": [
@@ -637,5 +619,671 @@
         ],
         "creationDate": "1568927533000",
         "modificationDate": "1568927533000"
+    },
+    {
+        "userSays": "Please delete the release",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 25,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "deleteCurrentContextRelease"
+        ],
+        "creationDate": "1569027787000",
+        "modificationDate": "1569027787000"
+    },
+    {
+        "userSays": "I don't want the release anymore",
+        "keywords": [
+            {
+                "start": 17,
+                "end": 24,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "deleteCurrentContextRelease"
+        ],
+        "creationDate": "1569027797000",
+        "modificationDate": "1569027797000"
+    },
+    {
+        "userSays": "get rid of the release",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 22,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "deleteCurrentContextRelease"
+        ],
+        "creationDate": "1569027806000",
+        "modificationDate": "1569027806000"
+    },
+    {
+        "userSays": "Show me the last tag",
+        "keywords": [
+            {
+                "start": 17,
+                "end": 20,
+                "value": "tag",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag"
+        ],
+        "creationDate": "1569027842000",
+        "modificationDate": "1569027842000"
+    },
+    {
+        "userSays": "Bring the latest tag",
+        "keywords": [
+            {
+                "start": 17,
+                "end": 20,
+                "value": "tag",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag"
+        ],
+        "creationDate": "1569027863000",
+        "modificationDate": "1569027863000"
+    },
+    {
+        "userSays": "Which is the latest tag?",
+        "keywords": [
+            {
+                "start": 20,
+                "end": 23,
+                "value": "tag",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag"
+        ],
+        "creationDate": "1569027870000",
+        "modificationDate": "1569027870000"
+    },
+    {
+        "userSays": "I want the most recent tag",
+        "keywords": [
+            {
+                "start": 23,
+                "end": 26,
+                "value": "tag",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag"
+        ],
+        "creationDate": "1569027922000",
+        "modificationDate": "1569027922000"
+    },
+    {
+        "userSays": "tag",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 3,
+                "value": "tag",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag"
+        ],
+        "creationDate": "1569027925000",
+        "modificationDate": "1569027925000"
+    },
+    {
+        "userSays": "release",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 7,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastRelease"
+        ],
+        "creationDate": "1569027977000",
+        "modificationDate": "1569027977000"
+    },
+    {
+        "userSays": "Which is the most recent release?",
+        "keywords": [
+            {
+                "start": 25,
+                "end": 32,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastRelease"
+        ],
+        "creationDate": "1569027988000",
+        "modificationDate": "1569027988000"
+    },
+    {
+        "userSays": "I want the latest release",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 25,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastRelease"
+        ],
+        "creationDate": "1569027999000",
+        "modificationDate": "1569027999000"
+    },
+    {
+        "userSays": "latest release",
+        "keywords": [
+            {
+                "start": 7,
+                "end": 14,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastRelease"
+        ],
+        "creationDate": "1569028003000",
+        "modificationDate": "1569028003000"
+    },
+    {
+        "userSays": "commit",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 6,
+                "value": "commit",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastCommit"
+        ],
+        "creationDate": "1569028038000",
+        "modificationDate": "1569028038000"
+    },
+    {
+        "userSays": "Get the most recent commit",
+        "keywords": [
+            {
+                "start": 20,
+                "end": 26,
+                "value": "commit",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastCommit"
+        ],
+        "creationDate": "1569028046000",
+        "modificationDate": "1569028046000"
+    },
+    {
+        "userSays": "most recent commit",
+        "keywords": [
+            {
+                "start": 12,
+                "end": 18,
+                "value": "commit",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastCommit"
+        ],
+        "creationDate": "1569028068000",
+        "modificationDate": "1569028068000"
+    },
+    {
+        "userSays": "last commit",
+        "keywords": [
+            {
+                "start": 5,
+                "end": 11,
+                "value": "commit",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastCommit"
+        ],
+        "creationDate": "1569028079000",
+        "modificationDate": "1569028079000"
+    },
+    {
+        "userSays": "I want to meake a release",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 25,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag",
+            "postReleaseUsingLastTag"
+        ],
+        "creationDate": "1569028184000",
+        "modificationDate": "1569028184000"
+    },
+    {
+        "userSays": "Let's build a release",
+        "keywords": [
+            {
+                "start": 14,
+                "end": 21,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag",
+            "postReleaseUsingLastTag"
+        ],
+        "creationDate": "1569028203000",
+        "modificationDate": "1569028203000"
+    },
+    {
+        "userSays": "I need to make a release",
+        "keywords": [
+            {
+                "start": 17,
+                "end": 24,
+                "value": "release",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastTag",
+            "postReleaseUsingLastTag"
+        ],
+        "creationDate": "1569028212000",
+        "modificationDate": "1569028212000"
+    },
+    {
+        "userSays": "How many open issues does the milestone have?",
+        "keywords": [
+            {
+                "start": 14,
+                "end": 20,
+                "value": "issues",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            },
+            {
+                "start": 30,
+                "end": 39,
+                "value": "milestone",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "countLastOpenMilestoneOpenIssues"
+        ],
+        "creationDate": "1569028442000",
+        "modificationDate": "1569028442000"
+    },
+    {
+        "userSays": "count the issues in the milestone",
+        "keywords": [
+            {
+                "start": 10,
+                "end": 16,
+                "value": "issues",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            },
+            {
+                "start": 24,
+                "end": 33,
+                "value": "milestone",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "countLastOpenMilestoneOpenIssues"
+        ],
+        "creationDate": "1569028461000",
+        "modificationDate": "1569028461000"
+    },
+    {
+        "userSays": "Which is the last open milestone",
+        "keywords": [
+            {
+                "start": 23,
+                "end": 32,
+                "value": "milestone",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastOpenMilestone"
+        ],
+        "creationDate": "1569028508000",
+        "modificationDate": "1569028508000"
+    },
+    {
+        "userSays": "Is there a last open milestone?",
+        "keywords": [
+            {
+                "start": 21,
+                "end": 30,
+                "value": "milestone",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastOpenMilestone"
+        ],
+        "creationDate": "1569028523000",
+        "modificationDate": "1569028523000"
+    },
+    {
+        "userSays": "milestone",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 9,
+                "value": "milestone",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getLastOpenMilestone"
+        ],
+        "creationDate": "1569028528000",
+        "modificationDate": "1569028528000"
+    },
+    {
+        "userSays": "Please close the issue",
+        "keywords": [
+            {
+                "start": 17,
+                "end": 22,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "closeCurrentContextIssue"
+        ],
+        "creationDate": "1569028613000",
+        "modificationDate": "1569028613000"
+    },
+    {
+        "userSays": "Mark the issue as closed",
+        "keywords": [
+            {
+                "start": 9,
+                "end": 14,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "closeCurrentContextIssue"
+        ],
+        "creationDate": "1569028623000",
+        "modificationDate": "1569028623000"
+    },
+    {
+        "userSays": "issue closed",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 5,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "closeCurrentContextIssue"
+        ],
+        "creationDate": "1569028631000",
+        "modificationDate": "1569028631000"
+    },
+    {
+        "userSays": "Comment on the issue",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 20,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "postCommentOnIssue"
+        ],
+        "creationDate": "1569028707000",
+        "modificationDate": "1569028707000"
+    },
+    {
+        "userSays": "I want to make a comment on the issue",
+        "keywords": [
+            {
+                "start": 32,
+                "end": 37,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "postCommentOnIssue"
+        ],
+        "creationDate": "1569028717000",
+        "modificationDate": "1569028717000"
+    },
+    {
+        "userSays": "Post a. comment on the issue",
+        "keywords": [
+            {
+                "start": 23,
+                "end": 28,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "postCommentOnIssue"
+        ],
+        "creationDate": "1569028729000",
+        "modificationDate": "1569028729000"
+    },
+    {
+        "userSays": "Get my last issue",
+        "keywords": [
+            {
+                "start": 12,
+                "end": 17,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getUserName",
+            "getLastOpenIssue"
+        ],
+        "creationDate": "1569028818000",
+        "modificationDate": "1569028818000"
+    },
+    {
+        "userSays": "get my last assigned issue open",
+        "keywords": [
+            {
+                "start": 21,
+                "end": 26,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getUserName",
+            "getLastOpenIssue"
+        ],
+        "creationDate": "1569028841000",
+        "modificationDate": "1569028841000"
+    },
+    {
+        "userSays": "issue",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 5,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "getUserName",
+            "getLastOpenIssue"
+        ],
+        "creationDate": "1569028901000",
+        "modificationDate": "1569028901000"
+    },
+    {
+        "userSays": "I want to assign the issue",
+        "keywords": [
+            {
+                "start": 21,
+                "end": 26,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "assignCurrentContextIssue"
+        ],
+        "creationDate": "1569028947000",
+        "modificationDate": "1569028947000"
+    },
+    {
+        "userSays": "lets assign the issue",
+        "keywords": [
+            {
+                "start": 16,
+                "end": 21,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "assignCurrentContextIssue"
+        ],
+        "creationDate": "1569028959000",
+        "modificationDate": "1569028959000"
+    },
+    {
+        "userSays": "I want to create an issue",
+        "keywords": [
+            {
+                "start": 20,
+                "end": 25,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "postIssue"
+        ],
+        "creationDate": "1569029002000",
+        "modificationDate": "1569029002000"
+    },
+    {
+        "userSays": "Lets create an issue",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 20,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "postIssue"
+        ],
+        "creationDate": "1569029015000",
+        "modificationDate": "1569029015000"
+    },
+    {
+        "userSays": "I want to make an issue",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 23,
+                "value": "issue",
+                "keyword": "githubItem",
+                "keywordId": 1509
+            }
+        ],
+        "actions": [
+            "postIssue"
+        ],
+        "creationDate": "1569029024000",
+        "modificationDate": "1569029024000"
     }
 ]
