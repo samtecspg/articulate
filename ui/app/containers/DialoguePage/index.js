@@ -223,6 +223,13 @@ export class DialoguePage extends React.PureComponent {
       });
       this.setNumberOfActionsPages(this.state.actionsPageSize);
     }
+    if (this.needSwitchToPreviousPage(this.state.currentSayingsPage,
+      this.props.totalSayings,
+      prevProps.totalSayings,
+      this.state.sayingsPageSize)) {
+      const currentSayingsPage = this.state.currentSayingsPage - 1;
+      this.changeSayingsPage(currentSayingsPage);
+    }
   }
 
   changeSayingsPage(pageNumber) {
@@ -303,28 +310,22 @@ export class DialoguePage extends React.PureComponent {
   deleteSaying(sayingId, categoryId) {
     this.props.onDeleteSaying(
       this.state.filter,
+      this.state.currentSayingsPage,
+      this.state.sayingsPageSize,
       sayingId,
       categoryId,
     );
-
-    if (this.needSwitchToPreviousPage(this.state.currentSayingsPage,
-      this.props.totalSayings,
-      this.state.sayingsPageSize)) {
-      const currentSayingsPage = this.state.currentSayingsPage - 1;
-      this.changeSayingsPage(currentSayingsPage);
-    } else {
-      this.props.onLoadSayings(
-        this.state.filter,
-        this.state.currentSayingsPage,
-        this.state.sayingsPageSize,
-      );
-    }
   }
 
-  needSwitchToPreviousPage(currentPage, totalElements, pageSize) {
-    return this.isLastElementOfPage(totalElements, pageSize)
-      && this.isLastPage(currentPage, totalElements, pageSize)
-      && currentPage > 1;
+  needSwitchToPreviousPage(currentPage, totalElements, previousStateTotalElements, pageSize) {
+    if (previousStateTotalElements != totalElements) {
+      return this.isLastElementOfPage(previousStateTotalElements, pageSize)
+        && this.isLastPage(currentPage, previousStateTotalElements, pageSize)
+        && currentPage > 1;
+    } else {
+      return false;
+    }
+
   }
 
   isLastElementOfPage(totalElements, pageSize) {
@@ -701,8 +702,8 @@ function mapDispatchToProps(dispatch) {
     onAddSaying: (filter, page, pageSize, value) => {
       dispatch(addSaying(filter, page, pageSize, value));
     },
-    onDeleteSaying: (filter, sayingId, categoryId) => {
-      dispatch(deleteSaying(filter, sayingId, categoryId));
+    onDeleteSaying: (filter, page, pageSize, sayingId, categoryId) => {
+      dispatch(deleteSaying(filter, page, pageSize, sayingId, categoryId));
     },
     onTagKeyword: (
       filter,
