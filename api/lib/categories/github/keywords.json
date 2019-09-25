@@ -77,6 +77,39 @@
                     "tag",
                     "tags"
                 ]
+            },
+            {
+                "value": "forks_count",
+                "synonyms": [
+                    "forks_count",
+                    "fork",
+                    "forks"
+                ]
+            },
+            {
+                "value": "subscribers_count",
+                "synonyms": [
+                    "subscribers_count",
+                    "subscribers",
+                    "subscriber"
+                ]
+            },
+            {
+                "value": "watchers_count",
+                "synonyms": [
+                    "watchers_count",
+                    "watchers",
+                    "watcher"
+                ]
+            },
+            {
+                "value": "stargazers_count",
+                "synonyms": [
+                    "stargazers_count",
+                    "stars",
+                    "star",
+                    "stargazers"
+                ]
             }
         ],
         "regex": "",
@@ -90,8 +123,8 @@
                 "sayings": []
             }
         ],
-        "creationDate": "1568646026000",
-        "modificationDate": "1568919449000"
+        "creationDate": "1569413861000",
+        "modificationDate": "1569414268000"
     },
     {
         "keywordName": "issueLabels",
@@ -155,7 +188,7 @@
         "regex": "",
         "type": "learned",
         "modifiers": [],
-        "creationDate": "1568738154000",
-        "modificationDate": "1568744065000"
+        "creationDate": "1569413861000",
+        "modificationDate": "1569413861000"
     }
 ]

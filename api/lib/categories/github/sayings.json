@@ -1,5 +1,32 @@
 [
     {
+        "userSays": "Assign it",
+        "keywords": [],
+        "actions": [
+            "assignCurrentContextIssue"
+        ],
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
+    },
+    {
+        "userSays": "Comment on it",
+        "keywords": [],
+        "actions": [
+            "postCommentOnIssue"
+        ],
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
+    },
+    {
+        "userSays": "Close it",
+        "keywords": [],
+        "actions": [
+            "closeCurrentContextIssue"
+        ],
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
+    },
+    {
         "userSays": "Tell me the watchers count",
         "keywords": [
             {
@@ -7,14 +34,14 @@
                 "end": 20,
                 "value": "watchers",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getCount"
         ],
-        "creationDate": "1568646026000",
-        "modificationDate": "1568646026000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Tell me the forks count",
@@ -24,14 +51,14 @@
                 "end": 17,
                 "value": "forks",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getCount"
         ],
-        "creationDate": "1568646026000",
-        "modificationDate": "1568646026000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Tell me the count of forks",
@@ -41,14 +68,14 @@
                 "end": 26,
                 "value": "forks",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getCount"
         ],
-        "creationDate": "1568646026000",
-        "modificationDate": "1568646026000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Tell me the count of watchers",
@@ -58,14 +85,14 @@
                 "end": 29,
                 "value": "watchers",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getCount"
         ],
-        "creationDate": "1568646026000",
-        "modificationDate": "1568646026000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Post an issue",
@@ -75,14 +102,14 @@
                 "end": 13,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postIssue"
         ],
-        "creationDate": "1568646026000",
-        "modificationDate": "1568646026000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Please post an issue",
@@ -92,14 +119,14 @@
                 "end": 20,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postIssue"
         ],
-        "creationDate": "1568646026000",
-        "modificationDate": "1568646026000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Assign the last issue",
@@ -109,23 +136,14 @@
                 "end": 21,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "assignCurrentContextIssue"
         ],
-        "creationDate": "1568647195000",
-        "modificationDate": "1568670292000"
-    },
-    {
-        "userSays": "Assign it",
-        "keywords": [],
-        "actions": [
-            "assignCurrentContextIssue"
-        ],
-        "creationDate": "1568647221000",
-        "modificationDate": "1568670292000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Get my last open issue",
@@ -135,24 +153,15 @@
                 "end": 22,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getUserName",
             "getLastOpenIssue"
         ],
-        "creationDate": "1568666914000",
-        "modificationDate": "1568671908000"
-    },
-    {
-        "userSays": "Comment on it",
-        "keywords": [],
-        "actions": [
-            "postCommentOnIssue"
-        ],
-        "creationDate": "1568674172000",
-        "modificationDate": "1568674172000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "comment on the issue",
@@ -162,23 +171,14 @@
                 "end": 20,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postCommentOnIssue"
         ],
-        "creationDate": "1568674177000",
-        "modificationDate": "1568674177000"
-    },
-    {
-        "userSays": "Close it",
-        "keywords": [],
-        "actions": [
-            "closeCurrentContextIssue"
-        ],
-        "creationDate": "1568736652000",
-        "modificationDate": "1568736652000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Close the issue",
@@ -188,14 +188,14 @@
                 "end": 15,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "closeCurrentContextIssue"
         ],
-        "creationDate": "1568736660000",
-        "modificationDate": "1568736660000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Label the issue as bug",
@@ -205,28 +205,28 @@
                 "end": 5,
                 "value": "label",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 10,
                 "end": 15,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 19,
                 "end": 22,
                 "value": "bug",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             }
         ],
         "actions": [
             "labelIssue"
         ],
-        "creationDate": "1568738622000",
-        "modificationDate": "1568738622000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Label the issue as enhancement, bug, help wanted and question",
@@ -236,49 +236,49 @@
                 "end": 5,
                 "value": "label",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 10,
                 "end": 15,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 19,
                 "end": 30,
                 "value": "enhancement",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             },
             {
                 "start": 32,
                 "end": 35,
                 "value": "bug",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             },
             {
                 "start": 37,
                 "end": 48,
                 "value": "help wanted",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             },
             {
                 "start": 53,
                 "end": 61,
                 "value": "question",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             }
         ],
         "actions": [
             "labelIssue"
         ],
-        "creationDate": "1568738764000",
-        "modificationDate": "1568738764000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Get the most recent milestone",
@@ -288,14 +288,14 @@
                 "end": 29,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastOpenMilestone"
         ],
-        "creationDate": "1568748452000",
-        "modificationDate": "1568748452000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which one is the las milestone",
@@ -305,14 +305,14 @@
                 "end": 30,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastOpenMilestone"
         ],
-        "creationDate": "1568748462000",
-        "modificationDate": "1568748462000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which one is the last milestone?",
@@ -322,14 +322,14 @@
                 "end": 31,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastOpenMilestone"
         ],
-        "creationDate": "1568748478000",
-        "modificationDate": "1568748478000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Hoy many open issues does it have?",
@@ -339,14 +339,14 @@
                 "end": 20,
                 "value": "issues",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "countLastOpenMilestoneOpenIssues"
         ],
-        "creationDate": "1568749527000",
-        "modificationDate": "1568749527000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Count the open issues in the milestone",
@@ -356,21 +356,21 @@
                 "end": 21,
                 "value": "issues",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 29,
                 "end": 38,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "countLastOpenMilestoneOpenIssues"
         ],
-        "creationDate": "1568749565000",
-        "modificationDate": "1568749565000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Label the issue as wontfix",
@@ -380,28 +380,28 @@
                 "end": 5,
                 "value": "label",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 10,
                 "end": 15,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 19,
                 "end": 26,
                 "value": "wontfix",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             }
         ],
         "actions": [
             "labelIssue"
         ],
-        "creationDate": "1568831707000",
-        "modificationDate": "1568833355000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which is the last commit from the repo?",
@@ -411,21 +411,21 @@
                 "end": 24,
                 "value": "commit",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 34,
                 "end": 38,
                 "value": "repo",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastCommit"
         ],
-        "creationDate": "1568833009000",
-        "modificationDate": "1568833348000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which is the last commit?",
@@ -435,14 +435,14 @@
                 "end": 24,
                 "value": "commit",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastCommit"
         ],
-        "creationDate": "1568833020000",
-        "modificationDate": "1568833344000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Label the issue as duplicate and invalid",
@@ -452,35 +452,35 @@
                 "end": 5,
                 "value": "label",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 10,
                 "end": 15,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 19,
                 "end": 28,
                 "value": "duplicate",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             },
             {
                 "start": 33,
                 "end": 40,
                 "value": "invalid",
                 "keyword": "issueLabels",
-                "keywordId": 1510
+                "keywordId": 1675
             }
         ],
         "actions": [
             "labelIssue"
         ],
-        "creationDate": "1568836670000",
-        "modificationDate": "1568836670000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which one is the last release",
@@ -490,14 +490,14 @@
                 "end": 29,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastRelease"
         ],
-        "creationDate": "1568914751000",
-        "modificationDate": "1568914751000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Get the last release",
@@ -507,14 +507,14 @@
                 "end": 20,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastRelease"
         ],
-        "creationDate": "1568914769000",
-        "modificationDate": "1568914769000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which is the last tag?",
@@ -524,14 +524,14 @@
                 "end": 21,
                 "value": "tag",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag"
         ],
-        "creationDate": "1568919728000",
-        "modificationDate": "1568919728000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Get the last tag",
@@ -541,14 +541,14 @@
                 "end": 16,
                 "value": "tag",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag"
         ],
-        "creationDate": "1568919739000",
-        "modificationDate": "1568919739000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Create a release",
@@ -558,15 +558,15 @@
                 "end": 16,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag",
             "postReleaseUsingLastTag"
         ],
-        "creationDate": "1568922908000",
-        "modificationDate": "1568926288000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Post a release",
@@ -576,15 +576,15 @@
                 "end": 14,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag",
             "postReleaseUsingLastTag"
         ],
-        "creationDate": "1568922914000",
-        "modificationDate": "1568926288000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Delete the release",
@@ -594,14 +594,14 @@
                 "end": 18,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "deleteCurrentContextRelease"
         ],
-        "creationDate": "1568927526000",
-        "modificationDate": "1568927526000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Undo the release",
@@ -611,14 +611,14 @@
                 "end": 16,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "deleteCurrentContextRelease"
         ],
-        "creationDate": "1568927533000",
-        "modificationDate": "1568927533000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Please delete the release",
@@ -628,14 +628,14 @@
                 "end": 25,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "deleteCurrentContextRelease"
         ],
-        "creationDate": "1569027787000",
-        "modificationDate": "1569027787000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I don't want the release anymore",
@@ -645,14 +645,14 @@
                 "end": 24,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "deleteCurrentContextRelease"
         ],
-        "creationDate": "1569027797000",
-        "modificationDate": "1569027797000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "get rid of the release",
@@ -662,14 +662,14 @@
                 "end": 22,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "deleteCurrentContextRelease"
         ],
-        "creationDate": "1569027806000",
-        "modificationDate": "1569027806000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Show me the last tag",
@@ -679,14 +679,14 @@
                 "end": 20,
                 "value": "tag",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag"
         ],
-        "creationDate": "1569027842000",
-        "modificationDate": "1569027842000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Bring the latest tag",
@@ -696,14 +696,14 @@
                 "end": 20,
                 "value": "tag",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag"
         ],
-        "creationDate": "1569027863000",
-        "modificationDate": "1569027863000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which is the latest tag?",
@@ -713,14 +713,14 @@
                 "end": 23,
                 "value": "tag",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag"
         ],
-        "creationDate": "1569027870000",
-        "modificationDate": "1569027870000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I want the most recent tag",
@@ -730,14 +730,14 @@
                 "end": 26,
                 "value": "tag",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag"
         ],
-        "creationDate": "1569027922000",
-        "modificationDate": "1569027922000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "tag",
@@ -747,14 +747,14 @@
                 "end": 3,
                 "value": "tag",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag"
         ],
-        "creationDate": "1569027925000",
-        "modificationDate": "1569027925000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "release",
@@ -764,14 +764,14 @@
                 "end": 7,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastRelease"
         ],
-        "creationDate": "1569027977000",
-        "modificationDate": "1569027977000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which is the most recent release?",
@@ -781,14 +781,14 @@
                 "end": 32,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastRelease"
         ],
-        "creationDate": "1569027988000",
-        "modificationDate": "1569027988000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I want the latest release",
@@ -798,14 +798,14 @@
                 "end": 25,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastRelease"
         ],
-        "creationDate": "1569027999000",
-        "modificationDate": "1569027999000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "latest release",
@@ -815,14 +815,14 @@
                 "end": 14,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastRelease"
         ],
-        "creationDate": "1569028003000",
-        "modificationDate": "1569028003000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "commit",
@@ -832,14 +832,14 @@
                 "end": 6,
                 "value": "commit",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastCommit"
         ],
-        "creationDate": "1569028038000",
-        "modificationDate": "1569028038000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Get the most recent commit",
@@ -849,14 +849,14 @@
                 "end": 26,
                 "value": "commit",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastCommit"
         ],
-        "creationDate": "1569028046000",
-        "modificationDate": "1569028046000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "most recent commit",
@@ -866,14 +866,14 @@
                 "end": 18,
                 "value": "commit",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastCommit"
         ],
-        "creationDate": "1569028068000",
-        "modificationDate": "1569028068000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "last commit",
@@ -883,14 +883,14 @@
                 "end": 11,
                 "value": "commit",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastCommit"
         ],
-        "creationDate": "1569028079000",
-        "modificationDate": "1569028079000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I want to meake a release",
@@ -900,15 +900,15 @@
                 "end": 25,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag",
             "postReleaseUsingLastTag"
         ],
-        "creationDate": "1569028184000",
-        "modificationDate": "1569028184000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Let's build a release",
@@ -918,15 +918,15 @@
                 "end": 21,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag",
             "postReleaseUsingLastTag"
         ],
-        "creationDate": "1569028203000",
-        "modificationDate": "1569028203000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I need to make a release",
@@ -936,15 +936,15 @@
                 "end": 24,
                 "value": "release",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastTag",
             "postReleaseUsingLastTag"
         ],
-        "creationDate": "1569028212000",
-        "modificationDate": "1569028212000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "How many open issues does the milestone have?",
@@ -954,21 +954,21 @@
                 "end": 20,
                 "value": "issues",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 30,
                 "end": 39,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "countLastOpenMilestoneOpenIssues"
         ],
-        "creationDate": "1569028442000",
-        "modificationDate": "1569028442000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "count the issues in the milestone",
@@ -978,21 +978,21 @@
                 "end": 16,
                 "value": "issues",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             },
             {
                 "start": 24,
                 "end": 33,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "countLastOpenMilestoneOpenIssues"
         ],
-        "creationDate": "1569028461000",
-        "modificationDate": "1569028461000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Which is the last open milestone",
@@ -1002,14 +1002,14 @@
                 "end": 32,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastOpenMilestone"
         ],
-        "creationDate": "1569028508000",
-        "modificationDate": "1569028508000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Is there a last open milestone?",
@@ -1019,14 +1019,14 @@
                 "end": 30,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastOpenMilestone"
         ],
-        "creationDate": "1569028523000",
-        "modificationDate": "1569028523000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "milestone",
@@ -1036,14 +1036,14 @@
                 "end": 9,
                 "value": "milestone",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getLastOpenMilestone"
         ],
-        "creationDate": "1569028528000",
-        "modificationDate": "1569028528000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Please close the issue",
@@ -1053,14 +1053,14 @@
                 "end": 22,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "closeCurrentContextIssue"
         ],
-        "creationDate": "1569028613000",
-        "modificationDate": "1569028613000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Mark the issue as closed",
@@ -1070,14 +1070,14 @@
                 "end": 14,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "closeCurrentContextIssue"
         ],
-        "creationDate": "1569028623000",
-        "modificationDate": "1569028623000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "issue closed",
@@ -1087,14 +1087,14 @@
                 "end": 5,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "closeCurrentContextIssue"
         ],
-        "creationDate": "1569028631000",
-        "modificationDate": "1569028631000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Comment on the issue",
@@ -1104,14 +1104,14 @@
                 "end": 20,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postCommentOnIssue"
         ],
-        "creationDate": "1569028707000",
-        "modificationDate": "1569028707000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I want to make a comment on the issue",
@@ -1121,14 +1121,14 @@
                 "end": 37,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postCommentOnIssue"
         ],
-        "creationDate": "1569028717000",
-        "modificationDate": "1569028717000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Post a. comment on the issue",
@@ -1138,14 +1138,14 @@
                 "end": 28,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postCommentOnIssue"
         ],
-        "creationDate": "1569028729000",
-        "modificationDate": "1569028729000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Get my last issue",
@@ -1155,15 +1155,15 @@
                 "end": 17,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getUserName",
             "getLastOpenIssue"
         ],
-        "creationDate": "1569028818000",
-        "modificationDate": "1569028818000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "get my last assigned issue open",
@@ -1173,15 +1173,15 @@
                 "end": 26,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getUserName",
             "getLastOpenIssue"
         ],
-        "creationDate": "1569028841000",
-        "modificationDate": "1569028841000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "issue",
@@ -1191,15 +1191,15 @@
                 "end": 5,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "getUserName",
             "getLastOpenIssue"
         ],
-        "creationDate": "1569028901000",
-        "modificationDate": "1569028901000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I want to assign the issue",
@@ -1209,14 +1209,14 @@
                 "end": 26,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "assignCurrentContextIssue"
         ],
-        "creationDate": "1569028947000",
-        "modificationDate": "1569028947000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "lets assign the issue",
@@ -1226,14 +1226,14 @@
                 "end": 21,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "assignCurrentContextIssue"
         ],
-        "creationDate": "1569028959000",
-        "modificationDate": "1569028959000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I want to create an issue",
@@ -1243,14 +1243,14 @@
                 "end": 25,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postIssue"
         ],
-        "creationDate": "1569029002000",
-        "modificationDate": "1569029002000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "Lets create an issue",
@@ -1260,14 +1260,14 @@
                 "end": 20,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postIssue"
         ],
-        "creationDate": "1569029015000",
-        "modificationDate": "1569029015000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
     },
     {
         "userSays": "I want to make an issue",
@@ -1277,13 +1277,146 @@
                 "end": 23,
                 "value": "issue",
                 "keyword": "githubItem",
-                "keywordId": 1509
+                "keywordId": 1674
             }
         ],
         "actions": [
             "postIssue"
         ],
-        "creationDate": "1569029024000",
-        "modificationDate": "1569029024000"
+        "creationDate": "1569413862000",
+        "modificationDate": "1569413862000"
+    },
+    {
+        "userSays": "how many stars does the repo have?",
+        "keywords": [
+            {
+                "start": 9,
+                "end": 14,
+                "value": "stars",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            },
+            {
+                "start": 24,
+                "end": 28,
+                "value": "repo",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            }
+        ],
+        "actions": [
+            "getCount"
+        ],
+        "creationDate": "1569414580000",
+        "modificationDate": "1569414580000"
+    },
+    {
+        "userSays": "how many stars there are?",
+        "keywords": [
+            {
+                "start": 9,
+                "end": 14,
+                "value": "stars",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            }
+        ],
+        "actions": [
+            "getCount"
+        ],
+        "creationDate": "1569414589000",
+        "modificationDate": "1569414589000"
+    },
+    {
+        "userSays": "tell me the count of stars",
+        "keywords": [
+            {
+                "start": 21,
+                "end": 26,
+                "value": "stars",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            }
+        ],
+        "actions": [
+            "getCount"
+        ],
+        "creationDate": "1569414600000",
+        "modificationDate": "1569414600000"
+    },
+    {
+        "userSays": "hoy many forks does the repo have?",
+        "keywords": [
+            {
+                "start": 9,
+                "end": 14,
+                "value": "forks",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            },
+            {
+                "start": 24,
+                "end": 28,
+                "value": "repo",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            }
+        ],
+        "actions": [
+            "getCount"
+        ],
+        "creationDate": "1569414631000",
+        "modificationDate": "1569414631000"
+    },
+    {
+        "userSays": "tell me the count of forks",
+        "keywords": [
+            {
+                "start": 21,
+                "end": 26,
+                "value": "forks",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            }
+        ],
+        "actions": [
+            "getCount"
+        ],
+        "creationDate": "1569414643000",
+        "modificationDate": "1569414643000"
+    },
+    {
+        "userSays": "how many subscribers does it have?",
+        "keywords": [
+            {
+                "start": 9,
+                "end": 20,
+                "value": "subscribers",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            }
+        ],
+        "actions": [
+            "getCount"
+        ],
+        "creationDate": "1569414664000",
+        "modificationDate": "1569414664000"
+    },
+    {
+        "userSays": "tell me the count of subscribers",
+        "keywords": [
+            {
+                "start": 21,
+                "end": 32,
+                "value": "subscribers",
+                "keyword": "githubItem",
+                "keywordId": 1674
+            }
+        ],
+        "actions": [
+            "getCount"
+        ],
+        "creationDate": "1569414681000",
+        "modificationDate": "1569414681000"
     }
 ]
