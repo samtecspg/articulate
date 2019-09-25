@@ -218,6 +218,7 @@ class SayingsDataForm extends React.Component {
     anchorEl: null,
     changedPage: false,
     currentNewSaying: '',
+    currentlyDeletingSaying: false
   };
 
   constructor(props) {
@@ -250,6 +251,9 @@ class SayingsDataForm extends React.Component {
     ) {
       this.setState({
         changedPage: false,
+      });
+      this.setState({
+        currentlyDeletingSaying: false
       });
     }
   }
@@ -539,10 +543,15 @@ class SayingsDataForm extends React.Component {
                         <TableCell className={classes.deleteCell}>
                           <img
                             onClick={() => {
-                              this.props.onDeleteSaying(
-                                saying.id,
-                                saying.category,
-                              );
+                              if (!this.state.currentlyDeletingSaying) {
+                                this.setState({
+                                  currentlyDeletingSaying: true
+                                });
+                                this.props.onDeleteSaying(
+                                  saying.id,
+                                  saying.category,
+                                );
+                              }
                             }}
                             className={classes.deleteIcon}
                             src={trashIcon}
