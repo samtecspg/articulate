@@ -1,0 +1,413 @@
+[
+    {
+        "keywordName": "newsCategory",
+        "uiColor": "#D5AAFF",
+        "examples": [
+            {
+                "value": "business",
+                "synonyms": [
+                    "business"
+                ]
+            },
+            {
+                "value": "entertainment",
+                "synonyms": [
+                    "entertainment"
+                ]
+            },
+            {
+                "value": "general",
+                "synonyms": [
+                    "general"
+                ]
+            },
+            {
+                "value": "health",
+                "synonyms": [
+                    "health"
+                ]
+            },
+            {
+                "value": "science",
+                "synonyms": [
+                    "science",
+                    "scientific"
+                ]
+            },
+            {
+                "value": "sports",
+                "synonyms": [
+                    "sports",
+                    "sport"
+                ]
+            },
+            {
+                "value": "technology",
+                "synonyms": [
+                    "technology",
+                    "tech"
+                ]
+            }
+        ],
+        "regex": "",
+        "type": "learned",
+        "modifiers": [],
+        "creationDate": "1569530281000",
+        "modificationDate": "1569606154000"
+    },
+    {
+        "keywordName": "languageAbbreviation",
+        "uiColor": "#FCC2FF",
+        "examples": [
+            {
+                "value": "ar",
+                "synonyms": [
+                    "ar",
+                    "arabic"
+                ]
+            },
+            {
+                "value": "de",
+                "synonyms": [
+                    "de",
+                    "german"
+                ]
+            },
+            {
+                "value": "en",
+                "synonyms": [
+                    "en",
+                    "english"
+                ]
+            },
+            {
+                "value": "es",
+                "synonyms": [
+                    "es",
+                    "spanish"
+                ]
+            },
+            {
+                "value": "fr",
+                "synonyms": [
+                    "fr",
+                    "french"
+                ]
+            },
+            {
+                "value": "he",
+                "synonyms": [
+                    "he",
+                    "hebrew"
+                ]
+            },
+            {
+                "value": "it",
+                "synonyms": [
+                    "it",
+                    "italian"
+                ]
+            },
+            {
+                "value": "nl",
+                "synonyms": [
+                    "nl",
+                    "dutch"
+                ]
+            },
+            {
+                "value": "no",
+                "synonyms": [
+                    "no",
+                    "norwegian"
+                ]
+            },
+            {
+                "value": "pt",
+                "synonyms": [
+                    "pt",
+                    "portuguese"
+                ]
+            },
+            {
+                "value": "ru",
+                "synonyms": [
+                    "ru",
+                    "russian"
+                ]
+            },
+            {
+                "value": "se",
+                "synonyms": [
+                    "se",
+                    "sami"
+                ]
+            },
+            {
+                "value": "zh",
+                "synonyms": [
+                    "zh",
+                    "chinese"
+                ]
+            }
+        ],
+        "regex": "",
+        "type": "learned",
+        "modifiers": [],
+        "creationDate": "1569530281000",
+        "modificationDate": "1569530281000"
+    },
+    {
+        "keywordName": "newsTopics",
+        "uiColor": "#AFF8DB",
+        "examples": [
+            {
+                "value": "weather",
+                "synonyms": [
+                    "weather"
+                ]
+            },
+            {
+                "value": "politics",
+                "synonyms": [
+                    "politics"
+                ]
+            },
+            {
+                "value": "accident",
+                "synonyms": [
+                    "accidents",
+                    "accident"
+                ]
+            },
+            {
+                "value": "food",
+                "synonyms": [
+                    "food"
+                ]
+            },
+            {
+                "value": "the newest movies",
+                "synonyms": [
+                    "the newest movies"
+                ]
+            },
+            {
+                "value": "the best restaurants",
+                "synonyms": [
+                    "the best restaurants"
+                ]
+            },
+            {
+                "value": "criminals and police",
+                "synonyms": [
+                    "criminals and police"
+                ]
+            },
+            {
+                "value": "natural disasters",
+                "synonyms": [
+                    "natural disasters"
+                ]
+            },
+            {
+                "value": "schools",
+                "synonyms": [
+                    "schools"
+                ]
+            },
+            {
+                "value": "kids",
+                "synonyms": [
+                    "kids"
+                ]
+            },
+            {
+                "value": "singers",
+                "synonyms": [
+                    "singers"
+                ]
+            },
+            {
+                "value": "recent events",
+                "synonyms": [
+                    "recent events"
+                ]
+            },
+            {
+                "value": "global warming",
+                "synonyms": [
+                    "global warming"
+                ]
+            },
+            {
+                "value": "Brad Pitt",
+                "synonyms": [
+                    "Brad Pitt"
+                ]
+            },
+            {
+                "value": "Angelina Jolie",
+                "synonyms": [
+                    "Angelina Jolie"
+                ]
+            },
+            {
+                "value": "Donald Trump",
+                "synonyms": [
+                    "Donald Trump"
+                ]
+            },
+            {
+                "value": "movies",
+                "synonyms": [
+                    "movies",
+                    "movie"
+                ]
+            },
+            {
+                "value": "movies and actors",
+                "synonyms": [
+                    "movies and actors"
+                ]
+            },
+            {
+                "value": "sports and players",
+                "synonyms": [
+                    "sports and players"
+                ]
+            },
+            {
+                "value": "Keylor Navas",
+                "synonyms": [
+                    "Keylor Navas"
+                ]
+            },
+            {
+                "value": "Mariah Carey",
+                "synonyms": [
+                    "Mariah Carey"
+                ]
+            },
+            {
+                "value": "education",
+                "synonyms": [
+                    "education"
+                ]
+            },
+            {
+                "value": "movies in Costa Rica",
+                "synonyms": [
+                    "movies in Costa Rica"
+                ]
+            },
+            {
+                "value": "homicides in Europe",
+                "synonyms": [
+                    "homicides in Europe"
+                ]
+            },
+            {
+                "value": "sports in Brazil",
+                "synonyms": [
+                    "sports in Brazil"
+                ]
+            },
+            {
+                "value": "events in California",
+                "synonyms": [
+                    "events in California"
+                ]
+            },
+            {
+                "value": "natural disasters in Australia",
+                "synonyms": [
+                    "natural disasters in Australia"
+                ]
+            },
+            {
+                "value": "Costa Rica",
+                "synonyms": [
+                    "Costa Rica"
+                ]
+            },
+            {
+                "value": "accidents in New York",
+                "synonyms": [
+                    "accidents in New York"
+                ]
+            },
+            {
+                "value": "diseases on Africa",
+                "synonyms": [
+                    "diseases on Africa"
+                ]
+            },
+            {
+                "value": "famous people",
+                "synonyms": [
+                    "famous people"
+                ]
+            },
+            {
+                "value": "medicine advancements",
+                "synonyms": [
+                    "medicine advancements"
+                ]
+            },
+            {
+                "value": "United States of America",
+                "synonyms": [
+                    "United States of America"
+                ]
+            },
+            {
+                "value": "Amazon rainforest",
+                "synonyms": [
+                    "Amazon rainforest"
+                ]
+            },
+            {
+                "value": "cultural activities",
+                "synonyms": [
+                    "cultural activities"
+                ]
+            },
+            {
+                "value": "art",
+                "synonyms": [
+                    "arts"
+                ]
+            },
+            {
+                "value": "food festival",
+                "synonyms": [
+                    "food festival"
+                ]
+            },
+            {
+                "value": "Venezuela",
+                "synonyms": [
+                    "Venezuela"
+                ]
+            },
+            {
+                "value": "Haiti",
+                "synonyms": [
+                    "Haiti"
+                ]
+            },
+            {
+                "value": "Colombia",
+                "synonyms": [
+                    "Colombia"
+                ]
+            }
+        ],
+        "regex": "",
+        "type": "learned",
+        "modifiers": [],
+        "creationDate": "1569532892000",
+        "modificationDate": "1569609638000"
+    }
+]
