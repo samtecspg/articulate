@@ -6,7 +6,7 @@
                 "slotName": "newsCategory",
                 "uiColor": "#D5AAFF",
                 "keyword": "newsCategory",
-                "keywordId": 1694,
+                "keywordId": 1711,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -17,7 +17,7 @@
                 "slotName": "topic",
                 "uiColor": "#AFF8DB",
                 "keyword": "newsTopics",
-                "keywordId": 1710,
+                "keywordId": 1713,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -33,8 +33,8 @@
         ],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1569530281000",
-        "modificationDate": "1569609638000",
+        "creationDate": "1569617312000",
+        "modificationDate": "1569781504000",
         "webhook": {
             "webhookKey": "getTopHeadlinesWebhook",
             "webhookUrl": "https://newsapi.org/v2/top-headlines?pageSize={{categories.News.parameters.fetchedNewsNumber}}{{#if slots.newsCategory.value}}&category={{slots.newsCategory.value}}{{/if}}{{#if slots.topic.value}}&q={{slots.topic.value}}{{else}}&country=us{{/if}}",
@@ -50,8 +50,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1569530281000",
-            "modificationDate": "1569603715000"
+            "creationDate": "1569617312000",
+            "modificationDate": "1569635184000"
         }
     },
     {
@@ -61,7 +61,7 @@
                 "slotName": "topic",
                 "uiColor": "#AFF8DB",
                 "keyword": "newsTopics",
-                "keywordId": 1710,
+                "keywordId": 1713,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -71,17 +71,6 @@
                 "freeText": false,
                 "remainingLife": null,
                 "promptCountLimit": null
-            },
-            {
-                "slotName": "language",
-                "uiColor": "#FCC2FF",
-                "keyword": "languageAbbreviation",
-                "keywordId": 1703,
-                "isList": false,
-                "isRequired": false,
-                "quickResponses": [],
-                "textPrompts": [],
-                "freeText": false
             },
             {
                 "slotName": "date",
@@ -97,17 +86,17 @@
         ],
         "responses": [
             {
-                "textResponse": "{{#if webhook.getAllNewsWebhook.error}}{{#eq webhook.getAllNewsWebhook.error.code compare=\"parameterInvalid\"}}I'm sorry, there was a problem when getting the news for you, please check if you are asking for news too old for your plan{{else}}I'm sorry, there was a problem when getting the news for you{{/eq}}{{else}}{{#eq webhook.getAllNewsWebhook.response.status compare=\"error\"}} I'm sorry, there was a problem when getting the news for you {{/eq}} {{#eq webhook.getAllNewsWebhook.response.status compare=\"ok\"}} {{#eq webhook.getAllNewsWebhook.response.totalResults 0}} Sorry, we didnt find any news {{/eq}} {{#gt webhook.getAllNewsWebhook.response.totalResults 0}} These are the news found: {{#each webhook.getAllNewsWebhook.response.articles}} Title: {{this.title}}, Link: {{this.url}}{{/each}} {{/gt}}{{/eq}}{{/if}}",
+                "textResponse": "{{#if webhook.getAllNewsWebhook.error}}{{#eq webhook.getAllNewsWebhook.error.code compare=\"parameterInvalid\"}}I'm sorry, there was a problem when getting the news for you, please check if you are asking for news too old for your plan{{else}}I'm sorry, there was a problem when getting the news for you, please try to be more specific or rephrase your request{{/eq}}{{else}}{{#eq webhook.getAllNewsWebhook.response.status compare=\"error\"}} I'm sorry, there was a problem when getting the news for you {{/eq}} {{#eq webhook.getAllNewsWebhook.response.status compare=\"ok\"}} {{#eq webhook.getAllNewsWebhook.response.totalResults 0}} Sorry, we didnt find any news {{/eq}} {{#gt webhook.getAllNewsWebhook.response.totalResults 0}} These are the news found: {{#each webhook.getAllNewsWebhook.response.articles}} Title: {{this.title}}, Link: {{this.url}}{{/each}} {{/gt}}{{/eq}}{{/if}}",
                 "actions": []
             }
         ],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1569530281000",
-        "modificationDate": "1569609638000",
+        "creationDate": "1569617312000",
+        "modificationDate": "1569782323000",
         "webhook": {
             "webhookKey": "getAllNewsWebhook",
-            "webhookUrl": "https://newsapi.org/v2/everything?pageSize={{categories.News.parameters.fetchedNewsNumber}}{{#if slots.date.original}}&sortBy=relevancy{{/if}}{{#if slots.topic.value}}&q={{slots.topic.value}}{{/if}}{{#if slots.language.value}}&language={{slots.language.value}}{{else}}&language=en{{/if}}{{#if slots.date.from}}&from={{dateTimeFormat slots.date.from \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}{{#if slots.date.to}}&to={{dateTimeFormat slots.date.to \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}",
+            "webhookUrl": "https://newsapi.org/v2/everything?pageSize={{categories.News.parameters.fetchedNewsNumber}}{{#if slots.date.original}}&sortBy=relevancy{{/if}}{{#if slots.topic.value}}&q={{slots.topic.value}}{{/if}}&language=en{{#if slots.date.from}}&from={{dateTimeFormat slots.date.from \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}{{#if slots.date.to}}&to={{dateTimeFormat slots.date.to \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}",
             "webhookVerb": "GET",
             "webhookPayloadType": "None",
             "webhookPayload": "",
@@ -120,8 +109,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1569530281000",
-            "modificationDate": "1569603696000"
+            "creationDate": "1569617312000",
+            "modificationDate": "1569782324000"
         }
     }
 ]
