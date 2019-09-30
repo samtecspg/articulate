@@ -7,7 +7,7 @@ After you've finished performing some action for the user you may want to follow
 ![Simple Action Chain](./img/chains/offer-help.PNG)
 
 
-## Seperation of Concerns
+## Separation of Concerns
 
 The above is an example of seperation of concerns. You could have your greet action ask if the user needed help, but that's not really what the `Greet` acton is for. This is the first use case for action chaining.
 
