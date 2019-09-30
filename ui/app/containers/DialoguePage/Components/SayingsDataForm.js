@@ -217,15 +217,11 @@ class SayingsDataForm extends React.Component {
     openActions: false,
     anchorEl: null,
     changedPage: false,
-    currentNewSaying: '',
     currentlyDeletingSaying: false
   };
 
   constructor(props) {
     super(props);
-    this.handleNewSayingTextFieldChange = this.handleNewSayingTextFieldChange.bind(
-      this,
-    );
   }
 
   scrollToNextPageCursor() {
@@ -252,9 +248,11 @@ class SayingsDataForm extends React.Component {
       this.setState({
         changedPage: false,
       });
-      this.setState({
-        currentlyDeletingSaying: false
-      });
+      if (this.state.currentlyDeletingSaying) {
+        this.setState({
+          currentlyDeletingSaying: false
+        });
+      }
     }
   }
 
@@ -262,12 +260,6 @@ class SayingsDataForm extends React.Component {
     if (this.state.changedPage) {
       this.scrollToNextPageCursor();
     }
-  }
-
-  handleNewSayingTextFieldChange(e) {
-    this.setState({
-      currentNewSaying: e.target.value,
-    });
   }
 
   render() {
@@ -317,31 +309,27 @@ class SayingsDataForm extends React.Component {
             <Grid item lg={10} md={10} sm={8} xs={8}>
               <TextField
                 id="newSaying"
+                inputRef={component => this.newSaying = component}
                 defaultValue={userSays || undefined}
-                onChange={this.handleNewSayingTextFieldChange}
-                value={this.state.currentNewSaying}
                 label={intl.formatMessage(messages.sayingTextField)}
                 placeholder={intl.formatMessage(
                   messages.sayingTextFieldPlaceholder,
                 )}
                 onKeyPress={ev => {
                   if (
-                    ev.key === 'Enter' &&
-                    this.state.currentNewSaying.trim() !== ''
+                    ev.key === 'Enter'
                   ) {
                     if (!category || category === '' || category === 'select') {
                       this.setState({
                         errorCategory: true,
                       });
-                    } else {
+                    } else if (ev.target.value.trim() !== '') {
                       this.setState({
                         errorCategory: false,
                       });
                       ev.preventDefault();
-                      this.props.onAddSaying(this.state.currentNewSaying);
-                      this.setState({
-                        currentNewSaying: '',
-                      });
+                      this.props.onAddSaying(ev.target.value);
+                      ev.target.value = '';
                     }
                   }
                 }}
@@ -419,26 +407,24 @@ class SayingsDataForm extends React.Component {
                       <span
                         className={classes.sayingEnter}
                         onClick={ev => {
-                          if (this.state.currentNewSaying.trim() !== '') {
-                            if (
-                              !category ||
-                              category === '' ||
-                              category === 'select'
-                            ) {
-                              this.setState({
-                                errorCategory: true,
-                              });
-                            } else {
-                              this.setState({
-                                errorCategory: false,
-                              });
+                          if (
+                            !category ||
+                            category === '' ||
+                            category === 'select'
+                          ) {
+                            this.setState({
+                              errorCategory: true,
+                            });
+                          } else {
+                            this.setState({
+                              errorCategory: false,
+                            });
+                            if (this.newSaying.value.trim() !== '') {
                               ev.preventDefault();
                               this.props.onAddSaying(
-                                this.state.currentNewSaying,
+                                this.newSaying.value,
                               );
-                              this.setState({
-                                currentNewSaying: '',
-                              });
+                              this.newSaying.value = '';
                             }
                           }
                         }}
