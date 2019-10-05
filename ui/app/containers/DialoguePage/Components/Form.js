@@ -36,6 +36,7 @@ const styles = {
     paddingRight: '10px',
     height: '20px',
     cursor: 'pointer',
+    marginTop: '15px'
   },
   titleTextHelpContainer: {
     display: 'inline',
@@ -243,31 +244,34 @@ class Form extends React.Component {
               </Tabs>
             </Grid>
             <Grid item xs={6} style={{ justifyContent: 'flex-end' }} container direction={'row'}>
-              <PopoverFilter
-                anchorEl={this.state.popOverFilterAnchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left'
-                }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                onClose={this.handlePopoverFilterClose}
-                dropDownValues={_.map(this.props.agentCategories, 'categoryName')}
-                chipValues={_.map(this.props.agentActions, 'actionName')}
-                filterChangeFunction={this.props.onSearchSaying}
-                chipsFilterLabel={'Actions:'}
-                resetFilters={this.state.resetFilters}
-                updateNumberFiltersApplied={this.updateNumberFiltersApplied}
-              />
-              <Grid>
-                <img className={classes.filterIcon} src={this.state.numberFiltersApplied > 0 ? blackFilterIcon : filterIcon}
-                  onClick={ev => {
-                    this.setState({
-                      popOverFilterAnchorEl: ev.currentTarget
-                    })
-                  }}
-                />
-              </Grid>
-
+              {this.props.selectedTab === 'sayings' && (
+                <React.Fragment>
+                  <PopoverFilter
+                    anchorEl={this.state.popOverFilterAnchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left'
+                    }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    onClose={this.handlePopoverFilterClose}
+                    dropDownValues={_.map(this.props.agentCategories, 'categoryName')}
+                    chipValues={_.map(this.props.agentActions, 'actionName')}
+                    filterChangeFunction={this.props.onSearchSaying}
+                    chipsFilterLabel={'Actions:'}
+                    resetFilters={this.state.resetFilters}
+                    updateNumberFiltersApplied={this.updateNumberFiltersApplied}
+                  />
+                  <Grid>
+                    <img className={classes.filterIcon} src={this.state.numberFiltersApplied > 0 ? blackFilterIcon : filterIcon}
+                      onClick={ev => {
+                        this.setState({
+                          popOverFilterAnchorEl: ev.currentTarget
+                        })
+                      }}
+                    />
+                  </Grid>
+                </React.Fragment>
+              )}
             </Grid>
           </Grid>
           {this.props.selectedTab === 'sayings' && (

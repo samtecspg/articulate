@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Popover, Grid, Input, TextField, Typography, Chip, MenuItem } from '@material-ui/core';
+import { Popover, Grid, Input, TextField, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import searchIcon from '../../images/search-icon.svg';
@@ -195,6 +195,11 @@ export class PopoverFilter extends React.Component {
         this.resetState = this.resetState.bind(this);
     }
 
+    componentWillUnmount() {
+        this.props.filterChangeFunction('');
+        this.props.updateNumberFiltersApplied(0);
+    }
+
     setStateAsync(state) {
         return new Promise((resolve) => {
             this.setState(state, resolve)
@@ -275,7 +280,8 @@ export class PopoverFilter extends React.Component {
                         <Grid
                             style={
                                 {
-                                    marginRight: '20px'
+                                    marginRight: '14px',
+                                    marginTop: '15px'
                                 }
                             }
                         >
@@ -290,8 +296,8 @@ export class PopoverFilter extends React.Component {
                                     }
                                 }
                             >
-                                {this.state.numberFiltersApplied} Filter
-                </span>
+                                {this.state.numberFiltersApplied} {this.state.numberFiltersApplied > 1 ? 'Filters' : 'Filter'}
+                            </span>
                             <a
                                 onClick={
                                     this.resetState
