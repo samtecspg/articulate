@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>Stroke 1</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Filter-flow1" transform="translate(-1053.000000, -298.000000)">
+            <rect fill="#FBFCFD" x="0" y="0" width="1280" height="850"></rect>
+            <path d="M193,202 L1087,202 C1088.65685,202 1090,203.343146 1090,205 L1090,322 L1090,322 L190,322 L190,205 C190,203.343146 191.343146,202 193,202 Z" id="Rectangle" stroke="#C5CBD8" fill="#F6F7F8"></path>
+            <path d="M1067.00898,299 L1054.51298,299 C1054.08098,299 1053.84298,299.502 1054.11698,299.836 L1058.89998,305.663 C1059.23298,306.069 1059.41498,306.576 1059.41498,307.101 L1059.41498,310.883 C1059.41498,310.957 1059.44798,311.025 1059.50698,311.069 L1061.29798,312.411 C1061.63198,312.661 1062.10798,312.423 1062.10798,312.005 L1062.10798,307.101 C1062.10798,306.576 1062.28898,306.069 1062.62198,305.663 L1067.40498,299.836 C1067.67898,299.502 1067.44098,299 1067.00898,299 Z" id="Stroke-1" stroke="#4E4E4E" stroke-width="1.5" opacity="0.601748512" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

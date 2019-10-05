@@ -9,9 +9,12 @@ import messages from '../messages';
 
 import agentIcon from '../../../images/agents-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';
+import filterIcon from '../../../images/filter-icon.svg';
+import blackFilterIcon from '../../../images/filter-black-icon.svg';
 import SayingsDataForm from './SayingsDataForm';
 import KeywordsDataForm from './KeywordsDataForm';
 import ActionsDataForm from './ActionsDataForm';
+import PopoverFilter from './../../../components/PopoverFilter';
 
 const styles = {
   headerContainer: {
@@ -27,6 +30,12 @@ const styles = {
     display: 'inline',
     paddingRight: '10px',
     height: '30px',
+  },
+  filterIcon: {
+    display: 'inline',
+    paddingRight: '10px',
+    height: '20px',
+    cursor: 'pointer',
   },
   titleTextHelpContainer: {
     display: 'inline',
@@ -53,7 +62,7 @@ const styles = {
     paddingLeft: '2px',
   },
   agentTabs: {
-    paddingLeft: '15px',
+    paddingLeft: '15px'
   },
   selected: {
     color: '#4e4e4e',
@@ -109,6 +118,8 @@ const styles = {
 class Form extends React.Component {
   state = {
     openModal: false,
+    popOverFilterAnchorEl: null,
+    numberFiltersApplied: 0,
   };
 
   handleOpen = () => {
@@ -122,6 +133,18 @@ class Form extends React.Component {
       openModal: false,
     });
   };
+
+  handlePopoverFilterClose = () => {
+    this.setState({
+      popOverFilterAnchorEl: null
+    });
+  };
+
+  updateNumberFiltersApplied = (number) => {
+    this.setState({
+      numberFiltersApplied: number
+    })
+  }
 
   render() {
     const { classes, intl } = this.props;
@@ -166,56 +189,87 @@ class Form extends React.Component {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Tabs
-            className={classes.agentTabs}
-            value={this.props.selectedTab}
-            indicatorColor="primary"
-            textColor="secondary"
-            scrollable
-            scrollButtons="off"
-            onChange={(evt, value) => {
-              this.props.handleTabChange(evt, value);
-            }}
-            TabIndicatorProps={{
-              style: {
-                display: 'none',
-              },
-            }}
-          >
-            <Tab
-              value="sayings"
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
-                </span>
-              }
-              className={
-                this.props.selectedTab === 'sayings' ? classes.selected : null
-              }
-            />
-            <Tab
-              value="keywords"
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.keywordsFormTitle)}</span>
-                </span>
-              }
-              className={
-                this.props.selectedTab === 'keywords' ? classes.selected : null
-              }
-            />
-            <Tab
-              value="actions"
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.actionsFormTitle)}</span>
-                </span>
-              }
-              className={
-                this.props.selectedTab === 'actions' ? classes.selected : null
-              }
-            />
-          </Tabs>
+          <Grid item xs={12} container direction={'row'}>
+            <Grid item xs={6}>
+              <Tabs
+                className={classes.agentTabs}
+                value={this.props.selectedTab}
+                indicatorColor="primary"
+                textColor="secondary"
+                scrollable
+                scrollButtons="off"
+                onChange={(evt, value) => {
+                  this.props.handleTabChange(evt, value);
+                }}
+                TabIndicatorProps={{
+                  style: {
+                    display: 'none',
+                  },
+                }}
+              >
+                <Tab
+                  value="sayings"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'sayings' ? classes.selected : null
+                  }
+                />
+                <Tab
+                  value="keywords"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>{intl.formatMessage(messages.keywordsFormTitle)}</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'keywords' ? classes.selected : null
+                  }
+                />
+                <Tab
+                  value="actions"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>{intl.formatMessage(messages.actionsFormTitle)}</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'actions' ? classes.selected : null
+                  }
+                />
+              </Tabs>
+            </Grid>
+            <Grid item xs={6} style={{ justifyContent: 'flex-end' }} container direction={'row'}>
+              <PopoverFilter
+                anchorEl={this.state.popOverFilterAnchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left'
+                }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                onClose={this.handlePopoverFilterClose}
+                dropDownValues={_.map(this.props.agentCategories, 'categoryName')}
+                chipValues={_.map(this.props.agentActions, 'actionName')}
+                filterChangeFunction={this.props.onSearchSaying}
+                chipsFilterLabel={'Actions:'}
+                resetFilters={this.state.resetFilters}
+                updateNumberFiltersApplied={this.updateNumberFiltersApplied}
+              />
+              <Grid>
+                <img className={classes.filterIcon} src={this.state.numberFiltersApplied > 0 ? blackFilterIcon : filterIcon}
+                  onClick={ev => {
+                    this.setState({
+                      popOverFilterAnchorEl: ev.currentTarget
+                    })
+                  }}
+                />
+              </Grid>
+
+            </Grid>
+          </Grid>
           {this.props.selectedTab === 'sayings' && (
             <SayingsDataForm
               agentId={this.props.agentId}
