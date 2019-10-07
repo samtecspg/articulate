@@ -5,4 +5,12 @@ export default defineMessages({
     id: 'app.components.PopOverFilter.FilterApplied',
     defaultMessage: 'Filter Applied:',
   },
+  filter: {
+    id: 'app.components.PopOverFilter.Filter',
+    defaultMessage: 'Filter',
+  },
+  filters: {
+    id: 'app.components.PopOverFilter.Filters',
+    defaultMessage: 'Filters',
+  }
 });

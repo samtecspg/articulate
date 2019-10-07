@@ -9,8 +9,6 @@ import messages from '../messages';
 
 import agentIcon from '../../../images/agents-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';
-import filterIcon from '../../../images/filter-icon.svg';
-import blackFilterIcon from '../../../images/filter-black-icon.svg';
 import SayingsDataForm from './SayingsDataForm';
 import KeywordsDataForm from './KeywordsDataForm';
 import ActionsDataForm from './ActionsDataForm';
@@ -30,13 +28,6 @@ const styles = {
     display: 'inline',
     paddingRight: '10px',
     height: '30px',
-  },
-  filterIcon: {
-    display: 'inline',
-    paddingRight: '10px',
-    height: '20px',
-    cursor: 'pointer',
-    marginTop: '15px'
   },
   titleTextHelpContainer: {
     display: 'inline',
@@ -117,9 +108,14 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.processSelectedPopoverFilters = this.processSelectedPopoverFilters.bind(this);
+  }
+
   state = {
     openModal: false,
-    popOverFilterAnchorEl: null,
     numberFiltersApplied: 0,
   };
 
@@ -135,16 +131,26 @@ class Form extends React.Component {
     });
   };
 
-  handlePopoverFilterClose = () => {
-    this.setState({
-      popOverFilterAnchorEl: null
-    });
-  };
-
   updateNumberFiltersApplied = (number) => {
     this.setState({
       numberFiltersApplied: number
     })
+  }
+
+  processSelectedPopoverFilters(dropDownValuePicked, chipValuesPicked, textFilterValue) {
+    var filter = '';
+    if (textFilterValue != '') {
+      filter = filter + textFilterValue + ' ';
+    }
+    if (dropDownValuePicked != 'Pick Category') {
+      filter = filter + 'category:"' + dropDownValuePicked + '"';
+    }
+    if (chipValuesPicked.length > 0) {
+      filter = filter + ' actions:"'
+      filter = filter + chipValuesPicked.join('" actions:"')
+      filter = filter + '"';
+    }
+    this.props.onSearchSaying(filter);
   }
 
   render() {
@@ -245,32 +251,17 @@ class Form extends React.Component {
             </Grid>
             <Grid item xs={6} style={{ justifyContent: 'flex-end' }} container direction={'row'}>
               {this.props.selectedTab === 'sayings' && (
-                <React.Fragment>
-                  <PopoverFilter
-                    anchorEl={this.state.popOverFilterAnchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left'
-                    }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    onClose={this.handlePopoverFilterClose}
-                    dropDownValues={_.map(this.props.agentCategories, 'categoryName')}
-                    chipValues={_.map(this.props.agentActions, 'actionName')}
-                    filterChangeFunction={this.props.onSearchSaying}
-                    chipsFilterLabel={'Actions:'}
-                    resetFilters={this.state.resetFilters}
-                    updateNumberFiltersApplied={this.updateNumberFiltersApplied}
-                  />
-                  <Grid>
-                    <img className={classes.filterIcon} src={this.state.numberFiltersApplied > 0 ? blackFilterIcon : filterIcon}
-                      onClick={ev => {
-                        this.setState({
-                          popOverFilterAnchorEl: ev.currentTarget
-                        })
-                      }}
-                    />
-                  </Grid>
-                </React.Fragment>
+                <PopoverFilter
+                  anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  dropDownValues={_.map(this.props.agentCategories, 'categoryName')}
+                  chipValues={_.map(this.props.agentActions, 'actionName')}
+                  textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
+                  dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
+                  chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  processSelectedFilters={this.processSelectedPopoverFilters}
+                  updateNumberFiltersApplied={this.updateNumberFiltersApplied}
+                />
               )}
             </Grid>
           </Grid>
