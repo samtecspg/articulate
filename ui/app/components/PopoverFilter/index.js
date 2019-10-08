@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Popover, Grid, Input, TextField, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { includes } from 'lodash';
 
 import searchIcon from '../../images/search-icon.svg';
 import filterIcon from '../../images/filter-icon.svg';
@@ -212,7 +213,7 @@ export class PopoverFilter extends React.Component {
     }
 
     chipIsSelected(value) {
-        return _.includes(this.state.chipValuesPicked, value);
+        return includes(this.state.chipValuesPicked, value);
     }
 
     async handleFiltersChange() {
