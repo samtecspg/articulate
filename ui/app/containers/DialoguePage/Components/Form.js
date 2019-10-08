@@ -6,7 +6,7 @@ import { Grid, Typography, Button, Modal, Tabs, Tab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
-import _ from 'lodash';
+import { map } from 'lodash';
 
 import agentIcon from '../../../images/agents-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';
@@ -255,8 +255,8 @@ class Form extends React.Component {
                 <PopoverFilter
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  dropDownValues={_.map(this.props.agentCategories, 'categoryName')}
-                  chipValues={_.map(this.props.agentActions, 'actionName')}
+                  dropDownValues={map(this.props.agentCategories, 'categoryName')}
+                  chipValues={map(this.props.agentActions, 'actionName')}
                   textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
                   dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
                   chipsFilterLabel={intl.formatMessage(messages.pickActions)}
