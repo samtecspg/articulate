@@ -6,6 +6,7 @@ import { Grid, Typography, Button, Modal, Tabs, Tab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
+import _ from 'lodash';
 
 import agentIcon from '../../../images/agents-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';

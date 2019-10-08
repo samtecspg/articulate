@@ -278,7 +278,9 @@ export class DialoguePage extends React.PureComponent {
       filter,
       currentSayingsPage: 1,
     });
-    this.throttledOnLoadSayings(filter, 1, this.state.sayingsPageSize);
+    if (this.throttledOnLoadSayings) {
+      this.throttledOnLoadSayings(filter, 1, this.state.sayingsPageSize);
+    }
   }
 
   onSearchCategory(categoryFilter) {
