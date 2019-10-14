@@ -1,0 +1,841 @@
+[
+    {
+        "userSays": "Weather news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 7,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569717085000",
+        "modificationDate": "1569717085000"
+    },
+    {
+        "userSays": "news about weather",
+        "keywords": [
+            {
+                "start": 11,
+                "end": 18,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569717100000",
+        "modificationDate": "1569717100000"
+    },
+    {
+        "userSays": "the news",
+        "keywords": [],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569718107000",
+        "modificationDate": "1569718107000"
+    },
+    {
+        "userSays": "get the news",
+        "keywords": [],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569718113000",
+        "modificationDate": "1569718113000"
+    },
+    {
+        "userSays": "todays news about weather",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 25,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569718374000",
+        "modificationDate": "1569718374000"
+    },
+    {
+        "userSays": "news about weather today",
+        "keywords": [
+            {
+                "start": 11,
+                "end": 18,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569718380000",
+        "modificationDate": "1569718380000"
+    },
+    {
+        "userSays": "get last weeks weather news",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 22,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569718664000",
+        "modificationDate": "1569718664000"
+    },
+    {
+        "userSays": "get weather news from last week",
+        "keywords": [
+            {
+                "start": 4,
+                "end": 11,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569718677000",
+        "modificationDate": "1569718677000"
+    },
+    {
+        "userSays": "breaking news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 13,
+                "value": "breaking news",
+                "keyword": "breakingNews",
+                "keywordId": 1725
+            }
+        ],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569719661000",
+        "modificationDate": "1569719661000"
+    },
+    {
+        "userSays": "the news",
+        "keywords": [],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569719844000",
+        "modificationDate": "1569719844000"
+    },
+    {
+        "userSays": "recent news about weather",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 6,
+                "value": "recent",
+                "keyword": "breakingNews",
+                "keywordId": 1725
+            },
+            {
+                "start": 18,
+                "end": 25,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569719915000",
+        "modificationDate": "1569719915000"
+    },
+    {
+        "userSays": "weather recent news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 7,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            },
+            {
+                "start": 8,
+                "end": 14,
+                "value": "recent",
+                "keyword": "breakingNews",
+                "keywordId": 1725
+            }
+        ],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569719922000",
+        "modificationDate": "1569719922000"
+    },
+    {
+        "userSays": "I want weather news",
+        "keywords": [
+            {
+                "start": 7,
+                "end": 14,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569720396000",
+        "modificationDate": "1569720396000"
+    },
+    {
+        "userSays": "Show me weather news",
+        "keywords": [
+            {
+                "start": 8,
+                "end": 15,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569720405000",
+        "modificationDate": "1569720405000"
+    },
+    {
+        "userSays": "I want news about weather",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 25,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569720412000",
+        "modificationDate": "1569720412000"
+    },
+    {
+        "userSays": "Show me news about weather",
+        "keywords": [
+            {
+                "start": 19,
+                "end": 26,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569720443000",
+        "modificationDate": "1569720443000"
+    },
+    {
+        "userSays": "Show me weather news",
+        "keywords": [
+            {
+                "start": 8,
+                "end": 15,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569720917000",
+        "modificationDate": "1569720917000"
+    },
+    {
+        "userSays": "Show me news about weather",
+        "keywords": [
+            {
+                "start": 19,
+                "end": 26,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569720922000",
+        "modificationDate": "1569720922000"
+    },
+    {
+        "userSays": "I want weather news in the last 3 days",
+        "keywords": [
+            {
+                "start": 7,
+                "end": 14,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569723068000",
+        "modificationDate": "1569723068000"
+    },
+    {
+        "userSays": "get todays weather news",
+        "keywords": [
+            {
+                "start": 11,
+                "end": 18,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569723094000",
+        "modificationDate": "1569723094000"
+    },
+    {
+        "userSays": "show me todays weather news",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 22,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569723107000",
+        "modificationDate": "1569723107000"
+    },
+    {
+        "userSays": "show me weather news from last 5 days",
+        "keywords": [
+            {
+                "start": 8,
+                "end": 15,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569724021000",
+        "modificationDate": "1569724021000"
+    },
+    {
+        "userSays": "i want weather news from last week",
+        "keywords": [
+            {
+                "start": 7,
+                "end": 14,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569724033000",
+        "modificationDate": "1569724033000"
+    },
+    {
+        "userSays": "get news about weather from last week",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 22,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569724341000",
+        "modificationDate": "1569724341000"
+    },
+    {
+        "userSays": "Show me news about weather from last week",
+        "keywords": [
+            {
+                "start": 19,
+                "end": 26,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569724558000",
+        "modificationDate": "1569724558000"
+    },
+    {
+        "userSays": "I want news about weather from last week",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 25,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569724565000",
+        "modificationDate": "1569724565000"
+    },
+    {
+        "userSays": "todays weather news",
+        "keywords": [
+            {
+                "start": 7,
+                "end": 14,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569726747000",
+        "modificationDate": "1569726747000"
+    },
+    {
+        "userSays": "yesterday weather news",
+        "keywords": [
+            {
+                "start": 10,
+                "end": 17,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569726759000",
+        "modificationDate": "1569726759000"
+    },
+    {
+        "userSays": "accident news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 8,
+                "value": "accident",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569726773000",
+        "modificationDate": "1569726773000"
+    },
+    {
+        "userSays": "news on weather",
+        "keywords": [
+            {
+                "start": 8,
+                "end": 15,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569774800000",
+        "modificationDate": "1569774800000"
+    },
+    {
+        "userSays": "todays news on weather",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 22,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569774813000",
+        "modificationDate": "1569774813000"
+    },
+    {
+        "userSays": "news on weather today",
+        "keywords": [
+            {
+                "start": 8,
+                "end": 15,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569774832000",
+        "modificationDate": "1569774832000"
+    },
+    {
+        "userSays": "recent news on weather",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 6,
+                "value": "recent",
+                "keyword": "breakingNews",
+                "keywordId": 1725
+            },
+            {
+                "start": 15,
+                "end": 22,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569774898000",
+        "modificationDate": "1569774898000"
+    },
+    {
+        "userSays": "I want news on weather",
+        "keywords": [
+            {
+                "start": 15,
+                "end": 22,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569774936000",
+        "modificationDate": "1569774936000"
+    },
+    {
+        "userSays": "Show me news on weather",
+        "keywords": [
+            {
+                "start": 16,
+                "end": 23,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569774963000",
+        "modificationDate": "1569774963000"
+    },
+    {
+        "userSays": "weather news today",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 7,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569776344000",
+        "modificationDate": "1569776495000"
+    },
+    {
+        "userSays": "weather news today",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 7,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569776384000",
+        "modificationDate": "1569776503000"
+    },
+    {
+        "userSays": "weather news from last three days",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 7,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569776486000",
+        "modificationDate": "1569776505000"
+    },
+    {
+        "userSays": "Get last week news about weather",
+        "keywords": [
+            {
+                "start": 25,
+                "end": 32,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569778437000",
+        "modificationDate": "1569778543000"
+    },
+    {
+        "userSays": "I want last week news about weather",
+        "keywords": [
+            {
+                "start": 28,
+                "end": 35,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569778485000",
+        "modificationDate": "1569778546000"
+    },
+    {
+        "userSays": "Show me last week news about weather",
+        "keywords": [
+            {
+                "start": 29,
+                "end": 36,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569778508000",
+        "modificationDate": "1569778548000"
+    },
+    {
+        "userSays": "last week news about weather",
+        "keywords": [
+            {
+                "start": 21,
+                "end": 28,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569778603000",
+        "modificationDate": "1569778727000"
+    },
+    {
+        "userSays": "last 10 hours weather news",
+        "keywords": [
+            {
+                "start": 14,
+                "end": 21,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569778634000",
+        "modificationDate": "1569778730000"
+    },
+    {
+        "userSays": "last week news on weather",
+        "keywords": [
+            {
+                "start": 18,
+                "end": 25,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569778688000",
+        "modificationDate": "1569778735000"
+    },
+    {
+        "userSays": "Get last week news on weather",
+        "keywords": [
+            {
+                "start": 22,
+                "end": 29,
+                "value": "weather",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569778715000",
+        "modificationDate": "1569778738000"
+    },
+    {
+        "userSays": "news",
+        "keywords": [],
+        "actions": [
+            "getTopHeadlines"
+        ],
+        "creationDate": "1569780154000",
+        "modificationDate": "1569780154000"
+    },
+    {
+        "userSays": "politics news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 8,
+                "value": "politics",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569780814000",
+        "modificationDate": "1569780814000"
+    },
+    {
+        "userSays": "accident news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 8,
+                "value": "accident",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569781089000",
+        "modificationDate": "1569781089000"
+    },
+    {
+        "userSays": "economics news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 9,
+                "value": "economics",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569781094000",
+        "modificationDate": "1569781094000"
+    },
+    {
+        "userSays": "cultural news",
+        "keywords": [
+            {
+                "start": 0,
+                "end": 8,
+                "value": "cultural",
+                "keyword": "newsTopics",
+                "keywordId": 1713
+            }
+        ],
+        "actions": [
+            "getAllNews"
+        ],
+        "creationDate": "1569781100000",
+        "modificationDate": "1569781100000"
+    }
+]

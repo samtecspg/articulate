@@ -236,7 +236,7 @@ export function* postSaying(payload) {
 
 export function* deleteSaying(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, sayingId, categoryId, filter } = payload;
+  const { api, sayingId, categoryId, filter, page, pageSize } = payload;
   try {
     yield call(
       api.delete,
@@ -249,6 +249,12 @@ export function* deleteSaying(payload) {
         sayingId,
       ]),
     );
+    yield call(getSayings, {
+      api,
+      filter,
+      pageSize,
+      page,
+    });
   } catch (err) {
     yield put(deleteSayingError(err));
   }

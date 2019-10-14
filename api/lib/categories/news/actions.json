@@ -1,0 +1,116 @@
+[
+    {
+        "actionName": "getTopHeadlines",
+        "slots": [
+            {
+                "slotName": "newsCategory",
+                "uiColor": "#D5AAFF",
+                "keyword": "newsCategory",
+                "keywordId": 1711,
+                "isList": false,
+                "isRequired": false,
+                "quickResponses": [],
+                "textPrompts": [],
+                "freeText": false
+            },
+            {
+                "slotName": "topic",
+                "uiColor": "#AFF8DB",
+                "keyword": "newsTopics",
+                "keywordId": 1713,
+                "isList": false,
+                "isRequired": false,
+                "quickResponses": [],
+                "textPrompts": [],
+                "freeText": false
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "{{#eq webhook.getTopHeadlinesWebhook.response.status compare=\"error\"}} I'm sorry, there was a problem when getting the news for you {{/eq}} {{#eq webhook.getTopHeadlinesWebhook.response.status compare=\"ok\"}} {{#eq webhook.getTopHeadlinesWebhook.response.totalResults 0}} Sorry, we didnt find any recent news {{/eq}} {{#gt webhook.getTopHeadlinesWebhook.response.totalResults 0}} These are the news found: {{#each webhook.getTopHeadlinesWebhook.response.articles}} Title: {{this.title}}, Link: {{this.url}}{{/each}}{{/gt}}{{/eq}}",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1569617312000",
+        "modificationDate": "1569781504000",
+        "webhook": {
+            "webhookKey": "getTopHeadlinesWebhook",
+            "webhookUrl": "https://newsapi.org/v2/top-headlines?pageSize={{categories.News.parameters.fetchedNewsNumber}}{{#if slots.newsCategory.value}}&category={{slots.newsCategory.value}}{{/if}}{{#if slots.topic.value}}&q={{slots.topic.value}}{{else}}&country=us{{/if}}",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "x-api-key",
+                    "value": "{{categories.News.parameters.token}}"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "",
+            "creationDate": "1569617312000",
+            "modificationDate": "1569635184000"
+        }
+    },
+    {
+        "actionName": "getAllNews",
+        "slots": [
+            {
+                "slotName": "topic",
+                "uiColor": "#AFF8DB",
+                "keyword": "newsTopics",
+                "keywordId": 1713,
+                "isList": false,
+                "isRequired": false,
+                "quickResponses": [],
+                "textPrompts": [
+                    "Please tell me a term you would like to appear in your news"
+                ],
+                "freeText": false,
+                "remainingLife": null,
+                "promptCountLimit": null
+            },
+            {
+                "slotName": "date",
+                "uiColor": "#009688",
+                "keyword": "sys.duckling_time",
+                "keywordId": 0,
+                "isList": false,
+                "isRequired": false,
+                "quickResponses": [],
+                "textPrompts": [],
+                "freeText": false
+            }
+        ],
+        "responses": [
+            {
+                "textResponse": "{{#if webhook.getAllNewsWebhook.error}}{{#eq webhook.getAllNewsWebhook.error.code compare=\"parameterInvalid\"}}I'm sorry, there was a problem when getting the news for you, please check if you are asking for news too old for your plan{{else}}I'm sorry, there was a problem when getting the news for you, please try to be more specific or rephrase your request{{/eq}}{{else}}{{#eq webhook.getAllNewsWebhook.response.status compare=\"error\"}} I'm sorry, there was a problem when getting the news for you {{/eq}} {{#eq webhook.getAllNewsWebhook.response.status compare=\"ok\"}} {{#eq webhook.getAllNewsWebhook.response.totalResults 0}} Sorry, we didnt find any news {{/eq}} {{#gt webhook.getAllNewsWebhook.response.totalResults 0}} These are the news found: {{#each webhook.getAllNewsWebhook.response.articles}} Title: {{this.title}}, Link: {{this.url}}{{/each}} {{/gt}}{{/eq}}{{/if}}",
+                "actions": []
+            }
+        ],
+        "useWebhook": true,
+        "usePostFormat": false,
+        "creationDate": "1569617312000",
+        "modificationDate": "1569782323000",
+        "webhook": {
+            "webhookKey": "getAllNewsWebhook",
+            "webhookUrl": "https://newsapi.org/v2/everything?pageSize={{categories.News.parameters.fetchedNewsNumber}}{{#if slots.date.original}}&sortBy=relevancy{{/if}}{{#if slots.topic.value}}&q={{slots.topic.value}}{{/if}}&language=en{{#if slots.date.from}}&from={{dateTimeFormat slots.date.from \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}{{#if slots.date.to}}&to={{dateTimeFormat slots.date.to \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}",
+            "webhookVerb": "GET",
+            "webhookPayloadType": "None",
+            "webhookPayload": "",
+            "webhookHeaders": [
+                {
+                    "key": "x-api-key",
+                    "value": "f2c54468b53a4183ad7b9b2fa0b483df"
+                }
+            ],
+            "webhookUser": "",
+            "webhookPassword": "",
+            "postScript": "",
+            "creationDate": "1569617312000",
+            "modificationDate": "1569782324000"
+        }
+    }
+]

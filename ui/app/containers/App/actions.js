@@ -553,7 +553,7 @@ export function importAgentSuccess(agent) {
  * Agent
  */
 
-export function resetSuccessAgent(){
+export function resetSuccessAgent() {
   return {
     type: RESET_SUCCESS_AGENT,
   }
@@ -922,13 +922,15 @@ export function addSayingError(error) {
   };
 }
 
-export function deleteSaying(filter, sayingId, categoryId) {
+export function deleteSaying(filter, page, pageSize, sayingId, categoryId) {
   return {
     type: DELETE_SAYING,
     apiCall: true,
     sayingId,
     categoryId,
-    filter
+    filter,
+    page,
+    pageSize
   };
 }
 

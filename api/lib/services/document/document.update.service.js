@@ -16,10 +16,13 @@ module.exports = async function ({ id, data }) {
             ...{ id: undefined },
             ...data
         };
-        if (merged.converseResult && merged.converseResult.CSO && merged.converseResult.CSO.webhooks){
+        if (merged.converseResult && merged.converseResult.CSO && merged.converseResult.CSO.webhooks) {
             Object.keys(merged.converseResult.CSO.webhooks).forEach((webhookKey) => {
-                        
-                merged.converseResult.CSO.webhooks[webhookKey].response = JSON.stringify(merged.converseResult.CSO.webhooks[webhookKey].response);
+                if (merged.converseResult.CSO.webhooks[webhookKey].response) {
+                    merged.converseResult.CSO.webhooks[webhookKey].response = JSON.stringify(merged.converseResult.CSO.webhooks[webhookKey].response);
+                } else if (merged.converseResult.CSO.webhooks[webhookKey].error) {
+                    merged.converseResult.CSO.webhooks[webhookKey].error = JSON.stringify(merged.converseResult.CSO.webhooks[webhookKey].error);
+                }
             });
         }
         await DocumentModel.updateInstance({ id, data: merged });
