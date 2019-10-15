@@ -31,8 +31,6 @@ import {
 import {
   makeSelectAgent,
   makeSelectServerStatus,
-  makeSelectDocumentsAnalytics,
-  makeSelectTotalDocumentsAnalytics,
   makeSelectDocumentsStats
 } from '../App/selectors';
 
@@ -52,8 +50,7 @@ export class AnalyticsPage extends React.PureComponent {
     const {
       onLoadKeywords,
       onLoadActions,
-      onLoadStats,
-      onRefreshDocuments
+      onLoadStats
     } = this.props;
 
     onLoadKeywords();
@@ -342,17 +339,13 @@ AnalyticsPage.propTypes = {
   agent: PropTypes.object,
   serverStatus: PropTypes.string,
   onTrain: PropTypes.func,
-  documents: PropTypes.array,
-  totalDocuments: PropTypes.number,
   onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   serverStatus: makeSelectServerStatus(),
-  documents: makeSelectDocumentsAnalytics(),
   stats: makeSelectDocumentsStats(),
-  totalDocuments: makeSelectTotalDocumentsAnalytics(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -365,9 +358,6 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadActions: () => {
       dispatch(loadActions());
-    },
-    onRefreshDocuments: (payload) => {
-      dispatch(loadAgentDocumentsSuccess(payload));
     },
     onLoadStats: (filters) => {
       dispatch(loadAgentStats(filters));
