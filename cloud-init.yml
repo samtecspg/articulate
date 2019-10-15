@@ -1,0 +1,55 @@
+#cloud-config
+groups:
+  - docker
+users:
+  - name: paasplayer
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBxbtNv3iy+DWOFQccx1IfDf2irxN1UvTgU0Zbm6wDOlvINnYILRcv2uWUX7PVizjI0Rrf49vpxdqWCQ/FevpPx73zxiwE54/kEvrcoDxFkEBmv4gwJt8gb99BBcuTPhOyxXvpU+RCDCqK1wAsl3+hKBohtqzyQxavZpVkN4i+fi+tJWiIUV9pdcQN3ppNVYkmQA+wgPu4Mi0fAjDcotKskRclqbJrYvHFb/TlSJCn/c+qFjkSvM1f+AT/o/cWpXBS9gbnBnZoXSTERLEDb3lH5vP5QcJTsgGE03vImzfEmz3Zq2H01rEpEypb3cbKZGbZZXwZ0QoSHVPkxxEsP4zR spg-do
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFAnKdxgGygiXTk4sS9dn2mOyaRb3Yo4d9lzJib7mlAUPjsc1fvsJO27eP256NNbMRJ4M3xg+N0dHgyMUZtYjfcCt6gSaI5gRigrg06ldS9NgI563PxWD77k89OImOjnuwl+KgCR4RR+XcdRHE/FxW3aOSmA1Atv/i3GowvmU+IFAPbnfaZagMfdmjkAYOJXuIc+t1KzkQPtcbIHjSl5emaTF1TGm81TImTMffkEFrHUXP+2sLnDVeK1J0ILlAVWPYO7D7RqSz4bZoB2oNNQJAeGpUFu97jtuI81ZQVqIR2kqgDYF4HtfrLZASor4crB1x6miBl0sYvOyTCN/krxwt backconnect
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo, docker
+    shell: /bin/bash
+package_upgrade: true
+packages: ['docker-ce', 'docker-ce-cli', 'unzip', 'jq', 'git']
+apt:
+  sources:
+    docker.list:
+      source: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable"
+      keyid: 0EBFCD88 # GPG key ID published on a key server
+runcmd:
+  - sed -i -e '/^#Port/s/^.*$/Port 4444/' /etc/ssh/sshd_config
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - sed -i -e '$aAllowUsers paasplayer' /etc/ssh/sshd_config
+  - systemctl restart ssh
+  - curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+  - chmod +x /usr/local/bin/docker-compose
+  - cd /usr/local/src
+  - git clone https://github.com/samtecspg/articulate.git
+  - cd articulate
+  - git fetch --tags
+  - latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+  - git checkout $latestTag
+  # - articulate_release=`curl -s https://api.github.com/repos/samtecspg/articulate/releases/latest | grep browser_download_url | cut -d '"' -f 4`
+  # - curl -O -L $articulate_release && articulate_zip=`basename $articulate_release`
+  # - unzip $articulate_zip && articulate_dir=`basename $articulate_zip .zip`
+  - export DO_API_TOKEN="0b33952f717eb17a7c8f27536de8f8344a7ec37f20a6aaa5e5b97dec2f54564d"
+  - export PUBLIC_IPV4=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
+  - export DROPLET_ID=$(curl -s http://169.254.169.254/metadata/v1/id)
+  - export DROPLET_NAME=$(curl -s http://169.254.169.254/metadata/v1/hostname)
+  - export DOMAIN="articulate.chat"
+  - export AUTH_PASSWORD="$(docker run --rm samtecspg/xkcd-password-generator:1.16.5 xkcdpass -n 4)"
+  - export AUTH_USER="admin@articulate.chat"
+  - export SESSION_SECRET="$(cat /dev/urandom | tr -dc '_A-Za-z0-9' | head -c${1:-32})"
+  - 'export EMAIL=$(curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $DO_API_TOKEN"  https://api.digitalocean.com/v2/account  | jq -r ".account.email")'
+  - 'curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $DO_API_TOKEN" -d "{\"type\":\"A\", \"name\":\"$DROPLET_NAME\", \"data\":\"$PUBLIC_IPV4\"}" https://api.digitalocean.com/v2/domains/$DOMAIN/records'
+  - sleep 30s
+  - chown -R 1000:1000 local-storage/elasticsearch
+  - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f compose/develop-compose.yml -f compose/basic-auth-compose.yml up -d
+  - chmod +x init-letsencrypt.sh
+  - sed -i 's/domains=()/domains=('$DROPLET_NAME"."$DOMAIN')/' init-letsencrypt.sh
+  - sed -i 's/email=""/email="'$EMAIL'"/' init-letsencrypt.sh
+  - sed -i 's/_server_name_/'$DROPLET_NAME"."$DOMAIN'/g' local-storage/nginx/nginx.ssl.conf
+  - ./init-letsencrypt.sh
+  - sleep 60s
+  - docker-compose -f docker-compose.yml -f compose/ssl-compose.yml exec nginx nginx -s reload
+  - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"Just created the $DROPLET_NAME instance with username: $AUTH_USER and password: $AUTH_PASSWORD the session secret is $SESSION_SECRET\"}" https://hooks.slack.com/services/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'
