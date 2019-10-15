@@ -136,206 +136,206 @@ export class AnalyticsPage extends React.PureComponent {
         />
       );
   }
-}
 
-getAgentStatsFilters = function (dateRange) {
+  getAgentStatsFilters = function (dateRange) {
 
-  let filterDocumentsAnalyticsRequestCount = {
-    "from": 0,
-    "size": 0,
-    "query": {
-      "bool": {
-        "must": [
-          {
-            "match": {
-              "agent_id": this.props.agent.id
+    let filterDocumentsAnalyticsRequestCount = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
             }
-          }
-        ]
-      }
-    }
-  }
-
-  if (dateRange && dateRange != 'all') {
-    filterDocumentsAnalyticsRequestCount.query.bool.must.push({
-      "range": {
-        "time_stamp": {
-          "gte": dateRange + "/m",
-          "lt": "now"
-        }
-      }
-    })
-  }
-
-
-  let filterdocumentsAnalyticsSessionsCount = {
-    "from": 0,
-    "size": 0,
-    "query": {
-      "bool": {
-        "must": [
-          {
-            "match": {
-              "agent_id": this.props.agent.id
-            }
-          }
-        ]
-      }
-    },
-    "aggs": {
-      "unique_sessions": {
-        "cardinality": {
-          "field": "session"
+          ]
         }
       }
     }
-  }
 
-  if (dateRange && dateRange != 'all') {
-    filterdocumentsAnalyticsSessionsCount.query.bool.must.push({
-      "range": {
-        "time_stamp": {
-          "gte": dateRange + "/m",
-          "lt": "now"
+    if (dateRange && dateRange != 'all') {
+      filterDocumentsAnalyticsRequestCount.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
+
+
+    let filterdocumentsAnalyticsSessionsCount = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "unique_sessions": {
+          "cardinality": {
+            "field": "session"
+          }
         }
       }
-    })
-  }
+    }
+
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsSessionsCount.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
 
 
-  let filterdocumentsAnalyticsFallbacksCount = {
-    "from": 0,
-    "size": 0,
-    "query": {
-      "bool": {
-        "must": [
-          {
-            "match": {
-              "agent_id": this.props.agent.id
-            }
-          },
-          {
-            "nested": {
-              "path": "converseResult",
-              "query": {
-                "bool": {
-                  "must": [
-                    {
-                      "match": {
-                        "converseResult.isFallback": "true"
+    let filterdocumentsAnalyticsFallbacksCount = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
+            },
+            {
+              "nested": {
+                "path": "converseResult",
+                "query": {
+                  "bool": {
+                    "must": [
+                      {
+                        "match": {
+                          "converseResult.isFallback": "true"
+                        }
                       }
-                    }
-                  ]
+                    ]
+                  }
                 }
               }
             }
-          }
-        ]
-      }
-    }
-  }
-
-  if (dateRange && dateRange != 'all') {
-    filterdocumentsAnalyticsFallbacksCount.query.bool.must.push({
-      "range": {
-        "time_stamp": {
-          "gte": dateRange + "/m",
-          "lt": "now"
+          ]
         }
       }
-    })
-  }
+    }
 
-  let filterdocumentsAnalyticsTopActions = {
-    "from": 0,
-    "size": 0,
-    "query": {
-      "bool": {
-        "must": [
-          {
-            "match": {
-              "agent_id": this.props.agent.id
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsFallbacksCount.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
+
+    let filterdocumentsAnalyticsTopActions = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
             }
+          ]
+        }
+      },
+      "aggs": {
+        "actions_count": {
+          "terms": {
+            "field": "recognized_action"
           }
-        ]
-      }
-    },
-    "aggs": {
-      "actions_count": {
-        "terms": {
-          "field": "recognized_action"
         }
       }
     }
-  }
 
-  if (dateRange && dateRange != 'all') {
-    filterdocumentsAnalyticsTopActions.query.bool.must.push({
-      "range": {
-        "time_stamp": {
-          "gte": dateRange + "/m",
-          "lt": "now"
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsTopActions.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
         }
-      }
-    })
-  }
+      })
+    }
 
-  let filterdocumentsAnalyticsRequestsOverTime = {
-    "from": 0,
-    "size": 0,
-    "query": {
-      "bool": {
-        "must": [
-          {
-            "match": {
-              "agent_id": this.props.agent.id
+    let filterdocumentsAnalyticsRequestsOverTime = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
             }
+          ]
+        }
+      },
+      "aggs": {
+        "start_time": {
+          "date_histogram": {
+            "field": "time_stamp",
+            "interval": "1m",
+            "min_doc_count": 1
           }
-        ]
-      }
-    },
-    "aggs": {
-      "start_time": {
-        "date_histogram": {
-          "field": "time_stamp",
-          "interval": "1m",
-          "min_doc_count": 1
         }
       }
     }
-  }
 
-  if (dateRange && dateRange != 'all') {
-    filterdocumentsAnalyticsRequestsOverTime.query.bool.must.push({
-      "range": {
-        "time_stamp": {
-          "gte": dateRange + "/m",
-          "lt": "now"
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsRequestsOverTime.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
         }
-      }
-    })
-  }
+      })
+    }
 
-  return [{
-    filterName: 'documentsAnalyticsRequestCount',
-    filter: filterDocumentsAnalyticsRequestCount
-  },
-  {
-    filterName: 'documentsAnalyticsSessionsCount',
-    filter: filterdocumentsAnalyticsSessionsCount
-  },
-  {
-    filterName: 'filterdocumentsAnalyticsFallbacksCount',
-    filter: filterdocumentsAnalyticsFallbacksCount
-  },
-  {
-    filterName: 'filterdocumentsAnalyticsTopActions',
-    filter: filterdocumentsAnalyticsTopActions
-  },
-  {
-    filterName: 'filterdocumentsAnalyticsRequestsOverTime',
-    filter: filterdocumentsAnalyticsRequestsOverTime
-  }]
+    return [{
+      filterName: 'documentsAnalyticsRequestCount',
+      filter: filterDocumentsAnalyticsRequestCount
+    },
+    {
+      filterName: 'documentsAnalyticsSessionsCount',
+      filter: filterdocumentsAnalyticsSessionsCount
+    },
+    {
+      filterName: 'filterdocumentsAnalyticsFallbacksCount',
+      filter: filterdocumentsAnalyticsFallbacksCount
+    },
+    {
+      filterName: 'filterdocumentsAnalyticsTopActions',
+      filter: filterdocumentsAnalyticsTopActions
+    },
+    {
+      filterName: 'filterdocumentsAnalyticsRequestsOverTime',
+      filter: filterdocumentsAnalyticsRequestsOverTime
+    }]
+  }
 }
 
 AnalyticsPage.propTypes = {
