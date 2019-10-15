@@ -135,6 +135,11 @@ export const LOAD_AGENT_DOCUMENTS_ERROR =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_ERROR';
 export const LOAD_AGENT_DOCUMENTS_SUCCESS =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_SUCCESS';
+export const LOAD_AGENT_STATS = 'app/AgentPage/LOAD_AGENT_STATS';
+export const LOAD_AGENT_STATS_ERROR =
+  'app/AgentPage/LOAD_AGENT_STATS_ERROR';
+export const LOAD_AGENT_STATS_SUCCESS =
+  'app/AgentPage/LOAD_AGENT_STATS_SUCCESS';
 export const SET_AGENT_DEFAULTS = 'app/AgentPage/SET_AGENT_DEFAULTS';
 export const LOAD_AGENT_SESSIONS = 'app/AgentPage/LOAD_AGENT_SESSIONS';
 export const LOAD_AGENT_SESSIONS_SUCCESS = 'app/AgentPage/LOAD_AGENT_SESSIONS_SUCCESS';
@@ -382,7 +387,7 @@ export const SIGN_UP_USER = 'app/user/SIGN_UP_USER';
 export const SIGN_UP_USER_SUCCESS = 'app/user/SIGN_UP_USER_SUCCESS';
 export const SIGN_UP_USER_ERROR = 'app/user/SIGN_UP_USER_ERROR';
 
-/* Users */ 
+/* Users */
 export const LOAD_USERS = 'app/user/LOAD_USERS';
 export const LOAD_USERS_SUCCESS = 'app/user/LOAD_USERS_SUCCESS';
 export const LOAD_USERS_ERROR = 'app/user/LOAD_USERS_ERROR';

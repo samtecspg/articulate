@@ -8,12 +8,15 @@ import { toAPIPath } from '../../utils/locationResolver';
 import {
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
+  loadAgentStatsError,
+  loadAgentStatsSuccess
 } from '../App/actions';
 
 import {
   LOAD_ACTIONS,
   LOAD_AGENT_DOCUMENTS,
   LOAD_KEYWORDS,
+  LOAD_AGENT_STATS
 } from '../App/constants';
 
 import { makeSelectAgent } from '../App/selectors';
@@ -31,7 +34,7 @@ export function* getAgentDocument(payload) {
       skip,
       limit,
     };
-    if (dateRange !== 'all'){
+    if (dateRange !== 'all') {
       params.dateRange = dateRange
     }
     const response = yield call(
@@ -51,8 +54,31 @@ export function* getAgentDocument(payload) {
   }
 }
 
+export function* getAgentStats(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, filters, dateRange } = payload;
+  try {
+    for (var i = 0; i < filters.length; i++) {
+      const response = yield call(
+        api.post,
+        toAPIPath([ROUTE_DOCUMENT, 'search']),
+        { ...filters[i].filter },
+      );
+      yield put(
+        loadAgentStatsSuccess({
+          stats: response,
+          statsName: filters[i].filterName
+        }),
+      );
+    }
+  } catch (err) {
+    yield put(loadAgentStatsError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(LOAD_ACTIONS, getActions);
   yield takeLatest(LOAD_AGENT_DOCUMENTS, getAgentDocument);
+  yield takeLatest(LOAD_AGENT_STATS, getAgentStats);
 }

@@ -90,6 +90,8 @@ import {
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_AGENT_STATS_ERROR,
+  LOAD_AGENT_STATS_SUCCESS,
   LOAD_AGENT_ERROR,
   LOAD_AGENT_SUCCESS,
   SET_AGENT_DEFAULTS,
@@ -304,8 +306,8 @@ const errorEmojies = [
   '🚨',
 ];
 
-const agentColors = [ material.red['900'], material.red['700'], material.red['500'], material.red['300'], material.red['100'], material.pink['900'], material.pink['700'], material.pink['500'], material.pink['300'], material.pink['100'], material.purple['900'], material.purple['700'], material.purple['500'], material.purple['300'], material.purple['100'], material.deepPurple['900'], material.deepPurple['700'], material.deepPurple['500'], material.deepPurple['300'], material.deepPurple['100'], material.indigo['900'], material.indigo['700'], material.indigo['500'], material.indigo['300'], material.indigo['100'], material.blue['900'], material.blue['700'], material.blue['500'], material.blue['300'], material.blue['100'], material.lightBlue['900'], material.lightBlue['700'], material.lightBlue['500'], material.lightBlue['300'], material.lightBlue['100'], material.cyan['900'], material.cyan['700'], material.cyan['500'], material.cyan['300'], material.cyan['100'], material.teal['900'], material.teal['700'], material.teal['500'], material.teal['300'], material.teal['100'], '#194D33', material.green['700'], material.green['500'], material.green['300'], material.green['100'], material.lightGreen['900'], material.lightGreen['700'], material.lightGreen['500'], material.lightGreen['300'], material.lightGreen['100'], material.lime['900'], material.lime['700'], material.lime['500'], material.lime['300'], material.lime['100'], material.yellow['900'], material.yellow['700'], material.yellow['500'], material.yellow['300'], material.yellow['100'], material.amber['900'], material.amber['700'], material.amber['500'], material.amber['300'], material.amber['100'], material.orange['900'], material.orange['700'], material.orange['500'], material.orange['300'], material.orange['100'], material.deepOrange['900'], material.deepOrange['700'], material.deepOrange['500'], material.deepOrange['300'], material.deepOrange['100'], material.brown['900'], material.brown['700'], material.brown['500'], material.brown['300'], material.brown['100'], material.blueGrey['900'], material.blueGrey['700'], material.blueGrey['500'], material.blueGrey['300'], material.blueGrey['100'], '#000000', '#525252', '#969696', '#D9D9D9', '#FFFFFF', ];
-const keywordColors = ['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF','#B28DFF','#C5A3FF','#D5AAFF','#ECD4FF','#FBE4FF','#DCD3FF','#A79AFF','#B5B9FF','#97A2FF','#AFCBFF','#AFF8DB','#C4FAF8','#85E3FF','#ACE7FF','#6EB5FF','#BFFCC6','#DBFFD6','#F3FFE3','#E7FFAC','#FFFFD1','#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA'];
+const agentColors = [material.red['900'], material.red['700'], material.red['500'], material.red['300'], material.red['100'], material.pink['900'], material.pink['700'], material.pink['500'], material.pink['300'], material.pink['100'], material.purple['900'], material.purple['700'], material.purple['500'], material.purple['300'], material.purple['100'], material.deepPurple['900'], material.deepPurple['700'], material.deepPurple['500'], material.deepPurple['300'], material.deepPurple['100'], material.indigo['900'], material.indigo['700'], material.indigo['500'], material.indigo['300'], material.indigo['100'], material.blue['900'], material.blue['700'], material.blue['500'], material.blue['300'], material.blue['100'], material.lightBlue['900'], material.lightBlue['700'], material.lightBlue['500'], material.lightBlue['300'], material.lightBlue['100'], material.cyan['900'], material.cyan['700'], material.cyan['500'], material.cyan['300'], material.cyan['100'], material.teal['900'], material.teal['700'], material.teal['500'], material.teal['300'], material.teal['100'], '#194D33', material.green['700'], material.green['500'], material.green['300'], material.green['100'], material.lightGreen['900'], material.lightGreen['700'], material.lightGreen['500'], material.lightGreen['300'], material.lightGreen['100'], material.lime['900'], material.lime['700'], material.lime['500'], material.lime['300'], material.lime['100'], material.yellow['900'], material.yellow['700'], material.yellow['500'], material.yellow['300'], material.yellow['100'], material.amber['900'], material.amber['700'], material.amber['500'], material.amber['300'], material.amber['100'], material.orange['900'], material.orange['700'], material.orange['500'], material.orange['300'], material.orange['100'], material.deepOrange['900'], material.deepOrange['700'], material.deepOrange['500'], material.deepOrange['300'], material.deepOrange['100'], material.brown['900'], material.brown['700'], material.brown['500'], material.brown['300'], material.brown['100'], material.blueGrey['900'], material.blueGrey['700'], material.blueGrey['500'], material.blueGrey['300'], material.blueGrey['100'], '#000000', '#525252', '#969696', '#D9D9D9', '#FFFFFF',];
+const keywordColors = ['#FFB5E8', '#FF9CEE', '#FFCCF9', '#FCC2FF', '#F6A6FF', '#B28DFF', '#C5A3FF', '#D5AAFF', '#ECD4FF', '#FBE4FF', '#DCD3FF', '#A79AFF', '#B5B9FF', '#97A2FF', '#AFCBFF', '#AFF8DB', '#C4FAF8', '#85E3FF', '#ACE7FF', '#6EB5FF', '#BFFCC6', '#DBFFD6', '#F3FFE3', '#E7FFAC', '#FFFFD1', '#FFC9DE', '#FFABAB', '#FFBEBC', '#FFCBC1', '#FFF5BA'];
 
 // The initial state of the App
 const initialState = Immutable({
@@ -517,6 +519,11 @@ const initialState = Immutable({
   totalDocuments: null,
   documentsAnalytics: [],
   totalDocumentsAnalytics: null,
+  documentsAnalyticsRequestCount: null,
+  documentsAnalyticsSessionsCount: null,
+  documentsAnalyticsFallbacksCount: null,
+  documentsAnalyticsTopActions: [],
+  documentsAnalyticsRequestsOverTime: [],
   sessions: [],
   totalSessions: null,
   serverStatus: '',
@@ -579,7 +586,7 @@ function appReducer(state = initialState, action) {
     case TOGGLE_CONVERSATION_BAR:
       return state.set('conversationBarOpen', action.value);
     case TOGGLE_CHAT_BUTTON:
-        return state.set('showChatButton', action.value);
+      return state.set('showChatButton', action.value);
     case CLOSE_NOTIFICATION:
       return state.update('notifications', notifications =>
         notifications.filter((item, index) => index !== action.index),
@@ -1091,21 +1098,56 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', action.error);
     case LOAD_AGENT_DOCUMENTS_SUCCESS:
-      if (action.documents.analytics){
+      if (action.documents.analytics) {
         return state
-        .set('documentsAnalytics', action.documents.documents)
-        .set('totalDocumentsAnalytics', action.documents.total)
-        .set('loading', false)
-        .set('error', false);
+          .set('documentsAnalytics', action.documents.documents)
+          .set('totalDocumentsAnalytics', action.documents.total)
+          .set('loading', false)
+          .set('error', false);
       }
       else {
         return state
-        .set('documents', action.documents.documents)
-        .set('totalDocuments', action.documents.total)
-        .set('loading', false)
-        .set('error', false);
+          .set('documents', action.documents.documents)
+          .set('totalDocuments', action.documents.total)
+          .set('loading', false)
+          .set('error', false);
       }
     case LOAD_AGENT_DOCUMENTS_ERROR:
+      return state
+        .set('documentsAnalytics', initialState.documents)
+        .set('totalDocumentsAnalytics', initialState.totalDocuments)
+        .set('documents', initialState.documents)
+        .set('totalDocuments', initialState.totalDocuments)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_AGENT_STATS_SUCCESS:
+      if (action.stats.statsName === "documentsAnalyticsRequestCount") {
+        return state
+          .set('documentsAnalyticsRequestCount', action.stats.stats.hits.total)
+          .set('loading', false)
+          .set('error', false);
+      } else if (action.stats.statsName === "documentsAnalyticsSessionsCount") {
+        return state
+          .set('documentsAnalyticsSessionsCount', action.stats.stats.aggregations.unique_sessions.value)
+          .set('loading', false)
+          .set('error', false);
+      } else if (action.stats.statsName === "filterdocumentsAnalyticsFallbacksCount") {
+        return state
+          .set('documentsAnalyticsFallbacksCount', action.stats.stats.hits.total)
+          .set('loading', false)
+          .set('error', false);
+      } else if (action.stats.statsName === "filterdocumentsAnalyticsTopActions") {
+        return state
+          .set('documentsAnalyticsTopActions', action.stats.stats.aggregations.actions_count.buckets)
+          .set('loading', false)
+          .set('error', false);
+      } else if (action.stats.statsName === "filterdocumentsAnalyticsRequestsOverTime") {
+        return state
+          .set('documentsAnalyticsRequestsOverTime', action.stats.stats.aggregations.start_time.buckets)
+          .set('loading', false)
+          .set('error', false);
+      }
+    case LOAD_AGENT_STATS_ERROR:
       return state
         .set('documentsAnalytics', initialState.documents)
         .set('totalDocumentsAnalytics', initialState.totalDocuments)
@@ -1762,11 +1804,11 @@ function appReducer(state = initialState, action) {
         )
         .set('actionTouched', true);
     case ADD_NEW_QUICK_RESPONSE:
-      if (!state.action.slots[action.slotIndex].quickResponses){
+      if (!state.action.slots[action.slotIndex].quickResponses) {
         state = state.setIn(['action', 'slots'], state.action.slots.map((slot, index) => {
 
-          if (index === action.slotIndex){
-            if (!slot.quickResponses){
+          if (index === action.slotIndex) {
+            if (!slot.quickResponses) {
               return slot.set('quickResponses', []);
             }
             return slot;
@@ -1778,50 +1820,50 @@ function appReducer(state = initialState, action) {
         ['action', 'slots'],
         slots => slots.map((slot, index) => {
 
-          if (index === action.slotIndex){
+          if (index === action.slotIndex) {
             return slot.update('quickResponses', quickResponses => quickResponses.concat(action.response));
           }
           return slot;
         })
       )
-      .set('actionTouched', true);;
+        .set('actionTouched', true);;
     case DELETE_QUICK_RESPONSE:
       return state.updateIn(
         ['action', 'slots'],
         slots => slots.map((slot, index) => {
 
-          if (index === action.slotIndex){
+          if (index === action.slotIndex) {
             return slot.set('quickResponses', slot.quickResponses.filter((quickResponse, index) => { return index !== action.quickResponseIndex }));
           }
           return slot;
         })
       )
-      .set('actionTouched', true);
+        .set('actionTouched', true);
     case CHANGE_QUICK_RESPONSE:
       return state.updateIn(
         ['action', 'slots'],
         slots => slots.map((slot, index) => {
 
-          if (index === action.slotIndex){
-            return slot.set('quickResponses', slot.quickResponses.map((quickResponse, index) => { 
-              if(index === action.quickResponseIndex){
+          if (index === action.slotIndex) {
+            return slot.set('quickResponses', slot.quickResponses.map((quickResponse, index) => {
+              if (index === action.quickResponseIndex) {
                 return action.response;
-              } 
+              }
               return quickResponse;
             }));
           }
           return slot;
         })
       )
-      .set('actionTouched', true);
+        .set('actionTouched', true);
     case EDIT_SLOT_TEXT_PROMPT:
       return state
         .updateIn(['action', 'slots'], slots =>
           slots.map((slot, index) => {
             if (index === action.slotIndex) {
               return slot.update('textPrompts', textPrompts => textPrompts.map((textPrompt, textPromptIndex) => {
-                
-                if (action.textPromptIndex === textPromptIndex){
+
+                if (action.textPromptIndex === textPromptIndex) {
                   return action.textPrompt;
                 }
                 return textPrompt;
@@ -2309,7 +2351,7 @@ function appReducer(state = initialState, action) {
     /* Connection */
     case CHANGE_CONNECTION_DATA:
       const details = action.payload.field === 'channel' ? {} : Immutable.asMutable(state.connection.details, { deep: true });
-      if (action.payload.value === 'chat-widget' || state.connection.channel === 'chat-widget'){
+      if (action.payload.value === 'chat-widget' || state.connection.channel === 'chat-widget') {
         const connectionAgent = action.payload.field === 'agent' ? action.payload.value : state.connection.agent;
         const agentData = state.agents.filter((agent) => {
 
@@ -2432,7 +2474,7 @@ function appReducer(state = initialState, action) {
         notifications.concat({
           message: `Error: ${action.error}. ${
             errorEmojies[Math.floor(Math.random() * errorEmojies.length)]
-          }`,
+            }`,
           type: 'error',
         }),
       );

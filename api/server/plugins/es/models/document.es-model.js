@@ -21,6 +21,9 @@ const mappings = {
         rasa_results: {
             type: 'object'
         },
+        recognized_action: {
+            type: "keyword"
+        },
         session: {
             type: 'keyword'
         },
@@ -82,7 +85,7 @@ const mappings = {
                         }
                     }
                 }
-            }        
+            }
         }
     }
 };

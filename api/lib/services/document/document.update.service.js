@@ -1,4 +1,4 @@
-import { MODEL_DOCUMENT, ROUTE_AGENT, ROUTE_DOCUMENT } from '../../../util/constants';
+import { MODEL_DOCUMENT, ROUTE_AGENT, ROUTE_DOCUMENT, PARAM_SEARCH } from '../../../util/constants';
 import ESErrorHandler from '../../errors/es.error-handler';
 import _ from 'lodash';
 
@@ -26,8 +26,7 @@ module.exports = async function ({ id, data }) {
             });
         }
         await DocumentModel.updateInstance({ id, data: merged });
-        const agentDocuments = await documentService.findByAgentId({ agentId: original.agent_id });
-        this.server.publish(`/${ROUTE_AGENT}/${original.agent_id}/${ROUTE_DOCUMENT}`, agentDocuments);
+        this.server.publish(`/${ROUTE_AGENT}/${original.agent_id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`, {});
         return { ...merged, ...{ id } };
     }
     catch (error) {
