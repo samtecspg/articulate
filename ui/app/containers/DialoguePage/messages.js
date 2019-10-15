@@ -140,5 +140,14 @@ export default defineMessages({
   sayingEnter: {
     id: 'app.containers.DialoguePage.component.SayingsDataForm.sayingEnter',
     defaultMessage: 'Enter',
+  },
+  pickCategory: {
+    id: 'app.containers.DialoguePage.component.PopoverFilter.pickCategory',
+    defaultMessage: 'Pick Category',
+  },
+  pickActions: {
+    id: 'app.containers.DialoguePage.component.PopoverFilter.pickActions',
+    defaultMessage: 'Actions: ',
   }
+
 });

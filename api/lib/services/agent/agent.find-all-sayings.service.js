@@ -45,7 +45,7 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
 
         if (actionFilter.length > 0) {
             filteredSayings = filteredSayings.filter((saying) => {
-                return _.includes(saying.actions, ...actionFilter);
+                return actionFilter.some(fil => saying.actions.indexOf(fil) !== -1) ? saying : undefined
             });
         }
 
