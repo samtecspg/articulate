@@ -146,10 +146,8 @@ export class DialoguePage extends React.PureComponent {
     );
 
     const locationSearchParams = qs.parse(this.props.location.search);
-    const filter = locationSearchParams.filter || this.state.filter;
-    const currentSayingsPage = locationSearchParams.page
-      ? _.toNumber(locationSearchParams.page)
-      : this.state.currentSayingsPage;
+    const filter = this.state.filter;
+    const currentSayingsPage = this.state.currentSayingsPage;
     this.setState({
       filter,
       currentSayingsPage,
@@ -205,7 +203,7 @@ export class DialoguePage extends React.PureComponent {
     if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
-    if (this.props.totalSayings !== prevProps.totalSayings) {
+    if (!this.state.numberOfSayingsPages || (this.props.totalSayings !== prevProps.totalSayings)) {
       this.setState({
         numberOfSayingsPages: Math.ceil(
           this.props.totalSayings / this.state.sayingsPageSize,
@@ -279,7 +277,10 @@ export class DialoguePage extends React.PureComponent {
       filter,
       currentSayingsPage: 1,
     });
-    this.throttledOnLoadSayings(filter, 1);
+    //if (this.throttledOnLoadSayings) {
+    //  this.throttledOnLoadSayings(filter, 1, this.state.sayingsPageSize);
+    //}
+    this.props.onLoadSayings(filter, 1, this.state.sayingsPageSize);
   }
 
   onSearchCategory(categoryFilter) {

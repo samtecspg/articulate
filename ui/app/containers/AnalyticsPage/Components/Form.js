@@ -124,66 +124,66 @@ class Form extends React.Component {
     });
   };
 
-  getTopActions = (documents) => {
+  getTopActions = (stats) => {
 
-    const actions = _.compact(documents.map((document) => {
+    let data = {};
+    if (stats.documentsAnalyticsTopActions.length > 0) {
+      var result = _.filter(stats.documentsAnalyticsTopActions, function (action) {
+        if (action.key && action.key !== '') return action;
+      });
+      result = _.orderBy(result, ['doc_count', 'key'], ['desc', 'asc']).slice(0, 5);
 
-      return document.rasa_results[0].action.name;
-    }));
-    const result = _.take(_.orderBy(_.values(_.groupBy(actions)).map(d => ({name: d[0], count: d.length})), 'count', 'desc'), 5);
-    
-    const data = {
-      labels: _.map(result, 'name'),
-      datasets: [
-        {
-          label: this.props.intl.formatMessage(messages.count),
-          backgroundColor: '#3ccb8e',
-          borderColor: '#3ccb8e',
-          borderWidth: 1,
-          hoverBackgroundColor: '#00c582',
-          hoverBorderColor: '#00c582',
-          data: _.map(result, 'count')
-        }
-      ]
-    };
+      data = {
+        labels: _.map(result, 'key'),
+        datasets: [
+          {
+            label: this.props.intl.formatMessage(messages.count),
+            backgroundColor: '#3ccb8e',
+            borderColor: '#3ccb8e',
+            borderWidth: 1,
+            hoverBackgroundColor: '#00c582',
+            hoverBorderColor: '#00c582',
+            data: _.map(result, 'doc_count')
+          }
+        ]
+      };
+    }
 
     return data
   };
 
 
 
-  getRequestsOverTime = (documents) => {
+  getRequestsOverTime = (stats) => {
 
-    const timestamps = _.sortBy(_.map(documents, (document) => { return new Moment(document.time_stamp) }));
-    const range = moment.range(timestamps[0].clone().subtract(1, 'minutes'), timestamps[timestamps.length - 1].clone().add(1, 'minutes'));
-    const minutes = Array.from(range.by('minutes'));
-    const labels = minutes.map(m => m.format('MM-DD-YYYY hh:mm'));
-    const minutesOfRequests = timestamps.map(t => t.format('MM-DD-YYYY hh:mm'));
-    
-    const tempResult = _.values(_.groupBy(minutesOfRequests)).map(d => ({name: d[0], count: d.length}));
+    let data = {}
+    if (stats.documentsAnalyticsRequestsOverTime.length > 0) {
+      const timestamps = _.sortBy(_.map(stats.documentsAnalyticsRequestsOverTime, (document) => { return new Moment(document.key_as_string) }));
+      const range = moment.range(timestamps[0].clone().subtract(1, 'minutes'), timestamps[timestamps.length - 1].clone().add(1, 'minutes'));
+      const minutes = Array.from(range.by('minutes'));
+      const labels = minutes.map(m => m.format('MM-DD-YYYY hh:mm'));
+      const tempResult = stats.documentsAnalyticsRequestsOverTime.map(d => ({ name: new Moment(d.key_as_string).format('MM-DD-YYYY hh:mm'), count: d.doc_count }));
+      const result = _.times(labels.length, _.constant(0));
 
-    const result = _.times(labels.length, _.constant(0));
-    
-    tempResult.forEach((minuteOfRequest) => {
-      
-      result[labels.indexOf(minuteOfRequest.name)] = minuteOfRequest.count;
-    });
-    
-    const data = {
-      labels,
-      datasets: [
-        {
-          label: this.props.intl.formatMessage(messages.count),
-          backgroundColor: '#3ccb8e',
-          borderColor: '#3ccb8e',
-          borderWidth: 1,
-          hoverBackgroundColor: '#00c582',
-          hoverBorderColor: '#00c582',
-          data: result
-        }
-      ]
-    };
+      tempResult.forEach((minuteOfRequest) => {
+        result[labels.indexOf(minuteOfRequest.name)] = minuteOfRequest.count;
+      });
 
+      data = {
+        labels,
+        datasets: [
+          {
+            label: this.props.intl.formatMessage(messages.count),
+            backgroundColor: '#3ccb8e',
+            borderColor: '#3ccb8e',
+            borderWidth: 1,
+            hoverBackgroundColor: '#00c582',
+            hoverBorderColor: '#00c582',
+            data: result
+          }
+        ]
+      };
+    }
     return data
   };
 
@@ -191,7 +191,7 @@ class Form extends React.Component {
 
     const webhookResponseTimes = _.compact(_.flattenDeep((documents.map((document) => {
 
-      if (document.converseResult && document.converseResult.CSO && document.converseResult.CSO.webhooks){
+      if (document.converseResult && document.converseResult.CSO && document.converseResult.CSO.webhooks) {
         return document.converseResult.CSO.webhooks.map((webhook) => {
 
           return webhook.elapsed_time_ms;
@@ -200,7 +200,7 @@ class Form extends React.Component {
       return null;
     }))));
 
-    return webhookResponseTimes.length > 0 ? `${_.sum(webhookResponseTimes)/webhookResponseTimes.length} ms` : this.props.intl.formatMessage(messages.noWebhooksCallsSoFar);
+    return webhookResponseTimes.length > 0 ? `${_.sum(webhookResponseTimes) / webhookResponseTimes.length} ms` : this.props.intl.formatMessage(messages.noWebhooksCallsSoFar);
   };
 
   render() {
@@ -265,7 +265,7 @@ class Form extends React.Component {
                     this.props.onSetDateRange(evt.target.value);
                   }}
                 >
-                  <MenuItem key={'lastHour'} value={'now-1d'}>
+                  <MenuItem key={'lastHour'} value={'now-1H'}>
                     {intl.formatMessage(messages.lastHour)}
                   </MenuItem>
                   <MenuItem key={'lastDay'} value={'now-1d'}>
@@ -300,7 +300,7 @@ class Form extends React.Component {
                     />
                     <CardContent className={classes.analyticsCardContent}>
                       <Typography className={classes.valueLabel}>
-                        {this.props.totalDocuments}
+                        {this.props.stats.documentsAnalyticsRequestCount}
                       </Typography>
                       <Typography className={classes.countLabel}>
                         {intl.formatMessage(messages.count)}
@@ -320,7 +320,7 @@ class Form extends React.Component {
                     />
                     <CardContent className={classes.analyticsCardContent}>
                       <Typography className={classes.valueLabel}>
-                          {_.uniqBy(this.props.documents, 'session').length}
+                        {this.props.stats.documentsAnalyticsSessionsCount}
                       </Typography>
                       <Typography className={classes.countLabel}>
                         {intl.formatMessage(messages.count)}
@@ -340,10 +340,7 @@ class Form extends React.Component {
                     />
                     <CardContent className={classes.analyticsCardContent}>
                       <Typography className={classes.valueLabel}>
-                          {this.props.documents.filter((document) => {
-
-                            return document.converseResult && document.converseResult.isFallback;
-                          }).length}
+                        {this.props.stats.documentsAnalyticsFallbacksCount}
                       </Typography>
                       <Typography className={classes.countLabel}>
                         {intl.formatMessage(messages.count)}
@@ -351,7 +348,7 @@ class Form extends React.Component {
                     </CardContent>
                   </Card>
                 </Grid>
-              </Grid> 
+              </Grid>
               <Grid container
                 spacing={16}
                 justify="space-around"
@@ -359,34 +356,34 @@ class Form extends React.Component {
                 <Grid item xs={6}>
                   <Card
                     className={classes.analyticsCard}
-                    style={{height: 330}}
+                    style={{ height: 330 }}
                   >
                     <CardHeader
                       title={intl.formatMessage(messages.topActions
-                        )}
+                      )}
                       titleTypographyProps={{
                         className: classes.cardTitle
                       }}
                     />
                     <CardContent className={classes.analyticsCardContent}>
-                      {this.props.documents.length > 0 ?
-                      <HorizontalBar
-                        data={this.getTopActions(this.props.documents)}
-                        options={{
-                          maintainAspectRatio: true,
-                          scales: {
-                            xAxes: [{
+                      {this.props.stats.documentsAnalyticsTopActions.length > 0 ?
+                        <HorizontalBar
+                          data={this.getTopActions(this.props.stats)}
+                          options={{
+                            maintainAspectRatio: true,
+                            scales: {
+                              xAxes: [{
                                 ticks: {
-                                    beginAtZero: true,
-                                    stepSize: 1
+                                  beginAtZero: true,
+                                  stepSize: 1
                                 }
-                            }]
-                          }
-                        }}
-                      /> :
-                      <Typography>
+                              }]
+                            }
+                          }}
+                        /> :
+                        <Typography>
                           {intl.formatMessage(messages.noActionsInvokedSoFar)}
-                      </Typography>}
+                        </Typography>}
                     </CardContent>
                   </Card>
                 </Grid>
@@ -394,7 +391,7 @@ class Form extends React.Component {
 
                   <Card
                     className={classes.analyticsCard}
-                    style={{height: 330}}
+                    style={{ height: 330 }}
                   >
                     <CardHeader
                       title={intl.formatMessage(messages.requestsOverTime)}
@@ -403,25 +400,25 @@ class Form extends React.Component {
                       }}
                     />
                     <CardContent className={classes.analyticsCardContent}>
-                      {this.props.documents.length > 0 ?
-                      <Bar
-                        data={this.getRequestsOverTime(this.props.documents)}
-                        options={{
-                          maintainAspectRatio: true,
-                          scales: {
-                            yAxes: [{
+                      {this.props.stats.documentsAnalyticsRequestsOverTime.length > 0 ?
+                        <Bar
+                          data={this.getRequestsOverTime(this.props.stats)}
+                          options={{
+                            maintainAspectRatio: true,
+                            scales: {
+                              yAxes: [{
                                 ticks: {
-                                    beginAtZero: true,
-                                    stepSize: 1
+                                  beginAtZero: true,
+                                  stepSize: 1
                                 }
-                            }]
-                          }
-                        }}
-                      /> 
-                      :
-                      <Typography>
+                              }]
+                            }
+                          }}
+                        />
+                        :
+                        <Typography>
                           {intl.formatMessage(messages.noActionsInvokedSoFar)}
-                      </Typography>}
+                        </Typography>}
                     </CardContent>
                   </Card>
                 </Grid>

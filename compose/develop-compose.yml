@@ -1,13 +1,9 @@
 version: '3.7'
 
 services:
-  nginx:
-    ports: ['${PORT:-8080}:80']
   api:
     build: './api/.'
-    ports: ['7500:7500']
   ui:
-    ports: ['3000:3000']
     build:
       context: './ui/.'
       dockerfile: Dockerfile.dev.yml
@@ -16,12 +12,8 @@ services:
   rasa:
     build:
       context: './rasa/.'
-    ports: ['5000:5000']
   duckling:
     build:
       context: './duckling/.'
-    ports: ['8000:8000']
   redis:
-    ports: ['6379:6379']
   elasticsearch:
-    ports: ['9200:9200']

@@ -18,20 +18,20 @@ import { getWS } from '../../utils/locationResolver';
 
 import {
   trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
-  toggleChatButton
+  toggleChatButton, loadAgentStats
 } from '../App/actions';
 
 import { AUTH_ENABLED } from "../../../common/env";
 import {
   ROUTE_DOCUMENT,
+  PARAM_SEARCH,
   ROUTE_AGENT,
 } from '../../../common/constants';
 
 import {
   makeSelectAgent,
   makeSelectServerStatus,
-  makeSelectDocumentsAnalytics,
-  makeSelectTotalDocumentsAnalytics
+  makeSelectDocumentsStats
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -46,17 +46,16 @@ export class AnalyticsPage extends React.PureComponent {
     dateRange: 'all'
   };
 
-  componentWillMount(){
+  componentWillMount() {
     const {
       onLoadKeywords,
       onLoadActions,
-      onLoadDocuments,
-      onRefreshDocuments
+      onLoadStats
     } = this.props;
 
     onLoadKeywords();
     onLoadActions();
-    onLoadDocuments();
+    onLoadStats(this.getAgentStatsFilters(this.state.dateRange));
 
     if (!this.state.socketClientConnected) {
       const client = new Nes.Client(getWS());
@@ -66,18 +65,12 @@ export class AnalyticsPage extends React.PureComponent {
           socketClientConnected: true,
         });
 
-        const handler = documents => {
-          if (documents) {
-            const payload = {
-              documents: documents.data,
-              total: documents.totalCount,
-            };
-            onLoadDocuments(this.state.dateRange);
-          }
+        const handler = () => {
+          onLoadStats(this.getAgentStatsFilters(this.state.dateRange));
         };
 
         client.subscribe(
-          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`,
+          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`,
           handler,
         );
       };
@@ -93,7 +86,7 @@ export class AnalyticsPage extends React.PureComponent {
 
   componentWillUnmount() {
     if (this.state.client) {
-      this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`);
+      this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`);
     }
   }
 
@@ -116,14 +109,13 @@ export class AnalyticsPage extends React.PureComponent {
           agentURL={`/agent/${agent.id}?ref=mainTab`}
           analyticsForm={
             <Form
-              totalDocuments={this.props.totalDocuments}
-              documents={this.props.documents}
+              stats={this.props.stats}
               dateRange={this.state.dateRange}
               onSetDateRange={(dateRange) => {
                 this.setState({
                   dateRange
                 });
-                this.props.onLoadDocuments(dateRange);
+                this.props.onLoadStats(this.getAgentStatsFilters(dateRange));
               }}
             />
           }
@@ -136,10 +128,210 @@ export class AnalyticsPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
-    );
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
+        />
+      );
+  }
+
+  getAgentStatsFilters = function (dateRange) {
+
+    let filterDocumentsAnalyticsRequestCount = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    if (dateRange && dateRange != 'all') {
+      filterDocumentsAnalyticsRequestCount.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
+
+
+    let filterdocumentsAnalyticsSessionsCount = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "unique_sessions": {
+          "cardinality": {
+            "field": "session"
+          }
+        }
+      }
+    }
+
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsSessionsCount.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
+
+
+    let filterdocumentsAnalyticsFallbacksCount = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
+            },
+            {
+              "nested": {
+                "path": "converseResult",
+                "query": {
+                  "bool": {
+                    "must": [
+                      {
+                        "match": {
+                          "converseResult.isFallback": "true"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsFallbacksCount.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
+
+    let filterdocumentsAnalyticsTopActions = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "actions_count": {
+          "terms": {
+            "field": "recognized_action"
+          }
+        }
+      }
+    }
+
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsTopActions.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
+
+    let filterdocumentsAnalyticsRequestsOverTime = {
+      "from": 0,
+      "size": 0,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "agent_id": this.props.agent.id
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "start_time": {
+          "date_histogram": {
+            "field": "time_stamp",
+            "interval": "1m",
+            "min_doc_count": 1
+          }
+        }
+      }
+    }
+
+    if (dateRange && dateRange != 'all') {
+      filterdocumentsAnalyticsRequestsOverTime.query.bool.must.push({
+        "range": {
+          "time_stamp": {
+            "gte": dateRange + "/m",
+            "lt": "now"
+          }
+        }
+      })
+    }
+
+    return [{
+      filterName: 'documentsAnalyticsRequestCount',
+      filter: filterDocumentsAnalyticsRequestCount
+    },
+    {
+      filterName: 'documentsAnalyticsSessionsCount',
+      filter: filterdocumentsAnalyticsSessionsCount
+    },
+    {
+      filterName: 'filterdocumentsAnalyticsFallbacksCount',
+      filter: filterdocumentsAnalyticsFallbacksCount
+    },
+    {
+      filterName: 'filterdocumentsAnalyticsTopActions',
+      filter: filterdocumentsAnalyticsTopActions
+    },
+    {
+      filterName: 'filterdocumentsAnalyticsRequestsOverTime',
+      filter: filterdocumentsAnalyticsRequestsOverTime
+    }]
   }
 }
 
@@ -147,16 +339,13 @@ AnalyticsPage.propTypes = {
   agent: PropTypes.object,
   serverStatus: PropTypes.string,
   onTrain: PropTypes.func,
-  documents: PropTypes.array,
-  totalDocuments: PropTypes.number,
   onShowChatButton: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   serverStatus: makeSelectServerStatus(),
-  documents: makeSelectDocumentsAnalytics(),
-  totalDocuments: makeSelectTotalDocumentsAnalytics(),
+  stats: makeSelectDocumentsStats(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -170,11 +359,8 @@ function mapDispatchToProps(dispatch) {
     onLoadActions: () => {
       dispatch(loadActions());
     },
-    onLoadDocuments: (dateRange) => {
-      dispatch(loadAgentDocuments({ dateRange }));
-    },
-    onRefreshDocuments: (payload) => {
-      dispatch(loadAgentDocumentsSuccess(payload));
+    onLoadStats: (filters) => {
+      dispatch(loadAgentStats(filters));
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
@@ -189,8 +375,9 @@ const withConnect = connect(
 
 const withSaga = injectSaga({ key: 'analytics', saga });
 
-export default 
+export default
   compose(
     withSaga,
     withConnect,
   )(withRouter(AnalyticsPage));
+

@@ -27,6 +27,10 @@ module.exports = new Confidence.Store({
         host: process.env.HOST || '0.0.0.0',
         port: process.env.PORT || 7500,
         routes: {
+            timeout: {
+                server: 60000 * 60,
+                socket: 60000 * 61
+            },
             cors: true,
             validate: {
                 failAction: (request, h, err) => {

@@ -24,6 +24,7 @@ class DocumentValidate {
                     maximum_category_score: Model.maximum_category_score.required(),
                     total_elapsed_time_ms: Model.total_elapsed_time_ms.required(),
                     rasa_results: Model.rasa_results.required(),
+                    recognized_action: Model.recognized_action.required(),
                     session: Model.session.required(),
                     agent_id: Model.agent_id.required(),
                     agent_model: Model.agent_model.required()
@@ -56,6 +57,7 @@ class DocumentValidate {
                     maximum_category_score: Model.maximum_category_score,
                     total_elapsed_time_ms: Model.total_elapsed_time_ms,
                     rasa_results: Model.rasa_results,
+                    recognized_action: Model.recognized_action,
                     creationDate: Model.creationDate,
                     modificationDate: Model.modificationDate,
                     webhooks: Model.webhooks

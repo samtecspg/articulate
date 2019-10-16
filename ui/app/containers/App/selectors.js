@@ -182,6 +182,20 @@ const makeSelectDocumentsAnalytics = () =>
     globalState => globalState.documentsAnalytics,
   );
 
+const makeSelectDocumentsStats = () =>
+  createSelector(
+    selectGlobal,
+    globalState => {
+      return {
+        'documentsAnalyticsRequestCount': globalState.documentsAnalyticsRequestCount,
+        'documentsAnalyticsSessionsCount': globalState.documentsAnalyticsSessionsCount,
+        'documentsAnalyticsFallbacksCount': globalState.documentsAnalyticsFallbacksCount,
+        'documentsAnalyticsTopActions': globalState.documentsAnalyticsTopActions,
+        'documentsAnalyticsRequestsOverTime': globalState.documentsAnalyticsRequestsOverTime
+      }
+    }
+  );
+
 const makeSelectTotalDocumentsAnalytics = () =>
   createSelector(
     selectGlobal,
@@ -494,6 +508,7 @@ export {
   makeSelectDocuments,
   makeSelectTotalDocuments,
   makeSelectDocumentsAnalytics,
+  makeSelectDocumentsStats,
   makeSelectTotalDocumentsAnalytics,
   makeSelectSessions,
   makeSelectTotalSessions,

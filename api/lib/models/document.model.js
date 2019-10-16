@@ -28,6 +28,10 @@ class DocumentModel {
                 .array()
                 .items(Joi.object())
                 .description('RASA Results'),
+            recognized_action: Joi
+                .string()
+                .description('Recognized Action')
+                .trim(),
             session: Joi
                 .string()
                 .description('Session')

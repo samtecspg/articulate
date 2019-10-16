@@ -110,6 +110,7 @@ export const PARAM_DOCUMENT_MAXIMUM_ACTION_SCORE = 'maximum_action_score';
 export const PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE = 'maximum_category_score';
 export const PARAM_DOCUMENT_TOTAL_ELAPSED_TIME = 'total_elapsed_time_ms';
 export const PARAM_DOCUMENT_RASA_RESULTS = 'rasa_results';
+export const PARAM_DOCUMENT_RECOGNIZED_ACTION = 'recognized_action';
 export const PARAM_DOCUMENT_ACTION_RANKING = 'action_ranking';
 export const PARAM_DOCUMENT_AGENT_ID = 'agent_id';
 export const PARAM_DOCUMENT_AGENT_MODEL = 'agent_model';
