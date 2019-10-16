@@ -4,6 +4,9 @@ import {
     ROUTE_EXTERNAL,
     PARAM_CONNECTION_ID
 } from '../../../util/constants';
+import {
+    AUTH_ENABLED
+} from '../../../util/env';
 import Validator from '../../validators/connection.validator';
 
 module.exports = {
@@ -12,6 +15,12 @@ module.exports = {
     options: {
         tags: ['api'],
         validate: Validator.get,
+        ... (AUTH_ENABLED && {
+            auth: {
+                strategy: 'session',
+                mode: 'optional'
+            }
+        }),
         handler: async (request) => {
 
             const { connectionService } = await request.services();
