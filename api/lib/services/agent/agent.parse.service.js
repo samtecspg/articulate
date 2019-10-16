@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import Moment from 'moment';
 import {
     MODEL_AGENT,
     PARAM_DOCUMENT_AGENT_ID,
@@ -16,6 +14,9 @@ import {
     MODEL_KEYWORD,
     RASA_MODEL_MODIFIERS
 } from '../../../util/constants';
+
+import _ from 'lodash';
+import Moment from 'moment';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 const getAgentModifers = ({ agentKeywords }) => {
