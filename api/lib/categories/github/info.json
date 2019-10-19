@@ -10,6 +10,9 @@
         "actionThreshold": 0.5,
         "model": "",
         "extraTrainingData": true,
-        "parameters": {}
+        "parameters": {
+            "token": "",
+            "repoPath": ""
+        }
     }
 }

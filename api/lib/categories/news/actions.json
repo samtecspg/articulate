@@ -103,7 +103,7 @@
             "webhookHeaders": [
                 {
                     "key": "x-api-key",
-                    "value": "f2c54468b53a4183ad7b9b2fa0b483df"
+                    "value": "{{categories.News.parameters.token}}"
                 }
             ],
             "webhookUser": "",

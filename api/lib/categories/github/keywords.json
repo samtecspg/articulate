@@ -24,19 +24,6 @@
                 ]
             },
             {
-                "value": "password",
-                "synonyms": [
-                    "password"
-                ]
-            },
-            {
-                "value": "repository",
-                "synonyms": [
-                    "repository",
-                    "repo"
-                ]
-            },
-            {
                 "value": "issue",
                 "synonyms": [
                     "issue",
@@ -99,7 +86,9 @@
                 "synonyms": [
                     "watchers_count",
                     "watchers",
-                    "watcher"
+                    "watcher",
+                    "follower",
+                    "followers"
                 ]
             },
             {
@@ -123,8 +112,8 @@
                 "sayings": []
             }
         ],
-        "creationDate": "1569413861000",
-        "modificationDate": "1569414268000"
+        "creationDate": "1571429471000",
+        "modificationDate": "1571429471000"
     },
     {
         "keywordName": "issueLabels",
@@ -188,7 +177,63 @@
         "regex": "",
         "type": "learned",
         "modifiers": [],
-        "creationDate": "1569413861000",
-        "modificationDate": "1569413861000"
+        "creationDate": "1571429471000",
+        "modificationDate": "1571429471000"
+    },
+    {
+        "keywordName": "state",
+        "uiColor": "#A79AFF",
+        "examples": [
+            {
+                "value": "open",
+                "synonyms": [
+                    "open",
+                    "opened"
+                ]
+            },
+            {
+                "value": "closed",
+                "synonyms": [
+                    "close",
+                    "closed"
+                ]
+            }
+        ],
+        "regex": "",
+        "type": "learned",
+        "modifiers": [],
+        "creationDate": "1571429471000",
+        "modificationDate": "1571429471000"
+    },
+    {
+        "keywordName": "timeState",
+        "uiColor": "#D5AAFF",
+        "examples": [
+            {
+                "value": "desc",
+                "synonyms": [
+                    "new",
+                    "newest",
+                    "latest",
+                    "last",
+                    "most recent",
+                    "desc"
+                ]
+            },
+            {
+                "value": "asc",
+                "synonyms": [
+                    "old",
+                    "oldest",
+                    "first",
+                    "asc"
+                ]
+            }
+        ],
+        "regex": "",
+        "type": "learned",
+        "modifiers": [],
+        "creationDate": "1571429471000",
+        "modificationDate": "1571429471000"
     }
 ]
