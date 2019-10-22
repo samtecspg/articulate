@@ -102,8 +102,9 @@ class Form extends React.Component {
   handleOnchangeAccessPolicyGroup = ({ accessPolicyGroup }) => {
     this.setState({ selectedAccessPolicyGroup: accessPolicyGroup });
   };
+
   render() {
-    const { classes, intl, accessPolicyGroups,onUpdateAccessPolicyGroup } = this.props;
+    const { classes, intl, accessPolicyGroups, onUpdateAccessPolicyGroup, onAddAccessPolicyGroup,newAccessPolicyGroupName, onUpdateNewAccessPolicyGroupName} = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -153,6 +154,9 @@ class Form extends React.Component {
             }
             selectedAccessPolicyGroup={this.state.selectedAccessPolicyGroup}
             onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
+            onAddAccessPolicyGroup={onAddAccessPolicyGroup}
+            newAccessPolicyGroupName={newAccessPolicyGroupName}
+            onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
           />
         </Grid>
       </Grid>
@@ -170,6 +174,9 @@ Form.propTypes = {
   onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
   errorState: PropTypes.object,
   accessPolicyGroups: PropTypes.array.isRequired,
+  onAddAccessPolicyGroup: PropTypes.func.isRequired,
+  newAccessPolicyGroupName: PropTypes.string.isRequired,
+  onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(Form));

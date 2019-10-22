@@ -1,11 +1,22 @@
-import { FormControlLabel, Switch, Typography } from '@material-ui/core';
+import {
+  Button,
+  FormControlLabel,
+  Grid,
+  Switch,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
 import messages from '../messages';
 
 const styles = {
@@ -21,18 +32,23 @@ const styles = {
     fontSize: '12px',
     color: '#a2a7b1',
   },
+  buttonContainer: {
+    position: 'relative',
+    bottom: '10px',
+  },
 };
 const GroupPolicyTabs = ({
   accessPolicyGroups,
   selectedGroup,
   handleChange,
   onUpdateAccessPolicyGroup,
+  onAddAccessPolicyGroup,
   classes,
+  intl,
+  onUpdateNewAccessPolicyGroupName,
+  newAccessPolicyGroupName,
 }) => {
-  if (
-    !accessPolicyGroups ||
-    (accessPolicyGroups && accessPolicyGroups.length === 0)
-  ) {
+  if (!accessPolicyGroups || (accessPolicyGroups && accessPolicyGroups.length === 0)) {
     return null;
   }
   const currentGroup = !selectedGroup ? accessPolicyGroups[0] : selectedGroup;
@@ -42,6 +58,33 @@ const GroupPolicyTabs = ({
         <FormattedMessage {...messages.groupPoliciesLabel} />
       </Typography>
       <div className={classes.label}>
+        <Grid className={classes.buttonContainer}>
+          <TextField
+            id="groupName"
+            label={intl.formatMessage(messages.groupNameTextField)}
+            value={newAccessPolicyGroupName}
+            placeholder={intl.formatMessage(messages.groupNameTextFieldPlaceholder)}
+            onChange={evt => onUpdateNewAccessPolicyGroupName({ groupName: evt.target.value })}
+            margin="normal"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            helperText={intl.formatMessage(messages.requiredField)}
+          />
+        </Grid>
+        <Grid className={classes.buttonContainer}>
+          <Button
+            key="btnFinish"
+            variant="contained"
+            onClick={() => {
+              onAddAccessPolicyGroup({ groupName: newAccessPolicyGroupName, rules: {} });
+              onUpdateNewAccessPolicyGroupName({ groupName: '' });
+            }}
+          >
+            <FormattedMessage {...messages.saveButton} />
+          </Button>
+        </Grid>
         <Select
           value={currentGroup.id}
           onChange={evt => {
@@ -92,6 +135,10 @@ GroupPolicyTabs.propTypes = {
   selectedGroup: PropTypes.object,
   handleChange: PropTypes.func.isRequired,
   onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
+  onAddAccessPolicyGroup: PropTypes.func.isRequired,
+  intl: intlShape.isRequired,
+  newAccessPolicyGroupName: PropTypes.string.isRequired,
+  onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
 };
 
 GroupPolicyTabs.defaultProps = {

@@ -1,10 +1,4 @@
-import {
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  Grid,
-  Typography,
-} from '@material-ui/core';
+import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import DucklingSettings from 'components/DucklingSettings';
 import RasaSettings from 'components/RasaSettings';
@@ -63,17 +57,14 @@ class SettingsDataForm extends React.Component {
       selectedAccessPolicyGroup,
       handleOnchangeAccessPolicyGroup,
       onUpdateAccessPolicyGroup,
+      onAddAccessPolicyGroup,
+      newAccessPolicyGroupName,
+      onUpdateNewAccessPolicyGroupName
     } = this.props;
     const { expanded } = this.state;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid
-          className={classes.formSubContainer}
-          id="formContainer"
-          container
-          item
-          xs={12}
-        >
+        <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
           <div className={classes.root}>
             <ExpansionPanel
               expanded={expanded === 'panelGeneral'}
@@ -81,9 +72,7 @@ class SettingsDataForm extends React.Component {
                 this.handleChange('expanded', 'panelGeneral');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(expanded === 'panelGeneral')}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(expanded === 'panelGeneral')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.generalSetting} />
                 </Typography>
@@ -104,19 +93,13 @@ class SettingsDataForm extends React.Component {
                 this.handleChange('expanded', 'panelRasa');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(expanded === 'panelRasa')}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(expanded === 'panelRasa')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.rasaSetting} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <RasaSettings
-                  settings={settings}
-                  onChangeSettingsData={this.props.onChangeSettingsData}
-                  errorState={this.props.errorState}
-                />
+                <RasaSettings settings={settings} onChangeSettingsData={this.props.onChangeSettingsData} errorState={this.props.errorState} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
@@ -125,19 +108,13 @@ class SettingsDataForm extends React.Component {
                 this.handleChange('expanded', 'panelDuckling');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(expanded === 'panelDuckling')}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(expanded === 'panelDuckling')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.ducklingSetting} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <DucklingSettings
-                  settings={settings}
-                  onChangeSettingsData={this.props.onChangeSettingsData}
-                  errorState={this.props.errorState}
-                />
+                <DucklingSettings settings={settings} onChangeSettingsData={this.props.onChangeSettingsData} errorState={this.props.errorState} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
@@ -146,9 +123,7 @@ class SettingsDataForm extends React.Component {
                 this.handleChange('expanded', 'panelGroupUsers');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(expanded === 'panelGroupUsers')}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(expanded === 'panelGroupUsers')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.groupAndUsersSettings} />
                 </Typography>
@@ -160,10 +135,11 @@ class SettingsDataForm extends React.Component {
                   onChangeSettingsData={this.props.onChangeSettingsData}
                   errorState={this.props.errorState}
                   selectedAccessPolicyGroup={selectedAccessPolicyGroup}
-                  handleOnchangeAccessPolicyGroup={
-                    handleOnchangeAccessPolicyGroup
-                  }
+                  handleOnchangeAccessPolicyGroup={handleOnchangeAccessPolicyGroup}
                   onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
+                  onAddAccessPolicyGroup={onAddAccessPolicyGroup}
+                  newAccessPolicyGroupName={newAccessPolicyGroupName}
+                  onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -185,6 +161,9 @@ SettingsDataForm.propTypes = {
   selectedAccessPolicyGroup: PropTypes.object,
   handleOnchangeAccessPolicyGroup: PropTypes.func.isRequired,
   onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
+  onAddAccessPolicyGroup: PropTypes.func.isRequired,
+  newAccessPolicyGroupName: PropTypes.string.isRequired,
+  onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(SettingsDataForm);

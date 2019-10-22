@@ -25,7 +25,10 @@ export class GroupAndUsersForm extends React.Component {
       accessPolicyGroups,
       selectedAccessPolicyGroup,
       handleOnchangeAccessPolicyGroup,
-      onUpdateAccessPolicyGroup
+      onUpdateAccessPolicyGroup,
+      onAddAccessPolicyGroup,
+      newAccessPolicyGroupName,
+      onUpdateNewAccessPolicyGroupName
     } = this.props;
     return (
       <Grid container spacing={16}>
@@ -52,6 +55,9 @@ export class GroupAndUsersForm extends React.Component {
               selectedGroup={selectedAccessPolicyGroup}
               handleChange={handleOnchangeAccessPolicyGroup}
               onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
+              onAddAccessPolicyGroup={onAddAccessPolicyGroup}
+              newAccessPolicyGroupName={newAccessPolicyGroupName}
+              onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
             />
           </Grid>
         </Grid>
@@ -70,6 +76,9 @@ GroupAndUsersForm.propTypes = {
   selectedAccessPolicyGroup: PropTypes.object,
   handleOnchangeAccessPolicyGroup: PropTypes.func.isRequired,
   onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
+  onAddAccessPolicyGroup: PropTypes.func.isRequired,
+  newAccessPolicyGroupName: PropTypes.string.isRequired,
+  onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(GroupAndUsersForm));

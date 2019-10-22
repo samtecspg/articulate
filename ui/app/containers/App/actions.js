@@ -818,14 +818,8 @@ export function changeAgentParameterValue(parameterName, value) {
   };
 }
 
-export function loadAgentDocuments({
-  page,
-  pageSize,
-  field,
-  direction,
-  dateRange,
+export function loadAgentDocuments({ page, pageSize, field, direction, dateRange }) {
   filter = null
-}) {
   return {
     type: LOAD_AGENT_DOCUMENTS,
     apiCall: true,
@@ -1062,13 +1056,7 @@ export function deleteSayingError(error) {
   };
 }
 
-export function changeSayingCategory(
-  filter,
-  page,
-  pageSize,
-  saying,
-  categoryId,
-) {
+export function changeSayingCategory(filter, page, pageSize, saying, categoryId) {
   return {
     type: CHANGE_SAYING_CATEGORY,
     apiCall: true,
@@ -1080,17 +1068,7 @@ export function changeSayingCategory(
   };
 }
 
-export function tagKeyword(
-  filter,
-  page,
-  pageSize,
-  saying,
-  value,
-  start,
-  end,
-  keywordId,
-  keywordName,
-) {
+export function tagKeyword(filter, page, pageSize, saying, value, start, end, keywordId, keywordName) {
   return {
     type: TAG_KEYWORD,
     apiCall: true,
@@ -2015,15 +1993,7 @@ export function deleteModifier(modifierIndex) {
   };
 }
 
-export function tagModifierKeyword(
-  modifierIndex,
-  sayingIndex,
-  value,
-  start,
-  end,
-  keywordId,
-  keywordName,
-) {
+export function tagModifierKeyword(modifierIndex, sayingIndex, value, start, end, keywordId, keywordName) {
   return {
     type: TAG_MODIFIER_KEYWORD,
     modifierIndex,
@@ -2178,10 +2148,7 @@ export function deleteCategoryParameter(parameterName) {
   };
 }
 
-export function changeCategoryParameterName(
-  oldParameterName,
-  newParameterName,
-) {
+export function changeCategoryParameterName(oldParameterName, newParameterName) {
   return {
     type: CHANGE_CATEGORY_PARAMETER_NAME,
     oldParameterName,
@@ -2535,6 +2502,30 @@ export function updateAccessPolicyGroupError(error) {
 }
 
 export function updateAccessPolicyGroupSuccess() {
+  return {
+    type: UPDATE_ACCESS_CONTROL_SUCCESS,
+  };
+}
+
+
+
+export function addAccessPolicyGroup({ groupName, rules }) {
+  return {
+    type: UPDATE_ACCESS_CONTROL,
+    apiCall: true,
+    groupName,
+    rules,
+  };
+}
+
+export function addAccessPolicyGroupError(error) {
+  return {
+    type: UPDATE_ACCESS_CONTROL_ERROR,
+    error,
+  };
+}
+
+export function addAccessPolicyGroupSuccess() {
   return {
     type: UPDATE_ACCESS_CONTROL_SUCCESS,
   };
