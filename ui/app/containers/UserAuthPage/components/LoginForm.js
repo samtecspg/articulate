@@ -1,10 +1,4 @@
-import {
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Button, Grid, TextField, Typography, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
@@ -23,13 +17,19 @@ const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
   },
+  error: {
+    color: theme.palette.error.light,
+  },
 });
 
 function LoginForm(props) {
-  const { intl, classes, onInputChange, username, password, onLogin } = props;
-
+  const { intl, classes, onInputChange, username, password, onLogin, error, isLoading, errorState } = props;
+  const onFormSubmit = e => {
+    e.preventDefault();
+    onLogin();
+  };
   return (
-    <form className={classes.root}>
+    <form className={classes.root} onSubmit={onFormSubmit}>
       <Grid className={classes.formSubContainer} container item xs={12}>
         <TextField
           label={intl.formatMessage(messages.username)}
@@ -40,10 +40,9 @@ function LoginForm(props) {
             shrink: true,
           }}
           autoComplete="username"
-          onChange={evt =>
-            onInputChange({ field: 'username', value: evt.target.value })
-          }
+          onChange={evt => onInputChange({ field: 'username', value: evt.target.value })}
           value={username}
+          error={errorState.username}
         />
         <TextField
           label={intl.formatMessage(messages.password)}
@@ -55,38 +54,23 @@ function LoginForm(props) {
           }}
           type="password"
           autoComplete="current-password"
-          onChange={evt =>
-            onInputChange({ field: 'password', value: evt.target.value })
-          }
+          onChange={evt => onInputChange({ field: 'password', value: evt.target.value })}
           value={password}
+          error={errorState.password}
         />
-        <Button color="primary" variant="contained" fullWidth onClick={onLogin}>
+        <Button color="primary" variant="contained" fullWidth type="submit" disabled={isLoading}>
           Login
         </Button>
-        <Typography
-          className={classes.separator}
-          align="center"
-          variant="overline"
-          gutterBottom
-        >
+        <Typography className={classes.error} variant="caption" gutterBottom>
+          {_.isString(error) ? error : ''}
+        </Typography>
+        <Typography className={classes.separator} align="center" variant="overline" gutterBottom>
           &mdash;&mdash;&mdash;&nbsp;OR&nbsp;&mdash;&mdash;&mdash;
         </Typography>
-        <Button
-          variant="contained"
-          className={classes.button}
-          component={Link}
-          to="/api/auth/twitter"
-          target="_self"
-        >
+        <Button variant="contained" className={classes.button} component={Link} to="/api/auth/twitter" target="_self">
           twitter
         </Button>
-        <Button
-          variant="contained"
-          className={classes.button}
-          component={Link}
-          to="/api/auth/github"
-          target="_self"
-        >
+        <Button variant="contained" className={classes.button} component={Link} to="/api/auth/github" target="_self">
           github
         </Button>
       </Grid>
@@ -101,6 +85,13 @@ LoginForm.propTypes = {
   onInputChange: PropTypes.func.isRequired,
   password: PropTypes.string,
   username: PropTypes.string,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.bool]),
+  isLoading: PropTypes.bool,
+  errorState: PropTypes.shape({
+    username: PropTypes.bool,
+    lastName: PropTypes.bool,
+    password: PropTypes.bool,
+  }),
 };
 
 export default injectIntl(withStyles(styles)(LoginForm));

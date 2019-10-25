@@ -168,6 +168,7 @@
     "pre-commit": "1.2.2",
     "prettier": "1.17.0",
     "react-app-polyfill": "0.2.2",
+    "react-router-props": "^1.0.2",
     "react-test-renderer": "16.8.6",
     "react-testing-library": "6.1.2",
     "rimraf": "2.6.3",

@@ -237,7 +237,6 @@ import {
   DELETE_QUICK_RESPONSE,
   CHANGE_QUICK_RESPONSE,
   EDIT_SLOT_TEXT_PROMPT,
-  DELETE_SLOT_TEXT_PROMPT,
   LOAD_USERS,
   LOAD_USERS_SUCCESS,
   LOAD_USERS_ERROR,
@@ -245,8 +244,9 @@ import {
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
   RESET_SUCCESS_AGENT,
+  LOGIN_USER,
+  LOGIN_USER_SUCCESS,
 } from './constants';
-
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
   '😀',
@@ -2479,9 +2479,12 @@ function appReducer(state = initialState, action) {
         }),
       );
       return state.set('loading', false).set('error', action.error);
+    case LOGIN_USER:
+      return state.set('loading', true).set('error', false);
+    case LOGIN_USER_SUCCESS:
+      return state.set('loading', false).set('error', false);
     case LOGIN_USER_ERROR:
       return state.set('loading', false).set('error', action.error);
-
     /* Users */
     case LOAD_USERS:
       return state
