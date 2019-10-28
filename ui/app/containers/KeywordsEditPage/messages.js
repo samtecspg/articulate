@@ -234,5 +234,22 @@ export default defineMessages({
   modifiersTooltip: {
     id: 'app.containers.KeywordsEditPage.component.MainTab.modifiersTooltip',
     defaultMessage: 'You must save the keyword before creating modifiers.',
+  },
+
+  updateExistingSayingsKeywordsQuestion: {
+    id: 'app.containers.KeywordsEditPage.component.MainTab.ExitModal.updateExistingSayingsKeywordsQuestion',
+    defaultMessage: 'Do you want to automatically update the existing sayings?',
+  },
+  updateExistingSayingsKeywordsExplanation: {
+    id: 'app.containers.KeywordsEditPage.component.MainTab.ExitModal.updateExistingSayingsKeywordsExplanation',
+    defaultMessage: 'This will mark and unmark the keywords in your sayings and modifiers according to the submitted updates.',
+  },
+  updateExistingSayingsKeywordsYes: {
+    id: 'app.containers.KeywordsEditPage.component.MainTab.ExitModal.updateExistingSayingsKeywordsYes',
+    defaultMessage: 'Yes',
+  },
+  updateExistingSayingsKeywordsNo: {
+    id: 'app.containers.KeywordsEditPage.component.MainTab.ExitModal.updateExistingSayingsKeywordsNo',
+    defaultMessage: 'No',
   }
 });

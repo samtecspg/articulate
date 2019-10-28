@@ -180,6 +180,7 @@ import {
   LOGOUT_USER,
   LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
+  REFRESH_KEYWORD_EXAMPLE_UPDATE,
   RESET_SAYINGS,
   RESET_ACTION_DATA,
   RESET_ACTIONS,
@@ -1737,9 +1738,10 @@ export function loadKeywordSuccess(keyword) {
   };
 }
 
-export function createKeyword() {
+export function createKeyword(updateSayingsKeywords) {
   return {
     type: CREATE_KEYWORD,
+    updateSayingsKeywords,
     apiCall: true,
   };
 }
@@ -1758,9 +1760,10 @@ export function createKeywordSuccess(keyword) {
   };
 }
 
-export function updateKeyword() {
+export function updateKeyword(updateSayingsKeywords) {
   return {
     type: UPDATE_KEYWORD,
+    updateSayingsKeywords,
     apiCall: true,
   };
 }
@@ -1777,6 +1780,12 @@ export function updateKeywordSuccess(keyword) {
     type: UPDATE_KEYWORD_SUCCESS,
     keyword,
   };
+}
+
+export function refreshKeywordExamplesUpdate() {
+  return {
+    type: REFRESH_KEYWORD_EXAMPLE_UPDATE
+  }
 }
 
 export function changeKeywordData(payload) {
@@ -1808,11 +1817,13 @@ export function changeExampleName(exampleIndex, name) {
   };
 }
 
-export function changeExampleSynonyms(exampleIndex, synonyms) {
+export function changeExampleSynonyms(exampleIndex, synonyms, synonymChanged, action) {
   return {
     type: CHANGE_EXAMPLE_SYNONYMS,
     exampleIndex,
     synonyms,
+    synonymChanged,
+    action
   };
 }
 

@@ -58,6 +58,7 @@ export const ROUTE_WEBHOOK = 'webhook';
 export const ROUTE_TRAIN = 'train';
 export const ROUTE_PARSE = 'parse';
 export const ROUTE_IDENTIFY_KEYWORDS = 'identifyKeywords';
+export const RECOGNIZE_UPDATED_KEYWORDS = 'recognizeUpdatedKeywords';
 export const ROUTE_CONVERSE = 'converse';
 export const ROUTE_CHANNEL = 'channel';
 export const ROUTE_CONNECTION = 'connection';
