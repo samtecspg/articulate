@@ -1030,6 +1030,29 @@ class AgentValidate {
             })()
         };
 
+        this.recognizeUpdatedKeywords = {
+            params: (() => {
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    deletedValues: Joi.array().items({
+                        synonym: SayingKeywordSchema.value,
+                        keywordName: SayingKeywordSchema.keyword,
+                        keywordId: SayingKeywordSchema.keywordId,
+                    }),
+                    updatedValues: Joi.array().items({
+                        synonym: SayingKeywordSchema.value,
+                        keywordName: SayingKeywordSchema.keyword,
+                        keywordId: SayingKeywordSchema.keywordId,
+                    })
+                };
+            })()
+        };
+
         this.parsePost = {
             params: (() => {
 

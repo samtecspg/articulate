@@ -322,6 +322,8 @@ export const UNTAG_MODIFIER_KEYWORD =
   'app/KeywordsEditPage/UNTAG_MODIFIER_KEYWORD';
 export const CHANGE_MODIFIER_SAYINGS_PAGE_SIZE =
   'app/KeywordsEditPage/CHANGE_MODIFIER_SAYINGS_PAGE_SIZE';
+export const REFRESH_KEYWORD_EXAMPLE_UPDATE =
+  'app/KeywordsEditPage/REFRESH_KEYWORD_EXAMPLE_UPDATE';
 
 /*
  * Category

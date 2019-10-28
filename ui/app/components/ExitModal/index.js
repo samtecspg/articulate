@@ -102,15 +102,20 @@ class ExitModal extends React.PureComponent {
             <Grid className={classes.dialogContentGrid}>
               <DialogContentText>
                 <span className={classes.exitMessage}>
-                  <FormattedMessage {...messages.exitMessageDialog1} />
-                  {` ${this.props.type} `}
-                  <FormattedMessage {...messages.exitMessageDialog2} />
+                  {!this.props.customMessage1 &&
+                    <FormattedMessage {...messages.exitMessageDialog1} />}
+                  {!this.props.customMessage1 ? ` ${this.props.type} ` : null}
+                  {!this.props.customMessage1 &&
+                    <FormattedMessage {...messages.exitMessageDialog2} />}
+                  {this.props.customMessage1}
                 </span>
               </DialogContentText>
               <DialogContentText>
                 <br />
                 <span className={classes.exitQuestion}>
-                  <FormattedMessage {...messages.exitQuestion} />
+                  {!this.props.customMessage2 &&
+                    <FormattedMessage {...messages.exitQuestion} />}
+                  {this.props.customMessage2}
                 </span>
               </DialogContentText>
             </Grid>
@@ -125,7 +130,9 @@ class ExitModal extends React.PureComponent {
                     this.props.onClose();
                   }}
                 >
-                  <FormattedMessage {...messages.saveAndExit} />
+                  {!this.props.customMessageSaveAndExitButton &&
+                    <FormattedMessage {...messages.saveAndExit} />}
+                  {this.props.customMessageSaveAndExitButton}
                 </Button>
               </Grid>
               <Grid item>
@@ -136,7 +143,9 @@ class ExitModal extends React.PureComponent {
                     this.props.onClose();
                   }}
                 >
-                  <FormattedMessage {...messages.exit} />
+                  {!this.props.customMessageExitButton &&
+                    <FormattedMessage {...messages.exit} />}
+                  {this.props.customMessageExitButton}
                 </Button>
               </Grid>
             </Grid>
@@ -154,6 +163,10 @@ ExitModal.propTypes = {
   onClose: PropTypes.func,
   type: PropTypes.string,
   open: PropTypes.bool,
+  customMessage1: PropTypes.string,
+  customMessage2: PropTypes.string,
+  customMessageSaveAndExitButton: PropTypes.string,
+  customMessageExitButton: PropTypes.string
 };
 
 export default withStyles(styles)(ExitModal);

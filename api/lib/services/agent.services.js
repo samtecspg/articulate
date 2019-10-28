@@ -31,6 +31,7 @@ import ParseRasaKeywords from './agent/agent.parse-rasa-keywords.service';
 import ParseRegexKeywords from './agent/agent.parse-regex-keywords.service';
 import Parse from './agent/agent.parse.service';
 import IdentifyKeywords from './agent/agent.identify-keywords.service';
+import RecognizeUpdatedKeywords from './agent/agent.recognize-updated-keywords.service';
 import RemoveAction from './agent/agent.remove-action.service';
 import RemoveCategory from './agent/agent.remove-category.service';
 import RemoveKeyword from './agent/agent.remove-keyword.service';
@@ -236,8 +237,13 @@ module.exports = class AgentService extends Schmervice.Service {
     }
 
     async identifyKeywords() {
-        
+
         return await IdentifyKeywords.apply(this, arguments);
+    }
+
+    async recognizeUpdatedKeywords() {
+
+        return await RecognizeUpdatedKeywords.apply(this, arguments);
     }
 
     async getTrainedCategories() {
@@ -280,25 +286,25 @@ module.exports = class AgentService extends Schmervice.Service {
         return await ConverseFulfillEmptySlotsWithSavedValues.apply(this, arguments);
     }
 
-    async converseGetKeywordsFromRasaResults(){
+    async converseGetKeywordsFromRasaResults() {
 
         return await ConverseGetKeywordsFromRasaResults.apply(this, arguments);
     }
 
-    async converseGetBestRasaResult(){
+    async converseGetBestRasaResult() {
 
         return await ConverseGetBestRasaResult.apply(this, arguments);
     }
 
-    async converseFillActionSlots(){
+    async converseFillActionSlots() {
         return await ConverseFillActionSlots.apply(this, arguments);
     }
 
-    async converseSendResponseToUbiquity(){
+    async converseSendResponseToUbiquity() {
         return await ConverseSendResponseToUbiquity.apply(this, arguments);
     }
 
-    async converseProcessPostFormat(){
+    async converseProcessPostFormat() {
         return await ConverseProcessPostFormat.apply(this, arguments);
     }
 

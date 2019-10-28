@@ -246,6 +246,7 @@ import {
   RESET_SUCCESS_AGENT,
   LOGIN_USER,
   LOGIN_USER_SUCCESS,
+  REFRESH_KEYWORD_EXAMPLE_UPDATE
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -401,6 +402,7 @@ const initialState = Immutable({
     examples: [],
     modifiers: [],
   },
+  keywordExamplesUpdate: [],
   connection: {
     channel: '',
     agent: '',
@@ -2086,20 +2088,70 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('successKeyword', true)
-        .set('keywordTouched', false);
+        .set('keywordTouched', false)
+        .set('keywordExamplesUpdate', [])
     case ADD_KEYWORD_EXAMPLE:
       return state
         .updateIn(['keyword', 'examples'], examples =>
           examples.concat(action.newExample),
         )
-        .set('keywordTouched', true);
+        .set('keywordTouched', true)
+        .updateIn(
+          ['keywordExamplesUpdate'], updates => {
+            return updates.map((update) => {
+              if (update.index >= state.keyword.examples.length) {
+                return update.set('index', update.index + 1);
+              }
+              return update;
+            }).concat([{
+              'index': state.keyword.examples.length,
+              'synonym': action.newExample.synonyms[0],
+              'count': 1
+            }])
+          });
     case DELETE_KEYWORD_EXAMPLE:
       return state
         .updateIn(['keyword', 'examples'], examples =>
           examples.filter((item, index) => index !== action.exampleIndex),
         )
-        .set('keywordTouched', true);
+        .set('keywordTouched', true)
+        .updateIn(
+          ['keywordExamplesUpdate'], updates => {
+            return updates.map((update) => {
+              if (update.index === action.exampleIndex) {
+                return update.set('index', - 1).set('count', update.count - 1);
+              }
+              return update;
+            }).map((update) => {
+              if (update.index > action.exampleIndex
+                && update.index < state.keyword.examples.length) {
+                return update.set('index', update.index - 1);
+              }
+              return update;
+            }).map((update) => {
+              if (update.index === -1) {
+                return update.set('index', state.keyword.examples.length - 1);
+              }
+              return update;
+            }).concat(state.keyword.examples[action.exampleIndex].synonyms.filter((synonym) => {
+              var exists = state.keywordExamplesUpdate.find(function (update) {
+                return update.index === action.exampleIndex && update.synonym === synonym;
+              });
+              return !exists;
+            }).map((update) => {
+              return {
+                'index': state.keyword.examples.length - 1,
+                'synonym': update,
+                'count': -1
+              }
+            }))
+          });
     case CHANGE_EXAMPLE_SYNONYMS:
+      var synonym = state.keywordExamplesUpdate.find(function (update) {
+        return update.index === action.exampleIndex && update.synonym === action.synonymChanged;
+      });
+      let countUpdate = action.action === 'add' ? 1 : -1;
+
       return state
         .updateIn(['keyword', 'examples'], examples =>
           examples.map((example, index) => {
@@ -2107,9 +2159,33 @@ function appReducer(state = initialState, action) {
               return example.set('synonyms', action.synonyms);
             }
             return example;
-          }),
+          })
         )
-        .set('keywordTouched', true);
+        .set('keywordTouched', true)
+        .updateIn(
+          ['keywordExamplesUpdate'], updates => {
+            if (synonym) {
+              return updates.map((update) => {
+                if (update.index === action.exampleIndex && update.synonym === action.synonymChanged) {
+                  if (update.count < 0 && countUpdate === 1) {
+                    return update.set('count', 1);
+                  } else {
+                    return update.set('count', update.count + countUpdate);
+                  }
+                }
+                return update;
+              });
+            } else {
+              return updates.concat([{
+                'index': action.exampleIndex,
+                'synonym': action.synonymChanged,
+                'count': countUpdate
+              }])
+            }
+          });
+    case REFRESH_KEYWORD_EXAMPLE_UPDATE:
+      return state
+        .set('keywordExamplesUpdate', initialState.keywordExamplesUpdate);
     case CHANGE_EXAMPLE_NAME:
       return state
         .updateIn(['keyword', 'examples'], examples =>

@@ -363,6 +363,12 @@ const makeSelectKeyword = () =>
     globalState => globalState.keyword,
   );
 
+const makeSelectkeywordExamplesUpdate = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.keywordExamplesUpdate,
+  );
+
 const makeSelectKeywordTouched = () =>
   createSelector(
     selectGlobal,
@@ -484,6 +490,7 @@ export {
   makeSelectSayingForAction,
   makeSelectSettings,
   makeSelectKeyword,
+  makeSelectkeywordExamplesUpdate,
   makeSelectKeywordTouched,
   makeSelectSuccessKeyword,
   makeSelectConnection,
