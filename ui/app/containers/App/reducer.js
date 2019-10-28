@@ -2047,7 +2047,7 @@ function appReducer(state = initialState, action) {
           type: 'success',
           datetime: new Date(),
         }),
-      ).set('keywordExamplesUpdate', initialState.keywordExamplesUpdate);
+      );
       return state
         .set('keyword', action.keyword)
         .set('loading', false)
@@ -2088,8 +2088,7 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('successKeyword', true)
-        .set('keywordTouched', false)
-        .set('keywordExamplesUpdate', initialState.keywordExamplesUpdate)
+        .set('keywordTouched', false);
     case ADD_KEYWORD_EXAMPLE:
       return state
         .updateIn(['keyword', 'examples'], examples =>

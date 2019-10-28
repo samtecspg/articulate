@@ -54,8 +54,7 @@ import {
   onChangeModifiersSayingsPageSize,
   loadSettings,
   loadKeywords,
-  toggleChatButton,
-  refreshKeywordExamplesUpdate
+  toggleChatButton
 } from '../App/actions';
 import ModifiersForm from './Components/ModifiersForm';
 
@@ -235,10 +234,6 @@ export class KeywordsEditPage extends React.Component {
         errorState: { ...newErrorState },
       });
     }
-  }
-
-  componentWillUnmount() {
-    this.props.onRefreshKeywordExamplesUpdate();
   }
 
   render() {
@@ -466,9 +461,6 @@ function mapDispatchToProps(dispatch) {
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
-    },
-    onRefreshKeywordExamplesUpdate: () => {
-      dispatch(refreshKeywordExamplesUpdate());
     }
   };
 }

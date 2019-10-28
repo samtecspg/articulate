@@ -19,6 +19,7 @@ import {
   loadKeyword,
   updateKeywordError,
   updateKeywordSuccess,
+  refreshKeywordExamplesUpdate,
 } from '../App/actions';
 import {
   ADD_MODIFIER_SAYING,
@@ -64,7 +65,6 @@ export function* postKeyword(payload) {
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD]),
       newKeyword,
     );
-    debugger;
     if (updateSayingsKeywords) {
       yield call(putRecognizeUpdatedKeywords, payload, response.id);
     }
@@ -102,7 +102,6 @@ export function* putKeyword(payload) {
 export function* putRecognizeUpdatedKeywords(payload, createdKeywordId = null) {
   const agent = yield select(makeSelectAgent());
   const keyword = yield select(makeSelectKeyword());
-  debugger;
   const keywordExamplesUpdate = yield select(makeSelectkeywordExamplesUpdate());
   let keywordExamplesUpdateClean = keywordExamplesUpdate.filter(update => {
     return update.count !== 0;
@@ -142,6 +141,7 @@ export function* putRecognizeUpdatedKeywords(payload, createdKeywordId = null) {
         updatedValues: keywordExamplesAdd
       },
     );
+    yield put(refreshKeywordExamplesUpdate());
   } catch (err) {
     throw err;
   }
