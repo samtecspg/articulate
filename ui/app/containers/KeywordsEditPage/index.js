@@ -27,7 +27,9 @@ import {
   makeSelectKeywords,
   makeSelectLoading,
   makeSelectKeywordTouched,
-  makeSelectkeywordExamplesUpdate
+  makeSelectkeywordExamplesUpdate,
+  makeSelectLoadingKeywordExamplesUpdate,
+  makeSelectSuccessKeywordExamplesUpdate
 } from '../App/selectors';
 
 import {
@@ -244,8 +246,8 @@ export class KeywordsEditPage extends React.Component {
           <MainTab
             touched={this.props.touched}
             keywordValuesTouched={this.props.keywordValuesTouched.filter((keyword) => { return keyword.count != 0 }).length > 0}
-            loading={this.props.loading}
-            success={this.props.success}
+            loading={this.props.loading || this.props.loadingKeywordExamplesUpdate}
+            success={this.props.success || this.props.successKeywordExamplesUpdate}
             goBack={() => {
               this.props.onGoToUrl(
                 `/agent/${this.props.agent.id}/dialogue?tab=keywords`,
@@ -362,6 +364,8 @@ const mapStateToProps = createStructuredSelector({
   agentKeywords: makeSelectKeywords(),
   success: makeSelectSuccessKeyword(),
   loading: makeSelectLoading(),
+  successKeywordExamplesUpdate: makeSelectSuccessKeywordExamplesUpdate(),
+  loadingKeywordExamplesUpdate: makeSelectLoadingKeywordExamplesUpdate(),
   touched: makeSelectKeywordTouched(),
   keywordValuesTouched: makeSelectkeywordExamplesUpdate()
 });

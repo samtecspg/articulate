@@ -148,7 +148,7 @@ export class MainTab extends React.Component {
             }
           }}
           onClose={() => {
-            this.setState({ openExitModal: false });
+            this.setState({ openUpdateSayingsExitModal: false });
           }}
           type={intl.formatMessage(messages.instanceName)}
           customMessage1={intl.formatMessage(messages.updateExistingSayingsKeywordsQuestion)}

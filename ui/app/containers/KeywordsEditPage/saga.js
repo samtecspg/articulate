@@ -20,6 +20,7 @@ import {
   updateKeywordError,
   updateKeywordSuccess,
   refreshKeywordExamplesUpdate,
+  recognizeUpdatedKeywords,
 } from '../App/actions';
 import {
   ADD_MODIFIER_SAYING,
@@ -29,6 +30,7 @@ import {
   LOAD_KEYWORD,
   LOAD_KEYWORDS,
   UPDATE_KEYWORD,
+  RECOGNIZE_UPDATED_KEYWORDS
 } from '../App/constants';
 import {
   makeSelectAgent,
@@ -67,6 +69,7 @@ export function* postKeyword(payload) {
     );
     if (updateSayingsKeywords) {
       yield call(putRecognizeUpdatedKeywords, payload, response.id);
+      yield put(refreshKeywordExamplesUpdate());
     }
     yield put(createKeywordSuccess(response));
   } catch (err) {
@@ -91,6 +94,7 @@ export function* putKeyword(payload) {
     );
     if (updateSayingsKeywords) {
       yield call(putRecognizeUpdatedKeywords, payload);
+      yield put(refreshKeywordExamplesUpdate());
     }
     yield put(loadKeyword(keywordId));
     yield put(updateKeywordSuccess(response));
@@ -103,34 +107,40 @@ export function* putRecognizeUpdatedKeywords(payload, createdKeywordId = null) {
   const agent = yield select(makeSelectAgent());
   const keyword = yield select(makeSelectKeyword());
   const keywordExamplesUpdate = yield select(makeSelectkeywordExamplesUpdate());
-  let keywordExamplesUpdateClean = keywordExamplesUpdate.filter(update => {
-    return update.count !== 0;
-  })
-  let keywordExamplesAdd = keywordExamplesUpdateClean.filter(update => {
-    return update.count > 0;
-  }).map(update => update.synonym)
-    .filter((update, index, self) => self.indexOf(update) === index)
-    .map(synonym => {
-      return {
-        "synonym": synonym,
-        "keywordName": keyword.keywordName,
-        "keywordId": keyword.id ? keyword.id : createdKeywordId
-      }
-    });
-
-  let keywordExamplesDelete = keywordExamplesUpdateClean.filter(updateClean => {
-    return updateClean.count < 0 && !keywordExamplesAdd.find(function (update) {
-      return update.synonym === updateClean.synonym
+  let keywordExamplesUpdateClean = yield call(() => {
+    return keywordExamplesUpdate.filter(update => {
+      return update.count !== 0;
     })
-  }).map(update => update.synonym)
-    .filter((update, index, self) => self.indexOf(update) === index)
-    .map(synonym => {
-      return {
-        "synonym": synonym,
-        "keywordName": keyword.keywordName,
-        "keywordId": keyword.id
-      }
-    });
+  });
+  let keywordExamplesAdd = yield call(() => {
+    return keywordExamplesUpdateClean.filter(update => {
+      return update.count > 0;
+    }).map(update => update.synonym)
+      .filter((update, index, self) => self.indexOf(update) === index)
+      .map(synonym => {
+        return {
+          "synonym": synonym,
+          "keywordName": keyword.keywordName,
+          "keywordId": keyword.id ? keyword.id : createdKeywordId
+        }
+      });
+  })
+
+  let keywordExamplesDelete = yield call(() => {
+    return keywordExamplesUpdateClean.filter(updateClean => {
+      return updateClean.count < 0 && !keywordExamplesAdd.find(function (update) {
+        return update.synonym === updateClean.synonym
+      })
+    }).map(update => update.synonym)
+      .filter((update, index, self) => self.indexOf(update) === index)
+      .map(synonym => {
+        return {
+          "synonym": synonym,
+          "keywordName": keyword.keywordName,
+          "keywordId": keyword.id
+        }
+      });
+  });
   const { api } = payload;
   try {
     const response = yield call(
@@ -141,7 +151,6 @@ export function* putRecognizeUpdatedKeywords(payload, createdKeywordId = null) {
         updatedValues: keywordExamplesAdd
       },
     );
-    yield put(refreshKeywordExamplesUpdate());
   } catch (err) {
     throw err;
   }

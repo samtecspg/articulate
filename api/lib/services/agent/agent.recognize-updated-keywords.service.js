@@ -30,58 +30,79 @@ module.exports = async function ({ id, payload }) {
             });
 
         await Promise.all(allSayings.map(async function (saying) {
-            var category = await globalService.loadAllLinked({ parentModel: saying, model: MODEL_CATEGORY, returnModel: true });
-            var currentKeywords = saying.property('keywords');
-            currentKeywords = await removeKeywords(deletedValues, currentKeywords);
+            let category = await globalService.loadAllLinked({ parentModel: saying, model: MODEL_CATEGORY, returnModel: true });
+            let currentKeywords = saying.property('keywords');
+            let currentKeywordsRemoved = await removeKeywords(deletedValues, currentKeywords);
+            let keywordsWereDeleted = currentKeywords.length != currentKeywordsRemoved.length
+            currentKeywords = currentKeywordsRemoved;
 
             let identifiedKeywords;
+            let keywordsWereAdded = false;
             if (groupedUpdatedArray.length > 0) {
                 identifiedKeywords = await agentService.identifyKeywords({ id: AgentModel.id, AgentModel, text: saying.properties.get('userSays').value, customValues: groupedUpdatedArray });
-                currentKeywords = await mergeKeywordsLists(identifiedKeywords, currentKeywords);
+                var currentKeywordsAdded = await mergeKeywordsLists(identifiedKeywords, currentKeywords);
+                keywordsWereAdded = currentKeywordsAdded.length != currentKeywords.length
+                if (keywordsWereAdded) {
+                    currentKeywords = currentKeywordsAdded;
+                }
             }
 
-            let sayingData = saying.allProperties();
-            sayingData.keywords = currentKeywords;
-            delete sayingData.id;
-            await agentService.upsertSayingInCategory({
-                id: Number(AgentModel.id),
-                categoryId: Number(category[0].id),
-                sayingId: Number(saying.id),
-                sayingData: sayingData
-            });
+            if (keywordsWereDeleted || keywordsWereAdded) {
+                let sayingData = saying.allProperties();
+                sayingData.keywords = currentKeywords;
+                delete sayingData.id;
+                await agentService.upsertSayingInCategory({
+                    id: Number(AgentModel.id),
+                    categoryId: Number(category[0].id),
+                    sayingId: Number(saying.id),
+                    sayingData: sayingData
+                });
+            }
 
         }));
 
         let uniqueKeywordIds = await getUniqueKeywordIds(deletedValues, updatedValues);
 
         //Modifiers
+        debugger;
+        let keywordsWereDeleted = false;
+        let keywordsWereAdded = false;
         await Promise.all(_.map(uniqueKeywordIds, async function (keywordId) {
             const modelPath = [MODEL_KEYWORD];
             const modelPathIds = [keywordId];
             const models = await globalService.getAllModelsInPath({ modelPath, ids: modelPathIds, returnModel: true });
             const KeywordModel = models[MODEL_KEYWORD];
             const keywordData = KeywordModel.allPropertiesCache;
+            keywordsWereDeleted = false;
+            keywordsWereAdded = false;
 
             await Promise.all(_.map(keywordData.modifiers, async function (modifier) {
                 await Promise.all(_.map(modifier.sayings, async function (saying) {
-                    var currentKeywords = saying.keywords;
-                    currentKeywords = await removeKeywords(deletedValues, currentKeywords);
+                    let currentKeywords = saying.keywords;
+                    let currentKeywordsRemoved = await removeKeywords(deletedValues, currentKeywords);
+                    keywordsWereDeleted = keywordsWereDeleted || currentKeywords.length != currentKeywordsRemoved.length
+                    currentKeywords = currentKeywordsRemoved;
 
                     let identifiedKeywords;
+                    let currentKeywordsAdded = [];
                     if (groupedUpdatedArray.length > 0) {
                         identifiedKeywords = await agentService.identifyKeywords({ id: AgentModel.id, AgentModel, text: saying.userSays, customValues: groupedUpdatedArray });
-                        currentKeywords = await mergeKeywordsLists(identifiedKeywords, currentKeywords);
+                        currentKeywordsAdded = await mergeKeywordsLists(identifiedKeywords, currentKeywords);
+                        keywordsWereAdded = keywordsWereAdded || currentKeywordsAdded.length != currentKeywords.length
+                        currentKeywords = currentKeywordsAdded;
                     }
                     saying.keywords = currentKeywords;
                 }));
             }));
 
-            delete keywordData.id
-            agentService.updateKeyword({
-                id: Number(AgentModel.id),
-                keywordId: KeywordModel.id,
-                keywordData
-            });
+            if (keywordsWereDeleted || keywordsWereAdded) {
+                delete keywordData.id
+                agentService.updateKeyword({
+                    id: Number(AgentModel.id),
+                    keywordId: KeywordModel.id,
+                    keywordData
+                });
+            }
         }));
 
         return { message: 'Sayings and modifiers updated' };

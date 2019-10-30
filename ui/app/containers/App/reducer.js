@@ -509,12 +509,14 @@ const initialState = Immutable({
   settingsTouched: false,
   loading: false,
   loadingImportCategory: false,
+  loadingKeywordExamplesUpdate: false,
   error: false,
   success: false,
   successKeyword: false,
   successCategory: false,
   successAction: false,
   successAgent: false,
+  successKeywordExamplesUpdate: false,
   CSO: {},
   newActionResponse: 'hello',
   documents: [],
@@ -2022,7 +2024,9 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('success', false)
-        .set('error', false);
+        .set('error', false)
+        .set('loadingKeywordExamplesUpdate', true)
+        .set('successKeywordExamplesUpdate', false);
     case CREATE_KEYWORD_ERROR:
       state = state.update('notifications', notifications =>
         notifications.concat({
@@ -2054,7 +2058,9 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false)
         .set('successKeyword', true)
-        .set('keywordTouched', false);
+        .set('keywordTouched', false)
+        .set('loadingKeywordExamplesUpdate', false)
+        .set('successKeywordExamplesUpdate', true);
     case RESET_KEYWORD_DATA:
       return state
         .set('keyword', initialState.keyword)
@@ -2067,7 +2073,9 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('success', false)
-        .set('error', false);
+        .set('error', false)
+        .set('loadingKeywordExamplesUpdate', true)
+        .set('successKeywordExamplesUpdate', false);
     case UPDATE_KEYWORD_ERROR:
       state = state.update('notifications', notifications =>
         notifications.concat({
@@ -2088,7 +2096,9 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('successKeyword', true)
-        .set('keywordTouched', false);
+        .set('keywordTouched', false)
+        .set('loadingKeywordExamplesUpdate', false)
+        .set('successKeywordExamplesUpdate', true);
     case ADD_KEYWORD_EXAMPLE:
       return state
         .updateIn(['keyword', 'examples'], examples =>

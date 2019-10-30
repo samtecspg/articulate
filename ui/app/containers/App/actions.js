@@ -268,6 +268,7 @@ import {
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
   RESET_SUCCESS_AGENT,
+  RECOGNIZE_UPDATED_KEYWORDS
 } from './constants';
 
 /*
@@ -1260,6 +1261,14 @@ export function changeKeywordsPageSize(agentId, pageSize) {
     agentId,
     pageSize,
   };
+}
+
+export function recognizeUpdatedKeywords(payload) {
+  return {
+    type: RECOGNIZE_UPDATED_KEYWORDS,
+    payload,
+
+  }
 }
 
 /*

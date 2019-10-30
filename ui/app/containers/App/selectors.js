@@ -47,6 +47,12 @@ const makeSelectLoadingImportCategory = () =>
     globalState => globalState.loadingImportCategory,
   );
 
+const makeSelectLoadingKeywordExamplesUpdate = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingKeywordExamplesUpdate,
+  );
+
 const makeSelectError = () =>
   createSelector(
     selectGlobal,
@@ -57,6 +63,12 @@ const makeSelectSuccess = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.success,
+  );
+
+const makeSelectSuccessKeywordExamplesUpdate = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.successKeywordExamplesUpdate,
   );
 
 const makeSelectConversationBarOpen = () =>
@@ -508,5 +520,7 @@ export {
   makeSelectTotalSessions,
   makeSelectLocale,
   makeSelectUsers,
-  makeSelectTotalUsers
+  makeSelectTotalUsers,
+  makeSelectSuccessKeywordExamplesUpdate,
+  makeSelectLoadingKeywordExamplesUpdate
 };
