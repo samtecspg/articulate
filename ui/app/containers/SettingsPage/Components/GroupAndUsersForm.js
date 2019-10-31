@@ -16,54 +16,48 @@ const styles = {
   },
 };
 
-/* eslint-disable react/prefer-stateless-function */
-export class GroupAndUsersForm extends React.Component {
-  render() {
-    const {
-      intl,
-      settings,
-      accessPolicyGroups,
-      selectedAccessPolicyGroup,
-      handleOnchangeAccessPolicyGroup,
-      onUpdateAccessPolicyGroup,
-      onAddAccessPolicyGroup,
-      newAccessPolicyGroupName,
-      onUpdateNewAccessPolicyGroupName
-    } = this.props;
-    return (
-      <Grid container spacing={16}>
-        <Grid container justify="space-between" spacing={24} item xs={12}>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={settings.allowNewUsersSignUps}
-                  onChange={(evt, value) => {
-                    this.props.onChangeSettingsData(
-                      'allowNewUsersSignUps',
-                      value,
-                    );
-                  }}
-                  value="multiCategory"
-                  color="primary"
-                />
-              }
-              label={intl.formatMessage(messages.allowNewUsersSignUps)}
-            />
-            <GroupPolicyTabs
-              accessPolicyGroups={accessPolicyGroups}
-              selectedGroup={selectedAccessPolicyGroup}
-              handleChange={handleOnchangeAccessPolicyGroup}
-              onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
-              onAddAccessPolicyGroup={onAddAccessPolicyGroup}
-              newAccessPolicyGroupName={newAccessPolicyGroupName}
-              onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
-            />
-          </Grid>
+export function GroupAndUsersForm(props) {
+  const {
+    intl,
+    settings,
+    accessPolicyGroups,
+    selectedAccessPolicyGroup,
+    handleOnchangeAccessPolicyGroup,
+    onUpdateAccessPolicyGroup,
+    onAddAccessPolicyGroup,
+    newAccessPolicyGroupName,
+    onUpdateNewAccessPolicyGroupName,
+  } = props;
+  return (
+    <Grid container spacing={16}>
+      <Grid container justify="space-between" spacing={24} item xs={12}>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={settings.allowNewUsersSignUps}
+                onChange={(evt, value) => {
+                  props.onChangeSettingsData('allowNewUsersSignUps', value);
+                }}
+                value="multiCategory"
+                color="primary"
+              />
+            }
+            label={intl.formatMessage(messages.allowNewUsersSignUps)}
+          />
+          <GroupPolicyTabs
+            accessPolicyGroups={accessPolicyGroups}
+            selectedGroup={selectedAccessPolicyGroup}
+            handleChange={handleOnchangeAccessPolicyGroup}
+            onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
+            onAddAccessPolicyGroup={onAddAccessPolicyGroup}
+            newAccessPolicyGroupName={newAccessPolicyGroupName}
+            onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
+          />
         </Grid>
       </Grid>
-    );
-  }
+    </Grid>
+  );
 }
 
 GroupAndUsersForm.propTypes = {
@@ -73,7 +67,7 @@ GroupAndUsersForm.propTypes = {
   onChangeSettingsData: PropTypes.func,
   errorState: PropTypes.object,
   accessPolicyGroups: PropTypes.array,
-  selectedAccessPolicyGroup: PropTypes.object,
+  selectedAccessPolicyGroup: PropTypes.string,
   handleOnchangeAccessPolicyGroup: PropTypes.func.isRequired,
   onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
   onAddAccessPolicyGroup: PropTypes.func.isRequired,

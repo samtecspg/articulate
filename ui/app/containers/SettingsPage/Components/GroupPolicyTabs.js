@@ -1,22 +1,11 @@
-import {
-  Button,
-  FormControlLabel,
-  Grid,
-  Switch,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Button, FormControlLabel, Grid, Switch, TextField, Typography } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  FormattedMessage,
-  injectIntl,
-  intlShape,
-} from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import messages from '../messages';
 
 const styles = {
@@ -48,10 +37,13 @@ const GroupPolicyTabs = ({
   onUpdateNewAccessPolicyGroupName,
   newAccessPolicyGroupName,
 }) => {
-  if (!accessPolicyGroups || (accessPolicyGroups && accessPolicyGroups.length === 0)) {
+  if (!accessPolicyGroups || (accessPolicyGroups && accessPolicyGroups.length === 0) || _.isNull(selectedGroup)) {
     return null;
   }
-  const currentGroup = !selectedGroup ? accessPolicyGroups[0] : selectedGroup;
+
+  const accessPolicyGroup = _.find(accessPolicyGroups, {
+    id: selectedGroup,
+  });
   return (
     <div>
       <Typography className={classes.label} id="groupPoliciesLabel">
@@ -86,7 +78,7 @@ const GroupPolicyTabs = ({
           </Button>
         </Grid>
         <Select
-          value={currentGroup.id}
+          value={accessPolicyGroup ? accessPolicyGroup.id : null}
           onChange={evt => {
             handleChange({
               accessPolicyGroup: _.find(accessPolicyGroups, {
@@ -104,7 +96,7 @@ const GroupPolicyTabs = ({
         </Select>
       </div>
 
-      {_.map(currentGroup.rules, (value, name) => (
+      {_.map(accessPolicyGroup.rules, (value, name) => (
         <FormControlLabel
           key={name}
           control={
@@ -113,11 +105,11 @@ const GroupPolicyTabs = ({
               checked={value}
               onChange={(evt, newValue) => {
                 const updatedRules = {
-                  ...currentGroup.rules,
+                  ...accessPolicyGroup.rules,
                   ...{ [name]: newValue },
                 };
                 onUpdateAccessPolicyGroup({
-                  groupName: currentGroup.name,
+                  groupName: accessPolicyGroup.name,
                   rules: updatedRules,
                 });
               }}
@@ -132,7 +124,7 @@ const GroupPolicyTabs = ({
 GroupPolicyTabs.propTypes = {
   classes: PropTypes.object.isRequired,
   accessPolicyGroups: PropTypes.array,
-  selectedGroup: PropTypes.object,
+  selectedGroup: PropTypes.string,
   handleChange: PropTypes.func.isRequired,
   onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
   onAddAccessPolicyGroup: PropTypes.func.isRequired,

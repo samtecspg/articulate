@@ -59,7 +59,7 @@ class SettingsDataForm extends React.Component {
       onUpdateAccessPolicyGroup,
       onAddAccessPolicyGroup,
       newAccessPolicyGroupName,
-      onUpdateNewAccessPolicyGroupName
+      onUpdateNewAccessPolicyGroupName,
     } = this.props;
     const { expanded } = this.state;
     return (
@@ -158,7 +158,7 @@ SettingsDataForm.propTypes = {
   onDeleteFallbackResponse: PropTypes.func.isRequired,
   errorState: PropTypes.object,
   accessPolicyGroups: PropTypes.array,
-  selectedAccessPolicyGroup: PropTypes.object,
+  selectedAccessPolicyGroup: PropTypes.string,
   handleOnchangeAccessPolicyGroup: PropTypes.func.isRequired,
   onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
   onAddAccessPolicyGroup: PropTypes.func.isRequired,

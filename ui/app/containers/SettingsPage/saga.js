@@ -70,8 +70,7 @@ export function* postAccessPolicyGroups(payload) {
   const { api, groupName, rules } = payload;
   try {
     const response = yield call(api.post, toAPIPath([ROUTE_ACCESS_CONTROL, ROUTE_GROUP, groupName]), rules);
-    yield put(updateAccessPolicyGroupSuccess(response.data));
-    yield call(getAccessPolicyGroups, { api });
+    yield put(updateAccessPolicyGroupSuccess(response));
   } catch (err) {
     yield put(updateAccessPolicyGroupError(err));
   }

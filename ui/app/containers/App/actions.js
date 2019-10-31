@@ -2501,9 +2501,10 @@ export function updateAccessPolicyGroupError(error) {
   };
 }
 
-export function updateAccessPolicyGroupSuccess() {
+export function updateAccessPolicyGroupSuccess(accessPolicyGroup) {
   return {
     type: UPDATE_ACCESS_CONTROL_SUCCESS,
+    accessPolicyGroup,
   };
 }
 
