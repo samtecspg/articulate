@@ -28,3 +28,4 @@ export const ROUTE_IMPORT = 'import';
 export const ROUTE_BULK = 'bulk';
 export const ROUTE_USER = 'user';
 export const PARAM_SEARCH = 'search';
+export const PARAM_DELETE_BY_QUERY = '_delete_by_query';

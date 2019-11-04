@@ -100,6 +100,8 @@ import {
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
   DELETE_CONNECTION_SUCCESS,
+  DELETE_DOCUMENT,
+  DELETE_DOCUMENT_ERROR,
   DELETE_FALLBACK,
   DELETE_HEADER_ACTION_WEBHOOK,
   DELETE_HEADER_AGENT_WEBHOOK,
@@ -111,6 +113,8 @@ import {
   DELETE_MODIFIER_SAYING,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
+  DELETE_SESSION_DATA,
+  DELETE_SESSION_DATA_ERROR,
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
   EDIT_ACTION_RESPONSE,
@@ -815,6 +819,45 @@ export function loadAgentDocumentsSuccess(documents) {
   return {
     type: LOAD_AGENT_DOCUMENTS_SUCCESS,
     documents,
+  };
+}
+
+export function deleteDocument({ documentId, sessionId, page, pageSize, field, direction }) {
+  return {
+    type: DELETE_DOCUMENT,
+    apiCall: true,
+    documentId,
+    sessionId,
+    page,
+    pageSize,
+    field,
+    direction
+  };
+}
+
+export function deleteDocumentError(error) {
+  return {
+    type: DELETE_DOCUMENT_ERROR,
+    error,
+  };
+}
+
+export function deleteSessionData({ sessionId, page, pageSize, field, direction }) {
+  return {
+    type: DELETE_SESSION_DATA,
+    apiCall: true,
+    sessionId,
+    page,
+    pageSize,
+    field,
+    direction
+  };
+}
+
+export function deleteSessionDataError(error) {
+  return {
+    type: DELETE_SESSION_DATA_ERROR,
+    error,
   };
 }
 

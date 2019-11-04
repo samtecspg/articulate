@@ -7,6 +7,8 @@ import {
   ROUTE_SAYING,
   ROUTE_SETTINGS,
   ROUTE_SESSION,
+  ROUTE_CONTEXT,
+  PARAM_DELETE_BY_QUERY
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
@@ -14,8 +16,10 @@ import { getActions } from '../ActionPage/saga';
 import {
   copySayingError,
   copySayingSuccess,
+  loadAgentDocuments,
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
+  deleteDocumentError,
   loadAgentSessionsSuccess,
   loadAgentSessionsError,
   loadCategoriesError,
@@ -25,6 +29,7 @@ import {
   loadSayingsError,
   loadSayingsSuccess,
   updateSayingError,
+  loadSession,
 } from '../App/actions';
 
 import {
@@ -36,6 +41,7 @@ import {
   DELETE_SAYING,
   LOAD_ACTIONS,
   LOAD_AGENT_DOCUMENTS,
+  DELETE_DOCUMENT,
   LOAD_AGENT_SESSIONS,
   LOAD_CATEGORIES,
   LOAD_FILTERED_CATEGORIES,
@@ -44,6 +50,7 @@ import {
   TAG_KEYWORD,
   UNTAG_KEYWORD,
   LOAD_SESSION,
+  DELETE_SESSION_DATA,
 } from '../App/constants';
 
 import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
@@ -302,6 +309,117 @@ export function* getAgentDocument(payload) {
   }
 }
 
+export function* deleteDocument(payload) {
+  const { api, documentId, sessionId, page, pageSize, field, direction } = payload;
+  try {
+    let session;
+    try {
+      session = yield call(
+        api.get,
+        toAPIPath([ROUTE_CONTEXT, sessionId])
+      );
+    } catch (err) {
+      console.log(JSON.stringify(err));
+      if (!err.response || !err.response.status || err.response.status !== 404) {
+        throw (err);
+      }
+    }
+
+    if (session) {
+      let patchPayload = session;
+      delete patchPayload.id;
+      delete patchPayload.sessionId;
+      patchPayload.docIds = patchPayload.docIds.filter((docId) => {
+        return docId !== documentId;
+      })
+
+      yield call(
+        api.patch,
+        toAPIPath([ROUTE_CONTEXT, sessionId]),
+        patchPayload,
+      );
+    }
+
+    yield call(
+      api.delete,
+      toAPIPath([ROUTE_DOCUMENT, documentId])
+    );
+
+    yield put(loadAgentDocuments({
+      page, pageSize, field, direction
+    }));
+
+    if (session) {
+      yield put(
+        loadSession(sessionId)
+      );
+    }
+  } catch (err) {
+    yield put(deleteDocumentError(err));
+  }
+}
+
+export function* deleteSessionData(payload) {
+  const { api, sessionId, page, pageSize, field, direction } = payload;
+
+  try {
+    debugger;
+
+    let session;
+    try {
+      session = yield call(
+        api.get,
+        toAPIPath([ROUTE_CONTEXT, sessionId])
+      );
+    } catch (err) {
+      console.log(JSON.stringify(err));
+      if (!err.response || !err.response.status || err.response.status !== 404) {
+        throw (err);
+      }
+    }
+
+    debugger;
+    let patchPayload = session;
+    delete patchPayload.id;
+    delete patchPayload.sessionId;
+    patchPayload.docIds = [];
+
+    debugger;
+    yield call(
+      api.patch,
+      toAPIPath([ROUTE_CONTEXT, sessionId]),
+      patchPayload,
+    );
+
+    debugger;
+    yield call(
+      api.post,
+      toAPIPath([ROUTE_DOCUMENT, PARAM_DELETE_BY_QUERY]),
+      {
+        "query": {
+          "match": {
+            "session": sessionId
+          }
+        }
+      }
+    );
+
+    debugger;
+    yield put(loadAgentDocuments({
+      page, pageSize, field, direction
+    }));
+
+    debugger;
+    yield put(
+      loadSession(sessionId)
+    );
+
+  } catch (err) {
+    alert(err);
+    yield put(deleteSessionDataError(err));
+  }
+}
+
 export function* getAgentSessions(payload) {
   const agent = yield select(makeSelectAgent());
   const { api, page, pageSize, field, direction } = payload;
@@ -347,6 +465,8 @@ export default function* rootSaga() {
   yield takeLatest(CHANGE_REVIEW_PAGE_SIZE, putReviewPageSize);
   yield takeLatest(CHANGE_SESSIONS_PAGE_SIZE, putSessionsPageSize);
   yield takeLatest(LOAD_AGENT_DOCUMENTS, getAgentDocument);
+  yield takeLatest(DELETE_DOCUMENT, deleteDocument);
+  yield takeLatest(DELETE_SESSION_DATA, deleteSessionData);
   yield takeLatest(LOAD_AGENT_SESSIONS, getAgentSessions);
   //yield takeLatest(LOAD_SESSION, getSession);
 }

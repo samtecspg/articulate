@@ -1,4 +1,4 @@
-import { Grid, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Grid, MenuItem, TextField, Typography, TableCell } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -226,6 +226,9 @@ const styles = {
     fontWeight: '500',
     paddingRight: '20px',
   },
+  deleteCell: {
+    width: '20px',
+  },
 };
 
 const tableHeaders = [
@@ -246,6 +249,7 @@ const tableHeaders = [
     width: '5%',
     sort: true,
   },
+  { id: 'delete', disablePadding: true, label: 'Delete', width: '5%' },
   { id: 'copy', disablePadding: true, label: 'Copy', width: '5%' },
   { id: 'try', disablePadding: true, label: 'Try', width: '5%' },
 ];
@@ -307,6 +311,7 @@ function SayingsDataForm(props) {
                       agentActions={props.agentActions}
                       onSendMessage={props.onSendMessage}
                       onCopySaying={props.onCopySaying}
+                      onDeleteDocumentModalChange={props.onDeleteDocumentModalChange}
                     />
                   </StyledRow>,
                 ]
@@ -320,6 +325,7 @@ function SayingsDataForm(props) {
                       agentActions={props.agentActions}
                       onSendMessage={props.onSendMessage}
                       onCopySaying={props.onCopySaying}
+                      onDeleteDocumentModalChange={props.onDeleteDocumentModalChange}
                     />
                   </StyledRow>
                 ))
@@ -436,6 +442,7 @@ SayingsDataForm.propTypes = {
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
   onCopySaying: PropTypes.func.isRequired,
+  onDeleteDocumentModalChange: PropTypes.func.isRequired,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,

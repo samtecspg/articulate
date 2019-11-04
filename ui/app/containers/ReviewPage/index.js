@@ -55,9 +55,12 @@ export class ReviewPage extends React.Component {
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.setNumberOfPages = this.setNumberOfPages.bind(this);
     this.copySayingFromDocument = this.copySayingFromDocument.bind(this);
+    this.deleteDocument = this.deleteDocument.bind(this);
+    this.deleteSession = this.deleteSession.bind(this);
     this.handleOnRequestSort = this.handleOnRequestSort.bind(this);
     this.initForm = this.initForm.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleDeleteDocModalChange = this.handleDeleteDocModalChange.bind(this);
   }
 
   state = {
@@ -79,8 +82,8 @@ export class ReviewPage extends React.Component {
         total: null,
         currentPage: 1,
         pageSize: this.props.agent.id && this.props.agent.settings.reviewPageSize
-        ? this.props.agent.settings.reviewPageSize
-        : 5,
+          ? this.props.agent.settings.reviewPageSize
+          : 5,
         numberOfPages: null,
         sortField: 'time_stamp',
         sortDirection: 'DESC',
@@ -92,14 +95,19 @@ export class ReviewPage extends React.Component {
         total: null,
         currentPage: 1,
         pageSize: this.props.agent.id && this.props.agent.settings.sessionsPageSize
-        ? this.props.agent.settings.sessionsPageSize
-        : 5,
+          ? this.props.agent.settings.sessionsPageSize
+          : 5,
         numberOfPages: null,
         sortField: 'modificationDate',
         sortDirection: 'desc',
         timeSort: 'desc',
       }
-    }
+    },
+    deleteDocModalOpen: false,
+    deleteDocId: '',
+    deleteDocSessionId: '',
+    deleteSessionModalOpen: false,
+    deleteSessionId: '',
   };
 
   async initForm() {
@@ -139,10 +147,10 @@ export class ReviewPage extends React.Component {
     if (!this.state.pageStatus.documents.socketClientConnected) {
       const client = new Nes.Client(getWS());
       client.onConnect = () => {
-        
+
         newPageStatus.documents.client = client;
         newPageStatus.documents.socketClientConnected = true;
-        
+
         this.setState({
           pageStatus: newPageStatus,
         });
@@ -175,10 +183,10 @@ export class ReviewPage extends React.Component {
     if (!this.state.pageStatus.sessions.socketClientConnected) {
       const client = new Nes.Client(getWS());
       client.onConnect = () => {
-        
+
         newPageStatus.sessions.client = client;
         newPageStatus.sessions.socketClientConnected = true;
-        
+
         this.setState({
           pageStatus: newPageStatus,
         });
@@ -255,7 +263,7 @@ export class ReviewPage extends React.Component {
     this.setState({
       pageStatus: newPageStatus,
     });
-    if (this.state.selectedTab === 'documents'){
+    if (this.state.selectedTab === 'documents') {
       onLoadAgentDocuments({
         page: pageNumber,
         pageSize: this.state.pageStatus.documents.pageSize,
@@ -263,7 +271,7 @@ export class ReviewPage extends React.Component {
         direction: this.state.pageStatus.documents.sortDirection,
       });
     }
-    if (this.state.selectedTab === 'sessions'){
+    if (this.state.selectedTab === 'sessions') {
       onLoadAgentSessions(
         pageNumber,
         this.state.pageStatus.sessions.pageSize,
@@ -297,7 +305,7 @@ export class ReviewPage extends React.Component {
     this.setState({
       pageStatus: newPageStatus,
     });
-    if (this.state.selectedTab === 'documents'){
+    if (this.state.selectedTab === 'documents') {
       onChangeReviewPageSize(this.props.agent.id, pageSize);
       onLoadAgentDocuments({
         page: 1,
@@ -306,7 +314,7 @@ export class ReviewPage extends React.Component {
         direction: this.state.pageStatus[this.state.selectedTab].sortDirection,
       });
     }
-    if (this.state.selectedTab === 'sessions'){
+    if (this.state.selectedTab === 'sessions') {
       onChangeSessionsPageSize(this.props.agent.id, pageSize);
       onLoadAgentSessions(
         1,
@@ -384,7 +392,7 @@ export class ReviewPage extends React.Component {
       pageStatus: newPageStatus,
     });
 
-    if (this.state.selectedTab === 'documents'){
+    if (this.state.selectedTab === 'documents') {
       onLoadAgentDocuments({
         page: this.state.pageStatus[this.state.selectedTab].currentPage,
         pageSize: this.state.pageStatus[this.state.selectedTab].pageSize,
@@ -392,7 +400,7 @@ export class ReviewPage extends React.Component {
         direction: sortDirection,
       });
     }
-    if (this.state.selectedTab === 'sessions'){
+    if (this.state.selectedTab === 'sessions') {
       onLoadAgentSessions(
         this.state.pageStatus[this.state.selectedTab].currentPage,
         this.state.pageStatus[this.state.selectedTab].pageSize,
@@ -402,12 +410,50 @@ export class ReviewPage extends React.Component {
     }
   }
 
-
   handleTabChange = (event, value) => {
     this.setState({
       selectedTab: value,
     });
   };
+
+  handleDeleteDocModalChange = (deleteDocModalOpen,
+    deleteDocId = this.state.deleteDocId,
+    deleteDocSessionId = this.state.deleteDocSessionId) => {
+    this.setState({
+      deleteDocModalOpen,
+      deleteDocId,
+      deleteDocSessionId
+    })
+  }
+
+  deleteDocument() {
+    this.props.actions.onDeleteDocument({
+      documentId: this.state.deleteDocId,
+      sessionId: this.state.deleteDocSessionId,
+      page: this.state.pageStatus.documents.currentPage,
+      pageSize: this.state.pageStatus.documents.pageSize,
+      field: this.state.pageStatus.documents.sortField,
+      direction: this.state.pageStatus.documents.sortDirection,
+    })
+  }
+
+  handleDeleteSessionModalChange = (deleteSessionModalOpen,
+    deleteSessionId = this.state.deleteSessionId) => {
+    this.setState({
+      deleteSessionModalOpen,
+      deleteSessionId
+    })
+  }
+
+  deleteSession() {
+    this.props.actions.onDeleteSession({
+      sessionId: this.state.deleteSessionId,
+      page: this.state.pageStatus.documents.currentPage,
+      pageSize: this.state.pageStatus.documents.pageSize,
+      field: this.state.pageStatus.documents.sortField,
+      direction: this.state.pageStatus.documents.sortDirection,
+    })
+  }
 
   render() {
     const {
@@ -459,7 +505,13 @@ export class ReviewPage extends React.Component {
               agentActions={agentActions}
               agentCategories={agentCategories}
               agentFilteredCategories={agentFilteredCategories}
+              deleteDocumentModalOpen={this.state.deleteDocModalOpen}
+              deleteSessionModalOpen={this.state.deleteSessionModalOpen}
               onCopySaying={this.copySayingFromDocument}
+              onDeleteDocumentModalChange={this.handleDeleteDocModalChange}
+              onDeleteSessionModalChange={this.handleDeleteSessionModalChange}
+              onDeleteDocument={this.deleteDocument}
+              onDeleteSession={this.deleteSession}
               onSearchSaying={this.onSearchSaying}
               onSearchCategory={this.onSearchCategory}
               onSendSayingToAction={onSendSayingToAction}
@@ -491,10 +543,10 @@ export class ReviewPage extends React.Component {
         />
       </Grid>
     ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
-    );
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
+        />
+      );
   }
 }
 
@@ -506,6 +558,8 @@ ReviewPage.propTypes = {
     onLoadKeywords: PropTypes.func.isRequired,
     onLoadActions: PropTypes.func.isRequired,
     onCopySaying: PropTypes.func.isRequired,
+    onDeleteDocument: PropTypes.func.isRequired,
+    onDeleteSession: PropTypes.func.isRequired,
     onSendSayingToAction: PropTypes.func.isRequired,
     onClearSayingToAction: PropTypes.func.isRequired,
     onSelectCategory: PropTypes.func.isRequired,
@@ -554,6 +608,8 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(
       {
         onLoadAgentDocuments: Actions.loadAgentDocuments,
+        onDeleteDocument: Actions.deleteDocument,
+        onDeleteSession: Actions.deleteSessionData,
         onLoadAgentSessions: Actions.loadAgentSessions,
         onLoadFilteredCategories: Actions.loadFilteredCategories,
         onLoadCategories: Actions.loadCategories,

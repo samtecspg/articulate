@@ -135,6 +135,14 @@ export const LOAD_AGENT_DOCUMENTS_ERROR =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_ERROR';
 export const LOAD_AGENT_DOCUMENTS_SUCCESS =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_SUCCESS';
+export const DELETE_DOCUMENT =
+  'app/AgentPage/DELETE_DOCUMENT';
+export const DELETE_DOCUMENT_ERROR =
+  'app/AgentPage/DELETE_DOCUMENT_ERROR';
+export const DELETE_SESSION_DATA =
+  'app/AgentPage/DELETE_SESSION_DATA';
+export const DELETE_SESSION_DATA_ERROR =
+  'app/AgentPage/DELETE_SESSION_DATA_ERROR';
 export const LOAD_AGENT_STATS = 'app/AgentPage/LOAD_AGENT_STATS';
 export const LOAD_AGENT_STATS_ERROR =
   'app/AgentPage/LOAD_AGENT_STATS_ERROR';

@@ -112,6 +112,22 @@ export default defineMessages({
     id: 'app.containers.ReviewPage.component.SayingRow.copyDialogCopyButton',
     defaultMessage: 'Copy',
   },
+  deleteDocumentAlert1: {
+    id: 'app.containers.ReviewPage.component.Form.deleteDocumentAlert1',
+    defaultMessage: 'Are you sure you want to permanently delete this saying?'
+  },
+  deleteDocumentAlert2: {
+    id: 'app.containers.ReviewPage.component.Form.deleteDocumentAlert2',
+    defaultMessage: 'Deleting this saying will impact analytics and cannot be reversed'
+  },
+  deleteDocumentAlertYes: {
+    id: 'app.containers.ReviewPage.component.Form.deleteDocumentAlertYes',
+    defaultMessage: 'Yes'
+  },
+  deleteDocumentAlertNo: {
+    id: 'app.containers.ReviewPage.component.Form.deleteDocumentAlertNo',
+    defaultMessage: 'No'
+  },
   seeSource: {
     id: 'app.containers.ReviewPage.component.SayingRow.seeSource',
     defaultMessage: 'See Source',
@@ -127,5 +143,25 @@ export default defineMessages({
   reproduceSession: {
     id: 'app.containers.ReviewPage.component.SessionRow.reproduceSession',
     defaultMessage: 'Reproduce session on chat window',
-  }
+  },
+  deleteSession: {
+    id: 'app.containers.ReviewPage.component.SessionRow.deleteSession',
+    defaultMessage: 'Delete session data',
+  },
+  deleteSessionAlert1: {
+    id: 'app.containers.ReviewPage.component.Form.deleteSessionAlert1',
+    defaultMessage: 'Are you sure you want to permanently delete this session data?'
+  },
+  deleteSessionAlert2: {
+    id: 'app.containers.ReviewPage.component.Form.deleteSessionAlert2',
+    defaultMessage: 'Deleting this session data will impact analytics and cannot be reversed'
+  },
+  deleteSessionAlertYes: {
+    id: 'app.containers.ReviewPage.component.Form.deleteSessionAlertYes',
+    defaultMessage: 'Yes'
+  },
+  deleteSessionAlertNo: {
+    id: 'app.containers.ReviewPage.component.Form.deleteSessionAlertNo',
+    defaultMessage: 'No'
+  },
 });

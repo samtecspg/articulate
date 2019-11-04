@@ -14,6 +14,7 @@ import React, { Fragment } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import {
   PlayImageCell,
+  DeleteImageCell,
 } from '../../../components/StyledTable';
 import messages from '../messages';
 import CodeModal from '../../../components/CodeModal';
@@ -144,7 +145,7 @@ class SessionRow extends React.Component {
       }
       return '';
     }
-    catch(e) {
+    catch (e) {
       console.log(e);
     }
   }
@@ -170,7 +171,7 @@ class SessionRow extends React.Component {
           <span className={classes.userSays}>
             {session.sessionId}
           </span>
-          {session.id !== 'noData' ? 
+          {session.id !== 'noData' ?
             [<span key='seeSourceLabel'
               onClick={() => {
                 this.setState({ openCodeModal: true });
@@ -191,9 +192,19 @@ class SessionRow extends React.Component {
               }
               open={this.state.openCodeModal}
             />]
-          : null
+            : null
           }
         </TableCell>
+        <DeleteImageCell
+          tooltip={intl.formatMessage(messages.deleteSession)}
+          disabled={session.id === 'noData'}
+          onClick={() => {
+            this.props.onDeleteSessionModalChange(
+              true,
+              session.sessionId
+            );
+          }}
+        />
         <PlayImageCell
           tooltip={intl.formatMessage(messages.reproduceSession)}
           disabled={session.id === 'noData'}
@@ -202,7 +213,7 @@ class SessionRow extends React.Component {
 
             let sessions = sessionStorage.getItem('sessions');
 
-            if (!sessions){
+            if (!sessions) {
               sessions = '{}';
             }
             sessions = JSON.parse(sessions);
@@ -215,7 +226,7 @@ class SessionRow extends React.Component {
             }
 
             sessions[this.props.agent.agentName].sessionId = session.sessionId;
-            if(sessions[this.props.agent.agentName].sessions.indexOf(session.sessionId) === -1){
+            if (sessions[this.props.agent.agentName].sessions.indexOf(session.sessionId) === -1) {
               sessions[this.props.agent.agentName].sessions.unshift(
                 session.sessionId,
               );
@@ -240,6 +251,7 @@ SessionRow.propTypes = {
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func,
   onCopySaying: PropTypes.func,
+  onDeleteSessionModalChange: PropTypes.func,
   locale: PropTypes.string,
   onLoadSessionId: PropTypes.func,
 };

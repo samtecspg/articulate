@@ -86,6 +86,7 @@ export const PARAM_TEXT = 'text';
 export const PARAM_TIMEZONE = 'timezone';
 export const PARAM_BULK = 'bulk';
 export const PARAM_SEARCH = 'search';
+export const PARAM_DELETE_BY_QUERY = '_delete_by_query';
 export const PARAM_FILTER = 'filter';
 export const PARAM_INCLUDE = 'include';
 export const PARAM_LAST_NAME = 'lastName';

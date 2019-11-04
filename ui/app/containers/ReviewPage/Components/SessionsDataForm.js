@@ -231,6 +231,7 @@ const styles = {
 const tableHeaders = [
   { id: 'modificationDate', disablePadding: true, label: '', width: '7%' },
   { id: 'session', disablePadding: true, label: '', width: '88%' },
+  { id: 'delete', disablePadding: true, label: 'Delete', width: '5%' },
   { id: 'try', disablePadding: true, label: 'Try', width: '5%' },
 ];
 
@@ -276,6 +277,7 @@ function SessionsDataForm(props) {
                       }}
                       onToggleConversationBar={props.onToggleConversationBar}
                       onSendMessage={props.onSendMessage}
+                      onDeleteSessionModalChange={props.onDeleteSessionModalChange}
                     />
                   </StyledRow>,
                 ]
@@ -288,6 +290,7 @@ function SessionsDataForm(props) {
                       onToggleConversationBar={props.onToggleConversationBar}
                       onSendMessage={props.onSendMessage}
                       onLoadSessionId={onLoadSessionId}
+                      onDeleteSessionModalChange={props.onDeleteSessionModalChange}
                     />
                   </StyledRow>
                 ))
@@ -405,6 +408,7 @@ SessionsDataForm.propTypes = {
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
   onCopySaying: PropTypes.func.isRequired,
+  onDeleteSessionModalChange: PropTypes.func.isRequired,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,

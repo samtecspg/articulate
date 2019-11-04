@@ -9,6 +9,7 @@ import searchIcon from '../../../images/search-icon.svg';
 import messages from '../messages';
 import SayingsDataForm from './SayingsDataForm';
 import SessionsDataForm from './SessionsDataForm';
+import ExitModal from '../../../components/ExitModal';
 
 const styles = {
   headerContainer: {
@@ -90,8 +91,10 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
   state = {
-    openModal: false,
+    openModal: false
   };
+
+  handle
 
   handleOpen = () => {
     this.setState({
@@ -158,6 +161,40 @@ class Form extends React.Component {
                 />
               </Grid>
             </Modal>
+            <ExitModal
+              open={this.props.deleteDocumentModalOpen}
+              onExit={() => {
+                this.props.onDeleteDocumentModalChange(false);
+              }}
+              onSaveAndExit={() => {
+                this.props.onDeleteDocument();
+                this.props.onDeleteDocumentModalChange(false);
+              }}
+              onClose={() => {
+                this.props.onDeleteDocumentModalChange(false);
+              }}
+              customMessage1={intl.formatMessage(messages.deleteDocumentAlert1)}
+              customMessage2={intl.formatMessage(messages.deleteDocumentAlert2)}
+              customMessageSaveAndExitButton={intl.formatMessage(messages.deleteDocumentAlertYes)}
+              customMessageExitButton={intl.formatMessage(messages.deleteDocumentAlertNo)}
+            />
+            <ExitModal
+              open={this.props.deleteSessionModalOpen}
+              onExit={() => {
+                this.props.onDeleteSessionModalChange(false);
+              }}
+              onSaveAndExit={() => {
+                this.props.onDeleteSession();
+                this.props.onDeleteSessionModalChange(false);
+              }}
+              onClose={() => {
+                this.props.onDeleteSessionModalChange(false);
+              }}
+              customMessage1={intl.formatMessage(messages.deleteSessionAlert1)}
+              customMessage2={intl.formatMessage(messages.deleteSessionAlert2)}
+              customMessageSaveAndExitButton={intl.formatMessage(messages.deleteSessionAlertYes)}
+              customMessageExitButton={intl.formatMessage(messages.deleteSessionAlertNo)}
+            />
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -201,34 +238,35 @@ class Form extends React.Component {
             />
           </Tabs>
           {this.props.selectedTab === 'documents' && (
-              <SayingsDataForm
-                agentId={this.props.agentId}
-                documents={this.props.documents}
-                agentKeywords={this.props.agentKeywords}
-                agentActions={this.props.agentActions}
-                agentCategories={this.props.agentCategories}
-                onCopySaying={this.props.onCopySaying}
-                onSendSayingToAction={this.props.onSendSayingToAction}
-                currentPage={this.props.currentPage}
-                pageSize={this.props.pageSize}
-                numberOfPages={this.props.numberOfPages}
-                changePage={this.props.changePage}
-                movePageBack={this.props.movePageBack}
-                movePageForward={this.props.movePageForward}
-                changePageSize={this.props.changePageSize}
-                onSelectCategory={this.props.onSelectCategory}
-                category={this.props.category}
-                onSearchCategory={this.props.onSearchCategory}
-                newSayingActions={this.props.newSayingActions}
-                onClearSayingToAction={this.props.onClearSayingToAction}
-                onToggleConversationBar={this.props.onToggleConversationBar}
-                onSendMessage={this.props.onSendMessage}
-                onRequestSort={this.props.onRequestSort}
-                sortField={this.props.sortField}
-                sortDirection={this.props.sortDirection}
-                locale={this.props.locale}
-                timeSort={this.props.timeSort}
-              />
+            <SayingsDataForm
+              agentId={this.props.agentId}
+              documents={this.props.documents}
+              agentKeywords={this.props.agentKeywords}
+              agentActions={this.props.agentActions}
+              agentCategories={this.props.agentCategories}
+              onCopySaying={this.props.onCopySaying}
+              onDeleteDocumentModalChange={this.props.onDeleteDocumentModalChange}
+              onSendSayingToAction={this.props.onSendSayingToAction}
+              currentPage={this.props.currentPage}
+              pageSize={this.props.pageSize}
+              numberOfPages={this.props.numberOfPages}
+              changePage={this.props.changePage}
+              movePageBack={this.props.movePageBack}
+              movePageForward={this.props.movePageForward}
+              changePageSize={this.props.changePageSize}
+              onSelectCategory={this.props.onSelectCategory}
+              category={this.props.category}
+              onSearchCategory={this.props.onSearchCategory}
+              newSayingActions={this.props.newSayingActions}
+              onClearSayingToAction={this.props.onClearSayingToAction}
+              onToggleConversationBar={this.props.onToggleConversationBar}
+              onSendMessage={this.props.onSendMessage}
+              onRequestSort={this.props.onRequestSort}
+              sortField={this.props.sortField}
+              sortDirection={this.props.sortDirection}
+              locale={this.props.locale}
+              timeSort={this.props.timeSort}
+            />
           )}
           {this.props.selectedTab === 'sessions' && (
             <SessionsDataForm
@@ -236,6 +274,7 @@ class Form extends React.Component {
               agentId={this.props.agentId}
               sessions={this.props.sessions}
               onCopySaying={this.props.onCopySaying}
+              onDeleteSessionModalChange={this.props.onDeleteSessionModalChange}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentPage={this.props.currentPage}
               pageSize={this.props.pageSize}
@@ -275,7 +314,13 @@ Form.propTypes = {
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
+  deleteDocumentModalOpen: PropTypes.bool,
+  onDeleteSessionModalChange: PropTypes.bool,
   onCopySaying: PropTypes.func,
+  onDeleteDocumentModalChange: PropTypes.func,
+  onDeleteDocument: PropTypes.func,
+  onDeleteSessionModalChange: PropTypes.func,
+  onDeleteSession: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,
