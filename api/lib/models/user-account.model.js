@@ -22,7 +22,8 @@ class UserAccountModel {
         return Joi.object().keys({
             ...this.schema, ...{
                 password: Joi.strip().forbidden(),
-                salt: Joi.strip().forbidden()
+                salt: Joi.strip().forbidden(),
+                simplifiedGroupPolicies: Joi.object().optional()
             }
         });
     };

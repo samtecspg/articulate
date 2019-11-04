@@ -20,12 +20,12 @@ module.exports = {
 
             const { userService } = await request.services();
             try {
-                let a = _.get(request, 'auth.credentials.id');
-                return await userService.findById({ id: _.get(request, 'auth.credentials.id', null), filterSensitiveData: true });
+                return await userService.findById({ id: _.get(request, 'auth.credentials.id', null), filterSensitiveData: true, includeAccessPolicies: true });
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });
             }
         }
     }
+};
 };

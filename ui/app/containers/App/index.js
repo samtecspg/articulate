@@ -27,20 +27,19 @@ import ActionPage from '../ActionPage/Loadable';
 import AddCategoryPage from '../AddCategoryPage/Loadable';
 import AgentPage from '../AgentPage/Loadable';
 import AgentsPage from '../AgentsPage/Loadable';
+import AnalyticsPage from '../AnalyticsPage/Loadable';
 import CategoryPage from '../CategoryPage/Loadable';
+import CheatSheetPage from '../CheatSheetPage/Loadable';
 import ConnectionPage from '../ConnectionPage/Loadable';
 import DialoguePage from '../DialoguePage/Loadable';
 import KeywordsEditPage from '../KeywordsEditPage/Loadable';
 import MissingAPIPage from '../MissingAPIPage/Loadable';
 import NotFoundPage from '../NotFoundPage/Loadable';
 import ReviewPage from '../ReviewPage/Loadable';
-import AnalyticsPage from '../AnalyticsPage/Loadable';
+import SayingsInfoPage from '../SayingsInfoPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
-import CheatSheetPage from '../CheatSheetPage/Loadable';
-import SayingsInfoPage from '../SayingsInfoPage/Loadable';
-
 import UsersPage from '../UsersPage/Loadable';
 import { checkCookie } from '../../utils/cookies';
 import {
@@ -51,8 +50,8 @@ import {
   loadServerInfo,
   loadSettings,
   refreshServerInfo,
-  toggleConversationBar,
   toggleChatButton,
+  toggleConversationBar,
   updateSetting,
   logoutUser,
 } from './actions';
@@ -61,11 +60,11 @@ import {
   makeSelectAgent,
   makeSelectConversationBarOpen,
   makeSelectLoadingCurrentUser,
-  makeSelectShowChatButton,
   makeSelectLocation,
   makeSelectMissingAPI,
   makeSelectNotifications,
   makeSelectSettings,
+  makeSelectShowChatButton,
 } from './selectors';
 
 class App extends React.Component {
@@ -148,31 +147,23 @@ class App extends React.Component {
       this.props.onMissingAPI(this.props.location.pathname);
     }
     // If an agent is loaded
-    if (this.props.agent.id) {
-      // If is different than the current agent
-      if (this.props.agent.id !== this.state.agent) {
-        // If the client was already initialized
-        if (this.state.client) {
-          // If the socket was already subscribed to an agent
-          if (this.state.agent) {
-            // Unsubscribe from the agent
-            this.state.client.unsubscribe(
-              `/${ROUTE_AGENT}/${this.state.agent}`,
-            );
-          }
-          const handler = agent => {
-            if (agent) {
-              this.props.onRefreshAgent(agent);
-            }
-          };
-          this.state.client.subscribe(
-            `/${ROUTE_AGENT}/${this.props.agent.id}`,
-            handler,
-          );
-          this.setState({
-            agent: this.props.agent.id,
-          });
+    if (this.props.agent.id && this.props.agent.id !== this.state.agent) {
+      // If the client was already initialized
+      if (this.state.client) {
+        // If the socket was already subscribed to an agent
+        if (this.state.agent) {
+          // Unsubscribe from the agent
+          this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.state.agent}`);
         }
+        const handler = agent => {
+          if (agent) {
+            this.props.onRefreshAgent(agent);
+          }
+        };
+        this.state.client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}`, handler);
+        this.setState({
+          agent: this.props.agent.id,
+        });
       }
     }
     if (this.state.socketClientConnected && !this.state.serverStatusConnected) {
@@ -189,38 +180,22 @@ class App extends React.Component {
   }
 
   render() {
-    const {
-      conversationBarOpen,
-      chatButtonOpen,
-      onToggleConversationBar,
-      notifications,
+    const { conversationBarOpen, chatButtonOpen, onToggleConversationBar, notifications, loadingCurrentUser } = this.props;
       loadingCurrentUser
-    } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
     const disableHeader = this.props.location.pathname.indexOf('discovery') !== -1;
-    //if (!loadingCurrentUser) {
-    //  return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
-    //}
-    return (
-      disableHeader ?
+    if (!loadingCurrentUser) {
+      return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
+    }
+    return disableHeader ? (
       <div>
         <Switch>
-          <Route
-            exact
-            path="/agent/:id/discovery"
-            component={CheatSheetPage}
-          />
-          <Route
-            exact
-            path="/agent/:id/discovery/saying/:sayingId"
-            component={SayingsInfoPage}
-          />
-          <Redirect
-            from="/agent/:id/discovery/sayingDummy/:sayingId"
-            to={`/agent/:id/discovery/saying/:sayingId?${this.props.location.search}`}
-          />
+          <Route exact path="/agent/:id/discovery" component={CheatSheetPage} />
+          <Route exact path="/agent/:id/discovery/saying/:sayingId" component={SayingsInfoPage} />
+          <Redirect from="/agent/:id/discovery/sayingDummy/:sayingId" to={`/agent/:id/discovery/saying/:sayingId?${this.props.location.search}`} />
         </Switch>
-      </div> :
+      </div>
+    ) : (
       <div>
         <AppHeader
           agent={this.props.agent}
@@ -234,101 +209,25 @@ class App extends React.Component {
           demoMode={demoMode}
           onShareAgent={this.props.onShareAgent}
         />
-        <AppContent
-          demoMode={demoMode}
-          conversationBarOpen={conversationBarOpen}
+        <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen}>
           onLogoutUser={this.props.onLogoutUser}
-        >
           <Switch>
-            <PrivateRoute
-              exact
-              path="/"
-              component={AgentsPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id"
-              component={AgentPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/connection/:id"
-              component={ConnectionPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id/dialogue"
-              component={DialoguePage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id/review"
-              component={ReviewPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id/analytics"
-              component={AnalyticsPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id/keyword/:keywordId"
-              component={KeywordsEditPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id/addCategory"
-              component={AddCategoryPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id/category/:categoryId"
-              component={CategoryPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/agent/:id/action/:actionId"
-              component={ActionPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/settings"
-              component={SettingsPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/missing-api"
-              component={MissingAPIPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <Redirect
-              from="/agent/:id/actionDummy/:actionId"
-              to={`/agent/:id/action/:actionId?${this.props.location.search}`}
-            />
+            <PrivateRoute exact path="/" component={AgentsPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id" component={AgentPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/connection/:id" component={ConnectionPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id/dialogue" component={DialoguePage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id/review" component={ReviewPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id/analytics" component={AnalyticsPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id/keyword/:keywordId" component={KeywordsEditPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id/addCategory" component={AddCategoryPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id/category/:categoryId" component={CategoryPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/agent/:id/action/:actionId" component={ActionPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/settings" component={SettingsPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/missing-api" component={MissingAPIPage} isAuthEnabled={AUTH_ENABLED} />
+            <Redirect from="/agent/:id/actionDummy/:actionId" to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
             <Route exact path="/login" component={UserAuthPage} />
-            <PrivateRoute
-              exact
-              path="/users"
-              component={UsersPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
-            <PrivateRoute
-              exact
-              path="/demo/:id"
-              component={SharedChatPage}
-              isAuthEnabled={AUTH_ENABLED}
-            />
+            <PrivateRoute exact path="/users" component={UsersPage} isAuthEnabled={AUTH_ENABLED} />
+            <PrivateRoute exact path="/demo/:id" component={SharedChatPage} isAuthEnabled={AUTH_ENABLED} />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>
@@ -350,6 +249,14 @@ App.propTypes = {
   notifications: PropTypes.array,
   settings: PropTypes.object,
   loadCurrentUser: PropTypes.func,
+  loadingCurrentUser: PropTypes.bool,
+  onLoadServerInfo: PropTypes.func,
+  onLoadAgent: PropTypes.func,
+  onLoadSettings: PropTypes.func,
+  onRefreshServerInfo: PropTypes.func,
+  onShareAgent: PropTypes.func,
+  conversationBarOpen: PropTypes.bool,
+  chatButtonOpen: PropTypes.bool,
   loadingCurrentUser: PropTypes.bool,
 };
 

@@ -1,58 +1,51 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
-import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
+  ROUTE_CONNECTION,
   ROUTE_CONTEXT,
   ROUTE_CONVERSE,
   ROUTE_CURRENT,
   ROUTE_POST_FORMAT,
+  ROUTE_SETTINGS,
   ROUTE_TRAIN,
   ROUTE_USER,
   ROUTE_WEBHOOK,
-  ROUTE_SETTINGS,
-  ROUTE_CONNECTION,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
-import {
-  LOAD_AGENT,
   LOAD_CURRENT_USER,
-  LOAD_SETTINGS,
-  LOAD_SERVER_INFO,
-  RESET_SESSION,
-  SEND_MESSAGE,
-  TRAIN_AGENT,
-  UPDATE_SETTING,
-  TOGGLE_CONVERSATION_BAR,
   LOGOUT_USER,
-} from './constants';
 import { getSettings, putSetting } from '../SettingsPage/saga';
 import {
   loadAgentError,
   loadAgentSuccess,
   loadCurrentUserError,
   loadCurrentUserSuccess,
-  resetSessionSuccess,
-  respondMessage,
-  storeSourceData,
-  trainAgentError,
-  showWarning,
-  loadServerInfoSuccess,
   loadServerInfoError,
+  loadServerInfoSuccess,
+  loadSessionSuccess,
+  resetSessionSuccess,
+  showWarning,
+  trainAgentError,
   updateSettingsError,
   updateSettingSuccess,
-  loadSessionSuccess,
   logoutUserSuccess,
   logoutUserError,
   toggleConversationBar,
   toggleChatButton,
 } from './actions';
 import {
-  makeSelectAgent,
-  makeSelectSessionId,
-  makeSelectSettings,
-  makeSelectConnection,
-} from './selectors';
+  LOAD_AGENT,
+  LOAD_CURRENT_USER,
+  LOAD_SERVER_INFO,
+  LOAD_SETTINGS,
+  RESET_SESSION,
+  SEND_MESSAGE,
+  TOGGLE_CONVERSATION_BAR,
+  TRAIN_AGENT,
+  UPDATE_SETTING,
+} from './constants';
+import { makeSelectAgent, makeSelectConnection, makeSelectSessionId, makeSelectSettings } from './selectors';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());
@@ -71,15 +64,10 @@ export function* postConverse(payload) {
           data: {
             sessionId,
             text: message.message,
-            articulateUI: true
+            articulateUI: true,
           },
         };
-        yield call(
-          api.post,
-          toAPIPath(isDemo ? [ROUTE_CONNECTION, connection.id, 'external'] : [ROUTE_AGENT, agent.id, ROUTE_CONVERSE]),
-          null,
-          postPayload,
-        );
+        yield call(api.post, toAPIPath(isDemo ? [ROUTE_CONNECTION, connection.id, 'external'] : [ROUTE_AGENT, agent.id, ROUTE_CONVERSE]), null, postPayload);
 
         if (newSession) {
           yield put(loadSessionSuccess(sessionId));
@@ -104,13 +92,9 @@ export function* deleteSession(payload) {
         actionQueue: [],
         savedSlots: {},
         docIds: [],
-        listenFreeText: false
+        listenFreeText: false,
       };
-      yield call(
-        api.patch,
-        toAPIPath([ROUTE_CONTEXT, sessionId]),
-        patchPayload,
-      );
+      yield call(api.patch, toAPIPath([ROUTE_CONTEXT, sessionId]), patchPayload);
       yield put(resetSessionSuccess());
     } catch ({ response }) {
       if (response.status && response.status === 404) {
@@ -144,17 +128,11 @@ export function* getAgent(payload) {
     let webhook;
     let postFormat;
     if (agent.useWebhook) {
-      response = yield call(
-        api.get,
-        toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]),
-      );
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]));
       webhook = response;
     }
     if (agent.usePostFormat) {
-      response = yield call(
-        api.get,
-        toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]),
-      );
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]));
       postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
@@ -176,15 +154,10 @@ export function* getServerInfo(payload) {
 export function* putConversationBarWidth(payload) {
   const { api } = payload;
   const settings = yield select(makeSelectSettings());
-  const mutableSettings = Immutable.asMutable(settings, { deep: true });
   const width = settings.conversationPanelWidth;
   try {
     if (width > 300) {
-      const response = yield call(
-        api.put,
-        toAPIPath([ROUTE_SETTINGS, 'conversationPanelWidth']),
-        300,
-      );
+      const response = yield call(api.put, toAPIPath([ROUTE_SETTINGS, 'conversationPanelWidth']), 300);
       yield put(updateSettingSuccess(response));
       yield put(push('/users'));
     }

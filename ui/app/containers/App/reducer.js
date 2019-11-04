@@ -166,6 +166,9 @@ import {
   LOAD_CONNECTIONS,
   LOAD_CONNECTIONS_ERROR,
   LOAD_CONNECTIONS_SUCCESS,
+  LOAD_CURRENT_USER,
+  LOAD_CURRENT_USER_ERROR,
+  LOAD_CURRENT_USER_SUCCESS,
   LOAD_FILTERED_ACTIONS,
   LOAD_FILTERED_ACTIONS_ERROR,
   LOAD_FILTERED_ACTIONS_SUCCESS,
@@ -2785,6 +2788,17 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('success', true)
         .set('error', false);
+    case LOAD_CURRENT_USER:
+      return state
+        .set('loadingCurrentUser', false);
+    case LOAD_CURRENT_USER_SUCCESS:
+      return state
+        .set('currentUser', action.user)
+        .set('loadingCurrentUser', true);
+    case LOAD_CURRENT_USER_ERROR:
+      return state
+        .set('currentUser', null)
+        .set('loadingCurrentUser', true);
     default:
       return state;
   }

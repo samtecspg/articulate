@@ -2508,8 +2508,6 @@ export function updateAccessPolicyGroupSuccess(accessPolicyGroup) {
   };
 }
 
-
-
 export function addAccessPolicyGroup({ groupName, rules }) {
   return {
     type: UPDATE_ACCESS_CONTROL,
@@ -2529,6 +2527,27 @@ export function addAccessPolicyGroupError(error) {
 export function addAccessPolicyGroupSuccess() {
   return {
     type: UPDATE_ACCESS_CONTROL_SUCCESS,
+  };
+}
+
+export function loadCurrentUser() {
+  return {
+    type: LOAD_CURRENT_USER,
+    apiCall: true,
+  };
+}
+
+export function loadCurrentUserError(error) {
+  return {
+    type: LOAD_CURRENT_USER_ERROR,
+    error,
+  };
+}
+
+export function loadCurrentUserSuccess({ user }) {
+  return {
+    type: LOAD_CURRENT_USER_SUCCESS,
+    user,
   };
 }
 

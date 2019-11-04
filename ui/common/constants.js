@@ -33,6 +33,7 @@ export const ROUTE_CURRENT = 'current';
 export const ROUTE_DELETE_BY_QUERY = '_delete_by_query?refresh';
 export const ROUTE_ACCESS_CONTROL = 'ac';
 export const ROUTE_GROUP = 'group';
+export const ROUTE_CURRENT = 'current';
 
 export const AGENT_ACCESS_POLICIES = {
   [`agent:read`]: false,

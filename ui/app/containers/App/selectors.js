@@ -511,6 +511,19 @@ const makeSelectAccessPolicyGroups = () =>
     selectGlobal,
     globalState => globalState.accessPolicyGroups,
   );
+
+const makeSelectCurrentUser = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.currentUser,
+  );
+const makeSelectLoadingCurrentUser = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingCurrentUser,
+  );
+
+
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -589,6 +602,7 @@ export {
   makeSelectSuccessKeywordExamplesUpdate,
   makeSelectAccessPolicyGroups,
   makeSelectLoadingKeywordExamplesUpdate,
+  makeSelectAccessPolicyGroups,
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
 };
