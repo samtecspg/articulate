@@ -10,9 +10,17 @@ export default defineMessages({
     id: 'app.containers.AgentsPage.title',
     defaultMessage: 'Agents',
   },
+  titleAccessDenied: {
+    id: 'app.containers.AgentsPage.titleAccessDenied',
+    defaultMessage: 'Agents (Need Permission)',
+  },
   connectionsTitle: {
     id: 'app.containers.AgentsPage.connectionsTitle',
     defaultMessage: 'Connections',
+  },
+  connectionsTitleAccessDenied: {
+    id: 'app.containers.AgentsPage.connectionsTitleAccessDenied',
+    defaultMessage: 'Connections (Need Permission)',
   },
   subtitle: {
     id: 'app.containers.AgentsPage.subtitle',

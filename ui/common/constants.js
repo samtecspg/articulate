@@ -34,9 +34,27 @@ export const ROUTE_DELETE_BY_QUERY = '_delete_by_query?refresh';
 export const ROUTE_ACCESS_CONTROL = 'ac';
 export const ROUTE_GROUP = 'group';
 export const ROUTE_CURRENT = 'current';
+export const ACL_ACTION_READ = 'read';
+export const ACL_ACTION_WRITE = 'write';
+export const ACL_ACTION_CONVERSE = 'converse';
+export const MODEL_AGENT = 'Agent';
+export const MODEL_CONNECTION = 'Connection';
+export const MODEL_USER_ACCOUNT = 'UserAccount';
+export const MODEL_ACCESS_POLICY_GROUP = 'AccessPolicyGroup';
+
+export const GROUP_ACCESS_CONTROL = {
+  AGENT_READ: `${MODEL_AGENT}:${ACL_ACTION_READ}`,
+  AGENT_WRITE: `${MODEL_AGENT}:${ACL_ACTION_WRITE}`,
+  CONNECTION_READ: `${MODEL_CONNECTION}:${ACL_ACTION_READ}`,
+  CONNECTION_WRITE: `${MODEL_CONNECTION}:${ACL_ACTION_WRITE}`,
+  USER_READ: `${MODEL_USER_ACCOUNT}:${ACL_ACTION_READ}`,
+  USER_WRITE: `${MODEL_USER_ACCOUNT}:${ACL_ACTION_WRITE}`,
+  ACL_READ: `${MODEL_ACCESS_POLICY_GROUP}:${ACL_ACTION_READ}`,
+  ACL_WRITE: `${MODEL_ACCESS_POLICY_GROUP}:${ACL_ACTION_WRITE}`,
+};
 
 export const AGENT_ACCESS_POLICIES = {
-  [`agent:read`]: false,
-  [`agent:write`]: false,
-  [`agent:converse`]: false,
+  [`${MODEL_AGENT}:${ACL_ACTION_READ}`]: false,
+  [`${MODEL_AGENT}:${ACL_ACTION_WRITE}`]: false,
+  [`${MODEL_AGENT}:${ACL_ACTION_CONVERSE}`]: false,
 };

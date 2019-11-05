@@ -1,6 +1,7 @@
 import Boom from 'boom';
 import {
     ACL_ACTION_READ,
+    ACL_ACTION_WRITE,
     P_HAPI_GBAC,
     PARAM_DIRECTION,
     PARAM_FIELD,
@@ -19,7 +20,8 @@ module.exports = ({ ROUTE }) => {
         options: {
             plugins: {
                 [P_HAPI_GBAC]: [
-                    `${ROUTE_TO_MODEL[ROUTE]}:${ACL_ACTION_READ}`
+                    `${ROUTE_TO_MODEL[ROUTE]}:${ACL_ACTION_READ}`,
+                    `${ROUTE_TO_MODEL[ROUTE]}:${ACL_ACTION_WRITE}`,
                 ]
             },
             tags: ['api'],
