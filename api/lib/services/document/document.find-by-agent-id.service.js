@@ -57,6 +57,29 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
                 query.bool.must.push(queryFilter);
             }
 
+            let orQueryActionIntervals = { "bool": { "should": [] } };
+            if (filter.actionIntervals) {
+                orQueryActionIntervals.bool.should.push({
+                    "bool": {
+                        "must_not": {
+                            "exists": {
+                                "field": "maximum_action_score"
+                            }
+                        }
+                    }
+                });
+                orQueryActionIntervals.bool.should.push({
+                    "range": {
+                        "maximum_action_score": {
+                            "gte": Number(filter.actionIntervals[0]),
+                            "lte": Number(filter.actionIntervals[1]),
+                            "boost": 2.0
+                        }
+                    }
+                });
+                query.bool.must.push(orQueryActionIntervals);
+            }
+
             let orQuery = { "bool": { "should": [] } };
             if (filter.actions) {
                 filter.actions.map((action) => {
