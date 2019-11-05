@@ -64,7 +64,6 @@ module.exports = async function ({ id, payload }) {
         let uniqueKeywordIds = await getUniqueKeywordIds(deletedValues, updatedValues);
 
         //Modifiers
-        debugger;
         let keywordsWereDeleted = false;
         let keywordsWereAdded = false;
         await Promise.all(_.map(uniqueKeywordIds, async function (keywordId) {

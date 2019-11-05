@@ -76,12 +76,13 @@ module.exports = class BaseModel {
         });
     }
 
-    async deleteByQuery({ body }) {
+    async deleteByQuery({ body, refresh = true }) {
 
         const { index } = this;
         return await this.client.deleteByQuery({
             index,
-            body
+            body,
+            refresh
         });
     }
 };

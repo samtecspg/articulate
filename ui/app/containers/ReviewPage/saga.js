@@ -20,6 +20,7 @@ import {
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
   deleteDocumentError,
+  deleteSessionDataError,
   loadAgentSessionsSuccess,
   loadAgentSessionsError,
   loadCategoriesError,
@@ -30,6 +31,7 @@ import {
   loadSayingsSuccess,
   updateSayingError,
   loadSession,
+  loadAgentSessions,
 } from '../App/actions';
 
 import {
@@ -319,7 +321,6 @@ export function* deleteDocument(payload) {
         toAPIPath([ROUTE_CONTEXT, sessionId])
       );
     } catch (err) {
-      console.log(JSON.stringify(err));
       if (!err.response || !err.response.status || err.response.status !== 404) {
         throw (err);
       }
@@ -344,10 +345,12 @@ export function* deleteDocument(payload) {
       api.delete,
       toAPIPath([ROUTE_DOCUMENT, documentId])
     );
-
     yield put(loadAgentDocuments({
       page, pageSize, field, direction
     }));
+    yield put(loadAgentSessions(
+      page, pageSize, field, direction
+    ));
 
     if (session) {
       yield put(
@@ -361,9 +364,7 @@ export function* deleteDocument(payload) {
 
 export function* deleteSessionData(payload) {
   const { api, sessionId, page, pageSize, field, direction } = payload;
-
   try {
-    debugger;
 
     let session;
     try {
@@ -372,26 +373,24 @@ export function* deleteSessionData(payload) {
         toAPIPath([ROUTE_CONTEXT, sessionId])
       );
     } catch (err) {
-      console.log(JSON.stringify(err));
       if (!err.response || !err.response.status || err.response.status !== 404) {
         throw (err);
       }
     }
 
-    debugger;
-    let patchPayload = session;
-    delete patchPayload.id;
-    delete patchPayload.sessionId;
-    patchPayload.docIds = [];
+    if (session) {
+      let patchPayload = session;
+      delete patchPayload.id;
+      delete patchPayload.sessionId;
+      patchPayload.docIds = [];
 
-    debugger;
-    yield call(
-      api.patch,
-      toAPIPath([ROUTE_CONTEXT, sessionId]),
-      patchPayload,
-    );
+      yield call(
+        api.patch,
+        toAPIPath([ROUTE_CONTEXT, sessionId]),
+        patchPayload,
+      );
+    }
 
-    debugger;
     yield call(
       api.post,
       toAPIPath([ROUTE_DOCUMENT, PARAM_DELETE_BY_QUERY]),
@@ -403,19 +402,18 @@ export function* deleteSessionData(payload) {
         }
       }
     );
-
-    debugger;
-    yield put(loadAgentDocuments({
-      page, pageSize, field, direction
-    }));
-
-    debugger;
     yield put(
       loadSession(sessionId)
     );
 
+    yield put(loadAgentDocuments({
+      page, pageSize, field, direction
+    }));
+    yield put(loadAgentSessions(
+      page, pageSize, field, direction
+    ));
+
   } catch (err) {
-    alert(err);
     yield put(deleteSessionDataError(err));
   }
 }
