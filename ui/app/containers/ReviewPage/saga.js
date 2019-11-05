@@ -58,6 +58,7 @@ import {
 import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
 
 import { getKeywords } from '../DialoguePage/saga';
+import ExtractTokensFromString from '../../utils/extractTokensFromString';
 //import { getSession } from '../../components/ConversationBar/saga';
 
 export function* postSaying(payload) {
@@ -280,8 +281,24 @@ export function* putSessionsPageSize(payload) {
 }
 
 export function* getAgentDocument(payload) {
+  debugger;
   const agent = yield select(makeSelectAgent());
-  const { api, page, pageSize, field, direction } = payload;
+  const { api, page, pageSize, field, direction, filter } = payload;
+  let tempFilter = null;
+  if (filter) {
+    const { remainingText, found } = ExtractTokensFromString({
+      text: filter,
+      tokens: ['category', 'actions'],
+    });
+    tempFilter =
+      filter === ''
+        ? undefined
+        : JSON.stringify({
+          category: found.category,
+          actions: found.actions,
+          query: remainingText,
+        });
+  }
   let skip = 0;
   let limit = -1;
   if (page) {
@@ -290,10 +307,11 @@ export function* getAgentDocument(payload) {
   }
   try {
     const params = {
+      filter: tempFilter ? tempFilter : null,
       skip,
       limit,
       field,
-      direction,
+      direction
     };
     const response = yield call(
       api.get,

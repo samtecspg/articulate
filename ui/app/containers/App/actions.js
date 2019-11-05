@@ -796,7 +796,7 @@ export function changeAgentParameterValue(parameterName, value) {
   };
 }
 
-export function loadAgentDocuments({ page, pageSize, field, direction, dateRange }) {
+export function loadAgentDocuments({ page, pageSize, field, direction, dateRange, filter = null }) {
   return {
     type: LOAD_AGENT_DOCUMENTS,
     apiCall: true,
@@ -804,7 +804,8 @@ export function loadAgentDocuments({ page, pageSize, field, direction, dateRange
     pageSize,
     field,
     direction,
-    dateRange
+    dateRange,
+    filter
   };
 }
 

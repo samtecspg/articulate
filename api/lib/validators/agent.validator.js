@@ -543,7 +543,11 @@ class AgentValidate {
                     dateRange: Joi
                         .string()
                         .optional()
-                        .description('ES range in format: now-1h, now-1d, now-7d, now-1M, now-1y')
+                        .description('ES range in format: now-1h, now-1d, now-7d, now-1M, now-1y'),
+                    [PARAM_FILTER]: Joi
+                        .object()
+                        .optional()
+                        .description('Values to filter the the results (experimental)'),
                 };
             })()
         };

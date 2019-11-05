@@ -6,7 +6,7 @@ import {
 } from '../../../util/constants';
 import ESErrorHandler from '../../errors/es.error-handler';
 
-module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, limit = 50, field = 'time_stamp', dateRange }) {
+module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, limit = 50, field = 'time_stamp', dateRange, filter = null }) {
 
     const { es } = this.server.app;
     const DocumentModel = es.models[MODEL_DOCUMENT];
@@ -29,22 +29,50 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
                 agent_id: agentId
             }
         };
-        
-        body.query = dateRange ? {
-            bool: {
-                must: [
-                    matchAgentId,
-                    {
-                        range: {
-                            time_stamp : {
-                                gte : dateRange,
-                                lte :  'now'
+
+        let query = { "bool": { "must": [] } };
+
+        query.bool.must.push(matchAgentId);
+
+        if (dateRange) {
+            const dateRangeFilter = {
+                range: {
+                    time_stamp: {
+                        gte: dateRange,
+                        lte: 'now'
+                    }
+                }
+            }
+            query.bool.must.push(dateRangeFilter);
+        }
+
+        if (filter) {
+            if (filter.query) {
+                const queryFilter = {
+
+                    "wildcard": {
+                        "document": "*" + filter.query + "*"
+                    },
+                }
+                query.bool.must.push(queryFilter);
+            }
+
+            let orQuery = { "bool": { "should": [] } };
+            if (filter.actions) {
+                filter.actions.map((action) => {
+                    orQuery.bool.should.push(
+                        {
+                            "match": {
+                                "recognized_action": action
                             }
                         }
-                    }
-                ]
+                    )
+                })
+                query.bool.must.push(orQuery);
             }
-        } : matchAgentId;
+        }
+
+        body.query = query
 
         const results = await DocumentModel.search({ body });
         if (results.hits.total === 0) {
@@ -53,10 +81,10 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
         const data = results.hits.hits.map((result) => {
 
             const tempDocData = { ...result._source };
-            if (tempDocData.converseResult){
-                if (tempDocData.converseResult.CSO){
-                    if (tempDocData.converseResult.CSO.webhooks){
-                        if (tempDocData.converseResult.CSO.webhooks.response){
+            if (tempDocData.converseResult) {
+                if (tempDocData.converseResult.CSO) {
+                    if (tempDocData.converseResult.CSO.webhooks) {
+                        if (tempDocData.converseResult.CSO.webhooks.response) {
                             Object.keys(tempDocData.converseResult.CSO.webhooks).forEach((webhookKey) => {
                                 tempDocData.converseResult.CSO.webhooks[webhookKey].response = JSON.parse(tempDocData.converseResult.CSO.webhooks[webhookKey].response);
                             });
