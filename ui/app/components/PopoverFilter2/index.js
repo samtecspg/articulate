@@ -32,7 +32,6 @@ const styles = {
     searchImageGrid: {
         borderColor: '#4E4E4E',
         borderRight: 'none',
-        borderTop: 'none',
         borderLeft: 'none',
         border: 'solid 1px',
     },
@@ -49,7 +48,6 @@ const styles = {
         borderRadius: '0%',
         borderRight: 'none',
         borderLeft: 'none',
-        borderTop: 'none'
     },
     textFilterInput: {
         border: 'none',
@@ -57,25 +55,21 @@ const styles = {
         marginLeft: '-8px'
     },
     dropDown: {
-        marginTop: '-25px',
-        marginBottom: '-26px'
+        marginTop: '0px',
+        marginBottom: '0px',
+        paddingLeft: '16px',
+        paddingRight: '16px'
     },
     dropDownInput: {
         borderRadius: '0%',
-        borderRight: 'none',
-        borderTop: 'none',
         borderColor: '#4E4E4E',
         height: '100%',
         color: '#A2A7B1',
-        marginLeft: '40px',
         '&:focus': {
             borderRadius: '0%',
-            borderRight: 'none',
-            borderTop: 'none',
             borderColor: '#4E4E4E',
             height: '100%',
             color: '#A2A7B1',
-            marginLeft: '40px'
         }
     },
     dropDownMainOption: {
@@ -85,40 +79,35 @@ const styles = {
         },
         minWidth: '335px',
         borderBottom: '1px solid #4e4e4e',
-        position: 'relative',
-        bottom: '8px',
         cursor: 'default',
-        padding: '14px'
     },
     chipBackgroundContainer: {
         cursor: 'pointer',
-        margin: '0px 5px 10px 5px',
-        fontSize: '12pt',
-        padding: '4px 14px 4px 14px',
+        margin: '5px 5px 5px 5px',
+        fontSize: '12px',
+        padding: '4px 8px 4px 10px',
+        backgroundColor: '#e2e5e7',
         display: 'inline-block',
         position: 'relative',
-        borderRadius: '50px',
-        width: 'max-content',
-        backgroundColor: '#ffffff',
-        border: 'solid 1px',
+        borderRadius: '5px',
     },
     chipBackgroundContainerSelected: {
         cursor: 'pointer',
-        margin: '0px 5px 10px 5px',
+        margin: '5px 5px 5px 5px',
         fontSize: '12px',
-        padding: '4px 14px 4px 14px',
+        padding: '4px 8px 4px 10px',
+        backgroundColor: '#e2e5e7',
         display: 'inline-block',
         position: 'relative',
-        borderRadius: '50px',
-        width: 'max-content',
+        borderRadius: '5px',
         backgroundColor: '#4e4e4e',
-        border: 'solid 1px',
+        color: '#fff',
     },
     chipLabel: {
         textDecoration: 'none',
+        fontSize: '12px',
         color: '#4e4e4e',
         fontFamily: 'Montserrat',
-        fontSize: '14pt',
         marginBottom: '2px',
         display: 'inline-block'
     },
@@ -126,7 +115,7 @@ const styles = {
         textDecoration: 'none',
         color: '#ffffff',
         fontFamily: 'Montserrat',
-        fontSize: '14pt',
+        fontSize: '12px',
         marginBottom: '2px',
         display: 'inline-block'
     },
@@ -134,7 +123,7 @@ const styles = {
         textDecoration: 'none',
         color: '#ffffff',
         fontFamily: 'Montserrat',
-        fontSize: '10pt',
+        fontSize: '12px',
         display: 'inline-block',
         marginLeft: '5px'
     },
@@ -159,6 +148,25 @@ const styles = {
         fontSize: '10pt',
         fontWeight: 'Bold',
         cursor: 'pointer'
+    },
+    clearAllFiltersLabel: {
+        textDecoration: 'underline',
+        color: '#4e4e4e',
+        fontFamily: 'Montserrat',
+        fontSize: '10pt',
+        marginRight: '5px',
+        paddingTop: '16px',
+        paddingLeft: '16px',
+        display: 'inline-block'
+    },
+    clearAllFiltersLabelX: {
+        color: '#4e4e4e',
+        fontFamily: 'Montserrat',
+        fontSize: '10pt',
+        fontWeight: 'Bold',
+        cursor: 'pointer',
+        paddingTop: '16px',
+        display: 'inline-block'
     }
 };
 
@@ -174,11 +182,13 @@ export class PopoverFilter extends React.Component {
             dropDownValuePicked: this.props.dropDownMainOptionLabel,
             chipValuesPicked: [],
             numberFiltersApplied: 0,
+            currentTextFilterValue: '',
         };
         this.state = this.initialState;
 
         this.handleChipClick = this.handleChipClick.bind(this);
         this.handleDropDownValuePicked = this.handleDropDownValuePicked.bind(this);
+        this.handleCurrentTextFilterValueChange = this.handleCurrentTextFilterValueChange.bind(this);
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.resetState = this.resetState.bind(this);
     }
@@ -195,6 +205,12 @@ export class PopoverFilter extends React.Component {
 
     async handleTextFilterValueChanged(value) {
         await this.setStateAsync({ textFilterValue: value });
+    }
+
+    async handleCurrentTextFilterValueChange(newValue) {
+        await this.setStateAsync({
+            currentTextFilterValue: newValue
+        })
     }
 
     async handleChipClick(value) {
@@ -240,8 +256,17 @@ export class PopoverFilter extends React.Component {
         });
     };
 
-    async resetState() {
-        await this.setStateAsync(this.initialState);
+    async resetState(exit) {
+        if (exit) {
+            await this.setStateAsync(this.initialState);
+        } else {
+            await this.setStateAsync({
+                textFilterValue: '',
+                dropDownValuePicked: this.props.dropDownMainOptionLabel,
+                chipValuesPicked: [],
+                numberFiltersApplied: 0
+            })
+        }
         await this.handleFiltersChange();
     }
 
@@ -268,7 +293,7 @@ export class PopoverFilter extends React.Component {
                             </span>
                             <a
                                 onClick={
-                                    this.resetState
+                                    () => { this.resetState(true) }
                                 }
                             >
                                 <span className={classes.numberFiltersAppliedLabelX}>
@@ -291,6 +316,62 @@ export class PopoverFilter extends React.Component {
                         className={classes.mainGrid}>
                         <Grid
                             container
+                            direction="row"
+                            alignItems="stretch"
+                        >
+                            <Grid item xs={3} >
+                                <span
+                                    className={classes.filterNamesLabels}
+                                >Apply Filter</span>
+                            </Grid>
+                            <Grid item xs={3} >
+                                {this.state.numberFiltersApplied > 0 &&
+                                    <Fragment >
+                                        <span
+                                            className={classes.clearAllFiltersLabel}
+                                        >
+                                            Clear All Filters
+                                </span>
+                                        <a
+                                            onClick={
+                                                () => { this.resetState(false) }
+                                            }
+                                        >
+                                            <span className={classes.clearAllFiltersLabelX}>
+                                                x
+                                </span>
+                                        </a>
+                                    </Fragment>
+                                }
+                            </Grid>
+                            <Grid item xs={3} >
+                                <span
+                                    className={classes.filterNamesLabels}
+                                >Cancel</span>
+                            </Grid>
+                            <Grid item xs={3} >
+                                <span
+                                    className={classes.filterNamesLabels}
+                                >Save Filter</span>
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            item xs={12}
+                            direction="row"
+                            alignItems="stretch"
+                        >
+                            <Grid item xs >
+                                <span
+                                    className={classes.filterNamesLabels}>
+                                    We have a variety of actions
+                                </span>
+                            </Grid>
+                        </Grid>
+                        <br />
+
+                        <Grid
+                            container
                             item xs={12}
                             direction="row"
                             alignItems="stretch">
@@ -307,7 +388,7 @@ export class PopoverFilter extends React.Component {
                                     className={classes.searchImage} />
                             </Grid>
                             <Grid
-                                item xs={7}
+                                item xs={11}
                                 container
                                 direction="row"
                                 alignItems="stretch"
@@ -318,55 +399,23 @@ export class PopoverFilter extends React.Component {
                                     inputProps={{
                                         className: classes.textFilterInput
                                     }}
+                                    value={this.state.currentTextFilterValue}
                                     placeholder={this.props.textFilterPlaceholder}
                                     onKeyPress={async ev => {
                                         if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
+                                            debugger;
                                             ev.preventDefault();
                                             await this.handleTextFilterValueChanged(ev.target.value);
                                             await this.handleFiltersChange();
+                                            await this.handleCurrentTextFilterValueChange("");
                                         }
                                     }}
-                                />
-                            </Grid>
-                            <Grid
-                                container
-                                item xs={4}
-                                alignItems="stretch"
-                                style={{
-                                    border: 'solid 1px',
-                                    borderColor: '#4e4e4e',
-                                    borderLeft: 'none',
-                                    borderRight: 'none',
-                                    borderTop: 'none'
-                                }}
-                            >
-                                <TextField
-                                    select
-                                    fullWidth
-                                    margin="normal"
-                                    className={classes.dropDown}
-                                    inputProps={{
-                                        className: classes.dropDownInput
-                                    }}
-                                    value={this.state.dropDownValuePicked}
-                                    onChange={async ev => {
-                                        await this.handleDropDownValuePicked(ev.target.value)
-                                        await this.handleFiltersChange();
-                                    }}
-                                >
-                                    <MenuItem key={this.props.dropDownMainOptionLabel} value={this.props.dropDownMainOptionLabel}
-                                        className={classes.dropDownMainOption}
-                                    >
-                                        {this.props.dropDownMainOptionLabel}
-                                    </MenuItem>
-                                    {
-                                        this.props.dropDownValues.map(option => (
-                                            <MenuItem key={option} value={option}>
-                                                {option}
-                                            </MenuItem>
-                                        ))
+                                    onChange={
+                                        async ev => {
+                                            await this.handleCurrentTextFilterValueChange(ev.target.value);
+                                        }
                                     }
-                                </TextField>
+                                />
                             </Grid>
                         </Grid>
                         <span
@@ -374,7 +423,6 @@ export class PopoverFilter extends React.Component {
                         >
                             <FormattedMessage {...messages.filterApplied} />
                         </span>
-                        <br />
                         {this.state.textFilterValue != '' &&
                             <Grid style={{ 'marginLeft': '10px' }}>
                                 <div
@@ -397,6 +445,56 @@ export class PopoverFilter extends React.Component {
                                 </div>
                             </Grid>
                         }
+                        {this.props.showCategoryFilter && (
+                            <span
+                                className={classes.filterNamesLabels}
+                            >
+                                Filter Category:
+                        </span>)
+                        }
+                        {this.props.showCategoryFilter &&
+                            <Grid
+                                container
+                                item xs={12}
+                                direction="row"
+                                alignItems="stretch"
+                            >
+                                <Grid
+                                    item xs={12}
+                                    container
+                                    direction="row"
+                                    alignItems="stretch"
+                                    justify="center">
+                                    <TextField
+                                        select
+                                        fullWidth
+                                        margin="normal"
+                                        className={classes.dropDown}
+                                        inputProps={{
+                                            className: classes.dropDownInput
+                                        }}
+                                        value={this.state.dropDownValuePicked}
+                                        onChange={async ev => {
+                                            await this.handleDropDownValuePicked(ev.target.value)
+                                            await this.handleFiltersChange();
+                                        }}
+                                    >
+                                        <MenuItem key={this.props.dropDownMainOptionLabel} value={this.props.dropDownMainOptionLabel}
+                                            className={classes.dropDownMainOption}
+                                        >
+                                            {this.props.dropDownMainOptionLabel}
+                                        </MenuItem>
+                                        {
+                                            this.props.dropDownValues.map(option => (
+                                                <MenuItem key={option} value={option}>
+                                                    {option}
+                                                </MenuItem>
+                                            ))
+                                        }
+                                    </TextField>
+                                </Grid>
+                            </Grid>
+                        }
                         <span
                             className={classes.filterNamesLabels}
                         >
@@ -404,7 +502,7 @@ export class PopoverFilter extends React.Component {
                         </span>
                         <br />
                         <Grid style={{ marginLeft: '10px', marginBottom: '40px' }}>
-                            {this.props.chipValues.map(data => {
+                            {this.props.chipValues.sort().map(data => {
                                 return (
                                     <div
                                         key={data}
@@ -444,6 +542,7 @@ PopoverFilter.propTypes = {
     intl: intlShape.isRequired,
     anchorOrigin: PropTypes.object,
     transformOrigin: PropTypes.object,
+    showCategoryFilter: PropTypes.bool,
     dropDownValues: PropTypes.array.isRequired,
     chipValues: PropTypes.array.isRequired,
     textFilterPlaceholder: PropTypes.string,

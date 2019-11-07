@@ -7,9 +7,11 @@ import playHelpIcon from '../../../images/play-help-icon.svg';
 import reviewIcon from '../../../images/icon-review.svg';
 import searchIcon from '../../../images/search-icon.svg';
 import messages from '../messages';
+import { map } from 'lodash';
 import SayingsDataForm from './SayingsDataForm';
 import SessionsDataForm from './SessionsDataForm';
 import ExitModal from '../../../components/ExitModal';
+import PopoverFilter from './../../../components/PopoverFilter2';
 
 const styles = {
   headerContainer: {
@@ -90,6 +92,12 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.processSelectedPopoverFilters = this.processSelectedPopoverFilters.bind(this);
+  }
+
   state = {
     openModal: false
   };
@@ -107,6 +115,28 @@ class Form extends React.Component {
       openModal: false,
     });
   };
+
+  processSelectedPopoverFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval) {
+    var filter = '';
+    if (textFilterValue != '') {
+      filter = filter + textFilterValue + ' ';
+    }
+    if (dropDownValuePicked != 'Pick Category') {
+      filter = filter + 'category:"' + dropDownValuePicked + '"';
+    }
+    if (chipValuesPicked.length > 0) {
+      filter = filter + ' actions:"'
+      filter = filter + chipValuesPicked.join('" actions:"')
+      filter = filter + '"';
+    }
+
+    if (actionInterval) {
+      filter = filter + ' actionIntervals:"'
+      filter = filter + actionInterval.join('" actionIntervals:"')
+      filter = filter + '"';
+    }
+    this.props.onSearchSaying(filter);
+  }
 
   render() {
     const { classes, intl } = this.props;
@@ -198,45 +228,69 @@ class Form extends React.Component {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Tabs
-            className={classes.reviewTabs}
-            value={this.props.selectedTab}
-            indicatorColor="primary"
-            textColor="secondary"
-            scrollable
-            scrollButtons="off"
-            onChange={(evt, value) => {
-              this.props.handleTabChange(evt, value);
-            }}
-            TabIndicatorProps={{
-              style: {
-                display: 'none',
-              },
-            }}
-          >
-            <Tab
-              value="documents"
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
-                </span>
-              }
-              className={
-                this.props.selectedTab === 'documents' ? classes.selected : null
-              }
-            />
-            <Tab
-              value="sessions"
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.sessionsFormTitle)}</span>
-                </span>
-              }
-              className={
-                this.props.selectedTab === 'sessions' ? classes.selected : null
-              }
-            />
-          </Tabs>
+          <Grid item xs={12} container direction={'row'}>
+            <Grid item xs={6}>
+              <Tabs
+                className={classes.reviewTabs}
+                value={this.props.selectedTab}
+                indicatorColor="primary"
+                textColor="secondary"
+                scrollable
+                scrollButtons="off"
+                onChange={(evt, value) => {
+                  this.props.handleTabChange(evt, value);
+                }}
+                TabIndicatorProps={{
+                  style: {
+                    display: 'none',
+                  },
+                }}
+              >
+                <Tab
+                  value="documents"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'documents' ? classes.selected : null
+                  }
+                />
+                <Tab
+                  value="sessions"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>{intl.formatMessage(messages.sessionsFormTitle)}</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'sessions' ? classes.selected : null
+                  }
+                />
+              </Tabs>
+            </Grid>
+            <Grid item xs={6} style={{ justifyContent: 'flex-end' }} container direction={'row'}>
+              {this.props.selectedTab === 'documents' && (
+                <PopoverFilter
+                  anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  showCategoryFilter={false}
+                  //dropDownValues={map(this.props.agentCategories, 'categoryName')}
+                  chipValues={map(this.props.agentActions, 'actionName')}
+                  dropDownValues={['cat1', 'cat2']}
+                  //chipValues={['action1', 'action2']}
+                  //textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
+                  //dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
+                  dropDownMainOptionLabel={'Pick Category'}
+                  //chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  processSelectedFilters={this.processSelectedPopoverFilters}
+                  //updateNumberFiltersApplied={this.updateNumberFiltersApplied}
+                  updateNumberFiltersApplied={() => { return true }}
+                />
+              )}
+            </Grid>
+          </Grid>
           {this.props.selectedTab === 'documents' && (
             <SayingsDataForm
               agentId={this.props.agentId}
@@ -344,7 +398,7 @@ Form.propTypes = {
   timeSort: PropTypes.string,
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
-  onLoadSessionId: PropTypes.func,
+  onLoadSessionId: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

@@ -69,10 +69,7 @@ export class ReviewPage extends React.Component {
     }).tab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
       : 'documents',
-    filter: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
-      .filter
-      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).filter
-      : '',
+    filter: '',
     documents: [],
     sessions: [],
     pageStatus: {
@@ -133,6 +130,7 @@ export class ReviewPage extends React.Component {
       pageSize: this.state.pageStatus.documents.pageSize,
       field: this.state.pageStatus.documents.sortField,
       direction: this.state.pageStatus.documents.sortDirection,
+      filter: this.state.filter
     });
 
     onLoadAgentSessions(
@@ -269,6 +267,7 @@ export class ReviewPage extends React.Component {
         pageSize: this.state.pageStatus.documents.pageSize,
         field: this.state.pageStatus.documents.sortField,
         direction: this.state.pageStatus.documents.sortDirection,
+        filter: this.state.filter
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -312,6 +311,7 @@ export class ReviewPage extends React.Component {
         pageSize,
         field: this.state.pageStatus[this.state.selectedTab].sortField,
         direction: this.state.pageStatus[this.state.selectedTab].sortDirection,
+        filter: this.state.filter
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -327,15 +327,18 @@ export class ReviewPage extends React.Component {
 
   onSearchSaying(filter) {
     const { onLoadAgentDocuments } = this.props.actions;
+    const newPageStatus = this.state.pageStatus;
+    newPageStatus['documents'].currentPage = 1;
     this.setState({
-      filter,
-      currentPage: 1,
+      pageStatus: newPageStatus,
+      filter
     });
     onLoadAgentDocuments({
       page: 1,
-      pageSize: this.state.pageSize,
-      field: this.state.sortField,
-      direction: this.state.sortDirection,
+      pageSize: this.state.pageStatus['documents'].pageSize,
+      field: this.state.pageStatus['documents'].sortField,
+      direction: this.state.pageStatus['documents'].sortDirection,
+      filter: filter
     });
   }
 
@@ -398,6 +401,7 @@ export class ReviewPage extends React.Component {
         pageSize: this.state.pageStatus[this.state.selectedTab].pageSize,
         field: sortField,
         direction: sortDirection,
+        filter: this.state.filter
       });
     }
     if (this.state.selectedTab === 'sessions') {

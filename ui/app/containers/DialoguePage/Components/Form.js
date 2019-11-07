@@ -13,7 +13,7 @@ import playHelpIcon from '../../../images/play-help-icon.svg';
 import SayingsDataForm from './SayingsDataForm';
 import KeywordsDataForm from './KeywordsDataForm';
 import ActionsDataForm from './ActionsDataForm';
-import PopoverFilter from './../../../components/PopoverFilter';
+import PopoverFilter from './../../../components/PopoverFilter2';
 
 const styles = {
   headerContainer: {
@@ -116,8 +116,7 @@ class Form extends React.Component {
   }
 
   state = {
-    openModal: false,
-    numberFiltersApplied: 0,
+    openModal: false
   };
 
   handleOpen = () => {
@@ -131,12 +130,6 @@ class Form extends React.Component {
       openModal: false,
     });
   };
-
-  updateNumberFiltersApplied = (number) => {
-    this.setState({
-      numberFiltersApplied: number
-    })
-  }
 
   processSelectedPopoverFilters(dropDownValuePicked, chipValuesPicked, textFilterValue) {
     var filter = '';
@@ -255,13 +248,13 @@ class Form extends React.Component {
                 <PopoverFilter
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  showCategoryFilter={true}
                   dropDownValues={map(this.props.agentCategories, 'categoryName')}
                   chipValues={map(this.props.agentActions, 'actionName')}
                   textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
                   dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
                   chipsFilterLabel={intl.formatMessage(messages.pickActions)}
                   processSelectedFilters={this.processSelectedPopoverFilters}
-                  updateNumberFiltersApplied={this.updateNumberFiltersApplied}
                 />
               )}
             </Grid>

@@ -281,14 +281,13 @@ export function* putSessionsPageSize(payload) {
 }
 
 export function* getAgentDocument(payload) {
-  debugger;
   const agent = yield select(makeSelectAgent());
   const { api, page, pageSize, field, direction, filter } = payload;
   let tempFilter = null;
   if (filter) {
     const { remainingText, found } = ExtractTokensFromString({
       text: filter,
-      tokens: ['category', 'actions'],
+      tokens: ['category', 'actions', 'actionIntervals'],
     });
     tempFilter =
       filter === ''
@@ -296,6 +295,7 @@ export function* getAgentDocument(payload) {
         : JSON.stringify({
           category: found.category,
           actions: found.actions,
+          actionIntervals: found.actionIntervals,
           query: remainingText,
         });
   }
