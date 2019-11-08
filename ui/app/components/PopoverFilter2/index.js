@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Popover, Grid, Input, TextField, MenuItem } from '@material-ui/core';
+import { Popover, Grid, Input, TextField, MenuItem, Slider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { includes } from 'lodash';
 
@@ -403,7 +403,6 @@ export class PopoverFilter extends React.Component {
                                     placeholder={this.props.textFilterPlaceholder}
                                     onKeyPress={async ev => {
                                         if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
-                                            debugger;
                                             ev.preventDefault();
                                             await this.handleTextFilterValueChanged(ev.target.value);
                                             await this.handleFiltersChange();
@@ -520,6 +519,14 @@ export class PopoverFilter extends React.Component {
                                     </div>
                                 );
                             })}
+                        </Grid>
+                        <Grid style={{ marginLeft: '10px', marginBottom: '40px' }}>
+                            <Slider
+                                value={[0, 100]}
+                                onChange={() => { }}
+                                valueLabelDisplay="auto"
+                                aria-labelledby="range-slider"
+                            />
                         </Grid>
                     </Grid>
                 </Popover >
