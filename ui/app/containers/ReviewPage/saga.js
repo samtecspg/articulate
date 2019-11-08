@@ -280,6 +280,7 @@ export function* putSessionsPageSize(payload) {
 }
 
 export function* getAgentDocument(payload) {
+  debugger;
   const agent = yield select(makeSelectAgent());
   const { api, page, pageSize, field, direction } = payload;
   let skip = 0;

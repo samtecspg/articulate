@@ -29,16 +29,16 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
                 agent_id: agentId
             }
         };
-        
+
         body.query = dateRange ? {
             bool: {
                 must: [
                     matchAgentId,
                     {
                         range: {
-                            time_stamp : {
-                                gte : dateRange,
-                                lte :  'now'
+                            time_stamp: {
+                                gte: dateRange,
+                                lte: 'now'
                             }
                         }
                     }
@@ -47,16 +47,16 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
         } : matchAgentId;
 
         const results = await DocumentModel.search({ body });
-        if (results.hits.total === 0) {
+        if (results.hits.total.value === 0) {
             return { data: [], totalCount: 0 };
         }
         const data = results.hits.hits.map((result) => {
 
             const tempDocData = { ...result._source };
-            if (tempDocData.converseResult){
-                if (tempDocData.converseResult.CSO){
-                    if (tempDocData.converseResult.CSO.webhooks){
-                        if (tempDocData.converseResult.CSO.webhooks.response){
+            if (tempDocData.converseResult) {
+                if (tempDocData.converseResult.CSO) {
+                    if (tempDocData.converseResult.CSO.webhooks) {
+                        if (tempDocData.converseResult.CSO.webhooks.response) {
                             Object.keys(tempDocData.converseResult.CSO.webhooks).forEach((webhookKey) => {
                                 tempDocData.converseResult.CSO.webhooks[webhookKey].response = JSON.parse(tempDocData.converseResult.CSO.webhooks[webhookKey].response);
                             });
@@ -67,7 +67,7 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
             return { id: result._id, ...tempDocData }
         });
 
-        return { data, totalCount: results.hits.total };
+        return { data, totalCount: results.hits.total.value };
     }
     catch (error) {
         throw ESErrorHandler({ error });

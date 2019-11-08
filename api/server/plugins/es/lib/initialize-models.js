@@ -20,7 +20,7 @@ module.exports = async ({ client, path }) => {
 
         await client.indices.putMapping({
             index,
-            type: index,
+            //type: index,
             body: { ...mappings }
         });
 

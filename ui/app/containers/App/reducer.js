@@ -1127,7 +1127,7 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENT_STATS_SUCCESS:
       if (action.stats.statsName === "documentsAnalyticsRequestCount") {
         return state
-          .set('documentsAnalyticsRequestCount', action.stats.stats.hits.total)
+          .set('documentsAnalyticsRequestCount', action.stats.stats.hits.total.value)
           .set('loading', false)
           .set('error', false);
       } else if (action.stats.statsName === "documentsAnalyticsSessionsCount") {
@@ -1137,7 +1137,7 @@ function appReducer(state = initialState, action) {
           .set('error', false);
       } else if (action.stats.statsName === "filterdocumentsAnalyticsFallbacksCount") {
         return state
-          .set('documentsAnalyticsFallbacksCount', action.stats.stats.hits.total)
+          .set('documentsAnalyticsFallbacksCount', action.stats.stats.hits.total.value)
           .set('loading', false)
           .set('error', false);
       } else if (action.stats.statsName === "filterdocumentsAnalyticsTopActions") {
