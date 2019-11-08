@@ -98,7 +98,7 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
         body.query = query
 
         const results = await DocumentModel.search({ body });
-        if (results.hits.total === 0) {
+        if (results.hits.total.value === 0) {
             return { data: [], totalCount: 0 };
         }
         const data = results.hits.hits.map((result) => {
@@ -118,7 +118,7 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
             return { id: result._id, ...tempDocData }
         });
 
-        return { data, totalCount: results.hits.total };
+        return { data, totalCount: results.hits.total.value };
     }
     catch (error) {
         throw ESErrorHandler({ error });

@@ -26,7 +26,7 @@ module.exports = class BaseModel {
         const { index } = this;
         return await this.client.index({
             index,
-            type: index,
+            //type: index,
             body: data,
             refresh
         });
@@ -37,7 +37,7 @@ module.exports = class BaseModel {
         const { index } = this;
         return await this.client.index({
             index,
-            type: index,
+            //type: index,
             id,
             body: data,
             refresh
@@ -49,7 +49,7 @@ module.exports = class BaseModel {
         const { index } = this;
         await this.client.delete({
             index,
-            type: index,
+            //type: index,
             id,
             refresh
         });
@@ -60,19 +60,20 @@ module.exports = class BaseModel {
         const { index } = this;
         return await this.client.get({
             index,
-            type: index,
+            //type: index,
             id,
             refresh,
             _source: source
         });
     }
 
-    async search({ body }) {
+    async search({ body, trackTotalHits = true }) {
 
         const { index } = this;
         return await this.client.search({
             index,
-            body
+            body,
+            trackTotalHits
         });
     }
 
