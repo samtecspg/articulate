@@ -12,5 +12,9 @@ export default defineMessages({
   filters: {
     id: 'app.components.PopOverFilter.Filters',
     defaultMessage: 'Filters',
+  },
+  clearAllFilters: {
+    id: 'app.components.PopOverFilter.clearAllFilters',
+    defaultMessage: 'Clear all filters',
   }
 });

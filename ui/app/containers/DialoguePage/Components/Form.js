@@ -13,7 +13,7 @@ import playHelpIcon from '../../../images/play-help-icon.svg';
 import SayingsDataForm from './SayingsDataForm';
 import KeywordsDataForm from './KeywordsDataForm';
 import ActionsDataForm from './ActionsDataForm';
-import PopoverFilter from './../../../components/PopoverFilter2';
+import PopoverFilter from './../../../components/PopoverFilter';
 
 const styles = {
   headerContainer: {
@@ -248,12 +248,16 @@ class Form extends React.Component {
                 <PopoverFilter
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  showCategoryFilter={true}
+                  showDropDownFilter={true}
+                  showMinMaxFilter={false}
+                  showCustomFirstChip={false}
                   dropDownValues={map(this.props.agentCategories, 'categoryName')}
                   chipValues={map(this.props.agentActions, 'actionName')}
                   textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
                   dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
                   chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  dropDownFilterLabel={intl.formatMessage(messages.pickCategoryLabel)}
+                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
                   processSelectedFilters={this.processSelectedPopoverFilters}
                 />
               )}

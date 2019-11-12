@@ -164,4 +164,28 @@ export default defineMessages({
     id: 'app.containers.ReviewPage.component.Form.deleteSessionAlertNo',
     defaultMessage: 'No'
   },
+  searchSayingPlaceholder: {
+    id: 'app.containers.ReviewPage.component.Form.searchSayingPlaceholder',
+    defaultMessage: 'Search sayings',
+  },
+  pickActions: {
+    id: 'app.containers.ReviewPage.component.PopoverFilter.pickActions',
+    defaultMessage: 'Actions: ',
+  },
+  actionIntervals: {
+    id: 'app.containers.ReviewPage.component.PopoverFilter.actionIntervals',
+    defaultMessage: 'Action Intervals: ',
+  },
+  actionIntervalsWarning: {
+    id: 'app.containers.ReviewPage.component.PopoverFilter.actionIntervalsWarning',
+    defaultMessage: '*Input must be between 0 - 100',
+  },
+  filtersDescription: {
+    id: 'app.containers.ReviewPage.component.PopoverFilter.filtersDescription',
+    defaultMessage: 'Filter sayings, actions, and action confidence intervals.',
+  },
+  customFirstActionLabel: {
+    id: 'app.containers.ReviewPage.component.PopoverFilter.customFirstActionLabel',
+    defaultMessage: 'ACTION NOT RECOGNIZED',
+  }
 });

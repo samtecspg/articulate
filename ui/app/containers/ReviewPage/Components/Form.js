@@ -11,7 +11,7 @@ import { map } from 'lodash';
 import SayingsDataForm from './SayingsDataForm';
 import SessionsDataForm from './SessionsDataForm';
 import ExitModal from '../../../components/ExitModal';
-import PopoverFilter from './../../../components/PopoverFilter2';
+import PopoverFilter from './../../../components/PopoverFilter';
 
 const styles = {
   headerContainer: {
@@ -276,17 +276,19 @@ class Form extends React.Component {
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                   showCategoryFilter={false}
-                  //dropDownValues={map(this.props.agentCategories, 'categoryName')}
+                  showMinMaxFilter={true}
+                  showCustomFirstChip={true}
                   chipValues={map(this.props.agentActions, 'actionName')}
-                  dropDownValues={['cat1', 'cat2']}
-                  //chipValues={['action1', 'action2']}
-                  //textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
-                  //dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
-                  dropDownMainOptionLabel={'Pick Category'}
-                  //chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
+                  textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
+                  chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  minMaxFilterLabel={intl.formatMessage(messages.actionIntervals)}
+                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
+                  minMaxIntervalsWarning={intl.formatMessage(messages.actionIntervalsWarning)}
+                  customFirstChipLabel={intl.formatMessage(messages.customFirstActionLabel)}
                   processSelectedFilters={this.processSelectedPopoverFilters}
-                  //updateNumberFiltersApplied={this.updateNumberFiltersApplied}
-                  updateNumberFiltersApplied={() => { return true }}
+                  absoluteMin={0}
+                  absoluteMax={100}
                 />
               )}
             </Grid>

@@ -42,7 +42,6 @@ export function* getAgentDocument(payload) {
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_DOCUMENT]),
       { params },
     );
-    debugger;
     yield put(
       loadAgentDocumentsSuccess({
         documents: response.data,
