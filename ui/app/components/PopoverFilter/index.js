@@ -309,7 +309,9 @@ export class PopoverFilter extends React.Component {
         if (this.state.textFilterValue != '') {
             numFilters++;
         }
-        if (this.state.currentMax !== this.state.absoluteMax || this.state.currentMin !== this.state.absoluteMin) {
+        debugger;
+        if (this.props.showMinMaxFilter && ((this.state.currentMax !== this.state.absoluteMax) ||
+            (this.state.currentMin !== this.state.absoluteMin))) {
             numFilters++;
         }
         await this.setStateAsync({ numberFiltersApplied: numFilters });
