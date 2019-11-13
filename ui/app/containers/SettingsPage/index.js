@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import ContentHeader from '../../components/ContentHeader';
 import injectSaga from '../../utils/injectSaga';
@@ -18,10 +19,17 @@ import {
   deleteFallbackResponse,
   loadSettings,
   updateSettings,
+  updateSettingsTouched,
   toggleChatButton,
   toggleConversationBar
 } from '../App/actions';
-import { makeSelectSettings } from '../App/selectors';
+import {
+  makeSelectSettings,
+  makeSelectSettingsTouched,
+  makeSelectLoading,
+  makeSelectSuccess,
+  makeSelectError
+} from '../App/selectors';
 import ActionButtons from './Components/ActionButtons';
 import Form from './Components/Form';
 import messages from './messages';
@@ -38,6 +46,15 @@ export class SettingsPage extends React.PureComponent {
     this.props.onShowChatButton(false);
     this.props.onToggleConversationBar(false);
     this.props.onLoadSettings();
+  }
+
+  componentDidUpdate() {
+    if (this.props.settingsSuccess) {
+      if (this.state.exitAfterSubmit) {
+        this.props.onUpdateSettingsTouched(false);
+        this.props.onGoToUrl(`/`);
+      }
+    }
   }
 
   state = {
@@ -57,9 +74,10 @@ export class SettingsPage extends React.PureComponent {
       defaultTimezone: false,
       defaultAgentFallbackResponses: false,
     },
+    exitAfterSubmit: false
   };
 
-  submit() {
+  submit(exit) {
     let errors = false;
     const newErrorState = {
       rasaURL: false,
@@ -246,6 +264,7 @@ export class SettingsPage extends React.PureComponent {
       this.setState({
         formError: false,
         errorState: { ...newErrorState },
+        exitAfterSubmit: exit
       });
       this.props.onSaveChanges();
     } else {
@@ -265,7 +284,18 @@ export class SettingsPage extends React.PureComponent {
           inlineElement={
             <ActionButtons
               formError={this.state.formError}
-              onFinishAction={this.submit}
+              onFinishAction={() => { this.submit(false); }}
+              touched={this.props.settingsTouched}
+              loading={this.props.settingsLoading}
+              success={this.props.settingsSuccess}
+              error={this.props.settingsError || this.state.formError}
+              onExit={() => {
+                this.props.onUpdateSettingsTouched(false);
+                this.props.onGoToUrl(`/`);
+              }}
+              onSaveAndExit={() => {
+                this.submit(true);
+              }}
             />
           }
         />
@@ -278,15 +308,16 @@ export class SettingsPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
-    );
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
+        />
+      );
   }
 }
 
 SettingsPage.propTypes = {
   settings: PropTypes.object,
+  settingsTouched: PropTypes.bool,
   onChangeSettingsData: PropTypes.func,
   onSaveChanges: PropTypes.func,
   onAddFallbackResponse: PropTypes.func.isRequired,
@@ -297,6 +328,10 @@ SettingsPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
+  settingsTouched: makeSelectSettingsTouched(),
+  settingsSuccess: makeSelectSuccess(),
+  settingsLoading: makeSelectLoading(),
+  settingsError: makeSelectError()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -310,6 +345,9 @@ function mapDispatchToProps(dispatch) {
     onSaveChanges: () => {
       dispatch(updateSettings());
     },
+    onUpdateSettingsTouched: (value) => {
+      dispatch(updateSettingsTouched(value));
+    },
     onAddFallbackResponse: newFallback => {
       dispatch(addFallbackResponse(newFallback));
     },
@@ -319,9 +357,12 @@ function mapDispatchToProps(dispatch) {
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
     },
-    onToggleConversationBar: value =>{
+    onToggleConversationBar: value => {
       dispatch(toggleConversationBar(value));
-    }
+    },
+    onGoToUrl: url => {
+      dispatch(push(url));
+    },
   };
 }
 

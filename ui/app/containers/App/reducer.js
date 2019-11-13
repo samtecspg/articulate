@@ -192,6 +192,7 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  UPDATE_SETTINGS_TOUCHED,
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
@@ -496,6 +497,7 @@ const initialState = Immutable({
     ducklingURL: '',
     defaultTimezone: '',
     defaultAgentLanguage: '',
+    defaultUISessionId: '',
     timezones: [],
     uiLanguages: [],
     agentLanguages: [],
@@ -1317,7 +1319,8 @@ function appReducer(state = initialState, action) {
       return state
         .set('settings', action.settings)
         .set('loading', false)
-        .set('error', false);
+        .set('error', false)
+        .set('success', false);
     case UPDATE_SETTINGS:
       return state
         .set('loading', true)
@@ -1327,12 +1330,17 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('success', false)
-        .set('error', action.error);
+        .set('error', action.error)
+        .set('settingsTouched', false);
     case UPDATE_SETTINGS_SUCCESS:
       return state
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('settingsTouched', false);
+    case UPDATE_SETTINGS_TOUCHED:
+      return state
+        .set('settingsTouched', action.touched);
     case UPDATE_SETTING:
       return state
         .set('loading', true)

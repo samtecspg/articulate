@@ -237,6 +237,7 @@ import {
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
+  UPDATE_SETTINGS_TOUCHED,
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
@@ -1356,6 +1357,13 @@ export function updateSettingsError(error) {
 export function updateSettingsSuccess() {
   return {
     type: UPDATE_SETTINGS_SUCCESS,
+  };
+}
+
+export function updateSettingsTouched(touched) {
+  return {
+    type: UPDATE_SETTINGS_TOUCHED,
+    touched,
   };
 }
 

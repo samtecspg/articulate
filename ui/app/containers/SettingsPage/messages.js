@@ -15,6 +15,10 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.createSubtitle',
     defaultMessage: 'System configuration',
   },
+  instanceName: {
+    id: 'app.containers.SettingsPage.instanceName',
+    defaultMessage: 'settings',
+  },
   help: {
     id: 'app.containers.SettingsPage.help',
     defaultMessage: 'Help?',
@@ -147,5 +151,9 @@ export default defineMessages({
       'app.containers.SettingsPage.component.GeneralSettings.defaultaFallbackActionNamePlaceholder',
     defaultMessage:
       'Enter the name for the default fallback action that will be created for new agents',
+  },
+  backButton: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.backButton',
+    defaultMessage: 'Exit',
   },
 });

@@ -368,6 +368,12 @@ const makeSelectSettings = () =>
     globalState => globalState.settings,
   );
 
+const makeSelectSettingsTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.settingsTouched
+  );
+
 /* Keyword */
 const makeSelectKeyword = () =>
   createSelector(
@@ -501,6 +507,7 @@ export {
   makeSelectActionPostFormat,
   makeSelectSayingForAction,
   makeSelectSettings,
+  makeSelectSettingsTouched,
   makeSelectKeyword,
   makeSelectkeywordExamplesUpdate,
   makeSelectKeywordTouched,

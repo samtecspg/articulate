@@ -217,6 +217,7 @@ export const UPDATE_SETTINGS = 'app/SettingsPage/UPDATE_SETTINGS';
 export const UPDATE_SETTINGS_ERROR = 'app/SettingsPage/UPDATE_SETTINGS_ERROR';
 export const UPDATE_SETTINGS_SUCCESS =
   'app/SettingsPage/UPDATE_SETTINGS_SUCCESS';
+export const UPDATE_SETTINGS_TOUCHED = 'app/SettingsPage/UPDATE_SETTINGS_TOUCHED';
 export const UPDATE_SETTING = 'app/SettingsPage/UPDATE_SETTING';
 export const UPDATE_SETTING_ERROR = 'app/SettingsPage/UPDATE_SETTING_ERROR';
 export const UPDATE_SETTING_SUCCESS = 'app/SettingsPage/UPDATE_SETTING_SUCCESS';
