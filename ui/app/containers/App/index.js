@@ -7,6 +7,7 @@
  *
  */
 
+import { CircularProgress } from '@material-ui/core';
 import Nes from 'nes';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -38,21 +39,25 @@ import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
 import UsersPage from '../UsersPage/Loadable';
+import { checkCookie } from '../../utils/cookies';
 import {
   checkAPI,
   loadAgent,
   loadAgentSuccess,
+  loadCurrentUser,
   loadServerInfo,
   loadSettings,
   refreshServerInfo,
   toggleConversationBar,
   toggleChatButton,
   updateSetting,
+  logoutUser,
 } from './actions';
 import saga from './saga';
 import {
   makeSelectAgent,
   makeSelectConversationBarOpen,
+  makeSelectLoadingCurrentUser,
   makeSelectShowChatButton,
   makeSelectLocation,
   makeSelectMissingAPI,
@@ -79,41 +84,45 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    this.props.onLoadServerInfo();
-    this.props.onLoadSettings();
-    this.props.onCheckAPI();
-    const agentId = this.getAgentIdFromPath();
-    if (agentId && !this.props.agent.id) {
-      this.props.onLoadAgent(agentId);
-    }
-    if (!this.state.socketClientConnected) {
-      const client = new Nes.Client(getWS());
-      client.onConnect = () => {
-        logger.log(`[WS] Connected to ${getWS()}`);
-        this.setState({
-          client,
-          socketClientConnected: true,
+    if (checkCookie()) {
+      this.props.loadCurrentUser();
+      this.props.onLoadServerInfo();
+      this.props.onLoadSettings();
+      this.props.onCheckAPI();
+
+      const agentId = this.getAgentIdFromPath();
+      if (agentId && !this.props.agent.id) {
+        this.props.onLoadAgent(agentId);
+      }
+      if (!this.state.socketClientConnected) {
+        const client = new Nes.Client(getWS());
+        client.onConnect = () => {
+          logger.log(`[WS] Connected to ${getWS()}`);
+          this.setState({
+            client,
+            socketClientConnected: true,
+          });
+        };
+        client.onError = err => {
+          logger.error(`[WS] Error ${getWS()}`);
+          logger.error(err);
+        };
+        client.onDisconnect = (willReconnect, log) => {
+          logger.log(`[WS] Disconnect from ${getWS()}`);
+          logger.log(log);
+          logger.log(`[WS] Will Reconnect = ${willReconnect}`);
+        };
+        client.onHeartbeatTimeout = willReconnect => {
+          logger.log(`[WS] Heartbeat Timeout from ${getWS()}`);
+          logger.log(`[WS] Will Reconnect = ${willReconnect}`);
+        };
+        client.connect({
+          delay: 1000,
+          auth: AUTH_ENABLED
+            ? { headers: { cookie: document.cookie } }
+            : undefined,
         });
-      };
-      client.onError = err => {
-        logger.error(`[WS] Error ${getWS()}`);
-        logger.error(err);
-      };
-      client.onDisconnect = (willReconnect, log) => {
-        logger.log(`[WS] Disconnect from ${getWS()}`);
-        logger.log(log);
-        logger.log(`[WS] Will Reconnect = ${willReconnect}`);
-      };
-      client.onHeartbeatTimeout = willReconnect => {
-        logger.log(`[WS] Heartbeat Timeout from ${getWS()}`);
-        logger.log(`[WS] Will Reconnect = ${willReconnect}`);
-      };
-      client.connect({
-        delay: 1000,
-        auth: AUTH_ENABLED
-          ? { headers: { cookie: document.cookie } }
-          : undefined,
-      });
+      }
     }
   }
 
@@ -182,8 +191,12 @@ class App extends React.Component {
       chatButtonOpen,
       onToggleConversationBar,
       notifications,
+      loadingCurrentUser
     } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
+    //if (!loadingCurrentUser) {
+    //  return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
+    //}
     return (
       <div>
         <AppHeader
@@ -201,6 +214,7 @@ class App extends React.Component {
         <AppContent
           demoMode={demoMode}
           conversationBarOpen={conversationBarOpen}
+          onLogoutUser={this.props.onLogoutUser}
         >
           <Switch>
             <PrivateRoute
@@ -312,6 +326,8 @@ App.propTypes = {
   onChangeLanguage: PropTypes.func,
   notifications: PropTypes.array,
   settings: PropTypes.object,
+  loadCurrentUser: PropTypes.func,
+  loadingCurrentUser: PropTypes.bool,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -355,6 +371,12 @@ export function mapDispatchToProps(dispatch) {
     onShareAgent: agentId => {
       dispatch(push(`/connection/create?channel=web-demo&agent=${agentId}`));
     },
+    onLogoutUser: () => {
+      dispatch(logoutUser());
+    },
+    loadCurrentUser: () => {
+      dispatch(loadCurrentUser());
+    },
   };
 }
 
@@ -366,6 +388,7 @@ const mapStateToProps = createStructuredSelector({
   chatButtonOpen: makeSelectShowChatButton(),
   notifications: makeSelectNotifications(),
   settings: makeSelectSettings(),
+  loadingCurrentUser: makeSelectLoadingCurrentUser(),
 });
 
 const withConnect = connect(

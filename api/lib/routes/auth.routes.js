@@ -12,7 +12,7 @@ const BASIC_ROUTE = {
             mode: 'try',
             strategy: 'simple'
         },
-        handler: async (request) => {
+        handler: async (request, h) => {
             const { credentials } = request.auth;
             if (credentials) {
                 await request.cookieAuth.set(credentials);
@@ -22,6 +22,21 @@ const BASIC_ROUTE = {
         }
     }
 };
+
+const LOGOUT_ROUTE = {
+    method: 'GET',
+    path: '/auth/logout',
+    config: {
+        auth: {
+            mode: 'try',
+            strategy: 'simple'
+        },
+        handler: async (request) => {
+            await request.cookieAuth.clear();
+            return { response: 'logged out' };
+        }
+    }
+}
 
 const HANDLER = async (request, h) => {
     try {
@@ -60,7 +75,7 @@ module.exports = () => {
                 handler: HANDLER
             }
         }));
-        return [...authRoutes, BASIC_ROUTE];
+        return [...authRoutes, BASIC_ROUTE, LOGOUT_ROUTE];
     }
     return [];
 };

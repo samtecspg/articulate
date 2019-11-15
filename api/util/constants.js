@@ -117,6 +117,7 @@ export const PARAM_DOCUMENT_ACTION_RANKING = 'action_ranking';
 export const PARAM_DOCUMENT_AGENT_ID = 'agent_id';
 export const PARAM_DOCUMENT_AGENT_MODEL = 'agent_model';
 export const PARAM_DOCUMENT_SESSION = 'session';
+export const PARAM_CURRENT = 'current';
 
 export const ROUTE_TO_MODEL = {
     [ROUTE_ACTION]: MODEL_ACTION,

@@ -160,6 +160,9 @@ import {
   LOAD_CONNECTIONS,
   LOAD_CONNECTIONS_ERROR,
   LOAD_CONNECTIONS_SUCCESS,
+  LOAD_CURRENT_USER,
+  LOAD_CURRENT_USER_ERROR,
+  LOAD_CURRENT_USER_SUCCESS,
   LOAD_FILTERED_ACTIONS,
   LOAD_FILTERED_ACTIONS_ERROR,
   LOAD_FILTERED_ACTIONS_SUCCESS,
@@ -2376,5 +2379,26 @@ export function deleteUserError(error) {
   return {
     type: DELETE_USER_ERROR,
     error,
+  };
+}
+
+export function loadCurrentUser() {
+  return {
+    type: LOAD_CURRENT_USER,
+    apiCall: true,
+  };
+}
+
+export function loadCurrentUserError(error) {
+  return {
+    type: LOAD_CURRENT_USER_ERROR,
+    error,
+  };
+}
+
+export function loadCurrentUserSuccess({ user }) {
+  return {
+    type: LOAD_CURRENT_USER_SUCCESS,
+    user,
   };
 }

@@ -203,6 +203,9 @@ import {
   LOAD_CONNECTION,
   LOAD_CONNECTION_ERROR,
   LOAD_CONNECTION_SUCCESS,
+  LOAD_CURRENT_USER,
+  LOAD_CURRENT_USER_ERROR,
+  LOAD_CURRENT_USER_SUCCESS,
   RESET_CONNECTION_DATA,
   CREATE_CONNECTION,
   CREATE_CONNECTION_ERROR,
@@ -313,6 +316,8 @@ const keywordColors = ['#FFB5E8', '#FF9CEE', '#FFCCF9', '#FCC2FF', '#F6A6FF', '#
 
 // The initial state of the App
 const initialState = Immutable({
+  currentUser: undefined,
+  loadingCurrentUser: false,
   locale: DEFAULT_LOCALE,
   sessionLoaded: false,
   sessionId: '',
@@ -2607,6 +2612,17 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', action.error)
+        case LOAD_CURRENT_USER:
+      return state
+        .set('loadingCurrentUser', false);
+    case LOAD_CURRENT_USER_SUCCESS:
+      return state
+        .set('currentUser', action.user)
+        .set('loadingCurrentUser', true);
+    case LOAD_CURRENT_USER_ERROR:
+      return state
+        .set('currentUser', null)
+        .set('loadingCurrentUser', true);
     default:
       return state;
   }

@@ -5,6 +5,10 @@ export function setCookie(cname, cvalue, hours) {
   document.cookie = `${cname}=${cvalue};${expires};path=/`;
 }
 
+export function deleteCookie(cname) {
+  document.cookie = `${cname}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+}
+
 export function getCookie(cname) {
   const name = `${cname}=`;
   const ca = document.cookie.split(';');

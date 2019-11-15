@@ -457,6 +457,17 @@ const makeSelectTotalUsers = () =>
     globalState => globalState.totalUsers,
   );
 
+const makeSelectCurrentUser = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.currentUser,
+  );
+const makeSelectLoadingCurrentUser = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingCurrentUser,
+  );
+
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -529,5 +540,7 @@ export {
   makeSelectUsers,
   makeSelectTotalUsers,
   makeSelectSuccessKeywordExamplesUpdate,
-  makeSelectLoadingKeywordExamplesUpdate
+  makeSelectLoadingKeywordExamplesUpdate,
+  makeSelectCurrentUser,
+  makeSelectLoadingCurrentUser,
 };

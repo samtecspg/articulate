@@ -400,6 +400,10 @@ export const SIGN_UP_USER = 'app/user/SIGN_UP_USER';
 export const SIGN_UP_USER_SUCCESS = 'app/user/SIGN_UP_USER_SUCCESS';
 export const SIGN_UP_USER_ERROR = 'app/user/SIGN_UP_USER_ERROR';
 
+export const LOAD_CURRENT_USER = 'app/user/LOAD_CURRENT_USER';
+export const LOAD_CURRENT_USER_SUCCESS = 'app/user/LOAD_CURRENT_USER_SUCCESS';
+export const LOAD_CURRENT_USER_ERROR = 'app/user/LOAD_CURRENT_USER_ERROR';
+
 /* Users */
 export const LOAD_USERS = 'app/user/LOAD_USERS';
 export const LOAD_USERS_SUCCESS = 'app/user/LOAD_USERS_SUCCESS';
