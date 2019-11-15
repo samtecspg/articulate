@@ -8,13 +8,16 @@ services:
       - ./local-storage/nginx/nginx-http.conf:/etc/nginx/nginx.conf
     command: [nginx-debug, '-g', 'daemon off;']
     ports: ['${PORT:-8080}:80']
+    restart: always
   api:
     image: samtecspg/articulate-api:repo-head
     ports: ['${API_PORT:-7500}:7500']
     environment:
       - AGENT_LIMIT=${AGENT_LIMIT:-1}
+    restart: always
   ui:
     image: samtecspg/articulate-ui:repo-head
+    restart: always
   rasa:
     image: samtecspg/articulate-rasa:repo-head
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
