@@ -15,6 +15,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Grid, CircularProgress } from '@material-ui/core';
 import injectSaga from 'utils/injectSaga';
 import qs from 'query-string';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
+import AC from '../../utils/accessControl';
 import MainTab from './Components/MainTab';
 import ActionForm from './Components/ActionForm';
 import SlotsForm from './Components/SlotsForm';
@@ -36,6 +38,7 @@ import {
   makeSelectLoading,
   makeSelectActionTouched,
   makeSelectNewActionResponse,
+  makeSelectCurrentUser,
 } from '../App/selectors';
 
 import {
@@ -380,7 +383,9 @@ export class ActionPage extends React.Component {
   }
 
   render() {
-    const { classes , agent} = this.props;
+    const { classes, agent, currentUser} = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
+
     return this.props.agent.id &&
       (this.props.saying.keywords.length === 0 ||
         (this.props.saying.keywords.length > 0 &&
@@ -395,6 +400,7 @@ export class ActionPage extends React.Component {
             />
           </Grid>
           <MainTab
+            isReadOnly={isReadOnly}
             touched={this.props.touched}
             loading={this.props.loading}
             success={this.props.success}
@@ -418,6 +424,7 @@ export class ActionPage extends React.Component {
             errorState={this.state.errorState}
             actionForm={
               <ActionForm
+              isReadOnly={isReadOnly}
                 action={this.props.action}
                 onChangeActionName={this.props.onChangeActionName}
                 errorState={this.state.errorState}
@@ -431,6 +438,7 @@ export class ActionPage extends React.Component {
             }
             slotsForm={
               <SlotsForm
+              isReadOnly={isReadOnly}
                 action={this.props.action}
                 newSlot={this.props.newSlot}
                 onChangeSlotData={this.props.onChangeSlotData}
@@ -459,6 +467,7 @@ export class ActionPage extends React.Component {
             }
             webhookForm={
               <WebhookForm
+              isReadOnly={isReadOnly}
                 action={this.props.action}
                 webhook={this.props.webhook}
                 onChangeActionData={this.props.onChangeActionData}
@@ -479,6 +488,7 @@ export class ActionPage extends React.Component {
             }
             responseForm={
               <ResponseForm
+              isReadOnly={isReadOnly}
                 agentId={this.props.agent.id}
                 agentSettings = {agent.settings}
                 action={this.props.action}
@@ -574,6 +584,7 @@ ActionPage.propTypes = {
   onShowChatButton: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -589,6 +600,7 @@ const mapStateToProps = createStructuredSelector({
   touched: makeSelectActionTouched(),
   newResponse: makeSelectNewActionResponse(),
   agentFilteredActions: makeSelectFilteredActions(),
+  currentUser: makeSelectCurrentUser(),
 });
 
 function mapDispatchToProps(dispatch) {

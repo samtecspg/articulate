@@ -14,8 +14,10 @@ import { Link, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import ExitModal from '../../components/ExitModal';
 import MainTab from '../../components/MainTab';
+import AC from '../../utils/accessControl';
 import injectSaga from '../../utils/injectSaga';
 import {
   addAgent,
@@ -58,6 +60,7 @@ import {
   makeSelectAgentSettings,
   makeSelectAgentTouched,
   makeSelectAgentWebhook,
+  makeSelectCurrentUser,
   makeSelectLoading,
   makeSelectLocale,
   makeSelectServerStatus,
@@ -145,10 +148,7 @@ export class AgentPage extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      !prevProps.settings.defaultAgentLanguage &&
-      this.props.settings.defaultAgentLanguage
-    ) {
+    if (!prevProps.settings.defaultAgentLanguage && this.props.settings.defaultAgentLanguage) {
       this.initForm();
     }
     if (this.props.success) {
@@ -216,50 +216,35 @@ export class AgentPage extends React.PureComponent {
     } else {
       newErrorState.fallbackAction = false;
     }
-    if (
-      this.props.agent.useWebhook &&
-      (!this.props.webhook.webhookKey || this.props.webhook.webhookKey === '')
-    ) {
+    if (this.props.agent.useWebhook && (!this.props.webhook.webhookKey || this.props.webhook.webhookKey === '')) {
       errors = true;
       newErrorState.webhookKey = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.webhookKey = false;
     }
-    if (
-      this.props.agent.useWebhook &&
-      (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')
-    ) {
+    if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')) {
       errors = true;
       newErrorState.webhookUrl = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.webhookUrl = false;
     }
-    if (
-      !this.props.agentSettings.rasaURL ||
-      this.props.agentSettings.rasaURL === ''
-    ) {
+    if (!this.props.agentSettings.rasaURL || this.props.agentSettings.rasaURL === '') {
       errors = true;
       newErrorState.rasaURL = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.rasaURL = false;
     }
-    if (
-      !this.props.agentSettings.ducklingURL ||
-      this.props.agentSettings.ducklingURL === ''
-    ) {
+    if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === '') {
       errors = true;
       newErrorState.ducklingURL = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.ducklingURL = false;
     }
-    if (
-      !this.props.agent.enableModelsPerCategory &&
-      this.props.agent.multiCategory
-    ) {
+    if (!this.props.agent.enableModelsPerCategory && this.props.agent.multiCategory) {
       errors = true;
       newErrorState.training = true;
       newErrorState.tabs.push(2);
@@ -323,10 +308,7 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (
-        this.props.agent.usePostFormat &&
-        this.props.postFormat.postFormatPayload === ''
-      ) {
+      if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;
@@ -337,11 +319,7 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (
-        this.props.agent.useWebhook &&
-        this.props.webhook.webhookPayloadType !== 'None' &&
-        this.props.webhook.webhookPayload === ''
-      ) {
+      if (this.props.agent.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === '') {
         throw 'Webhook payload is not an object';
       }
       newErrorState.webhookPayload = false;
@@ -371,7 +349,8 @@ export class AgentPage extends React.PureComponent {
   }
 
   render() {
-    const { intl } = this.props;
+    const { intl, currentUser } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
     return this.props.settings.defaultAgentLanguage ? (
       <Grid container>
         <ExitModal
@@ -388,6 +367,8 @@ export class AgentPage extends React.PureComponent {
           type={intl.formatMessage(messages.instanceName)}
         />
         <MainTab
+          isReadOnly={isReadOnly}
+          disableSave={isReadOnly}
           locale={this.props.locale}
           touched={this.props.touched}
           loading={this.props.loading}
@@ -396,9 +377,7 @@ export class AgentPage extends React.PureComponent {
             this.submit(true);
           }}
           agentName={this.props.agent.agentName}
-          agentGravatar={
-            this.props.agent.gravatar ? this.props.agent.gravatar : 1
-          }
+          agentGravatar={this.props.agent.gravatar ? this.props.agent.gravatar : 1}
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
@@ -430,18 +409,14 @@ export class AgentPage extends React.PureComponent {
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
-              onChangeCategoryClassifierThreshold={
-                this.props.onChangeCategoryClassifierThreshold
-              }
+              onChangeCategoryClassifierThreshold={this.props.onChangeCategoryClassifierThreshold}
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               onDelete={this.props.onDelete.bind(null, this.props.agent.id)}
               newAgent={this.state.isNewAgent}
               agentActions={this.props.agentActions}
               onGoToUrl={this.props.onGoToUrl}
-              defaultaFallbackActionName={
-                this.props.settings.defaultaFallbackActionName
-              }
+              defaultaFallbackActionName={this.props.settings.defaultaFallbackActionName}
               onAddNewParameter={this.props.onAddNewParameter}
               onDeleteParameter={this.props.onDeleteParameter}
               onChangeParameterName={this.props.onChangeParameterName}
@@ -449,6 +424,7 @@ export class AgentPage extends React.PureComponent {
               users={this.props.users}
               selectedAccessControlUser={this.state.selectedAccessControlUser}
               onAccessControlUserChange={this.onAccessControlUserChange}
+              isReadOnly={isReadOnly}
             />
           }
           dialogueForm={Link}
@@ -460,9 +436,7 @@ export class AgentPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
+      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
     );
   }
 }
@@ -508,6 +482,7 @@ AgentPage.propTypes = {
   onResetData: PropTypes.func,
   onLoadUsers: PropTypes.func,
   users: PropTypes.array,
+  currentUser: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -523,6 +498,7 @@ const mapStateToProps = createStructuredSelector({
   touched: makeSelectAgentTouched(),
   locale: makeSelectLocale(),
   users: makeSelectUsers(),
+  currentUser: makeSelectCurrentUser(),
 });
 
 function mapDispatchToProps(dispatch) {

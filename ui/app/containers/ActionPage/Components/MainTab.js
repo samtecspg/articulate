@@ -1,21 +1,11 @@
+import { Button, Grid, Hidden, Icon, Tab, Tabs, Tooltip } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  Hidden,
-  Tabs,
-  Tab,
-  Icon,
-  Button,
-  Tooltip,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-
-import messages from '../messages';
-import SaveButton from '../../../components/SaveButton';
 import ExitModal from '../../../components/ExitModal';
+import SaveButton from '../../../components/SaveButton';
+import messages from '../messages';
 
 const styles = {
   mainTabContainer: {
@@ -104,7 +94,7 @@ export class MainTab extends React.Component {
   };
 
   render() {
-    const { classes, intl, newAction } = this.props;
+    const { classes, intl, newAction, isReadOnly } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
         <ExitModal
@@ -145,14 +135,8 @@ export class MainTab extends React.Component {
                           <FormattedMessage {...messages.createSubtitle} />
                         ) : this.props.actionName ? (
                           this.props.actionName.length > 15 ? (
-                            <Tooltip
-                              title={this.props.actionName}
-                              placement="top"
-                            >
-                              <span>{`${this.props.actionName.substring(
-                                0,
-                                15,
-                              )}...`}</span>
+                            <Tooltip title={this.props.actionName} placement="top">
+                              <span>{`${this.props.actionName.substring(0, 15)}...`}</span>
                             </Tooltip>
                           ) : (
                             this.props.actionName
@@ -165,17 +149,8 @@ export class MainTab extends React.Component {
                   }
                   icon={
                     this.props.errorState.tabs.indexOf(0) > -1 ? (
-                      <div
-                        id="notificationDot"
-                        className={classes.notificationDot}
-                      >
-                        <span className={classes.numOfErrorsLabel}>
-                          {
-                            this.props.errorState.tabs.filter(
-                              element => element === 0,
-                            ).length
-                          }
-                        </span>
+                      <div id="notificationDot" className={classes.notificationDot}>
+                        <span className={classes.numOfErrorsLabel}>{this.props.errorState.tabs.filter(element => element === 0).length}</span>
                       </div>
                     ) : null
                   }
@@ -186,17 +161,8 @@ export class MainTab extends React.Component {
                   label={intl.formatMessage(messages.slots)}
                   icon={
                     this.props.errorState.tabs.indexOf(1) > -1 ? (
-                      <div
-                        id="notificationDot"
-                        className={classes.notificationDot}
-                      >
-                        <span className={classes.numOfErrorsLabel}>
-                          {
-                            this.props.errorState.tabs.filter(
-                              element => element === 1,
-                            ).length
-                          }
-                        </span>
+                      <div id="notificationDot" className={classes.notificationDot}>
+                        <span className={classes.numOfErrorsLabel}>{this.props.errorState.tabs.filter(element => element === 1).length}</span>
                       </div>
                     ) : null
                   }
@@ -207,17 +173,8 @@ export class MainTab extends React.Component {
                   label={intl.formatMessage(messages.webhook)}
                   icon={
                     this.props.errorState.tabs.indexOf(2) > -1 ? (
-                      <div
-                        id="notificationDot"
-                        className={classes.notificationDot}
-                      >
-                        <span className={classes.numOfErrorsLabel}>
-                          {
-                            this.props.errorState.tabs.filter(
-                              element => element === 2,
-                            ).length
-                          }
-                        </span>
+                      <div id="notificationDot" className={classes.notificationDot}>
+                        <span className={classes.numOfErrorsLabel}>{this.props.errorState.tabs.filter(element => element === 2).length}</span>
                       </div>
                     ) : null
                   }
@@ -228,17 +185,8 @@ export class MainTab extends React.Component {
                   label={intl.formatMessage(messages.response)}
                   icon={
                     this.props.errorState.tabs.indexOf(3) > -1 ? (
-                      <div
-                        id="notificationDot"
-                        className={classes.notificationDot}
-                      >
-                        <span className={classes.numOfErrorsLabel}>
-                          {
-                            this.props.errorState.tabs.filter(
-                              element => element === 3,
-                            ).length
-                          }
-                        </span>
+                      <div id="notificationDot" className={classes.notificationDot}>
+                        <span className={classes.numOfErrorsLabel}>{this.props.errorState.tabs.filter(element => element === 3).length}</span>
                       </div>
                     ) : null
                   }
@@ -252,9 +200,7 @@ export class MainTab extends React.Component {
                     <span
                       className={classes.backArrow}
                       onClick={() => {
-                        this.props.touched
-                          ? this.setState({ openExitModal: true })
-                          : this.props.goBack();
+                        this.props.touched ? this.setState({ openExitModal: true }) : this.props.goBack();
                       }}
                       key="backArrow"
                     >
@@ -264,21 +210,21 @@ export class MainTab extends React.Component {
                       key="backLink"
                       className={classes.backButton}
                       onClick={() => {
-                        this.props.touched
-                          ? this.setState({ openExitModal: true })
-                          : this.props.goBack();
+                        this.props.touched ? this.setState({ openExitModal: true }) : this.props.goBack();
                       }}
                     >
                       <FormattedMessage {...messages.backButton} />
                     </a>
                   </Grid>
-                  <a
-                    style={{ color: this.props.formError ? '#f44336' : '' }}
-                    onClick={this.props.onFinishAction}
-                    className={`${classes.icon} ${classes.link}`}
-                  >
-                    <Icon>save</Icon>
-                  </a>
+                  {!isReadOnly && (
+                    <a
+                      style={{ color: this.props.formError ? '#f44336' : '' }}
+                      onClick={this.props.onFinishAction}
+                      className={`${classes.icon} ${classes.link}`}
+                    >
+                      <Icon>save</Icon>
+                    </a>
+                  )}
                 </Grid>
               </Hidden>
               <Hidden only={['sm', 'xs']}>
@@ -287,9 +233,7 @@ export class MainTab extends React.Component {
                     <span
                       className={classes.backArrow}
                       onClick={() => {
-                        this.props.touched
-                          ? this.setState({ openExitModal: true })
-                          : this.props.goBack();
+                        this.props.touched ? this.setState({ openExitModal: true }) : this.props.goBack();
                       }}
                       key="backArrow"
                     >
@@ -299,22 +243,22 @@ export class MainTab extends React.Component {
                       key="backLink"
                       className={classes.backButton}
                       onClick={() => {
-                        this.props.touched
-                          ? this.setState({ openExitModal: true })
-                          : this.props.goBack();
+                        this.props.touched ? this.setState({ openExitModal: true }) : this.props.goBack();
                       }}
                     >
                       <FormattedMessage {...messages.backButton} />
                     </a>
                   </Grid>
-                  <SaveButton
-                    touched={this.props.touched}
-                    formError={this.props.formError}
-                    success={this.props.success}
-                    loading={this.props.loading}
-                    label={messages.finishButton}
-                    onClick={this.props.onFinishAction}
-                  />
+                  {!isReadOnly && (
+                    <SaveButton
+                      touched={this.props.touched}
+                      formError={this.props.formError}
+                      success={this.props.success}
+                      loading={this.props.loading}
+                      label={messages.finishButton}
+                      onClick={this.props.onFinishAction}
+                    />
+                  )}
                 </Grid>
               </Hidden>
             </Grid>
@@ -322,9 +266,7 @@ export class MainTab extends React.Component {
           {this.props.selectedTab === 'action' ? this.props.actionForm : null}
           {this.props.selectedTab === 'slots' ? this.props.slotsForm : null}
           {this.props.selectedTab === 'webhook' ? this.props.webhookForm : null}
-          {this.props.selectedTab === 'response'
-            ? this.props.responseForm
-            : null}
+          {this.props.selectedTab === 'response' ? this.props.responseForm : null}
         </Hidden>
         <Hidden only={['xl', 'lg', 'md']}>
           <Grid container justify="space-between">
@@ -340,61 +282,37 @@ export class MainTab extends React.Component {
                   this.handleChange(value);
                 }}
               >
-                <Tab
-                  value="action"
-                  icon={<Icon>play_arrow</Icon>}
-                  className={classes.tab}
-                />
-                <Tab
-                  value="slots"
-                  icon={<Icon>list</Icon>}
-                  className={classes.tab}
-                />
-                <Tab
-                  value="webhook"
-                  icon={<Icon>http</Icon>}
-                  className={classes.tab}
-                />
-                <Tab
-                  value="response"
-                  icon={<Icon>comment</Icon>}
-                  className={classes.tab}
-                />
+                <Tab value="action" icon={<Icon>play_arrow</Icon>} className={classes.tab} />
+                <Tab value="slots" icon={<Icon>list</Icon>} className={classes.tab} />
+                <Tab value="webhook" icon={<Icon>http</Icon>} className={classes.tab} />
+                <Tab value="response" icon={<Icon>comment</Icon>} className={classes.tab} />
               </Tabs>
             </Grid>
             <Grid className={classes.container}>
               <Hidden only={['xl', 'lg', 'md']}>
                 {this.props.hideFinishButton ? (
-                  <a
-                    key="btnNext"
-                    onClick={this.props.onNextAction}
-                    className={`${classes.icon} ${classes.link}`}
-                  >
+                  <a key="btnNext" onClick={this.props.onNextAction} className={`${classes.icon} ${classes.link}`}>
                     <Icon>arrow_forward</Icon>
                   </a>
-                ) : this.props.isLastTab ? (
-                  <a
-                    style={{ color: this.props.formError ? '#f44336' : '' }}
-                    onClick={this.props.onFinishAction}
-                    className={`${classes.icon} ${classes.link}`}
-                  >
+                ) : !isReadOnly && this.props.isLastTab ? (
+                  <a style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} className={`${classes.icon} ${classes.link}`}>
                     <Icon>save</Icon>
                   </a>
                 ) : (
                   [
-                    <a
-                      style={{ color: this.props.formError ? '#f44336' : '' }}
-                      key="btnFinish"
-                      onClick={this.props.onFinishAction}
-                      className={`${classes.icon} ${classes.link}`}
-                    >
-                      <Icon>save</Icon>
-                    </a>,
-                    <a
-                      key="btnNext"
-                      onClick={this.props.onNextAction}
-                      className={`${classes.icon} ${classes.link}`}
-                    >
+                    <React.Fragment>
+                      {!isReadOnly && (
+                        <a
+                          style={{ color: this.props.formError ? '#f44336' : '' }}
+                          key="btnFinish"
+                          onClick={this.props.onFinishAction}
+                          className={`${classes.icon} ${classes.link}`}
+                        >
+                          <Icon>save</Icon>
+                        </a>
+                      )}
+                    </React.Fragment>,
+                    <a key="btnNext" onClick={this.props.onNextAction} className={`${classes.icon} ${classes.link}`}>
                       <Icon>arrow_forward</Icon>
                     </a>,
                   ]
@@ -403,36 +321,19 @@ export class MainTab extends React.Component {
               <Hidden only={['sm', 'xs']}>
                 <Grid className={classes.buttonContainer}>
                   {this.props.hideFinishButton ? (
-                    <Button
-                      onClick={this.props.onNextAction}
-                      key="btnNext"
-                      variant="contained"
-                    >
+                    <Button onClick={this.props.onNextAction} key="btnNext" variant="contained">
                       <FormattedMessage {...messages.nextButton} />
                     </Button>
                   ) : this.props.isLastTab ? (
-                    <Button
-                      style={{ color: this.props.formError ? '#f44336' : '' }}
-                      onClick={this.props.onFinishAction}
-                      key="btnFinish"
-                      variant="contained"
-                    >
+                    <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key="btnFinish" variant="contained">
                       <FormattedMessage {...messages.finishButton} />
                     </Button>
                   ) : (
                     [
-                      <Button
-                        style={{ color: this.props.formError ? '#f44336' : '' }}
-                        onClick={this.props.onFinishAction}
-                        key="btnFinish"
-                      >
+                      <Button style={{ color: this.props.formError ? '#f44336' : '' }} onClick={this.props.onFinishAction} key="btnFinish">
                         <FormattedMessage {...messages.finishButton} />
                       </Button>,
-                      <Button
-                        onClick={this.props.onNextAction}
-                        key="btnNext"
-                        variant="contained"
-                      >
+                      <Button onClick={this.props.onNextAction} key="btnNext" variant="contained">
                         <FormattedMessage {...messages.nextButton} />
                       </Button>,
                     ]
@@ -444,9 +345,7 @@ export class MainTab extends React.Component {
           {this.props.selectedTab === 'action' ? this.props.actionForm : null}
           {this.props.selectedTab === 'slots' ? this.props.slotsForm : null}
           {this.props.selectedTab === 'webhook' ? this.props.webhookForm : null}
-          {this.props.selectedTab === 'response'
-            ? this.props.responseForm
-            : null}
+          {this.props.selectedTab === 'response' ? this.props.responseForm : null}
         </Hidden>
       </Grid>
     );
@@ -475,6 +374,10 @@ MainTab.propTypes = {
   loading: PropTypes.bool,
   success: PropTypes.bool,
   touched: PropTypes.bool,
+  isReadOnly: PropTypes.bool,
 };
 
+MainTab.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(MainTab));

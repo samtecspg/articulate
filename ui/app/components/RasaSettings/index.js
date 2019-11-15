@@ -1,19 +1,17 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, TextField, Typography, Menu, MenuItem } from '@material-ui/core';
+import { Grid, Menu, MenuItem, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import brace from 'brace';
-import AceEditor from 'react-ace';
+import 'brace/mode/json';
 
 import 'brace/mode/xml';
-import 'brace/mode/json';
 import 'brace/theme/terminal';
 
-import addPipelineIcon from '../../images/add-pipeline-icon.svg';
+import PropTypes from 'prop-types';
+import React from 'react';
+import AceEditor from 'react-ace';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../common/constants';
+
+import addPipelineIcon from '../../images/add-pipeline-icon.svg';
 
 import messages from './messages';
 
@@ -142,7 +140,7 @@ export class RasaSettings extends React.Component {
   }
 
   render() {
-    const { classes, intl, settings } = this.props;
+    const { classes, intl, settings, isReadOnly } = this.props;
     const { anchorEl } = this.state;
     return (
       <Grid container spacing={16}>
@@ -208,6 +206,7 @@ export class RasaSettings extends React.Component {
         <Grid container spacing={16} item xs={12}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
             <TextField
+              disabled={isReadOnly}
               id="rasaURL"
               label={intl.formatMessage(messages.rasaURL)}
               value={settings.rasaURL}
@@ -227,23 +226,22 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="categoryClassifierPipeline"
-            >
+            <Typography className={classes.settingEditorLabel} id="categoryClassifierPipeline">
               <FormattedMessage {...messages.categoryClassifierPipeline} />
             </Typography>
-            <img
-              onClick={evt => {
-                this.setState({
-                  openPipelineMenu: true,
-                  anchorEl: evt.currentTarget,
-                  pipeline: 'categoryClassifierPipeline',
-                });
-              }}
-              src={addPipelineIcon}
-              className={classes.addPipelineIcon}
-            />
+            {!isReadOnly && (
+              <img
+                onClick={evt => {
+                  this.setState({
+                    openPipelineMenu: true,
+                    anchorEl: evt.currentTarget,
+                    pipeline: 'categoryClassifierPipeline',
+                  });
+                }}
+                src={addPipelineIcon}
+                className={classes.addPipelineIcon}
+              />
+            )}
           </Grid>
           <AceEditor
             width="100%"
@@ -251,10 +249,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="categoryClassifierPipeline"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('categoryClassifierPipeline', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('categoryClassifierPipeline', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -277,23 +273,22 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="sayingClassifierPipeline"
-            >
+            <Typography className={classes.settingEditorLabel} id="sayingClassifierPipeline">
               <FormattedMessage {...messages.sayingClassifierPipeline} />
             </Typography>
-            <img
-              onClick={evt => {
-                this.setState({
-                  openPipelineMenu: true,
-                  anchorEl: evt.currentTarget,
-                  pipeline: 'sayingClassifierPipeline',
-                });
-              }}
-              src={addPipelineIcon}
-              className={classes.addPipelineIcon}
-            />
+            {!isReadOnly && (
+              <img
+                onClick={evt => {
+                  this.setState({
+                    openPipelineMenu: true,
+                    anchorEl: evt.currentTarget,
+                    pipeline: 'sayingClassifierPipeline',
+                  });
+                }}
+                src={addPipelineIcon}
+                className={classes.addPipelineIcon}
+              />
+            )}
           </Grid>
           <AceEditor
             width="100%"
@@ -301,10 +296,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="sayingClassifierPipeline"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('sayingClassifierPipeline', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('sayingClassifierPipeline', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -327,23 +320,22 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="keywordClassifierPipeline"
-            >
+            <Typography className={classes.settingEditorLabel} id="keywordClassifierPipeline">
               <FormattedMessage {...messages.keywordClassifierPipeline} />
             </Typography>
-            <img
-              onClick={evt => {
-                this.setState({
-                  openPipelineMenu: true,
-                  anchorEl: evt.currentTarget,
-                  pipeline: 'keywordClassifierPipeline',
-                });
-              }}
-              src={addPipelineIcon}
-              className={classes.addPipelineIcon}
-            />
+            {!isReadOnly && (
+              <img
+                onClick={evt => {
+                  this.setState({
+                    openPipelineMenu: true,
+                    anchorEl: evt.currentTarget,
+                    pipeline: 'keywordClassifierPipeline',
+                  });
+                }}
+                src={addPipelineIcon}
+                className={classes.addPipelineIcon}
+              />
+            )}
           </Grid>
           <AceEditor
             width="100%"
@@ -351,10 +343,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="keywordClassifierPipeline"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('keywordClassifierPipeline', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('keywordClassifierPipeline', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -377,10 +367,7 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="spacyPretrainedEntities"
-            >
+            <Typography className={classes.settingEditorLabel} id="spacyPretrainedEntities">
               <FormattedMessage {...messages.spacyPretrainedEntities} />
             </Typography>
           </Grid>
@@ -390,10 +377,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="spacyPretrainedEntities"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('spacyPretrainedEntities', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('spacyPretrainedEntities', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -425,6 +410,10 @@ RasaSettings.propTypes = {
   settings: PropTypes.object,
   onChangeSettingsData: PropTypes.func,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
 };
 
+RasaSettings.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(RasaSettings));

@@ -13,7 +13,11 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
 import DucklingSettings from '../../../components/DucklingSettings';
 import RasaSettings from '../../../components/RasaSettings';
 import ResponseSettings from '../../../components/ResponseSettings';
@@ -81,24 +85,11 @@ class AgentSettingsForm extends React.Component {
   };
 
   render() {
-    const {
-      classes,
-      agent,
-      webhook,
-      postFormat,
-      agentSettings,
-      intl,
-    } = this.props;
+    const { classes, agent, webhook, postFormat, agentSettings, intl, isReadOnly } = this.props;
     const { expanded } = this.state;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid
-          className={classes.formSubContainer}
-          id="formContainer"
-          container
-          item
-          xs={12}
-        >
+        <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
           <div className={classes.root}>
             <ExpansionPanel
               expanded={expanded === 'panelWebhook'}
@@ -106,26 +97,19 @@ class AgentSettingsForm extends React.Component {
                 this.handleChange('expanded', 'panelWebhook');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(
-                  true,
-                  expanded === 'panelWebhook',
-                  agent.useWebhook,
-                )}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(true, expanded === 'panelWebhook', agent.useWebhook)}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.webhookSetting} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <WebhookSettings
+                  isReadOnly={isReadOnly}
                   useWebhook={agent.useWebhook}
                   webhook={webhook}
                   onChangeUseWebhook={this.props.onChangeAgentData}
                   onChangeWebhookData={this.props.onChangeWebhookData}
-                  onChangeWebhookPayloadType={
-                    this.props.onChangeWebhookPayloadType
-                  }
+                  onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
                   webhookSettingDescription={messages.webhookSettingDescription}
                   onAddNewHeader={this.props.onAddNewHeader}
                   onDeleteHeader={this.props.onDeleteHeader}
@@ -141,26 +125,19 @@ class AgentSettingsForm extends React.Component {
                 this.handleChange('expanded', 'panelResponse');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(
-                  true,
-                  expanded === 'panelResponse',
-                  agent.usePostFormat,
-                )}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(true, expanded === 'panelResponse', agent.usePostFormat)}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.responseSetting} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <ResponseSettings
+                  isReadOnly={isReadOnly}
                   postFormat={postFormat}
                   usePostFormat={agent.usePostFormat}
                   onChangeUsePostFormatData={this.props.onChangeAgentData}
                   onChangePostFormatData={this.props.onChangePostFormatData}
-                  responseSettingDescription={
-                    messages.responseSettingDescription
-                  }
+                  responseSettingDescription={messages.responseSettingDescription}
                   errorState={this.props.errorState}
                 />
               </ExpansionPanelDetails>
@@ -172,22 +149,14 @@ class AgentSettingsForm extends React.Component {
               }}
             >
               <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(
-                  true,
-                  expanded === 'panelTraining',
-                  agent.enableModelsPerCategory || agent.extraTrainingData,
-                )}
+                expandIcon={this.getExpandIcon(true, expanded === 'panelTraining', agent.enableModelsPerCategory || agent.extraTrainingData)}
               >
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.trainingSetting} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <TrainingSettings
-                  agent={agent}
-                  onChangeAgentData={this.props.onChangeAgentData}
-                  errorState={this.props.errorState}
-                />
+                <TrainingSettings isReadOnly={isReadOnly} agent={agent} onChangeAgentData={this.props.onChangeAgentData} errorState={this.props.errorState} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
@@ -196,19 +165,13 @@ class AgentSettingsForm extends React.Component {
                 this.handleChange('expanded', 'panelRasa');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(false, expanded === 'panelRasa')}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(false, expanded === 'panelRasa')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.rasaSetting} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <RasaSettings
-                  settings={agentSettings}
-                  onChangeSettingsData={this.props.onChangeAgentSettingsData}
-                  errorState={this.props.errorState}
-                />
+                <RasaSettings isReadOnly={isReadOnly} settings={agentSettings} onChangeSettingsData={this.props.onChangeAgentSettingsData} errorState={this.props.errorState} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
@@ -217,22 +180,13 @@ class AgentSettingsForm extends React.Component {
                 this.handleChange('expanded', 'panelDuckling');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(
-                  false,
-                  expanded === 'panelDuckling',
-                )}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(false, expanded === 'panelDuckling')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.ducklingSetting} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <DucklingSettings
-                  settings={agentSettings}
-                  onChangeSettingsData={this.props.onChangeAgentSettingsData}
-                  errorState={this.props.errorState}
-                />
+                <DucklingSettings isReadOnly={isReadOnly} settings={agentSettings} onChangeSettingsData={this.props.onChangeAgentSettingsData} errorState={this.props.errorState} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel
@@ -241,12 +195,7 @@ class AgentSettingsForm extends React.Component {
                 this.handleChange('expanded', 'panelLogging');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(
-                  false,
-                  expanded === 'panelLogging',
-                )}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(false, expanded === 'panelLogging')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.loggingSetting} />
                 </Typography>
@@ -255,21 +204,13 @@ class AgentSettingsForm extends React.Component {
                 <Grid container spacing={16}>
                   <Grid item xs={12}>
                     <TextField
+                      disabled={isReadOnly}
                       id="slackLoggingURL"
                       label={intl.formatMessage(messages.slackLoggingURL)}
-                      value={
-                        agentSettings.slackLoggingURL
-                          ? agentSettings.slackLoggingURL
-                          : ''
-                      }
-                      placeholder={intl.formatMessage(
-                        messages.slackLoggingURLPlaceholder,
-                      )}
+                      value={agentSettings.slackLoggingURL ? agentSettings.slackLoggingURL : ''}
+                      placeholder={intl.formatMessage(messages.slackLoggingURLPlaceholder)}
                       onChange={evt => {
-                        this.props.onChangeAgentSettingsData(
-                          'slackLoggingURL',
-                          evt.target.value,
-                        );
+                        this.props.onChangeAgentSettingsData('slackLoggingURL', evt.target.value);
                       }}
                       margin="normal"
                       fullWidth
@@ -289,12 +230,7 @@ class AgentSettingsForm extends React.Component {
                 this.handleChange('expanded', 'panelDiscovery');
               }}
             >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(
-                  false,
-                  expanded === 'panelDiscovery',
-                )}
-              >
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(false, expanded === 'panelDiscovery')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.discoverySetting} />
                 </Typography>
@@ -305,15 +241,13 @@ class AgentSettingsForm extends React.Component {
                     <FormControlLabel
                       control={
                         <Switch
+                          disabled={isReadOnly}
                           checked={agent.enableDiscoverySheet}
                           onChange={(evt, value) => {
                             this.setState({
                               showSaveHint: true,
                             });
-                            this.props.onChangeAgentData(
-                              'enableDiscoverySheet',
-                              value,
-                            );
+                            this.props.onChangeAgentData('enableDiscoverySheet', value);
                           }}
                           value="enableDiscoverySheet"
                           color="primary"
@@ -325,10 +259,7 @@ class AgentSettingsForm extends React.Component {
                       label={intl.formatMessage(messages.enableDiscoverySheet)}
                     />
                     {this.state.showSaveHint ? (
-                      <FormHelperText
-                        style={{ marginTop: '0px', marginBottom: '10px' }}
-                        id="helper-text"
-                      >
+                      <FormHelperText style={{ marginTop: '0px', marginBottom: '10px' }} id="helper-text">
                         *Save to apply changes
                       </FormHelperText>
                     ) : null}
@@ -339,15 +270,9 @@ class AgentSettingsForm extends React.Component {
                         <a
                           style={{ textDecoration: 'none' }}
                           target="_blank"
-                          href={`${window.location.protocol}//${
-                            window.location.hostname
-                          }:${window.location.port}/agent/${
-                            agent.id
-                          }/discovery`}
+                          href={`${window.location.protocol}//${window.location.hostname}:${window.location.port}/agent/${agent.id}/discovery`}
                         >
-                          <Button variant="contained">
-                            {intl.formatMessage(messages.openDiscoverySheet)}
-                          </Button>
+                          <Button variant="contained">{intl.formatMessage(messages.openDiscoverySheet)}</Button>
                         </a>
                       </Typography>
                     </Grid>
@@ -379,31 +304,20 @@ class AgentSettingsForm extends React.Component {
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel
-              expanded={expanded === 'panelAccessControl'}
-              onChange={() =>
-                this.handleChange('expanded', 'panelAccessControl')
-              }
-            >
-              <ExpansionPanelSummary
-                expandIcon={this.getExpandIcon(
-                  false,
-                  expanded === 'panelAccessControl',
-                )}
-              >
+            <ExpansionPanel expanded={expanded === 'panelAccessControl'} onChange={() => this.handleChange('expanded', 'panelAccessControl')}>
+              <ExpansionPanelSummary expandIcon={this.getExpandIcon(false, expanded === 'panelAccessControl')}>
                 <Typography className={classes.panelHeading}>
                   <FormattedMessage {...messages.accessControlSettings} />
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <AgentAccessControlSettings
+                  isReadOnly={isReadOnly}
                   users={this.props.users}
                   onUpdateAccessPolicy={this.props.onChangeAgentData}
                   accessPolicies={agent.accessPolicies}
                   selectedUser={this.props.selectedAccessControlUser}
-                  onAccessControlUserChange={
-                    this.props.onAccessControlUserChange
-                  }
+                  onAccessControlUserChange={this.props.onAccessControlUserChange}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -435,6 +349,9 @@ AgentSettingsForm.propTypes = {
   selectedAccessControlUser: PropTypes.object,
   onAccessControlUserChange: PropTypes.func,
   onUpdateAccessPolicy: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
-
+AgentSettingsForm.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(AgentSettingsForm));

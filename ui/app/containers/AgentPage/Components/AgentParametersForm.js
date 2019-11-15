@@ -1,13 +1,10 @@
+import { Button, Grid, InputAdornment, TextField } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, TextField, Button, InputAdornment } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-
-import messages from '../messages';
-
 import trashIcon from '../../../images/trash-icon.svg';
+import messages from '../messages';
 
 const styles = {
   formContainer: {
@@ -43,52 +40,23 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 class AgentParametersForm extends React.Component {
   render() {
-    const { classes, intl, agent } = this.props;
+    const { classes, intl, agent , isReadOnly} = this.props;
     return (
       <Grid item xs={12}>
         <Grid className={classes.formContainer} container item xs={12}>
-          <Grid
-            className={classes.formSubContainer}
-            id="formContainer"
-            container
-            item
-            xs={12}
-          >
+          <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
             {Object.keys(agent.parameters).map((parameter, parameterIndex) => (
-              <Grid
-                key={`value_${parameterIndex}`}
-                container
-                justify="space-between"
-                spacing={24}
-                item
-                xs={12}
-              >
-                <Grid
-                  className={classes.agentParameterInputContainer}
-                  item
-                  xs={6}
-                >
+              <Grid key={`value_${parameterIndex}`} container justify="space-between" spacing={24} item xs={12}>
+                <Grid className={classes.agentParameterInputContainer} item xs={6}>
                   <TextField
+                    disabled={isReadOnly}
                     id="parameterName"
-                    className={
-                      parameterIndex !== 0 ? classes.agentParameterInput : ''
-                    }
+                    className={parameterIndex !== 0 ? classes.agentParameterInput : ''}
                     value={parameter}
-                    label={
-                      parameterIndex === 0
-                        ? intl.formatMessage(
-                            messages.newAgentParameterNameTextField,
-                          )
-                        : null
-                    }
-                    placeholder={intl.formatMessage(
-                      messages.newAgentParameterNameTextFieldPlaceholder,
-                    )}
+                    label={parameterIndex === 0 ? intl.formatMessage(messages.newAgentParameterNameTextField) : null}
+                    placeholder={intl.formatMessage(messages.newAgentParameterNameTextFieldPlaceholder)}
                     onChange={evt => {
-                      this.props.onChangeParameterName(
-                        parameter,
-                        evt.target.value,
-                      );
+                      this.props.onChangeParameterName(parameter, evt.target.value);
                     }}
                     margin="normal"
                     fullWidth
@@ -97,32 +65,16 @@ class AgentParametersForm extends React.Component {
                     }}
                   />
                 </Grid>
-                <Grid
-                  className={classes.agentParameterInputContainer}
-                  item
-                  xs={6}
-                >
+                <Grid className={classes.agentParameterInputContainer} item xs={6}>
                   <TextField
+                    disabled={isReadOnly}
                     id="parameterValue"
-                    className={
-                      parameterIndex !== 0 ? classes.agentParameterInput : ''
-                    }
+                    className={parameterIndex !== 0 ? classes.agentParameterInput : ''}
                     defaultValue={agent.parameters[parameter]}
-                    label={
-                      parameterIndex === 0
-                        ? intl.formatMessage(
-                            messages.newAgentParameterValueTextField,
-                          )
-                        : null
-                    }
-                    placeholder={intl.formatMessage(
-                      messages.newAgentParameterValueTextFieldPlaceholder,
-                    )}
+                    label={parameterIndex === 0 ? intl.formatMessage(messages.newAgentParameterValueTextField) : null}
+                    placeholder={intl.formatMessage(messages.newAgentParameterValueTextFieldPlaceholder)}
                     onChange={evt => {
-                      this.props.onChangeParameterValue(
-                        parameter,
-                        evt.target.value,
-                      );
+                      this.props.onChangeParameterValue(parameter, evt.target.value);
                     }}
                     margin="normal"
                     fullWidth
@@ -140,6 +92,7 @@ class AgentParametersForm extends React.Component {
                           position="end"
                         >
                           <img
+                            alt="delete"
                             key={`deleteHeader_${parameterIndex}`}
                             onClick={() => {
                               this.props.onDeleteParameter(parameter);
@@ -155,12 +108,9 @@ class AgentParametersForm extends React.Component {
               </Grid>
             ))}
             <Grid container item xs={12}>
-              <Grid
-                className={classes.addParameterButtonContainer}
-                item
-                xs={12}
-              >
+              <Grid className={classes.addParameterButtonContainer} item xs={12}>
                 <Button
+                  disabled={isReadOnly}
                   className={classes.button}
                   onClick={() => {
                     this.props.onAddNewParameter({ name: '', value: '' });
@@ -187,6 +137,9 @@ AgentParametersForm.propTypes = {
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,
   onChangeParameterValue: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
-
+AgentParametersForm.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(AgentParametersForm));

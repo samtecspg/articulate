@@ -85,11 +85,12 @@ class ResponseRow extends React.Component {
   };
 
   render() {
-    const { classes, action, response, responseIndex, intl } = this.props;
+    const { classes, action, response, responseIndex, intl , isReadOnly} = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
           <ContentEditable
+            disabled={isReadOnly}
             className={classes.response}
             innerRef={this.contentEditable}
             html={response.textResponse} // innerHTML of the editable div
@@ -140,99 +141,103 @@ class ResponseRow extends React.Component {
               </div>
             );
           })}
-          <img
-            onClick={evt =>
-              this.setState({
-                anchorEl: evt.target,
-                openActions: true,
-              })
-            }
-            className={classes.addActionIcon}
-            src={addActionIcon}
-          />
-          <Tooltip
-            key="copyResponse"
-            title={intl.formatMessage(messages.copyResponses)}
-            placement="top"
-          >
-            <img
-              onClick={() => {
-                this.props.onCopyResponse(response.textResponse);
-              }}
-              className={classes.icon}
-              src={copyIcon}
-            />
-          </Tooltip>
-          <img
-            key="deleteResponse"
-            onClick={() => {
-              this.props.onDeleteResponse(responseIndex);
-            }}
-            className={classes.icon}
-            src={trashIcon}
-          />
-          <FilterSelect
-            showRecent
-            value="select"
-            valueDisplayField="actionName"
-            valueField="actionName"
-            onSelect={value => {
-              if (value) {
-                this.props.onChainActionToResponse(responseIndex, value);
-              }
-            }}
-            onSearch={this.props.onSearchActions}
-            onGoToUrl={({ isEdit = false, url = '' }) => {
-              if (isEdit) {
-                this.props.onGoToUrl(`${url}?ref=action&actionId=${action.id}`);
-              } else {
-                this.props.onGoToUrl(
-                  `/agent/${
-                    this.props.agentId
-                  }/actionDummy/create?ref=action&actionId=${action.id}`,
-                );
-              }
-            }}
-            onEditRoutePrefix={`/agent/${this.props.agentId}/actionDummy/`}
-            onCreateRoute={`/agent/${
-              this.props.agentId
-            }/actionDummy/create?ref=action&actionId=${action.id}`}
-            filteredValues={this.props.agentFilteredActions.filter(
-              agentFilteredAction => {
-                return (
-                  agentFilteredAction.actionName !== action.actionName &&
-                  response.actions.indexOf(agentFilteredAction.actionName) ===
-                    -1
-                );
-              },
-            )}
-            values={this.props.agentActions.filter(agentAction => {
-              return (
-                agentAction.actionName !== action.actionName &&
-                response.actions.indexOf(agentAction.actionName) === -1
-              );
-            })}
-            SelectProps={{
-              open: this.state.openActions,
-              onClose: () =>
-                this.setState({
-                  openActions: false,
-                  anchorEl: null,
-                }),
-              onOpen: evt =>
-                this.setState({
-                  anchorEl: evt.target,
-                  openActions: true,
-                }),
-              MenuProps: {
-                anchorEl: this.state.anchorEl,
-              },
-            }}
-            style={{
-              display: 'none',
-            }}
-            displayEdit
-          />
+          {!isReadOnly && (
+            <React.Fragment>
+              <img
+                onClick={evt =>
+                  this.setState({
+                    anchorEl: evt.target,
+                    openActions: true,
+                  })
+                }
+                className={classes.addActionIcon}
+                src={addActionIcon}
+              />
+              <Tooltip
+                key="copyResponse"
+                title={intl.formatMessage(messages.copyResponses)}
+                placement="top"
+              >
+                <img
+                  onClick={() => {
+                    this.props.onCopyResponse(response.textResponse);
+                  }}
+                  className={classes.icon}
+                  src={copyIcon}
+                />
+              </Tooltip>
+              <img
+                key="deleteResponse"
+                onClick={() => {
+                  this.props.onDeleteResponse(responseIndex);
+                }}
+                className={classes.icon}
+                src={trashIcon}
+              />
+              <FilterSelect
+                showRecent
+                value="select"
+                valueDisplayField="actionName"
+                valueField="actionName"
+                onSelect={value => {
+                  if (value) {
+                    this.props.onChainActionToResponse(responseIndex, value);
+                  }
+                }}
+                onSearch={this.props.onSearchActions}
+                onGoToUrl={({ isEdit = false, url = '' }) => {
+                  if (isEdit) {
+                    this.props.onGoToUrl(`${url}?ref=action&actionId=${action.id}`);
+                  } else {
+                    this.props.onGoToUrl(
+                      `/agent/${
+                        this.props.agentId
+                      }/actionDummy/create?ref=action&actionId=${action.id}`,
+                    );
+                  }
+                }}
+                onEditRoutePrefix={`/agent/${this.props.agentId}/actionDummy/`}
+                onCreateRoute={`/agent/${
+                  this.props.agentId
+                }/actionDummy/create?ref=action&actionId=${action.id}`}
+                filteredValues={this.props.agentFilteredActions.filter(
+                  agentFilteredAction => {
+                    return (
+                      agentFilteredAction.actionName !== action.actionName &&
+                      response.actions.indexOf(agentFilteredAction.actionName) ===
+                      -1
+                    );
+                  },
+                )}
+                values={this.props.agentActions.filter(agentAction => {
+                  return (
+                    agentAction.actionName !== action.actionName &&
+                    response.actions.indexOf(agentAction.actionName) === -1
+                  );
+                })}
+                SelectProps={{
+                  open: this.state.openActions,
+                  onClose: () =>
+                    this.setState({
+                      openActions: false,
+                      anchorEl: null,
+                    }),
+                  onOpen: evt =>
+                    this.setState({
+                      anchorEl: evt.target,
+                      openActions: true,
+                    }),
+                  MenuProps: {
+                    anchorEl: this.state.anchorEl,
+                  },
+                }}
+                style={{
+                  display: 'none',
+                }}
+                displayEdit
+              />
+            </React.Fragment>
+          )}
         </Grid>
       </Grid>
     );
@@ -255,6 +260,10 @@ ResponseRow.propTypes = {
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
   agentId: PropTypes.string,
+  isReadOnly: PropTypes.bool,
 };
 
+ResponseRow.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(ResponseRow));

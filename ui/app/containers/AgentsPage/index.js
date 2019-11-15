@@ -46,6 +46,7 @@ export class AgentsPage extends React.PureComponent {
     const { agents, connections, channels, currentUser } = this.props;
     return (
       <Grid container>
+        <GetStarted title={messages.title} sizesForHideInlineElement={['sm', 'xs']} />
         <AccessControl
           requiredPolicies={agentAccessPolicies}
           userPolicies={currentUser.simplifiedGroupPolicies}

@@ -13,6 +13,8 @@ import { compose } from 'redux';
 
 import { Grid, CircularProgress } from '@material-ui/core';
 import injectSaga from 'utils/injectSaga';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
+import AC from '../../utils/accessControl';
 import MainTab from './Components/MainTab';
 import KeywordForm from './Components/KeywordForm';
 import ValuesForm from './Components/ValuesForm';
@@ -27,6 +29,7 @@ import {
   makeSelectKeywords,
   makeSelectLoading,
   makeSelectKeywordTouched,
+  makeSelectCurrentUser,
   makeSelectkeywordExamplesUpdate,
   makeSelectLoadingKeywordExamplesUpdate,
   makeSelectSuccessKeywordExamplesUpdate
@@ -239,11 +242,15 @@ export class KeywordsEditPage extends React.Component {
   }
 
   render() {
+    const {  currentUser } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
+
     return this.props.settings &&
       this.props.agent.id &&
       this.props.agentKeywords ? (
         <Grid container>
           <MainTab
+          isReadOnly={isReadOnly}
             touched={this.props.touched}
             keywordValuesTouched={this.props.keywordValuesTouched.filter((keyword) => { return keyword.count != 0 }).length > 0}
             loading={this.props.loading || this.props.loadingKeywordExamplesUpdate}
@@ -272,6 +279,7 @@ export class KeywordsEditPage extends React.Component {
             errorState={this.state.errorState}
             keywordForm={
               <KeywordForm
+              isReadOnly={isReadOnly}
                 keyword={this.props.keyword}
                 onChangeKeywordData={this.props.onChangeKeywordData}
                 errorState={this.state.errorState}
@@ -281,6 +289,7 @@ export class KeywordsEditPage extends React.Component {
             }
             valuesForm={
               <ValuesForm
+              isReadOnly={isReadOnly}
                 keyword={this.props.keyword}
                 onChangeKeywordData={this.props.onChangeKeywordData}
                 onAddKeywordExample={this.props.onAddKeywordExample}
@@ -294,6 +303,7 @@ export class KeywordsEditPage extends React.Component {
             }
             modifiersForm={
               <ModifiersForm
+              isReadOnly={isReadOnly}
                 keyword={this.props.keyword}
                 settings={this.props.settings}
                 onChangeModifierData={this.props.onChangeModifierData}
@@ -355,6 +365,7 @@ KeywordsEditPage.propTypes = {
   touched: PropTypes.bool,
   keywordValuesTouched: PropTypes.array,
   onShowChatButton: PropTypes.func,
+  currentUser: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -367,6 +378,7 @@ const mapStateToProps = createStructuredSelector({
   successKeywordExamplesUpdate: makeSelectSuccessKeywordExamplesUpdate(),
   loadingKeywordExamplesUpdate: makeSelectLoadingKeywordExamplesUpdate(),
   touched: makeSelectKeywordTouched(),
+  currentUser: makeSelectCurrentUser(),
   keywordValuesTouched: makeSelectkeywordExamplesUpdate()
 });
 

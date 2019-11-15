@@ -1,3 +1,4 @@
+import { withStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
@@ -15,8 +16,8 @@ import {
   InputAdornment,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import ResponseSettings from 'components/ResponseSettings';
+import DeleteFooter from '../../../components/DeleteFooter';
+import ResponseSettings from '../../../components/ResponseSettings';
 import SingleHighlightedSaying from './SingleHighlightedSaying';
 import ResponseRow from './ResponseRow';
 
@@ -25,7 +26,6 @@ import messages from '../messages';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
-import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
@@ -76,8 +76,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -177,7 +176,7 @@ class ResponseForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, action, postFormat, agentSettings } = this.props;
+    const { classes, intl, action, postFormat, agentSettings, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -220,6 +219,7 @@ class ResponseForm extends React.Component {
                   src={singleQuotesIcon}
                 />
                 <SingleHighlightedSaying
+                  isReadOnly={isReadOnly}
                   agentKeywords={this.props.agentKeywords}
                   keywords={this.props.saying.keywords}
                   text={this.props.saying.userSays}
@@ -263,22 +263,21 @@ class ResponseForm extends React.Component {
                       shrink: true,
                     }}
                     inputProps={{
+                      disabled: { isReadOnly },
                       style: {
                         border: 'none',
                       },
                     }}
                     InputProps={{
                       className: classes.sayingInputContainer,
-                      endAdornment: (
+                      endAdornment: !isReadOnly && (
                         <InputAdornment position="end">
                           <span
                             className={classes.responseEnter}
                             onClick={ev => {
                               if (this.props.newResponse.trim() !== '') {
                                 ev.preventDefault();
-                                this.props.onAddResponse(
-                                  this.props.newResponse,
-                                );
+                                this.props.onAddResponse(this.props.newResponse);
                                 this.props.onUpdateNewResponse('');
                               }
                             }}
@@ -298,6 +297,7 @@ class ResponseForm extends React.Component {
                           <TableRow key={`${response}_${responseIndex}`}>
                             <TableCell>
                               <ResponseRow
+                                isReadOnly={isReadOnly}
                                 agentId={this.props.agentId}
                                 response={response}
                                 responseIndex={responseIndex}
@@ -404,6 +404,7 @@ class ResponseForm extends React.Component {
                     <FormattedMessage {...messages.postFormatTitle} />
                   </Typography>
                   <ResponseSettings
+                    isReadOnly={isReadOnly}
                     postFormat={postFormat}
                     usePostFormat={action.usePostFormat}
                     onChangeUsePostFormatData={this.props.onChangeActionData}
@@ -418,12 +419,7 @@ class ResponseForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newAction ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {isReadOnly || this.props.newAction ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -452,9 +448,14 @@ ResponseForm.propTypes = {
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
   agentId: PropTypes.string,
+  isReadOnly: PropTypes.bool,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   agentSettings : PropTypes.object
+};
+
+ResponseForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

@@ -2,13 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import {
-  Grid,
-  TextField,
-  Typography,
-  MenuItem,
-  InputAdornment,
-} from '@material-ui/core';
+import { Grid, TextField, Typography, MenuItem, InputAdornment } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import brace from 'brace';
@@ -25,7 +19,7 @@ import trashIcon from '../../images/trash-icon.svg';
 const styles = {
   toggleContainer: {
     display: 'inline',
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   toggle: {
     display: 'inline',
@@ -72,7 +66,7 @@ export class WebhookSettings extends React.Component {
   };
 
   render() {
-    const { classes, intl, webhook } = this.props;
+    const { classes, intl, webhook,isReadOnly } = this.props;
     return (
       <Grid container spacing={16}>
         <Grid className={classes.toggleContainer} container item xs={12}>
@@ -82,13 +76,7 @@ export class WebhookSettings extends React.Component {
             </Typography>
           ) : null}
         </Grid>
-        <Grid
-          key="grid-webhook-config"
-          container
-          spacing={16}
-          item
-          xs={12}
-        >
+        <Grid key="grid-webhook-config" container spacing={16} item xs={12}>
           <Grid item xs={12}>
             <Typography variant="h2">
               <FormattedMessage {...messages.webhookKeyTitle} />
@@ -96,17 +84,13 @@ export class WebhookSettings extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              disabled={isReadOnly}
               id="webhookKey"
               label={intl.formatMessage(messages.webhookKey)}
               value={webhook.webhookKey}
-              placeholder={intl.formatMessage(
-                messages.webhookKeyPlaceholder,
-              )}
+              placeholder={intl.formatMessage(messages.webhookKeyPlaceholder)}
               onChange={evt => {
-                this.props.onChangeWebhookData(
-                  'webhookKey',
-                  evt.target.value,
-                );
+                this.props.onChangeWebhookData('webhookKey', evt.target.value);
               }}
               margin="normal"
               fullWidth
@@ -124,15 +108,13 @@ export class WebhookSettings extends React.Component {
           </Grid>
           <Grid item lg={2} md={2} sm={12} xs={12}>
             <TextField
+              disabled={isReadOnly}
               select
               id="webhookVerb"
               value={webhook.webhookVerb}
               label={intl.formatMessage(messages.webhookVerbSelect)}
               onChange={evt => {
-                this.props.onChangeWebhookData(
-                  'webhookVerb',
-                  evt.target.value,
-                );
+                this.props.onChangeWebhookData('webhookVerb', evt.target.value);
               }}
               margin="normal"
               fullWidth
@@ -160,18 +142,14 @@ export class WebhookSettings extends React.Component {
           </Grid>
           <Grid item lg={8} md={8} sm={12} xs={12}>
             <TextField
+              disabled={isReadOnly}
               id="webhookUrl"
               label={intl.formatMessage(messages.webhookUrl)}
               value={webhook.webhookUrl}
-              placeholder={intl.formatMessage(
-                messages.webhookUrlPlaceholder,
-              )}
+              placeholder={intl.formatMessage(messages.webhookUrlPlaceholder)}
               onChange={evt => {
                 this.props.onChangeUseWebhook('useWebhook', evt.target.value !== '');
-                this.props.onChangeWebhookData(
-                  'webhookUrl',
-                  evt.target.value,
-                );
+                this.props.onChangeWebhookData('webhookUrl', evt.target.value);
               }}
               margin="normal"
               fullWidth
@@ -184,15 +162,13 @@ export class WebhookSettings extends React.Component {
           </Grid>
           <Grid item lg={2} md={2} sm={12} xs={12}>
             <TextField
+              disabled={isReadOnly}
               select
               id="webhookPayloadType"
               value={webhook.webhookPayloadType}
               label={intl.formatMessage(messages.webhookPayloadType)}
               onChange={evt => {
-                this.props.onChangeWebhookPayloadType(
-                  'webhookPayloadType',
-                  evt.target.value,
-                );
+                this.props.onChangeWebhookPayloadType('webhookPayloadType', evt.target.value);
               }}
               margin="normal"
               fullWidth
@@ -215,13 +191,7 @@ export class WebhookSettings extends React.Component {
             </TextField>
           </Grid>
         </Grid>
-        <Grid
-          key="grid-webhook-basic-auth"
-          container
-          spacing={16}
-          item
-          xs={12}
-        >
+        <Grid key="grid-webhook-basic-auth" container spacing={16} item xs={12}>
           <Grid item xs={12}>
             <Typography variant="h2">
               <FormattedMessage {...messages.basicAuthTitle} />
@@ -229,17 +199,13 @@ export class WebhookSettings extends React.Component {
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
+              disabled={isReadOnly}
               id="webhookUser"
               label={intl.formatMessage(messages.webhookUser)}
               value={webhook.webhookUser}
-              placeholder={intl.formatMessage(
-                messages.webhookUserPlaceholder,
-              )}
+              placeholder={intl.formatMessage(messages.webhookUserPlaceholder)}
               onChange={evt => {
-                this.props.onChangeWebhookData(
-                  'webhookUser',
-                  evt.target.value,
-                );
+                this.props.onChangeWebhookData('webhookUser', evt.target.value);
               }}
               margin="normal"
               fullWidth
@@ -251,18 +217,14 @@ export class WebhookSettings extends React.Component {
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
+              disabled={isReadOnly}
               id="webhookPassword"
               type="password"
               label={intl.formatMessage(messages.webhookPassword)}
               value={webhook.webhookPassword}
-              placeholder={intl.formatMessage(
-                messages.webhookPasswordPlaceholder,
-              )}
+              placeholder={intl.formatMessage(messages.webhookPasswordPlaceholder)}
               onChange={evt => {
-                this.props.onChangeWebhookData(
-                  'webhookPassword',
-                  evt.target.value,
-                );
+                this.props.onChangeWebhookData('webhookPassword', evt.target.value);
               }}
               margin="normal"
               fullWidth
@@ -273,44 +235,23 @@ export class WebhookSettings extends React.Component {
             />
           </Grid>
         </Grid>
-        <Grid
-          key="grid-webhook-headers"
-          container
-          spacing={16}
-          item
-          xs={12}
-        >
+        <Grid key="grid-webhook-headers" container spacing={16} item xs={12}>
           <Grid item xs={12}>
             <Typography variant="h2">
               <FormattedMessage {...messages.headersTitle} />
             </Typography>
           </Grid>
           {webhook.webhookHeaders.map((header, headerIndex) => [
-            <Grid
-              key={`headerKey_${headerIndex}`}
-              className={classes.headerValueInputContainer}
-              item
-              xs={6}
-            >
+            <Grid key={`headerKey_${headerIndex}`} className={classes.headerValueInputContainer} item xs={6}>
               <TextField
+                disabled={isReadOnly}
                 id={`headerKeyInput_${headerIndex}`}
-                className={
-                  headerIndex !== 0 ? classes.headerValueInput : ''
-                }
+                className={headerIndex !== 0 ? classes.headerValueInput : ''}
                 value={header.key}
-                label={
-                  headerIndex === 0
-                    ? intl.formatMessage(messages.headerKey)
-                    : null
-                }
-                placeholder={intl.formatMessage(
-                  messages.headerKeyPlaceholder,
-                )}
+                label={headerIndex === 0 ? intl.formatMessage(messages.headerKey) : null}
+                placeholder={intl.formatMessage(messages.headerKeyPlaceholder)}
                 onChange={evt => {
-                  this.props.onChangeHeaderName(
-                    headerIndex,
-                    evt.target.value,
-                  );
+                  this.props.onChangeHeaderName(headerIndex, evt.target.value);
                 }}
                 margin="normal"
                 fullWidth
@@ -319,31 +260,16 @@ export class WebhookSettings extends React.Component {
                 }}
               />
             </Grid>,
-            <Grid
-              key={`headerValue_${headerIndex}`}
-              className={classes.headerValueInputContainer}
-              item
-              xs={6}
-            >
+            <Grid key={`headerValue_${headerIndex}`} className={classes.headerValueInputContainer} item xs={6}>
               <TextField
+                disabled={isReadOnly}
                 id={`headerKeyValue_${headerIndex}`}
-                className={
-                  headerIndex !== 0 ? classes.headerValueInput : ''
-                }
+                className={headerIndex !== 0 ? classes.headerValueInput : ''}
                 value={header.value}
-                label={
-                  headerIndex === 0
-                    ? intl.formatMessage(messages.headerValue)
-                    : null
-                }
-                placeholder={intl.formatMessage(
-                  messages.headerValuePlaceholder,
-                )}
+                label={headerIndex === 0 ? intl.formatMessage(messages.headerValue) : null}
+                placeholder={intl.formatMessage(messages.headerValuePlaceholder)}
                 onChange={evt => {
-                  this.props.onChangeHeaderValue(
-                    headerIndex,
-                    evt.target.value,
-                  );
+                  this.props.onChangeHeaderValue(headerIndex, evt.target.value);
                 }}
                 margin="normal"
                 fullWidth
@@ -374,23 +300,13 @@ export class WebhookSettings extends React.Component {
               />
             </Grid>,
           ])}
-          <Grid
-            key="newHeaderKeyGrid"
-            className={classes.keywordValueInputContainer}
-            item
-            xs={6}
-          >
+          <Grid key="newHeaderKeyGrid" className={classes.keywordValueInputContainer} item xs={6}>
             <TextField
+              disabled={isReadOnly}
               id="newHeaderKey"
               value={this.state.newHeaderKey}
-              placeholder={intl.formatMessage(
-                messages.newHeaderKeyPlaceholder,
-              )}
-              label={
-                webhook.webhookHeaders.length === 0
-                  ? intl.formatMessage(messages.headerKey)
-                  : null
-              }
+              placeholder={intl.formatMessage(messages.newHeaderKeyPlaceholder)}
+              label={webhook.webhookHeaders.length === 0 ? intl.formatMessage(messages.headerKey) : null}
               onKeyPress={evt => {
                 if (evt.key === 'Enter') {
                   evt.preventDefault();
@@ -415,10 +331,7 @@ export class WebhookSettings extends React.Component {
                 shrink: true,
               }}
               InputProps={{
-                className:
-                  webhook.webhookHeaders.length === 0
-                    ? ''
-                    : classes.newHeaderValueInput,
+                className: webhook.webhookHeaders.length === 0 ? '' : classes.newHeaderValueInput,
               }}
             />
           </Grid>
@@ -440,17 +353,12 @@ export class WebhookSettings extends React.Component {
                   key="webhookPayload"
                   width="100%"
                   height="300px"
-                  mode={
-                    webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'
-                  }
+                  mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
                   theme="terminal"
                   name="webhookPayload"
-                  readOnly={false}
+                  readOnly={isReadOnly}
                   onLoad={this.onLoad}
-                  onChange={this.props.onChangeWebhookData.bind(
-                    null,
-                    'webhookPayload',
-                  )}
+                  onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
                   fontSize={14}
                   showPrintMargin
                   showGutter
@@ -466,11 +374,7 @@ export class WebhookSettings extends React.Component {
                   }}
                 />,
                 this.props.errorState.webhookPayload ? (
-                  <Typography
-                    key="webhookPayloadError"
-                    variant="caption"
-                    className={classes.errorLabel}
-                  >
+                  <Typography key="webhookPayloadError" variant="caption" className={classes.errorLabel}>
                     <FormattedMessage {...messages.payloadError} />
                   </Typography>
                 ) : null,
@@ -490,12 +394,9 @@ export class WebhookSettings extends React.Component {
             mode={'javascript'}
             theme="terminal"
             name="postScript"
-            readOnly={false}
+            readOnly={isReadOnly}
             onLoad={this.onLoad}
-            onChange={this.props.onChangeWebhookData.bind(
-              null,
-              'postScript',
-            )}
+            onChange={this.props.onChangeWebhookData.bind(null, 'postScript')}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -511,11 +412,7 @@ export class WebhookSettings extends React.Component {
             }}
           />
           {this.props.errorState.postScript ? (
-            <Typography
-              key="postScriptError"
-              variant="caption"
-              className={classes.errorLabel}
-            >
+            <Typography key="postScriptError" variant="caption" className={classes.errorLabel}>
               <FormattedMessage {...messages.postScriptError} />
             </Typography>
           ) : null}
@@ -537,6 +434,9 @@ WebhookSettings.propTypes = {
   onChangeHeaderValue: PropTypes.func,
   webhookSettingDescription: PropTypes.object,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
 };
-
+WebhookSettings.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(WebhookSettings));

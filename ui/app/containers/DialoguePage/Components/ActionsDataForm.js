@@ -1,23 +1,10 @@
-import React from 'react';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  TextField,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Typography,
-  Button,
-  MenuItem,
-  Tooltip,
-} from '@material-ui/core';
+import { Button, Grid, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Tooltip, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import messages from '../messages';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import copyIcon from '../../../images/icon-copy.svg';
+import messages from '../messages';
 
 const styles = {
   formContainer: {
@@ -112,7 +99,7 @@ class ActionsDataForm extends React.Component {
   };
 
   render() {
-    const { classes, actionsPage, intl } = this.props;
+    const { classes, actionsPage, intl, isReadOnly } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid
@@ -125,6 +112,7 @@ class ActionsDataForm extends React.Component {
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <Button
+                disabled={isReadOnly}
                 variant="contained"
                 onClick={() => {
                   this.props.onCreateAction(
@@ -159,25 +147,27 @@ class ActionsDataForm extends React.Component {
                           >
                             <span>{action.actionName}</span>
                           </TableCell>
-                          <TableCell>
-                            <Tooltip
-                              onClick={() => {
-                                this.props.onGoToUrl(
-                                  `/agent/${
-                                  this.props.agentId
-                                  }/action/create?isDuplicate=true&actionId=${
-                                  action.id
-                                  }`,
-                                );
-                              }}
-                              title={intl.formatMessage(
-                                messages.duplicateAction,
-                              )}
-                              placement="top"
-                            >
-                              <img className={classes.icon} src={copyIcon} />
-                            </Tooltip>
-                          </TableCell>
+                          {!isReadOnly && (
+                            <TableCell>
+                              <Tooltip
+                                onClick={() => {
+                                  this.props.onGoToUrl(
+                                    `/agent/${
+                                      this.props.agentId
+                                    }/action/create?isDuplicate=true&actionId=${
+                                      action.id
+                                    }`,
+                                  );
+                                }}
+                                title={intl.formatMessage(
+                                  messages.duplicateAction,
+                                )}
+                                placement="top"
+                              >
+                                <img className={classes.icon} src={copyIcon} />
+                              </Tooltip>
+                            </TableCell>
+                          )}
                         </TableRow>
                       ))}
                     </TableBody>
@@ -307,6 +297,10 @@ ActionsDataForm.propTypes = {
   moveActionsPageForward: PropTypes.func,
   onDuplicateAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
 
+ActionsDataForm.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(ActionsDataForm));

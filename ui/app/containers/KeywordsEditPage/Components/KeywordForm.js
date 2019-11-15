@@ -1,22 +1,12 @@
+import { Button, Grid, MenuItem, Modal, TextField, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  Typography,
-  Button,
-  Modal,
-  TextField,
-  MenuItem,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import ColorPicker from 'components/ColorPicker';
-
-import messages from '../messages';
-
-import playHelpIcon from '../../../images/play-help-icon.svg';
+import ColorPicker from '../../../components/ColorPicker';
 import DeleteFooter from '../../../components/DeleteFooter';
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import messages from '../messages';
 
 const styles = {
   headerContainer: {
@@ -67,8 +57,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -108,7 +97,7 @@ class KeywordForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, keyword } = this.props;
+    const { classes, intl, keyword, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -116,16 +105,8 @@ class KeywordForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.keywordFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -151,27 +132,17 @@ class KeywordForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid
-              className={classes.formSubContainer}
-              id="formContainer"
-              container
-              item
-              xs={12}
-            >
+            <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
               <Grid container spacing={24} item xs={12}>
                 <Grid item md={9} sm={8} xs={12}>
                   <TextField
+                    disabled={isReadOnly}
                     id="keywordName"
                     label={intl.formatMessage(messages.keywordNameTextField)}
                     value={keyword.keywordName}
-                    placeholder={intl.formatMessage(
-                      messages.keywordNameTextFieldPlaceholder,
-                    )}
+                    placeholder={intl.formatMessage(messages.keywordNameTextFieldPlaceholder)}
                     onChange={evt => {
-                      this.props.onChangeKeywordData(
-                        'keywordName',
-                        evt.target.value,
-                      );
+                      this.props.onChangeKeywordData('keywordName', evt.target.value);
                     }}
                     margin="normal"
                     fullWidth
@@ -187,6 +158,7 @@ class KeywordForm extends React.Component {
                     <FormattedMessage {...messages.uiColorLabel} />
                   </Typography>
                   <ColorPicker
+                    disabled={isReadOnly}
                     isKeyword
                     handleClose={() => {
                       this.setState({
@@ -210,6 +182,7 @@ class KeywordForm extends React.Component {
               <Grid container justify="space-between" spacing={24} item xs={12}>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <TextField
+                    disabled={isReadOnly}
                     select
                     id="type"
                     value={keyword.type}
@@ -234,12 +207,11 @@ class KeywordForm extends React.Component {
                 </Grid>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <TextField
+                    disabled={isReadOnly}
                     id="regex"
                     label={intl.formatMessage(messages.regexTextField)}
                     value={keyword.regex}
-                    placeholder={intl.formatMessage(
-                      messages.regexTextFieldPlaceholder,
-                    )}
+                    placeholder={intl.formatMessage(messages.regexTextFieldPlaceholder)}
                     onChange={evt => {
                       this.props.onChangeKeywordData('regex', evt.target.value);
                     }}
@@ -254,12 +226,7 @@ class KeywordForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newKeyword ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {this.props.newKeyword || isReadOnly ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -273,6 +240,10 @@ KeywordForm.propTypes = {
   errorState: PropTypes.object,
   onDelete: PropTypes.func,
   newKeyword: PropTypes.bool,
+  isReadOnly: PropTypes.bool,
 };
 
+KeywordForm.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(KeywordForm));

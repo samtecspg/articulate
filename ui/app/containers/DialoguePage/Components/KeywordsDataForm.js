@@ -1,21 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  TextField,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Typography,
-  Button,
-  MenuItem,
-} from '@material-ui/core';
+import { Button, Grid, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import messages from '../messages';
 
 const styles = {
@@ -107,7 +94,7 @@ class KeywordsDataForm extends React.Component {
   };
 
   render() {
-    const { classes, keywords } = this.props;
+    const { classes, keywords, isReadOnly } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid
@@ -120,6 +107,7 @@ class KeywordsDataForm extends React.Component {
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <Button
+                disabled={isReadOnly}
                 variant="contained"
                 onClick={() => {
                   this.props.onCreateKeyword(
@@ -284,6 +272,10 @@ KeywordsDataForm.propTypes = {
   moveKeywordsPageBack: PropTypes.func,
   moveKeywordsPageForward: PropTypes.func,
   onGoToUrl: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
 
+KeywordsDataForm.defaultProps = {
+  isReadOnly: false,
+};
 export default withStyles(styles)(KeywordsDataForm);

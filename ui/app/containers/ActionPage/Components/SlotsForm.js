@@ -120,7 +120,7 @@ class SlotsForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, action } = this.props;
+    const { classes, intl, action, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -175,6 +175,7 @@ class SlotsForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <SortableSlotsTabs
+            isReadOnly={isReadOnly}
             action={action}
             onAddNewSlot={this.props.onAddNewSlot}
             onSortSlots={this.props.onSortSlots}
@@ -186,6 +187,7 @@ class SlotsForm extends React.Component {
           {action.slots.map((slot, index) =>
             this.state.selectedTab === index ? (
               <SlotForm
+                isReadOnly={isReadOnly}
                 slot={slot}
                 key={`slotForm_${index}`}
                 agentKeywords={this.props.agentKeywords}
@@ -207,7 +209,7 @@ class SlotsForm extends React.Component {
             ) : null,
           )}
         </Grid>
-        {this.props.newAction ? null : (
+        {isReadOnly || this.props.newAction ? null : (
           <DeleteFooter
             onDelete={this.props.onDelete}
             type={intl.formatMessage(messages.instanceName)}
@@ -238,7 +240,12 @@ SlotsForm.propTypes = {
   onAddNewQuickResponse: PropTypes.func.isRequired,
   onEditSlotTextPrompt: PropTypes.func.isRequired,
   onCopyTextPrompt: PropTypes.func.isRequired,
+  isReadOnly: PropTypes.bool,
   agentSettings: PropTypes.object.isRequired
+};
+
+SlotsForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default DragDropContext(HTML5Backend)(

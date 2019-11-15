@@ -15,7 +15,9 @@ import _ from 'lodash';
 
 import { Link } from 'react-router-dom';
 import { Grid, CircularProgress } from '@material-ui/core';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import MainTab from '../../components/MainTab';
+import AC from '../../utils/accessControl';
 import Form from './Components/Form';
 
 import injectSaga from '../../utils/injectSaga';
@@ -37,6 +39,7 @@ import {
   makeSelectTotalKeywords,
   makeSelectTotalActionsPage,
   makeSelectServerStatus,
+  makeSelectCurrentUser,
 } from '../App/selectors';
 
 import {
@@ -475,12 +478,16 @@ export class DialoguePage extends React.PureComponent {
   };
 
   render() {
+    const { currentUser } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
+
     return this.props.agent.id && this.props.agentKeywords &&
       (this.state.selectedTab === 'actions' ||
         (this.state.selectedTab === 'sayings' && this.props.agentKeywords.length === this.props.totalKeywords) ||
         (this.state.selectedTab === 'keywords' && this.props.agentKeywords.length <= this.state.keywordsPageSize)) ? (
         <Grid container>
           <MainTab
+            isReadOnly={isReadOnly}
             locale={this.props.locale}
             touched={this.props.touched}
             loading={this.props.loading}
@@ -593,6 +600,7 @@ export class DialoguePage extends React.PureComponent {
                 onClearSayingToAction={this.props.onClearSayingToAction}
                 filter={this.state.filter}
                 onUpdateSayingData={this.props.onUpdateSayingData}
+                isReadOnly={isReadOnly}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -642,7 +650,8 @@ DialoguePage.propTypes = {
   actionsPage: PropTypes.array,
   onChangeSayingCategory: PropTypes.func,
   onUpdateSayingData: PropTypes.func,
-  onShowChatButton: PropTypes.func
+  onShowChatButton: PropTypes.func,
+  currentUser: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -661,6 +670,7 @@ const mapStateToProps = createStructuredSelector({
   locale: makeSelectLocale(),
   totalKeywords: makeSelectTotalKeywords(),
   totalActions: makeSelectTotalActionsPage(),
+  currentUser: makeSelectCurrentUser(),
 });
 
 function mapDispatchToProps(dispatch) {

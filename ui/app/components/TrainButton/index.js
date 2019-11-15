@@ -1,18 +1,25 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Tooltip } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import es from 'javascript-time-ago/locale/es';
-import pt from 'javascript-time-ago/locale/pt';
 import pl from 'javascript-time-ago/locale/pl';
+import pt from 'javascript-time-ago/locale/pt';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
+import training from '../../images/training.svg';
 import messages from './messages';
 
-import training from '../../images/training.svg';
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
 TimeAgo.addLocale(pt);
@@ -66,23 +73,13 @@ export class TrainButton extends React.Component {
 
   getLastTrainingTime(lastTraining) {
     if (lastTraining) {
-      const timeAgo = new TimeAgo(this.props.locale).format(
-        new Date(lastTraining),
-      );
-      return timeAgo;
+      return new TimeAgo(this.props.locale).format(new Date(lastTraining));
     }
     return this.props.intl.formatMessage(messages.neverTrained);
   }
 
   render() {
-    const {
-      intl,
-      classes,
-      serverStatus,
-      agentStatus,
-      lastTraining,
-      onTrain,
-    } = this.props;
+    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly } = this.props;
     return (
       <Grid item className={classes.trainContainer}>
         <Typography className={classes.trainingStatusLabel}>
@@ -105,27 +102,10 @@ export class TrainButton extends React.Component {
             </span>
           ) : null}
         </Typography>
-        <Tooltip
-          title={
-            serverStatus === 'Training' && agentStatus !== 'Training'
-              ? intl.formatMessage(messages.anotherAgentTraining)
-              : ''
-          }
-          placement="top"
-        >
+        <Tooltip title={serverStatus === 'Training' && agentStatus !== 'Training' ? intl.formatMessage(messages.anotherAgentTraining) : ''} placement="top">
           <div style={{ display: 'inline' }}>
-            <Button
-              disabled={serverStatus === 'Training'}
-              className={classes.button}
-              onClick={onTrain}
-              key="btnFinish"
-              variant="contained"
-            >
-              {agentStatus !== 'Training' ? (
-                <FormattedMessage {...messages.trainButton} />
-              ) : (
-                <img src={training} className={classes.trainingAnimation} />
-              )}
+            <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.button} onClick={onTrain} key="btnFinish" variant="contained">
+              {agentStatus !== 'Training' ? <FormattedMessage {...messages.trainButton} /> : <img src={training} className={classes.trainingAnimation} />}
             </Button>
           </div>
         </Tooltip>
@@ -142,6 +122,11 @@ TrainButton.propTypes = {
   serverStatus: PropTypes.string,
   lastTraining: PropTypes.string,
   locale: PropTypes.string,
+  isReadOnly: PropTypes.bool,
+};
+
+TrainButton.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(TrainButton));

@@ -84,7 +84,7 @@ class SortableSlotsTabs extends React.Component {
   }
 
   render() {
-    const { action, classes } = this.props;
+    const { action, classes, isReadOnly } = this.props;
 
     return (
       <Tabs
@@ -135,19 +135,21 @@ class SortableSlotsTabs extends React.Component {
                         className={classes.dot}
                       />
                       <span>{slot.slotName}</span>
-                      <img
-                        style={{
-                          display:
-                            this.state.slotHovered === index
-                              ? 'inline'
-                              : 'none',
-                        }}
-                        onClick={() => {
-                          this.props.onDeleteSlot(index);
-                        }}
-                        className={classes.deleteHighlight}
-                        src={trashIcon}
-                      />
+                      {!isReadOnly && (
+                        <img
+                          style={{
+                            display:
+                              this.state.slotHovered === index
+                                ? 'inline'
+                                : 'none',
+                          }}
+                          onClick={() => {
+                            this.props.onDeleteSlot(index);
+                          }}
+                          className={classes.deleteHighlight}
+                          src={trashIcon}
+                        />
+                      )}
                     </span>
                   }
                   icon={
@@ -174,19 +176,21 @@ class SortableSlotsTabs extends React.Component {
             }
           />
         ))}
-        <Tab
-          key="newSlot"
-          label={
-            <span className={classes.slotTabLabel}>
+        {!isReadOnly && (
+          <Tab
+            key="newSlot"
+            label={
+              <span className={classes.slotTabLabel}>
               <FormattedMessage {...messages.newSlotTab} />
             </span>
-          }
-          className={
-            this.props.selectedTab === action.slots.length
-              ? classes.selected
-              : null
-          }
-        />
+            }
+            className={
+              this.props.selectedTab === action.slots.length
+                ? classes.selected
+                : null
+            }
+          />
+        )}
       </Tabs>
     );
   }
@@ -201,6 +205,11 @@ SortableSlotsTabs.propTypes = {
   selectedTab: PropTypes.number,
   onDeleteSlot: PropTypes.func,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
+};
+
+SortableSlotsTabs.defaultProps = {
+  isReadOnly: false,
 };
 
 export default withStyles(styles)(SortableSlotsTabs);

@@ -148,8 +148,7 @@ class SlotForm extends React.Component {
   }
 
   render() {
-    
-    const { classes, intl, slot, agentKeywords, agentSettings } = this.props;
+    const { classes, intl, slot, agentKeywords, agentSettings, isReadOnly } = this.props;
 
     return (
       <Grid className={classes.formContainer} container item xs={12}>
@@ -163,6 +162,7 @@ class SlotForm extends React.Component {
           <Grid container spacing={24} item xs={12}>
             <Grid item md={4} sm={12} xs={12}>
               <TextField
+                disabled={isReadOnly}
                 id="slotName"
                 label={intl.formatMessage(messages.slotNameTextField)}
                 value={slot.slotName}
@@ -188,6 +188,7 @@ class SlotForm extends React.Component {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      disabled={isReadOnly}
                       checked={slot.freeText}
                       value="anything"
                       color="primary"
@@ -239,9 +240,10 @@ class SlotForm extends React.Component {
                 </Tooltip>
               </Grid>
             </Grid>
-            {!slot.freeText ? 
+            {!slot.freeText ?
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <TextField
+                  disabled={isReadOnly}
                   select
                   id="keyword"
                   value={slot.keywordId ? slot.keywordId : slot.keyword}
@@ -329,7 +331,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
-                    disabled={slot.freeText}
+                    disabled={slot.freeText || isReadOnly}
                   />
                 }
                 label={intl.formatMessage(messages.rememberSlot)}
@@ -350,6 +352,7 @@ class SlotForm extends React.Component {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      disabled={isReadOnly}
                       checked={this.state.rememberForever}
                       onChange={(evt, value) => {
                         this.setState({
@@ -381,6 +384,7 @@ class SlotForm extends React.Component {
             <Grid container spacing={24} item xs={12}>
               <Grid item xs={12}>
                 <TextField
+                  disabled={isReadOnly}
                   id="remainingLife"
                   label={intl.formatMessage(messages.remainingLifeTextField)}
                   value={slot.remainingLife === 0 ? '' : slot.remainingLife}
@@ -414,7 +418,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
-                    disabled={slot.freeText}
+                    disabled={slot.freeText || isReadOnly}
                   />
                 }
                 label={intl.formatMessage(messages.slotIsRequired)}
@@ -428,7 +432,7 @@ class SlotForm extends React.Component {
                     }}
                     value="anything"
                     color="primary"
-                    disabled={slot.freeText}
+                    disabled={slot.freeText || isReadOnly}
                   />
                 }
                 label={intl.formatMessage(messages.slotIsList)}
@@ -456,7 +460,7 @@ class SlotForm extends React.Component {
                         }}
                         value="anything"
                         color="primary"
-                        disabled={slot.freeText}
+                        disabled={slot.freeText || isReadOnly}
                       />
                     }
                     label={intl.formatMessage(messages.limitPrompt)}
@@ -476,6 +480,7 @@ class SlotForm extends React.Component {
                 <Grid container spacing={24} item xs={12}>
                   <Grid item xs={12}>
                     <TextField
+                      disabled={isReadOnly}
                       id="promptCountLimit"
                       label={intl.formatMessage(messages.promptCountLimitTextField)}
                       value={slot.promptCountLimit ? slot.promptCountLimit : ''}
@@ -527,9 +532,9 @@ class SlotForm extends React.Component {
                       },
                     }}
                     InputProps={{
-                      disabled: !slot.isRequired,
+                      disabled: !slot.isRequired || isReadOnly,
                       className: classes.newCurrentSlotInputContainer,
-                      endAdornment: (
+                      endAdornment: !isReadOnly && (
                         <InputAdornment position="end">
                           <span
                             className={classes.responseEnter}
@@ -556,6 +561,7 @@ class SlotForm extends React.Component {
                           <TableRow key={`${textPrompt}_${textPromptIndex}`}>
                             <TableCell>
                               <TextPromptRow
+                                isReadOnly={isReadOnly}
                                 agentId={this.props.agentId}
                                 textPrompt={textPrompt}
                                 textPromptIndex={textPromptIndex}
@@ -576,6 +582,7 @@ class SlotForm extends React.Component {
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
+
                     id="newQuickResponse"
                     label={intl.formatMessage(messages.quickResponseValue)}
                     value={this.state.currentNewQuickResponse}
@@ -601,9 +608,9 @@ class SlotForm extends React.Component {
                       },
                     }}
                     InputProps={{
-                      disabled: !slot.isRequired,
+                      disabled: !slot.isRequired || isReadOnly,
                       className: classes.newQuickResponseInputContainer,
-                      endAdornment: (
+                      endAdornment: !isReadOnly && (
                         <InputAdornment position="end">
                           <span
                             className={classes.responseEnter}
@@ -629,15 +636,17 @@ class SlotForm extends React.Component {
                         {slot.quickResponses.map((quickResponse, index) => (
                           <TableRow key={`${quickResponse}_${index}`}>
                             <TableCell>{quickResponse}</TableCell>
-                            <TableCell className={classes.deleteCell}>
-                              <img
-                                onClick={() => {
-                                  this.props.onDeleteQuickResponse(index);
-                                }}
-                                className={classes.deleteIcon}
-                                src={trashIcon}
-                              />
-                            </TableCell>
+                            {!isReadOnly && (
+                              <TableCell className={classes.deleteCell}>
+                                <img
+                                  onClick={() => {
+                                    this.props.onDeleteQuickResponse(index);
+                                  }}
+                                  className={classes.deleteIcon}
+                                  src={trashIcon}
+                                />
+                              </TableCell>
+                            )}
                           </TableRow>
                         ))}
                       </TableBody>
@@ -669,7 +678,12 @@ SlotForm.propTypes = {
   onDeleteQuickResponse: PropTypes.func.isRequired,
   onAddNewQuickResponse: PropTypes.func.isRequired,
   onCopyTextPrompt: PropTypes.func.isRequired,
+  isReadOnly: PropTypes.bool,
   agentSettings: PropTypes.object.isRequired
+};
+
+SlotForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(SlotForm));

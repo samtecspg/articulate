@@ -1,23 +1,23 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
-
-import PropTypes from 'prop-types';
 import {
-  Grid,
   FormControl,
+  Grid,
   MenuItem,
   Select,
   TextField,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
+import FilterSelect from '../../../components/FilterSelect';
+import Star from '../../../components/Star';
+
+import addActionIcon from '../../../images/add-action-icon.svg';
+
 import messages from '../messages';
 
 import HighlightedSaying from './HighlightedSaying';
-
-import addActionIcon from '../../../images/add-action-icon.svg';
-import FilterSelect from '../../../components/FilterSelect';
-import Star from '../../../components/Star';
 
 const styles = {
   userSays: {
@@ -145,14 +145,16 @@ class SayingRow extends React.Component {
       if (selectedValue === 'create') {
         this.props.onSendSayingToAction(this.props.saying);
         this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
-      } else {
+      }
+      else {
         this.props.onAddAction(this.props.saying, selectedValue);
       }
     }
     if (selectName === 'keywords') {
       if (selectedValue === 'create') {
         this.props.onGoToUrl(`/agent/${this.props.agentId}/keyword/create`);
-      } else {
+      }
+      else {
         const keyword = selectedValue.split(',');
         const keywordId = keyword[0]; // TODO: change this to parseInt(keyword[0]) when the id of the keyword transforms into an integer
         const keywordName = keyword[1];
@@ -195,13 +197,14 @@ class SayingRow extends React.Component {
   }
 
   render() {
-    const { classes, saying, agentKeywords } = this.props;
+    const { classes, saying, agentKeywords , isReadOnly} = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
           <Grid container spacing={16}>
             <div style={{ width: '100px', marginTop: '5px' }}>
               <TextField
+                disabled={isReadOnly}
                 className={classes.categorySelectContainer}
                 select
                 id="category"
@@ -233,12 +236,12 @@ class SayingRow extends React.Component {
               </TextField>
             </div>
             <Star
-              style={{ width: '15px', height: '15px', position: 'relative', top: '12px', marginLeft: '5px', cursor: 'pointer' }}
+              style={{ width: '15px', height: '15px', position: 'relative', top: '12px', marginLeft: '5px', cursor: `${isReadOnly ? 'default' : 'pointer'}` }}
               starred={saying.starred}
               hovered={this.state.starHovered}
-              onMouseEnter={() => { this.setState({ starHovered: true }) }}
-              onMouseLeave={() => { this.setState({ starHovered: false }) }}
-              onClick={() => { this.props.onUpdateSayingData(saying, 'starred', !saying.starred) }}
+              onMouseEnter={() => !isReadOnly && this.setState({ starHovered: true })}
+              onMouseLeave={() => !isReadOnly && this.setState({ starHovered: false })}
+              onClick={() => !isReadOnly && this.props.onUpdateSayingData(saying, 'starred', !saying.starred)}
             />
             <Grid item md={10} xs={8}>
               <span
@@ -248,6 +251,7 @@ class SayingRow extends React.Component {
                 }}
               >
                 <HighlightedSaying
+                  isReadOnly={isReadOnly}
                   agentKeywords={agentKeywords}
                   keywords={saying.keywords}
                   text={saying.userSays}
@@ -281,22 +285,26 @@ class SayingRow extends React.Component {
                     >
                       {action}
                     </span>
-                    <a
-                      onClick={() => {
-                        this.props.onDeleteAction(saying, action);
-                      }}
-                      className={classes.deleteActionX}
-                    >
-                      x
-                    </a>
+                    {!isReadOnly && (
+                      <a
+                        onClick={() => {
+                          this.props.onDeleteAction(saying, action);
+                        }}
+                        className={classes.deleteActionX}
+                      >
+                        x
+                      </a>
+                    )}
                   </div>
                 );
               })}
-              <img
-                onClick={evt => this.handleOpen('actions', evt.target)}
-                className={classes.addActionIcon}
-                src={addActionIcon}
-              />
+              {!isReadOnly && (
+                <img
+                  onClick={evt => this.handleOpen('actions', evt.target)}
+                  className={classes.addActionIcon}
+                  src={addActionIcon}
+                />
+              )}
               <FilterSelect
                 showRecent
                 value="select"
@@ -312,7 +320,8 @@ class SayingRow extends React.Component {
                   this.props.onSendSayingToAction(this.props.saying);
                   if (isEdit) {
                     this.props.onGoToUrl(url);
-                  } else {
+                  }
+                  else {
                     this.props.onGoToUrl(
                       `/agent/${this.props.agentId}/action/create`,
                     );
@@ -342,41 +351,43 @@ class SayingRow extends React.Component {
                 }}
                 displayEdit
               />
-              <FormControl>
-                <Select
-                  style={{
-                    display: 'none',
-                  }}
-                  open={this.state.openKeywords}
-                  onClose={() => this.handleClose('keywords')}
-                  value={10}
-                  onChange={evt => {
-                    evt.preventDefault();
-                    this.handleChange('keywords', evt.target.value);
-                  }}
-                  MenuProps={{
-                    anchorPosition: {
-                      left: this.state.menuLocation.left,
-                      top: this.state.menuLocation.top,
-                    },
-                    anchorReference: 'anchorPosition',
-                  }}
-                >
-                  <MenuItem value="create">
-                    <FormattedMessage {...messages.newKeyword} />
-                  </MenuItem>
-                  {agentKeywords.map((keyword, index) => (
-                    <MenuItem
-                      key={`keyword_${index}`}
-                      value={`${keyword.id},${keyword.keywordName}`}
-                    >
+              {!isReadOnly && (
+                <FormControl>
+                  <Select
+                    style={{
+                      display: 'none',
+                    }}
+                    open={this.state.openKeywords}
+                    onClose={() => this.handleClose('keywords')}
+                    value={10}
+                    onChange={evt => {
+                      evt.preventDefault();
+                      this.handleChange('keywords', evt.target.value);
+                    }}
+                    MenuProps={{
+                      anchorPosition: {
+                        left: this.state.menuLocation.left,
+                        top: this.state.menuLocation.top,
+                      },
+                      anchorReference: 'anchorPosition',
+                    }}
+                  >
+                    <MenuItem value="create">
+                      <FormattedMessage {...messages.newKeyword} />
+                    </MenuItem>
+                    {agentKeywords.map((keyword, index) => (
+                      <MenuItem
+                        key={`keyword_${index}`}
+                        value={`${keyword.id},${keyword.keywordName}`}
+                      >
                       <span style={{ color: keyword.uiColor }}>
                         {keyword.keywordName}
                       </span>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -402,6 +413,10 @@ SayingRow.propTypes = {
   onSearchActions: PropTypes.func,
   agentFilteredActions: PropTypes.array,
   onUpdateSayingData: PropTypes.func,
+  isReadOnly: PropTypes.bool,
+};
+SayingRow.defaultProps = {
+  isReadOnly: false,
 };
 
 export default withStyles(styles)(SayingRow);

@@ -27,20 +27,12 @@ const styles = {
 /**
  * @return {null}
  */
-export function AgentAccessControlSettings({
-  classes,
-  users,
-  accessPolicies,
-  onUpdateAccessPolicy,
-  selectedUser,
-  onAccessControlUserChange,
-}) {
+export function AgentAccessControlSettings({ classes, users, accessPolicies, onUpdateAccessPolicy, selectedUser, onAccessControlUserChange, isReadOnly }) {
   if (users.length === 0) {
     return null;
   }
   const currentUser = !selectedUser ? users[0] : selectedUser;
-  const currentAccessPolicies =
-    accessPolicies[currentUser.id] || AGENT_ACCESS_POLICIES;
+  const currentAccessPolicies = accessPolicies[currentUser.id] || AGENT_ACCESS_POLICIES;
   return (
     <div>
       <Typography className={classes.label} id="groupPoliciesLabel">
@@ -70,6 +62,7 @@ export function AgentAccessControlSettings({
           key={name}
           control={
             <Switch
+              disabled={isReadOnly}
               color="primary"
               checked={value}
               onChange={(evt, newValue) => {
@@ -101,9 +94,11 @@ AgentAccessControlSettings.propTypes = {
   onUpdateAccessPolicy: PropTypes.func.isRequired,
   selectedUser: PropTypes.object,
   onAccessControlUserChange: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
 AgentAccessControlSettings.defaultProps = {
   users: [],
   selectedUser: null,
+  isReadOnly: false,
 };
 export default injectIntl(withStyles(styles)(AgentAccessControlSettings));

@@ -97,6 +97,7 @@ export class MainTab extends React.Component {
       newAgent,
       disableSave,
       locale,
+      isReadOnly
     } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
@@ -251,6 +252,7 @@ export class MainTab extends React.Component {
                   serverStatus={serverStatus}
                   lastTraining={lastTraining}
                   onTrain={onTrain}
+                  isReadOnly={isReadOnly}
                 />
               )}
               {disableSave ||
@@ -467,6 +469,11 @@ MainTab.propTypes = {
   touched: PropTypes.bool,
   locale: PropTypes.string,
   serverStatus: PropTypes.string,
+  isReadOnly: PropTypes.bool,
+};
+
+MainTab.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(MainTab));

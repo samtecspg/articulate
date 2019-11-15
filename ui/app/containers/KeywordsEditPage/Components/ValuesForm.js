@@ -156,7 +156,7 @@ class ValuesForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, keyword } = this.props;
+    const { classes, intl, keyword, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -164,16 +164,8 @@ class ValuesForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.valuesFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -229,18 +221,18 @@ class ValuesForm extends React.Component {
                       label={
                         exampleIndex === 0
                           ? intl.formatMessage(
-                            messages.newKeywordValueTextField,
-                          )
+                              messages.newKeywordValueTextField,
+                            )
                           : null
                       }
                       placeholder={
                         keyword.type === 'learned'
                           ? intl.formatMessage(
-                            messages.newKeywordValueTextFieldPlaceholder,
-                          )
+                              messages.newKeywordValueTextFieldPlaceholder,
+                            )
                           : intl.formatMessage(
-                            messages.newKeywordRegexTextFieldPlaceholder,
-                          )
+                              messages.newKeywordRegexTextFieldPlaceholder,
+                            )
                       }
                       onChange={evt => {
                         this.props.onChangeExampleName(
@@ -261,12 +253,13 @@ class ValuesForm extends React.Component {
                     xs={9}
                   >
                     <ChipInput
+                      disabled={isReadOnly}
                       value={example.synonyms}
                       label={
                         exampleIndex === 0
                           ? intl.formatMessage(
-                            messages.newKeywordSynonymTextField,
-                          )
+                              messages.newKeywordSynonymTextField,
+                            )
                           : null
                       }
                       onAdd={newSyonynm => {
@@ -317,6 +310,7 @@ class ValuesForm extends React.Component {
                   xs={3}
                 >
                   <TextField
+                    disabled={isReadOnly}
                     id="newExampleValue"
                     label={
                       keyword.examples.length === 0
@@ -328,11 +322,11 @@ class ValuesForm extends React.Component {
                     placeholder={
                       keyword.type === 'learned'
                         ? intl.formatMessage(
-                          messages.newKeywordValueTextFieldPlaceholder,
-                        )
+                            messages.newKeywordValueTextFieldPlaceholder,
+                          )
                         : intl.formatMessage(
-                          messages.newKeywordRegexTextFieldPlaceholder,
-                        )
+                            messages.newKeywordRegexTextFieldPlaceholder,
+                          )
                     }
                     inputProps={{
                       style: {
@@ -435,6 +429,11 @@ ValuesForm.propTypes = {
   errorState: PropTypes.object,
   onDelete: PropTypes.func,
   newKeyword: PropTypes.bool,
+  isReadOnly: PropTypes.bool,
+};
+
+ValuesForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(ValuesForm));

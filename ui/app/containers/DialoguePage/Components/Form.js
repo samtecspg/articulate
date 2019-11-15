@@ -149,7 +149,7 @@ class Form extends React.Component {
   }
 
   render() {
-    const { classes, intl } = this.props;
+    const { classes, intl, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -270,6 +270,7 @@ class Form extends React.Component {
           </Grid>
           {this.props.selectedTab === 'sayings' && (
             <SayingsDataForm
+              isReadOnly={isReadOnly}
               agentId={this.props.agentId}
               sayings={this.props.sayings}
               sayingsPageSize={this.props.sayingsPageSize}
@@ -310,6 +311,7 @@ class Form extends React.Component {
           )}
           {this.props.selectedTab === 'keywords' && (
             <KeywordsDataForm
+              isReadOnly={isReadOnly}
               agentId={this.props.agentId}
               keywords={this.props.agentKeywords}
               onCreateKeyword={this.props.onCreateKeyword}
@@ -328,6 +330,7 @@ class Form extends React.Component {
           )}
           {this.props.selectedTab === 'actions' && (
             <ActionsDataForm
+              isReadOnly={isReadOnly}
               agentId={this.props.agentId}
               actionsPage={this.props.actionsPage}
               onCreateAction={this.props.onCreateAction}
@@ -399,7 +402,13 @@ Form.propTypes = {
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
-  onUpdateSayingData: PropTypes.func
+  onUpdateSayingData: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
+
+Form.defaultProps = {
+  isReadOnly: false,
+};
+
 
 export default injectIntl(withStyles(styles)(Form));

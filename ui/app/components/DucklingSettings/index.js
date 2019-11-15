@@ -11,6 +11,7 @@ import AceEditor from 'react-ace';
 import 'brace/mode/xml';
 import 'brace/mode/json';
 import 'brace/theme/terminal';
+import { MainTab } from '../MainTab';
 
 import messages from './messages';
 
@@ -53,7 +54,7 @@ export class DucklingSettings extends React.Component {
   }
 
   render() {
-    const { classes, intl, settings } = this.props;
+    const { classes, intl, settings, isReadOnly } = this.props;
     return (
       <Grid container spacing={16}>
         <Grid container item xs={12}>
@@ -64,6 +65,7 @@ export class DucklingSettings extends React.Component {
         <Grid container spacing={16} item xs={12}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
             <TextField
+              disabled={isReadOnly}
               id="ducklingURL"
               label={intl.formatMessage(messages.ducklingURL)}
               value={settings.ducklingURL}
@@ -97,7 +99,7 @@ export class DucklingSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="ducklingDimension"
-            readOnly={false}
+            readOnly={isReadOnly}
             onChange={value =>
               this.onChangeEditorValue('ducklingDimension', value)
             }
@@ -132,6 +134,10 @@ DucklingSettings.propTypes = {
   settings: PropTypes.object,
   onChangeSettingsData: PropTypes.func,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
 };
 
+DucklingSettings.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(DucklingSettings));
