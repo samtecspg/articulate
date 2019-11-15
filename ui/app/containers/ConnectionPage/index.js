@@ -4,47 +4,46 @@
  *
  */
 
-import React from 'react';
+import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import qs from 'query-string';
+import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
-import { Grid, CircularProgress } from '@material-ui/core';
+import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
-import MainTab from './Components/MainTab';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
+import AC from '../../utils/accessControl';
+import {
+  changeConnectionData,
+  changeDetailValue,
+  createConnection,
+  deleteConnection,
+  loadActions,
+  loadAgents,
+  loadChannels,
+  loadConnection,
+  resetActions,
+  resetConnectionData,
+  resetStatusFlag,
+  toggleChatButton,
+  updateConnection,
+} from '../App/actions';
+import {
+  makeSelectActions,
+  makeSelectAgents,
+  makeSelectChannels,
+  makeSelectConnection,
+  makeSelectConnectionTouched,
+  makeSelectCurrentUser,
+  makeSelectLoading,
+  makeSelectSuccessConnection,
+} from '../App/selectors';
 import ConnectionForm from './Components/ConnectionForm';
 import DetailsForm from './Components/DetailsForm';
-import qs from 'query-string';
-
+import MainTab from './Components/MainTab';
 import saga from './saga';
-
-import {
-  makeSelectConnection,
-  makeSelectAgents,
-  makeSelectSuccessConnection,
-  makeSelectChannels,
-  makeSelectLoading,
-  makeSelectConnectionTouched,
-  makeSelectActions,
-} from '../App/selectors';
-
-import {
-  loadAgents,
-  resetStatusFlag,
-  changeConnectionData,
-  loadConnection,
-  resetConnectionData,
-  createConnection,
-  updateConnection,
-  changeDetailValue,
-  deleteConnection,
-  loadChannels,
-  resetActions,
-  loadActions,
-  toggleChatButton,
-} from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
 export class ConnectionPage extends React.Component {
@@ -79,19 +78,13 @@ export class ConnectionPage extends React.Component {
   initForm() {
     if (this.state.isNewConnection) {
       this.props.onResetData();
-      if (this.state.channel){
-        this.props.onChangeConnectionData(
-          'channel',
-          this.state.channel,
-        );
+      if (this.state.channel) {
+        this.props.onChangeConnectionData('channel', this.state.channel);
       }
-      if (this.state.agent){
-        this.props.onChangeConnectionData(
-          'agent',
-          this.state.agent,
-        );
+      if (this.state.agent) {
+        this.props.onChangeConnectionData('agent', this.state.agent);
       }
-      if (this.state.channel && this.state.agent){
+      if (this.state.channel && this.state.agent) {
         this.onChangeTab('details');
       }
     } else {
@@ -147,10 +140,7 @@ export class ConnectionPage extends React.Component {
       tabs: [],
     };
 
-    if (
-      !this.props.connection.channel ||
-      this.props.connection.channel === ''
-    ) {
+    if (!this.props.connection.channel || this.props.connection.channel === '') {
       errors = true;
       newErrorState.channel = true;
       newErrorState.tabs.push(0);
@@ -170,11 +160,8 @@ export class ConnectionPage extends React.Component {
       const usedChannel = this.props.channels[this.props.connection.channel];
       Object.keys(usedChannel.details).forEach(channelDetail => {
         newErrorState.details[channelDetail] =
-          (this.props.connection.details[channelDetail] === undefined ||
-            this.props.connection.details[channelDetail] === null) &&
-          !this.props.channels[this.props.connection.channel].details[
-            channelDetail
-          ].allowEmpty;
+          (this.props.connection.details[channelDetail] === undefined || this.props.connection.details[channelDetail] === null) &&
+          !this.props.channels[this.props.connection.channel].details[channelDetail].allowEmpty;
         if (newErrorState.details[channelDetail]) {
           errors = true;
           newErrorState.tabs.push(1);
@@ -202,6 +189,9 @@ export class ConnectionPage extends React.Component {
   }
 
   render() {
+    const { currentUser } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.CONNECTION_WRITE] });
+
     return this.props.channels && this.props.agents ? (
       <Grid container>
         <MainTab
@@ -215,16 +205,9 @@ export class ConnectionPage extends React.Component {
             this.submit(true);
           }}
           newConnection={this.state.isNewConnection}
-          connectionName={
-            this.props.channels[this.props.connection.channel]
-              ? this.props.channels[this.props.connection.channel].name
-              : ''
-          }
+          connectionName={this.props.channels[this.props.connection.channel] ? this.props.channels[this.props.connection.channel].name : ''}
           formError={this.state.formError}
-          hideFinishButton={
-            this.state.currentTab === 'connection' &&
-            !this.state.userCompletedAllRequiredFields
-          }
+          hideFinishButton={this.state.currentTab === 'connection' && !this.state.userCompletedAllRequiredFields}
           isLastTab={this.state.currentTab === 'details'}
           onFinishAction={() => {
             this.submit(false);
@@ -234,6 +217,7 @@ export class ConnectionPage extends React.Component {
           errorState={this.state.errorState}
           connectionForm={
             <ConnectionForm
+              isReadOnly={isReadOnly}
               channels={this.props.channels}
               agents={this.props.agents}
               onResetActions={this.props.onResetActions}
@@ -242,14 +226,12 @@ export class ConnectionPage extends React.Component {
               onChangeConnectionData={this.props.onChangeConnectionData}
               errorState={this.state.errorState}
               newConnection={this.state.isNewConnection}
-              onDelete={this.props.onDelete.bind(
-                null,
-                this.props.connection.id,
-              )}
+              onDelete={this.props.onDelete.bind(null, this.props.connection.id)}
             />
           }
           detailsForm={
             <DetailsForm
+              isReadOnly={isReadOnly}
               channels={this.props.channels}
               agentActions={this.props.agentActions}
               connection={this.props.connection}
@@ -257,19 +239,14 @@ export class ConnectionPage extends React.Component {
               onChangeDetailValue={this.props.onChangeDetailValue}
               errorState={this.state.errorState}
               newConnection={this.state.isNewConnection}
-              onDelete={this.props.onDelete.bind(
-                null,
-                this.props.connection.id,
-              )}
+              onDelete={this.props.onDelete.bind(null, this.props.connection.id)}
             />
           }
           onChangeTab={this.onChangeTab}
         />
       </Grid>
     ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
+      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
     );
   }
 }
@@ -303,6 +280,7 @@ const mapStateToProps = createStructuredSelector({
   success: makeSelectSuccessConnection(),
   loading: makeSelectLoading(),
   touched: makeSelectConnectionTouched(),
+  currentUser: makeSelectCurrentUser(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -352,7 +330,7 @@ function mapDispatchToProps(dispatch) {
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
-    }
+    },
   };
 }
 

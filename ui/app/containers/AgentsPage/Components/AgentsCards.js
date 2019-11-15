@@ -1,23 +1,13 @@
+import { Card, CardContent, CardHeader, Grid, Tooltip, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import {
-  Grid,
-  Card,
-  CardContent,
-  CardHeader,
-  Slide,
-  Typography,
-  Tooltip,
-} from '@material-ui/core';
-
-import messages from '../messages';
+import gravatars from '../../../components/Gravatar';
 import exportIcon from '../../../images/export-icon.svg';
 import importIcon from '../../../images/import-icon.svg';
 import rightArrowIcon from '../../../images/right-arrow-icon.svg';
-import gravatars from '../../../components/Gravatar';
+import messages from '../messages';
 
 const styles = {
   cardsContainer: {
@@ -148,27 +138,26 @@ class AgentsCards extends React.Component {
 
   state = {
     showLeftArrow: false,
-    showRightArrow: document.getElementById('dvCardsContainer') ? document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft :  false
+    showRightArrow: document.getElementById('dvCardsContainer')
+      ? document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
+        document.getElementById('dvCardsContainer').scrollLeft
+      : false,
   };
 
   componentDidMount() {
     if (document.getElementById('dvCardsContainer').addEventListener) {
       // IE9, Chrome, Safari, Opera
-      document
-        .getElementById('dvCardsContainer')
-        .addEventListener('mousewheel', this.scrollHorizontally, false);
+      document.getElementById('dvCardsContainer').addEventListener('mousewheel', this.scrollHorizontally, false);
       // Firefox
-      document
-        .getElementById('dvCardsContainer')
-        .addEventListener('DOMMouseScroll', this.scrollHorizontally, false);
+      document.getElementById('dvCardsContainer').addEventListener('DOMMouseScroll', this.scrollHorizontally, false);
     } else {
       // IE 6/7/8
-      document
-        .getElementById('dvCardsContainer')
-        .attachEvent('onmousewheel', this.scrollHorizontally);
+      document.getElementById('dvCardsContainer').attachEvent('onmousewheel', this.scrollHorizontally);
     }
     this.setState({
-      showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft
+      showRightArrow:
+        document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
+        document.getElementById('dvCardsContainer').scrollLeft,
     });
   }
 
@@ -178,7 +167,9 @@ class AgentsCards extends React.Component {
     document.getElementById('dvCardsContainer').scrollLeft -= delta * 10;
     this.setState({
       showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0,
-      showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
+      showRightArrow:
+        document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
+        document.getElementById('dvCardsContainer').scrollLeft,
     });
     e.preventDefault();
   }
@@ -188,28 +179,44 @@ class AgentsCards extends React.Component {
     // the ui show 4 cards as max per row
     const numberOfRows = Math.ceil(numOfCards / 4);
     for (let index = 0; index < numberOfRows * 4 - (1 + numOfCards); index++) {
-      emptyCards.push(
-        <Grid
-          key={`emptyCard_${index}`}
-          className={this.props.classes.emptyCard}
-        />,
-      );
+      emptyCards.push(<Grid key={`emptyCard_${index}`} className={this.props.classes.emptyCard} />);
     }
     return emptyCards;
   }
 
   render() {
-    const { classes, agents, onImportAgent } = this.props;
+    const { classes, agents, onImportAgent, isReadOnly } = this.props;
     return (
       <Grid container>
-        <Grid onClick={() => {
-          document.getElementById('dvCardsContainer').scrollLeft -= 205;
-          this.setState({
-            showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
-            showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0
-          });
-        }} className={classes.scrollerContainer} item xs={1}>
-          {this.state.showLeftArrow ? <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40, WebkitTransform: 'scaleX(-1)', transform: 'scaleX(-1)'}} /> : null}
+        <Grid
+          onClick={() => {
+            document.getElementById('dvCardsContainer').scrollLeft -= 205;
+            this.setState({
+              showRightArrow:
+                document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
+                document.getElementById('dvCardsContainer').scrollLeft,
+              showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0,
+            });
+          }}
+          className={classes.scrollerContainer}
+          item
+          xs={1}
+        >
+          {this.state.showLeftArrow ? (
+            <img
+              src={rightArrowIcon}
+              style={{
+                cursor: 'pointer',
+                height: '20px',
+                filter: 'invert(0.55)',
+                position: 'relative',
+                top: '40%',
+                left: 40,
+                WebkitTransform: 'scaleX(-1)',
+                transform: 'scaleX(-1)',
+              }}
+            />
+          ) : null}
         </Grid>
         <Grid
           id="dvCardsContainer"
@@ -220,64 +227,66 @@ class AgentsCards extends React.Component {
           spacing={16}
           xs={10}
         >
-          <Grid key="newAgentCard" item>
-            <Card className={classes.newAgentCard}>
-              <CardContent
-                onClick={() => {
-                  this.props.onGoToUrl('/agent/create');
-                }}
-                className={classes.newAgentCardContent}
-              >
-                <FormattedMessage {...messages.createAgent} />
-              </CardContent>
-              <Grid
-                container
-                justify="center"
-                style={{
-                  borderTop: '1px solid #00bd6f',
-                  position: 'absolute',
-                  width: '100%',
-                  bottom: 0,
-                  minHeight: '30px',
-                }}
-              >
-                <label style={{ padding: '15px' }} htmlFor="import_agent">
-                  <Grid container justify="center">
-                    <img src={importIcon} />
-                    <Typography className={classes.importLabel} variant="body1">
-                      <FormattedMessage {...messages.import} />
-                    </Typography>
-                  </Grid>
-                </label>
-                <input
-                  onChange={evt => {
-                    const { files } = evt.target; // FileList object
-
-                    for (let i = 0, f; (f = files[i]); i++) {
-                      const reader = new FileReader();
-
-                      // Closure to capture the file information.
-                      reader.onload = (function(theFile) {
-                        return function(e) {
-                          try {
-                            const agent = JSON.parse(e.target.result);
-                            onImportAgent(agent);
-                          } catch (ex) {
-                            console.error(`ex when trying to parse json = ${ex}`);
-                          }
-                        };
-                      })(f);
-                      reader.readAsText(f);
-                    }
+          {!isReadOnly && (
+            <Grid key="newAgentCard" item>
+              <Card className={classes.newAgentCard}>
+                <CardContent
+                  onClick={() => {
+                    this.props.onGoToUrl('/agent/create');
                   }}
-                  accept="application/JSON"
-                  hidden
-                  id="import_agent"
-                  type="file"
-                />
-              </Grid>
-            </Card>
-          </Grid>
+                  className={classes.newAgentCardContent}
+                >
+                  <FormattedMessage {...messages.createAgent} />
+                </CardContent>
+                <Grid
+                  container
+                  justify="center"
+                  style={{
+                    borderTop: '1px solid #00bd6f',
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    minHeight: '30px',
+                  }}
+                >
+                  <label style={{ padding: '15px' }} htmlFor="import_agent">
+                    <Grid container justify="center">
+                      <img src={importIcon} />
+                      <Typography className={classes.importLabel} variant="body1">
+                        <FormattedMessage {...messages.import} />
+                      </Typography>
+                    </Grid>
+                  </label>
+                  <input
+                    onChange={evt => {
+                      const { files } = evt.target; // FileList object
+
+                      for (let i = 0, f; (f = files[i]); i++) {
+                        const reader = new FileReader();
+
+                        // Closure to capture the file information.
+                        reader.onload = (function(theFile) {
+                          return function(e) {
+                            try {
+                              const agent = JSON.parse(e.target.result);
+                              onImportAgent(agent);
+                            } catch (ex) {
+                              console.error(`ex when trying to parse json = ${ex}`);
+                            }
+                          };
+                        })(f);
+                        reader.readAsText(f);
+                      }
+                    }}
+                    accept="application/JSON"
+                    hidden
+                    id="import_agent"
+                    type="file"
+                  />
+                </Grid>
+              </Card>
+            </Grid>
+          )}
           {agents.map((agent, index) => (
             <Grid key={`agentCard_${index}`} item>
               <Card className={classes.agentCard}>
@@ -301,9 +310,7 @@ class AgentsCards extends React.Component {
                       })}
                       <Tooltip title={agent.agentName} placement="top">
                         <span className={classes.agentName}>
-                          {agent.agentName.length > 11
-                            ? `${agent.agentName.substring(0, 11).trim()}...`
-                            : agent.agentName}
+                          {agent.agentName.length > 11 ? `${agent.agentName.substring(0, 11).trim()}...` : agent.agentName}
                         </span>
                       </Tooltip>
                     </span>
@@ -315,30 +322,20 @@ class AgentsCards extends React.Component {
                   }}
                   className={classes.agentCardContent}
                 >
-                  <Grid>
-                    {agent.description.length > 65
-                      ? `${agent.description.substring(0, 64).trim()}...`
-                      : agent.description}
-                  </Grid>
+                  <Grid>{agent.description.length > 65 ? `${agent.description.substring(0, 64).trim()}...` : agent.description}</Grid>
                 </CardContent>
                 <Grid container justify="center" className={classes.exportFooter}>
-                  {this.props.agentExport &&
-                  this.props.agentExport.agentName === agent.agentName ? (
+                  {this.props.agentExport && this.props.agentExport.agentName === agent.agentName ? (
                     <a
                       onClick={() => {
                         this.props.onExportAgent(0);
                       }}
                       style={{ textDecoration: 'none', padding: '15px' }}
-                      href={`data: text/json;charset=utf-8,${encodeURIComponent(
-                        JSON.stringify(this.props.agentExport, null, 2),
-                      )}`}
+                      href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.props.agentExport, null, 2))}`}
                       download={`${agent.agentName}.json`}
                     >
                       <Grid container justify="center">
-                        <Typography
-                          className={classes.exportLabelReady}
-                          variant="body1"
-                        >
+                        <Typography className={classes.exportLabelReady} variant="body1">
                           <FormattedMessage {...messages.download} />
                         </Typography>
                       </Grid>
@@ -364,19 +361,24 @@ class AgentsCards extends React.Component {
           ))}
           {this.addEmptyCards(agents.length)}
         </Grid>
-        <Grid onClick={() => {
-          document.getElementById('dvCardsContainer').scrollLeft -= -205;
-          console.log(document.getElementById('dvCardsContainer').scrollLeft);
-          this.setState({
-            showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
-            showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0
-          });
-        }} className={classes.scrollerContainer} item xs={1}>
-          {
-            this.state.showRightArrow ?
-            <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40}} /> :
-            null
-          }
+        <Grid
+          onClick={() => {
+            document.getElementById('dvCardsContainer').scrollLeft -= -205;
+            console.log(document.getElementById('dvCardsContainer').scrollLeft);
+            this.setState({
+              showRightArrow:
+                document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
+                document.getElementById('dvCardsContainer').scrollLeft,
+              showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0,
+            });
+          }}
+          className={classes.scrollerContainer}
+          item
+          xs={1}
+        >
+          {this.state.showRightArrow ? (
+            <img src={rightArrowIcon} style={{ cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40 }} />
+          ) : null}
         </Grid>
       </Grid>
     );
@@ -390,7 +392,11 @@ AgentsCards.propTypes = {
   onExportAgent: PropTypes.func,
   onImportAgent: PropTypes.func,
   agentExport: PropTypes.object,
-  onToggleConversationBar : PropTypes.func
+  onToggleConversationBar: PropTypes.func,
+  isReadOnly: PropTypes.bool,
+};
+AgentsCards.defaultProps = {
+  isReadOnly: false,
 };
 
 export default withStyles(styles)(AgentsCards);

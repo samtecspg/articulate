@@ -44,6 +44,8 @@ export class AgentsPage extends React.PureComponent {
 
   render() {
     const { agents, connections, channels, currentUser } = this.props;
+    const isAgentReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
+    const isConnectionReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.CONNECTION_WRITE] });
     return (
       <Grid container>
         <GetStarted title={messages.title} sizesForHideInlineElement={['sm', 'xs']} />
@@ -57,6 +59,7 @@ export class AgentsPage extends React.PureComponent {
           {agents ? (
             <React.Fragment>
               <AgentsCards
+                isReadOnly={isAgentReadOnly}
                 agents={agents}
                 onImportAgent={this.props.onImportAgent}
                 onExportAgent={this.props.onExportAgent}
@@ -72,7 +75,13 @@ export class AgentsPage extends React.PureComponent {
               >
                 <MainContentHeader title={messages.connectionsTitle} sizesForHideInlineElement={['sm', 'xs']} />
                 {agents && connections && channels ? (
-                  <ConnectionsCards agents={agents} connections={connections} channels={channels} onGoToUrl={this.props.onGoToUrl} />
+                  <ConnectionsCards
+                    isReadOnly={isConnectionReadOnly}
+                    agents={agents}
+                    connections={connections}
+                    channels={channels}
+                    onGoToUrl={this.props.onGoToUrl}
+                  />
                 ) : (
                   <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
                 )}
