@@ -102,7 +102,7 @@ module.exports = {
             logger.info('registered');
         }
         catch (e) {
-            console.error('elasticsearch cluster is down!');
+            console.error('hapi Group Access Control error');
             throw e;
         }
 
