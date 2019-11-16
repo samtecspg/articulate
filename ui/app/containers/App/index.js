@@ -84,7 +84,7 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    if (checkCookie()) {
+    if ((AUTH_ENABLED && checkCookie()) || !AUTH_ENABLED) {
       this.props.loadCurrentUser();
       this.props.onLoadServerInfo();
       this.props.onLoadSettings();

@@ -44,6 +44,8 @@ import {
   loadSessionSuccess,
   logoutUserSuccess,
   logoutUserError,
+  toggleConversationBar,
+  toggleChatButton,
 } from './actions';
 import {
   makeSelectAgent,
@@ -199,6 +201,8 @@ export function* logoutUser(payload) {
       toAPIPath(['auth', 'logout']),
     );
     yield put(logoutUserSuccess(response));
+    yield put(toggleConversationBar(false));
+    yield put(toggleChatButton(false));
     yield put(push('/'));
   } catch (err) {
     yield put(logoutUserError(err));
