@@ -229,6 +229,9 @@ import {
   LOGOUT_USER_SUCCESS,
   REFRESH_KEYWORD_EXAMPLE_UPDATE,
   REFRESH_SERVER_INFO,
+  REMOVE_ACCESS_CONTROL,
+  REMOVE_ACCESS_CONTROL_ERROR,
+  REMOVE_ACCESS_CONTROL_SUCCESS,
   RESET_ACTION_DATA,
   RESET_ACTIONS,
   RESET_AGENT_DATA,
@@ -2551,24 +2554,24 @@ export function loadCurrentUserSuccess({ user }) {
   };
 }
 
-export function loadCurrentUser() {
+export function removeAccessPolicyGroup({ groupName }) {
   return {
-    type: LOAD_CURRENT_USER,
+    type: REMOVE_ACCESS_CONTROL,
     apiCall: true,
+    groupName,
   };
 }
 
-export function loadCurrentUserError(error) {
+export function removeAccessPolicyGroupError(error) {
   return {
-    type: LOAD_CURRENT_USER_ERROR,
+    type: REMOVE_ACCESS_CONTROL_ERROR,
     error,
   };
 }
 
-export function loadCurrentUserSuccess({ user }) {
+export function removeAccessPolicyGroupSuccess() {
   return {
-    type: LOAD_CURRENT_USER_SUCCESS,
-    user,
+    type: REMOVE_ACCESS_CONTROL_SUCCESS
   };
 }
 

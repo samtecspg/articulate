@@ -208,6 +208,8 @@ import {
   LOGIN_USER_ERROR,
   MISSING_API,
   REFRESH_SERVER_INFO,
+  REMOVE_ACCESS_CONTROL_ERROR,
+  REMOVE_ACCESS_CONTROL_SUCCESS,
   RESET_ACTION_DATA,
   RESET_ACTIONS,
   RESET_AGENT_DATA,
@@ -2799,6 +2801,15 @@ function appReducer(state = initialState, action) {
       return state
         .set('currentUser', null)
         .set('loadingCurrentUser', true);
+    case REMOVE_ACCESS_CONTROL_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case REMOVE_ACCESS_CONTROL_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
     default:
       return state;
   }

@@ -25,7 +25,7 @@ module.exports = async function ({ data, returnModel = false }) {
             await AccessPolicyGroup.updateInstance({ id: Models.id, data: { name, rules: { ...defaults.rules, ...filteredRules } } });
         }
         else {
-            await AccessPolicyGroup.createInstance({ dxata: { name, rules: { ...defaults.rules, ...filteredRules } } });
+            await AccessPolicyGroup.createInstance({ data: { name, rules: { ...defaults.rules, ...filteredRules } } });
 
         }
         return returnModel ? AccessPolicyGroup : AccessPolicyGroup.allProperties();

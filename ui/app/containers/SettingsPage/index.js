@@ -1,7 +1,4 @@
-import {
-  CircularProgress,
-  Grid,
-} from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -19,21 +16,14 @@ import {
   deleteFallbackResponse,
   loadAccessPolicyGroups,
   loadSettings,
+  removeAccessPolicyGroup,
   updateSettingsTouched,
   toggleChatButton,
   toggleConversationBar,
   updateAccessPolicyGroup,
   updateSettings,
 } from '../App/actions';
-import {
-  makeSelectAccessPolicyGroups,
-  makeSelectCurrentUser,
-  makeSelectSettings,
-  makeSelectSettingsTouched,
-  makeSelectLoading,
-  makeSelectSuccess,
-  makeSelectError
-} from '../App/selectors';
+import { makeSelectAccessPolicyGroups, makeSelectCurrentUser, makeSelectSettings } from '../App/selectors';
 import ActionButtons from './Components/ActionButtons';
 import Form from './Components/Form';
 import messages from './messages';
@@ -105,32 +95,28 @@ export class SettingsPage extends React.PureComponent {
     if (!this.props.settings.defaultUISessionId || this.props.settings.defaultUISessionId === '') {
       errors = true;
       newErrorState.defaultUISessionId = true;
-    }
-    else {
+    } else {
       newErrorState.defaultUISessionId = false;
     }
 
     if (!this.props.settings.rasaURL || this.props.settings.rasaURL === '') {
       errors = true;
       newErrorState.rasaURL = true;
-    }
-    else {
+    } else {
       newErrorState.rasaURL = false;
     }
 
     if (!this.props.settings.ducklingURL || this.props.settings.ducklingURL === '') {
       errors = true;
       newErrorState.ducklingURL = true;
-    }
-    else {
+    } else {
       newErrorState.ducklingURL = false;
     }
 
     if (!this.props.settings.defaultAgentFallbackResponses || this.props.settings.defaultAgentFallbackResponses.length === 0) {
       errors = true;
       newErrorState.defaultAgentFallbackResponses = true;
-    }
-    else {
+    } else {
       newErrorState.defaultAgentFallbackResponses = false;
     }
 
@@ -143,8 +129,7 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.defaultAgentLanguage = true;
-    }
-    else {
+    } else {
       newErrorState.defaultAgentLanguage = false;
     }
 
@@ -157,8 +142,7 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.uiLanguage = true;
-    }
-    else {
+    } else {
       newErrorState.uiLanguage = false;
     }
 
@@ -170,8 +154,7 @@ export class SettingsPage extends React.PureComponent {
     ) {
       errors = true;
       newErrorState.defaultTimezone = true;
-    }
-    else {
+    } else {
       newErrorState.defaultTimezone = false;
     }
 
@@ -180,8 +163,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'Duckling dimensions is not an array';
       }
       newErrorState.ducklingDimension = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.ducklingDimension = true;
     }
@@ -191,8 +173,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'Category classifier pipeline is not an array';
       }
       newErrorState.categoryClassifierPipeline = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.categoryClassifierPipeline = true;
     }
@@ -202,8 +183,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'Saying classifier pipeline is not an array';
       }
       newErrorState.sayingClassifierPipeline = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.sayingClassifierPipeline = true;
     }
@@ -213,8 +193,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'Keyword classifier pipeline is not an array';
       }
       newErrorState.keywordClassifierPipeline = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.keywordClassifierPipeline = true;
     }
@@ -224,8 +203,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'Spacy pretrained entities is not an array';
       }
       newErrorState.spacyPretrainedEntities = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.spacyPretrainedEntities = true;
     }
@@ -235,8 +213,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'Timezones is not an array';
       }
       newErrorState.timezones = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.timezones = true;
     }
@@ -246,8 +223,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'Agent languages is not an array of object';
       }
       newErrorState.agentLanguages = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.agentLanguages = true;
     }
@@ -257,8 +233,7 @@ export class SettingsPage extends React.PureComponent {
         throw 'UI languages is not an array of object';
       }
       newErrorState.uiLanguages = false;
-    }
-    catch (e) {
+    } catch (e) {
       errors = true;
       newErrorState.uiLanguages = true;
     }
@@ -270,8 +245,7 @@ export class SettingsPage extends React.PureComponent {
         exitAfterSubmit: exit
       });
       this.props.onSaveChanges();
-    }
-    else {
+    } else {
       this.setState({
         formError: true,
         errorState: { ...newErrorState },
@@ -318,6 +292,7 @@ export class SettingsPage extends React.PureComponent {
           onAddAccessPolicyGroup={this.props.onAddAccessPolicyGroup}
           newAccessPolicyGroupName={this.state.newAccessPolicyGroupName}
           onUpdateNewAccessPolicyGroupName={this.onUpdateNewAccessPolicyGroupName}
+          onRemoveAccessPolicyGroup={this.props.onRemoveAccessPolicyGroup}
         />
       </Grid>
     ) : (
@@ -343,6 +318,7 @@ SettingsPage.propTypes = {
   onAddAccessPolicyGroup: PropTypes.func,
   accessPolicyGroups: PropTypes.array,
   currentUser: PropTypes.object,
+  onRemoveAccessPolicyGroup: PropTypes.func,
 };
 SettingsPage.defaultProps = {
   accessPolicyGroups: [],
@@ -394,6 +370,9 @@ function mapDispatchToProps(dispatch) {
     },
     onAddAccessPolicyGroup: ({ groupName, rules }) => {
       dispatch(addAccessPolicyGroup({ groupName, rules }));
+    },
+    onRemoveAccessPolicyGroup: ({ groupName }) => {
+      dispatch(removeAccessPolicyGroup({ groupName }));
     },
   };
 }

@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Grid, Switch, TextField, Typography } from '@material-ui/core';
+import { Button, Divider, FormControlLabel, Grid, Switch, TextField, Typography } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
@@ -6,6 +6,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import DeleteFooter from '../../../components/DeleteFooter';
 import messages from '../messages';
 
 const styles = {
@@ -25,6 +26,9 @@ const styles = {
     position: 'relative',
     bottom: '10px',
   },
+  divider: {
+    'margin-bottom': '10px',
+  },
 };
 const GroupPolicyTabs = ({
   accessPolicyGroups,
@@ -36,15 +40,23 @@ const GroupPolicyTabs = ({
   intl,
   onUpdateNewAccessPolicyGroupName,
   newAccessPolicyGroupName,
-  isReadOnly
+  isReadOnly,
+  onRemoveAccessPolicyGroup,
 }) => {
   if (!accessPolicyGroups || (accessPolicyGroups && accessPolicyGroups.length === 0) || _.isNull(selectedGroup)) {
     return null;
   }
 
-  const accessPolicyGroup = _.find(accessPolicyGroups, {
-    id: selectedGroup,
-  });
+  const accessPolicyGroup =
+    _.find(accessPolicyGroups, {
+      id: selectedGroup,
+    }) || accessPolicyGroups[0];
+
+  const onDelete = () => {
+    console.log(`GroupPolicyTabs::onDelete`); // TODO: REMOVE!!!!
+    console.log({ groupName: accessPolicyGroup.name }); // TODO: REMOVE!!!!
+    return onRemoveAccessPolicyGroup({ groupName: accessPolicyGroup.name });
+  };
   return (
     <div>
       <Typography className={classes.label} id="groupPoliciesLabel">
@@ -78,25 +90,28 @@ const GroupPolicyTabs = ({
             <FormattedMessage {...messages.saveButton} />
           </Button>
         </Grid>
-        <Select
-          value={accessPolicyGroup ? accessPolicyGroup.id : null}
-          onChange={evt => {
-            handleChange({
-              accessPolicyGroup: _.find(accessPolicyGroups, {
-                id: evt.target.value,
-              }),
-            });
-          }}
-          inputProps={{}}
-        >
-          {accessPolicyGroups.map(group => (
-            <MenuItem key={group.id} value={group.id}>
-              {group.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </div>
 
+        <Divider className={classes.divider} />
+        <div className={'mt-5'}>
+          <Select
+            value={accessPolicyGroup ? accessPolicyGroup.id : null}
+            onChange={evt => {
+              handleChange({
+                accessPolicyGroup: _.find(accessPolicyGroups, {
+                  id: evt.target.value,
+                }),
+              });
+            }}
+            inputProps={{}}
+          >
+            {accessPolicyGroups.map(group => (
+              <MenuItem key={group.id} value={group.id}>
+                {group.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+      </div>
       {_.map(accessPolicyGroup.rules, (value, name) => (
         <FormControlLabel
           key={name}
@@ -120,6 +135,9 @@ const GroupPolicyTabs = ({
           label={name}
         />
       ))}
+      {!(isReadOnly || accessPolicyGroup.isAdmin) && (
+        <DeleteFooter onDelete={onDelete} type={`${intl.formatMessage(messages.instanceName)} "${accessPolicyGroup.name}"`} />
+      )}
     </div>
   );
 };
@@ -134,6 +152,7 @@ GroupPolicyTabs.propTypes = {
   newAccessPolicyGroupName: PropTypes.string.isRequired,
   onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
   isReadOnly: PropTypes.bool.isRequired,
+  onRemoveAccessPolicyGroup: PropTypes.func.isRequired,
 };
 
 GroupPolicyTabs.defaultProps = {

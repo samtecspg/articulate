@@ -28,6 +28,7 @@ export function GroupAndUsersForm(props) {
     newAccessPolicyGroupName,
     onUpdateNewAccessPolicyGroupName,
     isReadOnly,
+    onRemoveAccessPolicyGroup,
   } = props;
   return (
     <Grid container spacing={16}>
@@ -55,6 +56,7 @@ export function GroupAndUsersForm(props) {
             onAddAccessPolicyGroup={onAddAccessPolicyGroup}
             newAccessPolicyGroupName={newAccessPolicyGroupName}
             onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
+            onRemoveAccessPolicyGroup={onRemoveAccessPolicyGroup}
           />
         </Grid>
       </Grid>
@@ -76,6 +78,7 @@ GroupAndUsersForm.propTypes = {
   newAccessPolicyGroupName: PropTypes.string.isRequired,
   onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
   isReadOnly: PropTypes.bool.isRequired,
+  onRemoveAccessPolicyGroup: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(GroupAndUsersForm));

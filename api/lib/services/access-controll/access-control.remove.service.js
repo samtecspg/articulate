@@ -1,3 +1,4 @@
+import Boom from 'boom';
 import _ from 'lodash';
 import {
     ERROR_NOT_FOUND,
@@ -14,6 +15,9 @@ module.exports = async function ({ name }) {
     try {
         const Model = await globalService.searchByField({ field: PARAM_NAME, value: name, model: MODEL_ACCESS_POLICY_GROUP });
         if (Model && !_.isArray(Model)) {
+            if (Model.isAdmin === true) {
+                throw RedisErrorHandler({ error: new Boom.forbidden(`Group [${name}] is read only.`) });
+            }
             return await AccessPolicyGroup.removeInstance({ id: Model.id });
         }
         return await Promise.reject(ERROR_NOT_FOUND);

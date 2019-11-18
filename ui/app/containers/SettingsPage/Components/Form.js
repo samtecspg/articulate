@@ -99,6 +99,7 @@ class Form extends React.Component {
       newAccessPolicyGroupName,
       onUpdateNewAccessPolicyGroupName,
       isReadOnly,
+      onRemoveAccessPolicyGroup
     } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
@@ -130,7 +131,6 @@ class Form extends React.Component {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {}
           <SettingsDataForm
             isReadOnly={isReadOnly}
             settings={this.props.settings}
@@ -145,6 +145,7 @@ class Form extends React.Component {
             onAddAccessPolicyGroup={onAddAccessPolicyGroup}
             newAccessPolicyGroupName={newAccessPolicyGroupName}
             onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
+            onRemoveAccessPolicyGroup={onRemoveAccessPolicyGroup}
           />
         </Grid>
       </Grid>
@@ -166,6 +167,7 @@ Form.propTypes = {
   newAccessPolicyGroupName: PropTypes.string.isRequired,
   onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
   isReadOnly: PropTypes.bool.isRequired,
+  onRemoveAccessPolicyGroup: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(Form));

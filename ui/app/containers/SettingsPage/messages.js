@@ -151,4 +151,8 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.saveButton',
     defaultMessage: 'Save',
   },
+  instanceName: {
+    id: 'app.containers.SettingsPage.deleteButton',
+    defaultMessage: 'group',
+  },
 });
