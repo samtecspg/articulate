@@ -114,6 +114,7 @@ export const PARAM_GROUPS = 'groups';
 export const PARAM_GROUP_NAME = 'groupName';
 export const PARAM_VALIDATE = 'validate';
 export const PARAM_RULES = 'rules';
+export const PARAM_IS_ADMIN = 'isAdmin';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
@@ -344,3 +345,5 @@ export const PROVIDER_GITHUB = 'github';
 export const ACL_ACTION_READ = 'read';
 export const ACL_ACTION_WRITE = 'write';
 export const ACL_ACTION_CONVERSE = 'converse';
+export const DEFAULT_ADMIN_GROUP_NAME = 'admin';
+export const DEFAULT_GROUP_NAME = 'users';

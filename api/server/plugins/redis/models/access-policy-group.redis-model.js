@@ -13,13 +13,13 @@ const logger = require('../../../../util/logger')({ name: `plugin:redis:AccessPo
 const defaults = {};
 
 defaults.rules = {
-    [`${MODEL_AGENT}:${ACL_ACTION_READ}`]: false,
+    [`${MODEL_AGENT}:${ACL_ACTION_READ}`]: true,
     [`${MODEL_AGENT}:${ACL_ACTION_WRITE}`]: false,
-    [`${MODEL_CONNECTION}:${ACL_ACTION_READ}`]: false,
+    [`${MODEL_CONNECTION}:${ACL_ACTION_READ}`]: true,
     [`${MODEL_CONNECTION}:${ACL_ACTION_WRITE}`]: false,
-    [`${MODEL_USER_ACCOUNT}:${ACL_ACTION_READ}`]: false,
+    [`${MODEL_USER_ACCOUNT}:${ACL_ACTION_READ}`]: true,
     [`${MODEL_USER_ACCOUNT}:${ACL_ACTION_WRITE}`]: false,
-    [`${MODEL_ACCESS_POLICY_GROUP}:${ACL_ACTION_READ}`]: false,
+    [`${MODEL_ACCESS_POLICY_GROUP}:${ACL_ACTION_READ}`]: true,
     [`${MODEL_ACCESS_POLICY_GROUP}:${ACL_ACTION_WRITE}`]: false
 };
 
@@ -30,6 +30,10 @@ const schema = {
     },
     rules: {
         type: 'json'
+    },
+    isAdmin: {
+        type: 'bool',
+        defaultValue: false
     },
     creationDate: {
         type: 'timestamp'

@@ -1,4 +1,5 @@
 import {
+    DEFAULT_ADMIN_GROUP_NAME,
     MODEL_USER_ACCOUNT,
     PARAM_EMAIL,
     PARAM_GROUPS,
@@ -27,7 +28,7 @@ module.exports = async (server) => {
     })();
     const username = process.env.AUTH_USER;
     const password = process.env.AUTH_PASSWORD;
-    const groups = ['admin'];
+    const groups = [DEFAULT_ADMIN_GROUP_NAME];
     const createUser = async () => {
 
         try {

@@ -36,6 +36,7 @@ const GroupPolicyTabs = ({
   intl,
   onUpdateNewAccessPolicyGroupName,
   newAccessPolicyGroupName,
+  isReadOnly
 }) => {
   if (!accessPolicyGroups || (accessPolicyGroups && accessPolicyGroups.length === 0) || _.isNull(selectedGroup)) {
     return null;
@@ -101,6 +102,7 @@ const GroupPolicyTabs = ({
           key={name}
           control={
             <Switch
+              disabled={isReadOnly || accessPolicyGroup.isAdmin}
               color="primary"
               checked={value}
               onChange={(evt, newValue) => {
@@ -131,6 +133,7 @@ GroupPolicyTabs.propTypes = {
   intl: intlShape.isRequired,
   newAccessPolicyGroupName: PropTypes.string.isRequired,
   onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
+  isReadOnly: PropTypes.bool.isRequired,
 };
 
 GroupPolicyTabs.defaultProps = {

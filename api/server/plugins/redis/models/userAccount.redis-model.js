@@ -30,7 +30,8 @@ const schema = {
         type: 'timestamp'
     },
     groups: {
-        type: 'json'
+        type: 'json',
+        defaultValue: []
     }
 };
 

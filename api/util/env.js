@@ -9,4 +9,5 @@ export const AUTH_FORCE_DEFAULT_USER = (() => {
     return process.env.AUTH_FORCE_DEFAULT_USER === 'true';
 
 })();
-export const AUTH_FORCE_DEFAULT_GROUP = process.env.AUTH_FORCE_DEFAULT_GROUP || false;
+export const AUTH_FORCE_DEFAULT_GROUP = process.env.AUTH_FORCE_DEFAULT_GROUP === 'true';
+export const DEBUG_ROUTES = process.env.DEBUG_ROUTES === 'true';

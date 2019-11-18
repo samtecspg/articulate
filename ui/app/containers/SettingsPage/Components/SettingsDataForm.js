@@ -60,6 +60,7 @@ class SettingsDataForm extends React.Component {
       onAddAccessPolicyGroup,
       newAccessPolicyGroupName,
       onUpdateNewAccessPolicyGroupName,
+      isReadOnly,
     } = this.props;
     const { expanded } = this.state;
     return (
@@ -130,6 +131,7 @@ class SettingsDataForm extends React.Component {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <GroupAndUsersForm
+                  isReadOnly={isReadOnly}
                   accessPolicyGroups={accessPolicyGroups}
                   settings={this.props.settings}
                   onChangeSettingsData={this.props.onChangeSettingsData}
@@ -164,6 +166,7 @@ SettingsDataForm.propTypes = {
   onAddAccessPolicyGroup: PropTypes.func.isRequired,
   newAccessPolicyGroupName: PropTypes.string.isRequired,
   onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
+  isReadOnly: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(SettingsDataForm);

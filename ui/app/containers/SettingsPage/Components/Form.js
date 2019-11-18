@@ -98,6 +98,7 @@ class Form extends React.Component {
       onAddAccessPolicyGroup,
       newAccessPolicyGroupName,
       onUpdateNewAccessPolicyGroupName,
+      isReadOnly,
     } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
@@ -131,6 +132,7 @@ class Form extends React.Component {
         <Grid item xs={12}>
           {}
           <SettingsDataForm
+            isReadOnly={isReadOnly}
             settings={this.props.settings}
             onChangeSettingsData={this.props.onChangeSettingsData}
             onAddFallbackResponse={this.props.onAddFallbackResponse}
@@ -163,6 +165,7 @@ Form.propTypes = {
   onAddAccessPolicyGroup: PropTypes.func.isRequired,
   newAccessPolicyGroupName: PropTypes.string.isRequired,
   onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
+  isReadOnly: PropTypes.bool.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(Form));

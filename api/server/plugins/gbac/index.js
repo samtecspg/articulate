@@ -57,15 +57,17 @@ internals.getGroupPolicy = async ({ group }) => {
 // Gets all the all the groups policies and merge them into a single one that shows all the allowed rules
 internals.getSimplifiedPolicy = async ({ groups = [] }) => {
 
-    const policies = await Promise.all(groups.map((group) => internals.getGroupPolicy({ group })));
-    if (policies.length === 0) {
-        return null;
-    }
-    return _.mergeWith(
+    const { redis } = internals.server.app;
+    const Model = await redis.factory(MODEL_ACCESS_POLICY_GROUP);
+    const policies = await Promise.all(groups.map((group) => internals.getGroupPolicy({ group }))) || [];
+    const simplified = _.mergeWith(
         ...policies
             .filter((policy) => !_.isEmpty(policy)) //Remove empty elements from the list
             .map((policy) => policy.rules), // Get the rules list for each one
         (o, s) => o || s); // Merge
+
+
+    return { ...Model.defaults.rules, ...simplified };
 };
 
 module.exports = {

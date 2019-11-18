@@ -1,52 +1,46 @@
 import _ from 'lodash';
 import {
-    ACL_ACTION_READ,
-    ACL_ACTION_WRITE,
+    DEFAULT_ADMIN_GROUP_NAME,
+    DEFAULT_GROUP_NAME,
     MODEL_ACCESS_POLICY_GROUP,
-    MODEL_AGENT,
-    MODEL_CONNECTION,
-    MODEL_USER_ACCOUNT,
+    PARAM_IS_ADMIN,
     PARAM_NAME,
     PARAM_RULES
 } from '../../util/constants';
 import { AUTH_FORCE_DEFAULT_GROUP } from '../../util/env';
 
 const logger = require('../../util/logger')({ name: `server:init:defaultGroup` });
-const DEFAULT_NAME = 'admin';
 module.exports = async (server) => {
 
     const { redis } = server.app;
     const { globalService } = await server.services();
     const { accessControlService } = await server.services();
-    const createGroup = async () => {
+    const PolicyGroupModel = await redis.factory(MODEL_ACCESS_POLICY_GROUP);
+    const defaultRules = PolicyGroupModel.defaults.rules;
+    const adminRules = _.mapValues(defaultRules, () => true);
+    const createGroup = async ({ name, rules, isAdmin = false }) => {
 
-        const rules = {
-            [`${MODEL_AGENT}:${ACL_ACTION_READ}`]: true,
-            [`${MODEL_AGENT}:${ACL_ACTION_WRITE}`]: true,
-            [`${MODEL_CONNECTION}:${ACL_ACTION_READ}`]: true,
-            [`${MODEL_CONNECTION}:${ACL_ACTION_WRITE}`]: true,
-            [`${MODEL_USER_ACCOUNT}:${ACL_ACTION_READ}`]: true,
-            [`${MODEL_USER_ACCOUNT}:${ACL_ACTION_WRITE}`]: true,
-            [`${MODEL_ACCESS_POLICY_GROUP}:${ACL_ACTION_READ}`]: true,
-            [`${MODEL_ACCESS_POLICY_GROUP}:${ACL_ACTION_WRITE}`]: true
-        };
         try {
-            logger.info(`Creating group`);
-            const group = await globalService.searchByField({ field: PARAM_NAME, value: DEFAULT_NAME, model: MODEL_ACCESS_POLICY_GROUP });
+            const group = await globalService.searchByField({ field: PARAM_NAME, value: name, model: MODEL_ACCESS_POLICY_GROUP });
+            if (group && !_.isArray(group) && !AUTH_FORCE_DEFAULT_GROUP) {
+                return;
+            }
             if (group && !_.isArray(group)) {
-                const PolicyGroupModel = await redis.factory(MODEL_ACCESS_POLICY_GROUP, group.id);
-                PolicyGroupModel.property(PARAM_RULES, rules);
-                await PolicyGroupModel.save();
-                logger.info(`Group updated successfully`);
+                const existingGroup = await redis.factory(MODEL_ACCESS_POLICY_GROUP, group.id);
+                existingGroup.property(PARAM_RULES, rules);
+                existingGroup.property(PARAM_IS_ADMIN, isAdmin);
+                await existingGroup.save();
+                logger.info(`Group [${name}] updated successfully`);
             }
             else {
                 await accessControlService.upsert({
                     data: {
-                        name: DEFAULT_NAME,
+                        name,
+                        isAdmin,
                         rules
                     }
                 });
-                logger.info(`Group created successfully`);
+                logger.info(`Group [${name}] created successfully`);
             }
 
         }
@@ -54,7 +48,6 @@ module.exports = async (server) => {
             logger.error(e);
         }
     };
-    if (AUTH_FORCE_DEFAULT_GROUP) {
-        return await createGroup();
-    }
+    await createGroup({ name: DEFAULT_ADMIN_GROUP_NAME, rules: adminRules, isAdmin: true });
+    await createGroup({ name: DEFAULT_GROUP_NAME, rules: defaultRules, isAdmin: false });
 };
