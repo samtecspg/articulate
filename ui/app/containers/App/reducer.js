@@ -90,6 +90,9 @@ import {
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_LOGS,
+  LOAD_LOGS_ERROR,
+  LOAD_LOGS_SUCCESS,
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
   LOAD_AGENT_ERROR,
@@ -535,6 +538,8 @@ const initialState = Immutable({
   documentsAnalyticsFallbacksCount: null,
   documentsAnalyticsTopActions: [],
   documentsAnalyticsRequestsOverTime: [],
+  logs: [],
+  totalLogs: null,
   sessions: [],
   totalSessions: null,
   serverStatus: '',
@@ -1129,6 +1134,23 @@ function appReducer(state = initialState, action) {
         .set('totalDocumentsAnalytics', initialState.totalDocuments)
         .set('documents', initialState.documents)
         .set('totalDocuments', initialState.totalDocuments)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_LOGS:
+      return state
+        .set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case LOAD_LOGS_SUCCESS:
+      return state
+        .set('logs', action.logs.logs)
+        .set('totalLogs', action.logs.total)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_LOGS_ERROR:
+      return state
+        .set('logs', initialState.logs)
+        .set('totalLogs', initialState.totalLogs)
         .set('loading', false)
         .set('error', action.error);
     case LOAD_AGENT_STATS_SUCCESS:
@@ -2612,7 +2634,7 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', action.error)
-        case LOAD_CURRENT_USER:
+    case LOAD_CURRENT_USER:
       return state
         .set('loadingCurrentUser', false);
     case LOAD_CURRENT_USER_SUCCESS:

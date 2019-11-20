@@ -137,6 +137,9 @@ import {
   LOAD_AGENT_DOCUMENTS,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_LOGS,
+  LOAD_LOGS_ERROR,
+  LOAD_LOGS_SUCCESS,
   LOAD_AGENT_STATS,
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
@@ -824,6 +827,33 @@ export function loadAgentDocumentsSuccess(documents) {
   return {
     type: LOAD_AGENT_DOCUMENTS_SUCCESS,
     documents,
+  };
+}
+
+export function loadLogs({ page, pageSize, field, direction, dateRange, filter = null }) {
+  return {
+    type: LOAD_LOGS,
+    apiCall: true,
+    page,
+    pageSize,
+    field,
+    direction,
+    dateRange,
+    filter
+  };
+}
+
+export function loadLogsError(error) {
+  return {
+    type: LOAD_LOGS_ERROR,
+    error,
+  };
+}
+
+export function loadLogsSuccess(logs) {
+  return {
+    type: LOAD_LOGS_SUCCESS,
+    logs,
   };
 }
 

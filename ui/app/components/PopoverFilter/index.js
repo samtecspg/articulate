@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 import PropTypes from 'prop-types';
-import { Popover, Grid, Input, TextField, MenuItem, InputAdornment } from '@material-ui/core';
+import { Popover, Grid, Input, TextField, MenuItem, InputAdornment, FormControl, FormGroup, FormControlLabel, Checkbox, Icon } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { includes } from 'lodash';
 
@@ -11,6 +11,8 @@ import filterIcon from '../../images/filter-icon.svg';
 import blackFilterIcon from '../../images/filter-black-icon.svg';
 import hyphenIcon from '../../images/hyphen-icon.svg';
 import xIcon from '../../images/x-icon2.svg';
+import checkboxCheckedIcon from '../../images/checkbox-checked-icon.svg';
+import checkboxUncheckedIcon from '../../images/checkbox-unchecked-icon.svg';
 import messages from './messages';
 
 const styles = {
@@ -221,7 +223,38 @@ const styles = {
         fontFamily: 'Montserrat',
         paddingLeft: '16px',
         marginBottom: '16px'
-    }
+    },
+    headerGrid: {
+        backgroundColor: '#F6F7F8',
+        borderBottom: 'solid 1px',
+        paddingBottom: '16px'
+    },
+    formControlLabel: {
+        marginRight: '20px'
+    },
+    checkboxLabel: {
+        color: '#A2A7B1',
+        fontSize: '12px',
+        fontFamily: 'Montserrat',
+    },
+    justMaxLabel: {
+        color: '#A2A7B1',
+        fontSize: '12px',
+        fontFamily: 'Montserrat',
+        marginTop: '15px',
+        display: 'inline-block'
+    },
+    checkboxImage: {
+        marginLeft: '-5px',
+        marginTop: '-5px'
+    },
+    justMaxInput: {
+        color: '#979797',
+        fontSize: '12pt',
+        fontFamily: 'Montserrat',
+        marginRight: '10px',
+        marginTop: '-15px'
+    },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -235,16 +268,21 @@ export class PopoverFilter extends React.Component {
             textFilterValue: '',
             dropDownValuePicked: this.props.dropDownMainOptionLabel,
             chipValuesPicked: [],
+            checkboxValuesPicked: [],
             numberFiltersApplied: 0,
             currentTextFilterValue: '',
             absoluteMax: this.props.absoluteMax,
             absoluteMin: this.props.absoluteMin,
             currentMax: 100,
-            currentMin: 0
+            currentMin: 0,
+            currentJustMax: 1000,
+            absoluteJustMax: this.props.absoluteJustMax
         };
         this.state = this.initialState;
 
         this.handleChipClick = this.handleChipClick.bind(this);
+        this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+        this.checkboxIsSelected = this.checkboxIsSelected.bind(this);
         this.handleDropDownValuePicked = this.handleDropDownValuePicked.bind(this);
         this.handleCurrentTextFilterValueChange = this.handleCurrentTextFilterValueChange.bind(this);
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
@@ -252,6 +290,8 @@ export class PopoverFilter extends React.Component {
         this.handleMaxChange = this.handleMaxChange.bind(this);
         this.handleMinValidation = this.handleMinValidation.bind(this);
         this.handleMaxValidation = this.handleMaxValidation.bind(this);
+        this.handleJustMaxChange = this.handleJustMaxChange.bind(this);
+        this.handleJustMaxValidation = this.handleJustMaxValidation.bind(this);
         this.resetState = this.resetState.bind(this);
     }
 
@@ -294,9 +334,28 @@ export class PopoverFilter extends React.Component {
         return includes(this.state.chipValuesPicked, value);
     }
 
+    async handleCheckboxClick(value) {
+        if (this.checkboxIsSelected(value)) {
+            await this.setStateAsync({
+                checkboxValuesPicked: this.state.checkboxValuesPicked.filter(function (valueToRemove) {
+                    return value !== valueToRemove
+                })
+            });
+        } else {
+            await this.setStateAsync(prevState => ({
+                checkboxValuesPicked: [...prevState.checkboxValuesPicked, value]
+            })
+            )
+        }
+    }
+
+    checkboxIsSelected(value) {
+        return includes(this.state.checkboxValuesPicked, value);
+    }
+
     async handleFiltersChange() {
-        const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax } = this.state;
-        this.props.processSelectedFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, [currentMin / 100, currentMax / 100]);
+        const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.state;
+        this.props.processSelectedFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax);
         await this.updateFilterNumber();
     }
 
@@ -356,6 +415,21 @@ export class PopoverFilter extends React.Component {
         }
     }
 
+    handleJustMaxChange = async (ev) => {
+        if (ev.target.value > this.state.absoluteJustMax) {
+            await this.setStateAsync({ currentJustMax: this.state.absoluteJustMax });
+        }
+        else {
+            await this.setStateAsync({ currentJustMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+        }
+    }
+
+    handleJustMaxValidation = async () => {
+        if (this.state.currentJustMax === '') {
+            await this.setStateAsync({ currentJustMax: 1000 });
+        }
+    }
+
     async resetState(exit) {
         if (exit) {
             await this.setStateAsync(this.initialState);
@@ -373,12 +447,13 @@ export class PopoverFilter extends React.Component {
     }
 
     componentWillUnmount() {
-        const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax } = this.initialState
-        this.props.processSelectedFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, [currentMin / 100, currentMax / 100]);
+        const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.initialState
+        this.props.processSelectedFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax);
     }
 
     render() {
         const { classes, intl } = this.props;
+        const containers = ['API', 'UI', 'Redis', 'Duckling', 'Nginx', 'Rasa'];
         return (
             <React.Fragment>
                 {this.state.numberFiltersApplied > 0 &&
@@ -417,72 +492,75 @@ export class PopoverFilter extends React.Component {
                     <Grid
                         className={classes.mainGrid}>
                         <Grid
-                            container
-                            direction="row"
-                            alignItems="stretch"
-                            style={{
-                                marginTop: "15px",
-                                marginBottom: "15px"
-                            }}
-                        >
-                            <Grid item xs={4}>
-                                <span
-                                    className={classes.titleLabel}
-                                >Apply Filter</span>
-                            </Grid>
-                            <Grid item xs={4}
+                            className={classes.headerGrid}>
+                            <Grid
+                                container
+                                direction="row"
+                                alignItems="stretch"
                                 style={{
-                                    textAlign: 'left'
-                                }}>
-                                {this.state.numberFiltersApplied > 0 &&
-                                    <Fragment >
-                                        <span
-                                            className={classes.clearAllFiltersLabel}
-                                        >
-                                            {intl.formatMessage(messages.clearAllFilters)}
-                                        </span>
-                                        <a
-                                            onClick={
-                                                () => { this.resetState(false) }
-                                            }
-                                        >
-                                            <span className={classes.clearAllFiltersLabelX}>
-                                                x
+                                    marginTop: "15px",
+                                    marginBottom: "15px"
+                                }}
+                            >
+                                <Grid item xs={4}>
+                                    <span
+                                        className={classes.titleLabel}
+                                    >Apply Filter</span>
+                                </Grid>
+                                <Grid item xs={4}
+                                    style={{
+                                        textAlign: 'left'
+                                    }}>
+                                    {this.state.numberFiltersApplied > 0 &&
+                                        <Fragment >
+                                            <span
+                                                className={classes.clearAllFiltersLabel}
+                                            >
+                                                {intl.formatMessage(messages.clearAllFilters)}
+                                            </span>
+                                            <a
+                                                onClick={
+                                                    () => { this.resetState(false) }
+                                                }
+                                            >
+                                                <span className={classes.clearAllFiltersLabelX}>
+                                                    x
                                 </span>
-                                        </a>
-                                    </Fragment>
-                                }
-                            </Grid>
-                            <Grid item xs={4}
-                                style={{
-                                    textAlign: 'end'
-                                }} >
-                                <a
-                                    onClick={
-                                        () => { this.handlePopoverClose(); }
+                                            </a>
+                                        </Fragment>
                                     }
-                                >
-                                    <img
-                                        src={xIcon}
-                                        className={classes.xIconImage}
-                                    />
-                                </a>
+                                </Grid>
+                                <Grid item xs={4}
+                                    style={{
+                                        textAlign: 'end'
+                                    }} >
+                                    <a
+                                        onClick={
+                                            () => { this.handlePopoverClose(); }
+                                        }
+                                    >
+                                        <img
+                                            src={xIcon}
+                                            className={classes.xIconImage}
+                                        />
+                                    </a>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            item xs={12}
-                            direction="row"
-                            alignItems="stretch"
-                        >
-                            <Grid item xs
-                                style={{
-                                    paddingBottom: '25px'
-                                }}>
-                                <span
-                                    className={classes.filtersDescriptionLabel}>
-                                    {this.props.filtersDescription}
-                                </span>
+                            <Grid
+                                container
+                                item xs={12}
+                                direction="row"
+                                alignItems="stretch"
+                            >
+                                <Grid item xs
+                                    style={{
+                                        paddingBottom: '25px'
+                                    }}>
+                                    <span
+                                        className={classes.filtersDescriptionLabel}>
+                                        {this.props.filtersDescription}
+                                    </span>
+                                </Grid>
                             </Grid>
                         </Grid>
                         <Grid
@@ -490,53 +568,134 @@ export class PopoverFilter extends React.Component {
                             item xs={12}
                             direction="row"
                             alignItems="stretch">
+                            {this.props.showCheckboxFilter && (
+                                <Fragment>
+                                    <Grid
+                                        item xs={12}
+                                        container
+                                        direction="row"
+                                        justify="center"
+                                        alignItems="center">
+                                    </Grid>
+                                    {
+                                        containers.map(container => {
+                                            return <FormControlLabel
+                                                key={container}
+                                                className={classes.formControlLabel}
+                                                classes={{ label: classes.checkboxLabel }}
+                                                control={<Checkbox
+                                                    icon={<Icon className={classes.checkboxImage} ><img src={checkboxUncheckedIcon} /></Icon>}
+                                                    checkedIcon={<Icon className={classes.checkboxImage}><img src={checkboxCheckedIcon} /></Icon>}
+                                                    checked={this.checkboxIsSelected(container)}
+                                                    onChange={async () => {
+                                                        await this.handleCheckboxClick(container);
+                                                        await this.handleFiltersChange()
+                                                    }}
+                                                    value={container} />}
+                                                label={container + ':'}
+                                                labelPlacement="start"
+                                            />
+                                        })
+                                    }
+                                </Fragment>
+                            )}
                             <Grid
-                                item xs={1}
                                 container
-                                direction="row"
-                                justify="center"
-                                alignItems="center"
-                                className={classes.searchImageGrid}
-                            >
-                                <img
-                                    src={searchIcon}
-                                    className={classes.searchImage} />
-                            </Grid>
-                            <Grid
-                                item xs={11}
-                                container
+                                item xs={12}
                                 direction="row"
                                 alignItems="stretch"
-                                justify="center"
+                                style={{ paddingLeft: '16px', marginBottom: '10px' }}
                             >
-                                <Input
-                                    className={classes.textFilter}
-                                    inputProps={{
-                                        className: classes.textFilterInput
-                                    }}
-                                    value={this.state.currentTextFilterValue}
-                                    placeholder={this.props.textFilterPlaceholder}
-                                    onKeyPress={async ev => {
-                                        if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
-                                            ev.preventDefault();
-                                            await this.handleTextFilterValueChanged(ev.target.value);
+                                <Grid item xs={3} >
+                                    <span className={classes.justMaxLabel}>
+                                        # of logs to View:
+                                    </span>
+                                    <TextField
+                                        id="standard-number-just-max"
+                                        type="number"
+                                        value={this.state.currentJustMax}
+                                        onChange={async (ev) => { await this.handleJustMaxChange(ev) }}
+                                        onKeyPress={async ev => {
+                                            if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
+                                                ev.preventDefault();
+                                                await this.handleJustMaxValidation();
+                                                await this.handleFiltersChange();
+                                            }
+                                        }}
+                                        onBlur={async () => {
+                                            await this.handleJustMaxValidation();
                                             await this.handleFiltersChange();
-                                            await this.handleCurrentTextFilterValueChange("");
-                                        }
-                                    }}
-                                    onChange={
-                                        async ev => {
-                                            await this.handleCurrentTextFilterValueChange(ev.target.value);
-                                        }
-                                    }
-                                />
+                                        }}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        inputProps={{
+                                            style: {
+                                                border: 'none',
+                                                paddingRight: '0px',
+                                                color: '#C5CBD8'
+                                            },
+                                        }}
+                                        InputProps={{
+                                            className: classes.minMaxContainer
+                                        }}
+                                        className={classes.justMaxInput}
+                                    />
+                                </Grid>
                             </Grid>
+                            {this.props.showTextFilter && (
+                                <Fragment>
+                                    <Grid
+                                        item xs={1}
+                                        container
+                                        direction="row"
+                                        justify="center"
+                                        alignItems="center"
+                                        className={classes.searchImageGrid}
+                                    >
+                                        <img
+                                            src={searchIcon}
+                                            className={classes.searchImage} />
+                                    </Grid>
+                                    <Grid
+                                        item xs={11}
+                                        container
+                                        direction="row"
+                                        alignItems="stretch"
+                                        justify="center"
+                                    >
+                                        <Input
+                                            className={classes.textFilter}
+                                            inputProps={{
+                                                className: classes.textFilterInput
+                                            }}
+                                            value={this.state.currentTextFilterValue}
+                                            placeholder={this.props.textFilterPlaceholder}
+                                            onKeyPress={async ev => {
+                                                if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
+                                                    ev.preventDefault();
+                                                    await this.handleTextFilterValueChanged(ev.target.value);
+                                                    await this.handleFiltersChange();
+                                                    await this.handleCurrentTextFilterValueChange("");
+                                                }
+                                            }}
+                                            onChange={
+                                                async ev => {
+                                                    await this.handleCurrentTextFilterValueChange(ev.target.value);
+                                                }
+                                            }
+                                        />
+                                    </Grid>
+                                </Fragment>
+                            )}
                         </Grid>
-                        <span
-                            className={classes.filterNamesLabels}
-                        >
-                            <FormattedMessage {...messages.filterApplied} />
-                        </span>
+                        {this.props.showTextFilter && (
+                            <span
+                                className={classes.filterNamesLabels}
+                            >
+                                <FormattedMessage {...messages.filterApplied} />
+                            </span>
+                        )}
                         {this.state.textFilterValue != '' &&
                             <Grid style={{ 'marginLeft': '10px' }}>
                                 <div
@@ -600,7 +759,7 @@ export class PopoverFilter extends React.Component {
                                             {this.props.dropDownMainOptionLabel}
                                         </MenuItem>
                                         {
-                                            this.props.dropDownValues.map(option => (
+                                            this.props.dropDownValues && this.props.dropDownValues.map(option => (
                                                 <MenuItem key={option} value={option}>
                                                     {option}
                                                 </MenuItem>
@@ -610,14 +769,18 @@ export class PopoverFilter extends React.Component {
                                 </Grid>
                             </Grid>
                         }
-                        <span
-                            className={classes.filterNamesLabels}
-                        >
-                            {this.props.chipsFilterLabel}
-                        </span>
-                        <br />
+                        {this.props.showChips ? (
+                            <Fragment>
+                                <span
+                                    className={classes.filterNamesLabels}
+                                >
+                                    {this.props.chipsFilterLabel}
+                                </span>
+                                <br />
+                            </Fragment>
+                        ) : (null)}
                         <Grid style={{ marginLeft: '10px', marginBottom: '10px' }}>
-                            {this.props.showCustomFirstChip === true && (
+                            {(this.props.showChips && this.props.showCustomFirstChip === true) && (
                                 <Fragment>
                                     <div
                                         key={""}
@@ -635,7 +798,7 @@ export class PopoverFilter extends React.Component {
                                     </div>
                                 </Fragment>
                             )}
-                            {this.props.chipValues.sort().map(data => {
+                            {this.props.showChips ? this.props.chipValues.sort().map(data => {
                                 return (
                                     <div
                                         key={data}
@@ -652,7 +815,7 @@ export class PopoverFilter extends React.Component {
                                         </span>
                                     </div>
                                 );
-                            })}
+                            }) : (null)}
                         </Grid>
                         {this.props.showMinMaxFilter && (
                             <Fragment>
@@ -782,7 +945,6 @@ PopoverFilter.propTypes = {
     transformOrigin: PropTypes.object,
     showCategoryFilter: PropTypes.bool,
     dropDownValues: PropTypes.array,
-    showCategoryFilter: PropTypes.bool,
     showMinMaxFilter: PropTypes.bool,
     showCustomFirstChip: PropTypes.bool,
     chipValues: PropTypes.array.isRequired,

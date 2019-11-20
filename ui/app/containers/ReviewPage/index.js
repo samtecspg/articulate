@@ -31,6 +31,8 @@ import {
   makeSelectAgent,
   makeSelectCategories,
   makeSelectDocuments,
+  makeSelectLogs,
+  makeSelectLogsText,
   makeSelectSessions,
   makeSelectFilteredCategories,
   makeSelectKeywords,
@@ -40,6 +42,8 @@ import {
   makeSelectTotalSessions,
   makeSelectLocale,
   makeSelectServerStatus,
+  makeSelectLoadingCurrentUser,
+  makeSelectLoading,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -61,6 +65,7 @@ export class ReviewPage extends React.Component {
     this.initForm = this.initForm.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleDeleteDocModalChange = this.handleDeleteDocModalChange.bind(this);
+    this.onSearchLog = this.onSearchLog.bind(this);
   }
 
   state = {
@@ -98,6 +103,16 @@ export class ReviewPage extends React.Component {
         sortField: 'modificationDate',
         sortDirection: 'desc',
         timeSort: 'desc',
+      },
+      logs: {
+        client: null,
+        socketClientConnected: false,
+        total: null,
+        currentPage: 1,
+        pageSize: 1000,
+        numberOfPages: null,
+        sortField: '@timestamp',
+        sortDirection: 'desc'
       }
     },
     deleteDocModalOpen: false,
@@ -114,6 +129,7 @@ export class ReviewPage extends React.Component {
       onLoadCategories,
       onLoadAgentDocuments,
       onLoadAgentSessions,
+      onLoadLogs,
       onRefreshDocuments,
     } = this.props.actions;
 
@@ -139,6 +155,14 @@ export class ReviewPage extends React.Component {
       this.state.pageStatus.sessions.sortField,
       this.state.pageStatus.sessions.sortDirection,
     );
+
+    onLoadLogs({
+      page: this.state.pageStatus.logs.currentPage,
+      pageSize: this.state.pageStatus.logs.pageSize,
+      field: this.state.pageStatus.logs.sortField,
+      direction: this.state.pageStatus.logs.sortDirection,
+      filter: this.state.filter
+    });
 
     const newPageStatus = this.state.pageStatus;
 
@@ -278,6 +302,14 @@ export class ReviewPage extends React.Component {
         this.state.pageStatus.sessions.sortDirection,
       );
     }
+    if (this.state.selectedTab === 'logs') {
+      onLoadLogs(
+        pageNumber,
+        this.state.pageStatus.sessions.pageSize,
+        this.state.pageStatus.sessions.sortField,
+        this.state.pageStatus.sessions.sortDirection,
+      );
+    }
   }
 
   movePageBack() {
@@ -333,11 +365,29 @@ export class ReviewPage extends React.Component {
       pageStatus: newPageStatus,
       filter
     });
+
     onLoadAgentDocuments({
       page: 1,
       pageSize: this.state.pageStatus['documents'].pageSize,
       field: this.state.pageStatus['documents'].sortField,
       direction: this.state.pageStatus['documents'].sortDirection,
+      filter: filter
+    });
+  }
+
+  onSearchLog(filter, logsNumber) {
+    const { onLoadLogs } = this.props.actions;
+    const newPageStatus = this.state.pageStatus;
+    newPageStatus['documents'].currentPage = 1;
+    this.setState({
+      filter
+    });
+
+    onLoadLogs({
+      page: this.state.pageStatus.logs.currentPage,
+      pageSize: logsNumber,
+      field: this.state.pageStatus.logs.sortField,
+      direction: this.state.pageStatus.logs.sortDirection,
       filter: filter
     });
   }
@@ -517,6 +567,7 @@ export class ReviewPage extends React.Component {
               onDeleteDocument={this.deleteDocument}
               onDeleteSession={this.deleteSession}
               onSearchSaying={this.onSearchSaying}
+              onSearchLog={this.onSearchLog}
               onSearchCategory={this.onSearchCategory}
               onSendSayingToAction={onSendSayingToAction}
               currentPage={this.state.pageStatus[this.state.selectedTab].currentPage}
@@ -538,6 +589,9 @@ export class ReviewPage extends React.Component {
               locale={this.props.locale}
               timeSort={this.state.pageStatus[this.state.selectedTab].timeSort}
               onLoadSessionId={onLoadSessionId}
+              //logs={this.props.logs}
+              logsText={this.props.logsText}
+              loading={this.props.loading}
             />
           }
           dialogueForm={Link}
@@ -557,6 +611,7 @@ export class ReviewPage extends React.Component {
 ReviewPage.propTypes = {
   actions: PropTypes.shape({
     onLoadAgentDocuments: PropTypes.func.isRequired,
+    onLoadLogs: PropTypes.func.isRequired,
     onLoadFilteredCategories: PropTypes.func.isRequired,
     onLoadCategories: PropTypes.func.isRequired,
     onLoadKeywords: PropTypes.func.isRequired,
@@ -579,6 +634,8 @@ ReviewPage.propTypes = {
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
   documents: PropTypes.array,
+  //logs: PropTypes.array,
+  logsText: PropTypes.string,
   totalDocuments: PropTypes.number,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
@@ -603,8 +660,11 @@ const mapStateToProps = createStructuredSelector({
   category: makeSelectSelectedCategory(),
   newSayingActions: makeSelectNewSayingActions(),
   documents: makeSelectDocuments(),
+  //logs: makeSelectLogs(),
+  logsText: makeSelectLogsText(),
   sessions: makeSelectSessions(),
   locale: makeSelectLocale(),
+  loading: makeSelectLoading(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -619,6 +679,7 @@ function mapDispatchToProps(dispatch) {
         onLoadCategories: Actions.loadCategories,
         onLoadKeywords: Actions.loadKeywords,
         onLoadActions: Actions.loadActions,
+        onLoadLogs: Actions.loadLogs,
         onCopySaying: Actions.copySaying,
         onSendSayingToAction: Actions.sendSayingToAction,
         onClearSayingToAction: Actions.clearSayingToAction,

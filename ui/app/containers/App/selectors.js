@@ -226,6 +226,27 @@ const makeSelectTotalSessions = () =>
     globalState => globalState.totalSessions,
   );
 
+/*Logs*/
+const makeSelectLogs = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.logs,
+  );
+
+const makeSelectLogsText = () =>
+  createSelector(
+    selectGlobal,
+    globalState => getLogsContent(globalState.logs)
+  )
+
+const getLogsContent = (logs) => {
+  var result = '';
+  logs.map((log) => {
+    result = result + log._source.container.name + ' :' + log._source.message + '\n';
+  });
+  return result;
+};
+
 /* Keywords */
 const makeSelectKeywords = () =>
   createSelector(
@@ -534,6 +555,8 @@ export {
   makeSelectDocumentsAnalytics,
   makeSelectDocumentsStats,
   makeSelectTotalDocumentsAnalytics,
+  makeSelectLogs,
+  makeSelectLogsText,
   makeSelectSessions,
   makeSelectTotalSessions,
   makeSelectLocale,

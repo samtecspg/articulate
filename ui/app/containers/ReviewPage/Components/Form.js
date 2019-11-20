@@ -1,7 +1,7 @@
-import { Button, Grid, Input, Modal, Typography, Tabs, Tab } from '@material-ui/core';
+import { Button, Grid, Input, Modal, Typography, Tabs, Tab, CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import reviewIcon from '../../../images/icon-review.svg';
@@ -10,6 +10,7 @@ import messages from '../messages';
 import { map } from 'lodash';
 import SayingsDataForm from './SayingsDataForm';
 import SessionsDataForm from './SessionsDataForm';
+import Logs from './Logs';
 import ExitModal from '../../../components/ExitModal';
 import PopoverFilter from './../../../components/PopoverFilter';
 
@@ -96,10 +97,13 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.processSelectedPopoverFilters = this.processSelectedPopoverFilters.bind(this);
+    this.processSelectedPopoverFiltersLogs = this.processSelectedPopoverFiltersLogs.bind(this);
   }
 
   state = {
-    openModal: false
+    openModal: false,
+    refreshLogFilter: '',
+    numberLogsFilter: 1000
   };
 
   handle
@@ -136,6 +140,20 @@ class Form extends React.Component {
       filter = filter + '"';
     }
     this.props.onSearchSaying(filter);
+  }
+
+  processSelectedPopoverFiltersLogs(dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval, checkboxValuesPicked, currentJustMax) {
+    var filter = '';
+    if (checkboxValuesPicked.length > 0) {
+      filter = filter + ' containers:"';
+      filter = filter + checkboxValuesPicked.map(container => { return container.toLowerCase() }).join('" containers:"');
+      filter = filter + '"';
+    }
+    this.props.onSearchLog(filter, currentJustMax);
+    this.setState({
+      refreshLogFilter: filter,
+      numberLogsFilter: currentJustMax
+    });
   }
 
   render() {
@@ -268,6 +286,17 @@ class Form extends React.Component {
                     this.props.selectedTab === 'sessions' ? classes.selected : null
                   }
                 />
+                <Tab
+                  value="logs"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>Logs</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'logs' ? classes.selected : null
+                  }
+                />
               </Tabs>
             </Grid>
             <Grid item xs={6} style={{ justifyContent: 'flex-end' }} container direction={'row'}>
@@ -275,8 +304,11 @@ class Form extends React.Component {
                 <PopoverFilter
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  showCategoryFilter={false}
+                  showCheckboxFilter={false}
+                  showTextFilter={true}
+                  showDropDownFilter={false}
                   showMinMaxFilter={true}
+                  showChips={true}
                   showCustomFirstChip={true}
                   chipValues={map(this.props.agentActions, 'actionName')}
                   filtersDescription={intl.formatMessage(messages.filtersDescription)}
@@ -289,6 +321,30 @@ class Form extends React.Component {
                   processSelectedFilters={this.processSelectedPopoverFilters}
                   absoluteMin={0}
                   absoluteMax={100}
+                />
+              )}
+              {this.props.selectedTab === 'logs' && (
+                <PopoverFilter
+                  anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  showCheckboxFilter={true}
+                  showTextFilter={false}
+                  showDropDownFilter={false}
+                  showMinMaxFilter={false}
+                  showChips={false}
+                  showCustomFirstChip={false}
+                  chipValues={map(this.props.agentActions, 'actionName')}
+                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
+                  textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
+                  chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  minMaxFilterLabel={intl.formatMessage(messages.actionIntervals)}
+                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
+                  minMaxIntervalsWarning={intl.formatMessage(messages.actionIntervalsWarning)}
+                  customFirstChipLabel={intl.formatMessage(messages.customFirstActionLabel)}
+                  processSelectedFilters={this.processSelectedPopoverFiltersLogs}
+                  absoluteMin={0}
+                  absoluteMax={100}
+                  absoluteJustMax={10000}
                 />
               )}
             </Grid>
@@ -354,8 +410,19 @@ class Form extends React.Component {
               onLoadSessionId={this.props.onLoadSessionId}
             />
           )}
+          {this.props.selectedTab === 'logs' && (
+            <Fragment>
+              <Logs
+                logsText={this.props.logsText}
+                loading={this.props.loading}
+                processSelectedFilters={this.processSelectedPopoverFiltersLogs}
+                refreshLogs={() => { this.props.onSearchLog(this.state.refreshLogFilter, this.state.numberLogsFilter) }}
+              />
+            </Fragment>
+          )
+          }
         </Grid>
-      </Grid>
+      </Grid >
     );
   }
 }
@@ -364,6 +431,8 @@ Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   documents: PropTypes.array,
+  //logs: PropTypes.array,
+  logsText: PropTypes.string,
   agent: PropTypes.object,
   agentId: PropTypes.string,
   agentKeywords: PropTypes.array,
@@ -400,7 +469,9 @@ Form.propTypes = {
   timeSort: PropTypes.string,
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
-  onLoadSessionId: PropTypes.func
+  onLoadSessionId: PropTypes.func,
+  loading: PropTypes.bool,
+  onSearchLog: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

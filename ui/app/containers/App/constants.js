@@ -135,6 +135,11 @@ export const LOAD_AGENT_DOCUMENTS_ERROR =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_ERROR';
 export const LOAD_AGENT_DOCUMENTS_SUCCESS =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_SUCCESS';
+export const LOAD_LOGS = 'app/AgentPage/LOAD_LOGS';
+export const LOAD_LOGS_ERROR =
+  'app/AgentPage/LOAD_LOGS_ERROR';
+export const LOAD_LOGS_SUCCESS =
+  'app/AgentPage/LOAD_LOGS_SUCCESS';
 export const DELETE_DOCUMENT =
   'app/AgentPage/DELETE_DOCUMENT';
 export const DELETE_DOCUMENT_ERROR =

@@ -4,11 +4,13 @@ import {
   ROUTE_AGENT,
   ROUTE_CATEGORY,
   ROUTE_DOCUMENT,
+  ROUTE_LOG,
+  ROUTE_SEARCH,
   ROUTE_SAYING,
   ROUTE_SETTINGS,
   ROUTE_SESSION,
   ROUTE_CONTEXT,
-  PARAM_DELETE_BY_QUERY
+  ROUTE_DELETE_BY_QUERY
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
@@ -19,6 +21,9 @@ import {
   loadAgentDocuments,
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
+  loadLogs,
+  loadLogsError,
+  loadLogsSuccess,
   deleteDocumentError,
   deleteSessionDataError,
   loadAgentSessionsSuccess,
@@ -43,6 +48,7 @@ import {
   DELETE_SAYING,
   LOAD_ACTIONS,
   LOAD_AGENT_DOCUMENTS,
+  LOAD_LOGS,
   DELETE_DOCUMENT,
   LOAD_AGENT_SESSIONS,
   LOAD_CATEGORIES,
@@ -329,6 +335,52 @@ export function* getAgentDocument(payload) {
   }
 }
 
+export function* getLogs(payload) {
+  const { api, page, pageSize, field, direction, filter } = payload;
+  let tempFilter = null;
+  if (filter) {
+    const { remainingText, found } = ExtractTokensFromString({
+      text: filter,
+      tokens: ['containers'],
+    });
+    tempFilter =
+      filter === ''
+        ? undefined
+        : JSON.stringify({
+          containers: found.containers,
+          query: remainingText,
+        });
+  }
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: tempFilter ? tempFilter : null,
+      skip,
+      limit,
+      field,
+      direction
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_LOG]),
+      { params },
+    );
+    yield put(
+      loadLogsSuccess({
+        logs: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadLogsError(err));
+  }
+}
+
 export function* deleteDocument(payload) {
   const { api, documentId, sessionId, page, pageSize, field, direction } = payload;
   try {
@@ -411,7 +463,7 @@ export function* deleteSessionData(payload) {
 
     yield call(
       api.post,
-      toAPIPath([ROUTE_DOCUMENT, PARAM_DELETE_BY_QUERY]),
+      toAPIPath([ROUTE_DOCUMENT, ROUTE_DELETE_BY_QUERY]),
       {
         "query": {
           "match": {
@@ -484,5 +536,6 @@ export default function* rootSaga() {
   yield takeLatest(DELETE_DOCUMENT, deleteDocument);
   yield takeLatest(DELETE_SESSION_DATA, deleteSessionData);
   yield takeLatest(LOAD_AGENT_SESSIONS, getAgentSessions);
+  yield takeLatest(LOAD_LOGS, getLogs);
   //yield takeLatest(LOAD_SESSION, getSession);
 }

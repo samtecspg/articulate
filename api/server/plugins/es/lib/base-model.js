@@ -1,13 +1,14 @@
 import _ from 'lodash';
 
 module.exports = class BaseModel {
-    constructor({ name, mappings, settings, client }) {
+    constructor({ name, mappings, settings, client, registerConfiguration }) {
 
         this.name = name;
-        this.index = _.snakeCase(name);
+        this.index = _.toLower(name);
         this.mappings = mappings;
         this.settings = settings;
         this.client = client;
+        this.registerConfiguration = registerConfiguration;
     }
 
     async count({ query = null } = {}) {
