@@ -1,41 +1,42 @@
 {
-    "name": "Twilio SMS",
-    "description": "A quick connection to the webhook of Twilio SMS Numbers.",
-    "documentation": null,
-    "userField": "From",
-    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/twilio.png",
-    "details": {
-        "authToken": {
-            "displayName": "Auth Token",
-            "description" : "Your Twilio auth token",
-            "type": "string"
-        },
-        "accountId": {
-            "displayName": "Account SID",
-            "description" : "Your Twilio account SID",
-            "type": "string"
-        },
-        "whiteList": {
-            "displayName": "Phone Numbers Whitelist",
-            "description" : "Allow only the numbers in this list. Allow all if empty.",
-            "type": "array",
-            "allowEmpty": true
-        },
-        "blackList": {
-            "displayName": "Phone Numbers Blacklist",
-            "description" : "Block the numbers in this list.",
-            "type": "array",
-            "allowEmpty": true
-        },
-        "outgoingMessages": {
-            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
-            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
-            "type": "boolean"
-        },
-        "waitTimeBetweenMessages": {
-            "displayName": "Time in MS between response messages:",
-            "description": "How much the channel should wait between agent responses?",
-            "type": "number"
-        }
+  "name": "Twilio SMS",
+  "description": "A quick connection to the webhook of Twilio SMS Numbers.",
+  "documentation": null,
+  "userField": "From",
+  "receivedTextField": "Body",
+  "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/twilio.png",
+  "details": {
+    "authToken": {
+      "displayName": "Auth Token",
+      "description": "Your Twilio auth token",
+      "type": "string"
+    },
+    "accountId": {
+      "displayName": "Account SID",
+      "description": "Your Twilio account SID",
+      "type": "string"
+    },
+    "whiteList": {
+      "displayName": "Phone Numbers Whitelist",
+      "description": "Allow only the numbers in this list. Allow all if empty.",
+      "type": "array",
+      "allowEmpty": true
+    },
+    "blackList": {
+      "displayName": "Phone Numbers Blacklist",
+      "description": "Block the numbers in this list.",
+      "type": "array",
+      "allowEmpty": true
+    },
+    "outgoingMessages": {
+      "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+      "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+      "type": "boolean"
+    },
+    "waitTimeBetweenMessages": {
+      "displayName": "Time in MS between response messages:",
+      "description": "How much the channel should wait between agent responses?",
+      "type": "number"
     }
+  }
 }

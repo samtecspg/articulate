@@ -1,34 +1,35 @@
 {
-    "name": "Rocket.Chat",
-    "description": "A quick connection to Rocket.Chat.",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/README.MD",
-    "userField": "user_id",
-    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/rocketchat.png",
-    "details": {
-        "rocketchatURL": {
-            "displayName": "Rocket.Chat URL",
-            "description" : "URL of the Rocket.Chat instance to connect to. Can be specified as host:port",
-            "type": "string"
-        },
-        "rocketchatUser": {
-            "displayName": "Rocket.Chat User",
-            "description" : "The bot’s username. Must be registered on your Rocket.Chat server and granted bot role.",
-            "type": "string"
-        },
-        "rocketchatPassword": {
-            "displayName": "Rocket.Chat password",
-            "description" : "The bot user’s password.",
-            "type": "password"
-        },
-        "outgoingMessages": {
-            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
-            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
-            "type": "boolean"
-        },
-        "waitTimeBetweenMessages": {
-            "displayName": "Time in MS between response messages:",
-            "description": "How much the channel should wait between agent responses?",
-            "type": "number"
-        }
+  "name": "Rocket.Chat",
+  "description": "A quick connection to Rocket.Chat.",
+  "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/README.MD",
+  "userField": "user_id",
+  "receivedTextField": "text",
+  "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/rocketchat.png",
+  "details": {
+    "rocketchatURL": {
+      "displayName": "Rocket.Chat URL",
+      "description": "URL of the Rocket.Chat instance to connect to. Can be specified as host:port",
+      "type": "string"
+    },
+    "rocketchatUser": {
+      "displayName": "Rocket.Chat User",
+      "description": "The bot’s username. Must be registered on your Rocket.Chat server and granted bot role.",
+      "type": "string"
+    },
+    "rocketchatPassword": {
+      "displayName": "Rocket.Chat password",
+      "description": "The bot user’s password.",
+      "type": "password"
+    },
+    "outgoingMessages": {
+      "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+      "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+      "type": "boolean"
+    },
+    "waitTimeBetweenMessages": {
+      "displayName": "Time in MS between response messages:",
+      "description": "How much the channel should wait between agent responses?",
+      "type": "number"
     }
+  }
 }

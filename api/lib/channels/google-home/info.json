@@ -1,14 +1,15 @@
 {
-    "name": "Google Home",
-    "description": "A connection for Google Home using the Google Actions SDK.",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/README.MD",
-    "userField": "conversation.conversationId",
-    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/google-assistant.png",
-    "details": {
-        "queryPatterns": {
-            "displayName": "Query Patterns for Main Action",
-            "description" : "Phrases that users will use to start your action",
-            "type": "array"
-        }
+  "name": "Google Home",
+  "description": "A connection for Google Home using the Google Actions SDK.",
+  "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/README.MD",
+  "userField": "conversation.conversationId",
+  "receivedTextField": "text",
+  "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/google-assistant.png",
+  "details": {
+    "queryPatterns": {
+      "displayName": "Query Patterns for Main Action",
+      "description": "Phrases that users will use to start your action",
+      "type": "array"
     }
+  }
 }

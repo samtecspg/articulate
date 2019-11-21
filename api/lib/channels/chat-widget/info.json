@@ -1,34 +1,35 @@
 {
-    "name": "Chat Widget",
-    "description": "Chat widget that can be injected in your website",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/chat-widget/README.MD",
-    "userField": "sessionId",
-    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/chat-widget.svg",
-    "details": {
-        "title": {
-            "displayName": "Widget title",
-            "description" : "Title of the widget window",
-            "type": "string"
-        },
-        "subtitle": {
-            "displayName": "Widget subtitle",
-            "description" : "Subtitle of the widget window",
-            "type": "string"
-        },
-        "senderPlaceHolder": {
-            "displayName": "Input placeholder",
-            "description" : "Placeholder users will see in the input of the widget",
-            "type": "string"
-        },
-        "outgoingMessages": {
-            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
-            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
-            "type": "boolean"
-        },
-        "waitTimeBetweenMessages": {
-            "displayName": "Time in MS between response messages:",
-            "description": "How much the channel should wait between agent responses?",
-            "type": "number"
-        }
+  "name": "Chat Widget",
+  "description": "Chat widget that can be injected in your website",
+  "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/chat-widget/README.MD",
+  "userField": "sessionId",
+  "receivedTextField": "text",
+  "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/chat-widget.svg",
+  "details": {
+    "title": {
+      "displayName": "Widget title",
+      "description": "Title of the widget window",
+      "type": "string"
+    },
+    "subtitle": {
+      "displayName": "Widget subtitle",
+      "description": "Subtitle of the widget window",
+      "type": "string"
+    },
+    "senderPlaceHolder": {
+      "displayName": "Input placeholder",
+      "description": "Placeholder users will see in the input of the widget",
+      "type": "string"
+    },
+    "outgoingMessages": {
+      "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+      "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+      "type": "boolean"
+    },
+    "waitTimeBetweenMessages": {
+      "displayName": "Time in MS between response messages:",
+      "description": "How much the channel should wait between agent responses?",
+      "type": "number"
     }
+  }
 }

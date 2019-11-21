@@ -1,29 +1,30 @@
 {
-    "name": "Slack",
-    "description": "A quick connection to Slack using the Events API.",
-    "documentation": null,
-    "userField": "event.user",
-    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/slack.png",
-    "details": {
-        "signingSecret": {
-            "displayName": "Signing Secret",
-            "description" : "Unique string provided by Slack to verify requests",
-            "type": "string"
-        },
-        "botAccessToken": {
-            "displayName": "Bot Access Token",
-            "description" : "Token provided by Slack when you created your bot",
-            "type": "string"
-        },
-        "outgoingMessages": {
-            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
-            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
-            "type": "boolean"
-        },
-        "waitTimeBetweenMessages": {
-            "displayName": "Time in MS between response messages:",
-            "description": "How much the channel should wait between agent responses?",
-            "type": "number"
-        }
+  "name": "Slack",
+  "description": "A quick connection to Slack using the Events API.",
+  "documentation": null,
+  "userField": "event.user",
+  "receivedTextField": "text",
+  "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/slack.png",
+  "details": {
+    "signingSecret": {
+      "displayName": "Signing Secret",
+      "description": "Unique string provided by Slack to verify requests",
+      "type": "string"
+    },
+    "botAccessToken": {
+      "displayName": "Bot Access Token",
+      "description": "Token provided by Slack when you created your bot",
+      "type": "string"
+    },
+    "outgoingMessages": {
+      "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+      "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+      "type": "boolean"
+    },
+    "waitTimeBetweenMessages": {
+      "displayName": "Time in MS between response messages:",
+      "description": "How much the channel should wait between agent responses?",
+      "type": "number"
     }
+  }
 }

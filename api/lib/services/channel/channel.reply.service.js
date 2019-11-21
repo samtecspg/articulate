@@ -17,14 +17,6 @@ module.exports = async function({ connection, event, response, sessionId }) {
     if (url) {
       const webhook = new IncomingWebhook(url);
 
-      var text = '';
-      if (connection.channel === 'twilio') {
-        text = event.Body;
-      } else if (connection.channel === 'web-demo') {
-        text = event.text;
-      } else {
-        text = event.text; // FIXME check where the text comes with other connections
-      }
       await webhook.send({
         attachments: [
           {
@@ -37,7 +29,7 @@ module.exports = async function({ connection, event, response, sessionId }) {
             author_icon: channel.info.iconURL,
             title: 'Message',
             title_link: `${connection.requestURL}/doc/${response.docId}`,
-            text: text,
+            text: _.get(event, channel.info.receivedTextField),
             fields: [
               {
                 title: 'Response',
