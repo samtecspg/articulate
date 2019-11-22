@@ -31,7 +31,6 @@ import {
   makeSelectAgent,
   makeSelectCategories,
   makeSelectDocuments,
-  makeSelectLogs,
   makeSelectLogsText,
   makeSelectSessions,
   makeSelectFilteredCategories,

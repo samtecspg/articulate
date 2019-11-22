@@ -248,7 +248,11 @@ class Form extends React.Component {
                 <PopoverFilter
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  showCheckboxFilter={false}
+                  showTextFilter={true}
                   showDropDownFilter={true}
+                  showMinMaxFilter={false}
+                  showChips={true}
                   showMinMaxFilter={false}
                   showCustomFirstChip={false}
                   dropDownValues={map(this.props.agentCategories, 'categoryName')}

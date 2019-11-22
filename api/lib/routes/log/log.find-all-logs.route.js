@@ -11,7 +11,6 @@ module.exports = {
         tags: ['api'],
         validate: LogValidator.findAllLogs,
         handler: async (request) => {
-
             const { logService } = await request.services();
             const { skip, limit, direction, field, filter } = request.query;
             try {

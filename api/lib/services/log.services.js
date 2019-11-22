@@ -9,7 +9,6 @@ module.exports = class LogService extends Schmervice.Service {
     }
 
     async findAllLogs() {
-
         return await FindAllLogs.apply(this, arguments);
     }
 };

@@ -1,6 +1,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  applyFilter: {
+    id: 'app.components.PopOverFilter.ApplyFilter',
+    defaultMessage: 'Apply Filter:',
+  },
   filterApplied: {
     id: 'app.components.PopOverFilter.FilterApplied',
     defaultMessage: 'Filter Applied:',

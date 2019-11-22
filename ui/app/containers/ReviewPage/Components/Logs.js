@@ -11,6 +11,8 @@ import AceEditor from 'react-ace';
 
 import 'brace/mode/text';
 import 'brace/theme/terminal';
+import refreshIcon from '../../../images/refresh-icon.svg';
+import messages from '../messages';
 
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
@@ -27,23 +29,30 @@ const styles = {
     logHeaders: {
         paddingTop: '30px',
         paddingBottom: '15px'
+    },
+    logHeadersLabels: {
+        fontSize: '12px',
+        color: '#4e4e4e',
+        fontFamily: 'Montserrat',
+        opacity: '60%'
+    },
+    logHeadersLabelsUnderlined: {
+        fontSize: '12px',
+        color: '#4e4e4e',
+        fontFamily: 'Montserrat',
+        textDecoration: 'underline',
+        cursor: 'pointer',
+        opacity: '60%'
+    },
+    logHeadersRefreshIcon: {
+        cursor: 'pointer',
+        position: 'relative',
+        marginLeft: '5px',
+        top: '5px'
     }
 }
 
 export class Logs extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.getLogsContent = this.getLogsContent.bind(this);
-    }
-
-    getLogsContent() {
-        var result = '';
-        this.props.logs.map((log) => {
-            result = result + log._source.container.name + ' :' + log._source.message + '\n';
-        });
-        return result;
-    }
 
     render() {
         const { classes } = this.props;
@@ -53,14 +62,22 @@ export class Logs extends React.Component {
                     <Grid className={classes.formSubContainer} container item xs={12}>
                         <Grid className={classes.logHeaders} item xs={12} container direction={'row'}>
                             <Grid item xs={6}>
-                                <span>
-                                    logs:
-                            </span>
+                                <span className={classes.logHeadersLabels}>
+                                    <FormattedMessage {...messages.log} />
+                                </span>
                             </Grid>
-                            <Grid item xs={6}>
-                                <a onClick={this.props.refreshLogs}>
-                                    <span>refresh logs</span>
-                                </a>
+                            <Grid item xs={6} style={{ textAlign: 'end' }}>
+                                <div>
+                                    <a onClick={this.props.refreshLogs}>
+                                        <span className={classes.logHeadersLabelsUnderlined}>
+                                            <FormattedMessage {...messages.refreshLog} />
+                                        </span>
+                                        <img
+                                            src={refreshIcon}
+                                            className={classes.logHeadersRefreshIcon}
+                                        />
+                                    </a>
+                                </div>
                             </Grid>
                             <Grid>
                             </Grid>
@@ -74,19 +91,9 @@ export class Logs extends React.Component {
                                 name="agentLanguages"
                                 readOnly={false}
                                 wrapEnabled={true}
-                                //onChange={value =>
-                                //    this.onChangeEditorValue('agentLanguages', value)
-                                //}
                                 fontSize={14}
                                 readOnly={true}
                                 value={this.props.logsText}
-                                /*value={
-                                    this.props.logs[0]._source.container.name + ' :' +
-                                    this.props.logs[0]._source.message +
-                                    '\n' +
-                                    this.props.logs[1]._source.container.name + ' :' +
-                                    this.props.logs[1]._source.message}
-                                    */
                                 setOptions={{
                                     useWorker: false,
                                     showLineNumbers: true,
@@ -105,9 +112,8 @@ export class Logs extends React.Component {
 }
 
 Logs.propTypes = {
-    //logs: PropTypes.array,
-    logsText: PropTypes.string,
-    loading: PropTypes.bool
+    refreshLogs: PropTypes.func,
+    logsText: PropTypes.string
 };
 
 export default injectIntl(withStyles(styles)(Logs));

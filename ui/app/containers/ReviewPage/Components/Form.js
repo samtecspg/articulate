@@ -96,7 +96,7 @@ class Form extends React.Component {
 
   constructor(props) {
     super(props);
-    this.processSelectedPopoverFilters = this.processSelectedPopoverFilters.bind(this);
+    this.processSelectedPopoverFiltersDocuments = this.processSelectedPopoverFiltersDocuments.bind(this);
     this.processSelectedPopoverFiltersLogs = this.processSelectedPopoverFiltersLogs.bind(this);
   }
 
@@ -120,7 +120,7 @@ class Form extends React.Component {
     });
   };
 
-  processSelectedPopoverFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval) {
+  processSelectedPopoverFiltersDocuments(dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval) {
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
@@ -311,14 +311,13 @@ class Form extends React.Component {
                   showChips={true}
                   showCustomFirstChip={true}
                   chipValues={map(this.props.agentActions, 'actionName')}
-                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
+                  filtersDescription={intl.formatMessage(messages.filtersDescriptionSayingsTab)}
                   textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
                   chipsFilterLabel={intl.formatMessage(messages.pickActions)}
                   minMaxFilterLabel={intl.formatMessage(messages.actionIntervals)}
-                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
                   minMaxIntervalsWarning={intl.formatMessage(messages.actionIntervalsWarning)}
                   customFirstChipLabel={intl.formatMessage(messages.customFirstActionLabel)}
-                  processSelectedFilters={this.processSelectedPopoverFilters}
+                  processSelectedFilters={this.processSelectedPopoverFiltersDocuments}
                   absoluteMin={0}
                   absoluteMax={100}
                 />
@@ -333,18 +332,12 @@ class Form extends React.Component {
                   showMinMaxFilter={false}
                   showChips={false}
                   showCustomFirstChip={false}
-                  chipValues={map(this.props.agentActions, 'actionName')}
-                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
-                  textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
-                  chipsFilterLabel={intl.formatMessage(messages.pickActions)}
-                  minMaxFilterLabel={intl.formatMessage(messages.actionIntervals)}
-                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
-                  minMaxIntervalsWarning={intl.formatMessage(messages.actionIntervalsWarning)}
-                  customFirstChipLabel={intl.formatMessage(messages.customFirstActionLabel)}
+                  checkBoxesFilterLabel={intl.formatMessage(messages.noLogsView)}
+                  checkBoxesValues={['API', 'UI', 'Redis', 'Duckling', 'Nginx', 'Rasa']}
+                  filtersDescription={intl.formatMessage(messages.filtersDescriptionLogsTab)}
                   processSelectedFilters={this.processSelectedPopoverFiltersLogs}
-                  absoluteMin={0}
-                  absoluteMax={100}
                   absoluteJustMax={10000}
+                  initialJustMax={1000}
                 />
               )}
             </Grid>
@@ -431,7 +424,6 @@ Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   documents: PropTypes.array,
-  //logs: PropTypes.array,
   logsText: PropTypes.string,
   agent: PropTypes.object,
   agentId: PropTypes.string,

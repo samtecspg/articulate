@@ -17,9 +17,7 @@ class LogValidate {
     constructor() {
 
         this.findAllLogs = {
-
             query: (() => {
-
                 return {
                     [PARAM_SKIP]: Joi
                         .number()
@@ -51,7 +49,6 @@ class LogValidate {
 
         this.search = {
             payload: (() => {
-
                 return Joi.object();
             })()
         };
