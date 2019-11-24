@@ -21,39 +21,39 @@
   ],
   "categoryClassifierPipeline": [
     {
-        "name": "intent_featurizer_count_vectors",
-        "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
+      "name": "intent_featurizer_count_vectors",
+      "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
     },
     {
-        "name": "intent_classifier_tensorflow_embedding",
-        "intent_tokenization_flag": true,
-        "intent_split_symbol": "+__+"
+      "name": "intent_classifier_tensorflow_embedding",
+      "intent_tokenization_flag": true,
+      "intent_split_symbol": "+__+"
     }
   ],
   "sayingClassifierPipeline": [
     {
-        "name": "intent_featurizer_count_vectors",
-        "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
+      "name": "intent_featurizer_count_vectors",
+      "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
     },
     {
-        "name": "intent_classifier_tensorflow_embedding",
-        "intent_tokenization_flag": true,
-        "intent_split_symbol": "+__+"
+      "name": "intent_classifier_tensorflow_embedding",
+      "intent_tokenization_flag": true,
+      "intent_split_symbol": "+__+"
     },
     {
-        "name": "nlp_spacy"
+      "name": "nlp_spacy"
     },
     {
-        "name": "tokenizer_spacy"
+      "name": "tokenizer_spacy"
     },
     {
-        "name": "ner_crf"
+      "name": "ner_crf"
     },
     {
-        "name": "ner_synonyms"
+      "name": "ner_synonyms"
     },
     {
-        "name": "ner_spacy"
+      "name": "ner_spacy"
     }
   ],
   "keywordClassifierPipeline": [
@@ -758,5 +758,5 @@
   "sessionsPageSize": 5,
   "usersPageSize": 5,
   "conversationPanelWidth": 300,
-  "allowNewUsersSignUps": true
+  "allowNewUsersSignUps": false
 }

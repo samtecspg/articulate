@@ -131,7 +131,8 @@ class Form extends React.Component {
     });
   };
 
-  processSelectedPopoverFilters(dropDownValuePicked, chipValuesPicked, textFilterValue) {
+  processSelectedPopoverFilters(filtersSet) {
+    const { dropDownValuePicked, chipValuesPicked, textFilterValue } = filtersSet;
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
@@ -144,7 +145,7 @@ class Form extends React.Component {
       filter = filter + chipValuesPicked.join('" actions:"')
       filter = filter + '"';
     }
-    this.props.onSearchSaying(filter);
+    this.props.onSearchSaying(filter, true);
   }
 
   render() {

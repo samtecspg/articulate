@@ -354,7 +354,7 @@ export class PopoverFilter extends React.Component {
 
     async handleFiltersChange() {
         const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.state;
-        this.props.processSelectedFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax);
+        this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
         await this.updateFilterNumber();
     }
 
@@ -455,7 +455,7 @@ export class PopoverFilter extends React.Component {
 
     componentWillUnmount() {
         const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.initialState
-        this.props.processSelectedFilters(dropDownValuePicked, chipValuesPicked, textFilterValue, [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax);
+        this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
     }
 
     renderNumberFiltersApplied(classes, intl) {

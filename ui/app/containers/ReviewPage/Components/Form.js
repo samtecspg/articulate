@@ -120,7 +120,8 @@ class Form extends React.Component {
     });
   };
 
-  processSelectedPopoverFiltersDocuments(dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval) {
+  processSelectedPopoverFiltersDocuments(filtersSet) {
+    const { dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval } = filtersSet;
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
@@ -142,7 +143,8 @@ class Form extends React.Component {
     this.props.onSearchSaying(filter);
   }
 
-  processSelectedPopoverFiltersLogs(dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval, checkboxValuesPicked, currentJustMax) {
+  processSelectedPopoverFiltersLogs(filtersSet) {
+    const { checkboxValuesPicked, currentJustMax } = filtersSet;
     var filter = '';
     if (checkboxValuesPicked.length > 0) {
       filter = filter + ' containers:"';
@@ -180,22 +182,6 @@ class Form extends React.Component {
                 <FormattedMessage {...messages.help} />
               </span>
             </Button>
-            {/* <form className={classes.searchForm}>
-            <img src={searchIcon} alt={intl.formatMessage(messages.searchReviewAlt)} />
-            <Input
-              inputProps={{
-                style: {
-                  border: 'none',
-                },
-              }}
-              disableUnderline
-              className={classes.searchInputField}
-              placeholder={intl.formatMessage(messages.searchReviewPlaceholder)}
-              onChange={(evt) => {
-                this.props.onSearchSaying(evt.target.value);
-              }}
-            />
-            </form> */}
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe

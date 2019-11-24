@@ -271,15 +271,12 @@ export class DialoguePage extends React.PureComponent {
     this.props.onLoadSayings(this.state.filter, 1, sayingsPageSize);
   }
 
-  onSearchSaying(filter) {
+  onSearchSaying(filter, ignoreKeywords) {
     this.setState({
       filter,
       currentSayingsPage: 1,
     });
-    //if (this.throttledOnLoadSayings) {
-    //  this.throttledOnLoadSayings(filter, 1, this.state.sayingsPageSize);
-    //}
-    this.props.onLoadSayings(filter, 1, this.state.sayingsPageSize);
+    this.props.onLoadSayings(filter, 1, this.state.sayingsPageSize, ignoreKeywords);
   }
 
   onSearchCategory(categoryFilter) {
@@ -478,8 +475,9 @@ export class DialoguePage extends React.PureComponent {
 
   render() {
     return this.props.agent.id && this.props.agentKeywords &&
-      (this.state.selectedTab !== 'sayings' ||
-        (this.state.selectedTab === 'sayings' && this.props.agentKeywords.length === this.props.totalKeywords)) ? (
+      (this.state.selectedTab === 'actions' ||
+        (this.state.selectedTab === 'sayings' && this.props.agentKeywords.length === this.props.totalKeywords) ||
+        (this.state.selectedTab === 'keywords' && this.props.agentKeywords.length <= this.state.keywordsPageSize)) ? (
         <Grid container>
           <MainTab
             locale={this.props.locale}
@@ -667,8 +665,8 @@ function mapDispatchToProps(dispatch) {
     onLoadAgent: id => {
       dispatch(loadAgent(id));
     },
-    onLoadSayings: (filter, page, pageSize) => {
-      dispatch(loadSayings(filter, page, pageSize));
+    onLoadSayings: (filter, page, pageSize, ignoreKeywords) => {
+      dispatch(loadSayings(filter, page, pageSize, ignoreKeywords));
     },
     onLoadFilteredCategories: filter => {
       dispatch(loadFilteredCategories(filter));

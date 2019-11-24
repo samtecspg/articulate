@@ -241,8 +241,11 @@ const makeSelectLogsText = () =>
 
 const getLogsContent = (logs) => {
   var result = '';
-  logs.map((log) => {
-    result = result + log._source.container.name + ' :' + log._source.message + '\n';
+  logs.map((log, index) => {
+    result = result + log._source.container.name + ' :' + log._source.message;
+    if (index !== logs.length - 1) {
+      result = result + '\n';
+    }
   });
   return result;
 };

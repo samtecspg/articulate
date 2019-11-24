@@ -953,13 +953,14 @@ export function resetSayings() {
   }
 }
 
-export function loadSayings(filter, page, pageSize) {
+export function loadSayings(filter, page, pageSize, ignoreKeywords) {
   return {
     type: LOAD_SAYINGS,
     apiCall: true,
     filter,
     page,
     pageSize,
+    ignoreKeywords
   };
 }
 
