@@ -80,6 +80,7 @@ describe('Agent', () => {
         expect(response.statusCode).to.equal(200);
         expect(response.result.textResponse).to.be.equal("This is an action");
         expect(response.result.responses[0].quickResponses[0]).to.be.equal("With a quick reply");
+        expect(response.result.responses[0].quickResponses[1]).to.be.equal("With another quick reply");
         expect(response.result.responses).to.be.an.array();
         expect(response.result.responses.length).to.be.greaterThan(0);
         expect(response.result.responses[0].fulfilled).to.be.equal(true);

@@ -360,7 +360,8 @@
         }
       ],
       "responsesQuickResponses": [
-        "With a quick reply"
+        "With a quick reply",
+        "With another quick reply"
       ],
       "useWebhook": false,
       "usePostFormat": false,
