@@ -24,6 +24,7 @@ import messages from '../messages';
 
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
+import trashIcon from '../../../images/trash-icon.svg';
 import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
@@ -93,6 +94,12 @@ const styles = {
   table: {
     marginTop: '10px',
   },
+  deleteCell: {
+    width: '20px',
+  },
+  deleteIcon: {
+    cursor: 'pointer',
+  },
   icon: {
     '&:hover': {
       filter: 'invert(0)',
@@ -123,10 +130,20 @@ const styles = {
     border: '1px solid #a2a7b1',
     borderRadius: '5px',
   },
+  newQuickResponseInputContainer: {
+    border: '1px solid #a2a7b1',
+    borderRadius: '5px',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class ResponseForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.addCurrentNewActionResponseQuickResponseToListFromEvent = this.addCurrentNewActionResponseQuickResponseToListFromEvent.bind(this);
+  }
+
   componentWillMount() {
     this.props.onUpdateNewResponse('');
   }
@@ -136,6 +153,7 @@ class ResponseForm extends React.Component {
     openModal: false,
     openActions: false,
     anchorEl: null,
+    currentNewActionResponseQuickResponse: ''
   };
 
   handleOpen = () => {
@@ -149,6 +167,14 @@ class ResponseForm extends React.Component {
       openModal: false,
     });
   };
+
+  addCurrentNewActionResponseQuickResponseToListFromEvent(ev) {
+    ev.preventDefault();
+    if (this.state.currentNewActionResponseQuickResponse.trim() !== '') {
+      this.props.onAddNewActionResponseQuickResponse(this.state.currentNewActionResponseQuickResponse);
+      this.setState({ currentNewActionResponseQuickResponse: '' });
+    }
+  }
 
   render() {
     const { classes, intl, action, postFormat } = this.props;
@@ -302,6 +328,74 @@ class ResponseForm extends React.Component {
                   ) : null}
                 </Grid>
                 <Grid item xs={12}>
+                  <TextField
+                    id="newActionResponseQuickResponse"
+                    label={intl.formatMessage(messages.actionResponseQuickResponseValue)}
+                    value={this.state.currentNewActionResponseQuickResponse}
+                    placeholder={intl.formatMessage(
+                      messages.newActionResponseQuickResponsePlaceholder,
+                    )}
+                    onKeyPress={ev => {
+                      if (ev.key === 'Enter') {
+                        this.addCurrentNewActionResponseQuickResponseToListFromEvent(ev);
+                      }
+                    }}
+                    onChange={ev => {
+                      this.setState({ currentNewActionResponseQuickResponse: ev.target.value });
+                    }}
+                    margin="normal"
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
+                    InputProps={{
+                      className: classes.newQuickResponseInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              this.addCurrentNewActionResponseQuickResponseToListFromEvent(ev);
+                            }}
+                          >
+                            {intl.formatMessage(messages.responseEnter)}
+                          </span>
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={
+                      this.props.errorState
+                        ? this.props.errorState.quickResponses
+                        : false
+                    }
+                  />
+                  {action.responsesQuickResponses && action.responsesQuickResponses.length > 0 ? (
+                    <Table className={classes.table}>
+                      <TableBody>
+                        {action.responsesQuickResponses.map((quickResponse, index) => (
+                          <TableRow key={`${quickResponse}_${index}`}>
+                            <TableCell>{quickResponse}</TableCell>
+                            <TableCell className={classes.deleteCell}>
+                              <img
+                                onClick={() => {
+                                  this.props.onDeleteNewActionResponseQuickResponse(index);
+                                }}
+                                className={classes.deleteIcon}
+                                src={trashIcon}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : null}
+                </Grid>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.postFormatLabel}
                     variant="caption"
@@ -357,6 +451,8 @@ ResponseForm.propTypes = {
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
   agentId: PropTypes.string,
+  onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

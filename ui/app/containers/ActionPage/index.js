@@ -76,6 +76,8 @@ import {
   changeQuickResponse,
   editSlotTextPrompt,
   toggleChatButton,
+  addNewActionResponseQuickResponse,
+  deleteNewActionResponseQuickResponse
 } from '../App/actions';
 
 const styles = {
@@ -100,7 +102,7 @@ export class ActionPage extends React.Component {
       ignoreQueryPrefix: true,
     }).actionTab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
-          .actionTab
+        .actionTab
       : 'action',
     userCompletedAllRequiredFields: false,
     ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
@@ -121,12 +123,12 @@ export class ActionPage extends React.Component {
       ignoreQueryPrefix: true,
     }).isDuplicate
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
-          .isDuplicate
+        .isDuplicate
       : '',
     actionId: qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
       .actionId
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
-          .actionId
+        .actionId
       : '',
     formError: false,
     exitAfterSubmit: false,
@@ -173,15 +175,15 @@ export class ActionPage extends React.Component {
       this.state.ref === 'agent'
         ? `/agent/${this.props.agent.id}`
         : this.state.ref === 'action'
-        ? `/agent/${this.props.agent.id}/actionDummy/${
-            this.state.refActionId
+          ? `/agent/${this.props.agent.id}/actionDummy/${
+          this.state.refActionId
           }?filter=${this.state.filter}&page=${
-            this.state.page
+          this.state.page
           }&actionTab=response`
-        : `/agent/${this.props.agent.id}/dialogue?filter=${
-            this.state.filter
+          : `/agent/${this.props.agent.id}/dialogue?filter=${
+          this.state.filter
           }&page=${this.state.page}${
-            this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'
+          this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'
           }`;
     this.setState({
       exitUrl,
@@ -353,7 +355,6 @@ export class ActionPage extends React.Component {
       newErrorState.webhookPayload = true;
       newErrorState.tabs.push(2);
     }
-
     if (!errors) {
       this.setState({
         formError: false,
@@ -364,8 +365,8 @@ export class ActionPage extends React.Component {
         // If the saying doesn't have an agent, then it is a new saying, so we will add the action to the new saying actions array
         this.props.onAddNewAction(
           this.props.saying.agent === '' &&
-            this.state.ref !== 'agent' &&
-            this.state.ref !== 'action',
+          this.state.ref !== 'agent' &&
+          this.state.ref !== 'action',
         );
       } else {
         this.props.onEditAction();
@@ -384,137 +385,139 @@ export class ActionPage extends React.Component {
       (this.props.saying.keywords.length === 0 ||
         (this.props.saying.keywords.length > 0 &&
           this.props.agentKeywords.length > 0)) ? (
-      <Grid container>
         <Grid container>
-          <Grid
-            className={classes.goBackCard}
-            onClick={() => {
+          <Grid container>
+            <Grid
+              className={classes.goBackCard}
+              onClick={() => {
+                this.props.onGoToUrl(this.state.exitUrl);
+              }}
+            />
+          </Grid>
+          <MainTab
+            touched={this.props.touched}
+            loading={this.props.loading}
+            success={this.props.success}
+            onSaveAndExit={() => {
+              this.submit(true);
+            }}
+            goBack={() => {
               this.props.onGoToUrl(this.state.exitUrl);
             }}
+            newAction={this.state.isNewAction}
+            actionName={this.props.action.actionName}
+            formError={this.state.formError}
+            hideFinishButton={
+              this.state.currentTab === 'action' &&
+              !this.state.userCompletedAllRequiredFields
+            }
+            isLastTab={this.state.currentTab === 'response'}
+            onFinishAction={this.submit}
+            onNextAction={this.moveNextTab}
+            selectedTab={this.state.currentTab}
+            errorState={this.state.errorState}
+            actionForm={
+              <ActionForm
+                action={this.props.action}
+                onChangeActionName={this.props.onChangeActionName}
+                errorState={this.state.errorState}
+                newAction={this.state.isNewAction}
+                onDelete={this.props.onDelete.bind(
+                  null,
+                  this.props.action.id,
+                  this.props.action.actionName,
+                )}
+              />
+            }
+            slotsForm={
+              <SlotsForm
+                action={this.props.action}
+                newSlot={this.props.newSlot}
+                onChangeSlotData={this.props.onChangeSlotData}
+                onAddTextPrompt={this.props.onAddTextPrompt}
+                onDeleteTextPrompt={this.props.onDeleteTextPrompt}
+                onAddNewSlot={this.props.onAddNewSlot}
+                onChangeSlotName={this.props.onChangeSlotName}
+                saying={this.props.saying}
+                agentKeywords={this.props.agentKeywords}
+                errorState={this.state.errorState}
+                newAction={this.state.isNewAction}
+                onDelete={this.props.onDelete.bind(
+                  null,
+                  this.props.action.id,
+                  this.props.action.actionName,
+                )}
+                onSortSlots={this.props.onSortSlots}
+                onDeleteSlot={this.props.onDeleteSlot}
+                onChangeQuickResponse={this.props.onChangeQuickResponse}
+                onDeleteQuickResponse={this.props.onDeleteQuickResponse}
+                onAddNewQuickResponse={this.props.onAddNewQuickResponse}
+                onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
+                onCopyTextPrompt={this.props.onCopyTextPrompt}
+              />
+            }
+            webhookForm={
+              <WebhookForm
+                action={this.props.action}
+                webhook={this.props.webhook}
+                onChangeActionData={this.props.onChangeActionData}
+                onChangeWebhookData={this.props.onChangeWebhookData}
+                onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
+                onAddNewHeader={this.props.onAddNewHeader}
+                onDeleteHeader={this.props.onDeleteHeader}
+                onChangeHeaderName={this.props.onChangeHeaderName}
+                onChangeHeaderValue={this.props.onChangeHeaderValue}
+                errorState={this.state.errorState}
+                newAction={this.state.isNewAction}
+                onDelete={this.props.onDelete.bind(
+                  null,
+                  this.props.action.id,
+                  this.props.action.actionName,
+                )}
+              />
+            }
+            responseForm={
+              <ResponseForm
+                agentId={this.props.agent.id}
+                action={this.props.action}
+                postFormat={this.props.postFormat}
+                onChangeActionData={this.props.onChangeActionData}
+                onChangePostFormatData={this.props.onChangePostFormatData}
+                saying={this.props.saying}
+                agentKeywords={this.props.agentKeywords}
+                onAddResponse={this.props.onAddResponse}
+                onDeleteResponse={this.props.onDeleteResponse}
+                onChainActionToResponse={this.props.onChainActionToResponse}
+                onUnchainActionFromResponse={
+                  this.props.onUnchainActionFromResponse
+                }
+                errorState={this.state.errorState}
+                agentActions={this.props.agentActions}
+                newAction={this.state.isNewAction}
+                onDelete={this.props.onDelete.bind(
+                  null,
+                  this.props.action.id,
+                  this.props.action.actionName,
+                )}
+                newResponse={this.props.newResponse}
+                onUpdateNewResponse={this.props.onUpdateNewResponse}
+                onCopyResponse={this.props.onCopyResponse}
+                onEditActionResponse={this.props.onEditActionResponse}
+                onSearchActions={this.onSearchActions}
+                agentFilteredActions={this.props.agentFilteredActions}
+                onGoToUrl={this.props.onGoToUrl}
+                onAddNewActionResponseQuickResponse={this.props.onAddNewActionResponseQuickResponse}
+                onDeleteNewActionResponseQuickResponse={this.props.onDeleteNewActionResponseQuickResponse}
+              />
+            }
+            onChangeTab={this.onChangeTab}
           />
         </Grid>
-        <MainTab
-          touched={this.props.touched}
-          loading={this.props.loading}
-          success={this.props.success}
-          onSaveAndExit={() => {
-            this.submit(true);
-          }}
-          goBack={() => {
-            this.props.onGoToUrl(this.state.exitUrl);
-          }}
-          newAction={this.state.isNewAction}
-          actionName={this.props.action.actionName}
-          formError={this.state.formError}
-          hideFinishButton={
-            this.state.currentTab === 'action' &&
-            !this.state.userCompletedAllRequiredFields
-          }
-          isLastTab={this.state.currentTab === 'response'}
-          onFinishAction={this.submit}
-          onNextAction={this.moveNextTab}
-          selectedTab={this.state.currentTab}
-          errorState={this.state.errorState}
-          actionForm={
-            <ActionForm
-              action={this.props.action}
-              onChangeActionName={this.props.onChangeActionName}
-              errorState={this.state.errorState}
-              newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(
-                null,
-                this.props.action.id,
-                this.props.action.actionName,
-              )}
-            />
-          }
-          slotsForm={
-            <SlotsForm
-              action={this.props.action}
-              newSlot={this.props.newSlot}
-              onChangeSlotData={this.props.onChangeSlotData}
-              onAddTextPrompt={this.props.onAddTextPrompt}
-              onDeleteTextPrompt={this.props.onDeleteTextPrompt}
-              onAddNewSlot={this.props.onAddNewSlot}
-              onChangeSlotName={this.props.onChangeSlotName}
-              saying={this.props.saying}
-              agentKeywords={this.props.agentKeywords}
-              errorState={this.state.errorState}
-              newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(
-                null,
-                this.props.action.id,
-                this.props.action.actionName,
-              )}
-              onSortSlots={this.props.onSortSlots}
-              onDeleteSlot={this.props.onDeleteSlot}
-              onChangeQuickResponse={this.props.onChangeQuickResponse}
-              onDeleteQuickResponse={this.props.onDeleteQuickResponse}
-              onAddNewQuickResponse={this.props.onAddNewQuickResponse}
-              onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
-              onCopyTextPrompt={this.props.onCopyTextPrompt}
-            />
-          }
-          webhookForm={
-            <WebhookForm
-              action={this.props.action}
-              webhook={this.props.webhook}
-              onChangeActionData={this.props.onChangeActionData}
-              onChangeWebhookData={this.props.onChangeWebhookData}
-              onChangeWebhookPayloadType={this.props.onChangeWebhookPayloadType}
-              onAddNewHeader={this.props.onAddNewHeader}
-              onDeleteHeader={this.props.onDeleteHeader}
-              onChangeHeaderName={this.props.onChangeHeaderName}
-              onChangeHeaderValue={this.props.onChangeHeaderValue}
-              errorState={this.state.errorState}
-              newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(
-                null,
-                this.props.action.id,
-                this.props.action.actionName,
-              )}
-            />
-          }
-          responseForm={
-            <ResponseForm
-              agentId={this.props.agent.id}
-              action={this.props.action}
-              postFormat={this.props.postFormat}
-              onChangeActionData={this.props.onChangeActionData}
-              onChangePostFormatData={this.props.onChangePostFormatData}
-              saying={this.props.saying}
-              agentKeywords={this.props.agentKeywords}
-              onAddResponse={this.props.onAddResponse}
-              onDeleteResponse={this.props.onDeleteResponse}
-              onChainActionToResponse={this.props.onChainActionToResponse}
-              onUnchainActionFromResponse={
-                this.props.onUnchainActionFromResponse
-              }
-              errorState={this.state.errorState}
-              agentActions={this.props.agentActions}
-              newAction={this.state.isNewAction}
-              onDelete={this.props.onDelete.bind(
-                null,
-                this.props.action.id,
-                this.props.action.actionName,
-              )}
-              newResponse={this.props.newResponse}
-              onUpdateNewResponse={this.props.onUpdateNewResponse}
-              onCopyResponse={this.props.onCopyResponse}
-              onEditActionResponse={this.props.onEditActionResponse}
-              onSearchActions={this.onSearchActions}
-              agentFilteredActions={this.props.agentFilteredActions}
-              onGoToUrl={this.props.onGoToUrl}
-            />
-          }
-          onChangeTab={this.onChangeTab}
+      ) : (
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
         />
-      </Grid>
-    ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
-    );
+      );
   }
 }
 
@@ -567,6 +570,8 @@ ActionPage.propTypes = {
   onDeleteSlotTextPrompt: PropTypes.func.isRequired,
   onCopyTextPrompt: PropTypes.func.isRequired,
   onShowChatButton: PropTypes.func.isRequired,
+  onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -706,6 +711,12 @@ function mapDispatchToProps(dispatch) {
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
+    },
+    onAddNewActionResponseQuickResponse: (response) => {
+      dispatch(addNewActionResponseQuickResponse(response));
+    },
+    onDeleteNewActionResponseQuickResponse: (index) => {
+      dispatch(deleteNewActionResponseQuickResponse(index));
     },
   };
 }

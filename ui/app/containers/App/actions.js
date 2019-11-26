@@ -279,7 +279,9 @@ import {
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
   RESET_SUCCESS_AGENT,
-  RECOGNIZE_UPDATED_KEYWORDS
+  RECOGNIZE_UPDATED_KEYWORDS,
+  ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
 } from './constants';
 
 /*
@@ -2431,5 +2433,19 @@ export function loadCurrentUserSuccess({ user }) {
   return {
     type: LOAD_CURRENT_USER_SUCCESS,
     user,
+  };
+}
+
+export function addNewActionResponseQuickResponse(response) {
+  return {
+    type: ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+    response,
+  };
+}
+
+export function deleteNewActionResponseQuickResponse(index) {
+  return {
+    type: DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+    index,
   };
 }

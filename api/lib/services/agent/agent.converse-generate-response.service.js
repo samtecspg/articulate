@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import { MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
-const {VM, VMScript} = require('vm2');
+const { VM, VMScript } = require('vm2');
 
 module.exports = async function ({ actionData, CSO }) {
-    
+
     const { agentService, globalService } = await this.server.services();
     const previousListenState = CSO.context.listenFreeText === true;
-    
+
     //This will initialize the slots in the current action and also will return the required slots of the action
     const requiredSlots = _.filter(actionData.slots, (slot) => {
 
@@ -14,10 +14,10 @@ module.exports = async function ({ actionData, CSO }) {
     });
     const missingSlots = _.filter(requiredSlots, (slot) => {
 
-        if (CSO.currentAction.slots[slot.slotName] && Array.isArray(CSO.currentAction.slots[slot.slotName])){
+        if (CSO.currentAction.slots[slot.slotName] && Array.isArray(CSO.currentAction.slots[slot.slotName])) {
             return CSO.currentAction.slots[slot.slotName].length === 0;
         }
-        return (CSO.currentAction.slots[slot.slotName].value !== undefined && !CSO.currentAction.slots[slot.slotName].value) 
+        return (CSO.currentAction.slots[slot.slotName].value !== undefined && !CSO.currentAction.slots[slot.slotName].value)
             || (CSO.currentAction.slots[slot.slotName].value === undefined && !CSO.currentAction.slots[slot.slotName].from && !CSO.currentAction.slots[slot.slotName].to);
     });
     CSO.slots = CSO.currentAction.slots;
@@ -26,9 +26,9 @@ module.exports = async function ({ actionData, CSO }) {
         missingSlots.some((missingSlot, tempMissingSlotIndex) => {
 
             CSO.currentAction.slots[missingSlot.slotName].promptCount += 1;
-            if (missingSlot.promptCountLimit === undefined || missingSlot.promptCountLimit === null || missingSlot.promptCountLimit >= CSO.currentAction.slots[missingSlot.slotName].promptCount){
-                if (missingSlots[tempMissingSlotIndex].freeText){
-                    if (CSO.context.listenFreeText){
+            if (missingSlot.promptCountLimit === undefined || missingSlot.promptCountLimit === null || missingSlot.promptCountLimit >= CSO.currentAction.slots[missingSlot.slotName].promptCount) {
+                if (missingSlots[tempMissingSlotIndex].freeText) {
+                    if (CSO.context.listenFreeText) {
                         Object.assign(CSO.currentAction.slots[missingSlots[tempMissingSlotIndex].slotName], {
                             value: CSO.text,
                             original: CSO.text,
@@ -45,19 +45,19 @@ module.exports = async function ({ actionData, CSO }) {
             }
             return false;
         });
-        if (missingSlotIndex !== null){
+        if (missingSlotIndex !== null) {
             const missingSlot = missingSlots[missingSlotIndex];
-            const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount});
+            const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount });
             return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
         }
-        if (!previousListenState && !CSO.context.listenFreeText){
+        if (!previousListenState && !CSO.context.listenFreeText) {
             return { slotPromptLimitReached: true }
         }
     }
 
     if (actionData.useWebhook || CSO.agent.useWebhook) {
         let modelPath, webhook;
-        if (actionData.useWebhook){
+        if (actionData.useWebhook) {
             modelPath = [
                 {
                     model: MODEL_AGENT,
@@ -95,10 +95,10 @@ module.exports = async function ({ actionData, CSO }) {
             password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
             templateContext: CSO
         });
-        CSO.webhook = { 
-            [webhook.webhookKey]: {...webhookResponse}
+        CSO.webhook = {
+            [webhook.webhookKey]: { ...webhookResponse }
         };
-        if (webhook.postScript){
+        if (webhook.postScript) {
             const vm = new VM({
                 timeout: 1000,
                 sandbox: {
@@ -116,9 +116,11 @@ module.exports = async function ({ actionData, CSO }) {
         if (webhookResponse.textResponse) {
             return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
         }
+        const quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
         const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
+        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: quickResponses, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
     }
+    const quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
     const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: actionData.quickResponses, fulfilled: true };
+    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: quickResponses, fulfilled: true };
 };

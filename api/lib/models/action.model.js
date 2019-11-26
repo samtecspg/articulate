@@ -10,7 +10,7 @@ class ActionModel {
             actionName: Joi.string().trim(),
             slots: Joi.array().items(SlotModel.schema),
             responses: Joi.array().items(ActionResponseModel.schema),
-            quickResponses: Joi.array().items(Joi.string().trim()),
+            responsesQuickResponses: Joi.array().items(Joi.string().trim()),
             useWebhook: Joi.boolean(),
             usePostFormat: Joi.boolean(),
             creationDate: Joi.string(),

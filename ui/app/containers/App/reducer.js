@@ -253,7 +253,9 @@ import {
   RESET_SUCCESS_AGENT,
   LOGIN_USER,
   LOGIN_USER_SUCCESS,
-  REFRESH_KEYWORD_EXAMPLE_UPDATE
+  REFRESH_KEYWORD_EXAMPLE_UPDATE,
+  ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -444,6 +446,7 @@ const initialState = Immutable({
     usePostFormat: false,
     slots: [],
     responses: [],
+    responsesQuickResponses: []
   },
   actionWebhook: {
     webhookKey: '',
@@ -1865,7 +1868,7 @@ function appReducer(state = initialState, action) {
           return slot;
         })
       )
-        .set('actionTouched', true);;
+        .set('actionTouched', true);
     case DELETE_QUICK_RESPONSE:
       return state.updateIn(
         ['action', 'slots'],
@@ -2049,6 +2052,25 @@ function appReducer(state = initialState, action) {
           }),
         )
         .set('keywordTouched', true);
+
+    case ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE:
+      if (!state.action.responsesQuickResponses) {
+        var tempAction = { ...state.action };
+        tempAction.responsesQuickResponses = [];
+        return state.set('action', tempAction)
+          .updateIn(['action', 'responsesQuickResponses'], quickResponses => quickResponses.concat([action.response]))
+          .set('actionTouched', true);
+      }
+      return state.updateIn(['action', 'responsesQuickResponses'], quickResponses => quickResponses.concat([action.response]))
+        .set('actionTouched', true);
+    case DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE:
+      return state.updateIn(
+        ['action', 'responsesQuickResponses'],
+        quickResponses => [
+          ...quickResponses.slice(0, action.index),
+          ...quickResponses.slice(action.index + 1)
+        ])
+        .set('actionTouched', true);
 
     /* Keyword */
     case CHANGE_KEYWORD_DATA:

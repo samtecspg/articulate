@@ -2,6 +2,7 @@ import Schmervice from 'schmervice';
 import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent.converse-fulfill-empty-slots-with-saved-values.service';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
+import ConverseCompileQuickResponsesTemplates from './agent/agent.converse-compile-quick-responses-templates.service';
 import ConverseGenerateResponseFallback from './agent/agent.converse-generate-response-fallback.service';
 import ConverseGenerateResponse from './agent/agent.converse-generate-response.service';
 import ConverseGetKeywordsFromRasaResults from './agent/agent.converse-get-keywords-from-rasa-results';
@@ -274,6 +275,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async converseCompileResponseTemplates() {
 
         return await ConverseCompileResponseTemplates.apply(this, arguments);
+    }
+
+    async converseCompileQuickResponsesTemplates() {
+
+        return await ConverseCompileQuickResponsesTemplates.apply(this, arguments);
     }
 
     async converseCallWebhook() {
