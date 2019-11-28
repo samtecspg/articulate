@@ -3,7 +3,7 @@
   "description": "A quick connection to Slack using the Events API.",
   "documentation": null,
   "userField": "event.user",
-  "receivedTextField": "text",
+  "receivedTextField": "event.text",
   "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/slack.png",
   "details": {
     "signingSecret": {

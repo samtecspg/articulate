@@ -2,7 +2,7 @@
   "name": "Mattermost",
   "description": "A quick connection to Mattermost using the Events API.",
   "documentation": null,
-  "userField": "conversation.conversationId",
+  "userField": "user_name",
   "receivedTextField": "text",
   "details": {
     "userName": {

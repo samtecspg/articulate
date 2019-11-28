@@ -2,7 +2,7 @@
   "name": "Rocket.Chat",
   "description": "A quick connection to Rocket.Chat.",
   "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/rocketchat/README.MD",
-  "userField": "user_id",
+  "userField": "user_name",
   "receivedTextField": "text",
   "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/rocketchat.png",
   "details": {
