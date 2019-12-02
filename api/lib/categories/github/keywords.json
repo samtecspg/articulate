@@ -112,8 +112,8 @@
                 "sayings": []
             }
         ],
-        "creationDate": "1571429471000",
-        "modificationDate": "1571429471000"
+        "creationDate": "1575042376000",
+        "modificationDate": "1575042376000"
     },
     {
         "keywordName": "issueLabels",
@@ -176,9 +176,199 @@
         ],
         "regex": "",
         "type": "learned",
-        "modifiers": [],
-        "creationDate": "1571429471000",
-        "modificationDate": "1571429471000"
+        "modifiers": [
+            {
+                "modifierName": "issueLabelAdd",
+                "action": "ADD",
+                "valueSource": "keyword",
+                "staticValue": "",
+                "sayings": [
+                    {
+                        "userSays": "question",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 8,
+                                "value": "question",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "invalid",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 7,
+                                "value": "invalid",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "bug",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 3,
+                                "value": "bug",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "duplicate",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 9,
+                                "value": "duplicate",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "good first issue",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 16,
+                                "value": "good first issue",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "enhancement",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 11,
+                                "value": "enhancement",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "wontfix",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 7,
+                                "value": "wontfix",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "bug, invalid and enhancement",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 3,
+                                "value": "bug",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            },
+                            {
+                                "start": 5,
+                                "end": 12,
+                                "value": "invalid",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            },
+                            {
+                                "start": 17,
+                                "end": 28,
+                                "value": "enhancement",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "duplicate, help wanted, question",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 9,
+                                "value": "duplicate",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            },
+                            {
+                                "start": 11,
+                                "end": 22,
+                                "value": "help wanted",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            },
+                            {
+                                "start": 24,
+                                "end": 32,
+                                "value": "question",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "bug, enhancement",
+                        "keywords": [
+                            {
+                                "start": 0,
+                                "end": 3,
+                                "value": "bug",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            },
+                            {
+                                "start": 5,
+                                "end": 16,
+                                "value": "enhancement",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    },
+                    {
+                        "userSays": "Label it as wontfix, good first issue and bug",
+                        "keywords": [
+                            {
+                                "start": 13,
+                                "end": 20,
+                                "value": "wontfix",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            },
+                            {
+                                "start": 22,
+                                "end": 38,
+                                "value": "good first issue",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            },
+                            {
+                                "start": 43,
+                                "end": 46,
+                                "value": "bug",
+                                "keyword": "issueLabels",
+                                "keywordId": 229
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "creationDate": "1575042376000",
+        "modificationDate": "1575313910000"
     },
     {
         "keywordName": "state",
@@ -202,8 +392,8 @@
         "regex": "",
         "type": "learned",
         "modifiers": [],
-        "creationDate": "1571429471000",
-        "modificationDate": "1571429471000"
+        "creationDate": "1575042376000",
+        "modificationDate": "1575042376000"
     },
     {
         "keywordName": "timeState",
@@ -233,7 +423,7 @@
         "regex": "",
         "type": "learned",
         "modifiers": [],
-        "creationDate": "1571429471000",
-        "modificationDate": "1571429471000"
+        "creationDate": "1575042376000",
+        "modificationDate": "1575042376000"
     }
 ]
