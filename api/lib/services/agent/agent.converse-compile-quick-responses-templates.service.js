@@ -8,13 +8,21 @@ module.exports = function ({ quickResponses, templateContext }) {
         return null;
     }
 
-    try {
-        let parsedQuickResponses = _.map(quickResponses, (response, index) => {
-            return handlebars.compile(response)(templateContext);
-        })
-        return parsedQuickResponses;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
+    let parsedQuickResponses = _.map(quickResponses, (response, index) => {
+        var compiledQuickResponse;
+        try {
+            compiledQuickResponse = handlebars.compile(response)(templateContext);
+        } catch (error) {
+            console.log(error);
+            compiledQuickResponse = '';
+        }
+        if (compiledQuickResponse !== '') {
+            return compiledQuickResponse;
+        }
+        else {
+            return null;
+        }
+    })
+    return parsedQuickResponses.filter(Boolean);
+
 };

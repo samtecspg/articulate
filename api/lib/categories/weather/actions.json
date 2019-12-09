@@ -1,5 +1,24 @@
 [
   {
+    "actionName": "Default Fallback Action",
+    "slots": [],
+    "responses": [
+      {
+        "textResponse": "Sorry can you rephrase that?",
+        "actions": []
+      },
+      {
+        "textResponse": "I'm still learning to speak with humans. What you mean?",
+        "actions": []
+      }
+    ],
+    "responsesQuickResponses": [],
+    "useWebhook": false,
+    "usePostFormat": false,
+    "creationDate": "1575651628000",
+    "modificationDate": "1575651628000"
+  },
+  {
     "actionName": "current_weather",
     "slots": [
       {
@@ -11,7 +30,8 @@
         "textPrompts": [
           "From which city you want to know the weather?"
         ],
-        "remainingLife": 2
+        "remainingLife": 2,
+        "keywordId": 0
       },
       {
         "slotName": "unit",
@@ -19,7 +39,8 @@
         "keyword": "unit",
         "isList": false,
         "isRequired": false,
-        "textPrompts": []
+        "textPrompts": [],
+        "keywordId": 309
       }
     ],
     "responses": [
@@ -28,10 +49,13 @@
         "actions": []
       }
     ],
+    "responsesQuickResponses": [
+      "{{#if slots.location.value}}What's the weather like in {{slots.location.value}} tomorrow {{/if}}"
+    ],
     "useWebhook": true,
     "usePostFormat": false,
-    "creationDate": "1556632702000",
-    "modificationDate": "1557160251000",
+    "creationDate": "1575651727000",
+    "modificationDate": "1575754986000",
     "webhook": {
       "webhookKey": "callCurrentWeather",
       "webhookUrl": "https://api.openweathermap.org/data/2.5/weather?q={{slots.location.value}}&appid={{categories.Weather.parameters.apiKey}}{{#if slots.unit.value}}&units={{slots.unit.value}}{{else}}&units=imperial{{/if}}",
@@ -41,8 +65,9 @@
       "webhookHeaders": [],
       "webhookUser": "",
       "webhookPassword": "",
-      "creationDate": "1556632703000",
-      "modificationDate": "1557160251000"
+      "postScript": "",
+      "creationDate": "1575651727000",
+      "modificationDate": "1575754987000"
     }
   },
   {
@@ -57,7 +82,8 @@
         "textPrompts": [
           "From which city you want to know the weather?"
         ],
-        "remainingLife": 2
+        "remainingLife": 2,
+        "keywordId": 0
       },
       {
         "slotName": "date",
@@ -67,7 +93,8 @@
         "isRequired": true,
         "textPrompts": [
           "for which date?"
-        ]
+        ],
+        "keywordId": 0
       },
       {
         "slotName": "unit",
@@ -75,19 +102,23 @@
         "keyword": "unit",
         "isList": false,
         "isRequired": false,
-        "textPrompts": []
+        "textPrompts": [],
+        "keywordId": 309
       }
     ],
     "responses": [
       {
-        "textResponse": "{{! We check if the date the user specified is between the last date and first day of the forecast }}\n{{#and\n\t(gte (get \"dt_txt\" (itemAt webhook.callForecast.response.list 39)) slots.date.to) \n\t(gte slots.date.from (get \"dt_txt\" (itemAt webhook.callForecast.response.list 0))) \n}}\n        {{! Now we compare each forecat to get the closest forecast to the given date}}\n\t{{#eachIndex webhook.callForecast.response.list}}\n\t  \t{{#compare (get \"dt_txt\" item) \"==\" (closestDate @root.slots.date.from (JSONPath @root.webhook.callForecast.response.list \"*.dt_txt\"))}} \n  \t\t\tIt's {{item.weather.0.description}} and {{item.main.temp}}{{#eq @root.slots.unit.value compare=\"metric\"}}°C{{else}}°F{{/eq}} in {{@root.webhook.callForecast.response.city.name}}, {{@root.webhook.callForecast.response.city.country}}\n  \t\t{{/compare}}\n\t{{/eachIndex}}\n{{else}}\n\tSorry, but we don't have a forecast for those dates\n{{/and}}",
+        "textResponse": "{{! We check if the date the user specified is between the last date and first day of the forecast }} {{#and (gte (get \"dt_txt\" (itemAt webhook.callForecast.response.list 39)) slots.date.to) (gte slots.date.from (get \"dt_txt\" (itemAt webhook.callForecast.response.list 0))) }} {{! Now we compare each forecat to get the closest forecast to the given date}} {{#eachIndex webhook.callForecast.response.list}} {{#compare (get \"dt_txt\" item) \"==\" (closestDate @root.slots.date.from (JSONPath @root.webhook.callForecast.response.list \"*.dt_txt\"))}} It's going to be: {{item.weather.0.description}} and {{item.main.temp}}{{#eq @root.slots.unit.value compare=\"metric\"}}°C{{else}}°F{{/eq}} in {{@root.webhook.callForecast.response.city.name}}, {{@root.webhook.callForecast.response.city.country}} {{#if @root.slots.date.original}} {{@root.slots.date.original}} {{/if}} {{/compare}} {{/eachIndex}} {{else}} Sorry, but we don't have a forecast for those dates {{/and}}",
         "actions": []
       }
     ],
+    "responsesQuickResponses": [
+      "What's the weather like now in {{slots.location.value}}"
+    ],
     "useWebhook": true,
     "usePostFormat": false,
-    "creationDate": "1556914755000",
-    "modificationDate": "1557337151000",
+    "creationDate": "1575651727000",
+    "modificationDate": "1575754744000",
     "webhook": {
       "webhookKey": "callForecast",
       "webhookUrl": "https://api.openweathermap.org/data/2.5/forecast?q={{slots.location.value}}&appid={{categories.Weather.parameters.apiKey}}{{#if slots.unit.value}}&units={{slots.unit.value}}{{else}}&units=imperial{{/if}}",
@@ -97,8 +128,9 @@
       "webhookHeaders": [],
       "webhookUser": "",
       "webhookPassword": "",
-      "creationDate": "1556914755000",
-      "modificationDate": "1557337152000"
+      "postScript": "",
+      "creationDate": "1575651727000",
+      "modificationDate": "1575754744000"
     }
   }
 ]

@@ -6,7 +6,7 @@
                 "slotName": "githubItem",
                 "uiColor": "#D5AAFF",
                 "keyword": "githubItem",
-                "keywordId": 228,
+                "keywordId": 304,
                 "isList": false,
                 "isRequired": true,
                 "quickResponses": [],
@@ -25,8 +25,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "countWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}",
@@ -42,8 +42,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -93,8 +93,8 @@
         ],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575046640000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "postIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues",
@@ -110,8 +110,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextIssue\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.postIssueWebhook.response,\n    \"original\": CSO.webhook.postIssueWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575046640000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -142,8 +142,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575046104000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "assignCurrentContextIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}",
@@ -159,8 +159,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575046104000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -175,8 +175,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "getUserNameWebhook",
             "webhookUrl": "https://api.github.com/user",
@@ -192,8 +192,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextUserName\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.getUserNameWebhook.response,\n    \"original\": CSO.webhook.getUserNameWebhook.response,\n    \"remainingLife\": 1,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -228,8 +228,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575648089000",
         "webhook": {
             "webhookKey": "postCommentOnIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}/comments",
@@ -245,8 +245,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575648089000"
         }
     },
     {
@@ -261,8 +261,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "closeCurrentContextIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}",
@@ -278,8 +278,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -289,7 +289,7 @@
                 "slotName": "labelList",
                 "uiColor": "#B28DFF",
                 "keyword": "issueLabels",
-                "keywordId": 229,
+                "keywordId": 305,
                 "isList": true,
                 "isRequired": true,
                 "quickResponses": [],
@@ -310,8 +310,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575313910000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "labelIssueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues/{{context.savedSlots.currentContextIssue.value.number}}/labels",
@@ -327,8 +327,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -343,8 +343,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "lastOpenMilestoneWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/milestones?state=open&direction=asc",
@@ -360,8 +360,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextMilestone\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -376,8 +376,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "lastCommitWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/commits",
@@ -393,8 +393,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextCommit\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastCommitWebhook.response[0],\n    \"original\": CSO.webhook.lastCommitWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -411,8 +411,8 @@
         ],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575048326000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "lastReleaseWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases/latest",
@@ -428,8 +428,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextRelease\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastReleaseWebhook.response,\n    \"original\": CSO.webhook.lastReleaseWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575048326000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -444,8 +444,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "lastTagWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/tags",
@@ -461,8 +461,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextTag\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastTagWebhook.response[0],\n    \"original\": CSO.webhook.lastTagWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -508,8 +508,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "postReleaseUsingLastTagWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases",
@@ -525,8 +525,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextRelease\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.postReleaseUsingLastTagWebhook.response,\n    \"original\": CSO.webhook.postReleaseUsingLastTagWebhook.response,\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -541,8 +541,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "deleteCurrentContextReleaseWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/releases/{{context.savedSlots.currentContextRelease.value.id}}",
@@ -558,8 +558,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "delete CSO.context.savedSlots.currentContextRelease;\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -574,8 +574,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "countRepoOpenIssuesWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}",
@@ -591,8 +591,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextMilestone\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"original\": CSO.webhook.lastOpenMilestoneWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -602,7 +602,7 @@
                 "slotName": "state",
                 "uiColor": "#A79AFF",
                 "keyword": "state",
-                "keywordId": 230,
+                "keywordId": 306,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -613,7 +613,7 @@
                 "slotName": "timeState",
                 "uiColor": "#D5AAFF",
                 "keyword": "timeState",
-                "keywordId": 231,
+                "keywordId": 307,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -635,8 +635,8 @@
         ],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575050739000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "issueWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/issues?{{#eq slots.state.value compare = \"\"}}&state=open{{else}}&state={{slots.state.value}}{{/eq}}{{#eq slots.timeState.value compare = \"\"}}&direction=desc{{else}}&direction={{slots.timeState.value}}{{/eq}}{{#if context.savedSlots.currentContextUserName}}&assignee={{context.savedSlots.currentContextUserName.value.login}}{{/if}}",
@@ -652,8 +652,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextIssue\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.issueWebhook.response[0],\n    \"original\": CSO.webhook.issueWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575050739000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     },
     {
@@ -663,7 +663,7 @@
                 "slotName": "state",
                 "uiColor": "#A79AFF",
                 "keyword": "state",
-                "keywordId": 230,
+                "keywordId": 306,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -674,7 +674,7 @@
                 "slotName": "timeState",
                 "uiColor": "#D5AAFF",
                 "keyword": "timeState",
-                "keywordId": 231,
+                "keywordId": 307,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -691,8 +691,8 @@
         "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1575042376000",
-        "modificationDate": "1575042376000",
+        "creationDate": "1575646521000",
+        "modificationDate": "1575646521000",
         "webhook": {
             "webhookKey": "milestoneWebhook",
             "webhookUrl": "https://api.github.com/repos/{{categories.Github.parameters.repoPath}}/milestones?state=open&direction=asc",
@@ -708,8 +708,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "CSO.context.savedSlots[\"currentContextMilestone\"] = \n {\n    \"keyword\": \"githubItem\",\n    \"value\": CSO.webhook.milestoneWebhook.response[0],\n    \"original\": CSO.webhook.milestoneWebhook.response[0],\n    \"remainingLife\": 10,\n    \"promptCount\": 0\n}\n\nCSO;",
-            "creationDate": "1575042376000",
-            "modificationDate": "1575042376000"
+            "creationDate": "1575646521000",
+            "modificationDate": "1575646521000"
         }
     }
 ]
