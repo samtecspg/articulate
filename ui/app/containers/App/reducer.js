@@ -21,6 +21,7 @@ import {
   ADD_KEYWORD_EXAMPLE,
   ADD_MODIFIER_SAYING,
   ADD_MODIFIER_SAYING_SUCCESS,
+  ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   ADD_NEW_MODIFIER,
   ADD_NEW_QUICK_RESPONSE,
   ADD_NEW_SLOT,
@@ -105,6 +106,7 @@ import {
   DELETE_KEYWORD_SUCCESS,
   DELETE_MODIFIER,
   DELETE_MODIFIER_SAYING,
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   DELETE_QUICK_RESPONSE,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
@@ -187,6 +189,9 @@ import {
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
   LOAD_KEYWORDS_SUCCESS,
+  LOAD_LOGS,
+  LOAD_LOGS_ERROR,
+  LOAD_LOGS_SUCCESS,
   LOAD_PREBUILT_CATEGORIES,
   LOAD_PREBUILT_CATEGORIES_ERROR,
   LOAD_PREBUILT_CATEGORIES_SUCCESS,
@@ -214,18 +219,11 @@ import {
   LOAD_USERS,
   LOAD_USERS_ERROR,
   LOAD_USERS_SUCCESS,
+  LOGIN_USER,
   LOGIN_USER_ERROR,
-  LOAD_STARRED_SAYING,
-  LOAD_STARRED_SAYING_ERROR,
-  LOAD_STARRED_SAYING_SUCCESS,
-  LOAD_STARRED_SAYINGS,
-  LOAD_STARRED_SAYINGS_ERROR,
-  LOAD_STARRED_SAYINGS_SUCCESS,
-  LOAD_USERS,
-  LOAD_USERS_ERROR,
-  LOAD_USERS_SUCCESS,
-  LOGIN_USER_ERROR,
+  LOGIN_USER_SUCCESS,
   MISSING_API,
+  REFRESH_KEYWORD_EXAMPLE_UPDATE,
   REFRESH_SERVER_INFO,
   REMOVE_ACCESS_CONTROL_ERROR,
   REMOVE_ACCESS_CONTROL_SUCCESS,
@@ -277,7 +275,6 @@ import {
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
   UPDATE_NEW_RESPONSE,
-  UPDATE_SAYING,
   UPDATE_SAYING_ERROR,
   UPDATE_SAYING_SUCCESS,
   UPDATE_SETTING,
@@ -286,6 +283,7 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  UPDATE_SETTINGS_TOUCHED,
   UPDATE_USER,
   UPDATE_USER_ERROR,
   UPDATE_USER_SUCCESS,
@@ -1032,27 +1030,15 @@ function appReducer(state = initialState, action) {
         .set('success', false)
         .set('error', false);
     case ADD_AGENT_ERROR:
-      if (action.error.indexOf('is already using')) {
-        state = state.update('notifications', notifications =>
-          notifications.concat({
-            template: 'errorMessageTemplate',
-            error: action.error,
-            emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)],
-            type: 'error',
-          }),
-        );
-      }
-      else {
-        state = state.update('notifications', notifications =>
-          notifications.concat({
-            template: 'negativeNotificationTemplate',
-            instanceType: 'agent',
-            action: 'creating',
-            emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)],
-            type: 'error',
-          }),
-        );
-      }
+      state = state.update('notifications', notifications =>
+        notifications.concat({
+          template: 'negativeNotificationTemplate',
+          instanceType: 'agent',
+          action: 'creating',
+          emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)],
+          type: 'error',
+        }),
+      );
       return state
         .set('loading', false)
         .set('success', false)
@@ -1314,11 +1300,6 @@ function appReducer(state = initialState, action) {
       return state.update('newSayingActions', newSayingActions =>
         newSayingActions.filter(item => item !== action.actionName),
       );
-    case UPDATE_SAYING:
-      return state
-        .set('loading', true)
-        .set('success', false)
-        .set('error', false);
     case UPDATE_SAYING_SUCCESS:
       return state.update('sayings', sayings =>
         sayings.map(tempSaying => {
@@ -1327,12 +1308,9 @@ function appReducer(state = initialState, action) {
           }
           return tempSaying;
         }),
-      )
-        .set('loading', false)
-        .set('success', true)
-        .set('error', false);
+      );
     case UPDATE_SAYING_ERROR:
-      return state.set('loading', false).set('success', false).set('error', action.error);
+      return state.set('loading', false).set('error', action.error);
     case SEND_SAYING_TO_ACTION:
       return state.set('sayingForAction', action.saying);
     case CLEAR_SAYING_TO_ACTION:
@@ -1959,7 +1937,6 @@ function appReducer(state = initialState, action) {
         }),
       )
         .set('actionTouched', true);
-      ;
     case DELETE_QUICK_RESPONSE:
       return state.updateIn(
         ['action', 'slots'],
@@ -2306,7 +2283,7 @@ function appReducer(state = initialState, action) {
             }))
           });
     case CHANGE_EXAMPLE_SYNONYMS:
-      var synonym = state.keywordExamplesUpdate.find(function (update) {
+      var synonym = state.keywordExamplesUpdate.find(function(update) {
         return update.index === action.exampleIndex && update.synonym === action.synonymChanged;
       });
       let countUpdate = action.action === 'add' ? 1 : -1;

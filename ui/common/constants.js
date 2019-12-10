@@ -32,6 +32,7 @@ export const PARAM_SEARCH = 'search';
 export const ROUTE_ACCESS_CONTROL = 'ac';
 export const ROUTE_GROUP = 'group';
 export const ROUTE_CURRENT = 'current';
+export const ROUTE_DELETE_BY_QUERY = '_delete_by_query?refresh';
 export const ACL_ACTION_READ = 'read';
 export const ACL_ACTION_WRITE = 'write';
 export const ACL_ACTION_CONVERSE = 'converse';

@@ -1,10 +1,8 @@
 import { Button, FormControl, Grid, InputLabel, MenuItem, Modal, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
 import 'brace/mode/html';
 import 'brace/theme/terminal';
 import _ from 'lodash';
-
 import PropTypes from 'prop-types';
 import React from 'react';
 import AceEditor from 'react-ace';
@@ -12,9 +10,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { PROXY_ROUTE_PREFIX } from '../../../../common/constants';
 import DeleteFooter from '../../../components/DeleteFooter';
 import gravatars from '../../../components/Gravatar';
-
 import playHelpIcon from '../../../images/play-help-icon.svg';
-
 import messages from '../messages';
 import actionsJSON from './actions.json';
 import ChannelCard from './ChannelCard';
@@ -171,7 +167,7 @@ class ConnectionForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, connection, channels, agents,isReadOnly } = this.props;
+    const { classes, intl, connection, channels, agents, isReadOnly } = this.props;
 
     return (
       <Grid className={classes.headerContainer} container item xs={12}>

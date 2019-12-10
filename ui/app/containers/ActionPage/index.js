@@ -4,84 +4,86 @@
  *
  */
 
-import React from 'react';
+import {
+  CircularProgress,
+  Grid,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import qs from 'query-string';
+import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import { withStyles } from '@material-ui/core/styles';
-
-import { Grid, CircularProgress } from '@material-ui/core';
+import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
-import qs from 'query-string';
 import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import AC from '../../utils/accessControl';
-import MainTab from './Components/MainTab';
-import ActionForm from './Components/ActionForm';
-import SlotsForm from './Components/SlotsForm';
-import WebhookForm from './Components/WebhookForm';
-import ResponseForm from './Components/ResponseForm';
 
-import saga from './saga';
+import {
+  addAction,
+  addActionResponse,
+  addNewActionResponseQuickResponse,
+  addNewHeaderActionWebhook,
+  addNewQuickResponse,
+  addNewSlot,
+  addSlotTextPrompt,
+  chainActionToResponse,
+  changeActionData,
+  changeActionName,
+  changeActionPostFormatData,
+  changeActionWebhookData,
+  changeActionWebhookPayloadType,
+  changeHeaderNameActionWebhook,
+  changeHeaderValueActionWebhook,
+  changeQuickResponse,
+  changeSlotData,
+  changeSlotName,
+  copyResponse,
+  deleteAction,
+  deleteActionResponse,
+  deleteHeaderActionWebhook,
+  deleteNewActionResponseQuickResponse,
+  deleteQuickResponse,
+  deleteSlot,
+  deleteSlotTextPrompt,
+  editActionResponse,
+  editSlotTextPrompt,
+  loadAction,
+  loadActions,
+  loadFilteredActions,
+  loadKeywords,
+  resetActionData,
+  resetStatusFlag,
+  sortSlots,
+  toggleChatButton,
+  unchainActionFromResponse,
+  updateAction,
+  updateNewResponse,
+} from '../App/actions';
 
 import {
   makeSelectAction,
-  makeSelectActionWebhook,
   makeSelectActionPostFormat,
-  makeSelectKeywords,
-  makeSelectAgent,
-  makeSelectSayingForAction,
   makeSelectActions,
-  makeSelectFilteredActions,
-  makeSelectSuccessAction,
-  makeSelectLoading,
   makeSelectActionTouched,
-  makeSelectNewActionResponse,
+  makeSelectActionWebhook,
+  makeSelectAgent,
   makeSelectCurrentUser,
+  makeSelectFilteredActions,
+  makeSelectKeywords,
+  makeSelectLoading,
+  makeSelectNewActionResponse,
+  makeSelectSayingForAction,
+  makeSelectSuccessAction,
 } from '../App/selectors';
+import ActionForm from './Components/ActionForm';
+import MainTab from './Components/MainTab';
+import ResponseForm from './Components/ResponseForm';
+import SlotsForm from './Components/SlotsForm';
+import WebhookForm from './Components/WebhookForm';
 
-import {
-  loadAction,
-  loadActions,
-  loadKeywords,
-  changeActionName,
-  changeActionData,
-  addActionResponse,
-  deleteActionResponse,
-  changeActionWebhookData,
-  changeActionWebhookPayloadType,
-  changeActionPostFormatData,
-  addAction,
-  updateAction,
-  resetStatusFlag,
-  resetActionData,
-  chainActionToResponse,
-  unchainActionFromResponse,
-  addNewHeaderActionWebhook,
-  deleteHeaderActionWebhook,
-  changeHeaderNameActionWebhook,
-  changeHeaderValueActionWebhook,
-  deleteAction,
-  addNewSlot,
-  changeSlotName,
-  changeSlotData,
-  addSlotTextPrompt,
-  deleteSlotTextPrompt,
-  sortSlots,
-  deleteSlot,
-  copyResponse,
-  updateNewResponse,
-  editActionResponse,
-  loadFilteredActions,
-  addNewQuickResponse,
-  deleteQuickResponse,
-  changeQuickResponse,
-  editSlotTextPrompt,
-  toggleChatButton,
-  addNewActionResponseQuickResponse,
-  deleteNewActionResponseQuickResponse
-} from '../App/actions';
+import saga from './saga';
 
 const styles = {
   goBackCard: {
@@ -167,7 +169,8 @@ export class ActionPage extends React.Component {
         this.props.onLoadAction(this.state.actionId, this.state.isDuplicate);
       }
       this.props.onResetData();
-    } else {
+    }
+    else {
       this.props.onLoadAction(this.props.match.params.actionId);
     }
     this.props.onShowChatButton(true);
@@ -178,16 +181,16 @@ export class ActionPage extends React.Component {
       this.state.ref === 'agent'
         ? `/agent/${this.props.agent.id}`
         : this.state.ref === 'action'
-          ? `/agent/${this.props.agent.id}/actionDummy/${
+        ? `/agent/${this.props.agent.id}/actionDummy/${
           this.state.refActionId
-          }?filter=${this.state.filter}&page=${
+        }?filter=${this.state.filter}&page=${
           this.state.page
-          }&actionTab=response`
-          : `/agent/${this.props.agent.id}/dialogue?filter=${
+        }&actionTab=response`
+        : `/agent/${this.props.agent.id}/dialogue?filter=${
           this.state.filter
-          }&page=${this.state.page}${
+        }&page=${this.state.page}${
           this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'
-          }`;
+        }`;
     this.setState({
       exitUrl,
     });
@@ -258,7 +261,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.actionName = true;
       newErrorState.tabs.push(0);
-    } else {
+    }
+    else {
       newErrorState.actionName = false;
     }
 
@@ -269,7 +273,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.webhookKey = true;
       newErrorState.tabs.push(2);
-    } else {
+    }
+    else {
       newErrorState.webhookKey = false;
     }
 
@@ -280,7 +285,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.webhookUrl = true;
       newErrorState.tabs.push(2);
-    } else {
+    }
+    else {
       newErrorState.webhookUrl = false;
     }
 
@@ -291,7 +297,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.responses = true;
       newErrorState.tabs.push(3);
-    } else {
+    }
+    else {
       newErrorState.responses = false;
     }
 
@@ -307,7 +314,8 @@ export class ActionPage extends React.Component {
           newSlotError.slotName = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        } else {
+        }
+        else {
           newSlotError.slotName = false;
         }
         if (!slot.keyword) {
@@ -315,7 +323,8 @@ export class ActionPage extends React.Component {
           newSlotError.keyword = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        } else {
+        }
+        else {
           newSlotError.keyword = false;
         }
         if (slot.isRequired && slot.textPrompts.length === 0) {
@@ -323,7 +332,8 @@ export class ActionPage extends React.Component {
           newSlotError.textPrompts = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        } else {
+        }
+        else {
           newSlotError.textPrompts = false;
         }
         newErrorState.slots.push(newSlotError);
@@ -338,7 +348,8 @@ export class ActionPage extends React.Component {
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.postFormatPayload = true;
       newErrorState.tabs.push(3);
@@ -353,7 +364,8 @@ export class ActionPage extends React.Component {
         throw 'Webhook payload is not an object';
       }
       newErrorState.webhookPayload = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.webhookPayload = true;
       newErrorState.tabs.push(2);
@@ -371,10 +383,12 @@ export class ActionPage extends React.Component {
           this.state.ref !== 'agent' &&
           this.state.ref !== 'action',
         );
-      } else {
+      }
+      else {
         this.props.onEditAction();
       }
-    } else {
+    }
+    else {
       this.setState({
         formError: true,
         errorState: { ...newErrorState },
@@ -387,19 +401,19 @@ export class ActionPage extends React.Component {
     const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
 
     return this.props.agent.id &&
-      (this.props.saying.keywords.length === 0 ||
-        (this.props.saying.keywords.length > 0 &&
-          this.props.agentKeywords.length > 0)) ? (
+    (this.props.saying.keywords.length === 0 ||
+      (this.props.saying.keywords.length > 0 &&
+        this.props.agentKeywords.length > 0)) ? (
+      <Grid container>
         <Grid container>
-          <Grid container>
-            <Grid
-              className={classes.goBackCard}
-              onClick={() => {
-                this.props.onGoToUrl(this.state.exitUrl);
-              }}
-            />
-          </Grid>
-          <MainTab
+          <Grid
+            className={classes.goBackCard}
+            onClick={() => {
+              this.props.onGoToUrl(this.state.exitUrl);
+            }}
+          />
+        </Grid>
+        <MainTab
           isReadOnly={isReadOnly}
             touched={this.props.touched}
             loading={this.props.loading}
@@ -518,8 +532,8 @@ export class ActionPage extends React.Component {
                 onSearchActions={this.onSearchActions}
                 agentFilteredActions={this.props.agentFilteredActions}
                 onGoToUrl={this.props.onGoToUrl}
-                onAddNewActionResponseQuickResponse={this.props.onAddNewActionResponseQuickResponse}
-                onDeleteNewActionResponseQuickResponse={this.props.onDeleteNewActionResponseQuickResponse}
+              onAddNewActionResponseQuickResponse={this.props.onAddNewActionResponseQuickResponse}
+              onDeleteNewActionResponseQuickResponse={this.props.onDeleteNewActionResponseQuickResponse}
               />
             }
             onChangeTab={this.onChangeTab}
@@ -585,6 +599,8 @@ ActionPage.propTypes = {
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
+  onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({

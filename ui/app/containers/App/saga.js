@@ -1,3 +1,4 @@
+import { push } from 'react-router-redux';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import {
@@ -22,8 +23,12 @@ import {
   loadServerInfoError,
   loadServerInfoSuccess,
   loadSessionSuccess,
+  logoutUserError,
+  logoutUserSuccess,
   resetSessionSuccess,
   showWarning,
+  toggleChatButton,
+  toggleConversationBar,
   trainAgentError,
   updateSettingsError,
   updateSettingSuccess,
@@ -200,6 +205,7 @@ export default function* rootSaga() {
   yield takeLatest(TRAIN_AGENT, postTrainAgent);
   yield takeLatest(UPDATE_SETTING, putSetting);
   yield takeLatest(TOGGLE_CONVERSATION_BAR, putConversationBarWidth);
+  yield takeLatest(LOGOUT_USER, logoutUser);
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
   yield takeLatest(LOGOUT_USER, logoutUser);
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);

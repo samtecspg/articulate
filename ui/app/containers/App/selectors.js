@@ -199,13 +199,13 @@ const makeSelectDocumentsStats = () =>
     selectGlobal,
     globalState => {
       return {
-        documentsAnalyticsRequestCount: globalState.documentsAnalyticsRequestCount,
-        documentsAnalyticsSessionsCount: globalState.documentsAnalyticsSessionsCount,
-        documentsAnalyticsFallbacksCount: globalState.documentsAnalyticsFallbacksCount,
-        documentsAnalyticsTopActions: globalState.documentsAnalyticsTopActions,
-        documentsAnalyticsRequestsOverTime: globalState.documentsAnalyticsRequestsOverTime,
-      };
-    },
+        'documentsAnalyticsRequestCount': globalState.documentsAnalyticsRequestCount,
+        'documentsAnalyticsSessionsCount': globalState.documentsAnalyticsSessionsCount,
+        'documentsAnalyticsFallbacksCount': globalState.documentsAnalyticsFallbacksCount,
+        'documentsAnalyticsTopActions': globalState.documentsAnalyticsTopActions,
+        'documentsAnalyticsRequestsOverTime': globalState.documentsAnalyticsRequestsOverTime
+      }
+    }
   );
 
 const makeSelectTotalDocumentsAnalytics = () =>
@@ -604,6 +604,8 @@ export {
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
   makeSelectTotalUsers,
+  makeSelectSuccessKeywordExamplesUpdate,
+  makeSelectLoadingKeywordExamplesUpdate,
   makeSelectAccessPolicyGroups,
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,

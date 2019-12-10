@@ -102,22 +102,14 @@ class ActionsDataForm extends React.Component {
     const { classes, actionsPage, intl, isReadOnly } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid
-          className={classes.formSubContainer}
-          id="formContainer"
-          container
-          item
-          xs={12}
-        >
+        <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <Button
                 disabled={isReadOnly}
                 variant="contained"
                 onClick={() => {
-                  this.props.onCreateAction(
-                    `/agent/${this.props.agentId}/action/create?tab=actions`,
-                  );
+                  this.props.onCreateAction(`/agent/${this.props.agentId}/action/create?tab=actions`);
                 }}
               >
                 <FormattedMessage {...messages.create} />
@@ -132,17 +124,10 @@ class ActionsDataForm extends React.Component {
                   <Table>
                     <TableBody>
                       {actionsPage.map((action, index) => (
-                        <TableRow
-                          className={classes.actionRow}
-                          key={`${action}_${index}`}
-                        >
+                        <TableRow className={classes.actionRow} key={`${action}_${index}`}>
                           <TableCell
                             onClick={() => {
-                              this.props.onGoToUrl(
-                                `/agent/${this.props.agentId}/action/${
-                                action.id
-                                }`,
-                              );
+                              this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
                             }}
                           >
                             <span>{action.actionName}</span>
@@ -151,17 +136,9 @@ class ActionsDataForm extends React.Component {
                             <TableCell>
                               <Tooltip
                                 onClick={() => {
-                                  this.props.onGoToUrl(
-                                    `/agent/${
-                                      this.props.agentId
-                                    }/action/create?isDuplicate=true&actionId=${
-                                      action.id
-                                    }`,
-                                  );
+                                  this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create?isDuplicate=true&actionId=${action.id}`);
                                 }}
-                                title={intl.formatMessage(
-                                  messages.duplicateAction,
-                                )}
+                                title={intl.formatMessage(messages.duplicateAction)}
                                 placement="top"
                               >
                                 <img className={classes.icon} src={copyIcon} />
@@ -209,16 +186,8 @@ class ActionsDataForm extends React.Component {
                     </Grid>
                     <Grid className={classes.pageNumberSubControl}>
                       <Typography
-                        onClick={
-                          this.props.currentActionsPage > 1
-                            ? this.props.moveActionsPageBack
-                            : null
-                        }
-                        className={
-                          this.props.currentActionsPage > 1
-                            ? classes.pageCursors
-                            : classes.pageCursorsDisabled
-                        }
+                        onClick={this.props.currentActionsPage > 1 ? this.props.moveActionsPageBack : null}
+                        className={this.props.currentActionsPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}
                       >
                         <FormattedMessage {...messages.backPage} />
                       </Typography>
@@ -230,11 +199,9 @@ class ActionsDataForm extends React.Component {
                           evt.target.value = evt.target.value.replace(/^0+/, '');
                           evt.target.value === ''
                             ? this.props.changeActionsPage(1)
-                            : evt.target.value <=
-                              this.props.numberOfActionsPages &&
-                              evt.target.value >= 1
-                              ? this.props.changeActionsPage(Number(evt.target.value))
-                              : false;
+                            : evt.target.value <= this.props.numberOfActionsPages && evt.target.value >= 1
+                            ? this.props.changeActionsPage(Number(evt.target.value))
+                            : false;
                         }}
                         fullWidth
                         InputLabelProps={{
@@ -251,22 +218,10 @@ class ActionsDataForm extends React.Component {
                         className={classes.pageTextfield}
                         type="number"
                       />
-                      <Typography className={classes.pagesLabel}>
-                        / {this.props.numberOfActionsPages}
-                      </Typography>
+                      <Typography className={classes.pagesLabel}>/ {this.props.numberOfActionsPages}</Typography>
                       <Typography
-                        onClick={
-                          this.props.currentActionsPage <
-                            this.props.numberOfActionsPages
-                            ? this.props.moveActionsPageForward
-                            : null
-                        }
-                        className={
-                          this.props.currentActionsPage <
-                            this.props.numberOfActionsPages
-                            ? classes.pageCursors
-                            : classes.pageCursorsDisabled
-                        }
+                        onClick={this.props.currentActionsPage < this.props.numberOfActionsPages ? this.props.moveActionsPageForward : null}
+                        className={this.props.currentActionsPage < this.props.numberOfActionsPages ? classes.pageCursors : classes.pageCursorsDisabled}
                       >
                         <FormattedMessage {...messages.nextPage} />
                       </Typography>

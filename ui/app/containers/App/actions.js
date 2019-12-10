@@ -826,8 +826,7 @@ export function changeAgentParameterValue(parameterName, value) {
   };
 }
 
-export function loadAgentDocuments({ page, pageSize, field, direction, dateRange }) {
-  filter = null
+export function loadAgentDocuments({ page, pageSize, field, direction, dateRange, filter = null }) {
   return {
     type: LOAD_AGENT_DOCUMENTS,
     apiCall: true,
@@ -836,7 +835,7 @@ export function loadAgentDocuments({ page, pageSize, field, direction, dateRange
     field,
     direction,
     dateRange,
-    filter
+    filter,
   };
 }
 
@@ -863,7 +862,7 @@ export function loadLogs({ page, pageSize, field, direction, dateRange, filter =
     field,
     direction,
     dateRange,
-    filter
+    filter,
   };
 }
 
@@ -890,7 +889,7 @@ export function deleteDocument({ documentId, sessionId, page, pageSize, field, d
     page,
     pageSize,
     field,
-    direction
+    direction,
   };
 }
 
@@ -909,7 +908,7 @@ export function deleteSessionData({ sessionId, page, pageSize, field, direction 
     page,
     pageSize,
     field,
-    direction
+    direction,
   };
 }
 
@@ -984,7 +983,7 @@ export function loadSayings(filter, page, pageSize, ignoreKeywords) {
     filter,
     page,
     pageSize,
-    ignoreKeywords
+    ignoreKeywords,
   };
 }
 
@@ -1365,7 +1364,7 @@ export function recognizeUpdatedKeywords(payload) {
     type: RECOGNIZE_UPDATED_KEYWORDS,
     payload,
 
-  }
+  };
 }
 
 /*
@@ -1897,8 +1896,8 @@ export function updateKeywordSuccess(keyword) {
 
 export function refreshKeywordExamplesUpdate() {
   return {
-    type: REFRESH_KEYWORD_EXAMPLE_UPDATE
-  }
+    type: REFRESH_KEYWORD_EXAMPLE_UPDATE,
+  };
 }
 
 export function changeKeywordData(payload) {
@@ -1936,7 +1935,7 @@ export function changeExampleSynonyms(exampleIndex, synonyms, synonymChanged, ac
     exampleIndex,
     synonyms,
     synonymChanged,
-    action
+    action,
   };
 }
 
@@ -2556,6 +2555,20 @@ export function loadCurrentUserSuccess({ user }) {
   return {
     type: LOAD_CURRENT_USER_SUCCESS,
     user,
+  };
+}
+
+export function addNewActionResponseQuickResponse(response) {
+  return {
+    type: ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+    response,
+  };
+}
+
+export function deleteNewActionResponseQuickResponse(index) {
+  return {
+    type: DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+    index,
   };
 }
 

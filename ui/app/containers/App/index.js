@@ -21,6 +21,7 @@ import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
 import PrivateRoute from '../../components/PrivateRoute';
+import { checkCookie } from '../../utils/cookies';
 import injectSaga from '../../utils/injectSaga';
 import { getWS } from '../../utils/locationResolver';
 import ActionPage from '../ActionPage/Loadable';
@@ -40,9 +41,8 @@ import SayingsInfoPage from '../SayingsInfoPage/Loadable';
 import SettingsPage from '../SettingsPage/Loadable';
 import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
-import UsersPage from '../UsersPage/Loadable';
 import UserPage from '../UserPage/Loadable';
-import { checkCookie } from '../../utils/cookies';
+import UsersPage from '../UsersPage/Loadable';
 import {
   checkAPI,
   loadAgent,
@@ -121,7 +121,7 @@ class App extends React.Component {
         };
         client.connect({
           delay: 1000,
-        auth: AUTH_ENABLED ? { headers: { cookie: document.cookie } } : undefined,
+          auth: AUTH_ENABLED ? { headers: { cookie: document.cookie } } : undefined,
         });
       }
     }

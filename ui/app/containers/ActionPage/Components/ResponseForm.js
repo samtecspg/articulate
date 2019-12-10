@@ -367,7 +367,78 @@ class ResponseForm extends React.Component {
                   ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography className={classes.postFormatLabel} variant="caption">
+                  <TextField
+                    id="newActionResponseQuickResponse"
+                    label={intl.formatMessage(messages.actionResponseQuickResponseValue)}
+                    value={this.state.currentNewActionResponseQuickResponse}
+                    placeholder={intl.formatMessage(
+                      messages.newActionResponseQuickResponsePlaceholder,
+                    )}
+                    onKeyPress={ev => {
+                      if (ev.key === 'Enter') {
+                        this.addCurrentNewActionResponseQuickResponseToListFromEvent(ev);
+                      }
+                    }}
+                    onChange={ev => {
+                      this.setState({ currentNewActionResponseQuickResponse: ev.target.value });
+                    }}
+                    margin="normal"
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      style: {
+                        border: 'none',
+                      },
+                    }}
+                    InputProps={{
+                      className: classes.newQuickResponseInputContainer,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <span
+                            className={classes.responseEnter}
+                            onClick={ev => {
+                              this.addCurrentNewActionResponseQuickResponseToListFromEvent(ev);
+                            }}
+                          >
+                            {intl.formatMessage(messages.responseEnter)}
+                          </span>
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={
+                      this.props.errorState
+                        ? this.props.errorState.quickResponses
+                        : false
+                    }
+                  />
+                  {action.responsesQuickResponses && action.responsesQuickResponses.length > 0 ? (
+                    <Table className={classes.table}>
+                      <TableBody>
+                        {action.responsesQuickResponses.map((quickResponse, index) => (
+                          <TableRow key={`${quickResponse}_${index}`}>
+                            <TableCell>{quickResponse}</TableCell>
+                            <TableCell className={classes.deleteCell}>
+                              <img
+                                onClick={() => {
+                                  this.props.onDeleteNewActionResponseQuickResponse(index);
+                                }}
+                                className={classes.deleteIcon}
+                                src={trashIcon}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : null}
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography
+                    className={classes.postFormatLabel}
+                    variant="caption"
+                  >
                     <FormattedMessage {...messages.postFormatTitle} />
                   </Typography>
                   <ResponseSettings
@@ -416,7 +487,7 @@ ResponseForm.propTypes = {
   isReadOnly: PropTypes.bool,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
-  agentSettings : PropTypes.object
+  agentSettings : PropTypes.object,
 };
 
 ResponseForm.defaultProps = {

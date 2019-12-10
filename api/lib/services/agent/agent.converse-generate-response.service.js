@@ -122,7 +122,7 @@ module.exports = async function ({ actionData, CSO }) {
         if (webhookResponse.textResponse) {
             return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
         }
-        var quickResponses = []; 
+        var quickResponses = [];
         if(actionData.responsesQuickResponses && actionData.responsesQuickResponses.length > 0){
             quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
         }else if (CSO.agent.settings.generateActionsQuickResponses){
@@ -137,6 +137,7 @@ module.exports = async function ({ actionData, CSO }) {
     }else if (CSO.agent.settings.generateActionsQuickResponses){
         quickResponses = await agentService.converseGenerateAutomaticActionsQuickResponses({CSO});
     }
+    const quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
     const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
     return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: quickResponses, fulfilled: true };
 };

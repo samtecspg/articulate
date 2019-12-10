@@ -268,6 +268,9 @@ export function* putSaying(payload) {
     api,
     sayingId,
     saying,
+    filter,
+    page,
+    pageSize,
     oldCategoryId,
   } = payload;
   const valuesToOmit = ['id', 'agent', 'Action', 'Category'];

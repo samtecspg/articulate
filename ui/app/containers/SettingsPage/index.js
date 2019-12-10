@@ -2,6 +2,7 @@ import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
@@ -22,6 +23,7 @@ import {
   toggleConversationBar,
   updateAccessPolicyGroup,
   updateSettings,
+  updateSettingsTouched,
 } from '../App/actions';
 import {
   makeSelectAccessPolicyGroups,
@@ -59,6 +61,7 @@ export class SettingsPage extends React.PureComponent {
       }
     }
   }
+
   state = {
     formError: false,
     newAccessPolicyGroupName: '',
@@ -77,7 +80,7 @@ export class SettingsPage extends React.PureComponent {
       defaultTimezone: false,
       defaultAgentFallbackResponses: false,
     },
-    exitAfterSubmit: false
+    exitAfterSubmit: false,
   };
 
   submit(exit) {
@@ -332,11 +335,11 @@ SettingsPage.defaultProps = {
 const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   settingsTouched: makeSelectSettingsTouched(),
-  accessPolicyGroups: makeSelectAccessPolicyGroups(),
-  currentUser: makeSelectCurrentUser(),
   settingsSuccess: makeSelectSuccess(),
   settingsLoading: makeSelectLoading(),
   settingsError: makeSelectError(),
+  accessPolicyGroups: makeSelectAccessPolicyGroups(),
+  currentUser: makeSelectCurrentUser(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -350,7 +353,7 @@ function mapDispatchToProps(dispatch) {
     onSaveChanges: () => {
       dispatch(updateSettings());
     },
-    onUpdateSettingsTouched: (value) => {
+    onUpdateSettingsTouched: value => {
       dispatch(updateSettingsTouched(value));
     },
     onAddFallbackResponse: newFallback => {
