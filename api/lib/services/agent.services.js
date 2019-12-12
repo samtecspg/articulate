@@ -10,6 +10,7 @@ import ConverseGetBestRasaResult from './agent/agent.converse-get-best-rasa-resu
 import ConverseFillActionSlots from './agent/agent.converse-fill-action-slots.service';
 import ConverseSendResponseToUbiquity from './agent/agent.converse-send-response-to-ubiquity';
 import ConverseProcessPostFormat from './agent/agent.converse-process-post-format';
+import ConverseMostRecentActionShoulBeIgnored from './agent/agent.converse-most-recent-action-should-be-ignored.service';
 import Converse from './agent/agent.converse.service';
 import CreateAction from './agent/agent.create-action.service';
 import CreateCategory from './agent/agent.create-category.service';
@@ -312,6 +313,10 @@ module.exports = class AgentService extends Schmervice.Service {
 
     async converseProcessPostFormat() {
         return await ConverseProcessPostFormat.apply(this, arguments);
+    }
+
+    async converseMostRecentActionShoulBeIgnored() {
+        return await ConverseMostRecentActionShoulBeIgnored.apply(this, arguments);
     }
 
     async isModelUnique() {

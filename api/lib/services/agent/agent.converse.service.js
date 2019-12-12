@@ -157,6 +157,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
             updateLifespanOfSlots({ CSO });
 
+            var newActionIndex;
             if (!CSO.context.listenFreeText) {
 
                 /*
@@ -256,7 +257,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 * The actions to concatenate are going to be inserted right before the oldest unfulfilled action
                 * So we are going to generate the response for the new action and we will recover the unfulfilled action later
                 */
-                let newActionIndex = _.findIndex(CSO.context.actionQueue, (action) => {
+                newActionIndex = _.findIndex(CSO.context.actionQueue, (action) => {
 
                     return !action.fulfilled;
                 });
@@ -284,9 +285,38 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
             }
             CSO.actionIndex = 0;
+
+            var mostRecentActionData;
+            if (!CSO.context.listenFreeText) {
+                mostRecentActionData = getActionData({ actionName: CSO.context.actionQueue[newActionIndex - 1].name, CSO });
+            }
             while (CSO.context.actionQueue[CSO.actionIndex] !== undefined) {
 
                 const action = CSO.context.actionQueue[CSO.actionIndex];
+
+                /*
+                * Sometimes when there are unfullfilled actions waiting for slots, if the use enters a slot value
+                * this value is recognized both as a keyword to fulfill the pending action but also as a whole new 
+                * identical action, resulting in two identical actions resolved. We are ignoring the most recent 
+                * action based on the following conditions:
+                *   - There must be no modifiers identified
+                *   - There must be at least one action and one keyword recognized
+                *   - There must be at least one unfulfilled action in the queue of the same type as the recognized action
+                *   - Both the recognized action and the waiting action should be fulfilled with the recognized keywords
+                */
+                if (!CSO.context.listenFreeText) {
+                    var mostRecentActionShouldBeIgnored = await agentService.converseMostRecentActionShoulBeIgnored({
+                        actionData: mostRecentActionData,
+                        CSO,
+                        newActionIndex: newActionIndex - 1,
+                        getActionData
+                    });
+
+                    if (mostRecentActionShouldBeIgnored) {
+                        CSO.context.actionQueue[newActionIndex - 1].fulfilled = true;
+                    }
+                }
+
                 if (!action.fulfilled) {
                     const actionData = getActionData({ actionName: action.name, CSO });
                     CSO.currentAction = CSO.context.actionQueue[CSO.actionIndex];
@@ -388,5 +418,4 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         }
         throw RedisErrorHandler({ error });
     }
-
 };

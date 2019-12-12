@@ -430,6 +430,46 @@ describe('Agent', () => {
 
     });
 
+    it('post /agent/agentId/converse - Ask for keyword to fulfill pending action and expect only one response', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "I want a keywordVsActions action",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("Enter keywordVsActionSlot");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+
+        var payload = {
+            sessionId,
+            text: "value1",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("This keywordVsAction response should only appear once");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.equal(1);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+
+    });
+
     after(async ({ context }) => {
 
         const { importedAgentId } = context;
