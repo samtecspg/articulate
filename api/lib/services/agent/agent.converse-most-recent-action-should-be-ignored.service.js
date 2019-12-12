@@ -7,11 +7,12 @@ module.exports = function ({ actionData, CSO, newActionIndex, getActionData }) {
         && CSO.recognizedModifiers.length === 0
         && CSO.recognizedKeywords.length > 0
         && CSO.recognizedActions.length > 0
-        && actionWillBeFilled({
-            actionData,
-            action: CSO.context.actionQueue[newActionIndex],
-            recognizedKeywords: CSO.recognizedKeywords
-        })) {
+        //&& actionWillBeFilled({
+        //    actionData,
+        //    action: CSO.context.actionQueue[newActionIndex],
+        //    recognizedKeywords: CSO.recognizedKeywords
+        //})
+    ) {
         mostRecentActionShouldBeIgnored = candidateForKeywordFillingExists({ CSO, newActionIndex, getActionData });
     }
     return mostRecentActionShouldBeIgnored;
@@ -36,7 +37,7 @@ const actionWillBeFilled = ({ actionData, action, recognizedKeywords }) => {
     if (actionData.slots) {
         var recognizedKeywordsNames = recognizedKeywords.map(keyword => keyword.keyword);
         var emptyRequiredSlotsKeywordsNames = getEmptyRequiredSlots(action.slots, actionData.slots)
-        return emptyRequiredSlotsKeywordsNames.every(emptyRequiredSlotKeywordName => recognizedKeywordsNames.indexOf(emptyRequiredSlotKeywordName) > -1);
+        return emptyRequiredSlotsKeywordsNames.some(emptyRequiredSlotKeywordName => recognizedKeywordsNames.indexOf(emptyRequiredSlotKeywordName) > -1);
     } else {
         return false;
     }

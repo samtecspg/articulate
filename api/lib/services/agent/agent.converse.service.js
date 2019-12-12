@@ -287,7 +287,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             CSO.actionIndex = 0;
 
             var mostRecentActionData;
-            if (!CSO.context.listenFreeText) {
+            if (!CSO.context.listenFreeText && CSO.recognizedActions.length > 0) {
                 mostRecentActionData = getActionData({ actionName: CSO.context.actionQueue[newActionIndex - 1].name, CSO });
             }
             while (CSO.context.actionQueue[CSO.actionIndex] !== undefined) {
@@ -304,7 +304,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 *   - There must be at least one unfulfilled action in the queue of the same type as the recognized action
                 *   - Both the recognized action and the waiting action should be fulfilled with the recognized keywords
                 */
-                if (!CSO.context.listenFreeText) {
+                if (!CSO.context.listenFreeText && CSO.recognizedActions.length > 0) {
                     var mostRecentActionShouldBeIgnored = await agentService.converseMostRecentActionShoulBeIgnored({
                         actionData: mostRecentActionData,
                         CSO,
