@@ -7,7 +7,6 @@
  *
  */
 
-import { CircularProgress } from '@material-ui/core';
 import Nes from 'nes';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -146,23 +145,26 @@ class App extends React.Component {
       this.props.onMissingAPI(this.props.location.pathname);
     }
     // If an agent is loaded
-    if (this.props.agent.id && this.props.agent.id !== this.state.agent) {
-      // If the client was already initialized
-      if (this.state.client) {
-        // If the socket was already subscribed to an agent
-        if (this.state.agent) {
-          // Unsubscribe from the agent
-          this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.state.agent}`);
-        }
-        const handler = agent => {
-          if (agent) {
-            this.props.onRefreshAgent(agent);
+    if (this.props.agent.id) {
+      // If is different than the current agent
+      if (this.props.agent.id !== this.state.agent) {
+        // If the client was already initialized
+        if (this.state.client) {
+          // If the socket was already subscribed to an agent
+          if (this.state.agent) {
+            // Unsubscribe from the agent
+            this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.state.agent}`);
           }
-        };
-        this.state.client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}`, handler);
-        this.setState({
-          agent: this.props.agent.id,
-        });
+          const handler = agent => {
+            if (agent) {
+              this.props.onRefreshAgent(agent);
+            }
+          };
+          this.state.client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}`, handler);
+          this.setState({
+            agent: this.props.agent.id,
+          });
+        }
       }
     }
     if (this.state.socketClientConnected && !this.state.serverStatusConnected) {
@@ -188,9 +190,9 @@ class App extends React.Component {
     } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
     const disableHeader = this.props.location.pathname.indexOf('discovery') !== -1;
-    if (!loadingCurrentUser) {
-      return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
-    }
+    //if (!loadingCurrentUser) {
+    //     //  return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
+    //     //}
     return disableHeader ? (
       <div>
         <Switch>
