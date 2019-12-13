@@ -1,12 +1,10 @@
 import _ from 'lodash';
 
-module.exports = function ({ actionData, CSO, newActionIndex, getActionData }) {
+module.exports = async function ({ CSO, newActionIndex, getActionData }) {
 
     var mostRecentActionShouldBeIgnored = false;
-    if (CSO.actionIndex === 0
-        && CSO.recognizedModifiers.length === 0
+    if (CSO.recognizedModifiers.length === 0
         && CSO.recognizedKeywords.length > 0
-        && CSO.recognizedActions.length > 0
         //&& actionWillBeFilled({
         //    actionData,
         //    action: CSO.context.actionQueue[newActionIndex],
@@ -18,7 +16,7 @@ module.exports = function ({ actionData, CSO, newActionIndex, getActionData }) {
     return mostRecentActionShouldBeIgnored;
 };
 
-const candidateForKeywordFillingExists = ({ CSO, newActionIndex, getActionData }) => {
+const candidateForKeywordFillingExists = async ({ CSO, newActionIndex, getActionData }) => {
     var candidateExists = false;
     var actionData;
     candidateExists = CSO.context.actionQueue.some((action, index) => {
@@ -58,7 +56,9 @@ const getEmptyRequiredSlots = (actionQueueSlots, actionDataSlots) => {
             }
         });
     }
-    emptyRequiredSlots = requiredActionDataSlots.filter(slot => !filledRequiredSlots.includes(slot));
+    emptyRequiredSlots = requiredActionDataSlots.filter(function (slot) {
+        let i = filledRequiredSlots.indexOf(slot)
+        return i == -1 ? true : (filledRequiredSlots.splice(i, 1), false)
+    });
     return emptyRequiredSlots;
 }
-

@@ -263,13 +263,38 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 });
                 newActionIndex = newActionIndex === -1 ? CSO.context.actionQueue.length : newActionIndex;
 
-                CSO.recognizedActions.forEach((recognizedAction) => {
+                await Promise.all(CSO.recognizedActions.map(async (recognizedAction) => {
                     CSO.context.actionQueue.splice(newActionIndex, 0, {
                         name: recognizedAction,
                         fulfilled: false
                     });
+
+                    /*
+                    * Sometimes when there are unfullfilled actions waiting for slots, if the use enters a slot value
+                    * this value is recognized both as a keyword to fulfill the pending action but also as a whole new 
+                    * identical action, resulting in two identical actions resolved. We are ignoring the most recent 
+                    * action based on the following conditions:
+                    *   - There must be no modifiers identified
+                    *   - There must be at least one action and one keyword recognized
+                    *   - There must be at least one unfulfilled action in the queue of the same type as the recognized action
+                    *   - At least one of the empty required slots of the pending action should be filled with the recognized keywords
+                    */
+                    var mostRecentActionData;
+                    mostRecentActionData = getActionData({ actionName: CSO.context.actionQueue[newActionIndex].name, CSO });
+
+                    var mostRecentActionShouldBeIgnored = await agentService.converseMostRecentActionShoulBeIgnored({
+                        actionData: mostRecentActionData,
+                        CSO,
+                        newActionIndex: newActionIndex,
+                        getActionData
+                    });
+
+                    if (mostRecentActionShouldBeIgnored) {
+                        CSO.context.actionQueue[newActionIndex].fulfilled = true;
+                    }
+
                     newActionIndex++;
-                });
+                }));
             }
 
             /*
@@ -285,38 +310,9 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 }
             }
             CSO.actionIndex = 0;
-
-            var mostRecentActionData;
-            if (!CSO.context.listenFreeText && CSO.recognizedActions.length > 0) {
-                mostRecentActionData = getActionData({ actionName: CSO.context.actionQueue[newActionIndex - 1].name, CSO });
-            }
             while (CSO.context.actionQueue[CSO.actionIndex] !== undefined) {
 
                 const action = CSO.context.actionQueue[CSO.actionIndex];
-
-                /*
-                * Sometimes when there are unfullfilled actions waiting for slots, if the use enters a slot value
-                * this value is recognized both as a keyword to fulfill the pending action but also as a whole new 
-                * identical action, resulting in two identical actions resolved. We are ignoring the most recent 
-                * action based on the following conditions:
-                *   - There must be no modifiers identified
-                *   - There must be at least one action and one keyword recognized
-                *   - There must be at least one unfulfilled action in the queue of the same type as the recognized action
-                *   - Both the recognized action and the waiting action should be fulfilled with the recognized keywords
-                */
-                if (!CSO.context.listenFreeText && CSO.recognizedActions.length > 0) {
-                    var mostRecentActionShouldBeIgnored = await agentService.converseMostRecentActionShoulBeIgnored({
-                        actionData: mostRecentActionData,
-                        CSO,
-                        newActionIndex: newActionIndex - 1,
-                        getActionData
-                    });
-
-                    if (mostRecentActionShouldBeIgnored) {
-                        CSO.context.actionQueue[newActionIndex - 1].fulfilled = true;
-                    }
-                }
-
                 if (!action.fulfilled) {
                     const actionData = getActionData({ actionName: action.name, CSO });
                     CSO.currentAction = CSO.context.actionQueue[CSO.actionIndex];
@@ -370,6 +366,16 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                             */
                             await agentService.converseSendResponseToUbiquity({ actionData, CSO });
                         }
+                    } else {
+                        await contextService.update({
+                            sessionId: CSO.context.sessionId,
+                            data: {
+                                savedSlots: CSO.context.savedSlots,
+                                docIds: CSO.context.docIds,
+                                actionQueue: CSO.context.actionQueue,
+                                listenFreeText: CSO.context.listenFreeText ? true : false
+                            }
+                        });
                     }
                 }
                 CSO.actionIndex++;
