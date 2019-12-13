@@ -263,7 +263,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 });
                 newActionIndex = newActionIndex === -1 ? CSO.context.actionQueue.length : newActionIndex;
 
-                await Promise.all(CSO.recognizedActions.map(async (recognizedAction) => {
+                for (var i = 0; i < CSO.recognizedActions.length; i++) {
+                    var recognizedAction = CSO.recognizedActions[i];
                     CSO.context.actionQueue.splice(newActionIndex, 0, {
                         name: recognizedAction,
                         fulfilled: false
@@ -294,7 +295,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     }
 
                     newActionIndex++;
-                }));
+                };
             }
 
             /*
