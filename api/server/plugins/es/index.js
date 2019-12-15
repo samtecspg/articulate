@@ -1,4 +1,4 @@
-import elasticsearch from 'elasticsearch';
+import elasticsearch from '@elastic/elasticsearch';
 import Package from '../../../package.json';
 import InitializeModels from './lib/initialize-models';
 
@@ -12,9 +12,7 @@ module.exports = {
 
         const client = new elasticsearch.Client(options);
         try {
-            await client.ping({
-                requestTimeout: 1000
-            });
+            await client.ping();
             server.app[name] = {
                 client,
                 models: await InitializeModels({ client, path: `${__dirname}/models` })
