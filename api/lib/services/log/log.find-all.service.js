@@ -38,7 +38,8 @@ module.exports = async function ({ direction = SORT_DESC, skip = 0, limit = 50, 
             body.query = orQueryContainers;
         }
 
-        const results = await LogModel.search({ body });
+        const bodyParam = body;
+        const results = await LogModel.search({ bodyParam });
         if (results.hits.total.value === 0) {
             return { data: [], totalCount: 0 };
         }

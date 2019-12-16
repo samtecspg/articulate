@@ -18,7 +18,7 @@ module.exports = {
 
             const { logService } = await request.services();
             try {
-                return await logService.search({ body: request.payload });
+                return await logService.search({ bodyParam: request.payload });
             }
             catch ({ message, statusCode }) {
 

@@ -97,7 +97,8 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
 
         body.query = query
 
-        const results = await DocumentModel.search({ body });
+        const bodyParam = body;
+        const results = await DocumentModel.search({ bodyParam });
         if (results.hits.total.value === 0) {
             return { data: [], totalCount: 0 };
         }

@@ -25,24 +25,27 @@ module.exports = class BaseModel {
     async createInstance({ data, refresh = true }) {
 
         const { index } = this;
-        return await this.client.index({
+        const { body } = await this.client.index({
             index,
             //type: index,
             body: data,
             refresh
         });
+        return body;
     }
 
     async updateInstance({ id, data, refresh = true }) {
 
         const { index } = this;
-        return await this.client.index({
+        const { body } = await this.client.index({
             index,
             //type: index,
             id,
             body: data,
             refresh
         });
+
+        return body;
     }
 
     async removeInstance({ id, refresh = true }) {
@@ -59,23 +62,25 @@ module.exports = class BaseModel {
     async findById({ id, refresh = true, source = true }) {
 
         const { index } = this;
-        return await this.client.get({
+        const { body } = await this.client.get({
             index,
             //type: index,
             id,
             refresh,
             _source: source
         });
+        return body;
     }
 
-    async search({ body, trackTotalHits = true }) {
+    async search({ bodyParam, trackTotalHits = true }) {
 
         const { index } = this;
-        return await this.client.search({
+        const { body } = await this.client.search({
             index,
-            body,
+            body: bodyParam,
             trackTotalHits
         });
+        return body;
     }
 
     async deleteByQuery({ body, refresh = true }) {
