@@ -135,6 +135,19 @@ export const LOAD_AGENT_DOCUMENTS_ERROR =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_ERROR';
 export const LOAD_AGENT_DOCUMENTS_SUCCESS =
   'app/AgentPage/LOAD_AGENT_DOCUMENTS_SUCCESS';
+export const LOAD_LOGS = 'app/AgentPage/LOAD_LOGS';
+export const LOAD_LOGS_ERROR =
+  'app/AgentPage/LOAD_LOGS_ERROR';
+export const LOAD_LOGS_SUCCESS =
+  'app/AgentPage/LOAD_LOGS_SUCCESS';
+export const DELETE_DOCUMENT =
+  'app/AgentPage/DELETE_DOCUMENT';
+export const DELETE_DOCUMENT_ERROR =
+  'app/AgentPage/DELETE_DOCUMENT_ERROR';
+export const DELETE_SESSION_DATA =
+  'app/AgentPage/DELETE_SESSION_DATA';
+export const DELETE_SESSION_DATA_ERROR =
+  'app/AgentPage/DELETE_SESSION_DATA_ERROR';
 export const LOAD_AGENT_STATS = 'app/AgentPage/LOAD_AGENT_STATS';
 export const LOAD_AGENT_STATS_ERROR =
   'app/AgentPage/LOAD_AGENT_STATS_ERROR';
@@ -210,6 +223,7 @@ export const UPDATE_SETTINGS = 'app/SettingsPage/UPDATE_SETTINGS';
 export const UPDATE_SETTINGS_ERROR = 'app/SettingsPage/UPDATE_SETTINGS_ERROR';
 export const UPDATE_SETTINGS_SUCCESS =
   'app/SettingsPage/UPDATE_SETTINGS_SUCCESS';
+export const UPDATE_SETTINGS_TOUCHED = 'app/SettingsPage/UPDATE_SETTINGS_TOUCHED';
 export const UPDATE_SETTING = 'app/SettingsPage/UPDATE_SETTING';
 export const UPDATE_SETTING_ERROR = 'app/SettingsPage/UPDATE_SETTING_ERROR';
 export const UPDATE_SETTING_SUCCESS = 'app/SettingsPage/UPDATE_SETTING_SUCCESS';
@@ -281,6 +295,8 @@ export const ADD_NEW_QUICK_RESPONSE = 'app/ActionPage/ADD_NEW_QUICK_RESPONSE';
 export const DELETE_QUICK_RESPONSE = 'app/ActionPage/DELETE_QUICK_RESPONSE';
 export const CHANGE_QUICK_RESPONSE = 'app/ActionPage/CHANGE_QUICK_RESPONSE';
 export const EDIT_SLOT_TEXT_PROMPT = 'app/ActionPage/EDIT_SLOT_TEXT_PROMPT';
+export const ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE = 'app/ActionPage/ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE'
+export const DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE = 'app/ActionPage/DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE'
 
 /*
  * Keyword
@@ -323,6 +339,10 @@ export const UNTAG_MODIFIER_KEYWORD =
   'app/KeywordsEditPage/UNTAG_MODIFIER_KEYWORD';
 export const CHANGE_MODIFIER_SAYINGS_PAGE_SIZE =
   'app/KeywordsEditPage/CHANGE_MODIFIER_SAYINGS_PAGE_SIZE';
+export const REFRESH_KEYWORD_EXAMPLE_UPDATE =
+  'app/KeywordsEditPage/REFRESH_KEYWORD_EXAMPLE_UPDATE';
+export const RECOGNIZE_UPDATED_KEYWORDS =
+  'app/KeywordsEditPage/RECOGNIZE_UPDATED_KEYWORDS';
 
 /*
  * Category
@@ -396,7 +416,7 @@ export const LOAD_STARRED_SAYING = 'app/ActionPage/LOAD_STARRED_SAYING';
 export const LOAD_STARRED_SAYING_ERROR = 'app/ActionPage/LOAD_STARRED_SAYING_ERROR';
 export const LOAD_STARRED_SAYING_SUCCESS = 'app/ActionPage/LOAD_STARRED_SAYING_SUCCESS';
 
-/* Users */ 
+/* Users */
 export const LOAD_USERS = 'app/user/LOAD_USERS';
 export const LOAD_USERS_SUCCESS = 'app/user/LOAD_USERS_SUCCESS';
 export const LOAD_USERS_ERROR = 'app/user/LOAD_USERS_ERROR';

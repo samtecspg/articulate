@@ -92,6 +92,8 @@ export class MainTab extends React.Component {
 
   state = {
     openExitModal: false,
+    openUpdateSayingsExitModal: false,
+    exitAfterSave: false
   };
 
   handleChange = value => {
@@ -108,12 +110,51 @@ export class MainTab extends React.Component {
             this.props.goBack();
           }}
           onSaveAndExit={() => {
-            this.props.onSaveAndExit();
+            if (this.props.keywordValuesTouched) {
+              this.setState({
+                openUpdateSayingsExitModal: true,
+                exitAfterSave: true
+              });
+            }
+            else {
+              this.props.onSaveAndExit();
+            }
           }}
           onClose={() => {
             this.setState({ openExitModal: false });
           }}
           type={intl.formatMessage(messages.instanceName)}
+        />
+        <ExitModal
+          open={this.state.openUpdateSayingsExitModal}
+          onExit={() => {
+            if (this.state.exitAfterSave) {
+              this.props.onSaveAndExit(false);
+            } else {
+              this.props.onFinishAction(false);
+              this.setState({
+                openUpdateSayingsExitModal: false
+              });
+            }
+          }}
+          onSaveAndExit={() => {
+            if (this.state.exitAfterSave) {
+              this.props.onSaveAndExit(true);
+            } else {
+              this.props.onFinishAction(true);
+              this.setState({
+                openUpdateSayingsExitModal: false
+              });
+            }
+          }}
+          onClose={() => {
+            this.setState({ openUpdateSayingsExitModal: false });
+          }}
+          type={intl.formatMessage(messages.instanceName)}
+          customMessage1={intl.formatMessage(messages.updateExistingSayingsKeywordsQuestion)}
+          customMessage2={intl.formatMessage(messages.updateExistingSayingsKeywordsExplanation)}
+          customMessageSaveAndExitButton={intl.formatMessage(messages.updateExistingSayingsKeywordsYes)}
+          customMessageExitButton={intl.formatMessage(messages.updateExistingSayingsKeywordsNo)}
         />
         <Hidden only={['sm', 'xs']}>
           <Grid container justify="space-between">
@@ -141,8 +182,8 @@ export class MainTab extends React.Component {
                         ) : this.props.keywordName ? (
                           this.props.keywordName
                         ) : (
-                          intl.formatMessage(messages.noName)
-                        )}
+                              intl.formatMessage(messages.noName)
+                            )}
                       </span>
                     </span>
                   }
@@ -199,8 +240,8 @@ export class MainTab extends React.Component {
                         <span>{intl.formatMessage(messages.modifiers)}</span>
                       </Tooltip>
                     ) : (
-                      intl.formatMessage(messages.modifiers)
-                    )
+                        intl.formatMessage(messages.modifiers)
+                      )
                   }
                   icon={
                     this.props.errorState.tabs.indexOf(2) > -1 ? (
@@ -255,7 +296,13 @@ export class MainTab extends React.Component {
                     success={this.props.success}
                     loading={this.props.loading}
                     label={messages.finishButton}
-                    onClick={this.props.onFinishAction}
+                    onClick={this.props.keywordValuesTouched ? () => {
+                      this.setState({
+                        openUpdateSayingsExitModal: true,
+                        exitAfterSave: false
+                      })
+                    }
+                      : this.props.onFinishAction}
                   />
                 </Grid>
               </Hidden>
@@ -305,8 +352,8 @@ export class MainTab extends React.Component {
                         <Icon>comment</Icon>
                       </Tooltip>
                     ) : (
-                      <Icon>comment</Icon>
-                    )
+                        <Icon>comment</Icon>
+                      )
                   }
                   className={classes.tab}
                   disabled={!newKeyword}
@@ -387,6 +434,7 @@ MainTab.propTypes = {
   loading: PropTypes.bool,
   success: PropTypes.bool,
   touched: PropTypes.bool,
+  keywordValuesTouched: PropTypes.bool
 };
 
 export default injectIntl(withStyles(styles)(MainTab));

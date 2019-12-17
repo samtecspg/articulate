@@ -4,9 +4,12 @@ import {
   ROUTE_AGENT,
   ROUTE_CATEGORY,
   ROUTE_DOCUMENT,
+  ROUTE_LOG,
   ROUTE_SAYING,
   ROUTE_SETTINGS,
   ROUTE_SESSION,
+  ROUTE_CONTEXT,
+  ROUTE_DELETE_BY_QUERY
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
@@ -14,8 +17,13 @@ import { getActions } from '../ActionPage/saga';
 import {
   copySayingError,
   copySayingSuccess,
+  loadAgentDocuments,
   loadAgentDocumentsError,
   loadAgentDocumentsSuccess,
+  loadLogsError,
+  loadLogsSuccess,
+  deleteDocumentError,
+  deleteSessionDataError,
   loadAgentSessionsSuccess,
   loadAgentSessionsError,
   loadCategoriesError,
@@ -25,6 +33,8 @@ import {
   loadSayingsError,
   loadSayingsSuccess,
   updateSayingError,
+  loadSession,
+  loadAgentSessions,
 } from '../App/actions';
 
 import {
@@ -36,6 +46,8 @@ import {
   DELETE_SAYING,
   LOAD_ACTIONS,
   LOAD_AGENT_DOCUMENTS,
+  LOAD_LOGS,
+  DELETE_DOCUMENT,
   LOAD_AGENT_SESSIONS,
   LOAD_CATEGORIES,
   LOAD_FILTERED_CATEGORIES,
@@ -44,11 +56,13 @@ import {
   TAG_KEYWORD,
   UNTAG_KEYWORD,
   LOAD_SESSION,
+  DELETE_SESSION_DATA,
 } from '../App/constants';
 
 import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
 
 import { getKeywords } from '../DialoguePage/saga';
+import ExtractTokensFromString from '../../utils/extractTokensFromString';
 //import { getSession } from '../../components/ConversationBar/saga';
 
 export function* postSaying(payload) {
@@ -272,7 +286,23 @@ export function* putSessionsPageSize(payload) {
 
 export function* getAgentDocument(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, page, pageSize, field, direction } = payload;
+  const { api, page, pageSize, field, direction, filter } = payload;
+  let tempFilter = null;
+  if (filter) {
+    const { remainingText, found } = ExtractTokensFromString({
+      text: filter,
+      tokens: ['category', 'actions', 'actionIntervals'],
+    });
+    tempFilter =
+      filter === ''
+        ? undefined
+        : JSON.stringify({
+          category: found.category,
+          actions: found.actions,
+          actionIntervals: found.actionIntervals,
+          query: remainingText,
+        });
+  }
   let skip = 0;
   let limit = -1;
   if (page) {
@@ -281,10 +311,11 @@ export function* getAgentDocument(payload) {
   }
   try {
     const params = {
+      filter: tempFilter ? tempFilter : null,
       skip,
       limit,
       field,
-      direction,
+      direction
     };
     const response = yield call(
       api.get,
@@ -299,6 +330,159 @@ export function* getAgentDocument(payload) {
     );
   } catch (err) {
     yield put(loadAgentDocumentsError(err));
+  }
+}
+
+export function* getLogs(payload) {
+  const { api, page, pageSize, field, direction, filter } = payload;
+  let tempFilter = null;
+  if (filter) {
+    const { remainingText, found } = ExtractTokensFromString({
+      text: filter,
+      tokens: ['containers'],
+    });
+    tempFilter =
+      filter === ''
+        ? undefined
+        : JSON.stringify({
+          containers: found.containers,
+          query: remainingText,
+        });
+  }
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: tempFilter ? tempFilter : null,
+      skip,
+      limit,
+      field,
+      direction
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_LOG]),
+      { params },
+    );
+    yield put(
+      loadLogsSuccess({
+        logs: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadLogsError(err));
+  }
+}
+
+export function* deleteDocument(payload) {
+  const { api, documentId, sessionId, page, pageSize, field, direction } = payload;
+  try {
+    let session;
+    try {
+      session = yield call(
+        api.get,
+        toAPIPath([ROUTE_CONTEXT, sessionId])
+      );
+    } catch (err) {
+      if (!err.response || !err.response.status || err.response.status !== 404) {
+        throw (err);
+      }
+    }
+
+    if (session) {
+      let patchPayload = session;
+      delete patchPayload.id;
+      delete patchPayload.sessionId;
+      patchPayload.docIds = patchPayload.docIds.filter((docId) => {
+        return docId !== documentId;
+      })
+
+      yield call(
+        api.patch,
+        toAPIPath([ROUTE_CONTEXT, sessionId]),
+        patchPayload,
+      );
+    }
+
+    yield call(
+      api.delete,
+      toAPIPath([ROUTE_DOCUMENT, documentId])
+    );
+    yield put(loadAgentDocuments({
+      page, pageSize, field, direction
+    }));
+    yield put(loadAgentSessions(
+      page, pageSize, field, direction
+    ));
+
+    if (session) {
+      yield put(
+        loadSession(sessionId)
+      );
+    }
+  } catch (err) {
+    yield put(deleteDocumentError(err));
+  }
+}
+
+export function* deleteSessionData(payload) {
+  const { api, sessionId, page, pageSize, field, direction } = payload;
+  try {
+
+    let session;
+    try {
+      session = yield call(
+        api.get,
+        toAPIPath([ROUTE_CONTEXT, sessionId])
+      );
+    } catch (err) {
+      if (!err.response || !err.response.status || err.response.status !== 404) {
+        throw (err);
+      }
+    }
+
+    if (session) {
+      let patchPayload = session;
+      delete patchPayload.id;
+      delete patchPayload.sessionId;
+      patchPayload.docIds = [];
+
+      yield call(
+        api.patch,
+        toAPIPath([ROUTE_CONTEXT, sessionId]),
+        patchPayload,
+      );
+    }
+
+    yield call(
+      api.post,
+      toAPIPath([ROUTE_DOCUMENT, ROUTE_DELETE_BY_QUERY]),
+      {
+        "query": {
+          "match": {
+            "session": sessionId
+          }
+        }
+      }
+    );
+    yield put(
+      loadSession(sessionId)
+    );
+
+    yield put(loadAgentDocuments({
+      page, pageSize, field, direction
+    }));
+    yield put(loadAgentSessions(
+      page, pageSize, field, direction
+    ));
+
+  } catch (err) {
+    yield put(deleteSessionDataError(err));
   }
 }
 
@@ -347,6 +531,9 @@ export default function* rootSaga() {
   yield takeLatest(CHANGE_REVIEW_PAGE_SIZE, putReviewPageSize);
   yield takeLatest(CHANGE_SESSIONS_PAGE_SIZE, putSessionsPageSize);
   yield takeLatest(LOAD_AGENT_DOCUMENTS, getAgentDocument);
+  yield takeLatest(DELETE_DOCUMENT, deleteDocument);
+  yield takeLatest(DELETE_SESSION_DATA, deleteSessionData);
   yield takeLatest(LOAD_AGENT_SESSIONS, getAgentSessions);
+  yield takeLatest(LOAD_LOGS, getLogs);
   //yield takeLatest(LOAD_SESSION, getSession);
 }

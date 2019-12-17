@@ -2,6 +2,7 @@ import Schmervice from 'schmervice';
 import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent.converse-fulfill-empty-slots-with-saved-values.service';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
+import ConverseCompileQuickResponsesTemplates from './agent/agent.converse-compile-quick-responses-templates.service';
 import ConverseGenerateResponseFallback from './agent/agent.converse-generate-response-fallback.service';
 import ConverseGenerateResponse from './agent/agent.converse-generate-response.service';
 import ConverseGetKeywordsFromRasaResults from './agent/agent.converse-get-keywords-from-rasa-results';
@@ -9,6 +10,7 @@ import ConverseGetBestRasaResult from './agent/agent.converse-get-best-rasa-resu
 import ConverseFillActionSlots from './agent/agent.converse-fill-action-slots.service';
 import ConverseSendResponseToUbiquity from './agent/agent.converse-send-response-to-ubiquity';
 import ConverseProcessPostFormat from './agent/agent.converse-process-post-format';
+import ConverseMostRecentActionShoulBeIgnored from './agent/agent.converse-most-recent-action-should-be-ignored.service';
 import Converse from './agent/agent.converse.service';
 import CreateAction from './agent/agent.create-action.service';
 import CreateCategory from './agent/agent.create-category.service';
@@ -31,6 +33,7 @@ import ParseRasaKeywords from './agent/agent.parse-rasa-keywords.service';
 import ParseRegexKeywords from './agent/agent.parse-regex-keywords.service';
 import Parse from './agent/agent.parse.service';
 import IdentifyKeywords from './agent/agent.identify-keywords.service';
+import RecognizeUpdatedKeywords from './agent/agent.recognize-updated-keywords.service';
 import RemoveAction from './agent/agent.remove-action.service';
 import RemoveCategory from './agent/agent.remove-category.service';
 import RemoveKeyword from './agent/agent.remove-keyword.service';
@@ -236,8 +239,13 @@ module.exports = class AgentService extends Schmervice.Service {
     }
 
     async identifyKeywords() {
-        
+
         return await IdentifyKeywords.apply(this, arguments);
+    }
+
+    async recognizeUpdatedKeywords() {
+
+        return await RecognizeUpdatedKeywords.apply(this, arguments);
     }
 
     async getTrainedCategories() {
@@ -270,6 +278,11 @@ module.exports = class AgentService extends Schmervice.Service {
         return await ConverseCompileResponseTemplates.apply(this, arguments);
     }
 
+    async converseCompileQuickResponsesTemplates() {
+
+        return await ConverseCompileQuickResponsesTemplates.apply(this, arguments);
+    }
+
     async converseCallWebhook() {
 
         return await ConverseCallWebhook.apply(this, arguments);
@@ -280,26 +293,30 @@ module.exports = class AgentService extends Schmervice.Service {
         return await ConverseFulfillEmptySlotsWithSavedValues.apply(this, arguments);
     }
 
-    async converseGetKeywordsFromRasaResults(){
+    async converseGetKeywordsFromRasaResults() {
 
         return await ConverseGetKeywordsFromRasaResults.apply(this, arguments);
     }
 
-    async converseGetBestRasaResult(){
+    async converseGetBestRasaResult() {
 
         return await ConverseGetBestRasaResult.apply(this, arguments);
     }
 
-    async converseFillActionSlots(){
+    async converseFillActionSlots() {
         return await ConverseFillActionSlots.apply(this, arguments);
     }
 
-    async converseSendResponseToUbiquity(){
+    async converseSendResponseToUbiquity() {
         return await ConverseSendResponseToUbiquity.apply(this, arguments);
     }
 
-    async converseProcessPostFormat(){
+    async converseProcessPostFormat() {
         return await ConverseProcessPostFormat.apply(this, arguments);
+    }
+
+    async converseMostRecentActionShoulBeIgnored() {
+        return await ConverseMostRecentActionShoulBeIgnored.apply(this, arguments);
     }
 
     async isModelUnique() {

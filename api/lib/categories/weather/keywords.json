@@ -103,8 +103,8 @@
     "regex": "",
     "type": "learned",
     "modifiers": [],
-    "creationDate": "1556586831000",
-    "modificationDate": "1556586831000"
+    "creationDate": "1575651727000",
+    "modificationDate": "1575651727000"
   },
   {
     "keywordName": "unit",
@@ -130,8 +130,8 @@
     "regex": "",
     "type": "learned",
     "modifiers": [],
-    "creationDate": "1556586943000",
-    "modificationDate": "1556641504000"
+    "creationDate": "1575651727000",
+    "modificationDate": "1575651727000"
   },
   {
     "keywordName": "feeling",
@@ -160,7 +160,7 @@
     "regex": "",
     "type": "learned",
     "modifiers": [],
-    "creationDate": "1556587423000",
-    "modificationDate": "1556587423000"
+    "creationDate": "1575651727000",
+    "modificationDate": "1575651727000"
   }
 ]

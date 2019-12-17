@@ -1,14 +1,18 @@
-import { Button, Grid, Input, Modal, Typography, Tabs, Tab } from '@material-ui/core';
+import { Button, Grid, Input, Modal, Typography, Tabs, Tab, CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import reviewIcon from '../../../images/icon-review.svg';
 import searchIcon from '../../../images/search-icon.svg';
 import messages from '../messages';
+import { map } from 'lodash';
 import SayingsDataForm from './SayingsDataForm';
 import SessionsDataForm from './SessionsDataForm';
+import Logs from './Logs';
+import ExitModal from '../../../components/ExitModal';
+import PopoverFilter from './../../../components/PopoverFilter';
 
 const styles = {
   headerContainer: {
@@ -89,9 +93,20 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.processSelectedPopoverFiltersDocuments = this.processSelectedPopoverFiltersDocuments.bind(this);
+    this.processSelectedPopoverFiltersLogs = this.processSelectedPopoverFiltersLogs.bind(this);
+  }
+
   state = {
     openModal: false,
+    refreshLogFilter: '',
+    numberLogsFilter: 1000
   };
+
+  handle
 
   handleOpen = () => {
     this.setState({
@@ -104,6 +119,44 @@ class Form extends React.Component {
       openModal: false,
     });
   };
+
+  processSelectedPopoverFiltersDocuments(filtersSet) {
+    const { dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval } = filtersSet;
+    var filter = '';
+    if (textFilterValue != '') {
+      filter = filter + textFilterValue + ' ';
+    }
+    if (dropDownValuePicked != 'Pick Category') {
+      filter = filter + 'category:"' + dropDownValuePicked + '"';
+    }
+    if (chipValuesPicked.length > 0) {
+      filter = filter + ' actions:"'
+      filter = filter + chipValuesPicked.join('" actions:"')
+      filter = filter + '"';
+    }
+
+    if (actionInterval) {
+      filter = filter + ' actionIntervals:"'
+      filter = filter + actionInterval.join('" actionIntervals:"')
+      filter = filter + '"';
+    }
+    this.props.onSearchSaying(filter);
+  }
+
+  processSelectedPopoverFiltersLogs(filtersSet) {
+    const { checkboxValuesPicked, currentJustMax } = filtersSet;
+    var filter = '';
+    if (checkboxValuesPicked.length > 0) {
+      filter = filter + ' containers:"';
+      filter = filter + checkboxValuesPicked.map(container => { return container.toLowerCase() }).join('" containers:"');
+      filter = filter + '"';
+    }
+    this.props.onSearchLog(filter, currentJustMax);
+    this.setState({
+      refreshLogFilter: filter,
+      numberLogsFilter: currentJustMax
+    });
+  }
 
   render() {
     const { classes, intl } = this.props;
@@ -129,22 +182,6 @@ class Form extends React.Component {
                 <FormattedMessage {...messages.help} />
               </span>
             </Button>
-            {/* <form className={classes.searchForm}>
-            <img src={searchIcon} alt={intl.formatMessage(messages.searchReviewAlt)} />
-            <Input
-              inputProps={{
-                style: {
-                  border: 'none',
-                },
-              }}
-              disableUnderline
-              className={classes.searchInputField}
-              placeholder={intl.formatMessage(messages.searchReviewPlaceholder)}
-              onChange={(evt) => {
-                this.props.onSearchSaying(evt.target.value);
-              }}
-            />
-            </form> */}
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
@@ -158,77 +195,169 @@ class Form extends React.Component {
                 />
               </Grid>
             </Modal>
+            <ExitModal
+              open={this.props.deleteDocumentModalOpen}
+              onExit={() => {
+                this.props.onDeleteDocumentModalChange(false);
+              }}
+              onSaveAndExit={() => {
+                this.props.onDeleteDocument();
+                this.props.onDeleteDocumentModalChange(false);
+              }}
+              onClose={() => {
+                this.props.onDeleteDocumentModalChange(false);
+              }}
+              customMessage1={intl.formatMessage(messages.deleteDocumentAlert1)}
+              customMessage2={intl.formatMessage(messages.deleteDocumentAlert2)}
+              customMessageSaveAndExitButton={intl.formatMessage(messages.deleteDocumentAlertYes)}
+              customMessageExitButton={intl.formatMessage(messages.deleteDocumentAlertNo)}
+            />
+            <ExitModal
+              open={this.props.deleteSessionModalOpen}
+              onExit={() => {
+                this.props.onDeleteSessionModalChange(false);
+              }}
+              onSaveAndExit={() => {
+                this.props.onDeleteSession();
+                this.props.onDeleteSessionModalChange(false);
+              }}
+              onClose={() => {
+                this.props.onDeleteSessionModalChange(false);
+              }}
+              customMessage1={intl.formatMessage(messages.deleteSessionAlert1)}
+              customMessage2={intl.formatMessage(messages.deleteSessionAlert2)}
+              customMessageSaveAndExitButton={intl.formatMessage(messages.deleteSessionAlertYes)}
+              customMessageExitButton={intl.formatMessage(messages.deleteSessionAlertNo)}
+            />
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Tabs
-            className={classes.reviewTabs}
-            value={this.props.selectedTab}
-            indicatorColor="primary"
-            textColor="secondary"
-            scrollable
-            scrollButtons="off"
-            onChange={(evt, value) => {
-              this.props.handleTabChange(evt, value);
-            }}
-            TabIndicatorProps={{
-              style: {
-                display: 'none',
-              },
-            }}
-          >
-            <Tab
-              value="documents"
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
-                </span>
-              }
-              className={
-                this.props.selectedTab === 'documents' ? classes.selected : null
-              }
-            />
-            <Tab
-              value="sessions"
-              label={
-                <span className={classes.tabLabel}>
-                  <span>{intl.formatMessage(messages.sessionsFormTitle)}</span>
-                </span>
-              }
-              className={
-                this.props.selectedTab === 'sessions' ? classes.selected : null
-              }
-            />
-          </Tabs>
+          <Grid item xs={12} container direction={'row'}>
+            <Grid item xs={6}>
+              <Tabs
+                className={classes.reviewTabs}
+                value={this.props.selectedTab}
+                indicatorColor="primary"
+                textColor="secondary"
+                scrollable
+                scrollButtons="off"
+                onChange={(evt, value) => {
+                  this.props.handleTabChange(evt, value);
+                }}
+                TabIndicatorProps={{
+                  style: {
+                    display: 'none',
+                  },
+                }}
+              >
+                <Tab
+                  value="documents"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>{intl.formatMessage(messages.sayingsFormTitle)}</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'documents' ? classes.selected : null
+                  }
+                />
+                <Tab
+                  value="sessions"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>{intl.formatMessage(messages.sessionsFormTitle)}</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'sessions' ? classes.selected : null
+                  }
+                />
+                <Tab
+                  value="logs"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>Logs</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'logs' ? classes.selected : null
+                  }
+                />
+              </Tabs>
+            </Grid>
+            <Grid item xs={6} style={{ justifyContent: 'flex-end' }} container direction={'row'}>
+              {this.props.selectedTab === 'documents' && (
+                <PopoverFilter
+                  anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  showCheckboxFilter={false}
+                  showTextFilter={true}
+                  showDropDownFilter={false}
+                  showMinMaxFilter={true}
+                  showChips={true}
+                  showCustomFirstChip={true}
+                  chipValues={map(this.props.agentActions, 'actionName')}
+                  filtersDescription={intl.formatMessage(messages.filtersDescriptionSayingsTab)}
+                  textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
+                  chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  minMaxFilterLabel={intl.formatMessage(messages.actionIntervals)}
+                  minMaxIntervalsWarning={intl.formatMessage(messages.actionIntervalsWarning)}
+                  customFirstChipLabel={intl.formatMessage(messages.customFirstActionLabel)}
+                  processSelectedFilters={this.processSelectedPopoverFiltersDocuments}
+                  absoluteMin={0}
+                  absoluteMax={100}
+                />
+              )}
+              {this.props.selectedTab === 'logs' && (
+                <PopoverFilter
+                  anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  showCheckboxFilter={true}
+                  showTextFilter={false}
+                  showDropDownFilter={false}
+                  showMinMaxFilter={false}
+                  showChips={false}
+                  showCustomFirstChip={false}
+                  checkBoxesFilterLabel={intl.formatMessage(messages.noLogsView)}
+                  checkBoxesValues={['API', 'UI', 'Redis', 'Duckling', 'Nginx', 'Rasa']}
+                  filtersDescription={intl.formatMessage(messages.filtersDescriptionLogsTab)}
+                  processSelectedFilters={this.processSelectedPopoverFiltersLogs}
+                  absoluteJustMax={10000}
+                  initialJustMax={1000}
+                />
+              )}
+            </Grid>
+          </Grid>
           {this.props.selectedTab === 'documents' && (
-              <SayingsDataForm
-                agentId={this.props.agentId}
-                documents={this.props.documents}
-                agentKeywords={this.props.agentKeywords}
-                agentActions={this.props.agentActions}
-                agentCategories={this.props.agentCategories}
-                onCopySaying={this.props.onCopySaying}
-                onSendSayingToAction={this.props.onSendSayingToAction}
-                currentPage={this.props.currentPage}
-                pageSize={this.props.pageSize}
-                numberOfPages={this.props.numberOfPages}
-                changePage={this.props.changePage}
-                movePageBack={this.props.movePageBack}
-                movePageForward={this.props.movePageForward}
-                changePageSize={this.props.changePageSize}
-                onSelectCategory={this.props.onSelectCategory}
-                category={this.props.category}
-                onSearchCategory={this.props.onSearchCategory}
-                newSayingActions={this.props.newSayingActions}
-                onClearSayingToAction={this.props.onClearSayingToAction}
-                onToggleConversationBar={this.props.onToggleConversationBar}
-                onSendMessage={this.props.onSendMessage}
-                onRequestSort={this.props.onRequestSort}
-                sortField={this.props.sortField}
-                sortDirection={this.props.sortDirection}
-                locale={this.props.locale}
-                timeSort={this.props.timeSort}
-              />
+            <SayingsDataForm
+              agentId={this.props.agentId}
+              documents={this.props.documents}
+              agentKeywords={this.props.agentKeywords}
+              agentActions={this.props.agentActions}
+              agentCategories={this.props.agentCategories}
+              onCopySaying={this.props.onCopySaying}
+              onDeleteDocumentModalChange={this.props.onDeleteDocumentModalChange}
+              onSendSayingToAction={this.props.onSendSayingToAction}
+              currentPage={this.props.currentPage}
+              pageSize={this.props.pageSize}
+              numberOfPages={this.props.numberOfPages}
+              changePage={this.props.changePage}
+              movePageBack={this.props.movePageBack}
+              movePageForward={this.props.movePageForward}
+              changePageSize={this.props.changePageSize}
+              onSelectCategory={this.props.onSelectCategory}
+              category={this.props.category}
+              onSearchCategory={this.props.onSearchCategory}
+              newSayingActions={this.props.newSayingActions}
+              onClearSayingToAction={this.props.onClearSayingToAction}
+              onToggleConversationBar={this.props.onToggleConversationBar}
+              onSendMessage={this.props.onSendMessage}
+              onRequestSort={this.props.onRequestSort}
+              sortField={this.props.sortField}
+              sortDirection={this.props.sortDirection}
+              locale={this.props.locale}
+              timeSort={this.props.timeSort}
+            />
           )}
           {this.props.selectedTab === 'sessions' && (
             <SessionsDataForm
@@ -236,6 +365,7 @@ class Form extends React.Component {
               agentId={this.props.agentId}
               sessions={this.props.sessions}
               onCopySaying={this.props.onCopySaying}
+              onDeleteSessionModalChange={this.props.onDeleteSessionModalChange}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentPage={this.props.currentPage}
               pageSize={this.props.pageSize}
@@ -259,8 +389,19 @@ class Form extends React.Component {
               onLoadSessionId={this.props.onLoadSessionId}
             />
           )}
+          {this.props.selectedTab === 'logs' && (
+            <Fragment>
+              <Logs
+                logsText={this.props.logsText}
+                loading={this.props.loading}
+                processSelectedFilters={this.processSelectedPopoverFiltersLogs}
+                refreshLogs={() => { this.props.onSearchLog(this.state.refreshLogFilter, this.state.numberLogsFilter) }}
+              />
+            </Fragment>
+          )
+          }
         </Grid>
-      </Grid>
+      </Grid >
     );
   }
 }
@@ -269,13 +410,20 @@ Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   documents: PropTypes.array,
+  logsText: PropTypes.string,
   agent: PropTypes.object,
   agentId: PropTypes.string,
   agentKeywords: PropTypes.array,
   agentActions: PropTypes.array,
   agentCategories: PropTypes.array,
   agentFilteredCategories: PropTypes.array,
+  deleteDocumentModalOpen: PropTypes.bool,
+  onDeleteSessionModalChange: PropTypes.bool,
   onCopySaying: PropTypes.func,
+  onDeleteDocumentModalChange: PropTypes.func,
+  onDeleteDocument: PropTypes.func,
+  onDeleteSessionModalChange: PropTypes.func,
+  onDeleteSession: PropTypes.func,
   onSendSayingToAction: PropTypes.func,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,
@@ -300,6 +448,8 @@ Form.propTypes = {
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
   onLoadSessionId: PropTypes.func,
+  loading: PropTypes.bool,
+  onSearchLog: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

@@ -9,25 +9,27 @@ module.exports = async ({ client, path }) => {
     await _.each(Mods, async (model) => {
 
         const instance = new model({ client });
-        const { name, mappings, settings, index } = instance;
+        const { name, mappings, settings, index, registerConfiguration } = instance;
 
         logger.debug(name);
 
-        const exists = await client.indices.exists({ index });
-        if (!exists) {
-            await client.indices.create({ index });
+        if (registerConfiguration) {
+            const exists = await client.indices.exists({ index });
+            if (!exists) {
+                await client.indices.create({ index });
+            }
+
+            await client.indices.putMapping({
+                index,
+                //type: index,
+                body: { ...mappings }
+            });
+
+            await client.indices.putSettings({
+                index,
+                body: { ...settings }
+            });
         }
-
-        await client.indices.putMapping({
-            index,
-            type: index,
-            body: { ...mappings }
-        });
-
-        await client.indices.putSettings({
-            index,
-            body: { ...settings }
-        });
 
         models[name] = instance;
     });

@@ -24,7 +24,7 @@ import {
 import { AUTH_ENABLED } from "../../../common/env";
 import {
   ROUTE_DOCUMENT,
-  PARAM_SEARCH,
+  ROUTE_SEARCH,
   ROUTE_AGENT,
 } from '../../../common/constants';
 
@@ -70,7 +70,7 @@ export class AnalyticsPage extends React.PureComponent {
         };
 
         client.subscribe(
-          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`,
+          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}/${ROUTE_SEARCH}`,
           handler,
         );
       };
@@ -86,7 +86,7 @@ export class AnalyticsPage extends React.PureComponent {
 
   componentWillUnmount() {
     if (this.state.client) {
-      this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`);
+      this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}/${ROUTE_SEARCH}`);
     }
   }
 

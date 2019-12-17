@@ -62,6 +62,30 @@ describe('Agent', () => {
         expect(response.result.status).to.be.equal(STATUS_READY);
     });
 
+    it('post /agent/agentId/converse - Checks action response with quick response of action', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        const payload = {
+            sessionId,
+            text: "Get a quick response from action",
+            timezone: "UTC"
+        };
+        const response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("This is an action");
+        expect(response.result.responses[0].quickResponses[0]).to.be.equal("With a quick reply");
+        expect(response.result.responses[0].quickResponses[1]).to.be.equal("With another quick reply");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+    });
+
     it('post /agent/agentId/converse - Checks action response with keyword inside saying', async ({ context }) => {
 
         const { importedAgentId } = context;
@@ -402,6 +426,46 @@ describe('Agent', () => {
         expect(response.result.textResponse).to.be.equal("The answer random free text slot");
         expect(response.result.responses).to.be.an.array();
         expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+
+    });
+
+    it('post /agent/agentId/converse - Ask for keyword to fulfill pending action and expect only one response', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "I want a keywordVsActions action",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("Enter keywordVsActionSlot");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+
+        var payload = {
+            sessionId,
+            text: "value1",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("This keywordVsAction response should only appear once");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.equal(1);
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
 
     });

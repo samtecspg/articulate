@@ -230,4 +230,12 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.SlotForm.freeTextInfo',
     defaultMessage: 'If this feature is enabled, the agent will fill this slot with the next text entered by the user'
   },
+  actionResponseQuickResponseValue: {
+    id: 'app.components.WebhookSettings.actionResponseQuickResponseValue',
+    defaultMessage: 'Quick Responses',
+  },
+  newActionResponseQuickResponsePlaceholder: {
+    id: 'app.components.WebhookSettings.newActionResponseQuickResponsePlaceholder',
+    defaultMessage: 'Please type possible responses that are going to be shown as buttons',
+  },
 });

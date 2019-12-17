@@ -1,11 +1,14 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 import Immutable from 'seamless-immutable';
 import {
   ROUTE_AGENT,
   ROUTE_CONTEXT,
   ROUTE_CONVERSE,
+  ROUTE_CURRENT,
   ROUTE_POST_FORMAT,
   ROUTE_TRAIN,
+  ROUTE_USER,
   ROUTE_WEBHOOK,
   ROUTE_SETTINGS,
   ROUTE_CONNECTION,
@@ -13,6 +16,7 @@ import {
 import { toAPIPath } from '../../utils/locationResolver';
 import {
   LOAD_AGENT,
+  LOAD_CURRENT_USER,
   LOAD_SETTINGS,
   LOAD_SERVER_INFO,
   RESET_SESSION,
@@ -20,11 +24,14 @@ import {
   TRAIN_AGENT,
   UPDATE_SETTING,
   TOGGLE_CONVERSATION_BAR,
+  LOGOUT_USER,
 } from './constants';
 import { getSettings, putSetting } from '../SettingsPage/saga';
 import {
   loadAgentError,
   loadAgentSuccess,
+  loadCurrentUserError,
+  loadCurrentUserSuccess,
   resetSessionSuccess,
   respondMessage,
   storeSourceData,
@@ -35,6 +42,10 @@ import {
   updateSettingsError,
   updateSettingSuccess,
   loadSessionSuccess,
+  logoutUserSuccess,
+  logoutUserError,
+  toggleConversationBar,
+  toggleChatButton,
 } from './actions';
 import {
   makeSelectAgent,
@@ -70,7 +81,7 @@ export function* postConverse(payload) {
           postPayload,
         );
 
-        if (newSession){
+        if (newSession) {
           yield put(loadSessionSuccess(sessionId));
         }
       } catch (err) {
@@ -175,9 +186,36 @@ export function* putConversationBarWidth(payload) {
         300,
       );
       yield put(updateSettingSuccess(response));
+      yield put(push('/users'));
     }
   } catch (err) {
     yield put(updateSettingsError(err));
+  }
+}
+
+export function* logoutUser(payload) {
+  const { api } = payload;
+  try {
+    const response = yield call(
+      api.get,
+      toAPIPath(['auth', 'logout']),
+    );
+    yield put(logoutUserSuccess(response));
+    yield put(toggleConversationBar(false));
+    yield put(toggleChatButton(false));
+    yield put(push('/'));
+  } catch (err) {
+    yield put(logoutUserError(err));
+  }
+}
+
+export function* getCurrentUser(payload) {
+  const { api } = payload;
+  try {
+    const response = yield call(api.get, toAPIPath([ROUTE_USER, ROUTE_CURRENT]));
+    yield put(loadCurrentUserSuccess({ user: response }));
+  } catch (err) {
+    yield put(loadCurrentUserError(err));
   }
 }
 
@@ -190,4 +228,6 @@ export default function* rootSaga() {
   yield takeLatest(TRAIN_AGENT, postTrainAgent);
   yield takeLatest(UPDATE_SETTING, putSetting);
   yield takeLatest(TOGGLE_CONVERSATION_BAR, putConversationBarWidth);
+  yield takeLatest(LOGOUT_USER, logoutUser);
+  yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
 }

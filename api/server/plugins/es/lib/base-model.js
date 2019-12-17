@@ -1,13 +1,14 @@
 import _ from 'lodash';
 
 module.exports = class BaseModel {
-    constructor({ name, mappings, settings, client }) {
+    constructor({ name, mappings, settings, client, registerConfiguration }) {
 
         this.name = name;
-        this.index = _.snakeCase(name);
+        this.index = _.toLower(name);
         this.mappings = mappings;
         this.settings = settings;
         this.client = client;
+        this.registerConfiguration = registerConfiguration;
     }
 
     async count({ query = null } = {}) {
@@ -24,24 +25,27 @@ module.exports = class BaseModel {
     async createInstance({ data, refresh = true }) {
 
         const { index } = this;
-        return await this.client.index({
+        const { body } = await this.client.index({
             index,
-            type: index,
+            //type: index,
             body: data,
             refresh
         });
+        return body;
     }
 
     async updateInstance({ id, data, refresh = true }) {
 
         const { index } = this;
-        return await this.client.index({
+        const { body } = await this.client.index({
             index,
-            type: index,
+            //type: index,
             id,
             body: data,
             refresh
         });
+
+        return body;
     }
 
     async removeInstance({ id, refresh = true }) {
@@ -49,7 +53,7 @@ module.exports = class BaseModel {
         const { index } = this;
         await this.client.delete({
             index,
-            type: index,
+            //type: index,
             id,
             refresh
         });
@@ -58,21 +62,34 @@ module.exports = class BaseModel {
     async findById({ id, refresh = true, source = true }) {
 
         const { index } = this;
-        return await this.client.get({
+        const { body } = await this.client.get({
             index,
-            type: index,
+            //type: index,
             id,
             refresh,
             _source: source
         });
+        return body;
     }
 
-    async search({ body }) {
+    async search({ bodyParam, trackTotalHits = true }) {
 
         const { index } = this;
-        return await this.client.search({
+        const { body } = await this.client.search({
             index,
-            body
+            body: bodyParam,
+            trackTotalHits
+        });
+        return body;
+    }
+
+    async deleteByQuery({ body, refresh = true }) {
+
+        const { index } = this;
+        return await this.client.deleteByQuery({
+            index,
+            body,
+            refresh
         });
     }
 };

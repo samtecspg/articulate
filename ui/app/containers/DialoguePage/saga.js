@@ -156,7 +156,7 @@ export function* putActionsPageSize(payload) {
 
 export function* getSayings(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, filter, page, pageSize } = payload;
+  const { api, filter, page, pageSize, ignoreKeywords = false } = payload;
   const { remainingText, found } = ExtractTokensFromString({
     text: filter,
     tokens: ['category', 'actions'],
@@ -184,7 +184,9 @@ export function* getSayings(payload) {
       direction: 'DESC',
       loadCategoryId: true,
     };
-    yield call(getKeywords, { api });
+    if (!ignoreKeywords) {
+      yield call(getKeywords, { api });
+    }
     const response = yield call(
       api.get,
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_SAYING]),

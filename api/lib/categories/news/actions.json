@@ -3,21 +3,10 @@
         "actionName": "getTopHeadlines",
         "slots": [
             {
-                "slotName": "newsCategory",
-                "uiColor": "#D5AAFF",
-                "keyword": "newsCategory",
-                "keywordId": 1711,
-                "isList": false,
-                "isRequired": false,
-                "quickResponses": [],
-                "textPrompts": [],
-                "freeText": false
-            },
-            {
                 "slotName": "topic",
                 "uiColor": "#AFF8DB",
                 "keyword": "newsTopics",
-                "keywordId": 1713,
+                "keywordId": 302,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -31,10 +20,14 @@
                 "actions": []
             }
         ],
+        "responsesQuickResponses": [
+            "{{#if slots.topic.original}}Get last week's news about {{slots.topic.original}}{{/if}}",
+            "{{#if slots.topic.original}}Get most recent news about {{slots.topic.original}}{{/if}}"
+        ],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1569617312000",
-        "modificationDate": "1569781504000",
+        "creationDate": "1575585216000",
+        "modificationDate": "1575585281000",
         "webhook": {
             "webhookKey": "getTopHeadlinesWebhook",
             "webhookUrl": "https://newsapi.org/v2/top-headlines?pageSize={{categories.News.parameters.fetchedNewsNumber}}{{#if slots.newsCategory.value}}&category={{slots.newsCategory.value}}{{/if}}{{#if slots.topic.value}}&q={{slots.topic.value}}{{else}}&country=us{{/if}}",
@@ -50,8 +43,8 @@
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1569617312000",
-            "modificationDate": "1569635184000"
+            "creationDate": "1575585216000",
+            "modificationDate": "1575585281000"
         }
     },
     {
@@ -61,7 +54,7 @@
                 "slotName": "topic",
                 "uiColor": "#AFF8DB",
                 "keyword": "newsTopics",
-                "keywordId": 1713,
+                "keywordId": 302,
                 "isList": false,
                 "isRequired": false,
                 "quickResponses": [],
@@ -90,10 +83,14 @@
                 "actions": []
             }
         ],
+        "responsesQuickResponses": [
+            "{{#if slots.topic.original}}Get last week's news about {{slots.topic.original}}{{/if}}",
+            "{{#if slots.topic.original}}Get most recent news about {{slots.topic.original}}{{/if}}"
+        ],
         "useWebhook": true,
         "usePostFormat": false,
-        "creationDate": "1569617312000",
-        "modificationDate": "1569782323000",
+        "creationDate": "1575585216000",
+        "modificationDate": "1575585258000",
         "webhook": {
             "webhookKey": "getAllNewsWebhook",
             "webhookUrl": "https://newsapi.org/v2/everything?pageSize={{categories.News.parameters.fetchedNewsNumber}}{{#if slots.date.original}}&sortBy=relevancy{{/if}}{{#if slots.topic.value}}&q={{slots.topic.value}}{{/if}}&language=en{{#if slots.date.from}}&from={{dateTimeFormat slots.date.from \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}{{#if slots.date.to}}&to={{dateTimeFormat slots.date.to \"YYYY-MM-DDTHH:mm:ss\" \"UTC\"}}{{/if}}",
@@ -103,14 +100,14 @@
             "webhookHeaders": [
                 {
                     "key": "x-api-key",
-                    "value": "f2c54468b53a4183ad7b9b2fa0b483df"
+                    "value": "{{categories.News.parameters.token}}"
                 }
             ],
             "webhookUser": "",
             "webhookPassword": "",
             "postScript": "",
-            "creationDate": "1569617312000",
-            "modificationDate": "1569782324000"
+            "creationDate": "1575585216000",
+            "modificationDate": "1575585258000"
         }
     }
 ]

@@ -90,6 +90,9 @@ import {
   LOAD_AGENT,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_LOGS,
+  LOAD_LOGS_ERROR,
+  LOAD_LOGS_SUCCESS,
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
   LOAD_AGENT_ERROR,
@@ -192,6 +195,7 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
+  UPDATE_SETTINGS_TOUCHED,
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
@@ -202,6 +206,9 @@ import {
   LOAD_CONNECTION,
   LOAD_CONNECTION_ERROR,
   LOAD_CONNECTION_SUCCESS,
+  LOAD_CURRENT_USER,
+  LOAD_CURRENT_USER_ERROR,
+  LOAD_CURRENT_USER_SUCCESS,
   RESET_CONNECTION_DATA,
   CREATE_CONNECTION,
   CREATE_CONNECTION_ERROR,
@@ -244,7 +251,6 @@ import {
   DELETE_QUICK_RESPONSE,
   CHANGE_QUICK_RESPONSE,
   EDIT_SLOT_TEXT_PROMPT,
-  DELETE_SLOT_TEXT_PROMPT,
   LOAD_USERS,
   LOAD_USERS_SUCCESS,
   LOAD_USERS_ERROR,
@@ -252,8 +258,12 @@ import {
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
   RESET_SUCCESS_AGENT,
+  LOGIN_USER,
+  LOGIN_USER_SUCCESS,
+  REFRESH_KEYWORD_EXAMPLE_UPDATE,
+  ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
 } from './constants';
-
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
   '😀',
@@ -318,6 +328,8 @@ const keywordColors = ['#FFB5E8', '#FF9CEE', '#FFCCF9', '#FCC2FF', '#F6A6FF', '#
 
 // The initial state of the App
 const initialState = Immutable({
+  currentUser: undefined,
+  loadingCurrentUser: false,
   locale: DEFAULT_LOCALE,
   sessionLoaded: false,
   sessionId: '',
@@ -408,6 +420,7 @@ const initialState = Immutable({
     examples: [],
     modifiers: [],
   },
+  keywordExamplesUpdate: [],
   connection: {
     channel: '',
     agent: '',
@@ -440,6 +453,7 @@ const initialState = Immutable({
     usePostFormat: false,
     slots: [],
     responses: [],
+    responsesQuickResponses: []
   },
   actionWebhook: {
     webhookKey: '',
@@ -501,6 +515,7 @@ const initialState = Immutable({
     ducklingURL: '',
     defaultTimezone: '',
     defaultAgentLanguage: '',
+    defaultUISessionId: '',
     timezones: [],
     uiLanguages: [],
     agentLanguages: [],
@@ -514,12 +529,14 @@ const initialState = Immutable({
   settingsTouched: false,
   loading: false,
   loadingImportCategory: false,
+  loadingKeywordExamplesUpdate: false,
   error: false,
   success: false,
   successKeyword: false,
   successCategory: false,
   successAction: false,
   successAgent: false,
+  successKeywordExamplesUpdate: false,
   CSO: {},
   newActionResponse: 'hello',
   documents: [],
@@ -531,6 +548,8 @@ const initialState = Immutable({
   documentsAnalyticsFallbacksCount: null,
   documentsAnalyticsTopActions: [],
   documentsAnalyticsRequestsOverTime: [],
+  logs: [],
+  totalLogs: null,
   sessions: [],
   totalSessions: null,
   serverStatus: '',
@@ -1141,10 +1160,27 @@ function appReducer(state = initialState, action) {
         .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)
         .set('error', action.error);
+    case LOAD_LOGS:
+      return state
+        .set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case LOAD_LOGS_SUCCESS:
+      return state
+        .set('logs', action.logs.logs)
+        .set('totalLogs', action.logs.total)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_LOGS_ERROR:
+      return state
+        .set('logs', initialState.logs)
+        .set('totalLogs', initialState.totalLogs)
+        .set('loading', false)
+        .set('error', action.error);
     case LOAD_AGENT_STATS_SUCCESS:
       if (action.stats.statsName === "documentsAnalyticsRequestCount") {
         return state
-          .set('documentsAnalyticsRequestCount', action.stats.stats.hits.total)
+          .set('documentsAnalyticsRequestCount', action.stats.stats.hits.total.value)
           .set('loading', false)
           .set('error', false);
       } else if (action.stats.statsName === "documentsAnalyticsSessionsCount") {
@@ -1154,7 +1190,7 @@ function appReducer(state = initialState, action) {
           .set('error', false);
       } else if (action.stats.statsName === "filterdocumentsAnalyticsFallbacksCount") {
         return state
-          .set('documentsAnalyticsFallbacksCount', action.stats.stats.hits.total)
+          .set('documentsAnalyticsFallbacksCount', action.stats.stats.hits.total.value)
           .set('loading', false)
           .set('error', false);
       } else if (action.stats.statsName === "filterdocumentsAnalyticsTopActions") {
@@ -1342,7 +1378,8 @@ function appReducer(state = initialState, action) {
       return state
         .set('settings', action.settings)
         .set('loading', false)
-        .set('error', false);
+        .set('error', false)
+        .set('success', false);
     case UPDATE_SETTINGS:
       return state
         .set('loading', true)
@@ -1352,12 +1389,17 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('success', false)
-        .set('error', action.error);
+        .set('error', action.error)
+        .set('settingsTouched', false);
     case UPDATE_SETTINGS_SUCCESS:
       return state
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('settingsTouched', false);
+    case UPDATE_SETTINGS_TOUCHED:
+      return state
+        .set('settingsTouched', action.touched);
     case UPDATE_SETTING:
       return state
         .set('loading', true)
@@ -1855,7 +1897,7 @@ function appReducer(state = initialState, action) {
           return slot;
         })
       )
-        .set('actionTouched', true);;
+        .set('actionTouched', true);
     case DELETE_QUICK_RESPONSE:
       return state.updateIn(
         ['action', 'slots'],
@@ -2040,6 +2082,25 @@ function appReducer(state = initialState, action) {
         )
         .set('keywordTouched', true);
 
+    case ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE:
+      if (!state.action.responsesQuickResponses) {
+        var tempAction = { ...state.action };
+        tempAction.responsesQuickResponses = [];
+        return state.set('action', tempAction)
+          .updateIn(['action', 'responsesQuickResponses'], quickResponses => quickResponses.concat([action.response]))
+          .set('actionTouched', true);
+      }
+      return state.updateIn(['action', 'responsesQuickResponses'], quickResponses => quickResponses.concat([action.response]))
+        .set('actionTouched', true);
+    case DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE:
+      return state.updateIn(
+        ['action', 'responsesQuickResponses'],
+        quickResponses => [
+          ...quickResponses.slice(0, action.index),
+          ...quickResponses.slice(action.index + 1)
+        ])
+        .set('actionTouched', true);
+
     /* Keyword */
     case CHANGE_KEYWORD_DATA:
       return state
@@ -2049,7 +2110,9 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('success', false)
-        .set('error', false);
+        .set('error', false)
+        .set('loadingKeywordExamplesUpdate', true)
+        .set('successKeywordExamplesUpdate', false);
     case CREATE_KEYWORD_ERROR:
       state = state.update('notifications', notifications =>
         notifications.concat({
@@ -2081,7 +2144,9 @@ function appReducer(state = initialState, action) {
         .set('success', true)
         .set('error', false)
         .set('successKeyword', true)
-        .set('keywordTouched', false);
+        .set('keywordTouched', false)
+        .set('loadingKeywordExamplesUpdate', false)
+        .set('successKeywordExamplesUpdate', true);
     case RESET_KEYWORD_DATA:
       return state
         .set('keyword', initialState.keyword)
@@ -2094,7 +2159,9 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('success', false)
-        .set('error', false);
+        .set('error', false)
+        .set('loadingKeywordExamplesUpdate', true)
+        .set('successKeywordExamplesUpdate', false);
     case UPDATE_KEYWORD_ERROR:
       state = state.update('notifications', notifications =>
         notifications.concat({
@@ -2115,20 +2182,71 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .set('successKeyword', true)
-        .set('keywordTouched', false);
+        .set('keywordTouched', false)
+        .set('loadingKeywordExamplesUpdate', false)
+        .set('successKeywordExamplesUpdate', true);
     case ADD_KEYWORD_EXAMPLE:
       return state
         .updateIn(['keyword', 'examples'], examples =>
           examples.concat(action.newExample),
         )
-        .set('keywordTouched', true);
+        .set('keywordTouched', true)
+        .updateIn(
+          ['keywordExamplesUpdate'], updates => {
+            return updates.map((update) => {
+              if (update.index >= state.keyword.examples.length) {
+                return update.set('index', update.index + 1);
+              }
+              return update;
+            }).concat([{
+              'index': state.keyword.examples.length,
+              'synonym': action.newExample.synonyms[0],
+              'count': 1
+            }])
+          });
     case DELETE_KEYWORD_EXAMPLE:
       return state
         .updateIn(['keyword', 'examples'], examples =>
           examples.filter((item, index) => index !== action.exampleIndex),
         )
-        .set('keywordTouched', true);
+        .set('keywordTouched', true)
+        .updateIn(
+          ['keywordExamplesUpdate'], updates => {
+            return updates.map((update) => {
+              if (update.index === action.exampleIndex) {
+                return update.set('index', - 1).set('count', update.count - 1);
+              }
+              return update;
+            }).map((update) => {
+              if (update.index > action.exampleIndex
+                && update.index < state.keyword.examples.length) {
+                return update.set('index', update.index - 1);
+              }
+              return update;
+            }).map((update) => {
+              if (update.index === -1) {
+                return update.set('index', state.keyword.examples.length - 1);
+              }
+              return update;
+            }).concat(state.keyword.examples[action.exampleIndex].synonyms.filter((synonym) => {
+              var exists = state.keywordExamplesUpdate.find(function (update) {
+                return update.index === action.exampleIndex && update.synonym === synonym;
+              });
+              return !exists;
+            }).map((update) => {
+              return {
+                'index': state.keyword.examples.length - 1,
+                'synonym': update,
+                'count': -1
+              }
+            }))
+          });
     case CHANGE_EXAMPLE_SYNONYMS:
+      var synonym = state.keywordExamplesUpdate.find(function (update) {
+        return update.index === action.exampleIndex && update.synonym === action.synonymChanged;
+      });
+      let countUpdate = action.action === 'add' ? 1 : -1;
+
       return state
         .updateIn(['keyword', 'examples'], examples =>
           examples.map((example, index) => {
@@ -2136,9 +2254,33 @@ function appReducer(state = initialState, action) {
               return example.set('synonyms', action.synonyms);
             }
             return example;
-          }),
+          })
         )
-        .set('keywordTouched', true);
+        .set('keywordTouched', true)
+        .updateIn(
+          ['keywordExamplesUpdate'], updates => {
+            if (synonym) {
+              return updates.map((update) => {
+                if (update.index === action.exampleIndex && update.synonym === action.synonymChanged) {
+                  if (update.count < 0 && countUpdate === 1) {
+                    return update.set('count', 1);
+                  } else {
+                    return update.set('count', update.count + countUpdate);
+                  }
+                }
+                return update;
+              });
+            } else {
+              return updates.concat([{
+                'index': action.exampleIndex,
+                'synonym': action.synonymChanged,
+                'count': countUpdate
+              }])
+            }
+          });
+    case REFRESH_KEYWORD_EXAMPLE_UPDATE:
+      return state
+        .set('keywordExamplesUpdate', initialState.keywordExamplesUpdate);
     case CHANGE_EXAMPLE_NAME:
       return state
         .updateIn(['keyword', 'examples'], examples =>
@@ -2508,6 +2650,10 @@ function appReducer(state = initialState, action) {
         }),
       );
       return state.set('loading', false).set('error', action.error);
+    case LOGIN_USER:
+      return state.set('loading', true).set('error', false);
+    case LOGIN_USER_SUCCESS:
+      return state.set('loading', false).set('error', false);
     case LOGIN_USER_ERROR:
       return state.set('loading', false).set('error', action.error);
 
@@ -2571,6 +2717,17 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', action.error)
+    case LOAD_CURRENT_USER:
+      return state
+        .set('loadingCurrentUser', false);
+    case LOAD_CURRENT_USER_SUCCESS:
+      return state
+        .set('currentUser', action.user)
+        .set('loadingCurrentUser', true);
+    case LOAD_CURRENT_USER_ERROR:
+      return state
+        .set('currentUser', null)
+        .set('loadingCurrentUser', true);
     default:
       return state;
   }

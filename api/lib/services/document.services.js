@@ -5,6 +5,7 @@ import FindById from './document/document.find-by-id.service.js';
 import Remove from './document/document.remove.service';
 import Search from './document/document.search.service';
 import Update from './document/document.update.service';
+import DeleteByQuery from './document/document.delete-by-query.service';
 
 module.exports = class DocumentService extends Schmervice.Service {
 
@@ -38,6 +39,10 @@ module.exports = class DocumentService extends Schmervice.Service {
         return await FindByAgentId.apply(this, arguments);
     }
 
+    async deleteByQuery() {
+
+        return await DeleteByQuery.apply(this, arguments);
+    }
 };
 
 

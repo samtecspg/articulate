@@ -100,6 +100,8 @@ import {
   DELETE_CONNECTION,
   DELETE_CONNECTION_ERROR,
   DELETE_CONNECTION_SUCCESS,
+  DELETE_DOCUMENT,
+  DELETE_DOCUMENT_ERROR,
   DELETE_FALLBACK,
   DELETE_HEADER_ACTION_WEBHOOK,
   DELETE_HEADER_AGENT_WEBHOOK,
@@ -111,6 +113,8 @@ import {
   DELETE_MODIFIER_SAYING,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
+  DELETE_SESSION_DATA,
+  DELETE_SESSION_DATA_ERROR,
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
   EDIT_ACTION_RESPONSE,
@@ -133,6 +137,9 @@ import {
   LOAD_AGENT_DOCUMENTS,
   LOAD_AGENT_DOCUMENTS_ERROR,
   LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_LOGS,
+  LOAD_LOGS_ERROR,
+  LOAD_LOGS_SUCCESS,
   LOAD_AGENT_STATS,
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
@@ -156,6 +163,9 @@ import {
   LOAD_CONNECTIONS,
   LOAD_CONNECTIONS_ERROR,
   LOAD_CONNECTIONS_SUCCESS,
+  LOAD_CURRENT_USER,
+  LOAD_CURRENT_USER_ERROR,
+  LOAD_CURRENT_USER_SUCCESS,
   LOAD_FILTERED_ACTIONS,
   LOAD_FILTERED_ACTIONS_ERROR,
   LOAD_FILTERED_ACTIONS_SUCCESS,
@@ -180,6 +190,7 @@ import {
   LOGOUT_USER,
   LOGOUT_USER_ERROR,
   LOGOUT_USER_SUCCESS,
+  REFRESH_KEYWORD_EXAMPLE_UPDATE,
   RESET_SAYINGS,
   RESET_ACTION_DATA,
   RESET_ACTIONS,
@@ -233,6 +244,7 @@ import {
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
+  UPDATE_SETTINGS_TOUCHED,
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
@@ -274,6 +286,9 @@ import {
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
   RESET_SUCCESS_AGENT,
+  RECOGNIZE_UPDATED_KEYWORDS,
+  ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
 } from './constants';
 
 /*
@@ -798,7 +813,7 @@ export function changeAgentParameterValue(parameterName, value) {
   };
 }
 
-export function loadAgentDocuments({ page, pageSize, field, direction, dateRange }) {
+export function loadAgentDocuments({ page, pageSize, field, direction, dateRange, filter = null }) {
   return {
     type: LOAD_AGENT_DOCUMENTS,
     apiCall: true,
@@ -806,7 +821,8 @@ export function loadAgentDocuments({ page, pageSize, field, direction, dateRange
     pageSize,
     field,
     direction,
-    dateRange
+    dateRange,
+    filter
   };
 }
 
@@ -821,6 +837,72 @@ export function loadAgentDocumentsSuccess(documents) {
   return {
     type: LOAD_AGENT_DOCUMENTS_SUCCESS,
     documents,
+  };
+}
+
+export function loadLogs({ page, pageSize, field, direction, dateRange, filter = null }) {
+  return {
+    type: LOAD_LOGS,
+    apiCall: true,
+    page,
+    pageSize,
+    field,
+    direction,
+    dateRange,
+    filter
+  };
+}
+
+export function loadLogsError(error) {
+  return {
+    type: LOAD_LOGS_ERROR,
+    error,
+  };
+}
+
+export function loadLogsSuccess(logs) {
+  return {
+    type: LOAD_LOGS_SUCCESS,
+    logs,
+  };
+}
+
+export function deleteDocument({ documentId, sessionId, page, pageSize, field, direction }) {
+  return {
+    type: DELETE_DOCUMENT,
+    apiCall: true,
+    documentId,
+    sessionId,
+    page,
+    pageSize,
+    field,
+    direction
+  };
+}
+
+export function deleteDocumentError(error) {
+  return {
+    type: DELETE_DOCUMENT_ERROR,
+    error,
+  };
+}
+
+export function deleteSessionData({ sessionId, page, pageSize, field, direction }) {
+  return {
+    type: DELETE_SESSION_DATA,
+    apiCall: true,
+    sessionId,
+    page,
+    pageSize,
+    field,
+    direction
+  };
+}
+
+export function deleteSessionDataError(error) {
+  return {
+    type: DELETE_SESSION_DATA_ERROR,
+    error,
   };
 }
 
@@ -881,13 +963,14 @@ export function resetSayings() {
   }
 }
 
-export function loadSayings(filter, page, pageSize) {
+export function loadSayings(filter, page, pageSize, ignoreKeywords) {
   return {
     type: LOAD_SAYINGS,
     apiCall: true,
     filter,
     page,
     pageSize,
+    ignoreKeywords
   };
 }
 
@@ -1279,6 +1362,14 @@ export function changeKeywordsPageSize(agentId, pageSize) {
   };
 }
 
+export function recognizeUpdatedKeywords(payload) {
+  return {
+    type: RECOGNIZE_UPDATED_KEYWORDS,
+    payload,
+
+  }
+}
+
 /*
  * Settings
  */
@@ -1320,6 +1411,13 @@ export function updateSettingsError(error) {
 export function updateSettingsSuccess() {
   return {
     type: UPDATE_SETTINGS_SUCCESS,
+  };
+}
+
+export function updateSettingsTouched(touched) {
+  return {
+    type: UPDATE_SETTINGS_TOUCHED,
+    touched,
   };
 }
 
@@ -1755,9 +1853,10 @@ export function loadKeywordSuccess(keyword) {
   };
 }
 
-export function createKeyword() {
+export function createKeyword(updateSayingsKeywords) {
   return {
     type: CREATE_KEYWORD,
+    updateSayingsKeywords,
     apiCall: true,
   };
 }
@@ -1776,9 +1875,10 @@ export function createKeywordSuccess(keyword) {
   };
 }
 
-export function updateKeyword() {
+export function updateKeyword(updateSayingsKeywords) {
   return {
     type: UPDATE_KEYWORD,
+    updateSayingsKeywords,
     apiCall: true,
   };
 }
@@ -1795,6 +1895,12 @@ export function updateKeywordSuccess(keyword) {
     type: UPDATE_KEYWORD_SUCCESS,
     keyword,
   };
+}
+
+export function refreshKeywordExamplesUpdate() {
+  return {
+    type: REFRESH_KEYWORD_EXAMPLE_UPDATE
+  }
 }
 
 export function changeKeywordData(payload) {
@@ -1826,11 +1932,13 @@ export function changeExampleName(exampleIndex, name) {
   };
 }
 
-export function changeExampleSynonyms(exampleIndex, synonyms) {
+export function changeExampleSynonyms(exampleIndex, synonyms, synonymChanged, action) {
   return {
     type: CHANGE_EXAMPLE_SYNONYMS,
     exampleIndex,
     synonyms,
+    synonymChanged,
+    action
   };
 }
 
@@ -2370,5 +2478,40 @@ export function deleteUserError(error) {
   return {
     type: DELETE_USER_ERROR,
     error,
+  };
+}
+
+export function loadCurrentUser() {
+  return {
+    type: LOAD_CURRENT_USER,
+    apiCall: true,
+  };
+}
+
+export function loadCurrentUserError(error) {
+  return {
+    type: LOAD_CURRENT_USER_ERROR,
+    error,
+  };
+}
+
+export function loadCurrentUserSuccess({ user }) {
+  return {
+    type: LOAD_CURRENT_USER_SUCCESS,
+    user,
+  };
+}
+
+export function addNewActionResponseQuickResponse(response) {
+  return {
+    type: ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+    response,
+  };
+}
+
+export function deleteNewActionResponseQuickResponse(index) {
+  return {
+    type: DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+    index,
   };
 }

@@ -1,10 +1,4 @@
-import {
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Button, Grid, TextField, Typography, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
@@ -26,19 +20,7 @@ const styles = theme => ({
 });
 
 function SignUpForm(props) {
-
-  const {
-    intl,
-    classes,
-    onInputChange,
-    username,
-    password,
-    name,
-    lastName,
-    onSignUp,
-    refUrl,
-    onGoToUrl
-  } = props;
+  const { intl, classes, onInputChange, username, password, name, lastName, onSignUp, refUrl, onGoToUrl, error, isLoading } = props;
 
   return (
     <form className={classes.root}>
@@ -52,9 +34,7 @@ function SignUpForm(props) {
             shrink: true,
           }}
           autoComplete="name"
-          onChange={evt =>
-            onInputChange({ field: 'name', value: evt.target.value })
-          }
+          onChange={evt => onInputChange({ field: 'name', value: evt.target.value })}
           value={name}
         />
         <TextField
@@ -66,9 +46,7 @@ function SignUpForm(props) {
             shrink: true,
           }}
           autoComplete="lastName"
-          onChange={evt =>
-            onInputChange({ field: 'lastName', value: evt.target.value })
-          }
+          onChange={evt => onInputChange({ field: 'lastName', value: evt.target.value })}
           value={lastName}
         />
         <TextField
@@ -80,9 +58,7 @@ function SignUpForm(props) {
             shrink: true,
           }}
           autoComplete="username"
-          onChange={evt =>
-            onInputChange({ field: 'username', value: evt.target.value })
-          }
+          onChange={evt => onInputChange({ field: 'username', value: evt.target.value })}
           value={username}
         />
         <TextField
@@ -95,14 +71,12 @@ function SignUpForm(props) {
           }}
           type="password"
           autoComplete="current-password"
-          onChange={evt =>
-            onInputChange({ field: 'password', value: evt.target.value })
-          }
+          onChange={evt => onInputChange({ field: 'password', value: evt.target.value })}
           value={password}
         />
         <Button
           style={{
-            margin: '20px 0px'
+            margin: '20px 0px',
           }}
           color="primary"
           variant="contained"
@@ -111,11 +85,10 @@ function SignUpForm(props) {
         >
           {intl.formatMessage(messages.signUp)}
         </Button>
-        {
-          refUrl === 'users' ?
+        {refUrl === 'users' ? (
           <Button
             style={{
-              marginBottom: '20px'
+              marginBottom: '20px',
             }}
             variant="contained"
             fullWidth
@@ -125,32 +98,14 @@ function SignUpForm(props) {
           >
             {intl.formatMessage(messages.goBack)}
           </Button>
-          : null
-        }
-        <Typography
-          className={classes.separator}
-          align="center"
-          variant="overline"
-          gutterBottom
-        >
+        ) : null}
+        <Typography className={classes.separator} align="center" variant="overline" gutterBottom>
           &mdash;&mdash;&mdash;&nbsp;OR&nbsp;&mdash;&mdash;&mdash;
         </Typography>
-        <Button
-          variant="contained"
-          className={classes.button}
-          component={Link}
-          to="/auth/twitter"
-          target="_self"
-        >
+        <Button variant="contained" className={classes.button} component={Link} to="/auth/twitter" target="_self">
           twitter
         </Button>
-        <Button
-          variant="contained"
-          className={classes.button}
-          component={Link}
-          to="/auth/github"
-          target="_self"
-        >
+        <Button variant="contained" className={classes.button} component={Link} to="/auth/github" target="_self">
           github
         </Button>
       </Grid>
@@ -168,7 +123,9 @@ SignUpForm.propTypes = {
   name: PropTypes.string,
   lastName: PropTypes.string,
   refUrl: PropTypes.string,
-  onGoToUrl: PropTypes.func.isRequired
+  onGoToUrl: PropTypes.func.isRequired,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.bool]),
+  isLoading: PropTypes.bool,
 };
 
 export default injectIntl(withStyles(styles)(SignUpForm));

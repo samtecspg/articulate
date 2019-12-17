@@ -142,9 +142,9 @@ class ConnectionForm extends React.Component {
       clonedAction.actions[0].intent.trigger.queryPatterns = queryPatterns;
       clonedAction.conversations.articulate_intent.url = `${
         window.location.protocol
-      }//${window.location.hostname}${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
+        }//${window.location.hostname}${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
         connection.id
-      }/external`;
+        }/external`;
       this.setState({
         actionExport: clonedAction,
       });
@@ -296,7 +296,7 @@ class ConnectionForm extends React.Component {
                         key={`channel_${index}`}
                         channel={channels[channel]}
                         onClick={() => {
-                          if (connection.agent && this.props.newConnection){
+                          if (connection.agent && this.props.newConnection) {
                             this.props.onChangeConnectionData(
                               'channel',
                               channel,
@@ -309,16 +309,16 @@ class ConnectionForm extends React.Component {
                   {this.fillEmptyCards()}
                 </Grid>
               </Grid>
-              {!this.props.newConnection ? (connection.channel === 'web-demo' ? 
+              {!this.props.newConnection ? (connection.channel === 'web-demo' ?
                 <Grid container item xs={12}>
                   <Grid item xs={12}>
                     <TextField
                       id="shareLink"
                       value={`${window.location.protocol}//${
                         window.location.hostname
-                      }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}/demo/${
+                        }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}/demo/${
                         connection.id
-                      }`}
+                        }`}
                       label={intl.formatMessage(messages.shareUrl)}
                       margin="normal"
                       fullWidth
@@ -331,7 +331,7 @@ class ConnectionForm extends React.Component {
                       }}
                     />
                   </Grid>
-                </Grid> : 
+                </Grid> :
                 (connection.channel === 'chat-widget' ?
                   <Grid container item xs={12}>
                     <Grid item xs={12}>
@@ -339,7 +339,7 @@ class ConnectionForm extends React.Component {
                         id="socketUrl"
                         value={`ws://${
                           window.location.hostname
-                        }:7500`}
+                          }:7500`}
                         label={intl.formatMessage(messages.socketUrl)}
                         margin="normal"
                         fullWidth
@@ -357,7 +357,7 @@ class ConnectionForm extends React.Component {
                         id="socketPath"
                         value={`/connection/${
                           connection.id
-                        }/external`}
+                          }/external`}
                         label={intl.formatMessage(messages.socketPath)}
                         margin="normal"
                         fullWidth
@@ -375,9 +375,9 @@ class ConnectionForm extends React.Component {
                         id="converseUrl"
                         value={`${window.location.protocol}//${
                           window.location.hostname
-                        }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
+                          }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
                           connection.id
-                        }/external`}
+                          }/external`}
                         label={intl.formatMessage(messages.converseUrl)}
                         margin="normal"
                         fullWidth
@@ -412,8 +412,8 @@ class ConnectionForm extends React.Component {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
     <title>Dev Widget</title>
-    <link href="https://cdn.jsdelivr.net/gh/samtecspg/articulate-webchat@0.0.1/lib/articulate-webchat.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.jsdelivr.net/gh/samtecspg/articulate-webchat@0.0.1/lib/articulate-webchat.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/samtecspg/articulate-webchat@0.0.2/lib/articulate-webchat.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/samtecspg/articulate-webchat@0.0.2/lib/articulate-webchat.js"></script>
   </head>
   <body>
     <div id="webchat"></div>
@@ -450,9 +450,9 @@ class ConnectionForm extends React.Component {
                         id="callbackUrl"
                         value={`${window.location.protocol}//${
                           window.location.hostname
-                        }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
+                          }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
                           connection.id
-                        }/external`}
+                          }/external`}
                         label={intl.formatMessage(messages.callbackUrl)}
                         margin="normal"
                         fullWidth
@@ -500,7 +500,7 @@ class ConnectionForm extends React.Component {
                       </Grid>
                     ) : null}
                   </Grid>
-                ))) : null}
+                  ))) : null}
             </Grid>
           </Grid>
         </Grid>

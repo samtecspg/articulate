@@ -109,8 +109,8 @@ module.exports = new Confidence.Store({
             {
                 plugin: './plugins/es',
                 options: {
-                    host: process.env.ES_HOST || 'http://elasticsearch:9200',
-                    log: process.env.ES_LOG || 'error'
+                    node: process.env.ES_HOST || 'http://elasticsearch:9200',
+                    log: process.env.ES_LOG || 'false'
                 }
             },
             {

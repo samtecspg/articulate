@@ -26,7 +26,7 @@ services:
     volumes:
       - ${REDIS_DATA:-./local-storage/redis-data}:/data
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_TAG:-6.5.1}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_TAG:-7.1.1}
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true

@@ -100,7 +100,8 @@ module.exports = class DocumentEsModel extends BaseModel {
             name: MODEL_DOCUMENT,
             mappings,
             settings,
-            client
+            client,
+            registerConfiguration: true
         });
     }
 };

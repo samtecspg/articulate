@@ -26,6 +26,7 @@ import {
   CopyImageCell,
   PercentCell,
   PlayImageCell,
+  DeleteImageCell
 } from '../../../components/StyledTable';
 import messages from '../messages';
 import HighlightedSaying from './HighlightedSaying';
@@ -137,7 +138,7 @@ const styles = {
     cursor: 'pointer',
     fontSize: '10px',
     marginTop: '10px',
-  },
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -234,17 +235,17 @@ class SayingRow extends React.Component {
               </div>
             ))}
           {document.converseResult &&
-          document.converseResult.CSO ? (
-            <span
-              onClick={() => {
-                this.setState({ openCodeModal: true });
-              }}
-              className={classes.messageSource}
-            >
-              {'</> '}
-              <span>{intl.formatMessage(messages.seeSource)}</span>
-            </span>
-          ) : null}
+            document.converseResult.CSO ? (
+              <span
+                onClick={() => {
+                  this.setState({ openCodeModal: true });
+                }}
+                className={classes.messageSource}
+              >
+                {'</> '}
+                <span>{intl.formatMessage(messages.seeSource)}</span>
+              </span>
+            ) : null}
           <CodeModal
             handleClose={() => {
               this.setState({ openCodeModal: false });
@@ -259,7 +260,18 @@ class SayingRow extends React.Component {
         </TableCell>
         <PercentCell value={document.maximum_category_score} align="center" />
         <PercentCell value={document.maximum_action_score} align="center" />
-        <CopyImageCell
+        <DeleteImageCell
+          tooltip="Delete this saying"
+          disabled={document.id === 'noData'}
+          onClick={() => {
+            this.props.onDeleteDocumentModalChange(
+              true,
+              document.id,
+              document.session
+            );
+          }}
+        />
+        < CopyImageCell
           tooltip="Copy to your list of Sayings"
           disabled={document.id === 'noData'}
           onClick={() => {
@@ -309,9 +321,9 @@ class SayingRow extends React.Component {
                 onChange={evt => {
                   evt.target.value !== '-1'
                     ? this.setState({
-                        selectedCategory: evt.target.value,
-                        categoryError: false,
-                      })
+                      selectedCategory: evt.target.value,
+                      categoryError: false,
+                    })
                     : null;
                 }}
                 error={this.state.categoryError}
@@ -392,6 +404,7 @@ SayingRow.propTypes = {
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func,
   onCopySaying: PropTypes.func,
+  onDeleteDocumentModalChange: PropTypes.func,
   locale: PropTypes.string,
 };
 

@@ -154,7 +154,7 @@ class AgentValidate {
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
                         actions: ActionResponseSchema.actions
                     }).required().min(1).error(new Error('Please specify at least one response.')),
-                    quickResponses: ActionSchema.quickResponses,
+                    responsesQuickResponses: ActionSchema.responsesQuickResponses,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -190,7 +190,7 @@ class AgentValidate {
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
                         actions: ActionResponseSchema.actions
                     }).min(1).error(new Error('Please specify at least one response.')),
-                    quickResponses: ActionSchema.quickResponses,
+                    responsesQuickResponses: ActionSchema.responsesQuickResponses,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -545,7 +545,11 @@ class AgentValidate {
                     dateRange: Joi
                         .string()
                         .optional()
-                        .description('ES range in format: now-1h, now-1d, now-7d, now-1M, now-1y')
+                        .description('ES range in format: now-1h, now-1d, now-7d, now-1M, now-1y'),
+                    [PARAM_FILTER]: Joi
+                        .object()
+                        .optional()
+                        .description('Values to filter the the results (experimental)'),
                 };
             })()
         };
@@ -981,7 +985,7 @@ class AgentValidate {
                             textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
                             actions: ActionResponseSchema.actions
                         }).required().min(1).error(new Error('Please specify at least one response.')),
-                        quickResponses: ActionSchema.quickResponses,
+                        responsesQuickResponses: Joi.alternatives().try(ActionSchema.responsesQuickResponses, Joi.number().valid(0)),
                         slots: Joi.array().items({
                             slotName: SlotSchema.slotName.required(),
                             uiColor: SlotSchema.uiColor.required(),
@@ -1031,6 +1035,29 @@ class AgentValidate {
 
                 return {
                     text: ParseSchema.text.required()
+                };
+            })()
+        };
+
+        this.recognizeUpdatedKeywords = {
+            params: (() => {
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    deletedValues: Joi.array().items({
+                        synonym: SayingKeywordSchema.value,
+                        keywordName: SayingKeywordSchema.keyword,
+                        keywordId: SayingKeywordSchema.keywordId,
+                    }),
+                    updatedValues: Joi.array().items({
+                        synonym: SayingKeywordSchema.value,
+                        keywordName: SayingKeywordSchema.keyword,
+                        keywordId: SayingKeywordSchema.keywordId,
+                    })
                 };
             })()
         };

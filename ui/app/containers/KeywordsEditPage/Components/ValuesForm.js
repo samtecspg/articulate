@@ -229,18 +229,18 @@ class ValuesForm extends React.Component {
                       label={
                         exampleIndex === 0
                           ? intl.formatMessage(
-                              messages.newKeywordValueTextField,
-                            )
+                            messages.newKeywordValueTextField,
+                          )
                           : null
                       }
                       placeholder={
                         keyword.type === 'learned'
                           ? intl.formatMessage(
-                              messages.newKeywordValueTextFieldPlaceholder,
-                            )
+                            messages.newKeywordValueTextFieldPlaceholder,
+                          )
                           : intl.formatMessage(
-                              messages.newKeywordRegexTextFieldPlaceholder,
-                            )
+                            messages.newKeywordRegexTextFieldPlaceholder,
+                          )
                       }
                       onChange={evt => {
                         this.props.onChangeExampleName(
@@ -265,14 +265,16 @@ class ValuesForm extends React.Component {
                       label={
                         exampleIndex === 0
                           ? intl.formatMessage(
-                              messages.newKeywordSynonymTextField,
-                            )
+                            messages.newKeywordSynonymTextField,
+                          )
                           : null
                       }
                       onAdd={newSyonynm => {
                         this.props.onChangeExampleSynonyms(
                           exampleIndex,
                           example.synonyms.concat(newSyonynm),
+                          newSyonynm,
+                          'add'
                         );
                       }}
                       onDelete={(synonymToDelete, indexToDelete) => {
@@ -282,6 +284,8 @@ class ValuesForm extends React.Component {
                             (tempSynonym, tempIndex) =>
                               tempIndex !== indexToDelete,
                           ),
+                          synonymToDelete,
+                          'delete'
                         );
                       }}
                       fullWidth
@@ -324,11 +328,11 @@ class ValuesForm extends React.Component {
                     placeholder={
                       keyword.type === 'learned'
                         ? intl.formatMessage(
-                            messages.newKeywordValueTextFieldPlaceholder,
-                          )
+                          messages.newKeywordValueTextFieldPlaceholder,
+                        )
                         : intl.formatMessage(
-                            messages.newKeywordRegexTextFieldPlaceholder,
-                          )
+                          messages.newKeywordRegexTextFieldPlaceholder,
+                        )
                     }
                     inputProps={{
                       style: {

@@ -2,24 +2,26 @@
 <html lang="en">
 
 <head>
-    <!-- The first thing in any HTML file should be the charset -->
-    <meta charset="utf-8">
-    <!-- Make the page mobile compatible -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The first thing in any HTML file should be the charset -->
+  <meta charset="utf-8">
+  <!-- Make the page mobile compatible -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Allow installing the app to the homescreen -->
-    <meta name="mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="icon" href="/favicon.ico" />
-    <title>Articulate</title>
+  <title>Articulate</title>
 </head>
 
 <body>
-    <!-- Display a message if JS has been disabled on the browser. -->
+  <!-- Display a message if JS has been disabled on the browser. -->
   <noscript>If you're seeing this message, that means
     <strong>JavaScript has been disabled on your browser</strong>, please
     <strong>enable JS</strong> to make this app work.</noscript>
 
-    <!-- The app hooks into this div -->
-    <div id="app"></div>
+  <!-- This is needed to remove warning when using tooltip override theme -->
+  <script>window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true</script>
+  <!-- The app hooks into this div -->
+  <div id="app"></div>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -28,4 +30,3 @@
 </body>
 
 </html>
-

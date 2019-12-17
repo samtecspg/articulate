@@ -121,10 +121,10 @@ export class GeneralSettings extends React.Component {
             >
               {Array.isArray(settings.uiLanguages)
                 ? settings.uiLanguages.map(language => (
-                    <MenuItem key={language.text} value={language.value}>
-                      {language.text}
-                    </MenuItem>
-                  ))
+                  <MenuItem key={language.text} value={language.value}>
+                    {language.text}
+                  </MenuItem>
+                ))
                 : null}
             </TextField>
           </Grid>
@@ -152,13 +152,13 @@ export class GeneralSettings extends React.Component {
             >
               {Array.isArray(settings.agentLanguages)
                 ? settings.agentLanguages.map(agentLanguage => (
-                    <MenuItem
-                      key={agentLanguage.text}
-                      value={agentLanguage.value}
-                    >
-                      {agentLanguage.text}
-                    </MenuItem>
-                  ))
+                  <MenuItem
+                    key={agentLanguage.text}
+                    value={agentLanguage.value}
+                  >
+                    {agentLanguage.text}
+                  </MenuItem>
+                ))
                 : null}
             </TextField>
           </Grid>

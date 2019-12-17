@@ -116,8 +116,7 @@ class Form extends React.Component {
   }
 
   state = {
-    openModal: false,
-    numberFiltersApplied: 0,
+    openModal: false
   };
 
   handleOpen = () => {
@@ -132,13 +131,8 @@ class Form extends React.Component {
     });
   };
 
-  updateNumberFiltersApplied = (number) => {
-    this.setState({
-      numberFiltersApplied: number
-    })
-  }
-
-  processSelectedPopoverFilters(dropDownValuePicked, chipValuesPicked, textFilterValue) {
+  processSelectedPopoverFilters(filtersSet) {
+    const { dropDownValuePicked, chipValuesPicked, textFilterValue } = filtersSet;
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
@@ -151,7 +145,7 @@ class Form extends React.Component {
       filter = filter + chipValuesPicked.join('" actions:"')
       filter = filter + '"';
     }
-    this.props.onSearchSaying(filter);
+    this.props.onSearchSaying(filter, true);
   }
 
   render() {
@@ -255,13 +249,21 @@ class Form extends React.Component {
                 <PopoverFilter
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  showCheckboxFilter={false}
+                  showTextFilter={true}
+                  showDropDownFilter={true}
+                  showMinMaxFilter={false}
+                  showChips={true}
+                  showMinMaxFilter={false}
+                  showCustomFirstChip={false}
                   dropDownValues={map(this.props.agentCategories, 'categoryName')}
                   chipValues={map(this.props.agentActions, 'actionName')}
                   textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
                   dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
                   chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  dropDownFilterLabel={intl.formatMessage(messages.pickCategoryLabel)}
+                  filtersDescription={intl.formatMessage(messages.filtersDescription)}
                   processSelectedFilters={this.processSelectedPopoverFilters}
-                  updateNumberFiltersApplied={this.updateNumberFiltersApplied}
                 />
               )}
             </Grid>

@@ -6,6 +6,7 @@ import {
   ROUTE_IDENTIFY_KEYWORDS,
   ROUTE_KEYWORD,
   ROUTE_SETTINGS,
+  ROUTE_RECOGNIZE_UPDATED_KEYWORDS,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -15,8 +16,11 @@ import {
   deleteKeywordError,
   loadKeywordError,
   loadKeywordSuccess,
+  loadKeyword,
   updateKeywordError,
   updateKeywordSuccess,
+  refreshKeywordExamplesUpdate,
+  recognizeUpdatedKeywords,
 } from '../App/actions';
 import {
   ADD_MODIFIER_SAYING,
@@ -26,11 +30,13 @@ import {
   LOAD_KEYWORD,
   LOAD_KEYWORDS,
   UPDATE_KEYWORD,
+  RECOGNIZE_UPDATED_KEYWORDS
 } from '../App/constants';
 import {
   makeSelectAgent,
   makeSelectAgentSettings,
   makeSelectKeyword,
+  makeSelectkeywordExamplesUpdate,
 } from '../App/selectors';
 import { getKeywords } from '../DialoguePage/saga';
 
@@ -54,13 +60,17 @@ export function* postKeyword(payload) {
   const keyword = yield select(makeSelectKeyword());
   const newKeyword = Immutable.asMutable(keyword, { deep: true });
   delete newKeyword.agent;
-  const { api } = payload;
+  const { api, updateSayingsKeywords } = payload;
   try {
     const response = yield call(
       api.post,
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD]),
       newKeyword,
     );
+    if (updateSayingsKeywords) {
+      yield call(putRecognizeUpdatedKeywords, payload, response.id);
+      yield put(refreshKeywordExamplesUpdate());
+    }
     yield put(createKeywordSuccess(response));
   } catch (err) {
     const error = { ...err };
@@ -73,7 +83,7 @@ export function* putKeyword(payload) {
   const keyword = yield select(makeSelectKeyword());
   const mutableKeyword = Immutable.asMutable(keyword, { deep: true });
   const keywordId = keyword.id;
-  const { api } = payload;
+  const { api, updateSayingsKeywords } = payload;
   delete mutableKeyword.id;
   delete mutableKeyword.agent;
   try {
@@ -82,9 +92,67 @@ export function* putKeyword(payload) {
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD, keywordId]),
       mutableKeyword,
     );
+    if (updateSayingsKeywords) {
+      yield call(putRecognizeUpdatedKeywords, payload);
+      yield put(refreshKeywordExamplesUpdate());
+    }
+    yield put(loadKeyword(keywordId));
     yield put(updateKeywordSuccess(response));
   } catch (err) {
     yield put(updateKeywordError(err));
+  }
+}
+
+export function* putRecognizeUpdatedKeywords(payload, createdKeywordId = null) {
+  const agent = yield select(makeSelectAgent());
+  const keyword = yield select(makeSelectKeyword());
+  const keywordExamplesUpdate = yield select(makeSelectkeywordExamplesUpdate());
+  let keywordExamplesUpdateClean = yield call(() => {
+    return keywordExamplesUpdate.filter(update => {
+      return update.count !== 0;
+    })
+  });
+  let keywordExamplesAdd = yield call(() => {
+    return keywordExamplesUpdateClean.filter(update => {
+      return update.count > 0;
+    }).map(update => update.synonym)
+      .filter((update, index, self) => self.indexOf(update) === index)
+      .map(synonym => {
+        return {
+          "synonym": synonym,
+          "keywordName": keyword.keywordName,
+          "keywordId": keyword.id ? keyword.id : createdKeywordId
+        }
+      });
+  })
+
+  let keywordExamplesDelete = yield call(() => {
+    return keywordExamplesUpdateClean.filter(updateClean => {
+      return updateClean.count < 0 && !keywordExamplesAdd.find(function (update) {
+        return update.synonym === updateClean.synonym
+      })
+    }).map(update => update.synonym)
+      .filter((update, index, self) => self.indexOf(update) === index)
+      .map(synonym => {
+        return {
+          "synonym": synonym,
+          "keywordName": keyword.keywordName,
+          "keywordId": keyword.id
+        }
+      });
+  });
+  const { api } = payload;
+  try {
+    const response = yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_RECOGNIZE_UPDATED_KEYWORDS]),
+      {
+        deletedValues: keywordExamplesDelete,
+        updatedValues: keywordExamplesAdd
+      },
+    );
+  } catch (err) {
+    throw err;
   }
 }
 

@@ -1,19 +1,21 @@
 import { Grid, Paper, Tab, Tabs } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import qs from 'query-string';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { locationShape } from 'react-router-props';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import injectSaga from '../../utils/injectSaga';
 import { loginUser, signUpUser } from '../App/actions';
+import { makeSelectError, makeSelectLoading, makeSelectSettings } from '../App/selectors';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import saga from './saga';
-import qs from 'query-string';
-import { makeSelectSettings } from '../App/selectors';
 
 const styles = theme => ({
   root: {
@@ -34,17 +36,23 @@ export class UserAuthPage extends React.PureComponent {
   }
 
   state = {
-    selectedTab: qs.parse(this.props.location.search, {
-      ignoreQueryPrefix: true,
-    }).tab && this.props.settings.allowNewUsersSignUps
-      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
-      : TAB_LOGIN,
+    selectedTab:
+      qs.parse(this.props.location.search, {
+        ignoreQueryPrefix: true,
+      }).tab && this.props.settings.allowNewUsersSignUps
+        ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
+        : TAB_LOGIN,
     ref: qs.parse(this.props.location.search, {
       ignoreQueryPrefix: true,
     }).ref
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref
       : '',
     name: '',
+    errorState: {
+      username: false,
+      lastName: false,
+      password: false,
+    },
     lastName: '',
     username: '',
     password: '',
@@ -60,7 +68,16 @@ export class UserAuthPage extends React.PureComponent {
 
   onLogin() {
     const { username, password } = this.state;
-    this.props.onLogin(username, password);
+    if (!(_.isEmpty(password) || _.isEmpty(username))) {
+      this.props.onLogin(username, password);
+    } else {
+      this.setState({
+        errorState: {
+          username: _.isEmpty(username),
+          password: _.isEmpty(password),
+        },
+      });
+    }
   }
 
   onSignUp() {
@@ -69,28 +86,24 @@ export class UserAuthPage extends React.PureComponent {
   }
 
   render() {
-    const { classes, onGoToUrl, settings } = this.props;
-    const { selectedTab, username, password, name, lastName, ref } = this.state;
+    const { classes, onGoToUrl, error, isLoading } = this.props;
+    const { selectedTab, username, password, name, lastName, ref, errorState } = this.state;
     return (
       <Grid container justify="center">
         <Paper square className={classes.root}>
-          <Tabs
-            value={selectedTab}
-            indicatorColor="primary"
-            textColor="secondary"
-            onChange={this.handleTabChange}
-            centered
-            fullWidth
-          >
+          <Tabs value={selectedTab} indicatorColor="primary" textColor="secondary" onChange={this.handleTabChange} centered fullWidth>
             <Tab value={TAB_LOGIN} label="Login" />
             {this.props.settings.allowNewUsersSignUps ? <Tab value={TAB_SIGN_UP} label="Sign Up" /> : null}
           </Tabs>
           {selectedTab === TAB_LOGIN && (
             <LoginForm
+              errorState={errorState}
               onLogin={this.onLogin}
               onInputChange={this.onInputChange}
               username={username}
               password={password}
+              error={error}
+              isLoading={isLoading}
             />
           )}
           {selectedTab === TAB_SIGN_UP && this.props.settings.allowNewUsersSignUps && (
@@ -103,6 +116,8 @@ export class UserAuthPage extends React.PureComponent {
               lastName={lastName}
               refUrl={ref}
               onGoToUrl={onGoToUrl}
+              error={error}
+              isLoading={isLoading}
             />
           )}
         </Paper>
@@ -112,15 +127,20 @@ export class UserAuthPage extends React.PureComponent {
 }
 
 UserAuthPage.propTypes = {
+  location: locationShape.isRequired,
   classes: PropTypes.object.isRequired,
   onLogin: PropTypes.func.isRequired,
   onSignUp: PropTypes.func.isRequired,
   onGoToUrl: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.bool]),
+  isLoading: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
+  error: makeSelectError(),
+  isLoading: makeSelectLoading(),
 });
 
 function mapDispatchToProps(dispatch) {

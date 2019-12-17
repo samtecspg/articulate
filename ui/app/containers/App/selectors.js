@@ -47,6 +47,12 @@ const makeSelectLoadingImportCategory = () =>
     globalState => globalState.loadingImportCategory,
   );
 
+const makeSelectLoadingKeywordExamplesUpdate = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingKeywordExamplesUpdate,
+  );
+
 const makeSelectError = () =>
   createSelector(
     selectGlobal,
@@ -57,6 +63,12 @@ const makeSelectSuccess = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.success,
+  );
+
+const makeSelectSuccessKeywordExamplesUpdate = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.successKeywordExamplesUpdate,
   );
 
 const makeSelectConversationBarOpen = () =>
@@ -214,6 +226,32 @@ const makeSelectTotalSessions = () =>
     globalState => globalState.totalSessions,
   );
 
+/*Logs*/
+const makeSelectLogs = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.logs,
+  );
+
+const makeSelectLogsText = () =>
+  createSelector(
+    selectGlobal,
+    globalState => getLogsContent(globalState.logs)
+  )
+
+const getLogsContent = (logs) => {
+  var result = '';
+  logs.map((log, index) => {
+    if (log && log._source && log._source.container && log._source.container.name && log._source.message) {
+      result = result + log._source.container.name + ' :' + log._source.message;
+      if (index !== logs.length - 1) {
+        result = result + '\n';
+      }
+    }
+  });
+  return result;
+};
+
 /* Keywords */
 const makeSelectKeywords = () =>
   createSelector(
@@ -356,11 +394,23 @@ const makeSelectSettings = () =>
     globalState => globalState.settings,
   );
 
+const makeSelectSettingsTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.settingsTouched
+  );
+
 /* Keyword */
 const makeSelectKeyword = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.keyword,
+  );
+
+const makeSelectkeywordExamplesUpdate = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.keywordExamplesUpdate,
   );
 
 const makeSelectKeywordTouched = () =>
@@ -446,6 +496,17 @@ const makeSelectTotalUsers = () =>
     globalState => globalState.totalUsers,
   );
 
+const makeSelectCurrentUser = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.currentUser,
+  );
+const makeSelectLoadingCurrentUser = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingCurrentUser,
+  );
+
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -496,7 +557,9 @@ export {
   makeSelectActionPostFormat,
   makeSelectSayingForAction,
   makeSelectSettings,
+  makeSelectSettingsTouched,
   makeSelectKeyword,
+  makeSelectkeywordExamplesUpdate,
   makeSelectKeywordTouched,
   makeSelectSuccessKeyword,
   makeSelectConnection,
@@ -510,11 +573,17 @@ export {
   makeSelectDocumentsAnalytics,
   makeSelectDocumentsStats,
   makeSelectTotalDocumentsAnalytics,
+  makeSelectLogs,
+  makeSelectLogsText,
   makeSelectSessions,
   makeSelectTotalSessions,
   makeSelectLocale,
   makeSelectStarredSayings,
   makeSelectStarredSaying,
   makeSelectUsers,
-  makeSelectTotalUsers
+  makeSelectTotalUsers,
+  makeSelectSuccessKeywordExamplesUpdate,
+  makeSelectLoadingKeywordExamplesUpdate,
+  makeSelectCurrentUser,
+  makeSelectLoadingCurrentUser,
 };
