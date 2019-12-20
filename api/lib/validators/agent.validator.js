@@ -78,7 +78,11 @@ class AgentValidate {
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     parameters: Joi.object(),
-                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false)
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
+                    actionsQuickResponsesAutomaticGeneration: AgentSchema.actionsQuickResponsesAutomaticGeneration,
+                    automaticActionsQuickResponsesMax: AgentSchema.automaticActionsQuickResponsesMax,
+                    slotsQuickResponsesAutomaticGeneration: AgentSchema.slotsQuickResponsesAutomaticGeneration,
+                    automaticSlotsQuickResponsesMax: AgentSchema.automaticSlotsQuickResponsesMax
                 };
             })()
         };
