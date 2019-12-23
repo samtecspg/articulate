@@ -410,6 +410,10 @@ const initialState = Immutable({
     categoryClassifierPipeline: '[]',
     sayingClassifierPipeline: '[]',
     keywordClassifierPipeline: '[]',
+    generateSlotsQuickResponses: false,
+    generateSlotsQuickResponsesMax: 1,
+    generateActionsQuickResponses: false,
+    generateActionsQuickResponsesMax: 1,
   },
   keyword: {
     type: 'learned',
@@ -880,7 +884,7 @@ function appReducer(state = initialState, action) {
         .setIn(
           ['agentSettings', 'ducklingDimension'],
           state.settings.ducklingDimension,
-        );
+        )
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)

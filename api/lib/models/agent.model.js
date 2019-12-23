@@ -32,10 +32,10 @@ class AgentModel {
       modificationDate: Joi.string(),
       parameters: Joi.object(),
       enableDiscoverySheet: Joi.boolean(),
-      actionsQuickResponsesAutomaticGeneration: Joi.boolean(),
-      automaticActionsQuickResponsesMax: Joi.number(),
-      slotsQuickResponsesAutomaticGeneration: Joi.boolean(),
-      automaticSlotsQuickResponsesMax: Joi.number()
+      generateSlotsQuickResponses: Joi.boolean(),
+      generateSlotsQuickResponsesMax: Joi.number(),
+      generateActionsQuickResponses: Joi.boolean(),
+      generateActionsQuickResponsesMax: Joi.number()
     };
   }
 }

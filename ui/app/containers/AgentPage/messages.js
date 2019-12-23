@@ -229,4 +229,40 @@ export default defineMessages({
       'app.containers.AgentPage.component.AgentParametersForm.newAgentParameterValueTextFieldPlaceholder',
     defaultMessage: 'Type your parameter value',
   },
+  AutomaticQuickRepliesSetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.automaticQuickRepliesSetting',
+    defaultMessage: 'Automatic Quick Replies',
+  },
+  slotsQuickReplies: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.slotsQuickReplies',
+    defaultMessage: 'Generate automatic quick replies for slots',
+  },
+  slotsQuickRepliesHelp: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
+    defaultMessage:
+      'If you enable this option, your agent will automatically generate suggestions after sending the response for an action using current context',
+  },
+  slotsQuickRepliesLabel : {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.slotsQuickRepliesLabel',
+    defaultMessage: 'Max quick replies generated for slots',
+  },
+  actionsQuickReplies: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.actionsQuickReplies',
+    defaultMessage: 'Generate automatic quick replies for actions',
+  },
+  actionsQuickRepliesHelp: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
+    defaultMessage:
+      'If you enable this option, your agent will automatically generate suggestions for missing required slots.',
+  },
+  actionsQuickRepliesLabel : {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.actionsQuickRepliesLabel',
+    defaultMessage: 'Max quick replies generated for actions',
+  },
 });

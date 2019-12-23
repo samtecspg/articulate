@@ -21,6 +21,7 @@ import ResponseSettings from 'components/ResponseSettings';
 import RasaSettings from 'components/RasaSettings';
 import DucklingSettings from 'components/DucklingSettings';
 import TrainingSettings from './TrainingSettings';
+import AutomaticQuickRepliesSettings from './AutomaticQuickRepliesSettings'
 
 import messages from '../messages';
 
@@ -335,6 +336,30 @@ class AgentSettingsForm extends React.Component {
                     : null
                   }
                 </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel
+              expanded={expanded === 'panelAutomaticQuickReplies'}
+              onChange={() => {
+                this.handleChange('expanded', 'panelAutomaticQuickReplies');
+              }}
+            >
+              <ExpansionPanelSummary
+                expandIcon={this.getExpandIcon(
+                  false,
+                  expanded === 'panelAutomaticQuickReplies',
+                )}
+              >
+                <Typography className={classes.panelHeading}>
+                  <FormattedMessage {...messages.AutomaticQuickRepliesSetting} />
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <AutomaticQuickRepliesSettings
+                  settings={agentSettings}
+                  onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
+                  errorState={this.props.errorState}
+                />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </div>
