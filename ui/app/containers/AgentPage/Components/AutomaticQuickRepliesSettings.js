@@ -59,7 +59,6 @@ export class AutomaticQuickRepliesSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    debugger;
     this.initialState = {
       generateSlotsQuickResponsesSelected: this.props.settings.generateSlotsQuickResponses ? this.props.settings.generateSlotsQuickResponses : false,
       currentSlotQuickResponsesMax: this.props.settings.generateSlotsQuickResponsesMax ? this.props.settings.generateSlotsQuickResponsesMax : 1,

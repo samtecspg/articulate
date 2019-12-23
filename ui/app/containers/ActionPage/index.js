@@ -380,7 +380,7 @@ export class ActionPage extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes , agent} = this.props;
     return this.props.agent.id &&
       (this.props.saying.keywords.length === 0 ||
         (this.props.saying.keywords.length > 0 &&
@@ -454,6 +454,7 @@ export class ActionPage extends React.Component {
                 onAddNewQuickResponse={this.props.onAddNewQuickResponse}
                 onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
                 onCopyTextPrompt={this.props.onCopyTextPrompt}
+                agentSettings = {agent.settings}
               />
             }
             webhookForm={

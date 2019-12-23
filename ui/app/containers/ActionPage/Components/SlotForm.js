@@ -148,7 +148,8 @@ class SlotForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, slot, agentKeywords } = this.props;
+    
+    const { classes, intl, slot, agentKeywords, agentSettings } = this.props;
 
     return (
       <Grid className={classes.formContainer} container item xs={12}>
@@ -615,6 +616,7 @@ class SlotForm extends React.Component {
                         </InputAdornment>
                       ),
                     }}
+                    helperText={agentSettings.generateSlotsQuickResponses? intl.formatMessage(messages.automaticQuickResponsesActivated) : ''}
                     error={
                       this.props.errorState
                         ? this.props.errorState.quickResponses
@@ -666,7 +668,8 @@ SlotForm.propTypes = {
   onChangeQuickResponse: PropTypes.func.isRequired,
   onDeleteQuickResponse: PropTypes.func.isRequired,
   onAddNewQuickResponse: PropTypes.func.isRequired,
-  onCopyTextPrompt: PropTypes.func.isRequired
+  onCopyTextPrompt: PropTypes.func.isRequired,
+  agentSettings: PropTypes.object.isRequired
 };
 
 export default injectIntl(withStyles(styles)(SlotForm));

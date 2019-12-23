@@ -48,7 +48,10 @@ module.exports = async function ({ actionData, CSO }) {
         if (missingSlotIndex !== null) {
             const missingSlot = missingSlots[missingSlotIndex];
             const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount });
-            return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
+            var missingSlotQuickResponses = CSO.agent.settings.generateSlotsQuickResponses?
+                await agentService.converseGenerateAutomaticMissingSlotQuickResponses({CSO, missingSlot}) :
+                missingSlots[0].quickResponses
+            return { ...response, quickResponses: missingSlotQuickResponses, fulfilled: false };
         }
         if (!previousListenState && !CSO.context.listenFreeText) {
             return { slotPromptLimitReached: true }
