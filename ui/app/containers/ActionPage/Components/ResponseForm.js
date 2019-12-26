@@ -177,7 +177,7 @@ class ResponseForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, action, postFormat } = this.props;
+    const { classes, intl, action, postFormat, agentSettings } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -368,6 +368,7 @@ class ResponseForm extends React.Component {
                         </InputAdornment>
                       ),
                     }}
+                    helperText={agentSettings.generateActionsQuickResponses? intl.formatMessage(messages.automaticQuickResponsesActivated) : ''}
                     error={
                       this.props.errorState
                         ? this.props.errorState.quickResponses
@@ -453,6 +454,7 @@ ResponseForm.propTypes = {
   agentId: PropTypes.string,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  agentSettings : PropTypes.object
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

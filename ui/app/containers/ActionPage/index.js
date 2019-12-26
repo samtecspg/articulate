@@ -480,6 +480,7 @@ export class ActionPage extends React.Component {
             responseForm={
               <ResponseForm
                 agentId={this.props.agent.id}
+                agentSettings = {agent.settings}
                 action={this.props.action}
                 postFormat={this.props.postFormat}
                 onChangeActionData={this.props.onChangeActionData}

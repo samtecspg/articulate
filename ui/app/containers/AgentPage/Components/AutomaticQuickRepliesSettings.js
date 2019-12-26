@@ -56,45 +56,37 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 export class AutomaticQuickRepliesSettings extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.initialState = {
-      generateSlotsQuickResponsesSelected: this.props.settings.generateSlotsQuickResponses ? this.props.settings.generateSlotsQuickResponses : false,
-      currentSlotQuickResponsesMax: this.props.settings.generateSlotsQuickResponsesMax ? this.props.settings.generateSlotsQuickResponsesMax : 1,
-      generateActionsQuickResponsesSelected: this.props.settings.generateActionsQuickResponses ? this.props.settings.generateActionsQuickResponses : false,
-      currentActionsQuickResponsesMax: this.props.settings.generateActionsQuickResponsesMax ? this.props.settings.generateActionsQuickResponsesMax : 1,
-    };
-    this.state = this.initialState;
-    this.handleCurrentSlotQuickResponsesMaxValidation = this.handleCurrentSlotQuickResponsesMaxValidation.bind(this);
-    this.handleCurrentSlotQuickResponsesMaxChange = this.handleCurrentSlotQuickResponsesMaxChange.bind(this);
-  }
-
   handleCurrentSlotQuickResponsesMaxChange = async ev => {
     if (ev.target.value < 1 && ev.target.value != '') {
-      await this.setState({ currentSlotQuickResponsesMax: 1 });
+      this.props.onChangeAgentSettingsData('generateSlotsQuickResponsesMax', 1);
     } else {
-      await this.setState({ currentSlotQuickResponsesMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+      this.props.onChangeAgentSettingsData(
+        'generateSlotsQuickResponsesMax',
+        Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''),
+      );
     }
   };
 
   handleCurrentSlotQuickResponsesMaxValidation = async () => {
-    if (this.state.currentSlotQuickResponsesMax === '') {
-      await this.setState({ currentSlotQuickResponsesMax: 1 });
+    if (this.props.settings.generateSlotsQuickResponsesMax === '') {
+      this.props.onChangeAgentSettingsData('generateSlotsQuickResponsesMax', 1);
     }
   };
 
   handleCurrentActionsQuickResponsesMaxChange = async ev => {
     if (ev.target.value < 1 && ev.target.value != '') {
-      await this.setState({ currentActionsQuickResponsesMax: 1 });
+      this.props.onChangeAgentSettingsData('generateActionsQuickResponsesMax', 1);
     } else {
-      await this.setState({ currentActionsQuickResponsesMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+      this.props.onChangeAgentSettingsData(
+        'generateActionsQuickResponsesMax',
+        Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''),
+      );
     }
   };
 
   handleCurrentActionsQuickResponsesMaxValidation = async () => {
-    if (this.state.currentActionsQuickResponsesMax === '') {
-      await this.setState({ currentActionsQuickResponsesMax: 1 });
+    if (this.props.settings.generateActionsQuickResponsesMax === '') {
+      this.props.onChangeAgentSettingsData('generateActionsQuickResponsesMax', 1);
     }
   };
 
@@ -104,19 +96,18 @@ export class AutomaticQuickRepliesSettings extends React.Component {
       <Grid container spacing={16}>
         <Grid container item xs={12}>
           <Typography className={classes.panelContent}>
-            <FormattedMessage {...messages.trainingSettingDescription} />
+            <FormattedMessage {...messages.automaticQuickRepliesSettingsDescription} />
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
             control={
               <Switch
-                checked={this.state.generateSlotsQuickResponsesSelected}
+                checked={this.props.settings.generateSlotsQuickResponses}
                 onChange={() => {
-                  this.props.onChangeAgentSettingsData('generateSlotsQuickResponses', !this.state.generateSlotsQuickResponsesSelected);
-                  this.setState({ generateSlotsQuickResponsesSelected: !this.state.generateSlotsQuickResponsesSelected });
+                  this.props.onChangeAgentSettingsData('generateSlotsQuickResponses', !this.props.settings.generateSlotsQuickResponses);
                 }}
-                value="extraTrainingData"
+                value="generateSlotsQuickResponses"
                 color="primary"
               />
             }
@@ -130,14 +121,14 @@ export class AutomaticQuickRepliesSettings extends React.Component {
             }
           />
 
-          {this.state.generateSlotsQuickResponsesSelected && (
+          {this.props.settings.generateSlotsQuickResponses && (
             <Grid container item xs={12} direction="row" alignItems="stretch" style={{ paddingLeft: '16px', marginBottom: '10px' }}>
               <Grid item xs={3}>
                 <span className={classes.justMaxLabel}>{intl.formatMessage(messages.slotsQuickRepliesLabel)}</span>
                 <TextField
                   id="standard-number-just-max"
                   type="number"
-                  value={this.state.currentSlotQuickResponsesMax}
+                  value={this.props.settings.generateSlotsQuickResponsesMax}
                   onChange={async ev => {
                     await this.handleCurrentSlotQuickResponsesMaxChange(ev);
                   }}
@@ -149,7 +140,6 @@ export class AutomaticQuickRepliesSettings extends React.Component {
                   }}
                   onBlur={async () => {
                     await this.handleCurrentSlotQuickResponsesMaxValidation();
-                    this.props.onChangeAgentSettingsData('generateSlotsQuickResponsesMax', this.state.currentSlotQuickResponsesMax);
                   }}
                   InputLabelProps={{
                     shrink: true,
@@ -174,12 +164,11 @@ export class AutomaticQuickRepliesSettings extends React.Component {
             <FormControlLabel
               control={
                 <Switch
-                  checked={this.state.generateActionsQuickResponsesSelected}
+                  checked={this.props.settings.generateActionsQuickResponses}
                   onChange={() => {
-                    this.props.onChangeAgentSettingsData('generateActionsQuickResponses', !this.state.generateActionsQuickResponsesSelected);
-                    this.setState({ generateActionsQuickResponsesSelected: !this.state.generateActionsQuickResponsesSelected });
+                    this.props.onChangeAgentSettingsData('generateActionsQuickResponses', !this.props.settings.generateActionsQuickResponses);
                   }}
-                  value="extraTrainingData"
+                  value="generateActionsQuickResponses"
                   color="primary"
                 />
               }
@@ -193,14 +182,14 @@ export class AutomaticQuickRepliesSettings extends React.Component {
               }
             />
 
-            {this.state.generateActionsQuickResponsesSelected && (
+            {this.props.settings.generateActionsQuickResponses && (
               <Grid container item xs={12} direction="row" alignItems="stretch" style={{ paddingLeft: '16px', marginBottom: '10px' }}>
                 <Grid item xs={3}>
                   <span className={classes.justMaxLabel}>{intl.formatMessage(messages.actionsQuickRepliesLabel)}</span>
                   <TextField
                     id="standard-number-just-max"
                     type="number"
-                    value={this.state.currentActionsQuickResponsesMax}
+                    value={this.props.settings.generateActionsQuickResponsesMax}
                     onChange={async ev => {
                       await this.handleCurrentActionsQuickResponsesMaxChange(ev);
                     }}
@@ -212,7 +201,6 @@ export class AutomaticQuickRepliesSettings extends React.Component {
                     }}
                     onBlur={async () => {
                       await this.handleCurrentActionsQuickResponsesMaxValidation();
-                      this.props.onChangeAgentSettingsData('generateActionsQuickResponsesMax', this.state.currentActionsQuickResponsesMax);
                     }}
                     InputLabelProps={{
                       shrink: true,
