@@ -4,13 +4,8 @@
     "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/chat-widget/README.MD",
     "details": {
         "title": {
-            "displayName": "Widget title",
-            "description" : "Title of the widget window",
-            "type": "string"
-        },
-        "subtitle": {
-            "displayName": "Widget subtitle",
-            "description" : "Subtitle of the widget window",
+            "displayName": "Widget Name",
+            "description" : "Display name of the widget",
             "type": "string"
         },
         "senderPlaceHolder": {

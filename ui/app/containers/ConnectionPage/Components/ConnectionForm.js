@@ -412,27 +412,29 @@ class ConnectionForm extends React.Component {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
     <title>Dev Widget</title>
-    <link href="https://cdn.jsdelivr.net/gh/samtecspg/articulate-webchat@0.0.3/lib/articulate-webchat.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.jsdelivr.net/gh/samtecspg/articulate-webchat@0.0.3/lib/articulate-webchat.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/samtecspg/articulate-chatbot-widget@0.0.2/dist/articulate-chatbot-widget.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/samtecspg/articulate-chatbot-widget@0.0.2/dist/articulate-chatbot-widget.js"></script>
   </head>
   <body>
     <div id="webchat"></div>
     <script>
-      WebChat.default.init({
+      ArticulateChatbotWidget.default.init({
         selector: '#webchat',
-        socketUrl: 'ws://${window.location.hostname}:7500',
-        socketPath: '/connection/${connection.id}/external',
-        converseUrl: '${window.location.protocol}//${window.location.hostname}${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external',
-        title: '${connection.details.title}',
-        subtitle: '${connection.details.subtitle}',
-        senderPlaceHolder: 'Type a message...',
-        titleAvatar: 'https://static.thenounproject.com/png/815603-200.png',
-        profileAvatar: 'https://static.thenounproject.com/png/815603-200.png'
+        name: '${connection.details.title}',
+        articulateHost: '${window.location.hostname}',
+        articulatePort: '${window.location.port ? window.location.port : 80}',
+        articulateWSPort: '7500',
+        connectionId: '${connection.id}',
+        botAvatarURL: 'https://static.thenounproject.com/png/815603-200.png',
+        userAvatarURL: 'https://static.thenounproject.com/png/138926-200.png',
+        clearItemMenuLabel: 'Clear',
+        restartItemMenuLabel: 'Restart',
+        closeItemMenuLabel: 'Close',
+        inputPlaceholder: 'Type a message...'
       });
     </script>
   </body>
-</html>                                              
-                        `}
+</html>`}
                         setOptions={{
                           useWorker: false,
                           showLineNumbers: true,
