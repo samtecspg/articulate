@@ -430,7 +430,7 @@ class ConnectionForm extends React.Component {
         clearItemMenuLabel: 'Clear',
         restartItemMenuLabel: 'Restart',
         closeItemMenuLabel: 'Close',
-        inputPlaceholder: 'Type a message...'
+        inputPlaceholder: '${connection.details.senderPlaceHolder}'
       });
     </script>
   </body>
