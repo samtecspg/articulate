@@ -19,8 +19,18 @@ const getAvailableKeywordsSlots = async CSO => {
   ) {
     if (action.slots && action.fulfilled) {
       Object.keys(action.slots).forEach(function(key) {
-        if (action.slots[key].value != '') {
+        if (
+          action.slots[key].value != '' &&
+          !Array.isArray(action.slots[key].value)
+        ) {
           result.push(action.slots[key]);
+        } else if (Array.isArray(action.slots[key].value)) {
+          action.slots[key].value.forEach(value => {
+            result.push({
+              keyword: action.slots[key].keyword,
+              value: value
+            });
+          });
         }
       });
     }
@@ -38,7 +48,7 @@ const getUniqueAvailableKeywordsSlots = async availableKeywordsSlots => {
   var arrResult = {};
   for (var i = 0; i < availableKeywordsSlots.length; i++) {
     var item = availableKeywordsSlots[i];
-    arrResult[item.keyword + ' - ' + item.original] = item;
+    arrResult[item.keyword + ' - ' + item.value] = item;
   }
 
   var i = 0;
@@ -128,6 +138,9 @@ const generateQuickResponses = async (
     counter++;
   }
 
+  quickResponsesGenerated = quickResponsesGenerated.filter(
+    (item, i, ar) => ar.indexOf(item) === i
+  );
   return quickResponsesGenerated;
 };
 

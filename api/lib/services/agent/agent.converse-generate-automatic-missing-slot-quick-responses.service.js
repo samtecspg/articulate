@@ -1,7 +1,7 @@
 module.exports = function({ CSO, missingSlot }) {
-  const missingSlotKeywordId = missingSlot.keywordId.toString();
+  const missingSlotKeywordName = missingSlot.keyword;
   const keywordToFillSlot = CSO.agent.keywords.find(keyword => {
-    return keyword.id === missingSlotKeywordId;
+    return keyword.keywordName === missingSlotKeywordName;
   });
   const quickResponsesGenerated = keywordToFillSlot.examples
     .slice(0, CSO.agent.settings.generateSlotsQuickResponsesMax)
