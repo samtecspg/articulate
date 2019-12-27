@@ -128,7 +128,12 @@
     "actionsPageSize": 5,
     "modifierSayingsPageSize": 10,
     "reviewPageSize": 5,
-    "sessionsPageSize": 5
+    "sessionsPageSize": 5,
+    "generateSlotsQuickResponses": false,
+    "generateSlotsQuickResponsesMax": 1,
+    "generateActionsQuickResponses": false,
+    "generateActionsQuickResponsesMax": 1,
+    "slackLoggingURL": "www.webhook.com"
   },
   "categoryRecognizer": true,
   "modifiersRecognizer": true,
@@ -256,162 +261,126 @@
         {
           "userSays": "hey",
           "keywords": [],
-          "actions": [
-            "Greet"
-          ],
+          "actions": ["Greet"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "hi",
           "keywords": [],
-          "actions": [
-            "Greet"
-          ],
+          "actions": ["Greet"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "hello",
           "keywords": [],
-          "actions": [
-            "Greet"
-          ],
+          "actions": ["Greet"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "greetings",
           "keywords": [],
-          "actions": [
-            "Greet"
-          ],
+          "actions": ["Greet"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "hola",
           "keywords": [],
-          "actions": [
-            "Greet"
-          ],
+          "actions": ["Greet"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "bye",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "good bye",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "goodbye",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "farewell",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "later",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "see you later",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "ciao",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "adios",
           "keywords": [],
-          "actions": [
-            "Goodbye"
-          ],
+          "actions": ["Goodbye"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "great, thanks.",
           "keywords": [],
-          "actions": [
-            "Gratitude"
-          ],
+          "actions": ["Gratitude"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "thank you",
           "keywords": [],
-          "actions": [
-            "Gratitude"
-          ],
+          "actions": ["Gratitude"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "thank you very much",
           "keywords": [],
-          "actions": [
-            "Gratitude"
-          ],
+          "actions": ["Gratitude"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "perfect",
           "keywords": [],
-          "actions": [
-            "Gratitude"
-          ],
+          "actions": ["Gratitude"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "excellent",
           "keywords": [],
-          "actions": [
-            "Gratitude"
-          ],
+          "actions": ["Gratitude"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         }
@@ -434,56 +403,42 @@
         {
           "userSays": "can I get a pizza?",
           "keywords": [],
-          "actions": [
-            "Order Pizza"
-          ],
+          "actions": ["Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "I'd like to order a pizza",
           "keywords": [],
-          "actions": [
-            "Order Pizza"
-          ],
+          "actions": ["Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "I want a pizza",
           "keywords": [],
-          "actions": [
-            "Order Pizza"
-          ],
+          "actions": ["Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "pizza please",
           "keywords": [],
-          "actions": [
-            "Order Pizza"
-          ],
+          "actions": ["Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "Hey, can I get a pizza?",
           "keywords": [],
-          "actions": [
-            "Greet",
-            "Order Pizza"
-          ],
+          "actions": ["Greet", "Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
         {
           "userSays": "Hola, pizza please.",
           "keywords": [],
-          "actions": [
-            "Greet",
-            "Order Pizza"
-          ],
+          "actions": ["Greet", "Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
@@ -498,9 +453,7 @@
               "keywordId": 13
             }
           ],
-          "actions": [
-            "Order Pizza"
-          ],
+          "actions": ["Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
@@ -522,9 +475,7 @@
               "keywordId": 13
             }
           ],
-          "actions": [
-            "Order Pizza"
-          ],
+          "actions": ["Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
@@ -553,9 +504,7 @@
               "keywordId": 13
             }
           ],
-          "actions": [
-            "Order Pizza"
-          ],
+          "actions": ["Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         },
@@ -570,10 +519,7 @@
               "keywordId": 13
             }
           ],
-          "actions": [
-            "Greet",
-            "Order Pizza"
-          ],
+          "actions": ["Greet", "Order Pizza"],
           "creationDate": "1551796312000",
           "modificationDate": "1551796312000"
         }
@@ -587,51 +533,31 @@
       "examples": [
         {
           "value": "sausage",
-          "synonyms": [
-            "sausage",
-            "sausages"
-          ]
+          "synonyms": ["sausage", "sausages"]
         },
         {
           "value": "pepperoni",
-          "synonyms": [
-            "pepperoni",
-            "pepperonis"
-          ]
+          "synonyms": ["pepperoni", "pepperonis"]
         },
         {
           "value": "ham",
-          "synonyms": [
-            "ham",
-            "Canadian bacon",
-            "canadian bacon"
-          ]
+          "synonyms": ["ham", "Canadian bacon", "canadian bacon"]
         },
         {
           "value": "pineapple",
-          "synonyms": [
-            "pineapple",
-            "pineapples"
-          ]
+          "synonyms": ["pineapple", "pineapples"]
         },
         {
           "value": "sardines",
-          "synonyms": [
-            "sardines"
-          ]
+          "synonyms": ["sardines"]
         },
         {
           "value": "onions",
-          "synonyms": [
-            "onions"
-          ]
+          "synonyms": ["onions"]
         },
         {
           "value": "banana peppers",
-          "synonyms": [
-            "banana peppers",
-            "yellow peppers"
-          ]
+          "synonyms": ["banana peppers", "yellow peppers"]
         }
       ],
       "regex": "",
@@ -931,15 +857,11 @@
       "examples": [
         {
           "value": "yes",
-          "synonyms": [
-            "yes"
-          ]
+          "synonyms": ["yes"]
         },
         {
           "value": "no",
-          "synonyms": [
-            "no"
-          ]
+          "synonyms": ["no"]
         }
       ],
       "regex": "",
