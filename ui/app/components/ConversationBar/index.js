@@ -258,40 +258,8 @@ export class ConversationBar extends React.PureComponent {
       this.props.onLoadSettings();
     }
 
-    if (!this.state.socketClientConnected) {
-      const client = new Nes.Client(getWS());
-      client.onConnect = () => {
-        this.setState({
-          client,
-          socketClientConnected: true,
-        });
-
-        const handler = (response) => {
-          if (response) {
-            this.props.onRespondMessage({
-              author: this.props.agent.agentName,
-              docId: response.docId,
-              message: response.textResponse,
-              quickResponses: response.quickResponses,
-              CSO: response.CSO,
-            });
-            this.props.onStoreSourceData({ ...response.CSO });
-          }
-        };
-
-        client.subscribe(
-          this.props.demoMode ?
-            `/${ROUTE_CONNECTION}/${this.props.connection.id}/external` :
-            `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`,
-          handler,
-        );
-      };
-      client.connect({
-        delay: 1000,
-        auth: AUTH_ENABLED
-          ? { headers: { cookie: document.cookie } }
-          : undefined,
-      });
+    if (!this.state.socketClientConnected && !this.props.demoMode) {
+      this.connectWSClient();
     }
   }
 
@@ -311,12 +279,8 @@ export class ConversationBar extends React.PureComponent {
     }
   }
 
-  componentWillUnmount(){
-    if (this.state.client) {
-      this.state.client.unsubscribe(this.props.demoMode ?
-          `/${ROUTE_CONNECTION}/${this.props.connection.id}/external` :
-          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`);
-    }
+  componentWillUnmount() {
+    this.disconnectWSClient();
   }
 
   componentDidUpdate(prevProps) {
@@ -344,22 +308,30 @@ export class ConversationBar extends React.PureComponent {
           sessionId: '',
           sessions: [],
         };
+        const newSessionId = `${this.props.agent.agentName.replace(
+          ' ',
+          '',
+        )}-session-${Guid.create().toString()}`;
+        sessions[this.props.agent.agentName].sessions.unshift(
+          newSessionId,
+        );
+        sessions[
+          this.props.agent.agentName
+        ].sessionId = newSessionId;
+        sessionStorage.setItem(
+          'sessions',
+          JSON.stringify(sessions),
+        );
+        this.connectWSClient();
+        this.props.onLoadSessionId(newSessionId, true);
+      } else {
+        if (!this.state.socketClientConnected) {
+          this.connectWSClient();
+        }
+        if (!this.props.sessionLoaded) {
+          this.props.onLoadSessionId(sessions[this.props.agent.agentName].sessionId);
+        }
       }
-      const newSessionId = `${this.props.agent.agentName.replace(
-        ' ',
-        '',
-      )}-session-${Guid.create().toString()}`;
-      sessions[this.props.agent.agentName].sessions.unshift(
-        newSessionId,
-      );
-      sessions[
-        this.props.agent.agentName
-      ].sessionId = newSessionId;
-      sessionStorage.setItem(
-        'sessions',
-        JSON.stringify(sessions),
-      );
-      this.props.onLoadSessionId(newSessionId, true);
     }
   }
 
@@ -399,6 +371,65 @@ export class ConversationBar extends React.PureComponent {
     this.setState({ isResizing: false });
   };
 
+  connectWSClient = () => {
+    const client = new Nes.Client(getWS());
+    client.onConnect = () => {
+      this.setState({
+        client,
+        socketClientConnected: true,
+      });
+
+      const handler = (response) => {
+        if (response) {
+          this.props.onRespondMessage({
+            author: this.props.agent.agentName,
+            docId: response.docId,
+            message: response.textResponse,
+            quickResponses: response.quickResponses,
+            CSO: response.CSO,
+          });
+          this.props.onStoreSourceData({ ...response.CSO });
+        }
+      };
+
+      var session, sessionId;
+      if (this.props.demoMode) {
+        session = sessionStorage.getItem('sessions');
+        session = JSON.parse(session);
+        sessionId = session[this.props.agent.agentName].sessionId;
+      }
+      client.subscribe(
+        this.props.demoMode ?
+          `/${ROUTE_CONNECTION}/${this.props.connection.id}/external/${sessionId}` :
+          `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`,
+        handler,
+      );
+    };
+    client.connect({
+      delay: 1000,
+      auth: AUTH_ENABLED
+        ? { headers: { cookie: document.cookie } }
+        : undefined,
+    });
+  }
+
+  disconnectWSClient = () => {
+    if (this.state.client) {
+      var session, sessionId;
+      if (this.props.demoMode) {
+        session = sessionStorage.getItem('sessions');
+        session = JSON.parse(session);
+        sessionId = session[this.props.agent.agentName].sessionId;
+      }
+      this.state.client.unsubscribe(this.props.demoMode ?
+        `/${ROUTE_CONNECTION}/${this.props.connection.id}/external/${sessionId}` :
+        `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`);
+      this.setState({
+        socketClientConnected: false,
+      });
+    }
+  }
+
   render() {
     const { classes, intl, demoMode } = this.props;
     return (
@@ -424,7 +455,7 @@ export class ConversationBar extends React.PureComponent {
             <Grid style={{
               padding: demoMode ? '10px' : null
             }} item xs={demoMode ? 12 : 10}>
-              {demoMode ? 
+              {demoMode ?
                 <Button
                   style={{
                     width: '100%',
@@ -434,6 +465,8 @@ export class ConversationBar extends React.PureComponent {
                       let sessions = sessionStorage.getItem('sessions');
                       if (!sessions) {
                         sessions = '{}';
+                      } else {
+                        this.disconnectWSClient();
                       }
                       sessions = JSON.parse(sessions);
                       if (!sessions[this.props.agent.agentName]) {
@@ -457,6 +490,7 @@ export class ConversationBar extends React.PureComponent {
                         JSON.stringify(sessions),
                       );
                       this.props.onLoadSessionId(newSessionId, true);
+                      this.connectWSClient();
                     }
                   }}
                   variant="contained">
@@ -563,58 +597,58 @@ export class ConversationBar extends React.PureComponent {
                     JSON.parse(sessionStorage.getItem('sessions'))[
                       this.props.agent.agentName
                     ] ? (
-                      [
-                        !this.props.sessionId ? (
-                          <MenuItem key="select" value="select">
-                            <span>{intl.formatMessage(messages.noSession)}</span>
-                          </MenuItem>
-                        ) : null,
-                        JSON.parse(sessionStorage.getItem('sessions'))[
-                          this.props.agent.agentName
-                        ].sessions.map((agentSession, index) => (
-                          <MenuItem
-                            key={`agentSession_${index}`}
-                            value={agentSession}
-                          >
-                            <span>
-                              {agentSession}
-                              {demoMode ? null :
-                              <img
-                                id={`deleteSession_${index}`}
-                                className={classes.deleteIcon}
-                                src={trashIcon}
-                              />
-                              }
-                            </span>
-                          </MenuItem>
-                        )),
-                      ]
-                    ) : (
+                        [
+                          !this.props.sessionId ? (
+                            <MenuItem key="select" value="select">
+                              <span>{intl.formatMessage(messages.noSession)}</span>
+                            </MenuItem>
+                          ) : null,
+                          JSON.parse(sessionStorage.getItem('sessions'))[
+                            this.props.agent.agentName
+                          ].sessions.map((agentSession, index) => (
+                            <MenuItem
+                              key={`agentSession_${index}`}
+                              value={agentSession}
+                            >
+                              <span>
+                                {agentSession}
+                                {demoMode ? null :
+                                  <img
+                                    id={`deleteSession_${index}`}
+                                    className={classes.deleteIcon}
+                                    src={trashIcon}
+                                  />
+                                }
+                              </span>
+                            </MenuItem>
+                          )),
+                        ]
+                      ) : (
+                        <MenuItem key="select" value="select">
+                          <span>{intl.formatMessage(messages.noSession)}</span>
+                        </MenuItem>
+                      )
+                  ) : (
                       <MenuItem key="select" value="select">
                         <span>{intl.formatMessage(messages.noSession)}</span>
                       </MenuItem>
-                    )
-                  ) : (
-                    <MenuItem key="select" value="select">
-                      <span>{intl.formatMessage(messages.noSession)}</span>
-                    </MenuItem>
-                  )}
+                    )}
                 </Select>
               }
             </Grid>
             {demoMode ? null :
-            <Grid item xs={2}>
-              <Tooltip
-                placement="bottom-end"
-                title={intl.formatMessage(messages.erase)}
-              >
-                <img
-                  className={classes.eraseIcon}
-                  src={eraserIcon}
-                  onClick={() => this.props.onResetSession()}
-                />
-              </Tooltip>
-            </Grid>
+              <Grid item xs={2}>
+                <Tooltip
+                  placement="bottom-end"
+                  title={intl.formatMessage(messages.erase)}
+                >
+                  <img
+                    className={classes.eraseIcon}
+                    src={eraserIcon}
+                    onClick={() => this.props.onResetSession()}
+                  />
+                </Tooltip>
+              </Grid>
             }
           </Grid>
           <Grid
@@ -653,15 +687,15 @@ export class ConversationBar extends React.PureComponent {
 
                 return (
                   <Grid key={`message_${index}`}>
-                    {index !== 0 && this.props.messages[index-1].author === 'User' ? <Typography
+                    {index !== 0 && this.props.messages[index - 1].author === 'User' ? <Typography
                       style={{ color: this.props.agent.uiColor }}
                       className={classes.agentName}
                     >
                       {this.props.agent.gravatar !== ''
                         ? gravatars[this.props.agent.gravatar - 1]({
-                            color: this.props.agent.uiColor,
-                            className: classes.agentIcon,
-                          })
+                          color: this.props.agent.uiColor,
+                          className: classes.agentIcon,
+                        })
                         : null}
                       {message.author}
                     </Typography> : null}
@@ -690,7 +724,7 @@ export class ConversationBar extends React.PureComponent {
                         </span>
                       ) : null}
                     </Typography>
-                    {message.quickResponses ? 
+                    {message.quickResponses ?
                       <Grid className={classes.agentButtonContainer}>
                         {message.quickResponses.map((quickResponse, buttonIndex) => {
                           return (
@@ -722,9 +756,9 @@ export class ConversationBar extends React.PureComponent {
                     >
                       {this.props.agent.gravatar !== ''
                         ? gravatars[this.props.agent.gravatar - 1]({
-                            color: this.props.agent.uiColor,
-                            className: classes.agentIcon,
-                          })
+                          color: this.props.agent.uiColor,
+                          className: classes.agentIcon,
+                        })
                         : null}
                       {this.props.agent.agentName}
                     </Typography>
@@ -789,7 +823,7 @@ export class ConversationBar extends React.PureComponent {
                             message: evt.target.value,
                             sessionId: newSessionId,
                             newSession: true,
-                            isDemo: demoMode 
+                            isDemo: demoMode
                           });
                           this.setState({
                             userMessage: '',
