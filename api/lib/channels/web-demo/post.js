@@ -9,7 +9,7 @@ module.exports = async function ({ connection, request, h }) {
   const sessionId = event.sessionId;
 
   try {
-    const response = await agentService.converse({ 
+    const response = await agentService.converse({
       id: connection.agent,
       sessionId,
       text: event.text,
@@ -23,14 +23,14 @@ module.exports = async function ({ connection, request, h }) {
       }
     });
 
-    if (!connection.details.outgoingMessages){
+    if (!connection.details.outgoingMessages) {
       await channelService.reply({ connection, event, response, sessionId });
     }
-  
+
     return h.response().code(200);
   }
   catch ({ message, statusCode }) {
-      return new Boom(message, { statusCode });
+    return new Boom(message, { statusCode });
   }
 };
 

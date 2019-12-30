@@ -15,7 +15,7 @@ module.exports = async ({ client, path }) => {
 
         if (registerConfiguration) {
             const exists = await client.indices.exists({ index });
-            if (!exists) {
+            if (!exists.body) {
                 await client.indices.create({ index });
             }
 

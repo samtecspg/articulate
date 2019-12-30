@@ -6,30 +6,26 @@
   "receivedTextField": "text",
   "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/chat-widget.svg",
   "details": {
+
     "title": {
-      "displayName": "Widget title",
-      "description": "Title of the widget window",
-      "type": "string"
-    },
-    "subtitle": {
-      "displayName": "Widget subtitle",
-      "description": "Subtitle of the widget window",
+      "displayName": "Widget Name",
+      "description" : "Display name of the widget",
       "type": "string"
     },
     "senderPlaceHolder": {
-      "displayName": "Input placeholder",
-      "description": "Placeholder users will see in the input of the widget",
-      "type": "string"
+        "displayName": "Input placeholder",
+        "description" : "Placeholder users will see in the input of the widget",
+        "type": "string"
     },
     "outgoingMessages": {
-      "displayName": "Sent responses as soon as they arrive (Multiple responses):",
-      "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
-      "type": "boolean"
+        "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+        "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+        "type": "boolean"
     },
     "waitTimeBetweenMessages": {
-      "displayName": "Time in MS between response messages:",
-      "description": "How much the channel should wait between agent responses?",
-      "type": "number"
+        "displayName": "Time in MS between response messages:",
+        "description": "How much the channel should wait between agent responses?",
+        "type": "number"
     }
   }
 }
