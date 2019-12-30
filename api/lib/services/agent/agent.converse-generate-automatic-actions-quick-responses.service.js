@@ -67,9 +67,28 @@ const getAvailableSayings = async (CSO, agentService) => {
     limit: -1
   });
   sayings = sayings.data.filter(saying => {
-    return saying.keywords && saying.keywords.length > 0;
+    return (
+      saying.keywords &&
+      saying.keywords.length > 0 &&
+      !sayingHasOverlappingKeywords(saying)
+    );
   });
   return await shuffleArray(sayings);
+};
+
+const sayingHasOverlappingKeywords = saying => {
+  var counter = 1;
+  var sayingHasOverlappingKeywords = false;
+  while (
+    counter < Object.keys(saying.keywords).length &&
+    !sayingHasOverlappingKeywords
+  ) {
+    sayingHasOverlappingKeywords =
+      saying.keywords[Object.keys(saying.keywords)[counter]].start <=
+      saying.keywords[Object.keys(saying.keywords)[counter - 1]].end;
+    counter++;
+  }
+  return sayingHasOverlappingKeywords;
 };
 
 const shuffleArray = async array => {
