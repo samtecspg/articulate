@@ -47,6 +47,7 @@ import {
   loadAgent,
   loadAgentSuccess,
   loadCurrentUser,
+  loadCurrentUserError,
   loadServerInfo,
   loadSettings,
   refreshServerInfo,
@@ -73,6 +74,7 @@ class App extends React.Component {
     client: null,
     socketClientConnected: false,
     serverStatusConnected: false,
+    isLoggedIn: !AUTH_ENABLED || !!checkCookie(),
   };
 
   getAgentIdFromPath() {
@@ -86,7 +88,7 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    if ((AUTH_ENABLED && checkCookie()) || !AUTH_ENABLED) {
+    if (this.state.isLoggedIn) {
       this.props.loadCurrentUser();
       this.props.onLoadServerInfo();
       this.props.onLoadSettings();
@@ -123,6 +125,8 @@ class App extends React.Component {
           auth: AUTH_ENABLED ? { headers: { cookie: document.cookie } } : undefined,
         });
       }
+    } else {
+      this.props.loadCurrentUserError();
     }
   }
 
@@ -190,9 +194,9 @@ class App extends React.Component {
     } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
     const disableHeader = this.props.location.pathname.indexOf('discovery') !== -1;
-    //if (!loadingCurrentUser) {
-    //     //  return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
-    //     //}
+    if (!loadingCurrentUser) {
+      return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
+    }
     return disableHeader ? (
       <div>
         <Switch>
@@ -256,7 +260,6 @@ App.propTypes = {
   notifications: PropTypes.array,
   settings: PropTypes.object,
   loadCurrentUser: PropTypes.func,
-  loadingCurrentUser: PropTypes.bool,
   onLoadServerInfo: PropTypes.func,
   onLoadAgent: PropTypes.func,
   onLoadSettings: PropTypes.func,
@@ -264,6 +267,9 @@ App.propTypes = {
   onShareAgent: PropTypes.func,
   conversationBarOpen: PropTypes.bool,
   chatButtonOpen: PropTypes.bool,
+  loadingCurrentUser: PropTypes.bool,
+  onGoToUrl: PropTypes.func,
+  loadCurrentUserError: PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -312,6 +318,12 @@ export function mapDispatchToProps(dispatch) {
     },
     loadCurrentUser: () => {
       dispatch(loadCurrentUser());
+    },
+    loadCurrentUserError: () => {
+      dispatch(loadCurrentUserError());
+    },
+    onGoToUrl: url => {
+      dispatch(push(url));
     },
   };
 }

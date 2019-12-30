@@ -57,7 +57,16 @@ internals.policyHandler = (server, options) => {
                 }));
             }
             const { id: userId } = request.auth.credentials;
-            const User = await redis.factory(MODEL_USER_ACCOUNT, userId);
+            let User = null;
+            try {
+                User = await redis.factory(MODEL_USER_ACCOUNT, userId);
+            }
+            catch (err) {
+                if (err && err.message === 'not found') {
+                    request.cookieAuth.clear();
+                }
+                throw err;
+            }
             const userGroup = User.property(PARAM_GROUPS);
             const routePolicies = request.route.settings.plugins[name] || options.policy;
             Joi.assert(routePolicies, schemas.routeOption, `[${name}] Route option`);
