@@ -7,7 +7,8 @@ module.exports = {
             rocketchatUser: Joi.string().required(),
             rocketchatPassword: Joi.string().required(),
             outgoingMessages: Joi.boolean(),
-            waitTimeBetweenMessages: Joi.number()
+            waitTimeBetweenMessages: Joi.number(),
+            useAgentWelcomeAction: Joi.boolean()
         };
 
         return Joi.validate(details, schema)

@@ -79,6 +79,9 @@ async function converse(agentService, connection, event, channelService){
       ubiquity: {
         connection,
         event
+      },
+      welcomeActionOptions: {
+        useWelcomeActionIfFirstMessage: connection.details.useAgentWelcomeAction
       }
     }
   });
