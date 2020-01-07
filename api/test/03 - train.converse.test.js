@@ -470,6 +470,65 @@ describe('Agent', () => {
 
     });
 
+    it('post /agent/agentId/converse - Ask for required slot and actions with automatic suggestions', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "Is there a automatic quick reply?",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("Enter slot for automatic quick replies");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+        expect(response.result.responses[0].quickResponses[0]).to.be.equal("valueForAutomaticQuickReplies");
+
+        var payload = {
+            sessionId,
+            text: "valueForAutomaticQuickReplies",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("Enter slot for automatic quick replies 2");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(false);
+        expect(response.result.responses[0].quickResponses[0]).to.be.equal("valueForAutomaticQuickReplies2");
+
+        var payload = {
+            sessionId,
+            text: "is there a valueforautomaticquickreplies and valueforautomaticquickreplies2",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("This is the response with automatic quick replies");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+        expect(response.result.responses[0].quickResponses[0].length).to.be.greaterThan(0);
+    });
+
     after(async ({ context }) => {
 
         const { importedAgentId } = context;
