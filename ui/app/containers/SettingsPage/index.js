@@ -1,10 +1,12 @@
-import { CircularProgress, Grid } from '@material-ui/core';
+import {
+  CircularProgress,
+  Grid,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
-import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import ContentHeader from '../../components/ContentHeader';
@@ -18,7 +20,6 @@ import {
   loadAccessPolicyGroups,
   loadSettings,
   removeAccessPolicyGroup,
-  updateSettingsTouched,
   toggleChatButton,
   toggleConversationBar,
   updateAccessPolicyGroup,

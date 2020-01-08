@@ -45,7 +45,6 @@ import {
   toggleChatButton,
   trainAgent,
   untagKeyword,
-  updateSaying,
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -393,7 +392,8 @@ export class DialoguePage extends React.PureComponent {
     const { currentUser } = this.props;
     const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
 
-    return this.props.agent.id && this.props.agentKeywords &&
+    return this.props.agent.id &&
+      this.props.agentKeywords &&
       (this.state.selectedTab === 'actions' ||
         (this.state.selectedTab === 'sayings' && this.props.agentKeywords.length === this.props.totalKeywords) ||
         (this.state.selectedTab === 'keywords' && this.props.agentKeywords.length <= this.state.keywordsPageSize)) ? (
@@ -472,7 +472,6 @@ export class DialoguePage extends React.PureComponent {
               onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
               onSendSayingToAction={this.props.onSendSayingToAction}
               currentSayingsPage={parseInt(this.state.currentSayingsPage)}
-              sayingsPageSize={this.state.sayingsPageSize}
               numberOfSayingsPages={this.state.numberOfSayingsPages}
               changeSayingsPage={this.changeSayingsPage}
               moveSayingsPageBack={this.moveSayingsPageBack}
@@ -484,7 +483,6 @@ export class DialoguePage extends React.PureComponent {
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
               filter={this.state.filter}
-              onUpdateSayingData={this.props.onUpdateSayingData}
               isReadOnly={isReadOnly}
             />
           }
@@ -532,7 +530,6 @@ DialoguePage.propTypes = {
   keywords: PropTypes.array,
   actionsPage: PropTypes.array,
   onChangeSayingCategory: PropTypes.func,
-  onUpdateSayingData: PropTypes.func,
   onShowChatButton: PropTypes.func,
   currentUser: PropTypes.object,
 };
@@ -641,9 +638,6 @@ function mapDispatchToProps(dispatch) {
     },
     onResetSayings: () => {
       dispatch(resetSayings());
-    },
-    onUpdateSayingData: (saying, field, value) => {
-      dispatch(updateSaying(saying, field, value));
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));

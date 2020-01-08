@@ -7,6 +7,7 @@
  *
  */
 
+import { CircularProgress } from '@material-ui/core';
 import Nes from 'nes';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -219,8 +220,7 @@ class App extends React.Component {
           demoMode={demoMode}
           onShareAgent={this.props.onShareAgent}
         />
-        <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen}>
-          onLogoutUser={this.props.onLogoutUser}
+        <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen} onLogoutUser={this.props.onLogoutUser}>
           <Switch>
             <PrivateRoute exact path="/" component={AgentsPage} isAuthEnabled={AUTH_ENABLED} />
             <PrivateRoute exact path="/agent/:id" component={AgentPage} isAuthEnabled={AUTH_ENABLED} />

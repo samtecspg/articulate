@@ -1,6 +1,10 @@
 import { push } from 'react-router-redux';
-import { call, put, select, takeLatest } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
+import {
+  call,
+  put,
+  select,
+  takeLatest,
+} from 'redux-saga/effects';
 import {
   ROUTE_AGENT,
   ROUTE_CONNECTION,
@@ -14,7 +18,10 @@ import {
   ROUTE_WEBHOOK,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
-import { getSettings, putSetting } from '../SettingsPage/saga';
+import {
+  getSettings,
+  putSetting,
+} from '../SettingsPage/saga';
 import {
   loadAgentError,
   loadAgentSuccess,
@@ -32,10 +39,6 @@ import {
   trainAgentError,
   updateSettingsError,
   updateSettingSuccess,
-  logoutUserSuccess,
-  logoutUserError,
-  toggleConversationBar,
-  toggleChatButton,
 } from './actions';
 import {
   LOAD_AGENT,
@@ -49,7 +52,12 @@ import {
   TRAIN_AGENT,
   UPDATE_SETTING,
 } from './constants';
-import { makeSelectAgent, makeSelectConnection, makeSelectSessionId, makeSelectSettings } from './selectors';
+import {
+  makeSelectAgent,
+  makeSelectConnection,
+  makeSelectSessionId,
+  makeSelectSettings,
+} from './selectors';
 
 export function* postConverse(payload) {
   const agent = yield select(makeSelectAgent());

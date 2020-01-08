@@ -141,6 +141,7 @@ import {
   IMPORT_CATEGORY,
   IMPORT_CATEGORY_ERROR,
   IMPORT_CATEGORY_SUCCESS,
+  LOAD_ACCESS_CONTROL,
   LOAD_ACCESS_CONTROL_SUCCESS,
   LOAD_ACTION,
   LOAD_ACTION_ERROR,
@@ -220,6 +221,7 @@ import {
   LOAD_STARRED_SAYINGS,
   LOAD_STARRED_SAYINGS_ERROR,
   LOAD_STARRED_SAYINGS_SUCCESS,
+  LOAD_USER,
   LOAD_USER_ERROR,
   LOAD_USER_SUCCESS,
   LOAD_USERS,
@@ -2554,13 +2556,6 @@ export function addNewActionResponseQuickResponse(response) {
   };
 }
 
-export function deleteNewActionResponseQuickResponse(index) {
-  return {
-    type: DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
-    index,
-  };
-}
-
 export function removeAccessPolicyGroup({ groupName }) {
   return {
     type: REMOVE_ACCESS_CONTROL,
@@ -2578,14 +2573,7 @@ export function removeAccessPolicyGroupError(error) {
 
 export function removeAccessPolicyGroupSuccess() {
   return {
-    type: REMOVE_ACCESS_CONTROL_SUCCESS
-  };
-}
-
-export function addNewActionResponseQuickResponse(response) {
-  return {
-    type: ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
-    response,
+    type: REMOVE_ACCESS_CONTROL_SUCCESS,
   };
 }
 

@@ -32,7 +32,6 @@ class AgentModel {
       modificationDate: Joi.string(),
       parameters: Joi.object(),
       enableDiscoverySheet: Joi.boolean(),
-      enableDiscoverySheet: Joi.boolean(),
       generateSlotsQuickResponses: Joi.boolean(),
       accessPolicies: Joi.object(),
       generateSlotsQuickResponsesMax: Joi.number(),

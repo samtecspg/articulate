@@ -79,8 +79,6 @@ class AgentValidate {
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     parameters: Joi.object(),
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
-                    accessPolicies: AgentSchema.accessPolicies
-                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
                     generateSlotsQuickResponses: AgentSchema.generateSlotsQuickResponses,
                     accessPolicies: AgentSchema.accessPolicies,
                     generateSlotsQuickResponsesMax: AgentSchema.generateSlotsQuickResponsesMax,
@@ -557,7 +555,7 @@ class AgentValidate {
                     [PARAM_FILTER]: Joi
                         .object()
                         .optional()
-                        .description('Values to filter the the results (experimental)'),
+                        .description('Values to filter the the results (experimental)')
                 };
             })()
         };
@@ -1059,12 +1057,12 @@ class AgentValidate {
                     deletedValues: Joi.array().items({
                         synonym: SayingKeywordSchema.value,
                         keywordName: SayingKeywordSchema.keyword,
-                        keywordId: SayingKeywordSchema.keywordId,
+                        keywordId: SayingKeywordSchema.keywordId
                     }),
                     updatedValues: Joi.array().items({
                         synonym: SayingKeywordSchema.value,
                         keywordName: SayingKeywordSchema.keyword,
-                        keywordId: SayingKeywordSchema.keywordId,
+                        keywordId: SayingKeywordSchema.keywordId
                     })
                 };
             })()
