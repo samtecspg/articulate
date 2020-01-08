@@ -29,7 +29,7 @@ const LOGOUT_ROUTE = {
     path: '/auth/logout',
     config: {
         auth: {
-            mode: 'try',
+            mode: 'optional',
             strategy: 'simple'
         },
         handler: async (request) => {
