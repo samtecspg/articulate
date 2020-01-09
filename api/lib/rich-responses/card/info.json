@@ -1,0 +1,14 @@
+{
+    "name": "Card Carousel",
+    "type": "cardsCarousel",
+    "description": "Clickable cards to display relevant information to the user",
+    "documentation": null,
+    "defaultPayload": [
+        {
+            "title": "Card 1",
+            "descption": "This is a card",
+            "imageURL": "<card image url>",
+            "linkURL": "<go to this link on click>"
+        }
+    ]
+}

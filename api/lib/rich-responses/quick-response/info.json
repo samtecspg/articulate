@@ -1,0 +1,7 @@
+{
+    "name": "Quick Responses",
+    "type": "quickResponses",
+    "description": "Array of strings that will show as clickable buttons to let the user quickly answer to the agent",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/web-demo/README.MD",
+    "defaultPayload": ["Quick response 1", "Quick Response 2", "Quick Response 3"]
+}

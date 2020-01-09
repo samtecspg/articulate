@@ -64,6 +64,7 @@ export const ROUTE_IDENTIFY_KEYWORDS = 'identifyKeywords';
 export const RECOGNIZE_UPDATED_KEYWORDS = 'recognizeUpdatedKeywords';
 export const ROUTE_CONVERSE = 'converse';
 export const ROUTE_CHANNEL = 'channel';
+export const ROUTE_RICH_RESPONSE = 'rich-response';
 export const ROUTE_CONNECTION = 'connection';
 export const ROUTE_EXTERNAL = 'external';
 export const ROUTE_USER_ACCOUNT = 'user';

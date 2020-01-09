@@ -1,0 +1,7 @@
+{
+    "name": "Video",
+    "type": "video",
+    "description": "Video message that will be playable by the user.",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/README.MD",
+    "defaultPayload": "http://example/video.mp4"
+}
