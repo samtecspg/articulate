@@ -1,11 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 8.78">
-    <defs>
-        <style>.cls-1{fill:#4e4e4e;}</style>
-    </defs>
-    <title>button-icon</title>
-    <g id="Layer_2" data-name="Layer 2">
-        <g id="Layer_1-2" data-name="Layer 1">
-            <path class="cls-1" d="M11.07,0H4A4,4,0,0,0,0,4v.83a4,4,0,0,0,4,4h7.08a4,4,0,0,0,4-4V4A4,4,0,0,0,11.07,0ZM4,1.5h7.08a2.49,2.49,0,0,1,0,5H4a2.49,2.49,0,0,1,0-5Z" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="14px" viewBox="0 0 15 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="button-icon" transform="translate(0.000000, 2.600000)" fill="#4E4E4E" fill-rule="nonzero">
+            <path d="M11.07,-1.25179302e-05 L4,-1.25179302e-05 C1.790861,-1.25179302e-05 0,1.790861 0,4 L0,4.83 C0,7.039139 1.790861,8.83 4,8.83 L11.08,8.83 C13.289139,8.83 15.08,7.039139 15.08,4.83 L15.08,4 C15.08,2.93739915 14.6572035,1.9184651 13.9048938,1.16803146 C13.1525841,0.417597826 12.1325975,-0.00265650212 11.07,-1.25179302e-05 Z M4,1.5 L11.08,1.5 C12.4607119,1.5 13.58,2.61928813 13.58,4 C13.58,5.38071187 12.4607119,6.5 11.08,6.5 L4,6.5 C2.61928813,6.5 1.5,5.38071187 1.5,4 C1.5,2.61928813 2.61928813,1.5 4,1.5 Z" id="Shape"></path>
         </g>
     </g>
 </svg>

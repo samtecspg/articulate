@@ -36,6 +36,7 @@ import {
   makeSelectLoading,
   makeSelectActionTouched,
   makeSelectNewActionResponse,
+  makeSelectRichResponses,
 } from '../App/selectors';
 
 import {
@@ -77,7 +78,8 @@ import {
   editSlotTextPrompt,
   toggleChatButton,
   addNewActionResponseQuickResponse,
-  deleteNewActionResponseQuickResponse
+  deleteNewActionResponseQuickResponse,
+  loadRichResponses
 } from '../App/actions';
 
 const styles = {
@@ -380,7 +382,7 @@ export class ActionPage extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, richResponses } = this.props;
     return this.props.agent.id &&
       (this.props.saying.keywords.length === 0 ||
         (this.props.saying.keywords.length > 0 &&
@@ -508,6 +510,7 @@ export class ActionPage extends React.Component {
                 onGoToUrl={this.props.onGoToUrl}
                 onAddNewActionResponseQuickResponse={this.props.onAddNewActionResponseQuickResponse}
                 onDeleteNewActionResponseQuickResponse={this.props.onDeleteNewActionResponseQuickResponse}
+                richResponses={richResponses}
               />
             }
             onChangeTab={this.onChangeTab}
@@ -572,6 +575,7 @@ ActionPage.propTypes = {
   onShowChatButton: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -587,6 +591,7 @@ const mapStateToProps = createStructuredSelector({
   touched: makeSelectActionTouched(),
   newResponse: makeSelectNewActionResponse(),
   agentFilteredActions: makeSelectFilteredActions(),
+  richResponses: makeSelectRichResponses(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -596,6 +601,7 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadAction: (actionId, isDuplicate) => {
       dispatch(loadAction(actionId, isDuplicate));
+      dispatch(loadRichResponses());
     },
     onLoadKeywords: () => {
       dispatch(loadKeywords());

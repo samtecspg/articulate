@@ -177,7 +177,7 @@ class ResponseForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, action, postFormat } = this.props;
+    const { classes, intl, action, postFormat, richResponses } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -319,6 +319,7 @@ class ResponseForm extends React.Component {
                                   this.props.agentFilteredActions
                                 }
                                 onGoToUrl={this.props.onGoToUrl}
+                                richResponses={richResponses}
                               />
                             </TableCell>
                           </TableRow>
@@ -453,6 +454,7 @@ ResponseForm.propTypes = {
   agentId: PropTypes.string,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

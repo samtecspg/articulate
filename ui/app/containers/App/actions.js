@@ -88,6 +88,9 @@ import {
   DELETE_ACTION_RESPONSE,
   DELETE_ACTION_SAYING,
   DELETE_ACTION_SUCCESS,
+  LOAD_RICH_RESPONSES,
+  LOAD_RICH_RESPONSES_ERROR,
+  LOAD_RICH_RESPONSES_SUCCESS,
   DELETE_AGENT,
   DELETE_AGENT_ERROR,
   DELETE_AGENT_FALLBACK,
@@ -1803,6 +1806,27 @@ export function changeQuickResponse(slotIndex, quickResponseIndex, response) {
     slotIndex,
     quickResponseIndex,
     response,
+  };
+}
+
+export function loadRichResponses() {
+  return {
+    type: LOAD_RICH_RESPONSES,
+    apiCall: true,
+  };
+}
+
+export function loadRichResponsesError(error) {
+  return {
+    type: LOAD_RICH_RESPONSES_ERROR,
+    error,
+  };
+}
+
+export function loadRichResponsesSuccess(richResponses) {
+  return {
+    type: LOAD_RICH_RESPONSES_SUCCESS,
+    richResponses,
   };
 }
 

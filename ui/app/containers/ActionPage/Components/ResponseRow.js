@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Grid, Tooltip, Select, MenuItem } from '@material-ui/core';
+import { Grid, Tooltip, Select, MenuItem, Menu } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ContentEditable from 'react-contenteditable';
 
@@ -10,7 +10,9 @@ import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
 import richResponsesIcon from '../../../images/rich-responses-icon.svg';
+import pencilIcon from '../../../images/pencil-icon.svg';
 import FilterSelect from '../../../components/FilterSelect';
+import RichResponsesIcons from '../../../components/RichResponsesIcons';
 import messages from '../messages';
 
 const styles = {
@@ -71,6 +73,18 @@ const styles = {
     border: 'none',
     padding: '0px',
   },
+  richResponsesActions: {
+    float: 'right',
+  },
+  responseTypeActiveIndicator: {
+    height: '10px',
+    width: '10px',
+    borderRadius: '50px',
+    display: 'inline-flex',
+    position: 'relative',
+    bottom: '2px',
+    marginRight: '5px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -88,7 +102,7 @@ class ResponseRow extends React.Component {
   };
 
   render() {
-    const { classes, action, response, responseIndex, intl } = this.props;
+    const { classes, action, response, responseIndex, intl, richResponses } = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -159,22 +173,24 @@ class ResponseRow extends React.Component {
               src={addActionIcon}
             />
           </Tooltip>
-          <Tooltip
-            key="richResponses"
-            title={intl.formatMessage(messages.richResponses)}
-            placement="top"
-          >
-            <img
-              onClick={evt =>
-                this.setState({
-                  anchorRichResponsesEl: evt.target,
-                  openRichResponses: true,
-                })
-              }
-              className={classes.icon}
-              src={richResponsesIcon}
-            />
-          </Tooltip>
+          {richResponses &&
+            <Tooltip
+              key="richResponses"
+              title={intl.formatMessage(messages.richResponses)}
+              placement="top"
+            >
+              <img
+                onClick={evt =>
+                  this.setState({
+                    anchorRichResponsesEl: evt.target,
+                    openRichResponses: true,
+                  })
+                }
+                className={classes.icon}
+                src={richResponsesIcon}
+              />
+            </Tooltip>
+          }
           <Tooltip
             key="copyResponse"
             title={intl.formatMessage(messages.copyResponses)}
@@ -202,23 +218,51 @@ class ResponseRow extends React.Component {
               src={trashIcon}
             />
           </Tooltip>
-          <Select
-            open={this.state.openRichResponses}
-            onClose={() => {
-              this.setState({
-                openRichResponses: false,
-                anchorRichResponsesEl: null
-              });
-            }}
-            MenuProps={{
-              anchorEl: this.state.anchorRichResponsesEl
-            }}
-            style={{
-              display: 'none'
-            }}
-          >
-
-          </Select>
+          {
+            richResponses &&
+            <Select
+              value=''
+              open={this.state.openRichResponses}
+              onClose={() => {
+                this.setState({
+                  openRichResponses: false,
+                  anchorRichResponsesEl: null
+                });
+              }}
+              MenuProps={{
+                anchorEl: this.state.anchorRichResponsesEl,
+                PaperProps: {
+                  style: {
+                    minWidth: '250px'
+                  }
+                }
+              }}
+              style={{
+                display: 'none'
+              }}
+            >
+              {
+                Object.keys(richResponses).map((richResponse, index) => {
+                  return (
+                    <MenuItem value={richResponses[richResponse].type} key={`richResponseType_${index}`}>
+                      <Grid container>
+                        <Grid item xs={2}>
+                          <div className={classes.responseTypeActiveIndicator} style={{ backgroundColor: "#00c582" }}></div>
+                          <RichResponsesIcons style={{height: '15px'}} logo={richResponses[richResponse].type} />
+                        </Grid>
+                        <Grid item xs={10}>
+                          {richResponses[richResponse].name}
+                          <div className={classes.richResponsesActions}>
+                            <img className={classes.addActionIcon} src={pencilIcon} />
+                          </div>
+                        </Grid>
+                      </Grid>
+                    </MenuItem>
+                  )
+                })
+              }
+            </Select>
+          }
           <FilterSelect
             showRecent
             value="select"
@@ -303,6 +347,7 @@ ResponseRow.propTypes = {
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
   agentId: PropTypes.string,
+  richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 };
 
 export default injectIntl(withStyles(styles)(ResponseRow));

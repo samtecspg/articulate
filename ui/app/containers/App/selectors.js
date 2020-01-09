@@ -315,6 +315,12 @@ const makeSelectNewSayingActions = () =>
   );
 
 /* Actions */
+const makeSelectRichResponses = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.richResponses,
+  );
+
 const makeSelectActionsPage = () =>
   createSelector(
     selectGlobal,
@@ -571,4 +577,5 @@ export {
   makeSelectLoadingKeywordExamplesUpdate,
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
+  makeSelectRichResponses,
 };

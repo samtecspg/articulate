@@ -255,7 +255,10 @@ import {
   LOGIN_USER_SUCCESS,
   REFRESH_KEYWORD_EXAMPLE_UPDATE,
   ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
-  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  LOAD_RICH_RESPONSES,
+  LOAD_RICH_RESPONSES_ERROR,
+  LOAD_RICH_RESPONSES_SUCCESS
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -343,6 +346,7 @@ const initialState = Immutable({
   filteredCategories: [],
   filteredActions: [],
   channels: false,
+  richResponses: false,
   connections: false,
   agents: false,
   currentAgent: {
@@ -1921,6 +1925,21 @@ function appReducer(state = initialState, action) {
           }),
         )
         .set('actionTouched', true);
+    case LOAD_RICH_RESPONSES:
+      return state
+        .set('richResponses', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_RICH_RESPONSES_ERROR:
+      return state
+        .set('richResponses', false)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_RICH_RESPONSES_SUCCESS:
+      return state
+        .set('richResponses', action.richResponses)
+        .set('loading', false)
+        .set('error', false);
 
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers =>

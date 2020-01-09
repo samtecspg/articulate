@@ -6,6 +6,7 @@ import {
   ROUTE_AGENT,
   ROUTE_POST_FORMAT,
   ROUTE_WEBHOOK,
+  ROUTE_RICH_RESPONSE,
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -21,6 +22,8 @@ import {
   loadFilteredActionsuccess,
   loadFilteredActionsError,
   updateActionSuccess,
+  loadRichResponsesSuccess,
+  loadRichResponsesError
 } from '../App/actions';
 import {
   ADD_ACTION,
@@ -30,6 +33,7 @@ import {
   LOAD_KEYWORDS,
   UPDATE_ACTION,
   LOAD_FILTERED_ACTIONS,
+  LOAD_RICH_RESPONSES,
 } from '../App/constants';
 import {
   makeSelectAction,
@@ -365,6 +369,17 @@ export function* deleteAction(payload) {
   }
 }
 
+export function* getRichResponses(payload) {
+  const { api } = payload;
+
+  try {
+    const response = yield call(api.get, toAPIPath([ROUTE_RICH_RESPONSE]));
+    yield put(loadRichResponsesSuccess(response));
+  } catch (err) {
+    yield put(loadRichResponsesError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_ACTION, getAction);
   yield takeLatest(LOAD_ACTIONS, getActions);
@@ -373,4 +388,5 @@ export default function* rootSaga() {
   yield takeLatest(UPDATE_ACTION, putAction);
   yield takeLatest(DELETE_ACTION, deleteAction);
   yield takeLatest(LOAD_FILTERED_ACTIONS, getActions);
+  yield takeLatest(LOAD_RICH_RESPONSES, getRichResponses);
 }
