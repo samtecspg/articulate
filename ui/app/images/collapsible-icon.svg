@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12.77 14.33">
+    <defs>
+        <style>.cls-1{fill:#4e4e4e;}</style>
+    </defs>
+    <title>collapsible-icon</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+            <path class="cls-1" d="M12,0H.75A.76.76,0,0,0,0,.75V13.58a.76.76,0,0,0,.75.75H12a.76.76,0,0,0,.75-.75V.75A.76.76,0,0,0,12,0ZM1.5,5V4h9.77V5Zm0-3.49h9.77v1H1.5Zm9.77,11.33H1.5V6.49H5.63V9.27l-.51-.51A.75.75,0,1,0,4.06,9.82l1.79,1.79a.75.75,0,0,0,1.06,0L8.7,9.82a.74.74,0,0,0,0-1.06.75.75,0,0,0-1.06,0l-.51.51V6.49h4.14Z" />
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 8.78">
+    <defs>
+        <style>.cls-1{fill:#4e4e4e;}</style>
+    </defs>
+    <title>button-icon</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+            <path class="cls-1" d="M11.07,0H4A4,4,0,0,0,0,4v.83a4,4,0,0,0,4,4h7.08a4,4,0,0,0,4-4V4A4,4,0,0,0,11.07,0ZM4,1.5h7.08a2.49,2.49,0,0,1,0,5H4a2.49,2.49,0,0,1,0-5Z" />
+        </g>
+    </g>
+</svg>
