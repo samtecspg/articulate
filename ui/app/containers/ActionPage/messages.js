@@ -202,9 +202,21 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.SlotForm.slotIsList',
     defaultMessage: 'Is List?',
   },
+  addAction: {
+    id: 'app.containers.ActionPage.component.ResponseRow.addAction',
+    defaultMessage: 'Chain an action to this response',
+  },
+  richResponses: {
+    id: 'app.containers.ActionPage.component.ResponseRow.richResponses',
+    defaultMessage: 'Add rich responses to this response',
+  },
   copyResponses: {
     id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
     defaultMessage: 'Copy response in the response input',
+  },
+  deleteResponse: {
+    id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
+    defaultMessage: 'Delete this response',
   },
   copyTextPrompt: {
     id: 'app.containers.ActionPage.component.ResponseRow.copyTextPrompt',

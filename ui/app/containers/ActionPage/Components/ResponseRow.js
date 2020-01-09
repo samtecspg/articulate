@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Grid, Tooltip } from '@material-ui/core';
+import { Grid, Tooltip, Select, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ContentEditable from 'react-contenteditable';
 
@@ -9,6 +9,7 @@ import { intlShape, injectIntl } from 'react-intl';
 import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
+import richResponsesIcon from '../../../images/rich-responses-icon.svg';
 import FilterSelect from '../../../components/FilterSelect';
 import messages from '../messages';
 
@@ -81,7 +82,9 @@ class ResponseRow extends React.Component {
 
   state = {
     openActions: false,
+    openRichResponses: false,
     anchorEl: null,
+    anchorRichResponsesEl: null,
   };
 
   render() {
@@ -140,16 +143,38 @@ class ResponseRow extends React.Component {
               </div>
             );
           })}
-          <img
-            onClick={evt =>
-              this.setState({
-                anchorEl: evt.target,
-                openActions: true,
-              })
-            }
-            className={classes.addActionIcon}
-            src={addActionIcon}
-          />
+          <Tooltip
+            key="addAction"
+            title={intl.formatMessage(messages.addAction)}
+            placement="top"
+          >
+            <img
+              onClick={evt =>
+                this.setState({
+                  anchorEl: evt.target,
+                  openActions: true,
+                })
+              }
+              className={classes.addActionIcon}
+              src={addActionIcon}
+            />
+          </Tooltip>
+          <Tooltip
+            key="richResponses"
+            title={intl.formatMessage(messages.richResponses)}
+            placement="top"
+          >
+            <img
+              onClick={evt =>
+                this.setState({
+                  anchorRichResponsesEl: evt.target,
+                  openRichResponses: true,
+                })
+              }
+              className={classes.icon}
+              src={richResponsesIcon}
+            />
+          </Tooltip>
           <Tooltip
             key="copyResponse"
             title={intl.formatMessage(messages.copyResponses)}
@@ -163,14 +188,37 @@ class ResponseRow extends React.Component {
               src={copyIcon}
             />
           </Tooltip>
-          <img
+          <Tooltip
             key="deleteResponse"
-            onClick={() => {
-              this.props.onDeleteResponse(responseIndex);
+            title={intl.formatMessage(messages.deleteResponse)}
+            placement="top"
+          >
+            <img
+              key="deleteResponse"
+              onClick={() => {
+                this.props.onDeleteResponse(responseIndex);
+              }}
+              className={classes.icon}
+              src={trashIcon}
+            />
+          </Tooltip>
+          <Select
+            open={this.state.openRichResponses}
+            onClose={() => {
+              this.setState({
+                openRichResponses: false,
+                anchorRichResponsesEl: null
+              });
             }}
-            className={classes.icon}
-            src={trashIcon}
-          />
+            MenuProps={{
+              anchorEl: this.state.anchorRichResponsesEl
+            }}
+            style={{
+              display: 'none'
+            }}
+          >
+
+          </Select>
           <FilterSelect
             showRecent
             value="select"
