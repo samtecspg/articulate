@@ -174,6 +174,7 @@ class ResponseForm extends React.Component {
 
   render() {
     const { classes, intl, action, postFormat, agentSettings, isReadOnly } = this.props;
+    debugger;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -241,7 +242,7 @@ class ResponseForm extends React.Component {
                       shrink: true,
                     }}
                     inputProps={{
-                      disabled: { isReadOnly },
+                      disabled: isReadOnly,
                       style: {
                         border: 'none',
                       },
@@ -319,6 +320,7 @@ class ResponseForm extends React.Component {
                       shrink: true,
                     }}
                     inputProps={{
+                      disabled: isReadOnly,
                       style: {
                         border: 'none',
                       },
@@ -338,75 +340,7 @@ class ResponseForm extends React.Component {
                         </InputAdornment>
                       ),
                     }}
-                    helperText={agentSettings.generateActionsQuickResponses? intl.formatMessage(messages.automaticQuickResponsesActivated) : ''}
-                    error={
-                      this.props.errorState
-                        ? this.props.errorState.quickResponses
-                        : false
-                    }
-                  />
-                  {action.responsesQuickResponses && action.responsesQuickResponses.length > 0 ? (
-                    <Table className={classes.table}>
-                      <TableBody>
-                        {action.responsesQuickResponses.map((quickResponse, index) => (
-                          <TableRow key={`${quickResponse}_${index}`}>
-                            <TableCell>{quickResponse}</TableCell>
-                            <TableCell className={classes.deleteCell}>
-                              <img
-                                onClick={() => {
-                                  this.props.onDeleteNewActionResponseQuickResponse(index);
-                                }}
-                                className={classes.deleteIcon}
-                                src={trashIcon}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  ) : null}
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="newActionResponseQuickResponse"
-                    label={intl.formatMessage(messages.actionResponseQuickResponseValue)}
-                    value={this.state.currentNewActionResponseQuickResponse}
-                    placeholder={intl.formatMessage(
-                      messages.newActionResponseQuickResponsePlaceholder,
-                    )}
-                    onKeyPress={ev => {
-                      if (ev.key === 'Enter') {
-                        this.addCurrentNewActionResponseQuickResponseToListFromEvent(ev);
-                      }
-                    }}
-                    onChange={ev => {
-                      this.setState({ currentNewActionResponseQuickResponse: ev.target.value });
-                    }}
-                    margin="normal"
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      style: {
-                        border: 'none',
-                      },
-                    }}
-                    InputProps={{
-                      className: classes.newQuickResponseInputContainer,
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <span
-                            className={classes.responseEnter}
-                            onClick={ev => {
-                              this.addCurrentNewActionResponseQuickResponseToListFromEvent(ev);
-                            }}
-                          >
-                            {intl.formatMessage(messages.responseEnter)}
-                          </span>
-                        </InputAdornment>
-                      ),
-                    }}
+                    helperText={agentSettings.generateActionsQuickResponses ? intl.formatMessage(messages.automaticQuickResponsesActivated) : ''}
                     error={
                       this.props.errorState
                         ? this.props.errorState.quickResponses
@@ -487,7 +421,7 @@ ResponseForm.propTypes = {
   isReadOnly: PropTypes.bool,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
-  agentSettings : PropTypes.object,
+  agentSettings: PropTypes.object,
 };
 
 ResponseForm.defaultProps = {
