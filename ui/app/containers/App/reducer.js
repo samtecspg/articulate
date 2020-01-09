@@ -358,6 +358,7 @@ const initialState = Immutable({
     enableModelsPerCategory: false,
     multiCategory: false,
     fallbackAction: '',
+    welcomeAction: '',
     categoryClassifierThreshold: 50,
     parameters: {},
   },
@@ -375,6 +376,7 @@ const initialState = Immutable({
     enableModelsPerCategory: false,
     multiCategory: false,
     fallbackAction: '',
+    welcomeAction: '',
     categoryClassifierThreshold: 50,
     parameters: {},
   },
@@ -849,6 +851,9 @@ function appReducer(state = initialState, action) {
         .setIn(
           ['agent', 'fallbackAction'],
           state.settings.defaultaFallbackActionName,
+        ).setIn(
+          ['agent', 'welcomeAction'],
+          state.settings.defaultWelcomeActionName,
         )
         .setIn(['agentSettings', 'rasaURL'], state.settings.rasaURL)
         .setIn(

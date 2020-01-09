@@ -140,9 +140,9 @@ class Form extends React.Component {
           {this.props.agent.gravatar === ''
             ? null
             : gravatars[this.props.agent.gravatar - 1]({
-                color: this.props.agent.uiColor,
-                className: classes.agentIcon,
-              })}
+              color: this.props.agent.uiColor,
+              className: classes.agentIcon,
+            })}
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />
@@ -277,6 +277,7 @@ class Form extends React.Component {
               newAgent={this.props.newAgent}
               onGoToUrl={this.props.onGoToUrl}
               defaultaFallbackActionName={this.props.defaultaFallbackActionName}
+              defaultWelcomeActionName={this.props.defaultWelcomeActionName}
             />
           )}
           {this.state.selectedTab === 1 && (
@@ -346,6 +347,7 @@ Form.propTypes = {
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
   defaultaFallbackActionName: PropTypes.string,
+  defaultWelcomeActionName: PropTypes.string,
   onAddNewParameter: PropTypes.func,
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,

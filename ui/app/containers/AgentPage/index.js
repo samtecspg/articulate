@@ -88,6 +88,7 @@ export class AgentPage extends React.PureComponent {
     errorState: {
       agentName: false,
       fallbackAction: false,
+      welcomeAction: false,
       webhookKey: false,
       webhookUrl: false,
       rasaURL: false,
@@ -434,6 +435,9 @@ export class AgentPage extends React.PureComponent {
               defaultaFallbackActionName={
                 this.props.settings.defaultaFallbackActionName
               }
+              defaultWelcomeActionName={
+                this.props.settings.defaultWelcomeActionName
+              }
               onAddNewParameter={this.props.onAddNewParameter}
               onDeleteParameter={this.props.onDeleteParameter}
               onChangeParameterName={this.props.onChangeParameterName}
@@ -449,10 +453,10 @@ export class AgentPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
-    );
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
+        />
+      );
   }
 }
 

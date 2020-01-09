@@ -13,7 +13,8 @@ module.exports = {
               TwilioJoi.string().phoneNumber({ defaultCountry: 'US', format: 'e164' })
             ),
             outgoingMessages: Joi.boolean(),
-            waitTimeBetweenMessages: Joi.number()
+            waitTimeBetweenMessages: Joi.number(),
+            useAgentWelcomeAction: Joi.boolean(),
         }
 
         return Joi.validate(details, schema)

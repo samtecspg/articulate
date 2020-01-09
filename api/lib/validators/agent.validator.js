@@ -75,6 +75,7 @@ class AgentValidate {
                     modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     fallbackAction: AgentSchema.fallbackAction,
+                    welcomeAction: AgentSchema.welcomeAction,
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     parameters: Joi.object()
@@ -269,6 +270,7 @@ class AgentValidate {
                     multiCategory: AgentSchema.multiCategory,
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold,
                     fallbackAction: AgentSchema.fallbackAction,
+                    welcomeAction: AgentSchema.welcomeAction,
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining.allow(''),
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -869,6 +871,7 @@ class AgentValidate {
                     modifiersRecognizer: AgentSchema.modifiersRecognizer,
                     modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
                     fallbackAction: AgentSchema.fallbackAction,
+                    welcomeAction: AgentSchema.welcomeAction,
                     useWebhook: AgentSchema.useWebhook.required(),
                     multiCategory: AgentSchema.multiCategory.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),

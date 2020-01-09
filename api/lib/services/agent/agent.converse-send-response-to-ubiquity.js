@@ -18,6 +18,7 @@ module.exports = async function ({ actionData, CSO }) {
         fulfilled: CSO.response.fulfilled,
         actions: CSO.response.actions ? CSO.response.actions : [],
         isFallback: CSO.response.isFallback,
+        isWelcome: CSO.response.isWelcome,
         quickResponses: CSO.response.quickResponses
     };
 

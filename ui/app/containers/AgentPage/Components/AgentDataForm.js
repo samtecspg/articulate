@@ -78,6 +78,7 @@ class AgentDataForm extends React.Component {
 
   state = {
     openActions: false,
+    openWelcomeActions: false,
     displayColorPicker: false,
   };
 
@@ -278,10 +279,10 @@ class AgentDataForm extends React.Component {
                   evt.target.value === ''
                     ? this.props.onChangeCategoryClassifierThreshold(0)
                     : evt.target.value <= 100 && evt.target.value >= 0
-                    ? this.props.onChangeCategoryClassifierThreshold(
+                      ? this.props.onChangeCategoryClassifierThreshold(
                         evt.target.value,
                       )
-                    : false;
+                      : false;
                 }}
                 fullWidth
                 InputLabelProps={{
@@ -300,7 +301,7 @@ class AgentDataForm extends React.Component {
                 type="number"
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
+            <Grid item lg={3} md={12} sm={12} xs={12}>
               <FormControl margin="normal" fullWidth>
                 <InputLabel focused={this.state.openActions}>
                   {intl.formatMessage(messages.fallbackTextField)}
@@ -332,10 +333,10 @@ class AgentDataForm extends React.Component {
                       {this.props.defaultaFallbackActionName}
                     </MenuItem>
                   ) : (
-                    <MenuItem value="create">
-                      <FormattedMessage {...messages.newAction} />
-                    </MenuItem>
-                  )}
+                      <MenuItem value="create">
+                        <FormattedMessage {...messages.newAction} />
+                      </MenuItem>
+                    )}
                   {this.props.agentActions.map(action => (
                     <MenuItem key={action.id} value={action.actionName}>
                       <Grid container justify="space-between">
@@ -349,7 +350,7 @@ class AgentDataForm extends React.Component {
                               onClick={() => {
                                 this.props.onGoToUrl(
                                   `/agent/${this.props.agent.id}/action/${
-                                    action.id
+                                  action.id
                                   }`,
                                 );
                               }}
@@ -367,6 +368,81 @@ class AgentDataForm extends React.Component {
                 </FormHelperText>
               </FormControl>
             </Grid>
+
+
+
+            <Grid item lg={3} md={12} sm={12} xs={12}>
+              <FormControl margin="normal" fullWidth>
+                <InputLabel focused={this.state.openWelcomeActions}>
+                  {intl.formatMessage(messages.welcomeTextField)}
+                </InputLabel>
+                <Select
+                  id="welcomeAction"
+                  value={agent.welcomeAction}
+                  label={intl.formatMessage(messages.welcomeTextField)}
+                  onChange={evt => {
+                    if (evt.target.value === 'create') {
+                      this.props.onGoToUrl(`/agent/${agent.id}/action/create`);
+                    } else {
+                      this.props.onChangeAgentData(
+                        'welcomeAction',
+                        evt.target.value,
+                      );
+                    }
+                  }}
+                  open={this.state.openWelcomeActions}
+                  onOpen={() => {
+                    this.setState({ openWelcomeActions: true });
+                  }}
+                  onClose={() => {
+                    this.setState({ openWelcomeActions: false });
+                  }}
+                >
+                  {this.props.newAgent ? (
+                    <MenuItem value={this.props.defaultWelcomeActionName}>
+                      {this.props.defaultWelcomeActionName}
+                    </MenuItem>
+                  ) : (
+                      <MenuItem value="create">
+                        <FormattedMessage {...messages.newAction} />
+                      </MenuItem>
+                    )}
+                  {this.props.agentActions.map(action => (
+                    <MenuItem key={action.id} value={action.actionName}>
+                      <Grid container justify="space-between">
+                        <div className={classes.categoryDataContainer}>
+                          <span>{action.actionName}</span>
+                        </div>
+                        {this.state.openWelcomeActions ? (
+                          <div className={classes.categoryDataContainer}>
+                            <img
+                              id={`edit_action_${action.id}`}
+                              onClick={() => {
+                                this.props.onGoToUrl(
+                                  `/agent/${this.props.agent.id}/action/${
+                                  action.id
+                                  }`,
+                                );
+                              }}
+                              className={classes.editCategoryIcon}
+                              src={pencilIcon}
+                            />
+                          </div>
+                        ) : null}
+                      </Grid>
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText error={this.props.errorState.welcomeAction}>
+                  {intl.formatMessage(messages.requiredField)}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+
+
+
+
+
           </Grid>
         </Grid>
       </Grid>
@@ -389,6 +465,7 @@ AgentDataForm.propTypes = {
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
   defaultaFallbackActionName: PropTypes.string,
+  defaultaWelcomeActionName: PropTypes.string,
 };
 
 export default injectIntl(withStyles(styles)(AgentDataForm));
