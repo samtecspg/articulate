@@ -328,7 +328,7 @@ class ResponseForm extends React.Component {
                     </Table>
                   ) : null}
                 </Grid>
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                   <TextField
                     id="newActionResponseQuickResponse"
                     label={intl.formatMessage(messages.actionResponseQuickResponseValue)}
@@ -395,7 +395,7 @@ class ResponseForm extends React.Component {
                       </TableBody>
                     </Table>
                   ) : null}
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={12}>
                   <Typography
                     className={classes.postFormatLabel}

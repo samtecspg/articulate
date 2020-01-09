@@ -26,12 +26,19 @@
     ],
     "responses": [
       {
+        "richResponses": [
+            {
+                "type": "quickResponses",
+                "data": {
+                    "quickResponses": [
+                      "{{#if slots.location.value}}What's the weather like in {{slots.location.value}} tomorrow {{/if}}"
+                    ]
+                }
+            }
+        ],
         "textResponse": "It's {{webhook.callCurrentWeather.response.weather.0.description}} and {{webhook.callCurrentWeather.response.main.temp}}{{#eq slots.unit.value compare= \"metric\"}}°C{{else}}°F{{/eq}} in {{webhook.callCurrentWeather.response.name}}, {{webhook.callCurrentWeather.response.sys.country}}",
         "actions": []
       }
-    ],
-    "responsesQuickResponses": [
-      "{{#if slots.location.value}}What's the weather like in {{slots.location.value}} tomorrow {{/if}}"
     ],
     "useWebhook": true,
     "usePostFormat": false,
@@ -89,12 +96,19 @@
     ],
     "responses": [
       {
+        "richResponses": [
+            {
+                "type": "quickResponses",
+                "data": {
+                    "quickResponses": [
+                      "What's the weather like now in {{slots.location.value}}"
+                    ]
+                }
+            }
+        ],
         "textResponse": "{{! We check if the date the user specified is between the last date and first day of the forecast }} {{#and (gte (get \"dt_txt\" (itemAt webhook.callForecast.response.list 39)) slots.date.to) (gte slots.date.from (get \"dt_txt\" (itemAt webhook.callForecast.response.list 0))) }} {{! Now we compare each forecat to get the closest forecast to the given date}} {{#eachIndex webhook.callForecast.response.list}} {{#compare (get \"dt_txt\" item) \"==\" (closestDate @root.slots.date.from (JSONPath @root.webhook.callForecast.response.list \"*.dt_txt\"))}} It's going to be: {{item.weather.0.description}} and {{item.main.temp}}{{#eq @root.slots.unit.value compare=\"metric\"}}°C{{else}}°F{{/eq}} in {{@root.webhook.callForecast.response.city.name}}, {{@root.webhook.callForecast.response.city.country}} {{#if @root.slots.date.original}} {{@root.slots.date.original}} {{/if}} {{/compare}} {{/eachIndex}} {{else}} Sorry, but we don't have a forecast for those dates {{/and}}",
         "actions": []
       }
-    ],
-    "responsesQuickResponses": [
-      "What's the weather like now in {{slots.location.value}}"
     ],
     "useWebhook": true,
     "usePostFormat": false,

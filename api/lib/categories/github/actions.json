@@ -22,7 +22,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -82,14 +81,21 @@
         ],
         "responses": [
             {
+                "richResponses": [
+                    {
+                        "type": "quickResponses",
+                        "data": {
+                            "quickResponses": [
+                                "Assign it",
+                                "Comment on it",
+                                "Label it"
+                            ]
+                        }
+                    }
+                ],
                 "textResponse": "{{#if webhook.postIssueWebhook.response}} The issue was created succesfully {{else}} Im sorry, there was a problem creating your issue{{/if}}",
                 "actions": []
             }
-        ],
-        "responsesQuickResponses": [
-            "Assign it",
-            "Comment on it",
-            "Label it"
         ],
         "useWebhook": true,
         "usePostFormat": false,
@@ -139,7 +145,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -172,7 +177,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -225,7 +229,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -258,7 +261,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -307,7 +309,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -340,7 +341,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -373,7 +373,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -402,12 +401,19 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [
+                    {
+                        "type": "quickResponses",
+                        "data": {
+                            "quickResponses": [
+                                "Undo the release"
+                            ]
+                        }
+                    }
+                ],
                 "textResponse": "{{#if webhook.lastReleaseWebhook.response}} This is the most recent release: \"{{webhook.lastReleaseWebhook.response.name}}\" and it's tag is: \"{{webhook.lastReleaseWebhook.response.tag_name}}\" {{else}} There are no releases {{/if}}",
                 "actions": []
             }
-        ],
-        "responsesQuickResponses": [
-            "Undo the release"
         ],
         "useWebhook": true,
         "usePostFormat": false,
@@ -441,7 +447,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -505,7 +510,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -538,7 +542,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -571,7 +574,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",
@@ -623,15 +625,22 @@
         ],
         "responses": [
             {
+                "richResponses": [
+                    {
+                        "type": "quickResponses",
+                        "data": {
+                            "quickResponses": [
+                                "Comment on it",
+                                "Label it",
+                                "Close it",
+                                "Assign it"
+                            ]
+                        }
+                    }
+                ],
                 "textResponse": "{{#if webhook.issueWebhook.response}} This is the {{#eq slots.timeState.value compare = \"\"}}most recent{{else}}{{slots.timeState.original}}{{/eq}} {{#eq slots.state.value compare = \"\"}}open{{else}}{{slots.state.original}}{{/eq}} issue {{#if context.savedSlots.currentContextUserName}}assigned to you {{else}}of the repo{{/if}} : \"{{webhook.issueWebhook.response.0.title}}\" and it was created on: {{dateTimeFormat webhook.issueWebhook.response.0.created_at \"DD/MM/YYYY\"}}{{else}}There was an error getting the requested issue{{/if}}",
                 "actions": []
             }
-        ],
-        "responsesQuickResponses": [
-            "Comment on it",
-            "Label it",
-            "Close it",
-            "Assign it"
         ],
         "useWebhook": true,
         "usePostFormat": false,
@@ -688,7 +697,6 @@
                 "actions": []
             }
         ],
-        "responsesQuickResponses": [],
         "useWebhook": true,
         "usePostFormat": false,
         "creationDate": "1575646521000",

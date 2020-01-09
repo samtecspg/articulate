@@ -16,13 +16,20 @@
         ],
         "responses": [
             {
+                "richResponses": [
+                    {
+                        "type": "quickResponses",
+                        "data": {
+                            "quickResponses": [
+                                "{{#if slots.topic.original}}Get last week's news about {{slots.topic.original}}{{/if}}",
+                                "{{#if slots.topic.original}}Get most recent news about {{slots.topic.original}}{{/if}}"
+                            ]
+                        }
+                    }
+                ],
                 "textResponse": "{{#eq webhook.getTopHeadlinesWebhook.response.status compare=\"error\"}} I'm sorry, there was a problem when getting the news for you {{/eq}} {{#eq webhook.getTopHeadlinesWebhook.response.status compare=\"ok\"}} {{#eq webhook.getTopHeadlinesWebhook.response.totalResults 0}} Sorry, we didnt find any recent news {{/eq}} {{#gt webhook.getTopHeadlinesWebhook.response.totalResults 0}} These are the news found: {{#each webhook.getTopHeadlinesWebhook.response.articles}} Title: {{this.title}}, Link: {{this.url}}{{/each}}{{/gt}}{{/eq}}",
                 "actions": []
             }
-        ],
-        "responsesQuickResponses": [
-            "{{#if slots.topic.original}}Get last week's news about {{slots.topic.original}}{{/if}}",
-            "{{#if slots.topic.original}}Get most recent news about {{slots.topic.original}}{{/if}}"
         ],
         "useWebhook": true,
         "usePostFormat": false,
@@ -79,13 +86,20 @@
         ],
         "responses": [
             {
+                "richResponses": [
+                    {
+                        "type": "quickResponses",
+                        "data": {
+                            "quickResponses": [
+                                "{{#if slots.topic.original}}Get last week's news about {{slots.topic.original}}{{/if}}",
+                                "{{#if slots.topic.original}}Get most recent news about {{slots.topic.original}}{{/if}}"
+                            ]
+                        }
+                    }
+                ],
                 "textResponse": "{{#if webhook.getAllNewsWebhook.error}}{{#eq webhook.getAllNewsWebhook.error.code compare=\"parameterInvalid\"}}I'm sorry, there was a problem when getting the news for you, please check if you are asking for news too old for your plan{{else}}I'm sorry, there was a problem when getting the news for you, please try to be more specific or rephrase your request{{/eq}}{{else}}{{#eq webhook.getAllNewsWebhook.response.status compare=\"error\"}} I'm sorry, there was a problem when getting the news for you {{/eq}} {{#eq webhook.getAllNewsWebhook.response.status compare=\"ok\"}} {{#eq webhook.getAllNewsWebhook.response.totalResults 0}} Sorry, we didnt find any news {{/eq}} {{#gt webhook.getAllNewsWebhook.response.totalResults 0}} These are the news found: {{#each webhook.getAllNewsWebhook.response.articles}} Title: {{this.title}}, Link: {{this.url}}{{/each}} {{/gt}}{{/eq}}{{/if}}",
                 "actions": []
             }
-        ],
-        "responsesQuickResponses": [
-            "{{#if slots.topic.original}}Get last week's news about {{slots.topic.original}}{{/if}}",
-            "{{#if slots.topic.original}}Get most recent news about {{slots.topic.original}}{{/if}}"
         ],
         "useWebhook": true,
         "usePostFormat": false,

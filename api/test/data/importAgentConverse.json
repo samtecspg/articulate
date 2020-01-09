@@ -129,7 +129,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -144,7 +143,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -159,7 +157,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -187,7 +184,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -214,7 +210,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -241,7 +236,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -256,7 +250,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -285,7 +278,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -300,7 +292,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": true,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -344,7 +335,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168205000",
@@ -355,13 +345,20 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [
+              {
+                  "type": "quickResponses",
+                  "data": {
+                      "quickResponses": [
+                        "With a quick reply",
+                        "With another quick reply"
+                      ]
+                  }
+              }
+          ],
           "textResponse": "This is an action",
           "actions": []
         }
-      ],
-      "responsesQuickResponses": [
-        "With a quick reply",
-        "With another quick reply"
       ],
       "useWebhook": false,
       "usePostFormat": false,
@@ -391,7 +388,6 @@
           "actions": []
         }
       ],
-      "responsesQuickResponses": [],
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1576168877000",

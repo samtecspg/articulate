@@ -12,10 +12,6 @@ const schema = {
     responses: {
         type: 'json'
     },
-    responsesQuickResponses: {
-        type: 'json',
-        defaultValue: []
-    },
     useWebhook: {
         type: 'boolean'
     },

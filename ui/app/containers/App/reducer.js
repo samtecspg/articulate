@@ -451,8 +451,7 @@ const initialState = Immutable({
     useWebhook: false,
     usePostFormat: false,
     slots: [],
-    responses: [],
-    responsesQuickResponses: []
+    responses: []
   },
   actionWebhook: {
     webhookKey: '',
@@ -1513,7 +1512,7 @@ function appReducer(state = initialState, action) {
     case ADD_ACTION_RESPONSE:
       return state
         .updateIn(['action', 'responses'], responses =>
-          responses.concat({ textResponse: action.newResponse, actions: [] }),
+          responses.concat({ richResponses: [], textResponse: action.newResponse, actions: [] }),
         )
         .set('newActionResponse', '')
         .set('actionTouched', true);
