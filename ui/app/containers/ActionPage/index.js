@@ -108,7 +108,7 @@ export class ActionPage extends React.Component {
     }).actionTab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
         .actionTab
-      : 'response',
+      : 'action',
     userCompletedAllRequiredFields: false,
     ref: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).ref,
     refActionId: qs.parse(this.props.location.search, {

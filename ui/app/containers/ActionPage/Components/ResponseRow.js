@@ -328,7 +328,7 @@ class ResponseRow extends React.Component {
                 anchorEl: this.state.anchorRichResponsesEl,
                 PaperProps: {
                   style: {
-                    minWidth: '250px',
+                    minWidth: usedRichResponses.length > 0 ? '300px' : '250px',
                   }
                 }
               }}
