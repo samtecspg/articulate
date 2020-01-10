@@ -19,7 +19,8 @@ module.exports = async function ({ actionData, CSO }) {
         actions: CSO.response.actions ? CSO.response.actions : [],
         isFallback: CSO.response.isFallback,
         isWelcome: CSO.response.isWelcome,
-        quickResponses: CSO.response.quickResponses
+        quickResponses: CSO.response.quickResponses ? CSO.response.quickResponses : [],
+        richResponses: CSO.response.richResponses
     };
 
     //This will store the final response in CSO.finalResponse
@@ -80,6 +81,20 @@ module.exports = async function ({ actionData, CSO }) {
             prunnedCSO.webhooks[webhookKey].error = JSON.parse(prunnedCSO.webhooks[webhookKey].error);
         }
     });
+
+    //Also we need to convert richResponses back to object
+    if (CSO.finalResponse.richResponses){
+        CSO.finalResponse.richResponses = JSON.parse(CSO.finalResponse.richResponses);
+    }
+    if (fullConverseResult.richResponses){
+        fullConverseResult.richResponses = JSON.parse(fullConverseResult.richResponses);
+    }
+    if (CSO.finalResponse.responses && CSO.finalResponse.responses.length > 0){
+        CSO.finalResponse.responses.forEach((response) => {
+
+            response.richResponses = JSON.parse(response.richResponses);
+        });
+    }
 
     const responseForUbiquity = CSO.debug ? fullConverseResult : converseResult;
 

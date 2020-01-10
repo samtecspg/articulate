@@ -386,6 +386,7 @@ export class ConversationBar extends React.PureComponent {
             docId: response.docId,
             message: response.textResponse,
             quickResponses: response.quickResponses,
+            richResponses: response.richResponses,
             CSO: response.CSO,
           });
           this.props.onStoreSourceData({ ...response.CSO });
@@ -744,6 +745,35 @@ export class ConversationBar extends React.PureComponent {
                           )
                         })}
                       </Grid> : null}
+                    {message.richResponses ?
+                        message.richResponses.map((richResponse, richResponseIndex) => {
+                          switch (richResponse.type) {
+                            case 'quickResponses':
+                              return (
+                                <Grid key={`message_${index}_richResponse_${richResponseIndex}`} className={classes.agentButtonContainer}>
+                                  {richResponse.data.quickResponses.map((quickResponse, quickResponseIndex) => {
+                                    return (
+                                      <Button
+                                        key={`message_${index}_richResponse_${richResponseIndex}_quickResponse_${quickResponseIndex}`}
+                                        style={{
+                                          color: fontColorContrast(this.props.agent.uiColor),
+                                          backgroundColor: this.props.agent.uiColor,
+                                        }}
+                                        className={classes.agentMessageButton}
+                                        onClick={() => {
+                                          this.props.onSendMessage({ message: quickResponse, isDemo: demoMode });
+                                        }}
+                                      >
+                                        {quickResponse}
+                                      </Button>
+                                    )
+                                  })}
+                                </Grid>
+                              )
+                            default:
+                              return null;
+                          }
+                        }) : null}
                   </Grid>
                 );
               })}

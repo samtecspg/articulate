@@ -18,6 +18,7 @@
         ],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "The repository has: {{lookup webhook.countWebhook.response slots.githubItem.value}} {{slots.githubItem.original}}",
                 "actions": []
             }
@@ -141,6 +142,7 @@
         ],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.assignCurrentContextIssueWebhook.error}} {{#eq webhook.assignCurrentContextIssueWebhook.error.message compare = \"Validation Failed\"}} I'm sorry, there was a problem with your request, make sure that the username is correct {{/eq}} {{#eq webhook.assignCurrentContextIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue posted or requested recently in this conversation{{/eq}} {{else}} The issue has been assigned {{/if}}",
                 "actions": []
             }
@@ -173,6 +175,7 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.getUserNameWebhook.response}}I see that your username is: {{webhook.getUserNameWebhook.response.login}}{{else}}I'm sorry, there was a problem getting your user name{{/if}}",
                 "actions": []
             }
@@ -221,10 +224,12 @@
         ],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "Done",
                 "actions": []
             },
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.postCommentOnIssueWebhook.error}} {{#eq webhook.postCommentOnIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue created or requested recently in this conversation{{/eq}} {{else}}  The comment was added to the issue {{/if}}",
                 "actions": []
             }
@@ -257,6 +262,7 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.closeCurrentContextIssueWebhook.error}} {{#eq webhook.closeCurrentContextIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue posted or requested recently in this conversation{{/eq}} {{else}} The issue has been closed {{/if}}",
                 "actions": []
             }
@@ -305,6 +311,7 @@
         ],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.labelIssueWebhook.error}} {{#eq webhook.labelIssueWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any issue created or requested recently in this conversation{{/eq}} {{else}}  The issue has been labeled correctly {{/if}}",
                 "actions": []
             }
@@ -337,6 +344,7 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.lastOpenMilestoneWebhook.error}} {{#eq webhook.lastOpenMilestoneWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any milestone created or requested recently in this conversation{{/eq}} {{else}}  The nearest open milestone has {{context.savedSlots.currentContextMilestone.value.open_issues}} open issue(s) {{/if}}",
                 "actions": []
             }
@@ -369,6 +377,7 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.lastCommitWebhook.response.0.commit}} The commit message is : \"{{webhook.lastCommitWebhook.response.0.commit.message}}\" and it was commited by: {{webhook.lastCommitWebhook.response.0.committer.login}}{{else}}There was an error getting the last commit{{/if}}",
                 "actions": []
             }
@@ -443,6 +452,7 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.lastTagWebhook.response}}The last tag is: \"{{webhook.lastTagWebhook.response.0.name}}\"{{else}} I'm sorry, there was a problem getting the last tag{{/if}}",
                 "actions": []
             }
@@ -506,6 +516,7 @@
         ],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.postReleaseUsingLastTagWebhook.error}} {{#eq webhook.postReleaseUsingLastTagWebhook.error.errors.0.code compare = \"already_exists\"}} I'm sorry, a release with this tag already exists {{else}} I'm sorry, there was an error creating the release {{/eq}} {{else}} The release has been created {{/if}}",
                 "actions": []
             }
@@ -538,6 +549,7 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.deleteCurrentContextReleaseWebhook.error}} {{#eq webhook.deleteCurrentContextReleaseWebhook.error.message compare = \"Not Found\"}} I'm sorry, I don't remember any release created or requested recently in this conversation{{/eq}} {{else}}  The release has been deleted {{/if}}",
                 "actions": []
             }
@@ -570,6 +582,7 @@
         "slots": [],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "The repository has: {{webhook.countRepoOpenIssuesWebhook.response.open_issues_count}} open issues(s)",
                 "actions": []
             }
@@ -693,6 +706,7 @@
         ],
         "responses": [
             {
+                "richResponses": [],
                 "textResponse": "{{#if webhook.milestoneWebhook.response}} This is the nearest open milestone : \"{{webhook.milestoneWebhook.response.0.title}}\" and its due date is: {{dateTimeFormat webhook.milestoneWebhook.response.0.due_on \"DD/MM/YYYY\"}}{{else}}There was an error getting the requested milestone{{/if}}",
                 "actions": []
             }
