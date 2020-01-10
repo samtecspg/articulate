@@ -299,6 +299,9 @@ export const DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE = 'app/ActionPage/DELETE_
 export const LOAD_RICH_RESPONSES = 'app/ActionPage/LOAD_RICH_RESPONSES';
 export const LOAD_RICH_RESPONSES_SUCCESS = 'app/ActionPage/LOAD_RICH_RESPONSES_SUCCESS';
 export const LOAD_RICH_RESPONSES_ERROR = 'app/ActionPage/LOAD_RICH_RESPONSES_ERROR';
+export const ADD_RICH_RESPONSE = 'app/ActionPage/ADD_RICH_RESPONSE';
+export const DELETE_RICH_RESPONSE = 'app/ActionPage/DELETE_RICH_RESPONSE';
+export const EDIT_RICH_RESPONSE = 'app/ActionPage/EDIT_RICH_RESPONSE';
 
 /*
  * Keyword

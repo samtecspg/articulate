@@ -366,7 +366,6 @@ class AgentsCards extends React.Component {
         </Grid>
         <Grid onClick={() => {
           document.getElementById('dvCardsContainer').scrollLeft -= -205;
-          console.log(document.getElementById('dvCardsContainer').scrollLeft);
           this.setState({
             showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
             showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0

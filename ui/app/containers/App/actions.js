@@ -91,6 +91,9 @@ import {
   LOAD_RICH_RESPONSES,
   LOAD_RICH_RESPONSES_ERROR,
   LOAD_RICH_RESPONSES_SUCCESS,
+  ADD_RICH_RESPONSE,
+  DELETE_RICH_RESPONSE,
+  EDIT_RICH_RESPONSE,
   DELETE_AGENT,
   DELETE_AGENT_ERROR,
   DELETE_AGENT_FALLBACK,
@@ -1828,6 +1831,30 @@ export function loadRichResponsesSuccess(richResponses) {
     type: LOAD_RICH_RESPONSES_SUCCESS,
     richResponses,
   };
+}
+
+export function addRichResponse(responseIndex, richResponse){
+  return {
+    type: ADD_RICH_RESPONSE,
+    responseIndex,
+    richResponse
+  }
+}
+
+export function editRichResponse(responseIndex, richResponse){
+  return {
+    type: EDIT_RICH_RESPONSE,
+    responseIndex,
+    richResponse
+  }
+}
+
+export function deleteRichResponse(responseIndex, richResponse){
+  return {
+    type: DELETE_RICH_RESPONSE,
+    responseIndex,
+    richResponse
+  }
 }
 
 /* Keyword */

@@ -320,6 +320,9 @@ class ResponseForm extends React.Component {
                                 }
                                 onGoToUrl={this.props.onGoToUrl}
                                 richResponses={richResponses}
+                                onAddRichResponse={this.props.onAddRichResponse}
+                                onDeleteRichResponse={this.props.onDeleteRichResponse}
+                                onEditRichResponse={this.props.onEditRichResponse}
                               />
                             </TableCell>
                           </TableRow>
@@ -455,6 +458,9 @@ ResponseForm.propTypes = {
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  onAddRichResponse: PropTypes.func.isRequired,
+  onDeleteRichResponse: PropTypes.func.isRequired,
+  onEditRichResponse: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));
