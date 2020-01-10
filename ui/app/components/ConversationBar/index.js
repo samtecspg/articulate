@@ -18,7 +18,13 @@ import {
   Button,
   Select,
   Tooltip,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  Slide,
 } from '@material-ui/core';
+
 import { withStyles } from '@material-ui/core/styles';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -30,6 +36,8 @@ import expandTtrimmedSingleIcon from '../../images/expand-trimmed-single-icon.sv
 import eraserIcon from '../../images/eraser-icon.svg';
 import trashIcon from '../../images/trash-icon.svg';
 import grabIcon from '../../images/grab-icon.svg';
+import circleEnabledIcon from '../../images/circle-enabled-icon.svg';
+import circleDisabledIcon from '../../images/circle-disabled-icon.svg';
 
 import messages from './messages';
 
@@ -115,7 +123,7 @@ const styles = {
     height: '25px',
   },
   inputContainer: {
-    padding: '10px',
+    padding: '0px 10px',
     position: 'fixed',
     bottom: 0,
     right: 0,
@@ -236,6 +244,27 @@ const styles = {
     borderRadius: '3px 0px 0px 3px',
     backgroundColor: '#f6f7f8',
   },
+  imageMessage: {
+    marginLeft: '15px',
+    width: '90%',
+    borderRadius: '5px'
+  },
+  cardMessageContainer: {
+    width: '90%',
+    marginLeft: '15px',
+    border: '1px solid #a2a7b1'
+  },
+  cardMessageImage: {
+    width: '100%'
+  },
+  cardMessageIndicatorContainer: {
+    marginTop: '5px',
+    textAlign: 'center'
+  },
+  cardMessageIndicator: {
+    marginLeft: '2px',
+    cursor: 'pointer'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -250,7 +279,8 @@ export class ConversationBar extends React.PureComponent {
     newWidth: this.props.settings.conversationPanelWidth ? this.props.settings.conversationPanelWidth : 300,
     client: null,
     socketClientConnected: false,
-    newSessionCreatedForStart: false
+    newSessionCreatedForStart: false,
+    cardsCarouselActiveCard: 0,
   };
 
   componentWillMount() {
@@ -748,6 +778,47 @@ export class ConversationBar extends React.PureComponent {
                     {message.richResponses ?
                         message.richResponses.map((richResponse, richResponseIndex) => {
                           switch (richResponse.type) {
+                            case 'cardsCarousel':
+                              return (
+                                <Grid key={`message_${index}_richResponse_${richResponseIndex}`}>
+                                  {richResponse.data.map((card, cardIndex) => {
+                                    return (
+                                      cardIndex === this.state.cardsCarouselActiveCard ?
+                                      <Slide in={true} timeout={200} direction="left" key={`message_${index}_richResponse_${richResponseIndex}_card_${cardIndex}`}>
+                                        <Card onClick={() => { window.open(card.linkURL, "_blank") }} className={classes.cardMessageContainer}>
+                                          <CardActionArea>
+                                            <CardMedia image={card.imageURL}>
+                                              <img className={classes.cardMessageImage} alt={card.title} src={card.imageURL} />
+                                            </CardMedia>
+                                            <CardContent>
+                                              <Typography gutterBottom variant="h5" component="h2">
+                                                {card.title}
+                                              </Typography>
+                                              <Typography component="p">
+                                                {card.description}
+                                              </Typography>
+                                            </CardContent>
+                                          </CardActionArea>
+                                        </Card>
+                                      </Slide> : null
+                                    )
+                                  })}
+                                  <Grid className={classes.cardMessageIndicatorContainer}>
+                                    {richResponse.data.map((card, cardIndicatorIndex) => {
+                                        return (
+                                          <span className={classes.cardMessageIndicator}><img onClick={() => { this.setState({ cardsCarouselActiveCard: cardIndicatorIndex }) }} key={`message_${index}_richResponse_${richResponseIndex}_cardIndicator_${cardIndicatorIndex}`} src={this.state.cardsCarouselActiveCard === cardIndicatorIndex ? circleEnabledIcon : circleDisabledIcon} /></span>
+                                        )
+                                      })
+                                    }
+                                  </Grid>
+                                </Grid>
+                              )
+                            case 'image':
+                              return (
+                                <a key={`message_${index}_richResponse_${richResponseIndex}`} href={richResponse.data.imageURL} target="_blank">
+                                  <img className={classes.imageMessage} src={richResponse.data.imageURL} />
+                                </a>
+                              )
                             case 'quickResponses':
                               return (
                                 <Grid key={`message_${index}_richResponse_${richResponseIndex}`} className={classes.agentButtonContainer}>
@@ -889,6 +960,14 @@ export class ConversationBar extends React.PureComponent {
                 }}
                 margin="normal"
                 fullWidth
+                style={{
+                  marginTop: '0px'
+                }}
+                InputProps={{
+                  style: {
+                    marginTop: '0px !important'
+                  }
+                }}
               />
             </Grid>
           </Grid>

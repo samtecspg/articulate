@@ -6,7 +6,7 @@
     "defaultPayload": [
         {
             "title": "Card 1",
-            "descption": "This is a card",
+            "description": "This is a card",
             "imageURL": "<card image url>",
             "linkURL": "<go to this link on click>"
         }
