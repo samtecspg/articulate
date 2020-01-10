@@ -25,11 +25,14 @@ import {
   Slide,
 } from '@material-ui/core';
 
+import ReactAudioPlayer from 'react-audio-player';
+
 import { withStyles } from '@material-ui/core/styles';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import injectSaga from '../../utils/injectSaga';
 import saga from './saga';
+
 
 import rightArrowIcon from '../../images/right-arrow-icon.svg';
 import expandTtrimmedSingleIcon from '../../images/expand-trimmed-single-icon.svg';
@@ -264,6 +267,11 @@ const styles = {
   cardMessageIndicator: {
     marginLeft: '2px',
     cursor: 'pointer'
+  },
+  audioMessage: {
+    width: '90%',
+    marginLeft: '15px',
+    height: '25px'
   }
 };
 
@@ -778,6 +786,16 @@ export class ConversationBar extends React.PureComponent {
                     {message.richResponses ?
                         message.richResponses.map((richResponse, richResponseIndex) => {
                           switch (richResponse.type) {
+                            case 'audio':
+                              console.log('AUDIO: ', richResponse.data.audio);
+                              return (
+                                <ReactAudioPlayer
+                                  className={classes.audioMessage}
+                                  key={`message_${index}_richResponse_${richResponseIndex}`}
+                                  src={richResponse.data.audio}
+                                  controls
+                                />
+                              )
                             case 'cardsCarousel':
                               return (
                                 <Grid key={`message_${index}_richResponse_${richResponseIndex}`}>
