@@ -833,7 +833,7 @@ export class ConversationBar extends React.PureComponent {
                                           key={`message_${index}_richResponse_${richResponseIndex}_button_${buttonIndex}`}
                                           className={classes.buttonMessage}
                                           onClick={() => {
-                                            this.props.onSendMessage({ message: button.payload, isDemo: demoMode });
+                                            window.open(button.linkURL, "_blank");
                                           }}
                                         >
                                           {button.label}

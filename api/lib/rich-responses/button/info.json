@@ -7,7 +7,7 @@
     "defaultPayload": [
         {
             "label": "Button 1",
-            "payload": "Payload 1"
+            "linkURL": "<go to this link on click>"
         }
     ]
 }
