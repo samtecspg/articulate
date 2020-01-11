@@ -113,7 +113,8 @@
     "reselect": "4.0.0",
     "seamless-immutable": "7.1.3",
     "shouldcomponentupdate-children": "^1.1.0",
-    "typeface-roboto": "0.0.54"
+    "typeface-roboto": "0.0.54",
+    "video-react": "^0.14.1"
   },
   "devDependencies": {
     "@babel/cli": "7.4.3",

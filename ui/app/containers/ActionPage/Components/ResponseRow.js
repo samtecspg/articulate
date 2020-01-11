@@ -348,6 +348,7 @@ class ResponseRow extends React.Component {
               {
                 Object.keys(richResponses).map((richResponse, index) => {
                   return (
+                    richResponses[richResponse].enabled &&
                     <MenuItem value={richResponse} key={`richResponseType_${index}`}>
                       <Grid container>
                         {

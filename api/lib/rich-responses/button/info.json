@@ -1,6 +1,7 @@
 {
     "name": "Button",
     "type": "buttons",
+    "enabled": true,
     "description": "Button that will have a payload to execute an action",
     "documentation": null,
     "defaultPayload": [

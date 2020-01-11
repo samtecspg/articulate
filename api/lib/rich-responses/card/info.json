@@ -1,6 +1,7 @@
 {
     "name": "Card Carousel",
     "type": "cardsCarousel",
+    "enabled": true,
     "description": "Clickable cards to display relevant information to the user",
     "documentation": null,
     "defaultPayload": [
