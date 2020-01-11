@@ -258,7 +258,10 @@ import {
   DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   LOAD_RICH_RESPONSES,
   LOAD_RICH_RESPONSES_ERROR,
-  LOAD_RICH_RESPONSES_SUCCESS
+  LOAD_RICH_RESPONSES_SUCCESS,
+  ADD_RICH_RESPONSE,
+  DELETE_RICH_RESPONSE,
+  EDIT_RICH_RESPONSE,
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -451,8 +454,7 @@ const initialState = Immutable({
     useWebhook: false,
     usePostFormat: false,
     slots: [],
-    responses: [],
-    responsesQuickResponses: []
+    responses: []
   },
   actionWebhook: {
     webhookKey: '',
@@ -1513,7 +1515,7 @@ function appReducer(state = initialState, action) {
     case ADD_ACTION_RESPONSE:
       return state
         .updateIn(['action', 'responses'], responses =>
-          responses.concat({ textResponse: action.newResponse, actions: [] }),
+          responses.concat({ richResponses: [], textResponse: action.newResponse, actions: [] }),
         )
         .set('newActionResponse', '')
         .set('actionTouched', true);
@@ -1940,7 +1942,52 @@ function appReducer(state = initialState, action) {
         .set('richResponses', action.richResponses)
         .set('loading', false)
         .set('error', false);
-
+    case ADD_RICH_RESPONSE:
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.update('richResponses', richResponses =>
+                richResponses.concat(action.richResponse),
+              );
+            }
+            return response;
+          }),
+        )
+        .set('actionTouched', true);
+    case EDIT_RICH_RESPONSE:
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.update('richResponses', richResponses =>
+                richResponses.map((richResponse) => {
+                  if (richResponse.type === action.richResponse.type) {
+                    return action.richResponse;
+                  }
+                  return richResponse;
+                })
+              );
+            }
+            return response;
+          })
+        )
+        .set('actionTouched', true);
+    case DELETE_RICH_RESPONSE:
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.update('richResponses', richResponses =>
+                richResponses.filter((richResponse) => {
+                  return richResponse.type !== action.richResponse.type;
+                })
+              );
+            }
+            return response;
+          })
+        )
+        .set('actionTouched', true);
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers =>
         modifiers.concat(state.newModifier),

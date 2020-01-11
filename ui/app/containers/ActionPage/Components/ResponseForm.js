@@ -320,6 +320,9 @@ class ResponseForm extends React.Component {
                                 }
                                 onGoToUrl={this.props.onGoToUrl}
                                 richResponses={richResponses}
+                                onAddRichResponse={this.props.onAddRichResponse}
+                                onDeleteRichResponse={this.props.onDeleteRichResponse}
+                                onEditRichResponse={this.props.onEditRichResponse}
                               />
                             </TableCell>
                           </TableRow>
@@ -328,7 +331,7 @@ class ResponseForm extends React.Component {
                     </Table>
                   ) : null}
                 </Grid>
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                   <TextField
                     id="newActionResponseQuickResponse"
                     label={intl.formatMessage(messages.actionResponseQuickResponseValue)}
@@ -395,7 +398,7 @@ class ResponseForm extends React.Component {
                       </TableBody>
                     </Table>
                   ) : null}
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={12}>
                   <Typography
                     className={classes.postFormatLabel}
@@ -455,6 +458,9 @@ ResponseForm.propTypes = {
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  onAddRichResponse: PropTypes.func.isRequired,
+  onDeleteRichResponse: PropTypes.func.isRequired,
+  onEditRichResponse: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

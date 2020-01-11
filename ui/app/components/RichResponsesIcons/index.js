@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import audio from '../../images/multimedia-icon.svg';
+import audio from '../../images/audio-icon.svg';
 import buttons from '../../images/button-icon.svg';
 import cardsCarousel from '../../images/card-carousel-icon.svg';
 import chart from '../../images/chart-icon.svg';

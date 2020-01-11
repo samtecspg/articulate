@@ -250,4 +250,20 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.newActionResponseQuickResponsePlaceholder',
     defaultMessage: 'Please type possible responses that are going to be shown as buttons',
   },
+  addButton: {
+    id: 'app.containers.ActionPage.component.ResponseRow.addButton',
+    defaultMessage: 'Add',
+  },
+  editButton: {
+    id: 'app.containers.ActionPage.component.ResponseRow.editButton',
+    defaultMessage: 'Edit',
+  },
+  hint1: {
+    id: 'app.containers.ActionPage.component.ResponseRow.hint',
+    defaultMessage: 'Hint: Use',
+  },
+  hint2: {
+    id: 'app.containers.ActionPage.component.ResponseRow.hint',
+    defaultMessage: 'for template values',
+  }
 });

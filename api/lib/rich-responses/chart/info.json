@@ -1,6 +1,7 @@
 {
     "name": "Chart",
     "type": "chart",
+    "enabled": false,
     "description": "Charts based on Chart.js",
     "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-respones/chart/README.MD",
     "defaultPayload": {

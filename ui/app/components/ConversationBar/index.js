@@ -18,18 +18,35 @@ import {
   Button,
   Select,
   Tooltip,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  Slide,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse,
 } from '@material-ui/core';
+
+import ReactAudioPlayer from 'react-audio-player';
+import { Player } from 'video-react';
+import '../../utils/video-react.css'; // import css
+
 import { withStyles } from '@material-ui/core/styles';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import injectSaga from '../../utils/injectSaga';
 import saga from './saga';
 
+
 import rightArrowIcon from '../../images/right-arrow-icon.svg';
 import expandTtrimmedSingleIcon from '../../images/expand-trimmed-single-icon.svg';
 import eraserIcon from '../../images/eraser-icon.svg';
 import trashIcon from '../../images/trash-icon.svg';
 import grabIcon from '../../images/grab-icon.svg';
+import circleEnabledIcon from '../../images/circle-enabled-icon.svg';
+import circleDisabledIcon from '../../images/circle-disabled-icon.svg';
 
 import messages from './messages';
 
@@ -68,7 +85,6 @@ import Nes from 'nes';
 import { getWS } from '../../utils/locationResolver';
 import { AUTH_ENABLED } from "../../../common/env";
 import { ROUTE_AGENT, ROUTE_CONVERSE, ROUTE_CONNECTION } from '../../../common/constants';
-import fontColorContrast from 'font-color-contrast';
 
 const styles = {
   container: {
@@ -115,7 +131,7 @@ const styles = {
     height: '25px',
   },
   inputContainer: {
-    padding: '10px',
+    padding: '0px 10px',
     position: 'fixed',
     bottom: 0,
     right: 0,
@@ -152,14 +168,16 @@ const styles = {
     marginBottom: '16px',
   },
   agentButtonContainer: {
-    overflowWrap: 'break-word'
+    whiteSpace: 'nowrap',
+    overflow: 'auto',
+    overflowX: 'scroll',
+    width: '90%',
+    marginBottom: '16px',
   },
   agentMessageButton: {
-    color: '#4A4A4A',
     borderRadius: '3px',
     padding: '8px',
     marginLeft: '15px',
-    marginBottom: '16px',
     display: 'inline',
     width: 'auto'
   },
@@ -236,6 +254,52 @@ const styles = {
     borderRadius: '3px 0px 0px 3px',
     backgroundColor: '#f6f7f8',
   },
+  imageMessage: {
+    marginLeft: '15px',
+    width: '90%',
+    borderRadius: '5px',
+    marginBottom: '16px'
+  },
+  cardMessageContainer: {
+    width: '90%',
+    marginLeft: '15px',
+    border: '1px solid #a2a7b1',
+    marginBottom: '16px'
+  },
+  cardMessageImage: {
+    width: '100%'
+  },
+  cardMessageIndicatorContainer: {
+    textAlign: 'center',
+    marginBottom: '16px'
+  },
+  cardMessageIndicator: {
+    marginLeft: '2px',
+    cursor: 'pointer'
+  },
+  audioMessage: {
+    width: '90%',
+    marginLeft: '15px',
+    height: '25px',
+    marginBottom: '16px'
+  },
+  buttonsContainer: {
+    width: '90%',
+    marginLeft: '15px',
+    padding: '10px 10px 0px 10px',
+    borderRadius: '5px',
+    marginBottom: '16px'
+  },
+  buttonMessage: {
+    color: '#4A4A4A',
+    width: '100%',
+    padding: '8px',
+    display: 'inline',
+    borderRadius: '3px',
+    marginBottom: '10px',
+    backgroundColor: '#00c582',
+    color: '#fff'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -250,7 +314,9 @@ export class ConversationBar extends React.PureComponent {
     newWidth: this.props.settings.conversationPanelWidth ? this.props.settings.conversationPanelWidth : 300,
     client: null,
     socketClientConnected: false,
-    newSessionCreatedForStart: false
+    newSessionCreatedForStart: false,
+    cardsCarouselActiveCard: 0,
+    collapsibleActiveItem: -1,
   };
 
   componentWillMount() {
@@ -386,6 +452,7 @@ export class ConversationBar extends React.PureComponent {
             docId: response.docId,
             message: response.textResponse,
             quickResponses: response.quickResponses,
+            richResponses: response.richResponses,
             CSO: response.CSO,
           });
           this.props.onStoreSourceData({ ...response.CSO });
@@ -724,15 +791,14 @@ export class ConversationBar extends React.PureComponent {
                         </span>
                       ) : null}
                     </Typography>
-                    {message.quickResponses ?
+                    {message.quickResponses && message.quickResponses.length > 0 ?
                       <Grid className={classes.agentButtonContainer}>
                         {message.quickResponses.map((quickResponse, buttonIndex) => {
                           return (
                             <Button
                               key={`message_${index}_button_${buttonIndex}`}
                               style={{
-                                color: fontColorContrast(this.props.agent.uiColor),
-                                backgroundColor: this.props.agent.uiColor,
+                                border: `1px solid ${this.props.agent.uiColor}`,
                               }}
                               className={classes.agentMessageButton}
                               onClick={() => {
@@ -744,6 +810,160 @@ export class ConversationBar extends React.PureComponent {
                           )
                         })}
                       </Grid> : null}
+                    {message.richResponses ?
+                        message.richResponses.map((richResponse, richResponseIndex) => {
+                          switch (richResponse.type) {
+                            case 'audio':
+                              console.log('AUDIO: ', richResponse.data.audio);
+                              return (
+                                <ReactAudioPlayer
+                                  className={classes.audioMessage}
+                                  key={`message_${index}_richResponse_${richResponseIndex}`}
+                                  src={richResponse.data.audio}
+                                  controls
+                                />
+                              )
+                            case 'buttons':
+                              return (
+                                <Grid key={`message_${index}_richResponse_${richResponseIndex}`}>
+                                  <div style={{ border: `1px solid ${this.props.agent.uiColor}`,}} className={classes.buttonsContainer}>
+                                    {richResponse.data.map((button, buttonIndex) => {
+                                      return (
+                                        <Button
+                                          key={`message_${index}_richResponse_${richResponseIndex}_button_${buttonIndex}`}
+                                          className={classes.buttonMessage}
+                                          onClick={() => {
+                                            window.open(button.linkURL, "_blank");
+                                          }}
+                                        >
+                                          {button.label}
+                                        </Button>
+                                      )
+                                    })}
+                                  </div>
+                                </Grid>
+                              )
+                            case 'cardsCarousel':
+                              return (
+                                <Grid key={`message_${index}_richResponse_${richResponseIndex}`}>
+                                  {richResponse.data.map((card, cardIndex) => {
+                                    return (
+                                      cardIndex === this.state.cardsCarouselActiveCard ?
+                                      <Slide in={true} timeout={200} direction="left" key={`message_${index}_richResponse_${richResponseIndex}_card_${cardIndex}`}>
+                                        <Card onClick={() => { window.open(card.linkURL, "_blank") }} className={classes.cardMessageContainer}>
+                                          <CardActionArea>
+                                            <CardMedia image={card.imageURL}>
+                                              <img className={classes.cardMessageImage} alt={card.title} src={card.imageURL} />
+                                            </CardMedia>
+                                            <CardContent>
+                                              <Typography gutterBottom variant="h5" component="h2">
+                                                {card.title}
+                                              </Typography>
+                                              <Typography component="p">
+                                                {card.description}
+                                              </Typography>
+                                            </CardContent>
+                                          </CardActionArea>
+                                        </Card>
+                                      </Slide> : null
+                                    )
+                                  })}
+                                  {richResponse.data.length > 1 &&
+                                    <Grid className={classes.cardMessageIndicatorContainer}>
+                                      {richResponse.data.map((card, cardIndicatorIndex) => {
+                                          return (
+                                            <span className={classes.cardMessageIndicator}><img onClick={() => { this.setState({ cardsCarouselActiveCard: cardIndicatorIndex }) }} key={`message_${index}_richResponse_${richResponseIndex}_cardIndicator_${cardIndicatorIndex}`} src={this.state.cardsCarouselActiveCard === cardIndicatorIndex ? circleEnabledIcon : circleDisabledIcon} /></span>
+                                          )
+                                        })
+                                      }
+                                    </Grid>
+                                  }
+                                </Grid>
+                              )
+                            case 'collapsible':
+                              return (
+                                <List
+                                  key={`message_${index}_richResponse_${richResponseIndex}`}
+                                  component="nav"
+                                  className={classes.cardMessageContainer}
+                                  style={{
+                                    border: `1px solid ${this.props.agent.uiColor}`,
+                                    borderRadius: '5px'
+                                  }}
+                                  disablePadding
+                                >
+                                  {richResponse.data.map((item, itemIndex) => {
+                                    return (
+                                      <React.Fragment key={`message_${index}_richResponse_${richResponseIndex}_item_${itemIndex}`}>
+                                        <ListItem
+                                          style={{
+                                            borderBottom: (itemIndex + 1 === richResponse.data.length && this.state.collapsibleActiveItem !== itemIndex ) ? null : `1px solid ${this.props.agent.uiColor}`
+                                          }}
+                                          button
+                                          onClick={() => {
+                                            const newActiveItem = this.state.collapsibleActiveItem === itemIndex ? -1 : itemIndex;
+                                            this.setState({ collapsibleActiveItem: newActiveItem })
+                                          }}
+                                        >
+                                          <ListItemText primary={item.title} />
+                                        </ListItem>
+                                        <Collapse
+                                          in={this.state.collapsibleActiveItem === itemIndex}
+                                          timeout="auto"
+                                          unmountOnExit
+                                          style={{
+                                            borderBottom: (itemIndex + 1 === richResponse.data.length && this.state.collapsibleActiveItem === itemIndex ) ? null : `1px solid ${this.props.agent.uiColor}`
+                                          }}
+                                        >
+                                          <Typography component='p' variant='body1' style={{ padding: '10px' }}>
+                                            {item.content}
+                                          </Typography>
+                                        </Collapse>
+                                      </React.Fragment>
+                                    )
+                                  })}
+                                </List>
+                              )
+                            case 'image':
+                              return (
+                                <a key={`message_${index}_richResponse_${richResponseIndex}`} href={richResponse.data.imageURL} target="_blank">
+                                  <img className={classes.imageMessage} src={richResponse.data.imageURL} />
+                                </a>
+                              )
+                            case 'quickResponses':
+                              return (
+                                <Grid key={`message_${index}_richResponse_${richResponseIndex}`} className={classes.agentButtonContainer}>
+                                  {richResponse.data.quickResponses.map((quickResponse, quickResponseIndex) => {
+                                    return (
+                                      <Button
+                                        key={`message_${index}_richResponse_${richResponseIndex}_quickResponse_${quickResponseIndex}`}
+                                        style={{
+                                          border: `1px solid ${this.props.agent.uiColor}`,
+                                        }}
+                                        className={classes.agentMessageButton}
+                                        onClick={() => {
+                                          this.props.onSendMessage({ message: quickResponse, isDemo: demoMode });
+                                        }}
+                                      >
+                                        {quickResponse}
+                                      </Button>
+                                    )
+                                  })}
+                                </Grid>
+                              )
+                            case 'video':
+                              console.log('VIDEO: ', richResponse);
+                              return (
+                                <Player
+                                  key={`message_${index}_richResponse_${richResponseIndex}`}
+                                  playsInline
+                                  src={richResponse.data.video}
+                                />
+                              )
+                            default:
+                              return null;
+                          }
+                        }) : null}
                   </Grid>
                 );
               })}
@@ -859,6 +1079,14 @@ export class ConversationBar extends React.PureComponent {
                 }}
                 margin="normal"
                 fullWidth
+                style={{
+                  marginTop: '0px'
+                }}
+                InputProps={{
+                  style: {
+                    marginTop: '0px !important'
+                  }
+                }}
               />
             </Grid>
           </Grid>

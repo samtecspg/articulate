@@ -79,7 +79,10 @@ import {
   toggleChatButton,
   addNewActionResponseQuickResponse,
   deleteNewActionResponseQuickResponse,
-  loadRichResponses
+  loadRichResponses,
+  addRichResponse,
+  deleteRichResponse,
+  editRichResponse,
 } from '../App/actions';
 
 const styles = {
@@ -511,6 +514,9 @@ export class ActionPage extends React.Component {
                 onAddNewActionResponseQuickResponse={this.props.onAddNewActionResponseQuickResponse}
                 onDeleteNewActionResponseQuickResponse={this.props.onDeleteNewActionResponseQuickResponse}
                 richResponses={richResponses}
+                onAddRichResponse={this.props.onAddRichResponse}
+                onDeleteRichResponse={this.props.onDeleteRichResponse}
+                onEditRichResponse={this.props.onEditRichResponse}
               />
             }
             onChangeTab={this.onChangeTab}
@@ -576,6 +582,9 @@ ActionPage.propTypes = {
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  onAddRichResponse: PropTypes.func.isRequired,
+  onDeleteRichResponse: PropTypes.func.isRequired,
+  onEditRichResponse: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -724,6 +733,15 @@ function mapDispatchToProps(dispatch) {
     onDeleteNewActionResponseQuickResponse: (index) => {
       dispatch(deleteNewActionResponseQuickResponse(index));
     },
+    onAddRichResponse: (responseIndex, richResponse) => {
+      dispatch(addRichResponse(responseIndex, richResponse));
+    },
+    onDeleteRichResponse: (responseIndex, richResponse) => {
+      dispatch(deleteRichResponse(responseIndex, richResponse));
+    },
+    onEditRichResponse: (responseIndex, richResponse) => {
+      dispatch(editRichResponse(responseIndex, richResponse));
+    }
   };
 }
 

@@ -1,12 +1,13 @@
 {
     "name": "Button",
     "type": "buttons",
+    "enabled": true,
     "description": "Button that will have a payload to execute an action",
     "documentation": null,
     "defaultPayload": [
         {
             "label": "Button 1",
-            "payload": "Payload 1"
+            "linkURL": "<go to this link on click>"
         }
     ]
 }

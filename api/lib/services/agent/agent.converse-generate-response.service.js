@@ -116,11 +116,9 @@ module.exports = async function ({ actionData, CSO }) {
         if (webhookResponse.textResponse) {
             return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
         }
-        const quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
         const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: quickResponses, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
+        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
     }
-    const quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
     const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: quickResponses, fulfilled: true };
+    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, fulfilled: true };
 };
