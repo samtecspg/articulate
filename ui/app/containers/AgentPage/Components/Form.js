@@ -276,7 +276,7 @@ class Form extends React.Component {
               agentActions={this.props.agentActions}
               newAgent={this.props.newAgent}
               onGoToUrl={this.props.onGoToUrl}
-              defaultaFallbackActionName={this.props.defaultaFallbackActionName}
+              defaultFallbackActionName={this.props.defaultFallbackActionName}
               defaultWelcomeActionName={this.props.defaultWelcomeActionName}
             />
           )}
@@ -346,7 +346,7 @@ Form.propTypes = {
   newAgent: PropTypes.bool,
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
-  defaultaFallbackActionName: PropTypes.string,
+  defaultFallbackActionName: PropTypes.string,
   defaultWelcomeActionName: PropTypes.string,
   onAddNewParameter: PropTypes.func,
   onDeleteParameter: PropTypes.func,
