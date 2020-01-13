@@ -814,7 +814,6 @@ export class ConversationBar extends React.PureComponent {
                         message.richResponses.map((richResponse, richResponseIndex) => {
                           switch (richResponse.type) {
                             case 'audio':
-                              console.log('AUDIO: ', richResponse.data.audio);
                               return (
                                 <ReactAudioPlayer
                                   className={classes.audioMessage}
@@ -952,7 +951,6 @@ export class ConversationBar extends React.PureComponent {
                                 </Grid>
                               )
                             case 'video':
-                              console.log('VIDEO: ', richResponse);
                               return (
                                 <Player
                                   key={`message_${index}_richResponse_${richResponseIndex}`}
