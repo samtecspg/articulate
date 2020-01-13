@@ -146,7 +146,7 @@ const styles = {
     width: '10px',
     display: 'inline-flex',
     position: 'absolute',
-    zIndex: 9999
+    zIndex: 9
   }
 };
 
