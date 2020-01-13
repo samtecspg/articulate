@@ -7,6 +7,15 @@ module.exports = async function ({ connection, request, h }) {
   const event = request.payload;
   event.server = request.server;
   const sessionId = event.sessionId + connection.id;
+
+  if (!connection.details.useAgentWelcomeAction && event.isWelcomeMessage) {
+    const response = {
+      ignore: true
+    }
+    channelService.reply({ connection, event, response });
+    return h.response().code(200);
+  }
+
   try {
     const response = await agentService.converse({
       id: connection.agent,

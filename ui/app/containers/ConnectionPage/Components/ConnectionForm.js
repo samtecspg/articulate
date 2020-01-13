@@ -412,8 +412,8 @@ class ConnectionForm extends React.Component {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
     <title>Dev Widget</title>
-    <link href="https://cdn.jsdelivr.net/gh/samtecspg/articulate-chatbot-widget@0.0.5/dist/articulate-chatbot-widget.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.jsdelivr.net/gh/samtecspg/articulate-chatbot-widget@0.0.5/dist/articulate-chatbot-widget.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/samtecspg/articulate-chatbot-widget@0.0.7/dist/articulate-chatbot-widget.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/samtecspg/articulate-chatbot-widget@0.0.7/dist/articulate-chatbot-widget.js"></script>
   </head>
   <body>
     <div id="webchat"></div>
