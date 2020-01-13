@@ -138,6 +138,15 @@ const styles = {
     position: 'relative',
     top: '2px',
     marginLeft: '5px'
+  },
+  activeRichResponsesDot: {
+    borderRadius: '50px',
+    backgroundColor: '#4e4e4e',
+    height: '10px',
+    width: '10px',
+    display: 'inline-flex',
+    position: 'absolute',
+    zIndex: 9
   }
 };
 
@@ -269,22 +278,28 @@ class ResponseRow extends React.Component {
             />
           </Tooltip>
           {richResponses &&
-            <Tooltip
-              key="richResponses"
-              title={intl.formatMessage(messages.richResponses)}
-              placement="top"
-            >
-              <img
-                onClick={evt =>
-                  this.setState({
-                    anchorRichResponsesEl: evt.target,
-                    openRichResponses: true,
-                  })
-                }
-                className={classes.icon}
-                src={richResponsesIcon}
-              />
-            </Tooltip>
+            <React.Fragment>
+              {usedRichResponses.length > 0 && <div className={classes.activeRichResponsesDot}></div>}
+              <Tooltip
+                key="richResponses"
+                title={intl.formatMessage(messages.richResponses)}
+                placement="top"
+              >
+                <img
+                  onClick={evt =>
+                    this.setState({
+                      anchorRichResponsesEl: evt.target,
+                      openRichResponses: true,
+                    })
+                  }
+                  style={{
+                    paddingLeft: '0px !important'
+                  }}
+                  className={classes.icon}
+                  src={richResponsesIcon}
+                />
+              </Tooltip>
+            </React.Fragment>
           }
           <Tooltip
             key="copyResponse"
