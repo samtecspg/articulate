@@ -39,8 +39,8 @@ module.exports = async function ({ connection, request, h }) {
 
         event = JSON.parse(event.payload);
 
-        if (event.type === 'interactive_message') {
-          event.api_app_id = JSON.parse(event.actions[0].name).api_app_id;
+        if (event.type === 'block_actions') {
+          event.api_app_id = JSON.parse(event.actions[0].value).api_app_id;
           event.event = {
               channel: event.channel.id,
               user: event.user.id
@@ -50,7 +50,7 @@ module.exports = async function ({ connection, request, h }) {
           const response = await agentService.converse({ 
               id: connection.agent,
               sessionId,
-              text: event.actions[0].value,
+              text: event.actions[0].text.text,
               timezone: null,
               debug: false,
               additionalKeys: {

@@ -3,31 +3,7 @@ const { WebClient } = require('@slack/client');
 module.exports = async function ({ connection, event, response }) {
 
     const web = new WebClient(connection.details.botAccessToken);
-
-    /* let attachments;
-     if (response.quickResponses) {
-         const actions = response.quickResponses.map((quickResponse, index) => {
- 
-             return {
-                 name: `{ "api_app_id": "${event.api_app_id}", "quickResponse": ${index + 1} }`,
-                 text: quickResponse,
-                 type: 'button',
-                 value: quickResponse
-             }
-         });
-         attachments = [
-             {
-                 text: "",
-                 fallback: "Quick response not selected",
-                 callback_id: "quickResponse",
-                 color: "#3AA3E3",
-                 attachment_type: "default",
-                 actions
-             }
-         ]
-     }
-     */
-
+    
     var blocks = [];
     if (response.richResponses && response.richResponses.length > 0) {
         blocks.push(createTextBlock(response.textResponse));
@@ -57,10 +33,12 @@ module.exports = async function ({ connection, event, response }) {
                     blocks.push(createCollapsibleBlock(collapsible));
                 }
             }
+            if (richResponse.type === 'quickResponses') {
+                blocks.push(createQuickResponsesBlock(richResponse.data.quickResponses, event))
+            }
             blocks.push(createDividerBlock());
         }
     }
-    //blocks.push(createImageBlock());
     web.chat.postMessage({ channel: event.event.channel, text: response.textResponse, blocks });
 }
 
@@ -152,6 +130,25 @@ const createButtonBlock = (richResponse) => {
                 "text": button.label
             },
             "url": button.linkURL
+        })
+    }
+
+    return {
+        type: "actions",
+        elements
+    }
+}
+
+const createQuickResponsesBlock = (quickResponses, event) => {
+    var elements = [];
+    for (const [index, quickResponse] of quickResponses.entries()) {
+        elements.push({
+            "type": "button",
+            "text": {
+                "type": "plain_text",
+                "text": quickResponse
+            },
+            "value": `{ "api_app_id": "${event.api_app_id}", "quickResponse": ${index + 1} }`
         })
     }
 
