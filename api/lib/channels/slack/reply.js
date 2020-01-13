@@ -3,10 +3,10 @@ const { WebClient } = require('@slack/client');
 module.exports = async function ({ connection, event, response }) {
 
     const web = new WebClient(connection.details.botAccessToken);
-    
+
     var blocks = [];
+    blocks.push(createTextBlock(response.textResponse));
     if (response.richResponses && response.richResponses.length > 0) {
-        blocks.push(createTextBlock(response.textResponse));
         blocks.push(createDividerBlock());
         for (const richResponse of response.richResponses) {
             if (richResponse.type === 'image') {
@@ -34,10 +34,14 @@ module.exports = async function ({ connection, event, response }) {
                 }
             }
             if (richResponse.type === 'quickResponses') {
-                blocks.push(createQuickResponsesBlock(richResponse.data.quickResponses, event))
+                blocks.push(createQuickResponsesBlock(richResponse.data.quickResponses, event));
             }
             blocks.push(createDividerBlock());
         }
+    }
+    if (response.quickResponses && response.quickResponses.length > 0) {
+        blocks.push(createDividerBlock());
+        blocks.push(createQuickResponsesBlock(response.quickResponses, event));
     }
     web.chat.postMessage({ channel: event.event.channel, text: response.textResponse, blocks });
 }
@@ -151,7 +155,6 @@ const createQuickResponsesBlock = (quickResponses, event) => {
             "value": `{ "api_app_id": "${event.api_app_id}", "quickResponse": ${index + 1} }`
         })
     }
-
     return {
         type: "actions",
         elements
