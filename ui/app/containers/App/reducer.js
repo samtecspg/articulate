@@ -856,7 +856,7 @@ function appReducer(state = initialState, action) {
         .setIn(['agent', 'timezone'], state.settings.defaultTimezone)
         .setIn(
           ['agent', 'fallbackAction'],
-          state.settings.defaultaFallbackActionName,
+          state.settings.defaultFallbackActionName,
         ).setIn(
           ['agent', 'welcomeAction'],
           state.settings.defaultWelcomeActionName,

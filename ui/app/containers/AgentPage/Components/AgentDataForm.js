@@ -90,6 +90,7 @@ class AgentDataForm extends React.Component {
 
   render() {
     const { classes, intl, agent, settings } = this.props;
+    debugger;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid
@@ -329,8 +330,8 @@ class AgentDataForm extends React.Component {
                   }}
                 >
                   {this.props.newAgent ? (
-                    <MenuItem value={this.props.defaultaFallbackActionName}>
-                      {this.props.defaultaFallbackActionName}
+                    <MenuItem value={this.props.defaultFallbackActionName}>
+                      {this.props.defaultFallbackActionName}
                     </MenuItem>
                   ) : (
                       <MenuItem value="create">
@@ -464,7 +465,7 @@ AgentDataForm.propTypes = {
   newAgent: PropTypes.bool,
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
-  defaultaFallbackActionName: PropTypes.string,
+  defaultFallbackActionName: PropTypes.string,
   defaultaWelcomeActionName: PropTypes.string,
 };
 

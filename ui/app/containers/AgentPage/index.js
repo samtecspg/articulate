@@ -432,8 +432,8 @@ export class AgentPage extends React.PureComponent {
               newAgent={this.state.isNewAgent}
               agentActions={this.props.agentActions}
               onGoToUrl={this.props.onGoToUrl}
-              defaultaFallbackActionName={
-                this.props.settings.defaultaFallbackActionName
+              defaultFallbackActionName={
+                this.props.settings.defaultFallbackActionName
               }
               defaultWelcomeActionName={
                 this.props.settings.defaultWelcomeActionName

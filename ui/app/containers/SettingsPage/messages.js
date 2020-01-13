@@ -141,14 +141,14 @@ export default defineMessages({
     defaultMessage:
       'Please verify this value. It should be an array of JSON objects with text and value attributes',
   },
-  defaultaFallbackActionName: {
+  defaultFallbackActionName: {
     id:
-      'app.containers.SettingsPage.component.GeneralSettings.defaultaFallbackActionName',
+      'app.containers.SettingsPage.component.GeneralSettings.defaultFallbackActionName',
     defaultMessage: 'Default Fallback Action Name:',
   },
-  defaultaFallbackActionNamePlaceholder: {
+  defaultFallbackActionNamePlaceholder: {
     id:
-      'app.containers.SettingsPage.component.GeneralSettings.defaultaFallbackActionNamePlaceholder',
+      'app.containers.SettingsPage.component.GeneralSettings.defaultFallbackActionNamePlaceholder',
     defaultMessage:
       'Enter the name for the default fallback action that will be created for new agents',
   },
