@@ -14,6 +14,7 @@ module.exports = function ({ richResponses, templateContext }) {
         parsedRichResponses = _.map(richResponses, (richResponse) => {
             currentType = richResponse.type;
             richResponse.data = JSON.parse(handlebars.compile(richResponse.data)(templateContext));
+            return richResponse;
         });
     } catch (error) {
         console.error(`An error ocurred parsing ${currentType} rich response:`);
