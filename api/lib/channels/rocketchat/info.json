@@ -5,17 +5,22 @@
     "details": {
         "rocketchatURL": {
             "displayName": "Rocket.Chat URL",
-            "description" : "URL of the Rocket.Chat instance to connect to. Can be specified as host:port",
+            "description": "URL of the Rocket.Chat instance to connect to. Can be specified as host:port",
             "type": "string"
+        },
+        "useSSL": {
+            "displayName": "Use SSL (https)",
+            "description": "If rocketchat server uses SSL-https this should be enabled",
+            "type": "boolean"
         },
         "rocketchatUser": {
             "displayName": "Rocket.Chat User",
-            "description" : "The bot’s username. Must be registered on your Rocket.Chat server and granted bot role.",
+            "description": "The bot’s username. Must be registered on your Rocket.Chat server and granted bot role.",
             "type": "string"
         },
         "rocketchatPassword": {
             "displayName": "Rocket.Chat password",
-            "description" : "The bot user’s password.",
+            "description": "The bot user’s password.",
             "type": "password"
         },
         "outgoingMessages": {

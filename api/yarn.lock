@@ -1364,7 +1364,7 @@ assign-symbols@^1.0.0:
   resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
   integrity sha1-WWZ/QfrdTyDMvCu5a41Pf3jsA2c=
 
-asteroid@rocketchat/asteroid:
+"asteroid@github:rocketchat/asteroid":
   version "0.6.1"
   resolved "https://codeload.github.com/rocketchat/asteroid/tar.gz/a76a53254e381f9487aa2a9be3d874c9a2df6552"
   dependencies:
