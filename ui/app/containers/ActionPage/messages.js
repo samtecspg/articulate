@@ -265,5 +265,9 @@ export default defineMessages({
   hint2: {
     id: 'app.containers.ActionPage.component.ResponseRow.hint',
     defaultMessage: 'for template values',
+  },
+  disableTextResponse: {
+    id: 'app.containers.ActionPage.component.ResponseRow.disableTextResponse',
+    defaultMessage: 'Disable text response',
   }
 });

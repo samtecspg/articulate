@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Grid, Tooltip, Select, MenuItem, Menu, Dialog, DialogContent, DialogTitle, Typography, Button } from '@material-ui/core';
+import { Grid, Tooltip, Select, MenuItem, Dialog, DialogContent, DialogTitle, Typography, Button, FormControlLabel, Switch } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ContentEditable from 'react-contenteditable';
 
@@ -147,6 +147,14 @@ const styles = {
     display: 'inline-flex',
     position: 'absolute',
     zIndex: 9
+  },
+  switchLabel: {
+    position: 'relative',
+    left: '14px',
+    bottom: '5px'
+  },
+  switchContainer: {
+    borderBottom: '1px solid #4e4e4e'
   }
 };
 
@@ -352,14 +360,34 @@ class ResponseRow extends React.Component {
               }}
               onChange={(evt) => {
                 evt.preventDefault();
-                if (
-                  !evt._targetInst ||
-                  (evt._targetInst && evt._targetInst.type !== 'img')
-                ) {
-                  this.toggleRichResponseEditor(true, evt.target.value);
+                if (!evt._targetInst || (evt._targetInst && ['img', 'input'].indexOf(evt._targetInst.type) === -1)){
+                  if (evt.target.value !== 'disableRichResponse'){
+                    this.toggleRichResponseEditor(true, evt.target.value);
+                  }
+                }
+                else {
+                  if (evt.target.value === 'disableRichResponse'){
+                    this.props.onChangeTextResponseFlag(!response.disableTextResponse, responseIndex);
+                  }
+                  this.setState({
+                    openRichResponses: true
+                  });
                 }
               }}
             >
+              <MenuItem className={classes.switchContainer} value='disableRichResponse'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={response.disableTextResponse ? response.disableTextResponse : false}
+                      value="disableTextResponse"
+                      color="primary"
+                    />
+                  }
+                  className={classes.switchLabel}
+                  label={intl.formatMessage(messages.disableTextResponse)}
+                />
+              </MenuItem>
               {
                 Object.keys(richResponses).map((richResponse, index) => {
                   return (
@@ -539,6 +567,7 @@ ResponseRow.propTypes = {
   onChainActionToResponse: PropTypes.func,
   onUnchainActionFromResponse: PropTypes.func,
   onEditActionResponse: PropTypes.func,
+  onChangeTextResponseFlag: PropTypes.func,
   onCopyResponse: PropTypes.func,
   onDeleteResponse: PropTypes.func,
   agentFilteredActions: PropTypes.array,

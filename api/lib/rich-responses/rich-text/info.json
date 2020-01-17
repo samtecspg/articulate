@@ -1,0 +1,10 @@
+{
+    "name": "Rich Text",
+    "type": "richText",
+    "enabled": true,
+    "description": "Rich text to enable text format and embeddings.",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/rich-text/README.MD",
+    "defaultPayload": {
+        "text": "<h2>This is a title</h2><p>This is text</p><a href='https://www.w3schools.com'>This is a link</a>"
+    }
+}

@@ -157,6 +157,7 @@ import {
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
   EDIT_ACTION_RESPONSE,
+  EDIT_TEXT_RESPONSE_FLAG,
   SORT_SLOTS,
   ADD_NEW_MODIFIER,
   ADD_MODIFIER_SAYING,
@@ -1851,6 +1852,17 @@ function appReducer(state = initialState, action) {
           responses.map((response, index) => {
             if (index === action.responseIndex) {
               return response.set('textResponse', action.newResponse);
+            }
+            return response;
+          }),
+        )
+        .set('actionTouched', true);
+    case EDIT_TEXT_RESPONSE_FLAG :
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.set('disableTextResponse', action.value);
             }
             return response;
           }),

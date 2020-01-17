@@ -312,6 +312,9 @@ class ResponseForm extends React.Component {
                                 onEditActionResponse={
                                   this.props.onEditActionResponse
                                 }
+                                onChangeTextResponseFlag={
+                                  this.props.onChangeTextResponseFlag
+                                }
                                 onCopyResponse={this.props.onCopyResponse}
                                 onDeleteResponse={this.props.onDeleteResponse}
                                 onSearchActions={this.props.onSearchActions}
@@ -451,6 +454,7 @@ ResponseForm.propTypes = {
   agentActions: PropTypes.array,
   newResponse: PropTypes.string,
   onEditActionResponse: PropTypes.func,
+  onChangeTextResponseFlag: PropTypes.func,
   agentFilteredActions: PropTypes.array,
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,

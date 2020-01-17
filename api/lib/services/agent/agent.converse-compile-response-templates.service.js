@@ -14,7 +14,7 @@ module.exports = async function ({ responses, templateContext, isTextPrompt = fa
             const compiledResponse = handlebars.compile(response.textResponse, { strict: true });
             try {
                 const richResponses = await agentService.converseCompileRichResponsesTemplates({ richResponses: response.richResponses, templateContext });
-                return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions, richResponses };
+                return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions, richResponses, disableTextResponse: response.disableTextResponse };
             }
             catch (error) {
                 console.error(error);

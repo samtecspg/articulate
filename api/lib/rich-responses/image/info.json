@@ -3,7 +3,7 @@
     "type": "image",
     "enabled": true,
     "description": "A link to an image that will be displayed as a message",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/README.MD",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/image/README.MD",
     "defaultPayload": {
         "imageURL": "http://example.com/image.jpg"
     }

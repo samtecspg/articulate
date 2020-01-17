@@ -124,6 +124,7 @@ import {
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
   EDIT_ACTION_RESPONSE,
+  EDIT_TEXT_RESPONSE_FLAG,
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
@@ -1774,6 +1775,14 @@ export function editActionResponse(newResponse, responseIndex) {
   return {
     type: EDIT_ACTION_RESPONSE,
     newResponse,
+    responseIndex,
+  };
+}
+
+export function changeTextResponseFlag(value, responseIndex) {
+  return {
+    type: EDIT_TEXT_RESPONSE_FLAG,
+    value,
     responseIndex,
   };
 }

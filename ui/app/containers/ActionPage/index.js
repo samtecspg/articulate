@@ -83,6 +83,7 @@ import {
   addRichResponse,
   deleteRichResponse,
   editRichResponse,
+  changeTextResponseFlag,
 } from '../App/actions';
 
 const styles = {
@@ -508,6 +509,7 @@ export class ActionPage extends React.Component {
                 onUpdateNewResponse={this.props.onUpdateNewResponse}
                 onCopyResponse={this.props.onCopyResponse}
                 onEditActionResponse={this.props.onEditActionResponse}
+                onChangeTextResponseFlag={this.props.onChangeTextResponseFlag}
                 onSearchActions={this.onSearchActions}
                 agentFilteredActions={this.props.agentFilteredActions}
                 onGoToUrl={this.props.onGoToUrl}
@@ -571,6 +573,7 @@ ActionPage.propTypes = {
   onCopyResponse: PropTypes.func,
   newResponse: PropTypes.string,
   onEditActionResponse: PropTypes.func,
+  onChangeTextResponseFlag: PropTypes.func,
   onLoadActions: PropTypes.func,
   onChangeQuickResponse: PropTypes.func.isRequired,
   onDeleteQuickResponse: PropTypes.func.isRequired,
@@ -699,6 +702,9 @@ function mapDispatchToProps(dispatch) {
     },
     onEditActionResponse: (newResponse, responseIndex) => {
       dispatch(editActionResponse(newResponse, responseIndex));
+    },
+    onChangeTextResponseFlag: (value, responseIndex) => {
+      dispatch(changeTextResponseFlag(value, responseIndex));
     },
     onLoadFilteredActions: filter => {
       dispatch(loadFilteredActions(filter));

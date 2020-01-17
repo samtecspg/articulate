@@ -3,7 +3,7 @@
     "type": "buttons",
     "enabled": true,
     "description": "Button that will have a payload to execute an action",
-    "documentation": null,
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/button/README.MD",
     "defaultPayload": [
         {
             "label": "Button 1",

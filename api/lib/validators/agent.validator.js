@@ -157,7 +157,8 @@ class AgentValidate {
                             data: ActionResponseRichResponseSchema.data
                         }).allow([]),
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
-                        actions: ActionResponseSchema.actions
+                        actions: ActionResponseSchema.actions,
+                        disableTextResponse: ActionResponseSchema.disableTextResponse
                     }).required().min(1).error(new Error('Please specify at least one response.')),
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
@@ -196,7 +197,8 @@ class AgentValidate {
                             data: ActionResponseRichResponseSchema.data
                         }).allow([]),
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
-                        actions: ActionResponseSchema.actions
+                        actions: ActionResponseSchema.actions,
+                        disableTextResponse: ActionResponseSchema.disableTextResponse
                     }).min(1).error(new Error('Please specify at least one response.')),
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
@@ -992,7 +994,8 @@ class AgentValidate {
                                 data: ActionResponseRichResponseSchema.data
                             }).allow([]),
                             textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
-                            actions: ActionResponseSchema.actions
+                            actions: ActionResponseSchema.actions,
+                            disableTextResponse: ActionResponseSchema.disableTextResponse
                         }).required().min(1).error(new Error('Please specify at least one response.')),
                         slots: Joi.array().items({
                             slotName: SlotSchema.slotName.required(),

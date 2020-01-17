@@ -8,7 +8,8 @@ class ActionResponseModel {
         return {
             richResponses: Joi.array().items(ActionResponseRichResponseModel.schema),
             textResponse: Joi.string().trim(),
-            actions: Joi.array().items(Joi.string().trim())
+            actions: Joi.array().items(Joi.string().trim()),
+            disableTextResponse: Joi.boolean().default(false)
         };
     };
 }

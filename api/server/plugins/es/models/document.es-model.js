@@ -57,6 +57,9 @@ const mappings = {
                 richResponses: {
                     type: 'text'
                 },
+                disableTextResponse: {
+                    type: 'boolean'
+                },
                 responses: {
                     type: 'nested',
                     properties: {
@@ -77,7 +80,10 @@ const mappings = {
                         },
                         richResponses: {
                             type: 'text'
-                        }
+                        },
+                        disableTextResponse: {
+                            type: 'boolean'
+                        },
                     }
                 },
                 CSO: {

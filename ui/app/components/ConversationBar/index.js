@@ -459,6 +459,7 @@ export class ConversationBar extends React.PureComponent {
             quickResponses: response.quickResponses,
             richResponses: response.richResponses,
             CSO: response.CSO,
+            disableTextResponse: response.disableTextResponse
           });
           this.props.onStoreSourceData({ ...response.CSO });
         }
@@ -771,31 +772,33 @@ export class ConversationBar extends React.PureComponent {
                         : null}
                       {message.author}
                     </Typography> : null}
-                    <Typography
-                      style={{
-                        border: `1px solid ${this.props.agent.uiColor}`,
-                      }}
-                      className={classes.agentMessage}
-                    >
-                      {unescapeText(message.message)}
-                      {message.docId && !demoMode ? (
-                        <span
-                          onClick={() => {
-                            this.setState({
-                              openCodeModal: true,
-                              CSO:
-                                message.CSO,
-                            });
-                          }}
-                          className={classes.messageSource}
-                        >
-                          {'</> '}
-                          <span className={classes.messageSourceLink}>
-                            {intl.formatMessage(messages.seeSource)}
+                    {!message.disableTextResponse &&
+                      <Typography
+                        style={{
+                          border: `1px solid ${this.props.agent.uiColor}`,
+                        }}
+                        className={classes.agentMessage}
+                      >
+                        {unescapeText(message.message)}
+                        {message.docId && !demoMode ? (
+                          <span
+                            onClick={() => {
+                              this.setState({
+                                openCodeModal: true,
+                                CSO:
+                                  message.CSO,
+                              });
+                            }}
+                            className={classes.messageSource}
+                          >
+                            {'</> '}
+                            <span className={classes.messageSourceLink}>
+                              {intl.formatMessage(messages.seeSource)}
+                            </span>
                           </span>
-                        </span>
-                      ) : null}
-                    </Typography>
+                        ) : null}
+                      </Typography>
+                    }
                     {message.quickResponses && message.quickResponses.length > 0 ?
                       <Grid className={classes.agentButtonContainer}>
                         {message.quickResponses.map((quickResponse, buttonIndex) => {
@@ -955,6 +958,18 @@ export class ConversationBar extends React.PureComponent {
                                       </Button>
                                     )
                                   })}
+                                </Grid>
+                              )
+                            case 'richText':
+                              return (
+                                <Grid
+                                  key={`message_${index}_richResponse_${richResponseIndex}`}
+                                  style={{
+                                    border: `1px solid ${this.props.agent.uiColor}`,
+                                  }}
+                                  className={classes.agentMessage}
+                                >
+                                  <div style={{fontFamily: 'Montserrat' }} dangerouslySetInnerHTML={{ __html: unescapeText(richResponse.data.text) }} />
                                 </Grid>
                               )
                             case 'video':
