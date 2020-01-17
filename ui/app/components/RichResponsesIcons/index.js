@@ -10,7 +10,7 @@ import image from '../../images/image-icon.svg';
 import location from '../../images/location-icon.svg';
 import quickResponses from '../../images/quick-response-icon.svg';
 import video from '../../images/multimedia-icon.svg';
-import richText from '../../images/multimedia-icon.svg';
+import richText from '../../images/rich-text-icon.svg';
 
 const logosDir = {
   audio,
