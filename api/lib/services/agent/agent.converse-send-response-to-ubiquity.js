@@ -20,7 +20,8 @@ module.exports = async function ({ actionData, CSO }) {
         isFallback: CSO.response.isFallback,
         isWelcome: CSO.response.isWelcome,
         quickResponses: CSO.response.quickResponses ? CSO.response.quickResponses : [],
-        richResponses: CSO.response.richResponses
+        richResponses: CSO.response.richResponses,
+        disableTextResponse: CSO.response.disableTextResponse
     };
 
     //This will store the final response in CSO.finalResponse

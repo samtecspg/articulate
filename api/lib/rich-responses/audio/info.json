@@ -3,7 +3,7 @@
     "type": "audio",
     "enabled": true,
     "description": "Audio message that will be playable by the user.",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/README.MD",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/audio/README.MD",
     "defaultPayload": {
         "audio": "http://example/audio.mp3"
     }

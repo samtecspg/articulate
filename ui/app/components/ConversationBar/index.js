@@ -173,6 +173,7 @@ const styles = {
     overflowX: 'scroll',
     width: '90%',
     marginBottom: '16px',
+    marginLeft: '15px'
   },
   agentMessageButton: {
     borderRadius: '3px',
@@ -301,6 +302,10 @@ const styles = {
     color: '#fff'
   }
 };
+
+const unescapeText = (string) => {
+  return unescape(string).replace(/&#x27;/g, '\'');
+}
 
 /* eslint-disable react/prefer-stateless-function */
 export class ConversationBar extends React.PureComponent {
@@ -454,6 +459,7 @@ export class ConversationBar extends React.PureComponent {
             quickResponses: response.quickResponses,
             richResponses: response.richResponses,
             CSO: response.CSO,
+            disableTextResponse: response.disableTextResponse
           });
           this.props.onStoreSourceData({ ...response.CSO });
         }
@@ -766,31 +772,33 @@ export class ConversationBar extends React.PureComponent {
                         : null}
                       {message.author}
                     </Typography> : null}
-                    <Typography
-                      style={{
-                        border: `1px solid ${this.props.agent.uiColor}`,
-                      }}
-                      className={classes.agentMessage}
-                    >
-                      {message.message}
-                      {message.docId && !demoMode ? (
-                        <span
-                          onClick={() => {
-                            this.setState({
-                              openCodeModal: true,
-                              CSO:
-                                message.CSO,
-                            });
-                          }}
-                          className={classes.messageSource}
-                        >
-                          {'</> '}
-                          <span className={classes.messageSourceLink}>
-                            {intl.formatMessage(messages.seeSource)}
+                    {!message.disableTextResponse &&
+                      <Typography
+                        style={{
+                          border: `1px solid ${this.props.agent.uiColor}`,
+                        }}
+                        className={classes.agentMessage}
+                      >
+                        {unescapeText(message.message)}
+                        {message.docId && !demoMode ? (
+                          <span
+                            onClick={() => {
+                              this.setState({
+                                openCodeModal: true,
+                                CSO:
+                                  message.CSO,
+                              });
+                            }}
+                            className={classes.messageSource}
+                          >
+                            {'</> '}
+                            <span className={classes.messageSourceLink}>
+                              {intl.formatMessage(messages.seeSource)}
+                            </span>
                           </span>
-                        </span>
-                      ) : null}
-                    </Typography>
+                        ) : null}
+                      </Typography>
+                    }
                     {message.quickResponses && message.quickResponses.length > 0 ?
                       <Grid className={classes.agentButtonContainer}>
                         {message.quickResponses.map((quickResponse, buttonIndex) => {
@@ -799,13 +807,14 @@ export class ConversationBar extends React.PureComponent {
                               key={`message_${index}_button_${buttonIndex}`}
                               style={{
                                 border: `1px solid ${this.props.agent.uiColor}`,
+                                marginLeft: buttonIndex === 0 ? '0px' : '15px'
                               }}
                               className={classes.agentMessageButton}
                               onClick={() => {
-                                this.props.onSendMessage({ message: quickResponse, isDemo: demoMode });
+                                this.props.onSendMessage({ message: unescapeText(quickResponse), isDemo: demoMode });
                               }}
                             >
-                              {quickResponse}
+                              {unescapeText(quickResponse)}
                             </Button>
                           )
                         })}
@@ -818,7 +827,7 @@ export class ConversationBar extends React.PureComponent {
                                 <ReactAudioPlayer
                                   className={classes.audioMessage}
                                   key={`message_${index}_richResponse_${richResponseIndex}`}
-                                  src={richResponse.data.audio}
+                                  src={unescapeText(richResponse.data.audio)}
                                   controls
                                 />
                               )
@@ -832,10 +841,10 @@ export class ConversationBar extends React.PureComponent {
                                           key={`message_${index}_richResponse_${richResponseIndex}_button_${buttonIndex}`}
                                           className={classes.buttonMessage}
                                           onClick={() => {
-                                            window.open(button.linkURL, "_blank");
+                                            window.open(unescapeText(button.linkURL), "_blank");
                                           }}
                                         >
-                                          {button.label}
+                                          {unescapeText(button.label)}
                                         </Button>
                                       )
                                     })}
@@ -849,17 +858,17 @@ export class ConversationBar extends React.PureComponent {
                                     return (
                                       cardIndex === this.state.cardsCarouselActiveCard ?
                                       <Slide in={true} timeout={200} direction="left" key={`message_${index}_richResponse_${richResponseIndex}_card_${cardIndex}`}>
-                                        <Card onClick={() => { window.open(card.linkURL, "_blank") }} className={classes.cardMessageContainer}>
+                                        <Card onClick={() => { window.open(unescapeText(card.linkURL), "_blank") }} className={classes.cardMessageContainer}>
                                           <CardActionArea>
-                                            <CardMedia image={card.imageURL}>
-                                              <img className={classes.cardMessageImage} alt={card.title} src={card.imageURL} />
+                                            <CardMedia image={unescapeText(card.imageURL)}>
+                                              <img className={classes.cardMessageImage} alt={unescapeText(card.title)} src={unescapeText(card.imageURL)} />
                                             </CardMedia>
                                             <CardContent>
                                               <Typography gutterBottom variant="h5" component="h2">
-                                                {card.title}
+                                                {unescapeText(card.title)}
                                               </Typography>
                                               <Typography component="p">
-                                                {card.description}
+                                                {unescapeText(card.description)}
                                               </Typography>
                                             </CardContent>
                                           </CardActionArea>
@@ -871,7 +880,7 @@ export class ConversationBar extends React.PureComponent {
                                     <Grid className={classes.cardMessageIndicatorContainer}>
                                       {richResponse.data.map((card, cardIndicatorIndex) => {
                                           return (
-                                            <span className={classes.cardMessageIndicator}><img onClick={() => { this.setState({ cardsCarouselActiveCard: cardIndicatorIndex }) }} key={`message_${index}_richResponse_${richResponseIndex}_cardIndicator_${cardIndicatorIndex}`} src={this.state.cardsCarouselActiveCard === cardIndicatorIndex ? circleEnabledIcon : circleDisabledIcon} /></span>
+                                            <span key={`message_${index}_richResponse_${richResponseIndex}_cardIndicator_${cardIndicatorIndex}`} className={classes.cardMessageIndicator}><img onClick={() => { this.setState({ cardsCarouselActiveCard: cardIndicatorIndex }) }} key={`message_${index}_richResponse_${richResponseIndex}_cardIndicator_${cardIndicatorIndex}`} src={this.state.cardsCarouselActiveCard === cardIndicatorIndex ? circleEnabledIcon : circleDisabledIcon} /></span>
                                           )
                                         })
                                       }
@@ -904,7 +913,7 @@ export class ConversationBar extends React.PureComponent {
                                             this.setState({ collapsibleActiveItem: newActiveItem })
                                           }}
                                         >
-                                          <ListItemText primary={item.title} />
+                                          <ListItemText primary={unescapeText(item.title)} />
                                         </ListItem>
                                         <Collapse
                                           in={this.state.collapsibleActiveItem === itemIndex}
@@ -915,7 +924,7 @@ export class ConversationBar extends React.PureComponent {
                                           }}
                                         >
                                           <Typography component='p' variant='body1' style={{ padding: '10px' }}>
-                                            {item.content}
+                                            {unescapeText(item.content)}
                                           </Typography>
                                         </Collapse>
                                       </React.Fragment>
@@ -925,8 +934,8 @@ export class ConversationBar extends React.PureComponent {
                               )
                             case 'image':
                               return (
-                                <a key={`message_${index}_richResponse_${richResponseIndex}`} href={richResponse.data.imageURL} target="_blank">
-                                  <img className={classes.imageMessage} src={richResponse.data.imageURL} />
+                                <a key={`message_${index}_richResponse_${richResponseIndex}`} href={unescapeText(richResponse.data.imageURL)} target="_blank">
+                                  <img className={classes.imageMessage} src={unescapeText(richResponse.data.imageURL)} />
                                 </a>
                               )
                             case 'quickResponses':
@@ -938,16 +947,29 @@ export class ConversationBar extends React.PureComponent {
                                         key={`message_${index}_richResponse_${richResponseIndex}_quickResponse_${quickResponseIndex}`}
                                         style={{
                                           border: `1px solid ${this.props.agent.uiColor}`,
+                                          marginLeft: quickResponseIndex === 0 ? '0px' : '15px'
                                         }}
                                         className={classes.agentMessageButton}
                                         onClick={() => {
-                                          this.props.onSendMessage({ message: quickResponse, isDemo: demoMode });
+                                          this.props.onSendMessage({ message: unescapeText(quickResponse), isDemo: demoMode });
                                         }}
                                       >
-                                        {quickResponse}
+                                        {unescapeText(quickResponse)}
                                       </Button>
                                     )
                                   })}
+                                </Grid>
+                              )
+                            case 'richText':
+                              return (
+                                <Grid
+                                  key={`message_${index}_richResponse_${richResponseIndex}`}
+                                  style={{
+                                    border: `1px solid ${this.props.agent.uiColor}`,
+                                  }}
+                                  className={classes.agentMessage}
+                                >
+                                  <div style={{fontFamily: 'Montserrat' }} dangerouslySetInnerHTML={{ __html: unescapeText(richResponse.data.text) }} />
                                 </Grid>
                               )
                             case 'video':
@@ -955,7 +977,7 @@ export class ConversationBar extends React.PureComponent {
                                 <Player
                                   key={`message_${index}_richResponse_${richResponseIndex}`}
                                   playsInline
-                                  src={richResponse.data.video}
+                                  src={unescapeText(richResponse.data.video)}
                                 />
                               )
                             default:

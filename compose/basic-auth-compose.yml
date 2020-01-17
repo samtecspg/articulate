@@ -9,6 +9,4 @@ services:
      - AUTH_PASSWORD
      - AUTH_FORCE_DEFAULT_USER=${AUTH_FORCE_DEFAULT_USER:-false}
   ui:
-    build:
-      args:
-        - AUTH_ENABLED=true #needed in args section to be available during build (Dockerfile)
+    image: samtecspg/articulate-ui:repo-head

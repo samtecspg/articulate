@@ -3,7 +3,7 @@
     "type": "collapsible",
     "enabled": true,
     "description": "Useful widget to present information in a summarized way",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/chat-widget/README.MD",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/collapsible/README.MD",
     "defaultPayload": [
         {
             "title": "Title 1",
