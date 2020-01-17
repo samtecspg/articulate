@@ -5,12 +5,12 @@
     "details": {
         "pageAccessToken": {
             "displayName": "Page Access Token",
-            "description" : "Token provided by FB when you connected your FB app to a page",
+            "description": "Token provided by FB when you connected your FB app to a page",
             "type": "string"
         },
         "appSecret": {
             "displayName": "App Secret",
-            "description" : "App secret value of your FB app",
+            "description": "App secret value of your FB app",
             "type": "string"
         },
         "outgoingMessages": {
@@ -27,6 +27,11 @@
             "displayName": "Use the agent's welcome action after first message",
             "description": "After the first message, the agent's welcome action will be executed",
             "type": "boolean"
+        },
+        "messageBeforeButtonResponse": {
+            "displayName": "Message before button groups:",
+            "description": "Everytime a group of buttons is displayed, this message is needed",
+            "type": "string"
         }
     }
 }
