@@ -50,7 +50,7 @@ module.exports = async function ({ connection, event, response }) {
     }
 
     await driver.sendToRoomId(attachments.length > 0 ? {
-      msg: response.textResponse,
+      msg: !response.disableTextResponse ? response.textResponse : '',
       attachments
     } : response.textResponse, event.channel_id);
   }

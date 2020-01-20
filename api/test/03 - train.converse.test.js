@@ -62,13 +62,13 @@ describe('Agent', () => {
         expect(response.result.status).to.be.equal(STATUS_READY);
     });
 
-    it('post /agent/agentId/converse - Checks action response with quick response of action', async ({ context }) => {
+    it('post /agent/agentId/converse - Checks action response with rich responses', async ({ context }) => {
 
         const { importedAgentId } = context;
         const server = await Server.deployment();
         const payload = {
             sessionId,
-            text: "Get a quick response from action",
+            text: "I test rich responses",
             timezone: "UTC"
         };
         const response = await server.inject({
@@ -78,12 +78,40 @@ describe('Agent', () => {
         });
 
         expect(response.statusCode).to.equal(200);
-        expect(response.result.textResponse).to.be.equal("This is an action");
-        expect(response.result.responses[0].quickResponses[0]).to.be.equal("With a quick reply");
-        expect(response.result.responses[0].quickResponses[1]).to.be.equal("With another quick reply");
+        expect(response.result.textResponse).to.be.equal("This response contains rich responses");
         expect(response.result.responses).to.be.an.array();
         expect(response.result.responses.length).to.be.greaterThan(0);
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
+        expect(response.result.responses[0].richResponses).to.be.an.array();
+        expect(response.result.responses[0].richResponses[0].type).to.be.equal("video");
+        expect(response.result.responses[0].richResponses[0].data.video).to.be.equal("http://techslides.com/demos/sample-videos/small.mp4");
+        expect(response.result.responses[0].richResponses[1].type).to.be.equal("richText");
+        expect(response.result.responses[0].richResponses[1].data.text).to.be.equal("<h2>This is a title</h2><p>This is text</p><a href='https://www.w3schools.com'>This is a link</a>");
+        expect(response.result.responses[0].richResponses[2].type).to.be.equal("quickResponses");
+        expect(response.result.responses[0].richResponses[2].data.quickResponses).to.be.an.array();
+        expect(response.result.responses[0].richResponses[2].data.quickResponses[0]).to.be.equal("Quick response 1");
+        expect(response.result.responses[0].richResponses[2].data.quickResponses[1]).to.be.equal("Quick Response 2");
+        expect(response.result.responses[0].richResponses[2].data.quickResponses[2]).to.be.equal("Quick Response 3");
+        expect(response.result.responses[0].richResponses[3].type).to.be.equal("image");
+        expect(response.result.responses[0].richResponses[3].data.imageURL).to.be.equal("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg");
+        expect(response.result.responses[0].richResponses[4].type).to.be.equal("collapsible");
+        expect(response.result.responses[0].richResponses[4].data).to.be.an.array();
+        expect(response.result.responses[0].richResponses[4].data[0].title).to.be.equal("Title 1");
+        expect(response.result.responses[0].richResponses[4].data[0].content).to.contain("Lorem");
+        expect(response.result.responses[0].richResponses[5].type).to.be.equal("cardsCarousel");
+        expect(response.result.responses[0].richResponses[5].data).to.be.an.array();
+        expect(response.result.responses[0].richResponses[5].data[0].title).to.be.equal("Card 1");
+        expect(response.result.responses[0].richResponses[5].data[0].description).to.be.equal("This is a card");
+        expect(response.result.responses[0].richResponses[5].data[0].imageURL).to.be.equal("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg");
+        expect(response.result.responses[0].richResponses[5].data[0].linkURL).to.be.equal("https://www.google.com");
+        expect(response.result.responses[0].richResponses[6].type).to.be.equal("buttons");
+        expect(response.result.responses[0].richResponses[6].data).to.be.an.array();
+        expect(response.result.responses[0].richResponses[6].data[0].label).to.be.equal("Button 1");
+        expect(response.result.responses[0].richResponses[6].data[0].linkURL).to.be.equal("http://www.google.com");
+        expect(response.result.responses[0].richResponses[7].type).to.be.equal("audio");
+        expect(response.result.responses[0].richResponses[7].data.audio).to.be.equal("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+        expect(response.result.responses[0].disableTextResponse).to.be.equal(false);
+
     });
 
     it('post /agent/agentId/converse - Checks action response with keyword inside saying', async ({ context }) => {

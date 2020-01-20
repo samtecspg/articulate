@@ -46,7 +46,7 @@ async function buildReplyPayload(response, event, connection) {
     }
 
     return {
-        text: response.textResponse,
+        text: !response.disableTextResponse || attachments.length === 0 ? response.textResponse : '',
         channel: channel_name,
         username: connection.details.userName,
         attachments: attachments.length > 0 ? attachments : null

@@ -5,7 +5,9 @@ module.exports = async function ({ connection, event, response }) {
     const web = new WebClient(connection.details.botAccessToken);
 
     var blocks = [];
-    blocks.push(createTextBlock(response.textResponse));
+    if (response.richResponses.length === 0 || !response.disableTextResponse) {
+        blocks.push(createTextBlock(response.textResponse));
+    }
     if (response.richResponses && response.richResponses.length > 0) {
         blocks.push(createDividerBlock());
         for (const richResponse of response.richResponses) {
