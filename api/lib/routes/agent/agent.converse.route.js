@@ -27,7 +27,6 @@ module.exports = {
                 `${ROUTE_TO_MODEL[ROUTE_AGENT]}:${ACL_ACTION_WRITE}`
             ],
             [P_HAPI_ABAC]: [
-                `${MODEL_AGENT}:${ACL_ACTION_WRITE}`,
                 `${MODEL_AGENT}:${ACL_ACTION_CONVERSE}`
             ]
         },
