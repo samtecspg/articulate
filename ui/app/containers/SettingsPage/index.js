@@ -278,7 +278,9 @@ export class SettingsPage extends React.PureComponent {
         <ContentHeader
           title={messages.title}
           subtitle={messages.createSubtitle}
-          inlineElement={<ActionButtons formError={this.state.formError} onFinishAction={this.submit} />}
+          inlineElement={
+            <ActionButtons
+              formError={this.state.formError}
               onFinishAction={() => { this.submit(false); }}
               touched={this.props.settingsTouched}
               loading={this.props.settingsLoading}
@@ -291,6 +293,8 @@ export class SettingsPage extends React.PureComponent {
               onSaveAndExit={() => {
                 this.submit(true);
               }}
+            />
+          }
         />
         <Form
           isReadOnly={isReadOnly}
