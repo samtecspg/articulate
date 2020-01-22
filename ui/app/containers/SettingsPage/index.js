@@ -280,7 +280,7 @@ export class SettingsPage extends React.PureComponent {
           subtitle={messages.createSubtitle}
           inlineElement={
             <ActionButtons
-              formError={this.state.formError}
+              fowrmError={this.state.formError}
               onFinishAction={() => { this.submit(false); }}
               touched={this.props.settingsTouched}
               loading={this.props.settingsLoading}
