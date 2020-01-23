@@ -15,7 +15,10 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { ROUTE_AGENT } from '../../../common/constants';
+import {
+  GROUP_ACCESS_CONTROL,
+  ROUTE_AGENT,
+} from '../../../common/constants';
 import { AUTH_ENABLED } from '../../../common/env';
 import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
@@ -61,6 +64,7 @@ import saga from './saga';
 import {
   makeSelectAgent,
   makeSelectConversationBarOpen,
+  makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
   makeSelectLocation,
   makeSelectMissingAPI,
@@ -68,6 +72,7 @@ import {
   makeSelectSettings,
   makeSelectShowChatButton,
 } from './selectors';
+import AC from '../../utils/accessControl';
 
 class App extends React.Component {
   state = {
@@ -191,13 +196,17 @@ class App extends React.Component {
       chatButtonOpen,
       onToggleConversationBar,
       notifications,
-      loadingCurrentUser
+      loadingCurrentUser,
+      currentUser
     } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
     const disableHeader = this.props.location.pathname.indexOf('discovery') !== -1;
     if (!loadingCurrentUser) {
       return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
     }
+
+    const isConverseEnabled = AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_CONVERSE] });
+
     return disableHeader ? (
       <div>
         <Switch>
@@ -219,6 +228,7 @@ class App extends React.Component {
           notifications={notifications}
           demoMode={demoMode}
           onShareAgent={this.props.onShareAgent}
+          isConverseEnabled={isConverseEnabled}
         />
         <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen} onLogoutUser={this.props.onLogoutUser}>
           <Switch>
@@ -270,6 +280,7 @@ App.propTypes = {
   loadingCurrentUser: PropTypes.bool,
   onGoToUrl: PropTypes.func,
   loadCurrentUserError: PropTypes.func,
+  currentUser: PropTypes.object,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -337,6 +348,7 @@ const mapStateToProps = createStructuredSelector({
   notifications: makeSelectNotifications(),
   settings: makeSelectSettings(),
   loadingCurrentUser: makeSelectLoadingCurrentUser(),
+  currentUser: makeSelectCurrentUser(),
 });
 
 const withConnect = connect(

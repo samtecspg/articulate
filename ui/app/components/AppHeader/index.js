@@ -1,23 +1,10 @@
-import {
-  Button,
-  Grid,
-  Hidden,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+import { Button, Grid, Hidden, Tooltip, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
-import {
-  FormattedMessage,
-  injectIntl,
-  intlShape,
-} from 'react-intl';
-import {
-  Link,
-  withRouter,
-} from 'react-router-dom';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import agentsIcon from '../../images/agents-icon.svg';
 import chatIcon from '../../images/chat-icon.svg';
@@ -108,16 +95,7 @@ export class AppHeader extends React.Component {
   }
 
   render() {
-    const {
-      classes,
-      intl,
-      conversationBarOpen,
-      chatButtonOpen,
-      notifications,
-      agent,
-      demoMode,
-      location,
-    } = this.props;
+    const { classes, intl, conversationBarOpen, chatButtonOpen, notifications, agent, demoMode, location, isConverseEnabled } = this.props;
     const { pathname } = location;
 
     let notificationDotColor = '#358fec';
@@ -161,11 +139,7 @@ export class AppHeader extends React.Component {
           <Grid item xl={2} lg={2} md={2}>
             {demoMode ? (
               <a href="https://spg.ai/projects/articulate/" target="_blank">
-                <img
-                  className={classes.logo}
-                  src={logo}
-                  alt={intl.formatMessage(messages.articulateLogoAlt)}
-                />
+                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </a>
             ) : (
               <Link
@@ -174,36 +148,20 @@ export class AppHeader extends React.Component {
                 }}
                 to={'/'}
               >
-                <img
-                  className={classes.logo}
-                  src={logo}
-                  alt={intl.formatMessage(messages.articulateLogoAlt)}
-                />
+                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </Link>
             )}
           </Grid>
           <Grid item xl={2} lg={2} md={2} />
-          <Grid
-            className={classes.agentsButtonContainer}
-            item
-            xl={2}
-            lg={2}
-            md={2}
-          >
+          <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
             {isAgentNameHidden ? (
-              <Typography
-                className={classes.agentName}
-                style={{ color: agent.uiColor }}
-              >
+              <Typography className={classes.agentName} style={{ color: agent.uiColor }}>
                 {gravatars[agent.gravatar - 1]({
                   color: agent.uiColor,
                   className: classes.agentIcon,
                 })}
                 <span className={classes.agentName}>{agent.agentName}</span>
-                <Tooltip
-                  title={intl.formatMessage(messages.shareAgent)}
-                  placement="bottom"
-                >
+                <Tooltip title={intl.formatMessage(messages.shareAgent)} placement="bottom">
                   <img
                     src={shareIcon}
                     className={classes.shareIcon}
@@ -250,11 +208,7 @@ export class AppHeader extends React.Component {
                   className={classes.link}
                 >
                   <Button variant="contained">
-                    <img
-                      className={classes.icon}
-                      src={agentsIcon}
-                      alt={intl.formatMessage(messages.articulateLogoAlt)}
-                    />
+                    <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.agentsButton} />
                   </Button>
                 </Link>
@@ -268,11 +222,7 @@ export class AppHeader extends React.Component {
                   variant="contained"
                   className={classes.openChat}
                 >
-                  <img
-                    className={classes.icon}
-                    src={chatIcon}
-                    alt={intl.formatMessage(messages.articulateLogoAlt)}
-                  />
+                  <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                   <FormattedMessage {...messages.openChatButton} />
                 </Button>
               </Grid>
@@ -286,11 +236,7 @@ export class AppHeader extends React.Component {
           <Grid item xl={2} lg={2} md={2}>
             {demoMode ? (
               <a href="https://spg.ai/projects/articulate/" target="_blank">
-                <img
-                  className={classes.logo}
-                  src={logo}
-                  alt={intl.formatMessage(messages.articulateLogoAlt)}
-                />
+                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </a>
             ) : (
               <Link
@@ -299,36 +245,20 @@ export class AppHeader extends React.Component {
                 }}
                 to="/"
               >
-                <img
-                  className={classes.logo}
-                  src={logo}
-                  alt={intl.formatMessage(messages.articulateLogoAlt)}
-                />
+                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </Link>
             )}
           </Grid>
           <Grid item xl={3} lg={3} md={3} />
-          <Grid
-            className={classes.agentsButtonContainer}
-            item
-            xl={2}
-            lg={2}
-            md={2}
-          >
+          <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
             {isAgentNameHidden ? (
-              <Typography
-                className={classes.agentName}
-                style={{ color: agent.uiColor }}
-              >
+              <Typography className={classes.agentName} style={{ color: agent.uiColor }}>
                 {gravatars[agent.gravatar - 1]({
                   color: agent.uiColor,
                   className: classes.agentIcon,
                 })}
                 <span>{agent.agentName}</span>
-                <Tooltip
-                  title={intl.formatMessage(messages.shareAgent)}
-                  placement="bottom"
-                >
+                <Tooltip title={intl.formatMessage(messages.shareAgent)} placement="bottom">
                   <img
                     src={shareIcon}
                     className={classes.shareIcon}
@@ -345,14 +275,10 @@ export class AppHeader extends React.Component {
             {pathname !== '/' ? (
               [
                 validNotifications.length > 0 && chatButtonOpen ? (
-                  <div
-                    key="conversationNotificationDot"
-                    className={classes.notificationDot}
-                    style={{ backgroundColor: notificationDotColor }}
-                  />
+                  <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }} />
                 ) : null,
 
-                chatButtonOpen && (
+                chatButtonOpen && isConverseEnabled && (
                   <Button
                     key="conversat_button"
                     onClick={() => {
@@ -362,11 +288,7 @@ export class AppHeader extends React.Component {
                     variant="contained"
                     className={classes.openChat}
                   >
-                    <img
-                      className={classes.icon}
-                      src={chatIcon}
-                      alt={intl.formatMessage(messages.articulateLogoAlt)}
-                    />
+                    <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.openChatButton} />
                   </Button>
                 ),
@@ -391,29 +313,19 @@ export class AppHeader extends React.Component {
           {demoMode ? (
             <Grid item xs={4}>
               <a href="https://spg.ai/projects/articulate/" target="_blank">
-                <img
-                  className={classes.logo}
-                  src={logo}
-                  alt={intl.formatMessage(messages.articulateLogoAlt)}
-                />
+                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </a>
             </Grid>
           ) : (
             <Grid item sm={6} xs={6}>
               {isAgentNameHidden ? (
-                <Typography
-                  className={classes.agentName}
-                  style={{ color: agent.uiColor }}
-                >
+                <Typography className={classes.agentName} style={{ color: agent.uiColor }}>
                   {gravatars[agent.gravatar - 1]({
                     color: agent.uiColor,
                     className: classes.agentIcon,
                   })}
                   <span className={classes.agentName}>{agent.agentName}</span>
-                  <Tooltip
-                    title={intl.formatMessage(messages.shareAgent)}
-                    placement="bottom"
-                  >
+                  <Tooltip title={intl.formatMessage(messages.shareAgent)} placement="bottom">
                     <img
                       src={shareIcon}
                       className={classes.shareIcon}
@@ -430,13 +342,9 @@ export class AppHeader extends React.Component {
             {pathname !== '/' ? (
               [
                 validNotifications.length > 0 && chatButtonOpen ? (
-                  <div
-                    key="conversationNotificationDot"
-                    className={classes.notificationDot}
-                    style={{ backgroundColor: notificationDotColor }}
-                  />
+                  <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }} />
                 ) : null,
-                chatButtonOpen && (
+                chatButtonOpen && isConverseEnabled && (
                   <Button
                     key="conversat_button"
                     onClick={() => {
@@ -447,11 +355,7 @@ export class AppHeader extends React.Component {
                     className={classes.openChat}
                     style={{ marginLeft: '15px' }}
                   >
-                    <img
-                      className={classes.icon}
-                      src={chatIcon}
-                      alt={intl.formatMessage(messages.articulateLogoAlt)}
-                    />
+                    <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.openChatButtonSmall} />
                   </Button>
                 ),
@@ -491,6 +395,7 @@ AppHeader.propTypes = {
   agent: PropTypes.object,
   demoMode: PropTypes.bool,
   onShareAgent: PropTypes.func,
+  isConverseEnabled: PropTypes.bool,
 };
 
 const withDefinedStyles = withStyles(styles);
