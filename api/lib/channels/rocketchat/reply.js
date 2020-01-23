@@ -1,15 +1,19 @@
-import { driver } from '@rocket.chat/sdk'
+import { Semaphore } from 'await-semaphore';
+var mainSemaphore = new Semaphore(1);
 
-module.exports = async function ({ connection, event, response }) {
+module.exports = async function ({ connection, event, response, server }) {
 
   const HOST = connection.details.rocketchatURL;
   const USER = connection.details.rocketchatUser;
   const PASS = connection.details.rocketchatPassword;
+  var { driver } = require('@rocket.chat/sdk');
 
+  var botUserId;
 
+  var release = await mainSemaphore.acquire();
   await driver.connect({ host: HOST, useSsl: connection.details.useSSL });
-
-  const botUserId = await driver.login({ username: USER, password: PASS });
+  botUserId = await driver.login({ username: USER, password: PASS });
+  release();
 
   if (event.user_id !== botUserId) {
 
@@ -53,6 +57,10 @@ module.exports = async function ({ connection, event, response }) {
       msg: !response.disableTextResponse ? response.textResponse : '',
       attachments
     } : response.textResponse, event.channel_id);
+
+    var release = await mainSemaphore.acquire();
+    await driver.disconnect();
+    release();
   }
 }
 

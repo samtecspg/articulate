@@ -5,7 +5,7 @@ module.exports = async function ({ connection, event, response }) {
     const web = new WebClient(connection.details.botAccessToken);
 
     var blocks = [];
-    if (response.richResponses.length === 0 || !response.disableTextResponse) {
+    if (response.richResponses && response.richResponses.length === 0 || !response.disableTextResponse) {
         blocks.push(createTextBlock(response.textResponse));
     }
     if (response.richResponses && response.richResponses.length > 0) {
@@ -45,7 +45,7 @@ module.exports = async function ({ connection, event, response }) {
         blocks.push(createDividerBlock());
         blocks.push(createQuickResponsesBlock(response.quickResponses, event));
     }
-    web.chat.postMessage({ channel: event.event.channel, text: response.textResponse, blocks });
+    await web.chat.postMessage({ channel: event.event.channel, text: response.textResponse, blocks });
 }
 
 const createTextBlock = (text) => {

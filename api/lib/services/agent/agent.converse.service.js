@@ -10,6 +10,10 @@ import {
     CSO_TIMEZONE_DEFAULT
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import { Semaphore } from 'await-semaphore';
+
+var mainSemaphore = new Semaphore(1);
+var semaphores = {};
 
 //Reduce the remaining life of the saved slots
 const updateLifespanOfSlots = ({ CSO }) => {
@@ -110,6 +114,14 @@ const welcomeActionNeeded = CSO => {
 }
 
 module.exports = async function ({ id, sessionId, text, timezone, debug = false, additionalKeys = null }) {
+
+    var release = await mainSemaphore.acquire();
+    if (!semaphores[sessionId]) {
+        semaphores[sessionId] = new Semaphore(1);
+    }
+    release();
+
+    release = await semaphores[sessionId].acquire();
 
     try {
         const { redis } = this.server.app;
@@ -320,7 +332,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                 * Once we have every action in the actionQueue, we are going to process that action queue to get responses
                 */
                 const unfulfilledActionsInQueue = CSO.context.actionQueue.some((action) => {
-
                     return !action.fulfilled;
                 });
                 if (!unfulfilledActionsInQueue) {
@@ -426,10 +437,12 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                     webhooks
                 };
             }
+            release();
             return converseResult;
         }
     }
     catch (error) {
+        release();
         if (error.isParseError) {
             if (error.missingCategories) {
                 return {

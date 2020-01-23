@@ -84,13 +84,13 @@ module.exports = async function ({ actionData, CSO }) {
     });
 
     //Also we need to convert richResponses back to object
-    if (CSO.finalResponse.richResponses){
+    if (CSO.finalResponse.richResponses) {
         CSO.finalResponse.richResponses = JSON.parse(CSO.finalResponse.richResponses);
     }
-    if (fullConverseResult.richResponses){
+    if (fullConverseResult.richResponses) {
         fullConverseResult.richResponses = JSON.parse(fullConverseResult.richResponses);
     }
-    if (CSO.finalResponse.responses && CSO.finalResponse.responses.length > 0){
+    if (CSO.finalResponse.responses && CSO.finalResponse.responses.length > 0) {
         CSO.finalResponse.responses.forEach((response) => {
 
             response.richResponses = JSON.parse(response.richResponses);
@@ -101,7 +101,7 @@ module.exports = async function ({ actionData, CSO }) {
 
     if (CSO.ubiquity && CSO.ubiquity.connection && CSO.ubiquity.connection.details.outgoingMessages) {
 
-        channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity });
+        await channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity, server: this.server });
         await timeout(CSO.ubiquity.connection.details.waitTimeBetweenMessages);
     }
     else {
