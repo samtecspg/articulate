@@ -90,7 +90,6 @@ class AgentDataForm extends React.Component {
 
   render() {
     const { classes, intl, agent, settings } = this.props;
-    debugger;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid
