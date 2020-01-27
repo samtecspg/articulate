@@ -1,20 +1,9 @@
-import {
-  Grid,
-  MenuItem,
-  Popover,
-  Tooltip,
-} from '@material-ui/core';
-import {
-  createMuiTheme,
-  MuiThemeProvider,
-  withStyles,
-} from '@material-ui/core/styles';
+import { Grid, MenuItem, Popover, Tooltip } from '@material-ui/core';
+import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
-import {
-  injectIntl,
-  intlShape,
-} from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -187,7 +176,10 @@ export class AppContent extends React.Component {
 
   render() {
     const { classes, intl, conversationBarOpen, demoMode } = this.props;
-    const isUserSettingsDisabled = AC.validate({ userPolicies: this.props.currentUser.simplifiedGroupPolicies, requiredPolicies: userAccessPolicies });
+    const isUserSettingsDisabled = AC.validate({
+      userPolicies: _.get(this.props.currentUser, 'simplifiedGroupPolicies', {}),
+      requiredPolicies: userAccessPolicies,
+    });
 
     return conversationBarOpen ? (
       <Grid container>

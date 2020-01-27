@@ -8,11 +8,17 @@
  */
 
 import { CircularProgress } from '@material-ui/core';
+import _ from 'lodash';
 import Nes from 'nes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  withRouter,
+} from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -24,6 +30,7 @@ import logger from '../../../server/logger';
 import AppContent from '../../components/AppContent';
 import AppHeader from '../../components/AppHeader';
 import PrivateRoute from '../../components/PrivateRoute';
+import AC from '../../utils/accessControl';
 import { checkCookie } from '../../utils/cookies';
 import injectSaga from '../../utils/injectSaga';
 import { getWS } from '../../utils/locationResolver';
@@ -54,11 +61,11 @@ import {
   loadCurrentUserError,
   loadServerInfo,
   loadSettings,
+  logoutUser,
   refreshServerInfo,
   toggleChatButton,
   toggleConversationBar,
   updateSetting,
-  logoutUser,
 } from './actions';
 import saga from './saga';
 import {
@@ -72,7 +79,6 @@ import {
   makeSelectSettings,
   makeSelectShowChatButton,
 } from './selectors';
-import AC from '../../utils/accessControl';
 
 class App extends React.Component {
   state = {
@@ -131,7 +137,8 @@ class App extends React.Component {
           auth: AUTH_ENABLED ? { headers: { cookie: document.cookie } } : undefined,
         });
       }
-    } else {
+    }
+    else {
       this.props.loadCurrentUserError();
     }
   }
@@ -191,21 +198,17 @@ class App extends React.Component {
   }
 
   render() {
-    const {
-      conversationBarOpen,
-      chatButtonOpen,
-      onToggleConversationBar,
-      notifications,
-      loadingCurrentUser,
-      currentUser
-    } = this.props;
+    const { conversationBarOpen, chatButtonOpen, onToggleConversationBar, notifications, loadingCurrentUser, currentUser } = this.props;
     const demoMode = this.props.location.pathname.indexOf('demo') !== -1;
     const disableHeader = this.props.location.pathname.indexOf('discovery') !== -1;
     if (!loadingCurrentUser) {
       return <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />;
     }
 
-    const isConverseEnabled = AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_CONVERSE] });
+    const isConverseEnabled = AC.validate({
+      userPolicies: _.get(currentUser, 'simplifiedGroupPolicies', {}),
+      requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_CONVERSE],
+    });
 
     return disableHeader ? (
       <div>
