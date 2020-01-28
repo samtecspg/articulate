@@ -385,6 +385,7 @@ export class AgentPage extends React.PureComponent {
             this.submit(false);
           }}
           onTrain={this.props.onTrain}
+          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
           agentStatus={this.props.agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={this.props.agent.lastTraining}
@@ -436,8 +437,8 @@ export class AgentPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
-    );
+        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+      );
   }
 }
 
@@ -468,9 +469,9 @@ AgentPage.propTypes = {
   onEditAgent: PropTypes.func,
   onSuccess: PropTypes.func,
   onTrain: PropTypes.func,
+  onGoToUrl: PropTypes.func,
   onDelete: PropTypes.func,
   agentActions: PropTypes.array,
-  onGoToUrl: PropTypes.func,
   onAddNewParameter: PropTypes.func,
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,
@@ -560,6 +561,9 @@ function mapDispatchToProps(dispatch) {
     },
     onTrain: () => {
       dispatch(trainAgent());
+    },
+    onGoToUrlLoadAgentVersion: url => {
+      dispatch(push(url));
     },
     onDelete: id => {
       dispatch(deleteAgent(id));
