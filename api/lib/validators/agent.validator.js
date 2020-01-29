@@ -83,7 +83,7 @@ class AgentValidate {
                     accessPolicies: AgentSchema.accessPolicies,
                     generateSlotsQuickResponsesMax: AgentSchema.generateSlotsQuickResponsesMax,
                     generateActionsQuickResponses: AgentSchema.generateActionsQuickResponses,
-                    generateActionsQuickResponsesMax: AgentSchema.generateActionsQuickResponsesMax
+                    generateActionsQuickResponsesMax: AgentSchema.generateActionsQuickResponsesMax,
                 };
             })()
         };
@@ -1009,6 +1009,8 @@ class AgentValidate {
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
                     }),
+                    backupAgentUsed: AgentSchema.backupAgentUsed,
+                    backupAgentId: AgentSchema.backupAgentId,
                     creationDate: KeywordSchema.creationDate,
                     modificationDate: KeywordSchema.modificationDate
                 };

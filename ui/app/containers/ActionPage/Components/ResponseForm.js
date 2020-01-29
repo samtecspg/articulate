@@ -174,7 +174,6 @@ class ResponseForm extends React.Component {
 
   render() {
     const { classes, intl, action, postFormat, agentSettings, isReadOnly } = this.props;
-    debugger;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>

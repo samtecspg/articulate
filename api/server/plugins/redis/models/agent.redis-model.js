@@ -98,6 +98,13 @@ const schema = {
     accessPolicies: {
         type: 'json',
         defaultValue: {}
+    },
+    backupAgentUsed: {
+        type: 'boolean',
+        defaultValue: true
+    },
+    backupAgentId: {
+        type: 'number',
     }
 };
 

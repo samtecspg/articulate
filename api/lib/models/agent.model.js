@@ -36,7 +36,9 @@ class AgentModel {
       accessPolicies: Joi.object(),
       generateSlotsQuickResponsesMax: Joi.number(),
       generateActionsQuickResponses: Joi.boolean(),
-      generateActionsQuickResponsesMax: Joi.number()
+      generateActionsQuickResponsesMax: Joi.number(),
+      backupAgentUsed: Joi.boolean(),
+      backupAgentId: Joi.number()
     };
   }
 }

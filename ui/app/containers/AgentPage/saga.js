@@ -169,12 +169,12 @@ export function* postAgent(payload) {
 }
 
 export function* postAgentBackup(payload) {
-  debugger;
   const { api, id } = payload;
   try {
     var agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
     agent.agentName = Date.now() + '_' + agent.agentName;
-    //agent.isCurrentBackupAgent = false;
+    agent.backupAgentUsed = false;
+    agent.backupAgentId = id;
     var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
     yield put(addAgentBackupSuccess(response));
   } catch (err) {
