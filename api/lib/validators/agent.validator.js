@@ -964,6 +964,7 @@ class AgentValidate {
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
                     }),
+                    accessPolicies: Joi.object(),
                     actions: Joi.array().items({
                         actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
                         useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),

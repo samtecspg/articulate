@@ -95,10 +95,12 @@ export class MainTab extends React.Component {
       lastTraining,
       onTrain,
       onGoToUrl,
+      onAddNewAgentBackup,
       newAgent,
       disableSave,
       locale,
-      isReadOnly
+      isReadOnly,
+      currentAgent
     } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
@@ -262,6 +264,11 @@ export class MainTab extends React.Component {
                     }}
                   >
                     hello
+                  </Button>
+                  <Button
+                    onClick={() => { onAddNewAgentBackup(currentAgent.id) }}
+                  >
+                    Save Backup
                   </Button>
                 </Fragment>
               )}
@@ -469,9 +476,11 @@ MainTab.propTypes = {
   reviewForm: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   reviewURL: PropTypes.string,
   agentName: PropTypes.string,
+  currentAgent: PropTypes.object,
   onFinishAction: PropTypes.func,
   onTrain: PropTypes.func,
   onGoToUrl: PropTypes.func,
+  onAddNewAgentBackup: PropTypes.func,
   agentStatus: PropTypes.string,
   lastTraining: PropTypes.string,
   formError: PropTypes.bool,

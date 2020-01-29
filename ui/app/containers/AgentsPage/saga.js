@@ -55,6 +55,7 @@ export function* getAgentExport(payload) {
   try {
     if (id !== 0) {
       const response = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
+      debugger
       yield put(exportAgentSuccess(response));
     } else {
       yield put(exportAgentSuccess(null));

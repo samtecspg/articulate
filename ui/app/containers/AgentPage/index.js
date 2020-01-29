@@ -52,6 +52,7 @@ import {
   toggleConversationBar,
   trainAgent,
   updateAgent,
+  addAgentBackup,
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -377,6 +378,7 @@ export class AgentPage extends React.PureComponent {
             this.submit(true);
           }}
           agentName={this.props.agent.agentName}
+          currentAgent={this.props.agent}
           agentGravatar={this.props.agent.gravatar ? this.props.agent.gravatar : 1}
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
@@ -385,6 +387,7 @@ export class AgentPage extends React.PureComponent {
             this.submit(false);
           }}
           onTrain={this.props.onTrain}
+          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
           onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
           agentStatus={this.props.agent.status}
           serverStatus={this.props.serverStatus}
@@ -551,6 +554,9 @@ function mapDispatchToProps(dispatch) {
     },
     onAddNewAgent: () => {
       dispatch(addAgent());
+    },
+    onAddNewAgentBackup: id => {
+      dispatch(addAgentBackup(id));
     },
     onSuccess: url => {
       dispatch(resetStatusFlag());

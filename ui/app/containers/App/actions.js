@@ -16,6 +16,9 @@ import {
   ADD_AGENT_FALLBACK,
   ADD_AGENT_PARAMETER,
   ADD_AGENT_SUCCESS,
+  ADD_AGENT_BACKUP,
+  ADD_AGENT_BACKUP_SUCCESS,
+  ADD_AGENT_BACKUP_ERROR,
   ADD_CATEGORY_PARAMETER,
   ADD_FALLBACK,
   ADD_HEADER_ACTION_WEBHOOK,
@@ -710,6 +713,28 @@ export function addAgentError(error) {
 export function addAgentSuccess(agent) {
   return {
     type: ADD_AGENT_SUCCESS,
+    agent,
+  };
+}
+
+export function addAgentBackup(id) {
+  return {
+    type: ADD_AGENT_BACKUP,
+    apiCall: true,
+    id
+  };
+}
+
+export function addAgentBackupError(error) {
+  return {
+    type: ADD_AGENT_BACKUP_ERROR,
+    error,
+  };
+}
+
+export function addAgentBackupSuccess(agent) {
+  return {
+    type: ADD_AGENT_BACKUP_SUCCESS,
     agent,
   };
 }
