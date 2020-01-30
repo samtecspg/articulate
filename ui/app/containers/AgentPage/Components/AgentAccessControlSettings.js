@@ -32,6 +32,7 @@ export function AgentAccessControlSettings({ classes, users, accessPolicies, onU
     return null;
   }
   const currentUser = !selectedUser ? users[0] : selectedUser;
+  const currentIsAdmin = currentUser.groups.indexOf('admin') >= 0;
   const currentAccessPolicies = accessPolicies[currentUser.id] || AGENT_ACCESS_POLICIES;
   return (
     <div>
@@ -62,9 +63,9 @@ export function AgentAccessControlSettings({ classes, users, accessPolicies, onU
           key={name}
           control={
             <Switch
-              disabled={isReadOnly}
+              disabled={isReadOnly || currentIsAdmin}
               color="primary"
-              checked={value}
+              checked={currentIsAdmin || value}
               onChange={(evt, newValue) => {
                 const updatedAccessPolicies = {
                   ...accessPolicies,

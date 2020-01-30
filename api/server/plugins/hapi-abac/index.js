@@ -10,13 +10,13 @@ import {
     P_HAPI_ABAC,
     PARAM_AGENT_ID
 } from '../../../util/constants';
+import Logger from '../../../util/logger';
 
 const name = P_HAPI_ABAC;
-const logger = require('../../../util/logger')({ name: `plugin:${name}` });
+const logger = Logger({ name: `plugin:${name}` });
 const internals = {};
 const defaults = {};
 const schemas = {};
-const CONFIG_NONE = 'none';
 
 defaults.options = {
     onError: (request, h, err) => {
@@ -29,6 +29,7 @@ defaults.options = {
         onUndetermined: 401
     }
 };
+
 schemas.registerOptions = Joi.object({
     onError: Joi.func().optional(),
     responseCode: Joi.object({
@@ -46,6 +47,7 @@ schemas.routeOption = [
 internals.policyHandler = (server, options) => {
 
     return async (request, h) => {
+
         const { redis } = server.app;
         const credentials = request.auth.credentials;
         const {
@@ -69,6 +71,9 @@ internals.policyHandler = (server, options) => {
 
             const { id: userId } = request.auth.credentials;
             const User = await redis.factory(MODEL_USER_ACCOUNT, userId);
+            if (User.property('groups').indexOf('admin') >= 0) {
+                return h.continue;
+            }
             const Agent = await redis.factory(MODEL_AGENT, agentId);
             const agentAccessControlPolicies = Agent.property('accessPolicies');
             const agentUserAccessControlPolicy = agentAccessControlPolicies[User.id];
