@@ -23,8 +23,9 @@ module.exports = {
         handler: async (request, h) => {
 
             const { agentService } = await request.services();
+            const credential = request.auth.credentials;
             try {
-                return await agentService.import({ payload: request.payload });
+                return await agentService.import({ payload: { ...request.payload, ...{ userCredentials: credential } } });
                 //return h.continue;
             }
             catch ({ message, statusCode }) {

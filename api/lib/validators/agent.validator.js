@@ -1009,7 +1009,8 @@ class AgentValidate {
                         modificationDate: KeywordSchema.modificationDate
                     }),
                     creationDate: KeywordSchema.creationDate,
-                    modificationDate: KeywordSchema.modificationDate
+                    modificationDate: KeywordSchema.modificationDate,
+                    accessPolicies: AgentSchema.accessPolicies,
                 };
             })()
         };

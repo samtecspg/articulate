@@ -12,6 +12,7 @@ module.exports = async function ({ payload }) {
         settings,
         postFormat: agentPostFormat,
         webhook: agentWebhook,
+        userCredentials,
         ...agent
     } = payload;
     const keywordsDir = {};
@@ -27,7 +28,8 @@ module.exports = async function ({ payload }) {
                 }
             },
             isImport: true,
-            returnModel: true
+            returnModel: true,
+            userCredentials
         });
 
         if (settings) {
@@ -88,7 +90,7 @@ module.exports = async function ({ payload }) {
                 });
             }
         }));
-        
+
         await Promise.all(actions.map(async (action) => {
 
             const { postFormat, webhook, ...actionData } = action;
