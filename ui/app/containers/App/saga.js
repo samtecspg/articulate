@@ -25,6 +25,9 @@ import {
 import {
   loadAgentError,
   loadAgentSuccess,
+  loadAgentBackups,
+  loadAgentBackupsError,
+  loadAgentBackupsSuccess,
   loadCurrentUserError,
   loadCurrentUserSuccess,
   loadServerInfoError,
@@ -42,6 +45,7 @@ import {
 } from './actions';
 import {
   LOAD_AGENT,
+  LOAD_AGENT_BACKUPS,
   LOAD_CURRENT_USER,
   LOAD_SERVER_INFO,
   LOAD_SETTINGS,
@@ -148,8 +152,25 @@ export function* getAgent(payload) {
       postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
+    yield put(loadAgentBackups(agent.backupAgentId == -1 ? agent.id : agent.backupAgentId));
   } catch (err) {
     yield put(loadAgentError(err));
+  }
+}
+
+export function* getAgentBackups(payload) {
+  const { api, backupAgentId } = payload;
+  try {
+    var filter = JSON.stringify({
+      backupAgentId: Number(backupAgentId)
+    });
+    const params = {
+      filter
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT]), { params });
+    yield put(loadAgentBackupsSuccess(response.data));
+  } catch (err) {
+    yield put(loadAgentBackupsError(_.get(err, 'response.data', true)));
   }
 }
 
@@ -206,6 +227,7 @@ export function* getCurrentUser(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
+  yield takeLatest(LOAD_AGENT_BACKUPS, getAgentBackups);
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(LOAD_SERVER_INFO, getServerInfo);
   yield takeLatest(SEND_MESSAGE, postConverse);

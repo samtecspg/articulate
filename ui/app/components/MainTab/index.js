@@ -263,10 +263,12 @@ export class MainTab extends React.Component {
                       onGoToUrl('/agent/92/dialogue')
                     }}
                   >
-                    hello
+                    Load another agent
                   </Button>
                   <Button
-                    onClick={() => { onAddNewAgentBackup(currentAgent.id) }}
+                    onClick={() => {
+                      onAddNewAgentBackup(currentAgent.backupAgentId !== -1 ? currentAgent.backupAgentId : currentAgent.id)
+                    }}
                   >
                     Save Backup
                   </Button>

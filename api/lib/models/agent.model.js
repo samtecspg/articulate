@@ -38,7 +38,9 @@ class AgentModel {
       generateActionsQuickResponses: Joi.boolean(),
       generateActionsQuickResponsesMax: Joi.number(),
       backupAgentUsed: Joi.boolean(),
-      backupAgentId: Joi.number()
+      backupAgentId: Joi.number(),
+      backupAgentOriginalName: Joi.string(),
+      backupAgentNotes: Joi.string()
     };
   }
 }

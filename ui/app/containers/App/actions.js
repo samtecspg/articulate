@@ -167,12 +167,12 @@ import {
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
   LOAD_AGENT_SUCCESS,
+  LOAD_AGENT_BACKUPS,
+  LOAD_AGENT_BACKUPS_ERROR,
+  LOAD_AGENT_BACKUPS_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
-  LOAD_AGENTS_BACKUPS,
-  LOAD_AGENTS_BACUKPS_ERROR,
-  LOAD_AGENTS_BACKUP_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
   LOAD_CATEGORIES_SUCCESS,
@@ -624,6 +624,28 @@ export function loadAgentSuccess(payload) {
   return {
     type: LOAD_AGENT_SUCCESS,
     payload,
+  };
+}
+
+export function loadAgentBackups(backupAgentId) {
+  return {
+    type: LOAD_AGENT_BACKUPS,
+    backupAgentId,
+    apiCall: true,
+  };
+}
+
+export function loadAgentBackupsError(error) {
+  return {
+    type: LOAD_AGENT_BACKUPS_ERROR,
+    error,
+  };
+}
+
+export function loadAgentBackupsSuccess(agentBackups) {
+  return {
+    type: LOAD_AGENT_BACKUPS_SUCCESS,
+    agentBackups,
   };
 }
 

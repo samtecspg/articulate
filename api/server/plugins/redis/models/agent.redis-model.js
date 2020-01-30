@@ -105,6 +105,15 @@ const schema = {
     },
     backupAgentId: {
         type: 'number',
+        defaultValue: -1
+    },
+    backupAgentOriginalName: {
+        type: 'string',
+        defaultValue: ''
+    },
+    backupAgentNotes: {
+        type: 'string',
+        defaultValue: ''
     }
 };
 

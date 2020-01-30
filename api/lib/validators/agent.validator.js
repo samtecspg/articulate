@@ -1011,6 +1011,8 @@ class AgentValidate {
                     }),
                     backupAgentUsed: AgentSchema.backupAgentUsed,
                     backupAgentId: AgentSchema.backupAgentId,
+                    backupAgentOriginalName: AgentSchema.backupAgentOriginalName,
+                    backupAgentNotes: AgentSchema.backupAgentNotes.allow(''),
                     creationDate: KeywordSchema.creationDate,
                     modificationDate: KeywordSchema.modificationDate
                 };

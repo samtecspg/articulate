@@ -150,6 +150,9 @@ import {
   LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
+  LOAD_AGENT_BACKUPS,
+  LOAD_AGENT_BACKUPS_ERROR,
+  LOAD_AGENT_BACKUPS_SUCCESS,
   LOAD_AGENTS_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
@@ -495,6 +498,7 @@ const initialState = Immutable({
   channels: false,
   connections: false,
   agents: false,
+  agentBackups: false,
   currentAgent: {
     gravatar: '',
     uiColor: '',
@@ -841,6 +845,21 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.agents)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_AGENT_BACKUPS:
+      return state
+        .set('agentBackups', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_AGENT_BACKUPS_ERROR:
+      return state
+        .set('agentBackups', false)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_AGENT_BACKUPS_SUCCESS:
+      return state
+        .set('agentBackups', action.agentBackups)
         .set('loading', false)
         .set('error', false);
     case EXPORT_AGENT:
@@ -2376,7 +2395,7 @@ function appReducer(state = initialState, action) {
             }))
           });
     case CHANGE_EXAMPLE_SYNONYMS:
-      var synonym = state.keywordExamplesUpdate.find(function(update) {
+      var synonym = state.keywordExamplesUpdate.find(function (update) {
         return update.index === action.exampleIndex && update.synonym === action.synonymChanged;
       });
       let countUpdate = action.action === 'add' ? 1 : -1;
@@ -2779,7 +2798,7 @@ function appReducer(state = initialState, action) {
         notifications.concat({
           message: `Error: ${action.error}. ${
             errorEmojies[Math.floor(Math.random() * errorEmojies.length)]
-          }`,
+            }`,
           type: 'error',
         }),
       );
