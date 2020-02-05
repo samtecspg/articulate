@@ -252,6 +252,13 @@ class App extends React.Component {
             <PrivateRoute exact path="/users" component={UsersPage} isAuthEnabled={AUTH_ENABLED} />
             <PrivateRoute exact path="/user/:id" component={UserPage} isAuthEnabled={AUTH_ENABLED} />
             <PrivateRoute exact path="/demo/:id" component={SharedChatPage} isAuthEnabled={AUTH_ENABLED} />
+            <Route
+              path="/api/auth/:provider"
+              component={props => {
+                window.location.replace(window.location.origin + props.location.pathname);
+                return null;
+              }}
+            />
             <Route component={NotFoundPage} />
           </Switch>
         </AppContent>

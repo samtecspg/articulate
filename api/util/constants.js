@@ -3,6 +3,7 @@ import _ from 'lodash';
 export const P_HAPI_GBAC = 'hapi-gbac';
 export const P_HAPI_ABAC = 'hapi-abac';
 export const P_GBAC = 'gbac';
+export const P_AUTHENTICATION = 'authentication';
 
 //DEBUG
 export const DEBUG_LEVEL_INFO = 'info';

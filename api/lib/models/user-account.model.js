@@ -6,7 +6,7 @@ class UserAccountModel {
         return {
             id: Joi.number(),
             name: Joi.string().trim().description('Name'),
-            lastName: Joi.string().trim().description('Last name'),
+            lastName: Joi.string().allow('').trim().description('Last name'),
             email: Joi.string().trim().description('Email'),
             password: Joi.string().description('Password'),
             salt: Joi.any().forbidden().strip().description('Salt'),

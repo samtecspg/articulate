@@ -1,6 +1,7 @@
 import {
     MODEL_USER_ACCOUNT,
     MODEL_USER_IDENTITY,
+    P_AUTHENTICATION,
     PARAM_EMAIL,
     PARAM_PROVIDER,
     PARAM_SECRET,
@@ -12,13 +13,17 @@ module.exports = async function ({ profile, token, secret, provider }) {
 
     const { userService, globalService } = await this.server.services();
     try {
+        const authPlugin = this.server.app[P_AUTHENTICATION];
+        const data = authPlugin.parseProfile({ profile, provider });
+
         const credentials = {
             id: undefined,
             name: undefined,
-            email: profile.raw.email
+            email : data.email
         };
 
-        const existingUser = await globalService.searchByField({ field: PARAM_EMAIL, value: profile.raw.email, model: MODEL_USER_ACCOUNT });
+        const existingUserResult = await globalService.searchByField({ field: PARAM_EMAIL, value: data.email, model: MODEL_USER_ACCOUNT });
+        const existingUser = Array.isArray(existingUserResult) ? existingUserResult[0] : existingUserResult;
         if (existingUser) {
             credentials.id = existingUser.id;
             credentials.name = existingUser.name;
@@ -50,20 +55,16 @@ module.exports = async function ({ profile, token, secret, provider }) {
         }
         else {
             const newUser = await userService.create({
-                data: {
-                    name: profile.displayName,
-                    email: profile.raw.email,
-                    identity: {
-                        provider,
-                        token,
-                        secret,
-                        profile
-                    },
-                    provider
+                data,
+                identity: {
+                    provider,
+                    token,
+                    secret,
+                    profile
                 }
             });
             credentials.id = newUser.id;
-            credentials.name = profile.displayName;
+            credentials.name = `${data.name} ${data.lastName}`.trim();
         }
 
         return credentials;
