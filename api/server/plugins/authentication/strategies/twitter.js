@@ -1,6 +1,8 @@
 module.exports = {
     name: 'twitter',
     scheme: 'bell',
+    profileParser: ['raw.name', '', 'raw.email'],
+
     options: {
         provider: 'twitter',
         password: process.env.SESSION_SECRET, // Use something more secure in production
@@ -14,13 +16,6 @@ module.exports = {
                 skip_status: 'true',
                 include_entities: 'false'
             }
-        },
-        location: (request) => {
-            const scheme = request.headers['x-scheme'];
-            const host = request.info.host;
-            const uri = request.headers['x-request-uri'];
-            const url = new URL(`${scheme}://${host}${uri}`);
-            return `${url.origin}${url.pathname}`;
         }
     }
 };
