@@ -1,5 +1,6 @@
 import {
   Button,
+  IconButton,
   Grid,
   Tooltip,
   Typography,
@@ -18,6 +19,7 @@ import {
   intlShape,
 } from 'react-intl';
 import training from '../../images/training.svg';
+import selectVersion from '../../images/select-version.svg';
 import messages from './messages';
 
 TimeAgo.addLocale(en);
@@ -28,9 +30,23 @@ TimeAgo.addLocale(pl);
 const styles = {
   button: {
     display: 'inline',
+    borderRadius: '4px 0px 0px 4px'
+  },
+  versionButton: {
+    width: '30px',
+    minWidth: '2px',
+    borderLeft: 'none',
+    borderRadius: '0px 4px 4px 0px'
+  },
+  selectVersionImage: {
+    height: '18px',
+    position: 'relative',
+    minWidth: '18px',
+    width: '18px',
+    marginLeft: '4px'
   },
   trainContainer: {
-    display: 'inline',
+    display: 'inline-block',
     marginLeft: '15px',
     position: 'relative',
     bottom: '5px',
@@ -103,9 +119,12 @@ export class TrainButton extends React.Component {
           ) : null}
         </Typography>
         <Tooltip title={serverStatus === 'Training' && agentStatus !== 'Training' ? intl.formatMessage(messages.anotherAgentTraining) : ''} placement="top">
-          <div style={{ display: 'inline' }}>
+          <div style={{ display: 'inline', overflow: 'hidden' }}>
             <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.button} onClick={onTrain} key="btnFinish" variant="contained">
               {agentStatus !== 'Training' ? <FormattedMessage {...messages.trainButton} /> : <img src={training} className={classes.trainingAnimation} />}
+            </Button>
+            <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.versionButton} onClick={onTrain} key="btnVersion" variant="contained">
+              <img src={selectVersion} className={classes.selectVersionImage} />
             </Button>
           </div>
         </Tooltip>
