@@ -4,6 +4,7 @@ import {
   Grid,
   Tooltip,
   Typography,
+  Modal
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import TimeAgo from 'javascript-time-ago';
@@ -21,6 +22,7 @@ import {
 import training from '../../images/training.svg';
 import selectVersion from '../../images/select-version.svg';
 import messages from './messages';
+import VersionsModal from './../VersionsModal'
 
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
@@ -73,10 +75,38 @@ const styles = {
     position: 'relative',
     bottom: '2px',
   },
+  modalContent: {
+    top: '50%',
+    left: '50%',
+    transform: `translate(-50%, -50%)`,
+    position: 'absolute',
+    width: '80%',
+    height: '80%',
+    backgroundColor: '#fff',
+    boxShadow:
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 export class TrainButton extends React.Component {
+
+  state = {
+    openVersionsModal: false
+  };
+
+  handleVersionsModalOpen = () => {
+    this.setState({
+      openVersionsModal: true,
+    });
+  };
+
+  handleVersionsModalClose = () => {
+    this.setState({
+      openVersionsModal: false,
+    });
+  };
+
   componentDidMount() {
     this.interval = setInterval(() => {
       this.setState({ time: Date.now() });
@@ -94,10 +124,19 @@ export class TrainButton extends React.Component {
     return this.props.intl.formatMessage(messages.neverTrained);
   }
 
+  renderVersionsModal(classes, intl) {
+    return <VersionsModal
+      open={this.state.openVersionsModal}
+      onClose={this.handleVersionsModalClose}
+    />
+  }
+
   render() {
     const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly } = this.props;
     return (
+
       <Grid item className={classes.trainContainer}>
+        {this.renderVersionsModal(classes, intl)}
         <Typography className={classes.trainingStatusLabel}>
           {agentStatus === 'Training' ? (
             <span className={classes.trainingLabel}>
@@ -123,7 +162,7 @@ export class TrainButton extends React.Component {
             <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.button} onClick={onTrain} key="btnFinish" variant="contained">
               {agentStatus !== 'Training' ? <FormattedMessage {...messages.trainButton} /> : <img src={training} className={classes.trainingAnimation} />}
             </Button>
-            <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.versionButton} onClick={onTrain} key="btnVersion" variant="contained">
+            <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.versionButton} onClick={this.handleVersionsModalOpen} key="btnVersion" variant="contained">
               <img src={selectVersion} className={classes.selectVersionImage} />
             </Button>
           </div>
