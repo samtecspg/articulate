@@ -43,6 +43,7 @@ import {
   makeSelectServerStatus,
   makeSelectLoadingCurrentUser,
   makeSelectLoading,
+  makeSelectAgentVersions,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -539,6 +540,8 @@ export class ReviewPage extends React.Component {
           agentGravatar={agent.gravatar ? agent.gravatar : 1}
           agentUIColor={agent.uiColor}
           onTrain={onTrain}
+          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
           agentStatus={agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={agent.lastTraining}
@@ -597,6 +600,7 @@ export class ReviewPage extends React.Component {
           dialogueURL={`/agent/${agent.id}/dialogue`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
     ) : (
@@ -664,6 +668,7 @@ const mapStateToProps = createStructuredSelector({
   sessions: makeSelectSessions(),
   locale: makeSelectLocale(),
   loading: makeSelectLoading(),
+  agentVersions: makeSelectAgentVersions(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -690,13 +695,17 @@ function mapDispatchToProps(dispatch) {
         onChangeSessionsPageSize: Actions.changeSessionsPageSize,
         onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
         onLoadSessionId: Actions.loadSession,
-        onShowChatButton: Actions.toggleChatButton
+        onShowChatButton: Actions.toggleChatButton,
+        onAddNewAgentBackup: Actions.addAgentBackup,
       },
       dispatch,
     ),
     onGoToUrl: url => {
       dispatch(push(url));
-    }
+    },
+    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    },
   };
 }
 

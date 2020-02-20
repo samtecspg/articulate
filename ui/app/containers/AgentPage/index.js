@@ -42,6 +42,9 @@ import {
   deleteHeaderAgentWebhook,
   loadActions,
   loadAgent,
+  loadAgentVersion,
+  updateAgentVersion,
+  deleteAgentVersion,
   loadSettings,
   loadUsers,
   resetAgentData,
@@ -68,6 +71,7 @@ import {
   makeSelectSettings,
   makeSelectSuccessAgent,
   makeSelectUsers,
+  makeSelectAgentVersions,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -389,6 +393,8 @@ export class AgentPage extends React.PureComponent {
           onTrain={this.props.onTrain}
           onAddNewAgentBackup={this.props.onAddNewAgentBackup}
           onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentStatus={this.props.agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={this.props.agent.lastTraining}
@@ -437,6 +443,7 @@ export class AgentPage extends React.PureComponent {
           reviewURL={`/agent/${this.props.agent.id}/review`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
     ) : (
@@ -503,6 +510,7 @@ const mapStateToProps = createStructuredSelector({
   locale: makeSelectLocale(),
   users: makeSelectUsers(),
   currentUser: makeSelectCurrentUser(),
+  agentVersions: makeSelectAgentVersions()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -568,8 +576,14 @@ function mapDispatchToProps(dispatch) {
     onTrain: () => {
       dispatch(trainAgent());
     },
-    onGoToUrlLoadAgentVersion: url => {
-      dispatch(push(url));
+    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
     },
     onDelete: id => {
       dispatch(deleteAgent(id));

@@ -15,8 +15,6 @@ import { getActions } from '../ActionPage/saga';
 import {
   addAgentError,
   addAgentSuccess,
-  addAgentBackupError,
-  addAgentBackupSuccess,
   deleteAgentError,
   deleteAgentSuccess,
   loadAgentsSuccess,
@@ -31,7 +29,6 @@ import {
   LOAD_ACTIONS,
   LOAD_USERS,
   UPDATE_AGENT,
-  ADD_AGENT_BACKUP,
 } from '../App/constants';
 import {
   makeSelectAgent,
@@ -168,22 +165,6 @@ export function* postAgent(payload) {
   }
 }
 
-export function* postAgentBackup(payload) {
-  const { api, id } = payload;
-  try {
-    var agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
-    agent.backupAgentOriginalName = agent.agentName;
-    agent.agentName = Date.now() + '_' + agent.agentName;
-    agent.backupAgentUsed = false;
-    agent.backupAgentId = Number(id);
-    agent.backupAgentNotes = '';
-    var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
-    yield put(addAgentBackupSuccess(response));
-  } catch (err) {
-    yield put(addAgentBackupError(err));
-  }
-}
-
 export function* putAgent(payload) {
   const agent = yield select(makeSelectAgent());
   const currentAgent = yield select(makeSelectCurrentAgent());
@@ -262,7 +243,6 @@ export function* getUsers(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(ADD_AGENT, postAgent);
-  yield takeLatest(ADD_AGENT_BACKUP, postAgentBackup);
   yield takeLatest(UPDATE_AGENT, putAgent);
   yield takeLatest(DELETE_AGENT, deleteAgent);
   yield takeLatest(LOAD_ACTIONS, getActions);

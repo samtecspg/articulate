@@ -100,7 +100,9 @@ export class MainTab extends React.Component {
       disableSave,
       locale,
       isReadOnly,
-      currentAgent
+      currentAgent,
+      agentVersions,
+      selectedTab,
     } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
@@ -257,17 +259,18 @@ export class MainTab extends React.Component {
                     lastTraining={lastTraining}
                     onTrain={onTrain}
                     isReadOnly={isReadOnly}
+                    agentVersions={agentVersions}
+                    selectedTab={selectedTab}
+                    onAddNewAgentBackup={onAddNewAgentBackup}
+                    onGoToUrl={onGoToUrl}
+                    onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+                    onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+                    onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+                    currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   />
                   <Button
                     onClick={() => {
-                      onGoToUrl('/agent/92/dialogue')
-                    }}
-                  >
-                    Load another agent
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      onAddNewAgentBackup(currentAgent.backupAgentId !== -1 ? currentAgent.backupAgentId : currentAgent.id)
+                      onAddNewAgentBackup(currentAgent.id)
                     }}
                   >
                     Save Backup
@@ -410,6 +413,12 @@ export class MainTab extends React.Component {
                   serverStatus={serverStatus}
                   lastTraining={lastTraining}
                   onTrain={onTrain}
+                  selectedTab={this.state.selectedTab}
+                  onGoToUrl={this.props.onGoToUrl}
+                  onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+                  onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+                  onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+                  currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                 />
               )}
               {disableSave ||
@@ -483,6 +492,8 @@ MainTab.propTypes = {
   onTrain: PropTypes.func,
   onGoToUrl: PropTypes.func,
   onAddNewAgentBackup: PropTypes.func,
+  onUpdateAgentVersion: PropTypes.func,
+  onDeleteAgentVersion: PropTypes.func,
   agentStatus: PropTypes.string,
   lastTraining: PropTypes.string,
   formError: PropTypes.bool,
@@ -492,6 +503,7 @@ MainTab.propTypes = {
   locale: PropTypes.string,
   serverStatus: PropTypes.string,
   isReadOnly: PropTypes.bool,
+  agentVersions: PropTypes.array
 };
 
 MainTab.defaultProps = {

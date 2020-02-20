@@ -170,6 +170,15 @@ import {
   LOAD_AGENT_BACKUPS,
   LOAD_AGENT_BACKUPS_ERROR,
   LOAD_AGENT_BACKUPS_SUCCESS,
+  LOAD_AGENT_VERSION,
+  LOAD_AGENT_VERSION_ERROR,
+  LOAD_AGENT_VERSION_SUCCESS,
+  UPDATE_AGENT_VERSION,
+  UPDATE_AGENT_VERSION_ERROR,
+  UPDATE_AGENT_VERSION_SUCCESS,
+  DELETE_AGENT_VERSION,
+  DELETE_AGENT_VERSION_ERROR,
+  DELETE_AGENT_VERSION_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
@@ -646,6 +655,74 @@ export function loadAgentBackupsSuccess(agentBackups) {
   return {
     type: LOAD_AGENT_BACKUPS_SUCCESS,
     agentBackups,
+  };
+}
+
+export function loadAgentVersion(url, versionId, currentAgentId) {
+  return {
+    type: LOAD_AGENT_VERSION,
+    url,
+    versionId,
+    currentAgentId,
+    apiCall: true,
+  };
+}
+
+export function loadAgentVersionError(error) {
+  return {
+    type: LOAD_AGENT_VERSION_ERROR,
+    error,
+  };
+}
+
+export function loadAgentVersionSuccess(version) {
+  return {
+    type: LOAD_AGENT_VERSION_SUCCESS,
+    version,
+  };
+}
+
+export function updateAgentVersion(version) {
+  return {
+    type: UPDATE_AGENT_VERSION,
+    version,
+    apiCall: true,
+  };
+}
+
+export function updateAgentVersionError(error) {
+  return {
+    type: UPDATE_AGENT_VERSION_ERROR,
+    error,
+  };
+}
+
+export function updateAgentVersionSuccess(version) {
+  return {
+    type: UPDATE_AGENT_VERSION_SUCCESS,
+    version,
+  };
+}
+
+export function deleteAgentVersion(versionId, currentAgentId) {
+  return {
+    type: DELETE_AGENT_VERSION,
+    versionId,
+    currentAgentId,
+    apiCall: true,
+  };
+}
+
+export function deleteAgentVersionError(error) {
+  return {
+    type: DELETE_AGENT_VERSION_ERROR,
+    error,
+  };
+}
+
+export function deleteAgentVersionSuccess() {
+  return {
+    type: DELETE_AGENT_VERSION_SUCCESS
   };
 }
 

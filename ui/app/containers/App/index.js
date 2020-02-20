@@ -219,51 +219,51 @@ class App extends React.Component {
         </Switch>
       </div>
     ) : (
-      <div>
-        <AppHeader
-          agent={this.props.agent}
-          uiLanguages={this.props.settings.uiLanguages}
-          uiLanguage={this.props.settings.uiLanguage}
-          onChangeLanguage={this.props.onChangeLanguage}
-          onToggleConversationBar={onToggleConversationBar}
-          conversationBarOpen={conversationBarOpen}
-          chatButtonOpen={chatButtonOpen}
-          notifications={notifications}
-          demoMode={demoMode}
-          onShareAgent={this.props.onShareAgent}
-          isConverseEnabled={isConverseEnabled}
-        />
-        <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen} onLogoutUser={this.props.onLogoutUser}>
-          <Switch>
-            <PrivateRoute exact path="/" component={AgentsPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id" component={AgentPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/connection/:id" component={ConnectionPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id/dialogue" component={DialoguePage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id/review" component={ReviewPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id/analytics" component={AnalyticsPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id/keyword/:keywordId" component={KeywordsEditPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id/addCategory" component={AddCategoryPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id/category/:categoryId" component={CategoryPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/agent/:id/action/:actionId" component={ActionPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/settings" component={SettingsPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/missing-api" component={MissingAPIPage} isAuthEnabled={AUTH_ENABLED} />
-            <Redirect from="/agent/:id/actionDummy/:actionId" to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
-            <Route exact path="/login" component={UserAuthPage} />
-            <PrivateRoute exact path="/users" component={UsersPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/user/:id" component={UserPage} isAuthEnabled={AUTH_ENABLED} />
-            <PrivateRoute exact path="/demo/:id" component={SharedChatPage} isAuthEnabled={AUTH_ENABLED} />
-            <Route
-              path="/api/auth/:provider"
-              component={props => {
-                window.location.replace(window.location.origin + props.location.pathname);
-                return null;
-              }}
-            />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </AppContent>
-      </div>
-    );
+        <div>
+          <AppHeader
+            agent={this.props.agent}
+            uiLanguages={this.props.settings.uiLanguages}
+            uiLanguage={this.props.settings.uiLanguage}
+            onChangeLanguage={this.props.onChangeLanguage}
+            onToggleConversationBar={onToggleConversationBar}
+            conversationBarOpen={conversationBarOpen}
+            chatButtonOpen={chatButtonOpen}
+            notifications={notifications}
+            demoMode={demoMode}
+            onShareAgent={this.props.onShareAgent}
+            isConverseEnabled={isConverseEnabled}
+          />
+          <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen} onLogoutUser={this.props.onLogoutUser}>
+            <Switch>
+              <PrivateRoute exact path="/" component={AgentsPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id" component={AgentPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/connection/:id" component={ConnectionPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/dialogue" component={DialoguePage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/review" component={ReviewPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/analytics" component={AnalyticsPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/keyword/:keywordId" component={KeywordsEditPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/addCategory" component={AddCategoryPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/category/:categoryId" component={CategoryPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/action/:actionId" component={ActionPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/settings" component={SettingsPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/missing-api" component={MissingAPIPage} isAuthEnabled={AUTH_ENABLED} />
+              <Redirect from="/agent/:id/actionDummy/:actionId" to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
+              <Route exact path="/login" component={UserAuthPage} />
+              <PrivateRoute exact path="/users" component={UsersPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/user/:id" component={UserPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/demo/:id" component={SharedChatPage} isAuthEnabled={AUTH_ENABLED} />
+              <Route
+                path="/api/auth/:provider"
+                component={props => {
+                  window.location.replace(window.location.origin + props.location.pathname);
+                  return null;
+                }}
+              />
+              <Route component={NotFoundPage} />
+            </Switch>
+          </AppContent>
+        </div>
+      );
   }
 }
 

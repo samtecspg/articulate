@@ -287,7 +287,11 @@ class AgentValidate {
                     modificationDate: AgentSchema.modificationDate,
                     parameters: Joi.object(),
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
-                    accessPolicies: AgentSchema.accessPolicies
+                    accessPolicies: AgentSchema.accessPolicies,
+                    backupAgentUsed: AgentSchema.backupAgentUsed,
+                    backupAgentId: AgentSchema.backupAgentId,
+                    backupAgentOriginalName: AgentSchema.backupAgentOriginalName,
+                    backupAgentNotes: AgentSchema.backupAgentNotes.allow(''),
                 };
             })()
         };
@@ -1016,6 +1020,7 @@ class AgentValidate {
                     creationDate: KeywordSchema.creationDate,
                     modificationDate: KeywordSchema.modificationDate,
                     accessPolicies: AgentSchema.accessPolicies,
+                    isVersionImport: Joi.boolean(),
                 };
             })()
         };

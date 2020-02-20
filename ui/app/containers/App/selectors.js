@@ -140,6 +140,12 @@ const makeSelectAgent = () =>
     globalState => globalState.agent,
   );
 
+const makeSelectAgentVersions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.agentBackups,
+  );
+
 const makeSelectCurrentAgent = () =>
   createSelector(
     selectGlobal,
@@ -544,6 +550,7 @@ export {
   makeSelectAgents,
   makeSelectAgentExport,
   makeSelectAgent,
+  makeSelectAgentVersions,
   makeSelectCurrentAgent,
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,

@@ -18,7 +18,7 @@ import { getWS } from '../../utils/locationResolver';
 
 import {
   trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
-  toggleChatButton, loadAgentStats
+  toggleChatButton, loadAgentStats, addAgentBackup
 } from '../App/actions';
 
 import { AUTH_ENABLED } from "../../../common/env";
@@ -31,7 +31,8 @@ import {
 import {
   makeSelectAgent,
   makeSelectServerStatus,
-  makeSelectDocumentsStats
+  makeSelectDocumentsStats,
+  makeSelectAgentVersions,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -100,6 +101,8 @@ export class AnalyticsPage extends React.PureComponent {
           agentGravatar={agent.gravatar ? agent.gravatar : 1}
           agentUIColor={agent.uiColor}
           onTrain={onTrain}
+          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
           agentStatus={agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={agent.lastTraining}
@@ -125,6 +128,7 @@ export class AnalyticsPage extends React.PureComponent {
           dialogueURL={`/agent/${this.props.agent.id}/dialogue`}
           reviewForm={Link}
           reviewURL={`/agent/${this.props.agent.id}/review`}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
     ) : (
@@ -346,6 +350,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   serverStatus: makeSelectServerStatus(),
   stats: makeSelectDocumentsStats(),
+  agentVersions: makeSelectAgentVersions(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -364,7 +369,13 @@ function mapDispatchToProps(dispatch) {
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
-    }
+    },
+    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    },
+    onAddNewAgentBackup: id => {
+      dispatch(addAgentBackup(id));
+    },
   };
 }
 

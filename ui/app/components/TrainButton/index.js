@@ -3,8 +3,7 @@ import {
   IconButton,
   Grid,
   Tooltip,
-  Typography,
-  Modal
+  Typography
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import TimeAgo from 'javascript-time-ago';
@@ -117,6 +116,12 @@ export class TrainButton extends React.Component {
     clearInterval(this.interval);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.agentStatus === 'Training' && this.props.agentStatus === 'Ready') {
+      this.props.onAddNewAgentBackup(this.props.currentAgentId);
+    }
+  }
+
   getLastTrainingTime(lastTraining) {
     if (lastTraining) {
       return new TimeAgo(this.props.locale).format(new Date(lastTraining));
@@ -128,6 +133,12 @@ export class TrainButton extends React.Component {
     return <VersionsModal
       open={this.state.openVersionsModal}
       onClose={this.handleVersionsModalClose}
+      agentVersions={this.props.agentVersions}
+      selectedTab={this.props.selectedTab}
+      onGoToUrl={this.props.onGoToUrl}
+      onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+      onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+      onDeleteAgentVersion={this.props.onDeleteAgentVersion}
     />
   }
 
@@ -181,6 +192,14 @@ TrainButton.propTypes = {
   lastTraining: PropTypes.string,
   locale: PropTypes.string,
   isReadOnly: PropTypes.bool,
+  agentVersions: PropTypes.array,
+  selectedTab: PropTypes.string,
+  onGoToUrl: PropTypes.func,
+  onAddNewAgentBackup: PropTypes.func,
+  onUpdateAgentVersion: PropTypes.func,
+  onDeleteAgentVersion: PropTypes.func,
+  onAddNewAgentBackup: PropTypes.func,
+  currentAgentId: PropTypes.number
 };
 
 TrainButton.defaultProps = {
