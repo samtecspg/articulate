@@ -18,7 +18,11 @@ import { getWS } from '../../utils/locationResolver';
 
 import {
   trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
-  toggleChatButton, loadAgentStats, addAgentBackup
+  toggleChatButton, loadAgentStats,
+  addAgentBackup,
+  loadAgentVersion,
+  updateAgentVersion,
+  deleteAgentVersion,
 } from '../App/actions';
 
 import { AUTH_ENABLED } from "../../../common/env";
@@ -101,7 +105,6 @@ export class AnalyticsPage extends React.PureComponent {
           agentGravatar={agent.gravatar ? agent.gravatar : 1}
           agentUIColor={agent.uiColor}
           onTrain={onTrain}
-          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
           onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
           agentStatus={agent.status}
           serverStatus={this.props.serverStatus}
@@ -128,6 +131,11 @@ export class AnalyticsPage extends React.PureComponent {
           dialogueURL={`/agent/${this.props.agent.id}/dialogue`}
           reviewForm={Link}
           reviewURL={`/agent/${this.props.agent.id}/review`}
+          currentAgent={this.props.agent}
+          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
@@ -372,6 +380,12 @@ function mapDispatchToProps(dispatch) {
     },
     onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
       dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
     },
     onAddNewAgentBackup: id => {
       dispatch(addAgentBackup(id));

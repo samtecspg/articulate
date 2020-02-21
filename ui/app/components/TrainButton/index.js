@@ -5,14 +5,14 @@ import {
   Tooltip,
   Typography
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import es from 'javascript-time-ago/locale/es';
 import pl from 'javascript-time-ago/locale/pl';
 import pt from 'javascript-time-ago/locale/pt';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   FormattedMessage,
   injectIntl,
@@ -27,6 +27,21 @@ TimeAgo.addLocale(en);
 TimeAgo.addLocale(es);
 TimeAgo.addLocale(pt);
 TimeAgo.addLocale(pl);
+
+const tooltipTheme = createMuiTheme({
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        fontSize: '14px',
+        fontFamily: 'Montserrat',
+        backgroundColor: 'none',
+        color: '#4E4E4E',
+        marginLeft: '-20px',
+        marginRight: '10px',
+      },
+    },
+  },
+});
 
 const styles = {
   button: {
@@ -143,7 +158,7 @@ export class TrainButton extends React.Component {
   }
 
   render() {
-    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly } = this.props;
+    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly, backupAgentOriginalName } = this.props;
     return (
 
       <Grid item className={classes.trainContainer}>
@@ -173,9 +188,15 @@ export class TrainButton extends React.Component {
             <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.button} onClick={onTrain} key="btnFinish" variant="contained">
               {agentStatus !== 'Training' ? <FormattedMessage {...messages.trainButton} /> : <img src={training} className={classes.trainingAnimation} />}
             </Button>
-            <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.versionButton} onClick={this.handleVersionsModalOpen} key="btnVersion" variant="contained">
-              <img src={selectVersion} className={classes.selectVersionImage} />
-            </Button>
+            <Fragment>
+              <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.versionButton} onClick={this.handleVersionsModalOpen} key="btnVersion" variant="contained">
+                <MuiThemeProvider theme={tooltipTheme}>
+                  <Tooltip title={backupAgentOriginalName ? backupAgentOriginalName : ''} placement="top">
+                    <img src={selectVersion} className={classes.selectVersionImage} />
+                  </Tooltip>
+                </MuiThemeProvider>
+              </Button>
+            </Fragment>
           </div>
         </Tooltip>
       </Grid>

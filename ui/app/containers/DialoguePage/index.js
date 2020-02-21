@@ -33,7 +33,6 @@ import {
   loadActions,
   loadActionsPage,
   loadAgent,
-  loadAgentVersion,
   loadCategories,
   loadFilteredActions,
   loadFilteredCategories,
@@ -47,6 +46,9 @@ import {
   trainAgent,
   untagKeyword,
   addAgentBackup,
+  loadAgentVersion,
+  updateAgentVersion,
+  deleteAgentVersion,
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -417,8 +419,6 @@ export class DialoguePage extends React.PureComponent {
             formError={this.state.formError}
             onFinishAction={this.submit}
             onTrain={this.props.onTrain}
-            onAddNewAgentBackup={this.props.onAddNewAgentBackup}
-            onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
             agentStatus={this.props.agent.status}
             serverStatus={this.props.serverStatus}
             lastTraining={this.props.agent.lastTraining}
@@ -495,6 +495,11 @@ export class DialoguePage extends React.PureComponent {
             reviewForm={Link}
             analyticsForm={Link}
             analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+            currentAgent={this.props.agent}
+            onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+            onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+            onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+            onDeleteAgentVersion={this.props.onDeleteAgentVersion}
             agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
           />
         </Grid>
@@ -564,9 +569,6 @@ function mapDispatchToProps(dispatch) {
   return {
     onLoadAgent: id => {
       dispatch(loadAgent(id));
-    },
-    onAddNewAgentBackup: id => {
-      dispatch(addAgentBackup(id));
     },
     onLoadSayings: (filter, page, pageSize, ignoreKeywords) => {
       dispatch(loadSayings(filter, page, pageSize, ignoreKeywords));
@@ -654,6 +656,15 @@ function mapDispatchToProps(dispatch) {
     },
     onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
       dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddNewAgentBackup: id => {
+      dispatch(addAgentBackup(id));
     },
   };
 }

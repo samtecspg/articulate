@@ -42,9 +42,6 @@ import {
   deleteHeaderAgentWebhook,
   loadActions,
   loadAgent,
-  loadAgentVersion,
-  updateAgentVersion,
-  deleteAgentVersion,
   loadSettings,
   loadUsers,
   resetAgentData,
@@ -56,6 +53,9 @@ import {
   trainAgent,
   updateAgent,
   addAgentBackup,
+  loadAgentVersion,
+  updateAgentVersion,
+  deleteAgentVersion,
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -391,10 +391,6 @@ export class AgentPage extends React.PureComponent {
             this.submit(false);
           }}
           onTrain={this.props.onTrain}
-          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
-          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
-          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
-          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentStatus={this.props.agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={this.props.agent.lastTraining}
@@ -443,6 +439,10 @@ export class AgentPage extends React.PureComponent {
           reviewURL={`/agent/${this.props.agent.id}/review`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
@@ -563,9 +563,6 @@ function mapDispatchToProps(dispatch) {
     onAddNewAgent: () => {
       dispatch(addAgent());
     },
-    onAddNewAgentBackup: id => {
-      dispatch(addAgentBackup(id));
-    },
     onSuccess: url => {
       dispatch(resetStatusFlag());
       dispatch(push(url));
@@ -575,15 +572,6 @@ function mapDispatchToProps(dispatch) {
     },
     onTrain: () => {
       dispatch(trainAgent());
-    },
-    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
-      dispatch(loadAgentVersion(url, versionId, currentAgentId));
-    },
-    onUpdateAgentVersion: (version) => {
-      dispatch(updateAgentVersion(version));
-    },
-    onDeleteAgentVersion: (versionId, currentAgentId) => {
-      dispatch(deleteAgentVersion(versionId, currentAgentId));
     },
     onDelete: id => {
       dispatch(deleteAgent(id));
@@ -624,6 +612,18 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadUsers: () => {
       dispatch(loadUsers());
+    },
+    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddNewAgentBackup: id => {
+      dispatch(addAgentBackup(id));
     },
   };
 }

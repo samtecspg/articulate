@@ -6,7 +6,8 @@ import {
   Grid,
   Modal,
   TextField,
-  MenuItem
+  MenuItem,
+  Button
 } from '@material-ui/core';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from './messages';
@@ -27,13 +28,13 @@ const styles = {
     border: '1px solid',
     boxShadow:
       '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
-    display: 'flex',
-    flexDirection: 'column',
+    overflow: 'scroll'
   },
   headerGrid: {
     backgroundColor: '#F6F7F8',
     borderBottom: 'solid 1px',
-    paddingBottom: '16px'
+    paddingBottom: '15px',
+    marginBottom: '15px',
   },
   titleLabel: {
     color: '#4E4E4E',
@@ -42,6 +43,7 @@ const styles = {
     paddingLeft: '16px',
     display: 'inline-block',
     fontFamily: 'Montserrat',
+    marginBottom: '32px'
   },
   headerDescriptionLabel: {
     color: '#4E4E4E',
@@ -49,11 +51,11 @@ const styles = {
     paddingLeft: '16px',
     display: 'inline-block',
     fontFamily: 'Montserrat',
+    marginBottom: '16px'
   },
   filterNamesLabels: {
     color: '#A2A7B1',
     fontSize: '12px',
-    paddingTop: '16px',
     paddingLeft: '16px',
     display: 'inline-block',
     fontFamily: 'Montserrat',
@@ -93,7 +95,13 @@ const styles = {
     cursor: 'pointer',
     position: 'relative',
     top: '4px',
-    height: '15px',
+    float: 'right',
+    marginRight: '16px',
+    height: '18px'
+  },
+  button: {
+    marginRight: '16px',
+    marginTop: '16px'
   },
 };
 
@@ -113,6 +121,22 @@ class VersionsModal extends React.Component {
     };
     this.state = this.initialState;
 
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isEditing
+      && this.state.versionPicked
+      && prevState.versionPicked
+      && this.state.versionPicked.agentName !== prevState.versionPicked.agentName) {
+      this.setState({
+        currentEditDescription: this.state.versionPicked.backupAgentNotes,
+        currentEditName: this.state.versionPicked.agentName
+      })
+    }
+    if (!this.state.isEditing &&
+      (this.props.agentVersions !== prevProps.agentVersions)) {
+      this.handleDropDownValuePicked(this.state.dropDownValuePicked);
+    }
   }
 
   async handleDropDownValuePicked(value) {
@@ -142,7 +166,10 @@ class VersionsModal extends React.Component {
     mutableVersion.agentName = this.state.currentEditName;
     mutableVersion.backupAgentNotes = this.state.currentEditDescription;
     this.props.onUpdateAgentVersion(mutableVersion);
-    this.setState({ dropDownValuePicked: mutableVersion.agentName })
+    this.setState({
+      isEditing: false,
+      dropDownValuePicked: mutableVersion.agentName
+    })
   }
 
   handleCurrentEditNameChange = async (ev) => {
@@ -159,16 +186,17 @@ class VersionsModal extends React.Component {
     }
   }
 
+  getDate(dateString) {
+    var d = new Date(Number(dateString));
+    return d.toString();
+  }
+
   renderMainHeader(classes, intl) {
     return <Fragment>
       <Grid
         container
         direction="row"
         alignItems="stretch"
-        style={{
-          marginTop: "15px",
-          marginBottom: "15px"
-        }}
       >
         <Grid item xs={6}>
           <span className={classes.titleLabel}>
@@ -181,16 +209,20 @@ class VersionsModal extends React.Component {
           style={{
             textAlign: 'end'
           }} >
-          {!this.state.isEditing && (
-            <a onClick={() => { this.loadVersion() }}>
-              Submit
-          </a>
+          {!this.state.isEditing && this.state.versionPicked && (
+            <Button className={classes.button} onClick={() => {
+              this.loadVersion();
+            }} key="btnLoad" variant="contained">
+              {'Load'}
+            </Button>
           )}
           {
             this.state.isEditing && (
-              <a onClick={() => { this.updateVersion() }}>
-                Edit
-              </a>
+              <Button className={classes.button} onClick={() => {
+                this.updateVersion();
+              }} key="btnEdit" variant="contained">
+                {'Edit Done'}
+              </Button>
             )}
         </Grid>
       </Grid>
@@ -203,11 +235,11 @@ class VersionsModal extends React.Component {
       item xs={12}
       direction="row"
       alignItems="stretch"
+      style={{
+        paddingBottom: '5px'
+      }}
     >
-      <Grid item xs
-        style={{
-          paddingBottom: '25px'
-        }}>
+      <Grid item xs>
         <span
           className={classes.headerDescriptionLabel}>
           {//this.props.filtersDescription
@@ -232,7 +264,10 @@ class VersionsModal extends React.Component {
         item xs={12}
         direction="row"
         alignItems="stretch"
-        style={{ marginTop: '-10px' }}
+        style={{
+          marginTop: '-10px',
+          marginBottom: '15px'
+        }}
       >
         <Grid
           item xs={12}
@@ -261,11 +296,12 @@ class VersionsModal extends React.Component {
               }
             </MenuItem>
             {
-              this.props.agentVersions && this.props.agentVersions.map(version => (
-                <MenuItem key={version.agentName} value={version.agentName}>
-                  {version.agentName}
-                </MenuItem>
-              ))
+              this.props.agentVersions && this.props.agentVersions
+                .map(version => (
+                  <MenuItem key={version.agentName} value={version.agentName}>
+                    {version.agentName}
+                  </MenuItem>
+                ))
             }
           </TextField>
         </Grid>
@@ -279,48 +315,61 @@ class VersionsModal extends React.Component {
       item xs={12}
       direction="row"
       alignItems="stretch"
+      style={{
+        marginBottom: '15px',
+        minHeight: '70px'
+      }}
     >
-      <Grid item xs={6}
-        style={{
-          paddingBottom: '25px'
-        }}>
-        <span
-          className={classes.headerDescriptionLabel}>
-          {//this.props.filtersDescription
-            'Training currently'
-          }
-        </span>
-        <br />
+      <Grid item xs={6}>
         {!this.state.isEditing && (
-          <span
-            className={classes.headerDescriptionLabel}>
-            {//this.props.filtersDescription
-              this.state.versionPicked ? this.state.versionPicked.agentName : ''
-            }
-          </span>
+          <Fragment>
+            <span
+              className={classes.filterNamesLabels}>
+              {//this.props.filtersDescription
+                'Training currently:'
+              }
+            </span>
+            <br />
+            <span
+              className={classes.headerDescriptionLabel}>
+              {//this.props.filtersDescription
+                this.state.versionPicked ? this.state.versionPicked.agentName : ''
+              }
+            </span>
+          </Fragment>
         )
         }
         {this.state.isEditing && (
           <TextField
             id="outlined-basic"
-            variant="outlined"
             value={this.state.currentEditName}
+            label={this.state.isEditing ? 'Edit timestamp name' : ''}
             onChange={async (ev) => { await this.handleCurrentEditNameChange(ev) }}
             onBlur={async () => {
               await this.handleCurrentEditNameValidation();
             }}
+            style={{
+              width: '100%',
+              paddingLeft: '16px',
+              paddingRight: '16px',
+              marginTop: '0px !important'
+            }}
+            className={classes.dropDown}
+            inputProps={{
+              className: classes.dropDownInput
+            }}
+            InputLabelProps={{
+              shrink: true,
+              style: { marginLeft: '16px' }
+            }}
           >
-
           </TextField>
         )
         }
       </Grid>
-      <Grid item xs={3}
-        style={{
-          paddingBottom: '25px'
-        }}>
+      <Grid item xs={3}>
         <span
-          className={classes.headerDescriptionLabel}>
+          className={classes.filterNamesLabels}>
           {//this.props.filtersDescription
             'Time trained'
           }
@@ -329,39 +378,52 @@ class VersionsModal extends React.Component {
         <span
           className={classes.headerDescriptionLabel}>
           {//this.props.filtersDescription
-            this.state.versionPicked ? this.state.versionPicked.creationDate : ''
+            this.state.versionPicked ? this.getDate(this.state.versionPicked.creationDate) : ''
           }
         </span>
       </Grid>
-      <Grid item xs={3}
-        style={{
-          paddingBottom: '25px'
-        }}>
+      <Grid item xs={3}>
+        {this.state.versionPicked && (
+          <Fragment>
+            <img
+              alt=""
+              onClick={() => {
+                //onClick && !disabled ? onClick() : _.noop;
+                this.setState({ isEditing: !this.state.isEditing });
+                this.setState({ currentEditName: this.state.versionPicked.agentName })
+                this.setState({ currentEditDescription: this.state.versionPicked.backupAgentNotes })
+              }}
+              className={classes.icon}
+              src={pencilIcon}
+            />
+            <img
+              alt=""
+              onClick={() => {
+                //onClick && !disabled ? onClick() : _.noop;
+                this.props.onDeleteAgentVersion(this.state.versionPicked.id, this.state.versionPicked.backupAgentId);
+              }}
+              className={classes.icon}
+              src={trashIcon}
+            />
+          </Fragment>
+        )}
+      </Grid>
+    </Grid >
+  }
+
+  renderVersionDescriptionHeader(classes, intl) {
+    return <Grid
+      container
+      item xs={12}
+      direction="row"
+      alignItems="stretch"
+    >
+      <Grid item xs>
         <span
-          className={classes.headerDescriptionLabel}>
+          className={classes.filterNamesLabels}>
           {//this.props.filtersDescription
-            'Edit'
+            'Training Info'
           }
-          <img
-            alt=""
-            onClick={() => {
-              //onClick && !disabled ? onClick() : _.noop;
-              this.props.onDeleteAgentVersion(this.state.versionPicked.id, this.state.versionPicked.backupAgentId);
-            }}
-            className={classes.icon}
-            src={trashIcon}
-          />
-          <img
-            alt=""
-            onClick={() => {
-              //onClick && !disabled ? onClick() : _.noop;
-              this.setState({ isEditing: !this.state.isEditing });
-              this.setState({ currentEditName: this.state.versionPicked.agentName })
-              this.setState({ currentEditDescription: this.state.versionPicked.backupAgentNotes })
-            }}
-            className={classes.icon}
-            src={pencilIcon}
-          />
         </span>
       </Grid>
     </Grid>
@@ -374,17 +436,7 @@ class VersionsModal extends React.Component {
       direction="row"
       alignItems="stretch"
     >
-      <Grid item xs
-        style={{
-          paddingBottom: '25px'
-        }}>
-        <span
-          className={classes.headerDescriptionLabel}>
-          {//this.props.filtersDescription
-            'Training Info'
-          }
-        </span>
-        <br />
+      <Grid item xs>
         {!this.state.isEditing && (
           <span
             className={classes.headerDescriptionLabel}>
@@ -395,10 +447,17 @@ class VersionsModal extends React.Component {
         {this.state.isEditing && (
           <TextField
             id="outlined-basic"
-            variant="outlined"
             multiline
+            rows={4}
             value={this.state.currentEditDescription}
             onChange={async (ev) => { await this.handleCurrentEditDescriptionChange(ev) }}
+            style={{
+              width: '100%',
+              paddingLeft: '16px',
+              paddingRight: '16px',
+              marginTop: '0px !important'
+            }}
+
           >
           </TextField>
         )
@@ -417,6 +476,7 @@ class VersionsModal extends React.Component {
             aria-describedby="simple-modal-description"
             open={this.props.open}
             onClose={this.props.onClose}
+            style={{ overflow: 'scroll' }}
           >
             <div className={classes.modalContent}>
               <Grid
@@ -426,6 +486,7 @@ class VersionsModal extends React.Component {
               </Grid>
               {this.renderDropDownFilter(classes, intl)}
               {this.renderEditDeleteSection(classes, intl)}
+              {this.renderVersionDescriptionHeader(classes, intl)}
               {this.renderVersionDescription(classes, intl)}
             </div>
           </Modal>

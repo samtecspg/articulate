@@ -189,7 +189,6 @@ export function* postAgentBackup(payload) {
     yield put(addAgentBackupSuccess(importResponse));
     yield put(loadAgentBackups(id));
   } catch (err) {
-    console.log(JSON.stringify(err));
     yield put(addAgentBackupError(err));
   }
 }
@@ -215,6 +214,7 @@ export function* getAgentVersion(payload) {
   try {
     var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
     versionAgent.isVersionImport = true;
+    versionAgent.backupAgentUsed = true;
     var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), versionAgent);
     window.location.reload();
     yield put(loadAgentVersionSuccess());
@@ -226,8 +226,6 @@ export function* getAgentVersion(payload) {
 export function* putAgentVersion(payload) {
   const { api, version } = payload;
   try {
-    version.categoryClassifierThreshold =
-      version.categoryClassifierThreshold / 100;
     var id = version.id;
     var currentAgentId = version.backupAgentId
     delete version.id;

@@ -251,31 +251,23 @@ export class MainTab extends React.Component {
             </Grid>
             <Grid className={classes.actionsContainer}>
               {newAgent ? null : (
-                <Fragment>
-                  <TrainButton
-                    locale={locale}
-                    agentStatus={agentStatus}
-                    serverStatus={serverStatus}
-                    lastTraining={lastTraining}
-                    onTrain={onTrain}
-                    isReadOnly={isReadOnly}
-                    agentVersions={agentVersions}
-                    selectedTab={selectedTab}
-                    onAddNewAgentBackup={onAddNewAgentBackup}
-                    onGoToUrl={onGoToUrl}
-                    onUpdateAgentVersion={this.props.onUpdateAgentVersion}
-                    onDeleteAgentVersion={this.props.onDeleteAgentVersion}
-                    onAddNewAgentBackup={this.props.onAddNewAgentBackup}
-                    currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
-                  />
-                  <Button
-                    onClick={() => {
-                      onAddNewAgentBackup(currentAgent.id)
-                    }}
-                  >
-                    Save Backup
-                  </Button>
-                </Fragment>
+                <TrainButton
+                  locale={locale}
+                  agentStatus={agentStatus}
+                  serverStatus={serverStatus}
+                  lastTraining={lastTraining}
+                  onTrain={onTrain}
+                  isReadOnly={isReadOnly}
+                  agentVersions={agentVersions}
+                  selectedTab={selectedTab}
+                  onAddNewAgentBackup={onAddNewAgentBackup}
+                  onGoToUrl={onGoToUrl}
+                  onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+                  onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+                  onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+                  currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
+                  backupAgentOriginalName={currentAgent ? currentAgent.backupAgentOriginalName : ''}
+                />
               )}
               {disableSave ||
                 (!this.props.success && !this.props.touched) ? null : (

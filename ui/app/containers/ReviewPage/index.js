@@ -540,8 +540,6 @@ export class ReviewPage extends React.Component {
           agentGravatar={agent.gravatar ? agent.gravatar : 1}
           agentUIColor={agent.uiColor}
           onTrain={onTrain}
-          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
-          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
           agentStatus={agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={agent.lastTraining}
@@ -600,6 +598,11 @@ export class ReviewPage extends React.Component {
           dialogueURL={`/agent/${agent.id}/dialogue`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          currentAgent={this.props.agent}
+          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
@@ -695,8 +698,7 @@ function mapDispatchToProps(dispatch) {
         onChangeSessionsPageSize: Actions.changeSessionsPageSize,
         onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
         onLoadSessionId: Actions.loadSession,
-        onShowChatButton: Actions.toggleChatButton,
-        onAddNewAgentBackup: Actions.addAgentBackup,
+        onShowChatButton: Actions.toggleChatButton
       },
       dispatch,
     ),
@@ -705,6 +707,15 @@ function mapDispatchToProps(dispatch) {
     },
     onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
       dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddNewAgentBackup: id => {
+      dispatch(addAgentBackup(id));
     },
   };
 }

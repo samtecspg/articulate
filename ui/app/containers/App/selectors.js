@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import Immutable from 'seamless-immutable';
 
 const selectGlobal = state => state.global;
 const selectRoute = state => state.router;
@@ -143,8 +144,17 @@ const makeSelectAgent = () =>
 const makeSelectAgentVersions = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.agentBackups,
+    globalState => makeSelectAgentVersionsSorted(globalState.agentBackups)
   );
+
+const makeSelectAgentVersionsSorted = (versions) => {
+  var tempArray = Immutable.asMutable(versions);
+  var temp = tempArray && tempArray.length ? tempArray
+    .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate)) ? 1 : -1)
+    .filter(version => { return !version.backupAgentUsed })
+    : []
+  return temp
+};
 
 const makeSelectCurrentAgent = () =>
   createSelector(

@@ -498,7 +498,7 @@ const initialState = Immutable({
   channels: false,
   connections: false,
   agents: false,
-  agentBackups: false,
+  agentBackups: [],
   currentAgent: {
     gravatar: '',
     uiColor: '',
