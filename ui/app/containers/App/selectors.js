@@ -144,7 +144,7 @@ const makeSelectAgent = () =>
 const makeSelectAgentVersions = () =>
   createSelector(
     selectGlobal,
-    globalState => makeSelectAgentVersionsSorted(globalState.agentBackups)
+    globalState => makeSelectAgentVersionsSorted(globalState.agentVersions)
   );
 
 const makeSelectAgentVersionsSorted = (versions) => {

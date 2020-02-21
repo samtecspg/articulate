@@ -52,7 +52,7 @@ import {
   toggleConversationBar,
   trainAgent,
   updateAgent,
-  addAgentBackup,
+  addAgentVersion,
   loadAgentVersion,
   updateAgentVersion,
   deleteAgentVersion,
@@ -439,7 +439,7 @@ export class AgentPage extends React.PureComponent {
           reviewURL={`/agent/${this.props.agent.id}/review`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
-          onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+          onAddAgentVersion={this.props.onAddAgentVersion}
           onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
@@ -622,8 +622,8 @@ function mapDispatchToProps(dispatch) {
     onDeleteAgentVersion: (versionId, currentAgentId) => {
       dispatch(deleteAgentVersion(versionId, currentAgentId));
     },
-    onAddNewAgentBackup: id => {
-      dispatch(addAgentBackup(id));
+    onAddAgentVersion: id => {
+      dispatch(addAgentVersion(id));
     },
   };
 }

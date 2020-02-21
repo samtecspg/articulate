@@ -95,7 +95,7 @@ export class MainTab extends React.Component {
       lastTraining,
       onTrain,
       onGoToUrl,
-      onAddNewAgentBackup,
+      onAddAgentVersion,
       newAgent,
       disableSave,
       locale,
@@ -260,11 +260,11 @@ export class MainTab extends React.Component {
                   isReadOnly={isReadOnly}
                   agentVersions={agentVersions}
                   selectedTab={selectedTab}
-                  onAddNewAgentBackup={onAddNewAgentBackup}
+                  onAddAgentVersion={onAddAgentVersion}
                   onGoToUrl={onGoToUrl}
                   onUpdateAgentVersion={this.props.onUpdateAgentVersion}
                   onDeleteAgentVersion={this.props.onDeleteAgentVersion}
-                  onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+                  onAddAgentVersion={this.props.onAddAgentVersion}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                 />
@@ -409,7 +409,7 @@ export class MainTab extends React.Component {
                   onGoToUrl={this.props.onGoToUrl}
                   onUpdateAgentVersion={this.props.onUpdateAgentVersion}
                   onDeleteAgentVersion={this.props.onDeleteAgentVersion}
-                  onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+                  onAddAgentVersion={this.props.onAddAgentVersion}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                 />
               )}
@@ -483,7 +483,7 @@ MainTab.propTypes = {
   onFinishAction: PropTypes.func,
   onTrain: PropTypes.func,
   onGoToUrl: PropTypes.func,
-  onAddNewAgentBackup: PropTypes.func,
+  onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,
   agentStatus: PropTypes.string,

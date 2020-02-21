@@ -37,7 +37,6 @@ module.exports = async function ({ payload }) {
                 userCredentials
             });
         } else {
-            //AgentModel = await globalService.findById({ id: originalAgentVersionId, model: MODEL_AGENT, returnModel: true });
             agent.loadedAgentVersionName = agent.agentName;
             agent.agentName = originalAgentName;
             AgentModel = await agentService.updateById({ id: agent.originalAgentVersionId, data: agent, returnModel: true });

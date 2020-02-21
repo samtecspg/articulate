@@ -16,9 +16,9 @@ import {
   ADD_AGENT_FALLBACK,
   ADD_AGENT_PARAMETER,
   ADD_AGENT_SUCCESS,
-  ADD_AGENT_BACKUP,
-  ADD_AGENT_BACKUP_SUCCESS,
-  ADD_AGENT_BACKUP_ERROR,
+  ADD_AGENT_VERSION,
+  ADD_AGENT_VERSION_SUCCESS,
+  ADD_AGENT_VERSION_ERROR,
   ADD_CATEGORY_PARAMETER,
   ADD_FALLBACK,
   ADD_HEADER_ACTION_WEBHOOK,
@@ -167,9 +167,9 @@ import {
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
   LOAD_AGENT_SUCCESS,
-  LOAD_AGENT_BACKUPS,
-  LOAD_AGENT_BACKUPS_ERROR,
-  LOAD_AGENT_BACKUPS_SUCCESS,
+  LOAD_AGENT_VERSIONS,
+  LOAD_AGENT_VERSIONS_ERROR,
+  LOAD_AGENT_VERSIONS_SUCCESS,
   LOAD_AGENT_VERSION,
   LOAD_AGENT_VERSION_ERROR,
   LOAD_AGENT_VERSION_SUCCESS,
@@ -636,25 +636,25 @@ export function loadAgentSuccess(payload) {
   };
 }
 
-export function loadAgentBackups(originalAgentVersionId) {
+export function loadAgentVersions(originalAgentVersionId) {
   return {
-    type: LOAD_AGENT_BACKUPS,
+    type: LOAD_AGENT_VERSIONS,
     originalAgentVersionId,
     apiCall: true,
   };
 }
 
-export function loadAgentBackupsError(error) {
+export function loadAgentVersionsError(error) {
   return {
-    type: LOAD_AGENT_BACKUPS_ERROR,
+    type: LOAD_AGENT_VERSIONS_ERROR,
     error,
   };
 }
 
-export function loadAgentBackupsSuccess(agentBackups) {
+export function loadAgentVersionsSuccess(agentVersions) {
   return {
-    type: LOAD_AGENT_BACKUPS_SUCCESS,
-    agentBackups,
+    type: LOAD_AGENT_VERSIONS_SUCCESS,
+    agentVersions,
   };
 }
 
@@ -819,24 +819,24 @@ export function addAgentSuccess(agent) {
   };
 }
 
-export function addAgentBackup(id) {
+export function addAgentVersion(id) {
   return {
-    type: ADD_AGENT_BACKUP,
+    type: ADD_AGENT_VERSION,
     apiCall: true,
     id
   };
 }
 
-export function addAgentBackupError(error) {
+export function addAgentVersionError(error) {
   return {
-    type: ADD_AGENT_BACKUP_ERROR,
+    type: ADD_AGENT_VERSION_ERROR,
     error,
   };
 }
 
-export function addAgentBackupSuccess(agent) {
+export function addAgentVersionSuccess(agent) {
   return {
-    type: ADD_AGENT_BACKUP_SUCCESS,
+    type: ADD_AGENT_VERSION_SUCCESS,
     agent,
   };
 }

@@ -28,11 +28,11 @@ import {
   loadAgent,
   loadAgentError,
   loadAgentSuccess,
-  loadAgentBackups,
-  loadAgentBackupsError,
-  loadAgentBackupsSuccess,
-  addAgentBackupError,
-  addAgentBackupSuccess,
+  loadAgentVersions,
+  loadAgentVersionsError,
+  loadAgentVersionsSuccess,
+  addAgentVersionError,
+  addAgentVersionSuccess,
   loadAgentVersion,
   loadAgentVersionError,
   loadAgentVersionSuccess,
@@ -57,8 +57,8 @@ import {
 } from './actions';
 import {
   LOAD_AGENT,
-  LOAD_AGENT_BACKUPS,
-  ADD_AGENT_BACKUP,
+  LOAD_AGENT_VERSIONS,
+  ADD_AGENT_VERSION,
   LOAD_AGENT_VERSION,
   LOAD_CURRENT_USER,
   LOAD_SERVER_INFO,
@@ -168,13 +168,13 @@ export function* getAgent(payload) {
       postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
-    yield put(loadAgentBackups(agent.originalAgentVersionId == -1 ? agent.id : agent.originalAgentVersionId));
+    yield put(loadAgentVersions(agent.originalAgentVersionId == -1 ? agent.id : agent.originalAgentVersionId));
   } catch (err) {
     yield put(loadAgentError(err));
   }
 }
 
-export function* postAgentBackup(payload) {
+export function* postagentVersion(payload) {
   const { api, id } = payload;
   try {
     var agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
@@ -187,14 +187,14 @@ export function* postAgentBackup(payload) {
     agent.originalAgentVersionId = Number(id);
     agent.agentVersionNotes = '';
     var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
-    yield put(addAgentBackupSuccess(importResponse));
-    yield put(loadAgentBackups(id));
+    yield put(addAgentVersionSuccess(importResponse));
+    yield put(loadAgentVersions(id));
   } catch (err) {
-    yield put(addAgentBackupError(err));
+    yield put(addAgentVersionError(err));
   }
 }
 
-export function* getAgentBackups(payload) {
+export function* getagentVersions(payload) {
   const { api, originalAgentVersionId } = payload;
   try {
     var filter = JSON.stringify({
@@ -204,9 +204,9 @@ export function* getAgentBackups(payload) {
       filter
     };
     const response = yield call(api.get, toAPIPath([ROUTE_AGENT]), { params });
-    yield put(loadAgentBackupsSuccess(response.data));
+    yield put(loadAgentVersionsSuccess(response.data));
   } catch (err) {
-    yield put(loadAgentBackupsError(_.get(err, 'response.data', true)));
+    yield put(loadAgentVersionsError(_.get(err, 'response.data', true)));
   }
 }
 
@@ -216,7 +216,6 @@ export function* getAgentVersion(payload) {
     var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
     versionAgent.isVersionImport = true;
     versionAgent.isOriginalAgentVersion = true;
-    debugger;
     var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), versionAgent);
     window.location.reload();
     yield put(loadAgentVersionSuccess());
@@ -241,7 +240,7 @@ export function* putAgentVersion(payload) {
       version,
     );
     yield put(updateAgentVersionSuccess(response));
-    yield put(loadAgentBackups(currentAgentId));
+    yield put(loadAgentVersions(currentAgentId));
   } catch (err) {
     yield put(updateAgentVersionError(err));
   }
@@ -252,7 +251,7 @@ export function* deleteAgentVersion(payload) {
   try {
     yield call(api.delete, toAPIPath([ROUTE_AGENT, versionId]));
     yield put(deleteAgentVersionSuccess());
-    yield put(loadAgentBackups(currentAgentId));
+    yield put(loadAgentVersions(currentAgentId));
   } catch (err) {
     yield put(deleteAgentVersionError(err));
   }
@@ -311,11 +310,11 @@ export function* getCurrentUser(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
-  yield takeLatest(LOAD_AGENT_BACKUPS, getAgentBackups);
+  yield takeLatest(LOAD_AGENT_VERSIONS, getagentVersions);
   yield takeLatest(LOAD_AGENT_VERSION, getAgentVersion);
   yield takeLatest(UPDATE_AGENT_VERSION, putAgentVersion);
   yield takeLatest(DELETE_AGENT_VERSION, deleteAgentVersion);
-  yield takeLatest(ADD_AGENT_BACKUP, postAgentBackup);
+  yield takeLatest(ADD_AGENT_VERSION, postagentVersion);
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(LOAD_SERVER_INFO, getServerInfo);
   yield takeLatest(SEND_MESSAGE, postConverse);

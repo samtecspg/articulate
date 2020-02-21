@@ -502,7 +502,7 @@ VersionsModal.propTypes = {
   agentVersions: PropTypes.array,
   selectedTab: PropTypes.string,
   onGoToUrl: PropTypes.func,
-  onAddNewAgentBackup: PropTypes.func,
+  onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,
 };

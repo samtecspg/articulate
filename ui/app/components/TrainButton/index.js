@@ -133,7 +133,7 @@ export class TrainButton extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.agentStatus === 'Training' && this.props.agentStatus === 'Ready') {
-      this.props.onAddNewAgentBackup(this.props.currentAgentId);
+      this.props.onAddAgentVersion(this.props.currentAgentId);
     }
   }
 
@@ -151,7 +151,7 @@ export class TrainButton extends React.Component {
       agentVersions={this.props.agentVersions}
       selectedTab={this.props.selectedTab}
       onGoToUrl={this.props.onGoToUrl}
-      onAddNewAgentBackup={this.props.onAddNewAgentBackup}
+      onAddAgentVersion={this.props.onAddAgentVersion}
       onUpdateAgentVersion={this.props.onUpdateAgentVersion}
       onDeleteAgentVersion={this.props.onDeleteAgentVersion}
     />
@@ -216,10 +216,10 @@ TrainButton.propTypes = {
   agentVersions: PropTypes.array,
   selectedTab: PropTypes.string,
   onGoToUrl: PropTypes.func,
-  onAddNewAgentBackup: PropTypes.func,
+  onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,
-  onAddNewAgentBackup: PropTypes.func,
+  onAddAgentVersion: PropTypes.func,
   currentAgentId: PropTypes.number
 };
 

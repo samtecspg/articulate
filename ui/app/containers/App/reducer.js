@@ -150,9 +150,9 @@ import {
   LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
-  LOAD_AGENT_BACKUPS,
-  LOAD_AGENT_BACKUPS_ERROR,
-  LOAD_AGENT_BACKUPS_SUCCESS,
+  LOAD_AGENT_VERSIONS,
+  LOAD_AGENT_VERSIONS_ERROR,
+  LOAD_AGENT_VERSIONS_SUCCESS,
   LOAD_AGENTS_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
@@ -498,7 +498,7 @@ const initialState = Immutable({
   channels: false,
   connections: false,
   agents: false,
-  agentBackups: [],
+  agentVersions: [],
   currentAgent: {
     gravatar: '',
     uiColor: '',
@@ -847,19 +847,19 @@ function appReducer(state = initialState, action) {
         .set('agents', action.agents)
         .set('loading', false)
         .set('error', false);
-    case LOAD_AGENT_BACKUPS:
+    case LOAD_AGENT_VERSIONS:
       return state
-        .set('agentBackups', false)
+        .set('agentVersions', false)
         .set('loading', true)
         .set('error', false);
-    case LOAD_AGENT_BACKUPS_ERROR:
+    case LOAD_AGENT_VERSIONS_ERROR:
       return state
-        .set('agentBackups', false)
+        .set('agentVersions', false)
         .set('loading', false)
         .set('error', action.error);
-    case LOAD_AGENT_BACKUPS_SUCCESS:
+    case LOAD_AGENT_VERSIONS_SUCCESS:
       return state
-        .set('agentBackups', action.agentBackups)
+        .set('agentVersions', action.agentVersions)
         .set('loading', false)
         .set('error', false);
     case EXPORT_AGENT:
