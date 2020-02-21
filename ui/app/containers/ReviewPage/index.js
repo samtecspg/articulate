@@ -600,7 +600,7 @@ export class ReviewPage extends React.Component {
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
           currentAgent={this.props.agent}
           onAddAgentVersion={this.props.onAddAgentVersion}
-          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
@@ -705,17 +705,17 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: url => {
       dispatch(push(url));
     },
-    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
-      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(Actions.loadAgentVersion(versionId, currentAgentId));
     },
     onUpdateAgentVersion: (version) => {
-      dispatch(updateAgentVersion(version));
+      dispatch(Actions.updateAgentVersion(version));
     },
     onDeleteAgentVersion: (versionId, currentAgentId) => {
-      dispatch(deleteAgentVersion(versionId, currentAgentId));
+      dispatch(Actions.deleteAgentVersion(versionId, currentAgentId));
     },
     onAddAgentVersion: id => {
-      dispatch(addAgentVersion(id));
+      dispatch(Actions.addAgentVersion(id));
     },
   };
 }

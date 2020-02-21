@@ -152,11 +152,7 @@ class VersionsModal extends React.Component {
   }
 
   loadVersion() {
-    if (this.props.selectedTab !== 'agent') {
-      this.props.onGoToUrl('/agent/' + this.state.versionPicked.id, this.state.versionPicked.id, this.state.versionPicked.originalAgentVersionId)
-    } else {
-      this.props.onGoToUrl('/agent/' + this.state.versionPicked.id + '/' + this.props.selectedTab, this.state.versionPicked.id, this.state.versionPicked.originalAgentVersionId)
-    }
+    this.props.onLoadAgentVersion(this.state.versionPicked.id, this.state.versionPicked.originalAgentVersionId)
   }
 
   updateVersion() {
@@ -501,7 +497,7 @@ VersionsModal.propTypes = {
   open: PropTypes.bool,
   agentVersions: PropTypes.array,
   selectedTab: PropTypes.string,
-  onGoToUrl: PropTypes.func,
+  onLoadAgentVersion: PropTypes.func,
   onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,

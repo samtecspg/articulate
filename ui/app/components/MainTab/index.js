@@ -94,7 +94,9 @@ export class MainTab extends React.Component {
       serverStatus,
       lastTraining,
       onTrain,
-      onGoToUrl,
+      onLoadAgentVersion,
+      onDeleteAgentVersion,
+      onUpdateAgentVersion,
       onAddAgentVersion,
       newAgent,
       disableSave,
@@ -260,11 +262,10 @@ export class MainTab extends React.Component {
                   isReadOnly={isReadOnly}
                   agentVersions={agentVersions}
                   selectedTab={selectedTab}
+                  onLoadAgentVersion={onLoadAgentVersion}
+                  onUpdateAgentVersion={onUpdateAgentVersion}
+                  onDeleteAgentVersion={onDeleteAgentVersion}
                   onAddAgentVersion={onAddAgentVersion}
-                  onGoToUrl={onGoToUrl}
-                  onUpdateAgentVersion={this.props.onUpdateAgentVersion}
-                  onDeleteAgentVersion={this.props.onDeleteAgentVersion}
-                  onAddAgentVersion={this.props.onAddAgentVersion}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                 />
@@ -406,11 +407,12 @@ export class MainTab extends React.Component {
                   lastTraining={lastTraining}
                   onTrain={onTrain}
                   selectedTab={this.state.selectedTab}
-                  onGoToUrl={this.props.onGoToUrl}
-                  onUpdateAgentVersion={this.props.onUpdateAgentVersion}
-                  onDeleteAgentVersion={this.props.onDeleteAgentVersion}
-                  onAddAgentVersion={this.props.onAddAgentVersion}
+                  onLoadAgentVersion={onLoadAgentVersion}
+                  onUpdateAgentVersion={onUpdateAgentVersion}
+                  onDeleteAgentVersion={onDeleteAgentVersion}
+                  onAddAgentVersion={onAddAgentVersion}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
+                  loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                 />
               )}
               {disableSave ||
@@ -482,7 +484,7 @@ MainTab.propTypes = {
   currentAgent: PropTypes.object,
   onFinishAction: PropTypes.func,
   onTrain: PropTypes.func,
-  onGoToUrl: PropTypes.func,
+  onLoadAgentVersion: PropTypes.func,
   onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,

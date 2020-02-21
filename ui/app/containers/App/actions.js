@@ -658,10 +658,9 @@ export function loadAgentVersionsSuccess(agentVersions) {
   };
 }
 
-export function loadAgentVersion(url, versionId, currentAgentId) {
+export function loadAgentVersion(versionId, currentAgentId) {
   return {
     type: LOAD_AGENT_VERSION,
-    url,
     versionId,
     currentAgentId,
     apiCall: true,

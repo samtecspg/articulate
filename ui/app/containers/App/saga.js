@@ -211,7 +211,7 @@ export function* getagentVersions(payload) {
 }
 
 export function* getAgentVersion(payload) {
-  const { api, url, versionId, currentAgentId } = payload;
+  const { api, versionId, currentAgentId } = payload;
   try {
     var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
     versionAgent.isVersionImport = true;

@@ -105,7 +105,7 @@ export class AnalyticsPage extends React.PureComponent {
           agentGravatar={agent.gravatar ? agent.gravatar : 1}
           agentUIColor={agent.uiColor}
           onTrain={onTrain}
-          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
           agentStatus={agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={agent.lastTraining}
@@ -133,7 +133,7 @@ export class AnalyticsPage extends React.PureComponent {
           reviewURL={`/agent/${this.props.agent.id}/review`}
           currentAgent={this.props.agent}
           onAddAgentVersion={this.props.onAddAgentVersion}
-          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
@@ -378,8 +378,8 @@ function mapDispatchToProps(dispatch) {
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
     },
-    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
-      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(versionId, currentAgentId));
     },
     onUpdateAgentVersion: (version) => {
       dispatch(updateAgentVersion(version));

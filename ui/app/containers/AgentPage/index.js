@@ -440,7 +440,7 @@ export class AgentPage extends React.PureComponent {
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
           onAddAgentVersion={this.props.onAddAgentVersion}
-          onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
@@ -613,8 +613,8 @@ function mapDispatchToProps(dispatch) {
     onLoadUsers: () => {
       dispatch(loadUsers());
     },
-    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
-      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(versionId, currentAgentId));
     },
     onUpdateAgentVersion: (version) => {
       dispatch(updateAgentVersion(version));

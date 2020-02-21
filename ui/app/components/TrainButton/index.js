@@ -150,7 +150,7 @@ export class TrainButton extends React.Component {
       onClose={this.handleVersionsModalClose}
       agentVersions={this.props.agentVersions}
       selectedTab={this.props.selectedTab}
-      onGoToUrl={this.props.onGoToUrl}
+      onLoadAgentVersion={this.props.onLoadAgentVersion}
       onAddAgentVersion={this.props.onAddAgentVersion}
       onUpdateAgentVersion={this.props.onUpdateAgentVersion}
       onDeleteAgentVersion={this.props.onDeleteAgentVersion}
@@ -215,7 +215,7 @@ TrainButton.propTypes = {
   isReadOnly: PropTypes.bool,
   agentVersions: PropTypes.array,
   selectedTab: PropTypes.string,
-  onGoToUrl: PropTypes.func,
+  onLoadAgentVersion: PropTypes.func,
   onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,

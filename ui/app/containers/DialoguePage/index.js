@@ -497,7 +497,7 @@ export class DialoguePage extends React.PureComponent {
             analyticsURL={`/agent/${this.props.agent.id}/analytics`}
             currentAgent={this.props.agent}
             onAddAgentVersion={this.props.onAddAgentVersion}
-            onGoToUrl={this.props.onGoToUrlLoadAgentVersion}
+            onLoadAgentVersion={this.props.onLoadAgentVersion}
             onUpdateAgentVersion={this.props.onUpdateAgentVersion}
             onDeleteAgentVersion={this.props.onDeleteAgentVersion}
             agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
@@ -654,8 +654,8 @@ function mapDispatchToProps(dispatch) {
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
     },
-    onGoToUrlLoadAgentVersion: (url, versionId, currentAgentId) => {
-      dispatch(loadAgentVersion(url, versionId, currentAgentId));
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(versionId, currentAgentId));
     },
     onUpdateAgentVersion: (version) => {
       dispatch(updateAgentVersion(version));
